@@ -67,11 +67,31 @@ class IColorGroupIterator;
 class ITexture2DGroupIterator;
 class ICompositeMaterialsIterator;
 class IMultiPropertyGroupIterator;
+class IImage3DIterator;
+class IScalarFieldIterator;
+class IVector3DFieldIterator;
 class IMetaData;
 class IMetaDataGroup;
 class IObject;
 class IMeshObject;
 class IBeamLattice;
+class IScalarField;
+class IVector3DField;
+class IScalarFieldFromImage3D;
+class IScalarFieldConstant;
+class IScalarFieldComposed;
+class IVector3DFieldFromImage3D;
+class IVector3DFieldConstant;
+class IVector3DFieldComposed;
+class IFieldReference;
+class IScalarFieldReference;
+class IVector3DFieldReference;
+class IVolumeDataBoundary;
+class IVolumeDataColor;
+class IMaterialMapping;
+class IVolumeDataComposite;
+class IVolumeDataProperty;
+class IVolumeData;
 class IComponent;
 class IComponentsObject;
 class IBeamSet;
@@ -80,6 +100,8 @@ class IColorGroup;
 class ITexture2DGroup;
 class ICompositeMaterials;
 class IMultiPropertyGroup;
+class IImage3D;
+class IImageStack;
 class IAttachment;
 class ITexture2D;
 class IBuildItem;
@@ -902,6 +924,84 @@ typedef IBaseSharedPtr<IMultiPropertyGroupIterator> PIMultiPropertyGroupIterator
 
 
 /*************************************************************************************************************************
+ Class interface for Image3DIterator 
+**************************************************************************************************************************/
+
+class IImage3DIterator : public virtual IResourceIterator {
+public:
+	/**
+	* IImage3DIterator::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xC4B8EC00A82BF336UL; // First 64 bits of SHA1 of a string: "Lib3MF::Image3DIterator"
+	}
+
+	/**
+	* IImage3DIterator::GetCurrentImage3D - Returns the Image3D the iterator points at.
+	* @return returns the Image3D instance.
+	*/
+	virtual IImage3D * GetCurrentImage3D() = 0;
+
+};
+
+typedef IBaseSharedPtr<IImage3DIterator> PIImage3DIterator;
+
+
+/*************************************************************************************************************************
+ Class interface for ScalarFieldIterator 
+**************************************************************************************************************************/
+
+class IScalarFieldIterator : public virtual IResourceIterator {
+public:
+	/**
+	* IScalarFieldIterator::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xDB00D7A0549F0D9BUL; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldIterator"
+	}
+
+	/**
+	* IScalarFieldIterator::GetCurrentScalarField - Returns the ScalarField the iterator points at.
+	* @return returns the ScalarField instance.
+	*/
+	virtual IScalarField * GetCurrentScalarField() = 0;
+
+};
+
+typedef IBaseSharedPtr<IScalarFieldIterator> PIScalarFieldIterator;
+
+
+/*************************************************************************************************************************
+ Class interface for Vector3DFieldIterator 
+**************************************************************************************************************************/
+
+class IVector3DFieldIterator : public virtual IResourceIterator {
+public:
+	/**
+	* IVector3DFieldIterator::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xFBE6DA41D00E8AA8UL; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldIterator"
+	}
+
+	/**
+	* IVector3DFieldIterator::GetCurrentVector3DField - Returns the Vector3DField the iterator points at.
+	* @return returns the Vector3DField instance.
+	*/
+	virtual IVector3DField * GetCurrentVector3DField() = 0;
+
+};
+
+typedef IBaseSharedPtr<IVector3DFieldIterator> PIVector3DFieldIterator;
+
+
+/*************************************************************************************************************************
  Class interface for MetaData 
 **************************************************************************************************************************/
 
@@ -1358,6 +1458,12 @@ public:
 	*/
 	virtual IBeamLattice * BeamLattice() = 0;
 
+	/**
+	* IMeshObject::VolumeData - Retrieves the VolumeData of this MeshObject.
+	* @return the VolumeData of this MeshObject
+	*/
+	virtual IVolumeData * VolumeData() = 0;
+
 };
 
 typedef IBaseSharedPtr<IMeshObject> PIMeshObject;
@@ -1537,6 +1643,906 @@ public:
 };
 
 typedef IBaseSharedPtr<IBeamLattice> PIBeamLattice;
+
+
+/*************************************************************************************************************************
+ Class interface for ScalarField 
+**************************************************************************************************************************/
+
+class IScalarField : public virtual IResource {
+public:
+	/**
+	* IScalarField::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xD287279D1D95FD5CUL; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarField"
+	}
+
+	/**
+	* IScalarField::GetName - Gets the name of this ScalarField.
+	* @return The name of this ScalarField.
+	*/
+	virtual std::string GetName() = 0;
+
+	/**
+	* IScalarField::SetName - Sets the name of this ScalarField.
+	* @param[in] sName - The name of this ScalarField.
+	*/
+	virtual void SetName(const std::string & sName) = 0;
+
+	/**
+	* IScalarField::IsFromImage3D - Retrieves, if this ScalarField is a ScalarFieldFromImage3D
+	* @return returns, whether the scalar field is a ScalarFieldFromImage3D
+	*/
+	virtual bool IsFromImage3D() = 0;
+
+	/**
+	* IScalarField::IsConstant - Retrieves, if this ScalarField is a ScalarFieldConstant
+	* @return returns, whether the scalar field is a ScalarFieldConstant
+	*/
+	virtual bool IsConstant() = 0;
+
+	/**
+	* IScalarField::IsComposed - Retrieves, if this ScalarField is a ScalarFieldComposed
+	* @return returns, whether the scalar field is a ScalarFieldComposed
+	*/
+	virtual bool IsComposed() = 0;
+
+};
+
+typedef IBaseSharedPtr<IScalarField> PIScalarField;
+
+
+/*************************************************************************************************************************
+ Class interface for Vector3DField 
+**************************************************************************************************************************/
+
+class IVector3DField : public virtual IResource {
+public:
+	/**
+	* IVector3DField::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x8238AA0982B65912UL; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DField"
+	}
+
+	/**
+	* IVector3DField::GetName - Gets the name of this Vector3DField.
+	* @return The name of this Vector3DField.
+	*/
+	virtual std::string GetName() = 0;
+
+	/**
+	* IVector3DField::SetName - Sets the name of this Vector3DField.
+	* @param[in] sName - The name of this Vector3DField.
+	*/
+	virtual void SetName(const std::string & sName) = 0;
+
+	/**
+	* IVector3DField::IsFromImage3D - Retrieves, if this Vector3DField is a Vector3DFieldFromImage3D
+	* @return returns, whether the 3d vector field is a Vector3DFieldFromImage3D
+	*/
+	virtual bool IsFromImage3D() = 0;
+
+	/**
+	* IVector3DField::IsConstant - Retrieves, if this Vector3DField is a Vector3DFieldConstant
+	* @return returns, whether the 3d vector field is a Vector3DFieldConstant
+	*/
+	virtual bool IsConstant() = 0;
+
+	/**
+	* IVector3DField::IsComposed - Retrieves, if this Vector3DField is a Vector3DFieldComposed
+	* @return returns, whether the 3d vector field is a Vector3DFieldComposed
+	*/
+	virtual bool IsComposed() = 0;
+
+};
+
+typedef IBaseSharedPtr<IVector3DField> PIVector3DField;
+
+
+/*************************************************************************************************************************
+ Class interface for ScalarFieldFromImage3D 
+**************************************************************************************************************************/
+
+class IScalarFieldFromImage3D : public virtual IScalarField {
+public:
+	/**
+	* IScalarFieldFromImage3D::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x34BAAE99C1A0884AUL; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldFromImage3D"
+	}
+
+	/**
+	* IScalarFieldFromImage3D::GetImage - Returns the selected 3D image.
+	* @return image instance
+	*/
+	virtual IImage3D * GetImage() = 0;
+
+	/**
+	* IScalarFieldFromImage3D::SetImage - Sets the 3D image of the selector.
+	* @param[in] pImage3D - image instance
+	*/
+	virtual void SetImage(IImage3D* pImage3D) = 0;
+
+	/**
+	* IScalarFieldFromImage3D::SetChannel - Sets the channel name to be picked from the referenced Image3D.
+	* @param[in] eName - Sets the channel name.
+	*/
+	virtual void SetChannel(const Lib3MF::eChannelName eName) = 0;
+
+	/**
+	* IScalarFieldFromImage3D::GetChannel - Gets the channel name to be picked from the referenced Image3D.
+	* @return Sets the channel name.
+	*/
+	virtual Lib3MF::eChannelName GetChannel() = 0;
+
+	/**
+	* IScalarFieldFromImage3D::SetFilter - Sets the texture filter of the selector.
+	* @param[in] eFilter - texture filter
+	*/
+	virtual void SetFilter(const Lib3MF::eTextureFilter eFilter) = 0;
+
+	/**
+	* IScalarFieldFromImage3D::GetFilter - Returns the texture filter of the selector.
+	* @return texture filter
+	*/
+	virtual Lib3MF::eTextureFilter GetFilter() = 0;
+
+	/**
+	* IScalarFieldFromImage3D::SetTileStyles - Sets the tile styles of the selector.
+	* @param[in] eTileStyleU - tile style in U
+	* @param[in] eTileStyleV - tile style in V
+	* @param[in] eTileStyleW - tile style in W
+	*/
+	virtual void SetTileStyles(const Lib3MF::eTextureTileStyle eTileStyleU, const Lib3MF::eTextureTileStyle eTileStyleV, const Lib3MF::eTextureTileStyle eTileStyleW) = 0;
+
+	/**
+	* IScalarFieldFromImage3D::GetTileStyles - Retrieves the tile styles of the selector.
+	* @param[out] eTileStyleU - tile style in U
+	* @param[out] eTileStyleV - tile style in V
+	* @param[out] eTileStyleW - tile style in W
+	*/
+	virtual void GetTileStyles(Lib3MF::eTextureTileStyle & eTileStyleU, Lib3MF::eTextureTileStyle & eTileStyleV, Lib3MF::eTextureTileStyle & eTileStyleW) = 0;
+
+	/**
+	* IScalarFieldFromImage3D::GetOffset - returns the offset value for the pixel values in the Image3D
+	* @return the offset value for the pixel values in the Image3D
+	*/
+	virtual Lib3MF_double GetOffset() = 0;
+
+	/**
+	* IScalarFieldFromImage3D::SetOffset - Sets the offset value for the pixel values in the Image3D
+	* @param[in] dOffset - the offset value for the pixel values in the Image3D
+	*/
+	virtual void SetOffset(const Lib3MF_double dOffset) = 0;
+
+	/**
+	* IScalarFieldFromImage3D::GetScale - returns the scale value for the pixel values in the Image3D
+	* @return the scale value for the pixel values in the Image3D
+	*/
+	virtual Lib3MF_double GetScale() = 0;
+
+	/**
+	* IScalarFieldFromImage3D::SetScale - Sets the scale value for the pixel values in the Image3D
+	* @param[in] dScale - the scale value for the pixel values in the Image3D
+	*/
+	virtual void SetScale(const Lib3MF_double dScale) = 0;
+
+};
+
+typedef IBaseSharedPtr<IScalarFieldFromImage3D> PIScalarFieldFromImage3D;
+
+
+/*************************************************************************************************************************
+ Class interface for ScalarFieldConstant 
+**************************************************************************************************************************/
+
+class IScalarFieldConstant : public virtual IScalarField {
+public:
+	/**
+	* IScalarFieldConstant::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xD66C857B3150881CUL; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldConstant"
+	}
+
+	/**
+	* IScalarFieldConstant::GetValue - returns the constant value of this ScalarFieldConstant
+	* @return the constant value of this ScalarFieldConstant
+	*/
+	virtual Lib3MF_double GetValue() = 0;
+
+	/**
+	* IScalarFieldConstant::SetValue - Sets the constant value of this ScalarFieldConstant
+	* @param[in] dValue - the constant value of this ScalarFieldConstant
+	*/
+	virtual void SetValue(const Lib3MF_double dValue) = 0;
+
+};
+
+typedef IBaseSharedPtr<IScalarFieldConstant> PIScalarFieldConstant;
+
+
+/*************************************************************************************************************************
+ Class interface for ScalarFieldComposed 
+**************************************************************************************************************************/
+
+class IScalarFieldComposed : public virtual IScalarField {
+public:
+	/**
+	* IScalarFieldComposed::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x35E133BE92DFB6BFUL; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldComposed"
+	}
+
+	/**
+	* IScalarFieldComposed::SetMethod - Sets the method to used for composition.
+	* @param[in] eTheMethod - Sets the composition method.
+	*/
+	virtual void SetMethod(const Lib3MF::eCompositionMethod eTheMethod) = 0;
+
+	/**
+	* IScalarFieldComposed::GetMethod - Gets the method to used for composition.
+	* @return Gets the composition method.
+	*/
+	virtual Lib3MF::eCompositionMethod GetMethod() = 0;
+
+	/**
+	* IScalarFieldComposed::GetFactor1 - returns the factor scalar field 1 is multiplied with when composited
+	* @return the factor scalar field 1 is multiplied with when composited
+	*/
+	virtual Lib3MF_double GetFactor1() = 0;
+
+	/**
+	* IScalarFieldComposed::SetFactor1 - sets the factor scalar field 1 is multiplied with when composited
+	* @param[in] dFactor1 - the factor scalar field 1 is multiplied with when composited
+	*/
+	virtual void SetFactor1(const Lib3MF_double dFactor1) = 0;
+
+	/**
+	* IScalarFieldComposed::GetFactor2 - returns the factor scalar field 2 is multiplied with when composited
+	* @return the factor scalar field 2 is multiplied with when composited
+	*/
+	virtual Lib3MF_double GetFactor2() = 0;
+
+	/**
+	* IScalarFieldComposed::SetFactor2 - sets the factor scalar field 2 is multiplied with when composited
+	* @param[in] dFactor2 - the factor scalar field 2 is multiplied with when composited
+	*/
+	virtual void SetFactor2(const Lib3MF_double dFactor2) = 0;
+
+	/**
+	* IScalarFieldComposed::ScalarFieldReference1 - Access to the ScalarFieldReference for the first composited field
+	* @return ScalarFieldReference
+	*/
+	virtual IScalarFieldReference * ScalarFieldReference1() = 0;
+
+	/**
+	* IScalarFieldComposed::ScalarFieldReference2 - Access to the ScalarFieldReference for the second composited field
+	* @return ScalarFieldReference
+	*/
+	virtual IScalarFieldReference * ScalarFieldReference2() = 0;
+
+	/**
+	* IScalarFieldComposed::ScalarFieldReferenceMask - Access to the ScalarFieldReference for masking. Only relevant if the Method is mask.
+	* @return ScalarFieldReference
+	*/
+	virtual IScalarFieldReference * ScalarFieldReferenceMask() = 0;
+
+};
+
+typedef IBaseSharedPtr<IScalarFieldComposed> PIScalarFieldComposed;
+
+
+/*************************************************************************************************************************
+ Class interface for Vector3DFieldFromImage3D 
+**************************************************************************************************************************/
+
+class IVector3DFieldFromImage3D : public virtual IVector3DField {
+public:
+	/**
+	* IVector3DFieldFromImage3D::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x8829BAD18E5688FCUL; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldFromImage3D"
+	}
+
+	/**
+	* IVector3DFieldFromImage3D::GetImage - Returns the selected 3D image.
+	* @return image instance
+	*/
+	virtual IImage3D * GetImage() = 0;
+
+	/**
+	* IVector3DFieldFromImage3D::SetImage - Sets the 3D image of the selector.
+	* @param[in] pImage3D - image instance
+	*/
+	virtual void SetImage(IImage3D* pImage3D) = 0;
+
+	/**
+	* IVector3DFieldFromImage3D::SetFilter - Sets the texture filter of the selector.
+	* @param[in] eFilter - texture filter
+	*/
+	virtual void SetFilter(const Lib3MF::eTextureFilter eFilter) = 0;
+
+	/**
+	* IVector3DFieldFromImage3D::GetFilter - Returns the texture filter of the selector.
+	* @return texture filter
+	*/
+	virtual Lib3MF::eTextureFilter GetFilter() = 0;
+
+	/**
+	* IVector3DFieldFromImage3D::SetTileStyles - Sets the tile styles of the selector.
+	* @param[in] eTileStyleU - tile style in U
+	* @param[in] eTileStyleV - tile style in V
+	* @param[in] eTileStyleW - tile style in W
+	*/
+	virtual void SetTileStyles(const Lib3MF::eTextureTileStyle eTileStyleU, const Lib3MF::eTextureTileStyle eTileStyleV, const Lib3MF::eTextureTileStyle eTileStyleW) = 0;
+
+	/**
+	* IVector3DFieldFromImage3D::GetTileStyles - Retrieves the tile styles of the selector.
+	* @param[out] eTileStyleU - tile style in U
+	* @param[out] eTileStyleV - tile style in V
+	* @param[out] eTileStyleW - tile style in W
+	*/
+	virtual void GetTileStyles(Lib3MF::eTextureTileStyle & eTileStyleU, Lib3MF::eTextureTileStyle & eTileStyleV, Lib3MF::eTextureTileStyle & eTileStyleW) = 0;
+
+	/**
+	* IVector3DFieldFromImage3D::GetOffset - returns the offset value for the pixel values in the Image3D
+	* @return the offset value for the pixel values in the Image3D
+	*/
+	virtual Lib3MF_double GetOffset() = 0;
+
+	/**
+	* IVector3DFieldFromImage3D::SetOffset - Sets the offset value for the pixel values in the Image3D
+	* @param[in] dOffset - the offset value for the pixel values in the Image3D
+	*/
+	virtual void SetOffset(const Lib3MF_double dOffset) = 0;
+
+	/**
+	* IVector3DFieldFromImage3D::GetScale - returns the scale value for the pixel values in the Image3D
+	* @return the scale value for the pixel values in the Image3D
+	*/
+	virtual Lib3MF_double GetScale() = 0;
+
+	/**
+	* IVector3DFieldFromImage3D::SetScale - Sets the scale value for the pixel values in the Image3D
+	* @param[in] dScale - the scale value for the pixel values in the Image3D
+	*/
+	virtual void SetScale(const Lib3MF_double dScale) = 0;
+
+};
+
+typedef IBaseSharedPtr<IVector3DFieldFromImage3D> PIVector3DFieldFromImage3D;
+
+
+/*************************************************************************************************************************
+ Class interface for Vector3DFieldConstant 
+**************************************************************************************************************************/
+
+class IVector3DFieldConstant : public virtual IVector3DField {
+public:
+	/**
+	* IVector3DFieldConstant::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xFE4F20B130D7A54CUL; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldConstant"
+	}
+
+	/**
+	* IVector3DFieldConstant::GetValueX - returns the constant x-value of this Vector3DFieldConstant
+	* @return the constant x-value of this Vector3DFieldConstant
+	*/
+	virtual Lib3MF_double GetValueX() = 0;
+
+	/**
+	* IVector3DFieldConstant::SetValueX - Sets the constant x-value of this Vector3DFieldConstant
+	* @param[in] dValueX - the constant x-value of this Vector3DFieldConstant
+	*/
+	virtual void SetValueX(const Lib3MF_double dValueX) = 0;
+
+	/**
+	* IVector3DFieldConstant::GetValueY - returns the constant y-value of this Vector3DFieldConstant
+	* @return the constant y-value of this Vector3DFieldConstant
+	*/
+	virtual Lib3MF_double GetValueY() = 0;
+
+	/**
+	* IVector3DFieldConstant::SetValueY - Sets the constant y-value of this Vector3DFieldConstant
+	* @param[in] dValueY - the constant y-value of this Vector3DFieldConstant
+	*/
+	virtual void SetValueY(const Lib3MF_double dValueY) = 0;
+
+	/**
+	* IVector3DFieldConstant::GetValueZ - returns the constant x-value of this Vector3DFieldConstant
+	* @return the constant x-value of this Vector3DFieldConstant
+	*/
+	virtual Lib3MF_double GetValueZ() = 0;
+
+	/**
+	* IVector3DFieldConstant::SetValueZ - Sets the constant z-value of this Vector3DFieldConstant
+	* @param[in] dValueZ - the constant z-value of this Vector3DFieldConstant
+	*/
+	virtual void SetValueZ(const Lib3MF_double dValueZ) = 0;
+
+};
+
+typedef IBaseSharedPtr<IVector3DFieldConstant> PIVector3DFieldConstant;
+
+
+/*************************************************************************************************************************
+ Class interface for Vector3DFieldComposed 
+**************************************************************************************************************************/
+
+class IVector3DFieldComposed : public virtual IVector3DField {
+public:
+	/**
+	* IVector3DFieldComposed::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x238E197DF1603119UL; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldComposed"
+	}
+
+	/**
+	* IVector3DFieldComposed::SetMethod - Sets the method to used for composition.
+	* @param[in] eTheMethod - Sets the composition method.
+	*/
+	virtual void SetMethod(const Lib3MF::eCompositionMethod eTheMethod) = 0;
+
+	/**
+	* IVector3DFieldComposed::GetMethod - Gets the method to used for composition.
+	* @return Gets the composition method.
+	*/
+	virtual Lib3MF::eCompositionMethod GetMethod() = 0;
+
+	/**
+	* IVector3DFieldComposed::SetSpace - Sets the space in which composition takes place.
+	* @param[in] eTheSpace - Sets the composition space.
+	*/
+	virtual void SetSpace(const Lib3MF::eCompositionSpace eTheSpace) = 0;
+
+	/**
+	* IVector3DFieldComposed::GetSpace - Gets the space in which composition takes place.
+	* @return Gets the composition space.
+	*/
+	virtual Lib3MF::eCompositionSpace GetSpace() = 0;
+
+	/**
+	* IVector3DFieldComposed::GetFactor1 - returns the factor vector3d field 1 is multiplied with when composited
+	* @return the factor vector3d field 1 is multiplied with when composited
+	*/
+	virtual Lib3MF_double GetFactor1() = 0;
+
+	/**
+	* IVector3DFieldComposed::SetFactor1 - sets the factor vector3d field 1 is multiplied with when composited
+	* @param[in] dFactor1 - the factor vector3d field 1 is multiplied with when composited
+	*/
+	virtual void SetFactor1(const Lib3MF_double dFactor1) = 0;
+
+	/**
+	* IVector3DFieldComposed::GetFactor2 - returns the vector3d scalar field 2 is multiplied with when composited
+	* @return the factor vector3d field 2 is multiplied with when composited
+	*/
+	virtual Lib3MF_double GetFactor2() = 0;
+
+	/**
+	* IVector3DFieldComposed::SetFactor2 - sets the factor vector3d field 2 is multiplied with when composited
+	* @param[in] dFactor2 - the factor vector3d field 2 is multiplied with when composited
+	*/
+	virtual void SetFactor2(const Lib3MF_double dFactor2) = 0;
+
+	/**
+	* IVector3DFieldComposed::Vector3DFieldReference1 - Access to the Vector3DFieldReference for the first composited field
+	* @return Vector3DFieldReference
+	*/
+	virtual IVector3DFieldReference * Vector3DFieldReference1() = 0;
+
+	/**
+	* IVector3DFieldComposed::Vector3DFieldReference2 - Access to the Vector3DFieldReference for the second composited field
+	* @return Vector3DFieldReference
+	*/
+	virtual IVector3DFieldReference * Vector3DFieldReference2() = 0;
+
+	/**
+	* IVector3DFieldComposed::ScalarFieldReferenceMask - Access to the ScalarFieldReference for masking. Only relevant if the Method is mask.
+	* @return ScalarFieldReference
+	*/
+	virtual IScalarFieldReference * ScalarFieldReferenceMask() = 0;
+
+};
+
+typedef IBaseSharedPtr<IVector3DFieldComposed> PIVector3DFieldComposed;
+
+
+/*************************************************************************************************************************
+ Class interface for FieldReference 
+**************************************************************************************************************************/
+
+class IFieldReference : public virtual IBase {
+public:
+	/**
+	* IFieldReference::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x1DAFE66A115A193CUL; // First 64 bits of SHA1 of a string: "Lib3MF::FieldReference"
+	}
+
+	/**
+	* IFieldReference::GetFieldResourceID - Returns the UniqueResourceID of the Field (Scalar- or Vector3DField).
+	* @return returns the UniqueResourceID.
+	*/
+	virtual Lib3MF_uint32 GetFieldResourceID() = 0;
+
+	/**
+	* IFieldReference::SetFieldResourceID - Sets the UniqueResourceID to refer to.
+	* @param[in] nUniqueResourceID - UniqueResourceID of the Field (Scalar- or Vector3DField)
+	*/
+	virtual void SetFieldResourceID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
+	* IFieldReference::GetTransform - Returns the transformation matrix into the coordinate system of the referenced Field.
+	* @return the transformation matrix
+	*/
+	virtual Lib3MF::sTransform GetTransform() = 0;
+
+	/**
+	* IFieldReference::SetTransform - Sets the transformation matrix into the coordinate system of the referenced Field.
+	* @param[in] Transform - new transformation matrix
+	*/
+	virtual void SetTransform(const Lib3MF::sTransform Transform) = 0;
+
+};
+
+typedef IBaseSharedPtr<IFieldReference> PIFieldReference;
+
+
+/*************************************************************************************************************************
+ Class interface for ScalarFieldReference 
+**************************************************************************************************************************/
+
+class IScalarFieldReference : public virtual IFieldReference {
+public:
+	/**
+	* IScalarFieldReference::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x2EC59C8B8BCD0C88UL; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldReference"
+	}
+
+	/**
+	* IScalarFieldReference::SetScalarField - Sets the ScalarField to use within this volume data item.
+	* @param[in] pTheScalarField - ScalarField used in this element
+	*/
+	virtual void SetScalarField(IScalarField* pTheScalarField) = 0;
+
+};
+
+typedef IBaseSharedPtr<IScalarFieldReference> PIScalarFieldReference;
+
+
+/*************************************************************************************************************************
+ Class interface for Vector3DFieldReference 
+**************************************************************************************************************************/
+
+class IVector3DFieldReference : public virtual IFieldReference {
+public:
+	/**
+	* IVector3DFieldReference::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x6DAF2470111B6F8AUL; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldReference"
+	}
+
+	/**
+	* IVector3DFieldReference::SetVector3DField - Sets the Vector3DField to use within this volume data item.
+	* @param[in] pTheVector3DField - Vector3DField used in this element
+	*/
+	virtual void SetVector3DField(IVector3DField* pTheVector3DField) = 0;
+
+};
+
+typedef IBaseSharedPtr<IVector3DFieldReference> PIVector3DFieldReference;
+
+
+/*************************************************************************************************************************
+ Class interface for VolumeDataBoundary 
+**************************************************************************************************************************/
+
+class IVolumeDataBoundary : public virtual IScalarFieldReference {
+public:
+	/**
+	* IVolumeDataBoundary::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xE7B8A8C7BC9DE5C1UL; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeDataBoundary"
+	}
+
+	/**
+	* IVolumeDataBoundary::GetSolidThreshold - Returns the solidthreshold for the levelset function encoded in this VolumeDataBoundary
+	* @return The solidthreshold for the levelset function encoded in this VolumeDataBoundary
+	*/
+	virtual Lib3MF_double GetSolidThreshold() = 0;
+
+	/**
+	* IVolumeDataBoundary::SetSolidThreshold - Sets the solidthreshold for the levelset function encoded in this VolumeDataBoundary
+	* @param[in] dTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataBoundary
+	*/
+	virtual void SetSolidThreshold(const Lib3MF_double dTheSolidThreshold) = 0;
+
+};
+
+typedef IBaseSharedPtr<IVolumeDataBoundary> PIVolumeDataBoundary;
+
+
+/*************************************************************************************************************************
+ Class interface for VolumeDataColor 
+**************************************************************************************************************************/
+
+class IVolumeDataColor : public virtual IVector3DFieldReference {
+public:
+	/**
+	* IVolumeDataColor::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xD85B5B6143E787E3UL; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeDataColor"
+	}
+
+};
+
+typedef IBaseSharedPtr<IVolumeDataColor> PIVolumeDataColor;
+
+
+/*************************************************************************************************************************
+ Class interface for MaterialMapping 
+**************************************************************************************************************************/
+
+class IMaterialMapping : public virtual IScalarFieldReference {
+public:
+	/**
+	* IMaterialMapping::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x241FE6B4817C3FE4UL; // First 64 bits of SHA1 of a string: "Lib3MF::MaterialMapping"
+	}
+
+};
+
+typedef IBaseSharedPtr<IMaterialMapping> PIMaterialMapping;
+
+
+/*************************************************************************************************************************
+ Class interface for VolumeDataComposite 
+**************************************************************************************************************************/
+
+class IVolumeDataComposite : public virtual IBase {
+public:
+	/**
+	* IVolumeDataComposite::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x46F1DAC40581B304UL; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeDataComposite"
+	}
+
+	/**
+	* IVolumeDataComposite::GetBaseMaterialGroup - Returns the BaseMaterialGroup used within this volume data item
+	* @return The BaseMaterialGroup instance of this VolumeDataComposite element
+	*/
+	virtual IBaseMaterialGroup * GetBaseMaterialGroup() = 0;
+
+	/**
+	* IVolumeDataComposite::SetBaseMaterialGroup - Sets the BaseMaterialGroup to use within this volume data item.
+	* @param[in] pBaseMaterialGroupInstance - The new BaseMaterialGroup instance of this VolumeDataComposite element
+	*/
+	virtual void SetBaseMaterialGroup(IBaseMaterialGroup* pBaseMaterialGroupInstance) = 0;
+
+	/**
+	* IVolumeDataComposite::GetMaterialMappingCount - Returns the number of material mappings of this VolumeDataComposite element
+	* @return the number of material mappings.
+	*/
+	virtual Lib3MF_uint32 GetMaterialMappingCount() = 0;
+
+	/**
+	* IVolumeDataComposite::GetMaterialMapping - Returns MaterialMappting with given index
+	* @param[in] nIndex - Index of the MaterialMapping in question.
+	* @return MaterialMapping used in this element
+	*/
+	virtual IMaterialMapping * GetMaterialMapping(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IVolumeDataComposite::AddMaterialMapping - Adds a the MaterialMapping
+	* @param[in] Transform - new transformation matrix
+	* @return The new MaterialMapping
+	*/
+	virtual IMaterialMapping * AddMaterialMapping(const Lib3MF::sTransform Transform) = 0;
+
+	/**
+	* IVolumeDataComposite::RemoveMaterialMapping - Removes the MaterialMapping with given index
+	* @param[in] nIndex - The index of the MaterialMapping to be removed.
+	*/
+	virtual void RemoveMaterialMapping(const Lib3MF_uint32 nIndex) = 0;
+
+};
+
+typedef IBaseSharedPtr<IVolumeDataComposite> PIVolumeDataComposite;
+
+
+/*************************************************************************************************************************
+ Class interface for VolumeDataProperty 
+**************************************************************************************************************************/
+
+class IVolumeDataProperty : public virtual IFieldReference {
+public:
+	/**
+	* IVolumeDataProperty::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xFC368AA44ACE42DAUL; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeDataProperty"
+	}
+
+	/**
+	* IVolumeDataProperty::GetName - Gets the qualified name of this property.
+	* @return The qualified name of this property.
+	*/
+	virtual std::string GetName() = 0;
+
+	/**
+	* IVolumeDataProperty::SetIsRequired - Sets whether this property is required to process this 3MF document instance.
+	* @param[in] bIsRequired - New value for whether this property is required to process this 3MF document instance.
+	*/
+	virtual void SetIsRequired(const bool bIsRequired) = 0;
+
+	/**
+	* IVolumeDataProperty::IsRequired - Returns whether this property is required to process this 3MF document instance.
+	* @return Is this property required to process this 3MF document instance?
+	*/
+	virtual bool IsRequired() = 0;
+
+};
+
+typedef IBaseSharedPtr<IVolumeDataProperty> PIVolumeDataProperty;
+
+
+/*************************************************************************************************************************
+ Class interface for VolumeData 
+**************************************************************************************************************************/
+
+class IVolumeData : public virtual IBase {
+public:
+	/**
+	* IVolumeData::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x9200586FB91587A7UL; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeData"
+	}
+
+	/**
+	* IVolumeData::GetBoundary - Returns the VolumeDataBoundary of this VolumeData instance
+	* @return filled with the VolumeDataBoundary of this VolumeData instance.
+	*/
+	virtual IVolumeDataBoundary * GetBoundary() = 0;
+
+	/**
+	* IVolumeData::CreateNewBoundary - Creates a new VolumeDataBoundary for this VolumeData instance
+	* @param[in] pTheScalarField - ScalarField used in this element
+	* @return The new VolumeDataBoundary of this VolumeData instance.
+	*/
+	virtual IVolumeDataBoundary * CreateNewBoundary(IScalarField* pTheScalarField) = 0;
+
+	/**
+	* IVolumeData::RemoveBoundary - Removes the VolumeDataBoundary of this VolumeData instance
+	*/
+	virtual void RemoveBoundary() = 0;
+
+	/**
+	* IVolumeData::GetComposite - Returns the VolumeDataComposite of this VolumeData instance
+	* @return filled with the VolumeDataComposite of this VolumeData instance.
+	*/
+	virtual IVolumeDataComposite * GetComposite() = 0;
+
+	/**
+	* IVolumeData::CreateNewComposite - Creates a new VolumeDataComposite for this VolumeData instance
+	* @return The new VolumeDataComposite of this VolumeData instance.
+	*/
+	virtual IVolumeDataComposite * CreateNewComposite() = 0;
+
+	/**
+	* IVolumeData::RemoveComposite - Removes the VolumeDataComposite of this VolumeData instance
+	*/
+	virtual void RemoveComposite() = 0;
+
+	/**
+	* IVolumeData::GetColor - Returns the VolumeDataColor of this VolumeData instance
+	* @return filled with the VolumeDataColor of this VolumeData instance.
+	*/
+	virtual IVolumeDataColor * GetColor() = 0;
+
+	/**
+	* IVolumeData::CreateNewColor - Creates a new VolumeDataColor for this VolumeData instance
+	* @param[in] pTheVector3DField - Vector3DField used in this element
+	* @return The new VolumeDataColor of this VolumeData instance.
+	*/
+	virtual IVolumeDataColor * CreateNewColor(IVector3DField* pTheVector3DField) = 0;
+
+	/**
+	* IVolumeData::RemoveColor - Removes the VolumeDataColor of this VolumeData instance
+	*/
+	virtual void RemoveColor() = 0;
+
+	/**
+	* IVolumeData::GetPropertyCount - Returns the number of VolumeDataProperty
+	* @return the number of VolumeDataProperty-elements within this VolumdeData
+	*/
+	virtual Lib3MF_uint32 GetPropertyCount() = 0;
+
+	/**
+	* IVolumeData::GetProperty - Returns the VolumeDataProperty at a given Index
+	* @param[in] nIndex - the index of the VolumeDataProperty to be returned.
+	* @return the VolumeDataProperty at the given index.
+	*/
+	virtual IVolumeDataProperty * GetProperty(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IVolumeData::AddPropertyFromScalarField - Adds a new VolumeDataProperty from a ScalarField
+	* @param[in] sName - the qualified name (namespace+name) of the Property
+	* @param[in] pTheScalarField - ScalarField used in this element
+	* @return the newly created VolumeDataProperty.
+	*/
+	virtual IVolumeDataProperty * AddPropertyFromScalarField(const std::string & sName, IScalarField* pTheScalarField) = 0;
+
+	/**
+	* IVolumeData::AddPropertyFromVector3DField - Adds a new VolumeDataProperty from a Vector3DField
+	* @param[in] sName - the qualified name (namespace+name) of the Property
+	* @param[in] pTheVector3DField - Vector3DField used in this element
+	* @return the newly created VolumeDataProperty.
+	*/
+	virtual IVolumeDataProperty * AddPropertyFromVector3DField(const std::string & sName, IVector3DField* pTheVector3DField) = 0;
+
+	/**
+	* IVolumeData::RemoveProperty - Removes the VolumeDataProperty with a given index
+	* @param[in] nIndex - the index of the VolumeDataProperty to be removed.
+	*/
+	virtual void RemoveProperty(const Lib3MF_uint32 nIndex) = 0;
+
+};
+
+typedef IBaseSharedPtr<IVolumeData> PIVolumeData;
 
 
 /*************************************************************************************************************************
@@ -2078,6 +3084,135 @@ public:
 };
 
 typedef IBaseSharedPtr<IMultiPropertyGroup> PIMultiPropertyGroup;
+
+
+/*************************************************************************************************************************
+ Class interface for Image3D 
+**************************************************************************************************************************/
+
+class IImage3D : public virtual IResource {
+public:
+	/**
+	* IImage3D::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xBD938FF2D2663D61UL; // First 64 bits of SHA1 of a string: "Lib3MF::Image3D"
+	}
+
+	/**
+	* IImage3D::GetName - returns the name of this Image3D
+	* @return the name of this Image3D
+	*/
+	virtual std::string GetName() = 0;
+
+	/**
+	* IImage3D::SetName - sets a new name of this Image3D
+	* @param[in] sName - the new name of this Image3D
+	*/
+	virtual void SetName(const std::string & sName) = 0;
+
+	/**
+	* IImage3D::IsImageStack - Retrieves, if this Image3D is a ImageStack
+	* @return returns, whether the Image3D is an ImageStack
+	*/
+	virtual bool IsImageStack() = 0;
+
+};
+
+typedef IBaseSharedPtr<IImage3D> PIImage3D;
+
+
+/*************************************************************************************************************************
+ Class interface for ImageStack 
+**************************************************************************************************************************/
+
+class IImageStack : public virtual IImage3D {
+public:
+	/**
+	* IImageStack::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x13A2561F0CFB712AUL; // First 64 bits of SHA1 of a string: "Lib3MF::ImageStack"
+	}
+
+	/**
+	* IImageStack::GetRowCount - Retrieves the number of rows in each image of this image3d
+	* @return number of rows
+	*/
+	virtual Lib3MF_uint32 GetRowCount() = 0;
+
+	/**
+	* IImageStack::SetRowCount - Sets the number of rows in each image of this image3d
+	* @param[in] nRowCount - number of rows
+	*/
+	virtual void SetRowCount(const Lib3MF_uint32 nRowCount) = 0;
+
+	/**
+	* IImageStack::GetColumnCount - Retrieves the number of columns in each image of this image3d
+	* @return number of columns
+	*/
+	virtual Lib3MF_uint32 GetColumnCount() = 0;
+
+	/**
+	* IImageStack::SetColumnCount - Sets the number of columns in each image of this image3d
+	* @param[in] nColumnCount - number of columns
+	*/
+	virtual void SetColumnCount(const Lib3MF_uint32 nColumnCount) = 0;
+
+	/**
+	* IImageStack::GetSheetCount - Retrieves the number of images in the stack.
+	* @return number of images
+	*/
+	virtual Lib3MF_uint32 GetSheetCount() = 0;
+
+	/**
+	* IImageStack::GetSheet - Retrieves a sheet of the stack. Raises an error if sheet is not set.
+	* @param[in] nIndex - index of the image (0-based)
+	* @return attachment containing the image
+	*/
+	virtual IAttachment * GetSheet(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IImageStack::SetSheet - Sets a sheet to an existing attachment.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[in] pSheet - attachment containing the image
+	*/
+	virtual void SetSheet(const Lib3MF_uint32 nIndex, IAttachment* pSheet) = 0;
+
+	/**
+	* IImageStack::CreateEmptySheet - Creates a new sheet attachment with empty data.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[in] sPath - path of part in the package
+	* @return attachment containing the image
+	*/
+	virtual IAttachment * CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath) = 0;
+
+	/**
+	* IImageStack::CreateSheetFromBuffer - Creates a new sheet attachment from a memory buffer.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[in] sPath - path of part in the package
+	* @param[in] nDataBufferSize - Number of elements in buffer
+	* @param[in] pDataBuffer - binary image data
+	* @return attachment containing the image
+	*/
+	virtual IAttachment * CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer) = 0;
+
+	/**
+	* IImageStack::CreateSheetFromFile - Creates a new sheet attachment from a file on disk.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[in] sPath - path of part in the package
+	* @param[in] sFileName - file name to read from
+	* @return attachment containing the image
+	*/
+	virtual IAttachment * CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName) = 0;
+
+};
+
+typedef IBaseSharedPtr<IImageStack> PIImageStack;
 
 
 /*************************************************************************************************************************
@@ -3173,6 +4308,24 @@ public:
 	virtual ISliceStackIterator * GetSliceStacks() = 0;
 
 	/**
+	* IModel::GetImage3Ds - creates a resource iterator instance with all image3d resources.
+	* @return returns the iterator instance.
+	*/
+	virtual IImage3DIterator * GetImage3Ds() = 0;
+
+	/**
+	* IModel::GetScalarFields - creates a resource iterator instance with all ScalarField resources.
+	* @return returns the iterator instance.
+	*/
+	virtual IScalarFieldIterator * GetScalarFields() = 0;
+
+	/**
+	* IModel::GetVector3DFields - creates a resource iterator instance with all Vector3DField resources.
+	* @return returns the iterator instance.
+	*/
+	virtual IVector3DFieldIterator * GetVector3DFields() = 0;
+
+	/**
 	* IModel::MergeToModel - Merges all components and objects which are referenced by a build item into a mesh. The memory is duplicated and a new model is created.
 	* @return returns the merged model instance
 	*/
@@ -3235,6 +4388,116 @@ public:
 	* @return returns the new MultiPropertyGroup instance.
 	*/
 	virtual IMultiPropertyGroup * AddMultiPropertyGroup() = 0;
+
+	/**
+	* IModel::AddImageStack - creates a new 3D Image Resource
+	* @param[in] nColumnCount - the number of columns in each sheet.
+	* @param[in] nRowCount - the number of rows in each sheet.
+	* @param[in] nSheetCount - the number of sheets in the image stack.
+	* @return returns the new ImageStack instance
+	*/
+	virtual IImageStack * AddImageStack(const Lib3MF_uint32 nColumnCount, const Lib3MF_uint32 nRowCount, const Lib3MF_uint32 nSheetCount) = 0;
+
+	/**
+	* IModel::GetImageStackByID - finds an ImageStack object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the image stack instance
+	*/
+	virtual IImageStack * GetImageStackByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
+	* IModel::AddScalarFieldFromImage3D - creates a new ScalarFieldFromImage3D Resource
+	* @param[in] pImage3D - image instance
+	* @return returns the new ScalarFieldFromImage3D instance
+	*/
+	virtual IScalarFieldFromImage3D * AddScalarFieldFromImage3D(IImage3D* pImage3D) = 0;
+
+	/**
+	* IModel::AddScalarFieldComposed - creates a new ScalarFieldComposed Resource
+	* @return returns the new ScalarFieldComposed instance
+	*/
+	virtual IScalarFieldComposed * AddScalarFieldComposed() = 0;
+
+	/**
+	* IModel::AddScalarFieldConstant - creates a new ScalarFieldConstant Resource
+	* @return returns the new ScalarFieldConstant instance
+	*/
+	virtual IScalarFieldConstant * AddScalarFieldConstant() = 0;
+
+	/**
+	* IModel::GetScalarFieldByID - finds a ScalarField object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the scalar field instance
+	*/
+	virtual IScalarField * GetScalarFieldByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
+	* IModel::GetScalarFieldFromImage3DByID - finds a ScalarFieldFromImage3D object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the ScalarFieldFromImage3D instance
+	*/
+	virtual IScalarFieldFromImage3D * GetScalarFieldFromImage3DByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
+	* IModel::GetScalarFieldComposedByID - finds a ScalarFieldComposed object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the ScalarFieldComponsed instance
+	*/
+	virtual IScalarFieldComposed * GetScalarFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
+	* IModel::GetScalarFieldConstantByID - finds a ScalarFieldConstant object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the ScalarFieldConstant instance
+	*/
+	virtual IScalarFieldConstant * GetScalarFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
+	* IModel::AddVector3DFieldFromImage3D - creates a new Vector3DFieldFromImage3D Resource
+	* @param[in] pImage3D - image instance
+	* @return returns the new Vector3DFieldFromImage3D instance
+	*/
+	virtual IVector3DFieldFromImage3D * AddVector3DFieldFromImage3D(IImage3D* pImage3D) = 0;
+
+	/**
+	* IModel::AddVector3DFieldComposed - creates a new Vector3DFieldComposed Resource
+	* @return returns the new Vector3DFieldComposed instance
+	*/
+	virtual IVector3DFieldComposed * AddVector3DFieldComposed() = 0;
+
+	/**
+	* IModel::AddVector3DFieldConstant - creates a new Vector3DFieldConstant Resource
+	* @return returns the new Vector3DFieldConstant instance
+	*/
+	virtual IVector3DFieldConstant * AddVector3DFieldConstant() = 0;
+
+	/**
+	* IModel::GetVector3DFieldByID - finds a Vector3DField object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the scalar field instance
+	*/
+	virtual IVector3DField * GetVector3DFieldByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
+	* IModel::GetVector3DFieldFromImage3DByID - finds a Vector3DFieldFromImage3D object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the Vector3DFieldFromImage3D instance
+	*/
+	virtual IVector3DFieldFromImage3D * GetVector3DFieldFromImage3DByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
+	* IModel::GetVector3DFieldComposedByID - finds a Vector3DFieldComposed object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the Vector3DFieldComponsed instance
+	*/
+	virtual IVector3DFieldComposed * GetVector3DFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
+	* IModel::GetVector3DFieldConstantByID - finds a Vector3DFieldConstant object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the Vector3DFieldConstant instance
+	*/
+	virtual IVector3DFieldConstant * GetVector3DFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
 
 	/**
 	* IModel::AddBuildItem - adds a build item to the model.

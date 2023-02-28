@@ -96,6 +96,18 @@ namespace NMR {
 
 	typedef std::map<NMR::UniqueResourceID, NMR::UniqueResourceID> UniqueResourceIDMapping;
 
+	class CModelImage3D;
+	typedef std::shared_ptr <CModelImage3D> PModelImage3D;
+
+	class CModelImageStack;
+	typedef std::shared_ptr <CModelImageStack> PModelImageStack;
+
+	class CModelScalarField;
+	typedef std::shared_ptr <CModelScalarField> PModelScalarField;
+
+	class CModelVector3DField;
+	typedef std::shared_ptr <CModelVector3DField> PModelVector3DField;
+
 	// The Model class implements the unification of all model-file in a 3MF package
 	// It should be understood as a "MultiModel"
 	class CModel {
@@ -147,6 +159,9 @@ namespace NMR {
 		std::vector<PModelResource> m_Texture2DGroupLookup;
 		std::vector<PModelResource> m_CompositeMaterialsLookup;
 		std::vector<PModelResource> m_MultiPropertyGroupLookup;
+		std::vector<PModelResource> m_Image3DLookup;
+		std::vector<PModelResource> m_ScalarFieldLookup;
+		std::vector<PModelResource> m_Vector3DFieldLookup;
 
 		// The KeyStore reference
 		PKeyStore m_pKeyStore;
@@ -278,6 +293,28 @@ namespace NMR {
 		PModelResource getTexture2DResource(_In_ nfUint32 nIndex);
 		CModelTexture2DResource * getTexture2D(_In_ nfUint32 nIndex);
 		void mergeTextures2D(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping);
+
+		// Convenience functions for 3D Images
+		_Ret_maybenull_ PModelImage3D findImage3D(_In_ UniqueResourceID nResourceID);
+		_Ret_maybenull_ PModelImageStack findImageStack(_In_ UniqueResourceID nResourceID);
+		nfUint32 getImage3DCount();
+		PModelResource getImage3DResource(_In_ nfUint32 nIndex);
+		CModelImage3D* getImage3D(_In_ nfUint32 nIndex);
+		void mergeImage3Ds(_In_ CModel* pSourceModel, _In_ UniqueResourceIDMapping& oldToNewMapping);
+
+		// Convenience functions for ScalarFields
+		_Ret_maybenull_ PModelScalarField findScalarField(_In_ UniqueResourceID nResourceID);
+		nfUint32 getScalarFieldCount();
+		PModelResource getScalarFieldResource(_In_ nfUint32 nIndex);
+		CModelScalarField* getScalarField(_In_ nfUint32 nIndex);
+		void mergeScalarFields(_In_ CModel* pSourceModel, _In_ UniqueResourceIDMapping& oldToNewMapping);
+
+		// Convenience functions for Vector3DFields
+		_Ret_maybenull_ PModelVector3DField findVector3DField(_In_ UniqueResourceID nResourceID);
+		nfUint32 getVector3DFieldCount();
+		PModelResource getVector3DFieldResource(_In_ nfUint32 nIndex);
+		CModelVector3DField* getVector3DField(_In_ nfUint32 nIndex);
+		void mergeVector3DFields(_In_ CModel* pSourceModel, _In_ UniqueResourceIDMapping& oldToNewMapping);
 
 		// Clear all build items and Resources
 		void clearAll ();

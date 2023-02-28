@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_MeshBeamLattice.h implements the class CMeshBeamLattice.
+NMR_MeshBeamLattice.cpp implements the class CMeshBeamLattice.
 
 --*/
 

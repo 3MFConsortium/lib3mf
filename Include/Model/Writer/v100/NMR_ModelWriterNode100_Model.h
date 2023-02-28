@@ -61,6 +61,7 @@ namespace NMR {
 		nfBool m_bWriteObjects;
 		nfBool m_bIsRootModel;
 		nfBool m_bWriteCustomNamespaces;
+		nfBool m_bWriteVolumetricExtension;
 
 		void writeModelMetaData();
 		void writeMetaData(_In_ PModelMetaData pMetaData);
@@ -75,6 +76,8 @@ namespace NMR {
 		void writeMultiProperties();
 		void writeMultiPropertyAttributes(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup);
 		void writeMultiPropertyMultiElements(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup);
+		void writeImage3Ds();
+		void writeFields();
 
 		void writeObjects();
 		void writeBuild();

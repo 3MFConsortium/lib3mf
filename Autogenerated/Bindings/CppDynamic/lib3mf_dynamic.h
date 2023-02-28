@@ -563,6 +563,45 @@ typedef Lib3MFResult (*PLib3MFCompositeMaterialsIterator_GetCurrentCompositeMate
 typedef Lib3MFResult (*PLib3MFMultiPropertyGroupIterator_GetCurrentMultiPropertyGroupPtr) (Lib3MF_MultiPropertyGroupIterator pMultiPropertyGroupIterator, Lib3MF_MultiPropertyGroup * pResource);
 
 /*************************************************************************************************************************
+ Class definition for Image3DIterator
+**************************************************************************************************************************/
+
+/**
+* Returns the Image3D the iterator points at.
+*
+* @param[in] pImage3DIterator - Image3DIterator instance.
+* @param[out] pResource - returns the Image3D instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImage3DIterator_GetCurrentImage3DPtr) (Lib3MF_Image3DIterator pImage3DIterator, Lib3MF_Image3D * pResource);
+
+/*************************************************************************************************************************
+ Class definition for ScalarFieldIterator
+**************************************************************************************************************************/
+
+/**
+* Returns the ScalarField the iterator points at.
+*
+* @param[in] pScalarFieldIterator - ScalarFieldIterator instance.
+* @param[out] pResource - returns the ScalarField instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldIterator_GetCurrentScalarFieldPtr) (Lib3MF_ScalarFieldIterator pScalarFieldIterator, Lib3MF_ScalarField * pResource);
+
+/*************************************************************************************************************************
+ Class definition for Vector3DFieldIterator
+**************************************************************************************************************************/
+
+/**
+* Returns the Vector3DField the iterator points at.
+*
+* @param[in] pVector3DFieldIterator - Vector3DFieldIterator instance.
+* @param[out] pResource - returns the Vector3DField instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldIterator_GetCurrentVector3DFieldPtr) (Lib3MF_Vector3DFieldIterator pVector3DFieldIterator, Lib3MF_Vector3DField * pResource);
+
+/*************************************************************************************************************************
  Class definition for MetaData
 **************************************************************************************************************************/
 
@@ -1153,6 +1192,15 @@ typedef Lib3MFResult (*PLib3MFMeshObject_IsManifoldAndOrientedPtr) (Lib3MF_MeshO
 */
 typedef Lib3MFResult (*PLib3MFMeshObject_BeamLatticePtr) (Lib3MF_MeshObject pMeshObject, Lib3MF_BeamLattice * pTheBeamLattice);
 
+/**
+* Retrieves the VolumeData of this MeshObject.
+*
+* @param[in] pMeshObject - MeshObject instance.
+* @param[out] pTheVolumeData - the VolumeData of this MeshObject
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFMeshObject_VolumeDataPtr) (Lib3MF_MeshObject pMeshObject, Lib3MF_VolumeData * pTheVolumeData);
+
 /*************************************************************************************************************************
  Class definition for BeamLattice
 **************************************************************************************************************************/
@@ -1381,6 +1429,913 @@ typedef Lib3MFResult (*PLib3MFBeamLattice_AddBeamSetPtr) (Lib3MF_BeamLattice pBe
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFBeamLattice_GetBeamSetPtr) (Lib3MF_BeamLattice pBeamLattice, Lib3MF_uint32 nIndex, Lib3MF_BeamSet * pBeamSet);
+
+/*************************************************************************************************************************
+ Class definition for ScalarField
+**************************************************************************************************************************/
+
+/**
+* Gets the name of this ScalarField.
+*
+* @param[in] pScalarField - ScalarField instance.
+* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameBuffer -  buffer of The name of this ScalarField., may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarField_GetNamePtr) (Lib3MF_ScalarField pScalarField, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer);
+
+/**
+* Sets the name of this ScalarField.
+*
+* @param[in] pScalarField - ScalarField instance.
+* @param[in] pName - The name of this ScalarField.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarField_SetNamePtr) (Lib3MF_ScalarField pScalarField, const char * pName);
+
+/**
+* Retrieves, if this ScalarField is a ScalarFieldFromImage3D
+*
+* @param[in] pScalarField - ScalarField instance.
+* @param[out] pIsFromImage3D - returns, whether the scalar field is a ScalarFieldFromImage3D
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarField_IsFromImage3DPtr) (Lib3MF_ScalarField pScalarField, bool * pIsFromImage3D);
+
+/**
+* Retrieves, if this ScalarField is a ScalarFieldConstant
+*
+* @param[in] pScalarField - ScalarField instance.
+* @param[out] pIsConstant - returns, whether the scalar field is a ScalarFieldConstant
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarField_IsConstantPtr) (Lib3MF_ScalarField pScalarField, bool * pIsConstant);
+
+/**
+* Retrieves, if this ScalarField is a ScalarFieldComposed
+*
+* @param[in] pScalarField - ScalarField instance.
+* @param[out] pIsComposed - returns, whether the scalar field is a ScalarFieldComposed
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarField_IsComposedPtr) (Lib3MF_ScalarField pScalarField, bool * pIsComposed);
+
+/*************************************************************************************************************************
+ Class definition for Vector3DField
+**************************************************************************************************************************/
+
+/**
+* Gets the name of this Vector3DField.
+*
+* @param[in] pVector3DField - Vector3DField instance.
+* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameBuffer -  buffer of The name of this Vector3DField., may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DField_GetNamePtr) (Lib3MF_Vector3DField pVector3DField, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer);
+
+/**
+* Sets the name of this Vector3DField.
+*
+* @param[in] pVector3DField - Vector3DField instance.
+* @param[in] pName - The name of this Vector3DField.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DField_SetNamePtr) (Lib3MF_Vector3DField pVector3DField, const char * pName);
+
+/**
+* Retrieves, if this Vector3DField is a Vector3DFieldFromImage3D
+*
+* @param[in] pVector3DField - Vector3DField instance.
+* @param[out] pIsFromImage3D - returns, whether the 3d vector field is a Vector3DFieldFromImage3D
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DField_IsFromImage3DPtr) (Lib3MF_Vector3DField pVector3DField, bool * pIsFromImage3D);
+
+/**
+* Retrieves, if this Vector3DField is a Vector3DFieldConstant
+*
+* @param[in] pVector3DField - Vector3DField instance.
+* @param[out] pIsConstant - returns, whether the 3d vector field is a Vector3DFieldConstant
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DField_IsConstantPtr) (Lib3MF_Vector3DField pVector3DField, bool * pIsConstant);
+
+/**
+* Retrieves, if this Vector3DField is a Vector3DFieldComposed
+*
+* @param[in] pVector3DField - Vector3DField instance.
+* @param[out] pIsComposed - returns, whether the 3d vector field is a Vector3DFieldComposed
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DField_IsComposedPtr) (Lib3MF_Vector3DField pVector3DField, bool * pIsComposed);
+
+/*************************************************************************************************************************
+ Class definition for ScalarFieldFromImage3D
+**************************************************************************************************************************/
+
+/**
+* Returns the selected 3D image.
+*
+* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+* @param[out] pImage3D - image instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldFromImage3D_GetImagePtr) (Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF_Image3D * pImage3D);
+
+/**
+* Sets the 3D image of the selector.
+*
+* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+* @param[in] pImage3D - image instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldFromImage3D_SetImagePtr) (Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF_Image3D pImage3D);
+
+/**
+* Sets the channel name to be picked from the referenced Image3D.
+*
+* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+* @param[in] eName - Sets the channel name.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldFromImage3D_SetChannelPtr) (Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF::eChannelName eName);
+
+/**
+* Gets the channel name to be picked from the referenced Image3D.
+*
+* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+* @param[out] pName - Sets the channel name.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldFromImage3D_GetChannelPtr) (Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF::eChannelName * pName);
+
+/**
+* Sets the texture filter of the selector.
+*
+* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+* @param[in] eFilter - texture filter
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldFromImage3D_SetFilterPtr) (Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF::eTextureFilter eFilter);
+
+/**
+* Returns the texture filter of the selector.
+*
+* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+* @param[out] pFilter - texture filter
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldFromImage3D_GetFilterPtr) (Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF::eTextureFilter * pFilter);
+
+/**
+* Sets the tile styles of the selector.
+*
+* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+* @param[in] eTileStyleU - tile style in U
+* @param[in] eTileStyleV - tile style in V
+* @param[in] eTileStyleW - tile style in W
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldFromImage3D_SetTileStylesPtr) (Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF::eTextureTileStyle eTileStyleU, Lib3MF::eTextureTileStyle eTileStyleV, Lib3MF::eTextureTileStyle eTileStyleW);
+
+/**
+* Retrieves the tile styles of the selector.
+*
+* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+* @param[out] pTileStyleU - tile style in U
+* @param[out] pTileStyleV - tile style in V
+* @param[out] pTileStyleW - tile style in W
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldFromImage3D_GetTileStylesPtr) (Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF::eTextureTileStyle * pTileStyleU, Lib3MF::eTextureTileStyle * pTileStyleV, Lib3MF::eTextureTileStyle * pTileStyleW);
+
+/**
+* returns the offset value for the pixel values in the Image3D
+*
+* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+* @param[out] pOffset - the offset value for the pixel values in the Image3D
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldFromImage3D_GetOffsetPtr) (Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF_double * pOffset);
+
+/**
+* Sets the offset value for the pixel values in the Image3D
+*
+* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+* @param[in] dOffset - the offset value for the pixel values in the Image3D
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldFromImage3D_SetOffsetPtr) (Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF_double dOffset);
+
+/**
+* returns the scale value for the pixel values in the Image3D
+*
+* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+* @param[out] pScale - the scale value for the pixel values in the Image3D
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldFromImage3D_GetScalePtr) (Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF_double * pScale);
+
+/**
+* Sets the scale value for the pixel values in the Image3D
+*
+* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+* @param[in] dScale - the scale value for the pixel values in the Image3D
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldFromImage3D_SetScalePtr) (Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF_double dScale);
+
+/*************************************************************************************************************************
+ Class definition for ScalarFieldConstant
+**************************************************************************************************************************/
+
+/**
+* returns the constant value of this ScalarFieldConstant
+*
+* @param[in] pScalarFieldConstant - ScalarFieldConstant instance.
+* @param[out] pValue - the constant value of this ScalarFieldConstant
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldConstant_GetValuePtr) (Lib3MF_ScalarFieldConstant pScalarFieldConstant, Lib3MF_double * pValue);
+
+/**
+* Sets the constant value of this ScalarFieldConstant
+*
+* @param[in] pScalarFieldConstant - ScalarFieldConstant instance.
+* @param[in] dValue - the constant value of this ScalarFieldConstant
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldConstant_SetValuePtr) (Lib3MF_ScalarFieldConstant pScalarFieldConstant, Lib3MF_double dValue);
+
+/*************************************************************************************************************************
+ Class definition for ScalarFieldComposed
+**************************************************************************************************************************/
+
+/**
+* Sets the method to used for composition.
+*
+* @param[in] pScalarFieldComposed - ScalarFieldComposed instance.
+* @param[in] eTheMethod - Sets the composition method.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldComposed_SetMethodPtr) (Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF::eCompositionMethod eTheMethod);
+
+/**
+* Gets the method to used for composition.
+*
+* @param[in] pScalarFieldComposed - ScalarFieldComposed instance.
+* @param[out] pTheMethod - Gets the composition method.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldComposed_GetMethodPtr) (Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF::eCompositionMethod * pTheMethod);
+
+/**
+* returns the factor scalar field 1 is multiplied with when composited
+*
+* @param[in] pScalarFieldComposed - ScalarFieldComposed instance.
+* @param[out] pFactor1 - the factor scalar field 1 is multiplied with when composited
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldComposed_GetFactor1Ptr) (Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF_double * pFactor1);
+
+/**
+* sets the factor scalar field 1 is multiplied with when composited
+*
+* @param[in] pScalarFieldComposed - ScalarFieldComposed instance.
+* @param[in] dFactor1 - the factor scalar field 1 is multiplied with when composited
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldComposed_SetFactor1Ptr) (Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF_double dFactor1);
+
+/**
+* returns the factor scalar field 2 is multiplied with when composited
+*
+* @param[in] pScalarFieldComposed - ScalarFieldComposed instance.
+* @param[out] pFactor2 - the factor scalar field 2 is multiplied with when composited
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldComposed_GetFactor2Ptr) (Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF_double * pFactor2);
+
+/**
+* sets the factor scalar field 2 is multiplied with when composited
+*
+* @param[in] pScalarFieldComposed - ScalarFieldComposed instance.
+* @param[in] dFactor2 - the factor scalar field 2 is multiplied with when composited
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldComposed_SetFactor2Ptr) (Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF_double dFactor2);
+
+/**
+* Access to the ScalarFieldReference for the first composited field
+*
+* @param[in] pScalarFieldComposed - ScalarFieldComposed instance.
+* @param[out] pTheScalarFieldReference1 - ScalarFieldReference
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldComposed_ScalarFieldReference1Ptr) (Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF_ScalarFieldReference * pTheScalarFieldReference1);
+
+/**
+* Access to the ScalarFieldReference for the second composited field
+*
+* @param[in] pScalarFieldComposed - ScalarFieldComposed instance.
+* @param[out] pTheScalarFieldReference1 - ScalarFieldReference
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldComposed_ScalarFieldReference2Ptr) (Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF_ScalarFieldReference * pTheScalarFieldReference1);
+
+/**
+* Access to the ScalarFieldReference for masking. Only relevant if the Method is mask.
+*
+* @param[in] pScalarFieldComposed - ScalarFieldComposed instance.
+* @param[out] pTheScalarFieldReferenceMask - ScalarFieldReference
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldComposed_ScalarFieldReferenceMaskPtr) (Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF_ScalarFieldReference * pTheScalarFieldReferenceMask);
+
+/*************************************************************************************************************************
+ Class definition for Vector3DFieldFromImage3D
+**************************************************************************************************************************/
+
+/**
+* Returns the selected 3D image.
+*
+* @param[in] pVector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+* @param[out] pImage3D - image instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldFromImage3D_GetImagePtr) (Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF_Image3D * pImage3D);
+
+/**
+* Sets the 3D image of the selector.
+*
+* @param[in] pVector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+* @param[in] pImage3D - image instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldFromImage3D_SetImagePtr) (Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF_Image3D pImage3D);
+
+/**
+* Sets the texture filter of the selector.
+*
+* @param[in] pVector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+* @param[in] eFilter - texture filter
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldFromImage3D_SetFilterPtr) (Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF::eTextureFilter eFilter);
+
+/**
+* Returns the texture filter of the selector.
+*
+* @param[in] pVector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+* @param[out] pFilter - texture filter
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldFromImage3D_GetFilterPtr) (Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF::eTextureFilter * pFilter);
+
+/**
+* Sets the tile styles of the selector.
+*
+* @param[in] pVector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+* @param[in] eTileStyleU - tile style in U
+* @param[in] eTileStyleV - tile style in V
+* @param[in] eTileStyleW - tile style in W
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldFromImage3D_SetTileStylesPtr) (Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF::eTextureTileStyle eTileStyleU, Lib3MF::eTextureTileStyle eTileStyleV, Lib3MF::eTextureTileStyle eTileStyleW);
+
+/**
+* Retrieves the tile styles of the selector.
+*
+* @param[in] pVector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+* @param[out] pTileStyleU - tile style in U
+* @param[out] pTileStyleV - tile style in V
+* @param[out] pTileStyleW - tile style in W
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldFromImage3D_GetTileStylesPtr) (Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF::eTextureTileStyle * pTileStyleU, Lib3MF::eTextureTileStyle * pTileStyleV, Lib3MF::eTextureTileStyle * pTileStyleW);
+
+/**
+* returns the offset value for the pixel values in the Image3D
+*
+* @param[in] pVector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+* @param[out] pOffset - the offset value for the pixel values in the Image3D
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldFromImage3D_GetOffsetPtr) (Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF_double * pOffset);
+
+/**
+* Sets the offset value for the pixel values in the Image3D
+*
+* @param[in] pVector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+* @param[in] dOffset - the offset value for the pixel values in the Image3D
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldFromImage3D_SetOffsetPtr) (Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF_double dOffset);
+
+/**
+* returns the scale value for the pixel values in the Image3D
+*
+* @param[in] pVector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+* @param[out] pScale - the scale value for the pixel values in the Image3D
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldFromImage3D_GetScalePtr) (Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF_double * pScale);
+
+/**
+* Sets the scale value for the pixel values in the Image3D
+*
+* @param[in] pVector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+* @param[in] dScale - the scale value for the pixel values in the Image3D
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldFromImage3D_SetScalePtr) (Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF_double dScale);
+
+/*************************************************************************************************************************
+ Class definition for Vector3DFieldConstant
+**************************************************************************************************************************/
+
+/**
+* returns the constant x-value of this Vector3DFieldConstant
+*
+* @param[in] pVector3DFieldConstant - Vector3DFieldConstant instance.
+* @param[out] pValueX - the constant x-value of this Vector3DFieldConstant
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldConstant_GetValueXPtr) (Lib3MF_Vector3DFieldConstant pVector3DFieldConstant, Lib3MF_double * pValueX);
+
+/**
+* Sets the constant x-value of this Vector3DFieldConstant
+*
+* @param[in] pVector3DFieldConstant - Vector3DFieldConstant instance.
+* @param[in] dValueX - the constant x-value of this Vector3DFieldConstant
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldConstant_SetValueXPtr) (Lib3MF_Vector3DFieldConstant pVector3DFieldConstant, Lib3MF_double dValueX);
+
+/**
+* returns the constant y-value of this Vector3DFieldConstant
+*
+* @param[in] pVector3DFieldConstant - Vector3DFieldConstant instance.
+* @param[out] pValueY - the constant y-value of this Vector3DFieldConstant
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldConstant_GetValueYPtr) (Lib3MF_Vector3DFieldConstant pVector3DFieldConstant, Lib3MF_double * pValueY);
+
+/**
+* Sets the constant y-value of this Vector3DFieldConstant
+*
+* @param[in] pVector3DFieldConstant - Vector3DFieldConstant instance.
+* @param[in] dValueY - the constant y-value of this Vector3DFieldConstant
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldConstant_SetValueYPtr) (Lib3MF_Vector3DFieldConstant pVector3DFieldConstant, Lib3MF_double dValueY);
+
+/**
+* returns the constant x-value of this Vector3DFieldConstant
+*
+* @param[in] pVector3DFieldConstant - Vector3DFieldConstant instance.
+* @param[out] pValueZ - the constant x-value of this Vector3DFieldConstant
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldConstant_GetValueZPtr) (Lib3MF_Vector3DFieldConstant pVector3DFieldConstant, Lib3MF_double * pValueZ);
+
+/**
+* Sets the constant z-value of this Vector3DFieldConstant
+*
+* @param[in] pVector3DFieldConstant - Vector3DFieldConstant instance.
+* @param[in] dValueZ - the constant z-value of this Vector3DFieldConstant
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldConstant_SetValueZPtr) (Lib3MF_Vector3DFieldConstant pVector3DFieldConstant, Lib3MF_double dValueZ);
+
+/*************************************************************************************************************************
+ Class definition for Vector3DFieldComposed
+**************************************************************************************************************************/
+
+/**
+* Sets the method to used for composition.
+*
+* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+* @param[in] eTheMethod - Sets the composition method.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldComposed_SetMethodPtr) (Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF::eCompositionMethod eTheMethod);
+
+/**
+* Gets the method to used for composition.
+*
+* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+* @param[out] pTheMethod - Gets the composition method.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldComposed_GetMethodPtr) (Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF::eCompositionMethod * pTheMethod);
+
+/**
+* Sets the space in which composition takes place.
+*
+* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+* @param[in] eTheSpace - Sets the composition space.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldComposed_SetSpacePtr) (Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF::eCompositionSpace eTheSpace);
+
+/**
+* Gets the space in which composition takes place.
+*
+* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+* @param[out] pTheSpace - Gets the composition space.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldComposed_GetSpacePtr) (Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF::eCompositionSpace * pTheSpace);
+
+/**
+* returns the factor vector3d field 1 is multiplied with when composited
+*
+* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+* @param[out] pFactor1 - the factor vector3d field 1 is multiplied with when composited
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldComposed_GetFactor1Ptr) (Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_double * pFactor1);
+
+/**
+* sets the factor vector3d field 1 is multiplied with when composited
+*
+* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+* @param[in] dFactor1 - the factor vector3d field 1 is multiplied with when composited
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldComposed_SetFactor1Ptr) (Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_double dFactor1);
+
+/**
+* returns the vector3d scalar field 2 is multiplied with when composited
+*
+* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+* @param[out] pFactor2 - the factor vector3d field 2 is multiplied with when composited
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldComposed_GetFactor2Ptr) (Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_double * pFactor2);
+
+/**
+* sets the factor vector3d field 2 is multiplied with when composited
+*
+* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+* @param[in] dFactor2 - the factor vector3d field 2 is multiplied with when composited
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldComposed_SetFactor2Ptr) (Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_double dFactor2);
+
+/**
+* Access to the Vector3DFieldReference for the first composited field
+*
+* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+* @param[out] pTheVector3DFieldReference1 - Vector3DFieldReference
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldComposed_Vector3DFieldReference1Ptr) (Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_Vector3DFieldReference * pTheVector3DFieldReference1);
+
+/**
+* Access to the Vector3DFieldReference for the second composited field
+*
+* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+* @param[out] pTheVector3DFieldReference1 - Vector3DFieldReference
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldComposed_Vector3DFieldReference2Ptr) (Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_Vector3DFieldReference * pTheVector3DFieldReference1);
+
+/**
+* Access to the ScalarFieldReference for masking. Only relevant if the Method is mask.
+*
+* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+* @param[out] pTheScalarFieldReferenceMask - ScalarFieldReference
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldComposed_ScalarFieldReferenceMaskPtr) (Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_ScalarFieldReference * pTheScalarFieldReferenceMask);
+
+/*************************************************************************************************************************
+ Class definition for FieldReference
+**************************************************************************************************************************/
+
+/**
+* Returns the UniqueResourceID of the Field (Scalar- or Vector3DField).
+*
+* @param[in] pFieldReference - FieldReference instance.
+* @param[out] pUniqueResourceID - returns the UniqueResourceID.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFFieldReference_GetFieldResourceIDPtr) (Lib3MF_FieldReference pFieldReference, Lib3MF_uint32 * pUniqueResourceID);
+
+/**
+* Sets the UniqueResourceID to refer to.
+*
+* @param[in] pFieldReference - FieldReference instance.
+* @param[in] nUniqueResourceID - UniqueResourceID of the Field (Scalar- or Vector3DField)
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFFieldReference_SetFieldResourceIDPtr) (Lib3MF_FieldReference pFieldReference, Lib3MF_uint32 nUniqueResourceID);
+
+/**
+* Returns the transformation matrix into the coordinate system of the referenced Field.
+*
+* @param[in] pFieldReference - FieldReference instance.
+* @param[out] pTransform - the transformation matrix
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFFieldReference_GetTransformPtr) (Lib3MF_FieldReference pFieldReference, Lib3MF::sTransform * pTransform);
+
+/**
+* Sets the transformation matrix into the coordinate system of the referenced Field.
+*
+* @param[in] pFieldReference - FieldReference instance.
+* @param[in] pTransform - new transformation matrix
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFFieldReference_SetTransformPtr) (Lib3MF_FieldReference pFieldReference, const Lib3MF::sTransform * pTransform);
+
+/*************************************************************************************************************************
+ Class definition for ScalarFieldReference
+**************************************************************************************************************************/
+
+/**
+* Sets the ScalarField to use within this volume data item.
+*
+* @param[in] pScalarFieldReference - ScalarFieldReference instance.
+* @param[in] pTheScalarField - ScalarField used in this element
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldReference_SetScalarFieldPtr) (Lib3MF_ScalarFieldReference pScalarFieldReference, Lib3MF_ScalarField pTheScalarField);
+
+/*************************************************************************************************************************
+ Class definition for Vector3DFieldReference
+**************************************************************************************************************************/
+
+/**
+* Sets the Vector3DField to use within this volume data item.
+*
+* @param[in] pVector3DFieldReference - Vector3DFieldReference instance.
+* @param[in] pTheVector3DField - Vector3DField used in this element
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldReference_SetVector3DFieldPtr) (Lib3MF_Vector3DFieldReference pVector3DFieldReference, Lib3MF_Vector3DField pTheVector3DField);
+
+/*************************************************************************************************************************
+ Class definition for VolumeDataBoundary
+**************************************************************************************************************************/
+
+/**
+* Returns the solidthreshold for the levelset function encoded in this VolumeDataBoundary
+*
+* @param[in] pVolumeDataBoundary - VolumeDataBoundary instance.
+* @param[out] pTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataBoundary
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeDataBoundary_GetSolidThresholdPtr) (Lib3MF_VolumeDataBoundary pVolumeDataBoundary, Lib3MF_double * pTheSolidThreshold);
+
+/**
+* Sets the solidthreshold for the levelset function encoded in this VolumeDataBoundary
+*
+* @param[in] pVolumeDataBoundary - VolumeDataBoundary instance.
+* @param[in] dTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataBoundary
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeDataBoundary_SetSolidThresholdPtr) (Lib3MF_VolumeDataBoundary pVolumeDataBoundary, Lib3MF_double dTheSolidThreshold);
+
+/*************************************************************************************************************************
+ Class definition for VolumeDataColor
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for MaterialMapping
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for VolumeDataComposite
+**************************************************************************************************************************/
+
+/**
+* Returns the BaseMaterialGroup used within this volume data item
+*
+* @param[in] pVolumeDataComposite - VolumeDataComposite instance.
+* @param[out] pBaseMaterialGroupInstance - The BaseMaterialGroup instance of this VolumeDataComposite element
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeDataComposite_GetBaseMaterialGroupPtr) (Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_BaseMaterialGroup * pBaseMaterialGroupInstance);
+
+/**
+* Sets the BaseMaterialGroup to use within this volume data item.
+*
+* @param[in] pVolumeDataComposite - VolumeDataComposite instance.
+* @param[in] pBaseMaterialGroupInstance - The new BaseMaterialGroup instance of this VolumeDataComposite element
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeDataComposite_SetBaseMaterialGroupPtr) (Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_BaseMaterialGroup pBaseMaterialGroupInstance);
+
+/**
+* Returns the number of material mappings of this VolumeDataComposite element
+*
+* @param[in] pVolumeDataComposite - VolumeDataComposite instance.
+* @param[out] pCount - the number of material mappings.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeDataComposite_GetMaterialMappingCountPtr) (Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_uint32 * pCount);
+
+/**
+* Returns MaterialMappting with given index
+*
+* @param[in] pVolumeDataComposite - VolumeDataComposite instance.
+* @param[in] nIndex - Index of the MaterialMapping in question.
+* @param[out] pTheMaterialMapping - MaterialMapping used in this element
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeDataComposite_GetMaterialMappingPtr) (Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_uint32 nIndex, Lib3MF_MaterialMapping * pTheMaterialMapping);
+
+/**
+* Adds a the MaterialMapping
+*
+* @param[in] pVolumeDataComposite - VolumeDataComposite instance.
+* @param[in] pTransform - new transformation matrix
+* @param[out] pTheMaterialMapping - The new MaterialMapping
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeDataComposite_AddMaterialMappingPtr) (Lib3MF_VolumeDataComposite pVolumeDataComposite, const Lib3MF::sTransform * pTransform, Lib3MF_MaterialMapping * pTheMaterialMapping);
+
+/**
+* Removes the MaterialMapping with given index
+*
+* @param[in] pVolumeDataComposite - VolumeDataComposite instance.
+* @param[in] nIndex - The index of the MaterialMapping to be removed.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeDataComposite_RemoveMaterialMappingPtr) (Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_uint32 nIndex);
+
+/*************************************************************************************************************************
+ Class definition for VolumeDataProperty
+**************************************************************************************************************************/
+
+/**
+* Gets the qualified name of this property.
+*
+* @param[in] pVolumeDataProperty - VolumeDataProperty instance.
+* @param[in] nPropertyNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pPropertyNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pPropertyNameBuffer -  buffer of The qualified name of this property., may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeDataProperty_GetNamePtr) (Lib3MF_VolumeDataProperty pVolumeDataProperty, const Lib3MF_uint32 nPropertyNameBufferSize, Lib3MF_uint32* pPropertyNameNeededChars, char * pPropertyNameBuffer);
+
+/**
+* Sets whether this property is required to process this 3MF document instance.
+*
+* @param[in] pVolumeDataProperty - VolumeDataProperty instance.
+* @param[in] bIsRequired - New value for whether this property is required to process this 3MF document instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeDataProperty_SetIsRequiredPtr) (Lib3MF_VolumeDataProperty pVolumeDataProperty, bool bIsRequired);
+
+/**
+* Returns whether this property is required to process this 3MF document instance.
+*
+* @param[in] pVolumeDataProperty - VolumeDataProperty instance.
+* @param[out] pIsRequired - Is this property required to process this 3MF document instance?
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeDataProperty_IsRequiredPtr) (Lib3MF_VolumeDataProperty pVolumeDataProperty, bool * pIsRequired);
+
+/*************************************************************************************************************************
+ Class definition for VolumeData
+**************************************************************************************************************************/
+
+/**
+* Returns the VolumeDataBoundary of this VolumeData instance
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[out] pTheBoundaryData - filled with the VolumeDataBoundary of this VolumeData instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeData_GetBoundaryPtr) (Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataBoundary * pTheBoundaryData);
+
+/**
+* Creates a new VolumeDataBoundary for this VolumeData instance
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[in] pTheScalarField - ScalarField used in this element
+* @param[out] pTheBoundaryData - The new VolumeDataBoundary of this VolumeData instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeData_CreateNewBoundaryPtr) (Lib3MF_VolumeData pVolumeData, Lib3MF_ScalarField pTheScalarField, Lib3MF_VolumeDataBoundary * pTheBoundaryData);
+
+/**
+* Removes the VolumeDataBoundary of this VolumeData instance
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeData_RemoveBoundaryPtr) (Lib3MF_VolumeData pVolumeData);
+
+/**
+* Returns the VolumeDataComposite of this VolumeData instance
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[out] pTheCompositeData - filled with the VolumeDataComposite of this VolumeData instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeData_GetCompositePtr) (Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataComposite * pTheCompositeData);
+
+/**
+* Creates a new VolumeDataComposite for this VolumeData instance
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[out] pTheCompositeData - The new VolumeDataComposite of this VolumeData instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeData_CreateNewCompositePtr) (Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataComposite * pTheCompositeData);
+
+/**
+* Removes the VolumeDataComposite of this VolumeData instance
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeData_RemoveCompositePtr) (Lib3MF_VolumeData pVolumeData);
+
+/**
+* Returns the VolumeDataColor of this VolumeData instance
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[out] pTheColorData - filled with the VolumeDataColor of this VolumeData instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeData_GetColorPtr) (Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataColor * pTheColorData);
+
+/**
+* Creates a new VolumeDataColor for this VolumeData instance
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[in] pTheVector3DField - Vector3DField used in this element
+* @param[out] pTheColorData - The new VolumeDataColor of this VolumeData instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeData_CreateNewColorPtr) (Lib3MF_VolumeData pVolumeData, Lib3MF_Vector3DField pTheVector3DField, Lib3MF_VolumeDataColor * pTheColorData);
+
+/**
+* Removes the VolumeDataColor of this VolumeData instance
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeData_RemoveColorPtr) (Lib3MF_VolumeData pVolumeData);
+
+/**
+* Returns the number of VolumeDataProperty
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[out] pCount - the number of VolumeDataProperty-elements within this VolumdeData
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeData_GetPropertyCountPtr) (Lib3MF_VolumeData pVolumeData, Lib3MF_uint32 * pCount);
+
+/**
+* Returns the VolumeDataProperty at a given Index
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[in] nIndex - the index of the VolumeDataProperty to be returned.
+* @param[out] pTheVolumeDataProperty - the VolumeDataProperty at the given index.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeData_GetPropertyPtr) (Lib3MF_VolumeData pVolumeData, Lib3MF_uint32 nIndex, Lib3MF_VolumeDataProperty * pTheVolumeDataProperty);
+
+/**
+* Adds a new VolumeDataProperty from a ScalarField
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[in] pName - the qualified name (namespace+name) of the Property
+* @param[in] pTheScalarField - ScalarField used in this element
+* @param[out] pTheVolumeDataProperty - the newly created VolumeDataProperty.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeData_AddPropertyFromScalarFieldPtr) (Lib3MF_VolumeData pVolumeData, const char * pName, Lib3MF_ScalarField pTheScalarField, Lib3MF_VolumeDataProperty * pTheVolumeDataProperty);
+
+/**
+* Adds a new VolumeDataProperty from a Vector3DField
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[in] pName - the qualified name (namespace+name) of the Property
+* @param[in] pTheVector3DField - Vector3DField used in this element
+* @param[out] pTheVolumeDataProperty - the newly created VolumeDataProperty.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeData_AddPropertyFromVector3DFieldPtr) (Lib3MF_VolumeData pVolumeData, const char * pName, Lib3MF_Vector3DField pTheVector3DField, Lib3MF_VolumeDataProperty * pTheVolumeDataProperty);
+
+/**
+* Removes the VolumeDataProperty with a given index
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[in] nIndex - the index of the VolumeDataProperty to be removed.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeData_RemovePropertyPtr) (Lib3MF_VolumeData pVolumeData, Lib3MF_uint32 nIndex);
 
 /*************************************************************************************************************************
  Class definition for Component
@@ -1970,6 +2925,144 @@ typedef Lib3MFResult (*PLib3MFMultiPropertyGroup_GetLayerPtr) (Lib3MF_MultiPrope
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFMultiPropertyGroup_RemoveLayerPtr) (Lib3MF_MultiPropertyGroup pMultiPropertyGroup, Lib3MF_uint32 nLayerIndex);
+
+/*************************************************************************************************************************
+ Class definition for Image3D
+**************************************************************************************************************************/
+
+/**
+* returns the name of this Image3D
+*
+* @param[in] pImage3D - Image3D instance.
+* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameBuffer -  buffer of the name of this Image3D, may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImage3D_GetNamePtr) (Lib3MF_Image3D pImage3D, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer);
+
+/**
+* sets a new name of this Image3D
+*
+* @param[in] pImage3D - Image3D instance.
+* @param[in] pName - the new name of this Image3D
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImage3D_SetNamePtr) (Lib3MF_Image3D pImage3D, const char * pName);
+
+/**
+* Retrieves, if this Image3D is a ImageStack
+*
+* @param[in] pImage3D - Image3D instance.
+* @param[out] pIsImageStack - returns, whether the Image3D is an ImageStack
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImage3D_IsImageStackPtr) (Lib3MF_Image3D pImage3D, bool * pIsImageStack);
+
+/*************************************************************************************************************************
+ Class definition for ImageStack
+**************************************************************************************************************************/
+
+/**
+* Retrieves the number of rows in each image of this image3d
+*
+* @param[in] pImageStack - ImageStack instance.
+* @param[out] pRowCount - number of rows
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImageStack_GetRowCountPtr) (Lib3MF_ImageStack pImageStack, Lib3MF_uint32 * pRowCount);
+
+/**
+* Sets the number of rows in each image of this image3d
+*
+* @param[in] pImageStack - ImageStack instance.
+* @param[in] nRowCount - number of rows
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImageStack_SetRowCountPtr) (Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nRowCount);
+
+/**
+* Retrieves the number of columns in each image of this image3d
+*
+* @param[in] pImageStack - ImageStack instance.
+* @param[out] pColumnCount - number of columns
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImageStack_GetColumnCountPtr) (Lib3MF_ImageStack pImageStack, Lib3MF_uint32 * pColumnCount);
+
+/**
+* Sets the number of columns in each image of this image3d
+*
+* @param[in] pImageStack - ImageStack instance.
+* @param[in] nColumnCount - number of columns
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImageStack_SetColumnCountPtr) (Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nColumnCount);
+
+/**
+* Retrieves the number of images in the stack.
+*
+* @param[in] pImageStack - ImageStack instance.
+* @param[out] pSheetCount - number of images
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImageStack_GetSheetCountPtr) (Lib3MF_ImageStack pImageStack, Lib3MF_uint32 * pSheetCount);
+
+/**
+* Retrieves a sheet of the stack. Raises an error if sheet is not set.
+*
+* @param[in] pImageStack - ImageStack instance.
+* @param[in] nIndex - index of the image (0-based)
+* @param[out] pSheet - attachment containing the image
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImageStack_GetSheetPtr) (Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nIndex, Lib3MF_Attachment * pSheet);
+
+/**
+* Sets a sheet to an existing attachment.
+*
+* @param[in] pImageStack - ImageStack instance.
+* @param[in] nIndex - index of the image (0-based)
+* @param[in] pSheet - attachment containing the image
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImageStack_SetSheetPtr) (Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nIndex, Lib3MF_Attachment pSheet);
+
+/**
+* Creates a new sheet attachment with empty data.
+*
+* @param[in] pImageStack - ImageStack instance.
+* @param[in] nIndex - index of the image (0-based)
+* @param[in] pPath - path of part in the package
+* @param[out] pSheet - attachment containing the image
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImageStack_CreateEmptySheetPtr) (Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_Attachment * pSheet);
+
+/**
+* Creates a new sheet attachment from a memory buffer.
+*
+* @param[in] pImageStack - ImageStack instance.
+* @param[in] nIndex - index of the image (0-based)
+* @param[in] pPath - path of part in the package
+* @param[in] nDataBufferSize - Number of elements in buffer
+* @param[in] pDataBuffer - uint8 buffer of binary image data
+* @param[out] pSheet - attachment containing the image
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImageStack_CreateSheetFromBufferPtr) (Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer, Lib3MF_Attachment * pSheet);
+
+/**
+* Creates a new sheet attachment from a file on disk.
+*
+* @param[in] pImageStack - ImageStack instance.
+* @param[in] nIndex - index of the image (0-based)
+* @param[in] pPath - path of part in the package
+* @param[in] pFileName - file name to read from
+* @param[out] pSheet - attachment containing the image
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImageStack_CreateSheetFromFilePtr) (Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nIndex, const char * pPath, const char * pFileName, Lib3MF_Attachment * pSheet);
 
 /*************************************************************************************************************************
  Class definition for Attachment
@@ -3271,6 +4364,33 @@ typedef Lib3MFResult (*PLib3MFModel_GetMultiPropertyGroupsPtr) (Lib3MF_Model pMo
 typedef Lib3MFResult (*PLib3MFModel_GetSliceStacksPtr) (Lib3MF_Model pModel, Lib3MF_SliceStackIterator * pResourceIterator);
 
 /**
+* creates a resource iterator instance with all image3d resources.
+*
+* @param[in] pModel - Model instance.
+* @param[out] pResourceIterator - returns the iterator instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetImage3DsPtr) (Lib3MF_Model pModel, Lib3MF_Image3DIterator * pResourceIterator);
+
+/**
+* creates a resource iterator instance with all ScalarField resources.
+*
+* @param[in] pModel - Model instance.
+* @param[out] pResourceIterator - returns the iterator instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetScalarFieldsPtr) (Lib3MF_Model pModel, Lib3MF_ScalarFieldIterator * pResourceIterator);
+
+/**
+* creates a resource iterator instance with all Vector3DField resources.
+*
+* @param[in] pModel - Model instance.
+* @param[out] pResourceIterator - returns the iterator instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetVector3DFieldsPtr) (Lib3MF_Model pModel, Lib3MF_Vector3DFieldIterator * pResourceIterator);
+
+/**
 * Merges all components and objects which are referenced by a build item into a mesh. The memory is duplicated and a new model is created.
 *
 * @param[in] pModel - Model instance.
@@ -3363,6 +4483,164 @@ typedef Lib3MFResult (*PLib3MFModel_AddCompositeMaterialsPtr) (Lib3MF_Model pMod
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFModel_AddMultiPropertyGroupPtr) (Lib3MF_Model pModel, Lib3MF_MultiPropertyGroup * pMultiPropertyGroupInstance);
+
+/**
+* creates a new 3D Image Resource
+*
+* @param[in] pModel - Model instance.
+* @param[in] nColumnCount - the number of columns in each sheet.
+* @param[in] nRowCount - the number of rows in each sheet.
+* @param[in] nSheetCount - the number of sheets in the image stack.
+* @param[out] pInstance - returns the new ImageStack instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_AddImageStackPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nColumnCount, Lib3MF_uint32 nRowCount, Lib3MF_uint32 nSheetCount, Lib3MF_ImageStack * pInstance);
+
+/**
+* finds an ImageStack object by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pImageStackInstance - returns the image stack instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetImageStackByIDPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ImageStack * pImageStackInstance);
+
+/**
+* creates a new ScalarFieldFromImage3D Resource
+*
+* @param[in] pModel - Model instance.
+* @param[in] pImage3D - image instance
+* @param[out] pTheScalarFieldFromImage3D - returns the new ScalarFieldFromImage3D instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_AddScalarFieldFromImage3DPtr) (Lib3MF_Model pModel, Lib3MF_Image3D pImage3D, Lib3MF_ScalarFieldFromImage3D * pTheScalarFieldFromImage3D);
+
+/**
+* creates a new ScalarFieldComposed Resource
+*
+* @param[in] pModel - Model instance.
+* @param[out] pTheScalarFieldComposed - returns the new ScalarFieldComposed instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_AddScalarFieldComposedPtr) (Lib3MF_Model pModel, Lib3MF_ScalarFieldComposed * pTheScalarFieldComposed);
+
+/**
+* creates a new ScalarFieldConstant Resource
+*
+* @param[in] pModel - Model instance.
+* @param[out] pTheScalarFieldConstant - returns the new ScalarFieldConstant instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_AddScalarFieldConstantPtr) (Lib3MF_Model pModel, Lib3MF_ScalarFieldConstant * pTheScalarFieldConstant);
+
+/**
+* finds a ScalarField object by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pScalarFieldInstance - returns the scalar field instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetScalarFieldByIDPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ScalarField * pScalarFieldInstance);
+
+/**
+* finds a ScalarFieldFromImage3D object by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pScalarFieldFromImage3DInstance - returns the ScalarFieldFromImage3D instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetScalarFieldFromImage3DByIDPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ScalarFieldFromImage3D * pScalarFieldFromImage3DInstance);
+
+/**
+* finds a ScalarFieldComposed object by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pScalarFieldComposedInstance - returns the ScalarFieldComponsed instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetScalarFieldComposedByIDPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ScalarFieldComposed * pScalarFieldComposedInstance);
+
+/**
+* finds a ScalarFieldConstant object by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pScalarFieldConstantInstance - returns the ScalarFieldConstant instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetScalarFieldConstantByIDPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ScalarFieldConstant * pScalarFieldConstantInstance);
+
+/**
+* creates a new Vector3DFieldFromImage3D Resource
+*
+* @param[in] pModel - Model instance.
+* @param[in] pImage3D - image instance
+* @param[out] pTheVector3DFieldFromImage3D - returns the new Vector3DFieldFromImage3D instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_AddVector3DFieldFromImage3DPtr) (Lib3MF_Model pModel, Lib3MF_Image3D pImage3D, Lib3MF_Vector3DFieldFromImage3D * pTheVector3DFieldFromImage3D);
+
+/**
+* creates a new Vector3DFieldComposed Resource
+*
+* @param[in] pModel - Model instance.
+* @param[out] pTheVector3DFieldComposed - returns the new Vector3DFieldComposed instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_AddVector3DFieldComposedPtr) (Lib3MF_Model pModel, Lib3MF_Vector3DFieldComposed * pTheVector3DFieldComposed);
+
+/**
+* creates a new Vector3DFieldConstant Resource
+*
+* @param[in] pModel - Model instance.
+* @param[out] pTheVector3DFieldConstant - returns the new Vector3DFieldConstant instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_AddVector3DFieldConstantPtr) (Lib3MF_Model pModel, Lib3MF_Vector3DFieldConstant * pTheVector3DFieldConstant);
+
+/**
+* finds a Vector3DField object by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pVector3DFieldInstance - returns the scalar field instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetVector3DFieldByIDPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Vector3DField * pVector3DFieldInstance);
+
+/**
+* finds a Vector3DFieldFromImage3D object by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pVector3DFieldFromImage3DInstance - returns the Vector3DFieldFromImage3D instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetVector3DFieldFromImage3DByIDPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Vector3DFieldFromImage3D * pVector3DFieldFromImage3DInstance);
+
+/**
+* finds a Vector3DFieldComposed object by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pVector3DFieldComposedInstance - returns the Vector3DFieldComponsed instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetVector3DFieldComposedByIDPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Vector3DFieldComposed * pVector3DFieldComposedInstance);
+
+/**
+* finds a Vector3DFieldConstant object by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pVector3DFieldConstantInstance - returns the Vector3DFieldConstant instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetVector3DFieldConstantByIDPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Vector3DFieldConstant * pVector3DFieldConstantInstance);
 
 /**
 * adds a build item to the model.
@@ -3767,6 +5045,9 @@ typedef struct {
 	PLib3MFTexture2DGroupIterator_GetCurrentTexture2DGroupPtr m_Texture2DGroupIterator_GetCurrentTexture2DGroup;
 	PLib3MFCompositeMaterialsIterator_GetCurrentCompositeMaterialsPtr m_CompositeMaterialsIterator_GetCurrentCompositeMaterials;
 	PLib3MFMultiPropertyGroupIterator_GetCurrentMultiPropertyGroupPtr m_MultiPropertyGroupIterator_GetCurrentMultiPropertyGroup;
+	PLib3MFImage3DIterator_GetCurrentImage3DPtr m_Image3DIterator_GetCurrentImage3D;
+	PLib3MFScalarFieldIterator_GetCurrentScalarFieldPtr m_ScalarFieldIterator_GetCurrentScalarField;
+	PLib3MFVector3DFieldIterator_GetCurrentVector3DFieldPtr m_Vector3DFieldIterator_GetCurrentVector3DField;
 	PLib3MFMetaData_GetNameSpacePtr m_MetaData_GetNameSpace;
 	PLib3MFMetaData_SetNameSpacePtr m_MetaData_SetNameSpace;
 	PLib3MFMetaData_GetNamePtr m_MetaData_GetName;
@@ -3826,6 +5107,7 @@ typedef struct {
 	PLib3MFMeshObject_SetGeometryPtr m_MeshObject_SetGeometry;
 	PLib3MFMeshObject_IsManifoldAndOrientedPtr m_MeshObject_IsManifoldAndOriented;
 	PLib3MFMeshObject_BeamLatticePtr m_MeshObject_BeamLattice;
+	PLib3MFMeshObject_VolumeDataPtr m_MeshObject_VolumeData;
 	PLib3MFBeamLattice_GetMinLengthPtr m_BeamLattice_GetMinLength;
 	PLib3MFBeamLattice_SetMinLengthPtr m_BeamLattice_SetMinLength;
 	PLib3MFBeamLattice_GetClippingPtr m_BeamLattice_GetClipping;
@@ -3849,6 +5131,97 @@ typedef struct {
 	PLib3MFBeamLattice_GetBeamSetCountPtr m_BeamLattice_GetBeamSetCount;
 	PLib3MFBeamLattice_AddBeamSetPtr m_BeamLattice_AddBeamSet;
 	PLib3MFBeamLattice_GetBeamSetPtr m_BeamLattice_GetBeamSet;
+	PLib3MFScalarField_GetNamePtr m_ScalarField_GetName;
+	PLib3MFScalarField_SetNamePtr m_ScalarField_SetName;
+	PLib3MFScalarField_IsFromImage3DPtr m_ScalarField_IsFromImage3D;
+	PLib3MFScalarField_IsConstantPtr m_ScalarField_IsConstant;
+	PLib3MFScalarField_IsComposedPtr m_ScalarField_IsComposed;
+	PLib3MFVector3DField_GetNamePtr m_Vector3DField_GetName;
+	PLib3MFVector3DField_SetNamePtr m_Vector3DField_SetName;
+	PLib3MFVector3DField_IsFromImage3DPtr m_Vector3DField_IsFromImage3D;
+	PLib3MFVector3DField_IsConstantPtr m_Vector3DField_IsConstant;
+	PLib3MFVector3DField_IsComposedPtr m_Vector3DField_IsComposed;
+	PLib3MFScalarFieldFromImage3D_GetImagePtr m_ScalarFieldFromImage3D_GetImage;
+	PLib3MFScalarFieldFromImage3D_SetImagePtr m_ScalarFieldFromImage3D_SetImage;
+	PLib3MFScalarFieldFromImage3D_SetChannelPtr m_ScalarFieldFromImage3D_SetChannel;
+	PLib3MFScalarFieldFromImage3D_GetChannelPtr m_ScalarFieldFromImage3D_GetChannel;
+	PLib3MFScalarFieldFromImage3D_SetFilterPtr m_ScalarFieldFromImage3D_SetFilter;
+	PLib3MFScalarFieldFromImage3D_GetFilterPtr m_ScalarFieldFromImage3D_GetFilter;
+	PLib3MFScalarFieldFromImage3D_SetTileStylesPtr m_ScalarFieldFromImage3D_SetTileStyles;
+	PLib3MFScalarFieldFromImage3D_GetTileStylesPtr m_ScalarFieldFromImage3D_GetTileStyles;
+	PLib3MFScalarFieldFromImage3D_GetOffsetPtr m_ScalarFieldFromImage3D_GetOffset;
+	PLib3MFScalarFieldFromImage3D_SetOffsetPtr m_ScalarFieldFromImage3D_SetOffset;
+	PLib3MFScalarFieldFromImage3D_GetScalePtr m_ScalarFieldFromImage3D_GetScale;
+	PLib3MFScalarFieldFromImage3D_SetScalePtr m_ScalarFieldFromImage3D_SetScale;
+	PLib3MFScalarFieldConstant_GetValuePtr m_ScalarFieldConstant_GetValue;
+	PLib3MFScalarFieldConstant_SetValuePtr m_ScalarFieldConstant_SetValue;
+	PLib3MFScalarFieldComposed_SetMethodPtr m_ScalarFieldComposed_SetMethod;
+	PLib3MFScalarFieldComposed_GetMethodPtr m_ScalarFieldComposed_GetMethod;
+	PLib3MFScalarFieldComposed_GetFactor1Ptr m_ScalarFieldComposed_GetFactor1;
+	PLib3MFScalarFieldComposed_SetFactor1Ptr m_ScalarFieldComposed_SetFactor1;
+	PLib3MFScalarFieldComposed_GetFactor2Ptr m_ScalarFieldComposed_GetFactor2;
+	PLib3MFScalarFieldComposed_SetFactor2Ptr m_ScalarFieldComposed_SetFactor2;
+	PLib3MFScalarFieldComposed_ScalarFieldReference1Ptr m_ScalarFieldComposed_ScalarFieldReference1;
+	PLib3MFScalarFieldComposed_ScalarFieldReference2Ptr m_ScalarFieldComposed_ScalarFieldReference2;
+	PLib3MFScalarFieldComposed_ScalarFieldReferenceMaskPtr m_ScalarFieldComposed_ScalarFieldReferenceMask;
+	PLib3MFVector3DFieldFromImage3D_GetImagePtr m_Vector3DFieldFromImage3D_GetImage;
+	PLib3MFVector3DFieldFromImage3D_SetImagePtr m_Vector3DFieldFromImage3D_SetImage;
+	PLib3MFVector3DFieldFromImage3D_SetFilterPtr m_Vector3DFieldFromImage3D_SetFilter;
+	PLib3MFVector3DFieldFromImage3D_GetFilterPtr m_Vector3DFieldFromImage3D_GetFilter;
+	PLib3MFVector3DFieldFromImage3D_SetTileStylesPtr m_Vector3DFieldFromImage3D_SetTileStyles;
+	PLib3MFVector3DFieldFromImage3D_GetTileStylesPtr m_Vector3DFieldFromImage3D_GetTileStyles;
+	PLib3MFVector3DFieldFromImage3D_GetOffsetPtr m_Vector3DFieldFromImage3D_GetOffset;
+	PLib3MFVector3DFieldFromImage3D_SetOffsetPtr m_Vector3DFieldFromImage3D_SetOffset;
+	PLib3MFVector3DFieldFromImage3D_GetScalePtr m_Vector3DFieldFromImage3D_GetScale;
+	PLib3MFVector3DFieldFromImage3D_SetScalePtr m_Vector3DFieldFromImage3D_SetScale;
+	PLib3MFVector3DFieldConstant_GetValueXPtr m_Vector3DFieldConstant_GetValueX;
+	PLib3MFVector3DFieldConstant_SetValueXPtr m_Vector3DFieldConstant_SetValueX;
+	PLib3MFVector3DFieldConstant_GetValueYPtr m_Vector3DFieldConstant_GetValueY;
+	PLib3MFVector3DFieldConstant_SetValueYPtr m_Vector3DFieldConstant_SetValueY;
+	PLib3MFVector3DFieldConstant_GetValueZPtr m_Vector3DFieldConstant_GetValueZ;
+	PLib3MFVector3DFieldConstant_SetValueZPtr m_Vector3DFieldConstant_SetValueZ;
+	PLib3MFVector3DFieldComposed_SetMethodPtr m_Vector3DFieldComposed_SetMethod;
+	PLib3MFVector3DFieldComposed_GetMethodPtr m_Vector3DFieldComposed_GetMethod;
+	PLib3MFVector3DFieldComposed_SetSpacePtr m_Vector3DFieldComposed_SetSpace;
+	PLib3MFVector3DFieldComposed_GetSpacePtr m_Vector3DFieldComposed_GetSpace;
+	PLib3MFVector3DFieldComposed_GetFactor1Ptr m_Vector3DFieldComposed_GetFactor1;
+	PLib3MFVector3DFieldComposed_SetFactor1Ptr m_Vector3DFieldComposed_SetFactor1;
+	PLib3MFVector3DFieldComposed_GetFactor2Ptr m_Vector3DFieldComposed_GetFactor2;
+	PLib3MFVector3DFieldComposed_SetFactor2Ptr m_Vector3DFieldComposed_SetFactor2;
+	PLib3MFVector3DFieldComposed_Vector3DFieldReference1Ptr m_Vector3DFieldComposed_Vector3DFieldReference1;
+	PLib3MFVector3DFieldComposed_Vector3DFieldReference2Ptr m_Vector3DFieldComposed_Vector3DFieldReference2;
+	PLib3MFVector3DFieldComposed_ScalarFieldReferenceMaskPtr m_Vector3DFieldComposed_ScalarFieldReferenceMask;
+	PLib3MFFieldReference_GetFieldResourceIDPtr m_FieldReference_GetFieldResourceID;
+	PLib3MFFieldReference_SetFieldResourceIDPtr m_FieldReference_SetFieldResourceID;
+	PLib3MFFieldReference_GetTransformPtr m_FieldReference_GetTransform;
+	PLib3MFFieldReference_SetTransformPtr m_FieldReference_SetTransform;
+	PLib3MFScalarFieldReference_SetScalarFieldPtr m_ScalarFieldReference_SetScalarField;
+	PLib3MFVector3DFieldReference_SetVector3DFieldPtr m_Vector3DFieldReference_SetVector3DField;
+	PLib3MFVolumeDataBoundary_GetSolidThresholdPtr m_VolumeDataBoundary_GetSolidThreshold;
+	PLib3MFVolumeDataBoundary_SetSolidThresholdPtr m_VolumeDataBoundary_SetSolidThreshold;
+	PLib3MFVolumeDataComposite_GetBaseMaterialGroupPtr m_VolumeDataComposite_GetBaseMaterialGroup;
+	PLib3MFVolumeDataComposite_SetBaseMaterialGroupPtr m_VolumeDataComposite_SetBaseMaterialGroup;
+	PLib3MFVolumeDataComposite_GetMaterialMappingCountPtr m_VolumeDataComposite_GetMaterialMappingCount;
+	PLib3MFVolumeDataComposite_GetMaterialMappingPtr m_VolumeDataComposite_GetMaterialMapping;
+	PLib3MFVolumeDataComposite_AddMaterialMappingPtr m_VolumeDataComposite_AddMaterialMapping;
+	PLib3MFVolumeDataComposite_RemoveMaterialMappingPtr m_VolumeDataComposite_RemoveMaterialMapping;
+	PLib3MFVolumeDataProperty_GetNamePtr m_VolumeDataProperty_GetName;
+	PLib3MFVolumeDataProperty_SetIsRequiredPtr m_VolumeDataProperty_SetIsRequired;
+	PLib3MFVolumeDataProperty_IsRequiredPtr m_VolumeDataProperty_IsRequired;
+	PLib3MFVolumeData_GetBoundaryPtr m_VolumeData_GetBoundary;
+	PLib3MFVolumeData_CreateNewBoundaryPtr m_VolumeData_CreateNewBoundary;
+	PLib3MFVolumeData_RemoveBoundaryPtr m_VolumeData_RemoveBoundary;
+	PLib3MFVolumeData_GetCompositePtr m_VolumeData_GetComposite;
+	PLib3MFVolumeData_CreateNewCompositePtr m_VolumeData_CreateNewComposite;
+	PLib3MFVolumeData_RemoveCompositePtr m_VolumeData_RemoveComposite;
+	PLib3MFVolumeData_GetColorPtr m_VolumeData_GetColor;
+	PLib3MFVolumeData_CreateNewColorPtr m_VolumeData_CreateNewColor;
+	PLib3MFVolumeData_RemoveColorPtr m_VolumeData_RemoveColor;
+	PLib3MFVolumeData_GetPropertyCountPtr m_VolumeData_GetPropertyCount;
+	PLib3MFVolumeData_GetPropertyPtr m_VolumeData_GetProperty;
+	PLib3MFVolumeData_AddPropertyFromScalarFieldPtr m_VolumeData_AddPropertyFromScalarField;
+	PLib3MFVolumeData_AddPropertyFromVector3DFieldPtr m_VolumeData_AddPropertyFromVector3DField;
+	PLib3MFVolumeData_RemovePropertyPtr m_VolumeData_RemoveProperty;
 	PLib3MFComponent_GetObjectResourcePtr m_Component_GetObjectResource;
 	PLib3MFComponent_GetObjectResourceIDPtr m_Component_GetObjectResourceID;
 	PLib3MFComponent_GetUUIDPtr m_Component_GetUUID;
@@ -3905,6 +5278,19 @@ typedef struct {
 	PLib3MFMultiPropertyGroup_AddLayerPtr m_MultiPropertyGroup_AddLayer;
 	PLib3MFMultiPropertyGroup_GetLayerPtr m_MultiPropertyGroup_GetLayer;
 	PLib3MFMultiPropertyGroup_RemoveLayerPtr m_MultiPropertyGroup_RemoveLayer;
+	PLib3MFImage3D_GetNamePtr m_Image3D_GetName;
+	PLib3MFImage3D_SetNamePtr m_Image3D_SetName;
+	PLib3MFImage3D_IsImageStackPtr m_Image3D_IsImageStack;
+	PLib3MFImageStack_GetRowCountPtr m_ImageStack_GetRowCount;
+	PLib3MFImageStack_SetRowCountPtr m_ImageStack_SetRowCount;
+	PLib3MFImageStack_GetColumnCountPtr m_ImageStack_GetColumnCount;
+	PLib3MFImageStack_SetColumnCountPtr m_ImageStack_SetColumnCount;
+	PLib3MFImageStack_GetSheetCountPtr m_ImageStack_GetSheetCount;
+	PLib3MFImageStack_GetSheetPtr m_ImageStack_GetSheet;
+	PLib3MFImageStack_SetSheetPtr m_ImageStack_SetSheet;
+	PLib3MFImageStack_CreateEmptySheetPtr m_ImageStack_CreateEmptySheet;
+	PLib3MFImageStack_CreateSheetFromBufferPtr m_ImageStack_CreateSheetFromBuffer;
+	PLib3MFImageStack_CreateSheetFromFilePtr m_ImageStack_CreateSheetFromFile;
 	PLib3MFAttachment_GetPathPtr m_Attachment_GetPath;
 	PLib3MFAttachment_SetPathPtr m_Attachment_SetPath;
 	PLib3MFAttachment_PackagePartPtr m_Attachment_PackagePart;
@@ -4033,6 +5419,9 @@ typedef struct {
 	PLib3MFModel_GetCompositeMaterialsPtr m_Model_GetCompositeMaterials;
 	PLib3MFModel_GetMultiPropertyGroupsPtr m_Model_GetMultiPropertyGroups;
 	PLib3MFModel_GetSliceStacksPtr m_Model_GetSliceStacks;
+	PLib3MFModel_GetImage3DsPtr m_Model_GetImage3Ds;
+	PLib3MFModel_GetScalarFieldsPtr m_Model_GetScalarFields;
+	PLib3MFModel_GetVector3DFieldsPtr m_Model_GetVector3DFields;
 	PLib3MFModel_MergeToModelPtr m_Model_MergeToModel;
 	PLib3MFModel_AddMeshObjectPtr m_Model_AddMeshObject;
 	PLib3MFModel_AddComponentsObjectPtr m_Model_AddComponentsObject;
@@ -4043,6 +5432,22 @@ typedef struct {
 	PLib3MFModel_AddTexture2DGroupPtr m_Model_AddTexture2DGroup;
 	PLib3MFModel_AddCompositeMaterialsPtr m_Model_AddCompositeMaterials;
 	PLib3MFModel_AddMultiPropertyGroupPtr m_Model_AddMultiPropertyGroup;
+	PLib3MFModel_AddImageStackPtr m_Model_AddImageStack;
+	PLib3MFModel_GetImageStackByIDPtr m_Model_GetImageStackByID;
+	PLib3MFModel_AddScalarFieldFromImage3DPtr m_Model_AddScalarFieldFromImage3D;
+	PLib3MFModel_AddScalarFieldComposedPtr m_Model_AddScalarFieldComposed;
+	PLib3MFModel_AddScalarFieldConstantPtr m_Model_AddScalarFieldConstant;
+	PLib3MFModel_GetScalarFieldByIDPtr m_Model_GetScalarFieldByID;
+	PLib3MFModel_GetScalarFieldFromImage3DByIDPtr m_Model_GetScalarFieldFromImage3DByID;
+	PLib3MFModel_GetScalarFieldComposedByIDPtr m_Model_GetScalarFieldComposedByID;
+	PLib3MFModel_GetScalarFieldConstantByIDPtr m_Model_GetScalarFieldConstantByID;
+	PLib3MFModel_AddVector3DFieldFromImage3DPtr m_Model_AddVector3DFieldFromImage3D;
+	PLib3MFModel_AddVector3DFieldComposedPtr m_Model_AddVector3DFieldComposed;
+	PLib3MFModel_AddVector3DFieldConstantPtr m_Model_AddVector3DFieldConstant;
+	PLib3MFModel_GetVector3DFieldByIDPtr m_Model_GetVector3DFieldByID;
+	PLib3MFModel_GetVector3DFieldFromImage3DByIDPtr m_Model_GetVector3DFieldFromImage3DByID;
+	PLib3MFModel_GetVector3DFieldComposedByIDPtr m_Model_GetVector3DFieldComposedByID;
+	PLib3MFModel_GetVector3DFieldConstantByIDPtr m_Model_GetVector3DFieldConstantByID;
 	PLib3MFModel_AddBuildItemPtr m_Model_AddBuildItem;
 	PLib3MFModel_RemoveBuildItemPtr m_Model_RemoveBuildItem;
 	PLib3MFModel_GetMetaDataGroupPtr m_Model_GetMetaDataGroup;

@@ -1228,6 +1228,176 @@ Model error codes (0x8XXX)
 // A component resource is invalid
 #define NMR_ERROR_INVALIDCOMPONENTRESOURCE 0x810D
 
+// errors for the volumetric extension 0x88xx
+
+// Invalid Image3D Size
+#define NMR_ERROR_INVALIDIMAGE3DSIZE 0x8800
+
+// Too many channel selectors
+#define NMR_ERROR_TOOMANYCHANNELSELECTORS 0x8801
+
+// Too many volumetric channels
+#define NMR_ERROR_TOOMANYVOLUMETRICCHANNELS 0x8802
+
+// Could not map package ID
+#define NMR_ERROR_COULDNOTMAPPACKAGEID 0x8803
+
+// Duplicate volumetric channel
+#define NMR_ERROR_DUPLICATEVOLUMETRICCHANNEL 0x8804
+
+// Could not remove volumetric layer
+#define NMR_ERROR_COULDNOTREMOVEVOLUMETRICLAYER 0x8805
+
+// Could not reindex volumetric layer
+#define NMR_ERROR_COULDNOTREINDEXVOLUMETRICLAYER 0x8806
+
+// Could not reindex channel selector
+#define NMR_ERROR_COULDNOTREINDEXCHANNELSELECTOR 0x8807
+
+// Duplicate Image3D Name
+#define NMR_ERROR_DUPLICATEIMAGE3DNAME 0x8808
+
+// Duplicate Image3D Size
+#define NMR_ERROR_DUPLICATEIMAGESTACKSIZE 0x8809
+
+// Duplicate Image3D Sheet count
+#define NMR_ERROR_DUPLICATEIMAGESTACKSHEETCOUNT 0x880A
+
+// Missing Image Stack Size
+#define NMR_ERROR_MISSINGIMAGESTACKSIZE 0x880B
+
+// Missing Image Stack Sheetcount
+#define NMR_ERROR_MISSINGIMAGESTACKSHEETCOUNT 0x880C
+
+// Missing 3D Image Name
+#define NMR_ERROR_MISSINGIMAGE3DNAME 0x880D
+
+// Invalid Image3D Sheet Count
+#define NMR_ERROR_INVALIDIMAGSHEETCOUNT 0x880E
+
+// Image Sheet not found
+#define NMR_ERROR_IMAGESHEETNOTFOUND 0x880F
+
+// Too many Image Stack sheets
+#define NMR_ERROR_TOOMANYIMAGESHEETS 0x8810
+
+// Missing Image3D sheet path
+#define NMR_ERROR_MISSINGIMAGE3DSHEETPATH 0x8811
+
+// Duplicate Volumetric Background
+#define NMR_ERROR_DUPLICATEVOLUMETRICBACKGROUND 0x8812
+
+// Invalid Volumetric Background
+#define NMR_ERROR_INVALIDVOLUMETRICBACKGROUND 0x8813
+
+// Missing Volumetric DstChannel Name
+#define NMR_ERROR_MISSINGVOLUMETRICDSTCHANNELNAME 0x8814
+
+// Missing Volumetric Layer Blend Method
+#define NMR_ERROR_MISSINGVOLUMETRICLAYERBLENDMETHOD 0x8815
+
+// Duplicate Volumetric Blend Method
+#define NMR_ERROR_DUPLICATEVOLUMETRICBLENDMETHOD 0x8816
+
+// Missing Volumetric Layer Transform
+#define NMR_ERROR_MISSINGVOLUMETRICLAYERTRANSFORM 0x8817
+
+// Duplicate Volumetric Transform
+#define NMR_ERROR_DUPLICATEVOLUMETRICTRANSFORM 0x8818
+
+// Duplicate Volumetric Src Alpha
+#define NMR_ERROR_DUPLICATEVOLUMETRICSRCALPHA 0x8819
+
+// Invalid Volumetric Src Alpha
+#define NMR_ERROR_INVALIDVOLUMETRICSRCALPHA 0x881A
+
+// Duplicate Volumetric Dst Alpha
+#define NMR_ERROR_DUPLICATEVOLUMETRICDSTALPHA 0x881B
+
+// Invalid Volumetric Dst Alpha
+#define NMR_ERROR_INVALIDVOLUMETRICDSTALPHA 0x881C
+
+// Duplicate Mask Channel Selector
+#define NMR_ERROR_DUPLICATEMASKCHANNELSELECTOR 0x881D
+
+// Duplicate Volumetric Min Value
+#define NMR_ERROR_DUPLICATEVOLUMETRICMINVALUE 0x881E
+
+// Invalid Volumetric Min Value
+#define NMR_ERROR_INVALIDVOLUMETRICMINVALUE 0x881F
+
+// Duplicate Volumetric Max Value
+#define NMR_ERROR_DUPLICATEVOLUMETRICMAXVALUE 0x8820
+
+// Invalid Volumetric Max Value
+#define NMR_ERROR_INVALIDVOLUMETRICMAXVALUE 0x8821
+
+// Missing Channel Selector ID
+#define NMR_ERROR_MISSINGCHANNELSELECTORID 0x8822
+
+// Missing Channel Selector TileStyle
+#define NMR_ERROR_MISSINGCHANNELSELECTORTILESTYLE 0x8823
+
+// Duplicate Volumetric TileStyle
+#define NMR_ERROR_DUPLICATEVOLUMETRICTILESTYLE 0x8824
+
+// Duplicate Volumetric Filter
+#define NMR_ERROR_DUPLICATEVOLUMETRICFILTER 0x8825
+
+// Duplicate Volumetric Source Channel
+#define NMR_ERROR_DUPLICATEVOLUMETRICSOURCECHANNEL 0x8826
+
+// Duplicate Volumetric Destination Channel
+#define NMR_ERROR_DUPLICATEVOLUMETRICDESTINATIONCHANNEL 0x8827
+
+// Duplicate VolumeData Levelset
+#define NMR_ERROR_DUPLICATEVOLUMEDATABOUNDARY 0x8828
+
+// Duplicate VolumeData Transform
+#define NMR_ERROR_DUPLICATEVOLUMEDATATRANSFORM 0x8829
+
+// Duplicate VolumeData Channel
+#define NMR_ERROR_DUPLICATEVOLUMEDATACHANNEL 0x882A
+
+// Duplicate VolumeData VolumetricStackID
+#define NMR_ERROR_DUPLICATEVOLUMEDATAFIELDID 0x882B
+
+// Duplicate VolumeData Solid Threshold
+#define NMR_ERROR_DUPLICATEVOLUMEDATASOLIDTHRESHOLD 0x882C
+
+// Missing VolumeData Channel
+#define NMR_ERROR_MISSINGVOLUMEDATACHANNEL 0x882D
+
+// Missing VolumeData VolumetricStackID
+#define NMR_ERROR_MISSINGVOLUMEDATAFIELDID 0x882E
+
+// Invalid VolumeData Solid Threshold
+#define NMR_ERROR_INVALIDVOLUMEDATASOLIDTHRESHOLD 0x882F
+
+// Duplicate VolumeData Property
+#define NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY 0x8830
+
+// Missing VolumeData Property
+#define NMR_ERROR_MISSINGVOLUMEDATAPROPERTYNAME 0x8831
+
+// Missing Volumetric Source Alpha
+#define NMR_ERROR_MISSINGVOLUMETRICSRCALPHA 0x882
+
+// Missing Volumetric Destination Alpha
+#define NMR_ERROR_MISSINGVOLUMETRICDSTALPHA 0x8833
+
+// Missing attribute in scalar field composed
+#define NMR_ERROR_MISSING_ATTRIBUTE_SCALARFIELDCOMPOSED 0x8834
+
+// Duplicate attribute in scalar field composed
+#define NMR_ERROR_DUPLICATE_ATTRIBUTE_SCALARFIELDCOMPOSED 0x8835
+
+// Missing attribute in vector3d field composed
+#define NMR_ERROR_MISSING_ATTRIBUTE_VECTOR3DFIELDCOMPOSED 0x8836
+
+// Duplicate attribute in vector3d field composed
+#define NMR_ERROR_DUPLICATE_ATTRIBUTE_VECTOR3DFIELDCOMPOSED 0x8837
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

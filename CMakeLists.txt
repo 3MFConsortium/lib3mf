@@ -11,7 +11,7 @@ include(GNUInstallDirs)
 set(LIB3MF_VERSION_MAJOR 2)        # increase on every backward-compatibility breaking change of the API
 set(LIB3MF_VERSION_MINOR 3)        # increase on every backward compatible change of the API
 set(LIB3MF_VERSION_MICRO 0)        # increase on on every change that does not alter the API
-set(LIB3MF_VERSION_PRERELEASE "develop")  # denotes pre-release information of a version of lib3mf
+set(LIB3MF_VERSION_PRERELEASE "volumetric")  # denotes pre-release information of a version of lib3mf
 
 project(lib3mf
   VERSION ${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}
@@ -51,6 +51,9 @@ if (${MSVC})
 
   add_definitions(/W3)
   
+  # Allow unnamed structs
+  add_definitions(/Wv:18)
+
   # add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS)
   # set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
   # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")

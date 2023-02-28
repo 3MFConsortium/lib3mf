@@ -504,6 +504,33 @@ Lib3MFResult CCall_lib3mf_multipropertygroupiterator_getcurrentmultipropertygrou
 }
 
 
+Lib3MFResult CCall_lib3mf_image3diterator_getcurrentimage3d(Lib3MFHandle libraryHandle, Lib3MF_Image3DIterator pImage3DIterator, Lib3MF_Image3D * pResource)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Image3DIterator_GetCurrentImage3D (pImage3DIterator, pResource);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfielditerator_getcurrentscalarfield(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldIterator pScalarFieldIterator, Lib3MF_ScalarField * pResource)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldIterator_GetCurrentScalarField (pScalarFieldIterator, pResource);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfielditerator_getcurrentvector3dfield(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldIterator pVector3DFieldIterator, Lib3MF_Vector3DField * pResource)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldIterator_GetCurrentVector3DField (pVector3DFieldIterator, pResource);
+}
+
+
 Lib3MFResult CCall_lib3mf_metadata_getnamespace(Lib3MFHandle libraryHandle, Lib3MF_MetaData pMetaData, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer)
 {
 	if (libraryHandle == 0) 
@@ -1035,6 +1062,15 @@ Lib3MFResult CCall_lib3mf_meshobject_beamlattice(Lib3MFHandle libraryHandle, Lib
 }
 
 
+Lib3MFResult CCall_lib3mf_meshobject_volumedata(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject, Lib3MF_VolumeData * pTheVolumeData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_MeshObject_VolumeData (pMeshObject, pTheVolumeData);
+}
+
+
 Lib3MFResult CCall_lib3mf_beamlattice_getminlength(Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice, Lib3MF_double * pMinLength)
 {
 	if (libraryHandle == 0) 
@@ -1239,6 +1275,825 @@ Lib3MFResult CCall_lib3mf_beamlattice_getbeamset(Lib3MFHandle libraryHandle, Lib
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_BeamLattice_GetBeamSet (pBeamLattice, nIndex, pBeamSet);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfield_getname(Lib3MFHandle libraryHandle, Lib3MF_ScalarField pScalarField, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarField_GetName (pScalarField, nNameBufferSize, pNameNeededChars, pNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfield_setname(Lib3MFHandle libraryHandle, Lib3MF_ScalarField pScalarField, const char * pName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarField_SetName (pScalarField, pName);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfield_isfromimage3d(Lib3MFHandle libraryHandle, Lib3MF_ScalarField pScalarField, bool * pIsFromImage3D)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarField_IsFromImage3D (pScalarField, pIsFromImage3D);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfield_isconstant(Lib3MFHandle libraryHandle, Lib3MF_ScalarField pScalarField, bool * pIsConstant)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarField_IsConstant (pScalarField, pIsConstant);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfield_iscomposed(Lib3MFHandle libraryHandle, Lib3MF_ScalarField pScalarField, bool * pIsComposed)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarField_IsComposed (pScalarField, pIsComposed);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfield_getname(Lib3MFHandle libraryHandle, Lib3MF_Vector3DField pVector3DField, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DField_GetName (pVector3DField, nNameBufferSize, pNameNeededChars, pNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfield_setname(Lib3MFHandle libraryHandle, Lib3MF_Vector3DField pVector3DField, const char * pName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DField_SetName (pVector3DField, pName);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfield_isfromimage3d(Lib3MFHandle libraryHandle, Lib3MF_Vector3DField pVector3DField, bool * pIsFromImage3D)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DField_IsFromImage3D (pVector3DField, pIsFromImage3D);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfield_isconstant(Lib3MFHandle libraryHandle, Lib3MF_Vector3DField pVector3DField, bool * pIsConstant)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DField_IsConstant (pVector3DField, pIsConstant);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfield_iscomposed(Lib3MFHandle libraryHandle, Lib3MF_Vector3DField pVector3DField, bool * pIsComposed)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DField_IsComposed (pVector3DField, pIsComposed);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldfromimage3d_getimage(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF_Image3D * pImage3D)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldFromImage3D_GetImage (pScalarFieldFromImage3D, pImage3D);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldfromimage3d_setimage(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF_Image3D pImage3D)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldFromImage3D_SetImage (pScalarFieldFromImage3D, pImage3D);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldfromimage3d_setchannel(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, eLib3MFChannelName eName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldFromImage3D_SetChannel (pScalarFieldFromImage3D, eName);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldfromimage3d_getchannel(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, eLib3MFChannelName * pName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldFromImage3D_GetChannel (pScalarFieldFromImage3D, pName);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldfromimage3d_setfilter(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, eLib3MFTextureFilter eFilter)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldFromImage3D_SetFilter (pScalarFieldFromImage3D, eFilter);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldfromimage3d_getfilter(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, eLib3MFTextureFilter * pFilter)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldFromImage3D_GetFilter (pScalarFieldFromImage3D, pFilter);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldfromimage3d_settilestyles(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, eLib3MFTextureTileStyle eTileStyleU, eLib3MFTextureTileStyle eTileStyleV, eLib3MFTextureTileStyle eTileStyleW)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldFromImage3D_SetTileStyles (pScalarFieldFromImage3D, eTileStyleU, eTileStyleV, eTileStyleW);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldfromimage3d_gettilestyles(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, eLib3MFTextureTileStyle * pTileStyleU, eLib3MFTextureTileStyle * pTileStyleV, eLib3MFTextureTileStyle * pTileStyleW)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldFromImage3D_GetTileStyles (pScalarFieldFromImage3D, pTileStyleU, pTileStyleV, pTileStyleW);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldfromimage3d_getoffset(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF_double * pOffset)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldFromImage3D_GetOffset (pScalarFieldFromImage3D, pOffset);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldfromimage3d_setoffset(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF_double dOffset)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldFromImage3D_SetOffset (pScalarFieldFromImage3D, dOffset);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldfromimage3d_getscale(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF_double * pScale)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldFromImage3D_GetScale (pScalarFieldFromImage3D, pScale);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldfromimage3d_setscale(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF_double dScale)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldFromImage3D_SetScale (pScalarFieldFromImage3D, dScale);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldconstant_getvalue(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldConstant pScalarFieldConstant, Lib3MF_double * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldConstant_GetValue (pScalarFieldConstant, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldconstant_setvalue(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldConstant pScalarFieldConstant, Lib3MF_double dValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldConstant_SetValue (pScalarFieldConstant, dValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldcomposed_setmethod(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldComposed pScalarFieldComposed, eLib3MFCompositionMethod eTheMethod)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldComposed_SetMethod (pScalarFieldComposed, eTheMethod);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldcomposed_getmethod(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldComposed pScalarFieldComposed, eLib3MFCompositionMethod * pTheMethod)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldComposed_GetMethod (pScalarFieldComposed, pTheMethod);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldcomposed_getfactor1(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF_double * pFactor1)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldComposed_GetFactor1 (pScalarFieldComposed, pFactor1);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldcomposed_setfactor1(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF_double dFactor1)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldComposed_SetFactor1 (pScalarFieldComposed, dFactor1);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldcomposed_getfactor2(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF_double * pFactor2)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldComposed_GetFactor2 (pScalarFieldComposed, pFactor2);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldcomposed_setfactor2(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF_double dFactor2)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldComposed_SetFactor2 (pScalarFieldComposed, dFactor2);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldcomposed_scalarfieldreference1(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF_ScalarFieldReference * pTheScalarFieldReference1)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldComposed_ScalarFieldReference1 (pScalarFieldComposed, pTheScalarFieldReference1);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldcomposed_scalarfieldreference2(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF_ScalarFieldReference * pTheScalarFieldReference1)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldComposed_ScalarFieldReference2 (pScalarFieldComposed, pTheScalarFieldReference1);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldcomposed_scalarfieldreferencemask(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF_ScalarFieldReference * pTheScalarFieldReferenceMask)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldComposed_ScalarFieldReferenceMask (pScalarFieldComposed, pTheScalarFieldReferenceMask);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldfromimage3d_getimage(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF_Image3D * pImage3D)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldFromImage3D_GetImage (pVector3DFieldFromImage3D, pImage3D);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldfromimage3d_setimage(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF_Image3D pImage3D)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldFromImage3D_SetImage (pVector3DFieldFromImage3D, pImage3D);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldfromimage3d_setfilter(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, eLib3MFTextureFilter eFilter)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldFromImage3D_SetFilter (pVector3DFieldFromImage3D, eFilter);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldfromimage3d_getfilter(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, eLib3MFTextureFilter * pFilter)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldFromImage3D_GetFilter (pVector3DFieldFromImage3D, pFilter);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldfromimage3d_settilestyles(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, eLib3MFTextureTileStyle eTileStyleU, eLib3MFTextureTileStyle eTileStyleV, eLib3MFTextureTileStyle eTileStyleW)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldFromImage3D_SetTileStyles (pVector3DFieldFromImage3D, eTileStyleU, eTileStyleV, eTileStyleW);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldfromimage3d_gettilestyles(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, eLib3MFTextureTileStyle * pTileStyleU, eLib3MFTextureTileStyle * pTileStyleV, eLib3MFTextureTileStyle * pTileStyleW)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldFromImage3D_GetTileStyles (pVector3DFieldFromImage3D, pTileStyleU, pTileStyleV, pTileStyleW);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldfromimage3d_getoffset(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF_double * pOffset)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldFromImage3D_GetOffset (pVector3DFieldFromImage3D, pOffset);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldfromimage3d_setoffset(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF_double dOffset)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldFromImage3D_SetOffset (pVector3DFieldFromImage3D, dOffset);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldfromimage3d_getscale(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF_double * pScale)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldFromImage3D_GetScale (pVector3DFieldFromImage3D, pScale);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldfromimage3d_setscale(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF_double dScale)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldFromImage3D_SetScale (pVector3DFieldFromImage3D, dScale);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldconstant_getvaluex(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldConstant pVector3DFieldConstant, Lib3MF_double * pValueX)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldConstant_GetValueX (pVector3DFieldConstant, pValueX);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldconstant_setvaluex(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldConstant pVector3DFieldConstant, Lib3MF_double dValueX)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldConstant_SetValueX (pVector3DFieldConstant, dValueX);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldconstant_getvaluey(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldConstant pVector3DFieldConstant, Lib3MF_double * pValueY)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldConstant_GetValueY (pVector3DFieldConstant, pValueY);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldconstant_setvaluey(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldConstant pVector3DFieldConstant, Lib3MF_double dValueY)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldConstant_SetValueY (pVector3DFieldConstant, dValueY);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldconstant_getvaluez(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldConstant pVector3DFieldConstant, Lib3MF_double * pValueZ)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldConstant_GetValueZ (pVector3DFieldConstant, pValueZ);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldconstant_setvaluez(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldConstant pVector3DFieldConstant, Lib3MF_double dValueZ)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldConstant_SetValueZ (pVector3DFieldConstant, dValueZ);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldcomposed_setmethod(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, eLib3MFCompositionMethod eTheMethod)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldComposed_SetMethod (pVector3DFieldComposed, eTheMethod);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldcomposed_getmethod(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, eLib3MFCompositionMethod * pTheMethod)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldComposed_GetMethod (pVector3DFieldComposed, pTheMethod);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldcomposed_setspace(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, eLib3MFCompositionSpace eTheSpace)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldComposed_SetSpace (pVector3DFieldComposed, eTheSpace);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldcomposed_getspace(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, eLib3MFCompositionSpace * pTheSpace)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldComposed_GetSpace (pVector3DFieldComposed, pTheSpace);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldcomposed_getfactor1(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_double * pFactor1)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldComposed_GetFactor1 (pVector3DFieldComposed, pFactor1);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldcomposed_setfactor1(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_double dFactor1)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldComposed_SetFactor1 (pVector3DFieldComposed, dFactor1);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldcomposed_getfactor2(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_double * pFactor2)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldComposed_GetFactor2 (pVector3DFieldComposed, pFactor2);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldcomposed_setfactor2(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_double dFactor2)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldComposed_SetFactor2 (pVector3DFieldComposed, dFactor2);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldcomposed_vector3dfieldreference1(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_Vector3DFieldReference * pTheVector3DFieldReference1)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldComposed_Vector3DFieldReference1 (pVector3DFieldComposed, pTheVector3DFieldReference1);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldcomposed_vector3dfieldreference2(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_Vector3DFieldReference * pTheVector3DFieldReference1)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldComposed_Vector3DFieldReference2 (pVector3DFieldComposed, pTheVector3DFieldReference1);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldcomposed_scalarfieldreferencemask(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_ScalarFieldReference * pTheScalarFieldReferenceMask)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldComposed_ScalarFieldReferenceMask (pVector3DFieldComposed, pTheScalarFieldReferenceMask);
+}
+
+
+Lib3MFResult CCall_lib3mf_fieldreference_getfieldresourceid(Lib3MFHandle libraryHandle, Lib3MF_FieldReference pFieldReference, Lib3MF_uint32 * pUniqueResourceID)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FieldReference_GetFieldResourceID (pFieldReference, pUniqueResourceID);
+}
+
+
+Lib3MFResult CCall_lib3mf_fieldreference_setfieldresourceid(Lib3MFHandle libraryHandle, Lib3MF_FieldReference pFieldReference, Lib3MF_uint32 nUniqueResourceID)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FieldReference_SetFieldResourceID (pFieldReference, nUniqueResourceID);
+}
+
+
+Lib3MFResult CCall_lib3mf_fieldreference_gettransform(Lib3MFHandle libraryHandle, Lib3MF_FieldReference pFieldReference, sLib3MFTransform * pTransform)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FieldReference_GetTransform (pFieldReference, pTransform);
+}
+
+
+Lib3MFResult CCall_lib3mf_fieldreference_settransform(Lib3MFHandle libraryHandle, Lib3MF_FieldReference pFieldReference, const sLib3MFTransform * pTransform)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FieldReference_SetTransform (pFieldReference, pTransform);
+}
+
+
+Lib3MFResult CCall_lib3mf_scalarfieldreference_setscalarfield(Lib3MFHandle libraryHandle, Lib3MF_ScalarFieldReference pScalarFieldReference, Lib3MF_ScalarField pTheScalarField)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarFieldReference_SetScalarField (pScalarFieldReference, pTheScalarField);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfieldreference_setvector3dfield(Lib3MFHandle libraryHandle, Lib3MF_Vector3DFieldReference pVector3DFieldReference, Lib3MF_Vector3DField pTheVector3DField)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DFieldReference_SetVector3DField (pVector3DFieldReference, pTheVector3DField);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedataboundary_getsolidthreshold(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataBoundary pVolumeDataBoundary, Lib3MF_double * pTheSolidThreshold)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeDataBoundary_GetSolidThreshold (pVolumeDataBoundary, pTheSolidThreshold);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedataboundary_setsolidthreshold(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataBoundary pVolumeDataBoundary, Lib3MF_double dTheSolidThreshold)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeDataBoundary_SetSolidThreshold (pVolumeDataBoundary, dTheSolidThreshold);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedatacomposite_getbasematerialgroup(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_BaseMaterialGroup * pBaseMaterialGroupInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeDataComposite_GetBaseMaterialGroup (pVolumeDataComposite, pBaseMaterialGroupInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedatacomposite_setbasematerialgroup(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_BaseMaterialGroup pBaseMaterialGroupInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeDataComposite_SetBaseMaterialGroup (pVolumeDataComposite, pBaseMaterialGroupInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedatacomposite_getmaterialmappingcount(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_uint32 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeDataComposite_GetMaterialMappingCount (pVolumeDataComposite, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedatacomposite_getmaterialmapping(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_uint32 nIndex, Lib3MF_MaterialMapping * pTheMaterialMapping)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeDataComposite_GetMaterialMapping (pVolumeDataComposite, nIndex, pTheMaterialMapping);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedatacomposite_addmaterialmapping(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataComposite pVolumeDataComposite, const sLib3MFTransform * pTransform, Lib3MF_MaterialMapping * pTheMaterialMapping)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeDataComposite_AddMaterialMapping (pVolumeDataComposite, pTransform, pTheMaterialMapping);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedatacomposite_removematerialmapping(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_uint32 nIndex)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeDataComposite_RemoveMaterialMapping (pVolumeDataComposite, nIndex);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedataproperty_getname(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataProperty pVolumeDataProperty, const Lib3MF_uint32 nPropertyNameBufferSize, Lib3MF_uint32* pPropertyNameNeededChars, char * pPropertyNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeDataProperty_GetName (pVolumeDataProperty, nPropertyNameBufferSize, pPropertyNameNeededChars, pPropertyNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedataproperty_setisrequired(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataProperty pVolumeDataProperty, bool bIsRequired)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeDataProperty_SetIsRequired (pVolumeDataProperty, bIsRequired);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedataproperty_isrequired(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataProperty pVolumeDataProperty, bool * pIsRequired)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeDataProperty_IsRequired (pVolumeDataProperty, pIsRequired);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedata_getboundary(Lib3MFHandle libraryHandle, Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataBoundary * pTheBoundaryData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeData_GetBoundary (pVolumeData, pTheBoundaryData);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedata_createnewboundary(Lib3MFHandle libraryHandle, Lib3MF_VolumeData pVolumeData, Lib3MF_ScalarField pTheScalarField, Lib3MF_VolumeDataBoundary * pTheBoundaryData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeData_CreateNewBoundary (pVolumeData, pTheScalarField, pTheBoundaryData);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedata_removeboundary(Lib3MFHandle libraryHandle, Lib3MF_VolumeData pVolumeData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeData_RemoveBoundary (pVolumeData);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedata_getcomposite(Lib3MFHandle libraryHandle, Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataComposite * pTheCompositeData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeData_GetComposite (pVolumeData, pTheCompositeData);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedata_createnewcomposite(Lib3MFHandle libraryHandle, Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataComposite * pTheCompositeData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeData_CreateNewComposite (pVolumeData, pTheCompositeData);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedata_removecomposite(Lib3MFHandle libraryHandle, Lib3MF_VolumeData pVolumeData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeData_RemoveComposite (pVolumeData);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedata_getcolor(Lib3MFHandle libraryHandle, Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataColor * pTheColorData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeData_GetColor (pVolumeData, pTheColorData);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedata_createnewcolor(Lib3MFHandle libraryHandle, Lib3MF_VolumeData pVolumeData, Lib3MF_Vector3DField pTheVector3DField, Lib3MF_VolumeDataColor * pTheColorData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeData_CreateNewColor (pVolumeData, pTheVector3DField, pTheColorData);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedata_removecolor(Lib3MFHandle libraryHandle, Lib3MF_VolumeData pVolumeData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeData_RemoveColor (pVolumeData);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedata_getpropertycount(Lib3MFHandle libraryHandle, Lib3MF_VolumeData pVolumeData, Lib3MF_uint32 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeData_GetPropertyCount (pVolumeData, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedata_getproperty(Lib3MFHandle libraryHandle, Lib3MF_VolumeData pVolumeData, Lib3MF_uint32 nIndex, Lib3MF_VolumeDataProperty * pTheVolumeDataProperty)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeData_GetProperty (pVolumeData, nIndex, pTheVolumeDataProperty);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedata_addpropertyfromscalarfield(Lib3MFHandle libraryHandle, Lib3MF_VolumeData pVolumeData, const char * pName, Lib3MF_ScalarField pTheScalarField, Lib3MF_VolumeDataProperty * pTheVolumeDataProperty)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeData_AddPropertyFromScalarField (pVolumeData, pName, pTheScalarField, pTheVolumeDataProperty);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedata_addpropertyfromvector3dfield(Lib3MFHandle libraryHandle, Lib3MF_VolumeData pVolumeData, const char * pName, Lib3MF_Vector3DField pTheVector3DField, Lib3MF_VolumeDataProperty * pTheVolumeDataProperty)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeData_AddPropertyFromVector3DField (pVolumeData, pName, pTheVector3DField, pTheVolumeDataProperty);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedata_removeproperty(Lib3MFHandle libraryHandle, Lib3MF_VolumeData pVolumeData, Lib3MF_uint32 nIndex)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeData_RemoveProperty (pVolumeData, nIndex);
 }
 
 
@@ -1743,6 +2598,123 @@ Lib3MFResult CCall_lib3mf_multipropertygroup_removelayer(Lib3MFHandle libraryHan
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_MultiPropertyGroup_RemoveLayer (pMultiPropertyGroup, nLayerIndex);
+}
+
+
+Lib3MFResult CCall_lib3mf_image3d_getname(Lib3MFHandle libraryHandle, Lib3MF_Image3D pImage3D, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Image3D_GetName (pImage3D, nNameBufferSize, pNameNeededChars, pNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_image3d_setname(Lib3MFHandle libraryHandle, Lib3MF_Image3D pImage3D, const char * pName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Image3D_SetName (pImage3D, pName);
+}
+
+
+Lib3MFResult CCall_lib3mf_image3d_isimagestack(Lib3MFHandle libraryHandle, Lib3MF_Image3D pImage3D, bool * pIsImageStack)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Image3D_IsImageStack (pImage3D, pIsImageStack);
+}
+
+
+Lib3MFResult CCall_lib3mf_imagestack_getrowcount(Lib3MFHandle libraryHandle, Lib3MF_ImageStack pImageStack, Lib3MF_uint32 * pRowCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImageStack_GetRowCount (pImageStack, pRowCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_imagestack_setrowcount(Lib3MFHandle libraryHandle, Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nRowCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImageStack_SetRowCount (pImageStack, nRowCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_imagestack_getcolumncount(Lib3MFHandle libraryHandle, Lib3MF_ImageStack pImageStack, Lib3MF_uint32 * pColumnCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImageStack_GetColumnCount (pImageStack, pColumnCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_imagestack_setcolumncount(Lib3MFHandle libraryHandle, Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nColumnCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImageStack_SetColumnCount (pImageStack, nColumnCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_imagestack_getsheetcount(Lib3MFHandle libraryHandle, Lib3MF_ImageStack pImageStack, Lib3MF_uint32 * pSheetCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImageStack_GetSheetCount (pImageStack, pSheetCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_imagestack_getsheet(Lib3MFHandle libraryHandle, Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nIndex, Lib3MF_Attachment * pSheet)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImageStack_GetSheet (pImageStack, nIndex, pSheet);
+}
+
+
+Lib3MFResult CCall_lib3mf_imagestack_setsheet(Lib3MFHandle libraryHandle, Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nIndex, Lib3MF_Attachment pSheet)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImageStack_SetSheet (pImageStack, nIndex, pSheet);
+}
+
+
+Lib3MFResult CCall_lib3mf_imagestack_createemptysheet(Lib3MFHandle libraryHandle, Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_Attachment * pSheet)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImageStack_CreateEmptySheet (pImageStack, nIndex, pPath, pSheet);
+}
+
+
+Lib3MFResult CCall_lib3mf_imagestack_createsheetfrombuffer(Lib3MFHandle libraryHandle, Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer, Lib3MF_Attachment * pSheet)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImageStack_CreateSheetFromBuffer (pImageStack, nIndex, pPath, nDataBufferSize, pDataBuffer, pSheet);
+}
+
+
+Lib3MFResult CCall_lib3mf_imagestack_createsheetfromfile(Lib3MFHandle libraryHandle, Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nIndex, const char * pPath, const char * pFileName, Lib3MF_Attachment * pSheet)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImageStack_CreateSheetFromFile (pImageStack, nIndex, pPath, pFileName, pSheet);
 }
 
 
@@ -2898,6 +3870,33 @@ Lib3MFResult CCall_lib3mf_model_getslicestacks(Lib3MFHandle libraryHandle, Lib3M
 }
 
 
+Lib3MFResult CCall_lib3mf_model_getimage3ds(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Image3DIterator * pResourceIterator)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_GetImage3Ds (pModel, pResourceIterator);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_getscalarfields(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_ScalarFieldIterator * pResourceIterator)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_GetScalarFields (pModel, pResourceIterator);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_getvector3dfields(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Vector3DFieldIterator * pResourceIterator)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_GetVector3DFields (pModel, pResourceIterator);
+}
+
+
 Lib3MFResult CCall_lib3mf_model_mergetomodel(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Model * pMergedModelInstance)
 {
 	if (libraryHandle == 0) 
@@ -2985,6 +3984,150 @@ Lib3MFResult CCall_lib3mf_model_addmultipropertygroup(Lib3MFHandle libraryHandle
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_Model_AddMultiPropertyGroup (pModel, pMultiPropertyGroupInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_addimagestack(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_uint32 nColumnCount, Lib3MF_uint32 nRowCount, Lib3MF_uint32 nSheetCount, Lib3MF_ImageStack * pInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_AddImageStack (pModel, nColumnCount, nRowCount, nSheetCount, pInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_getimagestackbyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ImageStack * pImageStackInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_GetImageStackByID (pModel, nUniqueResourceID, pImageStackInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_addscalarfieldfromimage3d(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Image3D pImage3D, Lib3MF_ScalarFieldFromImage3D * pTheScalarFieldFromImage3D)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_AddScalarFieldFromImage3D (pModel, pImage3D, pTheScalarFieldFromImage3D);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_addscalarfieldcomposed(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_ScalarFieldComposed * pTheScalarFieldComposed)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_AddScalarFieldComposed (pModel, pTheScalarFieldComposed);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_addscalarfieldconstant(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_ScalarFieldConstant * pTheScalarFieldConstant)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_AddScalarFieldConstant (pModel, pTheScalarFieldConstant);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_getscalarfieldbyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ScalarField * pScalarFieldInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_GetScalarFieldByID (pModel, nUniqueResourceID, pScalarFieldInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_getscalarfieldfromimage3dbyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ScalarFieldFromImage3D * pScalarFieldFromImage3DInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_GetScalarFieldFromImage3DByID (pModel, nUniqueResourceID, pScalarFieldFromImage3DInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_getscalarfieldcomposedbyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ScalarFieldComposed * pScalarFieldComposedInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_GetScalarFieldComposedByID (pModel, nUniqueResourceID, pScalarFieldComposedInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_getscalarfieldconstantbyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ScalarFieldConstant * pScalarFieldConstantInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_GetScalarFieldConstantByID (pModel, nUniqueResourceID, pScalarFieldConstantInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_addvector3dfieldfromimage3d(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Image3D pImage3D, Lib3MF_Vector3DFieldFromImage3D * pTheVector3DFieldFromImage3D)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_AddVector3DFieldFromImage3D (pModel, pImage3D, pTheVector3DFieldFromImage3D);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_addvector3dfieldcomposed(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Vector3DFieldComposed * pTheVector3DFieldComposed)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_AddVector3DFieldComposed (pModel, pTheVector3DFieldComposed);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_addvector3dfieldconstant(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Vector3DFieldConstant * pTheVector3DFieldConstant)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_AddVector3DFieldConstant (pModel, pTheVector3DFieldConstant);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_getvector3dfieldbyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Vector3DField * pVector3DFieldInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_GetVector3DFieldByID (pModel, nUniqueResourceID, pVector3DFieldInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_getvector3dfieldfromimage3dbyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Vector3DFieldFromImage3D * pVector3DFieldFromImage3DInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_GetVector3DFieldFromImage3DByID (pModel, nUniqueResourceID, pVector3DFieldFromImage3DInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_getvector3dfieldcomposedbyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Vector3DFieldComposed * pVector3DFieldComposedInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_GetVector3DFieldComposedByID (pModel, nUniqueResourceID, pVector3DFieldComposedInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_getvector3dfieldconstantbyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Vector3DFieldConstant * pVector3DFieldConstantInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_GetVector3DFieldConstantByID (pModel, nUniqueResourceID, pVector3DFieldConstantInstance);
 }
 
 
@@ -3448,6 +4591,35 @@ const (
 	BlendMethod_NoBlendMethod = 0
 	BlendMethod_Mix = 1
 	BlendMethod_Multiply = 2
+)
+
+// ChannelName represents a Lib3MF enum.
+type ChannelName int
+
+const (
+	ChannelName_Red = 0
+	ChannelName_Green = 1
+	ChannelName_Blue = 2
+	ChannelName_Alpha = 3
+)
+
+// CompositionMethod represents a Lib3MF enum.
+type CompositionMethod int
+
+const (
+	CompositionMethod_WeightedSum = 0
+	CompositionMethod_Multiply = 1
+	CompositionMethod_Min = 2
+	CompositionMethod_Max = 3
+	CompositionMethod_Mask = 4
+)
+
+// CompositionSpace represents a Lib3MF enum.
+type CompositionSpace int
+
+const (
+	CompositionSpace_Raw = 0
+	CompositionSpace_LinearColor = 1
 )
 
 // EncryptionAlgorithm represents a Lib3MF enum.
@@ -4493,6 +5665,66 @@ func (inst MultiPropertyGroupIterator) GetCurrentMultiPropertyGroup() (MultiProp
 }
 
 
+// Image3DIterator represents a Lib3MF class.
+type Image3DIterator struct {
+	ResourceIterator
+}
+
+func (wrapper Wrapper) NewImage3DIterator(r ref) Image3DIterator {
+	return Image3DIterator{wrapper.NewResourceIterator(r)}
+}
+
+// GetCurrentImage3D returns the Image3D the iterator points at.
+func (inst Image3DIterator) GetCurrentImage3D() (Image3D, error) {
+	var resource ref
+	ret := C.CCall_lib3mf_image3diterator_getcurrentimage3d(inst.wrapperRef.LibraryHandle, inst.Ref, &resource)
+	if ret != 0 {
+		return Image3D{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImage3D(resource), nil
+}
+
+
+// ScalarFieldIterator represents a Lib3MF class.
+type ScalarFieldIterator struct {
+	ResourceIterator
+}
+
+func (wrapper Wrapper) NewScalarFieldIterator(r ref) ScalarFieldIterator {
+	return ScalarFieldIterator{wrapper.NewResourceIterator(r)}
+}
+
+// GetCurrentScalarField returns the ScalarField the iterator points at.
+func (inst ScalarFieldIterator) GetCurrentScalarField() (ScalarField, error) {
+	var resource ref
+	ret := C.CCall_lib3mf_scalarfielditerator_getcurrentscalarfield(inst.wrapperRef.LibraryHandle, inst.Ref, &resource)
+	if ret != 0 {
+		return ScalarField{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewScalarField(resource), nil
+}
+
+
+// Vector3DFieldIterator represents a Lib3MF class.
+type Vector3DFieldIterator struct {
+	ResourceIterator
+}
+
+func (wrapper Wrapper) NewVector3DFieldIterator(r ref) Vector3DFieldIterator {
+	return Vector3DFieldIterator{wrapper.NewResourceIterator(r)}
+}
+
+// GetCurrentVector3DField returns the Vector3DField the iterator points at.
+func (inst Vector3DFieldIterator) GetCurrentVector3DField() (Vector3DField, error) {
+	var resource ref
+	ret := C.CCall_lib3mf_vector3dfielditerator_getcurrentvector3dfield(inst.wrapperRef.LibraryHandle, inst.Ref, &resource)
+	if ret != 0 {
+		return Vector3DField{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewVector3DField(resource), nil
+}
+
+
 // MetaData represents a Lib3MF class.
 type MetaData struct {
 	Base
@@ -5184,6 +6416,16 @@ func (inst MeshObject) BeamLattice() (BeamLattice, error) {
 	return inst.wrapperRef.NewBeamLattice(theBeamLattice), nil
 }
 
+// VolumeData retrieves the VolumeData of this MeshObject.
+func (inst MeshObject) VolumeData() (VolumeData, error) {
+	var theVolumeData ref
+	ret := C.CCall_lib3mf_meshobject_volumedata(inst.wrapperRef.LibraryHandle, inst.Ref, &theVolumeData)
+	if ret != 0 {
+		return VolumeData{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewVolumeData(theVolumeData), nil
+}
+
 
 // BeamLattice represents a Lib3MF class.
 type BeamLattice struct {
@@ -5431,6 +6673,1090 @@ func (inst BeamLattice) GetBeamSet(index uint32) (BeamSet, error) {
 		return BeamSet{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewBeamSet(beamSet), nil
+}
+
+
+// ScalarField represents a Lib3MF class.
+type ScalarField struct {
+	Resource
+}
+
+func (wrapper Wrapper) NewScalarField(r ref) ScalarField {
+	return ScalarField{wrapper.NewResource(r)}
+}
+
+// GetName gets the name of this ScalarField.
+func (inst ScalarField) GetName() (string, error) {
+	var neededforname C.uint32_t
+	var filledinname C.uint32_t
+	ret := C.CCall_lib3mf_scalarfield_getname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforname, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizename := neededforname
+	buffername := make([]byte, bufferSizename)
+	ret = C.CCall_lib3mf_scalarfield_getname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizename, &filledinname, (*C.char)(unsafe.Pointer(&buffername[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffername[:(filledinname-1)]), nil
+}
+
+// SetName sets the name of this ScalarField.
+func (inst ScalarField) SetName(name string) error {
+	ret := C.CCall_lib3mf_scalarfield_setname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// IsFromImage3D retrieves, if this ScalarField is a ScalarFieldFromImage3D.
+func (inst ScalarField) IsFromImage3D() (bool, error) {
+	var isFromImage3D C.bool
+	ret := C.CCall_lib3mf_scalarfield_isfromimage3d(inst.wrapperRef.LibraryHandle, inst.Ref, &isFromImage3D)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(isFromImage3D), nil
+}
+
+// IsConstant retrieves, if this ScalarField is a ScalarFieldConstant.
+func (inst ScalarField) IsConstant() (bool, error) {
+	var isConstant C.bool
+	ret := C.CCall_lib3mf_scalarfield_isconstant(inst.wrapperRef.LibraryHandle, inst.Ref, &isConstant)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(isConstant), nil
+}
+
+// IsComposed retrieves, if this ScalarField is a ScalarFieldComposed.
+func (inst ScalarField) IsComposed() (bool, error) {
+	var isComposed C.bool
+	ret := C.CCall_lib3mf_scalarfield_iscomposed(inst.wrapperRef.LibraryHandle, inst.Ref, &isComposed)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(isComposed), nil
+}
+
+
+// Vector3DField represents a Lib3MF class.
+type Vector3DField struct {
+	Resource
+}
+
+func (wrapper Wrapper) NewVector3DField(r ref) Vector3DField {
+	return Vector3DField{wrapper.NewResource(r)}
+}
+
+// GetName gets the name of this Vector3DField.
+func (inst Vector3DField) GetName() (string, error) {
+	var neededforname C.uint32_t
+	var filledinname C.uint32_t
+	ret := C.CCall_lib3mf_vector3dfield_getname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforname, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizename := neededforname
+	buffername := make([]byte, bufferSizename)
+	ret = C.CCall_lib3mf_vector3dfield_getname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizename, &filledinname, (*C.char)(unsafe.Pointer(&buffername[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffername[:(filledinname-1)]), nil
+}
+
+// SetName sets the name of this Vector3DField.
+func (inst Vector3DField) SetName(name string) error {
+	ret := C.CCall_lib3mf_vector3dfield_setname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// IsFromImage3D retrieves, if this Vector3DField is a Vector3DFieldFromImage3D.
+func (inst Vector3DField) IsFromImage3D() (bool, error) {
+	var isFromImage3D C.bool
+	ret := C.CCall_lib3mf_vector3dfield_isfromimage3d(inst.wrapperRef.LibraryHandle, inst.Ref, &isFromImage3D)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(isFromImage3D), nil
+}
+
+// IsConstant retrieves, if this Vector3DField is a Vector3DFieldConstant.
+func (inst Vector3DField) IsConstant() (bool, error) {
+	var isConstant C.bool
+	ret := C.CCall_lib3mf_vector3dfield_isconstant(inst.wrapperRef.LibraryHandle, inst.Ref, &isConstant)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(isConstant), nil
+}
+
+// IsComposed retrieves, if this Vector3DField is a Vector3DFieldComposed.
+func (inst Vector3DField) IsComposed() (bool, error) {
+	var isComposed C.bool
+	ret := C.CCall_lib3mf_vector3dfield_iscomposed(inst.wrapperRef.LibraryHandle, inst.Ref, &isComposed)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(isComposed), nil
+}
+
+
+// ScalarFieldFromImage3D represents a Lib3MF class.
+type ScalarFieldFromImage3D struct {
+	ScalarField
+}
+
+func (wrapper Wrapper) NewScalarFieldFromImage3D(r ref) ScalarFieldFromImage3D {
+	return ScalarFieldFromImage3D{wrapper.NewScalarField(r)}
+}
+
+// GetImage returns the selected 3D image.
+func (inst ScalarFieldFromImage3D) GetImage() (Image3D, error) {
+	var image3D ref
+	ret := C.CCall_lib3mf_scalarfieldfromimage3d_getimage(inst.wrapperRef.LibraryHandle, inst.Ref, &image3D)
+	if ret != 0 {
+		return Image3D{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImage3D(image3D), nil
+}
+
+// SetImage sets the 3D image of the selector.
+func (inst ScalarFieldFromImage3D) SetImage(image3D Image3D) error {
+	ret := C.CCall_lib3mf_scalarfieldfromimage3d_setimage(inst.wrapperRef.LibraryHandle, inst.Ref, image3D.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SetChannel sets the channel name to be picked from the referenced Image3D.
+func (inst ScalarFieldFromImage3D) SetChannel(name ChannelName) error {
+	ret := C.CCall_lib3mf_scalarfieldfromimage3d_setchannel(inst.wrapperRef.LibraryHandle, inst.Ref, C.eLib3MFChannelName(name))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetChannel gets the channel name to be picked from the referenced Image3D.
+func (inst ScalarFieldFromImage3D) GetChannel() (ChannelName, error) {
+	var name C.eLib3MFChannelName
+	ret := C.CCall_lib3mf_scalarfieldfromimage3d_getchannel(inst.wrapperRef.LibraryHandle, inst.Ref, &name)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return ChannelName(name), nil
+}
+
+// SetFilter sets the texture filter of the selector.
+func (inst ScalarFieldFromImage3D) SetFilter(filter TextureFilter) error {
+	ret := C.CCall_lib3mf_scalarfieldfromimage3d_setfilter(inst.wrapperRef.LibraryHandle, inst.Ref, C.eLib3MFTextureFilter(filter))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetFilter returns the texture filter of the selector.
+func (inst ScalarFieldFromImage3D) GetFilter() (TextureFilter, error) {
+	var filter C.eLib3MFTextureFilter
+	ret := C.CCall_lib3mf_scalarfieldfromimage3d_getfilter(inst.wrapperRef.LibraryHandle, inst.Ref, &filter)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return TextureFilter(filter), nil
+}
+
+// SetTileStyles sets the tile styles of the selector.
+func (inst ScalarFieldFromImage3D) SetTileStyles(tileStyleU TextureTileStyle, tileStyleV TextureTileStyle, tileStyleW TextureTileStyle) error {
+	ret := C.CCall_lib3mf_scalarfieldfromimage3d_settilestyles(inst.wrapperRef.LibraryHandle, inst.Ref, C.eLib3MFTextureTileStyle(tileStyleU), C.eLib3MFTextureTileStyle(tileStyleV), C.eLib3MFTextureTileStyle(tileStyleW))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetTileStyles retrieves the tile styles of the selector.
+func (inst ScalarFieldFromImage3D) GetTileStyles() (TextureTileStyle, TextureTileStyle, TextureTileStyle, error) {
+	var tileStyleU C.eLib3MFTextureTileStyle
+	var tileStyleV C.eLib3MFTextureTileStyle
+	var tileStyleW C.eLib3MFTextureTileStyle
+	ret := C.CCall_lib3mf_scalarfieldfromimage3d_gettilestyles(inst.wrapperRef.LibraryHandle, inst.Ref, &tileStyleU, &tileStyleV, &tileStyleW)
+	if ret != 0 {
+		return 0, 0, 0, makeError(uint32(ret))
+	}
+	return TextureTileStyle(tileStyleU), TextureTileStyle(tileStyleV), TextureTileStyle(tileStyleW), nil
+}
+
+// GetOffset returns the offset value for the pixel values in the Image3D.
+func (inst ScalarFieldFromImage3D) GetOffset() (float64, error) {
+	var offset C.double
+	ret := C.CCall_lib3mf_scalarfieldfromimage3d_getoffset(inst.wrapperRef.LibraryHandle, inst.Ref, &offset)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(offset), nil
+}
+
+// SetOffset sets the offset value for the pixel values in the Image3D.
+func (inst ScalarFieldFromImage3D) SetOffset(offset float64) error {
+	ret := C.CCall_lib3mf_scalarfieldfromimage3d_setoffset(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(offset))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetScale returns the scale value for the pixel values in the Image3D.
+func (inst ScalarFieldFromImage3D) GetScale() (float64, error) {
+	var scale C.double
+	ret := C.CCall_lib3mf_scalarfieldfromimage3d_getscale(inst.wrapperRef.LibraryHandle, inst.Ref, &scale)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(scale), nil
+}
+
+// SetScale sets the scale value for the pixel values in the Image3D.
+func (inst ScalarFieldFromImage3D) SetScale(scale float64) error {
+	ret := C.CCall_lib3mf_scalarfieldfromimage3d_setscale(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(scale))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// ScalarFieldConstant represents a Lib3MF class.
+type ScalarFieldConstant struct {
+	ScalarField
+}
+
+func (wrapper Wrapper) NewScalarFieldConstant(r ref) ScalarFieldConstant {
+	return ScalarFieldConstant{wrapper.NewScalarField(r)}
+}
+
+// GetValue returns the constant value of this ScalarFieldConstant.
+func (inst ScalarFieldConstant) GetValue() (float64, error) {
+	var value C.double
+	ret := C.CCall_lib3mf_scalarfieldconstant_getvalue(inst.wrapperRef.LibraryHandle, inst.Ref, &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(value), nil
+}
+
+// SetValue sets the constant value of this ScalarFieldConstant.
+func (inst ScalarFieldConstant) SetValue(value float64) error {
+	ret := C.CCall_lib3mf_scalarfieldconstant_setvalue(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// ScalarFieldComposed represents a Lib3MF class.
+type ScalarFieldComposed struct {
+	ScalarField
+}
+
+func (wrapper Wrapper) NewScalarFieldComposed(r ref) ScalarFieldComposed {
+	return ScalarFieldComposed{wrapper.NewScalarField(r)}
+}
+
+// SetMethod sets the method to used for composition.
+func (inst ScalarFieldComposed) SetMethod(theMethod CompositionMethod) error {
+	ret := C.CCall_lib3mf_scalarfieldcomposed_setmethod(inst.wrapperRef.LibraryHandle, inst.Ref, C.eLib3MFCompositionMethod(theMethod))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetMethod gets the method to used for composition.
+func (inst ScalarFieldComposed) GetMethod() (CompositionMethod, error) {
+	var theMethod C.eLib3MFCompositionMethod
+	ret := C.CCall_lib3mf_scalarfieldcomposed_getmethod(inst.wrapperRef.LibraryHandle, inst.Ref, &theMethod)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return CompositionMethod(theMethod), nil
+}
+
+// GetFactor1 returns the factor scalar field 1 is multiplied with when composited.
+func (inst ScalarFieldComposed) GetFactor1() (float64, error) {
+	var factor1 C.double
+	ret := C.CCall_lib3mf_scalarfieldcomposed_getfactor1(inst.wrapperRef.LibraryHandle, inst.Ref, &factor1)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(factor1), nil
+}
+
+// SetFactor1 sets the factor scalar field 1 is multiplied with when composited.
+func (inst ScalarFieldComposed) SetFactor1(factor1 float64) error {
+	ret := C.CCall_lib3mf_scalarfieldcomposed_setfactor1(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(factor1))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetFactor2 returns the factor scalar field 2 is multiplied with when composited.
+func (inst ScalarFieldComposed) GetFactor2() (float64, error) {
+	var factor2 C.double
+	ret := C.CCall_lib3mf_scalarfieldcomposed_getfactor2(inst.wrapperRef.LibraryHandle, inst.Ref, &factor2)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(factor2), nil
+}
+
+// SetFactor2 sets the factor scalar field 2 is multiplied with when composited.
+func (inst ScalarFieldComposed) SetFactor2(factor2 float64) error {
+	ret := C.CCall_lib3mf_scalarfieldcomposed_setfactor2(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(factor2))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// ScalarFieldReference1 access to the ScalarFieldReference for the first composited field.
+func (inst ScalarFieldComposed) ScalarFieldReference1() (ScalarFieldReference, error) {
+	var theScalarFieldReference1 ref
+	ret := C.CCall_lib3mf_scalarfieldcomposed_scalarfieldreference1(inst.wrapperRef.LibraryHandle, inst.Ref, &theScalarFieldReference1)
+	if ret != 0 {
+		return ScalarFieldReference{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewScalarFieldReference(theScalarFieldReference1), nil
+}
+
+// ScalarFieldReference2 access to the ScalarFieldReference for the second composited field.
+func (inst ScalarFieldComposed) ScalarFieldReference2() (ScalarFieldReference, error) {
+	var theScalarFieldReference1 ref
+	ret := C.CCall_lib3mf_scalarfieldcomposed_scalarfieldreference2(inst.wrapperRef.LibraryHandle, inst.Ref, &theScalarFieldReference1)
+	if ret != 0 {
+		return ScalarFieldReference{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewScalarFieldReference(theScalarFieldReference1), nil
+}
+
+// ScalarFieldReferenceMask access to the ScalarFieldReference for masking. Only relevant if the Method is mask.
+func (inst ScalarFieldComposed) ScalarFieldReferenceMask() (ScalarFieldReference, error) {
+	var theScalarFieldReferenceMask ref
+	ret := C.CCall_lib3mf_scalarfieldcomposed_scalarfieldreferencemask(inst.wrapperRef.LibraryHandle, inst.Ref, &theScalarFieldReferenceMask)
+	if ret != 0 {
+		return ScalarFieldReference{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewScalarFieldReference(theScalarFieldReferenceMask), nil
+}
+
+
+// Vector3DFieldFromImage3D represents a Lib3MF class.
+type Vector3DFieldFromImage3D struct {
+	Vector3DField
+}
+
+func (wrapper Wrapper) NewVector3DFieldFromImage3D(r ref) Vector3DFieldFromImage3D {
+	return Vector3DFieldFromImage3D{wrapper.NewVector3DField(r)}
+}
+
+// GetImage returns the selected 3D image.
+func (inst Vector3DFieldFromImage3D) GetImage() (Image3D, error) {
+	var image3D ref
+	ret := C.CCall_lib3mf_vector3dfieldfromimage3d_getimage(inst.wrapperRef.LibraryHandle, inst.Ref, &image3D)
+	if ret != 0 {
+		return Image3D{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImage3D(image3D), nil
+}
+
+// SetImage sets the 3D image of the selector.
+func (inst Vector3DFieldFromImage3D) SetImage(image3D Image3D) error {
+	ret := C.CCall_lib3mf_vector3dfieldfromimage3d_setimage(inst.wrapperRef.LibraryHandle, inst.Ref, image3D.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SetFilter sets the texture filter of the selector.
+func (inst Vector3DFieldFromImage3D) SetFilter(filter TextureFilter) error {
+	ret := C.CCall_lib3mf_vector3dfieldfromimage3d_setfilter(inst.wrapperRef.LibraryHandle, inst.Ref, C.eLib3MFTextureFilter(filter))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetFilter returns the texture filter of the selector.
+func (inst Vector3DFieldFromImage3D) GetFilter() (TextureFilter, error) {
+	var filter C.eLib3MFTextureFilter
+	ret := C.CCall_lib3mf_vector3dfieldfromimage3d_getfilter(inst.wrapperRef.LibraryHandle, inst.Ref, &filter)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return TextureFilter(filter), nil
+}
+
+// SetTileStyles sets the tile styles of the selector.
+func (inst Vector3DFieldFromImage3D) SetTileStyles(tileStyleU TextureTileStyle, tileStyleV TextureTileStyle, tileStyleW TextureTileStyle) error {
+	ret := C.CCall_lib3mf_vector3dfieldfromimage3d_settilestyles(inst.wrapperRef.LibraryHandle, inst.Ref, C.eLib3MFTextureTileStyle(tileStyleU), C.eLib3MFTextureTileStyle(tileStyleV), C.eLib3MFTextureTileStyle(tileStyleW))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetTileStyles retrieves the tile styles of the selector.
+func (inst Vector3DFieldFromImage3D) GetTileStyles() (TextureTileStyle, TextureTileStyle, TextureTileStyle, error) {
+	var tileStyleU C.eLib3MFTextureTileStyle
+	var tileStyleV C.eLib3MFTextureTileStyle
+	var tileStyleW C.eLib3MFTextureTileStyle
+	ret := C.CCall_lib3mf_vector3dfieldfromimage3d_gettilestyles(inst.wrapperRef.LibraryHandle, inst.Ref, &tileStyleU, &tileStyleV, &tileStyleW)
+	if ret != 0 {
+		return 0, 0, 0, makeError(uint32(ret))
+	}
+	return TextureTileStyle(tileStyleU), TextureTileStyle(tileStyleV), TextureTileStyle(tileStyleW), nil
+}
+
+// GetOffset returns the offset value for the pixel values in the Image3D.
+func (inst Vector3DFieldFromImage3D) GetOffset() (float64, error) {
+	var offset C.double
+	ret := C.CCall_lib3mf_vector3dfieldfromimage3d_getoffset(inst.wrapperRef.LibraryHandle, inst.Ref, &offset)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(offset), nil
+}
+
+// SetOffset sets the offset value for the pixel values in the Image3D.
+func (inst Vector3DFieldFromImage3D) SetOffset(offset float64) error {
+	ret := C.CCall_lib3mf_vector3dfieldfromimage3d_setoffset(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(offset))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetScale returns the scale value for the pixel values in the Image3D.
+func (inst Vector3DFieldFromImage3D) GetScale() (float64, error) {
+	var scale C.double
+	ret := C.CCall_lib3mf_vector3dfieldfromimage3d_getscale(inst.wrapperRef.LibraryHandle, inst.Ref, &scale)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(scale), nil
+}
+
+// SetScale sets the scale value for the pixel values in the Image3D.
+func (inst Vector3DFieldFromImage3D) SetScale(scale float64) error {
+	ret := C.CCall_lib3mf_vector3dfieldfromimage3d_setscale(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(scale))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// Vector3DFieldConstant represents a Lib3MF class.
+type Vector3DFieldConstant struct {
+	Vector3DField
+}
+
+func (wrapper Wrapper) NewVector3DFieldConstant(r ref) Vector3DFieldConstant {
+	return Vector3DFieldConstant{wrapper.NewVector3DField(r)}
+}
+
+// GetValueX returns the constant x-value of this Vector3DFieldConstant.
+func (inst Vector3DFieldConstant) GetValueX() (float64, error) {
+	var valueX C.double
+	ret := C.CCall_lib3mf_vector3dfieldconstant_getvaluex(inst.wrapperRef.LibraryHandle, inst.Ref, &valueX)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(valueX), nil
+}
+
+// SetValueX sets the constant x-value of this Vector3DFieldConstant.
+func (inst Vector3DFieldConstant) SetValueX(valueX float64) error {
+	ret := C.CCall_lib3mf_vector3dfieldconstant_setvaluex(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(valueX))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetValueY returns the constant y-value of this Vector3DFieldConstant.
+func (inst Vector3DFieldConstant) GetValueY() (float64, error) {
+	var valueY C.double
+	ret := C.CCall_lib3mf_vector3dfieldconstant_getvaluey(inst.wrapperRef.LibraryHandle, inst.Ref, &valueY)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(valueY), nil
+}
+
+// SetValueY sets the constant y-value of this Vector3DFieldConstant.
+func (inst Vector3DFieldConstant) SetValueY(valueY float64) error {
+	ret := C.CCall_lib3mf_vector3dfieldconstant_setvaluey(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(valueY))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetValueZ returns the constant x-value of this Vector3DFieldConstant.
+func (inst Vector3DFieldConstant) GetValueZ() (float64, error) {
+	var valueZ C.double
+	ret := C.CCall_lib3mf_vector3dfieldconstant_getvaluez(inst.wrapperRef.LibraryHandle, inst.Ref, &valueZ)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(valueZ), nil
+}
+
+// SetValueZ sets the constant z-value of this Vector3DFieldConstant.
+func (inst Vector3DFieldConstant) SetValueZ(valueZ float64) error {
+	ret := C.CCall_lib3mf_vector3dfieldconstant_setvaluez(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(valueZ))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// Vector3DFieldComposed represents a Lib3MF class.
+type Vector3DFieldComposed struct {
+	Vector3DField
+}
+
+func (wrapper Wrapper) NewVector3DFieldComposed(r ref) Vector3DFieldComposed {
+	return Vector3DFieldComposed{wrapper.NewVector3DField(r)}
+}
+
+// SetMethod sets the method to used for composition.
+func (inst Vector3DFieldComposed) SetMethod(theMethod CompositionMethod) error {
+	ret := C.CCall_lib3mf_vector3dfieldcomposed_setmethod(inst.wrapperRef.LibraryHandle, inst.Ref, C.eLib3MFCompositionMethod(theMethod))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetMethod gets the method to used for composition.
+func (inst Vector3DFieldComposed) GetMethod() (CompositionMethod, error) {
+	var theMethod C.eLib3MFCompositionMethod
+	ret := C.CCall_lib3mf_vector3dfieldcomposed_getmethod(inst.wrapperRef.LibraryHandle, inst.Ref, &theMethod)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return CompositionMethod(theMethod), nil
+}
+
+// SetSpace sets the space in which composition takes place.
+func (inst Vector3DFieldComposed) SetSpace(theSpace CompositionSpace) error {
+	ret := C.CCall_lib3mf_vector3dfieldcomposed_setspace(inst.wrapperRef.LibraryHandle, inst.Ref, C.eLib3MFCompositionSpace(theSpace))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetSpace gets the space in which composition takes place.
+func (inst Vector3DFieldComposed) GetSpace() (CompositionSpace, error) {
+	var theSpace C.eLib3MFCompositionSpace
+	ret := C.CCall_lib3mf_vector3dfieldcomposed_getspace(inst.wrapperRef.LibraryHandle, inst.Ref, &theSpace)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return CompositionSpace(theSpace), nil
+}
+
+// GetFactor1 returns the factor vector3d field 1 is multiplied with when composited.
+func (inst Vector3DFieldComposed) GetFactor1() (float64, error) {
+	var factor1 C.double
+	ret := C.CCall_lib3mf_vector3dfieldcomposed_getfactor1(inst.wrapperRef.LibraryHandle, inst.Ref, &factor1)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(factor1), nil
+}
+
+// SetFactor1 sets the factor vector3d field 1 is multiplied with when composited.
+func (inst Vector3DFieldComposed) SetFactor1(factor1 float64) error {
+	ret := C.CCall_lib3mf_vector3dfieldcomposed_setfactor1(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(factor1))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetFactor2 returns the vector3d scalar field 2 is multiplied with when composited.
+func (inst Vector3DFieldComposed) GetFactor2() (float64, error) {
+	var factor2 C.double
+	ret := C.CCall_lib3mf_vector3dfieldcomposed_getfactor2(inst.wrapperRef.LibraryHandle, inst.Ref, &factor2)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(factor2), nil
+}
+
+// SetFactor2 sets the factor vector3d field 2 is multiplied with when composited.
+func (inst Vector3DFieldComposed) SetFactor2(factor2 float64) error {
+	ret := C.CCall_lib3mf_vector3dfieldcomposed_setfactor2(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(factor2))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// Vector3DFieldReference1 access to the Vector3DFieldReference for the first composited field.
+func (inst Vector3DFieldComposed) Vector3DFieldReference1() (Vector3DFieldReference, error) {
+	var theVector3DFieldReference1 ref
+	ret := C.CCall_lib3mf_vector3dfieldcomposed_vector3dfieldreference1(inst.wrapperRef.LibraryHandle, inst.Ref, &theVector3DFieldReference1)
+	if ret != 0 {
+		return Vector3DFieldReference{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewVector3DFieldReference(theVector3DFieldReference1), nil
+}
+
+// Vector3DFieldReference2 access to the Vector3DFieldReference for the second composited field.
+func (inst Vector3DFieldComposed) Vector3DFieldReference2() (Vector3DFieldReference, error) {
+	var theVector3DFieldReference1 ref
+	ret := C.CCall_lib3mf_vector3dfieldcomposed_vector3dfieldreference2(inst.wrapperRef.LibraryHandle, inst.Ref, &theVector3DFieldReference1)
+	if ret != 0 {
+		return Vector3DFieldReference{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewVector3DFieldReference(theVector3DFieldReference1), nil
+}
+
+// ScalarFieldReferenceMask access to the ScalarFieldReference for masking. Only relevant if the Method is mask.
+func (inst Vector3DFieldComposed) ScalarFieldReferenceMask() (ScalarFieldReference, error) {
+	var theScalarFieldReferenceMask ref
+	ret := C.CCall_lib3mf_vector3dfieldcomposed_scalarfieldreferencemask(inst.wrapperRef.LibraryHandle, inst.Ref, &theScalarFieldReferenceMask)
+	if ret != 0 {
+		return ScalarFieldReference{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewScalarFieldReference(theScalarFieldReferenceMask), nil
+}
+
+
+// FieldReference represents a Lib3MF class.
+type FieldReference struct {
+	Base
+}
+
+func (wrapper Wrapper) NewFieldReference(r ref) FieldReference {
+	return FieldReference{wrapper.NewBase(r)}
+}
+
+// GetFieldResourceID returns the UniqueResourceID of the Field (Scalar- or Vector3DField).
+func (inst FieldReference) GetFieldResourceID() (uint32, error) {
+	var uniqueResourceID C.uint32_t
+	ret := C.CCall_lib3mf_fieldreference_getfieldresourceid(inst.wrapperRef.LibraryHandle, inst.Ref, &uniqueResourceID)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(uniqueResourceID), nil
+}
+
+// SetFieldResourceID sets the UniqueResourceID to refer to.
+func (inst FieldReference) SetFieldResourceID(uniqueResourceID uint32) error {
+	ret := C.CCall_lib3mf_fieldreference_setfieldresourceid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(uniqueResourceID))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetTransform returns the transformation matrix into the coordinate system of the referenced Field.
+func (inst FieldReference) GetTransform() (Transform, error) {
+	var transform C.sLib3MFTransform
+	ret := C.CCall_lib3mf_fieldreference_gettransform(inst.wrapperRef.LibraryHandle, inst.Ref, &transform)
+	if ret != 0 {
+		return Transform{}, makeError(uint32(ret))
+	}
+	return *(*Transform)(unsafe.Pointer(&transform)), nil
+}
+
+// SetTransform sets the transformation matrix into the coordinate system of the referenced Field.
+func (inst FieldReference) SetTransform(transform Transform) error {
+	ret := C.CCall_lib3mf_fieldreference_settransform(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.sLib3MFTransform)(unsafe.Pointer(&transform)))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// ScalarFieldReference represents a Lib3MF class.
+type ScalarFieldReference struct {
+	FieldReference
+}
+
+func (wrapper Wrapper) NewScalarFieldReference(r ref) ScalarFieldReference {
+	return ScalarFieldReference{wrapper.NewFieldReference(r)}
+}
+
+// SetScalarField sets the ScalarField to use within this volume data item.
+func (inst ScalarFieldReference) SetScalarField(theScalarField ScalarField) error {
+	ret := C.CCall_lib3mf_scalarfieldreference_setscalarfield(inst.wrapperRef.LibraryHandle, inst.Ref, theScalarField.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// Vector3DFieldReference represents a Lib3MF class.
+type Vector3DFieldReference struct {
+	FieldReference
+}
+
+func (wrapper Wrapper) NewVector3DFieldReference(r ref) Vector3DFieldReference {
+	return Vector3DFieldReference{wrapper.NewFieldReference(r)}
+}
+
+// SetVector3DField sets the Vector3DField to use within this volume data item.
+func (inst Vector3DFieldReference) SetVector3DField(theVector3DField Vector3DField) error {
+	ret := C.CCall_lib3mf_vector3dfieldreference_setvector3dfield(inst.wrapperRef.LibraryHandle, inst.Ref, theVector3DField.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// VolumeDataBoundary represents a Lib3MF class.
+type VolumeDataBoundary struct {
+	ScalarFieldReference
+}
+
+func (wrapper Wrapper) NewVolumeDataBoundary(r ref) VolumeDataBoundary {
+	return VolumeDataBoundary{wrapper.NewScalarFieldReference(r)}
+}
+
+// GetSolidThreshold returns the solidthreshold for the levelset function encoded in this VolumeDataBoundary.
+func (inst VolumeDataBoundary) GetSolidThreshold() (float64, error) {
+	var theSolidThreshold C.double
+	ret := C.CCall_lib3mf_volumedataboundary_getsolidthreshold(inst.wrapperRef.LibraryHandle, inst.Ref, &theSolidThreshold)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(theSolidThreshold), nil
+}
+
+// SetSolidThreshold sets the solidthreshold for the levelset function encoded in this VolumeDataBoundary.
+func (inst VolumeDataBoundary) SetSolidThreshold(theSolidThreshold float64) error {
+	ret := C.CCall_lib3mf_volumedataboundary_setsolidthreshold(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(theSolidThreshold))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// VolumeDataColor represents a Lib3MF class.
+type VolumeDataColor struct {
+	Vector3DFieldReference
+}
+
+func (wrapper Wrapper) NewVolumeDataColor(r ref) VolumeDataColor {
+	return VolumeDataColor{wrapper.NewVector3DFieldReference(r)}
+}
+
+
+// MaterialMapping represents a Lib3MF class.
+type MaterialMapping struct {
+	ScalarFieldReference
+}
+
+func (wrapper Wrapper) NewMaterialMapping(r ref) MaterialMapping {
+	return MaterialMapping{wrapper.NewScalarFieldReference(r)}
+}
+
+
+// VolumeDataComposite represents a Lib3MF class.
+type VolumeDataComposite struct {
+	Base
+}
+
+func (wrapper Wrapper) NewVolumeDataComposite(r ref) VolumeDataComposite {
+	return VolumeDataComposite{wrapper.NewBase(r)}
+}
+
+// GetBaseMaterialGroup returns the BaseMaterialGroup used within this volume data item.
+func (inst VolumeDataComposite) GetBaseMaterialGroup() (BaseMaterialGroup, error) {
+	var baseMaterialGroupInstance ref
+	ret := C.CCall_lib3mf_volumedatacomposite_getbasematerialgroup(inst.wrapperRef.LibraryHandle, inst.Ref, &baseMaterialGroupInstance)
+	if ret != 0 {
+		return BaseMaterialGroup{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewBaseMaterialGroup(baseMaterialGroupInstance), nil
+}
+
+// SetBaseMaterialGroup sets the BaseMaterialGroup to use within this volume data item.
+func (inst VolumeDataComposite) SetBaseMaterialGroup(baseMaterialGroupInstance BaseMaterialGroup) error {
+	ret := C.CCall_lib3mf_volumedatacomposite_setbasematerialgroup(inst.wrapperRef.LibraryHandle, inst.Ref, baseMaterialGroupInstance.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetMaterialMappingCount returns the number of material mappings of this VolumeDataComposite element.
+func (inst VolumeDataComposite) GetMaterialMappingCount() (uint32, error) {
+	var count C.uint32_t
+	ret := C.CCall_lib3mf_volumedatacomposite_getmaterialmappingcount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(count), nil
+}
+
+// GetMaterialMapping returns MaterialMappting with given index.
+func (inst VolumeDataComposite) GetMaterialMapping(index uint32) (MaterialMapping, error) {
+	var theMaterialMapping ref
+	ret := C.CCall_lib3mf_volumedatacomposite_getmaterialmapping(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &theMaterialMapping)
+	if ret != 0 {
+		return MaterialMapping{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewMaterialMapping(theMaterialMapping), nil
+}
+
+// AddMaterialMapping adds a the MaterialMapping.
+func (inst VolumeDataComposite) AddMaterialMapping(transform Transform) (MaterialMapping, error) {
+	var theMaterialMapping ref
+	ret := C.CCall_lib3mf_volumedatacomposite_addmaterialmapping(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.sLib3MFTransform)(unsafe.Pointer(&transform)), &theMaterialMapping)
+	if ret != 0 {
+		return MaterialMapping{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewMaterialMapping(theMaterialMapping), nil
+}
+
+// RemoveMaterialMapping removes the MaterialMapping with given index.
+func (inst VolumeDataComposite) RemoveMaterialMapping(index uint32) error {
+	ret := C.CCall_lib3mf_volumedatacomposite_removematerialmapping(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// VolumeDataProperty represents a Lib3MF class.
+type VolumeDataProperty struct {
+	FieldReference
+}
+
+func (wrapper Wrapper) NewVolumeDataProperty(r ref) VolumeDataProperty {
+	return VolumeDataProperty{wrapper.NewFieldReference(r)}
+}
+
+// GetName gets the qualified name of this property.
+func (inst VolumeDataProperty) GetName() (string, error) {
+	var neededforpropertyName C.uint32_t
+	var filledinpropertyName C.uint32_t
+	ret := C.CCall_lib3mf_volumedataproperty_getname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforpropertyName, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizepropertyName := neededforpropertyName
+	bufferpropertyName := make([]byte, bufferSizepropertyName)
+	ret = C.CCall_lib3mf_volumedataproperty_getname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizepropertyName, &filledinpropertyName, (*C.char)(unsafe.Pointer(&bufferpropertyName[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferpropertyName[:(filledinpropertyName-1)]), nil
+}
+
+// SetIsRequired sets whether this property is required to process this 3MF document instance.
+func (inst VolumeDataProperty) SetIsRequired(isRequired bool) error {
+	ret := C.CCall_lib3mf_volumedataproperty_setisrequired(inst.wrapperRef.LibraryHandle, inst.Ref, C.bool(isRequired))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// IsRequired returns whether this property is required to process this 3MF document instance.
+func (inst VolumeDataProperty) IsRequired() (bool, error) {
+	var isRequired C.bool
+	ret := C.CCall_lib3mf_volumedataproperty_isrequired(inst.wrapperRef.LibraryHandle, inst.Ref, &isRequired)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(isRequired), nil
+}
+
+
+// VolumeData represents a Lib3MF class.
+type VolumeData struct {
+	Base
+}
+
+func (wrapper Wrapper) NewVolumeData(r ref) VolumeData {
+	return VolumeData{wrapper.NewBase(r)}
+}
+
+// GetBoundary returns the VolumeDataBoundary of this VolumeData instance.
+func (inst VolumeData) GetBoundary() (*VolumeDataBoundary, error) {
+	var theBoundaryData ref
+	ret := C.CCall_lib3mf_volumedata_getboundary(inst.wrapperRef.LibraryHandle, inst.Ref, &theBoundaryData)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	var _theBoundaryDataPtr *VolumeDataBoundary
+	if theBoundaryData != nil {
+		_theBoundaryDataPtrVal := inst.wrapperRef.NewVolumeDataBoundary(theBoundaryData)
+		_theBoundaryDataPtr = &_theBoundaryDataPtrVal
+	}
+	return _theBoundaryDataPtr, nil
+}
+
+// CreateNewBoundary creates a new VolumeDataBoundary for this VolumeData instance.
+func (inst VolumeData) CreateNewBoundary(theScalarField ScalarField) (VolumeDataBoundary, error) {
+	var theBoundaryData ref
+	ret := C.CCall_lib3mf_volumedata_createnewboundary(inst.wrapperRef.LibraryHandle, inst.Ref, theScalarField.Ref, &theBoundaryData)
+	if ret != 0 {
+		return VolumeDataBoundary{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewVolumeDataBoundary(theBoundaryData), nil
+}
+
+// RemoveBoundary removes the VolumeDataBoundary of this VolumeData instance.
+func (inst VolumeData) RemoveBoundary() error {
+	ret := C.CCall_lib3mf_volumedata_removeboundary(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetComposite returns the VolumeDataComposite of this VolumeData instance.
+func (inst VolumeData) GetComposite() (*VolumeDataComposite, error) {
+	var theCompositeData ref
+	ret := C.CCall_lib3mf_volumedata_getcomposite(inst.wrapperRef.LibraryHandle, inst.Ref, &theCompositeData)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	var _theCompositeDataPtr *VolumeDataComposite
+	if theCompositeData != nil {
+		_theCompositeDataPtrVal := inst.wrapperRef.NewVolumeDataComposite(theCompositeData)
+		_theCompositeDataPtr = &_theCompositeDataPtrVal
+	}
+	return _theCompositeDataPtr, nil
+}
+
+// CreateNewComposite creates a new VolumeDataComposite for this VolumeData instance.
+func (inst VolumeData) CreateNewComposite() (VolumeDataComposite, error) {
+	var theCompositeData ref
+	ret := C.CCall_lib3mf_volumedata_createnewcomposite(inst.wrapperRef.LibraryHandle, inst.Ref, &theCompositeData)
+	if ret != 0 {
+		return VolumeDataComposite{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewVolumeDataComposite(theCompositeData), nil
+}
+
+// RemoveComposite removes the VolumeDataComposite of this VolumeData instance.
+func (inst VolumeData) RemoveComposite() error {
+	ret := C.CCall_lib3mf_volumedata_removecomposite(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetColor returns the VolumeDataColor of this VolumeData instance.
+func (inst VolumeData) GetColor() (*VolumeDataColor, error) {
+	var theColorData ref
+	ret := C.CCall_lib3mf_volumedata_getcolor(inst.wrapperRef.LibraryHandle, inst.Ref, &theColorData)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	var _theColorDataPtr *VolumeDataColor
+	if theColorData != nil {
+		_theColorDataPtrVal := inst.wrapperRef.NewVolumeDataColor(theColorData)
+		_theColorDataPtr = &_theColorDataPtrVal
+	}
+	return _theColorDataPtr, nil
+}
+
+// CreateNewColor creates a new VolumeDataColor for this VolumeData instance.
+func (inst VolumeData) CreateNewColor(theVector3DField Vector3DField) (VolumeDataColor, error) {
+	var theColorData ref
+	ret := C.CCall_lib3mf_volumedata_createnewcolor(inst.wrapperRef.LibraryHandle, inst.Ref, theVector3DField.Ref, &theColorData)
+	if ret != 0 {
+		return VolumeDataColor{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewVolumeDataColor(theColorData), nil
+}
+
+// RemoveColor removes the VolumeDataColor of this VolumeData instance.
+func (inst VolumeData) RemoveColor() error {
+	ret := C.CCall_lib3mf_volumedata_removecolor(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetPropertyCount returns the number of VolumeDataProperty.
+func (inst VolumeData) GetPropertyCount() (uint32, error) {
+	var count C.uint32_t
+	ret := C.CCall_lib3mf_volumedata_getpropertycount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(count), nil
+}
+
+// GetProperty returns the VolumeDataProperty at a given Index.
+func (inst VolumeData) GetProperty(index uint32) (VolumeDataProperty, error) {
+	var theVolumeDataProperty ref
+	ret := C.CCall_lib3mf_volumedata_getproperty(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &theVolumeDataProperty)
+	if ret != 0 {
+		return VolumeDataProperty{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewVolumeDataProperty(theVolumeDataProperty), nil
+}
+
+// AddPropertyFromScalarField adds a new VolumeDataProperty from a ScalarField.
+func (inst VolumeData) AddPropertyFromScalarField(name string, theScalarField ScalarField) (VolumeDataProperty, error) {
+	var theVolumeDataProperty ref
+	ret := C.CCall_lib3mf_volumedata_addpropertyfromscalarfield(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), theScalarField.Ref, &theVolumeDataProperty)
+	if ret != 0 {
+		return VolumeDataProperty{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewVolumeDataProperty(theVolumeDataProperty), nil
+}
+
+// AddPropertyFromVector3DField adds a new VolumeDataProperty from a Vector3DField.
+func (inst VolumeData) AddPropertyFromVector3DField(name string, theVector3DField Vector3DField) (VolumeDataProperty, error) {
+	var theVolumeDataProperty ref
+	ret := C.CCall_lib3mf_volumedata_addpropertyfromvector3dfield(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), theVector3DField.Ref, &theVolumeDataProperty)
+	if ret != 0 {
+		return VolumeDataProperty{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewVolumeDataProperty(theVolumeDataProperty), nil
+}
+
+// RemoveProperty removes the VolumeDataProperty with a given index.
+func (inst VolumeData) RemoveProperty(index uint32) error {
+	ret := C.CCall_lib3mf_volumedata_removeproperty(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
 }
 
 
@@ -6147,6 +8473,159 @@ func (inst MultiPropertyGroup) RemoveLayer(layerIndex uint32) error {
 		return makeError(uint32(ret))
 	}
 	return nil
+}
+
+
+// Image3D represents a Lib3MF class.
+type Image3D struct {
+	Resource
+}
+
+func (wrapper Wrapper) NewImage3D(r ref) Image3D {
+	return Image3D{wrapper.NewResource(r)}
+}
+
+// GetName returns the name of this Image3D.
+func (inst Image3D) GetName() (string, error) {
+	var neededforname C.uint32_t
+	var filledinname C.uint32_t
+	ret := C.CCall_lib3mf_image3d_getname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforname, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizename := neededforname
+	buffername := make([]byte, bufferSizename)
+	ret = C.CCall_lib3mf_image3d_getname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizename, &filledinname, (*C.char)(unsafe.Pointer(&buffername[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffername[:(filledinname-1)]), nil
+}
+
+// SetName sets a new name of this Image3D.
+func (inst Image3D) SetName(name string) error {
+	ret := C.CCall_lib3mf_image3d_setname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// IsImageStack retrieves, if this Image3D is a ImageStack.
+func (inst Image3D) IsImageStack() (bool, error) {
+	var isImageStack C.bool
+	ret := C.CCall_lib3mf_image3d_isimagestack(inst.wrapperRef.LibraryHandle, inst.Ref, &isImageStack)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(isImageStack), nil
+}
+
+
+// ImageStack represents a Lib3MF class.
+type ImageStack struct {
+	Image3D
+}
+
+func (wrapper Wrapper) NewImageStack(r ref) ImageStack {
+	return ImageStack{wrapper.NewImage3D(r)}
+}
+
+// GetRowCount retrieves the number of rows in each image of this image3d.
+func (inst ImageStack) GetRowCount() (uint32, error) {
+	var rowCount C.uint32_t
+	ret := C.CCall_lib3mf_imagestack_getrowcount(inst.wrapperRef.LibraryHandle, inst.Ref, &rowCount)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(rowCount), nil
+}
+
+// SetRowCount sets the number of rows in each image of this image3d.
+func (inst ImageStack) SetRowCount(rowCount uint32) error {
+	ret := C.CCall_lib3mf_imagestack_setrowcount(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(rowCount))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetColumnCount retrieves the number of columns in each image of this image3d.
+func (inst ImageStack) GetColumnCount() (uint32, error) {
+	var columnCount C.uint32_t
+	ret := C.CCall_lib3mf_imagestack_getcolumncount(inst.wrapperRef.LibraryHandle, inst.Ref, &columnCount)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(columnCount), nil
+}
+
+// SetColumnCount sets the number of columns in each image of this image3d.
+func (inst ImageStack) SetColumnCount(columnCount uint32) error {
+	ret := C.CCall_lib3mf_imagestack_setcolumncount(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(columnCount))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetSheetCount retrieves the number of images in the stack.
+func (inst ImageStack) GetSheetCount() (uint32, error) {
+	var sheetCount C.uint32_t
+	ret := C.CCall_lib3mf_imagestack_getsheetcount(inst.wrapperRef.LibraryHandle, inst.Ref, &sheetCount)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(sheetCount), nil
+}
+
+// GetSheet retrieves a sheet of the stack. Raises an error if sheet is not set.
+func (inst ImageStack) GetSheet(index uint32) (Attachment, error) {
+	var sheet ref
+	ret := C.CCall_lib3mf_imagestack_getsheet(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &sheet)
+	if ret != 0 {
+		return Attachment{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewAttachment(sheet), nil
+}
+
+// SetSheet sets a sheet to an existing attachment.
+func (inst ImageStack) SetSheet(index uint32, sheet Attachment) error {
+	ret := C.CCall_lib3mf_imagestack_setsheet(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), sheet.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// CreateEmptySheet creates a new sheet attachment with empty data.
+func (inst ImageStack) CreateEmptySheet(index uint32, path string) (Attachment, error) {
+	var sheet ref
+	ret := C.CCall_lib3mf_imagestack_createemptysheet(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), (*C.char)(unsafe.Pointer(&[]byte(path)[0])), &sheet)
+	if ret != 0 {
+		return Attachment{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewAttachment(sheet), nil
+}
+
+// CreateSheetFromBuffer creates a new sheet attachment from a memory buffer.
+func (inst ImageStack) CreateSheetFromBuffer(index uint32, path string, data []uint8) (Attachment, error) {
+	var sheet ref
+	ret := C.CCall_lib3mf_imagestack_createsheetfrombuffer(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), (*C.char)(unsafe.Pointer(&[]byte(path)[0])), C.uint64_t(len(data)), (*C.uint8_t)(unsafe.Pointer(&data[0])), &sheet)
+	if ret != 0 {
+		return Attachment{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewAttachment(sheet), nil
+}
+
+// CreateSheetFromFile creates a new sheet attachment from a file on disk.
+func (inst ImageStack) CreateSheetFromFile(index uint32, path string, fileName string) (Attachment, error) {
+	var sheet ref
+	ret := C.CCall_lib3mf_imagestack_createsheetfromfile(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), (*C.char)(unsafe.Pointer(&[]byte(path)[0])), (*C.char)(unsafe.Pointer(&[]byte(fileName)[0])), &sheet)
+	if ret != 0 {
+		return Attachment{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewAttachment(sheet), nil
 }
 
 
@@ -7705,6 +10184,36 @@ func (inst Model) GetSliceStacks() (SliceStackIterator, error) {
 	return inst.wrapperRef.NewSliceStackIterator(resourceIterator), nil
 }
 
+// GetImage3Ds creates a resource iterator instance with all image3d resources.
+func (inst Model) GetImage3Ds() (Image3DIterator, error) {
+	var resourceIterator ref
+	ret := C.CCall_lib3mf_model_getimage3ds(inst.wrapperRef.LibraryHandle, inst.Ref, &resourceIterator)
+	if ret != 0 {
+		return Image3DIterator{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImage3DIterator(resourceIterator), nil
+}
+
+// GetScalarFields creates a resource iterator instance with all ScalarField resources.
+func (inst Model) GetScalarFields() (ScalarFieldIterator, error) {
+	var resourceIterator ref
+	ret := C.CCall_lib3mf_model_getscalarfields(inst.wrapperRef.LibraryHandle, inst.Ref, &resourceIterator)
+	if ret != 0 {
+		return ScalarFieldIterator{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewScalarFieldIterator(resourceIterator), nil
+}
+
+// GetVector3DFields creates a resource iterator instance with all Vector3DField resources.
+func (inst Model) GetVector3DFields() (Vector3DFieldIterator, error) {
+	var resourceIterator ref
+	ret := C.CCall_lib3mf_model_getvector3dfields(inst.wrapperRef.LibraryHandle, inst.Ref, &resourceIterator)
+	if ret != 0 {
+		return Vector3DFieldIterator{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewVector3DFieldIterator(resourceIterator), nil
+}
+
 // MergeToModel merges all components and objects which are referenced by a build item into a mesh. The memory is duplicated and a new model is created.
 func (inst Model) MergeToModel() (Model, error) {
 	var mergedModelInstance ref
@@ -7803,6 +10312,166 @@ func (inst Model) AddMultiPropertyGroup() (MultiPropertyGroup, error) {
 		return MultiPropertyGroup{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewMultiPropertyGroup(multiPropertyGroupInstance), nil
+}
+
+// AddImageStack creates a new 3D Image Resource.
+func (inst Model) AddImageStack(columnCount uint32, rowCount uint32, sheetCount uint32) (ImageStack, error) {
+	var instance ref
+	ret := C.CCall_lib3mf_model_addimagestack(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(columnCount), C.uint32_t(rowCount), C.uint32_t(sheetCount), &instance)
+	if ret != 0 {
+		return ImageStack{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImageStack(instance), nil
+}
+
+// GetImageStackByID finds an ImageStack object by its UniqueResourceID.
+func (inst Model) GetImageStackByID(uniqueResourceID uint32) (ImageStack, error) {
+	var imageStackInstance ref
+	ret := C.CCall_lib3mf_model_getimagestackbyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(uniqueResourceID), &imageStackInstance)
+	if ret != 0 {
+		return ImageStack{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImageStack(imageStackInstance), nil
+}
+
+// AddScalarFieldFromImage3D creates a new ScalarFieldFromImage3D Resource.
+func (inst Model) AddScalarFieldFromImage3D(image3D Image3D) (ScalarFieldFromImage3D, error) {
+	var theScalarFieldFromImage3D ref
+	ret := C.CCall_lib3mf_model_addscalarfieldfromimage3d(inst.wrapperRef.LibraryHandle, inst.Ref, image3D.Ref, &theScalarFieldFromImage3D)
+	if ret != 0 {
+		return ScalarFieldFromImage3D{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewScalarFieldFromImage3D(theScalarFieldFromImage3D), nil
+}
+
+// AddScalarFieldComposed creates a new ScalarFieldComposed Resource.
+func (inst Model) AddScalarFieldComposed() (ScalarFieldComposed, error) {
+	var theScalarFieldComposed ref
+	ret := C.CCall_lib3mf_model_addscalarfieldcomposed(inst.wrapperRef.LibraryHandle, inst.Ref, &theScalarFieldComposed)
+	if ret != 0 {
+		return ScalarFieldComposed{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewScalarFieldComposed(theScalarFieldComposed), nil
+}
+
+// AddScalarFieldConstant creates a new ScalarFieldConstant Resource.
+func (inst Model) AddScalarFieldConstant() (ScalarFieldConstant, error) {
+	var theScalarFieldConstant ref
+	ret := C.CCall_lib3mf_model_addscalarfieldconstant(inst.wrapperRef.LibraryHandle, inst.Ref, &theScalarFieldConstant)
+	if ret != 0 {
+		return ScalarFieldConstant{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewScalarFieldConstant(theScalarFieldConstant), nil
+}
+
+// GetScalarFieldByID finds a ScalarField object by its UniqueResourceID.
+func (inst Model) GetScalarFieldByID(uniqueResourceID uint32) (ScalarField, error) {
+	var scalarFieldInstance ref
+	ret := C.CCall_lib3mf_model_getscalarfieldbyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(uniqueResourceID), &scalarFieldInstance)
+	if ret != 0 {
+		return ScalarField{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewScalarField(scalarFieldInstance), nil
+}
+
+// GetScalarFieldFromImage3DByID finds a ScalarFieldFromImage3D object by its UniqueResourceID.
+func (inst Model) GetScalarFieldFromImage3DByID(uniqueResourceID uint32) (ScalarFieldFromImage3D, error) {
+	var scalarFieldFromImage3DInstance ref
+	ret := C.CCall_lib3mf_model_getscalarfieldfromimage3dbyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(uniqueResourceID), &scalarFieldFromImage3DInstance)
+	if ret != 0 {
+		return ScalarFieldFromImage3D{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewScalarFieldFromImage3D(scalarFieldFromImage3DInstance), nil
+}
+
+// GetScalarFieldComposedByID finds a ScalarFieldComposed object by its UniqueResourceID.
+func (inst Model) GetScalarFieldComposedByID(uniqueResourceID uint32) (ScalarFieldComposed, error) {
+	var scalarFieldComposedInstance ref
+	ret := C.CCall_lib3mf_model_getscalarfieldcomposedbyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(uniqueResourceID), &scalarFieldComposedInstance)
+	if ret != 0 {
+		return ScalarFieldComposed{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewScalarFieldComposed(scalarFieldComposedInstance), nil
+}
+
+// GetScalarFieldConstantByID finds a ScalarFieldConstant object by its UniqueResourceID.
+func (inst Model) GetScalarFieldConstantByID(uniqueResourceID uint32) (ScalarFieldConstant, error) {
+	var scalarFieldConstantInstance ref
+	ret := C.CCall_lib3mf_model_getscalarfieldconstantbyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(uniqueResourceID), &scalarFieldConstantInstance)
+	if ret != 0 {
+		return ScalarFieldConstant{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewScalarFieldConstant(scalarFieldConstantInstance), nil
+}
+
+// AddVector3DFieldFromImage3D creates a new Vector3DFieldFromImage3D Resource.
+func (inst Model) AddVector3DFieldFromImage3D(image3D Image3D) (Vector3DFieldFromImage3D, error) {
+	var theVector3DFieldFromImage3D ref
+	ret := C.CCall_lib3mf_model_addvector3dfieldfromimage3d(inst.wrapperRef.LibraryHandle, inst.Ref, image3D.Ref, &theVector3DFieldFromImage3D)
+	if ret != 0 {
+		return Vector3DFieldFromImage3D{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewVector3DFieldFromImage3D(theVector3DFieldFromImage3D), nil
+}
+
+// AddVector3DFieldComposed creates a new Vector3DFieldComposed Resource.
+func (inst Model) AddVector3DFieldComposed() (Vector3DFieldComposed, error) {
+	var theVector3DFieldComposed ref
+	ret := C.CCall_lib3mf_model_addvector3dfieldcomposed(inst.wrapperRef.LibraryHandle, inst.Ref, &theVector3DFieldComposed)
+	if ret != 0 {
+		return Vector3DFieldComposed{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewVector3DFieldComposed(theVector3DFieldComposed), nil
+}
+
+// AddVector3DFieldConstant creates a new Vector3DFieldConstant Resource.
+func (inst Model) AddVector3DFieldConstant() (Vector3DFieldConstant, error) {
+	var theVector3DFieldConstant ref
+	ret := C.CCall_lib3mf_model_addvector3dfieldconstant(inst.wrapperRef.LibraryHandle, inst.Ref, &theVector3DFieldConstant)
+	if ret != 0 {
+		return Vector3DFieldConstant{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewVector3DFieldConstant(theVector3DFieldConstant), nil
+}
+
+// GetVector3DFieldByID finds a Vector3DField object by its UniqueResourceID.
+func (inst Model) GetVector3DFieldByID(uniqueResourceID uint32) (Vector3DField, error) {
+	var vector3DFieldInstance ref
+	ret := C.CCall_lib3mf_model_getvector3dfieldbyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(uniqueResourceID), &vector3DFieldInstance)
+	if ret != 0 {
+		return Vector3DField{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewVector3DField(vector3DFieldInstance), nil
+}
+
+// GetVector3DFieldFromImage3DByID finds a Vector3DFieldFromImage3D object by its UniqueResourceID.
+func (inst Model) GetVector3DFieldFromImage3DByID(uniqueResourceID uint32) (Vector3DFieldFromImage3D, error) {
+	var vector3DFieldFromImage3DInstance ref
+	ret := C.CCall_lib3mf_model_getvector3dfieldfromimage3dbyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(uniqueResourceID), &vector3DFieldFromImage3DInstance)
+	if ret != 0 {
+		return Vector3DFieldFromImage3D{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewVector3DFieldFromImage3D(vector3DFieldFromImage3DInstance), nil
+}
+
+// GetVector3DFieldComposedByID finds a Vector3DFieldComposed object by its UniqueResourceID.
+func (inst Model) GetVector3DFieldComposedByID(uniqueResourceID uint32) (Vector3DFieldComposed, error) {
+	var vector3DFieldComposedInstance ref
+	ret := C.CCall_lib3mf_model_getvector3dfieldcomposedbyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(uniqueResourceID), &vector3DFieldComposedInstance)
+	if ret != 0 {
+		return Vector3DFieldComposed{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewVector3DFieldComposed(vector3DFieldComposedInstance), nil
+}
+
+// GetVector3DFieldConstantByID finds a Vector3DFieldConstant object by its UniqueResourceID.
+func (inst Model) GetVector3DFieldConstantByID(uniqueResourceID uint32) (Vector3DFieldConstant, error) {
+	var vector3DFieldConstantInstance ref
+	ret := C.CCall_lib3mf_model_getvector3dfieldconstantbyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(uniqueResourceID), &vector3DFieldConstantInstance)
+	if ret != 0 {
+		return Vector3DFieldConstant{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewVector3DFieldConstant(vector3DFieldConstantInstance), nil
 }
 
 // AddBuildItem adds a build item to the model.

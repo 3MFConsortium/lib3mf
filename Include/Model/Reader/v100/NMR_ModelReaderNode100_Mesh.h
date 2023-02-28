@@ -38,6 +38,7 @@ A mesh reader model node is a parser for the mesh node of an XML Model Stream.
 #include "Model/Reader/NMR_ModelReader_TexCoordMapping.h"
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelVolumeData.h"
 
 namespace NMR {
 
@@ -46,6 +47,9 @@ namespace NMR {
 		CMesh * m_pMesh;
 		CModel * m_pModel;
 
+		PModelVolumeData m_pVolumeData;
+
+		ModelResourceID m_nObjectLevelPropertyID;
 		PPackageResourceID m_pObjectLevelPropertyID;
 		ModelResourceIndex m_nObjectLevelPropertyIndex;
 
@@ -64,6 +68,7 @@ namespace NMR {
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 		void retrieveClippingInfo(_Out_ eModelBeamLatticeClipMode &eClipMode, _Out_ nfBool & bHasClippingMode, _Out_ ModelResourceID & nClippingMeshID);
 		void retrieveRepresentationInfo(_Out_ nfBool & bHasRepresentation, _Out_ ModelResourceID & nRepresentationMeshID);
+		PModelVolumeData getVolumeData();
 	};
 	typedef std::shared_ptr <CModelReaderNode100_Mesh> PModelReaderNode100_Mesh;
 }

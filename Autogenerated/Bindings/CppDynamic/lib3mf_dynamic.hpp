@@ -73,11 +73,31 @@ class CColorGroupIterator;
 class CTexture2DGroupIterator;
 class CCompositeMaterialsIterator;
 class CMultiPropertyGroupIterator;
+class CImage3DIterator;
+class CScalarFieldIterator;
+class CVector3DFieldIterator;
 class CMetaData;
 class CMetaDataGroup;
 class CObject;
 class CMeshObject;
 class CBeamLattice;
+class CScalarField;
+class CVector3DField;
+class CScalarFieldFromImage3D;
+class CScalarFieldConstant;
+class CScalarFieldComposed;
+class CVector3DFieldFromImage3D;
+class CVector3DFieldConstant;
+class CVector3DFieldComposed;
+class CFieldReference;
+class CScalarFieldReference;
+class CVector3DFieldReference;
+class CVolumeDataBoundary;
+class CVolumeDataColor;
+class CMaterialMapping;
+class CVolumeDataComposite;
+class CVolumeDataProperty;
+class CVolumeData;
 class CComponent;
 class CComponentsObject;
 class CBeamSet;
@@ -86,6 +106,8 @@ class CColorGroup;
 class CTexture2DGroup;
 class CCompositeMaterials;
 class CMultiPropertyGroup;
+class CImage3D;
+class CImageStack;
 class CAttachment;
 class CTexture2D;
 class CBuildItem;
@@ -120,11 +142,31 @@ typedef CColorGroupIterator CLib3MFColorGroupIterator;
 typedef CTexture2DGroupIterator CLib3MFTexture2DGroupIterator;
 typedef CCompositeMaterialsIterator CLib3MFCompositeMaterialsIterator;
 typedef CMultiPropertyGroupIterator CLib3MFMultiPropertyGroupIterator;
+typedef CImage3DIterator CLib3MFImage3DIterator;
+typedef CScalarFieldIterator CLib3MFScalarFieldIterator;
+typedef CVector3DFieldIterator CLib3MFVector3DFieldIterator;
 typedef CMetaData CLib3MFMetaData;
 typedef CMetaDataGroup CLib3MFMetaDataGroup;
 typedef CObject CLib3MFObject;
 typedef CMeshObject CLib3MFMeshObject;
 typedef CBeamLattice CLib3MFBeamLattice;
+typedef CScalarField CLib3MFScalarField;
+typedef CVector3DField CLib3MFVector3DField;
+typedef CScalarFieldFromImage3D CLib3MFScalarFieldFromImage3D;
+typedef CScalarFieldConstant CLib3MFScalarFieldConstant;
+typedef CScalarFieldComposed CLib3MFScalarFieldComposed;
+typedef CVector3DFieldFromImage3D CLib3MFVector3DFieldFromImage3D;
+typedef CVector3DFieldConstant CLib3MFVector3DFieldConstant;
+typedef CVector3DFieldComposed CLib3MFVector3DFieldComposed;
+typedef CFieldReference CLib3MFFieldReference;
+typedef CScalarFieldReference CLib3MFScalarFieldReference;
+typedef CVector3DFieldReference CLib3MFVector3DFieldReference;
+typedef CVolumeDataBoundary CLib3MFVolumeDataBoundary;
+typedef CVolumeDataColor CLib3MFVolumeDataColor;
+typedef CMaterialMapping CLib3MFMaterialMapping;
+typedef CVolumeDataComposite CLib3MFVolumeDataComposite;
+typedef CVolumeDataProperty CLib3MFVolumeDataProperty;
+typedef CVolumeData CLib3MFVolumeData;
 typedef CComponent CLib3MFComponent;
 typedef CComponentsObject CLib3MFComponentsObject;
 typedef CBeamSet CLib3MFBeamSet;
@@ -133,6 +175,8 @@ typedef CColorGroup CLib3MFColorGroup;
 typedef CTexture2DGroup CLib3MFTexture2DGroup;
 typedef CCompositeMaterials CLib3MFCompositeMaterials;
 typedef CMultiPropertyGroup CLib3MFMultiPropertyGroup;
+typedef CImage3D CLib3MFImage3D;
+typedef CImageStack CLib3MFImageStack;
 typedef CAttachment CLib3MFAttachment;
 typedef CTexture2D CLib3MFTexture2D;
 typedef CBuildItem CLib3MFBuildItem;
@@ -167,11 +211,31 @@ typedef std::shared_ptr<CColorGroupIterator> PColorGroupIterator;
 typedef std::shared_ptr<CTexture2DGroupIterator> PTexture2DGroupIterator;
 typedef std::shared_ptr<CCompositeMaterialsIterator> PCompositeMaterialsIterator;
 typedef std::shared_ptr<CMultiPropertyGroupIterator> PMultiPropertyGroupIterator;
+typedef std::shared_ptr<CImage3DIterator> PImage3DIterator;
+typedef std::shared_ptr<CScalarFieldIterator> PScalarFieldIterator;
+typedef std::shared_ptr<CVector3DFieldIterator> PVector3DFieldIterator;
 typedef std::shared_ptr<CMetaData> PMetaData;
 typedef std::shared_ptr<CMetaDataGroup> PMetaDataGroup;
 typedef std::shared_ptr<CObject> PObject;
 typedef std::shared_ptr<CMeshObject> PMeshObject;
 typedef std::shared_ptr<CBeamLattice> PBeamLattice;
+typedef std::shared_ptr<CScalarField> PScalarField;
+typedef std::shared_ptr<CVector3DField> PVector3DField;
+typedef std::shared_ptr<CScalarFieldFromImage3D> PScalarFieldFromImage3D;
+typedef std::shared_ptr<CScalarFieldConstant> PScalarFieldConstant;
+typedef std::shared_ptr<CScalarFieldComposed> PScalarFieldComposed;
+typedef std::shared_ptr<CVector3DFieldFromImage3D> PVector3DFieldFromImage3D;
+typedef std::shared_ptr<CVector3DFieldConstant> PVector3DFieldConstant;
+typedef std::shared_ptr<CVector3DFieldComposed> PVector3DFieldComposed;
+typedef std::shared_ptr<CFieldReference> PFieldReference;
+typedef std::shared_ptr<CScalarFieldReference> PScalarFieldReference;
+typedef std::shared_ptr<CVector3DFieldReference> PVector3DFieldReference;
+typedef std::shared_ptr<CVolumeDataBoundary> PVolumeDataBoundary;
+typedef std::shared_ptr<CVolumeDataColor> PVolumeDataColor;
+typedef std::shared_ptr<CMaterialMapping> PMaterialMapping;
+typedef std::shared_ptr<CVolumeDataComposite> PVolumeDataComposite;
+typedef std::shared_ptr<CVolumeDataProperty> PVolumeDataProperty;
+typedef std::shared_ptr<CVolumeData> PVolumeData;
 typedef std::shared_ptr<CComponent> PComponent;
 typedef std::shared_ptr<CComponentsObject> PComponentsObject;
 typedef std::shared_ptr<CBeamSet> PBeamSet;
@@ -180,6 +244,8 @@ typedef std::shared_ptr<CColorGroup> PColorGroup;
 typedef std::shared_ptr<CTexture2DGroup> PTexture2DGroup;
 typedef std::shared_ptr<CCompositeMaterials> PCompositeMaterials;
 typedef std::shared_ptr<CMultiPropertyGroup> PMultiPropertyGroup;
+typedef std::shared_ptr<CImage3D> PImage3D;
+typedef std::shared_ptr<CImageStack> PImageStack;
 typedef std::shared_ptr<CAttachment> PAttachment;
 typedef std::shared_ptr<CTexture2D> PTexture2D;
 typedef std::shared_ptr<CBuildItem> PBuildItem;
@@ -214,11 +280,31 @@ typedef PColorGroupIterator PLib3MFColorGroupIterator;
 typedef PTexture2DGroupIterator PLib3MFTexture2DGroupIterator;
 typedef PCompositeMaterialsIterator PLib3MFCompositeMaterialsIterator;
 typedef PMultiPropertyGroupIterator PLib3MFMultiPropertyGroupIterator;
+typedef PImage3DIterator PLib3MFImage3DIterator;
+typedef PScalarFieldIterator PLib3MFScalarFieldIterator;
+typedef PVector3DFieldIterator PLib3MFVector3DFieldIterator;
 typedef PMetaData PLib3MFMetaData;
 typedef PMetaDataGroup PLib3MFMetaDataGroup;
 typedef PObject PLib3MFObject;
 typedef PMeshObject PLib3MFMeshObject;
 typedef PBeamLattice PLib3MFBeamLattice;
+typedef PScalarField PLib3MFScalarField;
+typedef PVector3DField PLib3MFVector3DField;
+typedef PScalarFieldFromImage3D PLib3MFScalarFieldFromImage3D;
+typedef PScalarFieldConstant PLib3MFScalarFieldConstant;
+typedef PScalarFieldComposed PLib3MFScalarFieldComposed;
+typedef PVector3DFieldFromImage3D PLib3MFVector3DFieldFromImage3D;
+typedef PVector3DFieldConstant PLib3MFVector3DFieldConstant;
+typedef PVector3DFieldComposed PLib3MFVector3DFieldComposed;
+typedef PFieldReference PLib3MFFieldReference;
+typedef PScalarFieldReference PLib3MFScalarFieldReference;
+typedef PVector3DFieldReference PLib3MFVector3DFieldReference;
+typedef PVolumeDataBoundary PLib3MFVolumeDataBoundary;
+typedef PVolumeDataColor PLib3MFVolumeDataColor;
+typedef PMaterialMapping PLib3MFMaterialMapping;
+typedef PVolumeDataComposite PLib3MFVolumeDataComposite;
+typedef PVolumeDataProperty PLib3MFVolumeDataProperty;
+typedef PVolumeData PLib3MFVolumeData;
 typedef PComponent PLib3MFComponent;
 typedef PComponentsObject PLib3MFComponentsObject;
 typedef PBeamSet PLib3MFBeamSet;
@@ -227,6 +313,8 @@ typedef PColorGroup PLib3MFColorGroup;
 typedef PTexture2DGroup PLib3MFTexture2DGroup;
 typedef PCompositeMaterials PLib3MFCompositeMaterials;
 typedef PMultiPropertyGroup PLib3MFMultiPropertyGroup;
+typedef PImage3D PLib3MFImage3D;
+typedef PImageStack PLib3MFImageStack;
 typedef PAttachment PLib3MFAttachment;
 typedef PTexture2D PLib3MFTexture2D;
 typedef PBuildItem PLib3MFBuildItem;
@@ -561,11 +649,31 @@ private:
 	friend class CTexture2DGroupIterator;
 	friend class CCompositeMaterialsIterator;
 	friend class CMultiPropertyGroupIterator;
+	friend class CImage3DIterator;
+	friend class CScalarFieldIterator;
+	friend class CVector3DFieldIterator;
 	friend class CMetaData;
 	friend class CMetaDataGroup;
 	friend class CObject;
 	friend class CMeshObject;
 	friend class CBeamLattice;
+	friend class CScalarField;
+	friend class CVector3DField;
+	friend class CScalarFieldFromImage3D;
+	friend class CScalarFieldConstant;
+	friend class CScalarFieldComposed;
+	friend class CVector3DFieldFromImage3D;
+	friend class CVector3DFieldConstant;
+	friend class CVector3DFieldComposed;
+	friend class CFieldReference;
+	friend class CScalarFieldReference;
+	friend class CVector3DFieldReference;
+	friend class CVolumeDataBoundary;
+	friend class CVolumeDataColor;
+	friend class CMaterialMapping;
+	friend class CVolumeDataComposite;
+	friend class CVolumeDataProperty;
+	friend class CVolumeData;
 	friend class CComponent;
 	friend class CComponentsObject;
 	friend class CBeamSet;
@@ -574,6 +682,8 @@ private:
 	friend class CTexture2DGroup;
 	friend class CCompositeMaterials;
 	friend class CMultiPropertyGroup;
+	friend class CImage3D;
+	friend class CImageStack;
 	friend class CAttachment;
 	friend class CTexture2D;
 	friend class CBuildItem;
@@ -936,6 +1046,57 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CImage3DIterator 
+**************************************************************************************************************************/
+class CImage3DIterator : public CResourceIterator {
+public:
+	
+	/**
+	* CImage3DIterator::CImage3DIterator - Constructor for Image3DIterator class.
+	*/
+	CImage3DIterator(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CResourceIterator(pWrapper, pHandle)
+	{
+	}
+	
+	inline PImage3D GetCurrentImage3D();
+};
+	
+/*************************************************************************************************************************
+ Class CScalarFieldIterator 
+**************************************************************************************************************************/
+class CScalarFieldIterator : public CResourceIterator {
+public:
+	
+	/**
+	* CScalarFieldIterator::CScalarFieldIterator - Constructor for ScalarFieldIterator class.
+	*/
+	CScalarFieldIterator(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CResourceIterator(pWrapper, pHandle)
+	{
+	}
+	
+	inline PScalarField GetCurrentScalarField();
+};
+	
+/*************************************************************************************************************************
+ Class CVector3DFieldIterator 
+**************************************************************************************************************************/
+class CVector3DFieldIterator : public CResourceIterator {
+public:
+	
+	/**
+	* CVector3DFieldIterator::CVector3DFieldIterator - Constructor for Vector3DFieldIterator class.
+	*/
+	CVector3DFieldIterator(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CResourceIterator(pWrapper, pHandle)
+	{
+	}
+	
+	inline PVector3DField GetCurrentVector3DField();
+};
+	
+/*************************************************************************************************************************
  Class CMetaData 
 **************************************************************************************************************************/
 class CMetaData : public CBase {
@@ -1056,6 +1217,7 @@ public:
 	inline void SetGeometry(const CInputVector<sPosition> & VerticesBuffer, const CInputVector<sTriangle> & IndicesBuffer);
 	inline bool IsManifoldAndOriented();
 	inline PBeamLattice BeamLattice();
+	inline PVolumeData VolumeData();
 };
 	
 /*************************************************************************************************************************
@@ -1095,6 +1257,369 @@ public:
 	inline Lib3MF_uint32 GetBeamSetCount();
 	inline PBeamSet AddBeamSet();
 	inline PBeamSet GetBeamSet(const Lib3MF_uint32 nIndex);
+};
+	
+/*************************************************************************************************************************
+ Class CScalarField 
+**************************************************************************************************************************/
+class CScalarField : public CResource {
+public:
+	
+	/**
+	* CScalarField::CScalarField - Constructor for ScalarField class.
+	*/
+	CScalarField(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CResource(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetName();
+	inline void SetName(const std::string & sName);
+	inline bool IsFromImage3D();
+	inline bool IsConstant();
+	inline bool IsComposed();
+};
+	
+/*************************************************************************************************************************
+ Class CVector3DField 
+**************************************************************************************************************************/
+class CVector3DField : public CResource {
+public:
+	
+	/**
+	* CVector3DField::CVector3DField - Constructor for Vector3DField class.
+	*/
+	CVector3DField(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CResource(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetName();
+	inline void SetName(const std::string & sName);
+	inline bool IsFromImage3D();
+	inline bool IsConstant();
+	inline bool IsComposed();
+};
+	
+/*************************************************************************************************************************
+ Class CScalarFieldFromImage3D 
+**************************************************************************************************************************/
+class CScalarFieldFromImage3D : public CScalarField {
+public:
+	
+	/**
+	* CScalarFieldFromImage3D::CScalarFieldFromImage3D - Constructor for ScalarFieldFromImage3D class.
+	*/
+	CScalarFieldFromImage3D(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CScalarField(pWrapper, pHandle)
+	{
+	}
+	
+	inline PImage3D GetImage();
+	inline void SetImage(classParam<CImage3D> pImage3D);
+	inline void SetChannel(const eChannelName eName);
+	inline eChannelName GetChannel();
+	inline void SetFilter(const eTextureFilter eFilter);
+	inline eTextureFilter GetFilter();
+	inline void SetTileStyles(const eTextureTileStyle eTileStyleU, const eTextureTileStyle eTileStyleV, const eTextureTileStyle eTileStyleW);
+	inline void GetTileStyles(eTextureTileStyle & eTileStyleU, eTextureTileStyle & eTileStyleV, eTextureTileStyle & eTileStyleW);
+	inline Lib3MF_double GetOffset();
+	inline void SetOffset(const Lib3MF_double dOffset);
+	inline Lib3MF_double GetScale();
+	inline void SetScale(const Lib3MF_double dScale);
+};
+	
+/*************************************************************************************************************************
+ Class CScalarFieldConstant 
+**************************************************************************************************************************/
+class CScalarFieldConstant : public CScalarField {
+public:
+	
+	/**
+	* CScalarFieldConstant::CScalarFieldConstant - Constructor for ScalarFieldConstant class.
+	*/
+	CScalarFieldConstant(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CScalarField(pWrapper, pHandle)
+	{
+	}
+	
+	inline Lib3MF_double GetValue();
+	inline void SetValue(const Lib3MF_double dValue);
+};
+	
+/*************************************************************************************************************************
+ Class CScalarFieldComposed 
+**************************************************************************************************************************/
+class CScalarFieldComposed : public CScalarField {
+public:
+	
+	/**
+	* CScalarFieldComposed::CScalarFieldComposed - Constructor for ScalarFieldComposed class.
+	*/
+	CScalarFieldComposed(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CScalarField(pWrapper, pHandle)
+	{
+	}
+	
+	inline void SetMethod(const eCompositionMethod eTheMethod);
+	inline eCompositionMethod GetMethod();
+	inline Lib3MF_double GetFactor1();
+	inline void SetFactor1(const Lib3MF_double dFactor1);
+	inline Lib3MF_double GetFactor2();
+	inline void SetFactor2(const Lib3MF_double dFactor2);
+	inline PScalarFieldReference ScalarFieldReference1();
+	inline PScalarFieldReference ScalarFieldReference2();
+	inline PScalarFieldReference ScalarFieldReferenceMask();
+};
+	
+/*************************************************************************************************************************
+ Class CVector3DFieldFromImage3D 
+**************************************************************************************************************************/
+class CVector3DFieldFromImage3D : public CVector3DField {
+public:
+	
+	/**
+	* CVector3DFieldFromImage3D::CVector3DFieldFromImage3D - Constructor for Vector3DFieldFromImage3D class.
+	*/
+	CVector3DFieldFromImage3D(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CVector3DField(pWrapper, pHandle)
+	{
+	}
+	
+	inline PImage3D GetImage();
+	inline void SetImage(classParam<CImage3D> pImage3D);
+	inline void SetFilter(const eTextureFilter eFilter);
+	inline eTextureFilter GetFilter();
+	inline void SetTileStyles(const eTextureTileStyle eTileStyleU, const eTextureTileStyle eTileStyleV, const eTextureTileStyle eTileStyleW);
+	inline void GetTileStyles(eTextureTileStyle & eTileStyleU, eTextureTileStyle & eTileStyleV, eTextureTileStyle & eTileStyleW);
+	inline Lib3MF_double GetOffset();
+	inline void SetOffset(const Lib3MF_double dOffset);
+	inline Lib3MF_double GetScale();
+	inline void SetScale(const Lib3MF_double dScale);
+};
+	
+/*************************************************************************************************************************
+ Class CVector3DFieldConstant 
+**************************************************************************************************************************/
+class CVector3DFieldConstant : public CVector3DField {
+public:
+	
+	/**
+	* CVector3DFieldConstant::CVector3DFieldConstant - Constructor for Vector3DFieldConstant class.
+	*/
+	CVector3DFieldConstant(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CVector3DField(pWrapper, pHandle)
+	{
+	}
+	
+	inline Lib3MF_double GetValueX();
+	inline void SetValueX(const Lib3MF_double dValueX);
+	inline Lib3MF_double GetValueY();
+	inline void SetValueY(const Lib3MF_double dValueY);
+	inline Lib3MF_double GetValueZ();
+	inline void SetValueZ(const Lib3MF_double dValueZ);
+};
+	
+/*************************************************************************************************************************
+ Class CVector3DFieldComposed 
+**************************************************************************************************************************/
+class CVector3DFieldComposed : public CVector3DField {
+public:
+	
+	/**
+	* CVector3DFieldComposed::CVector3DFieldComposed - Constructor for Vector3DFieldComposed class.
+	*/
+	CVector3DFieldComposed(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CVector3DField(pWrapper, pHandle)
+	{
+	}
+	
+	inline void SetMethod(const eCompositionMethod eTheMethod);
+	inline eCompositionMethod GetMethod();
+	inline void SetSpace(const eCompositionSpace eTheSpace);
+	inline eCompositionSpace GetSpace();
+	inline Lib3MF_double GetFactor1();
+	inline void SetFactor1(const Lib3MF_double dFactor1);
+	inline Lib3MF_double GetFactor2();
+	inline void SetFactor2(const Lib3MF_double dFactor2);
+	inline PVector3DFieldReference Vector3DFieldReference1();
+	inline PVector3DFieldReference Vector3DFieldReference2();
+	inline PScalarFieldReference ScalarFieldReferenceMask();
+};
+	
+/*************************************************************************************************************************
+ Class CFieldReference 
+**************************************************************************************************************************/
+class CFieldReference : public CBase {
+public:
+	
+	/**
+	* CFieldReference::CFieldReference - Constructor for FieldReference class.
+	*/
+	CFieldReference(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline Lib3MF_uint32 GetFieldResourceID();
+	inline void SetFieldResourceID(const Lib3MF_uint32 nUniqueResourceID);
+	inline sTransform GetTransform();
+	inline void SetTransform(const sTransform & Transform);
+};
+	
+/*************************************************************************************************************************
+ Class CScalarFieldReference 
+**************************************************************************************************************************/
+class CScalarFieldReference : public CFieldReference {
+public:
+	
+	/**
+	* CScalarFieldReference::CScalarFieldReference - Constructor for ScalarFieldReference class.
+	*/
+	CScalarFieldReference(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CFieldReference(pWrapper, pHandle)
+	{
+	}
+	
+	inline void SetScalarField(classParam<CScalarField> pTheScalarField);
+};
+	
+/*************************************************************************************************************************
+ Class CVector3DFieldReference 
+**************************************************************************************************************************/
+class CVector3DFieldReference : public CFieldReference {
+public:
+	
+	/**
+	* CVector3DFieldReference::CVector3DFieldReference - Constructor for Vector3DFieldReference class.
+	*/
+	CVector3DFieldReference(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CFieldReference(pWrapper, pHandle)
+	{
+	}
+	
+	inline void SetVector3DField(classParam<CVector3DField> pTheVector3DField);
+};
+	
+/*************************************************************************************************************************
+ Class CVolumeDataBoundary 
+**************************************************************************************************************************/
+class CVolumeDataBoundary : public CScalarFieldReference {
+public:
+	
+	/**
+	* CVolumeDataBoundary::CVolumeDataBoundary - Constructor for VolumeDataBoundary class.
+	*/
+	CVolumeDataBoundary(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CScalarFieldReference(pWrapper, pHandle)
+	{
+	}
+	
+	inline Lib3MF_double GetSolidThreshold();
+	inline void SetSolidThreshold(const Lib3MF_double dTheSolidThreshold);
+};
+	
+/*************************************************************************************************************************
+ Class CVolumeDataColor 
+**************************************************************************************************************************/
+class CVolumeDataColor : public CVector3DFieldReference {
+public:
+	
+	/**
+	* CVolumeDataColor::CVolumeDataColor - Constructor for VolumeDataColor class.
+	*/
+	CVolumeDataColor(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CVector3DFieldReference(pWrapper, pHandle)
+	{
+	}
+	
+};
+	
+/*************************************************************************************************************************
+ Class CMaterialMapping 
+**************************************************************************************************************************/
+class CMaterialMapping : public CScalarFieldReference {
+public:
+	
+	/**
+	* CMaterialMapping::CMaterialMapping - Constructor for MaterialMapping class.
+	*/
+	CMaterialMapping(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CScalarFieldReference(pWrapper, pHandle)
+	{
+	}
+	
+};
+	
+/*************************************************************************************************************************
+ Class CVolumeDataComposite 
+**************************************************************************************************************************/
+class CVolumeDataComposite : public CBase {
+public:
+	
+	/**
+	* CVolumeDataComposite::CVolumeDataComposite - Constructor for VolumeDataComposite class.
+	*/
+	CVolumeDataComposite(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline PBaseMaterialGroup GetBaseMaterialGroup();
+	inline void SetBaseMaterialGroup(classParam<CBaseMaterialGroup> pBaseMaterialGroupInstance);
+	inline Lib3MF_uint32 GetMaterialMappingCount();
+	inline PMaterialMapping GetMaterialMapping(const Lib3MF_uint32 nIndex);
+	inline PMaterialMapping AddMaterialMapping(const sTransform & Transform);
+	inline void RemoveMaterialMapping(const Lib3MF_uint32 nIndex);
+};
+	
+/*************************************************************************************************************************
+ Class CVolumeDataProperty 
+**************************************************************************************************************************/
+class CVolumeDataProperty : public CFieldReference {
+public:
+	
+	/**
+	* CVolumeDataProperty::CVolumeDataProperty - Constructor for VolumeDataProperty class.
+	*/
+	CVolumeDataProperty(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CFieldReference(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetName();
+	inline void SetIsRequired(const bool bIsRequired);
+	inline bool IsRequired();
+};
+	
+/*************************************************************************************************************************
+ Class CVolumeData 
+**************************************************************************************************************************/
+class CVolumeData : public CBase {
+public:
+	
+	/**
+	* CVolumeData::CVolumeData - Constructor for VolumeData class.
+	*/
+	CVolumeData(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline PVolumeDataBoundary GetBoundary();
+	inline PVolumeDataBoundary CreateNewBoundary(classParam<CScalarField> pTheScalarField);
+	inline void RemoveBoundary();
+	inline PVolumeDataComposite GetComposite();
+	inline PVolumeDataComposite CreateNewComposite();
+	inline void RemoveComposite();
+	inline PVolumeDataColor GetColor();
+	inline PVolumeDataColor CreateNewColor(classParam<CVector3DField> pTheVector3DField);
+	inline void RemoveColor();
+	inline Lib3MF_uint32 GetPropertyCount();
+	inline PVolumeDataProperty GetProperty(const Lib3MF_uint32 nIndex);
+	inline PVolumeDataProperty AddPropertyFromScalarField(const std::string & sName, classParam<CScalarField> pTheScalarField);
+	inline PVolumeDataProperty AddPropertyFromVector3DField(const std::string & sName, classParam<CVector3DField> pTheVector3DField);
+	inline void RemoveProperty(const Lib3MF_uint32 nIndex);
 };
 	
 /*************************************************************************************************************************
@@ -1279,6 +1804,51 @@ public:
 	inline Lib3MF_uint32 AddLayer(const sMultiPropertyLayer & TheLayer);
 	inline sMultiPropertyLayer GetLayer(const Lib3MF_uint32 nLayerIndex);
 	inline void RemoveLayer(const Lib3MF_uint32 nLayerIndex);
+};
+	
+/*************************************************************************************************************************
+ Class CImage3D 
+**************************************************************************************************************************/
+class CImage3D : public CResource {
+public:
+	
+	/**
+	* CImage3D::CImage3D - Constructor for Image3D class.
+	*/
+	CImage3D(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CResource(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetName();
+	inline void SetName(const std::string & sName);
+	inline bool IsImageStack();
+};
+	
+/*************************************************************************************************************************
+ Class CImageStack 
+**************************************************************************************************************************/
+class CImageStack : public CImage3D {
+public:
+	
+	/**
+	* CImageStack::CImageStack - Constructor for ImageStack class.
+	*/
+	CImageStack(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CImage3D(pWrapper, pHandle)
+	{
+	}
+	
+	inline Lib3MF_uint32 GetRowCount();
+	inline void SetRowCount(const Lib3MF_uint32 nRowCount);
+	inline Lib3MF_uint32 GetColumnCount();
+	inline void SetColumnCount(const Lib3MF_uint32 nColumnCount);
+	inline Lib3MF_uint32 GetSheetCount();
+	inline PAttachment GetSheet(const Lib3MF_uint32 nIndex);
+	inline void SetSheet(const Lib3MF_uint32 nIndex, classParam<CAttachment> pSheet);
+	inline PAttachment CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath);
+	inline PAttachment CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const CInputVector<Lib3MF_uint8> & DataBuffer);
+	inline PAttachment CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName);
 };
 	
 /*************************************************************************************************************************
@@ -1615,6 +2185,9 @@ public:
 	inline PCompositeMaterialsIterator GetCompositeMaterials();
 	inline PMultiPropertyGroupIterator GetMultiPropertyGroups();
 	inline PSliceStackIterator GetSliceStacks();
+	inline PImage3DIterator GetImage3Ds();
+	inline PScalarFieldIterator GetScalarFields();
+	inline PVector3DFieldIterator GetVector3DFields();
 	inline PModel MergeToModel();
 	inline PMeshObject AddMeshObject();
 	inline PComponentsObject AddComponentsObject();
@@ -1625,6 +2198,22 @@ public:
 	inline PTexture2DGroup AddTexture2DGroup(classParam<CTexture2D> pTexture2DInstance);
 	inline PCompositeMaterials AddCompositeMaterials(classParam<CBaseMaterialGroup> pBaseMaterialGroupInstance);
 	inline PMultiPropertyGroup AddMultiPropertyGroup();
+	inline PImageStack AddImageStack(const Lib3MF_uint32 nColumnCount, const Lib3MF_uint32 nRowCount, const Lib3MF_uint32 nSheetCount);
+	inline PImageStack GetImageStackByID(const Lib3MF_uint32 nUniqueResourceID);
+	inline PScalarFieldFromImage3D AddScalarFieldFromImage3D(classParam<CImage3D> pImage3D);
+	inline PScalarFieldComposed AddScalarFieldComposed();
+	inline PScalarFieldConstant AddScalarFieldConstant();
+	inline PScalarField GetScalarFieldByID(const Lib3MF_uint32 nUniqueResourceID);
+	inline PScalarFieldFromImage3D GetScalarFieldFromImage3DByID(const Lib3MF_uint32 nUniqueResourceID);
+	inline PScalarFieldComposed GetScalarFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID);
+	inline PScalarFieldConstant GetScalarFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID);
+	inline PVector3DFieldFromImage3D AddVector3DFieldFromImage3D(classParam<CImage3D> pImage3D);
+	inline PVector3DFieldComposed AddVector3DFieldComposed();
+	inline PVector3DFieldConstant AddVector3DFieldConstant();
+	inline PVector3DField GetVector3DFieldByID(const Lib3MF_uint32 nUniqueResourceID);
+	inline PVector3DFieldFromImage3D GetVector3DFieldFromImage3DByID(const Lib3MF_uint32 nUniqueResourceID);
+	inline PVector3DFieldComposed GetVector3DFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID);
+	inline PVector3DFieldConstant GetVector3DFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PBuildItem AddBuildItem(classParam<CObject> pObject, const sTransform & Transform);
 	inline void RemoveBuildItem(classParam<CBuildItem> pBuildItemInstance);
 	inline PMetaDataGroup GetMetaDataGroup();
@@ -1675,11 +2264,31 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0x30D55F4DB88FE0CAUL: return new CTexture2DGroupIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Texture2DGroupIterator"
 		case 0xA99CC6C3F70FB6F9UL: return new CCompositeMaterialsIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::CompositeMaterialsIterator"
 		case 0xC2BDF5D8CBBDB1F0UL: return new CMultiPropertyGroupIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MultiPropertyGroupIterator"
+		case 0xC4B8EC00A82BF336UL: return new CImage3DIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Image3DIterator"
+		case 0xDB00D7A0549F0D9BUL: return new CScalarFieldIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldIterator"
+		case 0xFBE6DA41D00E8AA8UL: return new CVector3DFieldIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldIterator"
 		case 0xD17716D063DE2C22UL: return new CMetaData(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaData"
 		case 0x0C3B85369E9B25D3UL: return new CMetaDataGroup(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaDataGroup"
 		case 0x2DA2136F577A779CUL: return new CObject(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Object"
 		case 0x3B3A6DC6EC610497UL: return new CMeshObject(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObject"
 		case 0x63B3B461B30B4BA5UL: return new CBeamLattice(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BeamLattice"
+		case 0xD287279D1D95FD5CUL: return new CScalarField(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarField"
+		case 0x8238AA0982B65912UL: return new CVector3DField(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DField"
+		case 0x34BAAE99C1A0884AUL: return new CScalarFieldFromImage3D(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldFromImage3D"
+		case 0xD66C857B3150881CUL: return new CScalarFieldConstant(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldConstant"
+		case 0x35E133BE92DFB6BFUL: return new CScalarFieldComposed(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldComposed"
+		case 0x8829BAD18E5688FCUL: return new CVector3DFieldFromImage3D(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldFromImage3D"
+		case 0xFE4F20B130D7A54CUL: return new CVector3DFieldConstant(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldConstant"
+		case 0x238E197DF1603119UL: return new CVector3DFieldComposed(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldComposed"
+		case 0x1DAFE66A115A193CUL: return new CFieldReference(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::FieldReference"
+		case 0x2EC59C8B8BCD0C88UL: return new CScalarFieldReference(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldReference"
+		case 0x6DAF2470111B6F8AUL: return new CVector3DFieldReference(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldReference"
+		case 0xE7B8A8C7BC9DE5C1UL: return new CVolumeDataBoundary(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeDataBoundary"
+		case 0xD85B5B6143E787E3UL: return new CVolumeDataColor(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeDataColor"
+		case 0x241FE6B4817C3FE4UL: return new CMaterialMapping(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MaterialMapping"
+		case 0x46F1DAC40581B304UL: return new CVolumeDataComposite(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeDataComposite"
+		case 0xFC368AA44ACE42DAUL: return new CVolumeDataProperty(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeDataProperty"
+		case 0x9200586FB91587A7UL: return new CVolumeData(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeData"
 		case 0x4ECDB6A6F69F2BEBUL: return new CComponent(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Component"
 		case 0x6522CF04EB283FEDUL: return new CComponentsObject(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ComponentsObject"
 		case 0x30CCDBE90E00B55BUL: return new CBeamSet(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BeamSet"
@@ -1688,6 +2297,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0xBC1208397E37055DUL: return new CTexture2DGroup(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Texture2DGroup"
 		case 0xCE16224D688B86F2UL: return new CCompositeMaterials(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::CompositeMaterials"
 		case 0xB989E02E43158FE6UL: return new CMultiPropertyGroup(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MultiPropertyGroup"
+		case 0xBD938FF2D2663D61UL: return new CImage3D(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Image3D"
+		case 0x13A2561F0CFB712AUL: return new CImageStack(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImageStack"
 		case 0x8CE7A1191A63A35DUL: return new CAttachment(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Attachment"
 		case 0xE0441CF976B36319UL: return new CTexture2D(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Texture2D"
 		case 0x68FB2D5FFC4BA12AUL: return new CBuildItem(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItem"
@@ -2035,6 +2646,9 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Texture2DGroupIterator_GetCurrentTexture2DGroup = nullptr;
 		pWrapperTable->m_CompositeMaterialsIterator_GetCurrentCompositeMaterials = nullptr;
 		pWrapperTable->m_MultiPropertyGroupIterator_GetCurrentMultiPropertyGroup = nullptr;
+		pWrapperTable->m_Image3DIterator_GetCurrentImage3D = nullptr;
+		pWrapperTable->m_ScalarFieldIterator_GetCurrentScalarField = nullptr;
+		pWrapperTable->m_Vector3DFieldIterator_GetCurrentVector3DField = nullptr;
 		pWrapperTable->m_MetaData_GetNameSpace = nullptr;
 		pWrapperTable->m_MetaData_SetNameSpace = nullptr;
 		pWrapperTable->m_MetaData_GetName = nullptr;
@@ -2094,6 +2708,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_MeshObject_SetGeometry = nullptr;
 		pWrapperTable->m_MeshObject_IsManifoldAndOriented = nullptr;
 		pWrapperTable->m_MeshObject_BeamLattice = nullptr;
+		pWrapperTable->m_MeshObject_VolumeData = nullptr;
 		pWrapperTable->m_BeamLattice_GetMinLength = nullptr;
 		pWrapperTable->m_BeamLattice_SetMinLength = nullptr;
 		pWrapperTable->m_BeamLattice_GetClipping = nullptr;
@@ -2117,6 +2732,97 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_BeamLattice_GetBeamSetCount = nullptr;
 		pWrapperTable->m_BeamLattice_AddBeamSet = nullptr;
 		pWrapperTable->m_BeamLattice_GetBeamSet = nullptr;
+		pWrapperTable->m_ScalarField_GetName = nullptr;
+		pWrapperTable->m_ScalarField_SetName = nullptr;
+		pWrapperTable->m_ScalarField_IsFromImage3D = nullptr;
+		pWrapperTable->m_ScalarField_IsConstant = nullptr;
+		pWrapperTable->m_ScalarField_IsComposed = nullptr;
+		pWrapperTable->m_Vector3DField_GetName = nullptr;
+		pWrapperTable->m_Vector3DField_SetName = nullptr;
+		pWrapperTable->m_Vector3DField_IsFromImage3D = nullptr;
+		pWrapperTable->m_Vector3DField_IsConstant = nullptr;
+		pWrapperTable->m_Vector3DField_IsComposed = nullptr;
+		pWrapperTable->m_ScalarFieldFromImage3D_GetImage = nullptr;
+		pWrapperTable->m_ScalarFieldFromImage3D_SetImage = nullptr;
+		pWrapperTable->m_ScalarFieldFromImage3D_SetChannel = nullptr;
+		pWrapperTable->m_ScalarFieldFromImage3D_GetChannel = nullptr;
+		pWrapperTable->m_ScalarFieldFromImage3D_SetFilter = nullptr;
+		pWrapperTable->m_ScalarFieldFromImage3D_GetFilter = nullptr;
+		pWrapperTable->m_ScalarFieldFromImage3D_SetTileStyles = nullptr;
+		pWrapperTable->m_ScalarFieldFromImage3D_GetTileStyles = nullptr;
+		pWrapperTable->m_ScalarFieldFromImage3D_GetOffset = nullptr;
+		pWrapperTable->m_ScalarFieldFromImage3D_SetOffset = nullptr;
+		pWrapperTable->m_ScalarFieldFromImage3D_GetScale = nullptr;
+		pWrapperTable->m_ScalarFieldFromImage3D_SetScale = nullptr;
+		pWrapperTable->m_ScalarFieldConstant_GetValue = nullptr;
+		pWrapperTable->m_ScalarFieldConstant_SetValue = nullptr;
+		pWrapperTable->m_ScalarFieldComposed_SetMethod = nullptr;
+		pWrapperTable->m_ScalarFieldComposed_GetMethod = nullptr;
+		pWrapperTable->m_ScalarFieldComposed_GetFactor1 = nullptr;
+		pWrapperTable->m_ScalarFieldComposed_SetFactor1 = nullptr;
+		pWrapperTable->m_ScalarFieldComposed_GetFactor2 = nullptr;
+		pWrapperTable->m_ScalarFieldComposed_SetFactor2 = nullptr;
+		pWrapperTable->m_ScalarFieldComposed_ScalarFieldReference1 = nullptr;
+		pWrapperTable->m_ScalarFieldComposed_ScalarFieldReference2 = nullptr;
+		pWrapperTable->m_ScalarFieldComposed_ScalarFieldReferenceMask = nullptr;
+		pWrapperTable->m_Vector3DFieldFromImage3D_GetImage = nullptr;
+		pWrapperTable->m_Vector3DFieldFromImage3D_SetImage = nullptr;
+		pWrapperTable->m_Vector3DFieldFromImage3D_SetFilter = nullptr;
+		pWrapperTable->m_Vector3DFieldFromImage3D_GetFilter = nullptr;
+		pWrapperTable->m_Vector3DFieldFromImage3D_SetTileStyles = nullptr;
+		pWrapperTable->m_Vector3DFieldFromImage3D_GetTileStyles = nullptr;
+		pWrapperTable->m_Vector3DFieldFromImage3D_GetOffset = nullptr;
+		pWrapperTable->m_Vector3DFieldFromImage3D_SetOffset = nullptr;
+		pWrapperTable->m_Vector3DFieldFromImage3D_GetScale = nullptr;
+		pWrapperTable->m_Vector3DFieldFromImage3D_SetScale = nullptr;
+		pWrapperTable->m_Vector3DFieldConstant_GetValueX = nullptr;
+		pWrapperTable->m_Vector3DFieldConstant_SetValueX = nullptr;
+		pWrapperTable->m_Vector3DFieldConstant_GetValueY = nullptr;
+		pWrapperTable->m_Vector3DFieldConstant_SetValueY = nullptr;
+		pWrapperTable->m_Vector3DFieldConstant_GetValueZ = nullptr;
+		pWrapperTable->m_Vector3DFieldConstant_SetValueZ = nullptr;
+		pWrapperTable->m_Vector3DFieldComposed_SetMethod = nullptr;
+		pWrapperTable->m_Vector3DFieldComposed_GetMethod = nullptr;
+		pWrapperTable->m_Vector3DFieldComposed_SetSpace = nullptr;
+		pWrapperTable->m_Vector3DFieldComposed_GetSpace = nullptr;
+		pWrapperTable->m_Vector3DFieldComposed_GetFactor1 = nullptr;
+		pWrapperTable->m_Vector3DFieldComposed_SetFactor1 = nullptr;
+		pWrapperTable->m_Vector3DFieldComposed_GetFactor2 = nullptr;
+		pWrapperTable->m_Vector3DFieldComposed_SetFactor2 = nullptr;
+		pWrapperTable->m_Vector3DFieldComposed_Vector3DFieldReference1 = nullptr;
+		pWrapperTable->m_Vector3DFieldComposed_Vector3DFieldReference2 = nullptr;
+		pWrapperTable->m_Vector3DFieldComposed_ScalarFieldReferenceMask = nullptr;
+		pWrapperTable->m_FieldReference_GetFieldResourceID = nullptr;
+		pWrapperTable->m_FieldReference_SetFieldResourceID = nullptr;
+		pWrapperTable->m_FieldReference_GetTransform = nullptr;
+		pWrapperTable->m_FieldReference_SetTransform = nullptr;
+		pWrapperTable->m_ScalarFieldReference_SetScalarField = nullptr;
+		pWrapperTable->m_Vector3DFieldReference_SetVector3DField = nullptr;
+		pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = nullptr;
+		pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold = nullptr;
+		pWrapperTable->m_VolumeDataComposite_GetBaseMaterialGroup = nullptr;
+		pWrapperTable->m_VolumeDataComposite_SetBaseMaterialGroup = nullptr;
+		pWrapperTable->m_VolumeDataComposite_GetMaterialMappingCount = nullptr;
+		pWrapperTable->m_VolumeDataComposite_GetMaterialMapping = nullptr;
+		pWrapperTable->m_VolumeDataComposite_AddMaterialMapping = nullptr;
+		pWrapperTable->m_VolumeDataComposite_RemoveMaterialMapping = nullptr;
+		pWrapperTable->m_VolumeDataProperty_GetName = nullptr;
+		pWrapperTable->m_VolumeDataProperty_SetIsRequired = nullptr;
+		pWrapperTable->m_VolumeDataProperty_IsRequired = nullptr;
+		pWrapperTable->m_VolumeData_GetBoundary = nullptr;
+		pWrapperTable->m_VolumeData_CreateNewBoundary = nullptr;
+		pWrapperTable->m_VolumeData_RemoveBoundary = nullptr;
+		pWrapperTable->m_VolumeData_GetComposite = nullptr;
+		pWrapperTable->m_VolumeData_CreateNewComposite = nullptr;
+		pWrapperTable->m_VolumeData_RemoveComposite = nullptr;
+		pWrapperTable->m_VolumeData_GetColor = nullptr;
+		pWrapperTable->m_VolumeData_CreateNewColor = nullptr;
+		pWrapperTable->m_VolumeData_RemoveColor = nullptr;
+		pWrapperTable->m_VolumeData_GetPropertyCount = nullptr;
+		pWrapperTable->m_VolumeData_GetProperty = nullptr;
+		pWrapperTable->m_VolumeData_AddPropertyFromScalarField = nullptr;
+		pWrapperTable->m_VolumeData_AddPropertyFromVector3DField = nullptr;
+		pWrapperTable->m_VolumeData_RemoveProperty = nullptr;
 		pWrapperTable->m_Component_GetObjectResource = nullptr;
 		pWrapperTable->m_Component_GetObjectResourceID = nullptr;
 		pWrapperTable->m_Component_GetUUID = nullptr;
@@ -2173,6 +2879,19 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_MultiPropertyGroup_AddLayer = nullptr;
 		pWrapperTable->m_MultiPropertyGroup_GetLayer = nullptr;
 		pWrapperTable->m_MultiPropertyGroup_RemoveLayer = nullptr;
+		pWrapperTable->m_Image3D_GetName = nullptr;
+		pWrapperTable->m_Image3D_SetName = nullptr;
+		pWrapperTable->m_Image3D_IsImageStack = nullptr;
+		pWrapperTable->m_ImageStack_GetRowCount = nullptr;
+		pWrapperTable->m_ImageStack_SetRowCount = nullptr;
+		pWrapperTable->m_ImageStack_GetColumnCount = nullptr;
+		pWrapperTable->m_ImageStack_SetColumnCount = nullptr;
+		pWrapperTable->m_ImageStack_GetSheetCount = nullptr;
+		pWrapperTable->m_ImageStack_GetSheet = nullptr;
+		pWrapperTable->m_ImageStack_SetSheet = nullptr;
+		pWrapperTable->m_ImageStack_CreateEmptySheet = nullptr;
+		pWrapperTable->m_ImageStack_CreateSheetFromBuffer = nullptr;
+		pWrapperTable->m_ImageStack_CreateSheetFromFile = nullptr;
 		pWrapperTable->m_Attachment_GetPath = nullptr;
 		pWrapperTable->m_Attachment_SetPath = nullptr;
 		pWrapperTable->m_Attachment_PackagePart = nullptr;
@@ -2301,6 +3020,9 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Model_GetCompositeMaterials = nullptr;
 		pWrapperTable->m_Model_GetMultiPropertyGroups = nullptr;
 		pWrapperTable->m_Model_GetSliceStacks = nullptr;
+		pWrapperTable->m_Model_GetImage3Ds = nullptr;
+		pWrapperTable->m_Model_GetScalarFields = nullptr;
+		pWrapperTable->m_Model_GetVector3DFields = nullptr;
 		pWrapperTable->m_Model_MergeToModel = nullptr;
 		pWrapperTable->m_Model_AddMeshObject = nullptr;
 		pWrapperTable->m_Model_AddComponentsObject = nullptr;
@@ -2311,6 +3033,22 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Model_AddTexture2DGroup = nullptr;
 		pWrapperTable->m_Model_AddCompositeMaterials = nullptr;
 		pWrapperTable->m_Model_AddMultiPropertyGroup = nullptr;
+		pWrapperTable->m_Model_AddImageStack = nullptr;
+		pWrapperTable->m_Model_GetImageStackByID = nullptr;
+		pWrapperTable->m_Model_AddScalarFieldFromImage3D = nullptr;
+		pWrapperTable->m_Model_AddScalarFieldComposed = nullptr;
+		pWrapperTable->m_Model_AddScalarFieldConstant = nullptr;
+		pWrapperTable->m_Model_GetScalarFieldByID = nullptr;
+		pWrapperTable->m_Model_GetScalarFieldFromImage3DByID = nullptr;
+		pWrapperTable->m_Model_GetScalarFieldComposedByID = nullptr;
+		pWrapperTable->m_Model_GetScalarFieldConstantByID = nullptr;
+		pWrapperTable->m_Model_AddVector3DFieldFromImage3D = nullptr;
+		pWrapperTable->m_Model_AddVector3DFieldComposed = nullptr;
+		pWrapperTable->m_Model_AddVector3DFieldConstant = nullptr;
+		pWrapperTable->m_Model_GetVector3DFieldByID = nullptr;
+		pWrapperTable->m_Model_GetVector3DFieldFromImage3DByID = nullptr;
+		pWrapperTable->m_Model_GetVector3DFieldComposedByID = nullptr;
+		pWrapperTable->m_Model_GetVector3DFieldConstantByID = nullptr;
 		pWrapperTable->m_Model_AddBuildItem = nullptr;
 		pWrapperTable->m_Model_RemoveBuildItem = nullptr;
 		pWrapperTable->m_Model_GetMetaDataGroup = nullptr;
@@ -2826,6 +3564,33 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_MultiPropertyGroupIterator_GetCurrentMultiPropertyGroup == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Image3DIterator_GetCurrentImage3D = (PLib3MFImage3DIterator_GetCurrentImage3DPtr) GetProcAddress(hLibrary, "lib3mf_image3diterator_getcurrentimage3d");
+		#else // _WIN32
+		pWrapperTable->m_Image3DIterator_GetCurrentImage3D = (PLib3MFImage3DIterator_GetCurrentImage3DPtr) dlsym(hLibrary, "lib3mf_image3diterator_getcurrentimage3d");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Image3DIterator_GetCurrentImage3D == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldIterator_GetCurrentScalarField = (PLib3MFScalarFieldIterator_GetCurrentScalarFieldPtr) GetProcAddress(hLibrary, "lib3mf_scalarfielditerator_getcurrentscalarfield");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldIterator_GetCurrentScalarField = (PLib3MFScalarFieldIterator_GetCurrentScalarFieldPtr) dlsym(hLibrary, "lib3mf_scalarfielditerator_getcurrentscalarfield");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldIterator_GetCurrentScalarField == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldIterator_GetCurrentVector3DField = (PLib3MFVector3DFieldIterator_GetCurrentVector3DFieldPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfielditerator_getcurrentvector3dfield");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldIterator_GetCurrentVector3DField = (PLib3MFVector3DFieldIterator_GetCurrentVector3DFieldPtr) dlsym(hLibrary, "lib3mf_vector3dfielditerator_getcurrentvector3dfield");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldIterator_GetCurrentVector3DField == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -3360,6 +4125,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_MeshObject_VolumeData = (PLib3MFMeshObject_VolumeDataPtr) GetProcAddress(hLibrary, "lib3mf_meshobject_volumedata");
+		#else // _WIN32
+		pWrapperTable->m_MeshObject_VolumeData = (PLib3MFMeshObject_VolumeDataPtr) dlsym(hLibrary, "lib3mf_meshobject_volumedata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_MeshObject_VolumeData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_BeamLattice_GetMinLength = (PLib3MFBeamLattice_GetMinLengthPtr) GetProcAddress(hLibrary, "lib3mf_beamlattice_getminlength");
 		#else // _WIN32
 		pWrapperTable->m_BeamLattice_GetMinLength = (PLib3MFBeamLattice_GetMinLengthPtr) dlsym(hLibrary, "lib3mf_beamlattice_getminlength");
@@ -3564,6 +4338,825 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_BeamLattice_GetBeamSet == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarField_GetName = (PLib3MFScalarField_GetNamePtr) GetProcAddress(hLibrary, "lib3mf_scalarfield_getname");
+		#else // _WIN32
+		pWrapperTable->m_ScalarField_GetName = (PLib3MFScalarField_GetNamePtr) dlsym(hLibrary, "lib3mf_scalarfield_getname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarField_GetName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarField_SetName = (PLib3MFScalarField_SetNamePtr) GetProcAddress(hLibrary, "lib3mf_scalarfield_setname");
+		#else // _WIN32
+		pWrapperTable->m_ScalarField_SetName = (PLib3MFScalarField_SetNamePtr) dlsym(hLibrary, "lib3mf_scalarfield_setname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarField_SetName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarField_IsFromImage3D = (PLib3MFScalarField_IsFromImage3DPtr) GetProcAddress(hLibrary, "lib3mf_scalarfield_isfromimage3d");
+		#else // _WIN32
+		pWrapperTable->m_ScalarField_IsFromImage3D = (PLib3MFScalarField_IsFromImage3DPtr) dlsym(hLibrary, "lib3mf_scalarfield_isfromimage3d");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarField_IsFromImage3D == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarField_IsConstant = (PLib3MFScalarField_IsConstantPtr) GetProcAddress(hLibrary, "lib3mf_scalarfield_isconstant");
+		#else // _WIN32
+		pWrapperTable->m_ScalarField_IsConstant = (PLib3MFScalarField_IsConstantPtr) dlsym(hLibrary, "lib3mf_scalarfield_isconstant");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarField_IsConstant == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarField_IsComposed = (PLib3MFScalarField_IsComposedPtr) GetProcAddress(hLibrary, "lib3mf_scalarfield_iscomposed");
+		#else // _WIN32
+		pWrapperTable->m_ScalarField_IsComposed = (PLib3MFScalarField_IsComposedPtr) dlsym(hLibrary, "lib3mf_scalarfield_iscomposed");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarField_IsComposed == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DField_GetName = (PLib3MFVector3DField_GetNamePtr) GetProcAddress(hLibrary, "lib3mf_vector3dfield_getname");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DField_GetName = (PLib3MFVector3DField_GetNamePtr) dlsym(hLibrary, "lib3mf_vector3dfield_getname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DField_GetName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DField_SetName = (PLib3MFVector3DField_SetNamePtr) GetProcAddress(hLibrary, "lib3mf_vector3dfield_setname");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DField_SetName = (PLib3MFVector3DField_SetNamePtr) dlsym(hLibrary, "lib3mf_vector3dfield_setname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DField_SetName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DField_IsFromImage3D = (PLib3MFVector3DField_IsFromImage3DPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfield_isfromimage3d");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DField_IsFromImage3D = (PLib3MFVector3DField_IsFromImage3DPtr) dlsym(hLibrary, "lib3mf_vector3dfield_isfromimage3d");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DField_IsFromImage3D == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DField_IsConstant = (PLib3MFVector3DField_IsConstantPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfield_isconstant");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DField_IsConstant = (PLib3MFVector3DField_IsConstantPtr) dlsym(hLibrary, "lib3mf_vector3dfield_isconstant");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DField_IsConstant == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DField_IsComposed = (PLib3MFVector3DField_IsComposedPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfield_iscomposed");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DField_IsComposed = (PLib3MFVector3DField_IsComposedPtr) dlsym(hLibrary, "lib3mf_vector3dfield_iscomposed");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DField_IsComposed == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_GetImage = (PLib3MFScalarFieldFromImage3D_GetImagePtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldfromimage3d_getimage");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_GetImage = (PLib3MFScalarFieldFromImage3D_GetImagePtr) dlsym(hLibrary, "lib3mf_scalarfieldfromimage3d_getimage");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldFromImage3D_GetImage == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_SetImage = (PLib3MFScalarFieldFromImage3D_SetImagePtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldfromimage3d_setimage");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_SetImage = (PLib3MFScalarFieldFromImage3D_SetImagePtr) dlsym(hLibrary, "lib3mf_scalarfieldfromimage3d_setimage");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldFromImage3D_SetImage == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_SetChannel = (PLib3MFScalarFieldFromImage3D_SetChannelPtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldfromimage3d_setchannel");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_SetChannel = (PLib3MFScalarFieldFromImage3D_SetChannelPtr) dlsym(hLibrary, "lib3mf_scalarfieldfromimage3d_setchannel");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldFromImage3D_SetChannel == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_GetChannel = (PLib3MFScalarFieldFromImage3D_GetChannelPtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldfromimage3d_getchannel");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_GetChannel = (PLib3MFScalarFieldFromImage3D_GetChannelPtr) dlsym(hLibrary, "lib3mf_scalarfieldfromimage3d_getchannel");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldFromImage3D_GetChannel == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_SetFilter = (PLib3MFScalarFieldFromImage3D_SetFilterPtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldfromimage3d_setfilter");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_SetFilter = (PLib3MFScalarFieldFromImage3D_SetFilterPtr) dlsym(hLibrary, "lib3mf_scalarfieldfromimage3d_setfilter");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldFromImage3D_SetFilter == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_GetFilter = (PLib3MFScalarFieldFromImage3D_GetFilterPtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldfromimage3d_getfilter");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_GetFilter = (PLib3MFScalarFieldFromImage3D_GetFilterPtr) dlsym(hLibrary, "lib3mf_scalarfieldfromimage3d_getfilter");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldFromImage3D_GetFilter == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_SetTileStyles = (PLib3MFScalarFieldFromImage3D_SetTileStylesPtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldfromimage3d_settilestyles");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_SetTileStyles = (PLib3MFScalarFieldFromImage3D_SetTileStylesPtr) dlsym(hLibrary, "lib3mf_scalarfieldfromimage3d_settilestyles");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldFromImage3D_SetTileStyles == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_GetTileStyles = (PLib3MFScalarFieldFromImage3D_GetTileStylesPtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldfromimage3d_gettilestyles");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_GetTileStyles = (PLib3MFScalarFieldFromImage3D_GetTileStylesPtr) dlsym(hLibrary, "lib3mf_scalarfieldfromimage3d_gettilestyles");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldFromImage3D_GetTileStyles == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_GetOffset = (PLib3MFScalarFieldFromImage3D_GetOffsetPtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldfromimage3d_getoffset");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_GetOffset = (PLib3MFScalarFieldFromImage3D_GetOffsetPtr) dlsym(hLibrary, "lib3mf_scalarfieldfromimage3d_getoffset");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldFromImage3D_GetOffset == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_SetOffset = (PLib3MFScalarFieldFromImage3D_SetOffsetPtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldfromimage3d_setoffset");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_SetOffset = (PLib3MFScalarFieldFromImage3D_SetOffsetPtr) dlsym(hLibrary, "lib3mf_scalarfieldfromimage3d_setoffset");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldFromImage3D_SetOffset == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_GetScale = (PLib3MFScalarFieldFromImage3D_GetScalePtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldfromimage3d_getscale");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_GetScale = (PLib3MFScalarFieldFromImage3D_GetScalePtr) dlsym(hLibrary, "lib3mf_scalarfieldfromimage3d_getscale");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldFromImage3D_GetScale == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_SetScale = (PLib3MFScalarFieldFromImage3D_SetScalePtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldfromimage3d_setscale");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldFromImage3D_SetScale = (PLib3MFScalarFieldFromImage3D_SetScalePtr) dlsym(hLibrary, "lib3mf_scalarfieldfromimage3d_setscale");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldFromImage3D_SetScale == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldConstant_GetValue = (PLib3MFScalarFieldConstant_GetValuePtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldconstant_getvalue");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldConstant_GetValue = (PLib3MFScalarFieldConstant_GetValuePtr) dlsym(hLibrary, "lib3mf_scalarfieldconstant_getvalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldConstant_GetValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldConstant_SetValue = (PLib3MFScalarFieldConstant_SetValuePtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldconstant_setvalue");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldConstant_SetValue = (PLib3MFScalarFieldConstant_SetValuePtr) dlsym(hLibrary, "lib3mf_scalarfieldconstant_setvalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldConstant_SetValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldComposed_SetMethod = (PLib3MFScalarFieldComposed_SetMethodPtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldcomposed_setmethod");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldComposed_SetMethod = (PLib3MFScalarFieldComposed_SetMethodPtr) dlsym(hLibrary, "lib3mf_scalarfieldcomposed_setmethod");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldComposed_SetMethod == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldComposed_GetMethod = (PLib3MFScalarFieldComposed_GetMethodPtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldcomposed_getmethod");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldComposed_GetMethod = (PLib3MFScalarFieldComposed_GetMethodPtr) dlsym(hLibrary, "lib3mf_scalarfieldcomposed_getmethod");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldComposed_GetMethod == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldComposed_GetFactor1 = (PLib3MFScalarFieldComposed_GetFactor1Ptr) GetProcAddress(hLibrary, "lib3mf_scalarfieldcomposed_getfactor1");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldComposed_GetFactor1 = (PLib3MFScalarFieldComposed_GetFactor1Ptr) dlsym(hLibrary, "lib3mf_scalarfieldcomposed_getfactor1");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldComposed_GetFactor1 == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldComposed_SetFactor1 = (PLib3MFScalarFieldComposed_SetFactor1Ptr) GetProcAddress(hLibrary, "lib3mf_scalarfieldcomposed_setfactor1");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldComposed_SetFactor1 = (PLib3MFScalarFieldComposed_SetFactor1Ptr) dlsym(hLibrary, "lib3mf_scalarfieldcomposed_setfactor1");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldComposed_SetFactor1 == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldComposed_GetFactor2 = (PLib3MFScalarFieldComposed_GetFactor2Ptr) GetProcAddress(hLibrary, "lib3mf_scalarfieldcomposed_getfactor2");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldComposed_GetFactor2 = (PLib3MFScalarFieldComposed_GetFactor2Ptr) dlsym(hLibrary, "lib3mf_scalarfieldcomposed_getfactor2");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldComposed_GetFactor2 == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldComposed_SetFactor2 = (PLib3MFScalarFieldComposed_SetFactor2Ptr) GetProcAddress(hLibrary, "lib3mf_scalarfieldcomposed_setfactor2");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldComposed_SetFactor2 = (PLib3MFScalarFieldComposed_SetFactor2Ptr) dlsym(hLibrary, "lib3mf_scalarfieldcomposed_setfactor2");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldComposed_SetFactor2 == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldComposed_ScalarFieldReference1 = (PLib3MFScalarFieldComposed_ScalarFieldReference1Ptr) GetProcAddress(hLibrary, "lib3mf_scalarfieldcomposed_scalarfieldreference1");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldComposed_ScalarFieldReference1 = (PLib3MFScalarFieldComposed_ScalarFieldReference1Ptr) dlsym(hLibrary, "lib3mf_scalarfieldcomposed_scalarfieldreference1");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldComposed_ScalarFieldReference1 == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldComposed_ScalarFieldReference2 = (PLib3MFScalarFieldComposed_ScalarFieldReference2Ptr) GetProcAddress(hLibrary, "lib3mf_scalarfieldcomposed_scalarfieldreference2");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldComposed_ScalarFieldReference2 = (PLib3MFScalarFieldComposed_ScalarFieldReference2Ptr) dlsym(hLibrary, "lib3mf_scalarfieldcomposed_scalarfieldreference2");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldComposed_ScalarFieldReference2 == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldComposed_ScalarFieldReferenceMask = (PLib3MFScalarFieldComposed_ScalarFieldReferenceMaskPtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldcomposed_scalarfieldreferencemask");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldComposed_ScalarFieldReferenceMask = (PLib3MFScalarFieldComposed_ScalarFieldReferenceMaskPtr) dlsym(hLibrary, "lib3mf_scalarfieldcomposed_scalarfieldreferencemask");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldComposed_ScalarFieldReferenceMask == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldFromImage3D_GetImage = (PLib3MFVector3DFieldFromImage3D_GetImagePtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldfromimage3d_getimage");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldFromImage3D_GetImage = (PLib3MFVector3DFieldFromImage3D_GetImagePtr) dlsym(hLibrary, "lib3mf_vector3dfieldfromimage3d_getimage");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldFromImage3D_GetImage == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldFromImage3D_SetImage = (PLib3MFVector3DFieldFromImage3D_SetImagePtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldfromimage3d_setimage");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldFromImage3D_SetImage = (PLib3MFVector3DFieldFromImage3D_SetImagePtr) dlsym(hLibrary, "lib3mf_vector3dfieldfromimage3d_setimage");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldFromImage3D_SetImage == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldFromImage3D_SetFilter = (PLib3MFVector3DFieldFromImage3D_SetFilterPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldfromimage3d_setfilter");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldFromImage3D_SetFilter = (PLib3MFVector3DFieldFromImage3D_SetFilterPtr) dlsym(hLibrary, "lib3mf_vector3dfieldfromimage3d_setfilter");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldFromImage3D_SetFilter == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldFromImage3D_GetFilter = (PLib3MFVector3DFieldFromImage3D_GetFilterPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldfromimage3d_getfilter");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldFromImage3D_GetFilter = (PLib3MFVector3DFieldFromImage3D_GetFilterPtr) dlsym(hLibrary, "lib3mf_vector3dfieldfromimage3d_getfilter");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldFromImage3D_GetFilter == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldFromImage3D_SetTileStyles = (PLib3MFVector3DFieldFromImage3D_SetTileStylesPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldfromimage3d_settilestyles");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldFromImage3D_SetTileStyles = (PLib3MFVector3DFieldFromImage3D_SetTileStylesPtr) dlsym(hLibrary, "lib3mf_vector3dfieldfromimage3d_settilestyles");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldFromImage3D_SetTileStyles == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldFromImage3D_GetTileStyles = (PLib3MFVector3DFieldFromImage3D_GetTileStylesPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldfromimage3d_gettilestyles");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldFromImage3D_GetTileStyles = (PLib3MFVector3DFieldFromImage3D_GetTileStylesPtr) dlsym(hLibrary, "lib3mf_vector3dfieldfromimage3d_gettilestyles");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldFromImage3D_GetTileStyles == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldFromImage3D_GetOffset = (PLib3MFVector3DFieldFromImage3D_GetOffsetPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldfromimage3d_getoffset");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldFromImage3D_GetOffset = (PLib3MFVector3DFieldFromImage3D_GetOffsetPtr) dlsym(hLibrary, "lib3mf_vector3dfieldfromimage3d_getoffset");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldFromImage3D_GetOffset == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldFromImage3D_SetOffset = (PLib3MFVector3DFieldFromImage3D_SetOffsetPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldfromimage3d_setoffset");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldFromImage3D_SetOffset = (PLib3MFVector3DFieldFromImage3D_SetOffsetPtr) dlsym(hLibrary, "lib3mf_vector3dfieldfromimage3d_setoffset");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldFromImage3D_SetOffset == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldFromImage3D_GetScale = (PLib3MFVector3DFieldFromImage3D_GetScalePtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldfromimage3d_getscale");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldFromImage3D_GetScale = (PLib3MFVector3DFieldFromImage3D_GetScalePtr) dlsym(hLibrary, "lib3mf_vector3dfieldfromimage3d_getscale");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldFromImage3D_GetScale == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldFromImage3D_SetScale = (PLib3MFVector3DFieldFromImage3D_SetScalePtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldfromimage3d_setscale");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldFromImage3D_SetScale = (PLib3MFVector3DFieldFromImage3D_SetScalePtr) dlsym(hLibrary, "lib3mf_vector3dfieldfromimage3d_setscale");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldFromImage3D_SetScale == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_GetValueX = (PLib3MFVector3DFieldConstant_GetValueXPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldconstant_getvaluex");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_GetValueX = (PLib3MFVector3DFieldConstant_GetValueXPtr) dlsym(hLibrary, "lib3mf_vector3dfieldconstant_getvaluex");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldConstant_GetValueX == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_SetValueX = (PLib3MFVector3DFieldConstant_SetValueXPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldconstant_setvaluex");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_SetValueX = (PLib3MFVector3DFieldConstant_SetValueXPtr) dlsym(hLibrary, "lib3mf_vector3dfieldconstant_setvaluex");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldConstant_SetValueX == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_GetValueY = (PLib3MFVector3DFieldConstant_GetValueYPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldconstant_getvaluey");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_GetValueY = (PLib3MFVector3DFieldConstant_GetValueYPtr) dlsym(hLibrary, "lib3mf_vector3dfieldconstant_getvaluey");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldConstant_GetValueY == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_SetValueY = (PLib3MFVector3DFieldConstant_SetValueYPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldconstant_setvaluey");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_SetValueY = (PLib3MFVector3DFieldConstant_SetValueYPtr) dlsym(hLibrary, "lib3mf_vector3dfieldconstant_setvaluey");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldConstant_SetValueY == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_GetValueZ = (PLib3MFVector3DFieldConstant_GetValueZPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldconstant_getvaluez");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_GetValueZ = (PLib3MFVector3DFieldConstant_GetValueZPtr) dlsym(hLibrary, "lib3mf_vector3dfieldconstant_getvaluez");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldConstant_GetValueZ == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_SetValueZ = (PLib3MFVector3DFieldConstant_SetValueZPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldconstant_setvaluez");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_SetValueZ = (PLib3MFVector3DFieldConstant_SetValueZPtr) dlsym(hLibrary, "lib3mf_vector3dfieldconstant_setvaluez");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldConstant_SetValueZ == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_SetMethod = (PLib3MFVector3DFieldComposed_SetMethodPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldcomposed_setmethod");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_SetMethod = (PLib3MFVector3DFieldComposed_SetMethodPtr) dlsym(hLibrary, "lib3mf_vector3dfieldcomposed_setmethod");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldComposed_SetMethod == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_GetMethod = (PLib3MFVector3DFieldComposed_GetMethodPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldcomposed_getmethod");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_GetMethod = (PLib3MFVector3DFieldComposed_GetMethodPtr) dlsym(hLibrary, "lib3mf_vector3dfieldcomposed_getmethod");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldComposed_GetMethod == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_SetSpace = (PLib3MFVector3DFieldComposed_SetSpacePtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldcomposed_setspace");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_SetSpace = (PLib3MFVector3DFieldComposed_SetSpacePtr) dlsym(hLibrary, "lib3mf_vector3dfieldcomposed_setspace");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldComposed_SetSpace == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_GetSpace = (PLib3MFVector3DFieldComposed_GetSpacePtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldcomposed_getspace");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_GetSpace = (PLib3MFVector3DFieldComposed_GetSpacePtr) dlsym(hLibrary, "lib3mf_vector3dfieldcomposed_getspace");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldComposed_GetSpace == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_GetFactor1 = (PLib3MFVector3DFieldComposed_GetFactor1Ptr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldcomposed_getfactor1");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_GetFactor1 = (PLib3MFVector3DFieldComposed_GetFactor1Ptr) dlsym(hLibrary, "lib3mf_vector3dfieldcomposed_getfactor1");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldComposed_GetFactor1 == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_SetFactor1 = (PLib3MFVector3DFieldComposed_SetFactor1Ptr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldcomposed_setfactor1");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_SetFactor1 = (PLib3MFVector3DFieldComposed_SetFactor1Ptr) dlsym(hLibrary, "lib3mf_vector3dfieldcomposed_setfactor1");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldComposed_SetFactor1 == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_GetFactor2 = (PLib3MFVector3DFieldComposed_GetFactor2Ptr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldcomposed_getfactor2");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_GetFactor2 = (PLib3MFVector3DFieldComposed_GetFactor2Ptr) dlsym(hLibrary, "lib3mf_vector3dfieldcomposed_getfactor2");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldComposed_GetFactor2 == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_SetFactor2 = (PLib3MFVector3DFieldComposed_SetFactor2Ptr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldcomposed_setfactor2");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_SetFactor2 = (PLib3MFVector3DFieldComposed_SetFactor2Ptr) dlsym(hLibrary, "lib3mf_vector3dfieldcomposed_setfactor2");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldComposed_SetFactor2 == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_Vector3DFieldReference1 = (PLib3MFVector3DFieldComposed_Vector3DFieldReference1Ptr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldcomposed_vector3dfieldreference1");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_Vector3DFieldReference1 = (PLib3MFVector3DFieldComposed_Vector3DFieldReference1Ptr) dlsym(hLibrary, "lib3mf_vector3dfieldcomposed_vector3dfieldreference1");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldComposed_Vector3DFieldReference1 == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_Vector3DFieldReference2 = (PLib3MFVector3DFieldComposed_Vector3DFieldReference2Ptr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldcomposed_vector3dfieldreference2");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_Vector3DFieldReference2 = (PLib3MFVector3DFieldComposed_Vector3DFieldReference2Ptr) dlsym(hLibrary, "lib3mf_vector3dfieldcomposed_vector3dfieldreference2");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldComposed_Vector3DFieldReference2 == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_ScalarFieldReferenceMask = (PLib3MFVector3DFieldComposed_ScalarFieldReferenceMaskPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldcomposed_scalarfieldreferencemask");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_ScalarFieldReferenceMask = (PLib3MFVector3DFieldComposed_ScalarFieldReferenceMaskPtr) dlsym(hLibrary, "lib3mf_vector3dfieldcomposed_scalarfieldreferencemask");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldComposed_ScalarFieldReferenceMask == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_FieldReference_GetFieldResourceID = (PLib3MFFieldReference_GetFieldResourceIDPtr) GetProcAddress(hLibrary, "lib3mf_fieldreference_getfieldresourceid");
+		#else // _WIN32
+		pWrapperTable->m_FieldReference_GetFieldResourceID = (PLib3MFFieldReference_GetFieldResourceIDPtr) dlsym(hLibrary, "lib3mf_fieldreference_getfieldresourceid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_FieldReference_GetFieldResourceID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_FieldReference_SetFieldResourceID = (PLib3MFFieldReference_SetFieldResourceIDPtr) GetProcAddress(hLibrary, "lib3mf_fieldreference_setfieldresourceid");
+		#else // _WIN32
+		pWrapperTable->m_FieldReference_SetFieldResourceID = (PLib3MFFieldReference_SetFieldResourceIDPtr) dlsym(hLibrary, "lib3mf_fieldreference_setfieldresourceid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_FieldReference_SetFieldResourceID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_FieldReference_GetTransform = (PLib3MFFieldReference_GetTransformPtr) GetProcAddress(hLibrary, "lib3mf_fieldreference_gettransform");
+		#else // _WIN32
+		pWrapperTable->m_FieldReference_GetTransform = (PLib3MFFieldReference_GetTransformPtr) dlsym(hLibrary, "lib3mf_fieldreference_gettransform");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_FieldReference_GetTransform == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_FieldReference_SetTransform = (PLib3MFFieldReference_SetTransformPtr) GetProcAddress(hLibrary, "lib3mf_fieldreference_settransform");
+		#else // _WIN32
+		pWrapperTable->m_FieldReference_SetTransform = (PLib3MFFieldReference_SetTransformPtr) dlsym(hLibrary, "lib3mf_fieldreference_settransform");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_FieldReference_SetTransform == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldReference_SetScalarField = (PLib3MFScalarFieldReference_SetScalarFieldPtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldreference_setscalarfield");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldReference_SetScalarField = (PLib3MFScalarFieldReference_SetScalarFieldPtr) dlsym(hLibrary, "lib3mf_scalarfieldreference_setscalarfield");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldReference_SetScalarField == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldReference_SetVector3DField = (PLib3MFVector3DFieldReference_SetVector3DFieldPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldreference_setvector3dfield");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldReference_SetVector3DField = (PLib3MFVector3DFieldReference_SetVector3DFieldPtr) dlsym(hLibrary, "lib3mf_vector3dfieldreference_setvector3dfield");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldReference_SetVector3DField == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = (PLib3MFVolumeDataBoundary_GetSolidThresholdPtr) GetProcAddress(hLibrary, "lib3mf_volumedataboundary_getsolidthreshold");
+		#else // _WIN32
+		pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = (PLib3MFVolumeDataBoundary_GetSolidThresholdPtr) dlsym(hLibrary, "lib3mf_volumedataboundary_getsolidthreshold");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold = (PLib3MFVolumeDataBoundary_SetSolidThresholdPtr) GetProcAddress(hLibrary, "lib3mf_volumedataboundary_setsolidthreshold");
+		#else // _WIN32
+		pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold = (PLib3MFVolumeDataBoundary_SetSolidThresholdPtr) dlsym(hLibrary, "lib3mf_volumedataboundary_setsolidthreshold");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeDataComposite_GetBaseMaterialGroup = (PLib3MFVolumeDataComposite_GetBaseMaterialGroupPtr) GetProcAddress(hLibrary, "lib3mf_volumedatacomposite_getbasematerialgroup");
+		#else // _WIN32
+		pWrapperTable->m_VolumeDataComposite_GetBaseMaterialGroup = (PLib3MFVolumeDataComposite_GetBaseMaterialGroupPtr) dlsym(hLibrary, "lib3mf_volumedatacomposite_getbasematerialgroup");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeDataComposite_GetBaseMaterialGroup == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeDataComposite_SetBaseMaterialGroup = (PLib3MFVolumeDataComposite_SetBaseMaterialGroupPtr) GetProcAddress(hLibrary, "lib3mf_volumedatacomposite_setbasematerialgroup");
+		#else // _WIN32
+		pWrapperTable->m_VolumeDataComposite_SetBaseMaterialGroup = (PLib3MFVolumeDataComposite_SetBaseMaterialGroupPtr) dlsym(hLibrary, "lib3mf_volumedatacomposite_setbasematerialgroup");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeDataComposite_SetBaseMaterialGroup == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeDataComposite_GetMaterialMappingCount = (PLib3MFVolumeDataComposite_GetMaterialMappingCountPtr) GetProcAddress(hLibrary, "lib3mf_volumedatacomposite_getmaterialmappingcount");
+		#else // _WIN32
+		pWrapperTable->m_VolumeDataComposite_GetMaterialMappingCount = (PLib3MFVolumeDataComposite_GetMaterialMappingCountPtr) dlsym(hLibrary, "lib3mf_volumedatacomposite_getmaterialmappingcount");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeDataComposite_GetMaterialMappingCount == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeDataComposite_GetMaterialMapping = (PLib3MFVolumeDataComposite_GetMaterialMappingPtr) GetProcAddress(hLibrary, "lib3mf_volumedatacomposite_getmaterialmapping");
+		#else // _WIN32
+		pWrapperTable->m_VolumeDataComposite_GetMaterialMapping = (PLib3MFVolumeDataComposite_GetMaterialMappingPtr) dlsym(hLibrary, "lib3mf_volumedatacomposite_getmaterialmapping");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeDataComposite_GetMaterialMapping == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeDataComposite_AddMaterialMapping = (PLib3MFVolumeDataComposite_AddMaterialMappingPtr) GetProcAddress(hLibrary, "lib3mf_volumedatacomposite_addmaterialmapping");
+		#else // _WIN32
+		pWrapperTable->m_VolumeDataComposite_AddMaterialMapping = (PLib3MFVolumeDataComposite_AddMaterialMappingPtr) dlsym(hLibrary, "lib3mf_volumedatacomposite_addmaterialmapping");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeDataComposite_AddMaterialMapping == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeDataComposite_RemoveMaterialMapping = (PLib3MFVolumeDataComposite_RemoveMaterialMappingPtr) GetProcAddress(hLibrary, "lib3mf_volumedatacomposite_removematerialmapping");
+		#else // _WIN32
+		pWrapperTable->m_VolumeDataComposite_RemoveMaterialMapping = (PLib3MFVolumeDataComposite_RemoveMaterialMappingPtr) dlsym(hLibrary, "lib3mf_volumedatacomposite_removematerialmapping");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeDataComposite_RemoveMaterialMapping == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeDataProperty_GetName = (PLib3MFVolumeDataProperty_GetNamePtr) GetProcAddress(hLibrary, "lib3mf_volumedataproperty_getname");
+		#else // _WIN32
+		pWrapperTable->m_VolumeDataProperty_GetName = (PLib3MFVolumeDataProperty_GetNamePtr) dlsym(hLibrary, "lib3mf_volumedataproperty_getname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeDataProperty_GetName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeDataProperty_SetIsRequired = (PLib3MFVolumeDataProperty_SetIsRequiredPtr) GetProcAddress(hLibrary, "lib3mf_volumedataproperty_setisrequired");
+		#else // _WIN32
+		pWrapperTable->m_VolumeDataProperty_SetIsRequired = (PLib3MFVolumeDataProperty_SetIsRequiredPtr) dlsym(hLibrary, "lib3mf_volumedataproperty_setisrequired");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeDataProperty_SetIsRequired == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeDataProperty_IsRequired = (PLib3MFVolumeDataProperty_IsRequiredPtr) GetProcAddress(hLibrary, "lib3mf_volumedataproperty_isrequired");
+		#else // _WIN32
+		pWrapperTable->m_VolumeDataProperty_IsRequired = (PLib3MFVolumeDataProperty_IsRequiredPtr) dlsym(hLibrary, "lib3mf_volumedataproperty_isrequired");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeDataProperty_IsRequired == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeData_GetBoundary = (PLib3MFVolumeData_GetBoundaryPtr) GetProcAddress(hLibrary, "lib3mf_volumedata_getboundary");
+		#else // _WIN32
+		pWrapperTable->m_VolumeData_GetBoundary = (PLib3MFVolumeData_GetBoundaryPtr) dlsym(hLibrary, "lib3mf_volumedata_getboundary");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeData_GetBoundary == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeData_CreateNewBoundary = (PLib3MFVolumeData_CreateNewBoundaryPtr) GetProcAddress(hLibrary, "lib3mf_volumedata_createnewboundary");
+		#else // _WIN32
+		pWrapperTable->m_VolumeData_CreateNewBoundary = (PLib3MFVolumeData_CreateNewBoundaryPtr) dlsym(hLibrary, "lib3mf_volumedata_createnewboundary");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeData_CreateNewBoundary == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeData_RemoveBoundary = (PLib3MFVolumeData_RemoveBoundaryPtr) GetProcAddress(hLibrary, "lib3mf_volumedata_removeboundary");
+		#else // _WIN32
+		pWrapperTable->m_VolumeData_RemoveBoundary = (PLib3MFVolumeData_RemoveBoundaryPtr) dlsym(hLibrary, "lib3mf_volumedata_removeboundary");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeData_RemoveBoundary == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeData_GetComposite = (PLib3MFVolumeData_GetCompositePtr) GetProcAddress(hLibrary, "lib3mf_volumedata_getcomposite");
+		#else // _WIN32
+		pWrapperTable->m_VolumeData_GetComposite = (PLib3MFVolumeData_GetCompositePtr) dlsym(hLibrary, "lib3mf_volumedata_getcomposite");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeData_GetComposite == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeData_CreateNewComposite = (PLib3MFVolumeData_CreateNewCompositePtr) GetProcAddress(hLibrary, "lib3mf_volumedata_createnewcomposite");
+		#else // _WIN32
+		pWrapperTable->m_VolumeData_CreateNewComposite = (PLib3MFVolumeData_CreateNewCompositePtr) dlsym(hLibrary, "lib3mf_volumedata_createnewcomposite");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeData_CreateNewComposite == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeData_RemoveComposite = (PLib3MFVolumeData_RemoveCompositePtr) GetProcAddress(hLibrary, "lib3mf_volumedata_removecomposite");
+		#else // _WIN32
+		pWrapperTable->m_VolumeData_RemoveComposite = (PLib3MFVolumeData_RemoveCompositePtr) dlsym(hLibrary, "lib3mf_volumedata_removecomposite");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeData_RemoveComposite == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeData_GetColor = (PLib3MFVolumeData_GetColorPtr) GetProcAddress(hLibrary, "lib3mf_volumedata_getcolor");
+		#else // _WIN32
+		pWrapperTable->m_VolumeData_GetColor = (PLib3MFVolumeData_GetColorPtr) dlsym(hLibrary, "lib3mf_volumedata_getcolor");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeData_GetColor == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeData_CreateNewColor = (PLib3MFVolumeData_CreateNewColorPtr) GetProcAddress(hLibrary, "lib3mf_volumedata_createnewcolor");
+		#else // _WIN32
+		pWrapperTable->m_VolumeData_CreateNewColor = (PLib3MFVolumeData_CreateNewColorPtr) dlsym(hLibrary, "lib3mf_volumedata_createnewcolor");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeData_CreateNewColor == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeData_RemoveColor = (PLib3MFVolumeData_RemoveColorPtr) GetProcAddress(hLibrary, "lib3mf_volumedata_removecolor");
+		#else // _WIN32
+		pWrapperTable->m_VolumeData_RemoveColor = (PLib3MFVolumeData_RemoveColorPtr) dlsym(hLibrary, "lib3mf_volumedata_removecolor");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeData_RemoveColor == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeData_GetPropertyCount = (PLib3MFVolumeData_GetPropertyCountPtr) GetProcAddress(hLibrary, "lib3mf_volumedata_getpropertycount");
+		#else // _WIN32
+		pWrapperTable->m_VolumeData_GetPropertyCount = (PLib3MFVolumeData_GetPropertyCountPtr) dlsym(hLibrary, "lib3mf_volumedata_getpropertycount");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeData_GetPropertyCount == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeData_GetProperty = (PLib3MFVolumeData_GetPropertyPtr) GetProcAddress(hLibrary, "lib3mf_volumedata_getproperty");
+		#else // _WIN32
+		pWrapperTable->m_VolumeData_GetProperty = (PLib3MFVolumeData_GetPropertyPtr) dlsym(hLibrary, "lib3mf_volumedata_getproperty");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeData_GetProperty == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeData_AddPropertyFromScalarField = (PLib3MFVolumeData_AddPropertyFromScalarFieldPtr) GetProcAddress(hLibrary, "lib3mf_volumedata_addpropertyfromscalarfield");
+		#else // _WIN32
+		pWrapperTable->m_VolumeData_AddPropertyFromScalarField = (PLib3MFVolumeData_AddPropertyFromScalarFieldPtr) dlsym(hLibrary, "lib3mf_volumedata_addpropertyfromscalarfield");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeData_AddPropertyFromScalarField == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeData_AddPropertyFromVector3DField = (PLib3MFVolumeData_AddPropertyFromVector3DFieldPtr) GetProcAddress(hLibrary, "lib3mf_volumedata_addpropertyfromvector3dfield");
+		#else // _WIN32
+		pWrapperTable->m_VolumeData_AddPropertyFromVector3DField = (PLib3MFVolumeData_AddPropertyFromVector3DFieldPtr) dlsym(hLibrary, "lib3mf_volumedata_addpropertyfromvector3dfield");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeData_AddPropertyFromVector3DField == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_VolumeData_RemoveProperty = (PLib3MFVolumeData_RemovePropertyPtr) GetProcAddress(hLibrary, "lib3mf_volumedata_removeproperty");
+		#else // _WIN32
+		pWrapperTable->m_VolumeData_RemoveProperty = (PLib3MFVolumeData_RemovePropertyPtr) dlsym(hLibrary, "lib3mf_volumedata_removeproperty");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_VolumeData_RemoveProperty == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -4068,6 +5661,123 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_MultiPropertyGroup_RemoveLayer == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Image3D_GetName = (PLib3MFImage3D_GetNamePtr) GetProcAddress(hLibrary, "lib3mf_image3d_getname");
+		#else // _WIN32
+		pWrapperTable->m_Image3D_GetName = (PLib3MFImage3D_GetNamePtr) dlsym(hLibrary, "lib3mf_image3d_getname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Image3D_GetName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Image3D_SetName = (PLib3MFImage3D_SetNamePtr) GetProcAddress(hLibrary, "lib3mf_image3d_setname");
+		#else // _WIN32
+		pWrapperTable->m_Image3D_SetName = (PLib3MFImage3D_SetNamePtr) dlsym(hLibrary, "lib3mf_image3d_setname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Image3D_SetName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Image3D_IsImageStack = (PLib3MFImage3D_IsImageStackPtr) GetProcAddress(hLibrary, "lib3mf_image3d_isimagestack");
+		#else // _WIN32
+		pWrapperTable->m_Image3D_IsImageStack = (PLib3MFImage3D_IsImageStackPtr) dlsym(hLibrary, "lib3mf_image3d_isimagestack");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Image3D_IsImageStack == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImageStack_GetRowCount = (PLib3MFImageStack_GetRowCountPtr) GetProcAddress(hLibrary, "lib3mf_imagestack_getrowcount");
+		#else // _WIN32
+		pWrapperTable->m_ImageStack_GetRowCount = (PLib3MFImageStack_GetRowCountPtr) dlsym(hLibrary, "lib3mf_imagestack_getrowcount");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImageStack_GetRowCount == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImageStack_SetRowCount = (PLib3MFImageStack_SetRowCountPtr) GetProcAddress(hLibrary, "lib3mf_imagestack_setrowcount");
+		#else // _WIN32
+		pWrapperTable->m_ImageStack_SetRowCount = (PLib3MFImageStack_SetRowCountPtr) dlsym(hLibrary, "lib3mf_imagestack_setrowcount");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImageStack_SetRowCount == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImageStack_GetColumnCount = (PLib3MFImageStack_GetColumnCountPtr) GetProcAddress(hLibrary, "lib3mf_imagestack_getcolumncount");
+		#else // _WIN32
+		pWrapperTable->m_ImageStack_GetColumnCount = (PLib3MFImageStack_GetColumnCountPtr) dlsym(hLibrary, "lib3mf_imagestack_getcolumncount");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImageStack_GetColumnCount == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImageStack_SetColumnCount = (PLib3MFImageStack_SetColumnCountPtr) GetProcAddress(hLibrary, "lib3mf_imagestack_setcolumncount");
+		#else // _WIN32
+		pWrapperTable->m_ImageStack_SetColumnCount = (PLib3MFImageStack_SetColumnCountPtr) dlsym(hLibrary, "lib3mf_imagestack_setcolumncount");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImageStack_SetColumnCount == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImageStack_GetSheetCount = (PLib3MFImageStack_GetSheetCountPtr) GetProcAddress(hLibrary, "lib3mf_imagestack_getsheetcount");
+		#else // _WIN32
+		pWrapperTable->m_ImageStack_GetSheetCount = (PLib3MFImageStack_GetSheetCountPtr) dlsym(hLibrary, "lib3mf_imagestack_getsheetcount");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImageStack_GetSheetCount == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImageStack_GetSheet = (PLib3MFImageStack_GetSheetPtr) GetProcAddress(hLibrary, "lib3mf_imagestack_getsheet");
+		#else // _WIN32
+		pWrapperTable->m_ImageStack_GetSheet = (PLib3MFImageStack_GetSheetPtr) dlsym(hLibrary, "lib3mf_imagestack_getsheet");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImageStack_GetSheet == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImageStack_SetSheet = (PLib3MFImageStack_SetSheetPtr) GetProcAddress(hLibrary, "lib3mf_imagestack_setsheet");
+		#else // _WIN32
+		pWrapperTable->m_ImageStack_SetSheet = (PLib3MFImageStack_SetSheetPtr) dlsym(hLibrary, "lib3mf_imagestack_setsheet");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImageStack_SetSheet == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImageStack_CreateEmptySheet = (PLib3MFImageStack_CreateEmptySheetPtr) GetProcAddress(hLibrary, "lib3mf_imagestack_createemptysheet");
+		#else // _WIN32
+		pWrapperTable->m_ImageStack_CreateEmptySheet = (PLib3MFImageStack_CreateEmptySheetPtr) dlsym(hLibrary, "lib3mf_imagestack_createemptysheet");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImageStack_CreateEmptySheet == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImageStack_CreateSheetFromBuffer = (PLib3MFImageStack_CreateSheetFromBufferPtr) GetProcAddress(hLibrary, "lib3mf_imagestack_createsheetfrombuffer");
+		#else // _WIN32
+		pWrapperTable->m_ImageStack_CreateSheetFromBuffer = (PLib3MFImageStack_CreateSheetFromBufferPtr) dlsym(hLibrary, "lib3mf_imagestack_createsheetfrombuffer");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImageStack_CreateSheetFromBuffer == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImageStack_CreateSheetFromFile = (PLib3MFImageStack_CreateSheetFromFilePtr) GetProcAddress(hLibrary, "lib3mf_imagestack_createsheetfromfile");
+		#else // _WIN32
+		pWrapperTable->m_ImageStack_CreateSheetFromFile = (PLib3MFImageStack_CreateSheetFromFilePtr) dlsym(hLibrary, "lib3mf_imagestack_createsheetfromfile");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImageStack_CreateSheetFromFile == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -5223,6 +6933,33 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_Model_GetImage3Ds = (PLib3MFModel_GetImage3DsPtr) GetProcAddress(hLibrary, "lib3mf_model_getimage3ds");
+		#else // _WIN32
+		pWrapperTable->m_Model_GetImage3Ds = (PLib3MFModel_GetImage3DsPtr) dlsym(hLibrary, "lib3mf_model_getimage3ds");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_GetImage3Ds == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_GetScalarFields = (PLib3MFModel_GetScalarFieldsPtr) GetProcAddress(hLibrary, "lib3mf_model_getscalarfields");
+		#else // _WIN32
+		pWrapperTable->m_Model_GetScalarFields = (PLib3MFModel_GetScalarFieldsPtr) dlsym(hLibrary, "lib3mf_model_getscalarfields");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_GetScalarFields == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_GetVector3DFields = (PLib3MFModel_GetVector3DFieldsPtr) GetProcAddress(hLibrary, "lib3mf_model_getvector3dfields");
+		#else // _WIN32
+		pWrapperTable->m_Model_GetVector3DFields = (PLib3MFModel_GetVector3DFieldsPtr) dlsym(hLibrary, "lib3mf_model_getvector3dfields");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_GetVector3DFields == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_Model_MergeToModel = (PLib3MFModel_MergeToModelPtr) GetProcAddress(hLibrary, "lib3mf_model_mergetomodel");
 		#else // _WIN32
 		pWrapperTable->m_Model_MergeToModel = (PLib3MFModel_MergeToModelPtr) dlsym(hLibrary, "lib3mf_model_mergetomodel");
@@ -5310,6 +7047,150 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_Model_AddMultiPropertyGroup == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_AddImageStack = (PLib3MFModel_AddImageStackPtr) GetProcAddress(hLibrary, "lib3mf_model_addimagestack");
+		#else // _WIN32
+		pWrapperTable->m_Model_AddImageStack = (PLib3MFModel_AddImageStackPtr) dlsym(hLibrary, "lib3mf_model_addimagestack");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_AddImageStack == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_GetImageStackByID = (PLib3MFModel_GetImageStackByIDPtr) GetProcAddress(hLibrary, "lib3mf_model_getimagestackbyid");
+		#else // _WIN32
+		pWrapperTable->m_Model_GetImageStackByID = (PLib3MFModel_GetImageStackByIDPtr) dlsym(hLibrary, "lib3mf_model_getimagestackbyid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_GetImageStackByID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_AddScalarFieldFromImage3D = (PLib3MFModel_AddScalarFieldFromImage3DPtr) GetProcAddress(hLibrary, "lib3mf_model_addscalarfieldfromimage3d");
+		#else // _WIN32
+		pWrapperTable->m_Model_AddScalarFieldFromImage3D = (PLib3MFModel_AddScalarFieldFromImage3DPtr) dlsym(hLibrary, "lib3mf_model_addscalarfieldfromimage3d");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_AddScalarFieldFromImage3D == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_AddScalarFieldComposed = (PLib3MFModel_AddScalarFieldComposedPtr) GetProcAddress(hLibrary, "lib3mf_model_addscalarfieldcomposed");
+		#else // _WIN32
+		pWrapperTable->m_Model_AddScalarFieldComposed = (PLib3MFModel_AddScalarFieldComposedPtr) dlsym(hLibrary, "lib3mf_model_addscalarfieldcomposed");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_AddScalarFieldComposed == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_AddScalarFieldConstant = (PLib3MFModel_AddScalarFieldConstantPtr) GetProcAddress(hLibrary, "lib3mf_model_addscalarfieldconstant");
+		#else // _WIN32
+		pWrapperTable->m_Model_AddScalarFieldConstant = (PLib3MFModel_AddScalarFieldConstantPtr) dlsym(hLibrary, "lib3mf_model_addscalarfieldconstant");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_AddScalarFieldConstant == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_GetScalarFieldByID = (PLib3MFModel_GetScalarFieldByIDPtr) GetProcAddress(hLibrary, "lib3mf_model_getscalarfieldbyid");
+		#else // _WIN32
+		pWrapperTable->m_Model_GetScalarFieldByID = (PLib3MFModel_GetScalarFieldByIDPtr) dlsym(hLibrary, "lib3mf_model_getscalarfieldbyid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_GetScalarFieldByID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_GetScalarFieldFromImage3DByID = (PLib3MFModel_GetScalarFieldFromImage3DByIDPtr) GetProcAddress(hLibrary, "lib3mf_model_getscalarfieldfromimage3dbyid");
+		#else // _WIN32
+		pWrapperTable->m_Model_GetScalarFieldFromImage3DByID = (PLib3MFModel_GetScalarFieldFromImage3DByIDPtr) dlsym(hLibrary, "lib3mf_model_getscalarfieldfromimage3dbyid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_GetScalarFieldFromImage3DByID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_GetScalarFieldComposedByID = (PLib3MFModel_GetScalarFieldComposedByIDPtr) GetProcAddress(hLibrary, "lib3mf_model_getscalarfieldcomposedbyid");
+		#else // _WIN32
+		pWrapperTable->m_Model_GetScalarFieldComposedByID = (PLib3MFModel_GetScalarFieldComposedByIDPtr) dlsym(hLibrary, "lib3mf_model_getscalarfieldcomposedbyid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_GetScalarFieldComposedByID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_GetScalarFieldConstantByID = (PLib3MFModel_GetScalarFieldConstantByIDPtr) GetProcAddress(hLibrary, "lib3mf_model_getscalarfieldconstantbyid");
+		#else // _WIN32
+		pWrapperTable->m_Model_GetScalarFieldConstantByID = (PLib3MFModel_GetScalarFieldConstantByIDPtr) dlsym(hLibrary, "lib3mf_model_getscalarfieldconstantbyid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_GetScalarFieldConstantByID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_AddVector3DFieldFromImage3D = (PLib3MFModel_AddVector3DFieldFromImage3DPtr) GetProcAddress(hLibrary, "lib3mf_model_addvector3dfieldfromimage3d");
+		#else // _WIN32
+		pWrapperTable->m_Model_AddVector3DFieldFromImage3D = (PLib3MFModel_AddVector3DFieldFromImage3DPtr) dlsym(hLibrary, "lib3mf_model_addvector3dfieldfromimage3d");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_AddVector3DFieldFromImage3D == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_AddVector3DFieldComposed = (PLib3MFModel_AddVector3DFieldComposedPtr) GetProcAddress(hLibrary, "lib3mf_model_addvector3dfieldcomposed");
+		#else // _WIN32
+		pWrapperTable->m_Model_AddVector3DFieldComposed = (PLib3MFModel_AddVector3DFieldComposedPtr) dlsym(hLibrary, "lib3mf_model_addvector3dfieldcomposed");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_AddVector3DFieldComposed == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_AddVector3DFieldConstant = (PLib3MFModel_AddVector3DFieldConstantPtr) GetProcAddress(hLibrary, "lib3mf_model_addvector3dfieldconstant");
+		#else // _WIN32
+		pWrapperTable->m_Model_AddVector3DFieldConstant = (PLib3MFModel_AddVector3DFieldConstantPtr) dlsym(hLibrary, "lib3mf_model_addvector3dfieldconstant");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_AddVector3DFieldConstant == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_GetVector3DFieldByID = (PLib3MFModel_GetVector3DFieldByIDPtr) GetProcAddress(hLibrary, "lib3mf_model_getvector3dfieldbyid");
+		#else // _WIN32
+		pWrapperTable->m_Model_GetVector3DFieldByID = (PLib3MFModel_GetVector3DFieldByIDPtr) dlsym(hLibrary, "lib3mf_model_getvector3dfieldbyid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_GetVector3DFieldByID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_GetVector3DFieldFromImage3DByID = (PLib3MFModel_GetVector3DFieldFromImage3DByIDPtr) GetProcAddress(hLibrary, "lib3mf_model_getvector3dfieldfromimage3dbyid");
+		#else // _WIN32
+		pWrapperTable->m_Model_GetVector3DFieldFromImage3DByID = (PLib3MFModel_GetVector3DFieldFromImage3DByIDPtr) dlsym(hLibrary, "lib3mf_model_getvector3dfieldfromimage3dbyid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_GetVector3DFieldFromImage3DByID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_GetVector3DFieldComposedByID = (PLib3MFModel_GetVector3DFieldComposedByIDPtr) GetProcAddress(hLibrary, "lib3mf_model_getvector3dfieldcomposedbyid");
+		#else // _WIN32
+		pWrapperTable->m_Model_GetVector3DFieldComposedByID = (PLib3MFModel_GetVector3DFieldComposedByIDPtr) dlsym(hLibrary, "lib3mf_model_getvector3dfieldcomposedbyid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_GetVector3DFieldComposedByID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_GetVector3DFieldConstantByID = (PLib3MFModel_GetVector3DFieldConstantByIDPtr) GetProcAddress(hLibrary, "lib3mf_model_getvector3dfieldconstantbyid");
+		#else // _WIN32
+		pWrapperTable->m_Model_GetVector3DFieldConstantByID = (PLib3MFModel_GetVector3DFieldConstantByIDPtr) dlsym(hLibrary, "lib3mf_model_getvector3dfieldconstantbyid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_GetVector3DFieldConstantByID == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -5835,6 +7716,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_MultiPropertyGroupIterator_GetCurrentMultiPropertyGroup == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_image3diterator_getcurrentimage3d", (void**)&(pWrapperTable->m_Image3DIterator_GetCurrentImage3D));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Image3DIterator_GetCurrentImage3D == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfielditerator_getcurrentscalarfield", (void**)&(pWrapperTable->m_ScalarFieldIterator_GetCurrentScalarField));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldIterator_GetCurrentScalarField == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfielditerator_getcurrentvector3dfield", (void**)&(pWrapperTable->m_Vector3DFieldIterator_GetCurrentVector3DField));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldIterator_GetCurrentVector3DField == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_metadata_getnamespace", (void**)&(pWrapperTable->m_MetaData_GetNameSpace));
 		if ( (eLookupError != 0) || (pWrapperTable->m_MetaData_GetNameSpace == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -6071,6 +7964,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_MeshObject_BeamLattice == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_meshobject_volumedata", (void**)&(pWrapperTable->m_MeshObject_VolumeData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_MeshObject_VolumeData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_beamlattice_getminlength", (void**)&(pWrapperTable->m_BeamLattice_GetMinLength));
 		if ( (eLookupError != 0) || (pWrapperTable->m_BeamLattice_GetMinLength == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -6161,6 +8058,370 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_beamlattice_getbeamset", (void**)&(pWrapperTable->m_BeamLattice_GetBeamSet));
 		if ( (eLookupError != 0) || (pWrapperTable->m_BeamLattice_GetBeamSet == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfield_getname", (void**)&(pWrapperTable->m_ScalarField_GetName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarField_GetName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfield_setname", (void**)&(pWrapperTable->m_ScalarField_SetName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarField_SetName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfield_isfromimage3d", (void**)&(pWrapperTable->m_ScalarField_IsFromImage3D));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarField_IsFromImage3D == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfield_isconstant", (void**)&(pWrapperTable->m_ScalarField_IsConstant));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarField_IsConstant == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfield_iscomposed", (void**)&(pWrapperTable->m_ScalarField_IsComposed));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarField_IsComposed == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfield_getname", (void**)&(pWrapperTable->m_Vector3DField_GetName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DField_GetName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfield_setname", (void**)&(pWrapperTable->m_Vector3DField_SetName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DField_SetName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfield_isfromimage3d", (void**)&(pWrapperTable->m_Vector3DField_IsFromImage3D));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DField_IsFromImage3D == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfield_isconstant", (void**)&(pWrapperTable->m_Vector3DField_IsConstant));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DField_IsConstant == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfield_iscomposed", (void**)&(pWrapperTable->m_Vector3DField_IsComposed));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DField_IsComposed == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldfromimage3d_getimage", (void**)&(pWrapperTable->m_ScalarFieldFromImage3D_GetImage));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldFromImage3D_GetImage == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldfromimage3d_setimage", (void**)&(pWrapperTable->m_ScalarFieldFromImage3D_SetImage));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldFromImage3D_SetImage == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldfromimage3d_setchannel", (void**)&(pWrapperTable->m_ScalarFieldFromImage3D_SetChannel));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldFromImage3D_SetChannel == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldfromimage3d_getchannel", (void**)&(pWrapperTable->m_ScalarFieldFromImage3D_GetChannel));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldFromImage3D_GetChannel == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldfromimage3d_setfilter", (void**)&(pWrapperTable->m_ScalarFieldFromImage3D_SetFilter));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldFromImage3D_SetFilter == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldfromimage3d_getfilter", (void**)&(pWrapperTable->m_ScalarFieldFromImage3D_GetFilter));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldFromImage3D_GetFilter == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldfromimage3d_settilestyles", (void**)&(pWrapperTable->m_ScalarFieldFromImage3D_SetTileStyles));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldFromImage3D_SetTileStyles == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldfromimage3d_gettilestyles", (void**)&(pWrapperTable->m_ScalarFieldFromImage3D_GetTileStyles));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldFromImage3D_GetTileStyles == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldfromimage3d_getoffset", (void**)&(pWrapperTable->m_ScalarFieldFromImage3D_GetOffset));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldFromImage3D_GetOffset == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldfromimage3d_setoffset", (void**)&(pWrapperTable->m_ScalarFieldFromImage3D_SetOffset));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldFromImage3D_SetOffset == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldfromimage3d_getscale", (void**)&(pWrapperTable->m_ScalarFieldFromImage3D_GetScale));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldFromImage3D_GetScale == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldfromimage3d_setscale", (void**)&(pWrapperTable->m_ScalarFieldFromImage3D_SetScale));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldFromImage3D_SetScale == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldconstant_getvalue", (void**)&(pWrapperTable->m_ScalarFieldConstant_GetValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldConstant_GetValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldconstant_setvalue", (void**)&(pWrapperTable->m_ScalarFieldConstant_SetValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldConstant_SetValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldcomposed_setmethod", (void**)&(pWrapperTable->m_ScalarFieldComposed_SetMethod));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldComposed_SetMethod == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldcomposed_getmethod", (void**)&(pWrapperTable->m_ScalarFieldComposed_GetMethod));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldComposed_GetMethod == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldcomposed_getfactor1", (void**)&(pWrapperTable->m_ScalarFieldComposed_GetFactor1));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldComposed_GetFactor1 == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldcomposed_setfactor1", (void**)&(pWrapperTable->m_ScalarFieldComposed_SetFactor1));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldComposed_SetFactor1 == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldcomposed_getfactor2", (void**)&(pWrapperTable->m_ScalarFieldComposed_GetFactor2));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldComposed_GetFactor2 == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldcomposed_setfactor2", (void**)&(pWrapperTable->m_ScalarFieldComposed_SetFactor2));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldComposed_SetFactor2 == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldcomposed_scalarfieldreference1", (void**)&(pWrapperTable->m_ScalarFieldComposed_ScalarFieldReference1));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldComposed_ScalarFieldReference1 == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldcomposed_scalarfieldreference2", (void**)&(pWrapperTable->m_ScalarFieldComposed_ScalarFieldReference2));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldComposed_ScalarFieldReference2 == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldcomposed_scalarfieldreferencemask", (void**)&(pWrapperTable->m_ScalarFieldComposed_ScalarFieldReferenceMask));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldComposed_ScalarFieldReferenceMask == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldfromimage3d_getimage", (void**)&(pWrapperTable->m_Vector3DFieldFromImage3D_GetImage));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldFromImage3D_GetImage == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldfromimage3d_setimage", (void**)&(pWrapperTable->m_Vector3DFieldFromImage3D_SetImage));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldFromImage3D_SetImage == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldfromimage3d_setfilter", (void**)&(pWrapperTable->m_Vector3DFieldFromImage3D_SetFilter));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldFromImage3D_SetFilter == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldfromimage3d_getfilter", (void**)&(pWrapperTable->m_Vector3DFieldFromImage3D_GetFilter));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldFromImage3D_GetFilter == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldfromimage3d_settilestyles", (void**)&(pWrapperTable->m_Vector3DFieldFromImage3D_SetTileStyles));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldFromImage3D_SetTileStyles == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldfromimage3d_gettilestyles", (void**)&(pWrapperTable->m_Vector3DFieldFromImage3D_GetTileStyles));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldFromImage3D_GetTileStyles == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldfromimage3d_getoffset", (void**)&(pWrapperTable->m_Vector3DFieldFromImage3D_GetOffset));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldFromImage3D_GetOffset == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldfromimage3d_setoffset", (void**)&(pWrapperTable->m_Vector3DFieldFromImage3D_SetOffset));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldFromImage3D_SetOffset == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldfromimage3d_getscale", (void**)&(pWrapperTable->m_Vector3DFieldFromImage3D_GetScale));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldFromImage3D_GetScale == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldfromimage3d_setscale", (void**)&(pWrapperTable->m_Vector3DFieldFromImage3D_SetScale));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldFromImage3D_SetScale == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldconstant_getvaluex", (void**)&(pWrapperTable->m_Vector3DFieldConstant_GetValueX));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldConstant_GetValueX == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldconstant_setvaluex", (void**)&(pWrapperTable->m_Vector3DFieldConstant_SetValueX));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldConstant_SetValueX == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldconstant_getvaluey", (void**)&(pWrapperTable->m_Vector3DFieldConstant_GetValueY));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldConstant_GetValueY == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldconstant_setvaluey", (void**)&(pWrapperTable->m_Vector3DFieldConstant_SetValueY));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldConstant_SetValueY == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldconstant_getvaluez", (void**)&(pWrapperTable->m_Vector3DFieldConstant_GetValueZ));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldConstant_GetValueZ == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldconstant_setvaluez", (void**)&(pWrapperTable->m_Vector3DFieldConstant_SetValueZ));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldConstant_SetValueZ == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldcomposed_setmethod", (void**)&(pWrapperTable->m_Vector3DFieldComposed_SetMethod));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldComposed_SetMethod == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldcomposed_getmethod", (void**)&(pWrapperTable->m_Vector3DFieldComposed_GetMethod));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldComposed_GetMethod == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldcomposed_setspace", (void**)&(pWrapperTable->m_Vector3DFieldComposed_SetSpace));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldComposed_SetSpace == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldcomposed_getspace", (void**)&(pWrapperTable->m_Vector3DFieldComposed_GetSpace));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldComposed_GetSpace == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldcomposed_getfactor1", (void**)&(pWrapperTable->m_Vector3DFieldComposed_GetFactor1));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldComposed_GetFactor1 == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldcomposed_setfactor1", (void**)&(pWrapperTable->m_Vector3DFieldComposed_SetFactor1));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldComposed_SetFactor1 == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldcomposed_getfactor2", (void**)&(pWrapperTable->m_Vector3DFieldComposed_GetFactor2));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldComposed_GetFactor2 == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldcomposed_setfactor2", (void**)&(pWrapperTable->m_Vector3DFieldComposed_SetFactor2));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldComposed_SetFactor2 == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldcomposed_vector3dfieldreference1", (void**)&(pWrapperTable->m_Vector3DFieldComposed_Vector3DFieldReference1));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldComposed_Vector3DFieldReference1 == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldcomposed_vector3dfieldreference2", (void**)&(pWrapperTable->m_Vector3DFieldComposed_Vector3DFieldReference2));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldComposed_Vector3DFieldReference2 == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldcomposed_scalarfieldreferencemask", (void**)&(pWrapperTable->m_Vector3DFieldComposed_ScalarFieldReferenceMask));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldComposed_ScalarFieldReferenceMask == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_fieldreference_getfieldresourceid", (void**)&(pWrapperTable->m_FieldReference_GetFieldResourceID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FieldReference_GetFieldResourceID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_fieldreference_setfieldresourceid", (void**)&(pWrapperTable->m_FieldReference_SetFieldResourceID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FieldReference_SetFieldResourceID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_fieldreference_gettransform", (void**)&(pWrapperTable->m_FieldReference_GetTransform));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FieldReference_GetTransform == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_fieldreference_settransform", (void**)&(pWrapperTable->m_FieldReference_SetTransform));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FieldReference_SetTransform == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldreference_setscalarfield", (void**)&(pWrapperTable->m_ScalarFieldReference_SetScalarField));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldReference_SetScalarField == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldreference_setvector3dfield", (void**)&(pWrapperTable->m_Vector3DFieldReference_SetVector3DField));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldReference_SetVector3DField == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedataboundary_getsolidthreshold", (void**)&(pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedataboundary_setsolidthreshold", (void**)&(pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedatacomposite_getbasematerialgroup", (void**)&(pWrapperTable->m_VolumeDataComposite_GetBaseMaterialGroup));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeDataComposite_GetBaseMaterialGroup == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedatacomposite_setbasematerialgroup", (void**)&(pWrapperTable->m_VolumeDataComposite_SetBaseMaterialGroup));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeDataComposite_SetBaseMaterialGroup == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedatacomposite_getmaterialmappingcount", (void**)&(pWrapperTable->m_VolumeDataComposite_GetMaterialMappingCount));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeDataComposite_GetMaterialMappingCount == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedatacomposite_getmaterialmapping", (void**)&(pWrapperTable->m_VolumeDataComposite_GetMaterialMapping));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeDataComposite_GetMaterialMapping == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedatacomposite_addmaterialmapping", (void**)&(pWrapperTable->m_VolumeDataComposite_AddMaterialMapping));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeDataComposite_AddMaterialMapping == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedatacomposite_removematerialmapping", (void**)&(pWrapperTable->m_VolumeDataComposite_RemoveMaterialMapping));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeDataComposite_RemoveMaterialMapping == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedataproperty_getname", (void**)&(pWrapperTable->m_VolumeDataProperty_GetName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeDataProperty_GetName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedataproperty_setisrequired", (void**)&(pWrapperTable->m_VolumeDataProperty_SetIsRequired));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeDataProperty_SetIsRequired == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedataproperty_isrequired", (void**)&(pWrapperTable->m_VolumeDataProperty_IsRequired));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeDataProperty_IsRequired == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedata_getboundary", (void**)&(pWrapperTable->m_VolumeData_GetBoundary));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeData_GetBoundary == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedata_createnewboundary", (void**)&(pWrapperTable->m_VolumeData_CreateNewBoundary));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeData_CreateNewBoundary == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedata_removeboundary", (void**)&(pWrapperTable->m_VolumeData_RemoveBoundary));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeData_RemoveBoundary == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedata_getcomposite", (void**)&(pWrapperTable->m_VolumeData_GetComposite));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeData_GetComposite == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedata_createnewcomposite", (void**)&(pWrapperTable->m_VolumeData_CreateNewComposite));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeData_CreateNewComposite == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedata_removecomposite", (void**)&(pWrapperTable->m_VolumeData_RemoveComposite));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeData_RemoveComposite == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedata_getcolor", (void**)&(pWrapperTable->m_VolumeData_GetColor));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeData_GetColor == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedata_createnewcolor", (void**)&(pWrapperTable->m_VolumeData_CreateNewColor));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeData_CreateNewColor == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedata_removecolor", (void**)&(pWrapperTable->m_VolumeData_RemoveColor));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeData_RemoveColor == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedata_getpropertycount", (void**)&(pWrapperTable->m_VolumeData_GetPropertyCount));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeData_GetPropertyCount == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedata_getproperty", (void**)&(pWrapperTable->m_VolumeData_GetProperty));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeData_GetProperty == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedata_addpropertyfromscalarfield", (void**)&(pWrapperTable->m_VolumeData_AddPropertyFromScalarField));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeData_AddPropertyFromScalarField == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedata_addpropertyfromvector3dfield", (void**)&(pWrapperTable->m_VolumeData_AddPropertyFromVector3DField));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeData_AddPropertyFromVector3DField == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_volumedata_removeproperty", (void**)&(pWrapperTable->m_VolumeData_RemoveProperty));
+		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeData_RemoveProperty == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_component_getobjectresource", (void**)&(pWrapperTable->m_Component_GetObjectResource));
@@ -6385,6 +8646,58 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_multipropertygroup_removelayer", (void**)&(pWrapperTable->m_MultiPropertyGroup_RemoveLayer));
 		if ( (eLookupError != 0) || (pWrapperTable->m_MultiPropertyGroup_RemoveLayer == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_image3d_getname", (void**)&(pWrapperTable->m_Image3D_GetName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Image3D_GetName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_image3d_setname", (void**)&(pWrapperTable->m_Image3D_SetName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Image3D_SetName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_image3d_isimagestack", (void**)&(pWrapperTable->m_Image3D_IsImageStack));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Image3D_IsImageStack == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_imagestack_getrowcount", (void**)&(pWrapperTable->m_ImageStack_GetRowCount));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImageStack_GetRowCount == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_imagestack_setrowcount", (void**)&(pWrapperTable->m_ImageStack_SetRowCount));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImageStack_SetRowCount == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_imagestack_getcolumncount", (void**)&(pWrapperTable->m_ImageStack_GetColumnCount));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImageStack_GetColumnCount == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_imagestack_setcolumncount", (void**)&(pWrapperTable->m_ImageStack_SetColumnCount));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImageStack_SetColumnCount == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_imagestack_getsheetcount", (void**)&(pWrapperTable->m_ImageStack_GetSheetCount));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImageStack_GetSheetCount == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_imagestack_getsheet", (void**)&(pWrapperTable->m_ImageStack_GetSheet));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImageStack_GetSheet == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_imagestack_setsheet", (void**)&(pWrapperTable->m_ImageStack_SetSheet));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImageStack_SetSheet == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_imagestack_createemptysheet", (void**)&(pWrapperTable->m_ImageStack_CreateEmptySheet));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImageStack_CreateEmptySheet == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_imagestack_createsheetfrombuffer", (void**)&(pWrapperTable->m_ImageStack_CreateSheetFromBuffer));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImageStack_CreateSheetFromBuffer == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_imagestack_createsheetfromfile", (void**)&(pWrapperTable->m_ImageStack_CreateSheetFromFile));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImageStack_CreateSheetFromFile == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_attachment_getpath", (void**)&(pWrapperTable->m_Attachment_GetPath));
@@ -6899,6 +9212,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetSliceStacks == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_model_getimage3ds", (void**)&(pWrapperTable->m_Model_GetImage3Ds));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetImage3Ds == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_getscalarfields", (void**)&(pWrapperTable->m_Model_GetScalarFields));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetScalarFields == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_getvector3dfields", (void**)&(pWrapperTable->m_Model_GetVector3DFields));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetVector3DFields == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_model_mergetomodel", (void**)&(pWrapperTable->m_Model_MergeToModel));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Model_MergeToModel == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -6937,6 +9262,70 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_model_addmultipropertygroup", (void**)&(pWrapperTable->m_Model_AddMultiPropertyGroup));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Model_AddMultiPropertyGroup == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_addimagestack", (void**)&(pWrapperTable->m_Model_AddImageStack));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_AddImageStack == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_getimagestackbyid", (void**)&(pWrapperTable->m_Model_GetImageStackByID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetImageStackByID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_addscalarfieldfromimage3d", (void**)&(pWrapperTable->m_Model_AddScalarFieldFromImage3D));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_AddScalarFieldFromImage3D == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_addscalarfieldcomposed", (void**)&(pWrapperTable->m_Model_AddScalarFieldComposed));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_AddScalarFieldComposed == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_addscalarfieldconstant", (void**)&(pWrapperTable->m_Model_AddScalarFieldConstant));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_AddScalarFieldConstant == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_getscalarfieldbyid", (void**)&(pWrapperTable->m_Model_GetScalarFieldByID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetScalarFieldByID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_getscalarfieldfromimage3dbyid", (void**)&(pWrapperTable->m_Model_GetScalarFieldFromImage3DByID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetScalarFieldFromImage3DByID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_getscalarfieldcomposedbyid", (void**)&(pWrapperTable->m_Model_GetScalarFieldComposedByID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetScalarFieldComposedByID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_getscalarfieldconstantbyid", (void**)&(pWrapperTable->m_Model_GetScalarFieldConstantByID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetScalarFieldConstantByID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_addvector3dfieldfromimage3d", (void**)&(pWrapperTable->m_Model_AddVector3DFieldFromImage3D));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_AddVector3DFieldFromImage3D == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_addvector3dfieldcomposed", (void**)&(pWrapperTable->m_Model_AddVector3DFieldComposed));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_AddVector3DFieldComposed == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_addvector3dfieldconstant", (void**)&(pWrapperTable->m_Model_AddVector3DFieldConstant));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_AddVector3DFieldConstant == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_getvector3dfieldbyid", (void**)&(pWrapperTable->m_Model_GetVector3DFieldByID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetVector3DFieldByID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_getvector3dfieldfromimage3dbyid", (void**)&(pWrapperTable->m_Model_GetVector3DFieldFromImage3DByID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetVector3DFieldFromImage3DByID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_getvector3dfieldcomposedbyid", (void**)&(pWrapperTable->m_Model_GetVector3DFieldComposedByID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetVector3DFieldComposedByID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_getvector3dfieldconstantbyid", (void**)&(pWrapperTable->m_Model_GetVector3DFieldConstantByID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetVector3DFieldConstantByID == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_model_addbuilditem", (void**)&(pWrapperTable->m_Model_AddBuildItem));
@@ -7738,6 +10127,63 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	 * Method definitions for class CImage3DIterator
+	 */
+	
+	/**
+	* CImage3DIterator::GetCurrentImage3D - Returns the Image3D the iterator points at.
+	* @return returns the Image3D instance.
+	*/
+	PImage3D CImage3DIterator::GetCurrentImage3D()
+	{
+		Lib3MFHandle hResource = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Image3DIterator_GetCurrentImage3D(m_pHandle, &hResource));
+		
+		if (!hResource) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImage3D>(dynamic_cast<CImage3D*>(m_pWrapper->polymorphicFactory(hResource)));
+	}
+	
+	/**
+	 * Method definitions for class CScalarFieldIterator
+	 */
+	
+	/**
+	* CScalarFieldIterator::GetCurrentScalarField - Returns the ScalarField the iterator points at.
+	* @return returns the ScalarField instance.
+	*/
+	PScalarField CScalarFieldIterator::GetCurrentScalarField()
+	{
+		Lib3MFHandle hResource = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldIterator_GetCurrentScalarField(m_pHandle, &hResource));
+		
+		if (!hResource) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CScalarField>(dynamic_cast<CScalarField*>(m_pWrapper->polymorphicFactory(hResource)));
+	}
+	
+	/**
+	 * Method definitions for class CVector3DFieldIterator
+	 */
+	
+	/**
+	* CVector3DFieldIterator::GetCurrentVector3DField - Returns the Vector3DField the iterator points at.
+	* @return returns the Vector3DField instance.
+	*/
+	PVector3DField CVector3DFieldIterator::GetCurrentVector3DField()
+	{
+		Lib3MFHandle hResource = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldIterator_GetCurrentVector3DField(m_pHandle, &hResource));
+		
+		if (!hResource) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVector3DField>(dynamic_cast<CVector3DField*>(m_pWrapper->polymorphicFactory(hResource)));
+	}
+	
+	/**
 	 * Method definitions for class CMetaData
 	 */
 	
@@ -8461,6 +10907,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CMeshObject::VolumeData - Retrieves the VolumeData of this MeshObject.
+	* @return the VolumeData of this MeshObject
+	*/
+	PVolumeData CMeshObject::VolumeData()
+	{
+		Lib3MFHandle hTheVolumeData = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_MeshObject_VolumeData(m_pHandle, &hTheVolumeData));
+		
+		if (!hTheVolumeData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVolumeData>(dynamic_cast<CVolumeData*>(m_pWrapper->polymorphicFactory(hTheVolumeData)));
+	}
+	
+	/**
 	 * Method definitions for class CBeamLattice
 	 */
 	
@@ -8728,6 +11189,1147 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CBeamSet>(dynamic_cast<CBeamSet*>(m_pWrapper->polymorphicFactory(hBeamSet)));
+	}
+	
+	/**
+	 * Method definitions for class CScalarField
+	 */
+	
+	/**
+	* CScalarField::GetName - Gets the name of this ScalarField.
+	* @return The name of this ScalarField.
+	*/
+	std::string CScalarField::GetName()
+	{
+		Lib3MF_uint32 bytesNeededName = 0;
+		Lib3MF_uint32 bytesWrittenName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarField_GetName(m_pHandle, 0, &bytesNeededName, nullptr));
+		std::vector<char> bufferName(bytesNeededName);
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarField_GetName(m_pHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]));
+		
+		return std::string(&bufferName[0]);
+	}
+	
+	/**
+	* CScalarField::SetName - Sets the name of this ScalarField.
+	* @param[in] sName - The name of this ScalarField.
+	*/
+	void CScalarField::SetName(const std::string & sName)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarField_SetName(m_pHandle, sName.c_str()));
+	}
+	
+	/**
+	* CScalarField::IsFromImage3D - Retrieves, if this ScalarField is a ScalarFieldFromImage3D
+	* @return returns, whether the scalar field is a ScalarFieldFromImage3D
+	*/
+	bool CScalarField::IsFromImage3D()
+	{
+		bool resultIsFromImage3D = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarField_IsFromImage3D(m_pHandle, &resultIsFromImage3D));
+		
+		return resultIsFromImage3D;
+	}
+	
+	/**
+	* CScalarField::IsConstant - Retrieves, if this ScalarField is a ScalarFieldConstant
+	* @return returns, whether the scalar field is a ScalarFieldConstant
+	*/
+	bool CScalarField::IsConstant()
+	{
+		bool resultIsConstant = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarField_IsConstant(m_pHandle, &resultIsConstant));
+		
+		return resultIsConstant;
+	}
+	
+	/**
+	* CScalarField::IsComposed - Retrieves, if this ScalarField is a ScalarFieldComposed
+	* @return returns, whether the scalar field is a ScalarFieldComposed
+	*/
+	bool CScalarField::IsComposed()
+	{
+		bool resultIsComposed = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarField_IsComposed(m_pHandle, &resultIsComposed));
+		
+		return resultIsComposed;
+	}
+	
+	/**
+	 * Method definitions for class CVector3DField
+	 */
+	
+	/**
+	* CVector3DField::GetName - Gets the name of this Vector3DField.
+	* @return The name of this Vector3DField.
+	*/
+	std::string CVector3DField::GetName()
+	{
+		Lib3MF_uint32 bytesNeededName = 0;
+		Lib3MF_uint32 bytesWrittenName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DField_GetName(m_pHandle, 0, &bytesNeededName, nullptr));
+		std::vector<char> bufferName(bytesNeededName);
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DField_GetName(m_pHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]));
+		
+		return std::string(&bufferName[0]);
+	}
+	
+	/**
+	* CVector3DField::SetName - Sets the name of this Vector3DField.
+	* @param[in] sName - The name of this Vector3DField.
+	*/
+	void CVector3DField::SetName(const std::string & sName)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DField_SetName(m_pHandle, sName.c_str()));
+	}
+	
+	/**
+	* CVector3DField::IsFromImage3D - Retrieves, if this Vector3DField is a Vector3DFieldFromImage3D
+	* @return returns, whether the 3d vector field is a Vector3DFieldFromImage3D
+	*/
+	bool CVector3DField::IsFromImage3D()
+	{
+		bool resultIsFromImage3D = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DField_IsFromImage3D(m_pHandle, &resultIsFromImage3D));
+		
+		return resultIsFromImage3D;
+	}
+	
+	/**
+	* CVector3DField::IsConstant - Retrieves, if this Vector3DField is a Vector3DFieldConstant
+	* @return returns, whether the 3d vector field is a Vector3DFieldConstant
+	*/
+	bool CVector3DField::IsConstant()
+	{
+		bool resultIsConstant = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DField_IsConstant(m_pHandle, &resultIsConstant));
+		
+		return resultIsConstant;
+	}
+	
+	/**
+	* CVector3DField::IsComposed - Retrieves, if this Vector3DField is a Vector3DFieldComposed
+	* @return returns, whether the 3d vector field is a Vector3DFieldComposed
+	*/
+	bool CVector3DField::IsComposed()
+	{
+		bool resultIsComposed = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DField_IsComposed(m_pHandle, &resultIsComposed));
+		
+		return resultIsComposed;
+	}
+	
+	/**
+	 * Method definitions for class CScalarFieldFromImage3D
+	 */
+	
+	/**
+	* CScalarFieldFromImage3D::GetImage - Returns the selected 3D image.
+	* @return image instance
+	*/
+	PImage3D CScalarFieldFromImage3D::GetImage()
+	{
+		Lib3MFHandle hImage3D = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldFromImage3D_GetImage(m_pHandle, &hImage3D));
+		
+		if (!hImage3D) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImage3D>(dynamic_cast<CImage3D*>(m_pWrapper->polymorphicFactory(hImage3D)));
+	}
+	
+	/**
+	* CScalarFieldFromImage3D::SetImage - Sets the 3D image of the selector.
+	* @param[in] pImage3D - image instance
+	*/
+	void CScalarFieldFromImage3D::SetImage(classParam<CImage3D> pImage3D)
+	{
+		Lib3MFHandle hImage3D = pImage3D.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldFromImage3D_SetImage(m_pHandle, hImage3D));
+	}
+	
+	/**
+	* CScalarFieldFromImage3D::SetChannel - Sets the channel name to be picked from the referenced Image3D.
+	* @param[in] eName - Sets the channel name.
+	*/
+	void CScalarFieldFromImage3D::SetChannel(const eChannelName eName)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldFromImage3D_SetChannel(m_pHandle, eName));
+	}
+	
+	/**
+	* CScalarFieldFromImage3D::GetChannel - Gets the channel name to be picked from the referenced Image3D.
+	* @return Sets the channel name.
+	*/
+	eChannelName CScalarFieldFromImage3D::GetChannel()
+	{
+		eChannelName resultName = (eChannelName) 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldFromImage3D_GetChannel(m_pHandle, &resultName));
+		
+		return resultName;
+	}
+	
+	/**
+	* CScalarFieldFromImage3D::SetFilter - Sets the texture filter of the selector.
+	* @param[in] eFilter - texture filter
+	*/
+	void CScalarFieldFromImage3D::SetFilter(const eTextureFilter eFilter)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldFromImage3D_SetFilter(m_pHandle, eFilter));
+	}
+	
+	/**
+	* CScalarFieldFromImage3D::GetFilter - Returns the texture filter of the selector.
+	* @return texture filter
+	*/
+	eTextureFilter CScalarFieldFromImage3D::GetFilter()
+	{
+		eTextureFilter resultFilter = (eTextureFilter) 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldFromImage3D_GetFilter(m_pHandle, &resultFilter));
+		
+		return resultFilter;
+	}
+	
+	/**
+	* CScalarFieldFromImage3D::SetTileStyles - Sets the tile styles of the selector.
+	* @param[in] eTileStyleU - tile style in U
+	* @param[in] eTileStyleV - tile style in V
+	* @param[in] eTileStyleW - tile style in W
+	*/
+	void CScalarFieldFromImage3D::SetTileStyles(const eTextureTileStyle eTileStyleU, const eTextureTileStyle eTileStyleV, const eTextureTileStyle eTileStyleW)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldFromImage3D_SetTileStyles(m_pHandle, eTileStyleU, eTileStyleV, eTileStyleW));
+	}
+	
+	/**
+	* CScalarFieldFromImage3D::GetTileStyles - Retrieves the tile styles of the selector.
+	* @param[out] eTileStyleU - tile style in U
+	* @param[out] eTileStyleV - tile style in V
+	* @param[out] eTileStyleW - tile style in W
+	*/
+	void CScalarFieldFromImage3D::GetTileStyles(eTextureTileStyle & eTileStyleU, eTextureTileStyle & eTileStyleV, eTextureTileStyle & eTileStyleW)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldFromImage3D_GetTileStyles(m_pHandle, &eTileStyleU, &eTileStyleV, &eTileStyleW));
+	}
+	
+	/**
+	* CScalarFieldFromImage3D::GetOffset - returns the offset value for the pixel values in the Image3D
+	* @return the offset value for the pixel values in the Image3D
+	*/
+	Lib3MF_double CScalarFieldFromImage3D::GetOffset()
+	{
+		Lib3MF_double resultOffset = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldFromImage3D_GetOffset(m_pHandle, &resultOffset));
+		
+		return resultOffset;
+	}
+	
+	/**
+	* CScalarFieldFromImage3D::SetOffset - Sets the offset value for the pixel values in the Image3D
+	* @param[in] dOffset - the offset value for the pixel values in the Image3D
+	*/
+	void CScalarFieldFromImage3D::SetOffset(const Lib3MF_double dOffset)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldFromImage3D_SetOffset(m_pHandle, dOffset));
+	}
+	
+	/**
+	* CScalarFieldFromImage3D::GetScale - returns the scale value for the pixel values in the Image3D
+	* @return the scale value for the pixel values in the Image3D
+	*/
+	Lib3MF_double CScalarFieldFromImage3D::GetScale()
+	{
+		Lib3MF_double resultScale = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldFromImage3D_GetScale(m_pHandle, &resultScale));
+		
+		return resultScale;
+	}
+	
+	/**
+	* CScalarFieldFromImage3D::SetScale - Sets the scale value for the pixel values in the Image3D
+	* @param[in] dScale - the scale value for the pixel values in the Image3D
+	*/
+	void CScalarFieldFromImage3D::SetScale(const Lib3MF_double dScale)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldFromImage3D_SetScale(m_pHandle, dScale));
+	}
+	
+	/**
+	 * Method definitions for class CScalarFieldConstant
+	 */
+	
+	/**
+	* CScalarFieldConstant::GetValue - returns the constant value of this ScalarFieldConstant
+	* @return the constant value of this ScalarFieldConstant
+	*/
+	Lib3MF_double CScalarFieldConstant::GetValue()
+	{
+		Lib3MF_double resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldConstant_GetValue(m_pHandle, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CScalarFieldConstant::SetValue - Sets the constant value of this ScalarFieldConstant
+	* @param[in] dValue - the constant value of this ScalarFieldConstant
+	*/
+	void CScalarFieldConstant::SetValue(const Lib3MF_double dValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldConstant_SetValue(m_pHandle, dValue));
+	}
+	
+	/**
+	 * Method definitions for class CScalarFieldComposed
+	 */
+	
+	/**
+	* CScalarFieldComposed::SetMethod - Sets the method to used for composition.
+	* @param[in] eTheMethod - Sets the composition method.
+	*/
+	void CScalarFieldComposed::SetMethod(const eCompositionMethod eTheMethod)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldComposed_SetMethod(m_pHandle, eTheMethod));
+	}
+	
+	/**
+	* CScalarFieldComposed::GetMethod - Gets the method to used for composition.
+	* @return Gets the composition method.
+	*/
+	eCompositionMethod CScalarFieldComposed::GetMethod()
+	{
+		eCompositionMethod resultTheMethod = (eCompositionMethod) 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldComposed_GetMethod(m_pHandle, &resultTheMethod));
+		
+		return resultTheMethod;
+	}
+	
+	/**
+	* CScalarFieldComposed::GetFactor1 - returns the factor scalar field 1 is multiplied with when composited
+	* @return the factor scalar field 1 is multiplied with when composited
+	*/
+	Lib3MF_double CScalarFieldComposed::GetFactor1()
+	{
+		Lib3MF_double resultFactor1 = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldComposed_GetFactor1(m_pHandle, &resultFactor1));
+		
+		return resultFactor1;
+	}
+	
+	/**
+	* CScalarFieldComposed::SetFactor1 - sets the factor scalar field 1 is multiplied with when composited
+	* @param[in] dFactor1 - the factor scalar field 1 is multiplied with when composited
+	*/
+	void CScalarFieldComposed::SetFactor1(const Lib3MF_double dFactor1)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldComposed_SetFactor1(m_pHandle, dFactor1));
+	}
+	
+	/**
+	* CScalarFieldComposed::GetFactor2 - returns the factor scalar field 2 is multiplied with when composited
+	* @return the factor scalar field 2 is multiplied with when composited
+	*/
+	Lib3MF_double CScalarFieldComposed::GetFactor2()
+	{
+		Lib3MF_double resultFactor2 = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldComposed_GetFactor2(m_pHandle, &resultFactor2));
+		
+		return resultFactor2;
+	}
+	
+	/**
+	* CScalarFieldComposed::SetFactor2 - sets the factor scalar field 2 is multiplied with when composited
+	* @param[in] dFactor2 - the factor scalar field 2 is multiplied with when composited
+	*/
+	void CScalarFieldComposed::SetFactor2(const Lib3MF_double dFactor2)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldComposed_SetFactor2(m_pHandle, dFactor2));
+	}
+	
+	/**
+	* CScalarFieldComposed::ScalarFieldReference1 - Access to the ScalarFieldReference for the first composited field
+	* @return ScalarFieldReference
+	*/
+	PScalarFieldReference CScalarFieldComposed::ScalarFieldReference1()
+	{
+		Lib3MFHandle hTheScalarFieldReference1 = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldComposed_ScalarFieldReference1(m_pHandle, &hTheScalarFieldReference1));
+		
+		if (!hTheScalarFieldReference1) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CScalarFieldReference>(dynamic_cast<CScalarFieldReference*>(m_pWrapper->polymorphicFactory(hTheScalarFieldReference1)));
+	}
+	
+	/**
+	* CScalarFieldComposed::ScalarFieldReference2 - Access to the ScalarFieldReference for the second composited field
+	* @return ScalarFieldReference
+	*/
+	PScalarFieldReference CScalarFieldComposed::ScalarFieldReference2()
+	{
+		Lib3MFHandle hTheScalarFieldReference1 = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldComposed_ScalarFieldReference2(m_pHandle, &hTheScalarFieldReference1));
+		
+		if (!hTheScalarFieldReference1) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CScalarFieldReference>(dynamic_cast<CScalarFieldReference*>(m_pWrapper->polymorphicFactory(hTheScalarFieldReference1)));
+	}
+	
+	/**
+	* CScalarFieldComposed::ScalarFieldReferenceMask - Access to the ScalarFieldReference for masking. Only relevant if the Method is mask.
+	* @return ScalarFieldReference
+	*/
+	PScalarFieldReference CScalarFieldComposed::ScalarFieldReferenceMask()
+	{
+		Lib3MFHandle hTheScalarFieldReferenceMask = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldComposed_ScalarFieldReferenceMask(m_pHandle, &hTheScalarFieldReferenceMask));
+		
+		if (!hTheScalarFieldReferenceMask) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CScalarFieldReference>(dynamic_cast<CScalarFieldReference*>(m_pWrapper->polymorphicFactory(hTheScalarFieldReferenceMask)));
+	}
+	
+	/**
+	 * Method definitions for class CVector3DFieldFromImage3D
+	 */
+	
+	/**
+	* CVector3DFieldFromImage3D::GetImage - Returns the selected 3D image.
+	* @return image instance
+	*/
+	PImage3D CVector3DFieldFromImage3D::GetImage()
+	{
+		Lib3MFHandle hImage3D = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldFromImage3D_GetImage(m_pHandle, &hImage3D));
+		
+		if (!hImage3D) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImage3D>(dynamic_cast<CImage3D*>(m_pWrapper->polymorphicFactory(hImage3D)));
+	}
+	
+	/**
+	* CVector3DFieldFromImage3D::SetImage - Sets the 3D image of the selector.
+	* @param[in] pImage3D - image instance
+	*/
+	void CVector3DFieldFromImage3D::SetImage(classParam<CImage3D> pImage3D)
+	{
+		Lib3MFHandle hImage3D = pImage3D.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldFromImage3D_SetImage(m_pHandle, hImage3D));
+	}
+	
+	/**
+	* CVector3DFieldFromImage3D::SetFilter - Sets the texture filter of the selector.
+	* @param[in] eFilter - texture filter
+	*/
+	void CVector3DFieldFromImage3D::SetFilter(const eTextureFilter eFilter)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldFromImage3D_SetFilter(m_pHandle, eFilter));
+	}
+	
+	/**
+	* CVector3DFieldFromImage3D::GetFilter - Returns the texture filter of the selector.
+	* @return texture filter
+	*/
+	eTextureFilter CVector3DFieldFromImage3D::GetFilter()
+	{
+		eTextureFilter resultFilter = (eTextureFilter) 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldFromImage3D_GetFilter(m_pHandle, &resultFilter));
+		
+		return resultFilter;
+	}
+	
+	/**
+	* CVector3DFieldFromImage3D::SetTileStyles - Sets the tile styles of the selector.
+	* @param[in] eTileStyleU - tile style in U
+	* @param[in] eTileStyleV - tile style in V
+	* @param[in] eTileStyleW - tile style in W
+	*/
+	void CVector3DFieldFromImage3D::SetTileStyles(const eTextureTileStyle eTileStyleU, const eTextureTileStyle eTileStyleV, const eTextureTileStyle eTileStyleW)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldFromImage3D_SetTileStyles(m_pHandle, eTileStyleU, eTileStyleV, eTileStyleW));
+	}
+	
+	/**
+	* CVector3DFieldFromImage3D::GetTileStyles - Retrieves the tile styles of the selector.
+	* @param[out] eTileStyleU - tile style in U
+	* @param[out] eTileStyleV - tile style in V
+	* @param[out] eTileStyleW - tile style in W
+	*/
+	void CVector3DFieldFromImage3D::GetTileStyles(eTextureTileStyle & eTileStyleU, eTextureTileStyle & eTileStyleV, eTextureTileStyle & eTileStyleW)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldFromImage3D_GetTileStyles(m_pHandle, &eTileStyleU, &eTileStyleV, &eTileStyleW));
+	}
+	
+	/**
+	* CVector3DFieldFromImage3D::GetOffset - returns the offset value for the pixel values in the Image3D
+	* @return the offset value for the pixel values in the Image3D
+	*/
+	Lib3MF_double CVector3DFieldFromImage3D::GetOffset()
+	{
+		Lib3MF_double resultOffset = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldFromImage3D_GetOffset(m_pHandle, &resultOffset));
+		
+		return resultOffset;
+	}
+	
+	/**
+	* CVector3DFieldFromImage3D::SetOffset - Sets the offset value for the pixel values in the Image3D
+	* @param[in] dOffset - the offset value for the pixel values in the Image3D
+	*/
+	void CVector3DFieldFromImage3D::SetOffset(const Lib3MF_double dOffset)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldFromImage3D_SetOffset(m_pHandle, dOffset));
+	}
+	
+	/**
+	* CVector3DFieldFromImage3D::GetScale - returns the scale value for the pixel values in the Image3D
+	* @return the scale value for the pixel values in the Image3D
+	*/
+	Lib3MF_double CVector3DFieldFromImage3D::GetScale()
+	{
+		Lib3MF_double resultScale = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldFromImage3D_GetScale(m_pHandle, &resultScale));
+		
+		return resultScale;
+	}
+	
+	/**
+	* CVector3DFieldFromImage3D::SetScale - Sets the scale value for the pixel values in the Image3D
+	* @param[in] dScale - the scale value for the pixel values in the Image3D
+	*/
+	void CVector3DFieldFromImage3D::SetScale(const Lib3MF_double dScale)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldFromImage3D_SetScale(m_pHandle, dScale));
+	}
+	
+	/**
+	 * Method definitions for class CVector3DFieldConstant
+	 */
+	
+	/**
+	* CVector3DFieldConstant::GetValueX - returns the constant x-value of this Vector3DFieldConstant
+	* @return the constant x-value of this Vector3DFieldConstant
+	*/
+	Lib3MF_double CVector3DFieldConstant::GetValueX()
+	{
+		Lib3MF_double resultValueX = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldConstant_GetValueX(m_pHandle, &resultValueX));
+		
+		return resultValueX;
+	}
+	
+	/**
+	* CVector3DFieldConstant::SetValueX - Sets the constant x-value of this Vector3DFieldConstant
+	* @param[in] dValueX - the constant x-value of this Vector3DFieldConstant
+	*/
+	void CVector3DFieldConstant::SetValueX(const Lib3MF_double dValueX)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldConstant_SetValueX(m_pHandle, dValueX));
+	}
+	
+	/**
+	* CVector3DFieldConstant::GetValueY - returns the constant y-value of this Vector3DFieldConstant
+	* @return the constant y-value of this Vector3DFieldConstant
+	*/
+	Lib3MF_double CVector3DFieldConstant::GetValueY()
+	{
+		Lib3MF_double resultValueY = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldConstant_GetValueY(m_pHandle, &resultValueY));
+		
+		return resultValueY;
+	}
+	
+	/**
+	* CVector3DFieldConstant::SetValueY - Sets the constant y-value of this Vector3DFieldConstant
+	* @param[in] dValueY - the constant y-value of this Vector3DFieldConstant
+	*/
+	void CVector3DFieldConstant::SetValueY(const Lib3MF_double dValueY)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldConstant_SetValueY(m_pHandle, dValueY));
+	}
+	
+	/**
+	* CVector3DFieldConstant::GetValueZ - returns the constant x-value of this Vector3DFieldConstant
+	* @return the constant x-value of this Vector3DFieldConstant
+	*/
+	Lib3MF_double CVector3DFieldConstant::GetValueZ()
+	{
+		Lib3MF_double resultValueZ = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldConstant_GetValueZ(m_pHandle, &resultValueZ));
+		
+		return resultValueZ;
+	}
+	
+	/**
+	* CVector3DFieldConstant::SetValueZ - Sets the constant z-value of this Vector3DFieldConstant
+	* @param[in] dValueZ - the constant z-value of this Vector3DFieldConstant
+	*/
+	void CVector3DFieldConstant::SetValueZ(const Lib3MF_double dValueZ)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldConstant_SetValueZ(m_pHandle, dValueZ));
+	}
+	
+	/**
+	 * Method definitions for class CVector3DFieldComposed
+	 */
+	
+	/**
+	* CVector3DFieldComposed::SetMethod - Sets the method to used for composition.
+	* @param[in] eTheMethod - Sets the composition method.
+	*/
+	void CVector3DFieldComposed::SetMethod(const eCompositionMethod eTheMethod)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldComposed_SetMethod(m_pHandle, eTheMethod));
+	}
+	
+	/**
+	* CVector3DFieldComposed::GetMethod - Gets the method to used for composition.
+	* @return Gets the composition method.
+	*/
+	eCompositionMethod CVector3DFieldComposed::GetMethod()
+	{
+		eCompositionMethod resultTheMethod = (eCompositionMethod) 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldComposed_GetMethod(m_pHandle, &resultTheMethod));
+		
+		return resultTheMethod;
+	}
+	
+	/**
+	* CVector3DFieldComposed::SetSpace - Sets the space in which composition takes place.
+	* @param[in] eTheSpace - Sets the composition space.
+	*/
+	void CVector3DFieldComposed::SetSpace(const eCompositionSpace eTheSpace)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldComposed_SetSpace(m_pHandle, eTheSpace));
+	}
+	
+	/**
+	* CVector3DFieldComposed::GetSpace - Gets the space in which composition takes place.
+	* @return Gets the composition space.
+	*/
+	eCompositionSpace CVector3DFieldComposed::GetSpace()
+	{
+		eCompositionSpace resultTheSpace = (eCompositionSpace) 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldComposed_GetSpace(m_pHandle, &resultTheSpace));
+		
+		return resultTheSpace;
+	}
+	
+	/**
+	* CVector3DFieldComposed::GetFactor1 - returns the factor vector3d field 1 is multiplied with when composited
+	* @return the factor vector3d field 1 is multiplied with when composited
+	*/
+	Lib3MF_double CVector3DFieldComposed::GetFactor1()
+	{
+		Lib3MF_double resultFactor1 = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldComposed_GetFactor1(m_pHandle, &resultFactor1));
+		
+		return resultFactor1;
+	}
+	
+	/**
+	* CVector3DFieldComposed::SetFactor1 - sets the factor vector3d field 1 is multiplied with when composited
+	* @param[in] dFactor1 - the factor vector3d field 1 is multiplied with when composited
+	*/
+	void CVector3DFieldComposed::SetFactor1(const Lib3MF_double dFactor1)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldComposed_SetFactor1(m_pHandle, dFactor1));
+	}
+	
+	/**
+	* CVector3DFieldComposed::GetFactor2 - returns the vector3d scalar field 2 is multiplied with when composited
+	* @return the factor vector3d field 2 is multiplied with when composited
+	*/
+	Lib3MF_double CVector3DFieldComposed::GetFactor2()
+	{
+		Lib3MF_double resultFactor2 = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldComposed_GetFactor2(m_pHandle, &resultFactor2));
+		
+		return resultFactor2;
+	}
+	
+	/**
+	* CVector3DFieldComposed::SetFactor2 - sets the factor vector3d field 2 is multiplied with when composited
+	* @param[in] dFactor2 - the factor vector3d field 2 is multiplied with when composited
+	*/
+	void CVector3DFieldComposed::SetFactor2(const Lib3MF_double dFactor2)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldComposed_SetFactor2(m_pHandle, dFactor2));
+	}
+	
+	/**
+	* CVector3DFieldComposed::Vector3DFieldReference1 - Access to the Vector3DFieldReference for the first composited field
+	* @return Vector3DFieldReference
+	*/
+	PVector3DFieldReference CVector3DFieldComposed::Vector3DFieldReference1()
+	{
+		Lib3MFHandle hTheVector3DFieldReference1 = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldComposed_Vector3DFieldReference1(m_pHandle, &hTheVector3DFieldReference1));
+		
+		if (!hTheVector3DFieldReference1) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVector3DFieldReference>(dynamic_cast<CVector3DFieldReference*>(m_pWrapper->polymorphicFactory(hTheVector3DFieldReference1)));
+	}
+	
+	/**
+	* CVector3DFieldComposed::Vector3DFieldReference2 - Access to the Vector3DFieldReference for the second composited field
+	* @return Vector3DFieldReference
+	*/
+	PVector3DFieldReference CVector3DFieldComposed::Vector3DFieldReference2()
+	{
+		Lib3MFHandle hTheVector3DFieldReference1 = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldComposed_Vector3DFieldReference2(m_pHandle, &hTheVector3DFieldReference1));
+		
+		if (!hTheVector3DFieldReference1) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVector3DFieldReference>(dynamic_cast<CVector3DFieldReference*>(m_pWrapper->polymorphicFactory(hTheVector3DFieldReference1)));
+	}
+	
+	/**
+	* CVector3DFieldComposed::ScalarFieldReferenceMask - Access to the ScalarFieldReference for masking. Only relevant if the Method is mask.
+	* @return ScalarFieldReference
+	*/
+	PScalarFieldReference CVector3DFieldComposed::ScalarFieldReferenceMask()
+	{
+		Lib3MFHandle hTheScalarFieldReferenceMask = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldComposed_ScalarFieldReferenceMask(m_pHandle, &hTheScalarFieldReferenceMask));
+		
+		if (!hTheScalarFieldReferenceMask) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CScalarFieldReference>(dynamic_cast<CScalarFieldReference*>(m_pWrapper->polymorphicFactory(hTheScalarFieldReferenceMask)));
+	}
+	
+	/**
+	 * Method definitions for class CFieldReference
+	 */
+	
+	/**
+	* CFieldReference::GetFieldResourceID - Returns the UniqueResourceID of the Field (Scalar- or Vector3DField).
+	* @return returns the UniqueResourceID.
+	*/
+	Lib3MF_uint32 CFieldReference::GetFieldResourceID()
+	{
+		Lib3MF_uint32 resultUniqueResourceID = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_FieldReference_GetFieldResourceID(m_pHandle, &resultUniqueResourceID));
+		
+		return resultUniqueResourceID;
+	}
+	
+	/**
+	* CFieldReference::SetFieldResourceID - Sets the UniqueResourceID to refer to.
+	* @param[in] nUniqueResourceID - UniqueResourceID of the Field (Scalar- or Vector3DField)
+	*/
+	void CFieldReference::SetFieldResourceID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_FieldReference_SetFieldResourceID(m_pHandle, nUniqueResourceID));
+	}
+	
+	/**
+	* CFieldReference::GetTransform - Returns the transformation matrix into the coordinate system of the referenced Field.
+	* @return the transformation matrix
+	*/
+	sTransform CFieldReference::GetTransform()
+	{
+		sTransform resultTransform;
+		CheckError(m_pWrapper->m_WrapperTable.m_FieldReference_GetTransform(m_pHandle, &resultTransform));
+		
+		return resultTransform;
+	}
+	
+	/**
+	* CFieldReference::SetTransform - Sets the transformation matrix into the coordinate system of the referenced Field.
+	* @param[in] Transform - new transformation matrix
+	*/
+	void CFieldReference::SetTransform(const sTransform & Transform)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_FieldReference_SetTransform(m_pHandle, &Transform));
+	}
+	
+	/**
+	 * Method definitions for class CScalarFieldReference
+	 */
+	
+	/**
+	* CScalarFieldReference::SetScalarField - Sets the ScalarField to use within this volume data item.
+	* @param[in] pTheScalarField - ScalarField used in this element
+	*/
+	void CScalarFieldReference::SetScalarField(classParam<CScalarField> pTheScalarField)
+	{
+		Lib3MFHandle hTheScalarField = pTheScalarField.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldReference_SetScalarField(m_pHandle, hTheScalarField));
+	}
+	
+	/**
+	 * Method definitions for class CVector3DFieldReference
+	 */
+	
+	/**
+	* CVector3DFieldReference::SetVector3DField - Sets the Vector3DField to use within this volume data item.
+	* @param[in] pTheVector3DField - Vector3DField used in this element
+	*/
+	void CVector3DFieldReference::SetVector3DField(classParam<CVector3DField> pTheVector3DField)
+	{
+		Lib3MFHandle hTheVector3DField = pTheVector3DField.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldReference_SetVector3DField(m_pHandle, hTheVector3DField));
+	}
+	
+	/**
+	 * Method definitions for class CVolumeDataBoundary
+	 */
+	
+	/**
+	* CVolumeDataBoundary::GetSolidThreshold - Returns the solidthreshold for the levelset function encoded in this VolumeDataBoundary
+	* @return The solidthreshold for the levelset function encoded in this VolumeDataBoundary
+	*/
+	Lib3MF_double CVolumeDataBoundary::GetSolidThreshold()
+	{
+		Lib3MF_double resultTheSolidThreshold = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeDataBoundary_GetSolidThreshold(m_pHandle, &resultTheSolidThreshold));
+		
+		return resultTheSolidThreshold;
+	}
+	
+	/**
+	* CVolumeDataBoundary::SetSolidThreshold - Sets the solidthreshold for the levelset function encoded in this VolumeDataBoundary
+	* @param[in] dTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataBoundary
+	*/
+	void CVolumeDataBoundary::SetSolidThreshold(const Lib3MF_double dTheSolidThreshold)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeDataBoundary_SetSolidThreshold(m_pHandle, dTheSolidThreshold));
+	}
+	
+	/**
+	 * Method definitions for class CVolumeDataColor
+	 */
+	
+	/**
+	 * Method definitions for class CMaterialMapping
+	 */
+	
+	/**
+	 * Method definitions for class CVolumeDataComposite
+	 */
+	
+	/**
+	* CVolumeDataComposite::GetBaseMaterialGroup - Returns the BaseMaterialGroup used within this volume data item
+	* @return The BaseMaterialGroup instance of this VolumeDataComposite element
+	*/
+	PBaseMaterialGroup CVolumeDataComposite::GetBaseMaterialGroup()
+	{
+		Lib3MFHandle hBaseMaterialGroupInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeDataComposite_GetBaseMaterialGroup(m_pHandle, &hBaseMaterialGroupInstance));
+		
+		if (!hBaseMaterialGroupInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CBaseMaterialGroup>(dynamic_cast<CBaseMaterialGroup*>(m_pWrapper->polymorphicFactory(hBaseMaterialGroupInstance)));
+	}
+	
+	/**
+	* CVolumeDataComposite::SetBaseMaterialGroup - Sets the BaseMaterialGroup to use within this volume data item.
+	* @param[in] pBaseMaterialGroupInstance - The new BaseMaterialGroup instance of this VolumeDataComposite element
+	*/
+	void CVolumeDataComposite::SetBaseMaterialGroup(classParam<CBaseMaterialGroup> pBaseMaterialGroupInstance)
+	{
+		Lib3MFHandle hBaseMaterialGroupInstance = pBaseMaterialGroupInstance.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeDataComposite_SetBaseMaterialGroup(m_pHandle, hBaseMaterialGroupInstance));
+	}
+	
+	/**
+	* CVolumeDataComposite::GetMaterialMappingCount - Returns the number of material mappings of this VolumeDataComposite element
+	* @return the number of material mappings.
+	*/
+	Lib3MF_uint32 CVolumeDataComposite::GetMaterialMappingCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeDataComposite_GetMaterialMappingCount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CVolumeDataComposite::GetMaterialMapping - Returns MaterialMappting with given index
+	* @param[in] nIndex - Index of the MaterialMapping in question.
+	* @return MaterialMapping used in this element
+	*/
+	PMaterialMapping CVolumeDataComposite::GetMaterialMapping(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hTheMaterialMapping = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeDataComposite_GetMaterialMapping(m_pHandle, nIndex, &hTheMaterialMapping));
+		
+		if (!hTheMaterialMapping) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CMaterialMapping>(dynamic_cast<CMaterialMapping*>(m_pWrapper->polymorphicFactory(hTheMaterialMapping)));
+	}
+	
+	/**
+	* CVolumeDataComposite::AddMaterialMapping - Adds a the MaterialMapping
+	* @param[in] Transform - new transformation matrix
+	* @return The new MaterialMapping
+	*/
+	PMaterialMapping CVolumeDataComposite::AddMaterialMapping(const sTransform & Transform)
+	{
+		Lib3MFHandle hTheMaterialMapping = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeDataComposite_AddMaterialMapping(m_pHandle, &Transform, &hTheMaterialMapping));
+		
+		if (!hTheMaterialMapping) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CMaterialMapping>(dynamic_cast<CMaterialMapping*>(m_pWrapper->polymorphicFactory(hTheMaterialMapping)));
+	}
+	
+	/**
+	* CVolumeDataComposite::RemoveMaterialMapping - Removes the MaterialMapping with given index
+	* @param[in] nIndex - The index of the MaterialMapping to be removed.
+	*/
+	void CVolumeDataComposite::RemoveMaterialMapping(const Lib3MF_uint32 nIndex)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeDataComposite_RemoveMaterialMapping(m_pHandle, nIndex));
+	}
+	
+	/**
+	 * Method definitions for class CVolumeDataProperty
+	 */
+	
+	/**
+	* CVolumeDataProperty::GetName - Gets the qualified name of this property.
+	* @return The qualified name of this property.
+	*/
+	std::string CVolumeDataProperty::GetName()
+	{
+		Lib3MF_uint32 bytesNeededPropertyName = 0;
+		Lib3MF_uint32 bytesWrittenPropertyName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeDataProperty_GetName(m_pHandle, 0, &bytesNeededPropertyName, nullptr));
+		std::vector<char> bufferPropertyName(bytesNeededPropertyName);
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeDataProperty_GetName(m_pHandle, bytesNeededPropertyName, &bytesWrittenPropertyName, &bufferPropertyName[0]));
+		
+		return std::string(&bufferPropertyName[0]);
+	}
+	
+	/**
+	* CVolumeDataProperty::SetIsRequired - Sets whether this property is required to process this 3MF document instance.
+	* @param[in] bIsRequired - New value for whether this property is required to process this 3MF document instance.
+	*/
+	void CVolumeDataProperty::SetIsRequired(const bool bIsRequired)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeDataProperty_SetIsRequired(m_pHandle, bIsRequired));
+	}
+	
+	/**
+	* CVolumeDataProperty::IsRequired - Returns whether this property is required to process this 3MF document instance.
+	* @return Is this property required to process this 3MF document instance?
+	*/
+	bool CVolumeDataProperty::IsRequired()
+	{
+		bool resultIsRequired = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeDataProperty_IsRequired(m_pHandle, &resultIsRequired));
+		
+		return resultIsRequired;
+	}
+	
+	/**
+	 * Method definitions for class CVolumeData
+	 */
+	
+	/**
+	* CVolumeData::GetBoundary - Returns the VolumeDataBoundary of this VolumeData instance
+	* @return filled with the VolumeDataBoundary of this VolumeData instance.
+	*/
+	PVolumeDataBoundary CVolumeData::GetBoundary()
+	{
+		Lib3MFHandle hTheBoundaryData = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeData_GetBoundary(m_pHandle, &hTheBoundaryData));
+		
+		if (hTheBoundaryData) {
+			return std::shared_ptr<CVolumeDataBoundary>(dynamic_cast<CVolumeDataBoundary*>(m_pWrapper->polymorphicFactory(hTheBoundaryData)));
+		} else {
+			return nullptr;
+		}
+	}
+	
+	/**
+	* CVolumeData::CreateNewBoundary - Creates a new VolumeDataBoundary for this VolumeData instance
+	* @param[in] pTheScalarField - ScalarField used in this element
+	* @return The new VolumeDataBoundary of this VolumeData instance.
+	*/
+	PVolumeDataBoundary CVolumeData::CreateNewBoundary(classParam<CScalarField> pTheScalarField)
+	{
+		Lib3MFHandle hTheScalarField = pTheScalarField.GetHandle();
+		Lib3MFHandle hTheBoundaryData = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeData_CreateNewBoundary(m_pHandle, hTheScalarField, &hTheBoundaryData));
+		
+		if (!hTheBoundaryData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVolumeDataBoundary>(dynamic_cast<CVolumeDataBoundary*>(m_pWrapper->polymorphicFactory(hTheBoundaryData)));
+	}
+	
+	/**
+	* CVolumeData::RemoveBoundary - Removes the VolumeDataBoundary of this VolumeData instance
+	*/
+	void CVolumeData::RemoveBoundary()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeData_RemoveBoundary(m_pHandle));
+	}
+	
+	/**
+	* CVolumeData::GetComposite - Returns the VolumeDataComposite of this VolumeData instance
+	* @return filled with the VolumeDataComposite of this VolumeData instance.
+	*/
+	PVolumeDataComposite CVolumeData::GetComposite()
+	{
+		Lib3MFHandle hTheCompositeData = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeData_GetComposite(m_pHandle, &hTheCompositeData));
+		
+		if (hTheCompositeData) {
+			return std::shared_ptr<CVolumeDataComposite>(dynamic_cast<CVolumeDataComposite*>(m_pWrapper->polymorphicFactory(hTheCompositeData)));
+		} else {
+			return nullptr;
+		}
+	}
+	
+	/**
+	* CVolumeData::CreateNewComposite - Creates a new VolumeDataComposite for this VolumeData instance
+	* @return The new VolumeDataComposite of this VolumeData instance.
+	*/
+	PVolumeDataComposite CVolumeData::CreateNewComposite()
+	{
+		Lib3MFHandle hTheCompositeData = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeData_CreateNewComposite(m_pHandle, &hTheCompositeData));
+		
+		if (!hTheCompositeData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVolumeDataComposite>(dynamic_cast<CVolumeDataComposite*>(m_pWrapper->polymorphicFactory(hTheCompositeData)));
+	}
+	
+	/**
+	* CVolumeData::RemoveComposite - Removes the VolumeDataComposite of this VolumeData instance
+	*/
+	void CVolumeData::RemoveComposite()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeData_RemoveComposite(m_pHandle));
+	}
+	
+	/**
+	* CVolumeData::GetColor - Returns the VolumeDataColor of this VolumeData instance
+	* @return filled with the VolumeDataColor of this VolumeData instance.
+	*/
+	PVolumeDataColor CVolumeData::GetColor()
+	{
+		Lib3MFHandle hTheColorData = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeData_GetColor(m_pHandle, &hTheColorData));
+		
+		if (hTheColorData) {
+			return std::shared_ptr<CVolumeDataColor>(dynamic_cast<CVolumeDataColor*>(m_pWrapper->polymorphicFactory(hTheColorData)));
+		} else {
+			return nullptr;
+		}
+	}
+	
+	/**
+	* CVolumeData::CreateNewColor - Creates a new VolumeDataColor for this VolumeData instance
+	* @param[in] pTheVector3DField - Vector3DField used in this element
+	* @return The new VolumeDataColor of this VolumeData instance.
+	*/
+	PVolumeDataColor CVolumeData::CreateNewColor(classParam<CVector3DField> pTheVector3DField)
+	{
+		Lib3MFHandle hTheVector3DField = pTheVector3DField.GetHandle();
+		Lib3MFHandle hTheColorData = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeData_CreateNewColor(m_pHandle, hTheVector3DField, &hTheColorData));
+		
+		if (!hTheColorData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVolumeDataColor>(dynamic_cast<CVolumeDataColor*>(m_pWrapper->polymorphicFactory(hTheColorData)));
+	}
+	
+	/**
+	* CVolumeData::RemoveColor - Removes the VolumeDataColor of this VolumeData instance
+	*/
+	void CVolumeData::RemoveColor()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeData_RemoveColor(m_pHandle));
+	}
+	
+	/**
+	* CVolumeData::GetPropertyCount - Returns the number of VolumeDataProperty
+	* @return the number of VolumeDataProperty-elements within this VolumdeData
+	*/
+	Lib3MF_uint32 CVolumeData::GetPropertyCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeData_GetPropertyCount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CVolumeData::GetProperty - Returns the VolumeDataProperty at a given Index
+	* @param[in] nIndex - the index of the VolumeDataProperty to be returned.
+	* @return the VolumeDataProperty at the given index.
+	*/
+	PVolumeDataProperty CVolumeData::GetProperty(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hTheVolumeDataProperty = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeData_GetProperty(m_pHandle, nIndex, &hTheVolumeDataProperty));
+		
+		if (!hTheVolumeDataProperty) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVolumeDataProperty>(dynamic_cast<CVolumeDataProperty*>(m_pWrapper->polymorphicFactory(hTheVolumeDataProperty)));
+	}
+	
+	/**
+	* CVolumeData::AddPropertyFromScalarField - Adds a new VolumeDataProperty from a ScalarField
+	* @param[in] sName - the qualified name (namespace+name) of the Property
+	* @param[in] pTheScalarField - ScalarField used in this element
+	* @return the newly created VolumeDataProperty.
+	*/
+	PVolumeDataProperty CVolumeData::AddPropertyFromScalarField(const std::string & sName, classParam<CScalarField> pTheScalarField)
+	{
+		Lib3MFHandle hTheScalarField = pTheScalarField.GetHandle();
+		Lib3MFHandle hTheVolumeDataProperty = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeData_AddPropertyFromScalarField(m_pHandle, sName.c_str(), hTheScalarField, &hTheVolumeDataProperty));
+		
+		if (!hTheVolumeDataProperty) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVolumeDataProperty>(dynamic_cast<CVolumeDataProperty*>(m_pWrapper->polymorphicFactory(hTheVolumeDataProperty)));
+	}
+	
+	/**
+	* CVolumeData::AddPropertyFromVector3DField - Adds a new VolumeDataProperty from a Vector3DField
+	* @param[in] sName - the qualified name (namespace+name) of the Property
+	* @param[in] pTheVector3DField - Vector3DField used in this element
+	* @return the newly created VolumeDataProperty.
+	*/
+	PVolumeDataProperty CVolumeData::AddPropertyFromVector3DField(const std::string & sName, classParam<CVector3DField> pTheVector3DField)
+	{
+		Lib3MFHandle hTheVector3DField = pTheVector3DField.GetHandle();
+		Lib3MFHandle hTheVolumeDataProperty = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeData_AddPropertyFromVector3DField(m_pHandle, sName.c_str(), hTheVector3DField, &hTheVolumeDataProperty));
+		
+		if (!hTheVolumeDataProperty) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVolumeDataProperty>(dynamic_cast<CVolumeDataProperty*>(m_pWrapper->polymorphicFactory(hTheVolumeDataProperty)));
+	}
+	
+	/**
+	* CVolumeData::RemoveProperty - Removes the VolumeDataProperty with a given index
+	* @param[in] nIndex - the index of the VolumeDataProperty to be removed.
+	*/
+	void CVolumeData::RemoveProperty(const Lib3MF_uint32 nIndex)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeData_RemoveProperty(m_pHandle, nIndex));
 	}
 	
 	/**
@@ -9443,6 +13045,184 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	void CMultiPropertyGroup::RemoveLayer(const Lib3MF_uint32 nLayerIndex)
 	{
 		CheckError(m_pWrapper->m_WrapperTable.m_MultiPropertyGroup_RemoveLayer(m_pHandle, nLayerIndex));
+	}
+	
+	/**
+	 * Method definitions for class CImage3D
+	 */
+	
+	/**
+	* CImage3D::GetName - returns the name of this Image3D
+	* @return the name of this Image3D
+	*/
+	std::string CImage3D::GetName()
+	{
+		Lib3MF_uint32 bytesNeededName = 0;
+		Lib3MF_uint32 bytesWrittenName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Image3D_GetName(m_pHandle, 0, &bytesNeededName, nullptr));
+		std::vector<char> bufferName(bytesNeededName);
+		CheckError(m_pWrapper->m_WrapperTable.m_Image3D_GetName(m_pHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]));
+		
+		return std::string(&bufferName[0]);
+	}
+	
+	/**
+	* CImage3D::SetName - sets a new name of this Image3D
+	* @param[in] sName - the new name of this Image3D
+	*/
+	void CImage3D::SetName(const std::string & sName)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Image3D_SetName(m_pHandle, sName.c_str()));
+	}
+	
+	/**
+	* CImage3D::IsImageStack - Retrieves, if this Image3D is a ImageStack
+	* @return returns, whether the Image3D is an ImageStack
+	*/
+	bool CImage3D::IsImageStack()
+	{
+		bool resultIsImageStack = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Image3D_IsImageStack(m_pHandle, &resultIsImageStack));
+		
+		return resultIsImageStack;
+	}
+	
+	/**
+	 * Method definitions for class CImageStack
+	 */
+	
+	/**
+	* CImageStack::GetRowCount - Retrieves the number of rows in each image of this image3d
+	* @return number of rows
+	*/
+	Lib3MF_uint32 CImageStack::GetRowCount()
+	{
+		Lib3MF_uint32 resultRowCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImageStack_GetRowCount(m_pHandle, &resultRowCount));
+		
+		return resultRowCount;
+	}
+	
+	/**
+	* CImageStack::SetRowCount - Sets the number of rows in each image of this image3d
+	* @param[in] nRowCount - number of rows
+	*/
+	void CImageStack::SetRowCount(const Lib3MF_uint32 nRowCount)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ImageStack_SetRowCount(m_pHandle, nRowCount));
+	}
+	
+	/**
+	* CImageStack::GetColumnCount - Retrieves the number of columns in each image of this image3d
+	* @return number of columns
+	*/
+	Lib3MF_uint32 CImageStack::GetColumnCount()
+	{
+		Lib3MF_uint32 resultColumnCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImageStack_GetColumnCount(m_pHandle, &resultColumnCount));
+		
+		return resultColumnCount;
+	}
+	
+	/**
+	* CImageStack::SetColumnCount - Sets the number of columns in each image of this image3d
+	* @param[in] nColumnCount - number of columns
+	*/
+	void CImageStack::SetColumnCount(const Lib3MF_uint32 nColumnCount)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ImageStack_SetColumnCount(m_pHandle, nColumnCount));
+	}
+	
+	/**
+	* CImageStack::GetSheetCount - Retrieves the number of images in the stack.
+	* @return number of images
+	*/
+	Lib3MF_uint32 CImageStack::GetSheetCount()
+	{
+		Lib3MF_uint32 resultSheetCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImageStack_GetSheetCount(m_pHandle, &resultSheetCount));
+		
+		return resultSheetCount;
+	}
+	
+	/**
+	* CImageStack::GetSheet - Retrieves a sheet of the stack. Raises an error if sheet is not set.
+	* @param[in] nIndex - index of the image (0-based)
+	* @return attachment containing the image
+	*/
+	PAttachment CImageStack::GetSheet(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hSheet = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImageStack_GetSheet(m_pHandle, nIndex, &hSheet));
+		
+		if (!hSheet) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CAttachment>(dynamic_cast<CAttachment*>(m_pWrapper->polymorphicFactory(hSheet)));
+	}
+	
+	/**
+	* CImageStack::SetSheet - Sets a sheet to an existing attachment.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[in] pSheet - attachment containing the image
+	*/
+	void CImageStack::SetSheet(const Lib3MF_uint32 nIndex, classParam<CAttachment> pSheet)
+	{
+		Lib3MFHandle hSheet = pSheet.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_ImageStack_SetSheet(m_pHandle, nIndex, hSheet));
+	}
+	
+	/**
+	* CImageStack::CreateEmptySheet - Creates a new sheet attachment with empty data.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[in] sPath - path of part in the package
+	* @return attachment containing the image
+	*/
+	PAttachment CImageStack::CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath)
+	{
+		Lib3MFHandle hSheet = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImageStack_CreateEmptySheet(m_pHandle, nIndex, sPath.c_str(), &hSheet));
+		
+		if (!hSheet) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CAttachment>(dynamic_cast<CAttachment*>(m_pWrapper->polymorphicFactory(hSheet)));
+	}
+	
+	/**
+	* CImageStack::CreateSheetFromBuffer - Creates a new sheet attachment from a memory buffer.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[in] sPath - path of part in the package
+	* @param[in] DataBuffer - binary image data
+	* @return attachment containing the image
+	*/
+	PAttachment CImageStack::CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const CInputVector<Lib3MF_uint8> & DataBuffer)
+	{
+		Lib3MFHandle hSheet = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImageStack_CreateSheetFromBuffer(m_pHandle, nIndex, sPath.c_str(), (Lib3MF_uint64)DataBuffer.size(), DataBuffer.data(), &hSheet));
+		
+		if (!hSheet) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CAttachment>(dynamic_cast<CAttachment*>(m_pWrapper->polymorphicFactory(hSheet)));
+	}
+	
+	/**
+	* CImageStack::CreateSheetFromFile - Creates a new sheet attachment from a file on disk.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[in] sPath - path of part in the package
+	* @param[in] sFileName - file name to read from
+	* @return attachment containing the image
+	*/
+	PAttachment CImageStack::CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName)
+	{
+		Lib3MFHandle hSheet = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImageStack_CreateSheetFromFile(m_pHandle, nIndex, sPath.c_str(), sFileName.c_str(), &hSheet));
+		
+		if (!hSheet) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CAttachment>(dynamic_cast<CAttachment*>(m_pWrapper->polymorphicFactory(hSheet)));
 	}
 	
 	/**
@@ -11204,6 +14984,51 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CModel::GetImage3Ds - creates a resource iterator instance with all image3d resources.
+	* @return returns the iterator instance.
+	*/
+	PImage3DIterator CModel::GetImage3Ds()
+	{
+		Lib3MFHandle hResourceIterator = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_GetImage3Ds(m_pHandle, &hResourceIterator));
+		
+		if (!hResourceIterator) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImage3DIterator>(dynamic_cast<CImage3DIterator*>(m_pWrapper->polymorphicFactory(hResourceIterator)));
+	}
+	
+	/**
+	* CModel::GetScalarFields - creates a resource iterator instance with all ScalarField resources.
+	* @return returns the iterator instance.
+	*/
+	PScalarFieldIterator CModel::GetScalarFields()
+	{
+		Lib3MFHandle hResourceIterator = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_GetScalarFields(m_pHandle, &hResourceIterator));
+		
+		if (!hResourceIterator) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CScalarFieldIterator>(dynamic_cast<CScalarFieldIterator*>(m_pWrapper->polymorphicFactory(hResourceIterator)));
+	}
+	
+	/**
+	* CModel::GetVector3DFields - creates a resource iterator instance with all Vector3DField resources.
+	* @return returns the iterator instance.
+	*/
+	PVector3DFieldIterator CModel::GetVector3DFields()
+	{
+		Lib3MFHandle hResourceIterator = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_GetVector3DFields(m_pHandle, &hResourceIterator));
+		
+		if (!hResourceIterator) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVector3DFieldIterator>(dynamic_cast<CVector3DFieldIterator*>(m_pWrapper->polymorphicFactory(hResourceIterator)));
+	}
+	
+	/**
 	* CModel::MergeToModel - Merges all components and objects which are referenced by a build item into a mesh. The memory is duplicated and a new model is created.
 	* @return returns the merged model instance
 	*/
@@ -11358,6 +15183,262 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CMultiPropertyGroup>(dynamic_cast<CMultiPropertyGroup*>(m_pWrapper->polymorphicFactory(hMultiPropertyGroupInstance)));
+	}
+	
+	/**
+	* CModel::AddImageStack - creates a new 3D Image Resource
+	* @param[in] nColumnCount - the number of columns in each sheet.
+	* @param[in] nRowCount - the number of rows in each sheet.
+	* @param[in] nSheetCount - the number of sheets in the image stack.
+	* @return returns the new ImageStack instance
+	*/
+	PImageStack CModel::AddImageStack(const Lib3MF_uint32 nColumnCount, const Lib3MF_uint32 nRowCount, const Lib3MF_uint32 nSheetCount)
+	{
+		Lib3MFHandle hInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_AddImageStack(m_pHandle, nColumnCount, nRowCount, nSheetCount, &hInstance));
+		
+		if (!hInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImageStack>(dynamic_cast<CImageStack*>(m_pWrapper->polymorphicFactory(hInstance)));
+	}
+	
+	/**
+	* CModel::GetImageStackByID - finds an ImageStack object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the image stack instance
+	*/
+	PImageStack CModel::GetImageStackByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hImageStackInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_GetImageStackByID(m_pHandle, nUniqueResourceID, &hImageStackInstance));
+		
+		if (!hImageStackInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImageStack>(dynamic_cast<CImageStack*>(m_pWrapper->polymorphicFactory(hImageStackInstance)));
+	}
+	
+	/**
+	* CModel::AddScalarFieldFromImage3D - creates a new ScalarFieldFromImage3D Resource
+	* @param[in] pImage3D - image instance
+	* @return returns the new ScalarFieldFromImage3D instance
+	*/
+	PScalarFieldFromImage3D CModel::AddScalarFieldFromImage3D(classParam<CImage3D> pImage3D)
+	{
+		Lib3MFHandle hImage3D = pImage3D.GetHandle();
+		Lib3MFHandle hTheScalarFieldFromImage3D = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_AddScalarFieldFromImage3D(m_pHandle, hImage3D, &hTheScalarFieldFromImage3D));
+		
+		if (!hTheScalarFieldFromImage3D) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CScalarFieldFromImage3D>(dynamic_cast<CScalarFieldFromImage3D*>(m_pWrapper->polymorphicFactory(hTheScalarFieldFromImage3D)));
+	}
+	
+	/**
+	* CModel::AddScalarFieldComposed - creates a new ScalarFieldComposed Resource
+	* @return returns the new ScalarFieldComposed instance
+	*/
+	PScalarFieldComposed CModel::AddScalarFieldComposed()
+	{
+		Lib3MFHandle hTheScalarFieldComposed = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_AddScalarFieldComposed(m_pHandle, &hTheScalarFieldComposed));
+		
+		if (!hTheScalarFieldComposed) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CScalarFieldComposed>(dynamic_cast<CScalarFieldComposed*>(m_pWrapper->polymorphicFactory(hTheScalarFieldComposed)));
+	}
+	
+	/**
+	* CModel::AddScalarFieldConstant - creates a new ScalarFieldConstant Resource
+	* @return returns the new ScalarFieldConstant instance
+	*/
+	PScalarFieldConstant CModel::AddScalarFieldConstant()
+	{
+		Lib3MFHandle hTheScalarFieldConstant = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_AddScalarFieldConstant(m_pHandle, &hTheScalarFieldConstant));
+		
+		if (!hTheScalarFieldConstant) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CScalarFieldConstant>(dynamic_cast<CScalarFieldConstant*>(m_pWrapper->polymorphicFactory(hTheScalarFieldConstant)));
+	}
+	
+	/**
+	* CModel::GetScalarFieldByID - finds a ScalarField object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the scalar field instance
+	*/
+	PScalarField CModel::GetScalarFieldByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hScalarFieldInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_GetScalarFieldByID(m_pHandle, nUniqueResourceID, &hScalarFieldInstance));
+		
+		if (!hScalarFieldInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CScalarField>(dynamic_cast<CScalarField*>(m_pWrapper->polymorphicFactory(hScalarFieldInstance)));
+	}
+	
+	/**
+	* CModel::GetScalarFieldFromImage3DByID - finds a ScalarFieldFromImage3D object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the ScalarFieldFromImage3D instance
+	*/
+	PScalarFieldFromImage3D CModel::GetScalarFieldFromImage3DByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hScalarFieldFromImage3DInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_GetScalarFieldFromImage3DByID(m_pHandle, nUniqueResourceID, &hScalarFieldFromImage3DInstance));
+		
+		if (!hScalarFieldFromImage3DInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CScalarFieldFromImage3D>(dynamic_cast<CScalarFieldFromImage3D*>(m_pWrapper->polymorphicFactory(hScalarFieldFromImage3DInstance)));
+	}
+	
+	/**
+	* CModel::GetScalarFieldComposedByID - finds a ScalarFieldComposed object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the ScalarFieldComponsed instance
+	*/
+	PScalarFieldComposed CModel::GetScalarFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hScalarFieldComposedInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_GetScalarFieldComposedByID(m_pHandle, nUniqueResourceID, &hScalarFieldComposedInstance));
+		
+		if (!hScalarFieldComposedInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CScalarFieldComposed>(dynamic_cast<CScalarFieldComposed*>(m_pWrapper->polymorphicFactory(hScalarFieldComposedInstance)));
+	}
+	
+	/**
+	* CModel::GetScalarFieldConstantByID - finds a ScalarFieldConstant object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the ScalarFieldConstant instance
+	*/
+	PScalarFieldConstant CModel::GetScalarFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hScalarFieldConstantInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_GetScalarFieldConstantByID(m_pHandle, nUniqueResourceID, &hScalarFieldConstantInstance));
+		
+		if (!hScalarFieldConstantInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CScalarFieldConstant>(dynamic_cast<CScalarFieldConstant*>(m_pWrapper->polymorphicFactory(hScalarFieldConstantInstance)));
+	}
+	
+	/**
+	* CModel::AddVector3DFieldFromImage3D - creates a new Vector3DFieldFromImage3D Resource
+	* @param[in] pImage3D - image instance
+	* @return returns the new Vector3DFieldFromImage3D instance
+	*/
+	PVector3DFieldFromImage3D CModel::AddVector3DFieldFromImage3D(classParam<CImage3D> pImage3D)
+	{
+		Lib3MFHandle hImage3D = pImage3D.GetHandle();
+		Lib3MFHandle hTheVector3DFieldFromImage3D = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_AddVector3DFieldFromImage3D(m_pHandle, hImage3D, &hTheVector3DFieldFromImage3D));
+		
+		if (!hTheVector3DFieldFromImage3D) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVector3DFieldFromImage3D>(dynamic_cast<CVector3DFieldFromImage3D*>(m_pWrapper->polymorphicFactory(hTheVector3DFieldFromImage3D)));
+	}
+	
+	/**
+	* CModel::AddVector3DFieldComposed - creates a new Vector3DFieldComposed Resource
+	* @return returns the new Vector3DFieldComposed instance
+	*/
+	PVector3DFieldComposed CModel::AddVector3DFieldComposed()
+	{
+		Lib3MFHandle hTheVector3DFieldComposed = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_AddVector3DFieldComposed(m_pHandle, &hTheVector3DFieldComposed));
+		
+		if (!hTheVector3DFieldComposed) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVector3DFieldComposed>(dynamic_cast<CVector3DFieldComposed*>(m_pWrapper->polymorphicFactory(hTheVector3DFieldComposed)));
+	}
+	
+	/**
+	* CModel::AddVector3DFieldConstant - creates a new Vector3DFieldConstant Resource
+	* @return returns the new Vector3DFieldConstant instance
+	*/
+	PVector3DFieldConstant CModel::AddVector3DFieldConstant()
+	{
+		Lib3MFHandle hTheVector3DFieldConstant = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_AddVector3DFieldConstant(m_pHandle, &hTheVector3DFieldConstant));
+		
+		if (!hTheVector3DFieldConstant) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVector3DFieldConstant>(dynamic_cast<CVector3DFieldConstant*>(m_pWrapper->polymorphicFactory(hTheVector3DFieldConstant)));
+	}
+	
+	/**
+	* CModel::GetVector3DFieldByID - finds a Vector3DField object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the scalar field instance
+	*/
+	PVector3DField CModel::GetVector3DFieldByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hVector3DFieldInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_GetVector3DFieldByID(m_pHandle, nUniqueResourceID, &hVector3DFieldInstance));
+		
+		if (!hVector3DFieldInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVector3DField>(dynamic_cast<CVector3DField*>(m_pWrapper->polymorphicFactory(hVector3DFieldInstance)));
+	}
+	
+	/**
+	* CModel::GetVector3DFieldFromImage3DByID - finds a Vector3DFieldFromImage3D object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the Vector3DFieldFromImage3D instance
+	*/
+	PVector3DFieldFromImage3D CModel::GetVector3DFieldFromImage3DByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hVector3DFieldFromImage3DInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_GetVector3DFieldFromImage3DByID(m_pHandle, nUniqueResourceID, &hVector3DFieldFromImage3DInstance));
+		
+		if (!hVector3DFieldFromImage3DInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVector3DFieldFromImage3D>(dynamic_cast<CVector3DFieldFromImage3D*>(m_pWrapper->polymorphicFactory(hVector3DFieldFromImage3DInstance)));
+	}
+	
+	/**
+	* CModel::GetVector3DFieldComposedByID - finds a Vector3DFieldComposed object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the Vector3DFieldComponsed instance
+	*/
+	PVector3DFieldComposed CModel::GetVector3DFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hVector3DFieldComposedInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_GetVector3DFieldComposedByID(m_pHandle, nUniqueResourceID, &hVector3DFieldComposedInstance));
+		
+		if (!hVector3DFieldComposedInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVector3DFieldComposed>(dynamic_cast<CVector3DFieldComposed*>(m_pWrapper->polymorphicFactory(hVector3DFieldComposedInstance)));
+	}
+	
+	/**
+	* CModel::GetVector3DFieldConstantByID - finds a Vector3DFieldConstant object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the Vector3DFieldConstant instance
+	*/
+	PVector3DFieldConstant CModel::GetVector3DFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hVector3DFieldConstantInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_GetVector3DFieldConstantByID(m_pHandle, nUniqueResourceID, &hVector3DFieldConstantInstance));
+		
+		if (!hVector3DFieldConstantInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVector3DFieldConstant>(dynamic_cast<CVector3DFieldConstant*>(m_pWrapper->polymorphicFactory(hVector3DFieldConstantInstance)));
 	}
 	
 	/**

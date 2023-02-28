@@ -86,7 +86,7 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_VERSION_MAJOR 2
 #define LIB3MF_VERSION_MINOR 3
 #define LIB3MF_VERSION_MICRO 0
-#define LIB3MF_VERSION_PRERELEASEINFO "develop"
+#define LIB3MF_VERSION_PRERELEASEINFO "volumetric"
 #define LIB3MF_VERSION_BUILDINFO ""
 
 /*************************************************************************************************************************
@@ -212,11 +212,31 @@ typedef Lib3MFHandle Lib3MF_ColorGroupIterator;
 typedef Lib3MFHandle Lib3MF_Texture2DGroupIterator;
 typedef Lib3MFHandle Lib3MF_CompositeMaterialsIterator;
 typedef Lib3MFHandle Lib3MF_MultiPropertyGroupIterator;
+typedef Lib3MFHandle Lib3MF_Image3DIterator;
+typedef Lib3MFHandle Lib3MF_ScalarFieldIterator;
+typedef Lib3MFHandle Lib3MF_Vector3DFieldIterator;
 typedef Lib3MFHandle Lib3MF_MetaData;
 typedef Lib3MFHandle Lib3MF_MetaDataGroup;
 typedef Lib3MFHandle Lib3MF_Object;
 typedef Lib3MFHandle Lib3MF_MeshObject;
 typedef Lib3MFHandle Lib3MF_BeamLattice;
+typedef Lib3MFHandle Lib3MF_ScalarField;
+typedef Lib3MFHandle Lib3MF_Vector3DField;
+typedef Lib3MFHandle Lib3MF_ScalarFieldFromImage3D;
+typedef Lib3MFHandle Lib3MF_ScalarFieldConstant;
+typedef Lib3MFHandle Lib3MF_ScalarFieldComposed;
+typedef Lib3MFHandle Lib3MF_Vector3DFieldFromImage3D;
+typedef Lib3MFHandle Lib3MF_Vector3DFieldConstant;
+typedef Lib3MFHandle Lib3MF_Vector3DFieldComposed;
+typedef Lib3MFHandle Lib3MF_FieldReference;
+typedef Lib3MFHandle Lib3MF_ScalarFieldReference;
+typedef Lib3MFHandle Lib3MF_Vector3DFieldReference;
+typedef Lib3MFHandle Lib3MF_VolumeDataBoundary;
+typedef Lib3MFHandle Lib3MF_VolumeDataColor;
+typedef Lib3MFHandle Lib3MF_MaterialMapping;
+typedef Lib3MFHandle Lib3MF_VolumeDataComposite;
+typedef Lib3MFHandle Lib3MF_VolumeDataProperty;
+typedef Lib3MFHandle Lib3MF_VolumeData;
 typedef Lib3MFHandle Lib3MF_Component;
 typedef Lib3MFHandle Lib3MF_ComponentsObject;
 typedef Lib3MFHandle Lib3MF_BeamSet;
@@ -225,6 +245,8 @@ typedef Lib3MFHandle Lib3MF_ColorGroup;
 typedef Lib3MFHandle Lib3MF_Texture2DGroup;
 typedef Lib3MFHandle Lib3MF_CompositeMaterials;
 typedef Lib3MFHandle Lib3MF_MultiPropertyGroup;
+typedef Lib3MFHandle Lib3MF_Image3D;
+typedef Lib3MFHandle Lib3MF_ImageStack;
 typedef Lib3MFHandle Lib3MF_Attachment;
 typedef Lib3MFHandle Lib3MF_Texture2D;
 typedef Lib3MFHandle Lib3MF_BuildItem;
@@ -343,6 +365,26 @@ typedef enum eLib3MFBlendMethod {
   eBlendMethodMultiply = 2
 } eLib3MFBlendMethod;
 
+typedef enum eLib3MFChannelName {
+  eChannelNameRed = 0,
+  eChannelNameGreen = 1,
+  eChannelNameBlue = 2,
+  eChannelNameAlpha = 3
+} eLib3MFChannelName;
+
+typedef enum eLib3MFCompositionMethod {
+  eCompositionMethodWeightedSum = 0,
+  eCompositionMethodMultiply = 1,
+  eCompositionMethodMin = 2,
+  eCompositionMethodMax = 3,
+  eCompositionMethodMask = 4
+} eLib3MFCompositionMethod;
+
+typedef enum eLib3MFCompositionSpace {
+  eCompositionSpaceRaw = 0,
+  eCompositionSpaceLinearColor = 1
+} eLib3MFCompositionSpace;
+
 typedef enum eLib3MFEncryptionAlgorithm {
   eEncryptionAlgorithmAES256_GCM = 1 /** http://www.w3.org/2009/xmlenc11#aes256-gcm */
 } eLib3MFEncryptionAlgorithm;
@@ -432,6 +474,21 @@ typedef union {
   eLib3MFBlendMethod m_enum;
   int m_code;
 } structEnumLib3MFBlendMethod;
+
+typedef union {
+  eLib3MFChannelName m_enum;
+  int m_code;
+} structEnumLib3MFChannelName;
+
+typedef union {
+  eLib3MFCompositionMethod m_enum;
+  int m_code;
+} structEnumLib3MFCompositionMethod;
+
+typedef union {
+  eLib3MFCompositionSpace m_enum;
+  int m_code;
+} structEnumLib3MFCompositionSpace;
 
 typedef union {
   eLib3MFEncryptionAlgorithm m_enum;

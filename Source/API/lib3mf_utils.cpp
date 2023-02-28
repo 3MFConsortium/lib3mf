@@ -57,7 +57,6 @@ sLib3MFTransform Lib3MF::MatrixToTransform(const NMR::NMATRIX3 matrix)
 	return transform;
 }
 
-
 eLib3MFEncryptionAlgorithm Lib3MF::translateEncryptionAlgorithm(const NMR::eKeyStoreEncryptAlgorithm algorithm) {
 	if (NMR::eKeyStoreEncryptAlgorithm::AES256_GCM == algorithm)
 		return eLib3MFEncryptionAlgorithm::AES256_GCM;
@@ -79,8 +78,6 @@ NMR::eKeyStoreWrapAlgorithm Lib3MF::translateWrappingAlgorithm(const eLib3MFWrap
 		return NMR::eKeyStoreWrapAlgorithm::RSA_OAEP;
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
-
-
 
 eLib3MFCompression Lib3MF::translateCompression(bool compression) {
 	if (compression)

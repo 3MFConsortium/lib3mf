@@ -51,7 +51,7 @@ This is the class for exporting the 3mf mesh node.
 namespace NMR {
 
 	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
-		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension)
+		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension, _In_ nfBool bWriteVolumetricExtension)
 		:CModelWriterNode_ModelBase(pModelMeshObject->getModel(), pXMLWriter, pProgressMonitor), m_nPosAfterDecPoint(nPosAfterDecPoint), m_nPutDoubleFactor((int)(pow(10, CModelWriterNode100_Mesh::m_nPosAfterDecPoint)))
 	{
 		__NMRASSERT(pModelMeshObject != nullptr);
@@ -60,6 +60,7 @@ namespace NMR {
 
 		m_bWriteMaterialExtension = bWriteMaterialExtension;
 		m_bWriteBeamLatticeExtension = bWriteBeamLatticeExtension;
+		m_bWriteVolumetricExtension = bWriteVolumetricExtension;
 
 		m_pModelMeshObject = pModelMeshObject;
 		m_pPropertyIndexMapping = pPropertyIndexMapping;
@@ -361,6 +362,75 @@ namespace NMR {
 						writeFullEndElement();
 					}
 				}
+				writeFullEndElement();
+			}
+		}
+
+		if (m_bWriteVolumetricExtension)
+		{
+			// TODO: different logic
+			if (m_pModelMeshObject->getVolumeData()->hasBoundary() ||
+				m_pModelMeshObject->getVolumeData()->getPropertyCount() ||
+				m_pModelMeshObject->getVolumeData()->hasColor()) {
+
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMEDATA, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+
+				if (m_pModelMeshObject->getVolumeData()->hasBoundary()) {
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_BOUNDARY, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+					PVolumeDataBoundary pBoundary = m_pModelMeshObject->getVolumeData()->getBoundary();
+
+					PPackageResourceID pID = m_pModel->findPackageResourceID(pBoundary->getFieldReferenceID());
+					if (!pID)
+						throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_SCALARFIELDID, pID->getModelResourceID());
+
+					if (pBoundary->getSolidThreshold() != 0.0) {
+						writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_SOLIDTHRESHOLD, float(pBoundary->getSolidThreshold()));
+					}
+					if (!fnMATRIX3_isIdentity(pBoundary->getTransform())) {
+						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pBoundary->getTransform()));
+					}
+					writeEndElement();
+				}
+
+				if (m_pModelMeshObject->getVolumeData()->getPropertyCount())
+				{
+					nfUint32 count = m_pModelMeshObject->getVolumeData()->getPropertyCount();
+
+					for (nfUint32 i = 0; i < count; i++)
+					{
+						writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_PROPERTY, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+						PVolumeDataProperty pProperty = m_pModelMeshObject->getVolumeData()->getProperty(i);
+						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY, pProperty->getName());
+						if (!fnMATRIX3_isIdentity(pProperty->getTransform())) {
+							writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pProperty->getTransform()));
+						}
+						PPackageResourceID pID = m_pModel->findPackageResourceID(pProperty->getFieldReferenceID());
+						if (!pID)
+							throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+						writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID, pID->getModelResourceID());
+						if (!pProperty->isRequired())
+							writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY_REQUIRED, "false");
+						writeEndElement();
+					}
+				}
+
+				if (m_pModelMeshObject->getVolumeData()->hasColor())
+				{
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_COLOR, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+					PVolumeDataColor pColor = m_pModelMeshObject->getVolumeData()->getColor();
+
+					PPackageResourceID pID = m_pModel->findPackageResourceID(pColor->getFieldReferenceID());
+					if (!pID)
+						throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_VECTOR3DFIELDID, pID->getModelResourceID());
+
+					if (!fnMATRIX3_isIdentity(pColor->getTransform())) {
+						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pColor->getTransform()));
+					}
+					writeEndElement();
+				}
+
 				writeFullEndElement();
 			}
 		}

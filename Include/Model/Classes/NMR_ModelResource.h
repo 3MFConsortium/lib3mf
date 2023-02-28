@@ -60,7 +60,7 @@ namespace NMR {
 		CModelResource(_In_ const ModelResourceID sResourceID, _In_ CModel * pModel);
 		virtual ~CModelResource();
 		
-		virtual PPackageResourceID getPackageResourceID();
+		PPackageResourceID getPackageResourceID();
 		void setPackageResourceID(PPackageResourceID pID);
 
 		bool mapResourceIndexToPropertyID (_In_ ModelResourceIndex nPropertyIndex, _Out_ ModelPropertyID & nPropertyID);

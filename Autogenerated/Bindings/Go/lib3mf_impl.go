@@ -96,6 +96,9 @@ type Lib3MFImplementation struct {
 	Lib3MF_texture2dgroupiterator_getcurrenttexture2dgroup uintptr
 	Lib3MF_compositematerialsiterator_getcurrentcompositematerials uintptr
 	Lib3MF_multipropertygroupiterator_getcurrentmultipropertygroup uintptr
+	Lib3MF_image3diterator_getcurrentimage3d uintptr
+	Lib3MF_scalarfielditerator_getcurrentscalarfield uintptr
+	Lib3MF_vector3dfielditerator_getcurrentvector3dfield uintptr
 	Lib3MF_metadata_getnamespace uintptr
 	Lib3MF_metadata_setnamespace uintptr
 	Lib3MF_metadata_getname uintptr
@@ -155,6 +158,7 @@ type Lib3MFImplementation struct {
 	Lib3MF_meshobject_setgeometry uintptr
 	Lib3MF_meshobject_ismanifoldandoriented uintptr
 	Lib3MF_meshobject_beamlattice uintptr
+	Lib3MF_meshobject_volumedata uintptr
 	Lib3MF_beamlattice_getminlength uintptr
 	Lib3MF_beamlattice_setminlength uintptr
 	Lib3MF_beamlattice_getclipping uintptr
@@ -178,6 +182,97 @@ type Lib3MFImplementation struct {
 	Lib3MF_beamlattice_getbeamsetcount uintptr
 	Lib3MF_beamlattice_addbeamset uintptr
 	Lib3MF_beamlattice_getbeamset uintptr
+	Lib3MF_scalarfield_getname uintptr
+	Lib3MF_scalarfield_setname uintptr
+	Lib3MF_scalarfield_isfromimage3d uintptr
+	Lib3MF_scalarfield_isconstant uintptr
+	Lib3MF_scalarfield_iscomposed uintptr
+	Lib3MF_vector3dfield_getname uintptr
+	Lib3MF_vector3dfield_setname uintptr
+	Lib3MF_vector3dfield_isfromimage3d uintptr
+	Lib3MF_vector3dfield_isconstant uintptr
+	Lib3MF_vector3dfield_iscomposed uintptr
+	Lib3MF_scalarfieldfromimage3d_getimage uintptr
+	Lib3MF_scalarfieldfromimage3d_setimage uintptr
+	Lib3MF_scalarfieldfromimage3d_setchannel uintptr
+	Lib3MF_scalarfieldfromimage3d_getchannel uintptr
+	Lib3MF_scalarfieldfromimage3d_setfilter uintptr
+	Lib3MF_scalarfieldfromimage3d_getfilter uintptr
+	Lib3MF_scalarfieldfromimage3d_settilestyles uintptr
+	Lib3MF_scalarfieldfromimage3d_gettilestyles uintptr
+	Lib3MF_scalarfieldfromimage3d_getoffset uintptr
+	Lib3MF_scalarfieldfromimage3d_setoffset uintptr
+	Lib3MF_scalarfieldfromimage3d_getscale uintptr
+	Lib3MF_scalarfieldfromimage3d_setscale uintptr
+	Lib3MF_scalarfieldconstant_getvalue uintptr
+	Lib3MF_scalarfieldconstant_setvalue uintptr
+	Lib3MF_scalarfieldcomposed_setmethod uintptr
+	Lib3MF_scalarfieldcomposed_getmethod uintptr
+	Lib3MF_scalarfieldcomposed_getfactor1 uintptr
+	Lib3MF_scalarfieldcomposed_setfactor1 uintptr
+	Lib3MF_scalarfieldcomposed_getfactor2 uintptr
+	Lib3MF_scalarfieldcomposed_setfactor2 uintptr
+	Lib3MF_scalarfieldcomposed_scalarfieldreference1 uintptr
+	Lib3MF_scalarfieldcomposed_scalarfieldreference2 uintptr
+	Lib3MF_scalarfieldcomposed_scalarfieldreferencemask uintptr
+	Lib3MF_vector3dfieldfromimage3d_getimage uintptr
+	Lib3MF_vector3dfieldfromimage3d_setimage uintptr
+	Lib3MF_vector3dfieldfromimage3d_setfilter uintptr
+	Lib3MF_vector3dfieldfromimage3d_getfilter uintptr
+	Lib3MF_vector3dfieldfromimage3d_settilestyles uintptr
+	Lib3MF_vector3dfieldfromimage3d_gettilestyles uintptr
+	Lib3MF_vector3dfieldfromimage3d_getoffset uintptr
+	Lib3MF_vector3dfieldfromimage3d_setoffset uintptr
+	Lib3MF_vector3dfieldfromimage3d_getscale uintptr
+	Lib3MF_vector3dfieldfromimage3d_setscale uintptr
+	Lib3MF_vector3dfieldconstant_getvaluex uintptr
+	Lib3MF_vector3dfieldconstant_setvaluex uintptr
+	Lib3MF_vector3dfieldconstant_getvaluey uintptr
+	Lib3MF_vector3dfieldconstant_setvaluey uintptr
+	Lib3MF_vector3dfieldconstant_getvaluez uintptr
+	Lib3MF_vector3dfieldconstant_setvaluez uintptr
+	Lib3MF_vector3dfieldcomposed_setmethod uintptr
+	Lib3MF_vector3dfieldcomposed_getmethod uintptr
+	Lib3MF_vector3dfieldcomposed_setspace uintptr
+	Lib3MF_vector3dfieldcomposed_getspace uintptr
+	Lib3MF_vector3dfieldcomposed_getfactor1 uintptr
+	Lib3MF_vector3dfieldcomposed_setfactor1 uintptr
+	Lib3MF_vector3dfieldcomposed_getfactor2 uintptr
+	Lib3MF_vector3dfieldcomposed_setfactor2 uintptr
+	Lib3MF_vector3dfieldcomposed_vector3dfieldreference1 uintptr
+	Lib3MF_vector3dfieldcomposed_vector3dfieldreference2 uintptr
+	Lib3MF_vector3dfieldcomposed_scalarfieldreferencemask uintptr
+	Lib3MF_fieldreference_getfieldresourceid uintptr
+	Lib3MF_fieldreference_setfieldresourceid uintptr
+	Lib3MF_fieldreference_gettransform uintptr
+	Lib3MF_fieldreference_settransform uintptr
+	Lib3MF_scalarfieldreference_setscalarfield uintptr
+	Lib3MF_vector3dfieldreference_setvector3dfield uintptr
+	Lib3MF_volumedataboundary_getsolidthreshold uintptr
+	Lib3MF_volumedataboundary_setsolidthreshold uintptr
+	Lib3MF_volumedatacomposite_getbasematerialgroup uintptr
+	Lib3MF_volumedatacomposite_setbasematerialgroup uintptr
+	Lib3MF_volumedatacomposite_getmaterialmappingcount uintptr
+	Lib3MF_volumedatacomposite_getmaterialmapping uintptr
+	Lib3MF_volumedatacomposite_addmaterialmapping uintptr
+	Lib3MF_volumedatacomposite_removematerialmapping uintptr
+	Lib3MF_volumedataproperty_getname uintptr
+	Lib3MF_volumedataproperty_setisrequired uintptr
+	Lib3MF_volumedataproperty_isrequired uintptr
+	Lib3MF_volumedata_getboundary uintptr
+	Lib3MF_volumedata_createnewboundary uintptr
+	Lib3MF_volumedata_removeboundary uintptr
+	Lib3MF_volumedata_getcomposite uintptr
+	Lib3MF_volumedata_createnewcomposite uintptr
+	Lib3MF_volumedata_removecomposite uintptr
+	Lib3MF_volumedata_getcolor uintptr
+	Lib3MF_volumedata_createnewcolor uintptr
+	Lib3MF_volumedata_removecolor uintptr
+	Lib3MF_volumedata_getpropertycount uintptr
+	Lib3MF_volumedata_getproperty uintptr
+	Lib3MF_volumedata_addpropertyfromscalarfield uintptr
+	Lib3MF_volumedata_addpropertyfromvector3dfield uintptr
+	Lib3MF_volumedata_removeproperty uintptr
 	Lib3MF_component_getobjectresource uintptr
 	Lib3MF_component_getobjectresourceid uintptr
 	Lib3MF_component_getuuid uintptr
@@ -234,6 +329,19 @@ type Lib3MFImplementation struct {
 	Lib3MF_multipropertygroup_addlayer uintptr
 	Lib3MF_multipropertygroup_getlayer uintptr
 	Lib3MF_multipropertygroup_removelayer uintptr
+	Lib3MF_image3d_getname uintptr
+	Lib3MF_image3d_setname uintptr
+	Lib3MF_image3d_isimagestack uintptr
+	Lib3MF_imagestack_getrowcount uintptr
+	Lib3MF_imagestack_setrowcount uintptr
+	Lib3MF_imagestack_getcolumncount uintptr
+	Lib3MF_imagestack_setcolumncount uintptr
+	Lib3MF_imagestack_getsheetcount uintptr
+	Lib3MF_imagestack_getsheet uintptr
+	Lib3MF_imagestack_setsheet uintptr
+	Lib3MF_imagestack_createemptysheet uintptr
+	Lib3MF_imagestack_createsheetfrombuffer uintptr
+	Lib3MF_imagestack_createsheetfromfile uintptr
 	Lib3MF_attachment_getpath uintptr
 	Lib3MF_attachment_setpath uintptr
 	Lib3MF_attachment_packagepart uintptr
@@ -361,6 +469,9 @@ type Lib3MFImplementation struct {
 	Lib3MF_model_getcompositematerials uintptr
 	Lib3MF_model_getmultipropertygroups uintptr
 	Lib3MF_model_getslicestacks uintptr
+	Lib3MF_model_getimage3ds uintptr
+	Lib3MF_model_getscalarfields uintptr
+	Lib3MF_model_getvector3dfields uintptr
 	Lib3MF_model_mergetomodel uintptr
 	Lib3MF_model_addmeshobject uintptr
 	Lib3MF_model_addcomponentsobject uintptr
@@ -371,6 +482,22 @@ type Lib3MFImplementation struct {
 	Lib3MF_model_addtexture2dgroup uintptr
 	Lib3MF_model_addcompositematerials uintptr
 	Lib3MF_model_addmultipropertygroup uintptr
+	Lib3MF_model_addimagestack uintptr
+	Lib3MF_model_getimagestackbyid uintptr
+	Lib3MF_model_addscalarfieldfromimage3d uintptr
+	Lib3MF_model_addscalarfieldcomposed uintptr
+	Lib3MF_model_addscalarfieldconstant uintptr
+	Lib3MF_model_getscalarfieldbyid uintptr
+	Lib3MF_model_getscalarfieldfromimage3dbyid uintptr
+	Lib3MF_model_getscalarfieldcomposedbyid uintptr
+	Lib3MF_model_getscalarfieldconstantbyid uintptr
+	Lib3MF_model_addvector3dfieldfromimage3d uintptr
+	Lib3MF_model_addvector3dfieldcomposed uintptr
+	Lib3MF_model_addvector3dfieldconstant uintptr
+	Lib3MF_model_getvector3dfieldbyid uintptr
+	Lib3MF_model_getvector3dfieldfromimage3dbyid uintptr
+	Lib3MF_model_getvector3dfieldcomposedbyid uintptr
+	Lib3MF_model_getvector3dfieldconstantbyid uintptr
 	Lib3MF_model_addbuilditem uintptr
 	Lib3MF_model_removebuilditem uintptr
 	Lib3MF_model_getmetadatagroup uintptr
@@ -834,6 +961,21 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 		return errors.New("Could not get function lib3mf_multipropertygroupiterator_getcurrentmultipropertygroup: " + err.Error())
 	}
 	
+	implementation.Lib3MF_image3diterator_getcurrentimage3d, err = syscall.GetProcAddress(dllHandle, "lib3mf_image3diterator_getcurrentimage3d")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_image3diterator_getcurrentimage3d: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfielditerator_getcurrentscalarfield, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfielditerator_getcurrentscalarfield")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfielditerator_getcurrentscalarfield: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfielditerator_getcurrentvector3dfield, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfielditerator_getcurrentvector3dfield")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfielditerator_getcurrentvector3dfield: " + err.Error())
+	}
+	
 	implementation.Lib3MF_metadata_getnamespace, err = syscall.GetProcAddress(dllHandle, "lib3mf_metadata_getnamespace")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_metadata_getnamespace: " + err.Error())
@@ -1129,6 +1271,11 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 		return errors.New("Could not get function lib3mf_meshobject_beamlattice: " + err.Error())
 	}
 	
+	implementation.Lib3MF_meshobject_volumedata, err = syscall.GetProcAddress(dllHandle, "lib3mf_meshobject_volumedata")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_meshobject_volumedata: " + err.Error())
+	}
+	
 	implementation.Lib3MF_beamlattice_getminlength, err = syscall.GetProcAddress(dllHandle, "lib3mf_beamlattice_getminlength")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_beamlattice_getminlength: " + err.Error())
@@ -1242,6 +1389,461 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 	implementation.Lib3MF_beamlattice_getbeamset, err = syscall.GetProcAddress(dllHandle, "lib3mf_beamlattice_getbeamset")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_beamlattice_getbeamset: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfield_getname, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfield_getname")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfield_getname: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfield_setname, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfield_setname")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfield_setname: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfield_isfromimage3d, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfield_isfromimage3d")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfield_isfromimage3d: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfield_isconstant, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfield_isconstant")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfield_isconstant: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfield_iscomposed, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfield_iscomposed")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfield_iscomposed: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfield_getname, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfield_getname")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfield_getname: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfield_setname, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfield_setname")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfield_setname: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfield_isfromimage3d, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfield_isfromimage3d")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfield_isfromimage3d: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfield_isconstant, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfield_isconstant")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfield_isconstant: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfield_iscomposed, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfield_iscomposed")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfield_iscomposed: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldfromimage3d_getimage, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldfromimage3d_getimage")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldfromimage3d_getimage: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldfromimage3d_setimage, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldfromimage3d_setimage")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldfromimage3d_setimage: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldfromimage3d_setchannel, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldfromimage3d_setchannel")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldfromimage3d_setchannel: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldfromimage3d_getchannel, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldfromimage3d_getchannel")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldfromimage3d_getchannel: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldfromimage3d_setfilter, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldfromimage3d_setfilter")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldfromimage3d_setfilter: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldfromimage3d_getfilter, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldfromimage3d_getfilter")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldfromimage3d_getfilter: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldfromimage3d_settilestyles, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldfromimage3d_settilestyles")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldfromimage3d_settilestyles: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldfromimage3d_gettilestyles, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldfromimage3d_gettilestyles")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldfromimage3d_gettilestyles: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldfromimage3d_getoffset, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldfromimage3d_getoffset")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldfromimage3d_getoffset: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldfromimage3d_setoffset, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldfromimage3d_setoffset")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldfromimage3d_setoffset: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldfromimage3d_getscale, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldfromimage3d_getscale")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldfromimage3d_getscale: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldfromimage3d_setscale, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldfromimage3d_setscale")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldfromimage3d_setscale: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldconstant_getvalue, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldconstant_getvalue")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldconstant_getvalue: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldconstant_setvalue, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldconstant_setvalue")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldconstant_setvalue: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldcomposed_setmethod, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldcomposed_setmethod")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldcomposed_setmethod: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldcomposed_getmethod, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldcomposed_getmethod")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldcomposed_getmethod: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldcomposed_getfactor1, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldcomposed_getfactor1")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldcomposed_getfactor1: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldcomposed_setfactor1, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldcomposed_setfactor1")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldcomposed_setfactor1: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldcomposed_getfactor2, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldcomposed_getfactor2")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldcomposed_getfactor2: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldcomposed_setfactor2, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldcomposed_setfactor2")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldcomposed_setfactor2: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldcomposed_scalarfieldreference1, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldcomposed_scalarfieldreference1")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldcomposed_scalarfieldreference1: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldcomposed_scalarfieldreference2, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldcomposed_scalarfieldreference2")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldcomposed_scalarfieldreference2: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldcomposed_scalarfieldreferencemask, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldcomposed_scalarfieldreferencemask")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldcomposed_scalarfieldreferencemask: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldfromimage3d_getimage, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldfromimage3d_getimage")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldfromimage3d_getimage: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldfromimage3d_setimage, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldfromimage3d_setimage")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldfromimage3d_setimage: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldfromimage3d_setfilter, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldfromimage3d_setfilter")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldfromimage3d_setfilter: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldfromimage3d_getfilter, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldfromimage3d_getfilter")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldfromimage3d_getfilter: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldfromimage3d_settilestyles, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldfromimage3d_settilestyles")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldfromimage3d_settilestyles: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldfromimage3d_gettilestyles, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldfromimage3d_gettilestyles")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldfromimage3d_gettilestyles: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldfromimage3d_getoffset, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldfromimage3d_getoffset")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldfromimage3d_getoffset: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldfromimage3d_setoffset, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldfromimage3d_setoffset")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldfromimage3d_setoffset: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldfromimage3d_getscale, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldfromimage3d_getscale")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldfromimage3d_getscale: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldfromimage3d_setscale, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldfromimage3d_setscale")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldfromimage3d_setscale: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldconstant_getvaluex, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldconstant_getvaluex")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldconstant_getvaluex: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldconstant_setvaluex, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldconstant_setvaluex")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldconstant_setvaluex: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldconstant_getvaluey, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldconstant_getvaluey")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldconstant_getvaluey: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldconstant_setvaluey, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldconstant_setvaluey")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldconstant_setvaluey: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldconstant_getvaluez, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldconstant_getvaluez")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldconstant_getvaluez: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldconstant_setvaluez, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldconstant_setvaluez")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldconstant_setvaluez: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldcomposed_setmethod, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldcomposed_setmethod")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldcomposed_setmethod: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldcomposed_getmethod, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldcomposed_getmethod")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldcomposed_getmethod: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldcomposed_setspace, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldcomposed_setspace")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldcomposed_setspace: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldcomposed_getspace, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldcomposed_getspace")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldcomposed_getspace: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldcomposed_getfactor1, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldcomposed_getfactor1")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldcomposed_getfactor1: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldcomposed_setfactor1, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldcomposed_setfactor1")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldcomposed_setfactor1: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldcomposed_getfactor2, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldcomposed_getfactor2")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldcomposed_getfactor2: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldcomposed_setfactor2, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldcomposed_setfactor2")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldcomposed_setfactor2: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldcomposed_vector3dfieldreference1, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldcomposed_vector3dfieldreference1")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldcomposed_vector3dfieldreference1: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldcomposed_vector3dfieldreference2, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldcomposed_vector3dfieldreference2")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldcomposed_vector3dfieldreference2: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldcomposed_scalarfieldreferencemask, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldcomposed_scalarfieldreferencemask")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldcomposed_scalarfieldreferencemask: " + err.Error())
+	}
+	
+	implementation.Lib3MF_fieldreference_getfieldresourceid, err = syscall.GetProcAddress(dllHandle, "lib3mf_fieldreference_getfieldresourceid")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_fieldreference_getfieldresourceid: " + err.Error())
+	}
+	
+	implementation.Lib3MF_fieldreference_setfieldresourceid, err = syscall.GetProcAddress(dllHandle, "lib3mf_fieldreference_setfieldresourceid")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_fieldreference_setfieldresourceid: " + err.Error())
+	}
+	
+	implementation.Lib3MF_fieldreference_gettransform, err = syscall.GetProcAddress(dllHandle, "lib3mf_fieldreference_gettransform")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_fieldreference_gettransform: " + err.Error())
+	}
+	
+	implementation.Lib3MF_fieldreference_settransform, err = syscall.GetProcAddress(dllHandle, "lib3mf_fieldreference_settransform")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_fieldreference_settransform: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldreference_setscalarfield, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldreference_setscalarfield")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldreference_setscalarfield: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldreference_setvector3dfield, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldreference_setvector3dfield")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldreference_setvector3dfield: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedataboundary_getsolidthreshold, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedataboundary_getsolidthreshold")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedataboundary_getsolidthreshold: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedataboundary_setsolidthreshold, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedataboundary_setsolidthreshold")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedataboundary_setsolidthreshold: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedatacomposite_getbasematerialgroup, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedatacomposite_getbasematerialgroup")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedatacomposite_getbasematerialgroup: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedatacomposite_setbasematerialgroup, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedatacomposite_setbasematerialgroup")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedatacomposite_setbasematerialgroup: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedatacomposite_getmaterialmappingcount, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedatacomposite_getmaterialmappingcount")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedatacomposite_getmaterialmappingcount: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedatacomposite_getmaterialmapping, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedatacomposite_getmaterialmapping")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedatacomposite_getmaterialmapping: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedatacomposite_addmaterialmapping, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedatacomposite_addmaterialmapping")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedatacomposite_addmaterialmapping: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedatacomposite_removematerialmapping, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedatacomposite_removematerialmapping")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedatacomposite_removematerialmapping: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedataproperty_getname, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedataproperty_getname")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedataproperty_getname: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedataproperty_setisrequired, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedataproperty_setisrequired")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedataproperty_setisrequired: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedataproperty_isrequired, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedataproperty_isrequired")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedataproperty_isrequired: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedata_getboundary, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_getboundary")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedata_getboundary: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedata_createnewboundary, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_createnewboundary")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedata_createnewboundary: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedata_removeboundary, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_removeboundary")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedata_removeboundary: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedata_getcomposite, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_getcomposite")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedata_getcomposite: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedata_createnewcomposite, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_createnewcomposite")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedata_createnewcomposite: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedata_removecomposite, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_removecomposite")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedata_removecomposite: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedata_getcolor, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_getcolor")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedata_getcolor: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedata_createnewcolor, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_createnewcolor")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedata_createnewcolor: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedata_removecolor, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_removecolor")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedata_removecolor: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedata_getpropertycount, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_getpropertycount")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedata_getpropertycount: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedata_getproperty, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_getproperty")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedata_getproperty: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedata_addpropertyfromscalarfield, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_addpropertyfromscalarfield")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedata_addpropertyfromscalarfield: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedata_addpropertyfromvector3dfield, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_addpropertyfromvector3dfield")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedata_addpropertyfromvector3dfield: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedata_removeproperty, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_removeproperty")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedata_removeproperty: " + err.Error())
 	}
 	
 	implementation.Lib3MF_component_getobjectresource, err = syscall.GetProcAddress(dllHandle, "lib3mf_component_getobjectresource")
@@ -1522,6 +2124,71 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 	implementation.Lib3MF_multipropertygroup_removelayer, err = syscall.GetProcAddress(dllHandle, "lib3mf_multipropertygroup_removelayer")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_multipropertygroup_removelayer: " + err.Error())
+	}
+	
+	implementation.Lib3MF_image3d_getname, err = syscall.GetProcAddress(dllHandle, "lib3mf_image3d_getname")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_image3d_getname: " + err.Error())
+	}
+	
+	implementation.Lib3MF_image3d_setname, err = syscall.GetProcAddress(dllHandle, "lib3mf_image3d_setname")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_image3d_setname: " + err.Error())
+	}
+	
+	implementation.Lib3MF_image3d_isimagestack, err = syscall.GetProcAddress(dllHandle, "lib3mf_image3d_isimagestack")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_image3d_isimagestack: " + err.Error())
+	}
+	
+	implementation.Lib3MF_imagestack_getrowcount, err = syscall.GetProcAddress(dllHandle, "lib3mf_imagestack_getrowcount")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_imagestack_getrowcount: " + err.Error())
+	}
+	
+	implementation.Lib3MF_imagestack_setrowcount, err = syscall.GetProcAddress(dllHandle, "lib3mf_imagestack_setrowcount")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_imagestack_setrowcount: " + err.Error())
+	}
+	
+	implementation.Lib3MF_imagestack_getcolumncount, err = syscall.GetProcAddress(dllHandle, "lib3mf_imagestack_getcolumncount")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_imagestack_getcolumncount: " + err.Error())
+	}
+	
+	implementation.Lib3MF_imagestack_setcolumncount, err = syscall.GetProcAddress(dllHandle, "lib3mf_imagestack_setcolumncount")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_imagestack_setcolumncount: " + err.Error())
+	}
+	
+	implementation.Lib3MF_imagestack_getsheetcount, err = syscall.GetProcAddress(dllHandle, "lib3mf_imagestack_getsheetcount")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_imagestack_getsheetcount: " + err.Error())
+	}
+	
+	implementation.Lib3MF_imagestack_getsheet, err = syscall.GetProcAddress(dllHandle, "lib3mf_imagestack_getsheet")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_imagestack_getsheet: " + err.Error())
+	}
+	
+	implementation.Lib3MF_imagestack_setsheet, err = syscall.GetProcAddress(dllHandle, "lib3mf_imagestack_setsheet")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_imagestack_setsheet: " + err.Error())
+	}
+	
+	implementation.Lib3MF_imagestack_createemptysheet, err = syscall.GetProcAddress(dllHandle, "lib3mf_imagestack_createemptysheet")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_imagestack_createemptysheet: " + err.Error())
+	}
+	
+	implementation.Lib3MF_imagestack_createsheetfrombuffer, err = syscall.GetProcAddress(dllHandle, "lib3mf_imagestack_createsheetfrombuffer")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_imagestack_createsheetfrombuffer: " + err.Error())
+	}
+	
+	implementation.Lib3MF_imagestack_createsheetfromfile, err = syscall.GetProcAddress(dllHandle, "lib3mf_imagestack_createsheetfromfile")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_imagestack_createsheetfromfile: " + err.Error())
 	}
 	
 	implementation.Lib3MF_attachment_getpath, err = syscall.GetProcAddress(dllHandle, "lib3mf_attachment_getpath")
@@ -2159,6 +2826,21 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 		return errors.New("Could not get function lib3mf_model_getslicestacks: " + err.Error())
 	}
 	
+	implementation.Lib3MF_model_getimage3ds, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_getimage3ds")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_getimage3ds: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_getscalarfields, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_getscalarfields")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_getscalarfields: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_getvector3dfields, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_getvector3dfields")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_getvector3dfields: " + err.Error())
+	}
+	
 	implementation.Lib3MF_model_mergetomodel, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_mergetomodel")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_model_mergetomodel: " + err.Error())
@@ -2207,6 +2889,86 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 	implementation.Lib3MF_model_addmultipropertygroup, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_addmultipropertygroup")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_model_addmultipropertygroup: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_addimagestack, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_addimagestack")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_addimagestack: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_getimagestackbyid, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_getimagestackbyid")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_getimagestackbyid: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_addscalarfieldfromimage3d, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_addscalarfieldfromimage3d")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_addscalarfieldfromimage3d: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_addscalarfieldcomposed, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_addscalarfieldcomposed")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_addscalarfieldcomposed: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_addscalarfieldconstant, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_addscalarfieldconstant")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_addscalarfieldconstant: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_getscalarfieldbyid, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_getscalarfieldbyid")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_getscalarfieldbyid: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_getscalarfieldfromimage3dbyid, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_getscalarfieldfromimage3dbyid")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_getscalarfieldfromimage3dbyid: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_getscalarfieldcomposedbyid, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_getscalarfieldcomposedbyid")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_getscalarfieldcomposedbyid: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_getscalarfieldconstantbyid, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_getscalarfieldconstantbyid")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_getscalarfieldconstantbyid: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_addvector3dfieldfromimage3d, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_addvector3dfieldfromimage3d")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_addvector3dfieldfromimage3d: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_addvector3dfieldcomposed, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_addvector3dfieldcomposed")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_addvector3dfieldcomposed: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_addvector3dfieldconstant, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_addvector3dfieldconstant")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_addvector3dfieldconstant: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_getvector3dfieldbyid, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_getvector3dfieldbyid")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_getvector3dfieldbyid: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_getvector3dfieldfromimage3dbyid, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_getvector3dfieldfromimage3dbyid")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_getvector3dfieldfromimage3dbyid: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_getvector3dfieldcomposedbyid, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_getvector3dfieldcomposedbyid")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_getvector3dfieldcomposedbyid: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_getvector3dfieldconstantbyid, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_getvector3dfieldconstantbyid")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_getvector3dfieldconstantbyid: " + err.Error())
 	}
 	
 	implementation.Lib3MF_model_addbuilditem, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_addbuilditem")
@@ -3253,6 +4015,57 @@ func (implementation *Lib3MFImplementation) MultiPropertyGroupIterator_GetCurren
 	}
 
 	err = implementation.CallFunction(implementation.Lib3MF_multipropertygroupiterator_getcurrentmultipropertygroup, implementation_multipropertygroupiterator.GetDLLInHandle(), hResource.GetDLLOutHandle())
+	if (err != nil) {
+		return hResource, err
+	}
+	
+	return hResource, err
+}
+
+func (implementation *Lib3MFImplementation) Image3DIterator_GetCurrentImage3D(Image3DIterator Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hResource := implementation.NewHandle()
+	
+	implementation_image3diterator, err := implementation.GetWrapperHandle(Image3DIterator)
+	if (err != nil) {
+		return hResource, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_image3diterator_getcurrentimage3d, implementation_image3diterator.GetDLLInHandle(), hResource.GetDLLOutHandle())
+	if (err != nil) {
+		return hResource, err
+	}
+	
+	return hResource, err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldIterator_GetCurrentScalarField(ScalarFieldIterator Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hResource := implementation.NewHandle()
+	
+	implementation_scalarfielditerator, err := implementation.GetWrapperHandle(ScalarFieldIterator)
+	if (err != nil) {
+		return hResource, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfielditerator_getcurrentscalarfield, implementation_scalarfielditerator.GetDLLInHandle(), hResource.GetDLLOutHandle())
+	if (err != nil) {
+		return hResource, err
+	}
+	
+	return hResource, err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldIterator_GetCurrentVector3DField(Vector3DFieldIterator Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hResource := implementation.NewHandle()
+	
+	implementation_vector3dfielditerator, err := implementation.GetWrapperHandle(Vector3DFieldIterator)
+	if (err != nil) {
+		return hResource, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfielditerator_getcurrentvector3dfield, implementation_vector3dfielditerator.GetDLLInHandle(), hResource.GetDLLOutHandle())
 	if (err != nil) {
 		return hResource, err
 	}
@@ -4356,6 +5169,23 @@ func (implementation *Lib3MFImplementation) MeshObject_BeamLattice(MeshObject Li
 	return hTheBeamLattice, err
 }
 
+func (implementation *Lib3MFImplementation) MeshObject_VolumeData(MeshObject Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheVolumeData := implementation.NewHandle()
+	
+	implementation_meshobject, err := implementation.GetWrapperHandle(MeshObject)
+	if (err != nil) {
+		return hTheVolumeData, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_meshobject_volumedata, implementation_meshobject.GetDLLInHandle(), hTheVolumeData.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheVolumeData, err
+	}
+	
+	return hTheVolumeData, err
+}
+
 func (implementation *Lib3MFImplementation) BeamLattice_GetMinLength(BeamLattice Lib3MFHandle) (float64, error) {
 	var err error = nil
 	var dMinLength float64 = 0
@@ -4748,6 +5578,1637 @@ func (implementation *Lib3MFImplementation) BeamLattice_GetBeamSet(BeamLattice L
 	}
 	
 	return hBeamSet, err
+}
+
+func (implementation *Lib3MFImplementation) ScalarField_GetName(ScalarField Lib3MFHandle) (string, error) {
+	var err error = nil
+	var neededforName int64 = 0
+	var filledinName int64 = 0
+	
+	implementation_scalarfield, err := implementation.GetWrapperHandle(ScalarField)
+	if (err != nil) {
+		return "", err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfield_getname, implementation_scalarfield.GetDLLInHandle(), Int64InValue(0), Int64OutValue(&neededforName), Int64InValue(0))
+	if (err != nil) {
+		return "", err
+	}
+	bufferSizeName := neededforName
+	bufferName := make([]byte, bufferSizeName)
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfield_getname, implementation_scalarfield.GetDLLInHandle(), Int64InValue(bufferSizeName), Int64OutValue(&filledinName), uintptr(unsafe.Pointer(&bufferName[0])))
+	if (err != nil) {
+		return "", err
+	}
+	
+	return string(bufferName[:(filledinName-1)]), err
+}
+
+func (implementation *Lib3MFImplementation) ScalarField_SetName(ScalarField Lib3MFHandle, sName string) (error) {
+	var err error = nil
+	
+	implementation_scalarfield, err := implementation.GetWrapperHandle(ScalarField)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfield_setname, implementation_scalarfield.GetDLLInHandle(), StringInValue(sName))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) ScalarField_IsFromImage3D(ScalarField Lib3MFHandle) (bool, error) {
+	var err error = nil
+	var bIsFromImage3D int64 = 0
+	
+	implementation_scalarfield, err := implementation.GetWrapperHandle(ScalarField)
+	if (err != nil) {
+		return false, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfield_isfromimage3d, implementation_scalarfield.GetDLLInHandle(), Int64OutValue(&bIsFromImage3D))
+	if (err != nil) {
+		return false, err
+	}
+	
+	return (bIsFromImage3D != 0), err
+}
+
+func (implementation *Lib3MFImplementation) ScalarField_IsConstant(ScalarField Lib3MFHandle) (bool, error) {
+	var err error = nil
+	var bIsConstant int64 = 0
+	
+	implementation_scalarfield, err := implementation.GetWrapperHandle(ScalarField)
+	if (err != nil) {
+		return false, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfield_isconstant, implementation_scalarfield.GetDLLInHandle(), Int64OutValue(&bIsConstant))
+	if (err != nil) {
+		return false, err
+	}
+	
+	return (bIsConstant != 0), err
+}
+
+func (implementation *Lib3MFImplementation) ScalarField_IsComposed(ScalarField Lib3MFHandle) (bool, error) {
+	var err error = nil
+	var bIsComposed int64 = 0
+	
+	implementation_scalarfield, err := implementation.GetWrapperHandle(ScalarField)
+	if (err != nil) {
+		return false, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfield_iscomposed, implementation_scalarfield.GetDLLInHandle(), Int64OutValue(&bIsComposed))
+	if (err != nil) {
+		return false, err
+	}
+	
+	return (bIsComposed != 0), err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DField_GetName(Vector3DField Lib3MFHandle) (string, error) {
+	var err error = nil
+	var neededforName int64 = 0
+	var filledinName int64 = 0
+	
+	implementation_vector3dfield, err := implementation.GetWrapperHandle(Vector3DField)
+	if (err != nil) {
+		return "", err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfield_getname, implementation_vector3dfield.GetDLLInHandle(), Int64InValue(0), Int64OutValue(&neededforName), Int64InValue(0))
+	if (err != nil) {
+		return "", err
+	}
+	bufferSizeName := neededforName
+	bufferName := make([]byte, bufferSizeName)
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfield_getname, implementation_vector3dfield.GetDLLInHandle(), Int64InValue(bufferSizeName), Int64OutValue(&filledinName), uintptr(unsafe.Pointer(&bufferName[0])))
+	if (err != nil) {
+		return "", err
+	}
+	
+	return string(bufferName[:(filledinName-1)]), err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DField_SetName(Vector3DField Lib3MFHandle, sName string) (error) {
+	var err error = nil
+	
+	implementation_vector3dfield, err := implementation.GetWrapperHandle(Vector3DField)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfield_setname, implementation_vector3dfield.GetDLLInHandle(), StringInValue(sName))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DField_IsFromImage3D(Vector3DField Lib3MFHandle) (bool, error) {
+	var err error = nil
+	var bIsFromImage3D int64 = 0
+	
+	implementation_vector3dfield, err := implementation.GetWrapperHandle(Vector3DField)
+	if (err != nil) {
+		return false, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfield_isfromimage3d, implementation_vector3dfield.GetDLLInHandle(), Int64OutValue(&bIsFromImage3D))
+	if (err != nil) {
+		return false, err
+	}
+	
+	return (bIsFromImage3D != 0), err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DField_IsConstant(Vector3DField Lib3MFHandle) (bool, error) {
+	var err error = nil
+	var bIsConstant int64 = 0
+	
+	implementation_vector3dfield, err := implementation.GetWrapperHandle(Vector3DField)
+	if (err != nil) {
+		return false, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfield_isconstant, implementation_vector3dfield.GetDLLInHandle(), Int64OutValue(&bIsConstant))
+	if (err != nil) {
+		return false, err
+	}
+	
+	return (bIsConstant != 0), err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DField_IsComposed(Vector3DField Lib3MFHandle) (bool, error) {
+	var err error = nil
+	var bIsComposed int64 = 0
+	
+	implementation_vector3dfield, err := implementation.GetWrapperHandle(Vector3DField)
+	if (err != nil) {
+		return false, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfield_iscomposed, implementation_vector3dfield.GetDLLInHandle(), Int64OutValue(&bIsComposed))
+	if (err != nil) {
+		return false, err
+	}
+	
+	return (bIsComposed != 0), err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldFromImage3D_GetImage(ScalarFieldFromImage3D Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hImage3D := implementation.NewHandle()
+	
+	implementation_scalarfieldfromimage3d, err := implementation.GetWrapperHandle(ScalarFieldFromImage3D)
+	if (err != nil) {
+		return hImage3D, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldfromimage3d_getimage, implementation_scalarfieldfromimage3d.GetDLLInHandle(), hImage3D.GetDLLOutHandle())
+	if (err != nil) {
+		return hImage3D, err
+	}
+	
+	return hImage3D, err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldFromImage3D_SetImage(ScalarFieldFromImage3D Lib3MFHandle, Image3D Lib3MFHandle) (error) {
+	var err error = nil
+	
+	implementation_scalarfieldfromimage3d, err := implementation.GetWrapperHandle(ScalarFieldFromImage3D)
+	if (err != nil) {
+		return err
+	}
+	implementation_image3d, err := implementation.GetWrapperHandle(Image3D)
+	if (err != nil) {
+		return err
+	}
+	
+	Image3DDLLHandle := implementation_image3d.GetDLLInHandle()
+	if (Image3DDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldfromimage3d_setimage, implementation_scalarfieldfromimage3d.GetDLLInHandle(), Image3DDLLHandle)
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldFromImage3D_SetChannel(ScalarFieldFromImage3D Lib3MFHandle, eName ELib3MFChannelName) (error) {
+	var err error = nil
+	
+	implementation_scalarfieldfromimage3d, err := implementation.GetWrapperHandle(ScalarFieldFromImage3D)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldfromimage3d_setchannel, implementation_scalarfieldfromimage3d.GetDLLInHandle(), uintptr(eName))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldFromImage3D_GetChannel(ScalarFieldFromImage3D Lib3MFHandle) (ELib3MFChannelName, error) {
+	var err error = nil
+	var eName uint64 = 0
+	
+	implementation_scalarfieldfromimage3d, err := implementation.GetWrapperHandle(ScalarFieldFromImage3D)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldfromimage3d_getchannel, implementation_scalarfieldfromimage3d.GetDLLInHandle(), UInt64OutValue(&eName))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return ELib3MFChannelName (eName), err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldFromImage3D_SetFilter(ScalarFieldFromImage3D Lib3MFHandle, eFilter ELib3MFTextureFilter) (error) {
+	var err error = nil
+	
+	implementation_scalarfieldfromimage3d, err := implementation.GetWrapperHandle(ScalarFieldFromImage3D)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldfromimage3d_setfilter, implementation_scalarfieldfromimage3d.GetDLLInHandle(), uintptr(eFilter))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldFromImage3D_GetFilter(ScalarFieldFromImage3D Lib3MFHandle) (ELib3MFTextureFilter, error) {
+	var err error = nil
+	var eFilter uint64 = 0
+	
+	implementation_scalarfieldfromimage3d, err := implementation.GetWrapperHandle(ScalarFieldFromImage3D)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldfromimage3d_getfilter, implementation_scalarfieldfromimage3d.GetDLLInHandle(), UInt64OutValue(&eFilter))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return ELib3MFTextureFilter (eFilter), err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldFromImage3D_SetTileStyles(ScalarFieldFromImage3D Lib3MFHandle, eTileStyleU ELib3MFTextureTileStyle, eTileStyleV ELib3MFTextureTileStyle, eTileStyleW ELib3MFTextureTileStyle) (error) {
+	var err error = nil
+	
+	implementation_scalarfieldfromimage3d, err := implementation.GetWrapperHandle(ScalarFieldFromImage3D)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldfromimage3d_settilestyles, implementation_scalarfieldfromimage3d.GetDLLInHandle(), uintptr(eTileStyleU), uintptr(eTileStyleV), uintptr(eTileStyleW))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldFromImage3D_GetTileStyles(ScalarFieldFromImage3D Lib3MFHandle) (ELib3MFTextureTileStyle, ELib3MFTextureTileStyle, ELib3MFTextureTileStyle, error) {
+	var err error = nil
+	var eTileStyleU uint64 = 0
+	var eTileStyleV uint64 = 0
+	var eTileStyleW uint64 = 0
+	
+	implementation_scalarfieldfromimage3d, err := implementation.GetWrapperHandle(ScalarFieldFromImage3D)
+	if (err != nil) {
+		return 0, 0, 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldfromimage3d_gettilestyles, implementation_scalarfieldfromimage3d.GetDLLInHandle(), UInt64OutValue(&eTileStyleU), UInt64OutValue(&eTileStyleV), UInt64OutValue(&eTileStyleW))
+	if (err != nil) {
+		return 0, 0, 0, err
+	}
+	
+	return ELib3MFTextureTileStyle (eTileStyleU), ELib3MFTextureTileStyle (eTileStyleV), ELib3MFTextureTileStyle (eTileStyleW), err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldFromImage3D_GetOffset(ScalarFieldFromImage3D Lib3MFHandle) (float64, error) {
+	var err error = nil
+	var dOffset float64 = 0
+	
+	implementation_scalarfieldfromimage3d, err := implementation.GetWrapperHandle(ScalarFieldFromImage3D)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldfromimage3d_getoffset, implementation_scalarfieldfromimage3d.GetDLLInHandle(), Float64OutValue(&dOffset))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dOffset, err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldFromImage3D_SetOffset(ScalarFieldFromImage3D Lib3MFHandle, dOffset float64) (error) {
+	var err error = nil
+	
+	implementation_scalarfieldfromimage3d, err := implementation.GetWrapperHandle(ScalarFieldFromImage3D)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldfromimage3d_setoffset, implementation_scalarfieldfromimage3d.GetDLLInHandle(), Float64InValue(dOffset))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldFromImage3D_GetScale(ScalarFieldFromImage3D Lib3MFHandle) (float64, error) {
+	var err error = nil
+	var dScale float64 = 0
+	
+	implementation_scalarfieldfromimage3d, err := implementation.GetWrapperHandle(ScalarFieldFromImage3D)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldfromimage3d_getscale, implementation_scalarfieldfromimage3d.GetDLLInHandle(), Float64OutValue(&dScale))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dScale, err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldFromImage3D_SetScale(ScalarFieldFromImage3D Lib3MFHandle, dScale float64) (error) {
+	var err error = nil
+	
+	implementation_scalarfieldfromimage3d, err := implementation.GetWrapperHandle(ScalarFieldFromImage3D)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldfromimage3d_setscale, implementation_scalarfieldfromimage3d.GetDLLInHandle(), Float64InValue(dScale))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldConstant_GetValue(ScalarFieldConstant Lib3MFHandle) (float64, error) {
+	var err error = nil
+	var dValue float64 = 0
+	
+	implementation_scalarfieldconstant, err := implementation.GetWrapperHandle(ScalarFieldConstant)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldconstant_getvalue, implementation_scalarfieldconstant.GetDLLInHandle(), Float64OutValue(&dValue))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dValue, err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldConstant_SetValue(ScalarFieldConstant Lib3MFHandle, dValue float64) (error) {
+	var err error = nil
+	
+	implementation_scalarfieldconstant, err := implementation.GetWrapperHandle(ScalarFieldConstant)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldconstant_setvalue, implementation_scalarfieldconstant.GetDLLInHandle(), Float64InValue(dValue))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldComposed_SetMethod(ScalarFieldComposed Lib3MFHandle, eTheMethod ELib3MFCompositionMethod) (error) {
+	var err error = nil
+	
+	implementation_scalarfieldcomposed, err := implementation.GetWrapperHandle(ScalarFieldComposed)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldcomposed_setmethod, implementation_scalarfieldcomposed.GetDLLInHandle(), uintptr(eTheMethod))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldComposed_GetMethod(ScalarFieldComposed Lib3MFHandle) (ELib3MFCompositionMethod, error) {
+	var err error = nil
+	var eTheMethod uint64 = 0
+	
+	implementation_scalarfieldcomposed, err := implementation.GetWrapperHandle(ScalarFieldComposed)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldcomposed_getmethod, implementation_scalarfieldcomposed.GetDLLInHandle(), UInt64OutValue(&eTheMethod))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return ELib3MFCompositionMethod (eTheMethod), err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldComposed_GetFactor1(ScalarFieldComposed Lib3MFHandle) (float64, error) {
+	var err error = nil
+	var dFactor1 float64 = 0
+	
+	implementation_scalarfieldcomposed, err := implementation.GetWrapperHandle(ScalarFieldComposed)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldcomposed_getfactor1, implementation_scalarfieldcomposed.GetDLLInHandle(), Float64OutValue(&dFactor1))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dFactor1, err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldComposed_SetFactor1(ScalarFieldComposed Lib3MFHandle, dFactor1 float64) (error) {
+	var err error = nil
+	
+	implementation_scalarfieldcomposed, err := implementation.GetWrapperHandle(ScalarFieldComposed)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldcomposed_setfactor1, implementation_scalarfieldcomposed.GetDLLInHandle(), Float64InValue(dFactor1))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldComposed_GetFactor2(ScalarFieldComposed Lib3MFHandle) (float64, error) {
+	var err error = nil
+	var dFactor2 float64 = 0
+	
+	implementation_scalarfieldcomposed, err := implementation.GetWrapperHandle(ScalarFieldComposed)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldcomposed_getfactor2, implementation_scalarfieldcomposed.GetDLLInHandle(), Float64OutValue(&dFactor2))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dFactor2, err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldComposed_SetFactor2(ScalarFieldComposed Lib3MFHandle, dFactor2 float64) (error) {
+	var err error = nil
+	
+	implementation_scalarfieldcomposed, err := implementation.GetWrapperHandle(ScalarFieldComposed)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldcomposed_setfactor2, implementation_scalarfieldcomposed.GetDLLInHandle(), Float64InValue(dFactor2))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldComposed_ScalarFieldReference1(ScalarFieldComposed Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheScalarFieldReference1 := implementation.NewHandle()
+	
+	implementation_scalarfieldcomposed, err := implementation.GetWrapperHandle(ScalarFieldComposed)
+	if (err != nil) {
+		return hTheScalarFieldReference1, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldcomposed_scalarfieldreference1, implementation_scalarfieldcomposed.GetDLLInHandle(), hTheScalarFieldReference1.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheScalarFieldReference1, err
+	}
+	
+	return hTheScalarFieldReference1, err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldComposed_ScalarFieldReference2(ScalarFieldComposed Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheScalarFieldReference1 := implementation.NewHandle()
+	
+	implementation_scalarfieldcomposed, err := implementation.GetWrapperHandle(ScalarFieldComposed)
+	if (err != nil) {
+		return hTheScalarFieldReference1, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldcomposed_scalarfieldreference2, implementation_scalarfieldcomposed.GetDLLInHandle(), hTheScalarFieldReference1.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheScalarFieldReference1, err
+	}
+	
+	return hTheScalarFieldReference1, err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldComposed_ScalarFieldReferenceMask(ScalarFieldComposed Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheScalarFieldReferenceMask := implementation.NewHandle()
+	
+	implementation_scalarfieldcomposed, err := implementation.GetWrapperHandle(ScalarFieldComposed)
+	if (err != nil) {
+		return hTheScalarFieldReferenceMask, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldcomposed_scalarfieldreferencemask, implementation_scalarfieldcomposed.GetDLLInHandle(), hTheScalarFieldReferenceMask.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheScalarFieldReferenceMask, err
+	}
+	
+	return hTheScalarFieldReferenceMask, err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldFromImage3D_GetImage(Vector3DFieldFromImage3D Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hImage3D := implementation.NewHandle()
+	
+	implementation_vector3dfieldfromimage3d, err := implementation.GetWrapperHandle(Vector3DFieldFromImage3D)
+	if (err != nil) {
+		return hImage3D, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldfromimage3d_getimage, implementation_vector3dfieldfromimage3d.GetDLLInHandle(), hImage3D.GetDLLOutHandle())
+	if (err != nil) {
+		return hImage3D, err
+	}
+	
+	return hImage3D, err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldFromImage3D_SetImage(Vector3DFieldFromImage3D Lib3MFHandle, Image3D Lib3MFHandle) (error) {
+	var err error = nil
+	
+	implementation_vector3dfieldfromimage3d, err := implementation.GetWrapperHandle(Vector3DFieldFromImage3D)
+	if (err != nil) {
+		return err
+	}
+	implementation_image3d, err := implementation.GetWrapperHandle(Image3D)
+	if (err != nil) {
+		return err
+	}
+	
+	Image3DDLLHandle := implementation_image3d.GetDLLInHandle()
+	if (Image3DDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldfromimage3d_setimage, implementation_vector3dfieldfromimage3d.GetDLLInHandle(), Image3DDLLHandle)
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldFromImage3D_SetFilter(Vector3DFieldFromImage3D Lib3MFHandle, eFilter ELib3MFTextureFilter) (error) {
+	var err error = nil
+	
+	implementation_vector3dfieldfromimage3d, err := implementation.GetWrapperHandle(Vector3DFieldFromImage3D)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldfromimage3d_setfilter, implementation_vector3dfieldfromimage3d.GetDLLInHandle(), uintptr(eFilter))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldFromImage3D_GetFilter(Vector3DFieldFromImage3D Lib3MFHandle) (ELib3MFTextureFilter, error) {
+	var err error = nil
+	var eFilter uint64 = 0
+	
+	implementation_vector3dfieldfromimage3d, err := implementation.GetWrapperHandle(Vector3DFieldFromImage3D)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldfromimage3d_getfilter, implementation_vector3dfieldfromimage3d.GetDLLInHandle(), UInt64OutValue(&eFilter))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return ELib3MFTextureFilter (eFilter), err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldFromImage3D_SetTileStyles(Vector3DFieldFromImage3D Lib3MFHandle, eTileStyleU ELib3MFTextureTileStyle, eTileStyleV ELib3MFTextureTileStyle, eTileStyleW ELib3MFTextureTileStyle) (error) {
+	var err error = nil
+	
+	implementation_vector3dfieldfromimage3d, err := implementation.GetWrapperHandle(Vector3DFieldFromImage3D)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldfromimage3d_settilestyles, implementation_vector3dfieldfromimage3d.GetDLLInHandle(), uintptr(eTileStyleU), uintptr(eTileStyleV), uintptr(eTileStyleW))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldFromImage3D_GetTileStyles(Vector3DFieldFromImage3D Lib3MFHandle) (ELib3MFTextureTileStyle, ELib3MFTextureTileStyle, ELib3MFTextureTileStyle, error) {
+	var err error = nil
+	var eTileStyleU uint64 = 0
+	var eTileStyleV uint64 = 0
+	var eTileStyleW uint64 = 0
+	
+	implementation_vector3dfieldfromimage3d, err := implementation.GetWrapperHandle(Vector3DFieldFromImage3D)
+	if (err != nil) {
+		return 0, 0, 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldfromimage3d_gettilestyles, implementation_vector3dfieldfromimage3d.GetDLLInHandle(), UInt64OutValue(&eTileStyleU), UInt64OutValue(&eTileStyleV), UInt64OutValue(&eTileStyleW))
+	if (err != nil) {
+		return 0, 0, 0, err
+	}
+	
+	return ELib3MFTextureTileStyle (eTileStyleU), ELib3MFTextureTileStyle (eTileStyleV), ELib3MFTextureTileStyle (eTileStyleW), err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldFromImage3D_GetOffset(Vector3DFieldFromImage3D Lib3MFHandle) (float64, error) {
+	var err error = nil
+	var dOffset float64 = 0
+	
+	implementation_vector3dfieldfromimage3d, err := implementation.GetWrapperHandle(Vector3DFieldFromImage3D)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldfromimage3d_getoffset, implementation_vector3dfieldfromimage3d.GetDLLInHandle(), Float64OutValue(&dOffset))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dOffset, err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldFromImage3D_SetOffset(Vector3DFieldFromImage3D Lib3MFHandle, dOffset float64) (error) {
+	var err error = nil
+	
+	implementation_vector3dfieldfromimage3d, err := implementation.GetWrapperHandle(Vector3DFieldFromImage3D)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldfromimage3d_setoffset, implementation_vector3dfieldfromimage3d.GetDLLInHandle(), Float64InValue(dOffset))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldFromImage3D_GetScale(Vector3DFieldFromImage3D Lib3MFHandle) (float64, error) {
+	var err error = nil
+	var dScale float64 = 0
+	
+	implementation_vector3dfieldfromimage3d, err := implementation.GetWrapperHandle(Vector3DFieldFromImage3D)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldfromimage3d_getscale, implementation_vector3dfieldfromimage3d.GetDLLInHandle(), Float64OutValue(&dScale))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dScale, err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldFromImage3D_SetScale(Vector3DFieldFromImage3D Lib3MFHandle, dScale float64) (error) {
+	var err error = nil
+	
+	implementation_vector3dfieldfromimage3d, err := implementation.GetWrapperHandle(Vector3DFieldFromImage3D)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldfromimage3d_setscale, implementation_vector3dfieldfromimage3d.GetDLLInHandle(), Float64InValue(dScale))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldConstant_GetValueX(Vector3DFieldConstant Lib3MFHandle) (float64, error) {
+	var err error = nil
+	var dValueX float64 = 0
+	
+	implementation_vector3dfieldconstant, err := implementation.GetWrapperHandle(Vector3DFieldConstant)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldconstant_getvaluex, implementation_vector3dfieldconstant.GetDLLInHandle(), Float64OutValue(&dValueX))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dValueX, err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldConstant_SetValueX(Vector3DFieldConstant Lib3MFHandle, dValueX float64) (error) {
+	var err error = nil
+	
+	implementation_vector3dfieldconstant, err := implementation.GetWrapperHandle(Vector3DFieldConstant)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldconstant_setvaluex, implementation_vector3dfieldconstant.GetDLLInHandle(), Float64InValue(dValueX))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldConstant_GetValueY(Vector3DFieldConstant Lib3MFHandle) (float64, error) {
+	var err error = nil
+	var dValueY float64 = 0
+	
+	implementation_vector3dfieldconstant, err := implementation.GetWrapperHandle(Vector3DFieldConstant)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldconstant_getvaluey, implementation_vector3dfieldconstant.GetDLLInHandle(), Float64OutValue(&dValueY))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dValueY, err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldConstant_SetValueY(Vector3DFieldConstant Lib3MFHandle, dValueY float64) (error) {
+	var err error = nil
+	
+	implementation_vector3dfieldconstant, err := implementation.GetWrapperHandle(Vector3DFieldConstant)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldconstant_setvaluey, implementation_vector3dfieldconstant.GetDLLInHandle(), Float64InValue(dValueY))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldConstant_GetValueZ(Vector3DFieldConstant Lib3MFHandle) (float64, error) {
+	var err error = nil
+	var dValueZ float64 = 0
+	
+	implementation_vector3dfieldconstant, err := implementation.GetWrapperHandle(Vector3DFieldConstant)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldconstant_getvaluez, implementation_vector3dfieldconstant.GetDLLInHandle(), Float64OutValue(&dValueZ))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dValueZ, err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldConstant_SetValueZ(Vector3DFieldConstant Lib3MFHandle, dValueZ float64) (error) {
+	var err error = nil
+	
+	implementation_vector3dfieldconstant, err := implementation.GetWrapperHandle(Vector3DFieldConstant)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldconstant_setvaluez, implementation_vector3dfieldconstant.GetDLLInHandle(), Float64InValue(dValueZ))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldComposed_SetMethod(Vector3DFieldComposed Lib3MFHandle, eTheMethod ELib3MFCompositionMethod) (error) {
+	var err error = nil
+	
+	implementation_vector3dfieldcomposed, err := implementation.GetWrapperHandle(Vector3DFieldComposed)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldcomposed_setmethod, implementation_vector3dfieldcomposed.GetDLLInHandle(), uintptr(eTheMethod))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldComposed_GetMethod(Vector3DFieldComposed Lib3MFHandle) (ELib3MFCompositionMethod, error) {
+	var err error = nil
+	var eTheMethod uint64 = 0
+	
+	implementation_vector3dfieldcomposed, err := implementation.GetWrapperHandle(Vector3DFieldComposed)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldcomposed_getmethod, implementation_vector3dfieldcomposed.GetDLLInHandle(), UInt64OutValue(&eTheMethod))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return ELib3MFCompositionMethod (eTheMethod), err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldComposed_SetSpace(Vector3DFieldComposed Lib3MFHandle, eTheSpace ELib3MFCompositionSpace) (error) {
+	var err error = nil
+	
+	implementation_vector3dfieldcomposed, err := implementation.GetWrapperHandle(Vector3DFieldComposed)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldcomposed_setspace, implementation_vector3dfieldcomposed.GetDLLInHandle(), uintptr(eTheSpace))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldComposed_GetSpace(Vector3DFieldComposed Lib3MFHandle) (ELib3MFCompositionSpace, error) {
+	var err error = nil
+	var eTheSpace uint64 = 0
+	
+	implementation_vector3dfieldcomposed, err := implementation.GetWrapperHandle(Vector3DFieldComposed)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldcomposed_getspace, implementation_vector3dfieldcomposed.GetDLLInHandle(), UInt64OutValue(&eTheSpace))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return ELib3MFCompositionSpace (eTheSpace), err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldComposed_GetFactor1(Vector3DFieldComposed Lib3MFHandle) (float64, error) {
+	var err error = nil
+	var dFactor1 float64 = 0
+	
+	implementation_vector3dfieldcomposed, err := implementation.GetWrapperHandle(Vector3DFieldComposed)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldcomposed_getfactor1, implementation_vector3dfieldcomposed.GetDLLInHandle(), Float64OutValue(&dFactor1))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dFactor1, err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldComposed_SetFactor1(Vector3DFieldComposed Lib3MFHandle, dFactor1 float64) (error) {
+	var err error = nil
+	
+	implementation_vector3dfieldcomposed, err := implementation.GetWrapperHandle(Vector3DFieldComposed)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldcomposed_setfactor1, implementation_vector3dfieldcomposed.GetDLLInHandle(), Float64InValue(dFactor1))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldComposed_GetFactor2(Vector3DFieldComposed Lib3MFHandle) (float64, error) {
+	var err error = nil
+	var dFactor2 float64 = 0
+	
+	implementation_vector3dfieldcomposed, err := implementation.GetWrapperHandle(Vector3DFieldComposed)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldcomposed_getfactor2, implementation_vector3dfieldcomposed.GetDLLInHandle(), Float64OutValue(&dFactor2))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dFactor2, err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldComposed_SetFactor2(Vector3DFieldComposed Lib3MFHandle, dFactor2 float64) (error) {
+	var err error = nil
+	
+	implementation_vector3dfieldcomposed, err := implementation.GetWrapperHandle(Vector3DFieldComposed)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldcomposed_setfactor2, implementation_vector3dfieldcomposed.GetDLLInHandle(), Float64InValue(dFactor2))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldComposed_Vector3DFieldReference1(Vector3DFieldComposed Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheVector3DFieldReference1 := implementation.NewHandle()
+	
+	implementation_vector3dfieldcomposed, err := implementation.GetWrapperHandle(Vector3DFieldComposed)
+	if (err != nil) {
+		return hTheVector3DFieldReference1, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldcomposed_vector3dfieldreference1, implementation_vector3dfieldcomposed.GetDLLInHandle(), hTheVector3DFieldReference1.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheVector3DFieldReference1, err
+	}
+	
+	return hTheVector3DFieldReference1, err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldComposed_Vector3DFieldReference2(Vector3DFieldComposed Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheVector3DFieldReference1 := implementation.NewHandle()
+	
+	implementation_vector3dfieldcomposed, err := implementation.GetWrapperHandle(Vector3DFieldComposed)
+	if (err != nil) {
+		return hTheVector3DFieldReference1, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldcomposed_vector3dfieldreference2, implementation_vector3dfieldcomposed.GetDLLInHandle(), hTheVector3DFieldReference1.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheVector3DFieldReference1, err
+	}
+	
+	return hTheVector3DFieldReference1, err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldComposed_ScalarFieldReferenceMask(Vector3DFieldComposed Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheScalarFieldReferenceMask := implementation.NewHandle()
+	
+	implementation_vector3dfieldcomposed, err := implementation.GetWrapperHandle(Vector3DFieldComposed)
+	if (err != nil) {
+		return hTheScalarFieldReferenceMask, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldcomposed_scalarfieldreferencemask, implementation_vector3dfieldcomposed.GetDLLInHandle(), hTheScalarFieldReferenceMask.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheScalarFieldReferenceMask, err
+	}
+	
+	return hTheScalarFieldReferenceMask, err
+}
+
+func (implementation *Lib3MFImplementation) FieldReference_GetFieldResourceID(FieldReference Lib3MFHandle) (uint32, error) {
+	var err error = nil
+	var nUniqueResourceID uint32 = 0
+	
+	implementation_fieldreference, err := implementation.GetWrapperHandle(FieldReference)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_fieldreference_getfieldresourceid, implementation_fieldreference.GetDLLInHandle(), UInt32OutValue(&nUniqueResourceID))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return uint32(nUniqueResourceID), err
+}
+
+func (implementation *Lib3MFImplementation) FieldReference_SetFieldResourceID(FieldReference Lib3MFHandle, nUniqueResourceID uint32) (error) {
+	var err error = nil
+	
+	implementation_fieldreference, err := implementation.GetWrapperHandle(FieldReference)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_fieldreference_setfieldresourceid, implementation_fieldreference.GetDLLInHandle(), UInt32InValue(nUniqueResourceID))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) FieldReference_GetTransform(FieldReference Lib3MFHandle) (sLib3MFTransform, error) {
+	var err error = nil
+	var sTransform sLib3MFTransform
+	
+	implementation_fieldreference, err := implementation.GetWrapperHandle(FieldReference)
+	if (err != nil) {
+		return sTransform, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_fieldreference_gettransform, implementation_fieldreference.GetDLLInHandle(), 0)
+	if (err != nil) {
+		return sTransform, err
+	}
+	
+	return sTransform, err
+}
+
+func (implementation *Lib3MFImplementation) FieldReference_SetTransform(FieldReference Lib3MFHandle, sTransform sLib3MFTransform) (error) {
+	var err error = nil
+	
+	implementation_fieldreference, err := implementation.GetWrapperHandle(FieldReference)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_fieldreference_settransform, implementation_fieldreference.GetDLLInHandle(), uintptr(unsafe.Pointer(&sTransform)))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldReference_SetScalarField(ScalarFieldReference Lib3MFHandle, TheScalarField Lib3MFHandle) (error) {
+	var err error = nil
+	
+	implementation_scalarfieldreference, err := implementation.GetWrapperHandle(ScalarFieldReference)
+	if (err != nil) {
+		return err
+	}
+	implementation_thescalarfield, err := implementation.GetWrapperHandle(TheScalarField)
+	if (err != nil) {
+		return err
+	}
+	
+	TheScalarFieldDLLHandle := implementation_thescalarfield.GetDLLInHandle()
+	if (TheScalarFieldDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldreference_setscalarfield, implementation_scalarfieldreference.GetDLLInHandle(), TheScalarFieldDLLHandle)
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldReference_SetVector3DField(Vector3DFieldReference Lib3MFHandle, TheVector3DField Lib3MFHandle) (error) {
+	var err error = nil
+	
+	implementation_vector3dfieldreference, err := implementation.GetWrapperHandle(Vector3DFieldReference)
+	if (err != nil) {
+		return err
+	}
+	implementation_thevector3dfield, err := implementation.GetWrapperHandle(TheVector3DField)
+	if (err != nil) {
+		return err
+	}
+	
+	TheVector3DFieldDLLHandle := implementation_thevector3dfield.GetDLLInHandle()
+	if (TheVector3DFieldDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldreference_setvector3dfield, implementation_vector3dfieldreference.GetDLLInHandle(), TheVector3DFieldDLLHandle)
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) VolumeDataBoundary_GetSolidThreshold(VolumeDataBoundary Lib3MFHandle) (float64, error) {
+	var err error = nil
+	var dTheSolidThreshold float64 = 0
+	
+	implementation_volumedataboundary, err := implementation.GetWrapperHandle(VolumeDataBoundary)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedataboundary_getsolidthreshold, implementation_volumedataboundary.GetDLLInHandle(), Float64OutValue(&dTheSolidThreshold))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dTheSolidThreshold, err
+}
+
+func (implementation *Lib3MFImplementation) VolumeDataBoundary_SetSolidThreshold(VolumeDataBoundary Lib3MFHandle, dTheSolidThreshold float64) (error) {
+	var err error = nil
+	
+	implementation_volumedataboundary, err := implementation.GetWrapperHandle(VolumeDataBoundary)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedataboundary_setsolidthreshold, implementation_volumedataboundary.GetDLLInHandle(), Float64InValue(dTheSolidThreshold))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) VolumeDataComposite_GetBaseMaterialGroup(VolumeDataComposite Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hBaseMaterialGroupInstance := implementation.NewHandle()
+	
+	implementation_volumedatacomposite, err := implementation.GetWrapperHandle(VolumeDataComposite)
+	if (err != nil) {
+		return hBaseMaterialGroupInstance, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedatacomposite_getbasematerialgroup, implementation_volumedatacomposite.GetDLLInHandle(), hBaseMaterialGroupInstance.GetDLLOutHandle())
+	if (err != nil) {
+		return hBaseMaterialGroupInstance, err
+	}
+	
+	return hBaseMaterialGroupInstance, err
+}
+
+func (implementation *Lib3MFImplementation) VolumeDataComposite_SetBaseMaterialGroup(VolumeDataComposite Lib3MFHandle, BaseMaterialGroupInstance Lib3MFHandle) (error) {
+	var err error = nil
+	
+	implementation_volumedatacomposite, err := implementation.GetWrapperHandle(VolumeDataComposite)
+	if (err != nil) {
+		return err
+	}
+	implementation_basematerialgroupinstance, err := implementation.GetWrapperHandle(BaseMaterialGroupInstance)
+	if (err != nil) {
+		return err
+	}
+	
+	BaseMaterialGroupInstanceDLLHandle := implementation_basematerialgroupinstance.GetDLLInHandle()
+	if (BaseMaterialGroupInstanceDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedatacomposite_setbasematerialgroup, implementation_volumedatacomposite.GetDLLInHandle(), BaseMaterialGroupInstanceDLLHandle)
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) VolumeDataComposite_GetMaterialMappingCount(VolumeDataComposite Lib3MFHandle) (uint32, error) {
+	var err error = nil
+	var nCount uint32 = 0
+	
+	implementation_volumedatacomposite, err := implementation.GetWrapperHandle(VolumeDataComposite)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedatacomposite_getmaterialmappingcount, implementation_volumedatacomposite.GetDLLInHandle(), UInt32OutValue(&nCount))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return uint32(nCount), err
+}
+
+func (implementation *Lib3MFImplementation) VolumeDataComposite_GetMaterialMapping(VolumeDataComposite Lib3MFHandle, nIndex uint32) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheMaterialMapping := implementation.NewHandle()
+	
+	implementation_volumedatacomposite, err := implementation.GetWrapperHandle(VolumeDataComposite)
+	if (err != nil) {
+		return hTheMaterialMapping, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedatacomposite_getmaterialmapping, implementation_volumedatacomposite.GetDLLInHandle(), UInt32InValue(nIndex), hTheMaterialMapping.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheMaterialMapping, err
+	}
+	
+	return hTheMaterialMapping, err
+}
+
+func (implementation *Lib3MFImplementation) VolumeDataComposite_AddMaterialMapping(VolumeDataComposite Lib3MFHandle, sTransform sLib3MFTransform) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheMaterialMapping := implementation.NewHandle()
+	
+	implementation_volumedatacomposite, err := implementation.GetWrapperHandle(VolumeDataComposite)
+	if (err != nil) {
+		return hTheMaterialMapping, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedatacomposite_addmaterialmapping, implementation_volumedatacomposite.GetDLLInHandle(), uintptr(unsafe.Pointer(&sTransform)), hTheMaterialMapping.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheMaterialMapping, err
+	}
+	
+	return hTheMaterialMapping, err
+}
+
+func (implementation *Lib3MFImplementation) VolumeDataComposite_RemoveMaterialMapping(VolumeDataComposite Lib3MFHandle, nIndex uint32) (error) {
+	var err error = nil
+	
+	implementation_volumedatacomposite, err := implementation.GetWrapperHandle(VolumeDataComposite)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedatacomposite_removematerialmapping, implementation_volumedatacomposite.GetDLLInHandle(), UInt32InValue(nIndex))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) VolumeDataProperty_GetName(VolumeDataProperty Lib3MFHandle) (string, error) {
+	var err error = nil
+	var neededforPropertyName int64 = 0
+	var filledinPropertyName int64 = 0
+	
+	implementation_volumedataproperty, err := implementation.GetWrapperHandle(VolumeDataProperty)
+	if (err != nil) {
+		return "", err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedataproperty_getname, implementation_volumedataproperty.GetDLLInHandle(), Int64InValue(0), Int64OutValue(&neededforPropertyName), Int64InValue(0))
+	if (err != nil) {
+		return "", err
+	}
+	bufferSizePropertyName := neededforPropertyName
+	bufferPropertyName := make([]byte, bufferSizePropertyName)
+	err = implementation.CallFunction(implementation.Lib3MF_volumedataproperty_getname, implementation_volumedataproperty.GetDLLInHandle(), Int64InValue(bufferSizePropertyName), Int64OutValue(&filledinPropertyName), uintptr(unsafe.Pointer(&bufferPropertyName[0])))
+	if (err != nil) {
+		return "", err
+	}
+	
+	return string(bufferPropertyName[:(filledinPropertyName-1)]), err
+}
+
+func (implementation *Lib3MFImplementation) VolumeDataProperty_SetIsRequired(VolumeDataProperty Lib3MFHandle, bIsRequired bool) (error) {
+	var err error = nil
+	var nIsRequired uint8 = 0
+	if (bIsRequired) {
+		nIsRequired = 1
+	}
+	
+	
+	implementation_volumedataproperty, err := implementation.GetWrapperHandle(VolumeDataProperty)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedataproperty_setisrequired, implementation_volumedataproperty.GetDLLInHandle(), UInt8InValue(nIsRequired))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) VolumeDataProperty_IsRequired(VolumeDataProperty Lib3MFHandle) (bool, error) {
+	var err error = nil
+	var bIsRequired int64 = 0
+	
+	implementation_volumedataproperty, err := implementation.GetWrapperHandle(VolumeDataProperty)
+	if (err != nil) {
+		return false, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedataproperty_isrequired, implementation_volumedataproperty.GetDLLInHandle(), Int64OutValue(&bIsRequired))
+	if (err != nil) {
+		return false, err
+	}
+	
+	return (bIsRequired != 0), err
+}
+
+func (implementation *Lib3MFImplementation) VolumeData_GetBoundary(VolumeData Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheBoundaryData := implementation.NewHandle()
+	
+	implementation_volumedata, err := implementation.GetWrapperHandle(VolumeData)
+	if (err != nil) {
+		return hTheBoundaryData, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_getboundary, implementation_volumedata.GetDLLInHandle(), hTheBoundaryData.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheBoundaryData, err
+	}
+	
+	return hTheBoundaryData, err
+}
+
+func (implementation *Lib3MFImplementation) VolumeData_CreateNewBoundary(VolumeData Lib3MFHandle, TheScalarField Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheBoundaryData := implementation.NewHandle()
+	
+	implementation_volumedata, err := implementation.GetWrapperHandle(VolumeData)
+	if (err != nil) {
+		return hTheBoundaryData, err
+	}
+	implementation_thescalarfield, err := implementation.GetWrapperHandle(TheScalarField)
+	if (err != nil) {
+		return hTheBoundaryData, err
+	}
+	
+	TheScalarFieldDLLHandle := implementation_thescalarfield.GetDLLInHandle()
+	if (TheScalarFieldDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return hTheBoundaryData, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_createnewboundary, implementation_volumedata.GetDLLInHandle(), TheScalarFieldDLLHandle, hTheBoundaryData.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheBoundaryData, err
+	}
+	
+	return hTheBoundaryData, err
+}
+
+func (implementation *Lib3MFImplementation) VolumeData_RemoveBoundary(VolumeData Lib3MFHandle) (error) {
+	var err error = nil
+	
+	implementation_volumedata, err := implementation.GetWrapperHandle(VolumeData)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_removeboundary, implementation_volumedata.GetDLLInHandle())
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) VolumeData_GetComposite(VolumeData Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheCompositeData := implementation.NewHandle()
+	
+	implementation_volumedata, err := implementation.GetWrapperHandle(VolumeData)
+	if (err != nil) {
+		return hTheCompositeData, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_getcomposite, implementation_volumedata.GetDLLInHandle(), hTheCompositeData.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheCompositeData, err
+	}
+	
+	return hTheCompositeData, err
+}
+
+func (implementation *Lib3MFImplementation) VolumeData_CreateNewComposite(VolumeData Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheCompositeData := implementation.NewHandle()
+	
+	implementation_volumedata, err := implementation.GetWrapperHandle(VolumeData)
+	if (err != nil) {
+		return hTheCompositeData, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_createnewcomposite, implementation_volumedata.GetDLLInHandle(), hTheCompositeData.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheCompositeData, err
+	}
+	
+	return hTheCompositeData, err
+}
+
+func (implementation *Lib3MFImplementation) VolumeData_RemoveComposite(VolumeData Lib3MFHandle) (error) {
+	var err error = nil
+	
+	implementation_volumedata, err := implementation.GetWrapperHandle(VolumeData)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_removecomposite, implementation_volumedata.GetDLLInHandle())
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) VolumeData_GetColor(VolumeData Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheColorData := implementation.NewHandle()
+	
+	implementation_volumedata, err := implementation.GetWrapperHandle(VolumeData)
+	if (err != nil) {
+		return hTheColorData, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_getcolor, implementation_volumedata.GetDLLInHandle(), hTheColorData.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheColorData, err
+	}
+	
+	return hTheColorData, err
+}
+
+func (implementation *Lib3MFImplementation) VolumeData_CreateNewColor(VolumeData Lib3MFHandle, TheVector3DField Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheColorData := implementation.NewHandle()
+	
+	implementation_volumedata, err := implementation.GetWrapperHandle(VolumeData)
+	if (err != nil) {
+		return hTheColorData, err
+	}
+	implementation_thevector3dfield, err := implementation.GetWrapperHandle(TheVector3DField)
+	if (err != nil) {
+		return hTheColorData, err
+	}
+	
+	TheVector3DFieldDLLHandle := implementation_thevector3dfield.GetDLLInHandle()
+	if (TheVector3DFieldDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return hTheColorData, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_createnewcolor, implementation_volumedata.GetDLLInHandle(), TheVector3DFieldDLLHandle, hTheColorData.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheColorData, err
+	}
+	
+	return hTheColorData, err
+}
+
+func (implementation *Lib3MFImplementation) VolumeData_RemoveColor(VolumeData Lib3MFHandle) (error) {
+	var err error = nil
+	
+	implementation_volumedata, err := implementation.GetWrapperHandle(VolumeData)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_removecolor, implementation_volumedata.GetDLLInHandle())
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) VolumeData_GetPropertyCount(VolumeData Lib3MFHandle) (uint32, error) {
+	var err error = nil
+	var nCount uint32 = 0
+	
+	implementation_volumedata, err := implementation.GetWrapperHandle(VolumeData)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_getpropertycount, implementation_volumedata.GetDLLInHandle(), UInt32OutValue(&nCount))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return uint32(nCount), err
+}
+
+func (implementation *Lib3MFImplementation) VolumeData_GetProperty(VolumeData Lib3MFHandle, nIndex uint32) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheVolumeDataProperty := implementation.NewHandle()
+	
+	implementation_volumedata, err := implementation.GetWrapperHandle(VolumeData)
+	if (err != nil) {
+		return hTheVolumeDataProperty, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_getproperty, implementation_volumedata.GetDLLInHandle(), UInt32InValue(nIndex), hTheVolumeDataProperty.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheVolumeDataProperty, err
+	}
+	
+	return hTheVolumeDataProperty, err
+}
+
+func (implementation *Lib3MFImplementation) VolumeData_AddPropertyFromScalarField(VolumeData Lib3MFHandle, sName string, TheScalarField Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheVolumeDataProperty := implementation.NewHandle()
+	
+	implementation_volumedata, err := implementation.GetWrapperHandle(VolumeData)
+	if (err != nil) {
+		return hTheVolumeDataProperty, err
+	}
+	implementation_thescalarfield, err := implementation.GetWrapperHandle(TheScalarField)
+	if (err != nil) {
+		return hTheVolumeDataProperty, err
+	}
+	
+	TheScalarFieldDLLHandle := implementation_thescalarfield.GetDLLInHandle()
+	if (TheScalarFieldDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return hTheVolumeDataProperty, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_addpropertyfromscalarfield, implementation_volumedata.GetDLLInHandle(), StringInValue(sName), TheScalarFieldDLLHandle, hTheVolumeDataProperty.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheVolumeDataProperty, err
+	}
+	
+	return hTheVolumeDataProperty, err
+}
+
+func (implementation *Lib3MFImplementation) VolumeData_AddPropertyFromVector3DField(VolumeData Lib3MFHandle, sName string, TheVector3DField Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheVolumeDataProperty := implementation.NewHandle()
+	
+	implementation_volumedata, err := implementation.GetWrapperHandle(VolumeData)
+	if (err != nil) {
+		return hTheVolumeDataProperty, err
+	}
+	implementation_thevector3dfield, err := implementation.GetWrapperHandle(TheVector3DField)
+	if (err != nil) {
+		return hTheVolumeDataProperty, err
+	}
+	
+	TheVector3DFieldDLLHandle := implementation_thevector3dfield.GetDLLInHandle()
+	if (TheVector3DFieldDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return hTheVolumeDataProperty, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_addpropertyfromvector3dfield, implementation_volumedata.GetDLLInHandle(), StringInValue(sName), TheVector3DFieldDLLHandle, hTheVolumeDataProperty.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheVolumeDataProperty, err
+	}
+	
+	return hTheVolumeDataProperty, err
+}
+
+func (implementation *Lib3MFImplementation) VolumeData_RemoveProperty(VolumeData Lib3MFHandle, nIndex uint32) (error) {
+	var err error = nil
+	
+	implementation_volumedata, err := implementation.GetWrapperHandle(VolumeData)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_removeproperty, implementation_volumedata.GetDLLInHandle(), UInt32InValue(nIndex))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
 }
 
 func (implementation *Lib3MFImplementation) Component_GetObjectResource(Component Lib3MFHandle) (Lib3MFHandle, error) {
@@ -5791,6 +8252,240 @@ func (implementation *Lib3MFImplementation) MultiPropertyGroup_RemoveLayer(Multi
 	}
 	
 	return err
+}
+
+func (implementation *Lib3MFImplementation) Image3D_GetName(Image3D Lib3MFHandle) (string, error) {
+	var err error = nil
+	var neededforName int64 = 0
+	var filledinName int64 = 0
+	
+	implementation_image3d, err := implementation.GetWrapperHandle(Image3D)
+	if (err != nil) {
+		return "", err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_image3d_getname, implementation_image3d.GetDLLInHandle(), Int64InValue(0), Int64OutValue(&neededforName), Int64InValue(0))
+	if (err != nil) {
+		return "", err
+	}
+	bufferSizeName := neededforName
+	bufferName := make([]byte, bufferSizeName)
+	err = implementation.CallFunction(implementation.Lib3MF_image3d_getname, implementation_image3d.GetDLLInHandle(), Int64InValue(bufferSizeName), Int64OutValue(&filledinName), uintptr(unsafe.Pointer(&bufferName[0])))
+	if (err != nil) {
+		return "", err
+	}
+	
+	return string(bufferName[:(filledinName-1)]), err
+}
+
+func (implementation *Lib3MFImplementation) Image3D_SetName(Image3D Lib3MFHandle, sName string) (error) {
+	var err error = nil
+	
+	implementation_image3d, err := implementation.GetWrapperHandle(Image3D)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_image3d_setname, implementation_image3d.GetDLLInHandle(), StringInValue(sName))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Image3D_IsImageStack(Image3D Lib3MFHandle) (bool, error) {
+	var err error = nil
+	var bIsImageStack int64 = 0
+	
+	implementation_image3d, err := implementation.GetWrapperHandle(Image3D)
+	if (err != nil) {
+		return false, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_image3d_isimagestack, implementation_image3d.GetDLLInHandle(), Int64OutValue(&bIsImageStack))
+	if (err != nil) {
+		return false, err
+	}
+	
+	return (bIsImageStack != 0), err
+}
+
+func (implementation *Lib3MFImplementation) ImageStack_GetRowCount(ImageStack Lib3MFHandle) (uint32, error) {
+	var err error = nil
+	var nRowCount uint32 = 0
+	
+	implementation_imagestack, err := implementation.GetWrapperHandle(ImageStack)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_imagestack_getrowcount, implementation_imagestack.GetDLLInHandle(), UInt32OutValue(&nRowCount))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return uint32(nRowCount), err
+}
+
+func (implementation *Lib3MFImplementation) ImageStack_SetRowCount(ImageStack Lib3MFHandle, nRowCount uint32) (error) {
+	var err error = nil
+	
+	implementation_imagestack, err := implementation.GetWrapperHandle(ImageStack)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_imagestack_setrowcount, implementation_imagestack.GetDLLInHandle(), UInt32InValue(nRowCount))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) ImageStack_GetColumnCount(ImageStack Lib3MFHandle) (uint32, error) {
+	var err error = nil
+	var nColumnCount uint32 = 0
+	
+	implementation_imagestack, err := implementation.GetWrapperHandle(ImageStack)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_imagestack_getcolumncount, implementation_imagestack.GetDLLInHandle(), UInt32OutValue(&nColumnCount))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return uint32(nColumnCount), err
+}
+
+func (implementation *Lib3MFImplementation) ImageStack_SetColumnCount(ImageStack Lib3MFHandle, nColumnCount uint32) (error) {
+	var err error = nil
+	
+	implementation_imagestack, err := implementation.GetWrapperHandle(ImageStack)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_imagestack_setcolumncount, implementation_imagestack.GetDLLInHandle(), UInt32InValue(nColumnCount))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) ImageStack_GetSheetCount(ImageStack Lib3MFHandle) (uint32, error) {
+	var err error = nil
+	var nSheetCount uint32 = 0
+	
+	implementation_imagestack, err := implementation.GetWrapperHandle(ImageStack)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_imagestack_getsheetcount, implementation_imagestack.GetDLLInHandle(), UInt32OutValue(&nSheetCount))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return uint32(nSheetCount), err
+}
+
+func (implementation *Lib3MFImplementation) ImageStack_GetSheet(ImageStack Lib3MFHandle, nIndex uint32) (Lib3MFHandle, error) {
+	var err error = nil
+	hSheet := implementation.NewHandle()
+	
+	implementation_imagestack, err := implementation.GetWrapperHandle(ImageStack)
+	if (err != nil) {
+		return hSheet, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_imagestack_getsheet, implementation_imagestack.GetDLLInHandle(), UInt32InValue(nIndex), hSheet.GetDLLOutHandle())
+	if (err != nil) {
+		return hSheet, err
+	}
+	
+	return hSheet, err
+}
+
+func (implementation *Lib3MFImplementation) ImageStack_SetSheet(ImageStack Lib3MFHandle, nIndex uint32, Sheet Lib3MFHandle) (error) {
+	var err error = nil
+	
+	implementation_imagestack, err := implementation.GetWrapperHandle(ImageStack)
+	if (err != nil) {
+		return err
+	}
+	implementation_sheet, err := implementation.GetWrapperHandle(Sheet)
+	if (err != nil) {
+		return err
+	}
+	
+	SheetDLLHandle := implementation_sheet.GetDLLInHandle()
+	if (SheetDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_imagestack_setsheet, implementation_imagestack.GetDLLInHandle(), UInt32InValue(nIndex), SheetDLLHandle)
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) ImageStack_CreateEmptySheet(ImageStack Lib3MFHandle, nIndex uint32, sPath string) (Lib3MFHandle, error) {
+	var err error = nil
+	hSheet := implementation.NewHandle()
+	
+	implementation_imagestack, err := implementation.GetWrapperHandle(ImageStack)
+	if (err != nil) {
+		return hSheet, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_imagestack_createemptysheet, implementation_imagestack.GetDLLInHandle(), UInt32InValue(nIndex), StringInValue(sPath), hSheet.GetDLLOutHandle())
+	if (err != nil) {
+		return hSheet, err
+	}
+	
+	return hSheet, err
+}
+
+func (implementation *Lib3MFImplementation) ImageStack_CreateSheetFromBuffer(ImageStack Lib3MFHandle, nIndex uint32, sPath string, Data []uint8) (Lib3MFHandle, error) {
+	var err error = nil
+	hSheet := implementation.NewHandle()
+	
+	implementation_imagestack, err := implementation.GetWrapperHandle(ImageStack)
+	if (err != nil) {
+		return hSheet, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_imagestack_createsheetfrombuffer, implementation_imagestack.GetDLLInHandle(), UInt32InValue(nIndex), StringInValue(sPath), 0, 0, hSheet.GetDLLOutHandle())
+	if (err != nil) {
+		return hSheet, err
+	}
+	
+	return hSheet, err
+}
+
+func (implementation *Lib3MFImplementation) ImageStack_CreateSheetFromFile(ImageStack Lib3MFHandle, nIndex uint32, sPath string, sFileName string) (Lib3MFHandle, error) {
+	var err error = nil
+	hSheet := implementation.NewHandle()
+	
+	implementation_imagestack, err := implementation.GetWrapperHandle(ImageStack)
+	if (err != nil) {
+		return hSheet, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_imagestack_createsheetfromfile, implementation_imagestack.GetDLLInHandle(), UInt32InValue(nIndex), StringInValue(sPath), StringInValue(sFileName), hSheet.GetDLLOutHandle())
+	if (err != nil) {
+		return hSheet, err
+	}
+	
+	return hSheet, err
 }
 
 func (implementation *Lib3MFImplementation) Attachment_GetPath(Attachment Lib3MFHandle) (string, error) {
@@ -8200,6 +10895,57 @@ func (implementation *Lib3MFImplementation) Model_GetSliceStacks(Model Lib3MFHan
 	return hResourceIterator, err
 }
 
+func (implementation *Lib3MFImplementation) Model_GetImage3Ds(Model Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hResourceIterator := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hResourceIterator, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_getimage3ds, implementation_model.GetDLLInHandle(), hResourceIterator.GetDLLOutHandle())
+	if (err != nil) {
+		return hResourceIterator, err
+	}
+	
+	return hResourceIterator, err
+}
+
+func (implementation *Lib3MFImplementation) Model_GetScalarFields(Model Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hResourceIterator := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hResourceIterator, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_getscalarfields, implementation_model.GetDLLInHandle(), hResourceIterator.GetDLLOutHandle())
+	if (err != nil) {
+		return hResourceIterator, err
+	}
+	
+	return hResourceIterator, err
+}
+
+func (implementation *Lib3MFImplementation) Model_GetVector3DFields(Model Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hResourceIterator := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hResourceIterator, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_getvector3dfields, implementation_model.GetDLLInHandle(), hResourceIterator.GetDLLOutHandle())
+	if (err != nil) {
+		return hResourceIterator, err
+	}
+	
+	return hResourceIterator, err
+}
+
 func (implementation *Lib3MFImplementation) Model_MergeToModel(Model Lib3MFHandle) (Lib3MFHandle, error) {
 	var err error = nil
 	hMergedModelInstance := implementation.NewHandle()
@@ -8398,6 +11144,298 @@ func (implementation *Lib3MFImplementation) Model_AddMultiPropertyGroup(Model Li
 	}
 	
 	return hMultiPropertyGroupInstance, err
+}
+
+func (implementation *Lib3MFImplementation) Model_AddImageStack(Model Lib3MFHandle, nColumnCount uint32, nRowCount uint32, nSheetCount uint32) (Lib3MFHandle, error) {
+	var err error = nil
+	hInstance := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hInstance, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_addimagestack, implementation_model.GetDLLInHandle(), UInt32InValue(nColumnCount), UInt32InValue(nRowCount), UInt32InValue(nSheetCount), hInstance.GetDLLOutHandle())
+	if (err != nil) {
+		return hInstance, err
+	}
+	
+	return hInstance, err
+}
+
+func (implementation *Lib3MFImplementation) Model_GetImageStackByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error) {
+	var err error = nil
+	hImageStackInstance := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hImageStackInstance, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_getimagestackbyid, implementation_model.GetDLLInHandle(), UInt32InValue(nUniqueResourceID), hImageStackInstance.GetDLLOutHandle())
+	if (err != nil) {
+		return hImageStackInstance, err
+	}
+	
+	return hImageStackInstance, err
+}
+
+func (implementation *Lib3MFImplementation) Model_AddScalarFieldFromImage3D(Model Lib3MFHandle, Image3D Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheScalarFieldFromImage3D := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hTheScalarFieldFromImage3D, err
+	}
+	implementation_image3d, err := implementation.GetWrapperHandle(Image3D)
+	if (err != nil) {
+		return hTheScalarFieldFromImage3D, err
+	}
+	
+	Image3DDLLHandle := implementation_image3d.GetDLLInHandle()
+	if (Image3DDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return hTheScalarFieldFromImage3D, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_addscalarfieldfromimage3d, implementation_model.GetDLLInHandle(), Image3DDLLHandle, hTheScalarFieldFromImage3D.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheScalarFieldFromImage3D, err
+	}
+	
+	return hTheScalarFieldFromImage3D, err
+}
+
+func (implementation *Lib3MFImplementation) Model_AddScalarFieldComposed(Model Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheScalarFieldComposed := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hTheScalarFieldComposed, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_addscalarfieldcomposed, implementation_model.GetDLLInHandle(), hTheScalarFieldComposed.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheScalarFieldComposed, err
+	}
+	
+	return hTheScalarFieldComposed, err
+}
+
+func (implementation *Lib3MFImplementation) Model_AddScalarFieldConstant(Model Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheScalarFieldConstant := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hTheScalarFieldConstant, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_addscalarfieldconstant, implementation_model.GetDLLInHandle(), hTheScalarFieldConstant.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheScalarFieldConstant, err
+	}
+	
+	return hTheScalarFieldConstant, err
+}
+
+func (implementation *Lib3MFImplementation) Model_GetScalarFieldByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error) {
+	var err error = nil
+	hScalarFieldInstance := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hScalarFieldInstance, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_getscalarfieldbyid, implementation_model.GetDLLInHandle(), UInt32InValue(nUniqueResourceID), hScalarFieldInstance.GetDLLOutHandle())
+	if (err != nil) {
+		return hScalarFieldInstance, err
+	}
+	
+	return hScalarFieldInstance, err
+}
+
+func (implementation *Lib3MFImplementation) Model_GetScalarFieldFromImage3DByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error) {
+	var err error = nil
+	hScalarFieldFromImage3DInstance := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hScalarFieldFromImage3DInstance, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_getscalarfieldfromimage3dbyid, implementation_model.GetDLLInHandle(), UInt32InValue(nUniqueResourceID), hScalarFieldFromImage3DInstance.GetDLLOutHandle())
+	if (err != nil) {
+		return hScalarFieldFromImage3DInstance, err
+	}
+	
+	return hScalarFieldFromImage3DInstance, err
+}
+
+func (implementation *Lib3MFImplementation) Model_GetScalarFieldComposedByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error) {
+	var err error = nil
+	hScalarFieldComposedInstance := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hScalarFieldComposedInstance, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_getscalarfieldcomposedbyid, implementation_model.GetDLLInHandle(), UInt32InValue(nUniqueResourceID), hScalarFieldComposedInstance.GetDLLOutHandle())
+	if (err != nil) {
+		return hScalarFieldComposedInstance, err
+	}
+	
+	return hScalarFieldComposedInstance, err
+}
+
+func (implementation *Lib3MFImplementation) Model_GetScalarFieldConstantByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error) {
+	var err error = nil
+	hScalarFieldConstantInstance := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hScalarFieldConstantInstance, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_getscalarfieldconstantbyid, implementation_model.GetDLLInHandle(), UInt32InValue(nUniqueResourceID), hScalarFieldConstantInstance.GetDLLOutHandle())
+	if (err != nil) {
+		return hScalarFieldConstantInstance, err
+	}
+	
+	return hScalarFieldConstantInstance, err
+}
+
+func (implementation *Lib3MFImplementation) Model_AddVector3DFieldFromImage3D(Model Lib3MFHandle, Image3D Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheVector3DFieldFromImage3D := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hTheVector3DFieldFromImage3D, err
+	}
+	implementation_image3d, err := implementation.GetWrapperHandle(Image3D)
+	if (err != nil) {
+		return hTheVector3DFieldFromImage3D, err
+	}
+	
+	Image3DDLLHandle := implementation_image3d.GetDLLInHandle()
+	if (Image3DDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return hTheVector3DFieldFromImage3D, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_addvector3dfieldfromimage3d, implementation_model.GetDLLInHandle(), Image3DDLLHandle, hTheVector3DFieldFromImage3D.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheVector3DFieldFromImage3D, err
+	}
+	
+	return hTheVector3DFieldFromImage3D, err
+}
+
+func (implementation *Lib3MFImplementation) Model_AddVector3DFieldComposed(Model Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheVector3DFieldComposed := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hTheVector3DFieldComposed, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_addvector3dfieldcomposed, implementation_model.GetDLLInHandle(), hTheVector3DFieldComposed.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheVector3DFieldComposed, err
+	}
+	
+	return hTheVector3DFieldComposed, err
+}
+
+func (implementation *Lib3MFImplementation) Model_AddVector3DFieldConstant(Model Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheVector3DFieldConstant := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hTheVector3DFieldConstant, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_addvector3dfieldconstant, implementation_model.GetDLLInHandle(), hTheVector3DFieldConstant.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheVector3DFieldConstant, err
+	}
+	
+	return hTheVector3DFieldConstant, err
+}
+
+func (implementation *Lib3MFImplementation) Model_GetVector3DFieldByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error) {
+	var err error = nil
+	hVector3DFieldInstance := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hVector3DFieldInstance, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_getvector3dfieldbyid, implementation_model.GetDLLInHandle(), UInt32InValue(nUniqueResourceID), hVector3DFieldInstance.GetDLLOutHandle())
+	if (err != nil) {
+		return hVector3DFieldInstance, err
+	}
+	
+	return hVector3DFieldInstance, err
+}
+
+func (implementation *Lib3MFImplementation) Model_GetVector3DFieldFromImage3DByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error) {
+	var err error = nil
+	hVector3DFieldFromImage3DInstance := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hVector3DFieldFromImage3DInstance, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_getvector3dfieldfromimage3dbyid, implementation_model.GetDLLInHandle(), UInt32InValue(nUniqueResourceID), hVector3DFieldFromImage3DInstance.GetDLLOutHandle())
+	if (err != nil) {
+		return hVector3DFieldFromImage3DInstance, err
+	}
+	
+	return hVector3DFieldFromImage3DInstance, err
+}
+
+func (implementation *Lib3MFImplementation) Model_GetVector3DFieldComposedByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error) {
+	var err error = nil
+	hVector3DFieldComposedInstance := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hVector3DFieldComposedInstance, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_getvector3dfieldcomposedbyid, implementation_model.GetDLLInHandle(), UInt32InValue(nUniqueResourceID), hVector3DFieldComposedInstance.GetDLLOutHandle())
+	if (err != nil) {
+		return hVector3DFieldComposedInstance, err
+	}
+	
+	return hVector3DFieldComposedInstance, err
+}
+
+func (implementation *Lib3MFImplementation) Model_GetVector3DFieldConstantByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error) {
+	var err error = nil
+	hVector3DFieldConstantInstance := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hVector3DFieldConstantInstance, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_getvector3dfieldconstantbyid, implementation_model.GetDLLInHandle(), UInt32InValue(nUniqueResourceID), hVector3DFieldConstantInstance.GetDLLOutHandle())
+	if (err != nil) {
+		return hVector3DFieldConstantInstance, err
+	}
+	
+	return hVector3DFieldConstantInstance, err
 }
 
 func (implementation *Lib3MFImplementation) Model_AddBuildItem(Model Lib3MFHandle, Object Lib3MFHandle, sTransform sLib3MFTransform) (Lib3MFHandle, error) {
