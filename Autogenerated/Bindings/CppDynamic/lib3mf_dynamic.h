@@ -2481,6 +2481,39 @@ typedef Lib3MFResult (*PLib3MFToolpathProfile_GetUUIDPtr) (Lib3MF_ToolpathProfil
 typedef Lib3MFResult (*PLib3MFToolpathProfile_GetNamePtr) (Lib3MF_ToolpathProfile pToolpathProfile, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer);
 
 /**
+* Returns the number of parameters.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[out] pCount - Returns the number of parameters.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathProfile_GetParameterCountPtr) (Lib3MF_ToolpathProfile pToolpathProfile, Lib3MF_uint32 * pCount);
+
+/**
+* Returns the Name of a parameter.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] nIndex - Index of Parameter (0-based). Call will fail if an invalid index is given.
+* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameBuffer -  buffer of Returns the name of the parameter., may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathProfile_GetParameterNamePtr) (Lib3MF_ToolpathProfile pToolpathProfile, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer);
+
+/**
+* Returns the NameSpace of a parameter.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] nIndex - Index of Parameter (0-based). Call will fail if an invalid index is given.
+* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameSpaceBuffer -  buffer of Returns the namespace of the parameter., may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathProfile_GetParameterNameSpacePtr) (Lib3MF_ToolpathProfile pToolpathProfile, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer);
+
+/**
 * Checks if a parameter value exists.
 *
 * @param[in] pToolpathProfile - ToolpathProfile instance.
@@ -2497,10 +2530,12 @@ typedef Lib3MFResult (*PLib3MFToolpathProfile_HasParameterValuePtr) (Lib3MF_Tool
 * @param[in] pToolpathProfile - ToolpathProfile instance.
 * @param[in] pNameSpaceName - Name of the Parameter Namespace.
 * @param[in] pValueName - Value key string.
-* @param[out] pValue - Returns the value of the field.
+* @param[in] nValueBufferSize - size of the buffer (including trailing 0)
+* @param[out] pValueNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pValueBuffer -  buffer of Returns the value of the field., may be NULL
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFToolpathProfile_GetParameterDoubleValuePtr) (Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_double * pValue);
+typedef Lib3MFResult (*PLib3MFToolpathProfile_GetParameterValuePtr) (Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, const Lib3MF_uint32 nValueBufferSize, Lib3MF_uint32* pValueNeededChars, char * pValueBuffer);
 
 /**
 * Retrieves a profile's parameter value
@@ -2508,11 +2543,82 @@ typedef Lib3MFResult (*PLib3MFToolpathProfile_GetParameterDoubleValuePtr) (Lib3M
 * @param[in] pToolpathProfile - ToolpathProfile instance.
 * @param[in] pNameSpaceName - Name of the Parameter Namespace.
 * @param[in] pValueName - Value key string.
-* @param[in] dDefaultValue - Default value if value does not exist.
+* @param[in] pDefaultValue - Default value if value does not exist.
+* @param[in] nValueBufferSize - size of the buffer (including trailing 0)
+* @param[out] pValueNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pValueBuffer -  buffer of Returns the value of the field., may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathProfile_GetParameterValueDefPtr) (Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, const char * pDefaultValue, const Lib3MF_uint32 nValueBufferSize, Lib3MF_uint32* pValueNeededChars, char * pValueBuffer);
+
+/**
+* Retrieves a profile's parameter value as double. Fails if value does not exist or is not a double value.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
+* @param[out] pValue - Returns the value of the field.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathProfile_GetParameterDoubleValuePtr) (Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_double * pValue);
+
+/**
+* Retrieves a profile's parameter value as double.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
+* @param[in] dDefaultValue - Default value if value does not exist or is not a double value.
 * @param[out] pValue - Returns the value of the field.
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFToolpathProfile_GetParameterDoubleValueDefPtr) (Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_double dDefaultValue, Lib3MF_double * pValue);
+
+/**
+* Retrieves a profile's parameter value as integer. Fails if value does not exist or is not a integer value.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
+* @param[out] pValue - Returns the value of the field.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathProfile_GetParameterIntegerValuePtr) (Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_int64 * pValue);
+
+/**
+* Retrieves a profile's parameter value as integer.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
+* @param[in] nDefaultValue - Default value if value does not exist or is not a integer value.
+* @param[out] pValue - Returns the value of the field.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathProfile_GetParameterIntegerValueDefPtr) (Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_int64 nDefaultValue, Lib3MF_int64 * pValue);
+
+/**
+* Retrieves a profile's parameter value as boolean. Fails if value does not exist or is not a boolean value.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
+* @param[out] pValue - Returns the value of the field.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathProfile_GetParameterBoolValuePtr) (Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, bool * pValue);
+
+/**
+* Retrieves a profile's parameter value as boolean.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
+* @param[in] bDefaultValue - Default value if value does not exist or is not a boolean value.
+* @param[out] pValue - Returns the value of the field.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathProfile_GetParameterBoolValueDefPtr) (Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, bool bDefaultValue, bool * pValue);
 
 /**
 * Sets the profile's name
@@ -2529,10 +2635,43 @@ typedef Lib3MFResult (*PLib3MFToolpathProfile_SetNamePtr) (Lib3MF_ToolpathProfil
 * @param[in] pToolpathProfile - ToolpathProfile instance.
 * @param[in] pNameSpaceName - Name of the Parameter Namespace.
 * @param[in] pValueName - Value key string.
+* @param[in] pValue - String value of the parameter.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathProfile_SetParameterValuePtr) (Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, const char * pValue);
+
+/**
+* Sets a profile's parameter value as double.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
 * @param[in] dValue - Double value of the parameter.
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFToolpathProfile_SetParameterDoubleValuePtr) (Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_double dValue);
+
+/**
+* Sets a profile's parameter value as integer.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
+* @param[in] nValue - Integer value of the parameter.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathProfile_SetParameterIntegerValuePtr) (Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_int64 nValue);
+
+/**
+* Sets a profile's parameter value as boolean.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
+* @param[in] bValue - Boolean value of the parameter.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathProfile_SetParameterBoolValuePtr) (Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, bool bValue);
 
 /*************************************************************************************************************************
  Class definition for ToolpathLayerReader
@@ -4435,11 +4574,23 @@ typedef struct {
 	PLib3MFSlice_GetZTopPtr m_Slice_GetZTop;
 	PLib3MFToolpathProfile_GetUUIDPtr m_ToolpathProfile_GetUUID;
 	PLib3MFToolpathProfile_GetNamePtr m_ToolpathProfile_GetName;
+	PLib3MFToolpathProfile_GetParameterCountPtr m_ToolpathProfile_GetParameterCount;
+	PLib3MFToolpathProfile_GetParameterNamePtr m_ToolpathProfile_GetParameterName;
+	PLib3MFToolpathProfile_GetParameterNameSpacePtr m_ToolpathProfile_GetParameterNameSpace;
 	PLib3MFToolpathProfile_HasParameterValuePtr m_ToolpathProfile_HasParameterValue;
+	PLib3MFToolpathProfile_GetParameterValuePtr m_ToolpathProfile_GetParameterValue;
+	PLib3MFToolpathProfile_GetParameterValueDefPtr m_ToolpathProfile_GetParameterValueDef;
 	PLib3MFToolpathProfile_GetParameterDoubleValuePtr m_ToolpathProfile_GetParameterDoubleValue;
 	PLib3MFToolpathProfile_GetParameterDoubleValueDefPtr m_ToolpathProfile_GetParameterDoubleValueDef;
+	PLib3MFToolpathProfile_GetParameterIntegerValuePtr m_ToolpathProfile_GetParameterIntegerValue;
+	PLib3MFToolpathProfile_GetParameterIntegerValueDefPtr m_ToolpathProfile_GetParameterIntegerValueDef;
+	PLib3MFToolpathProfile_GetParameterBoolValuePtr m_ToolpathProfile_GetParameterBoolValue;
+	PLib3MFToolpathProfile_GetParameterBoolValueDefPtr m_ToolpathProfile_GetParameterBoolValueDef;
 	PLib3MFToolpathProfile_SetNamePtr m_ToolpathProfile_SetName;
+	PLib3MFToolpathProfile_SetParameterValuePtr m_ToolpathProfile_SetParameterValue;
 	PLib3MFToolpathProfile_SetParameterDoubleValuePtr m_ToolpathProfile_SetParameterDoubleValue;
+	PLib3MFToolpathProfile_SetParameterIntegerValuePtr m_ToolpathProfile_SetParameterIntegerValue;
+	PLib3MFToolpathProfile_SetParameterBoolValuePtr m_ToolpathProfile_SetParameterBoolValue;
 	PLib3MFToolpathLayerReader_GetLayerDataUUIDPtr m_ToolpathLayerReader_GetLayerDataUUID;
 	PLib3MFToolpathLayerReader_GetSegmentCountPtr m_ToolpathLayerReader_GetSegmentCount;
 	PLib3MFToolpathLayerReader_GetSegmentInfoPtr m_ToolpathLayerReader_GetSegmentInfo;

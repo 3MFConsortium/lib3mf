@@ -1047,8 +1047,23 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_getname", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathProfile_GetName (IntPtr Handle, UInt32 sizeName, out UInt32 neededName, IntPtr dataName);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_getparametercount", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_GetParameterCount (IntPtr Handle, out UInt32 ACount);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_getparametername", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_GetParameterName (IntPtr Handle, UInt32 AIndex, UInt32 sizeName, out UInt32 neededName, IntPtr dataName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_getparameternamespace", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_GetParameterNameSpace (IntPtr Handle, UInt32 AIndex, UInt32 sizeNameSpace, out UInt32 neededNameSpace, IntPtr dataNameSpace);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_hasparametervalue", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathProfile_HasParameterValue (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, out Byte AValueExists);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_getparametervalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_GetParameterValue (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, UInt32 sizeValue, out UInt32 neededValue, IntPtr dataValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_getparametervaluedef", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_GetParameterValueDef (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, byte[] ADefaultValue, UInt32 sizeValue, out UInt32 neededValue, IntPtr dataValue);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_getparameterdoublevalue", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathProfile_GetParameterDoubleValue (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, out Double AValue);
@@ -1056,11 +1071,32 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_getparameterdoublevaluedef", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathProfile_GetParameterDoubleValueDef (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, Double ADefaultValue, out Double AValue);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_getparameterintegervalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_GetParameterIntegerValue (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, out Int64 AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_getparameterintegervaluedef", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_GetParameterIntegerValueDef (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, Int64 ADefaultValue, out Int64 AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_getparameterboolvalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_GetParameterBoolValue (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, out Byte AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_getparameterboolvaluedef", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_GetParameterBoolValueDef (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, Byte ADefaultValue, out Byte AValue);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_setname", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathProfile_SetName (IntPtr Handle, byte[] AName);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_setparametervalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_SetParameterValue (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, byte[] AValue);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_setparameterdoublevalue", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathProfile_SetParameterDoubleValue (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, Double AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_setparameterintegervalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_SetParameterIntegerValue (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, Int64 AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_setparameterboolvalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_SetParameterBoolValue (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, Byte AValue);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getlayerdatauuid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerReader_GetLayerDataUUID (IntPtr Handle, UInt32 sizeUUID, out UInt32 neededUUID, IntPtr dataUUID);
@@ -4334,6 +4370,42 @@ namespace Lib3MF {
 			return Encoding.UTF8.GetString(bytesName).TrimEnd(char.MinValue);
 		}
 
+		public UInt32 GetParameterCount ()
+		{
+			UInt32 resultCount = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetParameterCount (Handle, out resultCount));
+			return resultCount;
+		}
+
+		public String GetParameterName (UInt32 AIndex)
+		{
+			UInt32 sizeName = 0;
+			UInt32 neededName = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetParameterName (Handle, AIndex, sizeName, out neededName, IntPtr.Zero));
+			sizeName = neededName;
+			byte[] bytesName = new byte[sizeName];
+			GCHandle dataName = GCHandle.Alloc(bytesName, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetParameterName (Handle, AIndex, sizeName, out neededName, dataName.AddrOfPinnedObject()));
+			dataName.Free();
+			return Encoding.UTF8.GetString(bytesName).TrimEnd(char.MinValue);
+		}
+
+		public String GetParameterNameSpace (UInt32 AIndex)
+		{
+			UInt32 sizeNameSpace = 0;
+			UInt32 neededNameSpace = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetParameterNameSpace (Handle, AIndex, sizeNameSpace, out neededNameSpace, IntPtr.Zero));
+			sizeNameSpace = neededNameSpace;
+			byte[] bytesNameSpace = new byte[sizeNameSpace];
+			GCHandle dataNameSpace = GCHandle.Alloc(bytesNameSpace, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetParameterNameSpace (Handle, AIndex, sizeNameSpace, out neededNameSpace, dataNameSpace.AddrOfPinnedObject()));
+			dataNameSpace.Free();
+			return Encoding.UTF8.GetString(bytesNameSpace).TrimEnd(char.MinValue);
+		}
+
 		public bool HasParameterValue (String ANameSpaceName, String AValueName)
 		{
 			byte[] byteNameSpaceName = Encoding.UTF8.GetBytes(ANameSpaceName + char.MinValue);
@@ -4342,6 +4414,39 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_HasParameterValue (Handle, byteNameSpaceName, byteValueName, out resultValueExists));
 			return (resultValueExists != 0);
+		}
+
+		public String GetParameterValue (String ANameSpaceName, String AValueName)
+		{
+			byte[] byteNameSpaceName = Encoding.UTF8.GetBytes(ANameSpaceName + char.MinValue);
+			byte[] byteValueName = Encoding.UTF8.GetBytes(AValueName + char.MinValue);
+			UInt32 sizeValue = 0;
+			UInt32 neededValue = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetParameterValue (Handle, byteNameSpaceName, byteValueName, sizeValue, out neededValue, IntPtr.Zero));
+			sizeValue = neededValue;
+			byte[] bytesValue = new byte[sizeValue];
+			GCHandle dataValue = GCHandle.Alloc(bytesValue, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetParameterValue (Handle, byteNameSpaceName, byteValueName, sizeValue, out neededValue, dataValue.AddrOfPinnedObject()));
+			dataValue.Free();
+			return Encoding.UTF8.GetString(bytesValue).TrimEnd(char.MinValue);
+		}
+
+		public String GetParameterValueDef (String ANameSpaceName, String AValueName, String ADefaultValue)
+		{
+			byte[] byteNameSpaceName = Encoding.UTF8.GetBytes(ANameSpaceName + char.MinValue);
+			byte[] byteValueName = Encoding.UTF8.GetBytes(AValueName + char.MinValue);
+			byte[] byteDefaultValue = Encoding.UTF8.GetBytes(ADefaultValue + char.MinValue);
+			UInt32 sizeValue = 0;
+			UInt32 neededValue = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetParameterValueDef (Handle, byteNameSpaceName, byteValueName, byteDefaultValue, sizeValue, out neededValue, IntPtr.Zero));
+			sizeValue = neededValue;
+			byte[] bytesValue = new byte[sizeValue];
+			GCHandle dataValue = GCHandle.Alloc(bytesValue, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetParameterValueDef (Handle, byteNameSpaceName, byteValueName, byteDefaultValue, sizeValue, out neededValue, dataValue.AddrOfPinnedObject()));
+			dataValue.Free();
+			return Encoding.UTF8.GetString(bytesValue).TrimEnd(char.MinValue);
 		}
 
 		public Double GetParameterDoubleValue (String ANameSpaceName, String AValueName)
@@ -4364,11 +4469,60 @@ namespace Lib3MF {
 			return resultValue;
 		}
 
+		public Int64 GetParameterIntegerValue (String ANameSpaceName, String AValueName)
+		{
+			byte[] byteNameSpaceName = Encoding.UTF8.GetBytes(ANameSpaceName + char.MinValue);
+			byte[] byteValueName = Encoding.UTF8.GetBytes(AValueName + char.MinValue);
+			Int64 resultValue = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetParameterIntegerValue (Handle, byteNameSpaceName, byteValueName, out resultValue));
+			return resultValue;
+		}
+
+		public Int64 GetParameterIntegerValueDef (String ANameSpaceName, String AValueName, Int64 ADefaultValue)
+		{
+			byte[] byteNameSpaceName = Encoding.UTF8.GetBytes(ANameSpaceName + char.MinValue);
+			byte[] byteValueName = Encoding.UTF8.GetBytes(AValueName + char.MinValue);
+			Int64 resultValue = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetParameterIntegerValueDef (Handle, byteNameSpaceName, byteValueName, ADefaultValue, out resultValue));
+			return resultValue;
+		}
+
+		public bool GetParameterBoolValue (String ANameSpaceName, String AValueName)
+		{
+			byte[] byteNameSpaceName = Encoding.UTF8.GetBytes(ANameSpaceName + char.MinValue);
+			byte[] byteValueName = Encoding.UTF8.GetBytes(AValueName + char.MinValue);
+			Byte resultValue = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetParameterBoolValue (Handle, byteNameSpaceName, byteValueName, out resultValue));
+			return (resultValue != 0);
+		}
+
+		public bool GetParameterBoolValueDef (String ANameSpaceName, String AValueName, bool ADefaultValue)
+		{
+			byte[] byteNameSpaceName = Encoding.UTF8.GetBytes(ANameSpaceName + char.MinValue);
+			byte[] byteValueName = Encoding.UTF8.GetBytes(AValueName + char.MinValue);
+			Byte resultValue = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetParameterBoolValueDef (Handle, byteNameSpaceName, byteValueName, (Byte)( ADefaultValue ? 1 : 0 ), out resultValue));
+			return (resultValue != 0);
+		}
+
 		public void SetName (String AName)
 		{
 			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
 
 			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_SetName (Handle, byteName));
+		}
+
+		public void SetParameterValue (String ANameSpaceName, String AValueName, String AValue)
+		{
+			byte[] byteNameSpaceName = Encoding.UTF8.GetBytes(ANameSpaceName + char.MinValue);
+			byte[] byteValueName = Encoding.UTF8.GetBytes(AValueName + char.MinValue);
+			byte[] byteValue = Encoding.UTF8.GetBytes(AValue + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_SetParameterValue (Handle, byteNameSpaceName, byteValueName, byteValue));
 		}
 
 		public void SetParameterDoubleValue (String ANameSpaceName, String AValueName, Double AValue)
@@ -4377,6 +4531,22 @@ namespace Lib3MF {
 			byte[] byteValueName = Encoding.UTF8.GetBytes(AValueName + char.MinValue);
 
 			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_SetParameterDoubleValue (Handle, byteNameSpaceName, byteValueName, AValue));
+		}
+
+		public void SetParameterIntegerValue (String ANameSpaceName, String AValueName, Int64 AValue)
+		{
+			byte[] byteNameSpaceName = Encoding.UTF8.GetBytes(ANameSpaceName + char.MinValue);
+			byte[] byteValueName = Encoding.UTF8.GetBytes(AValueName + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_SetParameterIntegerValue (Handle, byteNameSpaceName, byteValueName, AValue));
+		}
+
+		public void SetParameterBoolValue (String ANameSpaceName, String AValueName, bool AValue)
+		{
+			byte[] byteNameSpaceName = Encoding.UTF8.GetBytes(ANameSpaceName + char.MinValue);
+			byte[] byteValueName = Encoding.UTF8.GetBytes(AValueName + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_SetParameterBoolValue (Handle, byteNameSpaceName, byteValueName, (Byte)( AValue ? 1 : 0 )));
 		}
 
 	}

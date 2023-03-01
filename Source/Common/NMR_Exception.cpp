@@ -132,9 +132,6 @@ namespace NMR {
 		case NMR_ERROR_COULDNOTINFLATE: return "Failed to decompress part";
 		case NMR_ERROR_COULDNOTINITDEFLATE: return "Failed to initialize a zlib buffer";
 		case NMR_ERROR_TOOMANYSLICES: return "Too many slices";
-		case NMR_ERROR_COULDNOTINITINFLATE: return "Failed to initialize a zlib buffer";
-		case NMR_ERROR_COULDNOTINFLATE: return "Failed to decompress part";
-		case NMR_ERROR_COULDNOTINITDEFLATE: return "Failed to initialize a zlib buffer";
 		case NMR_ERROR_DUPLICATEVALUE: return "Duplicate value";
 
 		// Unhandled exception
@@ -506,6 +503,8 @@ namespace NMR {
 		case NMR_ERROR_LAYERSEGMENTNOTOPEN: return "Layer segment is not open";
 		case NMR_ERROR_LAYERSEGMENTALREADYOPEN: return "Layer segment is already open";
 		case NMR_ERROR_PROFILEVALUENOTFOUND: return "Profile valuenot found";
+		case NMR_ERROR_TOOMANYPROFILEVALUES: return "Too many profile values";
+		case NMR_ERROR_INVALIDPARAMETERINDEX: return "Invalid parameter index";
 
 		default:
 			return "unknown error";

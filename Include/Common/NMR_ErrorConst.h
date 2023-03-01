@@ -1240,12 +1240,6 @@ Model error codes (0x8XXX)
 // No Binary stream available
 #define NMR_ERROR_NOBINARYSTREAMAVAILABLE 0x8111
 
-// Inconsistent binary stream count
-#define NMR_ERROR_INCONSISTENTBINARYSTREAMCOUNT 0x8110
-
-// Missing Unit Factor
-#define NMR_ERROR_MISSINGUNITFACTOR 0x8111
-
 // Missing Name
 #define NMR_ERROR_MISSINGNAME 0x8112
 
@@ -1284,6 +1278,12 @@ Model error codes (0x8XXX)
 
 // Data source is invalid
 #define NMR_ERROR_DATASOURCEISINVALIDATED 0x811E
+
+// Inconsistent binary stream count
+#define NMR_ERROR_INCONSISTENTBINARYSTREAMCOUNT 0x811F
+
+// Missing Unit Factor
+#define NMR_ERROR_MISSINGUNITFACTOR 0x8120
 
 
 /*-------------------------------------------------------------------
@@ -1424,5 +1424,10 @@ Toolpath errors (0xBXXX)
 // Profile value not found
 #define NMR_ERROR_PROFILEVALUENOTFOUND 0xB007
 
+// Too many profile values
+#define NMR_ERROR_TOOMANYPROFILEVALUES 0xB008
+
+// Too many profile values
+#define NMR_ERROR_INVALIDPARAMETERINDEX 0xB009
 
 #endif // __NMR_ERRORCONST

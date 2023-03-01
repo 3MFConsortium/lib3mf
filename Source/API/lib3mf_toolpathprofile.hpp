@@ -71,15 +71,39 @@ public:
 
 	std::string GetName() override;
 
+	Lib3MF_uint32 GetParameterCount() override;
+
+	std::string GetParameterName(const Lib3MF_uint32 nIndex) override;
+
+	std::string GetParameterNameSpace(const Lib3MF_uint32 nIndex) override;
+
 	bool HasParameterValue(const std::string & sNameSpaceName, const std::string & sValueName) override;
 
-	Lib3MF_double GetParameterDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName) override;
+	std::string GetParameterValue(const std::string& sNameSpaceName, const std::string& sValueName) override;
 
-	Lib3MF_double GetParameterDoubleValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dDefaultValue) override;
+	std::string GetParameterValueDef(const std::string& sNameSpaceName, const std::string& sValueName, const std::string& sDefaultValue) override;
+
+	Lib3MF_double GetParameterDoubleValue(const std::string& sNameSpaceName, const std::string& sValueName) override;
+
+	Lib3MF_double GetParameterDoubleValueDef(const std::string& sNameSpaceName, const std::string& sValueName, const Lib3MF_double dDefaultValue) override;
+
+	Lib3MF_int64 GetParameterIntegerValue(const std::string& sNameSpaceName, const std::string& sValueName) override;
+
+	Lib3MF_int64 GetParameterIntegerValueDef(const std::string& sNameSpaceName, const std::string& sValueName, const Lib3MF_int64 nDefaultValue) override;
+
+	bool GetParameterBoolValue(const std::string& sNameSpaceName, const std::string& sValueName) override;
+
+	bool GetParameterBoolValueDef(const std::string& sNameSpaceName, const std::string& sValueName, const bool bDefaultValue) override;
 
 	void SetName(const std::string & sName) override;
 
-	void SetParameterDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dValue) override;
+	void SetParameterValue(const std::string& sNameSpaceName, const std::string& sValueName, const std::string& sValue) override;
+
+	void SetParameterDoubleValue(const std::string& sNameSpaceName, const std::string& sValueName, const Lib3MF_double dValue) override;
+
+	void SetParameterIntegerValue(const std::string& sNameSpaceName, const std::string& sValueName, const Lib3MF_int64 nValue) override;
+
+	void SetParameterBoolValue(const std::string& sNameSpaceName, const std::string& sValueName, const bool bValue) override;
 
 	NMR::PModelToolpathProfile getProfileInstance();
 

@@ -30,8 +30,8 @@ Abstract: This is a stub class definition of CToolpathProfile
 
 #include "lib3mf_toolpathprofile.hpp"
 #include "lib3mf_interfaceexception.hpp"
-
 // Include custom headers here.
+#include "Common/NMR_StringUtils.h"
 
 
 using namespace Lib3MF::Impl;
@@ -39,6 +39,7 @@ using namespace Lib3MF::Impl;
 /*************************************************************************************************************************
  Class definition of CToolpathProfile
 **************************************************************************************************************************/
+
 
 CToolpathProfile::CToolpathProfile(NMR::PModelToolpathProfile pToolpathProfile)
 	: m_pToolpathProfile(pToolpathProfile)
@@ -63,6 +64,23 @@ std::string CToolpathProfile::GetName()
 	return m_pToolpathProfile->getName();
 }
 
+Lib3MF_uint32 CToolpathProfile::GetParameterCount()
+{
+	return m_pToolpathProfile->getParameterCount();
+}
+
+std::string CToolpathProfile::GetParameterName(const Lib3MF_uint32 nIndex)
+{
+	return m_pToolpathProfile->getParameterName(nIndex);
+
+}
+
+std::string CToolpathProfile::GetParameterNameSpace(const Lib3MF_uint32 nIndex)
+{
+	return m_pToolpathProfile->getParameterNameSpace(nIndex);
+}
+
+
 void CToolpathProfile::SetName(const std::string& sName)
 {
 	m_pToolpathProfile->setName(sName);
@@ -77,6 +95,22 @@ NMR::PModelToolpathProfile CToolpathProfile::getProfileInstance()
 bool CToolpathProfile::HasParameterValue(const std::string& sNameSpaceName, const std::string& sValueName)
 {
 	return m_pToolpathProfile->hasValue(sNameSpaceName, sValueName);
+}
+
+
+std::string CToolpathProfile::GetParameterValue(const std::string& sNameSpaceName, const std::string& sValueName)
+{
+	std::string sValue = m_pToolpathProfile->getValue(sNameSpaceName, sValueName);
+	return sValue;
+}
+
+std::string CToolpathProfile::GetParameterValueDef(const std::string& sNameSpaceName, const std::string& sValueName, const std::string& sDefaultValue)
+{
+	if (!m_pToolpathProfile->hasValue(sNameSpaceName, sValueName))
+		return sDefaultValue;
+
+	std::string sValue = m_pToolpathProfile->getValue(sNameSpaceName, sValueName);
+	return sValue;
 }
 
 Lib3MF_double CToolpathProfile::GetParameterDoubleValue(const std::string& sNameSpaceName, const std::string& sValueName)
@@ -95,7 +129,72 @@ Lib3MF_double CToolpathProfile::GetParameterDoubleValueDef(const std::string& sN
 }
 
 
+Lib3MF_int64 CToolpathProfile::GetParameterIntegerValue(const std::string& sNameSpaceName, const std::string& sValueName)
+{
+	std::string sValue = m_pToolpathProfile->getValue(sNameSpaceName, sValueName);
+	return std::stoll(sValue);
+}
+
+Lib3MF_int64 CToolpathProfile::GetParameterIntegerValueDef(const std::string& sNameSpaceName, const std::string& sValueName, const Lib3MF_int64 nDefaultValue)
+{
+	if (!m_pToolpathProfile->hasValue(sNameSpaceName, sValueName))
+		return nDefaultValue;
+
+	std::string sValue = m_pToolpathProfile->getValue(sNameSpaceName, sValueName);
+	return std::stoll(sValue);
+
+}
+
+bool CToolpathProfile::GetParameterBoolValue(const std::string& sNameSpaceName, const std::string& sValueName)
+{
+	std::string sValue = NMR::fnTrimString (NMR::fnStringToLower (m_pToolpathProfile->getValue(sNameSpaceName, sValueName)));
+	if (sValue == "true")
+		return true;
+
+	if (sValue == "false")
+		return true;
+
+	return (std::stoll(sValue) != 0);
+}
+
+bool CToolpathProfile::GetParameterBoolValueDef(const std::string& sNameSpaceName, const std::string& sValueName, const bool bDefaultValue)
+{
+	if (!m_pToolpathProfile->hasValue(sNameSpaceName, sValueName))
+		return bDefaultValue;
+
+	std::string sValue = NMR::fnTrimString(NMR::fnStringToLower(m_pToolpathProfile->getValue(sNameSpaceName, sValueName)));
+	if (sValue == "true")
+		return true;
+
+	if (sValue == "false")
+		return true;
+
+	return (std::stoll(sValue) != 0);
+}
+
+void CToolpathProfile::SetParameterValue(const std::string& sNameSpaceName, const std::string& sValueName, const std::string& sValue)
+{
+	m_pToolpathProfile->addValue(sNameSpaceName, sValueName, sValue);
+}
+
+
 void CToolpathProfile::SetParameterDoubleValue(const std::string& sNameSpaceName, const std::string& sValueName, const Lib3MF_double dValue)
 {
 	m_pToolpathProfile->addValue(sNameSpaceName, sValueName, std::to_string(dValue));
 }
+
+
+void CToolpathProfile::SetParameterIntegerValue(const std::string& sNameSpaceName, const std::string& sValueName, const Lib3MF_int64 nValue)
+{
+	m_pToolpathProfile->addValue(sNameSpaceName, sValueName, std::to_string(nValue));
+
+}
+
+void CToolpathProfile::SetParameterBoolValue(const std::string& sNameSpaceName, const std::string& sValueName, const bool bValue)
+{
+	if (bValue)
+		m_pToolpathProfile->addValue(sNameSpaceName, sValueName, "true");
+	else
+		m_pToolpathProfile->addValue(sNameSpaceName, sValueName, "false");
+}
+

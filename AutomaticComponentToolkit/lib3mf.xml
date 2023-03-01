@@ -1216,33 +1216,105 @@
 			<param name="Name" type="string" pass="return" description="Returns the name." />
 		</method>
 
+		<method name="GetParameterCount" description="Returns the number of parameters.">
+			<param name="Count" type="uint32" pass="return" description="Returns the number of parameters." />
+		</method>
+
+		<method name="GetParameterName" description="Returns the Name of a parameter.">
+			<param name="Index" type="uint32" pass="in" description="Index of Parameter (0-based). Call will fail if an invalid index is given." />
+			<param name="Name" type="string" pass="return" description="Returns the name of the parameter." />
+		</method>
+
+		<method name="GetParameterNameSpace" description="Returns the NameSpace of a parameter.">
+			<param name="Index" type="uint32" pass="in" description="Index of Parameter (0-based). Call will fail if an invalid index is given." />
+			<param name="NameSpace" type="string" pass="return" description="Returns the namespace of the parameter." />
+		</method>
+		
 		<method name="HasParameterValue" description="Checks if a parameter value exists.">
 			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
 			<param name="ValueName" type="string" pass="in" description="Value key string." />
 			<param name="ValueExists" type="bool" pass="return" description="Returns if a value exists." />
 		</method>
 
-		<method name="GetParameterDoubleValue" description="Retrieves a profile's parameter value. Fails if value does not exist.">
+		<method name="GetParameterValue" description="Retrieves a profile's parameter value. Fails if value does not exist.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="Value" type="string" pass="return" description="Returns the value of the field." />
+		</method>
+
+		<method name="GetParameterValueDef" description="Retrieves a profile's parameter value">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="DefaultValue" type="string" pass="in" description="Default value if value does not exist." />
+			<param name="Value" type="string" pass="return" description="Returns the value of the field." />
+		</method>
+
+		<method name="GetParameterDoubleValue" description="Retrieves a profile's parameter value as double. Fails if value does not exist or is not a double value.">
 			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
 			<param name="ValueName" type="string" pass="in" description="Value key string." />
 			<param name="Value" type="double" pass="return" description="Returns the value of the field." />
 		</method>
 
-		<method name="GetParameterDoubleValueDef" description="Retrieves a profile's parameter value">
+		<method name="GetParameterDoubleValueDef" description="Retrieves a profile's parameter value as double.">
 			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
 			<param name="ValueName" type="string" pass="in" description="Value key string." />
-			<param name="DefaultValue" type="double" pass="in" description="Default value if value does not exist." />
+			<param name="DefaultValue" type="double" pass="in" description="Default value if value does not exist or is not a double value." />
 			<param name="Value" type="double" pass="return" description="Returns the value of the field." />
 		</method>
 
+		<method name="GetParameterIntegerValue" description="Retrieves a profile's parameter value as integer. Fails if value does not exist or is not a integer value.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="Value" type="int64" pass="return" description="Returns the value of the field." />
+		</method>
+
+		<method name="GetParameterIntegerValueDef" description="Retrieves a profile's parameter value as integer.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="DefaultValue" type="int64" pass="in" description="Default value if value does not exist or is not a integer value." />
+			<param name="Value" type="int64" pass="return" description="Returns the value of the field." />
+		</method>
+		
+		<method name="GetParameterBoolValue" description="Retrieves a profile's parameter value as boolean. Fails if value does not exist or is not a boolean value.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="Value" type="bool" pass="return" description="Returns the value of the field." />
+		</method>
+
+		<method name="GetParameterBoolValueDef" description="Retrieves a profile's parameter value as boolean.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="DefaultValue" type="bool" pass="in" description="Default value if value does not exist or is not a boolean value." />
+			<param name="Value" type="bool" pass="return" description="Returns the value of the field." />
+		</method>
+		
 		<method name="SetName" description="Sets the profile's name">
 			<param name="Name" type="string" pass="in" description="Returns the name." />
 		</method>
 
-		<method name="SetParameterDoubleValue" description="Sets a profile's parameter value.">
+		<method name="SetParameterValue" description="Sets a profile's parameter value.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="Value" type="string" pass="in" description="String value of the parameter." />
+		</method>
+
+		<method name="SetParameterDoubleValue" description="Sets a profile's parameter value as double.">
 			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
 			<param name="ValueName" type="string" pass="in" description="Value key string." />
 			<param name="Value" type="double" pass="in" description="Double value of the parameter." />
+		</method>
+
+
+		<method name="SetParameterIntegerValue" description="Sets a profile's parameter value as integer.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="Value" type="int64" pass="in" description="Integer value of the parameter." />
+		</method>
+
+		<method name="SetParameterBoolValue" description="Sets a profile's parameter value as boolean.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="Value" type="bool" pass="in" description="Boolean value of the parameter." />
 		</method>
 
 	</class>

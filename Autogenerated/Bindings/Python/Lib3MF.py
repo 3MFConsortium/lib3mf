@@ -370,11 +370,23 @@ class FunctionTable:
 	lib3mf_slice_getztop = None
 	lib3mf_toolpathprofile_getuuid = None
 	lib3mf_toolpathprofile_getname = None
+	lib3mf_toolpathprofile_getparametercount = None
+	lib3mf_toolpathprofile_getparametername = None
+	lib3mf_toolpathprofile_getparameternamespace = None
 	lib3mf_toolpathprofile_hasparametervalue = None
+	lib3mf_toolpathprofile_getparametervalue = None
+	lib3mf_toolpathprofile_getparametervaluedef = None
 	lib3mf_toolpathprofile_getparameterdoublevalue = None
 	lib3mf_toolpathprofile_getparameterdoublevaluedef = None
+	lib3mf_toolpathprofile_getparameterintegervalue = None
+	lib3mf_toolpathprofile_getparameterintegervaluedef = None
+	lib3mf_toolpathprofile_getparameterboolvalue = None
+	lib3mf_toolpathprofile_getparameterboolvaluedef = None
 	lib3mf_toolpathprofile_setname = None
+	lib3mf_toolpathprofile_setparametervalue = None
 	lib3mf_toolpathprofile_setparameterdoublevalue = None
+	lib3mf_toolpathprofile_setparameterintegervalue = None
+	lib3mf_toolpathprofile_setparameterboolvalue = None
 	lib3mf_toolpathlayerreader_getlayerdatauuid = None
 	lib3mf_toolpathlayerreader_getsegmentcount = None
 	lib3mf_toolpathlayerreader_getsegmentinfo = None
@@ -2370,11 +2382,41 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
 			self.lib.lib3mf_toolpathprofile_getname = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_getparametercount")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathprofile_getparametercount = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_getparametername")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathprofile_getparametername = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_getparameternamespace")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathprofile_getparameternamespace = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_hasparametervalue")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_bool))
 			self.lib.lib3mf_toolpathprofile_hasparametervalue = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_getparametervalue")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathprofile_getparametervalue = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_getparametervaluedef")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathprofile_getparametervaluedef = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_getparameterdoublevalue")), methodAddress)
 			if err != 0:
@@ -2388,17 +2430,59 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_double, ctypes.POINTER(ctypes.c_double))
 			self.lib.lib3mf_toolpathprofile_getparameterdoublevaluedef = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_getparameterintegervalue")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_int64))
+			self.lib.lib3mf_toolpathprofile_getparameterintegervalue = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_getparameterintegervaluedef")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_int64, ctypes.POINTER(ctypes.c_int64))
+			self.lib.lib3mf_toolpathprofile_getparameterintegervaluedef = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_getparameterboolvalue")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_toolpathprofile_getparameterboolvalue = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_getparameterboolvaluedef")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_bool, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_toolpathprofile_getparameterboolvaluedef = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_setname")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
 			self.lib.lib3mf_toolpathprofile_setname = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_setparametervalue")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p)
+			self.lib.lib3mf_toolpathprofile_setparametervalue = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_setparameterdoublevalue")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_double)
 			self.lib.lib3mf_toolpathprofile_setparameterdoublevalue = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_setparameterintegervalue")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_int64)
+			self.lib.lib3mf_toolpathprofile_setparameterintegervalue = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_setparameterboolvalue")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_bool)
+			self.lib.lib3mf_toolpathprofile_setparameterboolvalue = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getlayerdatauuid")), methodAddress)
 			if err != 0:
@@ -4028,8 +4112,23 @@ class Wrapper:
 			self.lib.lib3mf_toolpathprofile_getname.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathprofile_getname.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
+			self.lib.lib3mf_toolpathprofile_getparametercount.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_getparametercount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathprofile_getparametername.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_getparametername.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathprofile_getparameternamespace.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_getparameternamespace.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
 			self.lib.lib3mf_toolpathprofile_hasparametervalue.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathprofile_hasparametervalue.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_toolpathprofile_getparametervalue.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_getparametervalue.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathprofile_getparametervaluedef.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_getparametervaluedef.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
 			self.lib.lib3mf_toolpathprofile_getparameterdoublevalue.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathprofile_getparameterdoublevalue.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_double)]
@@ -4037,11 +4136,32 @@ class Wrapper:
 			self.lib.lib3mf_toolpathprofile_getparameterdoublevaluedef.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathprofile_getparameterdoublevaluedef.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_double, ctypes.POINTER(ctypes.c_double)]
 			
+			self.lib.lib3mf_toolpathprofile_getparameterintegervalue.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_getparameterintegervalue.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_int64)]
+			
+			self.lib.lib3mf_toolpathprofile_getparameterintegervaluedef.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_getparameterintegervaluedef.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_int64, ctypes.POINTER(ctypes.c_int64)]
+			
+			self.lib.lib3mf_toolpathprofile_getparameterboolvalue.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_getparameterboolvalue.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_toolpathprofile_getparameterboolvaluedef.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_getparameterboolvaluedef.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_bool, ctypes.POINTER(ctypes.c_bool)]
+			
 			self.lib.lib3mf_toolpathprofile_setname.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathprofile_setname.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
 			
+			self.lib.lib3mf_toolpathprofile_setparametervalue.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_setparametervalue.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
+			
 			self.lib.lib3mf_toolpathprofile_setparameterdoublevalue.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathprofile_setparameterdoublevalue.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_double]
+			
+			self.lib.lib3mf_toolpathprofile_setparameterintegervalue.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_setparameterintegervalue.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_int64]
+			
+			self.lib.lib3mf_toolpathprofile_setparameterboolvalue.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_setparameterboolvalue.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_bool]
 			
 			self.lib.lib3mf_toolpathlayerreader_getlayerdatauuid.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_getlayerdatauuid.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
@@ -6785,6 +6905,36 @@ class ToolpathProfile(Base):
 		
 		return pNameBuffer.value.decode()
 	
+	def GetParameterCount(self):
+		pCount = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getparametercount(self._handle, pCount))
+		
+		return pCount.value
+	
+	def GetParameterName(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		nNameBufferSize = ctypes.c_uint64(0)
+		nNameNeededChars = ctypes.c_uint64(0)
+		pNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getparametername(self._handle, nIndex, nNameBufferSize, nNameNeededChars, pNameBuffer))
+		nNameBufferSize = ctypes.c_uint64(nNameNeededChars.value)
+		pNameBuffer = (ctypes.c_char * (nNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getparametername(self._handle, nIndex, nNameBufferSize, nNameNeededChars, pNameBuffer))
+		
+		return pNameBuffer.value.decode()
+	
+	def GetParameterNameSpace(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		nNameSpaceBufferSize = ctypes.c_uint64(0)
+		nNameSpaceNeededChars = ctypes.c_uint64(0)
+		pNameSpaceBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getparameternamespace(self._handle, nIndex, nNameSpaceBufferSize, nNameSpaceNeededChars, pNameSpaceBuffer))
+		nNameSpaceBufferSize = ctypes.c_uint64(nNameSpaceNeededChars.value)
+		pNameSpaceBuffer = (ctypes.c_char * (nNameSpaceNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getparameternamespace(self._handle, nIndex, nNameSpaceBufferSize, nNameSpaceNeededChars, pNameSpaceBuffer))
+		
+		return pNameSpaceBuffer.value.decode()
+	
 	def HasParameterValue(self, NameSpaceName, ValueName):
 		pNameSpaceName = ctypes.c_char_p(str.encode(NameSpaceName))
 		pValueName = ctypes.c_char_p(str.encode(ValueName))
@@ -6792,6 +6942,33 @@ class ToolpathProfile(Base):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_hasparametervalue(self._handle, pNameSpaceName, pValueName, pValueExists))
 		
 		return pValueExists.value
+	
+	def GetParameterValue(self, NameSpaceName, ValueName):
+		pNameSpaceName = ctypes.c_char_p(str.encode(NameSpaceName))
+		pValueName = ctypes.c_char_p(str.encode(ValueName))
+		nValueBufferSize = ctypes.c_uint64(0)
+		nValueNeededChars = ctypes.c_uint64(0)
+		pValueBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getparametervalue(self._handle, pNameSpaceName, pValueName, nValueBufferSize, nValueNeededChars, pValueBuffer))
+		nValueBufferSize = ctypes.c_uint64(nValueNeededChars.value)
+		pValueBuffer = (ctypes.c_char * (nValueNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getparametervalue(self._handle, pNameSpaceName, pValueName, nValueBufferSize, nValueNeededChars, pValueBuffer))
+		
+		return pValueBuffer.value.decode()
+	
+	def GetParameterValueDef(self, NameSpaceName, ValueName, DefaultValue):
+		pNameSpaceName = ctypes.c_char_p(str.encode(NameSpaceName))
+		pValueName = ctypes.c_char_p(str.encode(ValueName))
+		pDefaultValue = ctypes.c_char_p(str.encode(DefaultValue))
+		nValueBufferSize = ctypes.c_uint64(0)
+		nValueNeededChars = ctypes.c_uint64(0)
+		pValueBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getparametervaluedef(self._handle, pNameSpaceName, pValueName, pDefaultValue, nValueBufferSize, nValueNeededChars, pValueBuffer))
+		nValueBufferSize = ctypes.c_uint64(nValueNeededChars.value)
+		pValueBuffer = (ctypes.c_char * (nValueNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getparametervaluedef(self._handle, pNameSpaceName, pValueName, pDefaultValue, nValueBufferSize, nValueNeededChars, pValueBuffer))
+		
+		return pValueBuffer.value.decode()
 	
 	def GetParameterDoubleValue(self, NameSpaceName, ValueName):
 		pNameSpaceName = ctypes.c_char_p(str.encode(NameSpaceName))
@@ -6810,9 +6987,50 @@ class ToolpathProfile(Base):
 		
 		return pValue.value
 	
+	def GetParameterIntegerValue(self, NameSpaceName, ValueName):
+		pNameSpaceName = ctypes.c_char_p(str.encode(NameSpaceName))
+		pValueName = ctypes.c_char_p(str.encode(ValueName))
+		pValue = ctypes.c_int64()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getparameterintegervalue(self._handle, pNameSpaceName, pValueName, pValue))
+		
+		return pValue.value
+	
+	def GetParameterIntegerValueDef(self, NameSpaceName, ValueName, DefaultValue):
+		pNameSpaceName = ctypes.c_char_p(str.encode(NameSpaceName))
+		pValueName = ctypes.c_char_p(str.encode(ValueName))
+		nDefaultValue = ctypes.c_int64(DefaultValue)
+		pValue = ctypes.c_int64()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getparameterintegervaluedef(self._handle, pNameSpaceName, pValueName, nDefaultValue, pValue))
+		
+		return pValue.value
+	
+	def GetParameterBoolValue(self, NameSpaceName, ValueName):
+		pNameSpaceName = ctypes.c_char_p(str.encode(NameSpaceName))
+		pValueName = ctypes.c_char_p(str.encode(ValueName))
+		pValue = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getparameterboolvalue(self._handle, pNameSpaceName, pValueName, pValue))
+		
+		return pValue.value
+	
+	def GetParameterBoolValueDef(self, NameSpaceName, ValueName, DefaultValue):
+		pNameSpaceName = ctypes.c_char_p(str.encode(NameSpaceName))
+		pValueName = ctypes.c_char_p(str.encode(ValueName))
+		bDefaultValue = ctypes.c_bool(DefaultValue)
+		pValue = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getparameterboolvaluedef(self._handle, pNameSpaceName, pValueName, bDefaultValue, pValue))
+		
+		return pValue.value
+	
 	def SetName(self, Name):
 		pName = ctypes.c_char_p(str.encode(Name))
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_setname(self._handle, pName))
+		
+	
+	def SetParameterValue(self, NameSpaceName, ValueName, Value):
+		pNameSpaceName = ctypes.c_char_p(str.encode(NameSpaceName))
+		pValueName = ctypes.c_char_p(str.encode(ValueName))
+		pValue = ctypes.c_char_p(str.encode(Value))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_setparametervalue(self._handle, pNameSpaceName, pValueName, pValue))
 		
 	
 	def SetParameterDoubleValue(self, NameSpaceName, ValueName, Value):
@@ -6820,6 +7038,20 @@ class ToolpathProfile(Base):
 		pValueName = ctypes.c_char_p(str.encode(ValueName))
 		dValue = ctypes.c_double(Value)
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_setparameterdoublevalue(self._handle, pNameSpaceName, pValueName, dValue))
+		
+	
+	def SetParameterIntegerValue(self, NameSpaceName, ValueName, Value):
+		pNameSpaceName = ctypes.c_char_p(str.encode(NameSpaceName))
+		pValueName = ctypes.c_char_p(str.encode(ValueName))
+		nValue = ctypes.c_int64(Value)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_setparameterintegervalue(self._handle, pNameSpaceName, pValueName, nValue))
+		
+	
+	def SetParameterBoolValue(self, NameSpaceName, ValueName, Value):
+		pNameSpaceName = ctypes.c_char_p(str.encode(NameSpaceName))
+		pValueName = ctypes.c_char_p(str.encode(ValueName))
+		bValue = ctypes.c_bool(Value)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_setparameterboolvalue(self._handle, pNameSpaceName, pValueName, bValue))
 		
 	
 

@@ -1479,11 +1479,23 @@ public:
 	
 	inline std::string GetUUID();
 	inline std::string GetName();
+	inline Lib3MF_uint32 GetParameterCount();
+	inline std::string GetParameterName(const Lib3MF_uint32 nIndex);
+	inline std::string GetParameterNameSpace(const Lib3MF_uint32 nIndex);
 	inline bool HasParameterValue(const std::string & sNameSpaceName, const std::string & sValueName);
+	inline std::string GetParameterValue(const std::string & sNameSpaceName, const std::string & sValueName);
+	inline std::string GetParameterValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const std::string & sDefaultValue);
 	inline Lib3MF_double GetParameterDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName);
 	inline Lib3MF_double GetParameterDoubleValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dDefaultValue);
+	inline Lib3MF_int64 GetParameterIntegerValue(const std::string & sNameSpaceName, const std::string & sValueName);
+	inline Lib3MF_int64 GetParameterIntegerValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_int64 nDefaultValue);
+	inline bool GetParameterBoolValue(const std::string & sNameSpaceName, const std::string & sValueName);
+	inline bool GetParameterBoolValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const bool bDefaultValue);
 	inline void SetName(const std::string & sName);
+	inline void SetParameterValue(const std::string & sNameSpaceName, const std::string & sValueName, const std::string & sValue);
 	inline void SetParameterDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dValue);
+	inline void SetParameterIntegerValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_int64 nValue);
+	inline void SetParameterBoolValue(const std::string & sNameSpaceName, const std::string & sValueName, const bool bValue);
 };
 	
 /*************************************************************************************************************************
@@ -2407,11 +2419,23 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Slice_GetZTop = nullptr;
 		pWrapperTable->m_ToolpathProfile_GetUUID = nullptr;
 		pWrapperTable->m_ToolpathProfile_GetName = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetParameterCount = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetParameterName = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetParameterNameSpace = nullptr;
 		pWrapperTable->m_ToolpathProfile_HasParameterValue = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetParameterValue = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetParameterValueDef = nullptr;
 		pWrapperTable->m_ToolpathProfile_GetParameterDoubleValue = nullptr;
 		pWrapperTable->m_ToolpathProfile_GetParameterDoubleValueDef = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetParameterIntegerValue = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetParameterIntegerValueDef = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetParameterBoolValue = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetParameterBoolValueDef = nullptr;
 		pWrapperTable->m_ToolpathProfile_SetName = nullptr;
+		pWrapperTable->m_ToolpathProfile_SetParameterValue = nullptr;
 		pWrapperTable->m_ToolpathProfile_SetParameterDoubleValue = nullptr;
+		pWrapperTable->m_ToolpathProfile_SetParameterIntegerValue = nullptr;
+		pWrapperTable->m_ToolpathProfile_SetParameterBoolValue = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_GetLayerDataUUID = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentCount = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentInfo = nullptr;
@@ -4749,12 +4773,57 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterCount = (PLib3MFToolpathProfile_GetParameterCountPtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getparametercount");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterCount = (PLib3MFToolpathProfile_GetParameterCountPtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getparametercount");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetParameterCount == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterName = (PLib3MFToolpathProfile_GetParameterNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getparametername");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterName = (PLib3MFToolpathProfile_GetParameterNamePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getparametername");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetParameterName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterNameSpace = (PLib3MFToolpathProfile_GetParameterNameSpacePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getparameternamespace");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterNameSpace = (PLib3MFToolpathProfile_GetParameterNameSpacePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getparameternamespace");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetParameterNameSpace == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_ToolpathProfile_HasParameterValue = (PLib3MFToolpathProfile_HasParameterValuePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_hasparametervalue");
 		#else // _WIN32
 		pWrapperTable->m_ToolpathProfile_HasParameterValue = (PLib3MFToolpathProfile_HasParameterValuePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_hasparametervalue");
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_ToolpathProfile_HasParameterValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterValue = (PLib3MFToolpathProfile_GetParameterValuePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getparametervalue");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterValue = (PLib3MFToolpathProfile_GetParameterValuePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getparametervalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetParameterValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterValueDef = (PLib3MFToolpathProfile_GetParameterValueDefPtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getparametervaluedef");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterValueDef = (PLib3MFToolpathProfile_GetParameterValueDefPtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getparametervaluedef");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetParameterValueDef == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -4776,6 +4845,42 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterIntegerValue = (PLib3MFToolpathProfile_GetParameterIntegerValuePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getparameterintegervalue");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterIntegerValue = (PLib3MFToolpathProfile_GetParameterIntegerValuePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getparameterintegervalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetParameterIntegerValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterIntegerValueDef = (PLib3MFToolpathProfile_GetParameterIntegerValueDefPtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getparameterintegervaluedef");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterIntegerValueDef = (PLib3MFToolpathProfile_GetParameterIntegerValueDefPtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getparameterintegervaluedef");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetParameterIntegerValueDef == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterBoolValue = (PLib3MFToolpathProfile_GetParameterBoolValuePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getparameterboolvalue");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterBoolValue = (PLib3MFToolpathProfile_GetParameterBoolValuePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getparameterboolvalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetParameterBoolValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterBoolValueDef = (PLib3MFToolpathProfile_GetParameterBoolValueDefPtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getparameterboolvaluedef");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterBoolValueDef = (PLib3MFToolpathProfile_GetParameterBoolValueDefPtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getparameterboolvaluedef");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetParameterBoolValueDef == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_ToolpathProfile_SetName = (PLib3MFToolpathProfile_SetNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_setname");
 		#else // _WIN32
 		pWrapperTable->m_ToolpathProfile_SetName = (PLib3MFToolpathProfile_SetNamePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_setname");
@@ -4785,12 +4890,39 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_SetParameterValue = (PLib3MFToolpathProfile_SetParameterValuePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_setparametervalue");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_SetParameterValue = (PLib3MFToolpathProfile_SetParameterValuePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_setparametervalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_SetParameterValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_ToolpathProfile_SetParameterDoubleValue = (PLib3MFToolpathProfile_SetParameterDoubleValuePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_setparameterdoublevalue");
 		#else // _WIN32
 		pWrapperTable->m_ToolpathProfile_SetParameterDoubleValue = (PLib3MFToolpathProfile_SetParameterDoubleValuePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_setparameterdoublevalue");
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_ToolpathProfile_SetParameterDoubleValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_SetParameterIntegerValue = (PLib3MFToolpathProfile_SetParameterIntegerValuePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_setparameterintegervalue");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_SetParameterIntegerValue = (PLib3MFToolpathProfile_SetParameterIntegerValuePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_setparameterintegervalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_SetParameterIntegerValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_SetParameterBoolValue = (PLib3MFToolpathProfile_SetParameterBoolValuePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_setparameterboolvalue");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_SetParameterBoolValue = (PLib3MFToolpathProfile_SetParameterBoolValuePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_setparameterboolvalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_SetParameterBoolValue == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -7211,8 +7343,28 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetName == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getparametercount", (void**)&(pWrapperTable->m_ToolpathProfile_GetParameterCount));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetParameterCount == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getparametername", (void**)&(pWrapperTable->m_ToolpathProfile_GetParameterName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetParameterName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getparameternamespace", (void**)&(pWrapperTable->m_ToolpathProfile_GetParameterNameSpace));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetParameterNameSpace == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_toolpathprofile_hasparametervalue", (void**)&(pWrapperTable->m_ToolpathProfile_HasParameterValue));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_HasParameterValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getparametervalue", (void**)&(pWrapperTable->m_ToolpathProfile_GetParameterValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetParameterValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getparametervaluedef", (void**)&(pWrapperTable->m_ToolpathProfile_GetParameterValueDef));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetParameterValueDef == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getparameterdoublevalue", (void**)&(pWrapperTable->m_ToolpathProfile_GetParameterDoubleValue));
@@ -7223,12 +7375,40 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetParameterDoubleValueDef == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getparameterintegervalue", (void**)&(pWrapperTable->m_ToolpathProfile_GetParameterIntegerValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetParameterIntegerValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getparameterintegervaluedef", (void**)&(pWrapperTable->m_ToolpathProfile_GetParameterIntegerValueDef));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetParameterIntegerValueDef == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getparameterboolvalue", (void**)&(pWrapperTable->m_ToolpathProfile_GetParameterBoolValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetParameterBoolValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getparameterboolvaluedef", (void**)&(pWrapperTable->m_ToolpathProfile_GetParameterBoolValueDef));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetParameterBoolValueDef == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_toolpathprofile_setname", (void**)&(pWrapperTable->m_ToolpathProfile_SetName));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_SetName == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_setparametervalue", (void**)&(pWrapperTable->m_ToolpathProfile_SetParameterValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_SetParameterValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_toolpathprofile_setparameterdoublevalue", (void**)&(pWrapperTable->m_ToolpathProfile_SetParameterDoubleValue));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_SetParameterDoubleValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_setparameterintegervalue", (void**)&(pWrapperTable->m_ToolpathProfile_SetParameterIntegerValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_SetParameterIntegerValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_setparameterboolvalue", (void**)&(pWrapperTable->m_ToolpathProfile_SetParameterBoolValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_SetParameterBoolValue == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getlayerdatauuid", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetLayerDataUUID));
@@ -10870,6 +11050,50 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CToolpathProfile::GetParameterCount - Returns the number of parameters.
+	* @return Returns the number of parameters.
+	*/
+	Lib3MF_uint32 CToolpathProfile::GetParameterCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterCount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterName - Returns the Name of a parameter.
+	* @param[in] nIndex - Index of Parameter (0-based). Call will fail if an invalid index is given.
+	* @return Returns the name of the parameter.
+	*/
+	std::string CToolpathProfile::GetParameterName(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_uint32 bytesNeededName = 0;
+		Lib3MF_uint32 bytesWrittenName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterName(m_pHandle, nIndex, 0, &bytesNeededName, nullptr));
+		std::vector<char> bufferName(bytesNeededName);
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterName(m_pHandle, nIndex, bytesNeededName, &bytesWrittenName, &bufferName[0]));
+		
+		return std::string(&bufferName[0]);
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterNameSpace - Returns the NameSpace of a parameter.
+	* @param[in] nIndex - Index of Parameter (0-based). Call will fail if an invalid index is given.
+	* @return Returns the namespace of the parameter.
+	*/
+	std::string CToolpathProfile::GetParameterNameSpace(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterNameSpace(m_pHandle, nIndex, 0, &bytesNeededNameSpace, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterNameSpace(m_pHandle, nIndex, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0]));
+		
+		return std::string(&bufferNameSpace[0]);
+	}
+	
+	/**
 	* CToolpathProfile::HasParameterValue - Checks if a parameter value exists.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
@@ -10884,7 +11108,42 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathProfile::GetParameterDoubleValue - Retrieves a profile's parameter value. Fails if value does not exist.
+	* CToolpathProfile::GetParameterValue - Retrieves a profile's parameter value. Fails if value does not exist.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns the value of the field.
+	*/
+	std::string CToolpathProfile::GetParameterValue(const std::string & sNameSpaceName, const std::string & sValueName)
+	{
+		Lib3MF_uint32 bytesNeededValue = 0;
+		Lib3MF_uint32 bytesWrittenValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterValue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), 0, &bytesNeededValue, nullptr));
+		std::vector<char> bufferValue(bytesNeededValue);
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterValue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), bytesNeededValue, &bytesWrittenValue, &bufferValue[0]));
+		
+		return std::string(&bufferValue[0]);
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterValueDef - Retrieves a profile's parameter value
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] sDefaultValue - Default value if value does not exist.
+	* @return Returns the value of the field.
+	*/
+	std::string CToolpathProfile::GetParameterValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const std::string & sDefaultValue)
+	{
+		Lib3MF_uint32 bytesNeededValue = 0;
+		Lib3MF_uint32 bytesWrittenValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterValueDef(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), sDefaultValue.c_str(), 0, &bytesNeededValue, nullptr));
+		std::vector<char> bufferValue(bytesNeededValue);
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterValueDef(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), sDefaultValue.c_str(), bytesNeededValue, &bytesWrittenValue, &bufferValue[0]));
+		
+		return std::string(&bufferValue[0]);
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterDoubleValue - Retrieves a profile's parameter value as double. Fails if value does not exist or is not a double value.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
 	* @return Returns the value of the field.
@@ -10898,16 +11157,74 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathProfile::GetParameterDoubleValueDef - Retrieves a profile's parameter value
+	* CToolpathProfile::GetParameterDoubleValueDef - Retrieves a profile's parameter value as double.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
-	* @param[in] dDefaultValue - Default value if value does not exist.
+	* @param[in] dDefaultValue - Default value if value does not exist or is not a double value.
 	* @return Returns the value of the field.
 	*/
 	Lib3MF_double CToolpathProfile::GetParameterDoubleValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dDefaultValue)
 	{
 		Lib3MF_double resultValue = 0;
 		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterDoubleValueDef(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), dDefaultValue, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterIntegerValue - Retrieves a profile's parameter value as integer. Fails if value does not exist or is not a integer value.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns the value of the field.
+	*/
+	Lib3MF_int64 CToolpathProfile::GetParameterIntegerValue(const std::string & sNameSpaceName, const std::string & sValueName)
+	{
+		Lib3MF_int64 resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterIntegerValue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterIntegerValueDef - Retrieves a profile's parameter value as integer.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] nDefaultValue - Default value if value does not exist or is not a integer value.
+	* @return Returns the value of the field.
+	*/
+	Lib3MF_int64 CToolpathProfile::GetParameterIntegerValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_int64 nDefaultValue)
+	{
+		Lib3MF_int64 resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterIntegerValueDef(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), nDefaultValue, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterBoolValue - Retrieves a profile's parameter value as boolean. Fails if value does not exist or is not a boolean value.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns the value of the field.
+	*/
+	bool CToolpathProfile::GetParameterBoolValue(const std::string & sNameSpaceName, const std::string & sValueName)
+	{
+		bool resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterBoolValue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterBoolValueDef - Retrieves a profile's parameter value as boolean.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] bDefaultValue - Default value if value does not exist or is not a boolean value.
+	* @return Returns the value of the field.
+	*/
+	bool CToolpathProfile::GetParameterBoolValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const bool bDefaultValue)
+	{
+		bool resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterBoolValueDef(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), bDefaultValue, &resultValue));
 		
 		return resultValue;
 	}
@@ -10922,7 +11239,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathProfile::SetParameterDoubleValue - Sets a profile's parameter value.
+	* CToolpathProfile::SetParameterValue - Sets a profile's parameter value.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] sValue - String value of the parameter.
+	*/
+	void CToolpathProfile::SetParameterValue(const std::string & sNameSpaceName, const std::string & sValueName, const std::string & sValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_SetParameterValue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), sValue.c_str()));
+	}
+	
+	/**
+	* CToolpathProfile::SetParameterDoubleValue - Sets a profile's parameter value as double.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
 	* @param[in] dValue - Double value of the parameter.
@@ -10930,6 +11258,28 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	void CToolpathProfile::SetParameterDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dValue)
 	{
 		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_SetParameterDoubleValue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), dValue));
+	}
+	
+	/**
+	* CToolpathProfile::SetParameterIntegerValue - Sets a profile's parameter value as integer.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] nValue - Integer value of the parameter.
+	*/
+	void CToolpathProfile::SetParameterIntegerValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_int64 nValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_SetParameterIntegerValue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), nValue));
+	}
+	
+	/**
+	* CToolpathProfile::SetParameterBoolValue - Sets a profile's parameter value as boolean.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] bValue - Boolean value of the parameter.
+	*/
+	void CToolpathProfile::SetParameterBoolValue(const std::string & sNameSpaceName, const std::string & sValueName, const bool bValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_SetParameterBoolValue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), bValue));
 	}
 	
 	/**

@@ -2912,6 +2912,39 @@ type
 	TLib3MFToolpathProfile_GetNameFunc = function(pToolpathProfile: TLib3MFHandle; const nNameBufferSize: Cardinal; out pNameNeededChars: Cardinal; pNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
+	* Returns the number of parameters.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[out] pCount - Returns the number of parameters.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterCountFunc = function(pToolpathProfile: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the Name of a parameter.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] nIndex - Index of Parameter (0-based). Call will fail if an invalid index is given.
+	* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameBuffer -  buffer of Returns the name of the parameter., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterNameFunc = function(pToolpathProfile: TLib3MFHandle; const nIndex: Cardinal; const nNameBufferSize: Cardinal; out pNameNeededChars: Cardinal; pNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the NameSpace of a parameter.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] nIndex - Index of Parameter (0-based). Call will fail if an invalid index is given.
+	* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameSpaceBuffer -  buffer of Returns the namespace of the parameter., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterNameSpaceFunc = function(pToolpathProfile: TLib3MFHandle; const nIndex: Cardinal; const nNameSpaceBufferSize: Cardinal; out pNameSpaceNeededChars: Cardinal; pNameSpaceBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
 	* Checks if a parameter value exists.
 	*
 	* @param[in] pToolpathProfile - ToolpathProfile instance.
@@ -2928,10 +2961,12 @@ type
 	* @param[in] pToolpathProfile - ToolpathProfile instance.
 	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] pValueName - Value key string.
-	* @param[out] pValue - Returns the value of the field.
+	* @param[in] nValueBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pValueNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pValueBuffer -  buffer of Returns the value of the field., may be NULL
 	* @return error code or 0 (success)
 	*)
-	TLib3MFToolpathProfile_GetParameterDoubleValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; out pValue: Double): TLib3MFResult; cdecl;
+	TLib3MFToolpathProfile_GetParameterValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const nValueBufferSize: Cardinal; out pValueNeededChars: Cardinal; pValueBuffer: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves a profile's parameter value
@@ -2939,11 +2974,82 @@ type
 	* @param[in] pToolpathProfile - ToolpathProfile instance.
 	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] pValueName - Value key string.
-	* @param[in] dDefaultValue - Default value if value does not exist.
+	* @param[in] pDefaultValue - Default value if value does not exist.
+	* @param[in] nValueBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pValueNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pValueBuffer -  buffer of Returns the value of the field., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterValueDefFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const pDefaultValue: PAnsiChar; const nValueBufferSize: Cardinal; out pValueNeededChars: Cardinal; pValueBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a profile's parameter value as double. Fails if value does not exist or is not a double value.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[out] pValue - Returns the value of the field.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterDoubleValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; out pValue: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a profile's parameter value as double.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[in] dDefaultValue - Default value if value does not exist or is not a double value.
 	* @param[out] pValue - Returns the value of the field.
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpathProfile_GetParameterDoubleValueDefFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const dDefaultValue: Double; out pValue: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a profile's parameter value as integer. Fails if value does not exist or is not a integer value.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[out] pValue - Returns the value of the field.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterIntegerValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; out pValue: Int64): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a profile's parameter value as integer.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[in] nDefaultValue - Default value if value does not exist or is not a integer value.
+	* @param[out] pValue - Returns the value of the field.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterIntegerValueDefFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const nDefaultValue: Int64; out pValue: Int64): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a profile's parameter value as boolean. Fails if value does not exist or is not a boolean value.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[out] pValue - Returns the value of the field.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterBoolValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; out pValue: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a profile's parameter value as boolean.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[in] bDefaultValue - Default value if value does not exist or is not a boolean value.
+	* @param[out] pValue - Returns the value of the field.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterBoolValueDefFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const bDefaultValue: Byte; out pValue: Byte): TLib3MFResult; cdecl;
 	
 	(**
 	* Sets the profile's name
@@ -2960,10 +3066,43 @@ type
 	* @param[in] pToolpathProfile - ToolpathProfile instance.
 	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] pValueName - Value key string.
+	* @param[in] pValue - String value of the parameter.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_SetParameterValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const pValue: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets a profile's parameter value as double.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
 	* @param[in] dValue - Double value of the parameter.
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpathProfile_SetParameterDoubleValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const dValue: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets a profile's parameter value as integer.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[in] nValue - Integer value of the parameter.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_SetParameterIntegerValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const nValue: Int64): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets a profile's parameter value as boolean.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[in] bValue - Boolean value of the parameter.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_SetParameterBoolValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const bValue: Byte): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -5291,11 +5430,23 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		destructor Destroy; override;
 		function GetUUID(): String;
 		function GetName(): String;
+		function GetParameterCount(): Cardinal;
+		function GetParameterName(const AIndex: Cardinal): String;
+		function GetParameterNameSpace(const AIndex: Cardinal): String;
 		function HasParameterValue(const ANameSpaceName: String; const AValueName: String): Boolean;
+		function GetParameterValue(const ANameSpaceName: String; const AValueName: String): String;
+		function GetParameterValueDef(const ANameSpaceName: String; const AValueName: String; const ADefaultValue: String): String;
 		function GetParameterDoubleValue(const ANameSpaceName: String; const AValueName: String): Double;
 		function GetParameterDoubleValueDef(const ANameSpaceName: String; const AValueName: String; const ADefaultValue: Double): Double;
+		function GetParameterIntegerValue(const ANameSpaceName: String; const AValueName: String): Int64;
+		function GetParameterIntegerValueDef(const ANameSpaceName: String; const AValueName: String; const ADefaultValue: Int64): Int64;
+		function GetParameterBoolValue(const ANameSpaceName: String; const AValueName: String): Boolean;
+		function GetParameterBoolValueDef(const ANameSpaceName: String; const AValueName: String; const ADefaultValue: Boolean): Boolean;
 		procedure SetName(const AName: String);
+		procedure SetParameterValue(const ANameSpaceName: String; const AValueName: String; const AValue: String);
 		procedure SetParameterDoubleValue(const ANameSpaceName: String; const AValueName: String; const AValue: Double);
+		procedure SetParameterIntegerValue(const ANameSpaceName: String; const AValueName: String; const AValue: Int64);
+		procedure SetParameterBoolValue(const ANameSpaceName: String; const AValueName: String; const AValue: Boolean);
 	end;
 
 
@@ -5816,11 +5967,23 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFSlice_GetZTopFunc: TLib3MFSlice_GetZTopFunc;
 		FLib3MFToolpathProfile_GetUUIDFunc: TLib3MFToolpathProfile_GetUUIDFunc;
 		FLib3MFToolpathProfile_GetNameFunc: TLib3MFToolpathProfile_GetNameFunc;
+		FLib3MFToolpathProfile_GetParameterCountFunc: TLib3MFToolpathProfile_GetParameterCountFunc;
+		FLib3MFToolpathProfile_GetParameterNameFunc: TLib3MFToolpathProfile_GetParameterNameFunc;
+		FLib3MFToolpathProfile_GetParameterNameSpaceFunc: TLib3MFToolpathProfile_GetParameterNameSpaceFunc;
 		FLib3MFToolpathProfile_HasParameterValueFunc: TLib3MFToolpathProfile_HasParameterValueFunc;
+		FLib3MFToolpathProfile_GetParameterValueFunc: TLib3MFToolpathProfile_GetParameterValueFunc;
+		FLib3MFToolpathProfile_GetParameterValueDefFunc: TLib3MFToolpathProfile_GetParameterValueDefFunc;
 		FLib3MFToolpathProfile_GetParameterDoubleValueFunc: TLib3MFToolpathProfile_GetParameterDoubleValueFunc;
 		FLib3MFToolpathProfile_GetParameterDoubleValueDefFunc: TLib3MFToolpathProfile_GetParameterDoubleValueDefFunc;
+		FLib3MFToolpathProfile_GetParameterIntegerValueFunc: TLib3MFToolpathProfile_GetParameterIntegerValueFunc;
+		FLib3MFToolpathProfile_GetParameterIntegerValueDefFunc: TLib3MFToolpathProfile_GetParameterIntegerValueDefFunc;
+		FLib3MFToolpathProfile_GetParameterBoolValueFunc: TLib3MFToolpathProfile_GetParameterBoolValueFunc;
+		FLib3MFToolpathProfile_GetParameterBoolValueDefFunc: TLib3MFToolpathProfile_GetParameterBoolValueDefFunc;
 		FLib3MFToolpathProfile_SetNameFunc: TLib3MFToolpathProfile_SetNameFunc;
+		FLib3MFToolpathProfile_SetParameterValueFunc: TLib3MFToolpathProfile_SetParameterValueFunc;
 		FLib3MFToolpathProfile_SetParameterDoubleValueFunc: TLib3MFToolpathProfile_SetParameterDoubleValueFunc;
+		FLib3MFToolpathProfile_SetParameterIntegerValueFunc: TLib3MFToolpathProfile_SetParameterIntegerValueFunc;
+		FLib3MFToolpathProfile_SetParameterBoolValueFunc: TLib3MFToolpathProfile_SetParameterBoolValueFunc;
 		FLib3MFToolpathLayerReader_GetLayerDataUUIDFunc: TLib3MFToolpathLayerReader_GetLayerDataUUIDFunc;
 		FLib3MFToolpathLayerReader_GetSegmentCountFunc: TLib3MFToolpathLayerReader_GetSegmentCountFunc;
 		FLib3MFToolpathLayerReader_GetSegmentInfoFunc: TLib3MFToolpathLayerReader_GetSegmentInfoFunc;
@@ -6229,11 +6392,23 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFSlice_GetZTopFunc: TLib3MFSlice_GetZTopFunc read FLib3MFSlice_GetZTopFunc;
 		property Lib3MFToolpathProfile_GetUUIDFunc: TLib3MFToolpathProfile_GetUUIDFunc read FLib3MFToolpathProfile_GetUUIDFunc;
 		property Lib3MFToolpathProfile_GetNameFunc: TLib3MFToolpathProfile_GetNameFunc read FLib3MFToolpathProfile_GetNameFunc;
+		property Lib3MFToolpathProfile_GetParameterCountFunc: TLib3MFToolpathProfile_GetParameterCountFunc read FLib3MFToolpathProfile_GetParameterCountFunc;
+		property Lib3MFToolpathProfile_GetParameterNameFunc: TLib3MFToolpathProfile_GetParameterNameFunc read FLib3MFToolpathProfile_GetParameterNameFunc;
+		property Lib3MFToolpathProfile_GetParameterNameSpaceFunc: TLib3MFToolpathProfile_GetParameterNameSpaceFunc read FLib3MFToolpathProfile_GetParameterNameSpaceFunc;
 		property Lib3MFToolpathProfile_HasParameterValueFunc: TLib3MFToolpathProfile_HasParameterValueFunc read FLib3MFToolpathProfile_HasParameterValueFunc;
+		property Lib3MFToolpathProfile_GetParameterValueFunc: TLib3MFToolpathProfile_GetParameterValueFunc read FLib3MFToolpathProfile_GetParameterValueFunc;
+		property Lib3MFToolpathProfile_GetParameterValueDefFunc: TLib3MFToolpathProfile_GetParameterValueDefFunc read FLib3MFToolpathProfile_GetParameterValueDefFunc;
 		property Lib3MFToolpathProfile_GetParameterDoubleValueFunc: TLib3MFToolpathProfile_GetParameterDoubleValueFunc read FLib3MFToolpathProfile_GetParameterDoubleValueFunc;
 		property Lib3MFToolpathProfile_GetParameterDoubleValueDefFunc: TLib3MFToolpathProfile_GetParameterDoubleValueDefFunc read FLib3MFToolpathProfile_GetParameterDoubleValueDefFunc;
+		property Lib3MFToolpathProfile_GetParameterIntegerValueFunc: TLib3MFToolpathProfile_GetParameterIntegerValueFunc read FLib3MFToolpathProfile_GetParameterIntegerValueFunc;
+		property Lib3MFToolpathProfile_GetParameterIntegerValueDefFunc: TLib3MFToolpathProfile_GetParameterIntegerValueDefFunc read FLib3MFToolpathProfile_GetParameterIntegerValueDefFunc;
+		property Lib3MFToolpathProfile_GetParameterBoolValueFunc: TLib3MFToolpathProfile_GetParameterBoolValueFunc read FLib3MFToolpathProfile_GetParameterBoolValueFunc;
+		property Lib3MFToolpathProfile_GetParameterBoolValueDefFunc: TLib3MFToolpathProfile_GetParameterBoolValueDefFunc read FLib3MFToolpathProfile_GetParameterBoolValueDefFunc;
 		property Lib3MFToolpathProfile_SetNameFunc: TLib3MFToolpathProfile_SetNameFunc read FLib3MFToolpathProfile_SetNameFunc;
+		property Lib3MFToolpathProfile_SetParameterValueFunc: TLib3MFToolpathProfile_SetParameterValueFunc read FLib3MFToolpathProfile_SetParameterValueFunc;
 		property Lib3MFToolpathProfile_SetParameterDoubleValueFunc: TLib3MFToolpathProfile_SetParameterDoubleValueFunc read FLib3MFToolpathProfile_SetParameterDoubleValueFunc;
+		property Lib3MFToolpathProfile_SetParameterIntegerValueFunc: TLib3MFToolpathProfile_SetParameterIntegerValueFunc read FLib3MFToolpathProfile_SetParameterIntegerValueFunc;
+		property Lib3MFToolpathProfile_SetParameterBoolValueFunc: TLib3MFToolpathProfile_SetParameterBoolValueFunc read FLib3MFToolpathProfile_SetParameterBoolValueFunc;
 		property Lib3MFToolpathLayerReader_GetLayerDataUUIDFunc: TLib3MFToolpathLayerReader_GetLayerDataUUIDFunc read FLib3MFToolpathLayerReader_GetLayerDataUUIDFunc;
 		property Lib3MFToolpathLayerReader_GetSegmentCountFunc: TLib3MFToolpathLayerReader_GetSegmentCountFunc read FLib3MFToolpathLayerReader_GetSegmentCountFunc;
 		property Lib3MFToolpathLayerReader_GetSegmentInfoFunc: TLib3MFToolpathLayerReader_GetSegmentInfoFunc read FLib3MFToolpathLayerReader_GetSegmentInfoFunc;
@@ -9894,6 +10069,39 @@ implementation
 		Result := StrPas(@bufferName[0]);
 	end;
 
+	function TLib3MFToolpathProfile.GetParameterCount(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterCountFunc(FHandle, Result));
+	end;
+
+	function TLib3MFToolpathProfile.GetParameterName(const AIndex: Cardinal): String;
+	var
+		bytesNeededName: Cardinal;
+		bytesWrittenName: Cardinal;
+		bufferName: array of Char;
+	begin
+		bytesNeededName:= 0;
+		bytesWrittenName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterNameFunc(FHandle, AIndex, 0, bytesNeededName, nil));
+		SetLength(bufferName, bytesNeededName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterNameFunc(FHandle, AIndex, bytesNeededName, bytesWrittenName, @bufferName[0]));
+		Result := StrPas(@bufferName[0]);
+	end;
+
+	function TLib3MFToolpathProfile.GetParameterNameSpace(const AIndex: Cardinal): String;
+	var
+		bytesNeededNameSpace: Cardinal;
+		bytesWrittenNameSpace: Cardinal;
+		bufferNameSpace: array of Char;
+	begin
+		bytesNeededNameSpace:= 0;
+		bytesWrittenNameSpace:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterNameSpaceFunc(FHandle, AIndex, 0, bytesNeededNameSpace, nil));
+		SetLength(bufferNameSpace, bytesNeededNameSpace);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterNameSpaceFunc(FHandle, AIndex, bytesNeededNameSpace, bytesWrittenNameSpace, @bufferNameSpace[0]));
+		Result := StrPas(@bufferNameSpace[0]);
+	end;
+
 	function TLib3MFToolpathProfile.HasParameterValue(const ANameSpaceName: String; const AValueName: String): Boolean;
 	var
 		ResultValueExists: Byte;
@@ -9901,6 +10109,34 @@ implementation
 		ResultValueExists := 0;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_HasParameterValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), ResultValueExists));
 		Result := (ResultValueExists <> 0);
+	end;
+
+	function TLib3MFToolpathProfile.GetParameterValue(const ANameSpaceName: String; const AValueName: String): String;
+	var
+		bytesNeededValue: Cardinal;
+		bytesWrittenValue: Cardinal;
+		bufferValue: array of Char;
+	begin
+		bytesNeededValue:= 0;
+		bytesWrittenValue:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), 0, bytesNeededValue, nil));
+		SetLength(bufferValue, bytesNeededValue);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), bytesNeededValue, bytesWrittenValue, @bufferValue[0]));
+		Result := StrPas(@bufferValue[0]);
+	end;
+
+	function TLib3MFToolpathProfile.GetParameterValueDef(const ANameSpaceName: String; const AValueName: String; const ADefaultValue: String): String;
+	var
+		bytesNeededValue: Cardinal;
+		bytesWrittenValue: Cardinal;
+		bufferValue: array of Char;
+	begin
+		bytesNeededValue:= 0;
+		bytesWrittenValue:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterValueDefFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), PAnsiChar(ADefaultValue), 0, bytesNeededValue, nil));
+		SetLength(bufferValue, bytesNeededValue);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterValueDefFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), PAnsiChar(ADefaultValue), bytesNeededValue, bytesWrittenValue, @bufferValue[0]));
+		Result := StrPas(@bufferValue[0]);
 	end;
 
 	function TLib3MFToolpathProfile.GetParameterDoubleValue(const ANameSpaceName: String; const AValueName: String): Double;
@@ -9913,14 +10149,57 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterDoubleValueDefFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), ADefaultValue, Result));
 	end;
 
+	function TLib3MFToolpathProfile.GetParameterIntegerValue(const ANameSpaceName: String; const AValueName: String): Int64;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterIntegerValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), Result));
+	end;
+
+	function TLib3MFToolpathProfile.GetParameterIntegerValueDef(const ANameSpaceName: String; const AValueName: String; const ADefaultValue: Int64): Int64;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterIntegerValueDefFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), ADefaultValue, Result));
+	end;
+
+	function TLib3MFToolpathProfile.GetParameterBoolValue(const ANameSpaceName: String; const AValueName: String): Boolean;
+	var
+		ResultValue: Byte;
+	begin
+		ResultValue := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterBoolValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), ResultValue));
+		Result := (ResultValue <> 0);
+	end;
+
+	function TLib3MFToolpathProfile.GetParameterBoolValueDef(const ANameSpaceName: String; const AValueName: String; const ADefaultValue: Boolean): Boolean;
+	var
+		ResultValue: Byte;
+	begin
+		ResultValue := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterBoolValueDefFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), Ord(ADefaultValue), ResultValue));
+		Result := (ResultValue <> 0);
+	end;
+
 	procedure TLib3MFToolpathProfile.SetName(const AName: String);
 	begin
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_SetNameFunc(FHandle, PAnsiChar(AName)));
 	end;
 
+	procedure TLib3MFToolpathProfile.SetParameterValue(const ANameSpaceName: String; const AValueName: String; const AValue: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_SetParameterValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), PAnsiChar(AValue)));
+	end;
+
 	procedure TLib3MFToolpathProfile.SetParameterDoubleValue(const ANameSpaceName: String; const AValueName: String; const AValue: Double);
 	begin
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_SetParameterDoubleValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), AValue));
+	end;
+
+	procedure TLib3MFToolpathProfile.SetParameterIntegerValue(const ANameSpaceName: String; const AValueName: String; const AValue: Int64);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_SetParameterIntegerValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), AValue));
+	end;
+
+	procedure TLib3MFToolpathProfile.SetParameterBoolValue(const ANameSpaceName: String; const AValueName: String; const AValue: Boolean);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_SetParameterBoolValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), Ord(AValue)));
 	end;
 
 (*************************************************************************************************************************
@@ -11901,11 +12180,23 @@ implementation
 		FLib3MFSlice_GetZTopFunc := LoadFunction('lib3mf_slice_getztop');
 		FLib3MFToolpathProfile_GetUUIDFunc := LoadFunction('lib3mf_toolpathprofile_getuuid');
 		FLib3MFToolpathProfile_GetNameFunc := LoadFunction('lib3mf_toolpathprofile_getname');
+		FLib3MFToolpathProfile_GetParameterCountFunc := LoadFunction('lib3mf_toolpathprofile_getparametercount');
+		FLib3MFToolpathProfile_GetParameterNameFunc := LoadFunction('lib3mf_toolpathprofile_getparametername');
+		FLib3MFToolpathProfile_GetParameterNameSpaceFunc := LoadFunction('lib3mf_toolpathprofile_getparameternamespace');
 		FLib3MFToolpathProfile_HasParameterValueFunc := LoadFunction('lib3mf_toolpathprofile_hasparametervalue');
+		FLib3MFToolpathProfile_GetParameterValueFunc := LoadFunction('lib3mf_toolpathprofile_getparametervalue');
+		FLib3MFToolpathProfile_GetParameterValueDefFunc := LoadFunction('lib3mf_toolpathprofile_getparametervaluedef');
 		FLib3MFToolpathProfile_GetParameterDoubleValueFunc := LoadFunction('lib3mf_toolpathprofile_getparameterdoublevalue');
 		FLib3MFToolpathProfile_GetParameterDoubleValueDefFunc := LoadFunction('lib3mf_toolpathprofile_getparameterdoublevaluedef');
+		FLib3MFToolpathProfile_GetParameterIntegerValueFunc := LoadFunction('lib3mf_toolpathprofile_getparameterintegervalue');
+		FLib3MFToolpathProfile_GetParameterIntegerValueDefFunc := LoadFunction('lib3mf_toolpathprofile_getparameterintegervaluedef');
+		FLib3MFToolpathProfile_GetParameterBoolValueFunc := LoadFunction('lib3mf_toolpathprofile_getparameterboolvalue');
+		FLib3MFToolpathProfile_GetParameterBoolValueDefFunc := LoadFunction('lib3mf_toolpathprofile_getparameterboolvaluedef');
 		FLib3MFToolpathProfile_SetNameFunc := LoadFunction('lib3mf_toolpathprofile_setname');
+		FLib3MFToolpathProfile_SetParameterValueFunc := LoadFunction('lib3mf_toolpathprofile_setparametervalue');
 		FLib3MFToolpathProfile_SetParameterDoubleValueFunc := LoadFunction('lib3mf_toolpathprofile_setparameterdoublevalue');
+		FLib3MFToolpathProfile_SetParameterIntegerValueFunc := LoadFunction('lib3mf_toolpathprofile_setparameterintegervalue');
+		FLib3MFToolpathProfile_SetParameterBoolValueFunc := LoadFunction('lib3mf_toolpathprofile_setparameterboolvalue');
 		FLib3MFToolpathLayerReader_GetLayerDataUUIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getlayerdatauuid');
 		FLib3MFToolpathLayerReader_GetSegmentCountFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentcount');
 		FLib3MFToolpathLayerReader_GetSegmentInfoFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentinfo');
@@ -12787,7 +13078,22 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getname'), @FLib3MFToolpathProfile_GetNameFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparametercount'), @FLib3MFToolpathProfile_GetParameterCountFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparametername'), @FLib3MFToolpathProfile_GetParameterNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparameternamespace'), @FLib3MFToolpathProfile_GetParameterNameSpaceFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_hasparametervalue'), @FLib3MFToolpathProfile_HasParameterValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparametervalue'), @FLib3MFToolpathProfile_GetParameterValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparametervaluedef'), @FLib3MFToolpathProfile_GetParameterValueDefFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparameterdoublevalue'), @FLib3MFToolpathProfile_GetParameterDoubleValueFunc);
@@ -12796,10 +13102,31 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparameterdoublevaluedef'), @FLib3MFToolpathProfile_GetParameterDoubleValueDefFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparameterintegervalue'), @FLib3MFToolpathProfile_GetParameterIntegerValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparameterintegervaluedef'), @FLib3MFToolpathProfile_GetParameterIntegerValueDefFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparameterboolvalue'), @FLib3MFToolpathProfile_GetParameterBoolValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparameterboolvaluedef'), @FLib3MFToolpathProfile_GetParameterBoolValueDefFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_setname'), @FLib3MFToolpathProfile_SetNameFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_setparametervalue'), @FLib3MFToolpathProfile_SetParameterValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_setparameterdoublevalue'), @FLib3MFToolpathProfile_SetParameterDoubleValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_setparameterintegervalue'), @FLib3MFToolpathProfile_SetParameterIntegerValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_setparameterboolvalue'), @FLib3MFToolpathProfile_SetParameterBoolValueFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getlayerdatauuid'), @FLib3MFToolpathLayerReader_GetLayerDataUUIDFunc);

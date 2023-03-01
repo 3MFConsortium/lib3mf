@@ -35,6 +35,7 @@ NMR_ModelToolpathProfile.h defines the Model Toolpath Profile.
 
 #include "Common/NMR_Types.h" 
 
+#define MODELTOOLPATH_MAXCOUNT (1024 * 1024)
 
 #include <vector>
 #include <memory>
@@ -55,7 +56,9 @@ namespace NMR {
 		std::string m_sUUID;
 		std::string m_sName;
 
+		std::vector<std::pair<std::string, std::string>> m_Parameters;
 		std::map<std::pair<std::string, std::string>, std::string> m_Values;
+
 	public:
 		CModelToolpathProfile() = delete;
 		CModelToolpathProfile(std::string sUUID, std::string sName);
@@ -67,6 +70,10 @@ namespace NMR {
 		bool hasValue (const std::string & sNameSpace, const std::string & sValueName);
 		std::string getValue(const std::string& sNameSpace, const std::string& sValueName);
 		void addValue(const std::string& sNameSpace, const std::string& sValueName, const std::string & sValue);
+
+		uint32_t getParameterCount();
+		std::string getParameterName(const uint32_t nIndex);
+		std::string getParameterNameSpace(const uint32_t nIndex);
 
 		std::list<sModelToolpathProfileValue> listValues();
 

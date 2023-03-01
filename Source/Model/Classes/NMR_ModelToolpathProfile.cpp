@@ -59,6 +59,27 @@ namespace NMR {
 		m_sName = sName;
 	}
 
+	uint32_t CModelToolpathProfile::getParameterCount()
+	{
+		return (uint32_t)m_Parameters.size();
+	}
+
+	std::string CModelToolpathProfile::getParameterName(const uint32_t nIndex)
+	{
+		if (nIndex >= m_Parameters.size())
+			throw CNMRException(NMR_ERROR_INVALIDPARAMETERINDEX);
+
+		return m_Parameters.at(nIndex).first;
+	}
+
+	std::string CModelToolpathProfile::getParameterNameSpace(const uint32_t nIndex)
+	{
+		if (nIndex >= m_Parameters.size())
+			throw CNMRException(NMR_ERROR_INVALIDPARAMETERINDEX);
+
+		return m_Parameters.at(nIndex).second;
+	}
+
 	bool CModelToolpathProfile::hasValue(const std::string& sNameSpace, const std::string& sValueName)
 	{
 		auto iter = m_Values.find(std::make_pair (sNameSpace, sValueName));
@@ -76,6 +97,8 @@ namespace NMR {
 
 	void CModelToolpathProfile::addValue(const std::string& sNameSpace, const std::string& sValueName, const std::string& sValue)
 	{
+		if (m_Values.size () >= MODELTOOLPATH_MAXCOUNT)
+			throw CNMRException(NMR_ERROR_TOOMANYPROFILEVALUES);
 		m_Values.insert(std::make_pair (std::make_pair (sNameSpace, sValueName), sValue));
 	}
 

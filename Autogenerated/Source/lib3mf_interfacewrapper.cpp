@@ -8799,6 +8799,154 @@ Lib3MFResult lib3mf_toolpathprofile_getname(Lib3MF_ToolpathProfile pToolpathProf
 	}
 }
 
+Lib3MFResult lib3mf_toolpathprofile_getparametercount(Lib3MF_ToolpathProfile pToolpathProfile, Lib3MF_uint32 * pCount)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathProfile;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathProfile, "ToolpathProfile", "GetParameterCount");
+		}
+		if (pCount == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathProfile* pIToolpathProfile = dynamic_cast<IToolpathProfile*>(pIBaseClass);
+		if (!pIToolpathProfile)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pCount = pIToolpathProfile->GetParameterCount();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("Count", *pCount);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathprofile_getparametername(Lib3MF_ToolpathProfile pToolpathProfile, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathProfile;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathProfile, "ToolpathProfile", "GetParameterName");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+		}
+		if ( (!pNameBuffer) && !(pNameNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName("");
+		IToolpathProfile* pIToolpathProfile = dynamic_cast<IToolpathProfile*>(pIBaseClass);
+		if (!pIToolpathProfile)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pNameBuffer == nullptr);
+		if (isCacheCall) {
+			sName = pIToolpathProfile->GetParameterName(nIndex);
+
+			pIToolpathProfile->_setCache (new ParameterCache_1<std::string> (sName));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIToolpathProfile->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sName);
+			pIToolpathProfile->_setCache (nullptr);
+		}
+		
+		if (pNameNeededChars)
+			*pNameNeededChars = (Lib3MF_uint32) (sName.size()+1);
+		if (pNameBuffer) {
+			if (sName.size() >= nNameBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iName = 0; iName < sName.size(); iName++)
+				pNameBuffer[iName] = sName[iName];
+			pNameBuffer[sName.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("Name", sName.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathprofile_getparameternamespace(Lib3MF_ToolpathProfile pToolpathProfile, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathProfile;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathProfile, "ToolpathProfile", "GetParameterNameSpace");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+		}
+		if ( (!pNameSpaceBuffer) && !(pNameSpaceNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace("");
+		IToolpathProfile* pIToolpathProfile = dynamic_cast<IToolpathProfile*>(pIBaseClass);
+		if (!pIToolpathProfile)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pNameSpaceBuffer == nullptr);
+		if (isCacheCall) {
+			sNameSpace = pIToolpathProfile->GetParameterNameSpace(nIndex);
+
+			pIToolpathProfile->_setCache (new ParameterCache_1<std::string> (sNameSpace));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIToolpathProfile->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sNameSpace);
+			pIToolpathProfile->_setCache (nullptr);
+		}
+		
+		if (pNameSpaceNeededChars)
+			*pNameSpaceNeededChars = (Lib3MF_uint32) (sNameSpace.size()+1);
+		if (pNameSpaceBuffer) {
+			if (sNameSpace.size() >= nNameSpaceBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iNameSpace = 0; iNameSpace < sNameSpace.size(); iNameSpace++)
+				pNameSpaceBuffer[iNameSpace] = sNameSpace[iNameSpace];
+			pNameSpaceBuffer[sNameSpace.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("NameSpace", sNameSpace.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_toolpathprofile_hasparametervalue(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, bool * pValueExists)
 {
 	IBase* pIBaseClass = (IBase *)pToolpathProfile;
@@ -8826,6 +8974,138 @@ Lib3MFResult lib3mf_toolpathprofile_hasparametervalue(Lib3MF_ToolpathProfile pTo
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->addBooleanResult("ValueExists", *pValueExists);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathprofile_getparametervalue(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, const Lib3MF_uint32 nValueBufferSize, Lib3MF_uint32* pValueNeededChars, char * pValueBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathProfile;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathProfile, "ToolpathProfile", "GetParameterValue");
+			pJournalEntry->addStringParameter("NameSpaceName", pNameSpaceName);
+			pJournalEntry->addStringParameter("ValueName", pValueName);
+		}
+		if (pNameSpaceName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pValueName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pValueBuffer) && !(pValueNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpaceName(pNameSpaceName);
+		std::string sValueName(pValueName);
+		std::string sValue("");
+		IToolpathProfile* pIToolpathProfile = dynamic_cast<IToolpathProfile*>(pIBaseClass);
+		if (!pIToolpathProfile)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pValueBuffer == nullptr);
+		if (isCacheCall) {
+			sValue = pIToolpathProfile->GetParameterValue(sNameSpaceName, sValueName);
+
+			pIToolpathProfile->_setCache (new ParameterCache_1<std::string> (sValue));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIToolpathProfile->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sValue);
+			pIToolpathProfile->_setCache (nullptr);
+		}
+		
+		if (pValueNeededChars)
+			*pValueNeededChars = (Lib3MF_uint32) (sValue.size()+1);
+		if (pValueBuffer) {
+			if (sValue.size() >= nValueBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iValue = 0; iValue < sValue.size(); iValue++)
+				pValueBuffer[iValue] = sValue[iValue];
+			pValueBuffer[sValue.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("Value", sValue.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathprofile_getparametervaluedef(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, const char * pDefaultValue, const Lib3MF_uint32 nValueBufferSize, Lib3MF_uint32* pValueNeededChars, char * pValueBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathProfile;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathProfile, "ToolpathProfile", "GetParameterValueDef");
+			pJournalEntry->addStringParameter("NameSpaceName", pNameSpaceName);
+			pJournalEntry->addStringParameter("ValueName", pValueName);
+			pJournalEntry->addStringParameter("DefaultValue", pDefaultValue);
+		}
+		if (pNameSpaceName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pValueName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDefaultValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pValueBuffer) && !(pValueNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpaceName(pNameSpaceName);
+		std::string sValueName(pValueName);
+		std::string sDefaultValue(pDefaultValue);
+		std::string sValue("");
+		IToolpathProfile* pIToolpathProfile = dynamic_cast<IToolpathProfile*>(pIBaseClass);
+		if (!pIToolpathProfile)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pValueBuffer == nullptr);
+		if (isCacheCall) {
+			sValue = pIToolpathProfile->GetParameterValueDef(sNameSpaceName, sValueName, sDefaultValue);
+
+			pIToolpathProfile->_setCache (new ParameterCache_1<std::string> (sValue));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIToolpathProfile->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sValue);
+			pIToolpathProfile->_setCache (nullptr);
+		}
+		
+		if (pValueNeededChars)
+			*pValueNeededChars = (Lib3MF_uint32) (sValue.size()+1);
+		if (pValueBuffer) {
+			if (sValue.size() >= nValueBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iValue = 0; iValue < sValue.size(); iValue++)
+				pValueBuffer[iValue] = sValue[iValue];
+			pValueBuffer[sValue.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("Value", sValue.c_str());
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -8926,6 +9206,176 @@ Lib3MFResult lib3mf_toolpathprofile_getparameterdoublevaluedef(Lib3MF_ToolpathPr
 	}
 }
 
+Lib3MFResult lib3mf_toolpathprofile_getparameterintegervalue(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_int64 * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathProfile;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathProfile, "ToolpathProfile", "GetParameterIntegerValue");
+			pJournalEntry->addStringParameter("NameSpaceName", pNameSpaceName);
+			pJournalEntry->addStringParameter("ValueName", pValueName);
+		}
+		if (pNameSpaceName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pValueName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpaceName(pNameSpaceName);
+		std::string sValueName(pValueName);
+		IToolpathProfile* pIToolpathProfile = dynamic_cast<IToolpathProfile*>(pIBaseClass);
+		if (!pIToolpathProfile)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pValue = pIToolpathProfile->GetParameterIntegerValue(sNameSpaceName, sValueName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addInt64Result("Value", *pValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathprofile_getparameterintegervaluedef(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_int64 nDefaultValue, Lib3MF_int64 * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathProfile;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathProfile, "ToolpathProfile", "GetParameterIntegerValueDef");
+			pJournalEntry->addStringParameter("NameSpaceName", pNameSpaceName);
+			pJournalEntry->addStringParameter("ValueName", pValueName);
+			pJournalEntry->addInt64Parameter("DefaultValue", nDefaultValue);
+		}
+		if (pNameSpaceName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pValueName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpaceName(pNameSpaceName);
+		std::string sValueName(pValueName);
+		IToolpathProfile* pIToolpathProfile = dynamic_cast<IToolpathProfile*>(pIBaseClass);
+		if (!pIToolpathProfile)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pValue = pIToolpathProfile->GetParameterIntegerValueDef(sNameSpaceName, sValueName, nDefaultValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addInt64Result("Value", *pValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathprofile_getparameterboolvalue(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, bool * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathProfile;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathProfile, "ToolpathProfile", "GetParameterBoolValue");
+			pJournalEntry->addStringParameter("NameSpaceName", pNameSpaceName);
+			pJournalEntry->addStringParameter("ValueName", pValueName);
+		}
+		if (pNameSpaceName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pValueName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpaceName(pNameSpaceName);
+		std::string sValueName(pValueName);
+		IToolpathProfile* pIToolpathProfile = dynamic_cast<IToolpathProfile*>(pIBaseClass);
+		if (!pIToolpathProfile)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pValue = pIToolpathProfile->GetParameterBoolValue(sNameSpaceName, sValueName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("Value", *pValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathprofile_getparameterboolvaluedef(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, bool bDefaultValue, bool * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathProfile;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathProfile, "ToolpathProfile", "GetParameterBoolValueDef");
+			pJournalEntry->addStringParameter("NameSpaceName", pNameSpaceName);
+			pJournalEntry->addStringParameter("ValueName", pValueName);
+			pJournalEntry->addBooleanParameter("DefaultValue", bDefaultValue);
+		}
+		if (pNameSpaceName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pValueName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpaceName(pNameSpaceName);
+		std::string sValueName(pValueName);
+		IToolpathProfile* pIToolpathProfile = dynamic_cast<IToolpathProfile*>(pIBaseClass);
+		if (!pIToolpathProfile)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pValue = pIToolpathProfile->GetParameterBoolValueDef(sNameSpaceName, sValueName, bDefaultValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("Value", *pValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_toolpathprofile_setname(Lib3MF_ToolpathProfile pToolpathProfile, const char * pName)
 {
 	IBase* pIBaseClass = (IBase *)pToolpathProfile;
@@ -8944,6 +9394,49 @@ Lib3MFResult lib3mf_toolpathprofile_setname(Lib3MF_ToolpathProfile pToolpathProf
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
 		pIToolpathProfile->SetName(sName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathprofile_setparametervalue(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, const char * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathProfile;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathProfile, "ToolpathProfile", "SetParameterValue");
+			pJournalEntry->addStringParameter("NameSpaceName", pNameSpaceName);
+			pJournalEntry->addStringParameter("ValueName", pValueName);
+			pJournalEntry->addStringParameter("Value", pValue);
+		}
+		if (pNameSpaceName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pValueName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpaceName(pNameSpaceName);
+		std::string sValueName(pValueName);
+		std::string sValue(pValue);
+		IToolpathProfile* pIToolpathProfile = dynamic_cast<IToolpathProfile*>(pIBaseClass);
+		if (!pIToolpathProfile)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathProfile->SetParameterValue(sNameSpaceName, sValueName, sValue);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -8984,6 +9477,86 @@ Lib3MFResult lib3mf_toolpathprofile_setparameterdoublevalue(Lib3MF_ToolpathProfi
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
 		pIToolpathProfile->SetParameterDoubleValue(sNameSpaceName, sValueName, dValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathprofile_setparameterintegervalue(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_int64 nValue)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathProfile;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathProfile, "ToolpathProfile", "SetParameterIntegerValue");
+			pJournalEntry->addStringParameter("NameSpaceName", pNameSpaceName);
+			pJournalEntry->addStringParameter("ValueName", pValueName);
+			pJournalEntry->addInt64Parameter("Value", nValue);
+		}
+		if (pNameSpaceName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pValueName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpaceName(pNameSpaceName);
+		std::string sValueName(pValueName);
+		IToolpathProfile* pIToolpathProfile = dynamic_cast<IToolpathProfile*>(pIBaseClass);
+		if (!pIToolpathProfile)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathProfile->SetParameterIntegerValue(sNameSpaceName, sValueName, nValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathprofile_setparameterboolvalue(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, bool bValue)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathProfile;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathProfile, "ToolpathProfile", "SetParameterBoolValue");
+			pJournalEntry->addStringParameter("NameSpaceName", pNameSpaceName);
+			pJournalEntry->addStringParameter("ValueName", pValueName);
+			pJournalEntry->addBooleanParameter("Value", bValue);
+		}
+		if (pNameSpaceName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pValueName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpaceName(pNameSpaceName);
+		std::string sValueName(pValueName);
+		IToolpathProfile* pIToolpathProfile = dynamic_cast<IToolpathProfile*>(pIBaseClass);
+		if (!pIToolpathProfile)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathProfile->SetParameterBoolValue(sNameSpaceName, sValueName, bValue);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -15054,16 +15627,40 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_toolpathprofile_getuuid;
 	if (sProcName == "lib3mf_toolpathprofile_getname") 
 		*ppProcAddress = (void*) &lib3mf_toolpathprofile_getname;
+	if (sProcName == "lib3mf_toolpathprofile_getparametercount") 
+		*ppProcAddress = (void*) &lib3mf_toolpathprofile_getparametercount;
+	if (sProcName == "lib3mf_toolpathprofile_getparametername") 
+		*ppProcAddress = (void*) &lib3mf_toolpathprofile_getparametername;
+	if (sProcName == "lib3mf_toolpathprofile_getparameternamespace") 
+		*ppProcAddress = (void*) &lib3mf_toolpathprofile_getparameternamespace;
 	if (sProcName == "lib3mf_toolpathprofile_hasparametervalue") 
 		*ppProcAddress = (void*) &lib3mf_toolpathprofile_hasparametervalue;
+	if (sProcName == "lib3mf_toolpathprofile_getparametervalue") 
+		*ppProcAddress = (void*) &lib3mf_toolpathprofile_getparametervalue;
+	if (sProcName == "lib3mf_toolpathprofile_getparametervaluedef") 
+		*ppProcAddress = (void*) &lib3mf_toolpathprofile_getparametervaluedef;
 	if (sProcName == "lib3mf_toolpathprofile_getparameterdoublevalue") 
 		*ppProcAddress = (void*) &lib3mf_toolpathprofile_getparameterdoublevalue;
 	if (sProcName == "lib3mf_toolpathprofile_getparameterdoublevaluedef") 
 		*ppProcAddress = (void*) &lib3mf_toolpathprofile_getparameterdoublevaluedef;
+	if (sProcName == "lib3mf_toolpathprofile_getparameterintegervalue") 
+		*ppProcAddress = (void*) &lib3mf_toolpathprofile_getparameterintegervalue;
+	if (sProcName == "lib3mf_toolpathprofile_getparameterintegervaluedef") 
+		*ppProcAddress = (void*) &lib3mf_toolpathprofile_getparameterintegervaluedef;
+	if (sProcName == "lib3mf_toolpathprofile_getparameterboolvalue") 
+		*ppProcAddress = (void*) &lib3mf_toolpathprofile_getparameterboolvalue;
+	if (sProcName == "lib3mf_toolpathprofile_getparameterboolvaluedef") 
+		*ppProcAddress = (void*) &lib3mf_toolpathprofile_getparameterboolvaluedef;
 	if (sProcName == "lib3mf_toolpathprofile_setname") 
 		*ppProcAddress = (void*) &lib3mf_toolpathprofile_setname;
+	if (sProcName == "lib3mf_toolpathprofile_setparametervalue") 
+		*ppProcAddress = (void*) &lib3mf_toolpathprofile_setparametervalue;
 	if (sProcName == "lib3mf_toolpathprofile_setparameterdoublevalue") 
 		*ppProcAddress = (void*) &lib3mf_toolpathprofile_setparameterdoublevalue;
+	if (sProcName == "lib3mf_toolpathprofile_setparameterintegervalue") 
+		*ppProcAddress = (void*) &lib3mf_toolpathprofile_setparameterintegervalue;
+	if (sProcName == "lib3mf_toolpathprofile_setparameterboolvalue") 
+		*ppProcAddress = (void*) &lib3mf_toolpathprofile_setparameterboolvalue;
 	if (sProcName == "lib3mf_toolpathlayerreader_getlayerdatauuid") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getlayerdatauuid;
 	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentcount") 

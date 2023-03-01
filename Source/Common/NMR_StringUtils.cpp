@@ -39,7 +39,25 @@ correctly and Exception-safe
 #include <string.h>
 #include <vector>
 
+#include <algorithm>
+#include <cctype>
+#include <string>
+
 namespace NMR {
+
+	// trim from start (in place)
+	static inline void ltrim(std::string& s) {
+		s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+			return !std::isspace(ch);
+		}));
+	}
+
+	// trim from end (in place)
+	static inline void rtrim(std::string& s) {
+		s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+			return !std::isspace(ch);
+		}).base(), s.end());
+	}
 
 	// Lookup table to convert UTF8 bytes to sequence length
 	const nfByte UTF8DecodeTable[256] = {
@@ -822,6 +840,21 @@ namespace NMR {
 			return std::string("");
 		}
 	}
+
+	std::string fnTrimString(_In_ std::string sString)
+	{
+		ltrim(sString);
+		rtrim(sString);
+		return sString;
+	}
+
+	std::string fnStringToLower(_In_ std::string sString)
+	{
+		std::transform(sString.begin(), sString.end(), sString.begin(),
+			[](unsigned char c) { return std::tolower(c); });
+		return sString;
+	}
+
 
 	void decomposeKeyIntoNamespaceAndName(const std::string &sKey, std::string &sNameSpace, std::string &sName) {
 		size_t cInd = sKey.find(":");

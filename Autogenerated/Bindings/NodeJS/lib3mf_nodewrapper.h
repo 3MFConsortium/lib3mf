@@ -907,11 +907,23 @@ private:
 	static v8::Persistent<v8::Function> constructor;
 	static void GetUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetParameterCount(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetParameterName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetParameterNameSpace(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void HasParameterValue(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetParameterValue(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetParameterValueDef(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetParameterDoubleValue(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetParameterDoubleValueDef(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetParameterIntegerValue(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetParameterIntegerValueDef(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetParameterBoolValue(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetParameterBoolValueDef(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetParameterValue(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetParameterDoubleValue(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetParameterIntegerValue(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetParameterBoolValue(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFToolpathProfile();

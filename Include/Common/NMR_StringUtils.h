@@ -107,6 +107,9 @@ namespace NMR {
 	std::string fnExtractFileName(_In_ const std::string sFullPath);
 	std::string fnExtractFileDir(_In_ const std::string sFullPath);
 
+	std::string fnTrimString (_In_ std::string sString);
+	std::string fnStringToLower(_In_ std::string sString);
+
 	template<typename T>
 	std::vector<T> fnVctType_fromString(_In_ const std::string sInString)
 	{
