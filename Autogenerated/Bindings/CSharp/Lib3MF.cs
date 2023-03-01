@@ -1858,6 +1858,7 @@ namespace Lib3MF {
 				switch (resultClassTypeId) {
 					case 0x856632D0BAF1D8B7: Object = new CBase(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Base"
 					case 0xE76F642F363FD7E9: Object = new CWriter(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Writer"
+					case 0xBE46884397CE1319: Object = new CPersistentReaderSource(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::PersistentReaderSource"
 					case 0x2D86831DA59FBE72: Object = new CReader(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Reader"
 					case 0x0E55A826D377483E: Object = new CPackagePart(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::PackagePart"
 					case 0xDFE3889D1B269CBB: Object = new CResource(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Resource"
@@ -1890,6 +1891,11 @@ namespace Lib3MF {
 					case 0x68FB2D5FFC4BA12A: Object = new CBuildItem(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItem"
 					case 0xA7D21BD364910860: Object = new CBuildItemIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItemIterator"
 					case 0x2198BCF4D8DF9C40: Object = new CSlice(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Slice"
+					case 0xC869620B90242CA7: Object = new CToolpathProfile(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathProfile"
+					case 0x28DD7D3718F0616E: Object = new CToolpathLayerReader(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerReader"
+					case 0x28C0E70CC44F931A: Object = new CToolpathLayerData(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerData"
+					case 0xF0AAB2C814D9FFB1: Object = new CToolpath(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Toolpath"
+					case 0xD0F24425A07F2A81: Object = new CToolpathIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathIterator"
 					case 0x6594B031B6096238: Object = new CSliceStack(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::SliceStack"
 					case 0xD9E46D5E6D8118EE: Object = new CConsumer(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Consumer"
 					case 0x385C42FC5609498A: Object = new CAccessRight(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::AccessRight"
@@ -2071,7 +2077,7 @@ namespace Lib3MF {
 
 	}
 
-	class CPersistentReaderSource : CBase
+	public class CPersistentReaderSource : CBase
 	{
 		public CPersistentReaderSource (IntPtr NewHandle) : base (NewHandle)
 		{
@@ -2101,7 +2107,6 @@ namespace Lib3MF {
 
 	}
 
-	class CReader : CBase
 	public class CReader : CBase
 	{
 		public CReader (IntPtr NewHandle) : base (NewHandle)
@@ -2110,8 +2115,11 @@ namespace Lib3MF {
 
 		public void ReadFromPersistentSource (CPersistentReaderSource ASource)
 		{
+			IntPtr ASourceHandle = IntPtr.Zero;
+			if (ASource != null)
+				ASourceHandle = ASource.GetHandle();
 
-			CheckError(Internal.Lib3MFWrapper.Reader_ReadFromPersistentSource (Handle, ASource.GetHandle()));
+			CheckError(Internal.Lib3MFWrapper.Reader_ReadFromPersistentSource (Handle, ASourceHandle));
 		}
 
 		public void ReadFromFile (String AFilename)
@@ -4292,8 +4300,7 @@ namespace Lib3MF {
 
 	}
 
-<<<<<<< .mine
-	class CToolpathProfile : CBase
+	public class CToolpathProfile : CBase
 	{
 		public CToolpathProfile (IntPtr NewHandle) : base (NewHandle)
 		{
@@ -4374,7 +4381,7 @@ namespace Lib3MF {
 
 	}
 
-	class CToolpathLayerReader : CBase
+	public class CToolpathLayerReader : CBase
 	{
 		public CToolpathLayerReader (IntPtr NewHandle) : base (NewHandle)
 		{
@@ -4415,7 +4422,7 @@ namespace Lib3MF {
 			IntPtr newProfile = IntPtr.Zero;
 
 			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentProfile (Handle, AIndex, out newProfile));
-			return new CToolpathProfile (newProfile );
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpathProfile>(newProfile);
 		}
 
 		public String GetSegmentProfileUUID (UInt32 AIndex)
@@ -4437,7 +4444,7 @@ namespace Lib3MF {
 			IntPtr newBuildItem = IntPtr.Zero;
 
 			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentPart (Handle, AIndex, out newBuildItem));
-			return new CBuildItem (newBuildItem );
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CBuildItem>(newBuildItem);
 		}
 
 		public String GetSegmentPartUUID (UInt32 AIndex)
@@ -4472,7 +4479,7 @@ namespace Lib3MF {
 
 	}
 
-	class CToolpathLayerData : CBase
+	public class CToolpathLayerData : CBase
 	{
 		public CToolpathLayerData (IntPtr NewHandle) : base (NewHandle)
 		{
@@ -4494,17 +4501,23 @@ namespace Lib3MF {
 
 		public UInt32 RegisterProfile (CToolpathProfile AProfile)
 		{
+			IntPtr AProfileHandle = IntPtr.Zero;
+			if (AProfile != null)
+				AProfileHandle = AProfile.GetHandle();
 			UInt32 resultProfileID = 0;
 
-			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_RegisterProfile (Handle, AProfile.GetHandle(), out resultProfileID));
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_RegisterProfile (Handle, AProfileHandle, out resultProfileID));
 			return resultProfileID;
 		}
 
 		public UInt32 RegisterBuildItem (CBuildItem ABuildItem)
 		{
+			IntPtr ABuildItemHandle = IntPtr.Zero;
+			if (ABuildItem != null)
+				ABuildItemHandle = ABuildItem.GetHandle();
 			UInt32 resultPartID = 0;
 
-			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_RegisterBuildItem (Handle, ABuildItem.GetHandle(), out resultPartID));
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_RegisterBuildItem (Handle, ABuildItemHandle, out resultPartID));
 			return resultPartID;
 		}
 
@@ -4549,7 +4562,7 @@ namespace Lib3MF {
 
 	}
 
-	class CToolpath : CResource
+	public class CToolpath : CResource
 	{
 		public CToolpath (IntPtr NewHandle) : base (NewHandle)
 		{
@@ -4582,10 +4595,13 @@ namespace Lib3MF {
 		public CToolpathLayerData AddLayer (UInt32 AZMax, String APath, CWriter AModelWriter)
 		{
 			byte[] bytePath = Encoding.UTF8.GetBytes(APath + char.MinValue);
+			IntPtr AModelWriterHandle = IntPtr.Zero;
+			if (AModelWriter != null)
+				AModelWriterHandle = AModelWriter.GetHandle();
 			IntPtr newLayerData = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.Toolpath_AddLayer (Handle, AZMax, bytePath, AModelWriter.GetHandle(), out newLayerData));
-			return new CToolpathLayerData (newLayerData );
+			CheckError(Internal.Lib3MFWrapper.Toolpath_AddLayer (Handle, AZMax, bytePath, AModelWriterHandle, out newLayerData));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpathLayerData>(newLayerData);
 		}
 
 		public CAttachment GetLayerAttachment (UInt32 AIndex)
@@ -4593,7 +4609,7 @@ namespace Lib3MF {
 			IntPtr newAttachment = IntPtr.Zero;
 
 			CheckError(Internal.Lib3MFWrapper.Toolpath_GetLayerAttachment (Handle, AIndex, out newAttachment));
-			return new CAttachment (newAttachment );
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CAttachment>(newAttachment);
 		}
 
 		public CToolpathLayerReader ReadLayerData (UInt32 AIndex)
@@ -4601,7 +4617,7 @@ namespace Lib3MF {
 			IntPtr newToolpathReader = IntPtr.Zero;
 
 			CheckError(Internal.Lib3MFWrapper.Toolpath_ReadLayerData (Handle, AIndex, out newToolpathReader));
-			return new CToolpathLayerReader (newToolpathReader );
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpathLayerReader>(newToolpathReader);
 		}
 
 		public String GetLayerPath (UInt32 AIndex)
@@ -4640,7 +4656,7 @@ namespace Lib3MF {
 			IntPtr newProfile = IntPtr.Zero;
 
 			CheckError(Internal.Lib3MFWrapper.Toolpath_AddProfile (Handle, byteName, out newProfile));
-			return new CToolpathProfile (newProfile );
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpathProfile>(newProfile);
 		}
 
 		public CToolpathProfile GetProfile (UInt32 AProfileIndex)
@@ -4648,7 +4664,7 @@ namespace Lib3MF {
 			IntPtr newProfile = IntPtr.Zero;
 
 			CheckError(Internal.Lib3MFWrapper.Toolpath_GetProfile (Handle, AProfileIndex, out newProfile));
-			return new CToolpathProfile (newProfile );
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpathProfile>(newProfile);
 		}
 
 		public CToolpathProfile GetProfileUUID (String AProfileUUID)
@@ -4657,12 +4673,12 @@ namespace Lib3MF {
 			IntPtr newProfile = IntPtr.Zero;
 
 			CheckError(Internal.Lib3MFWrapper.Toolpath_GetProfileUUID (Handle, byteProfileUUID, out newProfile));
-			return new CToolpathProfile (newProfile );
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpathProfile>(newProfile);
 		}
 
 	}
 
-	class CToolpathIterator : CResourceIterator
+	public class CToolpathIterator : CResourceIterator
 	{
 		public CToolpathIterator (IntPtr NewHandle) : base (NewHandle)
 		{
@@ -4673,400 +4689,12 @@ namespace Lib3MF {
 			IntPtr newResource = IntPtr.Zero;
 
 			CheckError(Internal.Lib3MFWrapper.ToolpathIterator_GetCurrentToolpath (Handle, out newResource));
-			return new CToolpath (newResource );
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpath>(newResource);
 		}
 
 	}
 
-	class CSliceStack : CResource
-=======
 	public class CSliceStack : CResource
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> .theirs
 	{
 		public CSliceStack (IntPtr NewHandle) : base (NewHandle)
 		{
@@ -5910,7 +5538,7 @@ namespace Lib3MF {
 			IntPtr newResourceIterator = IntPtr.Zero;
 
 			CheckError(Internal.Lib3MFWrapper.Model_GetToolpaths (Handle, out newResourceIterator));
-			return new CToolpathIterator (newResourceIterator );
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpathIterator>(newResourceIterator);
 		}
 
 		public CSliceStackIterator GetSliceStacks ()
@@ -6036,7 +5664,7 @@ namespace Lib3MF {
 			IntPtr newToolpathInstance = IntPtr.Zero;
 
 			CheckError(Internal.Lib3MFWrapper.Model_AddToolpath (Handle, AUnitFactor, out newToolpathInstance));
-			return new CToolpath (newToolpathInstance );
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpath>(newToolpathInstance);
 		}
 
 		public CMetaDataGroup GetMetaDataGroup ()
@@ -6156,7 +5784,7 @@ namespace Lib3MF {
 			IntPtr newInstance = IntPtr.Zero;
 
 			CheckError(Internal.Lib3MFWrapper.Model_CreatePersistentSourceFromFile (Handle, byteFilename, out newInstance));
-			return new CPersistentReaderSource (newInstance );
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CPersistentReaderSource>(newInstance);
 		}
 
 		public CPersistentReaderSource CreatePersistentSourceFromBuffer (Byte[] ABuffer)
@@ -6166,15 +5794,15 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Model_CreatePersistentSourceFromBuffer (Handle, (UInt64) ABuffer.Length, dataBuffer.AddrOfPinnedObject(), out newInstance));
 			dataBuffer.Free ();
-			return new CPersistentReaderSource (newInstance );
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CPersistentReaderSource>(newInstance);
 		}
 
 		public CPersistentReaderSource CreatePersistentSourceFromCallback (IntPtr ATheReadCallback, UInt64 AStreamSize, IntPtr ATheSeekCallback, UInt64 AUserData)
 		{
 			IntPtr newInstance = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.Model_CreatePersistentSourceFromCallback (Handle, IntPtr.Zero, AStreamSize, IntPtr.Zero, AUserData, out newInstance));
-			return new CPersistentReaderSource (newInstance );
+			CheckError(Internal.Lib3MFWrapper.Model_CreatePersistentSourceFromCallback (Handle, ATheReadCallback, AStreamSize, ATheSeekCallback, AUserData, out newInstance));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CPersistentReaderSource>(newInstance);
 		}
 
 	}

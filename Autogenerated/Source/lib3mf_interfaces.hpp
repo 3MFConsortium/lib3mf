@@ -420,6 +420,15 @@ typedef IBaseSharedPtr<IWriter> PIWriter;
 class IPersistentReaderSource : public virtual IBase {
 public:
 	/**
+	* IPersistentReaderSource::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xBE46884397CE1319UL; // First 64 bits of SHA1 of a string: "Lib3MF::PersistentReaderSource"
+	}
+
+	/**
 	* IPersistentReaderSource::GetSourceType - Retrieves the type of source data.
 	* @return Reader Source Type
 	*/
@@ -2172,13 +2181,13 @@ public:
 	virtual void WriteToFile(const std::string & sFileName) = 0;
 
 	/**
-	* IAttachment::ReadFromFile - Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF packege, or via the WriteToFile or WriteToBuffer-methods.
+	* IAttachment::ReadFromFile - Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
 	* @param[in] sFileName - file to read from.
 	*/
 	virtual void ReadFromFile(const std::string & sFileName) = 0;
 
 	/**
-	* IAttachment::ReadFromCallback - Reads a model and from the data provided by a callback function
+	* IAttachment::ReadFromCallback - Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
 	* @param[in] pTheReadCallback - callback function
 	* @param[in] nStreamSize - number of bytes the callback returns
 	* @param[in] pTheSeekCallback - callback function
@@ -2201,7 +2210,7 @@ public:
 	virtual void WriteToBuffer(Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer) = 0;
 
 	/**
-	* IAttachment::ReadFromBuffer - Reads an attachment from a memory buffer
+	* IAttachment::ReadFromBuffer - Reads an attachment from a memory buffer. This buffer is immediatly read (in contrast to the ReadFromCallback and ReadFromFile-methods).
 	* @param[in] nBufferBufferSize - Number of elements in buffer
 	* @param[in] pBufferBuffer - Buffer to read from
 	*/
@@ -2511,6 +2520,15 @@ typedef IBaseSharedPtr<ISlice> PISlice;
 class IToolpathProfile : public virtual IBase {
 public:
 	/**
+	* IToolpathProfile::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xC869620B90242CA7UL; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathProfile"
+	}
+
+	/**
 	* IToolpathProfile::GetUUID - Retrieves the profile's uuid
 	* @return Returns the uuid value.
 	*/
@@ -2572,6 +2590,15 @@ typedef IBaseSharedPtr<IToolpathProfile> PIToolpathProfile;
 
 class IToolpathLayerReader : public virtual IBase {
 public:
+	/**
+	* IToolpathLayerReader::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x28DD7D3718F0616EUL; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerReader"
+	}
+
 	/**
 	* IToolpathLayerReader::GetLayerDataUUID - Retrieves the layerdata's uuid
 	* @return Returns the uuid value.
@@ -2641,6 +2668,15 @@ typedef IBaseSharedPtr<IToolpathLayerReader> PIToolpathLayerReader;
 class IToolpathLayerData : public virtual IBase {
 public:
 	/**
+	* IToolpathLayerData::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x28C0E70CC44F931AUL; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerData"
+	}
+
+	/**
 	* IToolpathLayerData::GetLayerDataUUID - Retrieves the layerdata's uuid
 	* @return Returns the uuid value.
 	*/
@@ -2703,6 +2739,15 @@ typedef IBaseSharedPtr<IToolpathLayerData> PIToolpathLayerData;
 
 class IToolpath : public virtual IResource {
 public:
+	/**
+	* IToolpath::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xF0AAB2C814D9FFB1UL; // First 64 bits of SHA1 of a string: "Lib3MF::Toolpath"
+	}
+
 	/**
 	* IToolpath::GetUnits - Retrieves the unit factor
 	* @return Returns the unit factor.
@@ -2797,6 +2842,15 @@ typedef IBaseSharedPtr<IToolpath> PIToolpath;
 
 class IToolpathIterator : public virtual IResourceIterator {
 public:
+	/**
+	* IToolpathIterator::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xD0F24425A07F2A81UL; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathIterator"
+	}
+
 	/**
 	* IToolpathIterator::GetCurrentToolpath - Returns the Toolpath the iterator points at.
 	* @return returns the Toolpath instance.

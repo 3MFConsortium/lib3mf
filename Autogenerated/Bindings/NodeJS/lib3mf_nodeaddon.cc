@@ -48,60 +48,9 @@ void LoadLib3MF(const FunctionCallbackInfo<Value>& args)
 
 void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 {
-<<<<<<< .mine
-    CLib3MFBase::Init();
-    CLib3MFWriter::Init();
-    CLib3MFPersistentReaderSource::Init();
-    CLib3MFReader::Init();
-    CLib3MFPackagePart::Init();
-    CLib3MFResource::Init();
-    CLib3MFResourceIterator::Init();
-    CLib3MFSliceStackIterator::Init();
-    CLib3MFObjectIterator::Init();
-    CLib3MFMeshObjectIterator::Init();
-    CLib3MFComponentsObjectIterator::Init();
-    CLib3MFTexture2DIterator::Init();
-    CLib3MFBaseMaterialGroupIterator::Init();
-    CLib3MFColorGroupIterator::Init();
-    CLib3MFTexture2DGroupIterator::Init();
-    CLib3MFCompositeMaterialsIterator::Init();
-    CLib3MFMultiPropertyGroupIterator::Init();
-    CLib3MFMetaData::Init();
-    CLib3MFMetaDataGroup::Init();
-    CLib3MFObject::Init();
-    CLib3MFMeshObject::Init();
-    CLib3MFBeamLattice::Init();
-    CLib3MFComponent::Init();
-    CLib3MFComponentsObject::Init();
-    CLib3MFBeamSet::Init();
-    CLib3MFBaseMaterialGroup::Init();
-    CLib3MFColorGroup::Init();
-    CLib3MFTexture2DGroup::Init();
-    CLib3MFCompositeMaterials::Init();
-    CLib3MFMultiPropertyGroup::Init();
-    CLib3MFAttachment::Init();
-    CLib3MFTexture2D::Init();
-    CLib3MFBuildItem::Init();
-    CLib3MFBuildItemIterator::Init();
-    CLib3MFSlice::Init();
-    CLib3MFToolpathProfile::Init();
-    CLib3MFToolpathLayerReader::Init();
-    CLib3MFToolpathLayerData::Init();
-    CLib3MFToolpath::Init();
-    CLib3MFToolpathIterator::Init();
-    CLib3MFSliceStack::Init();
-    CLib3MFConsumer::Init();
-    CLib3MFAccessRight::Init();
-    CLib3MFContentEncryptionParams::Init();
-    CLib3MFResourceData::Init();
-    CLib3MFResourceDataGroup::Init();
-    CLib3MFKeyStore::Init();
-    CLib3MFModel::Init();
-    CLib3MFWrapper::Init();
-    NODE_SET_METHOD(module, "exports", LoadLib3MF);
-=======
 	CLib3MFBase::Init();
 	CLib3MFWriter::Init();
+	CLib3MFPersistentReaderSource::Init();
 	CLib3MFReader::Init();
 	CLib3MFPackagePart::Init();
 	CLib3MFResource::Init();
@@ -134,6 +83,11 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFBuildItem::Init();
 	CLib3MFBuildItemIterator::Init();
 	CLib3MFSlice::Init();
+	CLib3MFToolpathProfile::Init();
+	CLib3MFToolpathLayerReader::Init();
+	CLib3MFToolpathLayerData::Init();
+	CLib3MFToolpath::Init();
+	CLib3MFToolpathIterator::Init();
 	CLib3MFSliceStack::Init();
 	CLib3MFConsumer::Init();
 	CLib3MFAccessRight::Init();
@@ -144,13 +98,6 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFModel::Init();
 	CLib3MFWrapper::Init();
 	NODE_SET_METHOD(module, "exports", LoadLib3MF);
-
-
-
-
-
-
->>>>>>> .theirs
 }
 
 NODE_MODULE(lib3mf_nodeaddon, InitAll)

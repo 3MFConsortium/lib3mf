@@ -1629,8 +1629,8 @@ void CLib3MFWriter::SetContentEncryptionCallback(const FunctionCallbackInfo<Valu
  Class CLib3MFPersistentReaderSource Implementation
 **************************************************************************************************************************/
 
-CLib3MFPersistentReaderSource::CLib3MFPersistentReaderSource ()
-    : CLib3MFBaseClass ()
+CLib3MFPersistentReaderSource::CLib3MFPersistentReaderSource()
+		: CLib3MFBaseClass()
 {
 }
 
@@ -1640,111 +1640,111 @@ CLib3MFPersistentReaderSource::~CLib3MFPersistentReaderSource()
 
 void CLib3MFPersistentReaderSource::Init()
 {
-    Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = Isolate::GetCurrent();
 
-    // Prepare constructor template
-    Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-    tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFPersistentReaderSource"));
-    tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFPersistentReaderSource"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
-    // Prototype
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetSourceType", GetSourceType);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "InvalidateSourceData", InvalidateSourceData);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "SourceDataIsValid", SourceDataIsValid);
-    constructor.Reset(isolate, tpl->GetFunction());
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSourceType", GetSourceType);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "InvalidateSourceData", InvalidateSourceData);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SourceDataIsValid", SourceDataIsValid);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
 
 void CLib3MFPersistentReaderSource::New(const FunctionCallbackInfo<Value>& args)
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
 
-    if (args.IsConstructCall()) {
-        CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
-        CLib3MFPersistentReaderSource * persistentreadersourceInstance = new CLib3MFPersistentReaderSource ();
-        persistentreadersourceInstance->Wrap(args.This());
-        args.GetReturnValue().Set(args.This());
-    } else {
-        RaiseError (isolate, "Lib3MFPersistentReaderSource: Invalid call to Constructor");
-    }
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFPersistentReaderSource * persistentreadersourceInstance = new CLib3MFPersistentReaderSource();
+				persistentreadersourceInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFPersistentReaderSource: Invalid call to Constructor");
+		}
 }
 
 Local<Object> CLib3MFPersistentReaderSource::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
-    Local<Function> cons = Local<Function>::New(isolate, constructor);
-    Local<Object> instance;
-    if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal (&instance)) {
-      instance->SetInternalField (NODEWRAPPER_TABLEINDEX, External::New (isolate, CLib3MFBaseClass::getDynamicWrapperTable (pParent)));
-      instance->SetInternalField (NODEWRAPPER_HANDLEINDEX, External::New (isolate, pHandle));
-    }
-    return instance;
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
 }
 
 
-void CLib3MFPersistentReaderSource::GetSourceType (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFPersistentReaderSource::GetSourceType(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         eLib3MFPersistentReaderSourceType eReturnSourceType;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetSourceType.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSourceType.");
         if (wrapperTable->m_PersistentReaderSource_GetSourceType == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method PersistentReaderSource::GetSourceType.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_PersistentReaderSource_GetSourceType (instanceHandle, &eReturnSourceType);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set (Integer::New (isolate, (int) eReturnSourceType));
+            throw std::runtime_error("Could not call Lib3MF method PersistentReaderSource::GetSourceType.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_PersistentReaderSource_GetSourceType(instanceHandle, &eReturnSourceType);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::New(isolate, (int)eReturnSourceType));
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFPersistentReaderSource::InvalidateSourceData (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFPersistentReaderSource::InvalidateSourceData(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method InvalidateSourceData.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method InvalidateSourceData.");
         if (wrapperTable->m_PersistentReaderSource_InvalidateSourceData == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method PersistentReaderSource::InvalidateSourceData.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_PersistentReaderSource_InvalidateSourceData (instanceHandle);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+            throw std::runtime_error("Could not call Lib3MF method PersistentReaderSource::InvalidateSourceData.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_PersistentReaderSource_InvalidateSourceData(instanceHandle);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFPersistentReaderSource::SourceDataIsValid (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFPersistentReaderSource::SourceDataIsValid(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         bool bReturnDataIsValid = false;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method SourceDataIsValid.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SourceDataIsValid.");
         if (wrapperTable->m_PersistentReaderSource_SourceDataIsValid == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method PersistentReaderSource::SourceDataIsValid.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_PersistentReaderSource_SourceDataIsValid (instanceHandle, &bReturnDataIsValid);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set (Boolean::New (isolate, bReturnDataIsValid));
+            throw std::runtime_error("Could not call Lib3MF method PersistentReaderSource::SourceDataIsValid.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_PersistentReaderSource_SourceDataIsValid(instanceHandle, &bReturnDataIsValid);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnDataIsValid));
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 /*************************************************************************************************************************
@@ -1769,24 +1769,8 @@ void CLib3MFReader::Init()
 		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFReader"));
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
-<<<<<<< .mine
-    // Prototype
-    NODE_SET_PROTOTYPE_METHOD(tpl, "ReadFromPersistentSource", ReadFromPersistentSource);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "ReadFromFile", ReadFromFile);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "ReadFromBuffer", ReadFromBuffer);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "ReadFromCallback", ReadFromCallback);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "SetProgressCallback", SetProgressCallback);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "AddRelationToRead", AddRelationToRead);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveRelationToRead", RemoveRelationToRead);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "SetStrictModeActive", SetStrictModeActive);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetStrictModeActive", GetStrictModeActive);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetWarning", GetWarning);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetWarningCount", GetWarningCount);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "AddKeyWrappingCallback", AddKeyWrappingCallback);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "SetContentEncryptionCallback", SetContentEncryptionCallback);
-    constructor.Reset(isolate, tpl->GetFunction());
-=======
 		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "ReadFromPersistentSource", ReadFromPersistentSource);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "ReadFromFile", ReadFromFile);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "ReadFromBuffer", ReadFromBuffer);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "ReadFromCallback", ReadFromCallback);
@@ -1800,8 +1784,6 @@ void CLib3MFReader::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddKeyWrappingCallback", AddKeyWrappingCallback);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetContentEncryptionCallback", SetContentEncryptionCallback);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
-
->>>>>>> .theirs
 
 }
 
@@ -1834,67 +1816,35 @@ Local<Object> CLib3MFReader::NewInstance(Local<Object> pParent, Lib3MFHandle pHa
 }
 
 
-<<<<<<< .mine
-void CLib3MFReader::ReadFromPersistentSource (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFReader::ReadFromPersistentSource(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsObject()) {
-            throw std::runtime_error ("Expected class parameter 0 (Source)");
+            throw std::runtime_error("Expected class parameter 0 (Source)");
         }
-        Local<Object> objSource = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked ();
+        Local<Object> objSource = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
         CLib3MFPersistentReaderSource * instanceSource = ObjectWrap::Unwrap<CLib3MFPersistentReaderSource>(objSource);
         if (instanceSource == nullptr)
             throw std::runtime_error("Invalid Object parameter 0 (Source)");
-        Lib3MFHandle hSource = instanceSource->getHandle ( objSource );
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        Lib3MFHandle hSource = instanceSource->getHandle( objSource );
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method ReadFromPersistentSource.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method ReadFromPersistentSource.");
         if (wrapperTable->m_Reader_ReadFromPersistentSource == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method Reader::ReadFromPersistentSource.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Reader_ReadFromPersistentSource (instanceHandle, hSource);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+            throw std::runtime_error("Could not call Lib3MF method Reader::ReadFromPersistentSource.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Reader_ReadFromPersistentSource(instanceHandle, hSource);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFReader::ReadFromFile (const FunctionCallbackInfo<Value>& args) 
-=======
 void CLib3MFReader::ReadFromFile(const FunctionCallbackInfo<Value>& args) 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> .theirs
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
@@ -9064,8 +9014,8 @@ void CLib3MFSlice::GetZTop(const FunctionCallbackInfo<Value>& args)
  Class CLib3MFToolpathProfile Implementation
 **************************************************************************************************************************/
 
-CLib3MFToolpathProfile::CLib3MFToolpathProfile ()
-    : CLib3MFBaseClass ()
+CLib3MFToolpathProfile::CLib3MFToolpathProfile()
+		: CLib3MFBaseClass()
 {
 }
 
@@ -9075,272 +9025,272 @@ CLib3MFToolpathProfile::~CLib3MFToolpathProfile()
 
 void CLib3MFToolpathProfile::Init()
 {
-    Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = Isolate::GetCurrent();
 
-    // Prepare constructor template
-    Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-    tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFToolpathProfile"));
-    tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFToolpathProfile"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
-    // Prototype
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetUUID", GetUUID);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetName", GetName);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "HasParameterValue", HasParameterValue);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetParameterDoubleValue", GetParameterDoubleValue);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetParameterDoubleValueDef", GetParameterDoubleValueDef);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "SetName", SetName);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "SetParameterDoubleValue", SetParameterDoubleValue);
-    constructor.Reset(isolate, tpl->GetFunction());
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetUUID", GetUUID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetName", GetName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "HasParameterValue", HasParameterValue);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetParameterDoubleValue", GetParameterDoubleValue);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetParameterDoubleValueDef", GetParameterDoubleValueDef);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetName", SetName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetParameterDoubleValue", SetParameterDoubleValue);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
 
 void CLib3MFToolpathProfile::New(const FunctionCallbackInfo<Value>& args)
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
 
-    if (args.IsConstructCall()) {
-        CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
-        CLib3MFToolpathProfile * toolpathprofileInstance = new CLib3MFToolpathProfile ();
-        toolpathprofileInstance->Wrap(args.This());
-        args.GetReturnValue().Set(args.This());
-    } else {
-        RaiseError (isolate, "Lib3MFToolpathProfile: Invalid call to Constructor");
-    }
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFToolpathProfile * toolpathprofileInstance = new CLib3MFToolpathProfile();
+				toolpathprofileInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFToolpathProfile: Invalid call to Constructor");
+		}
 }
 
 Local<Object> CLib3MFToolpathProfile::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
-    Local<Function> cons = Local<Function>::New(isolate, constructor);
-    Local<Object> instance;
-    if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal (&instance)) {
-      instance->SetInternalField (NODEWRAPPER_TABLEINDEX, External::New (isolate, CLib3MFBaseClass::getDynamicWrapperTable (pParent)));
-      instance->SetInternalField (NODEWRAPPER_HANDLEINDEX, External::New (isolate, pHandle));
-    }
-    return instance;
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
 }
 
 
-void CLib3MFToolpathProfile::GetUUID (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathProfile::GetUUID(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         unsigned int bytesNeededUUID = 0;
         unsigned int bytesWrittenUUID = 0;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetUUID.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetUUID.");
         if (wrapperTable->m_ToolpathProfile_GetUUID == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathProfile::GetUUID.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult initErrorCode = wrapperTable->m_ToolpathProfile_GetUUID (instanceHandle, 0, &bytesNeededUUID, nullptr);
-        CheckError (isolate, wrapperTable, instanceHandle, initErrorCode);
+            throw std::runtime_error("Could not call Lib3MF method ToolpathProfile::GetUUID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_ToolpathProfile_GetUUID(instanceHandle, 0, &bytesNeededUUID, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
         std::vector<char> bufferUUID;
         bufferUUID.resize(bytesNeededUUID);
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathProfile_GetUUID (instanceHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set (String::NewFromUtf8 (isolate, &bufferUUID[0]));
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathProfile_GetUUID(instanceHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferUUID[0]));
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpathProfile::GetName (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathProfile::GetName(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         unsigned int bytesNeededName = 0;
         unsigned int bytesWrittenName = 0;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetName.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetName.");
         if (wrapperTable->m_ToolpathProfile_GetName == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathProfile::GetName.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult initErrorCode = wrapperTable->m_ToolpathProfile_GetName (instanceHandle, 0, &bytesNeededName, nullptr);
-        CheckError (isolate, wrapperTable, instanceHandle, initErrorCode);
+            throw std::runtime_error("Could not call Lib3MF method ToolpathProfile::GetName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_ToolpathProfile_GetName(instanceHandle, 0, &bytesNeededName, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
         std::vector<char> bufferName;
         bufferName.resize(bytesNeededName);
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathProfile_GetName (instanceHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set (String::NewFromUtf8 (isolate, &bufferName[0]));
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathProfile_GetName(instanceHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferName[0]));
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpathProfile::HasParameterValue (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathProfile::HasParameterValue(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsString()) {
-            throw std::runtime_error ("Expected string parameter 0 (NameSpaceName)");
+            throw std::runtime_error("Expected string parameter 0 (NameSpaceName)");
         }
         if (!args[1]->IsString()) {
-            throw std::runtime_error ("Expected string parameter 1 (ValueName)");
+            throw std::runtime_error("Expected string parameter 1 (ValueName)");
         }
-        v8::String::Utf8Value sutf8NameSpaceName (args[0]->ToString());
+        v8::String::Utf8Value sutf8NameSpaceName(isolate, args[0]);
         std::string sNameSpaceName = *sutf8NameSpaceName;
-        v8::String::Utf8Value sutf8ValueName (args[1]->ToString());
+        v8::String::Utf8Value sutf8ValueName(isolate, args[1]);
         std::string sValueName = *sutf8ValueName;
         bool bReturnValueExists = false;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method HasParameterValue.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method HasParameterValue.");
         if (wrapperTable->m_ToolpathProfile_HasParameterValue == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathProfile::HasParameterValue.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathProfile_HasParameterValue (instanceHandle, sNameSpaceName.c_str(), sValueName.c_str(), &bReturnValueExists);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set (Boolean::New (isolate, bReturnValueExists));
+            throw std::runtime_error("Could not call Lib3MF method ToolpathProfile::HasParameterValue.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathProfile_HasParameterValue(instanceHandle, sNameSpaceName.c_str(), sValueName.c_str(), &bReturnValueExists);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnValueExists));
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpathProfile::GetParameterDoubleValue (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathProfile::GetParameterDoubleValue(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsString()) {
-            throw std::runtime_error ("Expected string parameter 0 (NameSpaceName)");
+            throw std::runtime_error("Expected string parameter 0 (NameSpaceName)");
         }
         if (!args[1]->IsString()) {
-            throw std::runtime_error ("Expected string parameter 1 (ValueName)");
+            throw std::runtime_error("Expected string parameter 1 (ValueName)");
         }
-        v8::String::Utf8Value sutf8NameSpaceName (args[0]->ToString());
+        v8::String::Utf8Value sutf8NameSpaceName(isolate, args[0]);
         std::string sNameSpaceName = *sutf8NameSpaceName;
-        v8::String::Utf8Value sutf8ValueName (args[1]->ToString());
+        v8::String::Utf8Value sutf8ValueName(isolate, args[1]);
         std::string sValueName = *sutf8ValueName;
         double dReturnValue = 0.0;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetParameterDoubleValue.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetParameterDoubleValue.");
         if (wrapperTable->m_ToolpathProfile_GetParameterDoubleValue == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathProfile::GetParameterDoubleValue.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathProfile_GetParameterDoubleValue (instanceHandle, sNameSpaceName.c_str(), sValueName.c_str(), &dReturnValue);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set (Number::New (isolate, dReturnValue));
+            throw std::runtime_error("Could not call Lib3MF method ToolpathProfile::GetParameterDoubleValue.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathProfile_GetParameterDoubleValue(instanceHandle, sNameSpaceName.c_str(), sValueName.c_str(), &dReturnValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Number::New(isolate, dReturnValue));
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpathProfile::GetParameterDoubleValueDef (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathProfile::GetParameterDoubleValueDef(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsString()) {
-            throw std::runtime_error ("Expected string parameter 0 (NameSpaceName)");
+            throw std::runtime_error("Expected string parameter 0 (NameSpaceName)");
         }
         if (!args[1]->IsString()) {
-            throw std::runtime_error ("Expected string parameter 1 (ValueName)");
+            throw std::runtime_error("Expected string parameter 1 (ValueName)");
         }
         if (!args[2]->IsNumber()) {
-            throw std::runtime_error ("Expected double parameter 2 (DefaultValue)");
+            throw std::runtime_error("Expected double parameter 2 (DefaultValue)");
         }
-        v8::String::Utf8Value sutf8NameSpaceName (args[0]->ToString());
+        v8::String::Utf8Value sutf8NameSpaceName(isolate, args[0]);
         std::string sNameSpaceName = *sutf8NameSpaceName;
-        v8::String::Utf8Value sutf8ValueName (args[1]->ToString());
+        v8::String::Utf8Value sutf8ValueName(isolate, args[1]);
         std::string sValueName = *sutf8ValueName;
-        double dDefaultValue = (double) args[2]->NumberValue ();
+        double dDefaultValue = (double) args[2]->NumberValue(isolate->GetCurrentContext()).ToChecked();
         double dReturnValue = 0.0;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetParameterDoubleValueDef.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetParameterDoubleValueDef.");
         if (wrapperTable->m_ToolpathProfile_GetParameterDoubleValueDef == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathProfile::GetParameterDoubleValueDef.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathProfile_GetParameterDoubleValueDef (instanceHandle, sNameSpaceName.c_str(), sValueName.c_str(), dDefaultValue, &dReturnValue);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set (Number::New (isolate, dReturnValue));
+            throw std::runtime_error("Could not call Lib3MF method ToolpathProfile::GetParameterDoubleValueDef.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathProfile_GetParameterDoubleValueDef(instanceHandle, sNameSpaceName.c_str(), sValueName.c_str(), dDefaultValue, &dReturnValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Number::New(isolate, dReturnValue));
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpathProfile::SetName (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathProfile::SetName(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsString()) {
-            throw std::runtime_error ("Expected string parameter 0 (Name)");
+            throw std::runtime_error("Expected string parameter 0 (Name)");
         }
-        v8::String::Utf8Value sutf8Name (args[0]->ToString());
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
         std::string sName = *sutf8Name;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method SetName.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetName.");
         if (wrapperTable->m_ToolpathProfile_SetName == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathProfile::SetName.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathProfile_SetName (instanceHandle, sName.c_str());
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+            throw std::runtime_error("Could not call Lib3MF method ToolpathProfile::SetName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathProfile_SetName(instanceHandle, sName.c_str());
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpathProfile::SetParameterDoubleValue (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathProfile::SetParameterDoubleValue(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsString()) {
-            throw std::runtime_error ("Expected string parameter 0 (NameSpaceName)");
+            throw std::runtime_error("Expected string parameter 0 (NameSpaceName)");
         }
         if (!args[1]->IsString()) {
-            throw std::runtime_error ("Expected string parameter 1 (ValueName)");
+            throw std::runtime_error("Expected string parameter 1 (ValueName)");
         }
         if (!args[2]->IsNumber()) {
-            throw std::runtime_error ("Expected double parameter 2 (Value)");
+            throw std::runtime_error("Expected double parameter 2 (Value)");
         }
-        v8::String::Utf8Value sutf8NameSpaceName (args[0]->ToString());
+        v8::String::Utf8Value sutf8NameSpaceName(isolate, args[0]);
         std::string sNameSpaceName = *sutf8NameSpaceName;
-        v8::String::Utf8Value sutf8ValueName (args[1]->ToString());
+        v8::String::Utf8Value sutf8ValueName(isolate, args[1]);
         std::string sValueName = *sutf8ValueName;
-        double dValue = (double) args[2]->NumberValue ();
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        double dValue = (double) args[2]->NumberValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method SetParameterDoubleValue.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetParameterDoubleValue.");
         if (wrapperTable->m_ToolpathProfile_SetParameterDoubleValue == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathProfile::SetParameterDoubleValue.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathProfile_SetParameterDoubleValue (instanceHandle, sNameSpaceName.c_str(), sValueName.c_str(), dValue);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+            throw std::runtime_error("Could not call Lib3MF method ToolpathProfile::SetParameterDoubleValue.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathProfile_SetParameterDoubleValue(instanceHandle, sNameSpaceName.c_str(), sValueName.c_str(), dValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 /*************************************************************************************************************************
  Class CLib3MFToolpathLayerReader Implementation
 **************************************************************************************************************************/
 
-CLib3MFToolpathLayerReader::CLib3MFToolpathLayerReader ()
-    : CLib3MFBaseClass ()
+CLib3MFToolpathLayerReader::CLib3MFToolpathLayerReader()
+		: CLib3MFBaseClass()
 {
 }
 
@@ -9350,279 +9300,279 @@ CLib3MFToolpathLayerReader::~CLib3MFToolpathLayerReader()
 
 void CLib3MFToolpathLayerReader::Init()
 {
-    Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = Isolate::GetCurrent();
 
-    // Prepare constructor template
-    Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-    tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFToolpathLayerReader"));
-    tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFToolpathLayerReader"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
-    // Prototype
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerDataUUID", GetLayerDataUUID);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentCount", GetSegmentCount);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentInfo", GetSegmentInfo);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentProfile", GetSegmentProfile);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentProfileUUID", GetSegmentProfileUUID);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPart", GetSegmentPart);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPartUUID", GetSegmentPartUUID);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPointData", GetSegmentPointData);
-    constructor.Reset(isolate, tpl->GetFunction());
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerDataUUID", GetLayerDataUUID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentCount", GetSegmentCount);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentInfo", GetSegmentInfo);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentProfile", GetSegmentProfile);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentProfileUUID", GetSegmentProfileUUID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPart", GetSegmentPart);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPartUUID", GetSegmentPartUUID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPointData", GetSegmentPointData);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
 
 void CLib3MFToolpathLayerReader::New(const FunctionCallbackInfo<Value>& args)
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
 
-    if (args.IsConstructCall()) {
-        CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
-        CLib3MFToolpathLayerReader * toolpathlayerreaderInstance = new CLib3MFToolpathLayerReader ();
-        toolpathlayerreaderInstance->Wrap(args.This());
-        args.GetReturnValue().Set(args.This());
-    } else {
-        RaiseError (isolate, "Lib3MFToolpathLayerReader: Invalid call to Constructor");
-    }
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFToolpathLayerReader * toolpathlayerreaderInstance = new CLib3MFToolpathLayerReader();
+				toolpathlayerreaderInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFToolpathLayerReader: Invalid call to Constructor");
+		}
 }
 
 Local<Object> CLib3MFToolpathLayerReader::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
-    Local<Function> cons = Local<Function>::New(isolate, constructor);
-    Local<Object> instance;
-    if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal (&instance)) {
-      instance->SetInternalField (NODEWRAPPER_TABLEINDEX, External::New (isolate, CLib3MFBaseClass::getDynamicWrapperTable (pParent)));
-      instance->SetInternalField (NODEWRAPPER_HANDLEINDEX, External::New (isolate, pHandle));
-    }
-    return instance;
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
 }
 
 
-void CLib3MFToolpathLayerReader::GetLayerDataUUID (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerReader::GetLayerDataUUID(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         unsigned int bytesNeededUUID = 0;
         unsigned int bytesWrittenUUID = 0;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetLayerDataUUID.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetLayerDataUUID.");
         if (wrapperTable->m_ToolpathLayerReader_GetLayerDataUUID == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathLayerReader::GetLayerDataUUID.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult initErrorCode = wrapperTable->m_ToolpathLayerReader_GetLayerDataUUID (instanceHandle, 0, &bytesNeededUUID, nullptr);
-        CheckError (isolate, wrapperTable, instanceHandle, initErrorCode);
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetLayerDataUUID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_ToolpathLayerReader_GetLayerDataUUID(instanceHandle, 0, &bytesNeededUUID, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
         std::vector<char> bufferUUID;
         bufferUUID.resize(bytesNeededUUID);
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetLayerDataUUID (instanceHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set (String::NewFromUtf8 (isolate, &bufferUUID[0]));
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetLayerDataUUID(instanceHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferUUID[0]));
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpathLayerReader::GetSegmentCount (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerReader::GetSegmentCount(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         unsigned int nReturnCount = 0;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetSegmentCount.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentCount.");
         if (wrapperTable->m_ToolpathLayerReader_GetSegmentCount == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathLayerReader::GetSegmentCount.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentCount (instanceHandle, &nReturnCount);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set (Integer::NewFromUnsigned (isolate, nReturnCount));
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentCount.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentCount(instanceHandle, &nReturnCount);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnCount));
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpathLayerReader::GetSegmentInfo (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerReader::GetSegmentInfo(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsUint32()) {
-            throw std::runtime_error ("Expected uint32 parameter 0 (Index)");
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
         }
         Local<Object> outObject = Object::New(isolate);
-        unsigned int nIndex = (unsigned int) args[0]->IntegerValue ();
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         eLib3MFToolpathSegmentType eReturnType;
         unsigned int nReturnPointCount = 0;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetSegmentInfo.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentInfo.");
         if (wrapperTable->m_ToolpathLayerReader_GetSegmentInfo == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathLayerReader::GetSegmentInfo.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentInfo (instanceHandle, nIndex, &eReturnType, &nReturnPointCount);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        outObject->Set (String::NewFromUtf8 (isolate, "Type"), Integer::New (isolate, (int) eReturnType));
-        outObject->Set (String::NewFromUtf8 (isolate, "PointCount"), Integer::NewFromUnsigned (isolate, nReturnPointCount));
-        args.GetReturnValue().Set (outObject);
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentInfo.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentInfo(instanceHandle, nIndex, &eReturnType, &nReturnPointCount);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Type"), Integer::New(isolate, (int)eReturnType));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "PointCount"), Integer::NewFromUnsigned(isolate, nReturnPointCount));
+        args.GetReturnValue().Set(outObject);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpathLayerReader::GetSegmentProfile (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerReader::GetSegmentProfile(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsUint32()) {
-            throw std::runtime_error ("Expected uint32 parameter 0 (Index)");
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
         }
-        unsigned int nIndex = (unsigned int) args[0]->IntegerValue ();
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         Lib3MFHandle hReturnProfile = nullptr;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetSegmentProfile.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentProfile.");
         if (wrapperTable->m_ToolpathLayerReader_GetSegmentProfile == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathLayerReader::GetSegmentProfile.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentProfile (instanceHandle, nIndex, &hReturnProfile);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjProfile = CLib3MFToolpathProfile::NewInstance (args.Holder(), hReturnProfile);
-        args.GetReturnValue().Set (instanceObjProfile);
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentProfile.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentProfile(instanceHandle, nIndex, &hReturnProfile);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjProfile = CLib3MFToolpathProfile::NewInstance(args.Holder(), hReturnProfile);
+        args.GetReturnValue().Set(instanceObjProfile);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpathLayerReader::GetSegmentProfileUUID (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerReader::GetSegmentProfileUUID(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsUint32()) {
-            throw std::runtime_error ("Expected uint32 parameter 0 (Index)");
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
         }
-        unsigned int nIndex = (unsigned int) args[0]->IntegerValue ();
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         unsigned int bytesNeededProfileUUID = 0;
         unsigned int bytesWrittenProfileUUID = 0;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetSegmentProfileUUID.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentProfileUUID.");
         if (wrapperTable->m_ToolpathLayerReader_GetSegmentProfileUUID == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathLayerReader::GetSegmentProfileUUID.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult initErrorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentProfileUUID (instanceHandle, nIndex, 0, &bytesNeededProfileUUID, nullptr);
-        CheckError (isolate, wrapperTable, instanceHandle, initErrorCode);
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentProfileUUID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentProfileUUID(instanceHandle, nIndex, 0, &bytesNeededProfileUUID, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
         std::vector<char> bufferProfileUUID;
         bufferProfileUUID.resize(bytesNeededProfileUUID);
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentProfileUUID (instanceHandle, nIndex, bytesNeededProfileUUID, &bytesWrittenProfileUUID, &bufferProfileUUID[0]);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set (String::NewFromUtf8 (isolate, &bufferProfileUUID[0]));
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentProfileUUID(instanceHandle, nIndex, bytesNeededProfileUUID, &bytesWrittenProfileUUID, &bufferProfileUUID[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferProfileUUID[0]));
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpathLayerReader::GetSegmentPart (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerReader::GetSegmentPart(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsUint32()) {
-            throw std::runtime_error ("Expected uint32 parameter 0 (Index)");
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
         }
-        unsigned int nIndex = (unsigned int) args[0]->IntegerValue ();
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         Lib3MFHandle hReturnBuildItem = nullptr;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetSegmentPart.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentPart.");
         if (wrapperTable->m_ToolpathLayerReader_GetSegmentPart == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathLayerReader::GetSegmentPart.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentPart (instanceHandle, nIndex, &hReturnBuildItem);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjBuildItem = CLib3MFBuildItem::NewInstance (args.Holder(), hReturnBuildItem);
-        args.GetReturnValue().Set (instanceObjBuildItem);
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentPart.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentPart(instanceHandle, nIndex, &hReturnBuildItem);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjBuildItem = CLib3MFBuildItem::NewInstance(args.Holder(), hReturnBuildItem);
+        args.GetReturnValue().Set(instanceObjBuildItem);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpathLayerReader::GetSegmentPartUUID (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerReader::GetSegmentPartUUID(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsUint32()) {
-            throw std::runtime_error ("Expected uint32 parameter 0 (Index)");
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
         }
-        unsigned int nIndex = (unsigned int) args[0]->IntegerValue ();
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         unsigned int bytesNeededPartUUID = 0;
         unsigned int bytesWrittenPartUUID = 0;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetSegmentPartUUID.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentPartUUID.");
         if (wrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathLayerReader::GetSegmentPartUUID.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult initErrorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID (instanceHandle, nIndex, 0, &bytesNeededPartUUID, nullptr);
-        CheckError (isolate, wrapperTable, instanceHandle, initErrorCode);
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentPartUUID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID(instanceHandle, nIndex, 0, &bytesNeededPartUUID, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
         std::vector<char> bufferPartUUID;
         bufferPartUUID.resize(bytesNeededPartUUID);
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID (instanceHandle, nIndex, bytesNeededPartUUID, &bytesWrittenPartUUID, &bufferPartUUID[0]);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set (String::NewFromUtf8 (isolate, &bufferPartUUID[0]));
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID(instanceHandle, nIndex, bytesNeededPartUUID, &bytesWrittenPartUUID, &bufferPartUUID[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferPartUUID[0]));
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpathLayerReader::GetSegmentPointData (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerReader::GetSegmentPointData(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsUint32()) {
-            throw std::runtime_error ("Expected uint32 parameter 0 (Index)");
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
         }
-        unsigned int nIndex = (unsigned int) args[0]->IntegerValue ();
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetSegmentPointData.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentPointData.");
         if (wrapperTable->m_ToolpathLayerReader_GetSegmentPointData == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathLayerReader::GetSegmentPointData.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentPointData (instanceHandle, nIndex, 0, nullptr, nullptr);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentPointData.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentPointData(instanceHandle, nIndex, 0, nullptr, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 /*************************************************************************************************************************
  Class CLib3MFToolpathLayerData Implementation
 **************************************************************************************************************************/
 
-CLib3MFToolpathLayerData::CLib3MFToolpathLayerData ()
-    : CLib3MFBaseClass ()
+CLib3MFToolpathLayerData::CLib3MFToolpathLayerData()
+		: CLib3MFBaseClass()
 {
 }
 
@@ -9632,250 +9582,250 @@ CLib3MFToolpathLayerData::~CLib3MFToolpathLayerData()
 
 void CLib3MFToolpathLayerData::Init()
 {
-    Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = Isolate::GetCurrent();
 
-    // Prepare constructor template
-    Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-    tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFToolpathLayerData"));
-    tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFToolpathLayerData"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
-    // Prototype
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerDataUUID", GetLayerDataUUID);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "RegisterProfile", RegisterProfile);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "RegisterBuildItem", RegisterBuildItem);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "WriteHatchData", WriteHatchData);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "WriteLoop", WriteLoop);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "WritePolyline", WritePolyline);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "Finish", Finish);
-    constructor.Reset(isolate, tpl->GetFunction());
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerDataUUID", GetLayerDataUUID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "RegisterProfile", RegisterProfile);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "RegisterBuildItem", RegisterBuildItem);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "WriteHatchData", WriteHatchData);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "WriteLoop", WriteLoop);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "WritePolyline", WritePolyline);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "Finish", Finish);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
 
 void CLib3MFToolpathLayerData::New(const FunctionCallbackInfo<Value>& args)
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
 
-    if (args.IsConstructCall()) {
-        CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
-        CLib3MFToolpathLayerData * toolpathlayerdataInstance = new CLib3MFToolpathLayerData ();
-        toolpathlayerdataInstance->Wrap(args.This());
-        args.GetReturnValue().Set(args.This());
-    } else {
-        RaiseError (isolate, "Lib3MFToolpathLayerData: Invalid call to Constructor");
-    }
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFToolpathLayerData * toolpathlayerdataInstance = new CLib3MFToolpathLayerData();
+				toolpathlayerdataInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFToolpathLayerData: Invalid call to Constructor");
+		}
 }
 
 Local<Object> CLib3MFToolpathLayerData::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
-    Local<Function> cons = Local<Function>::New(isolate, constructor);
-    Local<Object> instance;
-    if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal (&instance)) {
-      instance->SetInternalField (NODEWRAPPER_TABLEINDEX, External::New (isolate, CLib3MFBaseClass::getDynamicWrapperTable (pParent)));
-      instance->SetInternalField (NODEWRAPPER_HANDLEINDEX, External::New (isolate, pHandle));
-    }
-    return instance;
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
 }
 
 
-void CLib3MFToolpathLayerData::GetLayerDataUUID (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerData::GetLayerDataUUID(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         unsigned int bytesNeededUUID = 0;
         unsigned int bytesWrittenUUID = 0;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetLayerDataUUID.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetLayerDataUUID.");
         if (wrapperTable->m_ToolpathLayerData_GetLayerDataUUID == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathLayerData::GetLayerDataUUID.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult initErrorCode = wrapperTable->m_ToolpathLayerData_GetLayerDataUUID (instanceHandle, 0, &bytesNeededUUID, nullptr);
-        CheckError (isolate, wrapperTable, instanceHandle, initErrorCode);
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::GetLayerDataUUID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_ToolpathLayerData_GetLayerDataUUID(instanceHandle, 0, &bytesNeededUUID, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
         std::vector<char> bufferUUID;
         bufferUUID.resize(bytesNeededUUID);
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_GetLayerDataUUID (instanceHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set (String::NewFromUtf8 (isolate, &bufferUUID[0]));
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_GetLayerDataUUID(instanceHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferUUID[0]));
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpathLayerData::RegisterProfile (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerData::RegisterProfile(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsObject()) {
-            throw std::runtime_error ("Expected class parameter 0 (Profile)");
+            throw std::runtime_error("Expected class parameter 0 (Profile)");
         }
-        Local<Object> objProfile = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked ();
+        Local<Object> objProfile = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
         CLib3MFToolpathProfile * instanceProfile = ObjectWrap::Unwrap<CLib3MFToolpathProfile>(objProfile);
         if (instanceProfile == nullptr)
             throw std::runtime_error("Invalid Object parameter 0 (Profile)");
-        Lib3MFHandle hProfile = instanceProfile->getHandle ( objProfile );
+        Lib3MFHandle hProfile = instanceProfile->getHandle( objProfile );
         unsigned int nReturnProfileID = 0;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method RegisterProfile.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method RegisterProfile.");
         if (wrapperTable->m_ToolpathLayerData_RegisterProfile == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathLayerData::RegisterProfile.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_RegisterProfile (instanceHandle, hProfile, &nReturnProfileID);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set (Integer::NewFromUnsigned (isolate, nReturnProfileID));
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::RegisterProfile.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_RegisterProfile(instanceHandle, hProfile, &nReturnProfileID);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnProfileID));
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpathLayerData::RegisterBuildItem (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerData::RegisterBuildItem(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsObject()) {
-            throw std::runtime_error ("Expected class parameter 0 (BuildItem)");
+            throw std::runtime_error("Expected class parameter 0 (BuildItem)");
         }
-        Local<Object> objBuildItem = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked ();
+        Local<Object> objBuildItem = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
         CLib3MFBuildItem * instanceBuildItem = ObjectWrap::Unwrap<CLib3MFBuildItem>(objBuildItem);
         if (instanceBuildItem == nullptr)
             throw std::runtime_error("Invalid Object parameter 0 (BuildItem)");
-        Lib3MFHandle hBuildItem = instanceBuildItem->getHandle ( objBuildItem );
+        Lib3MFHandle hBuildItem = instanceBuildItem->getHandle( objBuildItem );
         unsigned int nReturnPartID = 0;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method RegisterBuildItem.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method RegisterBuildItem.");
         if (wrapperTable->m_ToolpathLayerData_RegisterBuildItem == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathLayerData::RegisterBuildItem.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_RegisterBuildItem (instanceHandle, hBuildItem, &nReturnPartID);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set (Integer::NewFromUnsigned (isolate, nReturnPartID));
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::RegisterBuildItem.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_RegisterBuildItem(instanceHandle, hBuildItem, &nReturnPartID);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnPartID));
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpathLayerData::WriteHatchData (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerData::WriteHatchData(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsUint32()) {
-            throw std::runtime_error ("Expected uint32 parameter 0 (ProfileID)");
+            throw std::runtime_error("Expected uint32 parameter 0 (ProfileID)");
         }
         if (!args[1]->IsUint32()) {
-            throw std::runtime_error ("Expected uint32 parameter 1 (PartID)");
+            throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
         }
-        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue ();
-        unsigned int nPartID = (unsigned int) args[1]->IntegerValue ();
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method WriteHatchData.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method WriteHatchData.");
         if (wrapperTable->m_ToolpathLayerData_WriteHatchData == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathLayerData::WriteHatchData.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteHatchData (instanceHandle, nProfileID, nPartID, 0, nullptr);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WriteHatchData.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteHatchData(instanceHandle, nProfileID, nPartID, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpathLayerData::WriteLoop (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerData::WriteLoop(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsUint32()) {
-            throw std::runtime_error ("Expected uint32 parameter 0 (ProfileID)");
+            throw std::runtime_error("Expected uint32 parameter 0 (ProfileID)");
         }
         if (!args[1]->IsUint32()) {
-            throw std::runtime_error ("Expected uint32 parameter 1 (PartID)");
+            throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
         }
-        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue ();
-        unsigned int nPartID = (unsigned int) args[1]->IntegerValue ();
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method WriteLoop.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method WriteLoop.");
         if (wrapperTable->m_ToolpathLayerData_WriteLoop == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathLayerData::WriteLoop.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteLoop (instanceHandle, nProfileID, nPartID, 0, nullptr);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WriteLoop.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteLoop(instanceHandle, nProfileID, nPartID, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpathLayerData::WritePolyline (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerData::WritePolyline(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsUint32()) {
-            throw std::runtime_error ("Expected uint32 parameter 0 (ProfileID)");
+            throw std::runtime_error("Expected uint32 parameter 0 (ProfileID)");
         }
         if (!args[1]->IsUint32()) {
-            throw std::runtime_error ("Expected uint32 parameter 1 (PartID)");
+            throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
         }
-        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue ();
-        unsigned int nPartID = (unsigned int) args[1]->IntegerValue ();
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method WritePolyline.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method WritePolyline.");
         if (wrapperTable->m_ToolpathLayerData_WritePolyline == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathLayerData::WritePolyline.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WritePolyline (instanceHandle, nProfileID, nPartID, 0, nullptr);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WritePolyline.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WritePolyline(instanceHandle, nProfileID, nPartID, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpathLayerData::Finish (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerData::Finish(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method Finish.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method Finish.");
         if (wrapperTable->m_ToolpathLayerData_Finish == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathLayerData::Finish.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_Finish (instanceHandle);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::Finish.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_Finish(instanceHandle);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 /*************************************************************************************************************************
  Class CLib3MFToolpath Implementation
 **************************************************************************************************************************/
 
-CLib3MFToolpath::CLib3MFToolpath ()
-    : CLib3MFBaseClass ()
+CLib3MFToolpath::CLib3MFToolpath()
+		: CLib3MFBaseClass()
 {
 }
 
@@ -9885,390 +9835,390 @@ CLib3MFToolpath::~CLib3MFToolpath()
 
 void CLib3MFToolpath::Init()
 {
-    Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = Isolate::GetCurrent();
 
-    // Prepare constructor template
-    Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-    tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFToolpath"));
-    tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFToolpath"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
-    // Prototype
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetUnits", GetUnits);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerCount", GetLayerCount);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetProfileCount", GetProfileCount);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "AddLayer", AddLayer);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerAttachment", GetLayerAttachment);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "ReadLayerData", ReadLayerData);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerPath", GetLayerPath);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerZMax", GetLayerZMax);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerZ", GetLayerZ);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "AddProfile", AddProfile);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetProfile", GetProfile);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetProfileUUID", GetProfileUUID);
-    constructor.Reset(isolate, tpl->GetFunction());
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetUnits", GetUnits);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerCount", GetLayerCount);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetProfileCount", GetProfileCount);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddLayer", AddLayer);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerAttachment", GetLayerAttachment);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "ReadLayerData", ReadLayerData);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerPath", GetLayerPath);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerZMax", GetLayerZMax);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerZ", GetLayerZ);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddProfile", AddProfile);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetProfile", GetProfile);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetProfileUUID", GetProfileUUID);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
 
 void CLib3MFToolpath::New(const FunctionCallbackInfo<Value>& args)
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
 
-    if (args.IsConstructCall()) {
-        CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
-        CLib3MFToolpath * toolpathInstance = new CLib3MFToolpath ();
-        toolpathInstance->Wrap(args.This());
-        args.GetReturnValue().Set(args.This());
-    } else {
-        RaiseError (isolate, "Lib3MFToolpath: Invalid call to Constructor");
-    }
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFToolpath * toolpathInstance = new CLib3MFToolpath();
+				toolpathInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFToolpath: Invalid call to Constructor");
+		}
 }
 
 Local<Object> CLib3MFToolpath::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
-    Local<Function> cons = Local<Function>::New(isolate, constructor);
-    Local<Object> instance;
-    if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal (&instance)) {
-      instance->SetInternalField (NODEWRAPPER_TABLEINDEX, External::New (isolate, CLib3MFBaseClass::getDynamicWrapperTable (pParent)));
-      instance->SetInternalField (NODEWRAPPER_HANDLEINDEX, External::New (isolate, pHandle));
-    }
-    return instance;
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
 }
 
 
-void CLib3MFToolpath::GetUnits (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpath::GetUnits(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         double dReturnUnits = 0.0;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetUnits.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetUnits.");
         if (wrapperTable->m_Toolpath_GetUnits == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method Toolpath::GetUnits.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetUnits (instanceHandle, &dReturnUnits);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set (Number::New (isolate, dReturnUnits));
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetUnits.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetUnits(instanceHandle, &dReturnUnits);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Number::New(isolate, dReturnUnits));
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpath::GetLayerCount (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpath::GetLayerCount(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         unsigned int nReturnCount = 0;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetLayerCount.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetLayerCount.");
         if (wrapperTable->m_Toolpath_GetLayerCount == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method Toolpath::GetLayerCount.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetLayerCount (instanceHandle, &nReturnCount);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set (Integer::NewFromUnsigned (isolate, nReturnCount));
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetLayerCount.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetLayerCount(instanceHandle, &nReturnCount);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnCount));
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpath::GetProfileCount (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpath::GetProfileCount(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         unsigned int nReturnCount = 0;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetProfileCount.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetProfileCount.");
         if (wrapperTable->m_Toolpath_GetProfileCount == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method Toolpath::GetProfileCount.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetProfileCount (instanceHandle, &nReturnCount);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set (Integer::NewFromUnsigned (isolate, nReturnCount));
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetProfileCount.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetProfileCount(instanceHandle, &nReturnCount);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnCount));
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpath::AddLayer (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpath::AddLayer(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsUint32()) {
-            throw std::runtime_error ("Expected uint32 parameter 0 (ZMax)");
+            throw std::runtime_error("Expected uint32 parameter 0 (ZMax)");
         }
         if (!args[1]->IsString()) {
-            throw std::runtime_error ("Expected string parameter 1 (Path)");
+            throw std::runtime_error("Expected string parameter 1 (Path)");
         }
         if (!args[2]->IsObject()) {
-            throw std::runtime_error ("Expected class parameter 2 (ModelWriter)");
+            throw std::runtime_error("Expected class parameter 2 (ModelWriter)");
         }
-        unsigned int nZMax = (unsigned int) args[0]->IntegerValue ();
-        v8::String::Utf8Value sutf8Path (args[1]->ToString());
+        unsigned int nZMax = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        v8::String::Utf8Value sutf8Path(isolate, args[1]);
         std::string sPath = *sutf8Path;
-        Local<Object> objModelWriter = args[2]->ToObject(isolate->GetCurrentContext()).ToLocalChecked ();
+        Local<Object> objModelWriter = args[2]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
         CLib3MFWriter * instanceModelWriter = ObjectWrap::Unwrap<CLib3MFWriter>(objModelWriter);
         if (instanceModelWriter == nullptr)
             throw std::runtime_error("Invalid Object parameter 2 (ModelWriter)");
-        Lib3MFHandle hModelWriter = instanceModelWriter->getHandle ( objModelWriter );
+        Lib3MFHandle hModelWriter = instanceModelWriter->getHandle( objModelWriter );
         Lib3MFHandle hReturnLayerData = nullptr;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method AddLayer.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddLayer.");
         if (wrapperTable->m_Toolpath_AddLayer == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method Toolpath::AddLayer.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Toolpath_AddLayer (instanceHandle, nZMax, sPath.c_str(), hModelWriter, &hReturnLayerData);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjLayerData = CLib3MFToolpathLayerData::NewInstance (args.Holder(), hReturnLayerData);
-        args.GetReturnValue().Set (instanceObjLayerData);
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::AddLayer.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_AddLayer(instanceHandle, nZMax, sPath.c_str(), hModelWriter, &hReturnLayerData);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjLayerData = CLib3MFToolpathLayerData::NewInstance(args.Holder(), hReturnLayerData);
+        args.GetReturnValue().Set(instanceObjLayerData);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpath::GetLayerAttachment (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpath::GetLayerAttachment(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsUint32()) {
-            throw std::runtime_error ("Expected uint32 parameter 0 (Index)");
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
         }
-        unsigned int nIndex = (unsigned int) args[0]->IntegerValue ();
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         Lib3MFHandle hReturnAttachment = nullptr;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetLayerAttachment.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetLayerAttachment.");
         if (wrapperTable->m_Toolpath_GetLayerAttachment == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method Toolpath::GetLayerAttachment.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetLayerAttachment (instanceHandle, nIndex, &hReturnAttachment);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjAttachment = CLib3MFAttachment::NewInstance (args.Holder(), hReturnAttachment);
-        args.GetReturnValue().Set (instanceObjAttachment);
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetLayerAttachment.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetLayerAttachment(instanceHandle, nIndex, &hReturnAttachment);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjAttachment = CLib3MFAttachment::NewInstance(args.Holder(), hReturnAttachment);
+        args.GetReturnValue().Set(instanceObjAttachment);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpath::ReadLayerData (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpath::ReadLayerData(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsUint32()) {
-            throw std::runtime_error ("Expected uint32 parameter 0 (Index)");
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
         }
-        unsigned int nIndex = (unsigned int) args[0]->IntegerValue ();
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         Lib3MFHandle hReturnToolpathReader = nullptr;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method ReadLayerData.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method ReadLayerData.");
         if (wrapperTable->m_Toolpath_ReadLayerData == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method Toolpath::ReadLayerData.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Toolpath_ReadLayerData (instanceHandle, nIndex, &hReturnToolpathReader);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjToolpathReader = CLib3MFToolpathLayerReader::NewInstance (args.Holder(), hReturnToolpathReader);
-        args.GetReturnValue().Set (instanceObjToolpathReader);
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::ReadLayerData.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_ReadLayerData(instanceHandle, nIndex, &hReturnToolpathReader);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjToolpathReader = CLib3MFToolpathLayerReader::NewInstance(args.Holder(), hReturnToolpathReader);
+        args.GetReturnValue().Set(instanceObjToolpathReader);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpath::GetLayerPath (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpath::GetLayerPath(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsUint32()) {
-            throw std::runtime_error ("Expected uint32 parameter 0 (Index)");
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
         }
-        unsigned int nIndex = (unsigned int) args[0]->IntegerValue ();
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         unsigned int bytesNeededPath = 0;
         unsigned int bytesWrittenPath = 0;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetLayerPath.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetLayerPath.");
         if (wrapperTable->m_Toolpath_GetLayerPath == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method Toolpath::GetLayerPath.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult initErrorCode = wrapperTable->m_Toolpath_GetLayerPath (instanceHandle, nIndex, 0, &bytesNeededPath, nullptr);
-        CheckError (isolate, wrapperTable, instanceHandle, initErrorCode);
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetLayerPath.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_Toolpath_GetLayerPath(instanceHandle, nIndex, 0, &bytesNeededPath, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
         std::vector<char> bufferPath;
         bufferPath.resize(bytesNeededPath);
-        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetLayerPath (instanceHandle, nIndex, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set (String::NewFromUtf8 (isolate, &bufferPath[0]));
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetLayerPath(instanceHandle, nIndex, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferPath[0]));
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpath::GetLayerZMax (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpath::GetLayerZMax(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsUint32()) {
-            throw std::runtime_error ("Expected uint32 parameter 0 (Index)");
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
         }
-        unsigned int nIndex = (unsigned int) args[0]->IntegerValue ();
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         unsigned int nReturnZMax = 0;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetLayerZMax.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetLayerZMax.");
         if (wrapperTable->m_Toolpath_GetLayerZMax == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method Toolpath::GetLayerZMax.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetLayerZMax (instanceHandle, nIndex, &nReturnZMax);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set (Integer::NewFromUnsigned (isolate, nReturnZMax));
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetLayerZMax.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetLayerZMax(instanceHandle, nIndex, &nReturnZMax);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnZMax));
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpath::GetLayerZ (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpath::GetLayerZ(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsUint32()) {
-            throw std::runtime_error ("Expected uint32 parameter 0 (LayerIndex)");
+            throw std::runtime_error("Expected uint32 parameter 0 (LayerIndex)");
         }
-        unsigned int nLayerIndex = (unsigned int) args[0]->IntegerValue ();
+        unsigned int nLayerIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         unsigned int nReturnZValue = 0;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetLayerZ.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetLayerZ.");
         if (wrapperTable->m_Toolpath_GetLayerZ == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method Toolpath::GetLayerZ.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetLayerZ (instanceHandle, nLayerIndex, &nReturnZValue);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set (Integer::NewFromUnsigned (isolate, nReturnZValue));
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetLayerZ.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetLayerZ(instanceHandle, nLayerIndex, &nReturnZValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnZValue));
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpath::AddProfile (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpath::AddProfile(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsString()) {
-            throw std::runtime_error ("Expected string parameter 0 (Name)");
+            throw std::runtime_error("Expected string parameter 0 (Name)");
         }
-        v8::String::Utf8Value sutf8Name (args[0]->ToString());
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
         std::string sName = *sutf8Name;
         Lib3MFHandle hReturnProfile = nullptr;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method AddProfile.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddProfile.");
         if (wrapperTable->m_Toolpath_AddProfile == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method Toolpath::AddProfile.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Toolpath_AddProfile (instanceHandle, sName.c_str(), &hReturnProfile);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjProfile = CLib3MFToolpathProfile::NewInstance (args.Holder(), hReturnProfile);
-        args.GetReturnValue().Set (instanceObjProfile);
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::AddProfile.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_AddProfile(instanceHandle, sName.c_str(), &hReturnProfile);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjProfile = CLib3MFToolpathProfile::NewInstance(args.Holder(), hReturnProfile);
+        args.GetReturnValue().Set(instanceObjProfile);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpath::GetProfile (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpath::GetProfile(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsUint32()) {
-            throw std::runtime_error ("Expected uint32 parameter 0 (ProfileIndex)");
+            throw std::runtime_error("Expected uint32 parameter 0 (ProfileIndex)");
         }
-        unsigned int nProfileIndex = (unsigned int) args[0]->IntegerValue ();
+        unsigned int nProfileIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         Lib3MFHandle hReturnProfile = nullptr;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetProfile.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetProfile.");
         if (wrapperTable->m_Toolpath_GetProfile == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method Toolpath::GetProfile.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetProfile (instanceHandle, nProfileIndex, &hReturnProfile);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjProfile = CLib3MFToolpathProfile::NewInstance (args.Holder(), hReturnProfile);
-        args.GetReturnValue().Set (instanceObjProfile);
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetProfile.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetProfile(instanceHandle, nProfileIndex, &hReturnProfile);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjProfile = CLib3MFToolpathProfile::NewInstance(args.Holder(), hReturnProfile);
+        args.GetReturnValue().Set(instanceObjProfile);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFToolpath::GetProfileUUID (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpath::GetProfileUUID(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsString()) {
-            throw std::runtime_error ("Expected string parameter 0 (ProfileUUID)");
+            throw std::runtime_error("Expected string parameter 0 (ProfileUUID)");
         }
-        v8::String::Utf8Value sutf8ProfileUUID (args[0]->ToString());
+        v8::String::Utf8Value sutf8ProfileUUID(isolate, args[0]);
         std::string sProfileUUID = *sutf8ProfileUUID;
         Lib3MFHandle hReturnProfile = nullptr;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetProfileUUID.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetProfileUUID.");
         if (wrapperTable->m_Toolpath_GetProfileUUID == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method Toolpath::GetProfileUUID.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetProfileUUID (instanceHandle, sProfileUUID.c_str(), &hReturnProfile);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjProfile = CLib3MFToolpathProfile::NewInstance (args.Holder(), hReturnProfile);
-        args.GetReturnValue().Set (instanceObjProfile);
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetProfileUUID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetProfileUUID(instanceHandle, sProfileUUID.c_str(), &hReturnProfile);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjProfile = CLib3MFToolpathProfile::NewInstance(args.Holder(), hReturnProfile);
+        args.GetReturnValue().Set(instanceObjProfile);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 /*************************************************************************************************************************
  Class CLib3MFToolpathIterator Implementation
 **************************************************************************************************************************/
 
-CLib3MFToolpathIterator::CLib3MFToolpathIterator ()
-    : CLib3MFBaseClass ()
+CLib3MFToolpathIterator::CLib3MFToolpathIterator()
+		: CLib3MFBaseClass()
 {
 }
 
@@ -10278,68 +10228,68 @@ CLib3MFToolpathIterator::~CLib3MFToolpathIterator()
 
 void CLib3MFToolpathIterator::Init()
 {
-    Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = Isolate::GetCurrent();
 
-    // Prepare constructor template
-    Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-    tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFToolpathIterator"));
-    tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFToolpathIterator"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
-    // Prototype
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetCurrentToolpath", GetCurrentToolpath);
-    constructor.Reset(isolate, tpl->GetFunction());
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCurrentToolpath", GetCurrentToolpath);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
 
 void CLib3MFToolpathIterator::New(const FunctionCallbackInfo<Value>& args)
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
 
-    if (args.IsConstructCall()) {
-        CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
-        CLib3MFToolpathIterator * toolpathiteratorInstance = new CLib3MFToolpathIterator ();
-        toolpathiteratorInstance->Wrap(args.This());
-        args.GetReturnValue().Set(args.This());
-    } else {
-        RaiseError (isolate, "Lib3MFToolpathIterator: Invalid call to Constructor");
-    }
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFToolpathIterator * toolpathiteratorInstance = new CLib3MFToolpathIterator();
+				toolpathiteratorInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFToolpathIterator: Invalid call to Constructor");
+		}
 }
 
 Local<Object> CLib3MFToolpathIterator::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
 {
-    Isolate* isolate = Isolate::GetCurrent();
-    HandleScope scope(isolate);
-    Local<Function> cons = Local<Function>::New(isolate, constructor);
-    Local<Object> instance;
-    if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal (&instance)) {
-      instance->SetInternalField (NODEWRAPPER_TABLEINDEX, External::New (isolate, CLib3MFBaseClass::getDynamicWrapperTable (pParent)));
-      instance->SetInternalField (NODEWRAPPER_HANDLEINDEX, External::New (isolate, pHandle));
-    }
-    return instance;
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
 }
 
 
-void CLib3MFToolpathIterator::GetCurrentToolpath (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathIterator::GetCurrentToolpath(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         Lib3MFHandle hReturnResource = nullptr;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetCurrentToolpath.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCurrentToolpath.");
         if (wrapperTable->m_ToolpathIterator_GetCurrentToolpath == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ToolpathIterator::GetCurrentToolpath.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathIterator_GetCurrentToolpath (instanceHandle, &hReturnResource);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjResource = CLib3MFToolpath::NewInstance (args.Holder(), hReturnResource);
-        args.GetReturnValue().Set (instanceObjResource);
+            throw std::runtime_error("Could not call Lib3MF method ToolpathIterator::GetCurrentToolpath.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathIterator_GetCurrentToolpath(instanceHandle, &hReturnResource);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjResource = CLib3MFToolpath::NewInstance(args.Holder(), hReturnResource);
+        args.GetReturnValue().Set(instanceObjResource);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 /*************************************************************************************************************************
@@ -12098,74 +12048,6 @@ void CLib3MFModel::Init()
 		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFModel"));
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
-<<<<<<< .mine
-    // Prototype
-    NODE_SET_PROTOTYPE_METHOD(tpl, "RootModelPart", RootModelPart);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "FindOrCreatePackagePart", FindOrCreatePackagePart);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "SetUnit", SetUnit);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetUnit", GetUnit);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetLanguage", GetLanguage);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "SetLanguage", SetLanguage);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "QueryWriter", QueryWriter);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "QueryReader", QueryReader);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetTexture2DByID", GetTexture2DByID);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetPropertyTypeByID", GetPropertyTypeByID);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetBaseMaterialGroupByID", GetBaseMaterialGroupByID);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetTexture2DGroupByID", GetTexture2DGroupByID);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetCompositeMaterialsByID", GetCompositeMaterialsByID);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetMultiPropertyGroupByID", GetMultiPropertyGroupByID);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetMeshObjectByID", GetMeshObjectByID);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetComponentsObjectByID", GetComponentsObjectByID);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetColorGroupByID", GetColorGroupByID);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetSliceStackByID", GetSliceStackByID);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetBuildUUID", GetBuildUUID);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "SetBuildUUID", SetBuildUUID);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetBuildItems", GetBuildItems);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetOutbox", GetOutbox);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetResources", GetResources);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetObjects", GetObjects);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetMeshObjects", GetMeshObjects);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetComponentsObjects", GetComponentsObjects);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetTexture2Ds", GetTexture2Ds);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetBaseMaterialGroups", GetBaseMaterialGroups);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetColorGroups", GetColorGroups);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetTexture2DGroups", GetTexture2DGroups);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetCompositeMaterials", GetCompositeMaterials);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetMultiPropertyGroups", GetMultiPropertyGroups);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetToolpaths", GetToolpaths);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetSliceStacks", GetSliceStacks);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "MergeToModel", MergeToModel);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "AddMeshObject", AddMeshObject);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "AddComponentsObject", AddComponentsObject);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "AddSliceStack", AddSliceStack);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "AddTexture2DFromAttachment", AddTexture2DFromAttachment);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "AddBaseMaterialGroup", AddBaseMaterialGroup);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "AddColorGroup", AddColorGroup);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "AddTexture2DGroup", AddTexture2DGroup);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "AddCompositeMaterials", AddCompositeMaterials);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "AddMultiPropertyGroup", AddMultiPropertyGroup);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "AddBuildItem", AddBuildItem);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveBuildItem", RemoveBuildItem);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "AddToolpath", AddToolpath);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetMetaDataGroup", GetMetaDataGroup);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "AddAttachment", AddAttachment);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveAttachment", RemoveAttachment);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetAttachment", GetAttachment);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "FindAttachment", FindAttachment);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetAttachmentCount", GetAttachmentCount);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "HasPackageThumbnailAttachment", HasPackageThumbnailAttachment);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "CreatePackageThumbnailAttachment", CreatePackageThumbnailAttachment);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetPackageThumbnailAttachment", GetPackageThumbnailAttachment);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "RemovePackageThumbnailAttachment", RemovePackageThumbnailAttachment);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "AddCustomContentType", AddCustomContentType);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveCustomContentType", RemoveCustomContentType);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "SetRandomNumberCallback", SetRandomNumberCallback);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetKeyStore", GetKeyStore);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "CreatePersistentSourceFromFile", CreatePersistentSourceFromFile);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "CreatePersistentSourceFromBuffer", CreatePersistentSourceFromBuffer);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "CreatePersistentSourceFromCallback", CreatePersistentSourceFromCallback);
-    constructor.Reset(isolate, tpl->GetFunction());
-=======
 		// Prototype
 		NODE_SET_PROTOTYPE_METHOD(tpl, "RootModelPart", RootModelPart);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "FindOrCreatePackagePart", FindOrCreatePackagePart);
@@ -12200,6 +12082,7 @@ void CLib3MFModel::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetTexture2DGroups", GetTexture2DGroups);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCompositeMaterials", GetCompositeMaterials);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetMultiPropertyGroups", GetMultiPropertyGroups);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetToolpaths", GetToolpaths);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSliceStacks", GetSliceStacks);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "MergeToModel", MergeToModel);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddMeshObject", AddMeshObject);
@@ -12213,6 +12096,7 @@ void CLib3MFModel::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddMultiPropertyGroup", AddMultiPropertyGroup);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddBuildItem", AddBuildItem);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveBuildItem", RemoveBuildItem);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddToolpath", AddToolpath);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetMetaDataGroup", GetMetaDataGroup);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddAttachment", AddAttachment);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveAttachment", RemoveAttachment);
@@ -12227,12 +12111,10 @@ void CLib3MFModel::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveCustomContentType", RemoveCustomContentType);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetRandomNumberCallback", SetRandomNumberCallback);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetKeyStore", GetKeyStore);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "CreatePersistentSourceFromFile", CreatePersistentSourceFromFile);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "CreatePersistentSourceFromBuffer", CreatePersistentSourceFromBuffer);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "CreatePersistentSourceFromCallback", CreatePersistentSourceFromCallback);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
-
-
-
-
->>>>>>> .theirs
 
 }
 
@@ -13097,57 +12979,30 @@ void CLib3MFModel::GetMultiPropertyGroups(const FunctionCallbackInfo<Value>& arg
 }
 
 
-<<<<<<< .mine
-void CLib3MFModel::GetToolpaths (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFModel::GetToolpaths(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         Lib3MFHandle hReturnResourceIterator = nullptr;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetToolpaths.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetToolpaths.");
         if (wrapperTable->m_Model_GetToolpaths == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method Model::GetToolpaths.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Model_GetToolpaths (instanceHandle, &hReturnResourceIterator);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjResourceIterator = CLib3MFToolpathIterator::NewInstance (args.Holder(), hReturnResourceIterator);
-        args.GetReturnValue().Set (instanceObjResourceIterator);
+            throw std::runtime_error("Could not call Lib3MF method Model::GetToolpaths.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_GetToolpaths(instanceHandle, &hReturnResourceIterator);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjResourceIterator = CLib3MFToolpathIterator::NewInstance(args.Holder(), hReturnResourceIterator);
+        args.GetReturnValue().Set(instanceObjResourceIterator);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFModel::GetSliceStacks (const FunctionCallbackInfo<Value>& args) 
-=======
 void CLib3MFModel::GetSliceStacks(const FunctionCallbackInfo<Value>& args) 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> .theirs
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
@@ -13491,65 +13346,34 @@ void CLib3MFModel::RemoveBuildItem(const FunctionCallbackInfo<Value>& args)
 }
 
 
-<<<<<<< .mine
-void CLib3MFModel::AddToolpath (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFModel::AddToolpath(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsNumber()) {
-            throw std::runtime_error ("Expected double parameter 0 (UnitFactor)");
+            throw std::runtime_error("Expected double parameter 0 (UnitFactor)");
         }
-        double dUnitFactor = (double) args[0]->NumberValue ();
+        double dUnitFactor = (double) args[0]->NumberValue(isolate->GetCurrentContext()).ToChecked();
         Lib3MFHandle hReturnToolpathInstance = nullptr;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method AddToolpath.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddToolpath.");
         if (wrapperTable->m_Model_AddToolpath == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method Model::AddToolpath.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Model_AddToolpath (instanceHandle, dUnitFactor, &hReturnToolpathInstance);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjToolpathInstance = CLib3MFToolpath::NewInstance (args.Holder(), hReturnToolpathInstance);
-        args.GetReturnValue().Set (instanceObjToolpathInstance);
+            throw std::runtime_error("Could not call Lib3MF method Model::AddToolpath.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_AddToolpath(instanceHandle, dUnitFactor, &hReturnToolpathInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjToolpathInstance = CLib3MFToolpath::NewInstance(args.Holder(), hReturnToolpathInstance);
+        args.GetReturnValue().Set(instanceObjToolpathInstance);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFModel::GetMetaDataGroup (const FunctionCallbackInfo<Value>& args) 
-=======
 void CLib3MFModel::GetMetaDataGroup(const FunctionCallbackInfo<Value>& args) 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> .theirs
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
@@ -13902,89 +13726,89 @@ void CLib3MFModel::GetKeyStore(const FunctionCallbackInfo<Value>& args)
 }
 
 
-void CLib3MFModel::CreatePersistentSourceFromFile (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFModel::CreatePersistentSourceFromFile(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[0]->IsString()) {
-            throw std::runtime_error ("Expected string parameter 0 (Filename)");
+            throw std::runtime_error("Expected string parameter 0 (Filename)");
         }
-        v8::String::Utf8Value sutf8Filename (args[0]->ToString());
+        v8::String::Utf8Value sutf8Filename(isolate, args[0]);
         std::string sFilename = *sutf8Filename;
         Lib3MFHandle hReturnInstance = nullptr;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method CreatePersistentSourceFromFile.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method CreatePersistentSourceFromFile.");
         if (wrapperTable->m_Model_CreatePersistentSourceFromFile == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method Model::CreatePersistentSourceFromFile.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Model_CreatePersistentSourceFromFile (instanceHandle, sFilename.c_str(), &hReturnInstance);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjInstance = CLib3MFPersistentReaderSource::NewInstance (args.Holder(), hReturnInstance);
-        args.GetReturnValue().Set (instanceObjInstance);
+            throw std::runtime_error("Could not call Lib3MF method Model::CreatePersistentSourceFromFile.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_CreatePersistentSourceFromFile(instanceHandle, sFilename.c_str(), &hReturnInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjInstance = CLib3MFPersistentReaderSource::NewInstance(args.Holder(), hReturnInstance);
+        args.GetReturnValue().Set(instanceObjInstance);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFModel::CreatePersistentSourceFromBuffer (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFModel::CreatePersistentSourceFromBuffer(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         Lib3MFHandle hReturnInstance = nullptr;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method CreatePersistentSourceFromBuffer.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method CreatePersistentSourceFromBuffer.");
         if (wrapperTable->m_Model_CreatePersistentSourceFromBuffer == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method Model::CreatePersistentSourceFromBuffer.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Model_CreatePersistentSourceFromBuffer (instanceHandle, 0, nullptr, &hReturnInstance);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjInstance = CLib3MFPersistentReaderSource::NewInstance (args.Holder(), hReturnInstance);
-        args.GetReturnValue().Set (instanceObjInstance);
+            throw std::runtime_error("Could not call Lib3MF method Model::CreatePersistentSourceFromBuffer.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_CreatePersistentSourceFromBuffer(instanceHandle, 0, nullptr, &hReturnInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjInstance = CLib3MFPersistentReaderSource::NewInstance(args.Holder(), hReturnInstance);
+        args.GetReturnValue().Set(instanceObjInstance);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 
-void CLib3MFModel::CreatePersistentSourceFromCallback (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFModel::CreatePersistentSourceFromCallback(const FunctionCallbackInfo<Value>& args) 
 {
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
         if (!args[1]->IsString()) {
-            throw std::runtime_error ("Expected uint64 parameter 1 (StreamSize)");
+            throw std::runtime_error("Expected uint64 parameter 1 (StreamSize)");
         }
         if (!args[3]->IsString()) {
-            throw std::runtime_error ("Expected pointer parameter 3 (UserData)");
+            throw std::runtime_error("Expected pointer parameter 3 (UserData)");
         }
-        v8::String::Utf8Value sutf8StreamSize (args[1]->ToString());
+        v8::String::Utf8Value sutf8StreamSize(isolate, args[1]);
         std::string sStreamSize = *sutf8StreamSize;
-        uint64_t nStreamSize = stoull (sStreamSize);
-        v8::String::Utf8Value sutf8UserData (args[3]->ToString());
+        uint64_t nStreamSize = stoull(sStreamSize);
+        v8::String::Utf8Value sutf8UserData(isolate, args[3]);
         std::string sUserData = *sutf8UserData;
-        uint64_t nUserData = stoull (sUserData);
+        uint64_t nUserData = stoull(sUserData);
         Lib3MFHandle hReturnInstance = nullptr;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method CreatePersistentSourceFromCallback.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method CreatePersistentSourceFromCallback.");
         if (wrapperTable->m_Model_CreatePersistentSourceFromCallback == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method Model::CreatePersistentSourceFromCallback.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Model_CreatePersistentSourceFromCallback (instanceHandle, nullptr, nStreamSize, nullptr, (void*) nUserData, &hReturnInstance);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjInstance = CLib3MFPersistentReaderSource::NewInstance (args.Holder(), hReturnInstance);
-        args.GetReturnValue().Set (instanceObjInstance);
+            throw std::runtime_error("Could not call Lib3MF method Model::CreatePersistentSourceFromCallback.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_CreatePersistentSourceFromCallback(instanceHandle, nullptr, nStreamSize, nullptr, (void*) nUserData, &hReturnInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjInstance = CLib3MFPersistentReaderSource::NewInstance(args.Holder(), hReturnInstance);
+        args.GetReturnValue().Set(instanceObjInstance);
 
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
 }
 
 /*************************************************************************************************************************
@@ -14038,117 +13862,6 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 
-<<<<<<< .mine
-    try {
-        if (args.IsConstructCall()) {
-            // Get Library Name as Argument
-            std::string sLibraryName = "lib3mf.dll";
-            if (args[0]->IsString()) {
-                v8::String::Utf8Value stringParam (args[0]->ToString());
-                sLibraryName = *stringParam;
-            }
-            // Invoked as constructor: `new Lib3MFWrapper(...)`
-            CLib3MFWrapper* obj = new CLib3MFWrapper ();
-            Local<Object> newObject = args.This();
-            std::auto_ptr<sLib3MFDynamicWrapperTable> wrapperTable ( new sLib3MFDynamicWrapperTable );
-            CheckError (isolate, nullptr, nullptr, LoadLib3MFWrapperTable (wrapperTable.get(), sLibraryName.c_str()));
-            newObject->SetInternalField (NODEWRAPPER_TABLEINDEX, External::New (isolate, wrapperTable.release ()));
-            newObject->Set (String::NewFromUtf8(isolate, "ePropertyType_NoPropertyType"), Integer::New(isolate, 0));
-            newObject->Set (String::NewFromUtf8(isolate, "ePropertyType_BaseMaterial"), Integer::New(isolate, 1));
-            newObject->Set (String::NewFromUtf8(isolate, "ePropertyType_TexCoord"), Integer::New(isolate, 2));
-            newObject->Set (String::NewFromUtf8(isolate, "ePropertyType_Colors"), Integer::New(isolate, 3));
-            newObject->Set (String::NewFromUtf8(isolate, "ePropertyType_Composite"), Integer::New(isolate, 4));
-            newObject->Set (String::NewFromUtf8(isolate, "ePropertyType_Multi"), Integer::New(isolate, 5));
-            newObject->Set (String::NewFromUtf8(isolate, "eSlicesMeshResolution_Fullres"), Integer::New(isolate, 0));
-            newObject->Set (String::NewFromUtf8(isolate, "eSlicesMeshResolution_Lowres"), Integer::New(isolate, 1));
-            newObject->Set (String::NewFromUtf8(isolate, "ePersistentReaderSourceType_Unknown"), Integer::New(isolate, 0));
-            newObject->Set (String::NewFromUtf8(isolate, "ePersistentReaderSourceType_FileOnDisk"), Integer::New(isolate, 1));
-            newObject->Set (String::NewFromUtf8(isolate, "ePersistentReaderSourceType_MemoryBuffer"), Integer::New(isolate, 2));
-            newObject->Set (String::NewFromUtf8(isolate, "ePersistentReaderSourceType_Callback"), Integer::New(isolate, 3));
-            newObject->Set (String::NewFromUtf8(isolate, "eModelUnit_MicroMeter"), Integer::New(isolate, 0));
-            newObject->Set (String::NewFromUtf8(isolate, "eModelUnit_MilliMeter"), Integer::New(isolate, 1));
-            newObject->Set (String::NewFromUtf8(isolate, "eModelUnit_CentiMeter"), Integer::New(isolate, 2));
-            newObject->Set (String::NewFromUtf8(isolate, "eModelUnit_Inch"), Integer::New(isolate, 3));
-            newObject->Set (String::NewFromUtf8(isolate, "eModelUnit_Foot"), Integer::New(isolate, 4));
-            newObject->Set (String::NewFromUtf8(isolate, "eModelUnit_Meter"), Integer::New(isolate, 5));
-            newObject->Set (String::NewFromUtf8(isolate, "eObjectType_Other"), Integer::New(isolate, 0));
-            newObject->Set (String::NewFromUtf8(isolate, "eObjectType_Model"), Integer::New(isolate, 1));
-            newObject->Set (String::NewFromUtf8(isolate, "eObjectType_Support"), Integer::New(isolate, 2));
-            newObject->Set (String::NewFromUtf8(isolate, "eObjectType_SolidSupport"), Integer::New(isolate, 3));
-            newObject->Set (String::NewFromUtf8(isolate, "eTextureType_Unknown"), Integer::New(isolate, 0));
-            newObject->Set (String::NewFromUtf8(isolate, "eTextureType_PNG"), Integer::New(isolate, 1));
-            newObject->Set (String::NewFromUtf8(isolate, "eTextureType_JPEG"), Integer::New(isolate, 2));
-            newObject->Set (String::NewFromUtf8(isolate, "eTextureTileStyle_Wrap"), Integer::New(isolate, 0));
-            newObject->Set (String::NewFromUtf8(isolate, "eTextureTileStyle_Mirror"), Integer::New(isolate, 1));
-            newObject->Set (String::NewFromUtf8(isolate, "eTextureTileStyle_Clamp"), Integer::New(isolate, 2));
-            newObject->Set (String::NewFromUtf8(isolate, "eTextureTileStyle_NoTileStyle"), Integer::New(isolate, 3));
-            newObject->Set (String::NewFromUtf8(isolate, "eTextureFilter_Auto"), Integer::New(isolate, 0));
-            newObject->Set (String::NewFromUtf8(isolate, "eTextureFilter_Linear"), Integer::New(isolate, 1));
-            newObject->Set (String::NewFromUtf8(isolate, "eTextureFilter_Nearest"), Integer::New(isolate, 2));
-            newObject->Set (String::NewFromUtf8(isolate, "eBeamLatticeCapMode_Sphere"), Integer::New(isolate, 0));
-            newObject->Set (String::NewFromUtf8(isolate, "eBeamLatticeCapMode_HemiSphere"), Integer::New(isolate, 1));
-            newObject->Set (String::NewFromUtf8(isolate, "eBeamLatticeCapMode_Butt"), Integer::New(isolate, 2));
-            newObject->Set (String::NewFromUtf8(isolate, "eBeamLatticeClipMode_NoClipMode"), Integer::New(isolate, 0));
-            newObject->Set (String::NewFromUtf8(isolate, "eBeamLatticeClipMode_Inside"), Integer::New(isolate, 1));
-            newObject->Set (String::NewFromUtf8(isolate, "eBeamLatticeClipMode_Outside"), Integer::New(isolate, 2));
-            newObject->Set (String::NewFromUtf8(isolate, "eBeamLatticeBallMode_None"), Integer::New(isolate, 0));
-            newObject->Set (String::NewFromUtf8(isolate, "eBeamLatticeBallMode_Mixed"), Integer::New(isolate, 1));
-            newObject->Set (String::NewFromUtf8(isolate, "eBeamLatticeBallMode_All"), Integer::New(isolate, 2));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_QUERYCANCELED"), Integer::New(isolate, 0));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_DONE"), Integer::New(isolate, 1));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_CLEANUP"), Integer::New(isolate, 2));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_READSTREAM"), Integer::New(isolate, 3));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_EXTRACTOPCPACKAGE"), Integer::New(isolate, 4));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_READNONROOTMODELS"), Integer::New(isolate, 5));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_READROOTMODEL"), Integer::New(isolate, 6));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_READRESOURCES"), Integer::New(isolate, 7));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_READMESH"), Integer::New(isolate, 8));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_READSLICES"), Integer::New(isolate, 9));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_READBUILD"), Integer::New(isolate, 10));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_READCUSTOMATTACHMENT"), Integer::New(isolate, 11));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_READTEXTURETACHMENTS"), Integer::New(isolate, 12));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_CREATEOPCPACKAGE"), Integer::New(isolate, 13));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_WRITEMODELSTOSTREAM"), Integer::New(isolate, 14));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_WRITEROOTMODEL"), Integer::New(isolate, 15));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_WRITENONROOTMODELS"), Integer::New(isolate, 16));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_WRITEATTACHMENTS"), Integer::New(isolate, 17));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_WRITECONTENTTYPES"), Integer::New(isolate, 18));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_WRITENOBJECTS"), Integer::New(isolate, 19));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_WRITENODES"), Integer::New(isolate, 20));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_WRITETRIANGLES"), Integer::New(isolate, 21));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_WRITESLICES"), Integer::New(isolate, 22));
-            newObject->Set (String::NewFromUtf8(isolate, "eProgressIdentifier_WRITEKEYSTORE"), Integer::New(isolate, 23));
-            newObject->Set (String::NewFromUtf8(isolate, "eBlendMethod_NoBlendMethod"), Integer::New(isolate, 0));
-            newObject->Set (String::NewFromUtf8(isolate, "eBlendMethod_Mix"), Integer::New(isolate, 1));
-            newObject->Set (String::NewFromUtf8(isolate, "eBlendMethod_Multiply"), Integer::New(isolate, 2));
-            newObject->Set (String::NewFromUtf8(isolate, "eToolpathSegmentType_Unknown"), Integer::New(isolate, 0));
-            newObject->Set (String::NewFromUtf8(isolate, "eToolpathSegmentType_Hatch"), Integer::New(isolate, 1));
-            newObject->Set (String::NewFromUtf8(isolate, "eToolpathSegmentType_Loop"), Integer::New(isolate, 2));
-            newObject->Set (String::NewFromUtf8(isolate, "eToolpathSegmentType_Polyline"), Integer::New(isolate, 3));
-            newObject->Set (String::NewFromUtf8(isolate, "eEncryptionAlgorithm_AES256_GCM"), Integer::New(isolate, 1));
-            newObject->Set (String::NewFromUtf8(isolate, "eWrappingAlgorithm_RSA_OAEP"), Integer::New(isolate, 0));
-            newObject->Set (String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA1"), Integer::New(isolate, 160));
-            newObject->Set (String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA224"), Integer::New(isolate, 224));
-            newObject->Set (String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA256"), Integer::New(isolate, 256));
-            newObject->Set (String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA384"), Integer::New(isolate, 384));
-            newObject->Set (String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA512"), Integer::New(isolate, 512));
-            newObject->Set (String::NewFromUtf8(isolate, "eDigestMethod_SHA1"), Integer::New(isolate, 160));
-            newObject->Set (String::NewFromUtf8(isolate, "eDigestMethod_SHA256"), Integer::New(isolate, 256));
-            newObject->Set (String::NewFromUtf8(isolate, "eCompression_NoCompression"), Integer::New(isolate, 0));
-            newObject->Set (String::NewFromUtf8(isolate, "eCompression_Deflate"), Integer::New(isolate, 1));
-            obj->Wrap(newObject);
-            args.GetReturnValue().Set(newObject);
-        } else {
-            // Invoked as plain function `Lib3MFWrapper(...)`, turn into construct call.
-            const int argc = 1;
-            Local<Value> argv[argc] = { args[0] };
-            Local<Function> cons = Local<Function>::New(isolate, constructor);
-            args.GetReturnValue().Set(cons->NewInstance(isolate->GetCurrentContext(), argc, argv).ToLocalChecked());
-        }
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
-=======
 		try {
 				if (args.IsConstructCall()) {
 						// Get Library Name as Argument
@@ -14177,6 +13890,10 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ePropertyType_Multi"), Integer::New(isolate, 5));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eSlicesMeshResolution_Fullres"), Integer::New(isolate, 0));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eSlicesMeshResolution_Lowres"), Integer::New(isolate, 1));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ePersistentReaderSourceType_Unknown"), Integer::New(isolate, 0));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ePersistentReaderSourceType_FileOnDisk"), Integer::New(isolate, 1));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ePersistentReaderSourceType_MemoryBuffer"), Integer::New(isolate, 2));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ePersistentReaderSourceType_Callback"), Integer::New(isolate, 3));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eModelUnit_MicroMeter"), Integer::New(isolate, 0));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eModelUnit_MilliMeter"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eModelUnit_CentiMeter"), Integer::New(isolate, 2));
@@ -14233,6 +13950,10 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBlendMethod_NoBlendMethod"), Integer::New(isolate, 0));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBlendMethod_Mix"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBlendMethod_Multiply"), Integer::New(isolate, 2));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathSegmentType_Unknown"), Integer::New(isolate, 0));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathSegmentType_Hatch"), Integer::New(isolate, 1));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathSegmentType_Loop"), Integer::New(isolate, 2));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathSegmentType_Polyline"), Integer::New(isolate, 3));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eEncryptionAlgorithm_AES256_GCM"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eWrappingAlgorithm_RSA_OAEP"), Integer::New(isolate, 0));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA1"), Integer::New(isolate, 160));
@@ -14256,9 +13977,6 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
 		}
-
-
->>>>>>> .theirs
 }
 
 Local<Object> CLib3MFWrapper::NewInstance(const FunctionCallbackInfo<Value>& args)

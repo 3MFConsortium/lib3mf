@@ -137,6 +137,10 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND 3003 /** A resource data has not been found */
 #define LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED 3004 /** A Key or Conentent encryption callback has not been registered */
 #define LIB3MF_ERROR_INVALIDKEYSIZE 3005 /** The key siue is invalid */
+#define LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER 4000 /** Not in toolpath header writing mode */
+#define LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA 4001 /** Not in toolpath data writing mode */
+#define LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN 4002 /** Toolpath has already been written out */
+#define LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT 4003 /** Toolpath has an invalid number of points */
 
 /*************************************************************************************************************************
  Error strings for Lib3MF
@@ -188,6 +192,10 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
     case LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: return "A resource data has not been found";
     case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: return "A Key or Conentent encryption callback has not been registered";
     case LIB3MF_ERROR_INVALIDKEYSIZE: return "The key siue is invalid";
+    case LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER: return "Not in toolpath header writing mode";
+    case LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA: return "Not in toolpath data writing mode";
+    case LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "Toolpath has already been written out";
+    case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "Toolpath has an invalid number of points";
     default: return "unknown error";
   }
 }
@@ -198,6 +206,7 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
 
 typedef Lib3MFHandle Lib3MF_Base;
 typedef Lib3MFHandle Lib3MF_Writer;
+typedef Lib3MFHandle Lib3MF_PersistentReaderSource;
 typedef Lib3MFHandle Lib3MF_Reader;
 typedef Lib3MFHandle Lib3MF_PackagePart;
 typedef Lib3MFHandle Lib3MF_Resource;
@@ -230,6 +239,11 @@ typedef Lib3MFHandle Lib3MF_Texture2D;
 typedef Lib3MFHandle Lib3MF_BuildItem;
 typedef Lib3MFHandle Lib3MF_BuildItemIterator;
 typedef Lib3MFHandle Lib3MF_Slice;
+typedef Lib3MFHandle Lib3MF_ToolpathProfile;
+typedef Lib3MFHandle Lib3MF_ToolpathLayerReader;
+typedef Lib3MFHandle Lib3MF_ToolpathLayerData;
+typedef Lib3MFHandle Lib3MF_Toolpath;
+typedef Lib3MFHandle Lib3MF_ToolpathIterator;
 typedef Lib3MFHandle Lib3MF_SliceStack;
 typedef Lib3MFHandle Lib3MF_Consumer;
 typedef Lib3MFHandle Lib3MF_AccessRight;
@@ -256,6 +270,13 @@ typedef enum eLib3MFSlicesMeshResolution {
   eSlicesMeshResolutionFullres = 0,
   eSlicesMeshResolutionLowres = 1
 } eLib3MFSlicesMeshResolution;
+
+typedef enum eLib3MFPersistentReaderSourceType {
+  ePersistentReaderSourceTypeUnknown = 0,
+  ePersistentReaderSourceTypeFileOnDisk = 1,
+  ePersistentReaderSourceTypeMemoryBuffer = 2,
+  ePersistentReaderSourceTypeCallback = 3
+} eLib3MFPersistentReaderSourceType;
 
 typedef enum eLib3MFModelUnit {
   eModelUnitMicroMeter = 0,
@@ -343,6 +364,13 @@ typedef enum eLib3MFBlendMethod {
   eBlendMethodMultiply = 2
 } eLib3MFBlendMethod;
 
+typedef enum eLib3MFToolpathSegmentType {
+  eToolpathSegmentTypeUnknown = 0,
+  eToolpathSegmentTypeHatch = 1,
+  eToolpathSegmentTypeLoop = 2,
+  eToolpathSegmentTypePolyline = 3
+} eLib3MFToolpathSegmentType;
+
 typedef enum eLib3MFEncryptionAlgorithm {
   eEncryptionAlgorithmAES256_GCM = 1 /** http://www.w3.org/2009/xmlenc11#aes256-gcm */
 } eLib3MFEncryptionAlgorithm;
@@ -382,6 +410,11 @@ typedef union {
   eLib3MFSlicesMeshResolution m_enum;
   int m_code;
 } structEnumLib3MFSlicesMeshResolution;
+
+typedef union {
+  eLib3MFPersistentReaderSourceType m_enum;
+  int m_code;
+} structEnumLib3MFPersistentReaderSourceType;
 
 typedef union {
   eLib3MFModelUnit m_enum;
@@ -432,6 +465,11 @@ typedef union {
   eLib3MFBlendMethod m_enum;
   int m_code;
 } structEnumLib3MFBlendMethod;
+
+typedef union {
+  eLib3MFToolpathSegmentType m_enum;
+  int m_code;
+} structEnumLib3MFToolpathSegmentType;
 
 typedef union {
   eLib3MFEncryptionAlgorithm m_enum;

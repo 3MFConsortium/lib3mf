@@ -2499,7 +2499,7 @@ type
 	TLib3MFAttachment_WriteToFileFunc = function(pAttachment: TLib3MFHandle; const pFileName: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
-	* Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF packege, or via the WriteToFile or WriteToBuffer-methods.
+	* Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
 	*
 	* @param[in] pAttachment - Attachment instance.
 	* @param[in] pFileName - file to read from.
@@ -2508,7 +2508,7 @@ type
 	TLib3MFAttachment_ReadFromFileFunc = function(pAttachment: TLib3MFHandle; const pFileName: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
-	* Reads a model and from the data provided by a callback function
+	* Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
 	*
 	* @param[in] pAttachment - Attachment instance.
 	* @param[in] pTheReadCallback - Callback to call for reading a data chunk
@@ -2540,7 +2540,7 @@ type
 	TLib3MFAttachment_WriteToBufferFunc = function(pAttachment: TLib3MFHandle; const nBufferCount: QWord; out pBufferNeededCount: QWord; pBufferBuffer: PByte): TLib3MFResult; cdecl;
 	
 	(**
-	* Reads an attachment from a memory buffer
+	* Reads an attachment from a memory buffer. This buffer is immediatly read (in contrast to the ReadFromCallback and ReadFromFile-methods).
 	*
 	* @param[in] pAttachment - Attachment instance.
 	* @param[in] nBufferCount - Number of elements in buffer
@@ -6470,6 +6470,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	end;
 	function TLib3MFPolymorphicFactoryMakeBase(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBase;
 	function TLib3MFPolymorphicFactoryMakeWriter(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFWriter;
+	function TLib3MFPolymorphicFactoryMakePersistentReaderSource(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFPersistentReaderSource;
 	function TLib3MFPolymorphicFactoryMakeReader(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFReader;
 	function TLib3MFPolymorphicFactoryMakePackagePart(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFPackagePart;
 	function TLib3MFPolymorphicFactoryMakeResource(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFResource;
@@ -6502,6 +6503,11 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function TLib3MFPolymorphicFactoryMakeBuildItem(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBuildItem;
 	function TLib3MFPolymorphicFactoryMakeBuildItemIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBuildItemIterator;
 	function TLib3MFPolymorphicFactoryMakeSlice(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSlice;
+	function TLib3MFPolymorphicFactoryMakeToolpathProfile(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathProfile;
+	function TLib3MFPolymorphicFactoryMakeToolpathLayerReader(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathLayerReader;
+	function TLib3MFPolymorphicFactoryMakeToolpathLayerData(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathLayerData;
+	function TLib3MFPolymorphicFactoryMakeToolpath(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpath;
+	function TLib3MFPolymorphicFactoryMakeToolpathIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathIterator;
 	function TLib3MFPolymorphicFactoryMakeSliceStack(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSliceStack;
 	function TLib3MFPolymorphicFactoryMakeConsumer(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFConsumer;
 	function TLib3MFPolymorphicFactoryMakeAccessRight(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFAccessRight;
@@ -7029,6 +7035,7 @@ implementation
 		case (ClassTypeId) of
 			QWord($856632D0BAF1D8B7): begin Obj := TLIB3MFBase.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Base"
 			QWord($E76F642F363FD7E9): begin Obj := TLIB3MFWriter.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Writer"
+			QWord($BE46884397CE1319): begin Obj := TLIB3MFPersistentReaderSource.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::PersistentReaderSource"
 			QWord($2D86831DA59FBE72): begin Obj := TLIB3MFReader.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Reader"
 			QWord($0E55A826D377483E): begin Obj := TLIB3MFPackagePart.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::PackagePart"
 			QWord($DFE3889D1B269CBB): begin Obj := TLIB3MFResource.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Resource"
@@ -7061,6 +7068,11 @@ implementation
 			QWord($68FB2D5FFC4BA12A): begin Obj := TLIB3MFBuildItem.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItem"
 			QWord($A7D21BD364910860): begin Obj := TLIB3MFBuildItemIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItemIterator"
 			QWord($2198BCF4D8DF9C40): begin Obj := TLIB3MFSlice.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Slice"
+			QWord($C869620B90242CA7): begin Obj := TLIB3MFToolpathProfile.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathProfile"
+			QWord($28DD7D3718F0616E): begin Obj := TLIB3MFToolpathLayerReader.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerReader"
+			QWord($28C0E70CC44F931A): begin Obj := TLIB3MFToolpathLayerData.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerData"
+			QWord($F0AAB2C814D9FFB1): begin Obj := TLIB3MFToolpath.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Toolpath"
+			QWord($D0F24425A07F2A81): begin Obj := TLIB3MFToolpathIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathIterator"
 			QWord($6594B031B6096238): begin Obj := TLIB3MFSliceStack.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::SliceStack"
 			QWord($D9E46D5E6D8118EE): begin Obj := TLIB3MFConsumer.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Consumer"
 			QWord($385C42FC5609498A): begin Obj := TLIB3MFAccessRight.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::AccessRight"
@@ -7079,6 +7091,10 @@ implementation
 	function TLib3MFPolymorphicFactoryMakeWriter(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFWriter;
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFWriter, TLIB3MFWriter>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakePersistentReaderSource(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFPersistentReaderSource;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFPersistentReaderSource, TLIB3MFPersistentReaderSource>.Make(Wrapper, Handle);
 	end;
 	function TLib3MFPolymorphicFactoryMakeReader(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFReader;
 	begin
@@ -7207,6 +7223,26 @@ implementation
 	function TLib3MFPolymorphicFactoryMakeSlice(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSlice;
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFSlice, TLIB3MFSlice>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeToolpathProfile(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathProfile;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFToolpathProfile, TLIB3MFToolpathProfile>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeToolpathLayerReader(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathLayerReader;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFToolpathLayerReader, TLIB3MFToolpathLayerReader>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeToolpathLayerData(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathLayerData;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFToolpathLayerData, TLIB3MFToolpathLayerData>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeToolpath(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpath;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFToolpath, TLIB3MFToolpath>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeToolpathIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathIterator;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFToolpathIterator, TLIB3MFToolpathIterator>.Make(Wrapper, Handle);
 	end;
 	function TLib3MFPolymorphicFactoryMakeSliceStack(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSliceStack;
 	begin
@@ -9937,7 +9973,7 @@ implementation
 		HProfile := nil;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentProfileFunc(FHandle, AIndex, HProfile));
 		if Assigned(HProfile) then
-			Result := TLib3MFToolpathProfile.Create(FWrapper, HProfile);
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathProfile, TLib3MFToolpathProfile>.Make(FWrapper, HProfile);
 	end;
 
 	function TLib3MFToolpathLayerReader.GetSegmentProfileUUID(const AIndex: Cardinal): String;
@@ -9962,7 +9998,7 @@ implementation
 		HBuildItem := nil;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPartFunc(FHandle, AIndex, HBuildItem));
 		if Assigned(HBuildItem) then
-			Result := TLib3MFBuildItem.Create(FWrapper, HBuildItem);
+			Result := TLib3MFPolymorphicFactory<TLib3MFBuildItem, TLib3MFBuildItem>.Make(FWrapper, HBuildItem);
 	end;
 
 	function TLib3MFToolpathLayerReader.GetSegmentPartUUID(const AIndex: Cardinal): String;
@@ -10136,7 +10172,7 @@ implementation
 		HLayerData := nil;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_AddLayerFunc(FHandle, AZMax, PAnsiChar(APath), AModelWriterHandle, HLayerData));
 		if Assigned(HLayerData) then
-			Result := TLib3MFToolpathLayerData.Create(FWrapper, HLayerData);
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathLayerData, TLib3MFToolpathLayerData>.Make(FWrapper, HLayerData);
 	end;
 
 	function TLib3MFToolpath.GetLayerAttachment(const AIndex: Cardinal): TLib3MFAttachment;
@@ -10147,7 +10183,7 @@ implementation
 		HAttachment := nil;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetLayerAttachmentFunc(FHandle, AIndex, HAttachment));
 		if Assigned(HAttachment) then
-			Result := TLib3MFAttachment.Create(FWrapper, HAttachment);
+			Result := TLib3MFPolymorphicFactory<TLib3MFAttachment, TLib3MFAttachment>.Make(FWrapper, HAttachment);
 	end;
 
 	function TLib3MFToolpath.ReadLayerData(const AIndex: Cardinal): TLib3MFToolpathLayerReader;
@@ -10158,7 +10194,7 @@ implementation
 		HToolpathReader := nil;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_ReadLayerDataFunc(FHandle, AIndex, HToolpathReader));
 		if Assigned(HToolpathReader) then
-			Result := TLib3MFToolpathLayerReader.Create(FWrapper, HToolpathReader);
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathLayerReader, TLib3MFToolpathLayerReader>.Make(FWrapper, HToolpathReader);
 	end;
 
 	function TLib3MFToolpath.GetLayerPath(const AIndex: Cardinal): String;
@@ -10193,7 +10229,7 @@ implementation
 		HProfile := nil;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_AddProfileFunc(FHandle, PAnsiChar(AName), HProfile));
 		if Assigned(HProfile) then
-			Result := TLib3MFToolpathProfile.Create(FWrapper, HProfile);
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathProfile, TLib3MFToolpathProfile>.Make(FWrapper, HProfile);
 	end;
 
 	function TLib3MFToolpath.GetProfile(const AProfileIndex: Cardinal): TLib3MFToolpathProfile;
@@ -10204,7 +10240,7 @@ implementation
 		HProfile := nil;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetProfileFunc(FHandle, AProfileIndex, HProfile));
 		if Assigned(HProfile) then
-			Result := TLib3MFToolpathProfile.Create(FWrapper, HProfile);
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathProfile, TLib3MFToolpathProfile>.Make(FWrapper, HProfile);
 	end;
 
 	function TLib3MFToolpath.GetProfileUUID(const AProfileUUID: String): TLib3MFToolpathProfile;
@@ -10215,7 +10251,7 @@ implementation
 		HProfile := nil;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetProfileUUIDFunc(FHandle, PAnsiChar(AProfileUUID), HProfile));
 		if Assigned(HProfile) then
-			Result := TLib3MFToolpathProfile.Create(FWrapper, HProfile);
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathProfile, TLib3MFToolpathProfile>.Make(FWrapper, HProfile);
 	end;
 
 (*************************************************************************************************************************
@@ -10240,7 +10276,7 @@ implementation
 		HResource := nil;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathIterator_GetCurrentToolpathFunc(FHandle, HResource));
 		if Assigned(HResource) then
-			Result := TLib3MFToolpath.Create(FWrapper, HResource);
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpath, TLib3MFToolpath>.Make(FWrapper, HResource);
 	end;
 
 (*************************************************************************************************************************
@@ -11259,7 +11295,7 @@ implementation
 		HResourceIterator := nil;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetToolpathsFunc(FHandle, HResourceIterator));
 		if Assigned(HResourceIterator) then
-			Result := TLib3MFToolpathIterator.Create(FWrapper, HResourceIterator);
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathIterator, TLib3MFToolpathIterator>.Make(FWrapper, HResourceIterator);
 	end;
 
 	function TLib3MFModel.GetSliceStacks(): TLib3MFSliceStackIterator;
@@ -11433,7 +11469,7 @@ implementation
 		HToolpathInstance := nil;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddToolpathFunc(FHandle, AUnitFactor, HToolpathInstance));
 		if Assigned(HToolpathInstance) then
-			Result := TLib3MFToolpath.Create(FWrapper, HToolpathInstance);
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpath, TLib3MFToolpath>.Make(FWrapper, HToolpathInstance);
 	end;
 
 	function TLib3MFModel.GetMetaDataGroup(): TLib3MFMetaDataGroup;
@@ -11568,7 +11604,7 @@ implementation
 		HInstance := nil;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_CreatePersistentSourceFromFileFunc(FHandle, PAnsiChar(AFilename), HInstance));
 		if Assigned(HInstance) then
-			Result := TLib3MFPersistentReaderSource.Create(FWrapper, HInstance);
+			Result := TLib3MFPolymorphicFactory<TLib3MFPersistentReaderSource, TLib3MFPersistentReaderSource>.Make(FWrapper, HInstance);
 	end;
 
 	function TLib3MFModel.CreatePersistentSourceFromBuffer(const ABuffer: TByteDynArray): TLib3MFPersistentReaderSource;
@@ -11589,7 +11625,7 @@ implementation
 		HInstance := nil;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_CreatePersistentSourceFromBufferFunc(FHandle, QWord(LenBuffer), PtrBuffer, HInstance));
 		if Assigned(HInstance) then
-			Result := TLib3MFPersistentReaderSource.Create(FWrapper, HInstance);
+			Result := TLib3MFPolymorphicFactory<TLib3MFPersistentReaderSource, TLib3MFPersistentReaderSource>.Make(FWrapper, HInstance);
 	end;
 
 	function TLib3MFModel.CreatePersistentSourceFromCallback(const ATheReadCallback: PLib3MF_ReadCallback; const AStreamSize: QWord; const ATheSeekCallback: PLib3MF_SeekCallback; const AUserData: Pointer): TLib3MFPersistentReaderSource;
@@ -11604,7 +11640,7 @@ implementation
 		HInstance := nil;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_CreatePersistentSourceFromCallbackFunc(FHandle, ATheReadCallback, AStreamSize, ATheSeekCallback, AUserData, HInstance));
 		if Assigned(HInstance) then
-			Result := TLib3MFPersistentReaderSource.Create(FWrapper, HInstance);
+			Result := TLib3MFPolymorphicFactory<TLib3MFPersistentReaderSource, TLib3MFPersistentReaderSource>.Make(FWrapper, HInstance);
 	end;
 
 (*************************************************************************************************************************

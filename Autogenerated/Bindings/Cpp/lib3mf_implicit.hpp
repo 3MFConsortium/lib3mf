@@ -386,6 +386,10 @@ public:
 			case LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: return "KEYSTORERESOURCEDATANOTFOUND";
 			case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: return "SECURECONTEXTNOTREGISTERED";
 			case LIB3MF_ERROR_INVALIDKEYSIZE: return "INVALIDKEYSIZE";
+			case LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER: return "TOOLPATH_NOTWRITINGHEADER";
+			case LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA: return "TOOLPATH_NOTWRITINGDATA";
+			case LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "TOOLPATH_DATAHASBEENWRITTEN";
+			case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "TOOLPATH_INVALIDPOINTCOUNT";
 		}
 		return "UNKNOWN";
 	}
@@ -437,6 +441,10 @@ public:
 			case LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: return "A resource data has not been found";
 			case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: return "A Key or Conentent encryption callback has not been registered";
 			case LIB3MF_ERROR_INVALIDKEYSIZE: return "The key siue is invalid";
+			case LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER: return "Not in toolpath header writing mode";
+			case LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA: return "Not in toolpath data writing mode";
+			case LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "Toolpath has already been written out";
+			case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "Toolpath has an invalid number of points";
 		}
 		return "unknown error";
 	}
@@ -716,7 +724,7 @@ public:
 	{
 	}
 	
-	inline void ReadFromPersistentSource(CPersistentReaderSource * pSource);
+	inline void ReadFromPersistentSource(classParam<CPersistentReaderSource> pSource);
 	inline void ReadFromFile(const std::string & sFilename);
 	inline void ReadFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer);
 	inline void ReadFromCallback(const ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData);
@@ -1493,8 +1501,8 @@ public:
 	}
 	
 	inline std::string GetLayerDataUUID();
-	inline Lib3MF_uint32 RegisterProfile(CToolpathProfile * pProfile);
-	inline Lib3MF_uint32 RegisterBuildItem(CBuildItem * pBuildItem);
+	inline Lib3MF_uint32 RegisterProfile(classParam<CToolpathProfile> pProfile);
+	inline Lib3MF_uint32 RegisterBuildItem(classParam<CBuildItem> pBuildItem);
 	inline void WriteHatchData(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
 	inline void WriteLoop(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
 	inline void WritePolyline(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
@@ -1518,7 +1526,7 @@ public:
 	inline Lib3MF_double GetUnits();
 	inline Lib3MF_uint32 GetLayerCount();
 	inline Lib3MF_uint32 GetProfileCount();
-	inline PToolpathLayerData AddLayer(const Lib3MF_uint32 nZMax, const std::string & sPath, CWriter * pModelWriter);
+	inline PToolpathLayerData AddLayer(const Lib3MF_uint32 nZMax, const std::string & sPath, classParam<CWriter> pModelWriter);
 	inline PAttachment GetLayerAttachment(const Lib3MF_uint32 nIndex);
 	inline PToolpathLayerReader ReadLayerData(const Lib3MF_uint32 nIndex);
 	inline std::string GetLayerPath(const Lib3MF_uint32 nIndex);
@@ -1807,6 +1815,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	switch(resultClassTypeId) {
 		case 0x856632D0BAF1D8B7UL: return new CBase(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Base"
 		case 0xE76F642F363FD7E9UL: return new CWriter(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Writer"
+		case 0xBE46884397CE1319UL: return new CPersistentReaderSource(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::PersistentReaderSource"
 		case 0x2D86831DA59FBE72UL: return new CReader(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Reader"
 		case 0x0E55A826D377483EUL: return new CPackagePart(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::PackagePart"
 		case 0xDFE3889D1B269CBBUL: return new CResource(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Resource"
@@ -1839,6 +1848,11 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0x68FB2D5FFC4BA12AUL: return new CBuildItem(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItem"
 		case 0xA7D21BD364910860UL: return new CBuildItemIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItemIterator"
 		case 0x2198BCF4D8DF9C40UL: return new CSlice(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Slice"
+		case 0xC869620B90242CA7UL: return new CToolpathProfile(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathProfile"
+		case 0x28DD7D3718F0616EUL: return new CToolpathLayerReader(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerReader"
+		case 0x28C0E70CC44F931AUL: return new CToolpathLayerData(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerData"
+		case 0xF0AAB2C814D9FFB1UL: return new CToolpath(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Toolpath"
+		case 0xD0F24425A07F2A81UL: return new CToolpathIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathIterator"
 		case 0x6594B031B6096238UL: return new CSliceStack(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::SliceStack"
 		case 0xD9E46D5E6D8118EEUL: return new CConsumer(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Consumer"
 		case 0x385C42FC5609498AUL: return new CAccessRight(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::AccessRight"
@@ -2339,12 +2353,9 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	* CReader::ReadFromPersistentSource - Reads a model from a persistent source object. The object will be referenced until the Model is destroyed or cleared.
 	* @param[in] pSource - Source object to read from
 	*/
-	void CReader::ReadFromPersistentSource(CPersistentReaderSource * pSource)
+	void CReader::ReadFromPersistentSource(classParam<CPersistentReaderSource> pSource)
 	{
-		Lib3MFHandle hSource = nullptr;
-		if (pSource != nullptr) {
-			hSource = pSource->GetHandle();
-		};
+		Lib3MFHandle hSource = pSource.GetHandle();
 		CheckError(lib3mf_reader_readfrompersistentsource(m_pHandle, hSource));
 	}
 	
@@ -4615,7 +4626,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CAttachment::ReadFromFile - Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF packege, or via the WriteToFile or WriteToBuffer-methods.
+	* CAttachment::ReadFromFile - Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
 	* @param[in] sFileName - file to read from.
 	*/
 	void CAttachment::ReadFromFile(const std::string & sFileName)
@@ -4624,7 +4635,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CAttachment::ReadFromCallback - Reads a model and from the data provided by a callback function
+	* CAttachment::ReadFromCallback - Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
 	* @param[in] pTheReadCallback - Callback to call for reading a data chunk
 	* @param[in] nStreamSize - number of bytes the callback returns
 	* @param[in] pTheSeekCallback - Callback to call for seeking in the stream.
@@ -4661,7 +4672,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CAttachment::ReadFromBuffer - Reads an attachment from a memory buffer
+	* CAttachment::ReadFromBuffer - Reads an attachment from a memory buffer. This buffer is immediatly read (in contrast to the ReadFromCallback and ReadFromFile-methods).
 	* @param[in] BufferBuffer - Buffer to read from
 	*/
 	void CAttachment::ReadFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer)
@@ -5234,7 +5245,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if (!hProfile) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::make_shared<CToolpathProfile>(m_pWrapper, hProfile);
+		return std::shared_ptr<CToolpathProfile>(dynamic_cast<CToolpathProfile*>(m_pWrapper->polymorphicFactory(hProfile)));
 	}
 	
 	/**
@@ -5266,7 +5277,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if (!hBuildItem) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::make_shared<CBuildItem>(m_pWrapper, hBuildItem);
+		return std::shared_ptr<CBuildItem>(dynamic_cast<CBuildItem*>(m_pWrapper->polymorphicFactory(hBuildItem)));
 	}
 	
 	/**
@@ -5323,12 +5334,9 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	* @param[in] pProfile - The toolpath profile to register.
 	* @return returns the local profile ID for the layer.
 	*/
-	Lib3MF_uint32 CToolpathLayerData::RegisterProfile(CToolpathProfile * pProfile)
+	Lib3MF_uint32 CToolpathLayerData::RegisterProfile(classParam<CToolpathProfile> pProfile)
 	{
-		Lib3MFHandle hProfile = nullptr;
-		if (pProfile != nullptr) {
-			hProfile = pProfile->GetHandle();
-		};
+		Lib3MFHandle hProfile = pProfile.GetHandle();
 		Lib3MF_uint32 resultProfileID = 0;
 		CheckError(lib3mf_toolpathlayerdata_registerprofile(m_pHandle, hProfile, &resultProfileID));
 		
@@ -5340,12 +5348,9 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	* @param[in] pBuildItem - The model build item to use.
 	* @return returns the local part ID for the layer.
 	*/
-	Lib3MF_uint32 CToolpathLayerData::RegisterBuildItem(CBuildItem * pBuildItem)
+	Lib3MF_uint32 CToolpathLayerData::RegisterBuildItem(classParam<CBuildItem> pBuildItem)
 	{
-		Lib3MFHandle hBuildItem = nullptr;
-		if (pBuildItem != nullptr) {
-			hBuildItem = pBuildItem->GetHandle();
-		};
+		Lib3MFHandle hBuildItem = pBuildItem.GetHandle();
 		Lib3MF_uint32 resultPartID = 0;
 		CheckError(lib3mf_toolpathlayerdata_registerbuilditem(m_pHandle, hBuildItem, &resultPartID));
 		
@@ -5440,19 +5445,16 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	* @param[in] pModelWriter - The model writer that writes out the 3MF.
 	* @return Returns the layerdata object to write the layer content into.
 	*/
-	PToolpathLayerData CToolpath::AddLayer(const Lib3MF_uint32 nZMax, const std::string & sPath, CWriter * pModelWriter)
+	PToolpathLayerData CToolpath::AddLayer(const Lib3MF_uint32 nZMax, const std::string & sPath, classParam<CWriter> pModelWriter)
 	{
-		Lib3MFHandle hModelWriter = nullptr;
-		if (pModelWriter != nullptr) {
-			hModelWriter = pModelWriter->GetHandle();
-		};
+		Lib3MFHandle hModelWriter = pModelWriter.GetHandle();
 		Lib3MFHandle hLayerData = nullptr;
 		CheckError(lib3mf_toolpath_addlayer(m_pHandle, nZMax, sPath.c_str(), hModelWriter, &hLayerData));
 		
 		if (!hLayerData) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::make_shared<CToolpathLayerData>(m_pWrapper, hLayerData);
+		return std::shared_ptr<CToolpathLayerData>(dynamic_cast<CToolpathLayerData*>(m_pWrapper->polymorphicFactory(hLayerData)));
 	}
 	
 	/**
@@ -5468,7 +5470,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if (!hAttachment) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::make_shared<CAttachment>(m_pWrapper, hAttachment);
+		return std::shared_ptr<CAttachment>(dynamic_cast<CAttachment*>(m_pWrapper->polymorphicFactory(hAttachment)));
 	}
 	
 	/**
@@ -5484,7 +5486,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if (!hToolpathReader) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::make_shared<CToolpathLayerReader>(m_pWrapper, hToolpathReader);
+		return std::shared_ptr<CToolpathLayerReader>(dynamic_cast<CToolpathLayerReader*>(m_pWrapper->polymorphicFactory(hToolpathReader)));
 	}
 	
 	/**
@@ -5542,7 +5544,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if (!hProfile) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::make_shared<CToolpathProfile>(m_pWrapper, hProfile);
+		return std::shared_ptr<CToolpathProfile>(dynamic_cast<CToolpathProfile*>(m_pWrapper->polymorphicFactory(hProfile)));
 	}
 	
 	/**
@@ -5558,7 +5560,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if (!hProfile) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::make_shared<CToolpathProfile>(m_pWrapper, hProfile);
+		return std::shared_ptr<CToolpathProfile>(dynamic_cast<CToolpathProfile*>(m_pWrapper->polymorphicFactory(hProfile)));
 	}
 	
 	/**
@@ -5574,7 +5576,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if (!hProfile) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::make_shared<CToolpathProfile>(m_pWrapper, hProfile);
+		return std::shared_ptr<CToolpathProfile>(dynamic_cast<CToolpathProfile*>(m_pWrapper->polymorphicFactory(hProfile)));
 	}
 	
 	/**
@@ -5593,7 +5595,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if (!hResource) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::make_shared<CToolpath>(m_pWrapper, hResource);
+		return std::shared_ptr<CToolpath>(dynamic_cast<CToolpath*>(m_pWrapper->polymorphicFactory(hResource)));
 	}
 	
 	/**
@@ -6807,7 +6809,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if (!hResourceIterator) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::make_shared<CToolpathIterator>(m_pWrapper, hResourceIterator);
+		return std::shared_ptr<CToolpathIterator>(dynamic_cast<CToolpathIterator*>(m_pWrapper->polymorphicFactory(hResourceIterator)));
 	}
 	
 	/**
@@ -7023,7 +7025,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if (!hToolpathInstance) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::make_shared<CToolpath>(m_pWrapper, hToolpathInstance);
+		return std::shared_ptr<CToolpath>(dynamic_cast<CToolpath*>(m_pWrapper->polymorphicFactory(hToolpathInstance)));
 	}
 	
 	/**
@@ -7220,7 +7222,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if (!hInstance) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::make_shared<CPersistentReaderSource>(m_pWrapper, hInstance);
+		return std::shared_ptr<CPersistentReaderSource>(dynamic_cast<CPersistentReaderSource*>(m_pWrapper->polymorphicFactory(hInstance)));
 	}
 	
 	/**
@@ -7236,7 +7238,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if (!hInstance) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::make_shared<CPersistentReaderSource>(m_pWrapper, hInstance);
+		return std::shared_ptr<CPersistentReaderSource>(dynamic_cast<CPersistentReaderSource*>(m_pWrapper->polymorphicFactory(hInstance)));
 	}
 	
 	/**
@@ -7255,7 +7257,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if (!hInstance) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::make_shared<CPersistentReaderSource>(m_pWrapper, hInstance);
+		return std::shared_ptr<CPersistentReaderSource>(dynamic_cast<CPersistentReaderSource*>(m_pWrapper->polymorphicFactory(hInstance)));
 	}
 
 } // namespace Lib3MF

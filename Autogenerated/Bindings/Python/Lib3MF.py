@@ -4682,6 +4682,8 @@ class Wrapper:
 				return Base(handle, wrapper)
 			def getObjectById_E76F642F363FD7E9(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Writer"
 				return Writer(handle, wrapper)
+			def getObjectById_BE46884397CE1319(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::PersistentReaderSource"
+				return PersistentReaderSource(handle, wrapper)
 			def getObjectById_2D86831DA59FBE72(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Reader"
 				return Reader(handle, wrapper)
 			def getObjectById_0E55A826D377483E(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::PackagePart"
@@ -4746,6 +4748,16 @@ class Wrapper:
 				return BuildItemIterator(handle, wrapper)
 			def getObjectById_2198BCF4D8DF9C40(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Slice"
 				return Slice(handle, wrapper)
+			def getObjectById_C869620B90242CA7(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ToolpathProfile"
+				return ToolpathProfile(handle, wrapper)
+			def getObjectById_28DD7D3718F0616E(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerReader"
+				return ToolpathLayerReader(handle, wrapper)
+			def getObjectById_28C0E70CC44F931A(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerData"
+				return ToolpathLayerData(handle, wrapper)
+			def getObjectById_F0AAB2C814D9FFB1(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Toolpath"
+				return Toolpath(handle, wrapper)
+			def getObjectById_D0F24425A07F2A81(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ToolpathIterator"
+				return ToolpathIterator(handle, wrapper)
 			def getObjectById_6594B031B6096238(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::SliceStack"
 				return SliceStack(handle, wrapper)
 			def getObjectById_D9E46D5E6D8118EE(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Consumer"
@@ -6847,7 +6859,7 @@ class ToolpathLayerReader(Base):
 		ProfileHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentprofile(self._handle, nIndex, ProfileHandle))
 		if ProfileHandle:
-			ProfileObject = ToolpathProfile(ProfileHandle, self._wrapper)
+			ProfileObject = self._wrapper._polymorphicFactory(ProfileHandle)
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
@@ -6870,7 +6882,7 @@ class ToolpathLayerReader(Base):
 		BuildItemHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentpart(self._handle, nIndex, BuildItemHandle))
 		if BuildItemHandle:
-			BuildItemObject = BuildItem(BuildItemHandle, self._wrapper)
+			BuildItemObject = self._wrapper._polymorphicFactory(BuildItemHandle)
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
@@ -7004,7 +7016,7 @@ class Toolpath(Resource):
 		LayerDataHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_addlayer(self._handle, nZMax, pPath, ModelWriterHandle, LayerDataHandle))
 		if LayerDataHandle:
-			LayerDataObject = ToolpathLayerData(LayerDataHandle, self._wrapper)
+			LayerDataObject = self._wrapper._polymorphicFactory(LayerDataHandle)
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
@@ -7015,7 +7027,7 @@ class Toolpath(Resource):
 		AttachmentHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getlayerattachment(self._handle, nIndex, AttachmentHandle))
 		if AttachmentHandle:
-			AttachmentObject = Attachment(AttachmentHandle, self._wrapper)
+			AttachmentObject = self._wrapper._polymorphicFactory(AttachmentHandle)
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
@@ -7026,7 +7038,7 @@ class Toolpath(Resource):
 		ToolpathReaderHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_readlayerdata(self._handle, nIndex, ToolpathReaderHandle))
 		if ToolpathReaderHandle:
-			ToolpathReaderObject = ToolpathLayerReader(ToolpathReaderHandle, self._wrapper)
+			ToolpathReaderObject = self._wrapper._polymorphicFactory(ToolpathReaderHandle)
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
@@ -7063,7 +7075,7 @@ class Toolpath(Resource):
 		ProfileHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_addprofile(self._handle, pName, ProfileHandle))
 		if ProfileHandle:
-			ProfileObject = ToolpathProfile(ProfileHandle, self._wrapper)
+			ProfileObject = self._wrapper._polymorphicFactory(ProfileHandle)
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
@@ -7074,7 +7086,7 @@ class Toolpath(Resource):
 		ProfileHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getprofile(self._handle, nProfileIndex, ProfileHandle))
 		if ProfileHandle:
-			ProfileObject = ToolpathProfile(ProfileHandle, self._wrapper)
+			ProfileObject = self._wrapper._polymorphicFactory(ProfileHandle)
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
@@ -7085,7 +7097,7 @@ class Toolpath(Resource):
 		ProfileHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getprofileuuid(self._handle, pProfileUUID, ProfileHandle))
 		if ProfileHandle:
-			ProfileObject = ToolpathProfile(ProfileHandle, self._wrapper)
+			ProfileObject = self._wrapper._polymorphicFactory(ProfileHandle)
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
@@ -7102,7 +7114,7 @@ class ToolpathIterator(ResourceIterator):
 		ResourceHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathiterator_getcurrenttoolpath(self._handle, ResourceHandle))
 		if ResourceHandle:
-			ResourceObject = Toolpath(ResourceHandle, self._wrapper)
+			ResourceObject = self._wrapper._polymorphicFactory(ResourceHandle)
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
@@ -7965,7 +7977,7 @@ class Model(Base):
 		ResourceIteratorHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_gettoolpaths(self._handle, ResourceIteratorHandle))
 		if ResourceIteratorHandle:
-			ResourceIteratorObject = ToolpathIterator(ResourceIteratorHandle, self._wrapper)
+			ResourceIteratorObject = self._wrapper._polymorphicFactory(ResourceIteratorHandle)
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
@@ -8126,7 +8138,7 @@ class Model(Base):
 		ToolpathInstanceHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_addtoolpath(self._handle, dUnitFactor, ToolpathInstanceHandle))
 		if ToolpathInstanceHandle:
-			ToolpathInstanceObject = Toolpath(ToolpathInstanceHandle, self._wrapper)
+			ToolpathInstanceObject = self._wrapper._polymorphicFactory(ToolpathInstanceHandle)
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
@@ -8252,7 +8264,7 @@ class Model(Base):
 		InstanceHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_createpersistentsourcefromfile(self._handle, pFilename, InstanceHandle))
 		if InstanceHandle:
-			InstanceObject = PersistentReaderSource(InstanceHandle, self._wrapper)
+			InstanceObject = self._wrapper._polymorphicFactory(InstanceHandle)
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
@@ -8264,7 +8276,7 @@ class Model(Base):
 		InstanceHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_createpersistentsourcefrombuffer(self._handle, nBufferCount, pBufferBuffer, InstanceHandle))
 		if InstanceHandle:
-			InstanceObject = PersistentReaderSource(InstanceHandle, self._wrapper)
+			InstanceObject = self._wrapper._polymorphicFactory(InstanceHandle)
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
@@ -8276,7 +8288,7 @@ class Model(Base):
 		InstanceHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_createpersistentsourcefromcallback(self._handle, TheReadCallbackFunc, nStreamSize, TheSeekCallbackFunc, pUserData, InstanceHandle))
 		if InstanceHandle:
-			InstanceObject = PersistentReaderSource(InstanceHandle, self._wrapper)
+			InstanceObject = self._wrapper._polymorphicFactory(InstanceHandle)
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		

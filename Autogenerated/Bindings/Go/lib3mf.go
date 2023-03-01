@@ -62,25 +62,6 @@ Lib3MFHandle loadLib3MFLibrary (const char * pFileName)
 	}
 }
 
-<<<<<<< .mine
-type ELib3MFPersistentReaderSourceType int
-const (
-		ePersistentReaderSourceType_Unknown = 0
-		ePersistentReaderSourceType_FileOnDisk = 1
-		ePersistentReaderSourceType_MemoryBuffer = 2
-		ePersistentReaderSourceType_Callback = 3
-)
-
-type ELib3MFModelUnit int
-const (
-		eModelUnit_MicroMeter = 0
-		eModelUnit_MilliMeter = 1
-		eModelUnit_CentiMeter = 2
-		eModelUnit_Inch = 3
-		eModelUnit_Foot = 4
-		eModelUnit_Meter = 5
-)
-=======
 void unloadLib3MFLibrary (Lib3MFHandle nLibraryHandle)
 {
 	sLib3MFDynamicWrapperTable * pWrapperTable = (sLib3MFDynamicWrapperTable *) malloc (sizeof (sLib3MFDynamicWrapperTable));
@@ -89,16 +70,6 @@ void unloadLib3MFLibrary (Lib3MFHandle nLibraryHandle)
 		free (pWrapperTable);
 	}
 }
-
-
-
-
-
-
-
-
-
->>>>>>> .theirs
 
 
 Lib3MFResult CCall_lib3mf_base_classtypeid(Lib3MFHandle libraryHandle, Lib3MF_Base pBase, Lib3MF_uint64 * pClassTypeId)
@@ -137,20 +108,6 @@ Lib3MFResult CCall_lib3mf_writer_writetobuffer(Lib3MFHandle libraryHandle, Lib3M
 }
 
 
-<<<<<<< .mine
-type ELib3MFToolpathSegmentType int
-const (
-		eToolpathSegmentType_Unknown = 0
-		eToolpathSegmentType_Hatch = 1
-		eToolpathSegmentType_Loop = 2
-		eToolpathSegmentType_Polyline = 3
-)
-
-type ELib3MFEncryptionAlgorithm int
-const (
-		eEncryptionAlgorithm_AES256_GCM = 1
-)
-=======
 Lib3MFResult CCall_lib3mf_writer_writetocallback(Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter, Lib3MFWriteCallback pTheWriteCallback, Lib3MFSeekCallback pTheSeekCallback, Lib3MF_pvoid pUserData)
 {
 	if (libraryHandle == 0) 
@@ -158,12 +115,6 @@ Lib3MFResult CCall_lib3mf_writer_writetocallback(Lib3MFHandle libraryHandle, Lib
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_Writer_WriteToCallback (pWriter, pTheWriteCallback, pTheSeekCallback, pUserData);
 }
-
-
-
-
-
->>>>>>> .theirs
 
 
 Lib3MFResult CCall_lib3mf_writer_setprogresscallback(Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter, Lib3MFProgressCallback pProgressCallback, Lib3MF_pvoid pUserData)
@@ -244,6 +195,42 @@ Lib3MFResult CCall_lib3mf_writer_setcontentencryptioncallback(Lib3MFHandle libra
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_Writer_SetContentEncryptionCallback (pWriter, pTheCallback, pUserData);
+}
+
+
+Lib3MFResult CCall_lib3mf_persistentreadersource_getsourcetype(Lib3MFHandle libraryHandle, Lib3MF_PersistentReaderSource pPersistentReaderSource, eLib3MFPersistentReaderSourceType * pSourceType)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_PersistentReaderSource_GetSourceType (pPersistentReaderSource, pSourceType);
+}
+
+
+Lib3MFResult CCall_lib3mf_persistentreadersource_invalidatesourcedata(Lib3MFHandle libraryHandle, Lib3MF_PersistentReaderSource pPersistentReaderSource)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_PersistentReaderSource_InvalidateSourceData (pPersistentReaderSource);
+}
+
+
+Lib3MFResult CCall_lib3mf_persistentreadersource_sourcedataisvalid(Lib3MFHandle libraryHandle, Lib3MF_PersistentReaderSource pPersistentReaderSource, bool * pDataIsValid)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_PersistentReaderSource_SourceDataIsValid (pPersistentReaderSource, pDataIsValid);
+}
+
+
+Lib3MFResult CCall_lib3mf_reader_readfrompersistentsource(Lib3MFHandle libraryHandle, Lib3MF_Reader pReader, Lib3MF_PersistentReaderSource pSource)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Reader_ReadFromPersistentSource (pReader, pSource);
 }
 
 
@@ -427,50 +414,6 @@ Lib3MFResult CCall_lib3mf_resourceiterator_movenext(Lib3MFHandle libraryHandle, 
 }
 
 
-<<<<<<< .mine
-	/**
-	* Retrieves the type of source data.
-	*
-	* @param[in] PersistentReaderSource - PersistentReaderSource instance.
-	* @return Reader Source Type
-	*/
-	PersistentReaderSource_GetSourceType(PersistentReaderSource Lib3MFHandle) (ELib3MFPersistentReaderSourceType, error)
-
-
-	/**
-	* Invalidates the reader source. Every subsequent read on this data will fail.
-	*
-	* @param[in] PersistentReaderSource - PersistentReaderSource instance.
-	*/
-	PersistentReaderSource_InvalidateSourceData(PersistentReaderSource Lib3MFHandle) (error)
-
-
-	/**
-	* Checks if the source data is valid. Any read on an invalid source object will fail.
-	*
-	* @param[in] PersistentReaderSource - PersistentReaderSource instance.
-	* @return The source data is valid.
-	*/
-	PersistentReaderSource_SourceDataIsValid(PersistentReaderSource Lib3MFHandle) (bool, error)
-
-
-	/**
-	* Reads a model from a persistent source object. The object will be referenced until the Model is destroyed or cleared.
-	*
-	* @param[in] Reader - Reader instance.
-	* @param[in] Source - Source object to read from
-	*/
-	Reader_ReadFromPersistentSource(Reader Lib3MFHandle, Source Lib3MFHandle) (error)
-
-
-	/**
-	* Reads a model from a file. The file type is specified by the Model Reader class
-	*
-	* @param[in] Reader - Reader instance.
-	* @param[in] sFilename - Filename to read from
-	*/
-	Reader_ReadFromFile(Reader Lib3MFHandle, sFilename string) (error)
-=======
 Lib3MFResult CCall_lib3mf_resourceiterator_moveprevious(Lib3MFHandle libraryHandle, Lib3MF_ResourceIterator pResourceIterator, bool * pHasPrevious)
 {
 	if (libraryHandle == 0) 
@@ -478,42 +421,6 @@ Lib3MFResult CCall_lib3mf_resourceiterator_moveprevious(Lib3MFHandle libraryHand
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_ResourceIterator_MovePrevious (pResourceIterator, pHasPrevious);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> .theirs
 
 
 Lib3MFResult CCall_lib3mf_resourceiterator_getcurrent(Lib3MFHandle libraryHandle, Lib3MF_ResourceIterator pResourceIterator, Lib3MF_Resource * pResource)
@@ -2271,6 +2178,321 @@ Lib3MFResult CCall_lib3mf_slice_getztop(Lib3MFHandle libraryHandle, Lib3MF_Slice
 }
 
 
+Lib3MFResult CCall_lib3mf_toolpathprofile_getuuid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetUUID (pToolpathProfile, nUUIDBufferSize, pUUIDNeededChars, pUUIDBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_getname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetName (pToolpathProfile, nNameBufferSize, pNameNeededChars, pNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_hasparametervalue(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, bool * pValueExists)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_HasParameterValue (pToolpathProfile, pNameSpaceName, pValueName, pValueExists);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_getparameterdoublevalue(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_double * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetParameterDoubleValue (pToolpathProfile, pNameSpaceName, pValueName, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_getparameterdoublevaluedef(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_double dDefaultValue, Lib3MF_double * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetParameterDoubleValueDef (pToolpathProfile, pNameSpaceName, pValueName, dDefaultValue, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_setname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_SetName (pToolpathProfile, pName);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_setparameterdoublevalue(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_double dValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_SetParameterDoubleValue (pToolpathProfile, pNameSpaceName, pValueName, dValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getlayerdatauuid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetLayerDataUUID (pToolpathLayerReader, nUUIDBufferSize, pUUIDNeededChars, pUUIDBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentcount(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentCount (pToolpathLayerReader, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentinfo(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, eLib3MFToolpathSegmentType * pType, Lib3MF_uint32 * pPointCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentInfo (pToolpathLayerReader, nIndex, pType, pPointCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentprofile(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_ToolpathProfile * pProfile)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentProfile (pToolpathLayerReader, nIndex, pProfile);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentprofileuuid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nProfileUUIDBufferSize, Lib3MF_uint32* pProfileUUIDNeededChars, char * pProfileUUIDBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentProfileUUID (pToolpathLayerReader, nIndex, nProfileUUIDBufferSize, pProfileUUIDNeededChars, pProfileUUIDBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentpart(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_BuildItem * pBuildItem)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentPart (pToolpathLayerReader, nIndex, pBuildItem);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentpartuuid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nPartUUIDBufferSize, Lib3MF_uint32* pPartUUIDNeededChars, char * pPartUUIDBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID (pToolpathLayerReader, nIndex, nPartUUIDBufferSize, pPartUUIDNeededChars, pPartUUIDBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentpointdata(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, sLib3MFPosition2D * pPointDataBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentPointData (pToolpathLayerReader, nIndex, nPointDataBufferSize, pPointDataNeededCount, pPointDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_getlayerdatauuid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_GetLayerDataUUID (pToolpathLayerData, nUUIDBufferSize, pUUIDNeededChars, pUUIDBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_registerprofile(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_ToolpathProfile pProfile, Lib3MF_uint32 * pProfileID)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_RegisterProfile (pToolpathLayerData, pProfile, pProfileID);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_registerbuilditem(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_BuildItem pBuildItem, Lib3MF_uint32 * pPartID)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_RegisterBuildItem (pToolpathLayerData, pBuildItem, pPartID);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writehatchdata(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WriteHatchData (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writeloop(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WriteLoop (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writepolyline(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WritePolyline (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_finish(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_Finish (pToolpathLayerData);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getunits(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_double * pUnits)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetUnits (pToolpath, pUnits);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getlayercount(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetLayerCount (pToolpath, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getprofilecount(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetProfileCount (pToolpath, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_addlayer(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nZMax, const char * pPath, Lib3MF_Writer pModelWriter, Lib3MF_ToolpathLayerData * pLayerData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_AddLayer (pToolpath, nZMax, pPath, pModelWriter, pLayerData);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getlayerattachment(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_Attachment * pAttachment)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetLayerAttachment (pToolpath, nIndex, pAttachment);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_readlayerdata(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_ToolpathLayerReader * pToolpathReader)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_ReadLayerData (pToolpath, nIndex, pToolpathReader);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getlayerpath(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char * pPathBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetLayerPath (pToolpath, nIndex, nPathBufferSize, pPathNeededChars, pPathBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getlayerzmax(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_uint32 * pZMax)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetLayerZMax (pToolpath, nIndex, pZMax);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getlayerz(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nLayerIndex, Lib3MF_uint32 * pZValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetLayerZ (pToolpath, nLayerIndex, pZValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_addprofile(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, const char * pName, Lib3MF_ToolpathProfile * pProfile)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_AddProfile (pToolpath, pName, pProfile);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getprofile(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nProfileIndex, Lib3MF_ToolpathProfile * pProfile)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetProfile (pToolpath, nProfileIndex, pProfile);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getprofileuuid(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, const char * pProfileUUID, Lib3MF_ToolpathProfile * pProfile)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetProfileUUID (pToolpath, pProfileUUID, pProfile);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathiterator_getcurrenttoolpath(Lib3MFHandle libraryHandle, Lib3MF_ToolpathIterator pToolpathIterator, Lib3MF_Toolpath * pResource)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathIterator_GetCurrentToolpath (pToolpathIterator, pResource);
+}
+
+
 Lib3MFResult CCall_lib3mf_slicestack_getbottomz(Lib3MFHandle libraryHandle, Lib3MF_SliceStack pSliceStack, Lib3MF_double * pZBottom)
 {
 	if (libraryHandle == 0) 
@@ -2451,364 +2673,6 @@ Lib3MFResult CCall_lib3mf_contentencryptionparams_getinitializationvector(Lib3MF
 }
 
 
-<<<<<<< .mine
-	/**
-	* Retrieves the profile's uuid
-	*
-	* @param[in] ToolpathProfile - ToolpathProfile instance.
-	* @return Returns the uuid value.
-	*/
-	ToolpathProfile_GetUUID(ToolpathProfile Lib3MFHandle) (string, error)
-
-
-	/**
-	* Retrieves the profile's name
-	*
-	* @param[in] ToolpathProfile - ToolpathProfile instance.
-	* @return Returns the name.
-	*/
-	ToolpathProfile_GetName(ToolpathProfile Lib3MFHandle) (string, error)
-
-
-	/**
-	* Checks if a parameter value exists.
-	*
-	* @param[in] ToolpathProfile - ToolpathProfile instance.
-	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
-	* @param[in] sValueName - Value key string.
-	* @return Returns if a value exists.
-	*/
-	ToolpathProfile_HasParameterValue(ToolpathProfile Lib3MFHandle, sNameSpaceName string, sValueName string) (bool, error)
-
-
-	/**
-	* Retrieves a profile's parameter value. Fails if value does not exist.
-	*
-	* @param[in] ToolpathProfile - ToolpathProfile instance.
-	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
-	* @param[in] sValueName - Value key string.
-	* @return Returns the value of the field.
-	*/
-	ToolpathProfile_GetParameterDoubleValue(ToolpathProfile Lib3MFHandle, sNameSpaceName string, sValueName string) (float64, error)
-
-
-	/**
-	* Retrieves a profile's parameter value
-	*
-	* @param[in] ToolpathProfile - ToolpathProfile instance.
-	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
-	* @param[in] sValueName - Value key string.
-	* @param[in] dDefaultValue - Default value if value does not exist.
-	* @return Returns the value of the field.
-	*/
-	ToolpathProfile_GetParameterDoubleValueDef(ToolpathProfile Lib3MFHandle, sNameSpaceName string, sValueName string, dDefaultValue float64) (float64, error)
-
-
-	/**
-	* Sets the profile's name
-	*
-	* @param[in] ToolpathProfile - ToolpathProfile instance.
-	* @param[in] sName - Returns the name.
-	*/
-	ToolpathProfile_SetName(ToolpathProfile Lib3MFHandle, sName string) (error)
-
-
-	/**
-	* Sets a profile's parameter value.
-	*
-	* @param[in] ToolpathProfile - ToolpathProfile instance.
-	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
-	* @param[in] sValueName - Value key string.
-	* @param[in] dValue - Double value of the parameter.
-	*/
-	ToolpathProfile_SetParameterDoubleValue(ToolpathProfile Lib3MFHandle, sNameSpaceName string, sValueName string, dValue float64) (error)
-
-
-	/**
-	* Retrieves the layerdata's uuid
-	*
-	* @param[in] ToolpathLayerReader - ToolpathLayerReader instance.
-	* @return Returns the uuid value.
-	*/
-	ToolpathLayerReader_GetLayerDataUUID(ToolpathLayerReader Lib3MFHandle) (string, error)
-
-
-	/**
-	* Retrieves the count of segments.
-	*
-	* @param[in] ToolpathLayerReader - ToolpathLayerReader instance.
-	* @return Count
-	*/
-	ToolpathLayerReader_GetSegmentCount(ToolpathLayerReader Lib3MFHandle) (uint32, error)
-
-
-	/**
-	* Retrieves the segment type information .
-	*
-	* @param[in] ToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @return Segment Type
-	* @return Point count of segment.
-	*/
-	ToolpathLayerReader_GetSegmentInfo(ToolpathLayerReader Lib3MFHandle, nIndex uint32) (ELib3MFToolpathSegmentType, uint32, error)
-
-
-	/**
-	* Retrieves the assigned segment profile.
-	*
-	* @param[in] ToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @return Segment Profile
-	*/
-	ToolpathLayerReader_GetSegmentProfile(ToolpathLayerReader Lib3MFHandle, nIndex uint32) (Lib3MFHandle, error)
-
-
-	/**
-	* Retrieves the assigned segment profile uuid.
-	*
-	* @param[in] ToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @return Segment Profile UUID
-	*/
-	ToolpathLayerReader_GetSegmentProfileUUID(ToolpathLayerReader Lib3MFHandle, nIndex uint32) (string, error)
-
-
-	/**
-	* Retrieves the assigned segment profile.
-	*
-	* @param[in] ToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @return Segment Build Item
-	*/
-	ToolpathLayerReader_GetSegmentPart(ToolpathLayerReader Lib3MFHandle, nIndex uint32) (Lib3MFHandle, error)
-
-
-	/**
-	* Retrieves the assigned segment part uuid.
-	*
-	* @param[in] ToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @return Segment Part UUID
-	*/
-	ToolpathLayerReader_GetSegmentPartUUID(ToolpathLayerReader Lib3MFHandle, nIndex uint32) (string, error)
-
-
-	/**
-	* Retrieves the assigned segment point list. For type hatch, the points are taken pairwise.
-	*
-	* @param[in] ToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @return The point data array
-	*/
-	ToolpathLayerReader_GetSegmentPointData(ToolpathLayerReader Lib3MFHandle, nIndex uint32) ([]sLib3MFPosition2D, error)
-
-
-	/**
-	* Retrieves the layerdata's uuid
-	*
-	* @param[in] ToolpathLayerData - ToolpathLayerData instance.
-	* @return Returns the uuid value.
-	*/
-	ToolpathLayerData_GetLayerDataUUID(ToolpathLayerData Lib3MFHandle) (string, error)
-
-
-	/**
-	* Registers a toolpath profile
-	*
-	* @param[in] ToolpathLayerData - ToolpathLayerData instance.
-	* @param[in] Profile - The toolpath profile to register.
-	* @return returns the local profile ID for the layer.
-	*/
-	ToolpathLayerData_RegisterProfile(ToolpathLayerData Lib3MFHandle, Profile Lib3MFHandle) (uint32, error)
-
-
-	/**
-	* Registers a Model Build Item
-	*
-	* @param[in] ToolpathLayerData - ToolpathLayerData instance.
-	* @param[in] BuildItem - The model build item to use.
-	* @return returns the local part ID for the layer.
-	*/
-	ToolpathLayerData_RegisterBuildItem(ToolpathLayerData Lib3MFHandle, BuildItem Lib3MFHandle) (uint32, error)
-
-
-	/**
-	* writes hatch data to the layer.
-	*
-	* @param[in] ToolpathLayerData - ToolpathLayerData instance.
-	* @param[in] nProfileID - The toolpath profile to use
-	* @param[in] nPartID - The toolpath part to use
-	* @param[in] PointData - The point data
-	*/
-	ToolpathLayerData_WriteHatchData(ToolpathLayerData Lib3MFHandle, nProfileID uint32, nPartID uint32, PointData []sLib3MFPosition2D) (error)
-
-
-	/**
-	* writes loop data to the layer.
-	*
-	* @param[in] ToolpathLayerData - ToolpathLayerData instance.
-	* @param[in] nProfileID - The toolpath profile to use
-	* @param[in] nPartID - The toolpath part to use
-	* @param[in] PointData - The point data
-	*/
-	ToolpathLayerData_WriteLoop(ToolpathLayerData Lib3MFHandle, nProfileID uint32, nPartID uint32, PointData []sLib3MFPosition2D) (error)
-
-
-	/**
-	* writes polyline data to the layer.
-	*
-	* @param[in] ToolpathLayerData - ToolpathLayerData instance.
-	* @param[in] nProfileID - The toolpath profile to use
-	* @param[in] nPartID - The toolpath part to use
-	* @param[in] PointData - The point data
-	*/
-	ToolpathLayerData_WritePolyline(ToolpathLayerData Lib3MFHandle, nProfileID uint32, nPartID uint32, PointData []sLib3MFPosition2D) (error)
-
-
-	/**
-	* finishes all writing of the layer and compresses toolpath data.
-	*
-	* @param[in] ToolpathLayerData - ToolpathLayerData instance.
-	*/
-	ToolpathLayerData_Finish(ToolpathLayerData Lib3MFHandle) (error)
-
-
-	/**
-	* Retrieves the unit factor
-	*
-	* @param[in] Toolpath - Toolpath instance.
-	* @return Returns the unit factor.
-	*/
-	Toolpath_GetUnits(Toolpath Lib3MFHandle) (float64, error)
-
-
-	/**
-	* Retrieves the count of layers
-	*
-	* @param[in] Toolpath - Toolpath instance.
-	* @return Returns the layer count
-	*/
-	Toolpath_GetLayerCount(Toolpath Lib3MFHandle) (uint32, error)
-
-
-	/**
-	* Retrieves the count of profiles
-	*
-	* @param[in] Toolpath - Toolpath instance.
-	* @return Returns the profile count
-	*/
-	Toolpath_GetProfileCount(Toolpath Lib3MFHandle) (uint32, error)
-
-
-	/**
-	* Adds a new toolpath layer
-	*
-	* @param[in] Toolpath - Toolpath instance.
-	* @param[in] nZMax - ZMax value
-	* @param[in] sPath - Package Path
-	* @param[in] ModelWriter - The model writer that writes out the 3MF.
-	* @return Returns the layerdata object to write the layer content into.
-	*/
-	Toolpath_AddLayer(Toolpath Lib3MFHandle, nZMax uint32, sPath string, ModelWriter Lib3MFHandle) (Lib3MFHandle, error)
-
-
-	/**
-	* Retrieves the Attachment of a layer
-	*
-	* @param[in] Toolpath - Toolpath instance.
-	* @param[in] nIndex - Layer Index
-	* @return Attachment
-	*/
-	Toolpath_GetLayerAttachment(Toolpath Lib3MFHandle, nIndex uint32) (Lib3MFHandle, error)
-
-
-	/**
-	* Reads the toolpath of a layer.
-	*
-	* @param[in] Toolpath - Toolpath instance.
-	* @param[in] nIndex - Layer Index
-	* @return Toolpath Reader Instance
-	*/
-	Toolpath_ReadLayerData(Toolpath Lib3MFHandle, nIndex uint32) (Lib3MFHandle, error)
-
-
-	/**
-	* Retrieves the Path of a layer
-	*
-	* @param[in] Toolpath - Toolpath instance.
-	* @param[in] nIndex - Layer Index
-	* @return Package Path
-	*/
-	Toolpath_GetLayerPath(Toolpath Lib3MFHandle, nIndex uint32) (string, error)
-
-
-	/**
-	* Retrieves the ZMax of a layer
-	*
-	* @param[in] Toolpath - Toolpath instance.
-	* @param[in] nIndex - Layer Index
-	* @return ZMax value
-	*/
-	Toolpath_GetLayerZMax(Toolpath Lib3MFHandle, nIndex uint32) (uint32, error)
-
-
-	/**
-	* Return the z value of a layer in units.
-	*
-	* @param[in] Toolpath - Toolpath instance.
-	* @param[in] nLayerIndex - Layer Index.
-	* @return Z Value in Units.
-	*/
-	Toolpath_GetLayerZ(Toolpath Lib3MFHandle, nLayerIndex uint32) (uint32, error)
-
-
-	/**
-	* Adds a new profile to the toolpath.
-	*
-	* @param[in] Toolpath - Toolpath instance.
-	* @param[in] sName - the name.
-	* @return Returns the profile.
-	*/
-	Toolpath_AddProfile(Toolpath Lib3MFHandle, sName string) (Lib3MFHandle, error)
-
-
-	/**
-	* Returns a profile of the toolpath.
-	*
-	* @param[in] Toolpath - Toolpath instance.
-	* @param[in] nProfileIndex - Layer Index.
-	* @return Returns the profile.
-	*/
-	Toolpath_GetProfile(Toolpath Lib3MFHandle, nProfileIndex uint32) (Lib3MFHandle, error)
-
-
-	/**
-	* Returns a profile of the toolpath by UUID.
-	*
-	* @param[in] Toolpath - Toolpath instance.
-	* @param[in] sProfileUUID - UUID string.
-	* @return Returns the profile.
-	*/
-	Toolpath_GetProfileUUID(Toolpath Lib3MFHandle, sProfileUUID string) (Lib3MFHandle, error)
-
-
-	/**
-	* Returns the Toolpath the iterator points at.
-	*
-	* @param[in] ToolpathIterator - ToolpathIterator instance.
-	* @return returns the Toolpath instance.
-	*/
-	ToolpathIterator_GetCurrentToolpath(ToolpathIterator Lib3MFHandle) (Lib3MFHandle, error)
-
-
-	/**
-	* Get the lower Z-Coordinate of the slice stack.
-	*
-	* @param[in] SliceStack - SliceStack instance.
-	* @return the lower Z-Coordinate the slice stack
-	*/
-	SliceStack_GetBottomZ(SliceStack Lib3MFHandle) (float64, error)
-=======
 Lib3MFResult CCall_lib3mf_contentencryptionparams_getauthenticationtag(Lib3MFHandle libraryHandle, Lib3MF_ContentEncryptionParams pContentEncryptionParams, const Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64* pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer)
 {
 	if (libraryHandle == 0) 
@@ -2816,356 +2680,6 @@ Lib3MFResult CCall_lib3mf_contentencryptionparams_getauthenticationtag(Lib3MFHan
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_ContentEncryptionParams_GetAuthenticationTag (pContentEncryptionParams, nByteDataBufferSize, pByteDataNeededCount, pByteDataBuffer);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> .theirs
 
 
 Lib3MFResult CCall_lib3mf_contentencryptionparams_setauthenticationtag(Lib3MFHandle libraryHandle, Lib3MF_ContentEncryptionParams pContentEncryptionParams, Lib3MF_uint64 nByteDataBufferSize, const Lib3MF_uint8 * pByteDataBuffer)
@@ -3726,6 +3240,15 @@ Lib3MFResult CCall_lib3mf_model_getmultipropertygroups(Lib3MFHandle libraryHandl
 }
 
 
+Lib3MFResult CCall_lib3mf_model_gettoolpaths(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_ToolpathIterator * pResourceIterator)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_GetToolpaths (pModel, pResourceIterator);
+}
+
+
 Lib3MFResult CCall_lib3mf_model_getslicestacks(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_SliceStackIterator * pResourceIterator)
 {
 	if (libraryHandle == 0) 
@@ -3843,6 +3366,15 @@ Lib3MFResult CCall_lib3mf_model_removebuilditem(Lib3MFHandle libraryHandle, Lib3
 }
 
 
+Lib3MFResult CCall_lib3mf_model_addtoolpath(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_double dUnitFactor, Lib3MF_Toolpath * pToolpathInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_AddToolpath (pModel, dUnitFactor, pToolpathInstance);
+}
+
+
 Lib3MFResult CCall_lib3mf_model_getmetadatagroup(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_MetaDataGroup * pTheMetaDataGroup)
 {
 	if (libraryHandle == 0) 
@@ -3897,24 +3429,6 @@ Lib3MFResult CCall_lib3mf_model_getattachmentcount(Lib3MFHandle libraryHandle, L
 }
 
 
-<<<<<<< .mine
-	/**
-	* creates a Toolpath instance with all toolpath resources.
-	*
-	* @param[in] Model - Model instance.
-	* @return returns the iterator instance.
-	*/
-	Model_GetToolpaths(Model Lib3MFHandle) (Lib3MFHandle, error)
-
-
-	/**
-	* creates a resource iterator instance with all slice stack resources.
-	*
-	* @param[in] Model - Model instance.
-	* @return returns the iterator instance.
-	*/
-	Model_GetSliceStacks(Model Lib3MFHandle) (Lib3MFHandle, error)
-=======
 Lib3MFResult CCall_lib3mf_model_haspackagethumbnailattachment(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, bool * pHasThumbnail)
 {
 	if (libraryHandle == 0) 
@@ -3922,16 +3436,6 @@ Lib3MFResult CCall_lib3mf_model_haspackagethumbnailattachment(Lib3MFHandle libra
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_Model_HasPackageThumbnailAttachment (pModel, pHasThumbnail);
 }
-
-
-
-
-
-
-
-
-
->>>>>>> .theirs
 
 
 Lib3MFResult CCall_lib3mf_model_createpackagethumbnailattachment(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Attachment * pAttachment)
@@ -3997,6 +3501,33 @@ Lib3MFResult CCall_lib3mf_model_getkeystore(Lib3MFHandle libraryHandle, Lib3MF_M
 }
 
 
+Lib3MFResult CCall_lib3mf_model_createpersistentsourcefromfile(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, const char * pFilename, Lib3MF_PersistentReaderSource * pInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_CreatePersistentSourceFromFile (pModel, pFilename, pInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_createpersistentsourcefrombuffer(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer, Lib3MF_PersistentReaderSource * pInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_CreatePersistentSourceFromBuffer (pModel, nBufferBufferSize, pBufferBuffer, pInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_createpersistentsourcefromcallback(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MFReadCallback pTheReadCallback, Lib3MF_uint64 nStreamSize, Lib3MFSeekCallback pTheSeekCallback, Lib3MF_pvoid pUserData, Lib3MF_PersistentReaderSource * pInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_CreatePersistentSourceFromCallback (pModel, pTheReadCallback, nStreamSize, pTheSeekCallback, pUserData, pInstance);
+}
+
+
 Lib3MFResult CCall_lib3mf_getlibraryversion(Lib3MFHandle libraryHandle, Lib3MF_uint32 * pMajor, Lib3MF_uint32 * pMinor, Lib3MF_uint32 * pMicro)
 {
 	if (libraryHandle == 0) 
@@ -4042,25 +3573,6 @@ Lib3MFResult CCall_lib3mf_createmodel(Lib3MFHandle libraryHandle, Lib3MF_Model *
 }
 
 
-<<<<<<< .mine
-	/**
-	* adds an empty Toolpath resource to the model.
-	*
-	* @param[in] Model - Model instance.
-	* @param[in] dUnitFactor - The toolpath instance of the created Toolpath.
-	* @return The toolpath instance of the created Toolpath.
-	*/
-	Model_AddToolpath(Model Lib3MFHandle, dUnitFactor float64) (Lib3MFHandle, error)
-
-
-	/**
-	* Returns the metadata of the model as MetaDataGroup
-	*
-	* @param[in] Model - Model instance.
-	* @return returns an Instance of the metadatagroup of the model
-	*/
-	Model_GetMetaDataGroup(Model Lib3MFHandle) (Lib3MFHandle, error)
-=======
 Lib3MFResult CCall_lib3mf_release(Lib3MFHandle libraryHandle, Lib3MF_Base pInstance)
 {
 	if (libraryHandle == 0) 
@@ -4068,17 +3580,6 @@ Lib3MFResult CCall_lib3mf_release(Lib3MFHandle libraryHandle, Lib3MF_Base pInsta
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_Release (pInstance);
 }
-
-
-
-
-
-
-
-
-
-
->>>>>>> .theirs
 
 
 Lib3MFResult CCall_lib3mf_acquire(Lib3MFHandle libraryHandle, Lib3MF_Base pInstance)
@@ -4200,93 +3701,11 @@ Lib3MFResult CCall_lib3mf_gettranslationtransform(Lib3MFHandle libraryHandle, Li
 */
 import "C"
 
-<<<<<<< .mine
-	/**
-	* Creates an OPC Reader Source from a file.
-	*
-	* @param[in] Model - Model instance.
-	* @param[in] sFilename - Filename to read from
-	* @return The instance of the created reader source
-	*/
-	Model_CreatePersistentSourceFromFile(Model Lib3MFHandle, sFilename string) (Lib3MFHandle, error)
-
-
-	/**
-	* Creates an OPC Reader Source from a memory buffer. The memory buffer MUST exist as long as the Source object exists.
-	*
-	* @param[in] Model - Model instance.
-	* @param[in] Buffer - Buffer to read from
-	* @return The instance of the created reader source
-	*/
-	Model_CreatePersistentSourceFromBuffer(Model Lib3MFHandle, Buffer []uint8) (Lib3MFHandle, error)
-
-
-	/**
-	* Creates an OPC Reader Source from a data provided by a callback function. The callbacks MUST exist as long as the source object exists.
-	*
-	* @param[in] Model - Model instance.
-	* @param[in] pTheReadCallback - Callback to call for reading a data chunk
-	* @param[in] nStreamSize - number of bytes the callback returns
-	* @param[in] pTheSeekCallback - Callback to call for seeking in the stream.
-	* @param[in] nUserData - Userdata that is passed to the callback function
-	* @return The instance of the created reader source
-	*/
-	Model_CreatePersistentSourceFromCallback(Model Lib3MFHandle, pTheReadCallback int64, nStreamSize uint64, pTheSeekCallback int64, nUserData uint64) (Lib3MFHandle, error)
-
-
-	/**
-	* retrieves the binary version of this library.
-	*
-	* @param[in] Wrapper - Wrapper instance.
-	* @return returns the major version of this library
-	* @return returns the minor version of this library
-	* @return returns the micro version of this library
-	*/
-	GetLibraryVersion() (uint32, uint32, uint32, error)
-=======
 import (
 	"fmt"
 	"unsafe"
 	"runtime"
 )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> .theirs
 
 type ref = C.Lib3MFHandle
 
@@ -4309,6 +3728,16 @@ type SlicesMeshResolution int
 const (
 	SlicesMeshResolution_Fullres = 0
 	SlicesMeshResolution_Lowres = 1
+)
+
+// PersistentReaderSourceType represents a Lib3MF enum.
+type PersistentReaderSourceType int
+
+const (
+	PersistentReaderSourceType_Unknown = 0
+	PersistentReaderSourceType_FileOnDisk = 1
+	PersistentReaderSourceType_MemoryBuffer = 2
+	PersistentReaderSourceType_Callback = 3
 )
 
 // ModelUnit represents a Lib3MF enum.
@@ -4425,6 +3854,16 @@ const (
 	BlendMethod_NoBlendMethod = 0
 	BlendMethod_Mix = 1
 	BlendMethod_Multiply = 2
+)
+
+// ToolpathSegmentType represents a Lib3MF enum.
+type ToolpathSegmentType int
+
+const (
+	ToolpathSegmentType_Unknown = 0
+	ToolpathSegmentType_Hatch = 1
+	ToolpathSegmentType_Loop = 2
+	ToolpathSegmentType_Polyline = 3
 )
 
 // EncryptionAlgorithm represents a Lib3MF enum.
@@ -4583,6 +4022,10 @@ const LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND = 3002;
 const LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND = 3003;
 const LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED = 3004;
 const LIB3MF_ERROR_INVALIDKEYSIZE = 3005;
+const LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER = 4000;
+const LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA = 4001;
+const LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN = 4002;
+const LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT = 4003;
 
 // WrappedError is an error that wraps a Lib3MF error.
 type WrappedError struct {
@@ -4682,6 +4125,14 @@ func errorMessage(errorcode uint32) string {
 		return "A Key or Conentent encryption callback has not been registered";
 	case LIB3MF_ERROR_INVALIDKEYSIZE:
 		return "The key siue is invalid";
+	case LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER:
+		return "Not in toolpath header writing mode";
+	case LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA:
+		return "Not in toolpath data writing mode";
+	case LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN:
+		return "Toolpath has already been written out";
+	case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT:
+		return "Toolpath has an invalid number of points";
 	default:
 		return "unknown";
 	}
@@ -4772,71 +4223,7 @@ func keyWrappingCallback(kEKParams C.Lib3MF_AccessRight, inBuffer *C.uint8_t, ou
 // ContentEncryptionCallbackFunc a callback to encrypt/decrypt content called on each resource encrypted. This might be called several times depending on content size. If Input is not available(either null or size is 0), clients must return the result of authenticated tag generation/validation.
 type ContentEncryptionCallbackFunc = func(cEKParams ContentEncryptionParams, input []uint8, output []uint8, userData uintptr, status *uint64)
 
-<<<<<<< .mine
-/*************************************************************************************************************************
-Class definition Lib3MFPersistentReaderSource
-**************************************************************************************************************************/
-
-type Lib3MFPersistentReaderSource struct {
-	Lib3MFBase
-}
-
-func (instance *Lib3MFPersistentReaderSource) Close() (error) {
-	return instance.Handle.Close()
-}
-
-func (instance *Lib3MFPersistentReaderSource) GetSourceType() (ELib3MFPersistentReaderSourceType, error) {
-	eSourceType, error := instance.Interface.PersistentReaderSource_GetSourceType(instance.Handle)
-	return eSourceType, error
-}
-
-func (instance *Lib3MFPersistentReaderSource) InvalidateSourceData() (error) {
-	error := instance.Interface.PersistentReaderSource_InvalidateSourceData(instance.Handle)
-	return error
-}
-
-func (instance *Lib3MFPersistentReaderSource) SourceDataIsValid() (bool, error) {
-	bDataIsValid, error := instance.Interface.PersistentReaderSource_SourceDataIsValid(instance.Handle)
-	return bDataIsValid, error
-}
-
-
-/*************************************************************************************************************************
-Class definition Lib3MFReader
-**************************************************************************************************************************/
-=======
 var contentEncryptionCallbackFunc ContentEncryptionCallbackFunc
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> .theirs
 
 //export contentEncryptionCallback
 func contentEncryptionCallback(cEKParams C.Lib3MF_ContentEncryptionParams, input *C.uint8_t, output *C.uint8_t, userData C.Lib3MF_pvoid, status *C.uint64_t) {
@@ -4852,25 +4239,12 @@ type Wrapper struct {
 	LibraryHandle ref
 }
 
-<<<<<<< .mine
-func (instance *Lib3MFReader) ReadFromPersistentSource(Source Lib3MFHandle) (error) {
-	error := instance.Interface.Reader_ReadFromPersistentSource(instance.Handle, Source)
-	return error
-}
-
-func (instance *Lib3MFReader) ReadFromFile(sFilename string) (error) {
-	error := instance.Interface.Reader_ReadFromFile(instance.Handle, sFilename)
-	return error
-=======
 // Base represents a Lib3MF class.
 type Base struct {
 	_     		[0]func() // uncomparable; to make == not compile
 	Ref   		ref       // identifies a C value, see ref type
 	wrapperRef Wrapper
 	gcPtr 		*ref      // used to trigger the finalizer when the Value is not referenced any more
-
-
->>>>>>> .theirs
 }
 
 // NewBase creates a new Base.
@@ -5058,6 +4432,45 @@ func (inst Writer) SetContentEncryptionCallback(theCallback ContentEncryptionCal
 }
 
 
+// PersistentReaderSource represents a Lib3MF class.
+type PersistentReaderSource struct {
+	Base
+}
+
+func (wrapper Wrapper) NewPersistentReaderSource(r ref) PersistentReaderSource {
+	return PersistentReaderSource{wrapper.NewBase(r)}
+}
+
+// GetSourceType retrieves the type of source data.
+func (inst PersistentReaderSource) GetSourceType() (PersistentReaderSourceType, error) {
+	var sourceType C.eLib3MFPersistentReaderSourceType
+	ret := C.CCall_lib3mf_persistentreadersource_getsourcetype(inst.wrapperRef.LibraryHandle, inst.Ref, &sourceType)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return PersistentReaderSourceType(sourceType), nil
+}
+
+// InvalidateSourceData invalidates the reader source. Every subsequent read on this data will fail.
+func (inst PersistentReaderSource) InvalidateSourceData() error {
+	ret := C.CCall_lib3mf_persistentreadersource_invalidatesourcedata(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SourceDataIsValid checks if the source data is valid. Any read on an invalid source object will fail.
+func (inst PersistentReaderSource) SourceDataIsValid() (bool, error) {
+	var dataIsValid C.bool
+	ret := C.CCall_lib3mf_persistentreadersource_sourcedataisvalid(inst.wrapperRef.LibraryHandle, inst.Ref, &dataIsValid)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(dataIsValid), nil
+}
+
+
 // Reader represents a Lib3MF class.
 type Reader struct {
 	Base
@@ -5065,6 +4478,15 @@ type Reader struct {
 
 func (wrapper Wrapper) NewReader(r ref) Reader {
 	return Reader{wrapper.NewBase(r)}
+}
+
+// ReadFromPersistentSource reads a model from a persistent source object. The object will be referenced until the Model is destroyed or cleared.
+func (inst Reader) ReadFromPersistentSource(source PersistentReaderSource) error {
+	ret := C.CCall_lib3mf_reader_readfrompersistentsource(inst.wrapperRef.LibraryHandle, inst.Ref, source.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
 }
 
 // ReadFromFile reads a model from a file. The file type is specified by the Model Reader class.
@@ -7284,7 +6706,7 @@ func (inst Attachment) WriteToFile(fileName string) error {
 	return nil
 }
 
-// ReadFromFile reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF packege, or via the WriteToFile or WriteToBuffer-methods.
+// ReadFromFile reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
 func (inst Attachment) ReadFromFile(fileName string) error {
 	ret := C.CCall_lib3mf_attachment_readfromfile(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(fileName)[0])))
 	if ret != 0 {
@@ -7293,7 +6715,7 @@ func (inst Attachment) ReadFromFile(fileName string) error {
 	return nil
 }
 
-// ReadFromCallback reads a model and from the data provided by a callback function.
+// ReadFromCallback reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
 func (inst Attachment) ReadFromCallback(theReadCallback ReadCallbackFunc, streamSize uint64, theSeekCallback SeekCallbackFunc, userData uintptr) error {
 	ret := C.CCall_lib3mf_attachment_readfromcallback(inst.wrapperRef.LibraryHandle, inst.Ref, (C.Lib3MFReadCallback)(unsafe.Pointer(C.Lib3MFReadCallback_cgo)), C.uint64_t(streamSize), (C.Lib3MFSeekCallback)(unsafe.Pointer(C.Lib3MFSeekCallback_cgo)), (C.Lib3MF_pvoid)(userData))
 	if ret != 0 {
@@ -7331,7 +6753,7 @@ func (inst Attachment) WriteToBuffer(buffer []uint8) ([]uint8, error) {
 	return buffer[:int(neededforbuffer)], nil
 }
 
-// ReadFromBuffer reads an attachment from a memory buffer.
+// ReadFromBuffer reads an attachment from a memory buffer. This buffer is immediatly read (in contrast to the ReadFromCallback and ReadFromFile-methods).
 func (inst Attachment) ReadFromBuffer(buffer []uint8) error {
 	ret := C.CCall_lib3mf_attachment_readfrombuffer(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint64_t(len(buffer)), (*C.uint8_t)(unsafe.Pointer(&buffer[0])))
 	if ret != 0 {
@@ -7732,555 +7154,460 @@ func (inst Slice) GetZTop() (float64, error) {
 }
 
 
-<<<<<<< .mine
-/*************************************************************************************************************************
-Class definition Lib3MFToolpathProfile
-**************************************************************************************************************************/
-
-type Lib3MFToolpathProfile struct {
-	Lib3MFBase
+// ToolpathProfile represents a Lib3MF class.
+type ToolpathProfile struct {
+	Base
 }
 
-func (instance *Lib3MFToolpathProfile) Close() (error) {
-	return instance.Handle.Close()
+func (wrapper Wrapper) NewToolpathProfile(r ref) ToolpathProfile {
+	return ToolpathProfile{wrapper.NewBase(r)}
 }
 
-func (instance *Lib3MFToolpathProfile) GetUUID() (string, error) {
-	sUUID, error := instance.Interface.ToolpathProfile_GetUUID(instance.Handle)
-	return sUUID, error
+// GetUUID retrieves the profile's uuid.
+func (inst ToolpathProfile) GetUUID() (string, error) {
+	var neededforuUID C.uint32_t
+	var filledinuUID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathprofile_getuuid(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforuUID, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizeuUID := neededforuUID
+	bufferuUID := make([]byte, bufferSizeuUID)
+	ret = C.CCall_lib3mf_toolpathprofile_getuuid(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizeuUID, &filledinuUID, (*C.char)(unsafe.Pointer(&bufferuUID[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferuUID[:(filledinuUID-1)]), nil
 }
 
-func (instance *Lib3MFToolpathProfile) GetName() (string, error) {
-	sName, error := instance.Interface.ToolpathProfile_GetName(instance.Handle)
-	return sName, error
+// GetName retrieves the profile's name.
+func (inst ToolpathProfile) GetName() (string, error) {
+	var neededforname C.uint32_t
+	var filledinname C.uint32_t
+	ret := C.CCall_lib3mf_toolpathprofile_getname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforname, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizename := neededforname
+	buffername := make([]byte, bufferSizename)
+	ret = C.CCall_lib3mf_toolpathprofile_getname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizename, &filledinname, (*C.char)(unsafe.Pointer(&buffername[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffername[:(filledinname-1)]), nil
 }
 
-func (instance *Lib3MFToolpathProfile) HasParameterValue(sNameSpaceName string, sValueName string) (bool, error) {
-	bValueExists, error := instance.Interface.ToolpathProfile_HasParameterValue(instance.Handle, sNameSpaceName, sValueName)
-	return bValueExists, error
+// HasParameterValue checks if a parameter value exists.
+func (inst ToolpathProfile) HasParameterValue(nameSpaceName string, valueName string) (bool, error) {
+	var valueExists C.bool
+	ret := C.CCall_lib3mf_toolpathprofile_hasparametervalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), &valueExists)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(valueExists), nil
 }
 
-func (instance *Lib3MFToolpathProfile) GetParameterDoubleValue(sNameSpaceName string, sValueName string) (float64, error) {
-	dValue, error := instance.Interface.ToolpathProfile_GetParameterDoubleValue(instance.Handle, sNameSpaceName, sValueName)
-	return dValue, error
+// GetParameterDoubleValue retrieves a profile's parameter value. Fails if value does not exist.
+func (inst ToolpathProfile) GetParameterDoubleValue(nameSpaceName string, valueName string) (float64, error) {
+	var value C.double
+	ret := C.CCall_lib3mf_toolpathprofile_getparameterdoublevalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(value), nil
 }
 
-func (instance *Lib3MFToolpathProfile) GetParameterDoubleValueDef(sNameSpaceName string, sValueName string, dDefaultValue float64) (float64, error) {
-	dValue, error := instance.Interface.ToolpathProfile_GetParameterDoubleValueDef(instance.Handle, sNameSpaceName, sValueName, dDefaultValue)
-	return dValue, error
+// GetParameterDoubleValueDef retrieves a profile's parameter value.
+func (inst ToolpathProfile) GetParameterDoubleValueDef(nameSpaceName string, valueName string, defaultValue float64) (float64, error) {
+	var value C.double
+	ret := C.CCall_lib3mf_toolpathprofile_getparameterdoublevaluedef(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), C.double(defaultValue), &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(value), nil
 }
 
-func (instance *Lib3MFToolpathProfile) SetName(sName string) (error) {
-	error := instance.Interface.ToolpathProfile_SetName(instance.Handle, sName)
-	return error
+// SetName sets the profile's name.
+func (inst ToolpathProfile) SetName(name string) error {
+	ret := C.CCall_lib3mf_toolpathprofile_setname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
 }
 
-func (instance *Lib3MFToolpathProfile) SetParameterDoubleValue(sNameSpaceName string, sValueName string, dValue float64) (error) {
-	error := instance.Interface.ToolpathProfile_SetParameterDoubleValue(instance.Handle, sNameSpaceName, sValueName, dValue)
-	return error
-}
-
-
-/*************************************************************************************************************************
-Class definition Lib3MFToolpathLayerReader
-**************************************************************************************************************************/
-
-type Lib3MFToolpathLayerReader struct {
-	Lib3MFBase
-}
-
-func (instance *Lib3MFToolpathLayerReader) Close() (error) {
-	return instance.Handle.Close()
-}
-
-func (instance *Lib3MFToolpathLayerReader) GetLayerDataUUID() (string, error) {
-	sUUID, error := instance.Interface.ToolpathLayerReader_GetLayerDataUUID(instance.Handle)
-	return sUUID, error
-}
-
-func (instance *Lib3MFToolpathLayerReader) GetSegmentCount() (uint32, error) {
-	nCount, error := instance.Interface.ToolpathLayerReader_GetSegmentCount(instance.Handle)
-	return nCount, error
-}
-
-func (instance *Lib3MFToolpathLayerReader) GetSegmentInfo(nIndex uint32) (ELib3MFToolpathSegmentType, uint32, error) {
-	eType, nPointCount, error := instance.Interface.ToolpathLayerReader_GetSegmentInfo(instance.Handle, nIndex)
-	return eType, nPointCount, error
-}
-
-func (instance *Lib3MFToolpathLayerReader) GetSegmentProfile(nIndex uint32) (Lib3MFToolpathProfile, error) {
-	hProfile, error := instance.Interface.ToolpathLayerReader_GetSegmentProfile(instance.Handle, nIndex)
-	var cProfile Lib3MFToolpathProfile
-	cProfile.Interface = instance.Interface
-	cProfile.Handle = hProfile
-	return cProfile, error
-}
-
-func (instance *Lib3MFToolpathLayerReader) GetSegmentProfileUUID(nIndex uint32) (string, error) {
-	sProfileUUID, error := instance.Interface.ToolpathLayerReader_GetSegmentProfileUUID(instance.Handle, nIndex)
-	return sProfileUUID, error
-}
-
-func (instance *Lib3MFToolpathLayerReader) GetSegmentPart(nIndex uint32) (Lib3MFBuildItem, error) {
-	hBuildItem, error := instance.Interface.ToolpathLayerReader_GetSegmentPart(instance.Handle, nIndex)
-	var cBuildItem Lib3MFBuildItem
-	cBuildItem.Interface = instance.Interface
-	cBuildItem.Handle = hBuildItem
-	return cBuildItem, error
-}
-
-func (instance *Lib3MFToolpathLayerReader) GetSegmentPartUUID(nIndex uint32) (string, error) {
-	sPartUUID, error := instance.Interface.ToolpathLayerReader_GetSegmentPartUUID(instance.Handle, nIndex)
-	return sPartUUID, error
-}
-
-func (instance *Lib3MFToolpathLayerReader) GetSegmentPointData(nIndex uint32) ([]sLib3MFPosition2D, error) {
-	arrayPointData, error := instance.Interface.ToolpathLayerReader_GetSegmentPointData(instance.Handle, nIndex)
-	return arrayPointData, error
+// SetParameterDoubleValue sets a profile's parameter value.
+func (inst ToolpathProfile) SetParameterDoubleValue(nameSpaceName string, valueName string, value float64) error {
+	ret := C.CCall_lib3mf_toolpathprofile_setparameterdoublevalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), C.double(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
 }
 
 
-/*************************************************************************************************************************
-Class definition Lib3MFToolpathLayerData
-**************************************************************************************************************************/
-
-type Lib3MFToolpathLayerData struct {
-	Lib3MFBase
+// ToolpathLayerReader represents a Lib3MF class.
+type ToolpathLayerReader struct {
+	Base
 }
 
-func (instance *Lib3MFToolpathLayerData) Close() (error) {
-	return instance.Handle.Close()
+func (wrapper Wrapper) NewToolpathLayerReader(r ref) ToolpathLayerReader {
+	return ToolpathLayerReader{wrapper.NewBase(r)}
 }
 
-func (instance *Lib3MFToolpathLayerData) GetLayerDataUUID() (string, error) {
-	sUUID, error := instance.Interface.ToolpathLayerData_GetLayerDataUUID(instance.Handle)
-	return sUUID, error
+// GetLayerDataUUID retrieves the layerdata's uuid.
+func (inst ToolpathLayerReader) GetLayerDataUUID() (string, error) {
+	var neededforuUID C.uint32_t
+	var filledinuUID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getlayerdatauuid(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforuUID, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizeuUID := neededforuUID
+	bufferuUID := make([]byte, bufferSizeuUID)
+	ret = C.CCall_lib3mf_toolpathlayerreader_getlayerdatauuid(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizeuUID, &filledinuUID, (*C.char)(unsafe.Pointer(&bufferuUID[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferuUID[:(filledinuUID-1)]), nil
 }
 
-func (instance *Lib3MFToolpathLayerData) RegisterProfile(Profile Lib3MFHandle) (uint32, error) {
-	nProfileID, error := instance.Interface.ToolpathLayerData_RegisterProfile(instance.Handle, Profile)
-	return nProfileID, error
+// GetSegmentCount retrieves the count of segments.
+func (inst ToolpathLayerReader) GetSegmentCount() (uint32, error) {
+	var count C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentcount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(count), nil
 }
 
-func (instance *Lib3MFToolpathLayerData) RegisterBuildItem(BuildItem Lib3MFHandle) (uint32, error) {
-	nPartID, error := instance.Interface.ToolpathLayerData_RegisterBuildItem(instance.Handle, BuildItem)
-	return nPartID, error
+// GetSegmentInfo retrieves the segment type information .
+func (inst ToolpathLayerReader) GetSegmentInfo(index uint32) (ToolpathSegmentType, uint32, error) {
+	var _type C.eLib3MFToolpathSegmentType
+	var pointCount C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentinfo(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &_type, &pointCount)
+	if ret != 0 {
+		return 0, 0, makeError(uint32(ret))
+	}
+	return ToolpathSegmentType(_type), uint32(pointCount), nil
 }
 
-func (instance *Lib3MFToolpathLayerData) WriteHatchData(nProfileID uint32, nPartID uint32, PointData []sLib3MFPosition2D) (error) {
-	error := instance.Interface.ToolpathLayerData_WriteHatchData(instance.Handle, nProfileID, nPartID, PointData)
-	return error
+// GetSegmentProfile retrieves the assigned segment profile.
+func (inst ToolpathLayerReader) GetSegmentProfile(index uint32) (ToolpathProfile, error) {
+	var profile ref
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentprofile(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &profile)
+	if ret != 0 {
+		return ToolpathProfile{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathProfile(profile), nil
 }
 
-func (instance *Lib3MFToolpathLayerData) WriteLoop(nProfileID uint32, nPartID uint32, PointData []sLib3MFPosition2D) (error) {
-	error := instance.Interface.ToolpathLayerData_WriteLoop(instance.Handle, nProfileID, nPartID, PointData)
-	return error
+// GetSegmentProfileUUID retrieves the assigned segment profile uuid.
+func (inst ToolpathLayerReader) GetSegmentProfileUUID(index uint32) (string, error) {
+	var neededforprofileUUID C.uint32_t
+	var filledinprofileUUID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentprofileuuid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforprofileUUID, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizeprofileUUID := neededforprofileUUID
+	bufferprofileUUID := make([]byte, bufferSizeprofileUUID)
+	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmentprofileuuid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), bufferSizeprofileUUID, &filledinprofileUUID, (*C.char)(unsafe.Pointer(&bufferprofileUUID[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferprofileUUID[:(filledinprofileUUID-1)]), nil
 }
 
-func (instance *Lib3MFToolpathLayerData) WritePolyline(nProfileID uint32, nPartID uint32, PointData []sLib3MFPosition2D) (error) {
-	error := instance.Interface.ToolpathLayerData_WritePolyline(instance.Handle, nProfileID, nPartID, PointData)
-	return error
+// GetSegmentPart retrieves the assigned segment profile.
+func (inst ToolpathLayerReader) GetSegmentPart(index uint32) (BuildItem, error) {
+	var buildItem ref
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentpart(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &buildItem)
+	if ret != 0 {
+		return BuildItem{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewBuildItem(buildItem), nil
 }
 
-func (instance *Lib3MFToolpathLayerData) Finish() (error) {
-	error := instance.Interface.ToolpathLayerData_Finish(instance.Handle)
-	return error
+// GetSegmentPartUUID retrieves the assigned segment part uuid.
+func (inst ToolpathLayerReader) GetSegmentPartUUID(index uint32) (string, error) {
+	var neededforpartUUID C.uint32_t
+	var filledinpartUUID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentpartuuid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforpartUUID, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizepartUUID := neededforpartUUID
+	bufferpartUUID := make([]byte, bufferSizepartUUID)
+	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmentpartuuid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), bufferSizepartUUID, &filledinpartUUID, (*C.char)(unsafe.Pointer(&bufferpartUUID[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferpartUUID[:(filledinpartUUID-1)]), nil
 }
 
-
-/*************************************************************************************************************************
-Class definition Lib3MFToolpath
-**************************************************************************************************************************/
-
-type Lib3MFToolpath struct {
-	Lib3MFResource
-}
-
-func (instance *Lib3MFToolpath) Close() (error) {
-	return instance.Handle.Close()
-}
-
-func (instance *Lib3MFToolpath) GetUnits() (float64, error) {
-	dUnits, error := instance.Interface.Toolpath_GetUnits(instance.Handle)
-	return dUnits, error
-}
-
-func (instance *Lib3MFToolpath) GetLayerCount() (uint32, error) {
-	nCount, error := instance.Interface.Toolpath_GetLayerCount(instance.Handle)
-	return nCount, error
-}
-
-func (instance *Lib3MFToolpath) GetProfileCount() (uint32, error) {
-	nCount, error := instance.Interface.Toolpath_GetProfileCount(instance.Handle)
-	return nCount, error
-}
-
-func (instance *Lib3MFToolpath) AddLayer(nZMax uint32, sPath string, ModelWriter Lib3MFHandle) (Lib3MFToolpathLayerData, error) {
-	hLayerData, error := instance.Interface.Toolpath_AddLayer(instance.Handle, nZMax, sPath, ModelWriter)
-	var cLayerData Lib3MFToolpathLayerData
-	cLayerData.Interface = instance.Interface
-	cLayerData.Handle = hLayerData
-	return cLayerData, error
-}
-
-func (instance *Lib3MFToolpath) GetLayerAttachment(nIndex uint32) (Lib3MFAttachment, error) {
-	hAttachment, error := instance.Interface.Toolpath_GetLayerAttachment(instance.Handle, nIndex)
-	var cAttachment Lib3MFAttachment
-	cAttachment.Interface = instance.Interface
-	cAttachment.Handle = hAttachment
-	return cAttachment, error
-}
-
-func (instance *Lib3MFToolpath) ReadLayerData(nIndex uint32) (Lib3MFToolpathLayerReader, error) {
-	hToolpathReader, error := instance.Interface.Toolpath_ReadLayerData(instance.Handle, nIndex)
-	var cToolpathReader Lib3MFToolpathLayerReader
-	cToolpathReader.Interface = instance.Interface
-	cToolpathReader.Handle = hToolpathReader
-	return cToolpathReader, error
-}
-
-func (instance *Lib3MFToolpath) GetLayerPath(nIndex uint32) (string, error) {
-	sPath, error := instance.Interface.Toolpath_GetLayerPath(instance.Handle, nIndex)
-	return sPath, error
-}
-
-func (instance *Lib3MFToolpath) GetLayerZMax(nIndex uint32) (uint32, error) {
-	nZMax, error := instance.Interface.Toolpath_GetLayerZMax(instance.Handle, nIndex)
-	return nZMax, error
-}
-
-func (instance *Lib3MFToolpath) GetLayerZ(nLayerIndex uint32) (uint32, error) {
-	nZValue, error := instance.Interface.Toolpath_GetLayerZ(instance.Handle, nLayerIndex)
-	return nZValue, error
-}
-
-func (instance *Lib3MFToolpath) AddProfile(sName string) (Lib3MFToolpathProfile, error) {
-	hProfile, error := instance.Interface.Toolpath_AddProfile(instance.Handle, sName)
-	var cProfile Lib3MFToolpathProfile
-	cProfile.Interface = instance.Interface
-	cProfile.Handle = hProfile
-	return cProfile, error
-}
-
-func (instance *Lib3MFToolpath) GetProfile(nProfileIndex uint32) (Lib3MFToolpathProfile, error) {
-	hProfile, error := instance.Interface.Toolpath_GetProfile(instance.Handle, nProfileIndex)
-	var cProfile Lib3MFToolpathProfile
-	cProfile.Interface = instance.Interface
-	cProfile.Handle = hProfile
-	return cProfile, error
-}
-
-func (instance *Lib3MFToolpath) GetProfileUUID(sProfileUUID string) (Lib3MFToolpathProfile, error) {
-	hProfile, error := instance.Interface.Toolpath_GetProfileUUID(instance.Handle, sProfileUUID)
-	var cProfile Lib3MFToolpathProfile
-	cProfile.Interface = instance.Interface
-	cProfile.Handle = hProfile
-	return cProfile, error
+// GetSegmentPointData retrieves the assigned segment point list. For type hatch, the points are taken pairwise.
+func (inst ToolpathLayerReader) GetSegmentPointData(index uint32, pointData []Position2D) ([]Position2D, error) {
+	var neededforpointData C.uint64_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentpointdata(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforpointData, nil)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	if len(pointData) < int(neededforpointData) {
+	 pointData = append(pointData, make([]Position2D, int(neededforpointData)-len(pointData))...)
+	}
+	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmentpointdata(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), neededforpointData, nil, (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])))
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	return pointData[:int(neededforpointData)], nil
 }
 
 
-/*************************************************************************************************************************
-Class definition Lib3MFToolpathIterator
-**************************************************************************************************************************/
-
-type Lib3MFToolpathIterator struct {
-	Lib3MFResourceIterator
+// ToolpathLayerData represents a Lib3MF class.
+type ToolpathLayerData struct {
+	Base
 }
 
-func (instance *Lib3MFToolpathIterator) Close() (error) {
-	return instance.Handle.Close()
+func (wrapper Wrapper) NewToolpathLayerData(r ref) ToolpathLayerData {
+	return ToolpathLayerData{wrapper.NewBase(r)}
 }
 
-func (instance *Lib3MFToolpathIterator) GetCurrentToolpath() (Lib3MFToolpath, error) {
-	hResource, error := instance.Interface.ToolpathIterator_GetCurrentToolpath(instance.Handle)
-	var cResource Lib3MFToolpath
-	cResource.Interface = instance.Interface
-	cResource.Handle = hResource
-	return cResource, error
+// GetLayerDataUUID retrieves the layerdata's uuid.
+func (inst ToolpathLayerData) GetLayerDataUUID() (string, error) {
+	var neededforuUID C.uint32_t
+	var filledinuUID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerdata_getlayerdatauuid(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforuUID, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizeuUID := neededforuUID
+	bufferuUID := make([]byte, bufferSizeuUID)
+	ret = C.CCall_lib3mf_toolpathlayerdata_getlayerdatauuid(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizeuUID, &filledinuUID, (*C.char)(unsafe.Pointer(&bufferuUID[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferuUID[:(filledinuUID-1)]), nil
+}
+
+// RegisterProfile registers a toolpath profile.
+func (inst ToolpathLayerData) RegisterProfile(profile ToolpathProfile) (uint32, error) {
+	var profileID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerdata_registerprofile(inst.wrapperRef.LibraryHandle, inst.Ref, profile.Ref, &profileID)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(profileID), nil
+}
+
+// RegisterBuildItem registers a Model Build Item.
+func (inst ToolpathLayerData) RegisterBuildItem(buildItem BuildItem) (uint32, error) {
+	var partID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerdata_registerbuilditem(inst.wrapperRef.LibraryHandle, inst.Ref, buildItem.Ref, &partID)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(partID), nil
+}
+
+// WriteHatchData writes hatch data to the layer.
+func (inst ToolpathLayerData) WriteHatchData(profileID uint32, partID uint32, pointData []Position2D) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writehatchdata(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WriteLoop writes loop data to the layer.
+func (inst ToolpathLayerData) WriteLoop(profileID uint32, partID uint32, pointData []Position2D) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writeloop(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WritePolyline writes polyline data to the layer.
+func (inst ToolpathLayerData) WritePolyline(profileID uint32, partID uint32, pointData []Position2D) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writepolyline(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// Finish finishes all writing of the layer and compresses toolpath data.
+func (inst ToolpathLayerData) Finish() error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_finish(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
 }
 
 
-/*************************************************************************************************************************
-Class definition Lib3MFSliceStack
-**************************************************************************************************************************/
+// Toolpath represents a Lib3MF class.
+type Toolpath struct {
+	Resource
+}
 
-type Lib3MFSliceStack struct {
-	Lib3MFResource
-=======
+func (wrapper Wrapper) NewToolpath(r ref) Toolpath {
+	return Toolpath{wrapper.NewResource(r)}
+}
+
+// GetUnits retrieves the unit factor.
+func (inst Toolpath) GetUnits() (float64, error) {
+	var units C.double
+	ret := C.CCall_lib3mf_toolpath_getunits(inst.wrapperRef.LibraryHandle, inst.Ref, &units)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(units), nil
+}
+
+// GetLayerCount retrieves the count of layers.
+func (inst Toolpath) GetLayerCount() (uint32, error) {
+	var count C.uint32_t
+	ret := C.CCall_lib3mf_toolpath_getlayercount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(count), nil
+}
+
+// GetProfileCount retrieves the count of profiles.
+func (inst Toolpath) GetProfileCount() (uint32, error) {
+	var count C.uint32_t
+	ret := C.CCall_lib3mf_toolpath_getprofilecount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(count), nil
+}
+
+// AddLayer adds a new toolpath layer.
+func (inst Toolpath) AddLayer(zMax uint32, path string, modelWriter Writer) (ToolpathLayerData, error) {
+	var layerData ref
+	ret := C.CCall_lib3mf_toolpath_addlayer(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(zMax), (*C.char)(unsafe.Pointer(&[]byte(path)[0])), modelWriter.Ref, &layerData)
+	if ret != 0 {
+		return ToolpathLayerData{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathLayerData(layerData), nil
+}
+
+// GetLayerAttachment retrieves the Attachment of a layer.
+func (inst Toolpath) GetLayerAttachment(index uint32) (Attachment, error) {
+	var attachment ref
+	ret := C.CCall_lib3mf_toolpath_getlayerattachment(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &attachment)
+	if ret != 0 {
+		return Attachment{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewAttachment(attachment), nil
+}
+
+// ReadLayerData reads the toolpath of a layer.
+func (inst Toolpath) ReadLayerData(index uint32) (ToolpathLayerReader, error) {
+	var toolpathReader ref
+	ret := C.CCall_lib3mf_toolpath_readlayerdata(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &toolpathReader)
+	if ret != 0 {
+		return ToolpathLayerReader{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathLayerReader(toolpathReader), nil
+}
+
+// GetLayerPath retrieves the Path of a layer.
+func (inst Toolpath) GetLayerPath(index uint32) (string, error) {
+	var neededforpath C.uint32_t
+	var filledinpath C.uint32_t
+	ret := C.CCall_lib3mf_toolpath_getlayerpath(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforpath, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizepath := neededforpath
+	bufferpath := make([]byte, bufferSizepath)
+	ret = C.CCall_lib3mf_toolpath_getlayerpath(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), bufferSizepath, &filledinpath, (*C.char)(unsafe.Pointer(&bufferpath[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferpath[:(filledinpath-1)]), nil
+}
+
+// GetLayerZMax retrieves the ZMax of a layer.
+func (inst Toolpath) GetLayerZMax(index uint32) (uint32, error) {
+	var zMax C.uint32_t
+	ret := C.CCall_lib3mf_toolpath_getlayerzmax(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &zMax)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(zMax), nil
+}
+
+// GetLayerZ return the z value of a layer in units.
+func (inst Toolpath) GetLayerZ(layerIndex uint32) (uint32, error) {
+	var zValue C.uint32_t
+	ret := C.CCall_lib3mf_toolpath_getlayerz(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(layerIndex), &zValue)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(zValue), nil
+}
+
+// AddProfile adds a new profile to the toolpath.
+func (inst Toolpath) AddProfile(name string) (ToolpathProfile, error) {
+	var profile ref
+	ret := C.CCall_lib3mf_toolpath_addprofile(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &profile)
+	if ret != 0 {
+		return ToolpathProfile{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathProfile(profile), nil
+}
+
+// GetProfile returns a profile of the toolpath.
+func (inst Toolpath) GetProfile(profileIndex uint32) (ToolpathProfile, error) {
+	var profile ref
+	ret := C.CCall_lib3mf_toolpath_getprofile(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileIndex), &profile)
+	if ret != 0 {
+		return ToolpathProfile{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathProfile(profile), nil
+}
+
+// GetProfileUUID returns a profile of the toolpath by UUID.
+func (inst Toolpath) GetProfileUUID(profileUUID string) (ToolpathProfile, error) {
+	var profile ref
+	ret := C.CCall_lib3mf_toolpath_getprofileuuid(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(profileUUID)[0])), &profile)
+	if ret != 0 {
+		return ToolpathProfile{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathProfile(profile), nil
+}
+
+
+// ToolpathIterator represents a Lib3MF class.
+type ToolpathIterator struct {
+	ResourceIterator
+}
+
+func (wrapper Wrapper) NewToolpathIterator(r ref) ToolpathIterator {
+	return ToolpathIterator{wrapper.NewResourceIterator(r)}
+}
+
+// GetCurrentToolpath returns the Toolpath the iterator points at.
+func (inst ToolpathIterator) GetCurrentToolpath() (Toolpath, error) {
+	var resource ref
+	ret := C.CCall_lib3mf_toolpathiterator_getcurrenttoolpath(inst.wrapperRef.LibraryHandle, inst.Ref, &resource)
+	if ret != 0 {
+		return Toolpath{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpath(resource), nil
+}
+
+
 // SliceStack represents a Lib3MF class.
 type SliceStack struct {
 	Resource
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> .theirs
 }
 
 func (wrapper Wrapper) NewSliceStack(r ref) SliceStack {
@@ -9295,6 +8622,16 @@ func (inst Model) GetMultiPropertyGroups() (MultiPropertyGroupIterator, error) {
 	return inst.wrapperRef.NewMultiPropertyGroupIterator(resourceIterator), nil
 }
 
+// GetToolpaths creates a Toolpath instance with all toolpath resources.
+func (inst Model) GetToolpaths() (ToolpathIterator, error) {
+	var resourceIterator ref
+	ret := C.CCall_lib3mf_model_gettoolpaths(inst.wrapperRef.LibraryHandle, inst.Ref, &resourceIterator)
+	if ret != 0 {
+		return ToolpathIterator{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathIterator(resourceIterator), nil
+}
+
 // GetSliceStacks creates a resource iterator instance with all slice stack resources.
 func (inst Model) GetSliceStacks() (SliceStackIterator, error) {
 	var resourceIterator ref
@@ -9315,22 +8652,6 @@ func (inst Model) MergeToModel() (Model, error) {
 	return inst.wrapperRef.NewModel(mergedModelInstance), nil
 }
 
-<<<<<<< .mine
-func (instance *Lib3MFModel) GetToolpaths() (Lib3MFToolpathIterator, error) {
-	hResourceIterator, error := instance.Interface.Model_GetToolpaths(instance.Handle)
-	var cResourceIterator Lib3MFToolpathIterator
-	cResourceIterator.Interface = instance.Interface
-	cResourceIterator.Handle = hResourceIterator
-	return cResourceIterator, error
-}
-
-func (instance *Lib3MFModel) GetSliceStacks() (Lib3MFSliceStackIterator, error) {
-	hResourceIterator, error := instance.Interface.Model_GetSliceStacks(instance.Handle)
-	var cResourceIterator Lib3MFSliceStackIterator
-	cResourceIterator.Interface = instance.Interface
-	cResourceIterator.Handle = hResourceIterator
-	return cResourceIterator, error
-=======
 // AddMeshObject adds an empty mesh object to the model.
 func (inst Model) AddMeshObject() (MeshObject, error) {
 	var meshObjectInstance ref
@@ -9339,13 +8660,6 @@ func (inst Model) AddMeshObject() (MeshObject, error) {
 		return MeshObject{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewMeshObject(meshObjectInstance), nil
-
-
-
-
-
-
->>>>>>> .theirs
 }
 
 // AddComponentsObject adds an empty component object to the model.
@@ -9447,6 +8761,16 @@ func (inst Model) RemoveBuildItem(buildItemInstance BuildItem) error {
 	return nil
 }
 
+// AddToolpath adds an empty Toolpath resource to the model.
+func (inst Model) AddToolpath(unitFactor float64) (Toolpath, error) {
+	var toolpathInstance ref
+	ret := C.CCall_lib3mf_model_addtoolpath(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(unitFactor), &toolpathInstance)
+	if ret != 0 {
+		return Toolpath{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpath(toolpathInstance), nil
+}
+
 // GetMetaDataGroup returns the metadata of the model as MetaDataGroup.
 func (inst Model) GetMetaDataGroup() (MetaDataGroup, error) {
 	var theMetaDataGroup ref
@@ -9467,22 +8791,6 @@ func (inst Model) AddAttachment(uRI string, relationShipType string) (Attachment
 	return inst.wrapperRef.NewAttachment(attachmentInstance), nil
 }
 
-<<<<<<< .mine
-func (instance *Lib3MFModel) AddToolpath(dUnitFactor float64) (Lib3MFToolpath, error) {
-	hToolpathInstance, error := instance.Interface.Model_AddToolpath(instance.Handle, dUnitFactor)
-	var cToolpathInstance Lib3MFToolpath
-	cToolpathInstance.Interface = instance.Interface
-	cToolpathInstance.Handle = hToolpathInstance
-	return cToolpathInstance, error
-}
-
-func (instance *Lib3MFModel) GetMetaDataGroup() (Lib3MFMetaDataGroup, error) {
-	hTheMetaDataGroup, error := instance.Interface.Model_GetMetaDataGroup(instance.Handle)
-	var cTheMetaDataGroup Lib3MFMetaDataGroup
-	cTheMetaDataGroup.Interface = instance.Interface
-	cTheMetaDataGroup.Handle = hTheMetaDataGroup
-	return cTheMetaDataGroup, error
-=======
 // RemoveAttachment removes attachment from the model.
 func (inst Model) RemoveAttachment(attachmentInstance Attachment) error {
 	ret := C.CCall_lib3mf_model_removeattachment(inst.wrapperRef.LibraryHandle, inst.Ref, attachmentInstance.Ref)
@@ -9490,14 +8798,6 @@ func (inst Model) RemoveAttachment(attachmentInstance Attachment) error {
 		return makeError(uint32(ret))
 	}
 	return nil
-
-
-
-
-
-
-
->>>>>>> .theirs
 }
 
 // GetAttachment retrieves an attachment stream object from the model..
@@ -9612,6 +8912,38 @@ func (inst Model) GetKeyStore() (KeyStore, error) {
 	return inst.wrapperRef.NewKeyStore(keyStore), nil
 }
 
+// CreatePersistentSourceFromFile creates an OPC Reader Source from a file.
+func (inst Model) CreatePersistentSourceFromFile(filename string) (PersistentReaderSource, error) {
+	var instance ref
+	ret := C.CCall_lib3mf_model_createpersistentsourcefromfile(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(filename)[0])), &instance)
+	if ret != 0 {
+		return PersistentReaderSource{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewPersistentReaderSource(instance), nil
+}
+
+// CreatePersistentSourceFromBuffer creates an OPC Reader Source from a memory buffer. The memory buffer MUST exist as long as the Source object exists.
+func (inst Model) CreatePersistentSourceFromBuffer(buffer []uint8) (PersistentReaderSource, error) {
+	var instance ref
+	ret := C.CCall_lib3mf_model_createpersistentsourcefrombuffer(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint64_t(len(buffer)), (*C.uint8_t)(unsafe.Pointer(&buffer[0])), &instance)
+	if ret != 0 {
+		return PersistentReaderSource{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewPersistentReaderSource(instance), nil
+}
+
+// CreatePersistentSourceFromCallback creates an OPC Reader Source from a data provided by a callback function. The callbacks MUST exist as long as the source object exists.
+func (inst Model) CreatePersistentSourceFromCallback(theReadCallback ReadCallbackFunc, streamSize uint64, theSeekCallback SeekCallbackFunc, userData uintptr) (PersistentReaderSource, error) {
+	var instance ref
+	ret := C.CCall_lib3mf_model_createpersistentsourcefromcallback(inst.wrapperRef.LibraryHandle, inst.Ref, (C.Lib3MFReadCallback)(unsafe.Pointer(C.Lib3MFReadCallback_cgo)), C.uint64_t(streamSize), (C.Lib3MFSeekCallback)(unsafe.Pointer(C.Lib3MFSeekCallback_cgo)), (C.Lib3MF_pvoid)(userData), &instance)
+	if ret != 0 {
+		return PersistentReaderSource{}, makeError(uint32(ret))
+	}
+	readCallbackFunc = theReadCallback
+	seekCallbackFunc = theSeekCallback
+	return inst.wrapperRef.NewPersistentReaderSource(instance), nil
+}
+
 
 // GetLibraryVersion retrieves the binary version of this library.
 func (wrapper Wrapper) GetLibraryVersion() (uint32, uint32, uint32, error) {
@@ -9643,35 +8975,6 @@ func (wrapper Wrapper) GetPrereleaseInformation() (bool, string, error) {
 	return bool(hasPrereleaseInfo), string(bufferprereleaseInfo[:(filledinprereleaseInfo-1)]), nil
 }
 
-<<<<<<< .mine
-func (instance *Lib3MFModel) CreatePersistentSourceFromFile(sFilename string) (Lib3MFPersistentReaderSource, error) {
-	hInstance, error := instance.Interface.Model_CreatePersistentSourceFromFile(instance.Handle, sFilename)
-	var cInstance Lib3MFPersistentReaderSource
-	cInstance.Interface = instance.Interface
-	cInstance.Handle = hInstance
-	return cInstance, error
-}
-
-func (instance *Lib3MFModel) CreatePersistentSourceFromBuffer(Buffer []uint8) (Lib3MFPersistentReaderSource, error) {
-	hInstance, error := instance.Interface.Model_CreatePersistentSourceFromBuffer(instance.Handle, Buffer)
-	var cInstance Lib3MFPersistentReaderSource
-	cInstance.Interface = instance.Interface
-	cInstance.Handle = hInstance
-	return cInstance, error
-}
-
-func (instance *Lib3MFModel) CreatePersistentSourceFromCallback(pTheReadCallback int64, nStreamSize uint64, pTheSeekCallback int64, nUserData uint64) (Lib3MFPersistentReaderSource, error) {
-	hInstance, error := instance.Interface.Model_CreatePersistentSourceFromCallback(instance.Handle, pTheReadCallback, nStreamSize, pTheSeekCallback, nUserData)
-	var cInstance Lib3MFPersistentReaderSource
-	cInstance.Interface = instance.Interface
-	cInstance.Handle = hInstance
-	return cInstance, error
-}
-
-func (instance *Lib3MFWrapper) GetLibraryVersion() (uint32, uint32, uint32, error) {
-	nMajor, nMinor, nMicro, error := instance.Interface.GetLibraryVersion()
-	return nMajor, nMinor, nMicro, error
-=======
 // GetBuildInformation retrieves build information of this library.
 func (wrapper Wrapper) GetBuildInformation() (bool, string, error) {
 	var hasBuildInfo C.bool
@@ -9688,18 +8991,6 @@ func (wrapper Wrapper) GetBuildInformation() (bool, string, error) {
 		return false, "", makeError(uint32(ret))
 	}
 	return bool(hasBuildInfo), string(bufferbuildInformation[:(filledinbuildInformation-1)]), nil
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> .theirs
 }
 
 // GetSpecificationVersion retrieves whether a specification is supported, and if so, which version.

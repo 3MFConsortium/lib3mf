@@ -136,6 +136,10 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND 3003 /** A resource data has not been found */
 #define LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED 3004 /** A Key or Conentent encryption callback has not been registered */
 #define LIB3MF_ERROR_INVALIDKEYSIZE 3005 /** The key siue is invalid */
+#define LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER 4000 /** Not in toolpath header writing mode */
+#define LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA 4001 /** Not in toolpath data writing mode */
+#define LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN 4002 /** Toolpath has already been written out */
+#define LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT 4003 /** Toolpath has an invalid number of points */
 
 /*************************************************************************************************************************
  Error strings for Lib3MF
@@ -187,6 +191,10 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
     case LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: return "A resource data has not been found";
     case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: return "A Key or Conentent encryption callback has not been registered";
     case LIB3MF_ERROR_INVALIDKEYSIZE: return "The key siue is invalid";
+    case LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER: return "Not in toolpath header writing mode";
+    case LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA: return "Not in toolpath data writing mode";
+    case LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "Toolpath has already been written out";
+    case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "Toolpath has an invalid number of points";
     default: return "unknown error";
   }
 }
@@ -197,6 +205,7 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
 
 typedef Lib3MFHandle Lib3MF_Base;
 typedef Lib3MFHandle Lib3MF_Writer;
+typedef Lib3MFHandle Lib3MF_PersistentReaderSource;
 typedef Lib3MFHandle Lib3MF_Reader;
 typedef Lib3MFHandle Lib3MF_PackagePart;
 typedef Lib3MFHandle Lib3MF_Resource;
@@ -229,6 +238,11 @@ typedef Lib3MFHandle Lib3MF_Texture2D;
 typedef Lib3MFHandle Lib3MF_BuildItem;
 typedef Lib3MFHandle Lib3MF_BuildItemIterator;
 typedef Lib3MFHandle Lib3MF_Slice;
+typedef Lib3MFHandle Lib3MF_ToolpathProfile;
+typedef Lib3MFHandle Lib3MF_ToolpathLayerReader;
+typedef Lib3MFHandle Lib3MF_ToolpathLayerData;
+typedef Lib3MFHandle Lib3MF_Toolpath;
+typedef Lib3MFHandle Lib3MF_ToolpathIterator;
 typedef Lib3MFHandle Lib3MF_SliceStack;
 typedef Lib3MFHandle Lib3MF_Consumer;
 typedef Lib3MFHandle Lib3MF_AccessRight;
@@ -256,6 +270,13 @@ namespace Lib3MF {
   enum class eSlicesMeshResolution : Lib3MF_int32 {
     Fullres = 0,
     Lowres = 1
+  };
+  
+  enum class ePersistentReaderSourceType : Lib3MF_int32 {
+    Unknown = 0,
+    FileOnDisk = 1,
+    MemoryBuffer = 2,
+    Callback = 3
   };
   
   enum class eModelUnit : Lib3MF_int32 {
@@ -342,6 +363,13 @@ namespace Lib3MF {
     NoBlendMethod = 0,
     Mix = 1,
     Multiply = 2
+  };
+  
+  enum class eToolpathSegmentType : Lib3MF_int32 {
+    Unknown = 0,
+    Hatch = 1,
+    Loop = 2,
+    Polyline = 3
   };
   
   enum class eEncryptionAlgorithm : Lib3MF_int32 {
@@ -520,6 +548,7 @@ namespace Lib3MF {
 // define legacy C-names for enums, structs and function types
 typedef Lib3MF::ePropertyType eLib3MFPropertyType;
 typedef Lib3MF::eSlicesMeshResolution eLib3MFSlicesMeshResolution;
+typedef Lib3MF::ePersistentReaderSourceType eLib3MFPersistentReaderSourceType;
 typedef Lib3MF::eModelUnit eLib3MFModelUnit;
 typedef Lib3MF::eObjectType eLib3MFObjectType;
 typedef Lib3MF::eTextureType eLib3MFTextureType;
@@ -530,6 +559,7 @@ typedef Lib3MF::eBeamLatticeClipMode eLib3MFBeamLatticeClipMode;
 typedef Lib3MF::eBeamLatticeBallMode eLib3MFBeamLatticeBallMode;
 typedef Lib3MF::eProgressIdentifier eLib3MFProgressIdentifier;
 typedef Lib3MF::eBlendMethod eLib3MFBlendMethod;
+typedef Lib3MF::eToolpathSegmentType eLib3MFToolpathSegmentType;
 typedef Lib3MF::eEncryptionAlgorithm eLib3MFEncryptionAlgorithm;
 typedef Lib3MF::eWrappingAlgorithm eLib3MFWrappingAlgorithm;
 typedef Lib3MF::eMgfAlgorithm eLib3MFMgfAlgorithm;

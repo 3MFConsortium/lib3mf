@@ -137,10 +137,10 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND 3003 /** A resource data has not been found */
 #define LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED 3004 /** A Key or Conentent encryption callback has not been registered */
 #define LIB3MF_ERROR_INVALIDKEYSIZE 3005 /** The key siue is invalid */
-#define LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER 4000
-#define LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA 4001
-#define LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN 4002
-#define LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT 4003
+#define LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER 4000 /** Not in toolpath header writing mode */
+#define LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA 4001 /** Not in toolpath data writing mode */
+#define LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN 4002 /** Toolpath has already been written out */
+#define LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT 4003 /** Toolpath has an invalid number of points */
 
 /*************************************************************************************************************************
  Error strings for Lib3MF
@@ -192,6 +192,10 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
     case LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: return "A resource data has not been found";
     case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: return "A Key or Conentent encryption callback has not been registered";
     case LIB3MF_ERROR_INVALIDKEYSIZE: return "The key siue is invalid";
+    case LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER: return "Not in toolpath header writing mode";
+    case LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA: return "Not in toolpath data writing mode";
+    case LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "Toolpath has already been written out";
+    case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "Toolpath has an invalid number of points";
     default: return "unknown error";
   }
 }
