@@ -576,8 +576,14 @@ _zip_find_central_dir(zip_t *za, zip_uint64_t len) {
     }
     zip_error_set(&error, ZIP_ER_NOZIP, 0);
 
+    // Check for 32bit overflow
+    zip_uint64_t zipBufferLeft = _zip_buffer_left(buffer);
+    uint64_t maxMemSize = SIZE_MAX;
+    if (zipBufferLeft >= maxMemSize)
+        return NULL;
+
     match = _zip_buffer_get(buffer, 0);
-    while ((match = _zip_memmem(match, _zip_buffer_left(buffer) - (EOCDLEN - 4), (const unsigned char *)EOCD_MAGIC, 4)) != NULL) {
+    while ((match = _zip_memmem(match, (size_t) (_zip_buffer_left(buffer) - (EOCDLEN - 4)), (const unsigned char *)EOCD_MAGIC, 4)) != NULL) {
         _zip_buffer_set_offset(buffer, (zip_uint64_t)(match - _zip_buffer_data(buffer)));
         if ((cdirnew = _zip_read_cdir(za, buffer, (zip_uint64_t)buf_offset, &error)) != NULL) {
             if (cdir) {

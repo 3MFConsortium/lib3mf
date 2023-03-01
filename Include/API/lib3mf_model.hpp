@@ -73,6 +73,8 @@ public:
 
 	NMR::CModel& model();
 
+	static IResource* createIResourceFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass);
+
 	/**
 	* Public member functions to implement.
 	*/
@@ -92,6 +94,8 @@ public:
 	IWriter * QueryWriter(const std::string & sWriterClass) override;
 
 	IReader * QueryReader(const std::string & sReaderClass) override;
+
+	IResource* GetResourceByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
 	ITexture2D * GetTexture2DByID(const Lib3MF_uint32 nUniqueResourceID) override;
 

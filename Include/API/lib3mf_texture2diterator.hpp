@@ -76,8 +76,9 @@ public:
 	* Public member functions to implement.
 	*/
 
-	ITexture2D * GetCurrentTexture2D ();
+	ITexture2D * GetCurrentTexture2D() override;
 
+	IResource * GetCurrent() override;
 };
 
 } // namespace Impl

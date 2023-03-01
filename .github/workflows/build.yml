@@ -4,7 +4,7 @@ jobs:
   build-linux:
     runs-on: ubuntu-18.04
     steps:
-      - run: sudo apt install -y valgrind
+      - run: sudo apt install -y valgrind uuid-dev
       - uses: actions/checkout@v2
         with:
           submodules: true
@@ -105,6 +105,27 @@ jobs:
         with:
           name: lib3mf.debug.dll
           path: build/Debug/lib3mf.dll
+  build-windows-32bit:
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - run: ./cmake/GenerateVS2019_32bit.bat
+      - run: cmake --build . --config Release
+        working-directory: ./build_32bit
+      - run: ctest -V
+        working-directory: ./build_32bit
+      - name: Archive Windows 32 bit Release binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: lib3mf_32bit.dll
+          path: build_32bit/Release/lib3mf.dll
+      - name: Archive Windows 32 bit Release lib
+        uses: actions/upload-artifact@v2
+        with:
+          name: lib3mf_32bit.lib
+          path: build_32bit/Release/lib3mf.lib
   build-mingw-w64:
     runs-on: windows-2019
     steps:

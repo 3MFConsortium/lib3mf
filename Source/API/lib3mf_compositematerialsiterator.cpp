@@ -46,3 +46,8 @@ ICompositeMaterials * CCompositeMaterialsIterator::GetCurrentCompositeMaterials 
 	return new CCompositeMaterials(std::dynamic_pointer_cast<NMR::CModelCompositeMaterialsResource>(GetCurrentResource()));
 }
 
+IResource * CCompositeMaterialsIterator::GetCurrent()
+{
+	return GetCurrentCompositeMaterials();
+}
+

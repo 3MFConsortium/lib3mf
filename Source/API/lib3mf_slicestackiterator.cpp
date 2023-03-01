@@ -44,3 +44,8 @@ ISliceStack * CSliceStackIterator::GetCurrentSliceStack ()
 {
 	return new CSliceStack(std::dynamic_pointer_cast<NMR::CModelSliceStack>(GetCurrentResource()));
 }
+
+IResource * CSliceStackIterator::GetCurrent()
+{
+	return GetCurrentSliceStack();
+}

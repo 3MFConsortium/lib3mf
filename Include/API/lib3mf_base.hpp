@@ -71,20 +71,19 @@ public:
 	* Put additional public members here. They will not be visible in the external API.
 	*/
 
-	bool GetLastErrorMessage(std::string & sErrorMessage);
+	bool GetLastErrorMessage(std::string & sErrorMessage) override;
 
-	void ClearErrorMessages();
+	void ClearErrorMessages() override;
 
-	void RegisterErrorMessage(const std::string & sErrorMessage);
+	void RegisterErrorMessage(const std::string & sErrorMessage) override;
 
-	void IncRefCount();
+	void IncRefCount() override;
 
-	bool DecRefCount();
+	bool DecRefCount() override;
 
 	/**
 	* Public member functions to implement.
 	*/
-
 };
 
 } // namespace Impl

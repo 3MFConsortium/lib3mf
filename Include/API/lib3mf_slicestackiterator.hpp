@@ -76,7 +76,9 @@ public:
 	* Public member functions to implement.
 	*/
 
-	ISliceStack * GetCurrentSliceStack ();
+	ISliceStack * GetCurrentSliceStack() override;
+
+	IResource * GetCurrent() override;
 
 };
 

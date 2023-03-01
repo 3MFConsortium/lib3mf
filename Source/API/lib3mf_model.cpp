@@ -100,6 +100,54 @@ NMR::CModel& CModel::model()
 	return *m_model;
 }
 
+IResource* CModel::createIResourceFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass)
+{
+	// this is really ugly and should be automated by mapping of Lib3MF::Impl-class to NMR-class
+	if (!pResource.get())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelTexture2DResource>(pResource)) {
+		return new CTexture2D(p);
+	}
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelBaseMaterialResource>(pResource)) {
+		return new CBaseMaterialGroup(p);
+	}
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelColorGroupResource>(pResource)) {
+		return new CColorGroup(p);
+	}
+
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelMeshObject>(pResource)) {
+		return new CMeshObject(p);
+	}
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelComponentsObject>(pResource)) {
+		return new CComponentsObject(p);
+	}
+
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelCompositeMaterialsResource>(pResource)) {
+		return new CCompositeMaterials(p);
+	}
+	
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelMultiPropertyGroupResource>(pResource)) {
+		return new CMultiPropertyGroup(p);
+	}
+
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelTexture2DGroupResource>(pResource)) {
+		return new CTexture2DGroup(p);
+	}
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelTexture2DResource>(pResource)) {
+		return new CTexture2D(p);
+	}
+
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelSliceStack>(pResource)) {
+		return new CSliceStack(p);
+	}
+
+	if (bFailIfUnkownClass)
+		throw ELib3MFInterfaceException(NMR_ERROR_UNKNOWNMODELRESOURCE);
+
+	return nullptr;
+}
+
 IPackagePart* CModel::RootModelPart()
 {
 	return new CPackagePart(model().rootModelPath());
@@ -138,6 +186,16 @@ IWriter * CModel::QueryWriter (const std::string & sWriterClass)
 IReader * CModel::QueryReader (const std::string & sReaderClass)
 {
 	return new CReader(sReaderClass, m_model);
+}
+
+IResource* CModel::GetResourceByID(const Lib3MF_uint32 nUniqueResourceID)
+{
+	NMR::PModelResource pResource = model().findResource(nUniqueResourceID);
+	if (pResource) {
+		return createIResourceFromModelResource(pResource, true);
+	}
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDRESOURCE);
 }
 
 ITexture2D * CModel::GetTexture2DByID(const Lib3MF_uint32 nUniqueResourceID)

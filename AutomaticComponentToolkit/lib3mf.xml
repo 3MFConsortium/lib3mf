@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component xmlns="http://schemas.autodesk.com/netfabb/automaticcomponenttoolkit/2018" libraryname="the 3MF Library" namespace="Lib3MF" copyright="3MF Consortium (Original Author)" year="2019" basename="lib3mf" version="2.2.0">
+<component xmlns="http://schemas.autodesk.com/netfabb/automaticcomponenttoolkit/2018" libraryname="the 3MF Library" namespace="Lib3MF" copyright="3MF Consortium (Original Author)" year="2019" basename="lib3mf" version="2.3.0-develop">
 
 
 	<license>
@@ -77,12 +77,16 @@
 		<error name="INVALIDPROPERTYCOUNT" code="132" description="Invalid property count."/>
 		<error name="UNKOWNPROGRESSIDENTIFIER" code="140" description="A progress identifier is unknown"/>
 		<error name="ELEMENTCOUNTEXCEEDSLIMIT" code="141" description="An element buffer exceeds its spec limit"/>
+		<error name="INVALIDRESOURCE" code="142" description="A resource is invalid"/>
+
 		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices"/>		
 		<error name="INVALIDKEYSTORE" code="3000" description="The keystore object is invalid"/>
 		<error name="INVALIDKEYSTORECONSUMER" code="3001" description="The consumer keystore object is invalid"/>
 		<error name="KEYSTORECONSUMERNOTFOUND" code="3002" description="A consumer has not been found"/>
 		<error name="KEYSTORERESOURCEDATANOTFOUND" code="3003" description="A resource data has not been found"/>
 		<error name="SECURECONTEXTNOTREGISTERED" code="3004" description="A Key or Conentent encryption callback has not been registered"/>
+		<error name="INVALIDKEYSIZE" code="3005" description="The key siue is invalid"/>
+
 		<error name="TOOLPATH_NOTWRITINGHEADER" code="4000" description="Not in toolpath header writing mode" />
 		<error name="TOOLPATH_NOTWRITINGDATA" code="4001" description="Not in toolpath data writing mode" />
 		<error name="TOOLPATH_DATAHASBEENWRITTEN" code="4002" description="Toolpath has already been written out" />
@@ -296,9 +300,12 @@
 	</functiontype>
 
 	<class name="Base">
+		<method name="ClassTypeId" description="Get Class Type Id">
+			<param name="ClassTypeId" type="uint64" pass="return" description="Class type as a 64 bits integer" />
+		</method>
 	</class>
 
-	<class name="Writer">
+	<class name="Writer" parent="Base">
 		<method name="WriteToFile" description="Writes out the model as file. The file type is specified by the Model Writer class.">
 			<param name="Filename" type="string" pass="in" description="Filename to write into"/>
 		</method>
@@ -365,7 +372,7 @@
 	</class>
 
 
-	<class name="Reader">
+	<class name="Reader" parent="Base">
 	
 		<method name="ReadFromPersistentSource" description="Reads a model from a persistent source object. The object will be referenced until the Model is destroyed or cleared.">
 			<param name="Source" type="class" class="PersistentReaderSource" pass="in" description="Source object to read from"/>				
@@ -418,7 +425,7 @@
 		</method>
   </class>
 
-	<class name="PackagePart">
+	<class name="PackagePart" parent="Base">
 		<method name="GetPath" description="Returns the absolute path of this PackagePart.">
 			<param name="Path" type="string" pass="return" description="Returns the absolute path of this PackagePart"/>
 		</method>
@@ -427,7 +434,7 @@
 		</method>
 	</class>
 	
-	<class name="Resource">
+	<class name="Resource" parent="Base">
 		<method name="GetResourceID" description="Retrieves the unique id of this resource within a package. This function will be removed in a later release in favor of GetUniqueResourceID">
 			<param name="UniqueResourceID" type="uint32" pass="return" description="Retrieves the unique id of this resource within a package."/>
 		</method>
@@ -445,7 +452,7 @@
 		</method>
 	</class>
 
-	<class name="ResourceIterator">
+	<class name="ResourceIterator" parent="Base">
 		<method name="MoveNext" description="Iterates to the next resource in the list.">
 			<param name="HasNext" type="bool" pass="return" description="Iterates to the next resource in the list."/>
 		</method>
@@ -523,7 +530,7 @@
 		</method>
 	</class>
 
-	<class name="MetaData">
+	<class name="MetaData" parent="Base">
 		<method name="GetNameSpace" description="returns the namespace URL of the metadata">
 			<param name="NameSpace" type="string" pass="return" description="the namespace URL of the metadata"/>
 		</method>
@@ -559,7 +566,7 @@
 		</method>
 	</class>
 
-	<class name="MetaDataGroup">
+	<class name="MetaDataGroup" parent="Base">
 		<method name="GetMetaDataCount" description="returns the number of metadata in this metadatagroup">
 			<param name="Count" type="uint32" pass="return" description="returns the number metadata"/>
 		</method>
@@ -731,7 +738,7 @@
 		</method>
 	</class>
 
-	<class name="BeamLattice">
+	<class name="BeamLattice" parent="Base">
 		<method name="GetMinLength" description="Returns the minimal length of beams for the beamlattice.">
 			<param name="MinLength" type="double" pass="return" description="minimal length of beams for the beamlattice"/>
 		</method>
@@ -815,7 +822,7 @@
 		</method>
 	</class>
 
-	<class name="Component">
+	<class name="Component" parent="Base">
 		<method name="GetObjectResource" description="Returns the Resource Instance of the component.">
 			<param name="ObjectResource" type="handle" class="Object" pass="return" description="filled with the Resource Instance."/>
 		</method>
@@ -855,7 +862,7 @@
 		</method>
 	</class>
 
-	<class name="BeamSet">
+	<class name="BeamSet" parent="Base">
 		<method name="SetName" description="Sets a beamset's name string">
 			<param name="Name" type="string" pass="in" description="new name of the beamset."/>
 		</method>
@@ -1029,7 +1036,7 @@
 		</method>
 	</class>
 
-	<class name="Attachment">
+	<class name="Attachment" parent="Base">
 		<method name="GetPath" description="Retrieves an attachment's package path. This function will be removed in a later release.">
 			<param name="Path" type="string" pass="return" description="returns the attachment's package path string"/>
 		</method>
@@ -1048,10 +1055,10 @@
 		<method name="WriteToFile" description="Writes out the attachment as file.">
 			<param name="FileName" type="string" pass="in" description="file to write into."/>
 		</method>
-		<method name="ReadFromFile" description="Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF packege, or via the WriteToFile or WriteToBuffer-methods.">
+		<method name="ReadFromFile" description="Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.">
 			<param name="FileName" type="string" pass="in" description="file to read from."/>
 		</method>
-		<method name="ReadFromCallback" description="Reads a model and from the data provided by a callback function">
+		<method name="ReadFromCallback" description="Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.">
 			<param name="TheReadCallback" type="functiontype" class="ReadCallback" pass="in" description="Callback to call for reading a data chunk"/>
 			<param name="StreamSize" type="uint64" pass="in" description="number of bytes the callback returns"/>
 			<param name="TheSeekCallback" type="functiontype" class="SeekCallback" pass="in" description="Callback to call for seeking in the stream."/>
@@ -1063,7 +1070,7 @@
 		<method name="WriteToBuffer" description="Writes out the attachment into a buffer">
 			<param name="Buffer" type="basicarray" class="uint8" pass="out" description="Buffer to write into"/>
 		</method>
-		<method name="ReadFromBuffer" description="Reads an attachment from a memory buffer">
+		<method name="ReadFromBuffer" description="Reads an attachment from a memory buffer. This buffer is immediatly read (in contrast to the ReadFromCallback and ReadFromFile-methods).">
 			<param name="Buffer" type="basicarray" class="uint8" pass="in" description="Buffer to read from"/>
 		</method>
 		<!--
@@ -1109,7 +1116,7 @@
 	</class>
 
 
-	<class name="BuildItem">
+	<class name="BuildItem" parent="Base">
 		<method name="GetObjectResource" description="Retrieves the object resource associated to a build item">
 			<param name="ObjectResource" type="handle" class="Object" pass="return" description="returns the associated resource instance"/>
 		</method>
@@ -1147,7 +1154,7 @@
 	</class>
 
 
-	<class name="BuildItemIterator">
+	<class name="BuildItemIterator" parent="Base">
 		<method name="MoveNext" description="Iterates to the next build item in the list.">
 			<param name="HasNext" type="bool" pass="return" description="Iterates to the next build item in the list."/>
 		</method>
@@ -1165,7 +1172,7 @@
 		</method>
 	</class>
 
-	<class name="Slice">
+	<class name="Slice" parent="Base">
 		<method name="SetVertices" description="Set all vertices of a slice. All polygons will be cleared.">
 			<param name="Vertices" type="structarray" class="Position2D" pass="in" description="contains the positions."/>
 		</method>
@@ -1431,7 +1438,7 @@
 		</method>
 	</class>
 
-	<class name="Consumer">
+	<class name="Consumer" parent="Base">
 		<method name="GetConsumerID" description="Gets the consumerid">
 			<param name="ConsumerID" type="string" pass="return" description="A unique identifier for the consumers"/>
 		</method>
@@ -1464,7 +1471,7 @@
 		<option name="SHA256" value="256" description="http://www.w3.org/2001/04/xmlenc#sha256"/>
 	</enum>
 	
-	<class name="AccessRight">
+	<class name="AccessRight" parent="Base">
 		<method name="GetConsumer" description="Gets the consumer associated with this access right">
 			<param name="Consumer" type="class" class="Consumer" pass="return" description="The consumer instance"/>
 		</method>
@@ -1487,7 +1494,7 @@
 		<param name="Status" type="uint64" pass="return" description="The needed/encrypted/decrypted bytes when succeed or zero when error."/>
 	</functiontype>
 
-	<class name="ContentEncryptionParams">
+	<class name="ContentEncryptionParams" parent="Base">
 		<method name="GetEncryptionAlgorithm" description="Returns the encryption method to be used in this encryption process">
 			<param name="Algorithm" type="enum" class="EncryptionAlgorithm" pass="return" descripton="The encryption algorith"/>
 		</method>
@@ -1527,7 +1534,7 @@
 		<option name="Deflate" value="1" description="Deflate compression applied"/>
 	</enum>
 	
-	<class name="ResourceData">
+	<class name="ResourceData" parent="Base">
 		<method name="GetPath" description="Gets the encrypted part path">
 			<param name="Path" type="class" class="PackagePart" pass="return" description="The part path"/>
 		</method>
@@ -1542,7 +1549,7 @@
 		</method>
 	</class>
 
-	<class name="ResourceDataGroup">
+	<class name="ResourceDataGroup" parent="Base">
 		<method name="GetKeyUUID" description="Sets the resourcedatagroup keyuuid">
 			<param name="UUID" type="string" pass="return" description="The new resourcedatagroup keyuuid."/>
 		</method>
@@ -1561,7 +1568,7 @@
 			<param name="Consumer" type="class" class="Consumer" pass="in" description="The Consumer instance"/>
 		</method>
 	</class>
-	<class name="KeyStore">
+	<class name="KeyStore" parent="Base">
 		<method name="AddConsumer" description="Adds a consumer to the keystore">
 			<param name="ConsumerID" type="string" pass="in" description="A unique identifier for the consumer"/>
 			<param name="KeyID" type="string" pass="in" description="The id of the key of the consumer"/>
@@ -1630,7 +1637,7 @@
 		</method>
 	</class>
 
-	<class name="Model">
+	<class name="Model" parent="Base">
 		<method name="RootModelPart" description="Returns the PackagePart within the OPC package that holds the root model.">
 			<param name="RootModelPart" type="class" class="PackagePart" pass="return" description="the PackagePart within the OPC package that holds the model-file"/>
 		</method>
@@ -1657,6 +1664,10 @@
 		<method name="QueryReader" description="creates a model reader instance for a specific file type">
 			<param name="ReaderClass" type="string" pass="in" description=" string identifier for the file type"/>
 			<param name="ReaderInstance" type="handle" class="Reader" pass="return" description=" string identifier for the file type"/>
+		</method>
+		<method name="GetResourceByID" description="finds a model resource by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
+			<param name="Resource" type="handle" class="Resource" pass="return" description="returns the resource instance"/>
 		</method>
 		<method name="GetTexture2DByID" description="finds a model texture by its UniqueResourceID">
 			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
@@ -1861,17 +1872,17 @@
 		
 	</class>
 
-	<global baseclassname="Base" releasemethod="Release" acquiremethod="Acquire" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod="GetLastError" prereleasemethod="GetPrereleaseInformation" buildinfomethod="GetBuildInformation" symbollookupmethod="GetSymbolLookupMethod">
+	<global baseclassname="Base" stringoutclassname="Base"  releasemethod="Release" acquiremethod="Acquire" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod="GetLastError" prereleasemethod="GetPrereleaseInformation" buildinfomethod="GetBuildInformation" symbollookupmethod="GetSymbolLookupMethod" classtypeidmethod="ClassTypeId">
 		<method name="GetLibraryVersion" description="retrieves the binary version of this library.">
 			<param name="Major" type="uint32" pass="out" description="returns the major version of this library"/>
 			<param name="Minor" type="uint32" pass="out" description="returns the minor version of this library"/>
 			<param name="Micro" type="uint32" pass="out" description="returns the micro version of this library"/>
 		</method>
-		<method name="GetPrereleaseInformation" description="retrieves prerelease information of this library.">
+		<method name="GetPrereleaseInformation" description="retrieves prerelease information of this library." disablestringoutcache="1">
 			<param name="HasPrereleaseInfo" type="bool" pass="return" description="Does the library provide prerelease version?"/>
 			<param name="PrereleaseInfo" type="string" pass="out" description="retrieves prerelease information of this library."/>
 		</method>
-		<method name="GetBuildInformation" description="retrieves build information of this library.">
+		<method name="GetBuildInformation" description="retrieves build information of this library." disablestringoutcache="1">
 			<param name="HasBuildInfo" type="bool" pass="return" description="Does the library provide build version?"/>
 			<param name="BuildInformation" type="string" pass="out" description="retrieves build information of this library."/>
 		</method>
@@ -1902,7 +1913,7 @@
 		<method name="GetSymbolLookupMethod" description="Returns the address of the SymbolLookupMethod">
 			<param name="SymbolLookupMethod" type="pointer" pass="return" description="Address of the SymbolAddressMethod" />
 		</method>
-		<method name="RetrieveProgressMessage" description="Return an English text for a progress identifier.|Note: this is the only function you can call from your callback function.">
+		<method name="RetrieveProgressMessage" description="Return an English text for a progress identifier.|Note: this is the only function you can call from your callback function."  disablestringoutcache="1">
 			<param name="TheProgressIdentifier" type="enum" class="ProgressIdentifier" pass="in" description="the progress identifier that is passed to the callback function"/>
 			<param name="ProgressMessage" type="string" pass="out" description="English text for the progress identifier"/>
 		</method>

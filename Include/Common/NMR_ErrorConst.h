@@ -299,8 +299,11 @@ NMR_ErrorConst.h defines all error code constants.
 // Failed to initialize a zlib buffer
 #define NMR_ERROR_COULDNOTINITDEFLATE 0x1052
 
+// Too many slices
+#define NMR_ERROR_TOOMANYSLICES 0x1053
+
 // Duplicate value
-#define NMR_ERROR_DUPLICATEVALUE 0x1053
+#define NMR_ERROR_DUPLICATEVALUE 0x1054
 
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
@@ -1222,17 +1225,20 @@ Model error codes (0x8XXX)
 // A beamset identifier is not unique
 #define NMR_ERROR_BEAMSET_IDENTIFIER_NOT_UNIQUE 0x810B
 
+// A transform attribute is duplicated
+#define NMR_ERROR_DUPLICATETRANSFORM 0x810C
+// A component resource is invalid
+#define NMR_ERROR_INVALIDCOMPONENTRESOURCE 0x810D
 // Invalid Mesh Binary Path
-#define NMR_ERROR_INVALIDMESHBINARYPATH 0x810C
-
+#define NMR_ERROR_INVALIDMESHBINARYPATH 0x810E
 // Duplicate Mesh Binary Path
-#define NMR_ERROR_DUPLICATEMESHBINARYPATH 0x810D
+#define NMR_ERROR_DUPLICATEMESHBINARYPATH 0x810F
 
 // Invalid XML attribute in namespace
-#define NMR_ERROR_INVALIDBINARYELEMENTID 0x810E
+#define NMR_ERROR_INVALIDBINARYELEMENTID 0x8110
 
 // No Binary stream available
-#define NMR_ERROR_NOBINARYSTREAMAVAILABLE 0x810F
+#define NMR_ERROR_NOBINARYSTREAMAVAILABLE 0x8111
 
 // Inconsistent binary stream count
 #define NMR_ERROR_INCONSISTENTBINARYSTREAMCOUNT 0x8110

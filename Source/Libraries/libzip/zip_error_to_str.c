@@ -39,13 +39,16 @@
 #define _ZIP_COMPILING_DEPRECATED
 #include "zipint.h"
 
+#define MAX_ERRORSTR_LEN (1ULL << 31)
 
 ZIP_EXTERN int
 zip_error_to_str(char *buf, zip_uint64_t len, int ze, int se) {
     const char *zs, *ss;
 
+    size_t maxLen = (size_t) ((len < MAX_ERRORSTR_LEN) ? len : MAX_ERRORSTR_LEN);
+
     if (ze < 0 || ze >= _zip_nerr_str)
-        return snprintf(buf, len, "Unknown error %d", ze);
+        return snprintf(buf, maxLen, "Unknown error %d", ze);
 
     zs = _zip_err_str[ze];
 
@@ -62,5 +65,5 @@ zip_error_to_str(char *buf, zip_uint64_t len, int ze, int se) {
         ss = NULL;
     }
 
-    return snprintf(buf, len, "%s%s%s", zs, (ss ? ": " : ""), (ss ? ss : ""));
+    return snprintf(buf, maxLen, "%s%s%s", zs, (ss ? ": " : ""), (ss ? ss : ""));
 }

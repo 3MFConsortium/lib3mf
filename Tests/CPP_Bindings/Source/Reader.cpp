@@ -126,4 +126,27 @@ namespace Lib3MF
 		ASSERT_EQ(28, model->GetObjects()->Count());
 	}
 
+	TEST_F(Reader, DuplicateStartPart)
+	{
+		// the /.rels-file of this 3MF contains two Relationship-entries with the StartPart relationship.
+		// The 3MFReader should raise a warning when reading this file.
+		Reader::reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "CS-1111_3dmodel-e1r1_other-e1r1.3mf");
+
+		CheckReaderWarnings(Reader::reader3MF, 1);
+	}
+
+	TEST_F(Reader, BrokeComposite) {
+		auto reader = model->QueryReader("3mf");
+		ASSERT_SPECIFIC_THROW(reader->ReadFromFile(sTestFilesPath + "/Reader/" + "DOS-FUZ-LIB3MF.3mf");, ELib3MFException);
+	}
+
+	TEST_F(Reader, DuplicateTransformComponent) {
+		auto reader = model->QueryReader("3mf");
+		ASSERT_SPECIFIC_THROW(reader->ReadFromFile(sTestFilesPath + "/Reader/" + "GEN-C-ADA-COMPONENT-TRANSFORM-0.3mf"), ELib3MFException);
+	}
+
+	TEST_F(Reader, DuplicateTransformBuildItem) {
+		auto reader = model->QueryReader("3mf");
+		ASSERT_SPECIFIC_THROW(reader->ReadFromFile(sTestFilesPath + "/Reader/" + "GEN-M-ADA-ITEM-TRANSFORM-0.3mf"), ELib3MFException);
+	}
 }

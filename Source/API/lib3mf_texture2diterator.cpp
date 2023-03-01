@@ -47,3 +47,8 @@ ITexture2D * CTexture2DIterator::GetCurrentTexture2D ()
 	return new CTexture2D(std::dynamic_pointer_cast<NMR::CModelTexture2DResource>(GetCurrentResource()));
 }
 
+IResource * CTexture2DIterator::GetCurrent()
+{
+	return GetCurrentTexture2D();
+}
+
