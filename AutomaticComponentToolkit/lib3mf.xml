@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component xmlns="http://schemas.autodesk.com/netfabb/automaticcomponenttoolkit/2018"
 	libraryname="the 3MF Library" namespace="Lib3MF" copyright="3MF Consortium (Original Author)"
-	year="2019" basename="lib3mf" version="2.3.0-volumetric">
+	year="2023" basename="lib3mf" version="2.4.0-implicit">
 
 	<license>
 		<line value="All rights reserved." />
