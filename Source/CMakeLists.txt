@@ -25,7 +25,6 @@ set(SRCS_PLATFORM
 )
 
 file(GLOB_RECURSE SOURCES LIST_DIRECTORIES false CONFIGURE_DEPENDS Source/*.cpp) # Recursively get all .cpp files, the false is to not follow symlinks
-# Collect all source files in the directory Source
 
 set(SRCS_COMMON
 ${SRCS_PLATFORM}
