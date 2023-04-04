@@ -249,8 +249,12 @@ typedef Lib3MFHandle Lib3MF_Image3D;
 typedef Lib3MFHandle Lib3MF_ImageStack;
 typedef Lib3MFHandle Lib3MF_Attachment;
 typedef Lib3MFHandle Lib3MF_Texture2D;
+typedef Lib3MFHandle Lib3MF_ImplicitPort;
+typedef Lib3MFHandle Lib3MF_Accessor;
+typedef Lib3MFHandle Lib3MF_ImplicitPortAccessor;
 typedef Lib3MFHandle Lib3MF_ImplicitNode;
-typedef Lib3MFHandle Lib3MF_ImplicitAddition;
+typedef Lib3MFHandle Lib3MF_NodeAccessor;
+typedef Lib3MFHandle Lib3MF_ImplicitFunction;
 typedef Lib3MFHandle Lib3MF_BuildItem;
 typedef Lib3MFHandle Lib3MF_BuildItemIterator;
 typedef Lib3MFHandle Lib3MF_Slice;
@@ -387,6 +391,12 @@ typedef enum eLib3MFCompositionSpace {
   eCompositionSpaceLinearColor = 1
 } eLib3MFCompositionSpace;
 
+/**
+* enum eLib3MFImplicitNodeTypes - The type of the node
+*/
+typedef enum eLib3MFImplicitNodeTypes {
+} eLib3MFImplicitNodeTypes;
+
 typedef enum eLib3MFEncryptionAlgorithm {
   eEncryptionAlgorithmAES256_GCM = 1 /** http://www.w3.org/2009/xmlenc11#aes256-gcm */
 } eLib3MFEncryptionAlgorithm;
@@ -491,6 +501,11 @@ typedef union {
   eLib3MFCompositionSpace m_enum;
   int m_code;
 } structEnumLib3MFCompositionSpace;
+
+typedef union {
+  eLib3MFImplicitNodeTypes m_enum;
+  int m_code;
+} structEnumLib3MFImplicitNodeTypes;
 
 typedef union {
   eLib3MFEncryptionAlgorithm m_enum;

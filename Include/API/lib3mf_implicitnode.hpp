@@ -28,7 +28,6 @@ Abstract: This is the class declaration of CImplicitNode
 
 */
 
-
 #ifndef __LIB3MF_IMPLICITNODE
 #define __LIB3MF_IMPLICITNODE
 
@@ -42,67 +41,61 @@ Abstract: This is the class declaration of CImplicitNode
 #endif
 
 // Include custom headers here.
+#include "Model/Classes/NMR_ImplicitNode.h"
 
+namespace Lib3MF
+{
+    namespace Impl
+    {
 
-namespace Lib3MF {
-namespace Impl {
+        /*************************************************************************************************************************
+         Class declaration of CImplicitNode
+        **************************************************************************************************************************/
 
+        class CImplicitNode : public virtual IImplicitNode, public virtual CBase
+        {
+          private:
+            NMR::PImplicitNode m_pImplicitNode;
 
-/*************************************************************************************************************************
- Class declaration of CImplicitNode 
-**************************************************************************************************************************/
+          protected:
+            /**
+             * Put protected members here.
+             */
 
-class CImplicitNode : public virtual IImplicitNode, public virtual CBase {
-private:
+          public:
+            // Ctor
+            CImplicitNode(NMR::PImplicitNode pImplicitNode);
 
-	/**
-	* Put private members here.
-	*/
+            /**
+             * Public member functions to implement.
+             */
 
-protected:
+            /**
+             * IImplicitNode::GetIdentifier - Retrieves the identifier of the node
+             * @return the identifier
+             */
+            std::string GetIdentifier() override;
 
-	/**
-	* Put protected members here.
-	*/
+            /**
+             * IImplicitNode::SetIdentifier - Sets the identifier of the node
+             * @param[in] sIdentifier - the identifier
+             */
+            void SetIdentifier(const std::string & sIdentifier) override;
 
-public:
+            /**
+             * IImplicitNode::GetDisplayName - Retrieves the display name of the node
+             * @return the display name
+             */
+            std::string GetDisplayName() override;
 
-	/**
-	* Put additional public members here. They will not be visible in the external API.
-	*/
+            /**
+             * IImplicitNode::SetDisplayName - Sets the display name of the node
+             * @param[in] sDisplayName - the display name
+             */
+            void SetDisplayName(const std::string & sDisplayName) override;
+        };
 
-
-	/**
-	* Public member functions to implement.
-	*/
-
-	/**
-	* IImplicitNode::GetIdentifier - Retrieves the identifier of the node
-	* @return the identifier
-	*/
-	std::string GetIdentifier() override;
-
-	/**
-	* IImplicitNode::SetIdentifier - Sets the identifier of the node
-	* @param[in] sIdentifier - the identifier
-	*/
-	void SetIdentifier(const std::string & sIdentifier) override;
-
-	/**
-	* IImplicitNode::GetDisplayName - Retrieves the display name of the node
-	* @return the display name
-	*/
-	std::string GetDisplayName() override;
-
-	/**
-	* IImplicitNode::SetDisplayName - Sets the display name of the node
-	* @param[in] sDisplayName - the display name
-	*/
-	void SetDisplayName(const std::string & sDisplayName) override;
-
-};
-
-} // namespace Impl
+    } // namespace Impl
 } // namespace Lib3MF
 
 #ifdef _MSC_VER

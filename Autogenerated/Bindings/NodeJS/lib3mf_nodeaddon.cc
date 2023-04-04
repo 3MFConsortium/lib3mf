@@ -101,8 +101,12 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFImageStack::Init();
 	CLib3MFAttachment::Init();
 	CLib3MFTexture2D::Init();
+	CLib3MFImplicitPort::Init();
+	CLib3MFAccessor::Init();
+	CLib3MFImplicitPortAccessor::Init();
 	CLib3MFImplicitNode::Init();
-	CLib3MFImplicitAddition::Init();
+	CLib3MFNodeAccessor::Init();
+	CLib3MFImplicitFunction::Init();
 	CLib3MFBuildItem::Init();
 	CLib3MFBuildItemIterator::Init();
 	CLib3MFSlice::Init();

@@ -248,8 +248,12 @@ typedef Lib3MFHandle Lib3MF_Image3D;
 typedef Lib3MFHandle Lib3MF_ImageStack;
 typedef Lib3MFHandle Lib3MF_Attachment;
 typedef Lib3MFHandle Lib3MF_Texture2D;
+typedef Lib3MFHandle Lib3MF_ImplicitPort;
+typedef Lib3MFHandle Lib3MF_Accessor;
+typedef Lib3MFHandle Lib3MF_ImplicitPortAccessor;
 typedef Lib3MFHandle Lib3MF_ImplicitNode;
-typedef Lib3MFHandle Lib3MF_ImplicitAddition;
+typedef Lib3MFHandle Lib3MF_NodeAccessor;
+typedef Lib3MFHandle Lib3MF_ImplicitFunction;
 typedef Lib3MFHandle Lib3MF_BuildItem;
 typedef Lib3MFHandle Lib3MF_BuildItemIterator;
 typedef Lib3MFHandle Lib3MF_Slice;
@@ -386,6 +390,12 @@ namespace Lib3MF {
   enum class eCompositionSpace : Lib3MF_int32 {
     Raw = 0,
     LinearColor = 1
+  };
+  
+  /**
+  * enum class eImplicitNodeTypes - The type of the node
+  */
+  enum class eImplicitNodeTypes : Lib3MF_int32 {
   };
   
   enum class eEncryptionAlgorithm : Lib3MF_int32 {
@@ -577,6 +587,7 @@ typedef Lib3MF::eBlendMethod eLib3MFBlendMethod;
 typedef Lib3MF::eChannelName eLib3MFChannelName;
 typedef Lib3MF::eCompositionMethod eLib3MFCompositionMethod;
 typedef Lib3MF::eCompositionSpace eLib3MFCompositionSpace;
+typedef Lib3MF::eImplicitNodeTypes eLib3MFImplicitNodeTypes;
 typedef Lib3MF::eEncryptionAlgorithm eLib3MFEncryptionAlgorithm;
 typedef Lib3MF::eWrappingAlgorithm eLib3MFWrappingAlgorithm;
 typedef Lib3MF::eMgfAlgorithm eLib3MFMgfAlgorithm;

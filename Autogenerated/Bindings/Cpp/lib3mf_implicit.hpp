@@ -110,8 +110,12 @@ class CImage3D;
 class CImageStack;
 class CAttachment;
 class CTexture2D;
+class CImplicitPort;
+class CAccessor;
+class CImplicitPortAccessor;
 class CImplicitNode;
-class CImplicitAddition;
+class CNodeAccessor;
+class CImplicitFunction;
 class CBuildItem;
 class CBuildItemIterator;
 class CSlice;
@@ -181,8 +185,12 @@ typedef CImage3D CLib3MFImage3D;
 typedef CImageStack CLib3MFImageStack;
 typedef CAttachment CLib3MFAttachment;
 typedef CTexture2D CLib3MFTexture2D;
+typedef CImplicitPort CLib3MFImplicitPort;
+typedef CAccessor CLib3MFAccessor;
+typedef CImplicitPortAccessor CLib3MFImplicitPortAccessor;
 typedef CImplicitNode CLib3MFImplicitNode;
-typedef CImplicitAddition CLib3MFImplicitAddition;
+typedef CNodeAccessor CLib3MFNodeAccessor;
+typedef CImplicitFunction CLib3MFImplicitFunction;
 typedef CBuildItem CLib3MFBuildItem;
 typedef CBuildItemIterator CLib3MFBuildItemIterator;
 typedef CSlice CLib3MFSlice;
@@ -252,8 +260,12 @@ typedef std::shared_ptr<CImage3D> PImage3D;
 typedef std::shared_ptr<CImageStack> PImageStack;
 typedef std::shared_ptr<CAttachment> PAttachment;
 typedef std::shared_ptr<CTexture2D> PTexture2D;
+typedef std::shared_ptr<CImplicitPort> PImplicitPort;
+typedef std::shared_ptr<CAccessor> PAccessor;
+typedef std::shared_ptr<CImplicitPortAccessor> PImplicitPortAccessor;
 typedef std::shared_ptr<CImplicitNode> PImplicitNode;
-typedef std::shared_ptr<CImplicitAddition> PImplicitAddition;
+typedef std::shared_ptr<CNodeAccessor> PNodeAccessor;
+typedef std::shared_ptr<CImplicitFunction> PImplicitFunction;
 typedef std::shared_ptr<CBuildItem> PBuildItem;
 typedef std::shared_ptr<CBuildItemIterator> PBuildItemIterator;
 typedef std::shared_ptr<CSlice> PSlice;
@@ -323,8 +335,12 @@ typedef PImage3D PLib3MFImage3D;
 typedef PImageStack PLib3MFImageStack;
 typedef PAttachment PLib3MFAttachment;
 typedef PTexture2D PLib3MFTexture2D;
+typedef PImplicitPort PLib3MFImplicitPort;
+typedef PAccessor PLib3MFAccessor;
+typedef PImplicitPortAccessor PLib3MFImplicitPortAccessor;
 typedef PImplicitNode PLib3MFImplicitNode;
-typedef PImplicitAddition PLib3MFImplicitAddition;
+typedef PNodeAccessor PLib3MFNodeAccessor;
+typedef PImplicitFunction PLib3MFImplicitFunction;
 typedef PBuildItem PLib3MFBuildItem;
 typedef PBuildItemIterator PLib3MFBuildItemIterator;
 typedef PSlice PLib3MFSlice;
@@ -670,8 +686,12 @@ private:
 	friend class CImageStack;
 	friend class CAttachment;
 	friend class CTexture2D;
+	friend class CImplicitPort;
+	friend class CAccessor;
+	friend class CImplicitPortAccessor;
 	friend class CImplicitNode;
-	friend class CImplicitAddition;
+	friend class CNodeAccessor;
+	friend class CImplicitFunction;
 	friend class CBuildItem;
 	friend class CBuildItemIterator;
 	friend class CSlice;
@@ -1889,6 +1909,63 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CImplicitPort 
+**************************************************************************************************************************/
+class CImplicitPort : public CBase {
+public:
+	
+	/**
+	* CImplicitPort::CImplicitPort - Constructor for ImplicitPort class.
+	*/
+	CImplicitPort(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetIdentifier();
+	inline void SetIdentifier(const std::string & sIdentifier);
+	inline std::string GetDisplayName();
+	inline void SetDisplayName(const std::string & sDisplayName);
+};
+	
+/*************************************************************************************************************************
+ Class CAccessor 
+**************************************************************************************************************************/
+class CAccessor : public CBase {
+public:
+	
+	/**
+	* CAccessor::CAccessor - Constructor for Accessor class.
+	*/
+	CAccessor(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline Lib3MF_uint64 GetSize();
+	inline bool Next();
+	inline bool Prev();
+	inline void Begin();
+};
+	
+/*************************************************************************************************************************
+ Class CImplicitPortAccessor 
+**************************************************************************************************************************/
+class CImplicitPortAccessor : public CAccessor {
+public:
+	
+	/**
+	* CImplicitPortAccessor::CImplicitPortAccessor - Constructor for ImplicitPortAccessor class.
+	*/
+	CImplicitPortAccessor(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CAccessor(pWrapper, pHandle)
+	{
+	}
+	
+	inline PImplicitPort Get();
+};
+	
+/*************************************************************************************************************************
  Class CImplicitNode 
 **************************************************************************************************************************/
 class CImplicitNode : public CBase {
@@ -1906,28 +1983,53 @@ public:
 	inline void SetIdentifier(const std::string & sIdentifier);
 	inline std::string GetDisplayName();
 	inline void SetDisplayName(const std::string & sDisplayName);
+	inline void AddInput(const std::string & sIdentifier, const std::string & sDisplayName);
+	inline PImplicitPort GetInputs();
+	inline void AddOutput(const std::string & sIdentifier, const std::string & sDisplayName);
+	inline PImplicitPort GetOutputs();
 };
 	
 /*************************************************************************************************************************
- Class CImplicitAddition 
+ Class CNodeAccessor 
 **************************************************************************************************************************/
-class CImplicitAddition : public CImplicitNode {
+class CNodeAccessor : public CAccessor {
 public:
 	
 	/**
-	* CImplicitAddition::CImplicitAddition - Constructor for ImplicitAddition class.
+	* CNodeAccessor::CNodeAccessor - Constructor for NodeAccessor class.
 	*/
-	CImplicitAddition(CWrapper* pWrapper, Lib3MFHandle pHandle)
-		: CImplicitNode(pWrapper, pHandle)
+	CNodeAccessor(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CAccessor(pWrapper, pHandle)
 	{
 	}
 	
-	inline std::string GetInputA();
-	inline void SetInputA(const std::string & sInputA);
-	inline std::string GetInputB();
-	inline void SetInputB(const std::string & sInputB);
-	inline std::string GetOutputSum();
-	inline void SetOutputSum(const std::string & sIdentifier);
+	inline PImplicitNode Get();
+};
+	
+/*************************************************************************************************************************
+ Class CImplicitFunction 
+**************************************************************************************************************************/
+class CImplicitFunction : public CBase {
+public:
+	
+	/**
+	* CImplicitFunction::CImplicitFunction - Constructor for ImplicitFunction class.
+	*/
+	CImplicitFunction(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetIdentifier();
+	inline void SetIdentifier(const std::string & sIdentifier);
+	inline std::string GetDisplayName();
+	inline void SetDisplayName(const std::string & sDisplayName);
+	inline void AddNode(const std::string & sNodeType, const std::string & sIdentifier, const std::string & sDisplayName);
+	inline PNodeAccessor GetNodes();
+	inline void AddInput(const std::string & sIdentifier, const std::string & sDisplayName);
+	inline PImplicitPortAccessor GetInputs();
+	inline void AddOutput(const std::string & sIdentifier, const std::string & sDisplayName);
+	inline PImplicitPortAccessor GetOutputs();
 };
 	
 /*************************************************************************************************************************
@@ -2329,8 +2431,12 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0x13A2561F0CFB712AUL: return new CImageStack(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImageStack"
 		case 0x8CE7A1191A63A35DUL: return new CAttachment(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Attachment"
 		case 0xE0441CF976B36319UL: return new CTexture2D(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Texture2D"
+		case 0xD5C49B04AF1963CDUL: return new CImplicitPort(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPort"
+		case 0xF94265ED198E4784UL: return new CAccessor(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Accessor"
+		case 0x258087F875881ADDUL: return new CImplicitPortAccessor(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPortAccessor"
 		case 0xE72592A7725AB29BUL: return new CImplicitNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitNode"
-		case 0xDB93DED4EC7849D7UL: return new CImplicitAddition(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitAddition"
+		case 0xE0E0FC011B210DE0UL: return new CNodeAccessor(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::NodeAccessor"
+		case 0x6CE54469EEA83BC1UL: return new CImplicitFunction(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitFunction"
 		case 0x68FB2D5FFC4BA12AUL: return new CBuildItem(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItem"
 		case 0xA7D21BD364910860UL: return new CBuildItemIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItemIterator"
 		case 0x2198BCF4D8DF9C40UL: return new CSlice(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Slice"
@@ -6598,6 +6704,125 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	 * Method definitions for class CImplicitPort
+	 */
+	
+	/**
+	* CImplicitPort::GetIdentifier - Retrieves the identifier of the port
+	* @return the identifier
+	*/
+	std::string CImplicitPort::GetIdentifier()
+	{
+		Lib3MF_uint32 bytesNeededIdentifier = 0;
+		Lib3MF_uint32 bytesWrittenIdentifier = 0;
+		CheckError(lib3mf_implicitport_getidentifier(m_pHandle, 0, &bytesNeededIdentifier, nullptr));
+		std::vector<char> bufferIdentifier(bytesNeededIdentifier);
+		CheckError(lib3mf_implicitport_getidentifier(m_pHandle, bytesNeededIdentifier, &bytesWrittenIdentifier, &bufferIdentifier[0]));
+		
+		return std::string(&bufferIdentifier[0]);
+	}
+	
+	/**
+	* CImplicitPort::SetIdentifier - Sets the identifier of the port
+	* @param[in] sIdentifier - the identifier
+	*/
+	void CImplicitPort::SetIdentifier(const std::string & sIdentifier)
+	{
+		CheckError(lib3mf_implicitport_setidentifier(m_pHandle, sIdentifier.c_str()));
+	}
+	
+	/**
+	* CImplicitPort::GetDisplayName - Retrieves the display name of the port
+	* @return the display name
+	*/
+	std::string CImplicitPort::GetDisplayName()
+	{
+		Lib3MF_uint32 bytesNeededDisplayName = 0;
+		Lib3MF_uint32 bytesWrittenDisplayName = 0;
+		CheckError(lib3mf_implicitport_getdisplayname(m_pHandle, 0, &bytesNeededDisplayName, nullptr));
+		std::vector<char> bufferDisplayName(bytesNeededDisplayName);
+		CheckError(lib3mf_implicitport_getdisplayname(m_pHandle, bytesNeededDisplayName, &bytesWrittenDisplayName, &bufferDisplayName[0]));
+		
+		return std::string(&bufferDisplayName[0]);
+	}
+	
+	/**
+	* CImplicitPort::SetDisplayName - Sets the display name of the port
+	* @param[in] sDisplayName - the display name
+	*/
+	void CImplicitPort::SetDisplayName(const std::string & sDisplayName)
+	{
+		CheckError(lib3mf_implicitport_setdisplayname(m_pHandle, sDisplayName.c_str()));
+	}
+	
+	/**
+	 * Method definitions for class CAccessor
+	 */
+	
+	/**
+	* CAccessor::GetSize - Returns the number of elements
+	* @return The number of elements
+	*/
+	Lib3MF_uint64 CAccessor::GetSize()
+	{
+		Lib3MF_uint64 resultSize = 0;
+		CheckError(lib3mf_accessor_getsize(m_pHandle, &resultSize));
+		
+		return resultSize;
+	}
+	
+	/**
+	* CAccessor::Next - Go to the next element
+	* @return Returns true, if there is a next element
+	*/
+	bool CAccessor::Next()
+	{
+		bool resultResult = 0;
+		CheckError(lib3mf_accessor_next(m_pHandle, &resultResult));
+		
+		return resultResult;
+	}
+	
+	/**
+	* CAccessor::Prev - Go to the previous element
+	* @return Returns true, if there is a previous element
+	*/
+	bool CAccessor::Prev()
+	{
+		bool resultResult = 0;
+		CheckError(lib3mf_accessor_prev(m_pHandle, &resultResult));
+		
+		return resultResult;
+	}
+	
+	/**
+	* CAccessor::Begin - Go to the first element
+	*/
+	void CAccessor::Begin()
+	{
+		CheckError(lib3mf_accessor_begin(m_pHandle));
+	}
+	
+	/**
+	 * Method definitions for class CImplicitPortAccessor
+	 */
+	
+	/**
+	* CImplicitPortAccessor::Get - Returns the current element
+	* @return The current element
+	*/
+	PImplicitPort CImplicitPortAccessor::Get()
+	{
+		Lib3MFHandle hPort = nullptr;
+		CheckError(lib3mf_implicitportaccessor_get(m_pHandle, &hPort));
+		
+		if (!hPort) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hPort)));
+	}
+	
+	/**
 	 * Method definitions for class CImplicitNode
 	 */
 	
@@ -6650,79 +6875,200 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	 * Method definitions for class CImplicitAddition
+	* CImplicitNode::AddInput - Add an input
+	* @param[in] sIdentifier - the identifier of the input
+	* @param[in] sDisplayName - the display name of the input
+	*/
+	void CImplicitNode::AddInput(const std::string & sIdentifier, const std::string & sDisplayName)
+	{
+		CheckError(lib3mf_implicitnode_addinput(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str()));
+	}
+	
+	/**
+	* CImplicitNode::GetInputs - Retrieves the inputs
+	* @return the accessor to the inputs
+	*/
+	PImplicitPort CImplicitNode::GetInputs()
+	{
+		Lib3MFHandle hAccessor = nullptr;
+		CheckError(lib3mf_implicitnode_getinputs(m_pHandle, &hAccessor));
+		
+		if (!hAccessor) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hAccessor)));
+	}
+	
+	/**
+	* CImplicitNode::AddOutput - Add an output
+	* @param[in] sIdentifier - the identifier of the output
+	* @param[in] sDisplayName - the display name of the output
+	*/
+	void CImplicitNode::AddOutput(const std::string & sIdentifier, const std::string & sDisplayName)
+	{
+		CheckError(lib3mf_implicitnode_addoutput(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str()));
+	}
+	
+	/**
+	* CImplicitNode::GetOutputs - Retrieves the outputs
+	* @return the accessor to the outputs
+	*/
+	PImplicitPort CImplicitNode::GetOutputs()
+	{
+		Lib3MFHandle hAccessor = nullptr;
+		CheckError(lib3mf_implicitnode_getoutputs(m_pHandle, &hAccessor));
+		
+		if (!hAccessor) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hAccessor)));
+	}
+	
+	/**
+	 * Method definitions for class CNodeAccessor
 	 */
 	
 	/**
-	* CImplicitAddition::GetInputA - Retrieves the input A of the addition
-	* @return the input A
+	* CNodeAccessor::Get - Returns the current element
+	* @return The current element
 	*/
-	std::string CImplicitAddition::GetInputA()
+	PImplicitNode CNodeAccessor::Get()
 	{
-		Lib3MF_uint32 bytesNeededInputA = 0;
-		Lib3MF_uint32 bytesWrittenInputA = 0;
-		CheckError(lib3mf_implicitaddition_getinputa(m_pHandle, 0, &bytesNeededInputA, nullptr));
-		std::vector<char> bufferInputA(bytesNeededInputA);
-		CheckError(lib3mf_implicitaddition_getinputa(m_pHandle, bytesNeededInputA, &bytesWrittenInputA, &bufferInputA[0]));
+		Lib3MFHandle hNode = nullptr;
+		CheckError(lib3mf_nodeaccessor_get(m_pHandle, &hNode));
 		
-		return std::string(&bufferInputA[0]);
+		if (!hNode) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitNode>(dynamic_cast<CImplicitNode*>(m_pWrapper->polymorphicFactory(hNode)));
 	}
 	
 	/**
-	* CImplicitAddition::SetInputA - Sets the input A of the addition
-	* @param[in] sInputA - the input A
-	*/
-	void CImplicitAddition::SetInputA(const std::string & sInputA)
-	{
-		CheckError(lib3mf_implicitaddition_setinputa(m_pHandle, sInputA.c_str()));
-	}
+	 * Method definitions for class CImplicitFunction
+	 */
 	
 	/**
-	* CImplicitAddition::GetInputB - Retrieves the input B of the addition
-	* @return the input B
+	* CImplicitFunction::GetIdentifier - Retrieves the identifier of the function
+	* @return the identifier
 	*/
-	std::string CImplicitAddition::GetInputB()
-	{
-		Lib3MF_uint32 bytesNeededInputB = 0;
-		Lib3MF_uint32 bytesWrittenInputB = 0;
-		CheckError(lib3mf_implicitaddition_getinputb(m_pHandle, 0, &bytesNeededInputB, nullptr));
-		std::vector<char> bufferInputB(bytesNeededInputB);
-		CheckError(lib3mf_implicitaddition_getinputb(m_pHandle, bytesNeededInputB, &bytesWrittenInputB, &bufferInputB[0]));
-		
-		return std::string(&bufferInputB[0]);
-	}
-	
-	/**
-	* CImplicitAddition::SetInputB - Sets the input B of the addition
-	* @param[in] sInputB - the input B
-	*/
-	void CImplicitAddition::SetInputB(const std::string & sInputB)
-	{
-		CheckError(lib3mf_implicitaddition_setinputb(m_pHandle, sInputB.c_str()));
-	}
-	
-	/**
-	* CImplicitAddition::GetOutputSum - Retrieves the identifier of the sum output of the addition
-	* @return identifier of the sum output
-	*/
-	std::string CImplicitAddition::GetOutputSum()
+	std::string CImplicitFunction::GetIdentifier()
 	{
 		Lib3MF_uint32 bytesNeededIdentifier = 0;
 		Lib3MF_uint32 bytesWrittenIdentifier = 0;
-		CheckError(lib3mf_implicitaddition_getoutputsum(m_pHandle, 0, &bytesNeededIdentifier, nullptr));
+		CheckError(lib3mf_implicitfunction_getidentifier(m_pHandle, 0, &bytesNeededIdentifier, nullptr));
 		std::vector<char> bufferIdentifier(bytesNeededIdentifier);
-		CheckError(lib3mf_implicitaddition_getoutputsum(m_pHandle, bytesNeededIdentifier, &bytesWrittenIdentifier, &bufferIdentifier[0]));
+		CheckError(lib3mf_implicitfunction_getidentifier(m_pHandle, bytesNeededIdentifier, &bytesWrittenIdentifier, &bufferIdentifier[0]));
 		
 		return std::string(&bufferIdentifier[0]);
 	}
 	
 	/**
-	* CImplicitAddition::SetOutputSum - Sets the id of the sum output
-	* @param[in] sIdentifier - identifier of the sum output
+	* CImplicitFunction::SetIdentifier - Sets the identifier of the function
+	* @param[in] sIdentifier - the identifier
 	*/
-	void CImplicitAddition::SetOutputSum(const std::string & sIdentifier)
+	void CImplicitFunction::SetIdentifier(const std::string & sIdentifier)
 	{
-		CheckError(lib3mf_implicitaddition_setoutputsum(m_pHandle, sIdentifier.c_str()));
+		CheckError(lib3mf_implicitfunction_setidentifier(m_pHandle, sIdentifier.c_str()));
+	}
+	
+	/**
+	* CImplicitFunction::GetDisplayName - Retrieves the display name of the function
+	* @return the display name
+	*/
+	std::string CImplicitFunction::GetDisplayName()
+	{
+		Lib3MF_uint32 bytesNeededDisplayName = 0;
+		Lib3MF_uint32 bytesWrittenDisplayName = 0;
+		CheckError(lib3mf_implicitfunction_getdisplayname(m_pHandle, 0, &bytesNeededDisplayName, nullptr));
+		std::vector<char> bufferDisplayName(bytesNeededDisplayName);
+		CheckError(lib3mf_implicitfunction_getdisplayname(m_pHandle, bytesNeededDisplayName, &bytesWrittenDisplayName, &bufferDisplayName[0]));
+		
+		return std::string(&bufferDisplayName[0]);
+	}
+	
+	/**
+	* CImplicitFunction::SetDisplayName - Sets the display name of the function
+	* @param[in] sDisplayName - the display name
+	*/
+	void CImplicitFunction::SetDisplayName(const std::string & sDisplayName)
+	{
+		CheckError(lib3mf_implicitfunction_setdisplayname(m_pHandle, sDisplayName.c_str()));
+	}
+	
+	/**
+	* CImplicitFunction::AddNode - Add a node
+	* @param[in] sNodeType - the type of the node
+	* @param[in] sIdentifier - the identifier of the input
+	* @param[in] sDisplayName - the display name of the input
+	*/
+	void CImplicitFunction::AddNode(const std::string & sNodeType, const std::string & sIdentifier, const std::string & sDisplayName)
+	{
+		CheckError(lib3mf_implicitfunction_addnode(m_pHandle, sNodeType.c_str(), sIdentifier.c_str(), sDisplayName.c_str()));
+	}
+	
+	/**
+	* CImplicitFunction::GetNodes - Retrieves the nodes
+	* @return the accessor to the nodes
+	*/
+	PNodeAccessor CImplicitFunction::GetNodes()
+	{
+		Lib3MFHandle hAccessor = nullptr;
+		CheckError(lib3mf_implicitfunction_getnodes(m_pHandle, &hAccessor));
+		
+		if (!hAccessor) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CNodeAccessor>(dynamic_cast<CNodeAccessor*>(m_pWrapper->polymorphicFactory(hAccessor)));
+	}
+	
+	/**
+	* CImplicitFunction::AddInput - Add an input
+	* @param[in] sIdentifier - the identifier of the input
+	* @param[in] sDisplayName - the display name of the input
+	*/
+	void CImplicitFunction::AddInput(const std::string & sIdentifier, const std::string & sDisplayName)
+	{
+		CheckError(lib3mf_implicitfunction_addinput(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str()));
+	}
+	
+	/**
+	* CImplicitFunction::GetInputs - Retrieves the inputs
+	* @return the accessor to the inputs
+	*/
+	PImplicitPortAccessor CImplicitFunction::GetInputs()
+	{
+		Lib3MFHandle hAccessor = nullptr;
+		CheckError(lib3mf_implicitfunction_getinputs(m_pHandle, &hAccessor));
+		
+		if (!hAccessor) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPortAccessor>(dynamic_cast<CImplicitPortAccessor*>(m_pWrapper->polymorphicFactory(hAccessor)));
+	}
+	
+	/**
+	* CImplicitFunction::AddOutput - Add an output
+	* @param[in] sIdentifier - the identifier of the output
+	* @param[in] sDisplayName - the display name of the output
+	*/
+	void CImplicitFunction::AddOutput(const std::string & sIdentifier, const std::string & sDisplayName)
+	{
+		CheckError(lib3mf_implicitfunction_addoutput(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str()));
+	}
+	
+	/**
+	* CImplicitFunction::GetOutputs - Retrieves the outputs
+	* @return the accessor to the outputs
+	*/
+	PImplicitPortAccessor CImplicitFunction::GetOutputs()
+	{
+		Lib3MFHandle hAccessor = nullptr;
+		CheckError(lib3mf_implicitfunction_getoutputs(m_pHandle, &hAccessor));
+		
+		if (!hAccessor) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPortAccessor>(dynamic_cast<CImplicitPortAccessor*>(m_pWrapper->polymorphicFactory(hAccessor)));
 	}
 	
 	/**

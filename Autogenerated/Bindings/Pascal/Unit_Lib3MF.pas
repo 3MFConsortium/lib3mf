@@ -247,6 +247,9 @@ type
 		eCompositionSpaceLinearColor
 	);
 
+	TLib3MFImplicitNodeTypes = (
+	);
+
 	TLib3MFEncryptionAlgorithm = (
 		eEncryptionAlgorithmAES256_GCM
 	);
@@ -441,8 +444,12 @@ type
 	TLib3MFImageStack = class;
 	TLib3MFAttachment = class;
 	TLib3MFTexture2D = class;
+	TLib3MFImplicitPort = class;
+	TLib3MFAccessor = class;
+	TLib3MFImplicitPortAccessor = class;
 	TLib3MFImplicitNode = class;
-	TLib3MFImplicitAddition = class;
+	TLib3MFNodeAccessor = class;
+	TLib3MFImplicitFunction = class;
 	TLib3MFBuildItem = class;
 	TLib3MFBuildItemIterator = class;
 	TLib3MFSlice = class;
@@ -3725,6 +3732,105 @@ type
 	
 
 (*************************************************************************************************************************
+ Function type definitions for ImplicitPort
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the identifier of the port
+	*
+	* @param[in] pImplicitPort - ImplicitPort instance.
+	* @param[in] nIdentifierBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pIdentifierNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pIdentifierBuffer -  buffer of the identifier, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitPort_GetIdentifierFunc = function(pImplicitPort: TLib3MFHandle; const nIdentifierBufferSize: Cardinal; out pIdentifierNeededChars: Cardinal; pIdentifierBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the identifier of the port
+	*
+	* @param[in] pImplicitPort - ImplicitPort instance.
+	* @param[in] pIdentifier - the identifier
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitPort_SetIdentifierFunc = function(pImplicitPort: TLib3MFHandle; const pIdentifier: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the display name of the port
+	*
+	* @param[in] pImplicitPort - ImplicitPort instance.
+	* @param[in] nDisplayNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pDisplayNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pDisplayNameBuffer -  buffer of the display name, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitPort_GetDisplayNameFunc = function(pImplicitPort: TLib3MFHandle; const nDisplayNameBufferSize: Cardinal; out pDisplayNameNeededChars: Cardinal; pDisplayNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the display name of the port
+	*
+	* @param[in] pImplicitPort - ImplicitPort instance.
+	* @param[in] pDisplayName - the display name
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitPort_SetDisplayNameFunc = function(pImplicitPort: TLib3MFHandle; const pDisplayName: PAnsiChar): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for Accessor
+**************************************************************************************************************************)
+
+	(**
+	* Returns the number of elements
+	*
+	* @param[in] pAccessor - Accessor instance.
+	* @param[out] pSize - The number of elements
+	* @return error code or 0 (success)
+	*)
+	TLib3MFAccessor_GetSizeFunc = function(pAccessor: TLib3MFHandle; out pSize: QWord): TLib3MFResult; cdecl;
+	
+	(**
+	* Go to the next element
+	*
+	* @param[in] pAccessor - Accessor instance.
+	* @param[out] pResult - Returns true, if there is a next element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFAccessor_NextFunc = function(pAccessor: TLib3MFHandle; out pResult: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Go to the previous element
+	*
+	* @param[in] pAccessor - Accessor instance.
+	* @param[out] pResult - Returns true, if there is a previous element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFAccessor_PrevFunc = function(pAccessor: TLib3MFHandle; out pResult: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Go to the first element
+	*
+	* @param[in] pAccessor - Accessor instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFAccessor_BeginFunc = function(pAccessor: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for ImplicitPortAccessor
+**************************************************************************************************************************)
+
+	(**
+	* Returns the current element
+	*
+	* @param[in] pImplicitPortAccessor - ImplicitPortAccessor instance.
+	* @param[out] pPort - The current element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitPortAccessor_GetFunc = function(pImplicitPortAccessor: TLib3MFHandle; out pPort: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
  Function type definitions for ImplicitNode
 **************************************************************************************************************************)
 
@@ -3768,70 +3874,160 @@ type
 	*)
 	TLib3MFImplicitNode_SetDisplayNameFunc = function(pImplicitNode: TLib3MFHandle; const pDisplayName: PAnsiChar): TLib3MFResult; cdecl;
 	
+	(**
+	* Add an input
+	*
+	* @param[in] pImplicitNode - ImplicitNode instance.
+	* @param[in] pIdentifier - the identifier of the input
+	* @param[in] pDisplayName - the display name of the input
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitNode_AddInputFunc = function(pImplicitNode: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the inputs
+	*
+	* @param[in] pImplicitNode - ImplicitNode instance.
+	* @param[out] pAccessor - the accessor to the inputs
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitNode_GetInputsFunc = function(pImplicitNode: TLib3MFHandle; out pAccessor: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add an output
+	*
+	* @param[in] pImplicitNode - ImplicitNode instance.
+	* @param[in] pIdentifier - the identifier of the output
+	* @param[in] pDisplayName - the display name of the output
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitNode_AddOutputFunc = function(pImplicitNode: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the outputs
+	*
+	* @param[in] pImplicitNode - ImplicitNode instance.
+	* @param[out] pAccessor - the accessor to the outputs
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitNode_GetOutputsFunc = function(pImplicitNode: TLib3MFHandle; out pAccessor: TLib3MFHandle): TLib3MFResult; cdecl;
+	
 
 (*************************************************************************************************************************
- Function type definitions for ImplicitAddition
+ Function type definitions for NodeAccessor
 **************************************************************************************************************************)
 
 	(**
-	* Retrieves the input A of the addition
+	* Returns the current element
 	*
-	* @param[in] pImplicitAddition - ImplicitAddition instance.
-	* @param[in] nInputABufferSize - size of the buffer (including trailing 0)
-	* @param[out] pInputANeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pInputABuffer - ImplicitNode buffer of the input A, may be NULL
+	* @param[in] pNodeAccessor - NodeAccessor instance.
+	* @param[out] pNode - The current element
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitAddition_GetInputAFunc = function(pImplicitAddition: TLib3MFHandle; const nInputABufferSize: Cardinal; out pInputANeededChars: Cardinal; pInputABuffer: PAnsiChar): TLib3MFResult; cdecl;
+	TLib3MFNodeAccessor_GetFunc = function(pNodeAccessor: TLib3MFHandle; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
+
+(*************************************************************************************************************************
+ Function type definitions for ImplicitFunction
+**************************************************************************************************************************)
+
 	(**
-	* Sets the input A of the addition
+	* Retrieves the identifier of the function
 	*
-	* @param[in] pImplicitAddition - ImplicitAddition instance.
-	* @param[in] pInputA - the input A
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImplicitAddition_SetInputAFunc = function(pImplicitAddition: TLib3MFHandle; const pInputA: PAnsiChar): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the input B of the addition
-	*
-	* @param[in] pImplicitAddition - ImplicitAddition instance.
-	* @param[in] nInputBBufferSize - size of the buffer (including trailing 0)
-	* @param[out] pInputBNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pInputBBuffer - ImplicitNode buffer of the input B, may be NULL
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImplicitAddition_GetInputBFunc = function(pImplicitAddition: TLib3MFHandle; const nInputBBufferSize: Cardinal; out pInputBNeededChars: Cardinal; pInputBBuffer: PAnsiChar): TLib3MFResult; cdecl;
-	
-	(**
-	* Sets the input B of the addition
-	*
-	* @param[in] pImplicitAddition - ImplicitAddition instance.
-	* @param[in] pInputB - the input B
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImplicitAddition_SetInputBFunc = function(pImplicitAddition: TLib3MFHandle; const pInputB: PAnsiChar): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the identifier of the sum output of the addition
-	*
-	* @param[in] pImplicitAddition - ImplicitAddition instance.
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
 	* @param[in] nIdentifierBufferSize - size of the buffer (including trailing 0)
 	* @param[out] pIdentifierNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pIdentifierBuffer - ImplicitNode buffer of identifier of the sum output, may be NULL
+	* @param[out] pIdentifierBuffer -  buffer of the identifier, may be NULL
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitAddition_GetOutputSumFunc = function(pImplicitAddition: TLib3MFHandle; const nIdentifierBufferSize: Cardinal; out pIdentifierNeededChars: Cardinal; pIdentifierBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_GetIdentifierFunc = function(pImplicitFunction: TLib3MFHandle; const nIdentifierBufferSize: Cardinal; out pIdentifierNeededChars: Cardinal; pIdentifierBuffer: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
-	* Sets the id of the sum output
+	* Sets the identifier of the function
 	*
-	* @param[in] pImplicitAddition - ImplicitAddition instance.
-	* @param[in] pIdentifier - identifier of the sum output
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitAddition_SetOutputSumFunc = function(pImplicitAddition: TLib3MFHandle; const pIdentifier: PAnsiChar): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_SetIdentifierFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the display name of the function
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] nDisplayNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pDisplayNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pDisplayNameBuffer -  buffer of the display name, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_GetDisplayNameFunc = function(pImplicitFunction: TLib3MFHandle; const nDisplayNameBufferSize: Cardinal; out pDisplayNameNeededChars: Cardinal; pDisplayNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the display name of the function
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pDisplayName - the display name
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_SetDisplayNameFunc = function(pImplicitFunction: TLib3MFHandle; const pDisplayName: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a node
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pNodeType - the type of the node
+	* @param[in] pIdentifier - the identifier of the input
+	* @param[in] pDisplayName - the display name of the input
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pNodeType: PAnsiChar; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the nodes
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[out] pAccessor - the accessor to the nodes
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_GetNodesFunc = function(pImplicitFunction: TLib3MFHandle; out pAccessor: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add an input
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the input
+	* @param[in] pDisplayName - the display name of the input
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddInputFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the inputs
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[out] pAccessor - the accessor to the inputs
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_GetInputsFunc = function(pImplicitFunction: TLib3MFHandle; out pAccessor: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add an output
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the output
+	* @param[in] pDisplayName - the display name of the output
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddOutputFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the outputs
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[out] pAccessor - the accessor to the outputs
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_GetOutputsFunc = function(pImplicitFunction: TLib3MFHandle; out pAccessor: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -6503,10 +6699,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 
 (*************************************************************************************************************************
- Class definition for ImplicitNode
+ Class definition for ImplicitPort
 **************************************************************************************************************************)
 
-	TLib3MFImplicitNode = class(TLib3MFBase)
+	TLib3MFImplicitPort = class(TLib3MFBase)
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
@@ -6518,19 +6714,81 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 
 (*************************************************************************************************************************
- Class definition for ImplicitAddition
+ Class definition for Accessor
 **************************************************************************************************************************)
 
-	TLib3MFImplicitAddition = class(TLib3MFImplicitNode)
+	TLib3MFAccessor = class(TLib3MFBase)
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
-		function GetInputA(): String;
-		procedure SetInputA(const AInputA: String);
-		function GetInputB(): String;
-		procedure SetInputB(const AInputB: String);
-		function GetOutputSum(): String;
-		procedure SetOutputSum(const AIdentifier: String);
+		function GetSize(): QWord;
+		function Next(): Boolean;
+		function Prev(): Boolean;
+		procedure Begin();
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ImplicitPortAccessor
+**************************************************************************************************************************)
+
+	TLib3MFImplicitPortAccessor = class(TLib3MFAccessor)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function Get(): TLib3MFImplicitPort;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ImplicitNode
+**************************************************************************************************************************)
+
+	TLib3MFImplicitNode = class(TLib3MFBase)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetIdentifier(): String;
+		procedure SetIdentifier(const AIdentifier: String);
+		function GetDisplayName(): String;
+		procedure SetDisplayName(const ADisplayName: String);
+		procedure AddInput(const AIdentifier: String; const ADisplayName: String);
+		function GetInputs(): TLib3MFImplicitPort;
+		procedure AddOutput(const AIdentifier: String; const ADisplayName: String);
+		function GetOutputs(): TLib3MFImplicitPort;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for NodeAccessor
+**************************************************************************************************************************)
+
+	TLib3MFNodeAccessor = class(TLib3MFAccessor)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function Get(): TLib3MFImplicitNode;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ImplicitFunction
+**************************************************************************************************************************)
+
+	TLib3MFImplicitFunction = class(TLib3MFBase)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetIdentifier(): String;
+		procedure SetIdentifier(const AIdentifier: String);
+		function GetDisplayName(): String;
+		procedure SetDisplayName(const ADisplayName: String);
+		procedure AddNode(const ANodeType: String; const AIdentifier: String; const ADisplayName: String);
+		function GetNodes(): TLib3MFNodeAccessor;
+		procedure AddInput(const AIdentifier: String; const ADisplayName: String);
+		function GetInputs(): TLib3MFImplicitPortAccessor;
+		procedure AddOutput(const AIdentifier: String; const ADisplayName: String);
+		function GetOutputs(): TLib3MFImplicitPortAccessor;
 	end;
 
 
@@ -7128,16 +7386,34 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFTexture2D_SetTileStyleUVFunc: TLib3MFTexture2D_SetTileStyleUVFunc;
 		FLib3MFTexture2D_GetFilterFunc: TLib3MFTexture2D_GetFilterFunc;
 		FLib3MFTexture2D_SetFilterFunc: TLib3MFTexture2D_SetFilterFunc;
+		FLib3MFImplicitPort_GetIdentifierFunc: TLib3MFImplicitPort_GetIdentifierFunc;
+		FLib3MFImplicitPort_SetIdentifierFunc: TLib3MFImplicitPort_SetIdentifierFunc;
+		FLib3MFImplicitPort_GetDisplayNameFunc: TLib3MFImplicitPort_GetDisplayNameFunc;
+		FLib3MFImplicitPort_SetDisplayNameFunc: TLib3MFImplicitPort_SetDisplayNameFunc;
+		FLib3MFAccessor_GetSizeFunc: TLib3MFAccessor_GetSizeFunc;
+		FLib3MFAccessor_NextFunc: TLib3MFAccessor_NextFunc;
+		FLib3MFAccessor_PrevFunc: TLib3MFAccessor_PrevFunc;
+		FLib3MFAccessor_BeginFunc: TLib3MFAccessor_BeginFunc;
+		FLib3MFImplicitPortAccessor_GetFunc: TLib3MFImplicitPortAccessor_GetFunc;
 		FLib3MFImplicitNode_GetIdentifierFunc: TLib3MFImplicitNode_GetIdentifierFunc;
 		FLib3MFImplicitNode_SetIdentifierFunc: TLib3MFImplicitNode_SetIdentifierFunc;
 		FLib3MFImplicitNode_GetDisplayNameFunc: TLib3MFImplicitNode_GetDisplayNameFunc;
 		FLib3MFImplicitNode_SetDisplayNameFunc: TLib3MFImplicitNode_SetDisplayNameFunc;
-		FLib3MFImplicitAddition_GetInputAFunc: TLib3MFImplicitAddition_GetInputAFunc;
-		FLib3MFImplicitAddition_SetInputAFunc: TLib3MFImplicitAddition_SetInputAFunc;
-		FLib3MFImplicitAddition_GetInputBFunc: TLib3MFImplicitAddition_GetInputBFunc;
-		FLib3MFImplicitAddition_SetInputBFunc: TLib3MFImplicitAddition_SetInputBFunc;
-		FLib3MFImplicitAddition_GetOutputSumFunc: TLib3MFImplicitAddition_GetOutputSumFunc;
-		FLib3MFImplicitAddition_SetOutputSumFunc: TLib3MFImplicitAddition_SetOutputSumFunc;
+		FLib3MFImplicitNode_AddInputFunc: TLib3MFImplicitNode_AddInputFunc;
+		FLib3MFImplicitNode_GetInputsFunc: TLib3MFImplicitNode_GetInputsFunc;
+		FLib3MFImplicitNode_AddOutputFunc: TLib3MFImplicitNode_AddOutputFunc;
+		FLib3MFImplicitNode_GetOutputsFunc: TLib3MFImplicitNode_GetOutputsFunc;
+		FLib3MFNodeAccessor_GetFunc: TLib3MFNodeAccessor_GetFunc;
+		FLib3MFImplicitFunction_GetIdentifierFunc: TLib3MFImplicitFunction_GetIdentifierFunc;
+		FLib3MFImplicitFunction_SetIdentifierFunc: TLib3MFImplicitFunction_SetIdentifierFunc;
+		FLib3MFImplicitFunction_GetDisplayNameFunc: TLib3MFImplicitFunction_GetDisplayNameFunc;
+		FLib3MFImplicitFunction_SetDisplayNameFunc: TLib3MFImplicitFunction_SetDisplayNameFunc;
+		FLib3MFImplicitFunction_AddNodeFunc: TLib3MFImplicitFunction_AddNodeFunc;
+		FLib3MFImplicitFunction_GetNodesFunc: TLib3MFImplicitFunction_GetNodesFunc;
+		FLib3MFImplicitFunction_AddInputFunc: TLib3MFImplicitFunction_AddInputFunc;
+		FLib3MFImplicitFunction_GetInputsFunc: TLib3MFImplicitFunction_GetInputsFunc;
+		FLib3MFImplicitFunction_AddOutputFunc: TLib3MFImplicitFunction_AddOutputFunc;
+		FLib3MFImplicitFunction_GetOutputsFunc: TLib3MFImplicitFunction_GetOutputsFunc;
 		FLib3MFBuildItem_GetObjectResourceFunc: TLib3MFBuildItem_GetObjectResourceFunc;
 		FLib3MFBuildItem_GetUUIDFunc: TLib3MFBuildItem_GetUUIDFunc;
 		FLib3MFBuildItem_SetUUIDFunc: TLib3MFBuildItem_SetUUIDFunc;
@@ -7634,16 +7910,34 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFTexture2D_SetTileStyleUVFunc: TLib3MFTexture2D_SetTileStyleUVFunc read FLib3MFTexture2D_SetTileStyleUVFunc;
 		property Lib3MFTexture2D_GetFilterFunc: TLib3MFTexture2D_GetFilterFunc read FLib3MFTexture2D_GetFilterFunc;
 		property Lib3MFTexture2D_SetFilterFunc: TLib3MFTexture2D_SetFilterFunc read FLib3MFTexture2D_SetFilterFunc;
+		property Lib3MFImplicitPort_GetIdentifierFunc: TLib3MFImplicitPort_GetIdentifierFunc read FLib3MFImplicitPort_GetIdentifierFunc;
+		property Lib3MFImplicitPort_SetIdentifierFunc: TLib3MFImplicitPort_SetIdentifierFunc read FLib3MFImplicitPort_SetIdentifierFunc;
+		property Lib3MFImplicitPort_GetDisplayNameFunc: TLib3MFImplicitPort_GetDisplayNameFunc read FLib3MFImplicitPort_GetDisplayNameFunc;
+		property Lib3MFImplicitPort_SetDisplayNameFunc: TLib3MFImplicitPort_SetDisplayNameFunc read FLib3MFImplicitPort_SetDisplayNameFunc;
+		property Lib3MFAccessor_GetSizeFunc: TLib3MFAccessor_GetSizeFunc read FLib3MFAccessor_GetSizeFunc;
+		property Lib3MFAccessor_NextFunc: TLib3MFAccessor_NextFunc read FLib3MFAccessor_NextFunc;
+		property Lib3MFAccessor_PrevFunc: TLib3MFAccessor_PrevFunc read FLib3MFAccessor_PrevFunc;
+		property Lib3MFAccessor_BeginFunc: TLib3MFAccessor_BeginFunc read FLib3MFAccessor_BeginFunc;
+		property Lib3MFImplicitPortAccessor_GetFunc: TLib3MFImplicitPortAccessor_GetFunc read FLib3MFImplicitPortAccessor_GetFunc;
 		property Lib3MFImplicitNode_GetIdentifierFunc: TLib3MFImplicitNode_GetIdentifierFunc read FLib3MFImplicitNode_GetIdentifierFunc;
 		property Lib3MFImplicitNode_SetIdentifierFunc: TLib3MFImplicitNode_SetIdentifierFunc read FLib3MFImplicitNode_SetIdentifierFunc;
 		property Lib3MFImplicitNode_GetDisplayNameFunc: TLib3MFImplicitNode_GetDisplayNameFunc read FLib3MFImplicitNode_GetDisplayNameFunc;
 		property Lib3MFImplicitNode_SetDisplayNameFunc: TLib3MFImplicitNode_SetDisplayNameFunc read FLib3MFImplicitNode_SetDisplayNameFunc;
-		property Lib3MFImplicitAddition_GetInputAFunc: TLib3MFImplicitAddition_GetInputAFunc read FLib3MFImplicitAddition_GetInputAFunc;
-		property Lib3MFImplicitAddition_SetInputAFunc: TLib3MFImplicitAddition_SetInputAFunc read FLib3MFImplicitAddition_SetInputAFunc;
-		property Lib3MFImplicitAddition_GetInputBFunc: TLib3MFImplicitAddition_GetInputBFunc read FLib3MFImplicitAddition_GetInputBFunc;
-		property Lib3MFImplicitAddition_SetInputBFunc: TLib3MFImplicitAddition_SetInputBFunc read FLib3MFImplicitAddition_SetInputBFunc;
-		property Lib3MFImplicitAddition_GetOutputSumFunc: TLib3MFImplicitAddition_GetOutputSumFunc read FLib3MFImplicitAddition_GetOutputSumFunc;
-		property Lib3MFImplicitAddition_SetOutputSumFunc: TLib3MFImplicitAddition_SetOutputSumFunc read FLib3MFImplicitAddition_SetOutputSumFunc;
+		property Lib3MFImplicitNode_AddInputFunc: TLib3MFImplicitNode_AddInputFunc read FLib3MFImplicitNode_AddInputFunc;
+		property Lib3MFImplicitNode_GetInputsFunc: TLib3MFImplicitNode_GetInputsFunc read FLib3MFImplicitNode_GetInputsFunc;
+		property Lib3MFImplicitNode_AddOutputFunc: TLib3MFImplicitNode_AddOutputFunc read FLib3MFImplicitNode_AddOutputFunc;
+		property Lib3MFImplicitNode_GetOutputsFunc: TLib3MFImplicitNode_GetOutputsFunc read FLib3MFImplicitNode_GetOutputsFunc;
+		property Lib3MFNodeAccessor_GetFunc: TLib3MFNodeAccessor_GetFunc read FLib3MFNodeAccessor_GetFunc;
+		property Lib3MFImplicitFunction_GetIdentifierFunc: TLib3MFImplicitFunction_GetIdentifierFunc read FLib3MFImplicitFunction_GetIdentifierFunc;
+		property Lib3MFImplicitFunction_SetIdentifierFunc: TLib3MFImplicitFunction_SetIdentifierFunc read FLib3MFImplicitFunction_SetIdentifierFunc;
+		property Lib3MFImplicitFunction_GetDisplayNameFunc: TLib3MFImplicitFunction_GetDisplayNameFunc read FLib3MFImplicitFunction_GetDisplayNameFunc;
+		property Lib3MFImplicitFunction_SetDisplayNameFunc: TLib3MFImplicitFunction_SetDisplayNameFunc read FLib3MFImplicitFunction_SetDisplayNameFunc;
+		property Lib3MFImplicitFunction_AddNodeFunc: TLib3MFImplicitFunction_AddNodeFunc read FLib3MFImplicitFunction_AddNodeFunc;
+		property Lib3MFImplicitFunction_GetNodesFunc: TLib3MFImplicitFunction_GetNodesFunc read FLib3MFImplicitFunction_GetNodesFunc;
+		property Lib3MFImplicitFunction_AddInputFunc: TLib3MFImplicitFunction_AddInputFunc read FLib3MFImplicitFunction_AddInputFunc;
+		property Lib3MFImplicitFunction_GetInputsFunc: TLib3MFImplicitFunction_GetInputsFunc read FLib3MFImplicitFunction_GetInputsFunc;
+		property Lib3MFImplicitFunction_AddOutputFunc: TLib3MFImplicitFunction_AddOutputFunc read FLib3MFImplicitFunction_AddOutputFunc;
+		property Lib3MFImplicitFunction_GetOutputsFunc: TLib3MFImplicitFunction_GetOutputsFunc read FLib3MFImplicitFunction_GetOutputsFunc;
 		property Lib3MFBuildItem_GetObjectResourceFunc: TLib3MFBuildItem_GetObjectResourceFunc read FLib3MFBuildItem_GetObjectResourceFunc;
 		property Lib3MFBuildItem_GetUUIDFunc: TLib3MFBuildItem_GetUUIDFunc read FLib3MFBuildItem_GetUUIDFunc;
 		property Lib3MFBuildItem_SetUUIDFunc: TLib3MFBuildItem_SetUUIDFunc read FLib3MFBuildItem_SetUUIDFunc;
@@ -7877,6 +8171,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function convertConstToCompositionMethod(const AValue: Integer): TLib3MFCompositionMethod;
 	function convertCompositionSpaceToConst(const AValue: TLib3MFCompositionSpace): Integer;
 	function convertConstToCompositionSpace(const AValue: Integer): TLib3MFCompositionSpace;
+	function convertImplicitNodeTypesToConst(const AValue: TLib3MFImplicitNodeTypes): Integer;
+	function convertConstToImplicitNodeTypes(const AValue: Integer): TLib3MFImplicitNodeTypes;
 	function convertEncryptionAlgorithmToConst(const AValue: TLib3MFEncryptionAlgorithm): Integer;
 	function convertConstToEncryptionAlgorithm(const AValue: Integer): TLib3MFEncryptionAlgorithm;
 	function convertWrappingAlgorithmToConst(const AValue: TLib3MFWrappingAlgorithm): Integer;
@@ -7944,8 +8240,12 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function TLib3MFPolymorphicFactoryMakeImageStack(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImageStack;
 	function TLib3MFPolymorphicFactoryMakeAttachment(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFAttachment;
 	function TLib3MFPolymorphicFactoryMakeTexture2D(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFTexture2D;
+	function TLib3MFPolymorphicFactoryMakeImplicitPort(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitPort;
+	function TLib3MFPolymorphicFactoryMakeAccessor(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFAccessor;
+	function TLib3MFPolymorphicFactoryMakeImplicitPortAccessor(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitPortAccessor;
 	function TLib3MFPolymorphicFactoryMakeImplicitNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitNode;
-	function TLib3MFPolymorphicFactoryMakeImplicitAddition(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitAddition;
+	function TLib3MFPolymorphicFactoryMakeNodeAccessor(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFNodeAccessor;
+	function TLib3MFPolymorphicFactoryMakeImplicitFunction(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitFunction;
 	function TLib3MFPolymorphicFactoryMakeBuildItem(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBuildItem;
 	function TLib3MFPolymorphicFactoryMakeBuildItemIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBuildItemIterator;
 	function TLib3MFPolymorphicFactoryMakeSlice(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSlice;
@@ -8369,6 +8669,23 @@ implementation
 	end;
 	
 	
+	function convertImplicitNodeTypesToConst(const AValue: TLib3MFImplicitNodeTypes): Integer;
+	begin
+		case AValue of
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
+		end;
+	end;
+	
+	function convertConstToImplicitNodeTypes(const AValue: Integer): TLib3MFImplicitNodeTypes;
+	begin
+		case AValue of
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
+		end;
+	end;
+	
+	
 	function convertEncryptionAlgorithmToConst(const AValue: TLib3MFEncryptionAlgorithm): Integer;
 	begin
 		case AValue of
@@ -8550,8 +8867,12 @@ implementation
 			QWord($13A2561F0CFB712A): begin Obj := TLIB3MFImageStack.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ImageStack"
 			QWord($8CE7A1191A63A35D): begin Obj := TLIB3MFAttachment.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Attachment"
 			QWord($E0441CF976B36319): begin Obj := TLIB3MFTexture2D.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Texture2D"
+			QWord($D5C49B04AF1963CD): begin Obj := TLIB3MFImplicitPort.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPort"
+			QWord($F94265ED198E4784): begin Obj := TLIB3MFAccessor.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Accessor"
+			QWord($258087F875881ADD): begin Obj := TLIB3MFImplicitPortAccessor.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPortAccessor"
 			QWord($E72592A7725AB29B): begin Obj := TLIB3MFImplicitNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitNode"
-			QWord($DB93DED4EC7849D7): begin Obj := TLIB3MFImplicitAddition.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitAddition"
+			QWord($E0E0FC011B210DE0): begin Obj := TLIB3MFNodeAccessor.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::NodeAccessor"
+			QWord($6CE54469EEA83BC1): begin Obj := TLIB3MFImplicitFunction.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitFunction"
 			QWord($68FB2D5FFC4BA12A): begin Obj := TLIB3MFBuildItem.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItem"
 			QWord($A7D21BD364910860): begin Obj := TLIB3MFBuildItemIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItemIterator"
 			QWord($2198BCF4D8DF9C40): begin Obj := TLIB3MFSlice.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Slice"
@@ -8778,13 +9099,29 @@ implementation
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFTexture2D, TLIB3MFTexture2D>.Make(Wrapper, Handle);
 	end;
+	function TLib3MFPolymorphicFactoryMakeImplicitPort(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitPort;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFImplicitPort, TLIB3MFImplicitPort>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeAccessor(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFAccessor;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFAccessor, TLIB3MFAccessor>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeImplicitPortAccessor(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitPortAccessor;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFImplicitPortAccessor, TLIB3MFImplicitPortAccessor>.Make(Wrapper, Handle);
+	end;
 	function TLib3MFPolymorphicFactoryMakeImplicitNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitNode;
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFImplicitNode, TLIB3MFImplicitNode>.Make(Wrapper, Handle);
 	end;
-	function TLib3MFPolymorphicFactoryMakeImplicitAddition(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitAddition;
+	function TLib3MFPolymorphicFactoryMakeNodeAccessor(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFNodeAccessor;
 	begin
-		Result := TLib3MFPolymorphicFactory<TLIB3MFImplicitAddition, TLIB3MFImplicitAddition>.Make(Wrapper, Handle);
+		Result := TLib3MFPolymorphicFactory<TLIB3MFNodeAccessor, TLIB3MFNodeAccessor>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeImplicitFunction(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitFunction;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFImplicitFunction, TLIB3MFImplicitFunction>.Make(Wrapper, Handle);
 	end;
 	function TLib3MFPolymorphicFactoryMakeBuildItem(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBuildItem;
 	begin
@@ -12278,6 +12615,125 @@ implementation
 	end;
 
 (*************************************************************************************************************************
+ Class implementation for ImplicitPort
+**************************************************************************************************************************)
+
+	constructor TLib3MFImplicitPort.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFImplicitPort.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFImplicitPort.GetIdentifier(): String;
+	var
+		bytesNeededIdentifier: Cardinal;
+		bytesWrittenIdentifier: Cardinal;
+		bufferIdentifier: array of Char;
+	begin
+		bytesNeededIdentifier:= 0;
+		bytesWrittenIdentifier:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitPort_GetIdentifierFunc(FHandle, 0, bytesNeededIdentifier, nil));
+		SetLength(bufferIdentifier, bytesNeededIdentifier);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitPort_GetIdentifierFunc(FHandle, bytesNeededIdentifier, bytesWrittenIdentifier, @bufferIdentifier[0]));
+		Result := StrPas(@bufferIdentifier[0]);
+	end;
+
+	procedure TLib3MFImplicitPort.SetIdentifier(const AIdentifier: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitPort_SetIdentifierFunc(FHandle, PAnsiChar(AIdentifier)));
+	end;
+
+	function TLib3MFImplicitPort.GetDisplayName(): String;
+	var
+		bytesNeededDisplayName: Cardinal;
+		bytesWrittenDisplayName: Cardinal;
+		bufferDisplayName: array of Char;
+	begin
+		bytesNeededDisplayName:= 0;
+		bytesWrittenDisplayName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitPort_GetDisplayNameFunc(FHandle, 0, bytesNeededDisplayName, nil));
+		SetLength(bufferDisplayName, bytesNeededDisplayName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitPort_GetDisplayNameFunc(FHandle, bytesNeededDisplayName, bytesWrittenDisplayName, @bufferDisplayName[0]));
+		Result := StrPas(@bufferDisplayName[0]);
+	end;
+
+	procedure TLib3MFImplicitPort.SetDisplayName(const ADisplayName: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitPort_SetDisplayNameFunc(FHandle, PAnsiChar(ADisplayName)));
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for Accessor
+**************************************************************************************************************************)
+
+	constructor TLib3MFAccessor.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFAccessor.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFAccessor.GetSize(): QWord;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFAccessor_GetSizeFunc(FHandle, Result));
+	end;
+
+	function TLib3MFAccessor.Next(): Boolean;
+	var
+		ResultResult: Byte;
+	begin
+		ResultResult := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFAccessor_NextFunc(FHandle, ResultResult));
+		Result := (ResultResult <> 0);
+	end;
+
+	function TLib3MFAccessor.Prev(): Boolean;
+	var
+		ResultResult: Byte;
+	begin
+		ResultResult := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFAccessor_PrevFunc(FHandle, ResultResult));
+		Result := (ResultResult <> 0);
+	end;
+
+	procedure TLib3MFAccessor.Begin();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFAccessor_BeginFunc(FHandle));
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ImplicitPortAccessor
+**************************************************************************************************************************)
+
+	constructor TLib3MFImplicitPortAccessor.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFImplicitPortAccessor.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFImplicitPortAccessor.Get(): TLib3MFImplicitPort;
+	var
+		HPort: TLib3MFHandle;
+	begin
+		Result := nil;
+		HPort := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitPortAccessor_GetFunc(FHandle, HPort));
+		if Assigned(HPort) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HPort);
+	end;
+
+(*************************************************************************************************************************
  Class implementation for ImplicitNode
 **************************************************************************************************************************)
 
@@ -12329,59 +12785,78 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitNode_SetDisplayNameFunc(FHandle, PAnsiChar(ADisplayName)));
 	end;
 
+	procedure TLib3MFImplicitNode.AddInput(const AIdentifier: String; const ADisplayName: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitNode_AddInputFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName)));
+	end;
+
+	function TLib3MFImplicitNode.GetInputs(): TLib3MFImplicitPort;
+	var
+		HAccessor: TLib3MFHandle;
+	begin
+		Result := nil;
+		HAccessor := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitNode_GetInputsFunc(FHandle, HAccessor));
+		if Assigned(HAccessor) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HAccessor);
+	end;
+
+	procedure TLib3MFImplicitNode.AddOutput(const AIdentifier: String; const ADisplayName: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitNode_AddOutputFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName)));
+	end;
+
+	function TLib3MFImplicitNode.GetOutputs(): TLib3MFImplicitPort;
+	var
+		HAccessor: TLib3MFHandle;
+	begin
+		Result := nil;
+		HAccessor := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitNode_GetOutputsFunc(FHandle, HAccessor));
+		if Assigned(HAccessor) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HAccessor);
+	end;
+
 (*************************************************************************************************************************
- Class implementation for ImplicitAddition
+ Class implementation for NodeAccessor
 **************************************************************************************************************************)
 
-	constructor TLib3MFImplicitAddition.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	constructor TLib3MFNodeAccessor.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 	begin
 		inherited Create(AWrapper, AHandle);
 	end;
 
-	destructor TLib3MFImplicitAddition.Destroy;
+	destructor TLib3MFNodeAccessor.Destroy;
 	begin
 		inherited;
 	end;
 
-	function TLib3MFImplicitAddition.GetInputA(): String;
+	function TLib3MFNodeAccessor.Get(): TLib3MFImplicitNode;
 	var
-		bytesNeededInputA: Cardinal;
-		bytesWrittenInputA: Cardinal;
-		bufferInputA: array of Char;
+		HNode: TLib3MFHandle;
 	begin
-		bytesNeededInputA:= 0;
-		bytesWrittenInputA:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitAddition_GetInputAFunc(FHandle, 0, bytesNeededInputA, nil));
-		SetLength(bufferInputA, bytesNeededInputA);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitAddition_GetInputAFunc(FHandle, bytesNeededInputA, bytesWrittenInputA, @bufferInputA[0]));
-		Result := StrPas(@bufferInputA[0]);
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNodeAccessor_GetFunc(FHandle, HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitNode, TLib3MFImplicitNode>.Make(FWrapper, HNode);
 	end;
 
-	procedure TLib3MFImplicitAddition.SetInputA(const AInputA: String);
+(*************************************************************************************************************************
+ Class implementation for ImplicitFunction
+**************************************************************************************************************************)
+
+	constructor TLib3MFImplicitFunction.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitAddition_SetInputAFunc(FHandle, PAnsiChar(AInputA)));
+		inherited Create(AWrapper, AHandle);
 	end;
 
-	function TLib3MFImplicitAddition.GetInputB(): String;
-	var
-		bytesNeededInputB: Cardinal;
-		bytesWrittenInputB: Cardinal;
-		bufferInputB: array of Char;
+	destructor TLib3MFImplicitFunction.Destroy;
 	begin
-		bytesNeededInputB:= 0;
-		bytesWrittenInputB:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitAddition_GetInputBFunc(FHandle, 0, bytesNeededInputB, nil));
-		SetLength(bufferInputB, bytesNeededInputB);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitAddition_GetInputBFunc(FHandle, bytesNeededInputB, bytesWrittenInputB, @bufferInputB[0]));
-		Result := StrPas(@bufferInputB[0]);
+		inherited;
 	end;
 
-	procedure TLib3MFImplicitAddition.SetInputB(const AInputB: String);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitAddition_SetInputBFunc(FHandle, PAnsiChar(AInputB)));
-	end;
-
-	function TLib3MFImplicitAddition.GetOutputSum(): String;
+	function TLib3MFImplicitFunction.GetIdentifier(): String;
 	var
 		bytesNeededIdentifier: Cardinal;
 		bytesWrittenIdentifier: Cardinal;
@@ -12389,15 +12864,82 @@ implementation
 	begin
 		bytesNeededIdentifier:= 0;
 		bytesWrittenIdentifier:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitAddition_GetOutputSumFunc(FHandle, 0, bytesNeededIdentifier, nil));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_GetIdentifierFunc(FHandle, 0, bytesNeededIdentifier, nil));
 		SetLength(bufferIdentifier, bytesNeededIdentifier);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitAddition_GetOutputSumFunc(FHandle, bytesNeededIdentifier, bytesWrittenIdentifier, @bufferIdentifier[0]));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_GetIdentifierFunc(FHandle, bytesNeededIdentifier, bytesWrittenIdentifier, @bufferIdentifier[0]));
 		Result := StrPas(@bufferIdentifier[0]);
 	end;
 
-	procedure TLib3MFImplicitAddition.SetOutputSum(const AIdentifier: String);
+	procedure TLib3MFImplicitFunction.SetIdentifier(const AIdentifier: String);
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitAddition_SetOutputSumFunc(FHandle, PAnsiChar(AIdentifier)));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_SetIdentifierFunc(FHandle, PAnsiChar(AIdentifier)));
+	end;
+
+	function TLib3MFImplicitFunction.GetDisplayName(): String;
+	var
+		bytesNeededDisplayName: Cardinal;
+		bytesWrittenDisplayName: Cardinal;
+		bufferDisplayName: array of Char;
+	begin
+		bytesNeededDisplayName:= 0;
+		bytesWrittenDisplayName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_GetDisplayNameFunc(FHandle, 0, bytesNeededDisplayName, nil));
+		SetLength(bufferDisplayName, bytesNeededDisplayName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_GetDisplayNameFunc(FHandle, bytesNeededDisplayName, bytesWrittenDisplayName, @bufferDisplayName[0]));
+		Result := StrPas(@bufferDisplayName[0]);
+	end;
+
+	procedure TLib3MFImplicitFunction.SetDisplayName(const ADisplayName: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_SetDisplayNameFunc(FHandle, PAnsiChar(ADisplayName)));
+	end;
+
+	procedure TLib3MFImplicitFunction.AddNode(const ANodeType: String; const AIdentifier: String; const ADisplayName: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddNodeFunc(FHandle, PAnsiChar(ANodeType), PAnsiChar(AIdentifier), PAnsiChar(ADisplayName)));
+	end;
+
+	function TLib3MFImplicitFunction.GetNodes(): TLib3MFNodeAccessor;
+	var
+		HAccessor: TLib3MFHandle;
+	begin
+		Result := nil;
+		HAccessor := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_GetNodesFunc(FHandle, HAccessor));
+		if Assigned(HAccessor) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFNodeAccessor, TLib3MFNodeAccessor>.Make(FWrapper, HAccessor);
+	end;
+
+	procedure TLib3MFImplicitFunction.AddInput(const AIdentifier: String; const ADisplayName: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddInputFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName)));
+	end;
+
+	function TLib3MFImplicitFunction.GetInputs(): TLib3MFImplicitPortAccessor;
+	var
+		HAccessor: TLib3MFHandle;
+	begin
+		Result := nil;
+		HAccessor := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_GetInputsFunc(FHandle, HAccessor));
+		if Assigned(HAccessor) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPortAccessor, TLib3MFImplicitPortAccessor>.Make(FWrapper, HAccessor);
+	end;
+
+	procedure TLib3MFImplicitFunction.AddOutput(const AIdentifier: String; const ADisplayName: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddOutputFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName)));
+	end;
+
+	function TLib3MFImplicitFunction.GetOutputs(): TLib3MFImplicitPortAccessor;
+	var
+		HAccessor: TLib3MFHandle;
+	begin
+		Result := nil;
+		HAccessor := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_GetOutputsFunc(FHandle, HAccessor));
+		if Assigned(HAccessor) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPortAccessor, TLib3MFImplicitPortAccessor>.Make(FWrapper, HAccessor);
 	end;
 
 (*************************************************************************************************************************
@@ -14520,16 +15062,34 @@ implementation
 		FLib3MFTexture2D_SetTileStyleUVFunc := LoadFunction('lib3mf_texture2d_settilestyleuv');
 		FLib3MFTexture2D_GetFilterFunc := LoadFunction('lib3mf_texture2d_getfilter');
 		FLib3MFTexture2D_SetFilterFunc := LoadFunction('lib3mf_texture2d_setfilter');
+		FLib3MFImplicitPort_GetIdentifierFunc := LoadFunction('lib3mf_implicitport_getidentifier');
+		FLib3MFImplicitPort_SetIdentifierFunc := LoadFunction('lib3mf_implicitport_setidentifier');
+		FLib3MFImplicitPort_GetDisplayNameFunc := LoadFunction('lib3mf_implicitport_getdisplayname');
+		FLib3MFImplicitPort_SetDisplayNameFunc := LoadFunction('lib3mf_implicitport_setdisplayname');
+		FLib3MFAccessor_GetSizeFunc := LoadFunction('lib3mf_accessor_getsize');
+		FLib3MFAccessor_NextFunc := LoadFunction('lib3mf_accessor_next');
+		FLib3MFAccessor_PrevFunc := LoadFunction('lib3mf_accessor_prev');
+		FLib3MFAccessor_BeginFunc := LoadFunction('lib3mf_accessor_begin');
+		FLib3MFImplicitPortAccessor_GetFunc := LoadFunction('lib3mf_implicitportaccessor_get');
 		FLib3MFImplicitNode_GetIdentifierFunc := LoadFunction('lib3mf_implicitnode_getidentifier');
 		FLib3MFImplicitNode_SetIdentifierFunc := LoadFunction('lib3mf_implicitnode_setidentifier');
 		FLib3MFImplicitNode_GetDisplayNameFunc := LoadFunction('lib3mf_implicitnode_getdisplayname');
 		FLib3MFImplicitNode_SetDisplayNameFunc := LoadFunction('lib3mf_implicitnode_setdisplayname');
-		FLib3MFImplicitAddition_GetInputAFunc := LoadFunction('lib3mf_implicitaddition_getinputa');
-		FLib3MFImplicitAddition_SetInputAFunc := LoadFunction('lib3mf_implicitaddition_setinputa');
-		FLib3MFImplicitAddition_GetInputBFunc := LoadFunction('lib3mf_implicitaddition_getinputb');
-		FLib3MFImplicitAddition_SetInputBFunc := LoadFunction('lib3mf_implicitaddition_setinputb');
-		FLib3MFImplicitAddition_GetOutputSumFunc := LoadFunction('lib3mf_implicitaddition_getoutputsum');
-		FLib3MFImplicitAddition_SetOutputSumFunc := LoadFunction('lib3mf_implicitaddition_setoutputsum');
+		FLib3MFImplicitNode_AddInputFunc := LoadFunction('lib3mf_implicitnode_addinput');
+		FLib3MFImplicitNode_GetInputsFunc := LoadFunction('lib3mf_implicitnode_getinputs');
+		FLib3MFImplicitNode_AddOutputFunc := LoadFunction('lib3mf_implicitnode_addoutput');
+		FLib3MFImplicitNode_GetOutputsFunc := LoadFunction('lib3mf_implicitnode_getoutputs');
+		FLib3MFNodeAccessor_GetFunc := LoadFunction('lib3mf_nodeaccessor_get');
+		FLib3MFImplicitFunction_GetIdentifierFunc := LoadFunction('lib3mf_implicitfunction_getidentifier');
+		FLib3MFImplicitFunction_SetIdentifierFunc := LoadFunction('lib3mf_implicitfunction_setidentifier');
+		FLib3MFImplicitFunction_GetDisplayNameFunc := LoadFunction('lib3mf_implicitfunction_getdisplayname');
+		FLib3MFImplicitFunction_SetDisplayNameFunc := LoadFunction('lib3mf_implicitfunction_setdisplayname');
+		FLib3MFImplicitFunction_AddNodeFunc := LoadFunction('lib3mf_implicitfunction_addnode');
+		FLib3MFImplicitFunction_GetNodesFunc := LoadFunction('lib3mf_implicitfunction_getnodes');
+		FLib3MFImplicitFunction_AddInputFunc := LoadFunction('lib3mf_implicitfunction_addinput');
+		FLib3MFImplicitFunction_GetInputsFunc := LoadFunction('lib3mf_implicitfunction_getinputs');
+		FLib3MFImplicitFunction_AddOutputFunc := LoadFunction('lib3mf_implicitfunction_addoutput');
+		FLib3MFImplicitFunction_GetOutputsFunc := LoadFunction('lib3mf_implicitfunction_getoutputs');
 		FLib3MFBuildItem_GetObjectResourceFunc := LoadFunction('lib3mf_builditem_getobjectresource');
 		FLib3MFBuildItem_GetUUIDFunc := LoadFunction('lib3mf_builditem_getuuid');
 		FLib3MFBuildItem_SetUUIDFunc := LoadFunction('lib3mf_builditem_setuuid');
@@ -15653,6 +16213,33 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_texture2d_setfilter'), @FLib3MFTexture2D_SetFilterFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitport_getidentifier'), @FLib3MFImplicitPort_GetIdentifierFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitport_setidentifier'), @FLib3MFImplicitPort_SetIdentifierFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitport_getdisplayname'), @FLib3MFImplicitPort_GetDisplayNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitport_setdisplayname'), @FLib3MFImplicitPort_SetDisplayNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_accessor_getsize'), @FLib3MFAccessor_GetSizeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_accessor_next'), @FLib3MFAccessor_NextFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_accessor_prev'), @FLib3MFAccessor_PrevFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_accessor_begin'), @FLib3MFAccessor_BeginFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitportaccessor_get'), @FLib3MFImplicitPortAccessor_GetFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_getidentifier'), @FLib3MFImplicitNode_GetIdentifierFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -15665,22 +16252,49 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_setdisplayname'), @FLib3MFImplicitNode_SetDisplayNameFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitaddition_getinputa'), @FLib3MFImplicitAddition_GetInputAFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_addinput'), @FLib3MFImplicitNode_AddInputFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitaddition_setinputa'), @FLib3MFImplicitAddition_SetInputAFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_getinputs'), @FLib3MFImplicitNode_GetInputsFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitaddition_getinputb'), @FLib3MFImplicitAddition_GetInputBFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_addoutput'), @FLib3MFImplicitNode_AddOutputFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitaddition_setinputb'), @FLib3MFImplicitAddition_SetInputBFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_getoutputs'), @FLib3MFImplicitNode_GetOutputsFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitaddition_getoutputsum'), @FLib3MFImplicitAddition_GetOutputSumFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_nodeaccessor_get'), @FLib3MFNodeAccessor_GetFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitaddition_setoutputsum'), @FLib3MFImplicitAddition_SetOutputSumFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_getidentifier'), @FLib3MFImplicitFunction_GetIdentifierFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_setidentifier'), @FLib3MFImplicitFunction_SetIdentifierFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_getdisplayname'), @FLib3MFImplicitFunction_GetDisplayNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_setdisplayname'), @FLib3MFImplicitFunction_SetDisplayNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addnode'), @FLib3MFImplicitFunction_AddNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_getnodes'), @FLib3MFImplicitFunction_GetNodesFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addinput'), @FLib3MFImplicitFunction_AddInputFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_getinputs'), @FLib3MFImplicitFunction_GetInputsFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addoutput'), @FLib3MFImplicitFunction_AddOutputFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_getoutputs'), @FLib3MFImplicitFunction_GetOutputsFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_builditem_getobjectresource'), @FLib3MFBuildItem_GetObjectResourceFunc);

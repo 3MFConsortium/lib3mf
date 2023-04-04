@@ -24,42 +24,88 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CImplicitNode
+Abstract: This is the class declaration of CImplicitPort
 
 */
 
-#include "lib3mf_implicitnode.hpp"
-#include "lib3mf_interfaceexception.hpp"
+
+#ifndef __LIB3MF_IMPLICITPORT
+#define __LIB3MF_IMPLICITPORT
+
+#include "lib3mf_interfaces.hpp"
+
+// Parent classes
+#include "lib3mf_base.hpp"
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 // Include custom headers here.
 
-using namespace Lib3MF::Impl;
+
+namespace Lib3MF {
+namespace Impl {
+
 
 /*************************************************************************************************************************
- Class definition of CImplicitNode
+ Class declaration of CImplicitPort 
 **************************************************************************************************************************/
 
-std::string CImplicitNode::GetIdentifier()
-{
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
+class CImplicitPort : public virtual IImplicitPort, public virtual CBase {
+private:
 
-void CImplicitNode::SetIdentifier(const std::string & sIdentifier)
-{
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
+	/**
+	* Put private members here.
+	*/
 
-std::string CImplicitNode::GetDisplayName()
-{
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
+protected:
 
-void CImplicitNode::SetDisplayName(const std::string & sDisplayName)
-{
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
+	/**
+	* Put protected members here.
+	*/
 
-CImplicitNode::CImplicitNode(NMR::PImplicitNode pImplicitNode)
-    : m_pImplicitNode(std::move(pImplicitNode))
-{
-}
+public:
+
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
+
+
+	/**
+	* Public member functions to implement.
+	*/
+
+	/**
+	* IImplicitPort::GetIdentifier - Retrieves the identifier of the port
+	* @return the identifier
+	*/
+	std::string GetIdentifier() override;
+
+	/**
+	* IImplicitPort::SetIdentifier - Sets the identifier of the port
+	* @param[in] sIdentifier - the identifier
+	*/
+	void SetIdentifier(const std::string & sIdentifier) override;
+
+	/**
+	* IImplicitPort::GetDisplayName - Retrieves the display name of the port
+	* @return the display name
+	*/
+	std::string GetDisplayName() override;
+
+	/**
+	* IImplicitPort::SetDisplayName - Sets the display name of the port
+	* @param[in] sDisplayName - the display name
+	*/
+	void SetDisplayName(const std::string & sDisplayName) override;
+
+};
+
+} // namespace Impl
+} // namespace Lib3MF
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#endif // __LIB3MF_IMPLICITPORT

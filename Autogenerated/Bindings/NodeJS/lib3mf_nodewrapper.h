@@ -1284,6 +1284,66 @@ public:
 };
 
 /*************************************************************************************************************************
+ Class CLib3MFImplicitPort 
+**************************************************************************************************************************/
+class CLib3MFImplicitPort : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetDisplayName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetDisplayName(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFImplicitPort();
+	~CLib3MFImplicitPort();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFAccessor 
+**************************************************************************************************************************/
+class CLib3MFAccessor : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetSize(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void Next(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void Prev(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void Begin(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFAccessor();
+	~CLib3MFAccessor();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFImplicitPortAccessor 
+**************************************************************************************************************************/
+class CLib3MFImplicitPortAccessor : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void Get(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFImplicitPortAccessor();
+	~CLib3MFImplicitPortAccessor();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
  Class CLib3MFImplicitNode 
 **************************************************************************************************************************/
 class CLib3MFImplicitNode : public CLib3MFBaseClass {
@@ -1294,6 +1354,10 @@ private:
 	static void SetIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetDisplayName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetDisplayName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddInput(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputs(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddOutput(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputs(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFImplicitNode();
@@ -1305,22 +1369,44 @@ public:
 };
 
 /*************************************************************************************************************************
- Class CLib3MFImplicitAddition 
+ Class CLib3MFNodeAccessor 
 **************************************************************************************************************************/
-class CLib3MFImplicitAddition : public CLib3MFBaseClass {
+class CLib3MFNodeAccessor : public CLib3MFBaseClass {
 private:
 	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static v8::Persistent<v8::Function> constructor;
-	static void GetInputA(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void SetInputA(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetInputB(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void SetInputB(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetOutputSum(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void SetOutputSum(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void Get(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
-	CLib3MFImplicitAddition();
-	~CLib3MFImplicitAddition();
+	CLib3MFNodeAccessor();
+	~CLib3MFNodeAccessor();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFImplicitFunction 
+**************************************************************************************************************************/
+class CLib3MFImplicitFunction : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetDisplayName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetDisplayName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetNodes(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddInput(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputs(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddOutput(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputs(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFImplicitFunction();
+	~CLib3MFImplicitFunction();
 	
 	static void Init();
 	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);

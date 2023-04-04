@@ -24,42 +24,39 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CImplicitNode
+Abstract: This is a stub class definition of CAccessor
 
 */
 
-#include "lib3mf_implicitnode.hpp"
+#include "lib3mf_accessor.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
 
+
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CImplicitNode
+ Class definition of CAccessor 
 **************************************************************************************************************************/
 
-std::string CImplicitNode::GetIdentifier()
+Lib3MF_uint64 CAccessor::GetSize()
 {
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CImplicitNode::SetIdentifier(const std::string & sIdentifier)
+bool CAccessor::Next()
 {
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-std::string CImplicitNode::GetDisplayName()
+bool CAccessor::Prev()
 {
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CImplicitNode::SetDisplayName(const std::string & sDisplayName)
+void CAccessor::Begin()
 {
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-CImplicitNode::CImplicitNode(NMR::PImplicitNode pImplicitNode)
-    : m_pImplicitNode(std::move(pImplicitNode))
-{
-}

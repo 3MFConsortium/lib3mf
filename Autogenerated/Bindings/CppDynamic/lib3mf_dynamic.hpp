@@ -110,8 +110,12 @@ class CImage3D;
 class CImageStack;
 class CAttachment;
 class CTexture2D;
+class CImplicitPort;
+class CAccessor;
+class CImplicitPortAccessor;
 class CImplicitNode;
-class CImplicitAddition;
+class CNodeAccessor;
+class CImplicitFunction;
 class CBuildItem;
 class CBuildItemIterator;
 class CSlice;
@@ -181,8 +185,12 @@ typedef CImage3D CLib3MFImage3D;
 typedef CImageStack CLib3MFImageStack;
 typedef CAttachment CLib3MFAttachment;
 typedef CTexture2D CLib3MFTexture2D;
+typedef CImplicitPort CLib3MFImplicitPort;
+typedef CAccessor CLib3MFAccessor;
+typedef CImplicitPortAccessor CLib3MFImplicitPortAccessor;
 typedef CImplicitNode CLib3MFImplicitNode;
-typedef CImplicitAddition CLib3MFImplicitAddition;
+typedef CNodeAccessor CLib3MFNodeAccessor;
+typedef CImplicitFunction CLib3MFImplicitFunction;
 typedef CBuildItem CLib3MFBuildItem;
 typedef CBuildItemIterator CLib3MFBuildItemIterator;
 typedef CSlice CLib3MFSlice;
@@ -252,8 +260,12 @@ typedef std::shared_ptr<CImage3D> PImage3D;
 typedef std::shared_ptr<CImageStack> PImageStack;
 typedef std::shared_ptr<CAttachment> PAttachment;
 typedef std::shared_ptr<CTexture2D> PTexture2D;
+typedef std::shared_ptr<CImplicitPort> PImplicitPort;
+typedef std::shared_ptr<CAccessor> PAccessor;
+typedef std::shared_ptr<CImplicitPortAccessor> PImplicitPortAccessor;
 typedef std::shared_ptr<CImplicitNode> PImplicitNode;
-typedef std::shared_ptr<CImplicitAddition> PImplicitAddition;
+typedef std::shared_ptr<CNodeAccessor> PNodeAccessor;
+typedef std::shared_ptr<CImplicitFunction> PImplicitFunction;
 typedef std::shared_ptr<CBuildItem> PBuildItem;
 typedef std::shared_ptr<CBuildItemIterator> PBuildItemIterator;
 typedef std::shared_ptr<CSlice> PSlice;
@@ -323,8 +335,12 @@ typedef PImage3D PLib3MFImage3D;
 typedef PImageStack PLib3MFImageStack;
 typedef PAttachment PLib3MFAttachment;
 typedef PTexture2D PLib3MFTexture2D;
+typedef PImplicitPort PLib3MFImplicitPort;
+typedef PAccessor PLib3MFAccessor;
+typedef PImplicitPortAccessor PLib3MFImplicitPortAccessor;
 typedef PImplicitNode PLib3MFImplicitNode;
-typedef PImplicitAddition PLib3MFImplicitAddition;
+typedef PNodeAccessor PLib3MFNodeAccessor;
+typedef PImplicitFunction PLib3MFImplicitFunction;
 typedef PBuildItem PLib3MFBuildItem;
 typedef PBuildItemIterator PLib3MFBuildItemIterator;
 typedef PSlice PLib3MFSlice;
@@ -694,8 +710,12 @@ private:
 	friend class CImageStack;
 	friend class CAttachment;
 	friend class CTexture2D;
+	friend class CImplicitPort;
+	friend class CAccessor;
+	friend class CImplicitPortAccessor;
 	friend class CImplicitNode;
-	friend class CImplicitAddition;
+	friend class CNodeAccessor;
+	friend class CImplicitFunction;
 	friend class CBuildItem;
 	friend class CBuildItemIterator;
 	friend class CSlice;
@@ -1913,6 +1933,63 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CImplicitPort 
+**************************************************************************************************************************/
+class CImplicitPort : public CBase {
+public:
+	
+	/**
+	* CImplicitPort::CImplicitPort - Constructor for ImplicitPort class.
+	*/
+	CImplicitPort(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetIdentifier();
+	inline void SetIdentifier(const std::string & sIdentifier);
+	inline std::string GetDisplayName();
+	inline void SetDisplayName(const std::string & sDisplayName);
+};
+	
+/*************************************************************************************************************************
+ Class CAccessor 
+**************************************************************************************************************************/
+class CAccessor : public CBase {
+public:
+	
+	/**
+	* CAccessor::CAccessor - Constructor for Accessor class.
+	*/
+	CAccessor(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline Lib3MF_uint64 GetSize();
+	inline bool Next();
+	inline bool Prev();
+	inline void Begin();
+};
+	
+/*************************************************************************************************************************
+ Class CImplicitPortAccessor 
+**************************************************************************************************************************/
+class CImplicitPortAccessor : public CAccessor {
+public:
+	
+	/**
+	* CImplicitPortAccessor::CImplicitPortAccessor - Constructor for ImplicitPortAccessor class.
+	*/
+	CImplicitPortAccessor(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CAccessor(pWrapper, pHandle)
+	{
+	}
+	
+	inline PImplicitPort Get();
+};
+	
+/*************************************************************************************************************************
  Class CImplicitNode 
 **************************************************************************************************************************/
 class CImplicitNode : public CBase {
@@ -1930,28 +2007,53 @@ public:
 	inline void SetIdentifier(const std::string & sIdentifier);
 	inline std::string GetDisplayName();
 	inline void SetDisplayName(const std::string & sDisplayName);
+	inline void AddInput(const std::string & sIdentifier, const std::string & sDisplayName);
+	inline PImplicitPort GetInputs();
+	inline void AddOutput(const std::string & sIdentifier, const std::string & sDisplayName);
+	inline PImplicitPort GetOutputs();
 };
 	
 /*************************************************************************************************************************
- Class CImplicitAddition 
+ Class CNodeAccessor 
 **************************************************************************************************************************/
-class CImplicitAddition : public CImplicitNode {
+class CNodeAccessor : public CAccessor {
 public:
 	
 	/**
-	* CImplicitAddition::CImplicitAddition - Constructor for ImplicitAddition class.
+	* CNodeAccessor::CNodeAccessor - Constructor for NodeAccessor class.
 	*/
-	CImplicitAddition(CWrapper* pWrapper, Lib3MFHandle pHandle)
-		: CImplicitNode(pWrapper, pHandle)
+	CNodeAccessor(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CAccessor(pWrapper, pHandle)
 	{
 	}
 	
-	inline std::string GetInputA();
-	inline void SetInputA(const std::string & sInputA);
-	inline std::string GetInputB();
-	inline void SetInputB(const std::string & sInputB);
-	inline std::string GetOutputSum();
-	inline void SetOutputSum(const std::string & sIdentifier);
+	inline PImplicitNode Get();
+};
+	
+/*************************************************************************************************************************
+ Class CImplicitFunction 
+**************************************************************************************************************************/
+class CImplicitFunction : public CBase {
+public:
+	
+	/**
+	* CImplicitFunction::CImplicitFunction - Constructor for ImplicitFunction class.
+	*/
+	CImplicitFunction(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetIdentifier();
+	inline void SetIdentifier(const std::string & sIdentifier);
+	inline std::string GetDisplayName();
+	inline void SetDisplayName(const std::string & sDisplayName);
+	inline void AddNode(const std::string & sNodeType, const std::string & sIdentifier, const std::string & sDisplayName);
+	inline PNodeAccessor GetNodes();
+	inline void AddInput(const std::string & sIdentifier, const std::string & sDisplayName);
+	inline PImplicitPortAccessor GetInputs();
+	inline void AddOutput(const std::string & sIdentifier, const std::string & sDisplayName);
+	inline PImplicitPortAccessor GetOutputs();
 };
 	
 /*************************************************************************************************************************
@@ -2353,8 +2455,12 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0x13A2561F0CFB712AUL: return new CImageStack(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImageStack"
 		case 0x8CE7A1191A63A35DUL: return new CAttachment(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Attachment"
 		case 0xE0441CF976B36319UL: return new CTexture2D(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Texture2D"
+		case 0xD5C49B04AF1963CDUL: return new CImplicitPort(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPort"
+		case 0xF94265ED198E4784UL: return new CAccessor(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Accessor"
+		case 0x258087F875881ADDUL: return new CImplicitPortAccessor(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPortAccessor"
 		case 0xE72592A7725AB29BUL: return new CImplicitNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitNode"
-		case 0xDB93DED4EC7849D7UL: return new CImplicitAddition(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitAddition"
+		case 0xE0E0FC011B210DE0UL: return new CNodeAccessor(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::NodeAccessor"
+		case 0x6CE54469EEA83BC1UL: return new CImplicitFunction(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitFunction"
 		case 0x68FB2D5FFC4BA12AUL: return new CBuildItem(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItem"
 		case 0xA7D21BD364910860UL: return new CBuildItemIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItemIterator"
 		case 0x2198BCF4D8DF9C40UL: return new CSlice(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Slice"
@@ -2965,16 +3071,34 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Texture2D_SetTileStyleUV = nullptr;
 		pWrapperTable->m_Texture2D_GetFilter = nullptr;
 		pWrapperTable->m_Texture2D_SetFilter = nullptr;
+		pWrapperTable->m_ImplicitPort_GetIdentifier = nullptr;
+		pWrapperTable->m_ImplicitPort_SetIdentifier = nullptr;
+		pWrapperTable->m_ImplicitPort_GetDisplayName = nullptr;
+		pWrapperTable->m_ImplicitPort_SetDisplayName = nullptr;
+		pWrapperTable->m_Accessor_GetSize = nullptr;
+		pWrapperTable->m_Accessor_Next = nullptr;
+		pWrapperTable->m_Accessor_Prev = nullptr;
+		pWrapperTable->m_Accessor_Begin = nullptr;
+		pWrapperTable->m_ImplicitPortAccessor_Get = nullptr;
 		pWrapperTable->m_ImplicitNode_GetIdentifier = nullptr;
 		pWrapperTable->m_ImplicitNode_SetIdentifier = nullptr;
 		pWrapperTable->m_ImplicitNode_GetDisplayName = nullptr;
 		pWrapperTable->m_ImplicitNode_SetDisplayName = nullptr;
-		pWrapperTable->m_ImplicitAddition_GetInputA = nullptr;
-		pWrapperTable->m_ImplicitAddition_SetInputA = nullptr;
-		pWrapperTable->m_ImplicitAddition_GetInputB = nullptr;
-		pWrapperTable->m_ImplicitAddition_SetInputB = nullptr;
-		pWrapperTable->m_ImplicitAddition_GetOutputSum = nullptr;
-		pWrapperTable->m_ImplicitAddition_SetOutputSum = nullptr;
+		pWrapperTable->m_ImplicitNode_AddInput = nullptr;
+		pWrapperTable->m_ImplicitNode_GetInputs = nullptr;
+		pWrapperTable->m_ImplicitNode_AddOutput = nullptr;
+		pWrapperTable->m_ImplicitNode_GetOutputs = nullptr;
+		pWrapperTable->m_NodeAccessor_Get = nullptr;
+		pWrapperTable->m_ImplicitFunction_GetIdentifier = nullptr;
+		pWrapperTable->m_ImplicitFunction_SetIdentifier = nullptr;
+		pWrapperTable->m_ImplicitFunction_GetDisplayName = nullptr;
+		pWrapperTable->m_ImplicitFunction_SetDisplayName = nullptr;
+		pWrapperTable->m_ImplicitFunction_AddNode = nullptr;
+		pWrapperTable->m_ImplicitFunction_GetNodes = nullptr;
+		pWrapperTable->m_ImplicitFunction_AddInput = nullptr;
+		pWrapperTable->m_ImplicitFunction_GetInputs = nullptr;
+		pWrapperTable->m_ImplicitFunction_AddOutput = nullptr;
+		pWrapperTable->m_ImplicitFunction_GetOutputs = nullptr;
 		pWrapperTable->m_BuildItem_GetObjectResource = nullptr;
 		pWrapperTable->m_BuildItem_GetUUID = nullptr;
 		pWrapperTable->m_BuildItem_SetUUID = nullptr;
@@ -6016,6 +6140,87 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ImplicitPort_GetIdentifier = (PLib3MFImplicitPort_GetIdentifierPtr) GetProcAddress(hLibrary, "lib3mf_implicitport_getidentifier");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitPort_GetIdentifier = (PLib3MFImplicitPort_GetIdentifierPtr) dlsym(hLibrary, "lib3mf_implicitport_getidentifier");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitPort_GetIdentifier == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitPort_SetIdentifier = (PLib3MFImplicitPort_SetIdentifierPtr) GetProcAddress(hLibrary, "lib3mf_implicitport_setidentifier");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitPort_SetIdentifier = (PLib3MFImplicitPort_SetIdentifierPtr) dlsym(hLibrary, "lib3mf_implicitport_setidentifier");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitPort_SetIdentifier == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitPort_GetDisplayName = (PLib3MFImplicitPort_GetDisplayNamePtr) GetProcAddress(hLibrary, "lib3mf_implicitport_getdisplayname");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitPort_GetDisplayName = (PLib3MFImplicitPort_GetDisplayNamePtr) dlsym(hLibrary, "lib3mf_implicitport_getdisplayname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitPort_GetDisplayName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitPort_SetDisplayName = (PLib3MFImplicitPort_SetDisplayNamePtr) GetProcAddress(hLibrary, "lib3mf_implicitport_setdisplayname");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitPort_SetDisplayName = (PLib3MFImplicitPort_SetDisplayNamePtr) dlsym(hLibrary, "lib3mf_implicitport_setdisplayname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitPort_SetDisplayName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Accessor_GetSize = (PLib3MFAccessor_GetSizePtr) GetProcAddress(hLibrary, "lib3mf_accessor_getsize");
+		#else // _WIN32
+		pWrapperTable->m_Accessor_GetSize = (PLib3MFAccessor_GetSizePtr) dlsym(hLibrary, "lib3mf_accessor_getsize");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Accessor_GetSize == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Accessor_Next = (PLib3MFAccessor_NextPtr) GetProcAddress(hLibrary, "lib3mf_accessor_next");
+		#else // _WIN32
+		pWrapperTable->m_Accessor_Next = (PLib3MFAccessor_NextPtr) dlsym(hLibrary, "lib3mf_accessor_next");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Accessor_Next == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Accessor_Prev = (PLib3MFAccessor_PrevPtr) GetProcAddress(hLibrary, "lib3mf_accessor_prev");
+		#else // _WIN32
+		pWrapperTable->m_Accessor_Prev = (PLib3MFAccessor_PrevPtr) dlsym(hLibrary, "lib3mf_accessor_prev");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Accessor_Prev == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Accessor_Begin = (PLib3MFAccessor_BeginPtr) GetProcAddress(hLibrary, "lib3mf_accessor_begin");
+		#else // _WIN32
+		pWrapperTable->m_Accessor_Begin = (PLib3MFAccessor_BeginPtr) dlsym(hLibrary, "lib3mf_accessor_begin");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Accessor_Begin == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitPortAccessor_Get = (PLib3MFImplicitPortAccessor_GetPtr) GetProcAddress(hLibrary, "lib3mf_implicitportaccessor_get");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitPortAccessor_Get = (PLib3MFImplicitPortAccessor_GetPtr) dlsym(hLibrary, "lib3mf_implicitportaccessor_get");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitPortAccessor_Get == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_ImplicitNode_GetIdentifier = (PLib3MFImplicitNode_GetIdentifierPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_getidentifier");
 		#else // _WIN32
 		pWrapperTable->m_ImplicitNode_GetIdentifier = (PLib3MFImplicitNode_GetIdentifierPtr) dlsym(hLibrary, "lib3mf_implicitnode_getidentifier");
@@ -6052,57 +6257,138 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_ImplicitAddition_GetInputA = (PLib3MFImplicitAddition_GetInputAPtr) GetProcAddress(hLibrary, "lib3mf_implicitaddition_getinputa");
+		pWrapperTable->m_ImplicitNode_AddInput = (PLib3MFImplicitNode_AddInputPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_addinput");
 		#else // _WIN32
-		pWrapperTable->m_ImplicitAddition_GetInputA = (PLib3MFImplicitAddition_GetInputAPtr) dlsym(hLibrary, "lib3mf_implicitaddition_getinputa");
+		pWrapperTable->m_ImplicitNode_AddInput = (PLib3MFImplicitNode_AddInputPtr) dlsym(hLibrary, "lib3mf_implicitnode_addinput");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_ImplicitAddition_GetInputA == nullptr)
+		if (pWrapperTable->m_ImplicitNode_AddInput == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_ImplicitAddition_SetInputA = (PLib3MFImplicitAddition_SetInputAPtr) GetProcAddress(hLibrary, "lib3mf_implicitaddition_setinputa");
+		pWrapperTable->m_ImplicitNode_GetInputs = (PLib3MFImplicitNode_GetInputsPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_getinputs");
 		#else // _WIN32
-		pWrapperTable->m_ImplicitAddition_SetInputA = (PLib3MFImplicitAddition_SetInputAPtr) dlsym(hLibrary, "lib3mf_implicitaddition_setinputa");
+		pWrapperTable->m_ImplicitNode_GetInputs = (PLib3MFImplicitNode_GetInputsPtr) dlsym(hLibrary, "lib3mf_implicitnode_getinputs");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_ImplicitAddition_SetInputA == nullptr)
+		if (pWrapperTable->m_ImplicitNode_GetInputs == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_ImplicitAddition_GetInputB = (PLib3MFImplicitAddition_GetInputBPtr) GetProcAddress(hLibrary, "lib3mf_implicitaddition_getinputb");
+		pWrapperTable->m_ImplicitNode_AddOutput = (PLib3MFImplicitNode_AddOutputPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_addoutput");
 		#else // _WIN32
-		pWrapperTable->m_ImplicitAddition_GetInputB = (PLib3MFImplicitAddition_GetInputBPtr) dlsym(hLibrary, "lib3mf_implicitaddition_getinputb");
+		pWrapperTable->m_ImplicitNode_AddOutput = (PLib3MFImplicitNode_AddOutputPtr) dlsym(hLibrary, "lib3mf_implicitnode_addoutput");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_ImplicitAddition_GetInputB == nullptr)
+		if (pWrapperTable->m_ImplicitNode_AddOutput == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_ImplicitAddition_SetInputB = (PLib3MFImplicitAddition_SetInputBPtr) GetProcAddress(hLibrary, "lib3mf_implicitaddition_setinputb");
+		pWrapperTable->m_ImplicitNode_GetOutputs = (PLib3MFImplicitNode_GetOutputsPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_getoutputs");
 		#else // _WIN32
-		pWrapperTable->m_ImplicitAddition_SetInputB = (PLib3MFImplicitAddition_SetInputBPtr) dlsym(hLibrary, "lib3mf_implicitaddition_setinputb");
+		pWrapperTable->m_ImplicitNode_GetOutputs = (PLib3MFImplicitNode_GetOutputsPtr) dlsym(hLibrary, "lib3mf_implicitnode_getoutputs");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_ImplicitAddition_SetInputB == nullptr)
+		if (pWrapperTable->m_ImplicitNode_GetOutputs == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_ImplicitAddition_GetOutputSum = (PLib3MFImplicitAddition_GetOutputSumPtr) GetProcAddress(hLibrary, "lib3mf_implicitaddition_getoutputsum");
+		pWrapperTable->m_NodeAccessor_Get = (PLib3MFNodeAccessor_GetPtr) GetProcAddress(hLibrary, "lib3mf_nodeaccessor_get");
 		#else // _WIN32
-		pWrapperTable->m_ImplicitAddition_GetOutputSum = (PLib3MFImplicitAddition_GetOutputSumPtr) dlsym(hLibrary, "lib3mf_implicitaddition_getoutputsum");
+		pWrapperTable->m_NodeAccessor_Get = (PLib3MFNodeAccessor_GetPtr) dlsym(hLibrary, "lib3mf_nodeaccessor_get");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_ImplicitAddition_GetOutputSum == nullptr)
+		if (pWrapperTable->m_NodeAccessor_Get == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_ImplicitAddition_SetOutputSum = (PLib3MFImplicitAddition_SetOutputSumPtr) GetProcAddress(hLibrary, "lib3mf_implicitaddition_setoutputsum");
+		pWrapperTable->m_ImplicitFunction_GetIdentifier = (PLib3MFImplicitFunction_GetIdentifierPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_getidentifier");
 		#else // _WIN32
-		pWrapperTable->m_ImplicitAddition_SetOutputSum = (PLib3MFImplicitAddition_SetOutputSumPtr) dlsym(hLibrary, "lib3mf_implicitaddition_setoutputsum");
+		pWrapperTable->m_ImplicitFunction_GetIdentifier = (PLib3MFImplicitFunction_GetIdentifierPtr) dlsym(hLibrary, "lib3mf_implicitfunction_getidentifier");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_ImplicitAddition_SetOutputSum == nullptr)
+		if (pWrapperTable->m_ImplicitFunction_GetIdentifier == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitFunction_SetIdentifier = (PLib3MFImplicitFunction_SetIdentifierPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_setidentifier");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitFunction_SetIdentifier = (PLib3MFImplicitFunction_SetIdentifierPtr) dlsym(hLibrary, "lib3mf_implicitfunction_setidentifier");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitFunction_SetIdentifier == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitFunction_GetDisplayName = (PLib3MFImplicitFunction_GetDisplayNamePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_getdisplayname");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitFunction_GetDisplayName = (PLib3MFImplicitFunction_GetDisplayNamePtr) dlsym(hLibrary, "lib3mf_implicitfunction_getdisplayname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitFunction_GetDisplayName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitFunction_SetDisplayName = (PLib3MFImplicitFunction_SetDisplayNamePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_setdisplayname");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitFunction_SetDisplayName = (PLib3MFImplicitFunction_SetDisplayNamePtr) dlsym(hLibrary, "lib3mf_implicitfunction_setdisplayname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitFunction_SetDisplayName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitFunction_AddNode = (PLib3MFImplicitFunction_AddNodePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addnode");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitFunction_AddNode = (PLib3MFImplicitFunction_AddNodePtr) dlsym(hLibrary, "lib3mf_implicitfunction_addnode");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitFunction_AddNode == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitFunction_GetNodes = (PLib3MFImplicitFunction_GetNodesPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_getnodes");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitFunction_GetNodes = (PLib3MFImplicitFunction_GetNodesPtr) dlsym(hLibrary, "lib3mf_implicitfunction_getnodes");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitFunction_GetNodes == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitFunction_AddInput = (PLib3MFImplicitFunction_AddInputPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addinput");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitFunction_AddInput = (PLib3MFImplicitFunction_AddInputPtr) dlsym(hLibrary, "lib3mf_implicitfunction_addinput");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitFunction_AddInput == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitFunction_GetInputs = (PLib3MFImplicitFunction_GetInputsPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_getinputs");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitFunction_GetInputs = (PLib3MFImplicitFunction_GetInputsPtr) dlsym(hLibrary, "lib3mf_implicitfunction_getinputs");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitFunction_GetInputs == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitFunction_AddOutput = (PLib3MFImplicitFunction_AddOutputPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addoutput");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitFunction_AddOutput = (PLib3MFImplicitFunction_AddOutputPtr) dlsym(hLibrary, "lib3mf_implicitfunction_addoutput");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitFunction_AddOutput == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitFunction_GetOutputs = (PLib3MFImplicitFunction_GetOutputsPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_getoutputs");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitFunction_GetOutputs = (PLib3MFImplicitFunction_GetOutputsPtr) dlsym(hLibrary, "lib3mf_implicitfunction_getoutputs");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitFunction_GetOutputs == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -8930,6 +9216,42 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_Texture2D_SetFilter == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_implicitport_getidentifier", (void**)&(pWrapperTable->m_ImplicitPort_GetIdentifier));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitPort_GetIdentifier == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitport_setidentifier", (void**)&(pWrapperTable->m_ImplicitPort_SetIdentifier));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitPort_SetIdentifier == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitport_getdisplayname", (void**)&(pWrapperTable->m_ImplicitPort_GetDisplayName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitPort_GetDisplayName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitport_setdisplayname", (void**)&(pWrapperTable->m_ImplicitPort_SetDisplayName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitPort_SetDisplayName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_accessor_getsize", (void**)&(pWrapperTable->m_Accessor_GetSize));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Accessor_GetSize == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_accessor_next", (void**)&(pWrapperTable->m_Accessor_Next));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Accessor_Next == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_accessor_prev", (void**)&(pWrapperTable->m_Accessor_Prev));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Accessor_Prev == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_accessor_begin", (void**)&(pWrapperTable->m_Accessor_Begin));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Accessor_Begin == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitportaccessor_get", (void**)&(pWrapperTable->m_ImplicitPortAccessor_Get));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitPortAccessor_Get == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_implicitnode_getidentifier", (void**)&(pWrapperTable->m_ImplicitNode_GetIdentifier));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_GetIdentifier == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -8946,28 +9268,64 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_SetDisplayName == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_implicitaddition_getinputa", (void**)&(pWrapperTable->m_ImplicitAddition_GetInputA));
-		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitAddition_GetInputA == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_implicitnode_addinput", (void**)&(pWrapperTable->m_ImplicitNode_AddInput));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_AddInput == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_implicitaddition_setinputa", (void**)&(pWrapperTable->m_ImplicitAddition_SetInputA));
-		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitAddition_SetInputA == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_implicitnode_getinputs", (void**)&(pWrapperTable->m_ImplicitNode_GetInputs));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_GetInputs == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_implicitaddition_getinputb", (void**)&(pWrapperTable->m_ImplicitAddition_GetInputB));
-		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitAddition_GetInputB == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_implicitnode_addoutput", (void**)&(pWrapperTable->m_ImplicitNode_AddOutput));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_AddOutput == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_implicitaddition_setinputb", (void**)&(pWrapperTable->m_ImplicitAddition_SetInputB));
-		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitAddition_SetInputB == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_implicitnode_getoutputs", (void**)&(pWrapperTable->m_ImplicitNode_GetOutputs));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_GetOutputs == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_implicitaddition_getoutputsum", (void**)&(pWrapperTable->m_ImplicitAddition_GetOutputSum));
-		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitAddition_GetOutputSum == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_nodeaccessor_get", (void**)&(pWrapperTable->m_NodeAccessor_Get));
+		if ( (eLookupError != 0) || (pWrapperTable->m_NodeAccessor_Get == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_implicitaddition_setoutputsum", (void**)&(pWrapperTable->m_ImplicitAddition_SetOutputSum));
-		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitAddition_SetOutputSum == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_implicitfunction_getidentifier", (void**)&(pWrapperTable->m_ImplicitFunction_GetIdentifier));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_GetIdentifier == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitfunction_setidentifier", (void**)&(pWrapperTable->m_ImplicitFunction_SetIdentifier));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_SetIdentifier == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitfunction_getdisplayname", (void**)&(pWrapperTable->m_ImplicitFunction_GetDisplayName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_GetDisplayName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitfunction_setdisplayname", (void**)&(pWrapperTable->m_ImplicitFunction_SetDisplayName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_SetDisplayName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitfunction_addnode", (void**)&(pWrapperTable->m_ImplicitFunction_AddNode));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_AddNode == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitfunction_getnodes", (void**)&(pWrapperTable->m_ImplicitFunction_GetNodes));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_GetNodes == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitfunction_addinput", (void**)&(pWrapperTable->m_ImplicitFunction_AddInput));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_AddInput == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitfunction_getinputs", (void**)&(pWrapperTable->m_ImplicitFunction_GetInputs));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_GetInputs == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitfunction_addoutput", (void**)&(pWrapperTable->m_ImplicitFunction_AddOutput));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_AddOutput == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitfunction_getoutputs", (void**)&(pWrapperTable->m_ImplicitFunction_GetOutputs));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_GetOutputs == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_builditem_getobjectresource", (void**)&(pWrapperTable->m_BuildItem_GetObjectResource));
@@ -13642,6 +14000,125 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	 * Method definitions for class CImplicitPort
+	 */
+	
+	/**
+	* CImplicitPort::GetIdentifier - Retrieves the identifier of the port
+	* @return the identifier
+	*/
+	std::string CImplicitPort::GetIdentifier()
+	{
+		Lib3MF_uint32 bytesNeededIdentifier = 0;
+		Lib3MF_uint32 bytesWrittenIdentifier = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitPort_GetIdentifier(m_pHandle, 0, &bytesNeededIdentifier, nullptr));
+		std::vector<char> bufferIdentifier(bytesNeededIdentifier);
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitPort_GetIdentifier(m_pHandle, bytesNeededIdentifier, &bytesWrittenIdentifier, &bufferIdentifier[0]));
+		
+		return std::string(&bufferIdentifier[0]);
+	}
+	
+	/**
+	* CImplicitPort::SetIdentifier - Sets the identifier of the port
+	* @param[in] sIdentifier - the identifier
+	*/
+	void CImplicitPort::SetIdentifier(const std::string & sIdentifier)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitPort_SetIdentifier(m_pHandle, sIdentifier.c_str()));
+	}
+	
+	/**
+	* CImplicitPort::GetDisplayName - Retrieves the display name of the port
+	* @return the display name
+	*/
+	std::string CImplicitPort::GetDisplayName()
+	{
+		Lib3MF_uint32 bytesNeededDisplayName = 0;
+		Lib3MF_uint32 bytesWrittenDisplayName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitPort_GetDisplayName(m_pHandle, 0, &bytesNeededDisplayName, nullptr));
+		std::vector<char> bufferDisplayName(bytesNeededDisplayName);
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitPort_GetDisplayName(m_pHandle, bytesNeededDisplayName, &bytesWrittenDisplayName, &bufferDisplayName[0]));
+		
+		return std::string(&bufferDisplayName[0]);
+	}
+	
+	/**
+	* CImplicitPort::SetDisplayName - Sets the display name of the port
+	* @param[in] sDisplayName - the display name
+	*/
+	void CImplicitPort::SetDisplayName(const std::string & sDisplayName)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitPort_SetDisplayName(m_pHandle, sDisplayName.c_str()));
+	}
+	
+	/**
+	 * Method definitions for class CAccessor
+	 */
+	
+	/**
+	* CAccessor::GetSize - Returns the number of elements
+	* @return The number of elements
+	*/
+	Lib3MF_uint64 CAccessor::GetSize()
+	{
+		Lib3MF_uint64 resultSize = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Accessor_GetSize(m_pHandle, &resultSize));
+		
+		return resultSize;
+	}
+	
+	/**
+	* CAccessor::Next - Go to the next element
+	* @return Returns true, if there is a next element
+	*/
+	bool CAccessor::Next()
+	{
+		bool resultResult = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Accessor_Next(m_pHandle, &resultResult));
+		
+		return resultResult;
+	}
+	
+	/**
+	* CAccessor::Prev - Go to the previous element
+	* @return Returns true, if there is a previous element
+	*/
+	bool CAccessor::Prev()
+	{
+		bool resultResult = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Accessor_Prev(m_pHandle, &resultResult));
+		
+		return resultResult;
+	}
+	
+	/**
+	* CAccessor::Begin - Go to the first element
+	*/
+	void CAccessor::Begin()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Accessor_Begin(m_pHandle));
+	}
+	
+	/**
+	 * Method definitions for class CImplicitPortAccessor
+	 */
+	
+	/**
+	* CImplicitPortAccessor::Get - Returns the current element
+	* @return The current element
+	*/
+	PImplicitPort CImplicitPortAccessor::Get()
+	{
+		Lib3MFHandle hPort = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitPortAccessor_Get(m_pHandle, &hPort));
+		
+		if (!hPort) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hPort)));
+	}
+	
+	/**
 	 * Method definitions for class CImplicitNode
 	 */
 	
@@ -13694,79 +14171,200 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	 * Method definitions for class CImplicitAddition
+	* CImplicitNode::AddInput - Add an input
+	* @param[in] sIdentifier - the identifier of the input
+	* @param[in] sDisplayName - the display name of the input
+	*/
+	void CImplicitNode::AddInput(const std::string & sIdentifier, const std::string & sDisplayName)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_AddInput(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str()));
+	}
+	
+	/**
+	* CImplicitNode::GetInputs - Retrieves the inputs
+	* @return the accessor to the inputs
+	*/
+	PImplicitPort CImplicitNode::GetInputs()
+	{
+		Lib3MFHandle hAccessor = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_GetInputs(m_pHandle, &hAccessor));
+		
+		if (!hAccessor) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hAccessor)));
+	}
+	
+	/**
+	* CImplicitNode::AddOutput - Add an output
+	* @param[in] sIdentifier - the identifier of the output
+	* @param[in] sDisplayName - the display name of the output
+	*/
+	void CImplicitNode::AddOutput(const std::string & sIdentifier, const std::string & sDisplayName)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_AddOutput(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str()));
+	}
+	
+	/**
+	* CImplicitNode::GetOutputs - Retrieves the outputs
+	* @return the accessor to the outputs
+	*/
+	PImplicitPort CImplicitNode::GetOutputs()
+	{
+		Lib3MFHandle hAccessor = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_GetOutputs(m_pHandle, &hAccessor));
+		
+		if (!hAccessor) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hAccessor)));
+	}
+	
+	/**
+	 * Method definitions for class CNodeAccessor
 	 */
 	
 	/**
-	* CImplicitAddition::GetInputA - Retrieves the input A of the addition
-	* @return the input A
+	* CNodeAccessor::Get - Returns the current element
+	* @return The current element
 	*/
-	std::string CImplicitAddition::GetInputA()
+	PImplicitNode CNodeAccessor::Get()
 	{
-		Lib3MF_uint32 bytesNeededInputA = 0;
-		Lib3MF_uint32 bytesWrittenInputA = 0;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitAddition_GetInputA(m_pHandle, 0, &bytesNeededInputA, nullptr));
-		std::vector<char> bufferInputA(bytesNeededInputA);
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitAddition_GetInputA(m_pHandle, bytesNeededInputA, &bytesWrittenInputA, &bufferInputA[0]));
+		Lib3MFHandle hNode = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_NodeAccessor_Get(m_pHandle, &hNode));
 		
-		return std::string(&bufferInputA[0]);
+		if (!hNode) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitNode>(dynamic_cast<CImplicitNode*>(m_pWrapper->polymorphicFactory(hNode)));
 	}
 	
 	/**
-	* CImplicitAddition::SetInputA - Sets the input A of the addition
-	* @param[in] sInputA - the input A
-	*/
-	void CImplicitAddition::SetInputA(const std::string & sInputA)
-	{
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitAddition_SetInputA(m_pHandle, sInputA.c_str()));
-	}
+	 * Method definitions for class CImplicitFunction
+	 */
 	
 	/**
-	* CImplicitAddition::GetInputB - Retrieves the input B of the addition
-	* @return the input B
+	* CImplicitFunction::GetIdentifier - Retrieves the identifier of the function
+	* @return the identifier
 	*/
-	std::string CImplicitAddition::GetInputB()
-	{
-		Lib3MF_uint32 bytesNeededInputB = 0;
-		Lib3MF_uint32 bytesWrittenInputB = 0;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitAddition_GetInputB(m_pHandle, 0, &bytesNeededInputB, nullptr));
-		std::vector<char> bufferInputB(bytesNeededInputB);
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitAddition_GetInputB(m_pHandle, bytesNeededInputB, &bytesWrittenInputB, &bufferInputB[0]));
-		
-		return std::string(&bufferInputB[0]);
-	}
-	
-	/**
-	* CImplicitAddition::SetInputB - Sets the input B of the addition
-	* @param[in] sInputB - the input B
-	*/
-	void CImplicitAddition::SetInputB(const std::string & sInputB)
-	{
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitAddition_SetInputB(m_pHandle, sInputB.c_str()));
-	}
-	
-	/**
-	* CImplicitAddition::GetOutputSum - Retrieves the identifier of the sum output of the addition
-	* @return identifier of the sum output
-	*/
-	std::string CImplicitAddition::GetOutputSum()
+	std::string CImplicitFunction::GetIdentifier()
 	{
 		Lib3MF_uint32 bytesNeededIdentifier = 0;
 		Lib3MF_uint32 bytesWrittenIdentifier = 0;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitAddition_GetOutputSum(m_pHandle, 0, &bytesNeededIdentifier, nullptr));
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_GetIdentifier(m_pHandle, 0, &bytesNeededIdentifier, nullptr));
 		std::vector<char> bufferIdentifier(bytesNeededIdentifier);
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitAddition_GetOutputSum(m_pHandle, bytesNeededIdentifier, &bytesWrittenIdentifier, &bufferIdentifier[0]));
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_GetIdentifier(m_pHandle, bytesNeededIdentifier, &bytesWrittenIdentifier, &bufferIdentifier[0]));
 		
 		return std::string(&bufferIdentifier[0]);
 	}
 	
 	/**
-	* CImplicitAddition::SetOutputSum - Sets the id of the sum output
-	* @param[in] sIdentifier - identifier of the sum output
+	* CImplicitFunction::SetIdentifier - Sets the identifier of the function
+	* @param[in] sIdentifier - the identifier
 	*/
-	void CImplicitAddition::SetOutputSum(const std::string & sIdentifier)
+	void CImplicitFunction::SetIdentifier(const std::string & sIdentifier)
 	{
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitAddition_SetOutputSum(m_pHandle, sIdentifier.c_str()));
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_SetIdentifier(m_pHandle, sIdentifier.c_str()));
+	}
+	
+	/**
+	* CImplicitFunction::GetDisplayName - Retrieves the display name of the function
+	* @return the display name
+	*/
+	std::string CImplicitFunction::GetDisplayName()
+	{
+		Lib3MF_uint32 bytesNeededDisplayName = 0;
+		Lib3MF_uint32 bytesWrittenDisplayName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_GetDisplayName(m_pHandle, 0, &bytesNeededDisplayName, nullptr));
+		std::vector<char> bufferDisplayName(bytesNeededDisplayName);
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_GetDisplayName(m_pHandle, bytesNeededDisplayName, &bytesWrittenDisplayName, &bufferDisplayName[0]));
+		
+		return std::string(&bufferDisplayName[0]);
+	}
+	
+	/**
+	* CImplicitFunction::SetDisplayName - Sets the display name of the function
+	* @param[in] sDisplayName - the display name
+	*/
+	void CImplicitFunction::SetDisplayName(const std::string & sDisplayName)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_SetDisplayName(m_pHandle, sDisplayName.c_str()));
+	}
+	
+	/**
+	* CImplicitFunction::AddNode - Add a node
+	* @param[in] sNodeType - the type of the node
+	* @param[in] sIdentifier - the identifier of the input
+	* @param[in] sDisplayName - the display name of the input
+	*/
+	void CImplicitFunction::AddNode(const std::string & sNodeType, const std::string & sIdentifier, const std::string & sDisplayName)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddNode(m_pHandle, sNodeType.c_str(), sIdentifier.c_str(), sDisplayName.c_str()));
+	}
+	
+	/**
+	* CImplicitFunction::GetNodes - Retrieves the nodes
+	* @return the accessor to the nodes
+	*/
+	PNodeAccessor CImplicitFunction::GetNodes()
+	{
+		Lib3MFHandle hAccessor = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_GetNodes(m_pHandle, &hAccessor));
+		
+		if (!hAccessor) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CNodeAccessor>(dynamic_cast<CNodeAccessor*>(m_pWrapper->polymorphicFactory(hAccessor)));
+	}
+	
+	/**
+	* CImplicitFunction::AddInput - Add an input
+	* @param[in] sIdentifier - the identifier of the input
+	* @param[in] sDisplayName - the display name of the input
+	*/
+	void CImplicitFunction::AddInput(const std::string & sIdentifier, const std::string & sDisplayName)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddInput(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str()));
+	}
+	
+	/**
+	* CImplicitFunction::GetInputs - Retrieves the inputs
+	* @return the accessor to the inputs
+	*/
+	PImplicitPortAccessor CImplicitFunction::GetInputs()
+	{
+		Lib3MFHandle hAccessor = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_GetInputs(m_pHandle, &hAccessor));
+		
+		if (!hAccessor) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPortAccessor>(dynamic_cast<CImplicitPortAccessor*>(m_pWrapper->polymorphicFactory(hAccessor)));
+	}
+	
+	/**
+	* CImplicitFunction::AddOutput - Add an output
+	* @param[in] sIdentifier - the identifier of the output
+	* @param[in] sDisplayName - the display name of the output
+	*/
+	void CImplicitFunction::AddOutput(const std::string & sIdentifier, const std::string & sDisplayName)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddOutput(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str()));
+	}
+	
+	/**
+	* CImplicitFunction::GetOutputs - Retrieves the outputs
+	* @return the accessor to the outputs
+	*/
+	PImplicitPortAccessor CImplicitFunction::GetOutputs()
+	{
+		Lib3MFHandle hAccessor = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_GetOutputs(m_pHandle, &hAccessor));
+		
+		if (!hAccessor) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPortAccessor>(dynamic_cast<CImplicitPortAccessor*>(m_pWrapper->polymorphicFactory(hAccessor)));
 	}
 	
 	/**

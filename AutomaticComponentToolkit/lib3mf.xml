@@ -2096,18 +2096,80 @@
 		</method>
 	</class>
 
-	<!-- Implicit geometries -->
-	<!-- <xs:complexType name="CT_Node">
-		<xs:annotation>
-			<xs:documentation>
-				<![CDATA[
-				Base type for all nodes in the implicit function tree.
-				]]>
-			</xs:documentation>
-		</xs:annotation>
-		<xs:attribute name="identifier" type="ST_Identifier" use="required" />
-		<xs:attribute name="displayname" type="xs:string" use="optional" />
-	</xs:complexType> -->
+
+	<enum name="ImplicitNodeTypes" description="The type of the node">
+		<value name="addition" description="Adds to values (skalar or vector)" />
+		<value name="subtraction" description="Subtracts two values (skalar or vector)" />
+		<value name="multiplication" description="Multiplies two values (skalar or vector)" />
+		<value name="division" description="Divides two values (skalar or vector)" />
+		<value name="constant" description="A constant skalar value" />
+		<value name="constvec" description="A constant vector value" />
+		<value name="constmat" description="A constant matrix value" />
+		<value name="composevector" description="Composes a vector from its components" />
+		<value name="composematrix" description="Composes a matrix from its components" />
+		<value name="composematrixfromcolumnvectors"
+			description="Composes a matrix from its column vectors" />
+		<value name="dotproduct" description="The dot product of two vectors" />
+		<value name="crossproduct" description="The cross product of two vectors" />
+		<value name="matvecmultiplication" description="Multiplies a matrix with a vector" />
+		<value name="transpose" description="The transpose of a matrix" />
+		<value name="sinus" description="The sinus of a skalar" />
+		<value name="cosinus" description="The cosinus of a skalar" />
+		<value name="tan" description="The tangent of a skalar" />
+		<value name="arcsin" description="The arcsinus of a skalar" />
+		<value name="arccos" description="The arccosinus of a skalar" />
+		<value name="arctan" description="The arctangent of a skalar" />
+		<value name="min" description="The minimum of two values (skalar or vector)" />
+		<value name="max" description="The maximum of two values (skalar or vector)" />
+		<value name="abs" description="The absolute value of a skalar" />
+		<value name="fmod" description="The remainder of a division" />
+		<value name="pow" description="The power of a skalar" />
+		<value name="sqrt" description="The square root of a skalar" />
+		<value name="functioncall" description="A call to a function" />
+		<value name="dot" description="The dot product of two vectors" />
+		<value name="cross" description="The cross product of two vectors" />
+		<value name="mesh" description="The signed distance to a mesh" />
+	</enum>
+
+
+	<class name="ImplicitPort">
+		<method name="GetIdentifier" description="Retrieves the identifier of the port">
+			<param name="Identifier" type="string" pass="return" description="the identifier" />
+		</method>
+		<method name="SetIdentifier" description="Sets the identifier of the port">
+			<param name="Identifier" type="string" pass="in" description="the identifier" />
+		</method>
+		<method name="GetDisplayName" description="Retrieves the display name of the port">
+			<param name="DisplayName" type="string" pass="return" description="the display name" />
+		</method>
+		<method name="SetDisplayName" description="Sets the display name of the port">
+			<param name="DisplayName" type="string" pass="in" description="the display name" />
+		</method>
+	</class>
+
+	<class name="Accessor" parent="Base">
+		<method name="GetSize" description="Returns the number of elements">
+			<param name="Size" type="uint64" pass="return" description="The number of elements" />
+		</method>
+		<method name="Next" description="Go to the next element">
+			<param name="Result" type="bool" pass="return"
+				description="Returns true, if there is a next element" />
+		</method>
+		<method name="Prev" description="Go to the previous element">
+			<param name="Result" type="bool" pass="return"
+				description="Returns true, if there is a previous element" />
+		</method>
+		<method name="Begin" description="Go to the first element">
+		</method>
+	</class>
+
+	<class name="ImplicitPortAccessor" parent="Accessor">
+		<method name="Get" description="Returns the current element">
+			<param name="Port" type="class" class="ImplicitPort" pass="return"
+				description="The current element" />
+		</method>
+	</class>
+
 	<class name="ImplicitNode">
 		<method name="GetIdentifier" description="Retrieves the identifier of the node">
 			<param name="Identifier" type="string" pass="return" description="the identifier" />
@@ -2121,92 +2183,89 @@
 		<method name="SetDisplayName" description="Sets the display name of the node">
 			<param name="DisplayName" type="string" pass="in" description="the display name" />
 		</method>
+
+		<method name="AddInput" description="Add an input">
+			<param name="Identifier" type="string" pass="in"
+				description="the identifier of the input" />
+			<param name="DisplayName" type="string" pass="in"
+				description="the display name of the input" />
+		</method>
+
+		<method name="GetInputs" description="Retrieves the inputs">
+			<param name="Accessor" type="class" class="ImplicitPort" pass="return"
+				description="the accessor to the inputs" />
+		</method>
+
+		<method name="AddOutput" description="Add an output">
+			<param name="Identifier" type="string" pass="in"
+				description="the identifier of the output" />
+			<param name="DisplayName" type="string" pass="in"
+				description="the display name of the output" />
+		</method>
+
+		<method name="GetOutputs" description="Retrieves the outputs">
+			<param name="Accessor" type="class" class="ImplicitPort" pass="return"
+				description="the accessor to the outputs" />
+		</method>
 	</class>
 
-	<!-- <xs:complexType name="CT_Addition">
-		<xs:annotation>
-			<xs:documentation>
-				<![CDATA[
-			Dervied node for an addition with a scalar as output and two scalar inputs or a
-			vecotor as output and two vectors as input. The inputs must have the identifier "A" and "B",
-			the output must have the identifier "sum".
-						
-			Example:
-			<addition identifier="addition1" displayname="Addition 1">
-				<in>
-								<scalarref identifier="A" ref="constant1.c1"/>
-								<scalarref identifier="B" ref="inputs.radius"/>
-				</in>
-				<out>
-					<scalar identifier="sum"/>
-				</out>
-			/addition>
-			]]>
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="CT_Node">
-				<xs:sequence>
-					<xs:element name="in" minOccurs="2" maxOccurs="2">
-						<xs:complexType>
-							<xs:annotation>
-								<xs:documentation>
-									<![CDATA[
-							Inputs to the addition.
-							]]>
-								</xs:documentation>
-							</xs:annotation>
-							<xs:choice>
-								<xs:element name="scalarref" type="CT_ScalarRef" />
-								<xs:element name="vectorref" type="CT_VectorRef" />
-							</xs:choice>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="out" minOccurs="1" maxOccurs="1">
-						<xs:complexType>
-							<xs:annotation>
-								<xs:documentation>
-									<![CDATA[
-							sum of the added values
-							]]>
-								</xs:documentation>
-							</xs:annotation>
-							<xs:choice>
-								<xs:element name="scalar" type="CT_Scalar" />
-								<xs:element name="vector" type="CT_Vector" />
-							</xs:choice>
-						</xs:complexType>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType> -->
+	<class name="NodeAccessor" parent="Accessor">
+		<method name="Get" description="Returns the current element">
+			<param name="Node" type="class" class="ImplicitNode" pass="return"
+				description="The current element" />
+		</method>
+	</class>
 
-	<class name="ImplicitAddition" parent="ImplicitNode">
-		<method name="GetInputA" description="Retrieves the input A of the addition">
-			<param name="InputA" type="string" class="ImplicitNode" pass="return"
-				description="the input A" />
+	<class name="ImplicitFunction" parent="Base">
+		<method name="GetIdentifier" description="Retrieves the identifier of the function">
+			<param name="Identifier" type="string" pass="return" description="the identifier" />
 		</method>
-		<method name="SetInputA" description="Sets the input A of the addition">
-			<param name="InputA" type="string" class="ImplicitNode" pass="in"
-				description="the input A" />
+		<method name="SetIdentifier" description="Sets the identifier of the function">
+			<param name="Identifier" type="string" pass="in" description="the identifier" />
 		</method>
-		<method name="GetInputB" description="Retrieves the input B of the addition">
-			<param name="InputB" type="string" class="ImplicitNode" pass="return"
-				description="the input B" />
+		<method name="GetDisplayName" description="Retrieves the display name of the function">
+			<param name="DisplayName" type="string" pass="return" description="the display name" />
 		</method>
-		<method name="SetInputB" description="Sets the input B of the addition">
-			<param name="InputB" type="string" class="ImplicitNode" pass="in"
-				description="the input B" />
+		<method name="SetDisplayName" description="Sets the display name of the function">
+			<param name="DisplayName" type="string" pass="in" description="the display name" />
 		</method>
-		<method name="GetOutputSum"
-			description="Retrieves the identifier of the sum output of the addition">
-			<param name="Identifier" type="string" class="ImplicitNode" pass="return"
-				description="identifier of the sum output" />
+
+		<method name="AddNode" description="Add a node">
+			<param name="NodeType" type="string" pass="in"
+				description="the type of the node" />
+			<param name="Identifier" type="string" pass="in"
+				description="the identifier of the input" />
+			<param name="DisplayName" type="string" pass="in"
+				description="the display name of the input" />
 		</method>
-		<method name="SetOutputSum" description="Sets the id of the sum output">
-			<param name="Identifier" type="string" class="ImplicitNode" pass="in"
-				description="identifier of the sum output" />
+
+		<method name="GetNodes" description="Retrieves the nodes">
+			<param name="Accessor" type="class" class="NodeAccessor" pass="return"
+				description="the accessor to the nodes" />
+		</method>
+
+		<method name="AddInput" description="Add an input">
+			<param name="Identifier" type="string" pass="in"
+				description="the identifier of the input" />
+			<param name="DisplayName" type="string" pass="in"
+				description="the display name of the input" />
+		</method>
+
+		<method name="GetInputs" description="Retrieves the inputs">
+			<param name="Accessor" type="class" class="ImplicitPortAccessor" pass="return"
+				description="the accessor to the inputs" />
+		</method>
+
+		<method name="AddOutput" description="Add an output">
+			<param name="Identifier" type="string" pass="in"
+				description="the identifier of the output" />
+			<param name="DisplayName" type="string" pass="in"
+				description="the display name of the output" />
+		</method>
+
+		<method name="GetOutputs" description="Retrieves the outputs">
+			<param name="Accessor" type="class" class="ImplicitPortAccessor" pass="return"
+				description="the accessor to the outputs" />
 		</method>
 	</class>
 

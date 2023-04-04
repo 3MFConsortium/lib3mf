@@ -24,18 +24,18 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CImplicitAddition
+Abstract: This is the class declaration of CMaterialMapping
 
 */
 
 
-#ifndef __LIB3MF_IMPLICITADDITION
-#define __LIB3MF_IMPLICITADDITION
+#ifndef __LIB3MF_MATERIALMAPPING
+#define __LIB3MF_MATERIALMAPPING
 
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_implicitnode.hpp"
+#include "lib3mf_scalarfieldreference.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
@@ -49,10 +49,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CImplicitAddition 
+ Class declaration of CMaterialMapping 
 **************************************************************************************************************************/
 
-class CImplicitAddition : public virtual IImplicitAddition, public virtual CImplicitNode {
+class CMaterialMapping : public virtual IMaterialMapping, public virtual CScalarFieldReference {
 private:
 
 	/**
@@ -76,42 +76,6 @@ public:
 	* Public member functions to implement.
 	*/
 
-	/**
-	* IImplicitAddition::GetInputA - Retrieves the input A of the addition
-	* @return the input A
-	*/
-	std::string GetInputA() override;
-
-	/**
-	* IImplicitAddition::SetInputA - Sets the input A of the addition
-	* @param[in] sInputA - the input A
-	*/
-	void SetInputA(const std::string & sInputA) override;
-
-	/**
-	* IImplicitAddition::GetInputB - Retrieves the input B of the addition
-	* @return the input B
-	*/
-	std::string GetInputB() override;
-
-	/**
-	* IImplicitAddition::SetInputB - Sets the input B of the addition
-	* @param[in] sInputB - the input B
-	*/
-	void SetInputB(const std::string & sInputB) override;
-
-	/**
-	* IImplicitAddition::GetOutputSum - Retrieves the identifier of the sum output of the addition
-	* @return identifier of the sum output
-	*/
-	std::string GetOutputSum() override;
-
-	/**
-	* IImplicitAddition::SetOutputSum - Sets the id of the sum output
-	* @param[in] sIdentifier - identifier of the sum output
-	*/
-	void SetOutputSum(const std::string & sIdentifier) override;
-
 };
 
 } // namespace Impl
@@ -120,4 +84,4 @@ public:
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-#endif // __LIB3MF_IMPLICITADDITION
+#endif // __LIB3MF_MATERIALMAPPING

@@ -24,49 +24,87 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CImplicitAddition
+Abstract: This is the class declaration of CAccessor
 
 */
 
-#include "lib3mf_implicitaddition.hpp"
-#include "lib3mf_interfaceexception.hpp"
+
+#ifndef __LIB3MF_ACCESSOR
+#define __LIB3MF_ACCESSOR
+
+#include "lib3mf_interfaces.hpp"
+
+// Parent classes
+#include "lib3mf_base.hpp"
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 // Include custom headers here.
 
 
-using namespace Lib3MF::Impl;
+namespace Lib3MF {
+namespace Impl {
+
 
 /*************************************************************************************************************************
- Class definition of CImplicitAddition 
+ Class declaration of CAccessor 
 **************************************************************************************************************************/
 
-std::string CImplicitAddition::GetInputA()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
+class CAccessor : public virtual IAccessor, public virtual CBase {
+private:
 
-void CImplicitAddition::SetInputA(const std::string & sInputA)
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
+	/**
+	* Put private members here.
+	*/
 
-std::string CImplicitAddition::GetInputB()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
+protected:
 
-void CImplicitAddition::SetInputB(const std::string & sInputB)
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
+	/**
+	* Put protected members here.
+	*/
 
-std::string CImplicitAddition::GetOutputSum()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
+public:
 
-void CImplicitAddition::SetOutputSum(const std::string & sIdentifier)
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
 
+
+	/**
+	* Public member functions to implement.
+	*/
+
+	/**
+	* IAccessor::GetSize - Returns the number of elements
+	* @return The number of elements
+	*/
+	Lib3MF_uint64 GetSize() override;
+
+	/**
+	* IAccessor::Next - Go to the next element
+	* @return Returns true, if there is a next element
+	*/
+	bool Next() override;
+
+	/**
+	* IAccessor::Prev - Go to the previous element
+	* @return Returns true, if there is a previous element
+	*/
+	bool Prev() override;
+
+	/**
+	* IAccessor::Begin - Go to the first element
+	*/
+	void Begin() override;
+
+};
+
+} // namespace Impl
+} // namespace Lib3MF
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#endif // __LIB3MF_ACCESSOR

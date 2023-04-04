@@ -24,42 +24,69 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CImplicitNode
+Abstract: This is a stub class definition of CImplicitFunction
 
 */
 
-#include "lib3mf_implicitnode.hpp"
+#include "lib3mf_implicitfunction.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
 
+
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CImplicitNode
+ Class definition of CImplicitFunction 
 **************************************************************************************************************************/
 
-std::string CImplicitNode::GetIdentifier()
+std::string CImplicitFunction::GetIdentifier()
 {
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CImplicitNode::SetIdentifier(const std::string & sIdentifier)
+void CImplicitFunction::SetIdentifier(const std::string & sIdentifier)
 {
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-std::string CImplicitNode::GetDisplayName()
+std::string CImplicitFunction::GetDisplayName()
 {
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CImplicitNode::SetDisplayName(const std::string & sDisplayName)
+void CImplicitFunction::SetDisplayName(const std::string & sDisplayName)
 {
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-CImplicitNode::CImplicitNode(NMR::PImplicitNode pImplicitNode)
-    : m_pImplicitNode(std::move(pImplicitNode))
+void CImplicitFunction::AddNode(const std::string & sNodeType, const std::string & sIdentifier, const std::string & sDisplayName)
 {
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
+
+INodeAccessor * CImplicitFunction::GetNodes()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+void CImplicitFunction::AddInput(const std::string & sIdentifier, const std::string & sDisplayName)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+IImplicitPortAccessor * CImplicitFunction::GetInputs()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+void CImplicitFunction::AddOutput(const std::string & sIdentifier, const std::string & sDisplayName)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+IImplicitPortAccessor * CImplicitFunction::GetOutputs()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+

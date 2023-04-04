@@ -443,16 +443,34 @@ class FunctionTable:
 	lib3mf_texture2d_settilestyleuv = None
 	lib3mf_texture2d_getfilter = None
 	lib3mf_texture2d_setfilter = None
+	lib3mf_implicitport_getidentifier = None
+	lib3mf_implicitport_setidentifier = None
+	lib3mf_implicitport_getdisplayname = None
+	lib3mf_implicitport_setdisplayname = None
+	lib3mf_accessor_getsize = None
+	lib3mf_accessor_next = None
+	lib3mf_accessor_prev = None
+	lib3mf_accessor_begin = None
+	lib3mf_implicitportaccessor_get = None
 	lib3mf_implicitnode_getidentifier = None
 	lib3mf_implicitnode_setidentifier = None
 	lib3mf_implicitnode_getdisplayname = None
 	lib3mf_implicitnode_setdisplayname = None
-	lib3mf_implicitaddition_getinputa = None
-	lib3mf_implicitaddition_setinputa = None
-	lib3mf_implicitaddition_getinputb = None
-	lib3mf_implicitaddition_setinputb = None
-	lib3mf_implicitaddition_getoutputsum = None
-	lib3mf_implicitaddition_setoutputsum = None
+	lib3mf_implicitnode_addinput = None
+	lib3mf_implicitnode_getinputs = None
+	lib3mf_implicitnode_addoutput = None
+	lib3mf_implicitnode_getoutputs = None
+	lib3mf_nodeaccessor_get = None
+	lib3mf_implicitfunction_getidentifier = None
+	lib3mf_implicitfunction_setidentifier = None
+	lib3mf_implicitfunction_getdisplayname = None
+	lib3mf_implicitfunction_setdisplayname = None
+	lib3mf_implicitfunction_addnode = None
+	lib3mf_implicitfunction_getnodes = None
+	lib3mf_implicitfunction_addinput = None
+	lib3mf_implicitfunction_getinputs = None
+	lib3mf_implicitfunction_addoutput = None
+	lib3mf_implicitfunction_getoutputs = None
 	lib3mf_builditem_getobjectresource = None
 	lib3mf_builditem_getuuid = None
 	lib3mf_builditem_setuuid = None
@@ -737,6 +755,9 @@ class CompositionMethod(CTypesEnum):
 class CompositionSpace(CTypesEnum):
 	Raw = 0
 	LinearColor = 1
+'''Definition of ImplicitNodeTypes
+'''
+class ImplicitNodeTypes(CTypesEnum):
 '''Definition of EncryptionAlgorithm
 '''
 class EncryptionAlgorithm(CTypesEnum):
@@ -2927,6 +2948,60 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, TextureFilter)
 			self.lib.lib3mf_texture2d_setfilter = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitport_getidentifier")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_implicitport_getidentifier = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitport_setidentifier")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
+			self.lib.lib3mf_implicitport_setidentifier = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitport_getdisplayname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_implicitport_getdisplayname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitport_setdisplayname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
+			self.lib.lib3mf_implicitport_setdisplayname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_accessor_getsize")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint64))
+			self.lib.lib3mf_accessor_getsize = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_accessor_next")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_accessor_next = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_accessor_prev")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_accessor_prev = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_accessor_begin")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_accessor_begin = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitportaccessor_get")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_implicitportaccessor_get = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitnode_getidentifier")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -2951,41 +3026,95 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
 			self.lib.lib3mf_implicitnode_setdisplayname = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitaddition_getinputa")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitnode_addinput")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
+			self.lib.lib3mf_implicitnode_addinput = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitnode_getinputs")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_implicitnode_getinputs = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitnode_addoutput")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
+			self.lib.lib3mf_implicitnode_addoutput = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitnode_getoutputs")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_implicitnode_getoutputs = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_nodeaccessor_get")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_nodeaccessor_get = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_getidentifier")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
-			self.lib.lib3mf_implicitaddition_getinputa = methodType(int(methodAddress.value))
+			self.lib.lib3mf_implicitfunction_getidentifier = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitaddition_setinputa")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_setidentifier")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
-			self.lib.lib3mf_implicitaddition_setinputa = methodType(int(methodAddress.value))
+			self.lib.lib3mf_implicitfunction_setidentifier = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitaddition_getinputb")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_getdisplayname")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
-			self.lib.lib3mf_implicitaddition_getinputb = methodType(int(methodAddress.value))
+			self.lib.lib3mf_implicitfunction_getdisplayname = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitaddition_setinputb")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_setdisplayname")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
-			self.lib.lib3mf_implicitaddition_setinputb = methodType(int(methodAddress.value))
+			self.lib.lib3mf_implicitfunction_setdisplayname = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitaddition_getoutputsum")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_addnode")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
-			self.lib.lib3mf_implicitaddition_getoutputsum = methodType(int(methodAddress.value))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p)
+			self.lib.lib3mf_implicitfunction_addnode = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitaddition_setoutputsum")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_getnodes")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
-			self.lib.lib3mf_implicitaddition_setoutputsum = methodType(int(methodAddress.value))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_implicitfunction_getnodes = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_addinput")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
+			self.lib.lib3mf_implicitfunction_addinput = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_getinputs")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_implicitfunction_getinputs = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_addoutput")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
+			self.lib.lib3mf_implicitfunction_addoutput = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_getoutputs")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_implicitfunction_getoutputs = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_builditem_getobjectresource")), methodAddress)
 			if err != 0:
@@ -4912,6 +5041,33 @@ class Wrapper:
 			self.lib.lib3mf_texture2d_setfilter.restype = ctypes.c_int32
 			self.lib.lib3mf_texture2d_setfilter.argtypes = [ctypes.c_void_p, TextureFilter]
 			
+			self.lib.lib3mf_implicitport_getidentifier.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitport_getidentifier.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_implicitport_setidentifier.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitport_setidentifier.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_implicitport_getdisplayname.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitport_getdisplayname.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_implicitport_setdisplayname.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitport_setdisplayname.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_accessor_getsize.restype = ctypes.c_int32
+			self.lib.lib3mf_accessor_getsize.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint64)]
+			
+			self.lib.lib3mf_accessor_next.restype = ctypes.c_int32
+			self.lib.lib3mf_accessor_next.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_accessor_prev.restype = ctypes.c_int32
+			self.lib.lib3mf_accessor_prev.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_accessor_begin.restype = ctypes.c_int32
+			self.lib.lib3mf_accessor_begin.argtypes = [ctypes.c_void_p]
+			
+			self.lib.lib3mf_implicitportaccessor_get.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitportaccessor_get.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
 			self.lib.lib3mf_implicitnode_getidentifier.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitnode_getidentifier.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
@@ -4924,23 +5080,50 @@ class Wrapper:
 			self.lib.lib3mf_implicitnode_setdisplayname.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitnode_setdisplayname.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
 			
-			self.lib.lib3mf_implicitaddition_getinputa.restype = ctypes.c_int32
-			self.lib.lib3mf_implicitaddition_getinputa.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			self.lib.lib3mf_implicitnode_addinput.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitnode_addinput.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
 			
-			self.lib.lib3mf_implicitaddition_setinputa.restype = ctypes.c_int32
-			self.lib.lib3mf_implicitaddition_setinputa.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			self.lib.lib3mf_implicitnode_getinputs.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitnode_getinputs.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_implicitaddition_getinputb.restype = ctypes.c_int32
-			self.lib.lib3mf_implicitaddition_getinputb.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			self.lib.lib3mf_implicitnode_addoutput.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitnode_addoutput.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
 			
-			self.lib.lib3mf_implicitaddition_setinputb.restype = ctypes.c_int32
-			self.lib.lib3mf_implicitaddition_setinputb.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			self.lib.lib3mf_implicitnode_getoutputs.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitnode_getoutputs.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_implicitaddition_getoutputsum.restype = ctypes.c_int32
-			self.lib.lib3mf_implicitaddition_getoutputsum.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			self.lib.lib3mf_nodeaccessor_get.restype = ctypes.c_int32
+			self.lib.lib3mf_nodeaccessor_get.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_implicitaddition_setoutputsum.restype = ctypes.c_int32
-			self.lib.lib3mf_implicitaddition_setoutputsum.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			self.lib.lib3mf_implicitfunction_getidentifier.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitfunction_getidentifier.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_implicitfunction_setidentifier.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitfunction_setidentifier.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_implicitfunction_getdisplayname.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitfunction_getdisplayname.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_implicitfunction_setdisplayname.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitfunction_setdisplayname.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_implicitfunction_addnode.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitfunction_addnode.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_implicitfunction_getnodes.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitfunction_getnodes.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_implicitfunction_addinput.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitfunction_addinput.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_implicitfunction_getinputs.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitfunction_getinputs.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_implicitfunction_addoutput.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitfunction_addoutput.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_implicitfunction_getoutputs.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitfunction_getoutputs.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_builditem_getobjectresource.restype = ctypes.c_int32
 			self.lib.lib3mf_builditem_getobjectresource.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -5716,10 +5899,18 @@ class Wrapper:
 				return Attachment(handle, wrapper)
 			def getObjectById_E0441CF976B36319(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Texture2D"
 				return Texture2D(handle, wrapper)
+			def getObjectById_D5C49B04AF1963CD(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPort"
+				return ImplicitPort(handle, wrapper)
+			def getObjectById_F94265ED198E4784(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Accessor"
+				return Accessor(handle, wrapper)
+			def getObjectById_258087F875881ADD(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPortAccessor"
+				return ImplicitPortAccessor(handle, wrapper)
 			def getObjectById_E72592A7725AB29B(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ImplicitNode"
 				return ImplicitNode(handle, wrapper)
-			def getObjectById_DB93DED4EC7849D7(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ImplicitAddition"
-				return ImplicitAddition(handle, wrapper)
+			def getObjectById_E0E0FC011B210DE0(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::NodeAccessor"
+				return NodeAccessor(handle, wrapper)
+			def getObjectById_6CE54469EEA83BC1(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ImplicitFunction"
+				return ImplicitFunction(handle, wrapper)
 			def getObjectById_68FB2D5FFC4BA12A(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::BuildItem"
 				return BuildItem(handle, wrapper)
 			def getObjectById_A7D21BD364910860(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::BuildItemIterator"
@@ -8430,6 +8621,91 @@ class Texture2D(Resource):
 	
 
 
+''' Class Implementation for ImplicitPort
+'''
+class ImplicitPort(Base):
+	def __init__(self, handle, wrapper):
+		Base.__init__(self, handle, wrapper)
+	def GetIdentifier(self):
+		nIdentifierBufferSize = ctypes.c_uint64(0)
+		nIdentifierNeededChars = ctypes.c_uint64(0)
+		pIdentifierBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitport_getidentifier(self._handle, nIdentifierBufferSize, nIdentifierNeededChars, pIdentifierBuffer))
+		nIdentifierBufferSize = ctypes.c_uint64(nIdentifierNeededChars.value)
+		pIdentifierBuffer = (ctypes.c_char * (nIdentifierNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitport_getidentifier(self._handle, nIdentifierBufferSize, nIdentifierNeededChars, pIdentifierBuffer))
+		
+		return pIdentifierBuffer.value.decode()
+	
+	def SetIdentifier(self, Identifier):
+		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitport_setidentifier(self._handle, pIdentifier))
+		
+	
+	def GetDisplayName(self):
+		nDisplayNameBufferSize = ctypes.c_uint64(0)
+		nDisplayNameNeededChars = ctypes.c_uint64(0)
+		pDisplayNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitport_getdisplayname(self._handle, nDisplayNameBufferSize, nDisplayNameNeededChars, pDisplayNameBuffer))
+		nDisplayNameBufferSize = ctypes.c_uint64(nDisplayNameNeededChars.value)
+		pDisplayNameBuffer = (ctypes.c_char * (nDisplayNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitport_getdisplayname(self._handle, nDisplayNameBufferSize, nDisplayNameNeededChars, pDisplayNameBuffer))
+		
+		return pDisplayNameBuffer.value.decode()
+	
+	def SetDisplayName(self, DisplayName):
+		pDisplayName = ctypes.c_char_p(str.encode(DisplayName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitport_setdisplayname(self._handle, pDisplayName))
+		
+	
+
+
+''' Class Implementation for Accessor
+'''
+class Accessor(Base):
+	def __init__(self, handle, wrapper):
+		Base.__init__(self, handle, wrapper)
+	def GetSize(self):
+		pSize = ctypes.c_uint64()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_accessor_getsize(self._handle, pSize))
+		
+		return pSize.value
+	
+	def Next(self):
+		pResult = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_accessor_next(self._handle, pResult))
+		
+		return pResult.value
+	
+	def Prev(self):
+		pResult = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_accessor_prev(self._handle, pResult))
+		
+		return pResult.value
+	
+	def Begin(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_accessor_begin(self._handle))
+		
+	
+
+
+''' Class Implementation for ImplicitPortAccessor
+'''
+class ImplicitPortAccessor(Accessor):
+	def __init__(self, handle, wrapper):
+		Accessor.__init__(self, handle, wrapper)
+	def Get(self):
+		PortHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitportaccessor_get(self._handle, PortHandle))
+		if PortHandle:
+			PortObject = self._wrapper._polymorphicFactory(PortHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return PortObject
+	
+
+
 ''' Class Implementation for ImplicitNode
 '''
 class ImplicitNode(Base):
@@ -8467,60 +8743,142 @@ class ImplicitNode(Base):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitnode_setdisplayname(self._handle, pDisplayName))
 		
 	
+	def AddInput(self, Identifier, DisplayName):
+		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
+		pDisplayName = ctypes.c_char_p(str.encode(DisplayName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitnode_addinput(self._handle, pIdentifier, pDisplayName))
+		
+	
+	def GetInputs(self):
+		AccessorHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitnode_getinputs(self._handle, AccessorHandle))
+		if AccessorHandle:
+			AccessorObject = self._wrapper._polymorphicFactory(AccessorHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return AccessorObject
+	
+	def AddOutput(self, Identifier, DisplayName):
+		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
+		pDisplayName = ctypes.c_char_p(str.encode(DisplayName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitnode_addoutput(self._handle, pIdentifier, pDisplayName))
+		
+	
+	def GetOutputs(self):
+		AccessorHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitnode_getoutputs(self._handle, AccessorHandle))
+		if AccessorHandle:
+			AccessorObject = self._wrapper._polymorphicFactory(AccessorHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return AccessorObject
+	
 
 
-''' Class Implementation for ImplicitAddition
+''' Class Implementation for NodeAccessor
 '''
-class ImplicitAddition(ImplicitNode):
+class NodeAccessor(Accessor):
 	def __init__(self, handle, wrapper):
-		ImplicitNode.__init__(self, handle, wrapper)
-	def GetInputA(self):
-		nInputABufferSize = ctypes.c_uint64(0)
-		nInputANeededChars = ctypes.c_uint64(0)
-		pInputABuffer = ctypes.c_char_p(None)
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitaddition_getinputa(self._handle, nInputABufferSize, nInputANeededChars, pInputABuffer))
-		nInputABufferSize = ctypes.c_uint64(nInputANeededChars.value)
-		pInputABuffer = (ctypes.c_char * (nInputANeededChars.value))()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitaddition_getinputa(self._handle, nInputABufferSize, nInputANeededChars, pInputABuffer))
+		Accessor.__init__(self, handle, wrapper)
+	def Get(self):
+		NodeHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_nodeaccessor_get(self._handle, NodeHandle))
+		if NodeHandle:
+			NodeObject = self._wrapper._polymorphicFactory(NodeHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
-		return pInputABuffer.value.decode()
+		return NodeObject
 	
-	def SetInputA(self, InputA):
-		pInputA = ctypes.c_char_p(str.encode(InputA))
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitaddition_setinputa(self._handle, pInputA))
-		
-	
-	def GetInputB(self):
-		nInputBBufferSize = ctypes.c_uint64(0)
-		nInputBNeededChars = ctypes.c_uint64(0)
-		pInputBBuffer = ctypes.c_char_p(None)
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitaddition_getinputb(self._handle, nInputBBufferSize, nInputBNeededChars, pInputBBuffer))
-		nInputBBufferSize = ctypes.c_uint64(nInputBNeededChars.value)
-		pInputBBuffer = (ctypes.c_char * (nInputBNeededChars.value))()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitaddition_getinputb(self._handle, nInputBBufferSize, nInputBNeededChars, pInputBBuffer))
-		
-		return pInputBBuffer.value.decode()
-	
-	def SetInputB(self, InputB):
-		pInputB = ctypes.c_char_p(str.encode(InputB))
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitaddition_setinputb(self._handle, pInputB))
-		
-	
-	def GetOutputSum(self):
+
+
+''' Class Implementation for ImplicitFunction
+'''
+class ImplicitFunction(Base):
+	def __init__(self, handle, wrapper):
+		Base.__init__(self, handle, wrapper)
+	def GetIdentifier(self):
 		nIdentifierBufferSize = ctypes.c_uint64(0)
 		nIdentifierNeededChars = ctypes.c_uint64(0)
 		pIdentifierBuffer = ctypes.c_char_p(None)
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitaddition_getoutputsum(self._handle, nIdentifierBufferSize, nIdentifierNeededChars, pIdentifierBuffer))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_getidentifier(self._handle, nIdentifierBufferSize, nIdentifierNeededChars, pIdentifierBuffer))
 		nIdentifierBufferSize = ctypes.c_uint64(nIdentifierNeededChars.value)
 		pIdentifierBuffer = (ctypes.c_char * (nIdentifierNeededChars.value))()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitaddition_getoutputsum(self._handle, nIdentifierBufferSize, nIdentifierNeededChars, pIdentifierBuffer))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_getidentifier(self._handle, nIdentifierBufferSize, nIdentifierNeededChars, pIdentifierBuffer))
 		
 		return pIdentifierBuffer.value.decode()
 	
-	def SetOutputSum(self, Identifier):
+	def SetIdentifier(self, Identifier):
 		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitaddition_setoutputsum(self._handle, pIdentifier))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_setidentifier(self._handle, pIdentifier))
 		
+	
+	def GetDisplayName(self):
+		nDisplayNameBufferSize = ctypes.c_uint64(0)
+		nDisplayNameNeededChars = ctypes.c_uint64(0)
+		pDisplayNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_getdisplayname(self._handle, nDisplayNameBufferSize, nDisplayNameNeededChars, pDisplayNameBuffer))
+		nDisplayNameBufferSize = ctypes.c_uint64(nDisplayNameNeededChars.value)
+		pDisplayNameBuffer = (ctypes.c_char * (nDisplayNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_getdisplayname(self._handle, nDisplayNameBufferSize, nDisplayNameNeededChars, pDisplayNameBuffer))
+		
+		return pDisplayNameBuffer.value.decode()
+	
+	def SetDisplayName(self, DisplayName):
+		pDisplayName = ctypes.c_char_p(str.encode(DisplayName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_setdisplayname(self._handle, pDisplayName))
+		
+	
+	def AddNode(self, NodeType, Identifier, DisplayName):
+		pNodeType = ctypes.c_char_p(str.encode(NodeType))
+		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
+		pDisplayName = ctypes.c_char_p(str.encode(DisplayName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_addnode(self._handle, pNodeType, pIdentifier, pDisplayName))
+		
+	
+	def GetNodes(self):
+		AccessorHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_getnodes(self._handle, AccessorHandle))
+		if AccessorHandle:
+			AccessorObject = self._wrapper._polymorphicFactory(AccessorHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return AccessorObject
+	
+	def AddInput(self, Identifier, DisplayName):
+		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
+		pDisplayName = ctypes.c_char_p(str.encode(DisplayName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_addinput(self._handle, pIdentifier, pDisplayName))
+		
+	
+	def GetInputs(self):
+		AccessorHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_getinputs(self._handle, AccessorHandle))
+		if AccessorHandle:
+			AccessorObject = self._wrapper._polymorphicFactory(AccessorHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return AccessorObject
+	
+	def AddOutput(self, Identifier, DisplayName):
+		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
+		pDisplayName = ctypes.c_char_p(str.encode(DisplayName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_addoutput(self._handle, pIdentifier, pDisplayName))
+		
+	
+	def GetOutputs(self):
+		AccessorHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_getoutputs(self._handle, AccessorHandle))
+		if AccessorHandle:
+			AccessorObject = self._wrapper._polymorphicFactory(AccessorHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return AccessorObject
 	
 
 

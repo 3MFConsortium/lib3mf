@@ -361,16 +361,34 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Texture2D_SetTileStyleUV = NULL;
 	pWrapperTable->m_Texture2D_GetFilter = NULL;
 	pWrapperTable->m_Texture2D_SetFilter = NULL;
+	pWrapperTable->m_ImplicitPort_GetIdentifier = NULL;
+	pWrapperTable->m_ImplicitPort_SetIdentifier = NULL;
+	pWrapperTable->m_ImplicitPort_GetDisplayName = NULL;
+	pWrapperTable->m_ImplicitPort_SetDisplayName = NULL;
+	pWrapperTable->m_Accessor_GetSize = NULL;
+	pWrapperTable->m_Accessor_Next = NULL;
+	pWrapperTable->m_Accessor_Prev = NULL;
+	pWrapperTable->m_Accessor_Begin = NULL;
+	pWrapperTable->m_ImplicitPortAccessor_Get = NULL;
 	pWrapperTable->m_ImplicitNode_GetIdentifier = NULL;
 	pWrapperTable->m_ImplicitNode_SetIdentifier = NULL;
 	pWrapperTable->m_ImplicitNode_GetDisplayName = NULL;
 	pWrapperTable->m_ImplicitNode_SetDisplayName = NULL;
-	pWrapperTable->m_ImplicitAddition_GetInputA = NULL;
-	pWrapperTable->m_ImplicitAddition_SetInputA = NULL;
-	pWrapperTable->m_ImplicitAddition_GetInputB = NULL;
-	pWrapperTable->m_ImplicitAddition_SetInputB = NULL;
-	pWrapperTable->m_ImplicitAddition_GetOutputSum = NULL;
-	pWrapperTable->m_ImplicitAddition_SetOutputSum = NULL;
+	pWrapperTable->m_ImplicitNode_AddInput = NULL;
+	pWrapperTable->m_ImplicitNode_GetInputs = NULL;
+	pWrapperTable->m_ImplicitNode_AddOutput = NULL;
+	pWrapperTable->m_ImplicitNode_GetOutputs = NULL;
+	pWrapperTable->m_NodeAccessor_Get = NULL;
+	pWrapperTable->m_ImplicitFunction_GetIdentifier = NULL;
+	pWrapperTable->m_ImplicitFunction_SetIdentifier = NULL;
+	pWrapperTable->m_ImplicitFunction_GetDisplayName = NULL;
+	pWrapperTable->m_ImplicitFunction_SetDisplayName = NULL;
+	pWrapperTable->m_ImplicitFunction_AddNode = NULL;
+	pWrapperTable->m_ImplicitFunction_GetNodes = NULL;
+	pWrapperTable->m_ImplicitFunction_AddInput = NULL;
+	pWrapperTable->m_ImplicitFunction_GetInputs = NULL;
+	pWrapperTable->m_ImplicitFunction_AddOutput = NULL;
+	pWrapperTable->m_ImplicitFunction_GetOutputs = NULL;
 	pWrapperTable->m_BuildItem_GetObjectResource = NULL;
 	pWrapperTable->m_BuildItem_GetUUID = NULL;
 	pWrapperTable->m_BuildItem_SetUUID = NULL;
@@ -3416,6 +3434,87 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_ImplicitPort_GetIdentifier = (PLib3MFImplicitPort_GetIdentifierPtr) GetProcAddress(hLibrary, "lib3mf_implicitport_getidentifier");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitPort_GetIdentifier = (PLib3MFImplicitPort_GetIdentifierPtr) dlsym(hLibrary, "lib3mf_implicitport_getidentifier");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitPort_GetIdentifier == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitPort_SetIdentifier = (PLib3MFImplicitPort_SetIdentifierPtr) GetProcAddress(hLibrary, "lib3mf_implicitport_setidentifier");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitPort_SetIdentifier = (PLib3MFImplicitPort_SetIdentifierPtr) dlsym(hLibrary, "lib3mf_implicitport_setidentifier");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitPort_SetIdentifier == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitPort_GetDisplayName = (PLib3MFImplicitPort_GetDisplayNamePtr) GetProcAddress(hLibrary, "lib3mf_implicitport_getdisplayname");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitPort_GetDisplayName = (PLib3MFImplicitPort_GetDisplayNamePtr) dlsym(hLibrary, "lib3mf_implicitport_getdisplayname");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitPort_GetDisplayName == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitPort_SetDisplayName = (PLib3MFImplicitPort_SetDisplayNamePtr) GetProcAddress(hLibrary, "lib3mf_implicitport_setdisplayname");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitPort_SetDisplayName = (PLib3MFImplicitPort_SetDisplayNamePtr) dlsym(hLibrary, "lib3mf_implicitport_setdisplayname");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitPort_SetDisplayName == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Accessor_GetSize = (PLib3MFAccessor_GetSizePtr) GetProcAddress(hLibrary, "lib3mf_accessor_getsize");
+	#else // _WIN32
+	pWrapperTable->m_Accessor_GetSize = (PLib3MFAccessor_GetSizePtr) dlsym(hLibrary, "lib3mf_accessor_getsize");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Accessor_GetSize == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Accessor_Next = (PLib3MFAccessor_NextPtr) GetProcAddress(hLibrary, "lib3mf_accessor_next");
+	#else // _WIN32
+	pWrapperTable->m_Accessor_Next = (PLib3MFAccessor_NextPtr) dlsym(hLibrary, "lib3mf_accessor_next");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Accessor_Next == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Accessor_Prev = (PLib3MFAccessor_PrevPtr) GetProcAddress(hLibrary, "lib3mf_accessor_prev");
+	#else // _WIN32
+	pWrapperTable->m_Accessor_Prev = (PLib3MFAccessor_PrevPtr) dlsym(hLibrary, "lib3mf_accessor_prev");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Accessor_Prev == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Accessor_Begin = (PLib3MFAccessor_BeginPtr) GetProcAddress(hLibrary, "lib3mf_accessor_begin");
+	#else // _WIN32
+	pWrapperTable->m_Accessor_Begin = (PLib3MFAccessor_BeginPtr) dlsym(hLibrary, "lib3mf_accessor_begin");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Accessor_Begin == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitPortAccessor_Get = (PLib3MFImplicitPortAccessor_GetPtr) GetProcAddress(hLibrary, "lib3mf_implicitportaccessor_get");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitPortAccessor_Get = (PLib3MFImplicitPortAccessor_GetPtr) dlsym(hLibrary, "lib3mf_implicitportaccessor_get");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitPortAccessor_Get == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_ImplicitNode_GetIdentifier = (PLib3MFImplicitNode_GetIdentifierPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_getidentifier");
 	#else // _WIN32
 	pWrapperTable->m_ImplicitNode_GetIdentifier = (PLib3MFImplicitNode_GetIdentifierPtr) dlsym(hLibrary, "lib3mf_implicitnode_getidentifier");
@@ -3452,57 +3551,138 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ImplicitAddition_GetInputA = (PLib3MFImplicitAddition_GetInputAPtr) GetProcAddress(hLibrary, "lib3mf_implicitaddition_getinputa");
+	pWrapperTable->m_ImplicitNode_AddInput = (PLib3MFImplicitNode_AddInputPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_addinput");
 	#else // _WIN32
-	pWrapperTable->m_ImplicitAddition_GetInputA = (PLib3MFImplicitAddition_GetInputAPtr) dlsym(hLibrary, "lib3mf_implicitaddition_getinputa");
+	pWrapperTable->m_ImplicitNode_AddInput = (PLib3MFImplicitNode_AddInputPtr) dlsym(hLibrary, "lib3mf_implicitnode_addinput");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ImplicitAddition_GetInputA == NULL)
+	if (pWrapperTable->m_ImplicitNode_AddInput == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ImplicitAddition_SetInputA = (PLib3MFImplicitAddition_SetInputAPtr) GetProcAddress(hLibrary, "lib3mf_implicitaddition_setinputa");
+	pWrapperTable->m_ImplicitNode_GetInputs = (PLib3MFImplicitNode_GetInputsPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_getinputs");
 	#else // _WIN32
-	pWrapperTable->m_ImplicitAddition_SetInputA = (PLib3MFImplicitAddition_SetInputAPtr) dlsym(hLibrary, "lib3mf_implicitaddition_setinputa");
+	pWrapperTable->m_ImplicitNode_GetInputs = (PLib3MFImplicitNode_GetInputsPtr) dlsym(hLibrary, "lib3mf_implicitnode_getinputs");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ImplicitAddition_SetInputA == NULL)
+	if (pWrapperTable->m_ImplicitNode_GetInputs == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ImplicitAddition_GetInputB = (PLib3MFImplicitAddition_GetInputBPtr) GetProcAddress(hLibrary, "lib3mf_implicitaddition_getinputb");
+	pWrapperTable->m_ImplicitNode_AddOutput = (PLib3MFImplicitNode_AddOutputPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_addoutput");
 	#else // _WIN32
-	pWrapperTable->m_ImplicitAddition_GetInputB = (PLib3MFImplicitAddition_GetInputBPtr) dlsym(hLibrary, "lib3mf_implicitaddition_getinputb");
+	pWrapperTable->m_ImplicitNode_AddOutput = (PLib3MFImplicitNode_AddOutputPtr) dlsym(hLibrary, "lib3mf_implicitnode_addoutput");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ImplicitAddition_GetInputB == NULL)
+	if (pWrapperTable->m_ImplicitNode_AddOutput == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ImplicitAddition_SetInputB = (PLib3MFImplicitAddition_SetInputBPtr) GetProcAddress(hLibrary, "lib3mf_implicitaddition_setinputb");
+	pWrapperTable->m_ImplicitNode_GetOutputs = (PLib3MFImplicitNode_GetOutputsPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_getoutputs");
 	#else // _WIN32
-	pWrapperTable->m_ImplicitAddition_SetInputB = (PLib3MFImplicitAddition_SetInputBPtr) dlsym(hLibrary, "lib3mf_implicitaddition_setinputb");
+	pWrapperTable->m_ImplicitNode_GetOutputs = (PLib3MFImplicitNode_GetOutputsPtr) dlsym(hLibrary, "lib3mf_implicitnode_getoutputs");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ImplicitAddition_SetInputB == NULL)
+	if (pWrapperTable->m_ImplicitNode_GetOutputs == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ImplicitAddition_GetOutputSum = (PLib3MFImplicitAddition_GetOutputSumPtr) GetProcAddress(hLibrary, "lib3mf_implicitaddition_getoutputsum");
+	pWrapperTable->m_NodeAccessor_Get = (PLib3MFNodeAccessor_GetPtr) GetProcAddress(hLibrary, "lib3mf_nodeaccessor_get");
 	#else // _WIN32
-	pWrapperTable->m_ImplicitAddition_GetOutputSum = (PLib3MFImplicitAddition_GetOutputSumPtr) dlsym(hLibrary, "lib3mf_implicitaddition_getoutputsum");
+	pWrapperTable->m_NodeAccessor_Get = (PLib3MFNodeAccessor_GetPtr) dlsym(hLibrary, "lib3mf_nodeaccessor_get");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ImplicitAddition_GetOutputSum == NULL)
+	if (pWrapperTable->m_NodeAccessor_Get == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ImplicitAddition_SetOutputSum = (PLib3MFImplicitAddition_SetOutputSumPtr) GetProcAddress(hLibrary, "lib3mf_implicitaddition_setoutputsum");
+	pWrapperTable->m_ImplicitFunction_GetIdentifier = (PLib3MFImplicitFunction_GetIdentifierPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_getidentifier");
 	#else // _WIN32
-	pWrapperTable->m_ImplicitAddition_SetOutputSum = (PLib3MFImplicitAddition_SetOutputSumPtr) dlsym(hLibrary, "lib3mf_implicitaddition_setoutputsum");
+	pWrapperTable->m_ImplicitFunction_GetIdentifier = (PLib3MFImplicitFunction_GetIdentifierPtr) dlsym(hLibrary, "lib3mf_implicitfunction_getidentifier");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ImplicitAddition_SetOutputSum == NULL)
+	if (pWrapperTable->m_ImplicitFunction_GetIdentifier == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitFunction_SetIdentifier = (PLib3MFImplicitFunction_SetIdentifierPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_setidentifier");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitFunction_SetIdentifier = (PLib3MFImplicitFunction_SetIdentifierPtr) dlsym(hLibrary, "lib3mf_implicitfunction_setidentifier");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitFunction_SetIdentifier == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitFunction_GetDisplayName = (PLib3MFImplicitFunction_GetDisplayNamePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_getdisplayname");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitFunction_GetDisplayName = (PLib3MFImplicitFunction_GetDisplayNamePtr) dlsym(hLibrary, "lib3mf_implicitfunction_getdisplayname");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitFunction_GetDisplayName == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitFunction_SetDisplayName = (PLib3MFImplicitFunction_SetDisplayNamePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_setdisplayname");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitFunction_SetDisplayName = (PLib3MFImplicitFunction_SetDisplayNamePtr) dlsym(hLibrary, "lib3mf_implicitfunction_setdisplayname");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitFunction_SetDisplayName == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitFunction_AddNode = (PLib3MFImplicitFunction_AddNodePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addnode");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitFunction_AddNode = (PLib3MFImplicitFunction_AddNodePtr) dlsym(hLibrary, "lib3mf_implicitfunction_addnode");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitFunction_AddNode == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitFunction_GetNodes = (PLib3MFImplicitFunction_GetNodesPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_getnodes");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitFunction_GetNodes = (PLib3MFImplicitFunction_GetNodesPtr) dlsym(hLibrary, "lib3mf_implicitfunction_getnodes");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitFunction_GetNodes == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitFunction_AddInput = (PLib3MFImplicitFunction_AddInputPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addinput");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitFunction_AddInput = (PLib3MFImplicitFunction_AddInputPtr) dlsym(hLibrary, "lib3mf_implicitfunction_addinput");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitFunction_AddInput == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitFunction_GetInputs = (PLib3MFImplicitFunction_GetInputsPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_getinputs");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitFunction_GetInputs = (PLib3MFImplicitFunction_GetInputsPtr) dlsym(hLibrary, "lib3mf_implicitfunction_getinputs");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitFunction_GetInputs == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitFunction_AddOutput = (PLib3MFImplicitFunction_AddOutputPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addoutput");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitFunction_AddOutput = (PLib3MFImplicitFunction_AddOutputPtr) dlsym(hLibrary, "lib3mf_implicitfunction_addoutput");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitFunction_AddOutput == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitFunction_GetOutputs = (PLib3MFImplicitFunction_GetOutputsPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_getoutputs");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitFunction_GetOutputs = (PLib3MFImplicitFunction_GetOutputsPtr) dlsym(hLibrary, "lib3mf_implicitfunction_getoutputs");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitFunction_GetOutputs == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

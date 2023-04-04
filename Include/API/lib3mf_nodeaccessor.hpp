@@ -24,42 +24,70 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CImplicitNode
+Abstract: This is the class declaration of CNodeAccessor
 
 */
 
-#include "lib3mf_implicitnode.hpp"
-#include "lib3mf_interfaceexception.hpp"
+
+#ifndef __LIB3MF_NODEACCESSOR
+#define __LIB3MF_NODEACCESSOR
+
+#include "lib3mf_interfaces.hpp"
+
+// Parent classes
+#include "lib3mf_accessor.hpp"
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 // Include custom headers here.
 
-using namespace Lib3MF::Impl;
+
+namespace Lib3MF {
+namespace Impl {
+
 
 /*************************************************************************************************************************
- Class definition of CImplicitNode
+ Class declaration of CNodeAccessor 
 **************************************************************************************************************************/
 
-std::string CImplicitNode::GetIdentifier()
-{
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
+class CNodeAccessor : public virtual INodeAccessor, public virtual CAccessor {
+private:
 
-void CImplicitNode::SetIdentifier(const std::string & sIdentifier)
-{
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
+	/**
+	* Put private members here.
+	*/
 
-std::string CImplicitNode::GetDisplayName()
-{
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
+protected:
 
-void CImplicitNode::SetDisplayName(const std::string & sDisplayName)
-{
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
+	/**
+	* Put protected members here.
+	*/
 
-CImplicitNode::CImplicitNode(NMR::PImplicitNode pImplicitNode)
-    : m_pImplicitNode(std::move(pImplicitNode))
-{
-}
+public:
+
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
+
+
+	/**
+	* Public member functions to implement.
+	*/
+
+	/**
+	* INodeAccessor::Get - Returns the current element
+	* @return The current element
+	*/
+	IImplicitNode * Get() override;
+
+};
+
+} // namespace Impl
+} // namespace Lib3MF
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#endif // __LIB3MF_NODEACCESSOR

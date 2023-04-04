@@ -3256,6 +3256,102 @@ typedef Lib3MFResult (*PLib3MFTexture2D_GetFilterPtr) (Lib3MF_Texture2D pTexture
 typedef Lib3MFResult (*PLib3MFTexture2D_SetFilterPtr) (Lib3MF_Texture2D pTexture2D, eLib3MFTextureFilter eFilter);
 
 /*************************************************************************************************************************
+ Class definition for ImplicitPort
+**************************************************************************************************************************/
+
+/**
+* Retrieves the identifier of the port
+*
+* @param[in] pImplicitPort - ImplicitPort instance.
+* @param[in] nIdentifierBufferSize - size of the buffer (including trailing 0)
+* @param[out] pIdentifierNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pIdentifierBuffer -  buffer of the identifier, may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitPort_GetIdentifierPtr) (Lib3MF_ImplicitPort pImplicitPort, const Lib3MF_uint32 nIdentifierBufferSize, Lib3MF_uint32* pIdentifierNeededChars, char * pIdentifierBuffer);
+
+/**
+* Sets the identifier of the port
+*
+* @param[in] pImplicitPort - ImplicitPort instance.
+* @param[in] pIdentifier - the identifier
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitPort_SetIdentifierPtr) (Lib3MF_ImplicitPort pImplicitPort, const char * pIdentifier);
+
+/**
+* Retrieves the display name of the port
+*
+* @param[in] pImplicitPort - ImplicitPort instance.
+* @param[in] nDisplayNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pDisplayNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pDisplayNameBuffer -  buffer of the display name, may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitPort_GetDisplayNamePtr) (Lib3MF_ImplicitPort pImplicitPort, const Lib3MF_uint32 nDisplayNameBufferSize, Lib3MF_uint32* pDisplayNameNeededChars, char * pDisplayNameBuffer);
+
+/**
+* Sets the display name of the port
+*
+* @param[in] pImplicitPort - ImplicitPort instance.
+* @param[in] pDisplayName - the display name
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitPort_SetDisplayNamePtr) (Lib3MF_ImplicitPort pImplicitPort, const char * pDisplayName);
+
+/*************************************************************************************************************************
+ Class definition for Accessor
+**************************************************************************************************************************/
+
+/**
+* Returns the number of elements
+*
+* @param[in] pAccessor - Accessor instance.
+* @param[out] pSize - The number of elements
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFAccessor_GetSizePtr) (Lib3MF_Accessor pAccessor, Lib3MF_uint64 * pSize);
+
+/**
+* Go to the next element
+*
+* @param[in] pAccessor - Accessor instance.
+* @param[out] pResult - Returns true, if there is a next element
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFAccessor_NextPtr) (Lib3MF_Accessor pAccessor, bool * pResult);
+
+/**
+* Go to the previous element
+*
+* @param[in] pAccessor - Accessor instance.
+* @param[out] pResult - Returns true, if there is a previous element
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFAccessor_PrevPtr) (Lib3MF_Accessor pAccessor, bool * pResult);
+
+/**
+* Go to the first element
+*
+* @param[in] pAccessor - Accessor instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFAccessor_BeginPtr) (Lib3MF_Accessor pAccessor);
+
+/*************************************************************************************************************************
+ Class definition for ImplicitPortAccessor
+**************************************************************************************************************************/
+
+/**
+* Returns the current element
+*
+* @param[in] pImplicitPortAccessor - ImplicitPortAccessor instance.
+* @param[out] pPort - The current element
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitPortAccessor_GetPtr) (Lib3MF_ImplicitPortAccessor pImplicitPortAccessor, Lib3MF_ImplicitPort * pPort);
+
+/*************************************************************************************************************************
  Class definition for ImplicitNode
 **************************************************************************************************************************/
 
@@ -3299,69 +3395,158 @@ typedef Lib3MFResult (*PLib3MFImplicitNode_GetDisplayNamePtr) (Lib3MF_ImplicitNo
 */
 typedef Lib3MFResult (*PLib3MFImplicitNode_SetDisplayNamePtr) (Lib3MF_ImplicitNode pImplicitNode, const char * pDisplayName);
 
+/**
+* Add an input
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[in] pIdentifier - the identifier of the input
+* @param[in] pDisplayName - the display name of the input
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitNode_AddInputPtr) (Lib3MF_ImplicitNode pImplicitNode, const char * pIdentifier, const char * pDisplayName);
+
+/**
+* Retrieves the inputs
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[out] pAccessor - the accessor to the inputs
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitNode_GetInputsPtr) (Lib3MF_ImplicitNode pImplicitNode, Lib3MF_ImplicitPort * pAccessor);
+
+/**
+* Add an output
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[in] pIdentifier - the identifier of the output
+* @param[in] pDisplayName - the display name of the output
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitNode_AddOutputPtr) (Lib3MF_ImplicitNode pImplicitNode, const char * pIdentifier, const char * pDisplayName);
+
+/**
+* Retrieves the outputs
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[out] pAccessor - the accessor to the outputs
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitNode_GetOutputsPtr) (Lib3MF_ImplicitNode pImplicitNode, Lib3MF_ImplicitPort * pAccessor);
+
 /*************************************************************************************************************************
- Class definition for ImplicitAddition
+ Class definition for NodeAccessor
 **************************************************************************************************************************/
 
 /**
-* Retrieves the input A of the addition
+* Returns the current element
 *
-* @param[in] pImplicitAddition - ImplicitAddition instance.
-* @param[in] nInputABufferSize - size of the buffer (including trailing 0)
-* @param[out] pInputANeededChars - will be filled with the count of the written bytes, or needed buffer size.
-* @param[out] pInputABuffer - ImplicitNode buffer of the input A, may be NULL
+* @param[in] pNodeAccessor - NodeAccessor instance.
+* @param[out] pNode - The current element
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitAddition_GetInputAPtr) (Lib3MF_ImplicitAddition pImplicitAddition, const Lib3MF_uint32 nInputABufferSize, Lib3MF_uint32* pInputANeededChars, char * pInputABuffer);
+typedef Lib3MFResult (*PLib3MFNodeAccessor_GetPtr) (Lib3MF_NodeAccessor pNodeAccessor, Lib3MF_ImplicitNode * pNode);
+
+/*************************************************************************************************************************
+ Class definition for ImplicitFunction
+**************************************************************************************************************************/
 
 /**
-* Sets the input A of the addition
+* Retrieves the identifier of the function
 *
-* @param[in] pImplicitAddition - ImplicitAddition instance.
-* @param[in] pInputA - the input A
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFImplicitAddition_SetInputAPtr) (Lib3MF_ImplicitAddition pImplicitAddition, const char * pInputA);
-
-/**
-* Retrieves the input B of the addition
-*
-* @param[in] pImplicitAddition - ImplicitAddition instance.
-* @param[in] nInputBBufferSize - size of the buffer (including trailing 0)
-* @param[out] pInputBNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-* @param[out] pInputBBuffer - ImplicitNode buffer of the input B, may be NULL
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFImplicitAddition_GetInputBPtr) (Lib3MF_ImplicitAddition pImplicitAddition, const Lib3MF_uint32 nInputBBufferSize, Lib3MF_uint32* pInputBNeededChars, char * pInputBBuffer);
-
-/**
-* Sets the input B of the addition
-*
-* @param[in] pImplicitAddition - ImplicitAddition instance.
-* @param[in] pInputB - the input B
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFImplicitAddition_SetInputBPtr) (Lib3MF_ImplicitAddition pImplicitAddition, const char * pInputB);
-
-/**
-* Retrieves the identifier of the sum output of the addition
-*
-* @param[in] pImplicitAddition - ImplicitAddition instance.
+* @param[in] pImplicitFunction - ImplicitFunction instance.
 * @param[in] nIdentifierBufferSize - size of the buffer (including trailing 0)
 * @param[out] pIdentifierNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-* @param[out] pIdentifierBuffer - ImplicitNode buffer of identifier of the sum output, may be NULL
+* @param[out] pIdentifierBuffer -  buffer of the identifier, may be NULL
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitAddition_GetOutputSumPtr) (Lib3MF_ImplicitAddition pImplicitAddition, const Lib3MF_uint32 nIdentifierBufferSize, Lib3MF_uint32* pIdentifierNeededChars, char * pIdentifierBuffer);
+typedef Lib3MFResult (*PLib3MFImplicitFunction_GetIdentifierPtr) (Lib3MF_ImplicitFunction pImplicitFunction, const Lib3MF_uint32 nIdentifierBufferSize, Lib3MF_uint32* pIdentifierNeededChars, char * pIdentifierBuffer);
 
 /**
-* Sets the id of the sum output
+* Sets the identifier of the function
 *
-* @param[in] pImplicitAddition - ImplicitAddition instance.
-* @param[in] pIdentifier - identifier of the sum output
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitAddition_SetOutputSumPtr) (Lib3MF_ImplicitAddition pImplicitAddition, const char * pIdentifier);
+typedef Lib3MFResult (*PLib3MFImplicitFunction_SetIdentifierPtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier);
+
+/**
+* Retrieves the display name of the function
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] nDisplayNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pDisplayNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pDisplayNameBuffer -  buffer of the display name, may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitFunction_GetDisplayNamePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const Lib3MF_uint32 nDisplayNameBufferSize, Lib3MF_uint32* pDisplayNameNeededChars, char * pDisplayNameBuffer);
+
+/**
+* Sets the display name of the function
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pDisplayName - the display name
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitFunction_SetDisplayNamePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pDisplayName);
+
+/**
+* Add a node
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pNodeType - the type of the node
+* @param[in] pIdentifier - the identifier of the input
+* @param[in] pDisplayName - the display name of the input
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pNodeType, const char * pIdentifier, const char * pDisplayName);
+
+/**
+* Retrieves the nodes
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[out] pAccessor - the accessor to the nodes
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitFunction_GetNodesPtr) (Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_NodeAccessor * pAccessor);
+
+/**
+* Add an input
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the input
+* @param[in] pDisplayName - the display name of the input
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddInputPtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName);
+
+/**
+* Retrieves the inputs
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[out] pAccessor - the accessor to the inputs
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitFunction_GetInputsPtr) (Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPortAccessor * pAccessor);
+
+/**
+* Add an output
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the output
+* @param[in] pDisplayName - the display name of the output
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddOutputPtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName);
+
+/**
+* Retrieves the outputs
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[out] pAccessor - the accessor to the outputs
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitFunction_GetOutputsPtr) (Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPortAccessor * pAccessor);
 
 /*************************************************************************************************************************
  Class definition for BuildItem
@@ -5418,16 +5603,34 @@ typedef struct {
 	PLib3MFTexture2D_SetTileStyleUVPtr m_Texture2D_SetTileStyleUV;
 	PLib3MFTexture2D_GetFilterPtr m_Texture2D_GetFilter;
 	PLib3MFTexture2D_SetFilterPtr m_Texture2D_SetFilter;
+	PLib3MFImplicitPort_GetIdentifierPtr m_ImplicitPort_GetIdentifier;
+	PLib3MFImplicitPort_SetIdentifierPtr m_ImplicitPort_SetIdentifier;
+	PLib3MFImplicitPort_GetDisplayNamePtr m_ImplicitPort_GetDisplayName;
+	PLib3MFImplicitPort_SetDisplayNamePtr m_ImplicitPort_SetDisplayName;
+	PLib3MFAccessor_GetSizePtr m_Accessor_GetSize;
+	PLib3MFAccessor_NextPtr m_Accessor_Next;
+	PLib3MFAccessor_PrevPtr m_Accessor_Prev;
+	PLib3MFAccessor_BeginPtr m_Accessor_Begin;
+	PLib3MFImplicitPortAccessor_GetPtr m_ImplicitPortAccessor_Get;
 	PLib3MFImplicitNode_GetIdentifierPtr m_ImplicitNode_GetIdentifier;
 	PLib3MFImplicitNode_SetIdentifierPtr m_ImplicitNode_SetIdentifier;
 	PLib3MFImplicitNode_GetDisplayNamePtr m_ImplicitNode_GetDisplayName;
 	PLib3MFImplicitNode_SetDisplayNamePtr m_ImplicitNode_SetDisplayName;
-	PLib3MFImplicitAddition_GetInputAPtr m_ImplicitAddition_GetInputA;
-	PLib3MFImplicitAddition_SetInputAPtr m_ImplicitAddition_SetInputA;
-	PLib3MFImplicitAddition_GetInputBPtr m_ImplicitAddition_GetInputB;
-	PLib3MFImplicitAddition_SetInputBPtr m_ImplicitAddition_SetInputB;
-	PLib3MFImplicitAddition_GetOutputSumPtr m_ImplicitAddition_GetOutputSum;
-	PLib3MFImplicitAddition_SetOutputSumPtr m_ImplicitAddition_SetOutputSum;
+	PLib3MFImplicitNode_AddInputPtr m_ImplicitNode_AddInput;
+	PLib3MFImplicitNode_GetInputsPtr m_ImplicitNode_GetInputs;
+	PLib3MFImplicitNode_AddOutputPtr m_ImplicitNode_AddOutput;
+	PLib3MFImplicitNode_GetOutputsPtr m_ImplicitNode_GetOutputs;
+	PLib3MFNodeAccessor_GetPtr m_NodeAccessor_Get;
+	PLib3MFImplicitFunction_GetIdentifierPtr m_ImplicitFunction_GetIdentifier;
+	PLib3MFImplicitFunction_SetIdentifierPtr m_ImplicitFunction_SetIdentifier;
+	PLib3MFImplicitFunction_GetDisplayNamePtr m_ImplicitFunction_GetDisplayName;
+	PLib3MFImplicitFunction_SetDisplayNamePtr m_ImplicitFunction_SetDisplayName;
+	PLib3MFImplicitFunction_AddNodePtr m_ImplicitFunction_AddNode;
+	PLib3MFImplicitFunction_GetNodesPtr m_ImplicitFunction_GetNodes;
+	PLib3MFImplicitFunction_AddInputPtr m_ImplicitFunction_AddInput;
+	PLib3MFImplicitFunction_GetInputsPtr m_ImplicitFunction_GetInputs;
+	PLib3MFImplicitFunction_AddOutputPtr m_ImplicitFunction_AddOutput;
+	PLib3MFImplicitFunction_GetOutputsPtr m_ImplicitFunction_GetOutputs;
 	PLib3MFBuildItem_GetObjectResourcePtr m_BuildItem_GetObjectResource;
 	PLib3MFBuildItem_GetUUIDPtr m_BuildItem_GetUUID;
 	PLib3MFBuildItem_SetUUIDPtr m_BuildItem_SetUUID;

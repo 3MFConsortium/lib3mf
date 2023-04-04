@@ -2889,6 +2889,87 @@ Lib3MFResult CCall_lib3mf_texture2d_setfilter(Lib3MFHandle libraryHandle, Lib3MF
 }
 
 
+Lib3MFResult CCall_lib3mf_implicitport_getidentifier(Lib3MFHandle libraryHandle, Lib3MF_ImplicitPort pImplicitPort, const Lib3MF_uint32 nIdentifierBufferSize, Lib3MF_uint32* pIdentifierNeededChars, char * pIdentifierBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitPort_GetIdentifier (pImplicitPort, nIdentifierBufferSize, pIdentifierNeededChars, pIdentifierBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitport_setidentifier(Lib3MFHandle libraryHandle, Lib3MF_ImplicitPort pImplicitPort, const char * pIdentifier)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitPort_SetIdentifier (pImplicitPort, pIdentifier);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitport_getdisplayname(Lib3MFHandle libraryHandle, Lib3MF_ImplicitPort pImplicitPort, const Lib3MF_uint32 nDisplayNameBufferSize, Lib3MF_uint32* pDisplayNameNeededChars, char * pDisplayNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitPort_GetDisplayName (pImplicitPort, nDisplayNameBufferSize, pDisplayNameNeededChars, pDisplayNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitport_setdisplayname(Lib3MFHandle libraryHandle, Lib3MF_ImplicitPort pImplicitPort, const char * pDisplayName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitPort_SetDisplayName (pImplicitPort, pDisplayName);
+}
+
+
+Lib3MFResult CCall_lib3mf_accessor_getsize(Lib3MFHandle libraryHandle, Lib3MF_Accessor pAccessor, Lib3MF_uint64 * pSize)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Accessor_GetSize (pAccessor, pSize);
+}
+
+
+Lib3MFResult CCall_lib3mf_accessor_next(Lib3MFHandle libraryHandle, Lib3MF_Accessor pAccessor, bool * pResult)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Accessor_Next (pAccessor, pResult);
+}
+
+
+Lib3MFResult CCall_lib3mf_accessor_prev(Lib3MFHandle libraryHandle, Lib3MF_Accessor pAccessor, bool * pResult)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Accessor_Prev (pAccessor, pResult);
+}
+
+
+Lib3MFResult CCall_lib3mf_accessor_begin(Lib3MFHandle libraryHandle, Lib3MF_Accessor pAccessor)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Accessor_Begin (pAccessor);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitportaccessor_get(Lib3MFHandle libraryHandle, Lib3MF_ImplicitPortAccessor pImplicitPortAccessor, Lib3MF_ImplicitPort * pPort)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitPortAccessor_Get (pImplicitPortAccessor, pPort);
+}
+
+
 Lib3MFResult CCall_lib3mf_implicitnode_getidentifier(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, const Lib3MF_uint32 nIdentifierBufferSize, Lib3MF_uint32* pIdentifierNeededChars, char * pIdentifierBuffer)
 {
 	if (libraryHandle == 0) 
@@ -2925,57 +3006,138 @@ Lib3MFResult CCall_lib3mf_implicitnode_setdisplayname(Lib3MFHandle libraryHandle
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitaddition_getinputa(Lib3MFHandle libraryHandle, Lib3MF_ImplicitAddition pImplicitAddition, const Lib3MF_uint32 nInputABufferSize, Lib3MF_uint32* pInputANeededChars, char * pInputABuffer)
+Lib3MFResult CCall_lib3mf_implicitnode_addinput(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, const char * pIdentifier, const char * pDisplayName)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitAddition_GetInputA (pImplicitAddition, nInputABufferSize, pInputANeededChars, pInputABuffer);
+	return wrapperTable->m_ImplicitNode_AddInput (pImplicitNode, pIdentifier, pDisplayName);
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitaddition_setinputa(Lib3MFHandle libraryHandle, Lib3MF_ImplicitAddition pImplicitAddition, const char * pInputA)
+Lib3MFResult CCall_lib3mf_implicitnode_getinputs(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, Lib3MF_ImplicitPort * pAccessor)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitAddition_SetInputA (pImplicitAddition, pInputA);
+	return wrapperTable->m_ImplicitNode_GetInputs (pImplicitNode, pAccessor);
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitaddition_getinputb(Lib3MFHandle libraryHandle, Lib3MF_ImplicitAddition pImplicitAddition, const Lib3MF_uint32 nInputBBufferSize, Lib3MF_uint32* pInputBNeededChars, char * pInputBBuffer)
+Lib3MFResult CCall_lib3mf_implicitnode_addoutput(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, const char * pIdentifier, const char * pDisplayName)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitAddition_GetInputB (pImplicitAddition, nInputBBufferSize, pInputBNeededChars, pInputBBuffer);
+	return wrapperTable->m_ImplicitNode_AddOutput (pImplicitNode, pIdentifier, pDisplayName);
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitaddition_setinputb(Lib3MFHandle libraryHandle, Lib3MF_ImplicitAddition pImplicitAddition, const char * pInputB)
+Lib3MFResult CCall_lib3mf_implicitnode_getoutputs(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, Lib3MF_ImplicitPort * pAccessor)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitAddition_SetInputB (pImplicitAddition, pInputB);
+	return wrapperTable->m_ImplicitNode_GetOutputs (pImplicitNode, pAccessor);
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitaddition_getoutputsum(Lib3MFHandle libraryHandle, Lib3MF_ImplicitAddition pImplicitAddition, const Lib3MF_uint32 nIdentifierBufferSize, Lib3MF_uint32* pIdentifierNeededChars, char * pIdentifierBuffer)
+Lib3MFResult CCall_lib3mf_nodeaccessor_get(Lib3MFHandle libraryHandle, Lib3MF_NodeAccessor pNodeAccessor, Lib3MF_ImplicitNode * pNode)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitAddition_GetOutputSum (pImplicitAddition, nIdentifierBufferSize, pIdentifierNeededChars, pIdentifierBuffer);
+	return wrapperTable->m_NodeAccessor_Get (pNodeAccessor, pNode);
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitaddition_setoutputsum(Lib3MFHandle libraryHandle, Lib3MF_ImplicitAddition pImplicitAddition, const char * pIdentifier)
+Lib3MFResult CCall_lib3mf_implicitfunction_getidentifier(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const Lib3MF_uint32 nIdentifierBufferSize, Lib3MF_uint32* pIdentifierNeededChars, char * pIdentifierBuffer)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitAddition_SetOutputSum (pImplicitAddition, pIdentifier);
+	return wrapperTable->m_ImplicitFunction_GetIdentifier (pImplicitFunction, nIdentifierBufferSize, pIdentifierNeededChars, pIdentifierBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_setidentifier(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_SetIdentifier (pImplicitFunction, pIdentifier);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_getdisplayname(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const Lib3MF_uint32 nDisplayNameBufferSize, Lib3MF_uint32* pDisplayNameNeededChars, char * pDisplayNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_GetDisplayName (pImplicitFunction, nDisplayNameBufferSize, pDisplayNameNeededChars, pDisplayNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_setdisplayname(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pDisplayName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_SetDisplayName (pImplicitFunction, pDisplayName);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pNodeType, const char * pIdentifier, const char * pDisplayName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddNode (pImplicitFunction, pNodeType, pIdentifier, pDisplayName);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_getnodes(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_NodeAccessor * pAccessor)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_GetNodes (pImplicitFunction, pAccessor);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addinput(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddInput (pImplicitFunction, pIdentifier, pDisplayName);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_getinputs(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPortAccessor * pAccessor)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_GetInputs (pImplicitFunction, pAccessor);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addoutput(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddOutput (pImplicitFunction, pIdentifier, pDisplayName);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_getoutputs(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPortAccessor * pAccessor)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_GetOutputs (pImplicitFunction, pAccessor);
 }
 
 
@@ -4710,6 +4872,12 @@ type CompositionSpace int
 const (
 	CompositionSpace_Raw = 0
 	CompositionSpace_LinearColor = 1
+)
+
+// ImplicitNodeTypes represents a Lib3MF enum.
+type ImplicitNodeTypes int
+
+const (
 )
 
 // EncryptionAlgorithm represents a Lib3MF enum.
@@ -8943,6 +9111,137 @@ func (inst Texture2D) SetFilter(filter TextureFilter) error {
 }
 
 
+// ImplicitPort represents a Lib3MF class.
+type ImplicitPort struct {
+	Base
+}
+
+func (wrapper Wrapper) NewImplicitPort(r ref) ImplicitPort {
+	return ImplicitPort{wrapper.NewBase(r)}
+}
+
+// GetIdentifier retrieves the identifier of the port.
+func (inst ImplicitPort) GetIdentifier() (string, error) {
+	var neededforidentifier C.uint32_t
+	var filledinidentifier C.uint32_t
+	ret := C.CCall_lib3mf_implicitport_getidentifier(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforidentifier, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizeidentifier := neededforidentifier
+	bufferidentifier := make([]byte, bufferSizeidentifier)
+	ret = C.CCall_lib3mf_implicitport_getidentifier(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizeidentifier, &filledinidentifier, (*C.char)(unsafe.Pointer(&bufferidentifier[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferidentifier[:(filledinidentifier-1)]), nil
+}
+
+// SetIdentifier sets the identifier of the port.
+func (inst ImplicitPort) SetIdentifier(identifier string) error {
+	ret := C.CCall_lib3mf_implicitport_setidentifier(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetDisplayName retrieves the display name of the port.
+func (inst ImplicitPort) GetDisplayName() (string, error) {
+	var neededfordisplayName C.uint32_t
+	var filledindisplayName C.uint32_t
+	ret := C.CCall_lib3mf_implicitport_getdisplayname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededfordisplayName, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizedisplayName := neededfordisplayName
+	bufferdisplayName := make([]byte, bufferSizedisplayName)
+	ret = C.CCall_lib3mf_implicitport_getdisplayname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizedisplayName, &filledindisplayName, (*C.char)(unsafe.Pointer(&bufferdisplayName[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferdisplayName[:(filledindisplayName-1)]), nil
+}
+
+// SetDisplayName sets the display name of the port.
+func (inst ImplicitPort) SetDisplayName(displayName string) error {
+	ret := C.CCall_lib3mf_implicitport_setdisplayname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// Accessor represents a Lib3MF class.
+type Accessor struct {
+	Base
+}
+
+func (wrapper Wrapper) NewAccessor(r ref) Accessor {
+	return Accessor{wrapper.NewBase(r)}
+}
+
+// GetSize returns the number of elements.
+func (inst Accessor) GetSize() (uint64, error) {
+	var size C.uint64_t
+	ret := C.CCall_lib3mf_accessor_getsize(inst.wrapperRef.LibraryHandle, inst.Ref, &size)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint64(size), nil
+}
+
+// Next go to the next element.
+func (inst Accessor) Next() (bool, error) {
+	var result C.bool
+	ret := C.CCall_lib3mf_accessor_next(inst.wrapperRef.LibraryHandle, inst.Ref, &result)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(result), nil
+}
+
+// Prev go to the previous element.
+func (inst Accessor) Prev() (bool, error) {
+	var result C.bool
+	ret := C.CCall_lib3mf_accessor_prev(inst.wrapperRef.LibraryHandle, inst.Ref, &result)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(result), nil
+}
+
+// Begin go to the first element.
+func (inst Accessor) Begin() error {
+	ret := C.CCall_lib3mf_accessor_begin(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// ImplicitPortAccessor represents a Lib3MF class.
+type ImplicitPortAccessor struct {
+	Accessor
+}
+
+func (wrapper Wrapper) NewImplicitPortAccessor(r ref) ImplicitPortAccessor {
+	return ImplicitPortAccessor{wrapper.NewAccessor(r)}
+}
+
+// Get returns the current element.
+func (inst ImplicitPortAccessor) Get() (ImplicitPort, error) {
+	var port ref
+	ret := C.CCall_lib3mf_implicitportaccessor_get(inst.wrapperRef.LibraryHandle, inst.Ref, &port)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(port), nil
+}
+
+
 // ImplicitNode represents a Lib3MF class.
 type ImplicitNode struct {
 	Base
@@ -9004,92 +9303,181 @@ func (inst ImplicitNode) SetDisplayName(displayName string) error {
 	return nil
 }
 
-
-// ImplicitAddition represents a Lib3MF class.
-type ImplicitAddition struct {
-	ImplicitNode
-}
-
-func (wrapper Wrapper) NewImplicitAddition(r ref) ImplicitAddition {
-	return ImplicitAddition{wrapper.NewImplicitNode(r)}
-}
-
-// GetInputA retrieves the input A of the addition.
-func (inst ImplicitAddition) GetInputA() (string, error) {
-	var neededforinputA C.uint32_t
-	var filledininputA C.uint32_t
-	ret := C.CCall_lib3mf_implicitaddition_getinputa(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforinputA, nil)
-	if ret != 0 {
-		return "", makeError(uint32(ret))
-	}
-	bufferSizeinputA := neededforinputA
-	bufferinputA := make([]byte, bufferSizeinputA)
-	ret = C.CCall_lib3mf_implicitaddition_getinputa(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizeinputA, &filledininputA, (*C.char)(unsafe.Pointer(&bufferinputA[0])))
-	if ret != 0 {
-		return "", makeError(uint32(ret))
-	}
-	return string(bufferinputA[:(filledininputA-1)]), nil
-}
-
-// SetInputA sets the input A of the addition.
-func (inst ImplicitAddition) SetInputA(inputA string) error {
-	ret := C.CCall_lib3mf_implicitaddition_setinputa(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(inputA)[0])))
+// AddInput add an input.
+func (inst ImplicitNode) AddInput(identifier string, displayName string) error {
+	ret := C.CCall_lib3mf_implicitnode_addinput(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
 	return nil
 }
 
-// GetInputB retrieves the input B of the addition.
-func (inst ImplicitAddition) GetInputB() (string, error) {
-	var neededforinputB C.uint32_t
-	var filledininputB C.uint32_t
-	ret := C.CCall_lib3mf_implicitaddition_getinputb(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforinputB, nil)
+// GetInputs retrieves the inputs.
+func (inst ImplicitNode) GetInputs() (ImplicitPort, error) {
+	var accessor ref
+	ret := C.CCall_lib3mf_implicitnode_getinputs(inst.wrapperRef.LibraryHandle, inst.Ref, &accessor)
 	if ret != 0 {
-		return "", makeError(uint32(ret))
+		return ImplicitPort{}, makeError(uint32(ret))
 	}
-	bufferSizeinputB := neededforinputB
-	bufferinputB := make([]byte, bufferSizeinputB)
-	ret = C.CCall_lib3mf_implicitaddition_getinputb(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizeinputB, &filledininputB, (*C.char)(unsafe.Pointer(&bufferinputB[0])))
-	if ret != 0 {
-		return "", makeError(uint32(ret))
-	}
-	return string(bufferinputB[:(filledininputB-1)]), nil
+	return inst.wrapperRef.NewImplicitPort(accessor), nil
 }
 
-// SetInputB sets the input B of the addition.
-func (inst ImplicitAddition) SetInputB(inputB string) error {
-	ret := C.CCall_lib3mf_implicitaddition_setinputb(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(inputB)[0])))
+// AddOutput add an output.
+func (inst ImplicitNode) AddOutput(identifier string, displayName string) error {
+	ret := C.CCall_lib3mf_implicitnode_addoutput(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
 	return nil
 }
 
-// GetOutputSum retrieves the identifier of the sum output of the addition.
-func (inst ImplicitAddition) GetOutputSum() (string, error) {
+// GetOutputs retrieves the outputs.
+func (inst ImplicitNode) GetOutputs() (ImplicitPort, error) {
+	var accessor ref
+	ret := C.CCall_lib3mf_implicitnode_getoutputs(inst.wrapperRef.LibraryHandle, inst.Ref, &accessor)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(accessor), nil
+}
+
+
+// NodeAccessor represents a Lib3MF class.
+type NodeAccessor struct {
+	Accessor
+}
+
+func (wrapper Wrapper) NewNodeAccessor(r ref) NodeAccessor {
+	return NodeAccessor{wrapper.NewAccessor(r)}
+}
+
+// Get returns the current element.
+func (inst NodeAccessor) Get() (ImplicitNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_nodeaccessor_get(inst.wrapperRef.LibraryHandle, inst.Ref, &node)
+	if ret != 0 {
+		return ImplicitNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitNode(node), nil
+}
+
+
+// ImplicitFunction represents a Lib3MF class.
+type ImplicitFunction struct {
+	Base
+}
+
+func (wrapper Wrapper) NewImplicitFunction(r ref) ImplicitFunction {
+	return ImplicitFunction{wrapper.NewBase(r)}
+}
+
+// GetIdentifier retrieves the identifier of the function.
+func (inst ImplicitFunction) GetIdentifier() (string, error) {
 	var neededforidentifier C.uint32_t
 	var filledinidentifier C.uint32_t
-	ret := C.CCall_lib3mf_implicitaddition_getoutputsum(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforidentifier, nil)
+	ret := C.CCall_lib3mf_implicitfunction_getidentifier(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforidentifier, nil)
 	if ret != 0 {
 		return "", makeError(uint32(ret))
 	}
 	bufferSizeidentifier := neededforidentifier
 	bufferidentifier := make([]byte, bufferSizeidentifier)
-	ret = C.CCall_lib3mf_implicitaddition_getoutputsum(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizeidentifier, &filledinidentifier, (*C.char)(unsafe.Pointer(&bufferidentifier[0])))
+	ret = C.CCall_lib3mf_implicitfunction_getidentifier(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizeidentifier, &filledinidentifier, (*C.char)(unsafe.Pointer(&bufferidentifier[0])))
 	if ret != 0 {
 		return "", makeError(uint32(ret))
 	}
 	return string(bufferidentifier[:(filledinidentifier-1)]), nil
 }
 
-// SetOutputSum sets the id of the sum output.
-func (inst ImplicitAddition) SetOutputSum(identifier string) error {
-	ret := C.CCall_lib3mf_implicitaddition_setoutputsum(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])))
+// SetIdentifier sets the identifier of the function.
+func (inst ImplicitFunction) SetIdentifier(identifier string) error {
+	ret := C.CCall_lib3mf_implicitfunction_setidentifier(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
 	return nil
+}
+
+// GetDisplayName retrieves the display name of the function.
+func (inst ImplicitFunction) GetDisplayName() (string, error) {
+	var neededfordisplayName C.uint32_t
+	var filledindisplayName C.uint32_t
+	ret := C.CCall_lib3mf_implicitfunction_getdisplayname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededfordisplayName, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizedisplayName := neededfordisplayName
+	bufferdisplayName := make([]byte, bufferSizedisplayName)
+	ret = C.CCall_lib3mf_implicitfunction_getdisplayname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizedisplayName, &filledindisplayName, (*C.char)(unsafe.Pointer(&bufferdisplayName[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferdisplayName[:(filledindisplayName-1)]), nil
+}
+
+// SetDisplayName sets the display name of the function.
+func (inst ImplicitFunction) SetDisplayName(displayName string) error {
+	ret := C.CCall_lib3mf_implicitfunction_setdisplayname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// AddNode add a node.
+func (inst ImplicitFunction) AddNode(nodeType string, identifier string, displayName string) error {
+	ret := C.CCall_lib3mf_implicitfunction_addnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nodeType)[0])), (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetNodes retrieves the nodes.
+func (inst ImplicitFunction) GetNodes() (NodeAccessor, error) {
+	var accessor ref
+	ret := C.CCall_lib3mf_implicitfunction_getnodes(inst.wrapperRef.LibraryHandle, inst.Ref, &accessor)
+	if ret != 0 {
+		return NodeAccessor{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewNodeAccessor(accessor), nil
+}
+
+// AddInput add an input.
+func (inst ImplicitFunction) AddInput(identifier string, displayName string) error {
+	ret := C.CCall_lib3mf_implicitfunction_addinput(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetInputs retrieves the inputs.
+func (inst ImplicitFunction) GetInputs() (ImplicitPortAccessor, error) {
+	var accessor ref
+	ret := C.CCall_lib3mf_implicitfunction_getinputs(inst.wrapperRef.LibraryHandle, inst.Ref, &accessor)
+	if ret != 0 {
+		return ImplicitPortAccessor{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPortAccessor(accessor), nil
+}
+
+// AddOutput add an output.
+func (inst ImplicitFunction) AddOutput(identifier string, displayName string) error {
+	ret := C.CCall_lib3mf_implicitfunction_addoutput(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetOutputs retrieves the outputs.
+func (inst ImplicitFunction) GetOutputs() (ImplicitPortAccessor, error) {
+	var accessor ref
+	ret := C.CCall_lib3mf_implicitfunction_getoutputs(inst.wrapperRef.LibraryHandle, inst.Ref, &accessor)
+	if ret != 0 {
+		return ImplicitPortAccessor{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPortAccessor(accessor), nil
 }
 
 

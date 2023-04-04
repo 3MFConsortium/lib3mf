@@ -3269,6 +3269,102 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_texture2d_getfilter(Lib3MF_Texture2D pTextur
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_texture2d_setfilter(Lib3MF_Texture2D pTexture2D, Lib3MF::eTextureFilter eFilter);
 
 /*************************************************************************************************************************
+ Class definition for ImplicitPort
+**************************************************************************************************************************/
+
+/**
+* Retrieves the identifier of the port
+*
+* @param[in] pImplicitPort - ImplicitPort instance.
+* @param[in] nIdentifierBufferSize - size of the buffer (including trailing 0)
+* @param[out] pIdentifierNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pIdentifierBuffer -  buffer of the identifier, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitport_getidentifier(Lib3MF_ImplicitPort pImplicitPort, const Lib3MF_uint32 nIdentifierBufferSize, Lib3MF_uint32* pIdentifierNeededChars, char * pIdentifierBuffer);
+
+/**
+* Sets the identifier of the port
+*
+* @param[in] pImplicitPort - ImplicitPort instance.
+* @param[in] pIdentifier - the identifier
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitport_setidentifier(Lib3MF_ImplicitPort pImplicitPort, const char * pIdentifier);
+
+/**
+* Retrieves the display name of the port
+*
+* @param[in] pImplicitPort - ImplicitPort instance.
+* @param[in] nDisplayNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pDisplayNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pDisplayNameBuffer -  buffer of the display name, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitport_getdisplayname(Lib3MF_ImplicitPort pImplicitPort, const Lib3MF_uint32 nDisplayNameBufferSize, Lib3MF_uint32* pDisplayNameNeededChars, char * pDisplayNameBuffer);
+
+/**
+* Sets the display name of the port
+*
+* @param[in] pImplicitPort - ImplicitPort instance.
+* @param[in] pDisplayName - the display name
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitport_setdisplayname(Lib3MF_ImplicitPort pImplicitPort, const char * pDisplayName);
+
+/*************************************************************************************************************************
+ Class definition for Accessor
+**************************************************************************************************************************/
+
+/**
+* Returns the number of elements
+*
+* @param[in] pAccessor - Accessor instance.
+* @param[out] pSize - The number of elements
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_accessor_getsize(Lib3MF_Accessor pAccessor, Lib3MF_uint64 * pSize);
+
+/**
+* Go to the next element
+*
+* @param[in] pAccessor - Accessor instance.
+* @param[out] pResult - Returns true, if there is a next element
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_accessor_next(Lib3MF_Accessor pAccessor, bool * pResult);
+
+/**
+* Go to the previous element
+*
+* @param[in] pAccessor - Accessor instance.
+* @param[out] pResult - Returns true, if there is a previous element
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_accessor_prev(Lib3MF_Accessor pAccessor, bool * pResult);
+
+/**
+* Go to the first element
+*
+* @param[in] pAccessor - Accessor instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_accessor_begin(Lib3MF_Accessor pAccessor);
+
+/*************************************************************************************************************************
+ Class definition for ImplicitPortAccessor
+**************************************************************************************************************************/
+
+/**
+* Returns the current element
+*
+* @param[in] pImplicitPortAccessor - ImplicitPortAccessor instance.
+* @param[out] pPort - The current element
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitportaccessor_get(Lib3MF_ImplicitPortAccessor pImplicitPortAccessor, Lib3MF_ImplicitPort * pPort);
+
+/*************************************************************************************************************************
  Class definition for ImplicitNode
 **************************************************************************************************************************/
 
@@ -3312,69 +3408,158 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getdisplayname(Lib3MF_ImplicitN
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_setdisplayname(Lib3MF_ImplicitNode pImplicitNode, const char * pDisplayName);
 
+/**
+* Add an input
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[in] pIdentifier - the identifier of the input
+* @param[in] pDisplayName - the display name of the input
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_addinput(Lib3MF_ImplicitNode pImplicitNode, const char * pIdentifier, const char * pDisplayName);
+
+/**
+* Retrieves the inputs
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[out] pAccessor - the accessor to the inputs
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getinputs(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_ImplicitPort * pAccessor);
+
+/**
+* Add an output
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[in] pIdentifier - the identifier of the output
+* @param[in] pDisplayName - the display name of the output
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_addoutput(Lib3MF_ImplicitNode pImplicitNode, const char * pIdentifier, const char * pDisplayName);
+
+/**
+* Retrieves the outputs
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[out] pAccessor - the accessor to the outputs
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getoutputs(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_ImplicitPort * pAccessor);
+
 /*************************************************************************************************************************
- Class definition for ImplicitAddition
+ Class definition for NodeAccessor
 **************************************************************************************************************************/
 
 /**
-* Retrieves the input A of the addition
+* Returns the current element
 *
-* @param[in] pImplicitAddition - ImplicitAddition instance.
-* @param[in] nInputABufferSize - size of the buffer (including trailing 0)
-* @param[out] pInputANeededChars - will be filled with the count of the written bytes, or needed buffer size.
-* @param[out] pInputABuffer - ImplicitNode buffer of the input A, may be NULL
+* @param[in] pNodeAccessor - NodeAccessor instance.
+* @param[out] pNode - The current element
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitaddition_getinputa(Lib3MF_ImplicitAddition pImplicitAddition, const Lib3MF_uint32 nInputABufferSize, Lib3MF_uint32* pInputANeededChars, char * pInputABuffer);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_nodeaccessor_get(Lib3MF_NodeAccessor pNodeAccessor, Lib3MF_ImplicitNode * pNode);
+
+/*************************************************************************************************************************
+ Class definition for ImplicitFunction
+**************************************************************************************************************************/
 
 /**
-* Sets the input A of the addition
+* Retrieves the identifier of the function
 *
-* @param[in] pImplicitAddition - ImplicitAddition instance.
-* @param[in] pInputA - the input A
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitaddition_setinputa(Lib3MF_ImplicitAddition pImplicitAddition, const char * pInputA);
-
-/**
-* Retrieves the input B of the addition
-*
-* @param[in] pImplicitAddition - ImplicitAddition instance.
-* @param[in] nInputBBufferSize - size of the buffer (including trailing 0)
-* @param[out] pInputBNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-* @param[out] pInputBBuffer - ImplicitNode buffer of the input B, may be NULL
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitaddition_getinputb(Lib3MF_ImplicitAddition pImplicitAddition, const Lib3MF_uint32 nInputBBufferSize, Lib3MF_uint32* pInputBNeededChars, char * pInputBBuffer);
-
-/**
-* Sets the input B of the addition
-*
-* @param[in] pImplicitAddition - ImplicitAddition instance.
-* @param[in] pInputB - the input B
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitaddition_setinputb(Lib3MF_ImplicitAddition pImplicitAddition, const char * pInputB);
-
-/**
-* Retrieves the identifier of the sum output of the addition
-*
-* @param[in] pImplicitAddition - ImplicitAddition instance.
+* @param[in] pImplicitFunction - ImplicitFunction instance.
 * @param[in] nIdentifierBufferSize - size of the buffer (including trailing 0)
 * @param[out] pIdentifierNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-* @param[out] pIdentifierBuffer - ImplicitNode buffer of identifier of the sum output, may be NULL
+* @param[out] pIdentifierBuffer -  buffer of the identifier, may be NULL
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitaddition_getoutputsum(Lib3MF_ImplicitAddition pImplicitAddition, const Lib3MF_uint32 nIdentifierBufferSize, Lib3MF_uint32* pIdentifierNeededChars, char * pIdentifierBuffer);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_getidentifier(Lib3MF_ImplicitFunction pImplicitFunction, const Lib3MF_uint32 nIdentifierBufferSize, Lib3MF_uint32* pIdentifierNeededChars, char * pIdentifierBuffer);
 
 /**
-* Sets the id of the sum output
+* Sets the identifier of the function
 *
-* @param[in] pImplicitAddition - ImplicitAddition instance.
-* @param[in] pIdentifier - identifier of the sum output
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitaddition_setoutputsum(Lib3MF_ImplicitAddition pImplicitAddition, const char * pIdentifier);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_setidentifier(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier);
+
+/**
+* Retrieves the display name of the function
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] nDisplayNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pDisplayNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pDisplayNameBuffer -  buffer of the display name, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_getdisplayname(Lib3MF_ImplicitFunction pImplicitFunction, const Lib3MF_uint32 nDisplayNameBufferSize, Lib3MF_uint32* pDisplayNameNeededChars, char * pDisplayNameBuffer);
+
+/**
+* Sets the display name of the function
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pDisplayName - the display name
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_setdisplayname(Lib3MF_ImplicitFunction pImplicitFunction, const char * pDisplayName);
+
+/**
+* Add a node
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pNodeType - the type of the node
+* @param[in] pIdentifier - the identifier of the input
+* @param[in] pDisplayName - the display name of the input
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pNodeType, const char * pIdentifier, const char * pDisplayName);
+
+/**
+* Retrieves the nodes
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[out] pAccessor - the accessor to the nodes
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_getnodes(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_NodeAccessor * pAccessor);
+
+/**
+* Add an input
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the input
+* @param[in] pDisplayName - the display name of the input
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addinput(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName);
+
+/**
+* Retrieves the inputs
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[out] pAccessor - the accessor to the inputs
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_getinputs(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPortAccessor * pAccessor);
+
+/**
+* Add an output
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the output
+* @param[in] pDisplayName - the display name of the output
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addoutput(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName);
+
+/**
+* Retrieves the outputs
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[out] pAccessor - the accessor to the outputs
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_getoutputs(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPortAccessor * pAccessor);
 
 /*************************************************************************************************************************
  Class definition for BuildItem

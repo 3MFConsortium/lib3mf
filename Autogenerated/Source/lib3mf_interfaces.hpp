@@ -104,8 +104,12 @@ class IImage3D;
 class IImageStack;
 class IAttachment;
 class ITexture2D;
+class IImplicitPort;
+class IAccessor;
+class IImplicitPortAccessor;
 class IImplicitNode;
-class IImplicitAddition;
+class INodeAccessor;
+class IImplicitFunction;
 class IBuildItem;
 class IBuildItemIterator;
 class ISlice;
@@ -3380,6 +3384,119 @@ typedef IBaseSharedPtr<ITexture2D> PITexture2D;
 
 
 /*************************************************************************************************************************
+ Class interface for ImplicitPort 
+**************************************************************************************************************************/
+
+class IImplicitPort : public virtual IBase {
+public:
+	/**
+	* IImplicitPort::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xD5C49B04AF1963CDUL; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPort"
+	}
+
+	/**
+	* IImplicitPort::GetIdentifier - Retrieves the identifier of the port
+	* @return the identifier
+	*/
+	virtual std::string GetIdentifier() = 0;
+
+	/**
+	* IImplicitPort::SetIdentifier - Sets the identifier of the port
+	* @param[in] sIdentifier - the identifier
+	*/
+	virtual void SetIdentifier(const std::string & sIdentifier) = 0;
+
+	/**
+	* IImplicitPort::GetDisplayName - Retrieves the display name of the port
+	* @return the display name
+	*/
+	virtual std::string GetDisplayName() = 0;
+
+	/**
+	* IImplicitPort::SetDisplayName - Sets the display name of the port
+	* @param[in] sDisplayName - the display name
+	*/
+	virtual void SetDisplayName(const std::string & sDisplayName) = 0;
+
+};
+
+typedef IBaseSharedPtr<IImplicitPort> PIImplicitPort;
+
+
+/*************************************************************************************************************************
+ Class interface for Accessor 
+**************************************************************************************************************************/
+
+class IAccessor : public virtual IBase {
+public:
+	/**
+	* IAccessor::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xF94265ED198E4784UL; // First 64 bits of SHA1 of a string: "Lib3MF::Accessor"
+	}
+
+	/**
+	* IAccessor::GetSize - Returns the number of elements
+	* @return The number of elements
+	*/
+	virtual Lib3MF_uint64 GetSize() = 0;
+
+	/**
+	* IAccessor::Next - Go to the next element
+	* @return Returns true, if there is a next element
+	*/
+	virtual bool Next() = 0;
+
+	/**
+	* IAccessor::Prev - Go to the previous element
+	* @return Returns true, if there is a previous element
+	*/
+	virtual bool Prev() = 0;
+
+	/**
+	* IAccessor::Begin - Go to the first element
+	*/
+	virtual void Begin() = 0;
+
+};
+
+typedef IBaseSharedPtr<IAccessor> PIAccessor;
+
+
+/*************************************************************************************************************************
+ Class interface for ImplicitPortAccessor 
+**************************************************************************************************************************/
+
+class IImplicitPortAccessor : public virtual IAccessor {
+public:
+	/**
+	* IImplicitPortAccessor::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x258087F875881ADDUL; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPortAccessor"
+	}
+
+	/**
+	* IImplicitPortAccessor::Get - Returns the current element
+	* @return The current element
+	*/
+	virtual IImplicitPort * Get() = 0;
+
+};
+
+typedef IBaseSharedPtr<IImplicitPortAccessor> PIImplicitPortAccessor;
+
+
+/*************************************************************************************************************************
  Class interface for ImplicitNode 
 **************************************************************************************************************************/
 
@@ -3418,65 +3535,145 @@ public:
 	*/
 	virtual void SetDisplayName(const std::string & sDisplayName) = 0;
 
+	/**
+	* IImplicitNode::AddInput - Add an input
+	* @param[in] sIdentifier - the identifier of the input
+	* @param[in] sDisplayName - the display name of the input
+	*/
+	virtual void AddInput(const std::string & sIdentifier, const std::string & sDisplayName) = 0;
+
+	/**
+	* IImplicitNode::GetInputs - Retrieves the inputs
+	* @return the accessor to the inputs
+	*/
+	virtual IImplicitPort * GetInputs() = 0;
+
+	/**
+	* IImplicitNode::AddOutput - Add an output
+	* @param[in] sIdentifier - the identifier of the output
+	* @param[in] sDisplayName - the display name of the output
+	*/
+	virtual void AddOutput(const std::string & sIdentifier, const std::string & sDisplayName) = 0;
+
+	/**
+	* IImplicitNode::GetOutputs - Retrieves the outputs
+	* @return the accessor to the outputs
+	*/
+	virtual IImplicitPort * GetOutputs() = 0;
+
 };
 
 typedef IBaseSharedPtr<IImplicitNode> PIImplicitNode;
 
 
 /*************************************************************************************************************************
- Class interface for ImplicitAddition 
+ Class interface for NodeAccessor 
 **************************************************************************************************************************/
 
-class IImplicitAddition : public virtual IImplicitNode {
+class INodeAccessor : public virtual IAccessor {
 public:
 	/**
-	* IImplicitAddition::ClassTypeId - Get Class Type Id
+	* INodeAccessor::ClassTypeId - Get Class Type Id
 	* @return Class type as a 64 bits integer
 	*/
 	Lib3MF_uint64 ClassTypeId() override
 	{
-		return 0xDB93DED4EC7849D7UL; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitAddition"
+		return 0xE0E0FC011B210DE0UL; // First 64 bits of SHA1 of a string: "Lib3MF::NodeAccessor"
 	}
 
 	/**
-	* IImplicitAddition::GetInputA - Retrieves the input A of the addition
-	* @return the input A
+	* INodeAccessor::Get - Returns the current element
+	* @return The current element
 	*/
-	virtual std::string GetInputA() = 0;
-
-	/**
-	* IImplicitAddition::SetInputA - Sets the input A of the addition
-	* @param[in] sInputA - the input A
-	*/
-	virtual void SetInputA(const std::string & sInputA) = 0;
-
-	/**
-	* IImplicitAddition::GetInputB - Retrieves the input B of the addition
-	* @return the input B
-	*/
-	virtual std::string GetInputB() = 0;
-
-	/**
-	* IImplicitAddition::SetInputB - Sets the input B of the addition
-	* @param[in] sInputB - the input B
-	*/
-	virtual void SetInputB(const std::string & sInputB) = 0;
-
-	/**
-	* IImplicitAddition::GetOutputSum - Retrieves the identifier of the sum output of the addition
-	* @return identifier of the sum output
-	*/
-	virtual std::string GetOutputSum() = 0;
-
-	/**
-	* IImplicitAddition::SetOutputSum - Sets the id of the sum output
-	* @param[in] sIdentifier - identifier of the sum output
-	*/
-	virtual void SetOutputSum(const std::string & sIdentifier) = 0;
+	virtual IImplicitNode * Get() = 0;
 
 };
 
-typedef IBaseSharedPtr<IImplicitAddition> PIImplicitAddition;
+typedef IBaseSharedPtr<INodeAccessor> PINodeAccessor;
+
+
+/*************************************************************************************************************************
+ Class interface for ImplicitFunction 
+**************************************************************************************************************************/
+
+class IImplicitFunction : public virtual IBase {
+public:
+	/**
+	* IImplicitFunction::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x6CE54469EEA83BC1UL; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitFunction"
+	}
+
+	/**
+	* IImplicitFunction::GetIdentifier - Retrieves the identifier of the function
+	* @return the identifier
+	*/
+	virtual std::string GetIdentifier() = 0;
+
+	/**
+	* IImplicitFunction::SetIdentifier - Sets the identifier of the function
+	* @param[in] sIdentifier - the identifier
+	*/
+	virtual void SetIdentifier(const std::string & sIdentifier) = 0;
+
+	/**
+	* IImplicitFunction::GetDisplayName - Retrieves the display name of the function
+	* @return the display name
+	*/
+	virtual std::string GetDisplayName() = 0;
+
+	/**
+	* IImplicitFunction::SetDisplayName - Sets the display name of the function
+	* @param[in] sDisplayName - the display name
+	*/
+	virtual void SetDisplayName(const std::string & sDisplayName) = 0;
+
+	/**
+	* IImplicitFunction::AddNode - Add a node
+	* @param[in] sNodeType - the type of the node
+	* @param[in] sIdentifier - the identifier of the input
+	* @param[in] sDisplayName - the display name of the input
+	*/
+	virtual void AddNode(const std::string & sNodeType, const std::string & sIdentifier, const std::string & sDisplayName) = 0;
+
+	/**
+	* IImplicitFunction::GetNodes - Retrieves the nodes
+	* @return the accessor to the nodes
+	*/
+	virtual INodeAccessor * GetNodes() = 0;
+
+	/**
+	* IImplicitFunction::AddInput - Add an input
+	* @param[in] sIdentifier - the identifier of the input
+	* @param[in] sDisplayName - the display name of the input
+	*/
+	virtual void AddInput(const std::string & sIdentifier, const std::string & sDisplayName) = 0;
+
+	/**
+	* IImplicitFunction::GetInputs - Retrieves the inputs
+	* @return the accessor to the inputs
+	*/
+	virtual IImplicitPortAccessor * GetInputs() = 0;
+
+	/**
+	* IImplicitFunction::AddOutput - Add an output
+	* @param[in] sIdentifier - the identifier of the output
+	* @param[in] sDisplayName - the display name of the output
+	*/
+	virtual void AddOutput(const std::string & sIdentifier, const std::string & sDisplayName) = 0;
+
+	/**
+	* IImplicitFunction::GetOutputs - Retrieves the outputs
+	* @return the accessor to the outputs
+	*/
+	virtual IImplicitPortAccessor * GetOutputs() = 0;
+
+};
+
+typedef IBaseSharedPtr<IImplicitFunction> PIImplicitFunction;
 
 
 /*************************************************************************************************************************
