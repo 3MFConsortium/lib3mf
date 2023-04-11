@@ -26,28 +26,34 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --*/
 
-#include "Model/Classes/NMR_ImplicitNode.h"
+#include "Model/Classes/NMR_ImplicitFunction.h"
 #include "Common/NMR_Exception.h"
+#include "Model/Classes/NMR_ImplicitFunction.h"
 
 namespace NMR
 {
-    ImplicitIdentifier const & CImplicitNode::getIdentifier() const
+    std::string const & CImplicitFunction::getIdentifier() const
     {
         return m_identifier;
     }
 
-    std::string const & CImplicitNode::getDisplayName() const
+    std::string const & CImplicitFunction::getDisplayName() const
     {
         return m_displayname;
     }
 
-    void CImplicitNode::setIdentifier(ImplicitIdentifier const & identifier)
+    void CImplicitFunction::setIdentifier(std::string const & identifier)
     {
         m_identifier = identifier;
     }
 
-    void CImplicitNode::setDisplayName(std::string const & displayname)
+    void CImplicitFunction::setDisplayName(std::string const & displayname)
     {
         m_displayname = displayname;
+    }
+
+    ImplicitNodes const & NMR::CImplicitFunction::getNodes() const
+    {
+        return m_nodes;
     }
 }

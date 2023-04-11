@@ -24,30 +24,35 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+Abstract:
+
+NMR_ModelFunction.h defines the Model Function Class.
+It is a container for a function that can be used in a build item.
 --*/
 
-#include "Model/Classes/NMR_ImplicitNode.h"
-#include "Common/NMR_Exception.h"
+#pragma once
 
-namespace NMR
-{
-    ImplicitIdentifier const & CImplicitNode::getIdentifier() const
-    {
-        return m_identifier;
-    }
+#include "Model/Classes/NMR_Model.h"
+#include "Model/Classes/NMR_ModelResource.h"
+#include "Common/NMR_Types.h"
+#include "Common/Math/NMR_Matrix.h"
 
-    std::string const & CImplicitNode::getDisplayName() const
-    {
-        return m_displayname;
-    }
 
-    void CImplicitNode::setIdentifier(ImplicitIdentifier const & identifier)
-    {
-        m_identifier = identifier;
-    }
+namespace NMR {
 
-    void CImplicitNode::setDisplayName(std::string const & displayname)
-    {
-        m_displayname = displayname;
-    }
+	class CModel;
+	typedef std::shared_ptr <CModel> PModel;
+
+	class CModelFunction : public CModelResource { 
+	private:
+		std::string m_sName;
+
+		// TODO: Add function data
+	public:
+		CModelFunction() = delete;
+		CModelFunction(_In_ const ModelResourceID sID, _In_ CModel * pModel);
+	};
+
+	typedef std::shared_ptr <CModelFunction> PModelFunction;
 }
+

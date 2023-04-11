@@ -26,28 +26,29 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --*/
 
-#include "Model/Classes/NMR_ImplicitNode.h"
-#include "Common/NMR_Exception.h"
+#pragma once
+
+#include <Common/Platform/NMR_SAL.h>
+#include <memory>
+#include <string>
 
 namespace NMR
 {
-    ImplicitIdentifier const & CImplicitNode::getIdentifier() const
-    {
-        return m_identifier;
-    }
 
-    std::string const & CImplicitNode::getDisplayName() const
-    {
-        return m_displayname;
-    }
+    using ImplicitIdentifier = std::string;
 
-    void CImplicitNode::setIdentifier(ImplicitIdentifier const & identifier)
+    class CImplicitPort
     {
-        m_identifier = identifier;
-    }
+      private:
+        ImplicitIdentifier m_identifier;
+        std::string m_displayname;
 
-    void CImplicitNode::setDisplayName(std::string const & displayname)
-    {
-        m_displayname = displayname;
-    }
+      public:
+        ImplicitIdentifier const & getIdentifier() const;
+        std::string const & getDisplayName() const;
+        void setIdentifier(ImplicitIdentifier const & identifier);
+        void setDisplayName(std::string const & displayname);
+    };
+
+    using PImplicitPort = std::shared_ptr<CImplicitPort>;
 }

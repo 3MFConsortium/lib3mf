@@ -66,6 +66,7 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFMultiPropertyGroupIterator::Init();
 	CLib3MFImage3DIterator::Init();
 	CLib3MFScalarFieldIterator::Init();
+	CLib3MFFunctionIterator::Init();
 	CLib3MFVector3DFieldIterator::Init();
 	CLib3MFMetaData::Init();
 	CLib3MFMetaDataGroup::Init();
@@ -105,8 +106,12 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFAccessor::Init();
 	CLib3MFImplicitPortAccessor::Init();
 	CLib3MFImplicitNode::Init();
+	CLib3MFImplicitConstant::Init();
+	CLib3MFImplicitVector::Init();
+	CLib3MFImplicitMatrix::Init();
 	CLib3MFNodeAccessor::Init();
 	CLib3MFImplicitFunction::Init();
+	CLib3MFFunction::Init();
 	CLib3MFBuildItem::Init();
 	CLib3MFBuildItemIterator::Init();
 	CLib3MFSlice::Init();

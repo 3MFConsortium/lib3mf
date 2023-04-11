@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium
+Copyright (C) 2023 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,30 +24,29 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
---*/
+Abstract: This is a stub class definition of CFunction
 
-#include "Model/Classes/NMR_ImplicitNode.h"
-#include "Common/NMR_Exception.h"
+*/
 
-namespace NMR
+#include "lib3mf_function.hpp"
+#include "lib3mf_interfaceexception.hpp"
+
+// Include custom headers here.
+
+
+using namespace Lib3MF::Impl;
+
+/*************************************************************************************************************************
+ Class definition of CFunction 
+**************************************************************************************************************************/
+
+IImplicitFunction * CFunction::GetFunction()
 {
-    ImplicitIdentifier const & CImplicitNode::getIdentifier() const
-    {
-        return m_identifier;
-    }
-
-    std::string const & CImplicitNode::getDisplayName() const
-    {
-        return m_displayname;
-    }
-
-    void CImplicitNode::setIdentifier(ImplicitIdentifier const & identifier)
-    {
-        m_identifier = identifier;
-    }
-
-    void CImplicitNode::setDisplayName(std::string const & displayname)
-    {
-        m_displayname = displayname;
-    }
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
+
+void CFunction::SetFunction(IImplicitFunction* pFunction)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+

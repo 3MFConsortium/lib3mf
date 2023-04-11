@@ -108,6 +108,9 @@ namespace NMR {
 	class CModelVector3DField;
 	typedef std::shared_ptr <CModelVector3DField> PModelVector3DField;
 
+	class CModelFunction;
+	typedef std::shared_ptr <CModelFunction> PModelFunction;
+
 	// The Model class implements the unification of all model-file in a 3MF package
 	// It should be understood as a "MultiModel"
 	class CModel {
@@ -162,6 +165,7 @@ namespace NMR {
 		std::vector<PModelResource> m_Image3DLookup;
 		std::vector<PModelResource> m_ScalarFieldLookup;
 		std::vector<PModelResource> m_Vector3DFieldLookup;
+		std::vector<PModelResource> m_FunctionLookup; // for implicit models
 
 		// The KeyStore reference
 		PKeyStore m_pKeyStore;
@@ -316,6 +320,12 @@ namespace NMR {
 		CModelVector3DField* getVector3DField(_In_ nfUint32 nIndex);
 		void mergeVector3DFields(_In_ CModel* pSourceModel, _In_ UniqueResourceIDMapping& oldToNewMapping);
 
+		// Convenience functions for Functions
+		_Ret_maybenull_ PModelFunction findFunction(_In_ UniqueResourceID nResourceID);
+		nfUint32 getFunctionCount();
+		PModelResource getFunctionResource(_In_ nfUint32 nIndex);
+		CModelFunction* getFunction(_In_ nfUint32 nIndex);
+		
 		// Clear all build items and Resources
 		void clearAll ();
 

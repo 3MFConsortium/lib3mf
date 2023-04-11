@@ -60,12 +60,17 @@ void CImplicitFunction::SetDisplayName(const std::string & sDisplayName)
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CImplicitFunction::AddNode(const std::string & sNodeType, const std::string & sIdentifier, const std::string & sDisplayName)
+IImplicitNode * CImplicitFunction::AddNode(const Lib3MF::eImplicitNodeType eNodeType, const std::string & sIdentifier, const std::string & sDisplayName)
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 INodeAccessor * CImplicitFunction::GetNodes()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+void CImplicitFunction::RemoveNode(IImplicitNode* pNode)
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
@@ -80,12 +85,22 @@ IImplicitPortAccessor * CImplicitFunction::GetInputs()
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
+void CImplicitFunction::RemoveInput(IImplicitPort* pInput)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
 void CImplicitFunction::AddOutput(const std::string & sIdentifier, const std::string & sDisplayName)
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IImplicitPortAccessor * CImplicitFunction::GetOutputs()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+void CImplicitFunction::RemoveOutput(IImplicitPort* pOutput)
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }

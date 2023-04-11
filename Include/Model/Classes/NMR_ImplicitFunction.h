@@ -26,28 +26,34 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --*/
 
-#include "Model/Classes/NMR_ImplicitNode.h"
-#include "Common/NMR_Exception.h"
+#pragma once
+
+#include <Common/Platform/NMR_SAL.h>
+#include <Model/Classes/NMR_ImplicitNode.h>
+
+#include <memory>
+#include <string>
+#include <vector>
 
 namespace NMR
 {
-    ImplicitIdentifier const & CImplicitNode::getIdentifier() const
-    {
-        return m_identifier;
-    }
+    using ImplicitNodes = std::vector<PImplicitNode>;
 
-    std::string const & CImplicitNode::getDisplayName() const
+    class CImplicitFunction
     {
-        return m_displayname;
-    }
+      private:
+        ImplicitIdentifier m_identifier;
+        std::string m_displayname;
+        ImplicitNodes m_nodes;
 
-    void CImplicitNode::setIdentifier(ImplicitIdentifier const & identifier)
-    {
-        m_identifier = identifier;
-    }
+      public:
+        ImplicitIdentifier const & getIdentifier() const;
+        std::string const & getDisplayName() const;
+        void setIdentifier(ImplicitIdentifier const & identifier);
+        void setDisplayName(std::string const & displayname);
 
-    void CImplicitNode::setDisplayName(std::string const & displayname)
-    {
-        m_displayname = displayname;
-    }
+        ImplicitNodes const & getNodes() const;
+    };
+
+    using PImplicitFunction = std::shared_ptr<CImplicitFunction>;
 }

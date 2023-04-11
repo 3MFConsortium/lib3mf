@@ -98,6 +98,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_MultiPropertyGroupIterator_GetCurrentMultiPropertyGroup = NULL;
 	pWrapperTable->m_Image3DIterator_GetCurrentImage3D = NULL;
 	pWrapperTable->m_ScalarFieldIterator_GetCurrentScalarField = NULL;
+	pWrapperTable->m_FunctionIterator_GetCurrentFunction = NULL;
 	pWrapperTable->m_Vector3DFieldIterator_GetCurrentVector3DField = NULL;
 	pWrapperTable->m_MetaData_GetNameSpace = NULL;
 	pWrapperTable->m_MetaData_SetNameSpace = NULL;
@@ -374,10 +375,16 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ImplicitNode_SetIdentifier = NULL;
 	pWrapperTable->m_ImplicitNode_GetDisplayName = NULL;
 	pWrapperTable->m_ImplicitNode_SetDisplayName = NULL;
+	pWrapperTable->m_ImplicitNode_GetNodeType = NULL;
 	pWrapperTable->m_ImplicitNode_AddInput = NULL;
 	pWrapperTable->m_ImplicitNode_GetInputs = NULL;
 	pWrapperTable->m_ImplicitNode_AddOutput = NULL;
 	pWrapperTable->m_ImplicitNode_GetOutputs = NULL;
+	pWrapperTable->m_ImplicitConstant_GetValue = NULL;
+	pWrapperTable->m_ImplicitConstant_SetValue = NULL;
+	pWrapperTable->m_ImplicitVector_Get = NULL;
+	pWrapperTable->m_ImplicitMatrix_GetMatrix = NULL;
+	pWrapperTable->m_ImplicitMatrix_SetMatrix = NULL;
 	pWrapperTable->m_NodeAccessor_Get = NULL;
 	pWrapperTable->m_ImplicitFunction_GetIdentifier = NULL;
 	pWrapperTable->m_ImplicitFunction_SetIdentifier = NULL;
@@ -385,10 +392,15 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ImplicitFunction_SetDisplayName = NULL;
 	pWrapperTable->m_ImplicitFunction_AddNode = NULL;
 	pWrapperTable->m_ImplicitFunction_GetNodes = NULL;
+	pWrapperTable->m_ImplicitFunction_RemoveNode = NULL;
 	pWrapperTable->m_ImplicitFunction_AddInput = NULL;
 	pWrapperTable->m_ImplicitFunction_GetInputs = NULL;
+	pWrapperTable->m_ImplicitFunction_RemoveInput = NULL;
 	pWrapperTable->m_ImplicitFunction_AddOutput = NULL;
 	pWrapperTable->m_ImplicitFunction_GetOutputs = NULL;
+	pWrapperTable->m_ImplicitFunction_RemoveOutput = NULL;
+	pWrapperTable->m_Function_GetFunction = NULL;
+	pWrapperTable->m_Function_SetFunction = NULL;
 	pWrapperTable->m_BuildItem_GetObjectResource = NULL;
 	pWrapperTable->m_BuildItem_GetUUID = NULL;
 	pWrapperTable->m_BuildItem_SetUUID = NULL;
@@ -543,6 +555,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Model_RemoveCustomContentType = NULL;
 	pWrapperTable->m_Model_SetRandomNumberCallback = NULL;
 	pWrapperTable->m_Model_GetKeyStore = NULL;
+	pWrapperTable->m_Model_GetFunctions = NULL;
 	pWrapperTable->m_GetLibraryVersion = NULL;
 	pWrapperTable->m_GetPrereleaseInformation = NULL;
 	pWrapperTable->m_GetBuildInformation = NULL;
@@ -1064,6 +1077,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_ScalarFieldIterator_GetCurrentScalarField == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_FunctionIterator_GetCurrentFunction = (PLib3MFFunctionIterator_GetCurrentFunctionPtr) GetProcAddress(hLibrary, "lib3mf_functioniterator_getcurrentfunction");
+	#else // _WIN32
+	pWrapperTable->m_FunctionIterator_GetCurrentFunction = (PLib3MFFunctionIterator_GetCurrentFunctionPtr) dlsym(hLibrary, "lib3mf_functioniterator_getcurrentfunction");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_FunctionIterator_GetCurrentFunction == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -3551,6 +3573,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_ImplicitNode_GetNodeType = (PLib3MFImplicitNode_GetNodeTypePtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_getnodetype");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitNode_GetNodeType = (PLib3MFImplicitNode_GetNodeTypePtr) dlsym(hLibrary, "lib3mf_implicitnode_getnodetype");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitNode_GetNodeType == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_ImplicitNode_AddInput = (PLib3MFImplicitNode_AddInputPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_addinput");
 	#else // _WIN32
 	pWrapperTable->m_ImplicitNode_AddInput = (PLib3MFImplicitNode_AddInputPtr) dlsym(hLibrary, "lib3mf_implicitnode_addinput");
@@ -3584,6 +3615,51 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_ImplicitNode_GetOutputs == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitConstant_GetValue = (PLib3MFImplicitConstant_GetValuePtr) GetProcAddress(hLibrary, "lib3mf_implicitconstant_getvalue");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitConstant_GetValue = (PLib3MFImplicitConstant_GetValuePtr) dlsym(hLibrary, "lib3mf_implicitconstant_getvalue");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitConstant_GetValue == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitConstant_SetValue = (PLib3MFImplicitConstant_SetValuePtr) GetProcAddress(hLibrary, "lib3mf_implicitconstant_setvalue");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitConstant_SetValue = (PLib3MFImplicitConstant_SetValuePtr) dlsym(hLibrary, "lib3mf_implicitconstant_setvalue");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitConstant_SetValue == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitVector_Get = (PLib3MFImplicitVector_GetPtr) GetProcAddress(hLibrary, "lib3mf_implicitvector_get");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitVector_Get = (PLib3MFImplicitVector_GetPtr) dlsym(hLibrary, "lib3mf_implicitvector_get");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitVector_Get == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitMatrix_GetMatrix = (PLib3MFImplicitMatrix_GetMatrixPtr) GetProcAddress(hLibrary, "lib3mf_implicitmatrix_getmatrix");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitMatrix_GetMatrix = (PLib3MFImplicitMatrix_GetMatrixPtr) dlsym(hLibrary, "lib3mf_implicitmatrix_getmatrix");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitMatrix_GetMatrix == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitMatrix_SetMatrix = (PLib3MFImplicitMatrix_SetMatrixPtr) GetProcAddress(hLibrary, "lib3mf_implicitmatrix_setmatrix");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitMatrix_SetMatrix = (PLib3MFImplicitMatrix_SetMatrixPtr) dlsym(hLibrary, "lib3mf_implicitmatrix_setmatrix");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitMatrix_SetMatrix == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -3650,6 +3726,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_ImplicitFunction_RemoveNode = (PLib3MFImplicitFunction_RemoveNodePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_removenode");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitFunction_RemoveNode = (PLib3MFImplicitFunction_RemoveNodePtr) dlsym(hLibrary, "lib3mf_implicitfunction_removenode");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitFunction_RemoveNode == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_ImplicitFunction_AddInput = (PLib3MFImplicitFunction_AddInputPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addinput");
 	#else // _WIN32
 	pWrapperTable->m_ImplicitFunction_AddInput = (PLib3MFImplicitFunction_AddInputPtr) dlsym(hLibrary, "lib3mf_implicitfunction_addinput");
@@ -3668,6 +3753,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_ImplicitFunction_RemoveInput = (PLib3MFImplicitFunction_RemoveInputPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_removeinput");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitFunction_RemoveInput = (PLib3MFImplicitFunction_RemoveInputPtr) dlsym(hLibrary, "lib3mf_implicitfunction_removeinput");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitFunction_RemoveInput == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_ImplicitFunction_AddOutput = (PLib3MFImplicitFunction_AddOutputPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addoutput");
 	#else // _WIN32
 	pWrapperTable->m_ImplicitFunction_AddOutput = (PLib3MFImplicitFunction_AddOutputPtr) dlsym(hLibrary, "lib3mf_implicitfunction_addoutput");
@@ -3683,6 +3777,33 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_ImplicitFunction_GetOutputs == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitFunction_RemoveOutput = (PLib3MFImplicitFunction_RemoveOutputPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_removeoutput");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitFunction_RemoveOutput = (PLib3MFImplicitFunction_RemoveOutputPtr) dlsym(hLibrary, "lib3mf_implicitfunction_removeoutput");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitFunction_RemoveOutput == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Function_GetFunction = (PLib3MFFunction_GetFunctionPtr) GetProcAddress(hLibrary, "lib3mf_function_getfunction");
+	#else // _WIN32
+	pWrapperTable->m_Function_GetFunction = (PLib3MFFunction_GetFunctionPtr) dlsym(hLibrary, "lib3mf_function_getfunction");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Function_GetFunction == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Function_SetFunction = (PLib3MFFunction_SetFunctionPtr) GetProcAddress(hLibrary, "lib3mf_function_setfunction");
+	#else // _WIN32
+	pWrapperTable->m_Function_SetFunction = (PLib3MFFunction_SetFunctionPtr) dlsym(hLibrary, "lib3mf_function_setfunction");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Function_SetFunction == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -5069,6 +5190,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Model_GetKeyStore == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_GetFunctions = (PLib3MFModel_GetFunctionsPtr) GetProcAddress(hLibrary, "lib3mf_model_getfunctions");
+	#else // _WIN32
+	pWrapperTable->m_Model_GetFunctions = (PLib3MFModel_GetFunctionsPtr) dlsym(hLibrary, "lib3mf_model_getfunctions");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_GetFunctions == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

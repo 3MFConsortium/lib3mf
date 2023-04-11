@@ -58,6 +58,7 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_ModelVector3DFieldConstant.h"
 #include "Model/Classes/NMR_ModelVector3DFieldComposed.h"
 #include "Model/Classes/NMR_ModelVector3DFieldFromImage3D.h"
+#include "Model/Classes/NMR_ModelFunction.h"
 
 #include "Common/Mesh/NMR_Mesh.h"
 #include "Common/MeshInformation/NMR_MeshInformation.h"
@@ -1642,5 +1643,41 @@ namespace NMR {
 		}
 		return size;
 	}
+
+		// _Ret_maybenull_ PModelFunction findFunction(_In_ UniqueResourceID nResourceID);
+		// nfUint32 getFunctionCount();
+		// PModelResource getFunctionResource(_In_ nfUint32 nIndex);
+		// CModelFunction* getFunction(_In_ nfUint32 nIndex);
+		// void mergeFunctions(_In_ CModel* pSourceModel, _In_ UniqueResourceIDMapping& oldToNewMapping);
+
+		// implementation:
+		PModelFunction CModel::findFunction(_In_ UniqueResourceID nResourceID) {
+			for (size_t i = 0; i < m_FunctionLookup.size(); i++) {
+				PModelFunction pFunction = std::dynamic_pointer_cast<CModelFunction>(m_FunctionLookup[i]);
+				if (pFunction->getPackageResourceID()->getUniqueID() == nResourceID)
+					return pFunction;
+			}
+			return nullptr;
+		}
+
+		nfUint32 CModel::getFunctionCount() {
+			return (nfUint32)m_FunctionLookup.size();
+		}
+
+		PModelResource CModel::getFunctionResource(_In_ nfUint32 nIndex) {
+			nfUint32 nCount = getFunctionCount();
+			if (nIndex >= nCount)
+				throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+			return m_FunctionLookup[nIndex];
+		}
+
+		CModelFunction* CModel::getFunction(_In_ nfUint32 nIndex) {
+			PModelResource pResource = getFunctionResource(nIndex);
+			if (pResource.get() == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+			return dynamic_cast<CModelFunction*>(pResource.get());
+		}
 
 }

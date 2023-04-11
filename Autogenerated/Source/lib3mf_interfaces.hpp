@@ -69,6 +69,7 @@ class ICompositeMaterialsIterator;
 class IMultiPropertyGroupIterator;
 class IImage3DIterator;
 class IScalarFieldIterator;
+class IFunctionIterator;
 class IVector3DFieldIterator;
 class IMetaData;
 class IMetaDataGroup;
@@ -108,8 +109,12 @@ class IImplicitPort;
 class IAccessor;
 class IImplicitPortAccessor;
 class IImplicitNode;
+class IImplicitConstant;
+class IImplicitVector;
+class IImplicitMatrix;
 class INodeAccessor;
 class IImplicitFunction;
+class IFunction;
 class IBuildItem;
 class IBuildItemIterator;
 class ISlice;
@@ -979,6 +984,32 @@ public:
 };
 
 typedef IBaseSharedPtr<IScalarFieldIterator> PIScalarFieldIterator;
+
+
+/*************************************************************************************************************************
+ Class interface for FunctionIterator 
+**************************************************************************************************************************/
+
+class IFunctionIterator : public virtual IResourceIterator {
+public:
+	/**
+	* IFunctionIterator::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x40E9035363ACE65EUL; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionIterator"
+	}
+
+	/**
+	* IFunctionIterator::GetCurrentFunction - Returns the Function the iterator points at.
+	* @return returns the Function instance.
+	*/
+	virtual IFunction * GetCurrentFunction() = 0;
+
+};
+
+typedef IBaseSharedPtr<IFunctionIterator> PIFunctionIterator;
 
 
 /*************************************************************************************************************************
@@ -3536,11 +3567,18 @@ public:
 	virtual void SetDisplayName(const std::string & sDisplayName) = 0;
 
 	/**
+	* IImplicitNode::GetNodeType - Retrieves the type of the node
+	* @return the type of the node
+	*/
+	virtual Lib3MF::eImplicitNodeType GetNodeType() = 0;
+
+	/**
 	* IImplicitNode::AddInput - Add an input
 	* @param[in] sIdentifier - the identifier of the input
 	* @param[in] sDisplayName - the display name of the input
+	* @return 
 	*/
-	virtual void AddInput(const std::string & sIdentifier, const std::string & sDisplayName) = 0;
+	virtual IImplicitPort * AddInput(const std::string & sIdentifier, const std::string & sDisplayName) = 0;
 
 	/**
 	* IImplicitNode::GetInputs - Retrieves the inputs
@@ -3552,8 +3590,9 @@ public:
 	* IImplicitNode::AddOutput - Add an output
 	* @param[in] sIdentifier - the identifier of the output
 	* @param[in] sDisplayName - the display name of the output
+	* @return 
 	*/
-	virtual void AddOutput(const std::string & sIdentifier, const std::string & sDisplayName) = 0;
+	virtual IImplicitPort * AddOutput(const std::string & sIdentifier, const std::string & sDisplayName) = 0;
 
 	/**
 	* IImplicitNode::GetOutputs - Retrieves the outputs
@@ -3564,6 +3603,96 @@ public:
 };
 
 typedef IBaseSharedPtr<IImplicitNode> PIImplicitNode;
+
+
+/*************************************************************************************************************************
+ Class interface for ImplicitConstant 
+**************************************************************************************************************************/
+
+class IImplicitConstant : public virtual IImplicitNode {
+public:
+	/**
+	* IImplicitConstant::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xFDD0E00663954DA8UL; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitConstant"
+	}
+
+	/**
+	* IImplicitConstant::GetValue - Retrieves the value of the constant
+	* @return the value
+	*/
+	virtual Lib3MF_single GetValue() = 0;
+
+	/**
+	* IImplicitConstant::SetValue - Sets the value of the constant
+	* @param[in] fValue - the value
+	*/
+	virtual void SetValue(const Lib3MF_single fValue) = 0;
+
+};
+
+typedef IBaseSharedPtr<IImplicitConstant> PIImplicitConstant;
+
+
+/*************************************************************************************************************************
+ Class interface for ImplicitVector 
+**************************************************************************************************************************/
+
+class IImplicitVector : public virtual IImplicitNode {
+public:
+	/**
+	* IImplicitVector::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x2B3F23DD95A4DF56UL; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitVector"
+	}
+
+	/**
+	* IImplicitVector::Get - Retrieves the x value of the vector
+	* @return the value
+	*/
+	virtual Lib3MF::sVector Get() = 0;
+
+};
+
+typedef IBaseSharedPtr<IImplicitVector> PIImplicitVector;
+
+
+/*************************************************************************************************************************
+ Class interface for ImplicitMatrix 
+**************************************************************************************************************************/
+
+class IImplicitMatrix : public virtual IImplicitNode {
+public:
+	/**
+	* IImplicitMatrix::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x7D48084ED0AE80FEUL; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitMatrix"
+	}
+
+	/**
+	* IImplicitMatrix::GetMatrix - Retrieves the matrix
+	* @return the matrix
+	*/
+	virtual Lib3MF::sTransform GetMatrix() = 0;
+
+	/**
+	* IImplicitMatrix::SetMatrix - Sets the matrix
+	* @param[in] Matrix - the matrix
+	*/
+	virtual void SetMatrix(const Lib3MF::sTransform Matrix) = 0;
+
+};
+
+typedef IBaseSharedPtr<IImplicitMatrix> PIImplicitMatrix;
 
 
 /*************************************************************************************************************************
@@ -3633,17 +3762,24 @@ public:
 
 	/**
 	* IImplicitFunction::AddNode - Add a node
-	* @param[in] sNodeType - the type of the node
+	* @param[in] eNodeType - the type of the node
 	* @param[in] sIdentifier - the identifier of the input
 	* @param[in] sDisplayName - the display name of the input
+	* @return the added node
 	*/
-	virtual void AddNode(const std::string & sNodeType, const std::string & sIdentifier, const std::string & sDisplayName) = 0;
+	virtual IImplicitNode * AddNode(const Lib3MF::eImplicitNodeType eNodeType, const std::string & sIdentifier, const std::string & sDisplayName) = 0;
 
 	/**
 	* IImplicitFunction::GetNodes - Retrieves the nodes
 	* @return the accessor to the nodes
 	*/
 	virtual INodeAccessor * GetNodes() = 0;
+
+	/**
+	* IImplicitFunction::RemoveNode - Removes a node
+	* @param[in] pNode - The node to be removed
+	*/
+	virtual void RemoveNode(IImplicitNode* pNode) = 0;
 
 	/**
 	* IImplicitFunction::AddInput - Add an input
@@ -3659,6 +3795,12 @@ public:
 	virtual IImplicitPortAccessor * GetInputs() = 0;
 
 	/**
+	* IImplicitFunction::RemoveInput - Removes an input
+	* @param[in] pInput - The input to be removed
+	*/
+	virtual void RemoveInput(IImplicitPort* pInput) = 0;
+
+	/**
 	* IImplicitFunction::AddOutput - Add an output
 	* @param[in] sIdentifier - the identifier of the output
 	* @param[in] sDisplayName - the display name of the output
@@ -3671,9 +3813,47 @@ public:
 	*/
 	virtual IImplicitPortAccessor * GetOutputs() = 0;
 
+	/**
+	* IImplicitFunction::RemoveOutput - Removes an output
+	* @param[in] pOutput - The output to be removed
+	*/
+	virtual void RemoveOutput(IImplicitPort* pOutput) = 0;
+
 };
 
 typedef IBaseSharedPtr<IImplicitFunction> PIImplicitFunction;
+
+
+/*************************************************************************************************************************
+ Class interface for Function 
+**************************************************************************************************************************/
+
+class IFunction : public virtual IResource {
+public:
+	/**
+	* IFunction::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x9EFB2757CA1A5231UL; // First 64 bits of SHA1 of a string: "Lib3MF::Function"
+	}
+
+	/**
+	* IFunction::GetFunction - Retrieves the function
+	* @return the function
+	*/
+	virtual IImplicitFunction * GetFunction() = 0;
+
+	/**
+	* IFunction::SetFunction - Sets the function
+	* @param[in] pImplicitFunction - the function
+	*/
+	virtual void SetFunction(IImplicitFunction* pImplicitFunction) = 0;
+
+};
+
+typedef IBaseSharedPtr<IFunction> PIFunction;
 
 
 /*************************************************************************************************************************
@@ -4900,6 +5080,12 @@ public:
 	* @return The package keystore
 	*/
 	virtual IKeyStore * GetKeyStore() = 0;
+
+	/**
+	* IModel::GetFunctions - creates a resource iterator for all functions
+	* @return returns the resource iterator
+	*/
+	virtual IFunctionIterator * GetFunctions() = 0;
 
 };
 

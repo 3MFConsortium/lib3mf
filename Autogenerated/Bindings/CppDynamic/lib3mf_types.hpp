@@ -213,6 +213,7 @@ typedef Lib3MFHandle Lib3MF_CompositeMaterialsIterator;
 typedef Lib3MFHandle Lib3MF_MultiPropertyGroupIterator;
 typedef Lib3MFHandle Lib3MF_Image3DIterator;
 typedef Lib3MFHandle Lib3MF_ScalarFieldIterator;
+typedef Lib3MFHandle Lib3MF_FunctionIterator;
 typedef Lib3MFHandle Lib3MF_Vector3DFieldIterator;
 typedef Lib3MFHandle Lib3MF_MetaData;
 typedef Lib3MFHandle Lib3MF_MetaDataGroup;
@@ -252,8 +253,12 @@ typedef Lib3MFHandle Lib3MF_ImplicitPort;
 typedef Lib3MFHandle Lib3MF_Accessor;
 typedef Lib3MFHandle Lib3MF_ImplicitPortAccessor;
 typedef Lib3MFHandle Lib3MF_ImplicitNode;
+typedef Lib3MFHandle Lib3MF_ImplicitConstant;
+typedef Lib3MFHandle Lib3MF_ImplicitVector;
+typedef Lib3MFHandle Lib3MF_ImplicitMatrix;
 typedef Lib3MFHandle Lib3MF_NodeAccessor;
 typedef Lib3MFHandle Lib3MF_ImplicitFunction;
+typedef Lib3MFHandle Lib3MF_Function;
 typedef Lib3MFHandle Lib3MF_BuildItem;
 typedef Lib3MFHandle Lib3MF_BuildItemIterator;
 typedef Lib3MFHandle Lib3MF_Slice;
@@ -393,9 +398,39 @@ namespace Lib3MF {
   };
   
   /**
-  * enum class eImplicitNodeTypes - The type of the node
+  * enum class eImplicitNodeType - The type of the node
   */
-  enum class eImplicitNodeTypes : Lib3MF_int32 {
+  enum class eImplicitNodeType : Lib3MF_int32 {
+    Addition = 1, /** Adds to values (scalar or vector) */
+    Subtraction = 2, /** Subtracts two values (scalar or vector) */
+    Multiplication = 3, /** Multiplies two values (scalar or vector) */
+    Division = 4, /** Divides two values (scalar or vector) */
+    Constant = 5, /** A constant scalar value */
+    ConstVec = 6, /** A constant vector value */
+    ConstMat = 7, /** A constant matrix value */
+    ComposeVector = 8, /** Creates a vector from three scalar values */
+    ComposeMatrix = 9, /** Creates a matrix from nine scalar values */
+    ComposeMatrixFromColumnVectors = 10, /** Creates a matrix from three vector values */
+    DotProduct = 11, /** Calculates the dot product of two vector values */
+    CrossProduct = 12, /** Calculates the cross product of two vector values */
+    MatVecMultiplication = 13, /** Multiplies a matrix with a vector */
+    Transpose = 14, /** Transposes a matrix */
+    Sinus = 15, /** Calculates the sinus of a scalar value */
+    Cosinus = 16, /** Calculates the cosinus of a scalar value */
+    Tan = 17, /** Calculates the tangent of a scalar value */
+    ArcSin = 18, /** Calculates the arcsinus of a scalar value */
+    ArcCos = 19, /** Calculates the arccosinus of a scalar value */
+    ArcTan = 20, /** Calculates the arctangent of a scalar value */
+    Min = 21, /** Calculates the minimum of two scalar values */
+    Max = 22, /** Calculates the maximum of two scalar values */
+    Abs = 23, /** Calcul the absolute value of a scalar value */
+    Fmod = 24, /** Calculates the modulo of two scalar values */
+    Pow = 25, /** Calculates the power of two scalar values */
+    Sqrt = 26, /** Calculates the square root of a scalar value */
+    FunctionCall = 27, /** Calls a function */
+    Dot = 28, /** Calculates the dot product of two vector values */
+    Cross = 29, /** Calculates the cross product of two vector values */
+    Mesh = 30 /** Calculates the signed distance to a mesh */
   };
   
   enum class eEncryptionAlgorithm : Lib3MF_int32 {
@@ -488,6 +523,10 @@ namespace Lib3MF {
       Lib3MF_uint32 m_Index;
       Lib3MF_double m_Radius;
   } sBall;
+  
+  typedef struct sVector {
+      Lib3MF_single m_Coordinates[3];
+  } sVector;
   
   #pragma pack ()
   
@@ -587,7 +626,7 @@ typedef Lib3MF::eBlendMethod eLib3MFBlendMethod;
 typedef Lib3MF::eChannelName eLib3MFChannelName;
 typedef Lib3MF::eCompositionMethod eLib3MFCompositionMethod;
 typedef Lib3MF::eCompositionSpace eLib3MFCompositionSpace;
-typedef Lib3MF::eImplicitNodeTypes eLib3MFImplicitNodeTypes;
+typedef Lib3MF::eImplicitNodeType eLib3MFImplicitNodeType;
 typedef Lib3MF::eEncryptionAlgorithm eLib3MFEncryptionAlgorithm;
 typedef Lib3MF::eWrappingAlgorithm eLib3MFWrappingAlgorithm;
 typedef Lib3MF::eMgfAlgorithm eLib3MFMgfAlgorithm;
@@ -605,6 +644,7 @@ typedef Lib3MF::sBox sLib3MFBox;
 typedef Lib3MF::sColor sLib3MFColor;
 typedef Lib3MF::sBeam sLib3MFBeam;
 typedef Lib3MF::sBall sLib3MFBall;
+typedef Lib3MF::sVector sLib3MFVector;
 typedef Lib3MF::ProgressCallback Lib3MFProgressCallback;
 typedef Lib3MF::WriteCallback Lib3MFWriteCallback;
 typedef Lib3MF::ReadCallback Lib3MFReadCallback;

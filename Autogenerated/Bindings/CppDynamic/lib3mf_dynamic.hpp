@@ -75,6 +75,7 @@ class CCompositeMaterialsIterator;
 class CMultiPropertyGroupIterator;
 class CImage3DIterator;
 class CScalarFieldIterator;
+class CFunctionIterator;
 class CVector3DFieldIterator;
 class CMetaData;
 class CMetaDataGroup;
@@ -114,8 +115,12 @@ class CImplicitPort;
 class CAccessor;
 class CImplicitPortAccessor;
 class CImplicitNode;
+class CImplicitConstant;
+class CImplicitVector;
+class CImplicitMatrix;
 class CNodeAccessor;
 class CImplicitFunction;
+class CFunction;
 class CBuildItem;
 class CBuildItemIterator;
 class CSlice;
@@ -150,6 +155,7 @@ typedef CCompositeMaterialsIterator CLib3MFCompositeMaterialsIterator;
 typedef CMultiPropertyGroupIterator CLib3MFMultiPropertyGroupIterator;
 typedef CImage3DIterator CLib3MFImage3DIterator;
 typedef CScalarFieldIterator CLib3MFScalarFieldIterator;
+typedef CFunctionIterator CLib3MFFunctionIterator;
 typedef CVector3DFieldIterator CLib3MFVector3DFieldIterator;
 typedef CMetaData CLib3MFMetaData;
 typedef CMetaDataGroup CLib3MFMetaDataGroup;
@@ -189,8 +195,12 @@ typedef CImplicitPort CLib3MFImplicitPort;
 typedef CAccessor CLib3MFAccessor;
 typedef CImplicitPortAccessor CLib3MFImplicitPortAccessor;
 typedef CImplicitNode CLib3MFImplicitNode;
+typedef CImplicitConstant CLib3MFImplicitConstant;
+typedef CImplicitVector CLib3MFImplicitVector;
+typedef CImplicitMatrix CLib3MFImplicitMatrix;
 typedef CNodeAccessor CLib3MFNodeAccessor;
 typedef CImplicitFunction CLib3MFImplicitFunction;
+typedef CFunction CLib3MFFunction;
 typedef CBuildItem CLib3MFBuildItem;
 typedef CBuildItemIterator CLib3MFBuildItemIterator;
 typedef CSlice CLib3MFSlice;
@@ -225,6 +235,7 @@ typedef std::shared_ptr<CCompositeMaterialsIterator> PCompositeMaterialsIterator
 typedef std::shared_ptr<CMultiPropertyGroupIterator> PMultiPropertyGroupIterator;
 typedef std::shared_ptr<CImage3DIterator> PImage3DIterator;
 typedef std::shared_ptr<CScalarFieldIterator> PScalarFieldIterator;
+typedef std::shared_ptr<CFunctionIterator> PFunctionIterator;
 typedef std::shared_ptr<CVector3DFieldIterator> PVector3DFieldIterator;
 typedef std::shared_ptr<CMetaData> PMetaData;
 typedef std::shared_ptr<CMetaDataGroup> PMetaDataGroup;
@@ -264,8 +275,12 @@ typedef std::shared_ptr<CImplicitPort> PImplicitPort;
 typedef std::shared_ptr<CAccessor> PAccessor;
 typedef std::shared_ptr<CImplicitPortAccessor> PImplicitPortAccessor;
 typedef std::shared_ptr<CImplicitNode> PImplicitNode;
+typedef std::shared_ptr<CImplicitConstant> PImplicitConstant;
+typedef std::shared_ptr<CImplicitVector> PImplicitVector;
+typedef std::shared_ptr<CImplicitMatrix> PImplicitMatrix;
 typedef std::shared_ptr<CNodeAccessor> PNodeAccessor;
 typedef std::shared_ptr<CImplicitFunction> PImplicitFunction;
+typedef std::shared_ptr<CFunction> PFunction;
 typedef std::shared_ptr<CBuildItem> PBuildItem;
 typedef std::shared_ptr<CBuildItemIterator> PBuildItemIterator;
 typedef std::shared_ptr<CSlice> PSlice;
@@ -300,6 +315,7 @@ typedef PCompositeMaterialsIterator PLib3MFCompositeMaterialsIterator;
 typedef PMultiPropertyGroupIterator PLib3MFMultiPropertyGroupIterator;
 typedef PImage3DIterator PLib3MFImage3DIterator;
 typedef PScalarFieldIterator PLib3MFScalarFieldIterator;
+typedef PFunctionIterator PLib3MFFunctionIterator;
 typedef PVector3DFieldIterator PLib3MFVector3DFieldIterator;
 typedef PMetaData PLib3MFMetaData;
 typedef PMetaDataGroup PLib3MFMetaDataGroup;
@@ -339,8 +355,12 @@ typedef PImplicitPort PLib3MFImplicitPort;
 typedef PAccessor PLib3MFAccessor;
 typedef PImplicitPortAccessor PLib3MFImplicitPortAccessor;
 typedef PImplicitNode PLib3MFImplicitNode;
+typedef PImplicitConstant PLib3MFImplicitConstant;
+typedef PImplicitVector PLib3MFImplicitVector;
+typedef PImplicitMatrix PLib3MFImplicitMatrix;
 typedef PNodeAccessor PLib3MFNodeAccessor;
 typedef PImplicitFunction PLib3MFImplicitFunction;
+typedef PFunction PLib3MFFunction;
 typedef PBuildItem PLib3MFBuildItem;
 typedef PBuildItemIterator PLib3MFBuildItemIterator;
 typedef PSlice PLib3MFSlice;
@@ -675,6 +695,7 @@ private:
 	friend class CMultiPropertyGroupIterator;
 	friend class CImage3DIterator;
 	friend class CScalarFieldIterator;
+	friend class CFunctionIterator;
 	friend class CVector3DFieldIterator;
 	friend class CMetaData;
 	friend class CMetaDataGroup;
@@ -714,8 +735,12 @@ private:
 	friend class CAccessor;
 	friend class CImplicitPortAccessor;
 	friend class CImplicitNode;
+	friend class CImplicitConstant;
+	friend class CImplicitVector;
+	friend class CImplicitMatrix;
 	friend class CNodeAccessor;
 	friend class CImplicitFunction;
+	friend class CFunction;
 	friend class CBuildItem;
 	friend class CBuildItemIterator;
 	friend class CSlice;
@@ -1107,6 +1132,23 @@ public:
 	}
 	
 	inline PScalarField GetCurrentScalarField();
+};
+	
+/*************************************************************************************************************************
+ Class CFunctionIterator 
+**************************************************************************************************************************/
+class CFunctionIterator : public CResourceIterator {
+public:
+	
+	/**
+	* CFunctionIterator::CFunctionIterator - Constructor for FunctionIterator class.
+	*/
+	CFunctionIterator(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CResourceIterator(pWrapper, pHandle)
+	{
+	}
+	
+	inline PFunction GetCurrentFunction();
 };
 	
 /*************************************************************************************************************************
@@ -2007,10 +2049,64 @@ public:
 	inline void SetIdentifier(const std::string & sIdentifier);
 	inline std::string GetDisplayName();
 	inline void SetDisplayName(const std::string & sDisplayName);
-	inline void AddInput(const std::string & sIdentifier, const std::string & sDisplayName);
+	inline eImplicitNodeType GetNodeType();
+	inline PImplicitPort AddInput(const std::string & sIdentifier, const std::string & sDisplayName);
 	inline PImplicitPort GetInputs();
-	inline void AddOutput(const std::string & sIdentifier, const std::string & sDisplayName);
+	inline PImplicitPort AddOutput(const std::string & sIdentifier, const std::string & sDisplayName);
 	inline PImplicitPort GetOutputs();
+};
+	
+/*************************************************************************************************************************
+ Class CImplicitConstant 
+**************************************************************************************************************************/
+class CImplicitConstant : public CImplicitNode {
+public:
+	
+	/**
+	* CImplicitConstant::CImplicitConstant - Constructor for ImplicitConstant class.
+	*/
+	CImplicitConstant(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CImplicitNode(pWrapper, pHandle)
+	{
+	}
+	
+	inline Lib3MF_single GetValue();
+	inline void SetValue(const Lib3MF_single fValue);
+};
+	
+/*************************************************************************************************************************
+ Class CImplicitVector 
+**************************************************************************************************************************/
+class CImplicitVector : public CImplicitNode {
+public:
+	
+	/**
+	* CImplicitVector::CImplicitVector - Constructor for ImplicitVector class.
+	*/
+	CImplicitVector(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CImplicitNode(pWrapper, pHandle)
+	{
+	}
+	
+	inline sVector Get();
+};
+	
+/*************************************************************************************************************************
+ Class CImplicitMatrix 
+**************************************************************************************************************************/
+class CImplicitMatrix : public CImplicitNode {
+public:
+	
+	/**
+	* CImplicitMatrix::CImplicitMatrix - Constructor for ImplicitMatrix class.
+	*/
+	CImplicitMatrix(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CImplicitNode(pWrapper, pHandle)
+	{
+	}
+	
+	inline sTransform GetMatrix();
+	inline void SetMatrix(const sTransform & Matrix);
 };
 	
 /*************************************************************************************************************************
@@ -2048,12 +2144,33 @@ public:
 	inline void SetIdentifier(const std::string & sIdentifier);
 	inline std::string GetDisplayName();
 	inline void SetDisplayName(const std::string & sDisplayName);
-	inline void AddNode(const std::string & sNodeType, const std::string & sIdentifier, const std::string & sDisplayName);
+	inline PImplicitNode AddNode(const eImplicitNodeType eNodeType, const std::string & sIdentifier, const std::string & sDisplayName);
 	inline PNodeAccessor GetNodes();
+	inline void RemoveNode(classParam<CImplicitNode> pNode);
 	inline void AddInput(const std::string & sIdentifier, const std::string & sDisplayName);
 	inline PImplicitPortAccessor GetInputs();
+	inline void RemoveInput(classParam<CImplicitPort> pInput);
 	inline void AddOutput(const std::string & sIdentifier, const std::string & sDisplayName);
 	inline PImplicitPortAccessor GetOutputs();
+	inline void RemoveOutput(classParam<CImplicitPort> pOutput);
+};
+	
+/*************************************************************************************************************************
+ Class CFunction 
+**************************************************************************************************************************/
+class CFunction : public CResource {
+public:
+	
+	/**
+	* CFunction::CFunction - Constructor for Function class.
+	*/
+	CFunction(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CResource(pWrapper, pHandle)
+	{
+	}
+	
+	inline PImplicitFunction GetFunction();
+	inline void SetFunction(classParam<CImplicitFunction> pImplicitFunction);
 };
 	
 /*************************************************************************************************************************
@@ -2384,6 +2501,7 @@ public:
 	inline void RemoveCustomContentType(const std::string & sExtension);
 	inline void SetRandomNumberCallback(const RandomNumberCallback pTheCallback, const Lib3MF_pvoid pUserData);
 	inline PKeyStore GetKeyStore();
+	inline PFunctionIterator GetFunctions();
 };
 
 /*************************************************************************************************************************
@@ -2420,6 +2538,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0xC2BDF5D8CBBDB1F0UL: return new CMultiPropertyGroupIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MultiPropertyGroupIterator"
 		case 0xC4B8EC00A82BF336UL: return new CImage3DIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Image3DIterator"
 		case 0xDB00D7A0549F0D9BUL: return new CScalarFieldIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldIterator"
+		case 0x40E9035363ACE65EUL: return new CFunctionIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionIterator"
 		case 0xFBE6DA41D00E8AA8UL: return new CVector3DFieldIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldIterator"
 		case 0xD17716D063DE2C22UL: return new CMetaData(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaData"
 		case 0x0C3B85369E9B25D3UL: return new CMetaDataGroup(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaDataGroup"
@@ -2459,8 +2578,12 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0xF94265ED198E4784UL: return new CAccessor(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Accessor"
 		case 0x258087F875881ADDUL: return new CImplicitPortAccessor(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPortAccessor"
 		case 0xE72592A7725AB29BUL: return new CImplicitNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitNode"
+		case 0xFDD0E00663954DA8UL: return new CImplicitConstant(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitConstant"
+		case 0x2B3F23DD95A4DF56UL: return new CImplicitVector(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitVector"
+		case 0x7D48084ED0AE80FEUL: return new CImplicitMatrix(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitMatrix"
 		case 0xE0E0FC011B210DE0UL: return new CNodeAccessor(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::NodeAccessor"
 		case 0x6CE54469EEA83BC1UL: return new CImplicitFunction(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitFunction"
+		case 0x9EFB2757CA1A5231UL: return new CFunction(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Function"
 		case 0x68FB2D5FFC4BA12AUL: return new CBuildItem(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItem"
 		case 0xA7D21BD364910860UL: return new CBuildItemIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItemIterator"
 		case 0x2198BCF4D8DF9C40UL: return new CSlice(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Slice"
@@ -2808,6 +2931,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_MultiPropertyGroupIterator_GetCurrentMultiPropertyGroup = nullptr;
 		pWrapperTable->m_Image3DIterator_GetCurrentImage3D = nullptr;
 		pWrapperTable->m_ScalarFieldIterator_GetCurrentScalarField = nullptr;
+		pWrapperTable->m_FunctionIterator_GetCurrentFunction = nullptr;
 		pWrapperTable->m_Vector3DFieldIterator_GetCurrentVector3DField = nullptr;
 		pWrapperTable->m_MetaData_GetNameSpace = nullptr;
 		pWrapperTable->m_MetaData_SetNameSpace = nullptr;
@@ -3084,10 +3208,16 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ImplicitNode_SetIdentifier = nullptr;
 		pWrapperTable->m_ImplicitNode_GetDisplayName = nullptr;
 		pWrapperTable->m_ImplicitNode_SetDisplayName = nullptr;
+		pWrapperTable->m_ImplicitNode_GetNodeType = nullptr;
 		pWrapperTable->m_ImplicitNode_AddInput = nullptr;
 		pWrapperTable->m_ImplicitNode_GetInputs = nullptr;
 		pWrapperTable->m_ImplicitNode_AddOutput = nullptr;
 		pWrapperTable->m_ImplicitNode_GetOutputs = nullptr;
+		pWrapperTable->m_ImplicitConstant_GetValue = nullptr;
+		pWrapperTable->m_ImplicitConstant_SetValue = nullptr;
+		pWrapperTable->m_ImplicitVector_Get = nullptr;
+		pWrapperTable->m_ImplicitMatrix_GetMatrix = nullptr;
+		pWrapperTable->m_ImplicitMatrix_SetMatrix = nullptr;
 		pWrapperTable->m_NodeAccessor_Get = nullptr;
 		pWrapperTable->m_ImplicitFunction_GetIdentifier = nullptr;
 		pWrapperTable->m_ImplicitFunction_SetIdentifier = nullptr;
@@ -3095,10 +3225,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ImplicitFunction_SetDisplayName = nullptr;
 		pWrapperTable->m_ImplicitFunction_AddNode = nullptr;
 		pWrapperTable->m_ImplicitFunction_GetNodes = nullptr;
+		pWrapperTable->m_ImplicitFunction_RemoveNode = nullptr;
 		pWrapperTable->m_ImplicitFunction_AddInput = nullptr;
 		pWrapperTable->m_ImplicitFunction_GetInputs = nullptr;
+		pWrapperTable->m_ImplicitFunction_RemoveInput = nullptr;
 		pWrapperTable->m_ImplicitFunction_AddOutput = nullptr;
 		pWrapperTable->m_ImplicitFunction_GetOutputs = nullptr;
+		pWrapperTable->m_ImplicitFunction_RemoveOutput = nullptr;
+		pWrapperTable->m_Function_GetFunction = nullptr;
+		pWrapperTable->m_Function_SetFunction = nullptr;
 		pWrapperTable->m_BuildItem_GetObjectResource = nullptr;
 		pWrapperTable->m_BuildItem_GetUUID = nullptr;
 		pWrapperTable->m_BuildItem_SetUUID = nullptr;
@@ -3253,6 +3388,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Model_RemoveCustomContentType = nullptr;
 		pWrapperTable->m_Model_SetRandomNumberCallback = nullptr;
 		pWrapperTable->m_Model_GetKeyStore = nullptr;
+		pWrapperTable->m_Model_GetFunctions = nullptr;
 		pWrapperTable->m_GetLibraryVersion = nullptr;
 		pWrapperTable->m_GetPrereleaseInformation = nullptr;
 		pWrapperTable->m_GetBuildInformation = nullptr;
@@ -3770,6 +3906,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_ScalarFieldIterator_GetCurrentScalarField == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_FunctionIterator_GetCurrentFunction = (PLib3MFFunctionIterator_GetCurrentFunctionPtr) GetProcAddress(hLibrary, "lib3mf_functioniterator_getcurrentfunction");
+		#else // _WIN32
+		pWrapperTable->m_FunctionIterator_GetCurrentFunction = (PLib3MFFunctionIterator_GetCurrentFunctionPtr) dlsym(hLibrary, "lib3mf_functioniterator_getcurrentfunction");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_FunctionIterator_GetCurrentFunction == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -6257,6 +6402,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ImplicitNode_GetNodeType = (PLib3MFImplicitNode_GetNodeTypePtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_getnodetype");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitNode_GetNodeType = (PLib3MFImplicitNode_GetNodeTypePtr) dlsym(hLibrary, "lib3mf_implicitnode_getnodetype");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitNode_GetNodeType == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_ImplicitNode_AddInput = (PLib3MFImplicitNode_AddInputPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_addinput");
 		#else // _WIN32
 		pWrapperTable->m_ImplicitNode_AddInput = (PLib3MFImplicitNode_AddInputPtr) dlsym(hLibrary, "lib3mf_implicitnode_addinput");
@@ -6290,6 +6444,51 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_ImplicitNode_GetOutputs == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitConstant_GetValue = (PLib3MFImplicitConstant_GetValuePtr) GetProcAddress(hLibrary, "lib3mf_implicitconstant_getvalue");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitConstant_GetValue = (PLib3MFImplicitConstant_GetValuePtr) dlsym(hLibrary, "lib3mf_implicitconstant_getvalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitConstant_GetValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitConstant_SetValue = (PLib3MFImplicitConstant_SetValuePtr) GetProcAddress(hLibrary, "lib3mf_implicitconstant_setvalue");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitConstant_SetValue = (PLib3MFImplicitConstant_SetValuePtr) dlsym(hLibrary, "lib3mf_implicitconstant_setvalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitConstant_SetValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitVector_Get = (PLib3MFImplicitVector_GetPtr) GetProcAddress(hLibrary, "lib3mf_implicitvector_get");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitVector_Get = (PLib3MFImplicitVector_GetPtr) dlsym(hLibrary, "lib3mf_implicitvector_get");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitVector_Get == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitMatrix_GetMatrix = (PLib3MFImplicitMatrix_GetMatrixPtr) GetProcAddress(hLibrary, "lib3mf_implicitmatrix_getmatrix");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitMatrix_GetMatrix = (PLib3MFImplicitMatrix_GetMatrixPtr) dlsym(hLibrary, "lib3mf_implicitmatrix_getmatrix");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitMatrix_GetMatrix == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitMatrix_SetMatrix = (PLib3MFImplicitMatrix_SetMatrixPtr) GetProcAddress(hLibrary, "lib3mf_implicitmatrix_setmatrix");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitMatrix_SetMatrix = (PLib3MFImplicitMatrix_SetMatrixPtr) dlsym(hLibrary, "lib3mf_implicitmatrix_setmatrix");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitMatrix_SetMatrix == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -6356,6 +6555,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ImplicitFunction_RemoveNode = (PLib3MFImplicitFunction_RemoveNodePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_removenode");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitFunction_RemoveNode = (PLib3MFImplicitFunction_RemoveNodePtr) dlsym(hLibrary, "lib3mf_implicitfunction_removenode");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitFunction_RemoveNode == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_ImplicitFunction_AddInput = (PLib3MFImplicitFunction_AddInputPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addinput");
 		#else // _WIN32
 		pWrapperTable->m_ImplicitFunction_AddInput = (PLib3MFImplicitFunction_AddInputPtr) dlsym(hLibrary, "lib3mf_implicitfunction_addinput");
@@ -6374,6 +6582,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ImplicitFunction_RemoveInput = (PLib3MFImplicitFunction_RemoveInputPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_removeinput");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitFunction_RemoveInput = (PLib3MFImplicitFunction_RemoveInputPtr) dlsym(hLibrary, "lib3mf_implicitfunction_removeinput");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitFunction_RemoveInput == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_ImplicitFunction_AddOutput = (PLib3MFImplicitFunction_AddOutputPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addoutput");
 		#else // _WIN32
 		pWrapperTable->m_ImplicitFunction_AddOutput = (PLib3MFImplicitFunction_AddOutputPtr) dlsym(hLibrary, "lib3mf_implicitfunction_addoutput");
@@ -6389,6 +6606,33 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_ImplicitFunction_GetOutputs == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitFunction_RemoveOutput = (PLib3MFImplicitFunction_RemoveOutputPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_removeoutput");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitFunction_RemoveOutput = (PLib3MFImplicitFunction_RemoveOutputPtr) dlsym(hLibrary, "lib3mf_implicitfunction_removeoutput");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitFunction_RemoveOutput == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Function_GetFunction = (PLib3MFFunction_GetFunctionPtr) GetProcAddress(hLibrary, "lib3mf_function_getfunction");
+		#else // _WIN32
+		pWrapperTable->m_Function_GetFunction = (PLib3MFFunction_GetFunctionPtr) dlsym(hLibrary, "lib3mf_function_getfunction");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Function_GetFunction == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Function_SetFunction = (PLib3MFFunction_SetFunctionPtr) GetProcAddress(hLibrary, "lib3mf_function_setfunction");
+		#else // _WIN32
+		pWrapperTable->m_Function_SetFunction = (PLib3MFFunction_SetFunctionPtr) dlsym(hLibrary, "lib3mf_function_setfunction");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Function_SetFunction == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -7778,6 +8022,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_Model_GetFunctions = (PLib3MFModel_GetFunctionsPtr) GetProcAddress(hLibrary, "lib3mf_model_getfunctions");
+		#else // _WIN32
+		pWrapperTable->m_Model_GetFunctions = (PLib3MFModel_GetFunctionsPtr) dlsym(hLibrary, "lib3mf_model_getfunctions");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_GetFunctions == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_GetLibraryVersion = (PLib3MFGetLibraryVersionPtr) GetProcAddress(hLibrary, "lib3mf_getlibraryversion");
 		#else // _WIN32
 		pWrapperTable->m_GetLibraryVersion = (PLib3MFGetLibraryVersionPtr) dlsym(hLibrary, "lib3mf_getlibraryversion");
@@ -8162,6 +8415,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_scalarfielditerator_getcurrentscalarfield", (void**)&(pWrapperTable->m_ScalarFieldIterator_GetCurrentScalarField));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldIterator_GetCurrentScalarField == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_functioniterator_getcurrentfunction", (void**)&(pWrapperTable->m_FunctionIterator_GetCurrentFunction));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionIterator_GetCurrentFunction == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_vector3dfielditerator_getcurrentvector3dfield", (void**)&(pWrapperTable->m_Vector3DFieldIterator_GetCurrentVector3DField));
@@ -9268,6 +9525,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_SetDisplayName == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_implicitnode_getnodetype", (void**)&(pWrapperTable->m_ImplicitNode_GetNodeType));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_GetNodeType == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_implicitnode_addinput", (void**)&(pWrapperTable->m_ImplicitNode_AddInput));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_AddInput == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -9282,6 +9543,26 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_implicitnode_getoutputs", (void**)&(pWrapperTable->m_ImplicitNode_GetOutputs));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_GetOutputs == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitconstant_getvalue", (void**)&(pWrapperTable->m_ImplicitConstant_GetValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitConstant_GetValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitconstant_setvalue", (void**)&(pWrapperTable->m_ImplicitConstant_SetValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitConstant_SetValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitvector_get", (void**)&(pWrapperTable->m_ImplicitVector_Get));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitVector_Get == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitmatrix_getmatrix", (void**)&(pWrapperTable->m_ImplicitMatrix_GetMatrix));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitMatrix_GetMatrix == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitmatrix_setmatrix", (void**)&(pWrapperTable->m_ImplicitMatrix_SetMatrix));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitMatrix_SetMatrix == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_nodeaccessor_get", (void**)&(pWrapperTable->m_NodeAccessor_Get));
@@ -9312,6 +9593,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_GetNodes == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_implicitfunction_removenode", (void**)&(pWrapperTable->m_ImplicitFunction_RemoveNode));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_RemoveNode == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_implicitfunction_addinput", (void**)&(pWrapperTable->m_ImplicitFunction_AddInput));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_AddInput == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -9320,12 +9605,28 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_GetInputs == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_implicitfunction_removeinput", (void**)&(pWrapperTable->m_ImplicitFunction_RemoveInput));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_RemoveInput == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_implicitfunction_addoutput", (void**)&(pWrapperTable->m_ImplicitFunction_AddOutput));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_AddOutput == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_implicitfunction_getoutputs", (void**)&(pWrapperTable->m_ImplicitFunction_GetOutputs));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_GetOutputs == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitfunction_removeoutput", (void**)&(pWrapperTable->m_ImplicitFunction_RemoveOutput));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_RemoveOutput == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_function_getfunction", (void**)&(pWrapperTable->m_Function_GetFunction));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Function_GetFunction == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_function_setfunction", (void**)&(pWrapperTable->m_Function_SetFunction));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Function_SetFunction == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_builditem_getobjectresource", (void**)&(pWrapperTable->m_BuildItem_GetObjectResource));
@@ -9942,6 +10243,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_model_getkeystore", (void**)&(pWrapperTable->m_Model_GetKeyStore));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetKeyStore == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_getfunctions", (void**)&(pWrapperTable->m_Model_GetFunctions));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetFunctions == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_getlibraryversion", (void**)&(pWrapperTable->m_GetLibraryVersion));
@@ -10714,6 +11019,25 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CScalarField>(dynamic_cast<CScalarField*>(m_pWrapper->polymorphicFactory(hResource)));
+	}
+	
+	/**
+	 * Method definitions for class CFunctionIterator
+	 */
+	
+	/**
+	* CFunctionIterator::GetCurrentFunction - Returns the Function the iterator points at.
+	* @return returns the Function instance.
+	*/
+	PFunction CFunctionIterator::GetCurrentFunction()
+	{
+		Lib3MFHandle hResource = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionIterator_GetCurrentFunction(m_pHandle, &hResource));
+		
+		if (!hResource) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CFunction>(dynamic_cast<CFunction*>(m_pWrapper->polymorphicFactory(hResource)));
 	}
 	
 	/**
@@ -14171,13 +14495,32 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CImplicitNode::GetNodeType - Retrieves the type of the node
+	* @return the type of the node
+	*/
+	eImplicitNodeType CImplicitNode::GetNodeType()
+	{
+		eImplicitNodeType resultType = (eImplicitNodeType) 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_GetNodeType(m_pHandle, &resultType));
+		
+		return resultType;
+	}
+	
+	/**
 	* CImplicitNode::AddInput - Add an input
 	* @param[in] sIdentifier - the identifier of the input
 	* @param[in] sDisplayName - the display name of the input
+	* @return 
 	*/
-	void CImplicitNode::AddInput(const std::string & sIdentifier, const std::string & sDisplayName)
+	PImplicitPort CImplicitNode::AddInput(const std::string & sIdentifier, const std::string & sDisplayName)
 	{
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_AddInput(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str()));
+		Lib3MFHandle hPort = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_AddInput(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), &hPort));
+		
+		if (!hPort) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hPort)));
 	}
 	
 	/**
@@ -14199,10 +14542,17 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	* CImplicitNode::AddOutput - Add an output
 	* @param[in] sIdentifier - the identifier of the output
 	* @param[in] sDisplayName - the display name of the output
+	* @return 
 	*/
-	void CImplicitNode::AddOutput(const std::string & sIdentifier, const std::string & sDisplayName)
+	PImplicitPort CImplicitNode::AddOutput(const std::string & sIdentifier, const std::string & sDisplayName)
 	{
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_AddOutput(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str()));
+		Lib3MFHandle hPort = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_AddOutput(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), &hPort));
+		
+		if (!hPort) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hPort)));
 	}
 	
 	/**
@@ -14218,6 +14568,72 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hAccessor)));
+	}
+	
+	/**
+	 * Method definitions for class CImplicitConstant
+	 */
+	
+	/**
+	* CImplicitConstant::GetValue - Retrieves the value of the constant
+	* @return the value
+	*/
+	Lib3MF_single CImplicitConstant::GetValue()
+	{
+		Lib3MF_single resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitConstant_GetValue(m_pHandle, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CImplicitConstant::SetValue - Sets the value of the constant
+	* @param[in] fValue - the value
+	*/
+	void CImplicitConstant::SetValue(const Lib3MF_single fValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitConstant_SetValue(m_pHandle, fValue));
+	}
+	
+	/**
+	 * Method definitions for class CImplicitVector
+	 */
+	
+	/**
+	* CImplicitVector::Get - Retrieves the x value of the vector
+	* @return the value
+	*/
+	sVector CImplicitVector::Get()
+	{
+		sVector resultValue;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitVector_Get(m_pHandle, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	 * Method definitions for class CImplicitMatrix
+	 */
+	
+	/**
+	* CImplicitMatrix::GetMatrix - Retrieves the matrix
+	* @return the matrix
+	*/
+	sTransform CImplicitMatrix::GetMatrix()
+	{
+		sTransform resultMatrix;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitMatrix_GetMatrix(m_pHandle, &resultMatrix));
+		
+		return resultMatrix;
+	}
+	
+	/**
+	* CImplicitMatrix::SetMatrix - Sets the matrix
+	* @param[in] Matrix - the matrix
+	*/
+	void CImplicitMatrix::SetMatrix(const sTransform & Matrix)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitMatrix_SetMatrix(m_pHandle, &Matrix));
 	}
 	
 	/**
@@ -14293,13 +14709,20 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	
 	/**
 	* CImplicitFunction::AddNode - Add a node
-	* @param[in] sNodeType - the type of the node
+	* @param[in] eNodeType - the type of the node
 	* @param[in] sIdentifier - the identifier of the input
 	* @param[in] sDisplayName - the display name of the input
+	* @return the added node
 	*/
-	void CImplicitFunction::AddNode(const std::string & sNodeType, const std::string & sIdentifier, const std::string & sDisplayName)
+	PImplicitNode CImplicitFunction::AddNode(const eImplicitNodeType eNodeType, const std::string & sIdentifier, const std::string & sDisplayName)
 	{
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddNode(m_pHandle, sNodeType.c_str(), sIdentifier.c_str(), sDisplayName.c_str()));
+		Lib3MFHandle hNode = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddNode(m_pHandle, eNodeType, sIdentifier.c_str(), sDisplayName.c_str(), &hNode));
+		
+		if (!hNode) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitNode>(dynamic_cast<CImplicitNode*>(m_pWrapper->polymorphicFactory(hNode)));
 	}
 	
 	/**
@@ -14315,6 +14738,16 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CNodeAccessor>(dynamic_cast<CNodeAccessor*>(m_pWrapper->polymorphicFactory(hAccessor)));
+	}
+	
+	/**
+	* CImplicitFunction::RemoveNode - Removes a node
+	* @param[in] pNode - The node to be removed
+	*/
+	void CImplicitFunction::RemoveNode(classParam<CImplicitNode> pNode)
+	{
+		Lib3MFHandle hNode = pNode.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_RemoveNode(m_pHandle, hNode));
 	}
 	
 	/**
@@ -14343,6 +14776,16 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CImplicitFunction::RemoveInput - Removes an input
+	* @param[in] pInput - The input to be removed
+	*/
+	void CImplicitFunction::RemoveInput(classParam<CImplicitPort> pInput)
+	{
+		Lib3MFHandle hInput = pInput.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_RemoveInput(m_pHandle, hInput));
+	}
+	
+	/**
 	* CImplicitFunction::AddOutput - Add an output
 	* @param[in] sIdentifier - the identifier of the output
 	* @param[in] sDisplayName - the display name of the output
@@ -14365,6 +14808,45 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CImplicitPortAccessor>(dynamic_cast<CImplicitPortAccessor*>(m_pWrapper->polymorphicFactory(hAccessor)));
+	}
+	
+	/**
+	* CImplicitFunction::RemoveOutput - Removes an output
+	* @param[in] pOutput - The output to be removed
+	*/
+	void CImplicitFunction::RemoveOutput(classParam<CImplicitPort> pOutput)
+	{
+		Lib3MFHandle hOutput = pOutput.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_RemoveOutput(m_pHandle, hOutput));
+	}
+	
+	/**
+	 * Method definitions for class CFunction
+	 */
+	
+	/**
+	* CFunction::GetFunction - Retrieves the function
+	* @return the function
+	*/
+	PImplicitFunction CFunction::GetFunction()
+	{
+		Lib3MFHandle hImplicitFunction = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Function_GetFunction(m_pHandle, &hImplicitFunction));
+		
+		if (!hImplicitFunction) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitFunction>(dynamic_cast<CImplicitFunction*>(m_pWrapper->polymorphicFactory(hImplicitFunction)));
+	}
+	
+	/**
+	* CFunction::SetFunction - Sets the function
+	* @param[in] pImplicitFunction - the function
+	*/
+	void CFunction::SetFunction(classParam<CImplicitFunction> pImplicitFunction)
+	{
+		Lib3MFHandle hImplicitFunction = pImplicitFunction.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_Function_SetFunction(m_pHandle, hImplicitFunction));
 	}
 	
 	/**
@@ -16568,6 +17050,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CKeyStore>(dynamic_cast<CKeyStore*>(m_pWrapper->polymorphicFactory(hKeyStore)));
+	}
+	
+	/**
+	* CModel::GetFunctions - creates a resource iterator for all functions
+	* @return returns the resource iterator
+	*/
+	PFunctionIterator CModel::GetFunctions()
+	{
+		Lib3MFHandle hTheResourceIterator = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_GetFunctions(m_pHandle, &hTheResourceIterator));
+		
+		if (!hTheResourceIterator) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CFunctionIterator>(dynamic_cast<CFunctionIterator*>(m_pWrapper->polymorphicFactory(hTheResourceIterator)));
 	}
 
 } // namespace Lib3MF

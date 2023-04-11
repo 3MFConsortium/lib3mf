@@ -347,6 +347,9 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY           "name"
 #define XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY_REQUIRED  "required"
 
+// Voumeteric/Implicit
+#define XML_3MF_ELEMENT_IMPLICITNODE_INPUT "in"
+#define XML_3MF_ELEMENT_IMPLICITNODE_OUTPUT "out"
 
 // Multiproperties
 #define XML_3MF_ELEMENT_MULTIPROPERTIES             "multiproperties"

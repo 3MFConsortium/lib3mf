@@ -52,9 +52,10 @@ namespace NMR
 
         void OnAttribute(_In_z_ const nfChar * pAttributeName,
                          _In_z_ const nfChar * pAttributeValue) override;
-        // virtual void OnNSChildElement(_In_z_ const nfChar * pChildName,
-        //                               _In_z_ const nfChar * pNameSpace,
-        //                               _In_ CXmlReader * pXMLReader);
+
+        void OnNSChildElement(_In_z_ const nfChar * pChildName,
+                              _In_z_ const nfChar * pNameSpace,
+                              _In_ CXmlReader * pXMLReader) override;
     };
 
     typedef std::shared_ptr<CModelReaderNode_Volumetric2201_ImplicitNode>

@@ -102,17 +102,24 @@ public:
 
 	/**
 	* IImplicitFunction::AddNode - Add a node
-	* @param[in] sNodeType - the type of the node
+	* @param[in] eNodeType - the type of the node
 	* @param[in] sIdentifier - the identifier of the input
 	* @param[in] sDisplayName - the display name of the input
+	* @return the added node
 	*/
-	void AddNode(const std::string & sNodeType, const std::string & sIdentifier, const std::string & sDisplayName) override;
+	IImplicitNode * AddNode(const Lib3MF::eImplicitNodeType eNodeType, const std::string & sIdentifier, const std::string & sDisplayName) override;
 
 	/**
 	* IImplicitFunction::GetNodes - Retrieves the nodes
 	* @return the accessor to the nodes
 	*/
 	INodeAccessor * GetNodes() override;
+
+	/**
+	* IImplicitFunction::RemoveNode - Removes a node
+	* @param[in] pNode - The node to be removed
+	*/
+	void RemoveNode(IImplicitNode* pNode) override;
 
 	/**
 	* IImplicitFunction::AddInput - Add an input
@@ -128,6 +135,12 @@ public:
 	IImplicitPortAccessor * GetInputs() override;
 
 	/**
+	* IImplicitFunction::RemoveInput - Removes an input
+	* @param[in] pInput - The input to be removed
+	*/
+	void RemoveInput(IImplicitPort* pInput) override;
+
+	/**
 	* IImplicitFunction::AddOutput - Add an output
 	* @param[in] sIdentifier - the identifier of the output
 	* @param[in] sDisplayName - the display name of the output
@@ -139,6 +152,12 @@ public:
 	* @return the accessor to the outputs
 	*/
 	IImplicitPortAccessor * GetOutputs() override;
+
+	/**
+	* IImplicitFunction::RemoveOutput - Removes an output
+	* @param[in] pOutput - The output to be removed
+	*/
+	void RemoveOutput(IImplicitPort* pOutput) override;
 
 };
 

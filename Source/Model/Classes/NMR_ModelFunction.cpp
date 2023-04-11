@@ -24,30 +24,22 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+Abstract:
+
+NMR_ModelVector3DField.cpp implements the Model Vector3DField Class.
+A model scalar field is the base class of different scalar field specializations.
+
 --*/
 
-#include "Model/Classes/NMR_ImplicitNode.h"
+#include "Model/Classes/NMR_ModelFunction.h"
+#include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
 
-namespace NMR
-{
-    ImplicitIdentifier const & CImplicitNode::getIdentifier() const
-    {
-        return m_identifier;
-    }
+namespace NMR {
 
-    std::string const & CImplicitNode::getDisplayName() const
-    {
-        return m_displayname;
-    }
-
-    void CImplicitNode::setIdentifier(ImplicitIdentifier const & identifier)
-    {
-        m_identifier = identifier;
-    }
-
-    void CImplicitNode::setDisplayName(std::string const & displayname)
-    {
-        m_displayname = displayname;
-    }
+	CModelFunction::CModelFunction(_In_ const ModelResourceID sID, _In_ CModel * pModel)
+		: CModelResource(sID, pModel)
+	{
+	
+	}
 }

@@ -71,6 +71,7 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_vector3dfieldcomposed.hpp"
 #include "lib3mf_vector3dfieldconstant.hpp"
 #include "lib3mf_vector3dfieldfromimage3d.hpp"
+#include "lib3mf_functioniterator.hpp"
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -1010,3 +1011,14 @@ void Lib3MF::Impl::CModel::SetRandomNumberCallback(Lib3MF::RandomNumberCallback 
 	m_model->setCryptoRandCallback(descriptor);
 }
 
+IFunctionIterator * CModel::GetFunctions()
+{
+	auto pResult = std::unique_ptr<CFunctionIterator>(new CFunctionIterator());
+	Lib3MF_uint32 nFunctionCount = model().getFunctionCount();
+
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nFunctionCount; nIdx++) {
+		auto resource = model().getFunctionResource(nIdx);
+		pResult->addResource(resource);
+	}
+	return pResult.release();
+}

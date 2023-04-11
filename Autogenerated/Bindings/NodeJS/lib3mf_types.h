@@ -214,6 +214,7 @@ typedef Lib3MFHandle Lib3MF_CompositeMaterialsIterator;
 typedef Lib3MFHandle Lib3MF_MultiPropertyGroupIterator;
 typedef Lib3MFHandle Lib3MF_Image3DIterator;
 typedef Lib3MFHandle Lib3MF_ScalarFieldIterator;
+typedef Lib3MFHandle Lib3MF_FunctionIterator;
 typedef Lib3MFHandle Lib3MF_Vector3DFieldIterator;
 typedef Lib3MFHandle Lib3MF_MetaData;
 typedef Lib3MFHandle Lib3MF_MetaDataGroup;
@@ -253,8 +254,12 @@ typedef Lib3MFHandle Lib3MF_ImplicitPort;
 typedef Lib3MFHandle Lib3MF_Accessor;
 typedef Lib3MFHandle Lib3MF_ImplicitPortAccessor;
 typedef Lib3MFHandle Lib3MF_ImplicitNode;
+typedef Lib3MFHandle Lib3MF_ImplicitConstant;
+typedef Lib3MFHandle Lib3MF_ImplicitVector;
+typedef Lib3MFHandle Lib3MF_ImplicitMatrix;
 typedef Lib3MFHandle Lib3MF_NodeAccessor;
 typedef Lib3MFHandle Lib3MF_ImplicitFunction;
+typedef Lib3MFHandle Lib3MF_Function;
 typedef Lib3MFHandle Lib3MF_BuildItem;
 typedef Lib3MFHandle Lib3MF_BuildItemIterator;
 typedef Lib3MFHandle Lib3MF_Slice;
@@ -392,10 +397,40 @@ typedef enum eLib3MFCompositionSpace {
 } eLib3MFCompositionSpace;
 
 /**
-* enum eLib3MFImplicitNodeTypes - The type of the node
+* enum eLib3MFImplicitNodeType - The type of the node
 */
-typedef enum eLib3MFImplicitNodeTypes {
-} eLib3MFImplicitNodeTypes;
+typedef enum eLib3MFImplicitNodeType {
+  eImplicitNodeTypeAddition = 1, /** Adds to values (scalar or vector) */
+  eImplicitNodeTypeSubtraction = 2, /** Subtracts two values (scalar or vector) */
+  eImplicitNodeTypeMultiplication = 3, /** Multiplies two values (scalar or vector) */
+  eImplicitNodeTypeDivision = 4, /** Divides two values (scalar or vector) */
+  eImplicitNodeTypeConstant = 5, /** A constant scalar value */
+  eImplicitNodeTypeConstVec = 6, /** A constant vector value */
+  eImplicitNodeTypeConstMat = 7, /** A constant matrix value */
+  eImplicitNodeTypeComposeVector = 8, /** Creates a vector from three scalar values */
+  eImplicitNodeTypeComposeMatrix = 9, /** Creates a matrix from nine scalar values */
+  eImplicitNodeTypeComposeMatrixFromColumnVectors = 10, /** Creates a matrix from three vector values */
+  eImplicitNodeTypeDotProduct = 11, /** Calculates the dot product of two vector values */
+  eImplicitNodeTypeCrossProduct = 12, /** Calculates the cross product of two vector values */
+  eImplicitNodeTypeMatVecMultiplication = 13, /** Multiplies a matrix with a vector */
+  eImplicitNodeTypeTranspose = 14, /** Transposes a matrix */
+  eImplicitNodeTypeSinus = 15, /** Calculates the sinus of a scalar value */
+  eImplicitNodeTypeCosinus = 16, /** Calculates the cosinus of a scalar value */
+  eImplicitNodeTypeTan = 17, /** Calculates the tangent of a scalar value */
+  eImplicitNodeTypeArcSin = 18, /** Calculates the arcsinus of a scalar value */
+  eImplicitNodeTypeArcCos = 19, /** Calculates the arccosinus of a scalar value */
+  eImplicitNodeTypeArcTan = 20, /** Calculates the arctangent of a scalar value */
+  eImplicitNodeTypeMin = 21, /** Calculates the minimum of two scalar values */
+  eImplicitNodeTypeMax = 22, /** Calculates the maximum of two scalar values */
+  eImplicitNodeTypeAbs = 23, /** Calcul the absolute value of a scalar value */
+  eImplicitNodeTypeFmod = 24, /** Calculates the modulo of two scalar values */
+  eImplicitNodeTypePow = 25, /** Calculates the power of two scalar values */
+  eImplicitNodeTypeSqrt = 26, /** Calculates the square root of a scalar value */
+  eImplicitNodeTypeFunctionCall = 27, /** Calls a function */
+  eImplicitNodeTypeDot = 28, /** Calculates the dot product of two vector values */
+  eImplicitNodeTypeCross = 29, /** Calculates the cross product of two vector values */
+  eImplicitNodeTypeMesh = 30 /** Calculates the signed distance to a mesh */
+} eLib3MFImplicitNodeType;
 
 typedef enum eLib3MFEncryptionAlgorithm {
   eEncryptionAlgorithmAES256_GCM = 1 /** http://www.w3.org/2009/xmlenc11#aes256-gcm */
@@ -503,9 +538,9 @@ typedef union {
 } structEnumLib3MFCompositionSpace;
 
 typedef union {
-  eLib3MFImplicitNodeTypes m_enum;
+  eLib3MFImplicitNodeType m_enum;
   int m_code;
-} structEnumLib3MFImplicitNodeTypes;
+} structEnumLib3MFImplicitNodeType;
 
 typedef union {
   eLib3MFEncryptionAlgorithm m_enum;
@@ -596,6 +631,10 @@ typedef struct sLib3MFBall {
     Lib3MF_uint32 m_Index;
     Lib3MF_double m_Radius;
 } sLib3MFBall;
+
+typedef struct sLib3MFVector {
+    Lib3MF_single m_Coordinates[3];
+} sLib3MFVector;
 
 #pragma pack ()
 

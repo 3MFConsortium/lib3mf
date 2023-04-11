@@ -236,6 +236,8 @@ public:
 	IScalarFieldIterator* GetScalarFields() override;
 
 	IVector3DFieldIterator* GetVector3DFields() override;
+
+	IFunctionIterator * GetFunctions() override;
 };
 
 }

@@ -78,4 +78,30 @@ namespace NMR
             m_pImplicitNode->setDisplayName(pAttributeValue);
         }
     }
+
+    void NMR::CModelReaderNode_Volumetric2201_ImplicitNode::OnNSChildElement(
+      _In_z_ const nfChar * pChildName,
+      _In_z_ const nfChar * pNameSpace,
+      _In_ CXmlReader * pXMLReader)
+    {
+        __NMRASSERT(pChildName);
+        __NMRASSERT(pXMLReader);
+        __NMRASSERT(pNameSpace);
+
+        // if (strcmp(pNameSpace, XML_3MF_NAMESPACE_VOLUMETRICSPEC) == 0)
+        // {
+        //     if (strcmp(pChildName, XML_3MF_ELEMENT_IMPLICITNODE_INPUT) == 0)
+        //     {
+        //         auto pImplicitNode = m_pModel->addImplicitNode(m_pImplicitNode);
+        //         auto pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_ImplicitPort>(
+        //           m_pModel, pImplicitNode.get(), m_pWarnings);
+        //         pXMLNode->parseXML(pXMLReader);
+        //     }
+        // }
+        // else
+        // {
+        //     m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT),
+        //                               mrwInvalidOptionalValue);
+        // }
+    }
 }
