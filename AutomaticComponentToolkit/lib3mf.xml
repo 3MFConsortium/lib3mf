@@ -2096,39 +2096,45 @@
 		</method>
 	</class>
 
-
-	<enum name="ImplicitNodeTypes" description="The type of the node">
-		<value name="addition" description="Adds to values (skalar or vector)" />
-		<value name="subtraction" description="Subtracts two values (skalar or vector)" />
-		<value name="multiplication" description="Multiplies two values (skalar or vector)" />
-		<value name="division" description="Divides two values (skalar or vector)" />
-		<value name="constant" description="A constant skalar value" />
-		<value name="constvec" description="A constant vector value" />
-		<value name="constmat" description="A constant matrix value" />
-		<value name="composevector" description="Composes a vector from its components" />
-		<value name="composematrix" description="Composes a matrix from its components" />
-		<value name="composematrixfromcolumnvectors"
-			description="Composes a matrix from its column vectors" />
-		<value name="dotproduct" description="The dot product of two vectors" />
-		<value name="crossproduct" description="The cross product of two vectors" />
-		<value name="matvecmultiplication" description="Multiplies a matrix with a vector" />
-		<value name="transpose" description="The transpose of a matrix" />
-		<value name="sinus" description="The sinus of a skalar" />
-		<value name="cosinus" description="The cosinus of a skalar" />
-		<value name="tan" description="The tangent of a skalar" />
-		<value name="arcsin" description="The arcsinus of a skalar" />
-		<value name="arccos" description="The arccosinus of a skalar" />
-		<value name="arctan" description="The arctangent of a skalar" />
-		<value name="min" description="The minimum of two values (skalar or vector)" />
-		<value name="max" description="The maximum of two values (skalar or vector)" />
-		<value name="abs" description="The absolute value of a skalar" />
-		<value name="fmod" description="The remainder of a division" />
-		<value name="pow" description="The power of a skalar" />
-		<value name="sqrt" description="The square root of a skalar" />
-		<value name="functioncall" description="A call to a function" />
-		<value name="dot" description="The dot product of two vectors" />
-		<value name="cross" description="The cross product of two vectors" />
-		<value name="mesh" description="The signed distance to a mesh" />
+	<enum name="ImplicitNodeType" description="The type of the node">
+		<option name="Addition" description="Adds to values (scalar or vector)" value="1" />
+		<option name="Subtraction" description="Subtracts two values (scalar or vector)" value="2" />
+		<option name="Multiplication" description="Multiplies two values (scalar or vector)"
+			value="3" />
+		<option name="Division" description="Divides two values (scalar or vector)" value="4" />
+		<option name="Constant" description="A constant scalar value" value="5" />
+		<option name="ConstVec" description="A constant vector value" value="6" />
+		<option name="ConstMat" description="A constant matrix value" value="7" />
+		<option name="ComposeVector" description="Creates a vector from three scalar values"
+			value="8" />
+		<option name="ComposeMatrix" description="Creates a matrix from nine scalar values"
+			value="9" />
+		<option name="ComposeMatrixFromColumnVectors"
+			description="Creates a matrix from three vector values" value="10" />
+		<option name="DotProduct" description="Calculates the dot product of two vector values"
+			value="11" />
+		<option name="CrossProduct" description="Calculates the cross product of two vector values"
+			value="12" />
+		<option name="MatVecMultiplication" description="Multiplies a matrix with a vector"
+			value="13" />
+		<option name="Transpose" description="Transposes a matrix" value="14" />
+		<option name="Sinus" description="Calculates the sinus of a scalar value" value="15" />
+		<option name="Cosinus" description="Calculates the cosinus of a scalar value" value="16" />
+		<option name="Tan" description="Calculates the tangent of a scalar value" value="17" />
+		<option name="ArcSin" description="Calculates the arcsinus of a scalar value" value="18" />
+		<option name="ArcCos" description="Calculates the arccosinus of a scalar value" value="19" />
+		<option name="ArcTan" description="Calculates the arctangent of a scalar value" value="20" />
+		<option name="Min" description="Calculates the minimum of two scalar values" value="21" />
+		<option name="Max" description="Calculates the maximum of two scalar values" value="22" />
+		<option name="Abs" description="Calcul the absolute value of a scalar value" value="23" />
+		<option name="Fmod" description="Calculates the modulo of two scalar values" value="24" />
+		<option name="Pow" description="Calculates the power of two scalar values" value="25" />
+		<option name="Sqrt" description="Calculates the square root of a scalar value" value="26" />
+		<option name="FunctionCall" description="Calls a function" value="27" />
+		<option name="Dot" description="Calculates the dot product of two vector values" value="28" />
+		<option name="Cross" description="Calculates the cross product of two vector values"
+			value="29" />
+		<option name="Mesh" description="Calculates the signed distance to a mesh" value="30" />
 	</enum>
 
 
@@ -2184,11 +2190,17 @@
 			<param name="DisplayName" type="string" pass="in" description="the display name" />
 		</method>
 
+		<method name="GetNodeType" description="Retrieves the type of the node">
+			<param name="Type" type="enum" class="ImplicitNodeType" pass="return"
+				description="the type of the node" />
+		</method>
+
 		<method name="AddInput" description="Add an input">
 			<param name="Identifier" type="string" pass="in"
 				description="the identifier of the input" />
 			<param name="DisplayName" type="string" pass="in"
 				description="the display name of the input" />
+			<param name="Port" type="class" class="ImplicitPort" pass="return"></param>
 		</method>
 
 		<method name="GetInputs" description="Retrieves the inputs">
@@ -2201,11 +2213,43 @@
 				description="the identifier of the output" />
 			<param name="DisplayName" type="string" pass="in"
 				description="the display name of the output" />
+			<param name="Port" type="class" class="ImplicitPort" pass="return"></param>
 		</method>
 
 		<method name="GetOutputs" description="Retrieves the outputs">
 			<param name="Accessor" type="class" class="ImplicitPort" pass="return"
 				description="the accessor to the outputs" />
+		</method>
+	</class>
+
+	<class name="ImplicitConstant" parent="ImplicitNode">
+		<method name="GetValue" description="Retrieves the value of the constant">
+			<param name="Value" type="single" pass="return" description="the value" />
+		</method>
+		<method name="SetValue" description="Sets the value of the constant">
+			<param name="Value" type="single" pass="in" description="the value" />
+		</method>
+	</class>
+
+	<struct name="Vector">
+		<member name="Coordinates" type="single" rows="3" />
+	</struct>
+
+	<class name="ImplicitVector" parent="ImplicitNode">
+		<method name="Get" description="Retrieves the x value of the vector">
+			<param name="Value" type="struct" class="Vector" pass="return"
+				description="the value" />
+		</method>
+
+	</class>
+
+	<class name="ImplicitMatrix" parent="ImplicitNode">
+		<method name="GetMatrix" description="Retrieves the matrix">
+			<param name="Matrix" type="struct" class="Transform" pass="return"
+				description="the matrix" />
+		</method>
+		<method name="SetMatrix" description="Sets the matrix">
+			<param name="Matrix" type="struct" class="Transform" pass="in" description="the matrix" />
 		</method>
 	</class>
 
@@ -2231,17 +2275,24 @@
 		</method>
 
 		<method name="AddNode" description="Add a node">
-			<param name="NodeType" type="string" pass="in"
+			<param name="NodeType" type="enum" class="ImplicitNodeType" pass="in"
 				description="the type of the node" />
 			<param name="Identifier" type="string" pass="in"
 				description="the identifier of the input" />
 			<param name="DisplayName" type="string" pass="in"
 				description="the display name of the input" />
+			<param name="Node" type="class" class="ImplicitNode" pass="return"
+				description="the added node" />
 		</method>
 
 		<method name="GetNodes" description="Retrieves the nodes">
 			<param name="Accessor" type="class" class="NodeAccessor" pass="return"
 				description="the accessor to the nodes" />
+		</method>
+
+		<method name="RemoveNode" description="Removes a node">
+			<param name="Node" type="class" class="ImplicitNode" pass="in"
+				description="The node to be removed" />
 		</method>
 
 		<method name="AddInput" description="Add an input">
@@ -2256,6 +2307,11 @@
 				description="the accessor to the inputs" />
 		</method>
 
+		<method name="RemoveInput" description="Removes an input">
+			<param name="Input" type="class" class="ImplicitPort" pass="in"
+				description="The input to be removed" />
+		</method>
+
 		<method name="AddOutput" description="Add an output">
 			<param name="Identifier" type="string" pass="in"
 				description="the identifier of the output" />
@@ -2266,6 +2322,11 @@
 		<method name="GetOutputs" description="Retrieves the outputs">
 			<param name="Accessor" type="class" class="ImplicitPortAccessor" pass="return"
 				description="the accessor to the outputs" />
+		</method>
+
+		<method name="RemoveOutput" description="Removes an output">
+			<param name="Output" type="class" class="ImplicitPort" pass="in"
+				description="The output to be removed" />
 		</method>
 	</class>
 
