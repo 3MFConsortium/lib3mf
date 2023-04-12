@@ -662,7 +662,7 @@
 
 	<class name="FunctionIterator" parent="ResourceIterator">
 		<method name="GetCurrentFunction" description="Returns the Function the iterator points at.">
-			<param name="Resource" type="handle" class="Function" pass="return"
+			<param name="Resource" type="handle" class="ImplicitFunction" pass="return"
 				description="returns the Function instance." />
 		</method>
 	</class>
@@ -2267,7 +2267,7 @@
 		</method>
 	</class>
 
-	<class name="ImplicitFunction" parent="Base">
+	<class name="ImplicitFunction" parent="Resource">
 		<method name="GetIdentifier" description="Retrieves the identifier of the function">
 			<param name="Identifier" type="string" pass="return" description="the identifier" />
 		</method>
@@ -2336,18 +2336,6 @@
 				description="The output to be removed" />
 		</method>
 	</class>
-
-	<class name="Function" parent="Resource">
-		<method name="GetFunction" description="Retrieves the function">
-			<param name="ImplicitFunction" type="class" class="ImplicitFunction" pass="return"
-				description="the function" />
-		</method>
-		<method name="SetFunction" description="Sets the function">
-			<param name="ImplicitFunction" type="class" class="ImplicitFunction" pass="in"
-				description="the function" />
-		</method>
-	</class>
-
 
 	<class name="BuildItem" parent="Base">
 		<method name="GetObjectResource"
@@ -3246,6 +3234,11 @@
 		<method name="GetFunctions" description="creates a resource iterator for all functions">
 			<param name="TheResourceIterator" type="class" class="FunctionIterator" pass="return"
 				description="returns the resource iterator" />
+		</method>
+
+		<method name="AddFunction" description="adds a function (e.g. for implicit geometries) to the model">
+			<param name="FunctionInstance" type="handle" class="ImplicitFunction" pass="return"
+				description="returns the function instance" />
 		</method>
 	</class>
 

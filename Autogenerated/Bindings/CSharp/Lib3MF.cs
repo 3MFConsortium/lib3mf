@@ -1442,12 +1442,6 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_removeoutput", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_RemoveOutput (IntPtr Handle, IntPtr AOutput);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_function_getfunction", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Function_GetFunction (IntPtr Handle, out IntPtr AImplicitFunction);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_function_setfunction", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Function_SetFunction (IntPtr Handle, IntPtr AImplicitFunction);
-
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_builditem_getobjectresource", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BuildItem_GetObjectResource (IntPtr Handle, out IntPtr AObjectResource);
 
@@ -1913,6 +1907,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getfunctions", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetFunctions (IntPtr Handle, out IntPtr ATheResourceIterator);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addfunction", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_AddFunction (IntPtr Handle, out IntPtr AFunctionInstance);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_getlibraryversion", CharSet = CharSet.Ansi, CallingConvention=CallingConvention.Cdecl)]
 			public extern static Int32 GetLibraryVersion (out UInt32 AMajor, out UInt32 AMinor, out UInt32 AMicro);
 
@@ -2362,7 +2359,6 @@ namespace Lib3MF {
 					case 0x7D48084ED0AE80FE: Object = new CImplicitMatrix(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitMatrix"
 					case 0xE0E0FC011B210DE0: Object = new CNodeAccessor(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::NodeAccessor"
 					case 0x6CE54469EEA83BC1: Object = new CImplicitFunction(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitFunction"
-					case 0x9EFB2757CA1A5231: Object = new CFunction(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Function"
 					case 0x68FB2D5FFC4BA12A: Object = new CBuildItem(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItem"
 					case 0xA7D21BD364910860: Object = new CBuildItemIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItemIterator"
 					case 0x2198BCF4D8DF9C40: Object = new CSlice(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Slice"
@@ -2969,12 +2965,12 @@ namespace Lib3MF {
 		{
 		}
 
-		public CFunction GetCurrentFunction ()
+		public CImplicitFunction GetCurrentFunction ()
 		{
 			IntPtr newResource = IntPtr.Zero;
 
 			CheckError(Internal.Lib3MFWrapper.FunctionIterator_GetCurrentFunction (Handle, out newResource));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CFunction>(newResource);
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitFunction>(newResource);
 		}
 
 	}
@@ -5816,7 +5812,7 @@ namespace Lib3MF {
 
 	}
 
-	public class CImplicitFunction : CBase
+	public class CImplicitFunction : CResource
 	{
 		public CImplicitFunction (IntPtr NewHandle) : base (NewHandle)
 		{
@@ -5940,31 +5936,6 @@ namespace Lib3MF {
 				AOutputHandle = AOutput.GetHandle();
 
 			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_RemoveOutput (Handle, AOutputHandle));
-		}
-
-	}
-
-	public class CFunction : CResource
-	{
-		public CFunction (IntPtr NewHandle) : base (NewHandle)
-		{
-		}
-
-		public CImplicitFunction GetFunction ()
-		{
-			IntPtr newImplicitFunction = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Function_GetFunction (Handle, out newImplicitFunction));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitFunction>(newImplicitFunction);
-		}
-
-		public void SetFunction (CImplicitFunction AImplicitFunction)
-		{
-			IntPtr AImplicitFunctionHandle = IntPtr.Zero;
-			if (AImplicitFunction != null)
-				AImplicitFunctionHandle = AImplicitFunction.GetHandle();
-
-			CheckError(Internal.Lib3MFWrapper.Function_SetFunction (Handle, AImplicitFunctionHandle));
 		}
 
 	}
@@ -7454,6 +7425,14 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Model_GetFunctions (Handle, out newTheResourceIterator));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CFunctionIterator>(newTheResourceIterator);
+		}
+
+		public CImplicitFunction AddFunction ()
+		{
+			IntPtr newFunctionInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_AddFunction (Handle, out newFunctionInstance));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitFunction>(newFunctionInstance);
 		}
 
 	}

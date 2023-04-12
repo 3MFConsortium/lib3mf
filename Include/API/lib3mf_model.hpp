@@ -238,6 +238,8 @@ public:
 	IVector3DFieldIterator* GetVector3DFields() override;
 
 	IFunctionIterator * GetFunctions() override;
+
+	IImplicitFunction * AddFunction() override;
 };
 
 }

@@ -599,7 +599,7 @@ typedef Lib3MFResult (*PLib3MFScalarFieldIterator_GetCurrentScalarFieldPtr) (Lib
 * @param[out] pResource - returns the Function instance.
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFFunctionIterator_GetCurrentFunctionPtr) (Lib3MF_FunctionIterator pFunctionIterator, Lib3MF_Function * pResource);
+typedef Lib3MFResult (*PLib3MFFunctionIterator_GetCurrentFunctionPtr) (Lib3MF_FunctionIterator pFunctionIterator, Lib3MF_ImplicitFunction * pResource);
 
 /*************************************************************************************************************************
  Class definition for Vector3DFieldIterator
@@ -3658,28 +3658,6 @@ typedef Lib3MFResult (*PLib3MFImplicitFunction_GetOutputsPtr) (Lib3MF_ImplicitFu
 typedef Lib3MFResult (*PLib3MFImplicitFunction_RemoveOutputPtr) (Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPort pOutput);
 
 /*************************************************************************************************************************
- Class definition for Function
-**************************************************************************************************************************/
-
-/**
-* Retrieves the function
-*
-* @param[in] pFunction - Function instance.
-* @param[out] pImplicitFunction - the function
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFFunction_GetFunctionPtr) (Lib3MF_Function pFunction, Lib3MF_ImplicitFunction * pImplicitFunction);
-
-/**
-* Sets the function
-*
-* @param[in] pFunction - Function instance.
-* @param[in] pImplicitFunction - the function
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFFunction_SetFunctionPtr) (Lib3MF_Function pFunction, Lib3MF_ImplicitFunction pImplicitFunction);
-
-/*************************************************************************************************************************
  Class definition for BuildItem
 **************************************************************************************************************************/
 
@@ -5226,6 +5204,15 @@ typedef Lib3MFResult (*PLib3MFModel_GetKeyStorePtr) (Lib3MF_Model pModel, Lib3MF
 */
 typedef Lib3MFResult (*PLib3MFModel_GetFunctionsPtr) (Lib3MF_Model pModel, Lib3MF_FunctionIterator * pTheResourceIterator);
 
+/**
+* adds a function (e.g. for implicit geometries) to the model
+*
+* @param[in] pModel - Model instance.
+* @param[out] pFunctionInstance - returns the function instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_AddFunctionPtr) (Lib3MF_Model pModel, Lib3MF_ImplicitFunction * pFunctionInstance);
+
 /*************************************************************************************************************************
  Global functions
 **************************************************************************************************************************/
@@ -5781,8 +5768,6 @@ typedef struct {
 	PLib3MFImplicitFunction_AddOutputPtr m_ImplicitFunction_AddOutput;
 	PLib3MFImplicitFunction_GetOutputsPtr m_ImplicitFunction_GetOutputs;
 	PLib3MFImplicitFunction_RemoveOutputPtr m_ImplicitFunction_RemoveOutput;
-	PLib3MFFunction_GetFunctionPtr m_Function_GetFunction;
-	PLib3MFFunction_SetFunctionPtr m_Function_SetFunction;
 	PLib3MFBuildItem_GetObjectResourcePtr m_BuildItem_GetObjectResource;
 	PLib3MFBuildItem_GetUUIDPtr m_BuildItem_GetUUID;
 	PLib3MFBuildItem_SetUUIDPtr m_BuildItem_SetUUID;
@@ -5938,6 +5923,7 @@ typedef struct {
 	PLib3MFModel_SetRandomNumberCallbackPtr m_Model_SetRandomNumberCallback;
 	PLib3MFModel_GetKeyStorePtr m_Model_GetKeyStore;
 	PLib3MFModel_GetFunctionsPtr m_Model_GetFunctions;
+	PLib3MFModel_AddFunctionPtr m_Model_AddFunction;
 	PLib3MFGetLibraryVersionPtr m_GetLibraryVersion;
 	PLib3MFGetPrereleaseInformationPtr m_GetPrereleaseInformation;
 	PLib3MFGetBuildInformationPtr m_GetBuildInformation;

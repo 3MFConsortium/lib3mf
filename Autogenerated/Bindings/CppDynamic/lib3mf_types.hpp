@@ -258,7 +258,6 @@ typedef Lib3MFHandle Lib3MF_ImplicitVector;
 typedef Lib3MFHandle Lib3MF_ImplicitMatrix;
 typedef Lib3MFHandle Lib3MF_NodeAccessor;
 typedef Lib3MFHandle Lib3MF_ImplicitFunction;
-typedef Lib3MFHandle Lib3MF_Function;
 typedef Lib3MFHandle Lib3MF_BuildItem;
 typedef Lib3MFHandle Lib3MF_BuildItemIterator;
 typedef Lib3MFHandle Lib3MF_Slice;

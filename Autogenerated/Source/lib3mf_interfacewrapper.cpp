@@ -1957,7 +1957,7 @@ Lib3MFResult lib3mf_scalarfielditerator_getcurrentscalarfield(Lib3MF_ScalarField
 /*************************************************************************************************************************
  Class implementation for FunctionIterator
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_functioniterator_getcurrentfunction(Lib3MF_FunctionIterator pFunctionIterator, Lib3MF_Function * pResource)
+Lib3MFResult lib3mf_functioniterator_getcurrentfunction(Lib3MF_FunctionIterator pFunctionIterator, Lib3MF_ImplicitFunction * pResource)
 {
 	IBase* pIBaseClass = (IBase *)pFunctionIterator;
 
@@ -13087,83 +13087,6 @@ Lib3MFResult lib3mf_implicitfunction_removeoutput(Lib3MF_ImplicitFunction pImpli
 
 
 /*************************************************************************************************************************
- Class implementation for Function
-**************************************************************************************************************************/
-Lib3MFResult lib3mf_function_getfunction(Lib3MF_Function pFunction, Lib3MF_ImplicitFunction * pImplicitFunction)
-{
-	IBase* pIBaseClass = (IBase *)pFunction;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunction, "Function", "GetFunction");
-		}
-		if (pImplicitFunction == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseImplicitFunction(nullptr);
-		IFunction* pIFunction = dynamic_cast<IFunction*>(pIBaseClass);
-		if (!pIFunction)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pBaseImplicitFunction = pIFunction->GetFunction();
-
-		*pImplicitFunction = (IBase*)(pBaseImplicitFunction);
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("ImplicitFunction", *pImplicitFunction);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_function_setfunction(Lib3MF_Function pFunction, Lib3MF_ImplicitFunction pImplicitFunction)
-{
-	IBase* pIBaseClass = (IBase *)pFunction;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunction, "Function", "SetFunction");
-			pJournalEntry->addHandleParameter("ImplicitFunction", pImplicitFunction);
-		}
-		IBase* pIBaseClassImplicitFunction = (IBase *)pImplicitFunction;
-		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClassImplicitFunction);
-		if (!pIImplicitFunction)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
-		
-		IFunction* pIFunction = dynamic_cast<IFunction*>(pIBaseClass);
-		if (!pIFunction)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIFunction->SetFunction(pIImplicitFunction);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-
-/*************************************************************************************************************************
  Class implementation for BuildItem
 **************************************************************************************************************************/
 Lib3MFResult lib3mf_builditem_getobjectresource(Lib3MF_BuildItem pBuildItem, Lib3MF_Object * pObjectResource)
@@ -19057,6 +18980,42 @@ Lib3MFResult lib3mf_model_getfunctions(Lib3MF_Model pModel, Lib3MF_FunctionItera
 	}
 }
 
+Lib3MFResult lib3mf_model_addfunction(Lib3MF_Model pModel, Lib3MF_ImplicitFunction * pFunctionInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "AddFunction");
+		}
+		if (pFunctionInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseFunctionInstance(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseFunctionInstance = pIModel->AddFunction();
+
+		*pFunctionInstance = (IBase*)(pBaseFunctionInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("FunctionInstance", *pFunctionInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 
 
 /*************************************************************************************************************************
@@ -19774,10 +19733,6 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_implicitfunction_getoutputs;
 	if (sProcName == "lib3mf_implicitfunction_removeoutput") 
 		*ppProcAddress = (void*) &lib3mf_implicitfunction_removeoutput;
-	if (sProcName == "lib3mf_function_getfunction") 
-		*ppProcAddress = (void*) &lib3mf_function_getfunction;
-	if (sProcName == "lib3mf_function_setfunction") 
-		*ppProcAddress = (void*) &lib3mf_function_setfunction;
 	if (sProcName == "lib3mf_builditem_getobjectresource") 
 		*ppProcAddress = (void*) &lib3mf_builditem_getobjectresource;
 	if (sProcName == "lib3mf_builditem_getuuid") 
@@ -20088,6 +20043,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_model_getkeystore;
 	if (sProcName == "lib3mf_model_getfunctions") 
 		*ppProcAddress = (void*) &lib3mf_model_getfunctions;
+	if (sProcName == "lib3mf_model_addfunction") 
+		*ppProcAddress = (void*) &lib3mf_model_addfunction;
 	if (sProcName == "lib3mf_getlibraryversion") 
 		*ppProcAddress = (void*) &lib3mf_getlibraryversion;
 	if (sProcName == "lib3mf_getprereleaseinformation") 

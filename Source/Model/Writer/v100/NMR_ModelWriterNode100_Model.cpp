@@ -61,6 +61,8 @@ This is the class for exporting the 3mf model stream root node.
 #include "Common/NMR_StringUtils.h"
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
 #include "Model/Classes/NMR_ModelConstants_Slices.h"
+#include "Model/Classes/NMR_ModelImplicitFunction.h"
+
 
 #include "Common/3MF_ProgressMonitor.h"
 
@@ -979,12 +981,18 @@ namespace NMR {
 
 	}
 
-    void CModelWriterNode100_Model::writeImlicitModels()
+    void CModelWriterNode100_Model::writeFunctions()
     {
-		nfUint32 nCount = m_pModel->getFunctionCount();
+		nfUint32 const nCount = m_pModel->getFunctionCount();
 
-
-
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+			m_pProgressMonitor->IncrementProgress(1);
+			CModelImplicitFunction * pFunction = m_pModel->getFunction(nIndex);
+			
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_IMPLICIT_FUNCTION, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+			writeIntAttribute(XML_3MF_ELEMENT_IMPLICIT_FUNCTION_ID, pFunction->getPackageResourceID()->getModelResourceID());
+			writeFullEndElement();
+		}
     }
 
     void CModelWriterNode100_Model::writeMultiProperties()

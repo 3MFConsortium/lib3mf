@@ -393,4 +393,16 @@ namespace Lib3MF
 			ioWriter->WriteToFile(Volumetric::OutFolder + "MyCompositionVector3DReOut.3mf");
 		}
 	}
+
+	
+	TEST_F(Volumetric, AddFunction_NumberOfFunctionsIncreases)
+	{
+		auto functionIteratorBefore = model->GetFunctions();
+		ASSERT_EQ(functionIteratorBefore->Count(), 0);
+		auto newFunction = model->AddFunction();
+
+		auto functionIterator = model->GetFunctions();
+		ASSERT_EQ(functionIterator->Count(), 1);
+	}
+	
 }

@@ -26,34 +26,38 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --*/
 
-#pragma once
-
-#include <Common/Platform/NMR_SAL.h>
-#include <Model/Classes/NMR_ImplicitNode.h>
-
-#include <memory>
-#include <string>
-#include <vector>
+#include "Model/Classes/NMR_ModelImplicitFunction.h"
+#include "Common/NMR_Exception.h"
 
 namespace NMR
 {
-    using ImplicitNodes = std::vector<PImplicitNode>;
-
-    class CImplicitFunction
+    CModelImplicitFunction::CModelImplicitFunction(const ModelResourceID sID, CModel * pModel) : CModelResource(sID, pModel)
     {
-      private:
-        ImplicitIdentifier m_identifier;
-        std::string m_displayname;
-        ImplicitNodes m_nodes;
+    }
 
-      public:
-        ImplicitIdentifier const & getIdentifier() const;
-        std::string const & getDisplayName() const;
-        void setIdentifier(ImplicitIdentifier const & identifier);
-        void setDisplayName(std::string const & displayname);
 
-        ImplicitNodes const & getNodes() const;
-    };
+    std::string const & CModelImplicitFunction::getIdentifier() const
+    {
+        return m_identifier;
+    }
 
-    using PImplicitFunction = std::shared_ptr<CImplicitFunction>;
+    std::string const & CModelImplicitFunction::getDisplayName() const
+    {
+        return m_displayname;
+    }
+
+    void CModelImplicitFunction::setIdentifier(std::string const & identifier)
+    {
+        m_identifier = identifier;
+    }
+
+    void CModelImplicitFunction::setDisplayName(std::string const & displayname)
+    {
+        m_displayname = displayname;
+    }
+
+    ImplicitNodes const & NMR::CModelImplicitFunction::getNodes() const
+    {
+        return m_nodes;
+    }
 }

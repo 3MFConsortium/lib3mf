@@ -1492,25 +1492,6 @@ public:
 };
 
 /*************************************************************************************************************************
- Class CLib3MFFunction 
-**************************************************************************************************************************/
-class CLib3MFFunction : public CLib3MFBaseClass {
-private:
-	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static v8::Persistent<v8::Function> constructor;
-	static void GetFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void SetFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
-
-public:
-	CLib3MFFunction();
-	~CLib3MFFunction();
-	
-	static void Init();
-	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
-	
-};
-
-/*************************************************************************************************************************
  Class CLib3MFBuildItem 
 **************************************************************************************************************************/
 class CLib3MFBuildItem : public CLib3MFBaseClass {
@@ -1842,6 +1823,7 @@ private:
 	static void SetRandomNumberCallback(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetKeyStore(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetFunctions(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFModel();

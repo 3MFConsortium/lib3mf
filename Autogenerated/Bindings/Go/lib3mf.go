@@ -522,7 +522,7 @@ Lib3MFResult CCall_lib3mf_scalarfielditerator_getcurrentscalarfield(Lib3MFHandle
 }
 
 
-Lib3MFResult CCall_lib3mf_functioniterator_getcurrentfunction(Lib3MFHandle libraryHandle, Lib3MF_FunctionIterator pFunctionIterator, Lib3MF_Function * pResource)
+Lib3MFResult CCall_lib3mf_functioniterator_getcurrentfunction(Lib3MFHandle libraryHandle, Lib3MF_FunctionIterator pFunctionIterator, Lib3MF_ImplicitFunction * pResource)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
@@ -3231,24 +3231,6 @@ Lib3MFResult CCall_lib3mf_implicitfunction_removeoutput(Lib3MFHandle libraryHand
 }
 
 
-Lib3MFResult CCall_lib3mf_function_getfunction(Lib3MFHandle libraryHandle, Lib3MF_Function pFunction, Lib3MF_ImplicitFunction * pImplicitFunction)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_Function_GetFunction (pFunction, pImplicitFunction);
-}
-
-
-Lib3MFResult CCall_lib3mf_function_setfunction(Lib3MFHandle libraryHandle, Lib3MF_Function pFunction, Lib3MF_ImplicitFunction pImplicitFunction)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_Function_SetFunction (pFunction, pImplicitFunction);
-}
-
-
 Lib3MFResult CCall_lib3mf_builditem_getobjectresource(Lib3MFHandle libraryHandle, Lib3MF_BuildItem pBuildItem, Lib3MF_Object * pObjectResource)
 {
 	if (libraryHandle == 0) 
@@ -4641,6 +4623,15 @@ Lib3MFResult CCall_lib3mf_model_getfunctions(Lib3MFHandle libraryHandle, Lib3MF_
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_Model_GetFunctions (pModel, pTheResourceIterator);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_addfunction(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_ImplicitFunction * pFunctionInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_AddFunction (pModel, pFunctionInstance);
 }
 
 
@@ -6125,13 +6116,13 @@ func (wrapper Wrapper) NewFunctionIterator(r ref) FunctionIterator {
 }
 
 // GetCurrentFunction returns the Function the iterator points at.
-func (inst FunctionIterator) GetCurrentFunction() (Function, error) {
+func (inst FunctionIterator) GetCurrentFunction() (ImplicitFunction, error) {
 	var resource ref
 	ret := C.CCall_lib3mf_functioniterator_getcurrentfunction(inst.wrapperRef.LibraryHandle, inst.Ref, &resource)
 	if ret != 0 {
-		return Function{}, makeError(uint32(ret))
+		return ImplicitFunction{}, makeError(uint32(ret))
 	}
-	return inst.wrapperRef.NewFunction(resource), nil
+	return inst.wrapperRef.NewImplicitFunction(resource), nil
 }
 
 
@@ -9626,11 +9617,11 @@ func (inst NodeAccessor) Get() (ImplicitNode, error) {
 
 // ImplicitFunction represents a Lib3MF class.
 type ImplicitFunction struct {
-	Base
+	Resource
 }
 
 func (wrapper Wrapper) NewImplicitFunction(r ref) ImplicitFunction {
-	return ImplicitFunction{wrapper.NewBase(r)}
+	return ImplicitFunction{wrapper.NewResource(r)}
 }
 
 // GetIdentifier retrieves the identifier of the function.
@@ -9764,35 +9755,6 @@ func (inst ImplicitFunction) GetOutputs() (ImplicitPortAccessor, error) {
 // RemoveOutput removes an output.
 func (inst ImplicitFunction) RemoveOutput(output ImplicitPort) error {
 	ret := C.CCall_lib3mf_implicitfunction_removeoutput(inst.wrapperRef.LibraryHandle, inst.Ref, output.Ref)
-	if ret != 0 {
-		return makeError(uint32(ret))
-	}
-	return nil
-}
-
-
-// Function represents a Lib3MF class.
-type Function struct {
-	Resource
-}
-
-func (wrapper Wrapper) NewFunction(r ref) Function {
-	return Function{wrapper.NewResource(r)}
-}
-
-// GetFunction retrieves the function.
-func (inst Function) GetFunction() (ImplicitFunction, error) {
-	var implicitFunction ref
-	ret := C.CCall_lib3mf_function_getfunction(inst.wrapperRef.LibraryHandle, inst.Ref, &implicitFunction)
-	if ret != 0 {
-		return ImplicitFunction{}, makeError(uint32(ret))
-	}
-	return inst.wrapperRef.NewImplicitFunction(implicitFunction), nil
-}
-
-// SetFunction sets the function.
-func (inst Function) SetFunction(implicitFunction ImplicitFunction) error {
-	ret := C.CCall_lib3mf_function_setfunction(inst.wrapperRef.LibraryHandle, inst.Ref, implicitFunction.Ref)
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
@@ -11589,6 +11551,16 @@ func (inst Model) GetFunctions() (FunctionIterator, error) {
 		return FunctionIterator{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewFunctionIterator(theResourceIterator), nil
+}
+
+// AddFunction adds a function (e.g. for implicit geometries) to the model.
+func (inst Model) AddFunction() (ImplicitFunction, error) {
+	var functionInstance ref
+	ret := C.CCall_lib3mf_model_addfunction(inst.wrapperRef.LibraryHandle, inst.Ref, &functionInstance)
+	if ret != 0 {
+		return ImplicitFunction{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitFunction(functionInstance), nil
 }
 
 

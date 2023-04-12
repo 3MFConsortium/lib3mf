@@ -71,6 +71,7 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_vector3dfieldcomposed.hpp"
 #include "lib3mf_vector3dfieldconstant.hpp"
 #include "lib3mf_vector3dfieldfromimage3d.hpp"
+#include "lib3mf_implicitfunction.hpp"
 #include "lib3mf_functioniterator.hpp"
 
 // Include custom headers here.
@@ -89,6 +90,7 @@ Abstract: This is a stub class definition of CModel
 #include "Model/Classes/NMR_ModelVector3DFieldFromImage3D.h"
 #include "Model/Classes/NMR_ModelVector3DFieldComposed.h"
 #include "Model/Classes/NMR_ModelVector3DFieldConstant.h"
+#include "Model/Classes/NMR_ModelImplicitFunction.h"
 #include "Common/NMR_SecureContentTypes.h"
 #include "lib3mf_utils.hpp"
 
@@ -182,6 +184,10 @@ IResource* CModel::createIResourceFromModelResource(NMR::PModelResource pResourc
 	}
 	if (auto p = std::dynamic_pointer_cast<NMR::CModelVector3DField>(pResource)) {
 		return new CVector3DField(p);
+	}
+	
+	if (auto p= std::dynamic_pointer_cast<NMR::CModelImplicitFunction>(pResource)) {
+		return new CImplicitFunction(p);
 	}
 
 	if (bFailIfUnkownClass)
@@ -1021,4 +1027,14 @@ IFunctionIterator * CModel::GetFunctions()
 		pResult->addResource(resource);
 	}
 	return pResult.release();
+}
+
+IImplicitFunction * CModel::AddFunction()
+{
+	NMR::ModelResourceID NewResourceID = model().generateResourceID();	
+	NMR::PModelImplicitFunction pNewResource = std::make_shared<NMR::CModelImplicitFunction>(NewResourceID, &model());
+
+	model().addResource(pNewResource);
+
+	return new CImplicitFunction(pNewResource);
 }

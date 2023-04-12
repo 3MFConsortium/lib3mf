@@ -111,7 +111,6 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFImplicitMatrix::Init();
 	CLib3MFNodeAccessor::Init();
 	CLib3MFImplicitFunction::Init();
-	CLib3MFFunction::Init();
 	CLib3MFBuildItem::Init();
 	CLib3MFBuildItemIterator::Init();
 	CLib3MFSlice::Init();

@@ -28,140 +28,143 @@ Abstract: This is the class declaration of CImplicitFunction
 
 */
 
-
 #ifndef __LIB3MF_IMPLICITFUNCTION
 #define __LIB3MF_IMPLICITFUNCTION
 
 #include "lib3mf_interfaces.hpp"
+#include "lib3mf_resource.hpp"
 
 // Parent classes
 #include "lib3mf_base.hpp"
+
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
 // Include custom headers here.
+#include "Model/Classes/NMR_ModelImplicitFunction.h"
 
+namespace Lib3MF
+{
+    namespace Impl
+    {
 
-namespace Lib3MF {
-namespace Impl {
+        /*************************************************************************************************************************
+         Class declaration of CImplicitFunction
+        **************************************************************************************************************************/
 
+        class CImplicitFunction : public virtual IImplicitFunction, public virtual CResource
+        {
+          private:
+            /**
+             * Put private members here.
+             */
+          protected:
+            /**
+             * Put protected members here.
+             */
 
-/*************************************************************************************************************************
- Class declaration of CImplicitFunction 
-**************************************************************************************************************************/
+          public:
+            /**
+             * Put additional public members here. They will not be visible in the external API.
+             */
 
-class CImplicitFunction : public virtual IImplicitFunction, public virtual CBase {
-private:
+            CImplicitFunction() = delete;
+            CImplicitFunction(NMR::PModelImplicitFunction pResource);
+            /**
+             * Public member functions to implement.
+             */
 
-	/**
-	* Put private members here.
-	*/
+            /**
+             * IImplicitFunction::GetIdentifier - Retrieves the identifier of the function
+             * @return the identifier
+             */
+            std::string GetIdentifier() override;
 
-protected:
+            /**
+             * IImplicitFunction::SetIdentifier - Sets the identifier of the function
+             * @param[in] sIdentifier - the identifier
+             */
+            void SetIdentifier(const std::string & sIdentifier) override;
 
-	/**
-	* Put protected members here.
-	*/
+            /**
+             * IImplicitFunction::GetDisplayName - Retrieves the display name of the function
+             * @return the display name
+             */
+            std::string GetDisplayName() override;
 
-public:
+            /**
+             * IImplicitFunction::SetDisplayName - Sets the display name of the function
+             * @param[in] sDisplayName - the display name
+             */
+            void SetDisplayName(const std::string & sDisplayName) override;
 
-	/**
-	* Put additional public members here. They will not be visible in the external API.
-	*/
+            /**
+             * IImplicitFunction::AddNode - Add a node
+             * @param[in] eNodeType - the type of the node
+             * @param[in] sIdentifier - the identifier of the input
+             * @param[in] sDisplayName - the display name of the input
+             * @return the added node
+             */
+            IImplicitNode * AddNode(const Lib3MF::eImplicitNodeType eNodeType,
+                                    const std::string & sIdentifier,
+                                    const std::string & sDisplayName) override;
 
+            /**
+             * IImplicitFunction::GetNodes - Retrieves the nodes
+             * @return the accessor to the nodes
+             */
+            INodeAccessor * GetNodes() override;
 
-	/**
-	* Public member functions to implement.
-	*/
+            /**
+             * IImplicitFunction::RemoveNode - Removes a node
+             * @param[in] pNode - The node to be removed
+             */
+            void RemoveNode(IImplicitNode * pNode) override;
 
-	/**
-	* IImplicitFunction::GetIdentifier - Retrieves the identifier of the function
-	* @return the identifier
-	*/
-	std::string GetIdentifier() override;
+            /**
+             * IImplicitFunction::AddInput - Add an input
+             * @param[in] sIdentifier - the identifier of the input
+             * @param[in] sDisplayName - the display name of the input
+             */
+            void AddInput(const std::string & sIdentifier,
+                          const std::string & sDisplayName) override;
 
-	/**
-	* IImplicitFunction::SetIdentifier - Sets the identifier of the function
-	* @param[in] sIdentifier - the identifier
-	*/
-	void SetIdentifier(const std::string & sIdentifier) override;
+            /**
+             * IImplicitFunction::GetInputs - Retrieves the inputs
+             * @return the accessor to the inputs
+             */
+            IImplicitPortAccessor * GetInputs() override;
 
-	/**
-	* IImplicitFunction::GetDisplayName - Retrieves the display name of the function
-	* @return the display name
-	*/
-	std::string GetDisplayName() override;
+            /**
+             * IImplicitFunction::RemoveInput - Removes an input
+             * @param[in] pInput - The input to be removed
+             */
+            void RemoveInput(IImplicitPort * pInput) override;
 
-	/**
-	* IImplicitFunction::SetDisplayName - Sets the display name of the function
-	* @param[in] sDisplayName - the display name
-	*/
-	void SetDisplayName(const std::string & sDisplayName) override;
+            /**
+             * IImplicitFunction::AddOutput - Add an output
+             * @param[in] sIdentifier - the identifier of the output
+             * @param[in] sDisplayName - the display name of the output
+             */
+            void AddOutput(const std::string & sIdentifier,
+                           const std::string & sDisplayName) override;
 
-	/**
-	* IImplicitFunction::AddNode - Add a node
-	* @param[in] eNodeType - the type of the node
-	* @param[in] sIdentifier - the identifier of the input
-	* @param[in] sDisplayName - the display name of the input
-	* @return the added node
-	*/
-	IImplicitNode * AddNode(const Lib3MF::eImplicitNodeType eNodeType, const std::string & sIdentifier, const std::string & sDisplayName) override;
+            /**
+             * IImplicitFunction::GetOutputs - Retrieves the outputs
+             * @return the accessor to the outputs
+             */
+            IImplicitPortAccessor * GetOutputs() override;
 
-	/**
-	* IImplicitFunction::GetNodes - Retrieves the nodes
-	* @return the accessor to the nodes
-	*/
-	INodeAccessor * GetNodes() override;
+            /**
+             * IImplicitFunction::RemoveOutput - Removes an output
+             * @param[in] pOutput - The output to be removed
+             */
+            void RemoveOutput(IImplicitPort * pOutput) override;
+        };
 
-	/**
-	* IImplicitFunction::RemoveNode - Removes a node
-	* @param[in] pNode - The node to be removed
-	*/
-	void RemoveNode(IImplicitNode* pNode) override;
-
-	/**
-	* IImplicitFunction::AddInput - Add an input
-	* @param[in] sIdentifier - the identifier of the input
-	* @param[in] sDisplayName - the display name of the input
-	*/
-	void AddInput(const std::string & sIdentifier, const std::string & sDisplayName) override;
-
-	/**
-	* IImplicitFunction::GetInputs - Retrieves the inputs
-	* @return the accessor to the inputs
-	*/
-	IImplicitPortAccessor * GetInputs() override;
-
-	/**
-	* IImplicitFunction::RemoveInput - Removes an input
-	* @param[in] pInput - The input to be removed
-	*/
-	void RemoveInput(IImplicitPort* pInput) override;
-
-	/**
-	* IImplicitFunction::AddOutput - Add an output
-	* @param[in] sIdentifier - the identifier of the output
-	* @param[in] sDisplayName - the display name of the output
-	*/
-	void AddOutput(const std::string & sIdentifier, const std::string & sDisplayName) override;
-
-	/**
-	* IImplicitFunction::GetOutputs - Retrieves the outputs
-	* @return the accessor to the outputs
-	*/
-	IImplicitPortAccessor * GetOutputs() override;
-
-	/**
-	* IImplicitFunction::RemoveOutput - Removes an output
-	* @param[in] pOutput - The output to be removed
-	*/
-	void RemoveOutput(IImplicitPort* pOutput) override;
-
-};
-
-} // namespace Impl
+    } // namespace Impl
 } // namespace Lib3MF
 
 #ifdef _MSC_VER

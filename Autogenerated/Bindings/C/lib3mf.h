@@ -612,7 +612,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_scalarfielditerator_getcurrentscalarfield(Li
 * @param[out] pResource - returns the Function instance.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_functioniterator_getcurrentfunction(Lib3MF_FunctionIterator pFunctionIterator, Lib3MF_Function * pResource);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functioniterator_getcurrentfunction(Lib3MF_FunctionIterator pFunctionIterator, Lib3MF_ImplicitFunction * pResource);
 
 /*************************************************************************************************************************
  Class definition for Vector3DFieldIterator
@@ -3671,28 +3671,6 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_getoutputs(Lib3MF_ImplicitF
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_removeoutput(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPort pOutput);
 
 /*************************************************************************************************************************
- Class definition for Function
-**************************************************************************************************************************/
-
-/**
-* Retrieves the function
-*
-* @param[in] pFunction - Function instance.
-* @param[out] pImplicitFunction - the function
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_function_getfunction(Lib3MF_Function pFunction, Lib3MF_ImplicitFunction * pImplicitFunction);
-
-/**
-* Sets the function
-*
-* @param[in] pFunction - Function instance.
-* @param[in] pImplicitFunction - the function
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_function_setfunction(Lib3MF_Function pFunction, Lib3MF_ImplicitFunction pImplicitFunction);
-
-/*************************************************************************************************************************
  Class definition for BuildItem
 **************************************************************************************************************************/
 
@@ -5238,6 +5216,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getkeystore(Lib3MF_Model pModel, Lib3M
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getfunctions(Lib3MF_Model pModel, Lib3MF_FunctionIterator * pTheResourceIterator);
+
+/**
+* adds a function (e.g. for implicit geometries) to the model
+*
+* @param[in] pModel - Model instance.
+* @param[out] pFunctionInstance - returns the function instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addfunction(Lib3MF_Model pModel, Lib3MF_ImplicitFunction * pFunctionInstance);
 
 /*************************************************************************************************************************
  Global functions

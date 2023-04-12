@@ -481,8 +481,6 @@ class FunctionTable:
 	lib3mf_implicitfunction_addoutput = None
 	lib3mf_implicitfunction_getoutputs = None
 	lib3mf_implicitfunction_removeoutput = None
-	lib3mf_function_getfunction = None
-	lib3mf_function_setfunction = None
 	lib3mf_builditem_getobjectresource = None
 	lib3mf_builditem_getuuid = None
 	lib3mf_builditem_setuuid = None
@@ -638,6 +636,7 @@ class FunctionTable:
 	lib3mf_model_setrandomnumbercallback = None
 	lib3mf_model_getkeystore = None
 	lib3mf_model_getfunctions = None
+	lib3mf_model_addfunction = None
 
 '''Definition of Enumerations
 '''
@@ -3226,18 +3225,6 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
 			self.lib.lib3mf_implicitfunction_removeoutput = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_function_getfunction")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_function_getfunction = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_function_setfunction")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
-			self.lib.lib3mf_function_setfunction = methodType(int(methodAddress.value))
-			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_builditem_getobjectresource")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -4167,6 +4154,12 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_getfunctions = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_addfunction")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_addfunction = methodType(int(methodAddress.value))
 			
 		except AttributeError as ae:
 			raise ELib3MFException(ErrorCodes.COULDNOTFINDLIBRARYEXPORT, ae.args[0])
@@ -5283,12 +5276,6 @@ class Wrapper:
 			self.lib.lib3mf_implicitfunction_removeoutput.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitfunction_removeoutput.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
 			
-			self.lib.lib3mf_function_getfunction.restype = ctypes.c_int32
-			self.lib.lib3mf_function_getfunction.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
-			
-			self.lib.lib3mf_function_setfunction.restype = ctypes.c_int32
-			self.lib.lib3mf_function_setfunction.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
-			
 			self.lib.lib3mf_builditem_getobjectresource.restype = ctypes.c_int32
 			self.lib.lib3mf_builditem_getobjectresource.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
@@ -5754,6 +5741,9 @@ class Wrapper:
 			self.lib.lib3mf_model_getfunctions.restype = ctypes.c_int32
 			self.lib.lib3mf_model_getfunctions.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
+			self.lib.lib3mf_model_addfunction.restype = ctypes.c_int32
+			self.lib.lib3mf_model_addfunction.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
 		except AttributeError as ae:
 			raise ELib3MFException(ErrorCodes.COULDNOTFINDLIBRARYEXPORT, ae.args[0])
 	
@@ -6086,8 +6076,6 @@ class Wrapper:
 				return NodeAccessor(handle, wrapper)
 			def getObjectById_6CE54469EEA83BC1(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ImplicitFunction"
 				return ImplicitFunction(handle, wrapper)
-			def getObjectById_9EFB2757CA1A5231(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Function"
-				return Function(handle, wrapper)
 			def getObjectById_68FB2D5FFC4BA12A(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::BuildItem"
 				return BuildItem(handle, wrapper)
 			def getObjectById_A7D21BD364910860(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::BuildItemIterator"
@@ -9056,9 +9044,9 @@ class NodeAccessor(Accessor):
 
 ''' Class Implementation for ImplicitFunction
 '''
-class ImplicitFunction(Base):
+class ImplicitFunction(Resource):
 	def __init__(self, handle, wrapper):
-		Base.__init__(self, handle, wrapper)
+		Resource.__init__(self, handle, wrapper)
 	def GetIdentifier(self):
 		nIdentifierBufferSize = ctypes.c_uint64(0)
 		nIdentifierNeededChars = ctypes.c_uint64(0)
@@ -9170,32 +9158,6 @@ class ImplicitFunction(Base):
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_removeoutput(self._handle, OutputHandle))
-		
-	
-
-
-''' Class Implementation for Function
-'''
-class Function(Resource):
-	def __init__(self, handle, wrapper):
-		Resource.__init__(self, handle, wrapper)
-	def GetFunction(self):
-		ImplicitFunctionHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_function_getfunction(self._handle, ImplicitFunctionHandle))
-		if ImplicitFunctionHandle:
-			ImplicitFunctionObject = self._wrapper._polymorphicFactory(ImplicitFunctionHandle)
-		else:
-			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
-		
-		return ImplicitFunctionObject
-	
-	def SetFunction(self, ImplicitFunctionObject):
-		ImplicitFunctionHandle = None
-		if ImplicitFunctionObject:
-			ImplicitFunctionHandle = ImplicitFunctionObject._handle
-		else:
-			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_function_setfunction(self._handle, ImplicitFunctionHandle))
 		
 	
 
@@ -10746,5 +10708,15 @@ class Model(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return TheResourceIteratorObject
+	
+	def AddFunction(self):
+		FunctionInstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_addfunction(self._handle, FunctionInstanceHandle))
+		if FunctionInstanceHandle:
+			FunctionInstanceObject = self._wrapper._polymorphicFactory(FunctionInstanceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return FunctionInstanceObject
 	
 		

@@ -30,6 +30,7 @@ Abstract: This is a stub class definition of CFunctionIterator
 
 #include "lib3mf_functioniterator.hpp"
 #include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_implicitfunction.hpp"
 
 // Include custom headers here.
 
@@ -40,7 +41,7 @@ using namespace Lib3MF::Impl;
  Class definition of CFunctionIterator 
 **************************************************************************************************************************/
 
-IFunction * CFunctionIterator::GetCurrentFunction()
+IImplicitFunction * CFunctionIterator::GetCurrentFunction()
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }

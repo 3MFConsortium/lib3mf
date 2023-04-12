@@ -104,7 +104,6 @@ Persistent<Function> CLib3MFImplicitVector::constructor;
 Persistent<Function> CLib3MFImplicitMatrix::constructor;
 Persistent<Function> CLib3MFNodeAccessor::constructor;
 Persistent<Function> CLib3MFImplicitFunction::constructor;
-Persistent<Function> CLib3MFFunction::constructor;
 Persistent<Function> CLib3MFBuildItem::constructor;
 Persistent<Function> CLib3MFBuildItemIterator::constructor;
 Persistent<Function> CLib3MFSlice::constructor;
@@ -3580,7 +3579,7 @@ void CLib3MFFunctionIterator::GetCurrentFunction(const FunctionCallbackInfo<Valu
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_FunctionIterator_GetCurrentFunction(instanceHandle, &hReturnResource);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjResource = CLib3MFFunction::NewInstance(args.Holder(), hReturnResource);
+        Local<Object> instanceObjResource = CLib3MFImplicitFunction::NewInstance(args.Holder(), hReturnResource);
         args.GetReturnValue().Set(instanceObjResource);
 
 		} catch (std::exception & E) {
@@ -13694,114 +13693,6 @@ void CLib3MFImplicitFunction::RemoveOutput(const FunctionCallbackInfo<Value>& ar
 }
 
 /*************************************************************************************************************************
- Class CLib3MFFunction Implementation
-**************************************************************************************************************************/
-
-CLib3MFFunction::CLib3MFFunction()
-		: CLib3MFBaseClass()
-{
-}
-
-CLib3MFFunction::~CLib3MFFunction()
-{
-}
-
-void CLib3MFFunction::Init()
-{
-		Isolate* isolate = Isolate::GetCurrent();
-
-		// Prepare constructor template
-		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFFunction"));
-		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
-
-		// Prototype
-		NODE_SET_PROTOTYPE_METHOD(tpl, "GetFunction", GetFunction);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "SetFunction", SetFunction);
-		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
-
-}
-
-void CLib3MFFunction::New(const FunctionCallbackInfo<Value>& args)
-{
-		Isolate* isolate = args.GetIsolate();
-		HandleScope scope(isolate);
-
-		if (args.IsConstructCall()) {
-				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
-				CLib3MFFunction * functionInstance = new CLib3MFFunction();
-				functionInstance->Wrap(args.This());
-				args.GetReturnValue().Set(args.This());
-		} else {
-				RaiseError(isolate, "Lib3MFFunction: Invalid call to Constructor");
-		}
-}
-
-Local<Object> CLib3MFFunction::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
-{
-		Isolate* isolate = Isolate::GetCurrent();
-		HandleScope scope(isolate);
-		Local<Function> cons = Local<Function>::New(isolate, constructor);
-		Local<Object> instance;
-		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
-			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
-			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
-		}
-		return instance;
-}
-
-
-void CLib3MFFunction::GetFunction(const FunctionCallbackInfo<Value>& args) 
-{
-		Isolate* isolate = args.GetIsolate();
-		HandleScope scope(isolate);
-		try {
-        Lib3MFHandle hReturnImplicitFunction = nullptr;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
-        if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetFunction.");
-        if (wrapperTable->m_Function_GetFunction == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method Function::GetFunction.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Function_GetFunction(instanceHandle, &hReturnImplicitFunction);
-        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjImplicitFunction = CLib3MFImplicitFunction::NewInstance(args.Holder(), hReturnImplicitFunction);
-        args.GetReturnValue().Set(instanceObjImplicitFunction);
-
-		} catch (std::exception & E) {
-				RaiseError(isolate, E.what());
-		}
-}
-
-
-void CLib3MFFunction::SetFunction(const FunctionCallbackInfo<Value>& args) 
-{
-		Isolate* isolate = args.GetIsolate();
-		HandleScope scope(isolate);
-		try {
-        if (!args[0]->IsObject()) {
-            throw std::runtime_error("Expected class parameter 0 (ImplicitFunction)");
-        }
-        Local<Object> objImplicitFunction = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
-        CLib3MFImplicitFunction * instanceImplicitFunction = ObjectWrap::Unwrap<CLib3MFImplicitFunction>(objImplicitFunction);
-        if (instanceImplicitFunction == nullptr)
-            throw std::runtime_error("Invalid Object parameter 0 (ImplicitFunction)");
-        Lib3MFHandle hImplicitFunction = instanceImplicitFunction->getHandle( objImplicitFunction );
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
-        if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetFunction.");
-        if (wrapperTable->m_Function_SetFunction == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method Function::SetFunction.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Function_SetFunction(instanceHandle, hImplicitFunction);
-        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-
-		} catch (std::exception & E) {
-				RaiseError(isolate, E.what());
-		}
-}
-
-/*************************************************************************************************************************
  Class CLib3MFBuildItem Implementation
 **************************************************************************************************************************/
 
@@ -16414,6 +16305,7 @@ void CLib3MFModel::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetRandomNumberCallback", SetRandomNumberCallback);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetKeyStore", GetKeyStore);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetFunctions", GetFunctions);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddFunction", AddFunction);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -18493,6 +18385,29 @@ void CLib3MFModel::GetFunctions(const FunctionCallbackInfo<Value>& args)
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjTheResourceIterator = CLib3MFFunctionIterator::NewInstance(args.Holder(), hReturnTheResourceIterator);
         args.GetReturnValue().Set(instanceObjTheResourceIterator);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::AddFunction(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnFunctionInstance = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddFunction.");
+        if (wrapperTable->m_Model_AddFunction == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::AddFunction.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_AddFunction(instanceHandle, &hReturnFunctionInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjFunctionInstance = CLib3MFImplicitFunction::NewInstance(args.Holder(), hReturnFunctionInstance);
+        args.GetReturnValue().Set(instanceObjFunctionInstance);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

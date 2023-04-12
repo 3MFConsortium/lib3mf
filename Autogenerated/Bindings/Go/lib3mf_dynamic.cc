@@ -399,8 +399,6 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ImplicitFunction_AddOutput = NULL;
 	pWrapperTable->m_ImplicitFunction_GetOutputs = NULL;
 	pWrapperTable->m_ImplicitFunction_RemoveOutput = NULL;
-	pWrapperTable->m_Function_GetFunction = NULL;
-	pWrapperTable->m_Function_SetFunction = NULL;
 	pWrapperTable->m_BuildItem_GetObjectResource = NULL;
 	pWrapperTable->m_BuildItem_GetUUID = NULL;
 	pWrapperTable->m_BuildItem_SetUUID = NULL;
@@ -556,6 +554,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Model_SetRandomNumberCallback = NULL;
 	pWrapperTable->m_Model_GetKeyStore = NULL;
 	pWrapperTable->m_Model_GetFunctions = NULL;
+	pWrapperTable->m_Model_AddFunction = NULL;
 	pWrapperTable->m_GetLibraryVersion = NULL;
 	pWrapperTable->m_GetPrereleaseInformation = NULL;
 	pWrapperTable->m_GetBuildInformation = NULL;
@@ -3789,24 +3788,6 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_Function_GetFunction = (PLib3MFFunction_GetFunctionPtr) GetProcAddress(hLibrary, "lib3mf_function_getfunction");
-	#else // _WIN32
-	pWrapperTable->m_Function_GetFunction = (PLib3MFFunction_GetFunctionPtr) dlsym(hLibrary, "lib3mf_function_getfunction");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_Function_GetFunction == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
-	pWrapperTable->m_Function_SetFunction = (PLib3MFFunction_SetFunctionPtr) GetProcAddress(hLibrary, "lib3mf_function_setfunction");
-	#else // _WIN32
-	pWrapperTable->m_Function_SetFunction = (PLib3MFFunction_SetFunctionPtr) dlsym(hLibrary, "lib3mf_function_setfunction");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_Function_SetFunction == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
 	pWrapperTable->m_BuildItem_GetObjectResource = (PLib3MFBuildItem_GetObjectResourcePtr) GetProcAddress(hLibrary, "lib3mf_builditem_getobjectresource");
 	#else // _WIN32
 	pWrapperTable->m_BuildItem_GetObjectResource = (PLib3MFBuildItem_GetObjectResourcePtr) dlsym(hLibrary, "lib3mf_builditem_getobjectresource");
@@ -5199,6 +5180,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Model_GetFunctions == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_AddFunction = (PLib3MFModel_AddFunctionPtr) GetProcAddress(hLibrary, "lib3mf_model_addfunction");
+	#else // _WIN32
+	pWrapperTable->m_Model_AddFunction = (PLib3MFModel_AddFunctionPtr) dlsym(hLibrary, "lib3mf_model_addfunction");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_AddFunction == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

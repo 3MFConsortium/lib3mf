@@ -40,6 +40,10 @@ using namespace Lib3MF::Impl;
  Class definition of CImplicitFunction 
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CImplicitFunction::CImplicitFunction(NMR::PModelImplicitFunction pResource) : CResource(pResource)
+{
+}
+
 std::string CImplicitFunction::GetIdentifier()
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);

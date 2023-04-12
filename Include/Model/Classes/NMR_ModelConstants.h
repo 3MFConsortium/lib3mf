@@ -348,6 +348,8 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY_REQUIRED  "required"
 
 // Voumeteric/Implicit
+#define XML_3MF_ELEMENT_IMPLICIT_FUNCTION "function"
+#define XML_3MF_ELEMENT_IMPLICIT_FUNCTION_ID "id"
 #define XML_3MF_ELEMENT_IMPLICITNODE_INPUT "in"
 #define XML_3MF_ELEMENT_IMPLICITNODE_OUTPUT "out"
 

@@ -120,7 +120,6 @@ class CImplicitVector;
 class CImplicitMatrix;
 class CNodeAccessor;
 class CImplicitFunction;
-class CFunction;
 class CBuildItem;
 class CBuildItemIterator;
 class CSlice;
@@ -200,7 +199,6 @@ typedef CImplicitVector CLib3MFImplicitVector;
 typedef CImplicitMatrix CLib3MFImplicitMatrix;
 typedef CNodeAccessor CLib3MFNodeAccessor;
 typedef CImplicitFunction CLib3MFImplicitFunction;
-typedef CFunction CLib3MFFunction;
 typedef CBuildItem CLib3MFBuildItem;
 typedef CBuildItemIterator CLib3MFBuildItemIterator;
 typedef CSlice CLib3MFSlice;
@@ -280,7 +278,6 @@ typedef std::shared_ptr<CImplicitVector> PImplicitVector;
 typedef std::shared_ptr<CImplicitMatrix> PImplicitMatrix;
 typedef std::shared_ptr<CNodeAccessor> PNodeAccessor;
 typedef std::shared_ptr<CImplicitFunction> PImplicitFunction;
-typedef std::shared_ptr<CFunction> PFunction;
 typedef std::shared_ptr<CBuildItem> PBuildItem;
 typedef std::shared_ptr<CBuildItemIterator> PBuildItemIterator;
 typedef std::shared_ptr<CSlice> PSlice;
@@ -360,7 +357,6 @@ typedef PImplicitVector PLib3MFImplicitVector;
 typedef PImplicitMatrix PLib3MFImplicitMatrix;
 typedef PNodeAccessor PLib3MFNodeAccessor;
 typedef PImplicitFunction PLib3MFImplicitFunction;
-typedef PFunction PLib3MFFunction;
 typedef PBuildItem PLib3MFBuildItem;
 typedef PBuildItemIterator PLib3MFBuildItemIterator;
 typedef PSlice PLib3MFSlice;
@@ -716,7 +712,6 @@ private:
 	friend class CImplicitMatrix;
 	friend class CNodeAccessor;
 	friend class CImplicitFunction;
-	friend class CFunction;
 	friend class CBuildItem;
 	friend class CBuildItemIterator;
 	friend class CSlice;
@@ -1124,7 +1119,7 @@ public:
 	{
 	}
 	
-	inline PFunction GetCurrentFunction();
+	inline PImplicitFunction GetCurrentFunction();
 };
 	
 /*************************************************************************************************************************
@@ -2105,14 +2100,14 @@ public:
 /*************************************************************************************************************************
  Class CImplicitFunction 
 **************************************************************************************************************************/
-class CImplicitFunction : public CBase {
+class CImplicitFunction : public CResource {
 public:
 	
 	/**
 	* CImplicitFunction::CImplicitFunction - Constructor for ImplicitFunction class.
 	*/
 	CImplicitFunction(CWrapper* pWrapper, Lib3MFHandle pHandle)
-		: CBase(pWrapper, pHandle)
+		: CResource(pWrapper, pHandle)
 	{
 	}
 	
@@ -2129,24 +2124,6 @@ public:
 	inline void AddOutput(const std::string & sIdentifier, const std::string & sDisplayName);
 	inline PImplicitPortAccessor GetOutputs();
 	inline void RemoveOutput(classParam<CImplicitPort> pOutput);
-};
-	
-/*************************************************************************************************************************
- Class CFunction 
-**************************************************************************************************************************/
-class CFunction : public CResource {
-public:
-	
-	/**
-	* CFunction::CFunction - Constructor for Function class.
-	*/
-	CFunction(CWrapper* pWrapper, Lib3MFHandle pHandle)
-		: CResource(pWrapper, pHandle)
-	{
-	}
-	
-	inline PImplicitFunction GetFunction();
-	inline void SetFunction(classParam<CImplicitFunction> pImplicitFunction);
 };
 	
 /*************************************************************************************************************************
@@ -2478,6 +2455,7 @@ public:
 	inline void SetRandomNumberCallback(const RandomNumberCallback pTheCallback, const Lib3MF_pvoid pUserData);
 	inline PKeyStore GetKeyStore();
 	inline PFunctionIterator GetFunctions();
+	inline PImplicitFunction AddFunction();
 };
 
 /*************************************************************************************************************************
@@ -2559,7 +2537,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0x7D48084ED0AE80FEUL: return new CImplicitMatrix(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitMatrix"
 		case 0xE0E0FC011B210DE0UL: return new CNodeAccessor(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::NodeAccessor"
 		case 0x6CE54469EEA83BC1UL: return new CImplicitFunction(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitFunction"
-		case 0x9EFB2757CA1A5231UL: return new CFunction(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Function"
 		case 0x68FB2D5FFC4BA12AUL: return new CBuildItem(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItem"
 		case 0xA7D21BD364910860UL: return new CBuildItemIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItemIterator"
 		case 0x2198BCF4D8DF9C40UL: return new CSlice(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Slice"
@@ -3551,7 +3528,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	* CFunctionIterator::GetCurrentFunction - Returns the Function the iterator points at.
 	* @return returns the Function instance.
 	*/
-	PFunction CFunctionIterator::GetCurrentFunction()
+	PImplicitFunction CFunctionIterator::GetCurrentFunction()
 	{
 		Lib3MFHandle hResource = nullptr;
 		CheckError(lib3mf_functioniterator_getcurrentfunction(m_pHandle, &hResource));
@@ -3559,7 +3536,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if (!hResource) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::shared_ptr<CFunction>(dynamic_cast<CFunction*>(m_pWrapper->polymorphicFactory(hResource)));
+		return std::shared_ptr<CImplicitFunction>(dynamic_cast<CImplicitFunction*>(m_pWrapper->polymorphicFactory(hResource)));
 	}
 	
 	/**
@@ -7343,35 +7320,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	 * Method definitions for class CFunction
-	 */
-	
-	/**
-	* CFunction::GetFunction - Retrieves the function
-	* @return the function
-	*/
-	PImplicitFunction CFunction::GetFunction()
-	{
-		Lib3MFHandle hImplicitFunction = nullptr;
-		CheckError(lib3mf_function_getfunction(m_pHandle, &hImplicitFunction));
-		
-		if (!hImplicitFunction) {
-			CheckError(LIB3MF_ERROR_INVALIDPARAM);
-		}
-		return std::shared_ptr<CImplicitFunction>(dynamic_cast<CImplicitFunction*>(m_pWrapper->polymorphicFactory(hImplicitFunction)));
-	}
-	
-	/**
-	* CFunction::SetFunction - Sets the function
-	* @param[in] pImplicitFunction - the function
-	*/
-	void CFunction::SetFunction(classParam<CImplicitFunction> pImplicitFunction)
-	{
-		Lib3MFHandle hImplicitFunction = pImplicitFunction.GetHandle();
-		CheckError(lib3mf_function_setfunction(m_pHandle, hImplicitFunction));
-	}
-	
-	/**
 	 * Method definitions for class CBuildItem
 	 */
 	
@@ -9587,6 +9535,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CFunctionIterator>(dynamic_cast<CFunctionIterator*>(m_pWrapper->polymorphicFactory(hTheResourceIterator)));
+	}
+	
+	/**
+	* CModel::AddFunction - adds a function (e.g. for implicit geometries) to the model
+	* @return returns the function instance
+	*/
+	PImplicitFunction CModel::AddFunction()
+	{
+		Lib3MFHandle hFunctionInstance = nullptr;
+		CheckError(lib3mf_model_addfunction(m_pHandle, &hFunctionInstance));
+		
+		if (!hFunctionInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitFunction>(dynamic_cast<CImplicitFunction*>(m_pWrapper->polymorphicFactory(hFunctionInstance)));
 	}
 
 } // namespace Lib3MF

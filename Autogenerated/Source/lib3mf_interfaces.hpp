@@ -114,7 +114,6 @@ class IImplicitVector;
 class IImplicitMatrix;
 class INodeAccessor;
 class IImplicitFunction;
-class IFunction;
 class IBuildItem;
 class IBuildItemIterator;
 class ISlice;
@@ -1005,7 +1004,7 @@ public:
 	* IFunctionIterator::GetCurrentFunction - Returns the Function the iterator points at.
 	* @return returns the Function instance.
 	*/
-	virtual IFunction * GetCurrentFunction() = 0;
+	virtual IImplicitFunction * GetCurrentFunction() = 0;
 
 };
 
@@ -3725,7 +3724,7 @@ typedef IBaseSharedPtr<INodeAccessor> PINodeAccessor;
  Class interface for ImplicitFunction 
 **************************************************************************************************************************/
 
-class IImplicitFunction : public virtual IBase {
+class IImplicitFunction : public virtual IResource {
 public:
 	/**
 	* IImplicitFunction::ClassTypeId - Get Class Type Id
@@ -3822,38 +3821,6 @@ public:
 };
 
 typedef IBaseSharedPtr<IImplicitFunction> PIImplicitFunction;
-
-
-/*************************************************************************************************************************
- Class interface for Function 
-**************************************************************************************************************************/
-
-class IFunction : public virtual IResource {
-public:
-	/**
-	* IFunction::ClassTypeId - Get Class Type Id
-	* @return Class type as a 64 bits integer
-	*/
-	Lib3MF_uint64 ClassTypeId() override
-	{
-		return 0x9EFB2757CA1A5231UL; // First 64 bits of SHA1 of a string: "Lib3MF::Function"
-	}
-
-	/**
-	* IFunction::GetFunction - Retrieves the function
-	* @return the function
-	*/
-	virtual IImplicitFunction * GetFunction() = 0;
-
-	/**
-	* IFunction::SetFunction - Sets the function
-	* @param[in] pImplicitFunction - the function
-	*/
-	virtual void SetFunction(IImplicitFunction* pImplicitFunction) = 0;
-
-};
-
-typedef IBaseSharedPtr<IFunction> PIFunction;
 
 
 /*************************************************************************************************************************
@@ -5086,6 +5053,12 @@ public:
 	* @return returns the resource iterator
 	*/
 	virtual IFunctionIterator * GetFunctions() = 0;
+
+	/**
+	* IModel::AddFunction - adds a function (e.g. for implicit geometries) to the model
+	* @return returns the function instance
+	*/
+	virtual IImplicitFunction * AddFunction() = 0;
 
 };
 
