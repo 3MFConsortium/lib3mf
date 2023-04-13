@@ -42,15 +42,14 @@ using namespace Lib3MF::Impl;
 
 NMR::PModelImplicitFunction Lib3MF::Impl::CImplicitFunction::function() 
 {
-	auto pFunction = std::dynamic_pointer_cast<NMR::CModelImplicitFunction>(resource());
-	if (pFunction.get() == nullptr)
+	if (m_function.get() == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
 
-	return pFunction;
+	return m_function;
 }
 
 Lib3MF::Impl::CImplicitFunction::CImplicitFunction(NMR::PModelImplicitFunction pResource)
-    : CResource(pResource)
+    : CResource(pResource), m_function(pResource)
 {
 }
 
