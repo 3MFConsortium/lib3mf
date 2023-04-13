@@ -26,27 +26,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --*/
 
-#include "Model/Classes/NMR_ImplicitPort.h"
+#include "Model/Classes/NMR_ModelImplicitPort.h"
 #include "Common/NMR_Exception.h"
 
 namespace NMR
 {
-    ImplicitIdentifier const & CImplicitPort::getIdentifier() const
+    ImplicitIdentifier const & CModelImplicitPort::getIdentifier() const
     {
         return m_identifier;
     }
 
-    std::string const & CImplicitPort::getDisplayName() const
+    std::string const & CModelImplicitPort::getDisplayName() const
     {
         return m_displayname;
     }
 
-    void CImplicitPort::setIdentifier(std::string const & identifier)
+    void CModelImplicitPort::setIdentifier(std::string const & identifier)
     {
         m_identifier = identifier;
     }
 
-    void CImplicitPort::setDisplayName(std::string const & displayname)
+    void CModelImplicitPort::setDisplayName(std::string const & displayname)
     {
         m_displayname = displayname;
     }

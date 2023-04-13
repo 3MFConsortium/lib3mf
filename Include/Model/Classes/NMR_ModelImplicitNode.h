@@ -29,26 +29,35 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #pragma once
 
 #include <Common/Platform/NMR_SAL.h>
+#include <Model/Classes/NMR_ModelImplicitPort.h>
+
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace NMR
 {
+    using Inputs = std::vector<PModelImplicitPort>;
+    using Ouputs = std::vector<PModelImplicitPort>;
 
-    using ImplicitIdentifier = std::string;
-
-    class CImplicitPort
+    class CModelImplicitNode
     {
       private:
         ImplicitIdentifier m_identifier;
         std::string m_displayname;
+
+        Inputs m_inputs;
+        Ouputs m_outputs;
 
       public:
         ImplicitIdentifier const & getIdentifier() const;
         std::string const & getDisplayName() const;
         void setIdentifier(ImplicitIdentifier const & identifier);
         void setDisplayName(std::string const & displayname);
+
+        Inputs const & getInputs() const;
+        Ouputs const & getOutputs() const;
     };
 
-    using PImplicitPort = std::shared_ptr<CImplicitPort>;
+    using PModelImplicitNode = std::shared_ptr<CModelImplicitNode>;
 }

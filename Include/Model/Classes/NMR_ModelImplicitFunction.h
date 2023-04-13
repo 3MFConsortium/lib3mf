@@ -29,7 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #pragma once
 
 #include <Common/Platform/NMR_SAL.h>
-#include <Model/Classes/NMR_ImplicitNode.h>
+#include <Model/Classes/NMR_ModelImplicitNode.h>
 #include "Model/Classes/NMR_ModelResource.h"
 
 #include <memory>
@@ -38,7 +38,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace NMR
 {
-    using ImplicitNodes = std::vector<PImplicitNode>;
+    using ImplicitNodes = std::vector<PModelImplicitNode>;
 
     class CModelImplicitFunction :public CModelResource
     {

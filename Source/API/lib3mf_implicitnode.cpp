@@ -59,7 +59,7 @@ void CImplicitNode::SetDisplayName(const std::string & sDisplayName)
     throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-CImplicitNode::CImplicitNode(NMR::PImplicitNode pImplicitNode)
+CImplicitNode::CImplicitNode(NMR::PModelImplicitNode pImplicitNode)
     : m_pImplicitNode(std::move(pImplicitNode))
 {
 }

@@ -31,7 +31,7 @@ NMR_ModelReaderNode_Volumetric2201_Image3D.h covers the official 3MF volumetric 
 
 #pragma once
 
-#include "Model/Classes/NMR_ImplicitNode.h"
+#include "Model/Classes/NMR_ModelImplicitNode.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
 
 namespace NMR
@@ -39,13 +39,13 @@ namespace NMR
     class CModelReaderNode_Volumetric2201_ImplicitNode : public CModelReaderNode
     {
       private:
-        CImplicitNode * m_pImplicitNode;
+        CModelImplicitNode * m_pImplicitNode;
         CModel * m_pModel;
 
       public:
         CModelReaderNode_Volumetric2201_ImplicitNode() = delete;
         CModelReaderNode_Volumetric2201_ImplicitNode(_In_ CModel * pModel,
-                                                     _In_ CImplicitNode * pImplicitNode,
+                                                     _In_ CModelImplicitNode * pImplicitNode,
                                                      _In_ PModelWarnings pWarnings);
 
         void parseXML(_In_ CXmlReader * pXMLReader) override;

@@ -43,7 +43,7 @@ namespace NMR
 {
     CModelReaderNode_Volumetric2201_ImplicitNode::CModelReaderNode_Volumetric2201_ImplicitNode(
       _In_ CModel * pModel,
-      _In_ CImplicitNode * pImplicitNode,
+      _In_ CModelImplicitNode * pImplicitNode,
       _In_ PModelWarnings pWarnings)
         : CModelReaderNode(pWarnings)
     {

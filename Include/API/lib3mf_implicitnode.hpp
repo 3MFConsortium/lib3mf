@@ -41,7 +41,7 @@ Abstract: This is the class declaration of CImplicitNode
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ImplicitNode.h"
+#include "Model/Classes/NMR_ModelImplicitNode.h"
 
 namespace Lib3MF
 {
@@ -55,7 +55,7 @@ namespace Lib3MF
         class CImplicitNode : public virtual IImplicitNode, public virtual CBase
         {
           private:
-            NMR::PImplicitNode m_pImplicitNode;
+            NMR::PModelImplicitNode m_pImplicitNode;
 
           protected:
             /**
@@ -64,7 +64,7 @@ namespace Lib3MF
 
           public:
             // Ctor
-            CImplicitNode(NMR::PImplicitNode pImplicitNode);
+            CImplicitNode(NMR::PModelImplicitNode pImplicitNode);
 
             /**
              * Public member functions to implement.
