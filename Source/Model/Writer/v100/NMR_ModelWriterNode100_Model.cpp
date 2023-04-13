@@ -981,20 +981,6 @@ namespace NMR {
 
 	}
 
-    void CModelWriterNode100_Model::writeFunctions()
-    {
-		nfUint32 const nCount = m_pModel->getFunctionCount();
-
-		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
-			m_pProgressMonitor->IncrementProgress(1);
-			CModelImplicitFunction * pFunction = m_pModel->getFunction(nIndex);
-			
-			writeStartElementWithPrefix(XML_3MF_ELEMENT_IMPLICIT_FUNCTION, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-			writeIntAttribute(XML_3MF_ELEMENT_IMPLICIT_FUNCTION_ID, pFunction->getPackageResourceID()->getModelResourceID());
-			writeFullEndElement();
-		}
-    }
-
     void CModelWriterNode100_Model::writeMultiProperties()
     {
 		nfUint32 nCount = m_pModel->getMultiPropertyGroupCount();

@@ -24,39 +24,34 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+Abstract:
+
+
 --*/
 
 #pragma once
 
-#include <Common/Platform/NMR_SAL.h>
-#include <Model/Classes/NMR_ModelImplicitNode.h>
-#include "Model/Classes/NMR_ModelResource.h"
-
-#include <memory>
-#include <string>
-#include <vector>
+#include "Common/3MF_ProgressMonitor.h"
+#include "Common/Platform/NMR_XmlWriter.h"
+#include "Model/Classes/NMR_ModelConstants.h"
+#include "Model/Classes/NMR_ModelImplicitFunction.h"
+#include "Model/Classes/NMR_ModelImplicitNode.h"
+#include "Model/Writer/NMR_ModelWriterNode_ModelBase.h"
 
 namespace NMR
 {
-    using ImplicitNodes = std::vector<PModelImplicitNode>;
-        
-    class CModelImplicitFunction :public CModelResource
+    class CModelWriterNode_Implicit : public CModelWriterNode_ModelBase
     {
-      private:
-        ImplicitIdentifier m_identifier;
-        std::string m_displayname;
-        ImplicitNodes m_nodes;
 
       public:
-        CModelImplicitFunction(_In_ const ModelResourceID sID, _In_ CModel* pModel);
+        CModelWriterNode_Implicit() = delete;
+        CModelWriterNode_Implicit(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor);
 
-        ImplicitIdentifier const & getIdentifier() const;
-        std::string const & getDisplayName() const;
-        void setIdentifier(ImplicitIdentifier const & identifier);
-        void setDisplayName(std::string const & displayname);
+        void writeImplicitFunctions();
 
-        ImplicitNodes const & getNodes() const;
+      private:
+        void writeImplicitFunctionElements(_In_ CModelImplicitFunction & function);
+        void writeImplicitNode(_In_ CModelImplicitNode & node);
     };
 
-    using PModelImplicitFunction = std::shared_ptr<CModelImplicitFunction>;
 }

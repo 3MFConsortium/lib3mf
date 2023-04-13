@@ -350,8 +350,10 @@ These are given by the 3MF Standard
 // Voumeteric/Implicit
 #define XML_3MF_ELEMENT_IMPLICIT_FUNCTION "function"
 #define XML_3MF_ELEMENT_IMPLICIT_FUNCTION_ID "id"
+#define XML_3MF_ELEMENT_IMPLICIT_FUNCTION_DISPLAY_NAME "displayname"
 #define XML_3MF_ELEMENT_IMPLICITNODE_INPUT "in"
 #define XML_3MF_ELEMENT_IMPLICITNODE_OUTPUT "out"
+
 
 // Multiproperties
 #define XML_3MF_ELEMENT_MULTIPROPERTIES             "multiproperties"
