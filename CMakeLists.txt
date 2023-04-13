@@ -32,7 +32,13 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
   add_definitions(-DBUILD_DLL)
   add_compile_options(-Wall)
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O2")
+  if (CMAKE_BUILD_TYPE MATCHES DEBUG)
+    add_compile_options(-g)
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Og")
+  else()
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O2")
+  endif(CMAKE_BUILD_TYPE MATCHES DEBUG)
+  
 elseif ("${CMAKE_SYSTEM_NAME}" MATCHES "Darwin")
   # using GCC
   add_definitions(-DBUILD_DLL)
