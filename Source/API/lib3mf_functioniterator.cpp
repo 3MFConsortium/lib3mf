@@ -43,6 +43,9 @@ using namespace Lib3MF::Impl;
 
 IImplicitFunction * CFunctionIterator::GetCurrentFunction()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto currentFunction = dynamic_cast<IImplicitFunction*>(GetCurrent());
+	if (currentFunction == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+	return currentFunction;
 }
 

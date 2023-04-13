@@ -397,12 +397,23 @@ namespace Lib3MF
 	
 	TEST_F(Volumetric, AddFunction_NumberOfFunctionsIncreases)
 	{
+		auto resourceIteratorBefore = model->GetResources();
+		EXPECT_EQ(resourceIteratorBefore->Count(), 2);
 		auto functionIteratorBefore = model->GetFunctions();
-		ASSERT_EQ(functionIteratorBefore->Count(), 0);
-		auto newFunction = model->AddFunction();
+		EXPECT_EQ(functionIteratorBefore->Count(), 0);
+		PImplicitFunction newFunction = model->AddFunction();
+		std::string const displayName = "test";
+		newFunction->SetDisplayName(displayName);
+
+		auto resourceIteratorAfter = model->GetResources();
+		EXPECT_EQ(resourceIteratorAfter->Count(), 3);
 
 		auto functionIterator = model->GetFunctions();
 		ASSERT_EQ(functionIterator->Count(), 1);
+
+		EXPECT_TRUE(functionIterator->MoveNext());
+		EXPECT_EQ(functionIterator->GetCurrentFunction()->GetDisplayName(), displayName);
+		EXPECT_FALSE(functionIterator->MoveNext());
 	}
 	
 }

@@ -60,6 +60,8 @@ namespace Lib3MF
             /**
              * Put private members here.
              */
+            NMR::PModelImplicitFunction function();
+
           protected:
             /**
              * Put protected members here.

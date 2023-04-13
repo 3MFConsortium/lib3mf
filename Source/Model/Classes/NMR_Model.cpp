@@ -554,6 +554,11 @@ namespace NMR {
 		CModelVector3DField* pVector3DField = dynamic_cast<CModelVector3DField*>(pResource.get());
 		if (pVector3DField != nullptr)
 			m_Vector3DFieldLookup.push_back(pResource);
+
+
+		CModelImplicitFunction* pImplicitFunction = dynamic_cast<CModelImplicitFunction*>(pResource.get());
+		if (pImplicitFunction != nullptr)
+			m_FunctionLookup.push_back(pResource);
 	}
 
 	// Clear all build items and Resources
@@ -577,6 +582,8 @@ namespace NMR {
 		m_Vector3DFieldLookup.clear();
 
 		m_MetaDataGroup->clear();
+
+		m_FunctionLookup.clear();
 	}
 
 	_Ret_maybenull_ PModelBaseMaterialResource CModel::findBaseMaterial(_In_ PPackageResourceID pID)

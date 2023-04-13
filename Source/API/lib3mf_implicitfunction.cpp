@@ -40,28 +40,38 @@ using namespace Lib3MF::Impl;
  Class definition of CImplicitFunction 
 **************************************************************************************************************************/
 
-Lib3MF::Impl::CImplicitFunction::CImplicitFunction(NMR::PModelImplicitFunction pResource) : CResource(pResource)
+NMR::PModelImplicitFunction Lib3MF::Impl::CImplicitFunction::function() 
+{
+	auto pFunction = std::dynamic_pointer_cast<NMR::CModelImplicitFunction>(resource());
+	if (pFunction.get() == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+
+	return pFunction;
+}
+
+Lib3MF::Impl::CImplicitFunction::CImplicitFunction(NMR::PModelImplicitFunction pResource)
+    : CResource(pResource)
 {
 }
 
 std::string CImplicitFunction::GetIdentifier()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return function()->getIdentifier();
 }
 
 void CImplicitFunction::SetIdentifier(const std::string & sIdentifier)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	function()->setIdentifier(sIdentifier);
 }
 
 std::string CImplicitFunction::GetDisplayName()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return function()->getDisplayName();
 }
 
 void CImplicitFunction::SetDisplayName(const std::string & sDisplayName)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	function()->setDisplayName(sDisplayName);
 }
 
 IImplicitNode * CImplicitFunction::AddNode(const Lib3MF::eImplicitNodeType eNodeType, const std::string & sIdentifier, const std::string & sDisplayName)
