@@ -48,7 +48,8 @@ namespace NMR
         CModelWriterNode_Implicit(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor);
 
         void writeImplicitFunctions();
-
+        
+        void writeToXML () override;
       private:
         void writeImplicitFunctionElements(_In_ CModelImplicitFunction & function);
         void writeImplicitNode(_In_ CModelImplicitNode & node);

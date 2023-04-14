@@ -78,6 +78,7 @@ namespace NMR {
 		void writeMultiPropertyMultiElements(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup);
 		void writeImage3Ds();
 		void writeFields();
+		void writeImplicitFunctions();
 		
 
 		void writeObjects();

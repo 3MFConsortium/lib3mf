@@ -32,6 +32,7 @@ Writer node for implicit functions
 #include "Common/NMR_Exception.h"
 #include "lib3mf_types.hpp"
 
+
 namespace NMR
 {
     CModelWriterNode_Implicit::CModelWriterNode_Implicit(_In_ CModel * pModel,
@@ -61,6 +62,11 @@ namespace NMR
 
             writeFullEndElement();
         }
+    }
+
+    void CModelWriterNode_Implicit::writeToXML()
+    {
+        throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
     }
 
     void CModelWriterNode_Implicit::writeImplicitFunctionElements(CModelImplicitFunction & function)

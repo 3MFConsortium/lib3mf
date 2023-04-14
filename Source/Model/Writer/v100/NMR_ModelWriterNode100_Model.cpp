@@ -62,6 +62,7 @@ This is the class for exporting the 3mf model stream root node.
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
 #include "Model/Classes/NMR_ModelConstants_Slices.h"
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
+#include "Model/Writer/NMR_ModelWriterNode_Implicit.h"
 
 
 #include "Common/3MF_ProgressMonitor.h"
@@ -981,25 +982,35 @@ namespace NMR {
 
 	}
 
-    void CModelWriterNode100_Model::writeMultiProperties()
-    {
-		nfUint32 nCount = m_pModel->getMultiPropertyGroupCount();
+        void CModelWriterNode100_Model::writeImplicitFunctions()
+        {
+			CModelWriterNode_Implicit implicitWriter(m_pModel, m_pXMLWriter, m_pProgressMonitor);
+			implicitWriter.writeImplicitFunctions();
+        }
 
-		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
-			m_pProgressMonitor->IncrementProgress(1);
 
-			CModelMultiPropertyGroupResource * pMultiPropertyGroup = m_pModel->getMultiPropertyGroup(nIndex);
+        void CModelWriterNode100_Model::writeMultiProperties()
+        {
+            nfUint32 nCount = m_pModel->getMultiPropertyGroupCount();
 
-			pMultiPropertyGroup->buildResourceIndexMap();
+            for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++)
+            {
+                m_pProgressMonitor->IncrementProgress(1);
 
-			writeStartElementWithPrefix(XML_3MF_ELEMENT_MULTIPROPERTIES, XML_3MF_NAMESPACEPREFIX_MATERIAL);
+                CModelMultiPropertyGroupResource * pMultiPropertyGroup =
+                  m_pModel->getMultiPropertyGroup(nIndex);
 
-			writeMultiPropertyAttributes(pMultiPropertyGroup);
-			
-			writeMultiPropertyMultiElements(pMultiPropertyGroup);
+                pMultiPropertyGroup->buildResourceIndexMap();
 
-			writeFullEndElement();
-		}
+                writeStartElementWithPrefix(XML_3MF_ELEMENT_MULTIPROPERTIES,
+                                            XML_3MF_NAMESPACEPREFIX_MATERIAL);
+
+                writeMultiPropertyAttributes(pMultiPropertyGroup);
+
+                writeMultiPropertyMultiElements(pMultiPropertyGroup);
+
+                writeFullEndElement();
+            }
 	}
 
 	void CModelWriterNode100_Model::writeResources()
@@ -1024,6 +1035,8 @@ namespace NMR {
 			if (m_bWriteVolumetricExtension) {
 				writeImage3Ds();
 				writeFields();
+				writeImplicitFunctions();
+
 			}
 			if (m_bWriteObjects)
 				writeObjects();

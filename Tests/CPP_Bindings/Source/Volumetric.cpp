@@ -415,5 +415,25 @@ namespace Lib3MF
 		EXPECT_EQ(functionIterator->GetCurrentFunction()->GetDisplayName(), displayName);
 		EXPECT_FALSE(functionIterator->MoveNext());
 	}
+
+	TEST_F(Volumetric, AddFunction_AddedFunctionAreWrittenTo3mfFile)
+	{
+		PImplicitFunction newFunction = model->AddFunction();
+		std::string const displayName = "test";
+		newFunction->SetDisplayName(displayName);
+
+		writer3MF->WriteToFile(Volumetric::OutFolder + "AddFunction.3mf");
+
+		PModel ioModel = wrapper->CreateModel();
+		PReader ioReader = ioModel->QueryReader("3mf");
+		ioReader->ReadFromFile(Volumetric::OutFolder + "AddFunction.3mf");
+
+		auto functionIterator = ioModel->GetFunctions();
+		ASSERT_EQ(functionIterator->Count(), 1);
+
+		EXPECT_TRUE(functionIterator->MoveNext());
+		EXPECT_EQ(functionIterator->GetCurrentFunction()->GetDisplayName(), displayName);
+		EXPECT_FALSE(functionIterator->MoveNext());
+	}
 	
 }
