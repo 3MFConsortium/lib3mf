@@ -25,28 +25,29 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-Reader for nodes of graph representing a function for implicit modelling
+Reader for implicit function ressources
 
 --*/
 
 #pragma once
 
-#include "Model/Classes/NMR_ModelImplicitNode.h"
+#include "Model/Classes/NMR_ModelImplicitFunction.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
 
 namespace NMR
 {
-    class CModelReaderNode_Volumetric2201_ImplicitNode : public CModelReaderNode
+    class CModelReaderNode_ImplicitFunction : public CModelReaderNode
     {
       private:
-        CModelImplicitNode * m_pImplicitNode;
-        CModel * m_pModel;
+        PModelImplicitFunction  m_pImplicitFunction;
+        CModel * m_pModel = nullptr;
 
+        ModelResourceID m_nID = 0;
+
+        std::string m_displayName;
       public:
-        CModelReaderNode_Volumetric2201_ImplicitNode() = delete;
-        CModelReaderNode_Volumetric2201_ImplicitNode(_In_ CModel * pModel,
-                                                     _In_ CModelImplicitNode * pImplicitNode,
-                                                     _In_ PModelWarnings pWarnings);
+        CModelReaderNode_ImplicitFunction() = delete;
+        CModelReaderNode_ImplicitFunction(_In_ CModel * pModel, _In_ PModelWarnings pWarnings);
 
         void parseXML(_In_ CXmlReader * pXMLReader) override;
 
@@ -58,6 +59,5 @@ namespace NMR
                               _In_ CXmlReader * pXMLReader) override;
     };
 
-    typedef std::shared_ptr<CModelReaderNode_Volumetric2201_ImplicitNode>
-      PModelReaderNode_Volumetric2201_ImplicitNode;
+    typedef std::shared_ptr<CModelReaderNode_ImplicitFunction> PModelReaderNode_ImplicitFunction;
 }

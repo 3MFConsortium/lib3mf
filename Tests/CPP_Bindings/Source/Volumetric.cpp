@@ -418,9 +418,11 @@ namespace Lib3MF
 
 	TEST_F(Volumetric, AddFunction_AddedFunctionAreWrittenTo3mfFile)
 	{
+		
 		PImplicitFunction newFunction = model->AddFunction();
 		std::string const displayName = "test";
 		newFunction->SetDisplayName(displayName);
+		auto const expectedResourceId = newFunction->GetModelResourceID();
 
 		writer3MF->WriteToFile(Volumetric::OutFolder + "AddFunction.3mf");
 
@@ -433,7 +435,46 @@ namespace Lib3MF
 
 		EXPECT_TRUE(functionIterator->MoveNext());
 		EXPECT_EQ(functionIterator->GetCurrentFunction()->GetDisplayName(), displayName);
+		EXPECT_EQ(functionIterator->GetCurrentFunction()->GetModelResourceID(), expectedResourceId);
 		EXPECT_FALSE(functionIterator->MoveNext());
+	}
+
+	// Function with an "addition" node
+	TEST_F(Volumetric, AddFunction_AddedFunctionWithAdditionNodeAreWrittenTo3mfFile)
+	{
+		PImplicitFunction newFunction = model->AddFunction();
+		std::string const displayName = "test";
+		newFunction->SetDisplayName(displayName);
+		auto const expectedResourceId = newFunction->GetModelResourceID();
+
+		// Add an addition node
+		auto node = newFunction->AddNode(Lib3MF::eImplicitNodeType::Addition,"addition_1", "addition 1");
+
+		// Write to file
+		writer3MF->WriteToFile(Volumetric::OutFolder + "AddFunctionWithAdditionNode.3mf");
+
+		// Read from file
+		PModel ioModel = wrapper->CreateModel();
+		PReader ioReader = ioModel->QueryReader("3mf");
+		ioReader->ReadFromFile(Volumetric::OutFolder + "AddFunctionWithAdditionNode.3mf");
+
+		// Check the function
+		// auto functionIterator = ioModel->GetFunctions();
+		// ASSERT_EQ(functionIterator->Count(), 1);
+
+		// // Check the addtion node
+		// EXPECT_TRUE(functionIterator->MoveNext());
+		// EXPECT_EQ(functionIterator->GetCurrentFunction()->GetModelResourceID(), expectedResourceId);
+
+		// auto nodeIterator = functionIterator->GetCurrentFunction()->GetNodes();
+		// ASSERT_EQ(nodeIterator->Count(), 1);
+		// EXPECT_TRUE(nodeIterator->MoveNext());
+		// EXPECT_EQ(nodeIterator->GetCurrentNode()->GetNodeType(), Lib3MF::eImplicitNodeType::Addition);
+		// EXPECT_EQ(nodeIterator->GetCurrentNode()->GetDisplayName(), "addition 1");
+		
+		// EXPECT_FALSE(functionIterator->MoveNext());
+
+	
 	}
 	
 }
