@@ -24,70 +24,24 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CNodeAccessor
+Abstract: This is a stub class definition of CNodeIterator
 
 */
 
-
-#ifndef __LIB3MF_NODEACCESSOR
-#define __LIB3MF_NODEACCESSOR
-
-#include "lib3mf_interfaces.hpp"
-
-// Parent classes
-#include "lib3mf_accessor.hpp"
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4250)
-#endif
+#include "lib3mf_nodeiterator.hpp"
+#include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
 
 
-namespace Lib3MF {
-namespace Impl {
-
+using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class declaration of CNodeAccessor 
+ Class definition of CNodeIterator 
 **************************************************************************************************************************/
 
-class CNodeAccessor : public virtual INodeAccessor, public virtual CAccessor {
-private:
+IImplicitNode * CNodeIterator::GetCurrent()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
 
-	/**
-	* Put private members here.
-	*/
-
-protected:
-
-	/**
-	* Put protected members here.
-	*/
-
-public:
-
-	/**
-	* Put additional public members here. They will not be visible in the external API.
-	*/
-
-
-	/**
-	* Public member functions to implement.
-	*/
-
-	/**
-	* INodeAccessor::Get - Returns the current element
-	* @return The current element
-	*/
-	IImplicitNode * Get() override;
-
-};
-
-} // namespace Impl
-} // namespace Lib3MF
-
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-#endif // __LIB3MF_NODEACCESSOR

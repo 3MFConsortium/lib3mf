@@ -96,13 +96,13 @@ Persistent<Function> CLib3MFImageStack::constructor;
 Persistent<Function> CLib3MFAttachment::constructor;
 Persistent<Function> CLib3MFTexture2D::constructor;
 Persistent<Function> CLib3MFImplicitPort::constructor;
-Persistent<Function> CLib3MFAccessor::constructor;
-Persistent<Function> CLib3MFImplicitPortAccessor::constructor;
+Persistent<Function> CLib3MFIterator::constructor;
+Persistent<Function> CLib3MFImplicitPortIterator::constructor;
 Persistent<Function> CLib3MFImplicitNode::constructor;
 Persistent<Function> CLib3MFImplicitConstant::constructor;
 Persistent<Function> CLib3MFImplicitVector::constructor;
 Persistent<Function> CLib3MFImplicitMatrix::constructor;
-Persistent<Function> CLib3MFNodeAccessor::constructor;
+Persistent<Function> CLib3MFNodeIterator::constructor;
 Persistent<Function> CLib3MFImplicitFunction::constructor;
 Persistent<Function> CLib3MFBuildItem::constructor;
 Persistent<Function> CLib3MFBuildItemIterator::constructor;
@@ -12382,52 +12382,51 @@ void CLib3MFImplicitPort::SetDisplayName(const FunctionCallbackInfo<Value>& args
 }
 
 /*************************************************************************************************************************
- Class CLib3MFAccessor Implementation
+ Class CLib3MFIterator Implementation
 **************************************************************************************************************************/
 
-CLib3MFAccessor::CLib3MFAccessor()
+CLib3MFIterator::CLib3MFIterator()
 		: CLib3MFBaseClass()
 {
 }
 
-CLib3MFAccessor::~CLib3MFAccessor()
+CLib3MFIterator::~CLib3MFIterator()
 {
 }
 
-void CLib3MFAccessor::Init()
+void CLib3MFIterator::Init()
 {
 		Isolate* isolate = Isolate::GetCurrent();
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFAccessor"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFIterator"));
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
-		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSize", GetSize);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "Next", Next);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "Prev", Prev);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "Begin", Begin);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "MoveNext", MoveNext);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "MovePrevious", MovePrevious);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "Count", Count);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
 
-void CLib3MFAccessor::New(const FunctionCallbackInfo<Value>& args)
+void CLib3MFIterator::New(const FunctionCallbackInfo<Value>& args)
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 
 		if (args.IsConstructCall()) {
 				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
-				CLib3MFAccessor * accessorInstance = new CLib3MFAccessor();
-				accessorInstance->Wrap(args.This());
+				CLib3MFIterator * iteratorInstance = new CLib3MFIterator();
+				iteratorInstance->Wrap(args.This());
 				args.GetReturnValue().Set(args.This());
 		} else {
-				RaiseError(isolate, "Lib3MFAccessor: Invalid call to Constructor");
+				RaiseError(isolate, "Lib3MFIterator: Invalid call to Constructor");
 		}
 }
 
-Local<Object> CLib3MFAccessor::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+Local<Object> CLib3MFIterator::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
 {
 		Isolate* isolate = Isolate::GetCurrent();
 		HandleScope scope(isolate);
@@ -12441,21 +12440,21 @@ Local<Object> CLib3MFAccessor::NewInstance(Local<Object> pParent, Lib3MFHandle p
 }
 
 
-void CLib3MFAccessor::GetSize(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFIterator::MoveNext(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		try {
-        uint64_t nReturnSize = 0;
+        bool bReturnHasNext = false;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSize.");
-        if (wrapperTable->m_Accessor_GetSize == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method Accessor::GetSize.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method MoveNext.");
+        if (wrapperTable->m_Iterator_MoveNext == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Iterator::MoveNext.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Accessor_GetSize(instanceHandle, &nReturnSize);
+        Lib3MFResult errorCode = wrapperTable->m_Iterator_MoveNext(instanceHandle, &bReturnHasNext);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnSize).c_str()));
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnHasNext));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -12463,21 +12462,21 @@ void CLib3MFAccessor::GetSize(const FunctionCallbackInfo<Value>& args)
 }
 
 
-void CLib3MFAccessor::Next(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFIterator::MovePrevious(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		try {
-        bool bReturnResult = false;
+        bool bReturnHasPrevious = false;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method Next.");
-        if (wrapperTable->m_Accessor_Next == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method Accessor::Next.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method MovePrevious.");
+        if (wrapperTable->m_Iterator_MovePrevious == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Iterator::MovePrevious.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Accessor_Next(instanceHandle, &bReturnResult);
+        Lib3MFResult errorCode = wrapperTable->m_Iterator_MovePrevious(instanceHandle, &bReturnHasPrevious);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(Boolean::New(isolate, bReturnResult));
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnHasPrevious));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -12485,41 +12484,21 @@ void CLib3MFAccessor::Next(const FunctionCallbackInfo<Value>& args)
 }
 
 
-void CLib3MFAccessor::Prev(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFIterator::Count(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		try {
-        bool bReturnResult = false;
+        uint64_t nReturnCount = 0;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method Prev.");
-        if (wrapperTable->m_Accessor_Prev == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method Accessor::Prev.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method Count.");
+        if (wrapperTable->m_Iterator_Count == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Iterator::Count.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Accessor_Prev(instanceHandle, &bReturnResult);
+        Lib3MFResult errorCode = wrapperTable->m_Iterator_Count(instanceHandle, &nReturnCount);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(Boolean::New(isolate, bReturnResult));
-
-		} catch (std::exception & E) {
-				RaiseError(isolate, E.what());
-		}
-}
-
-
-void CLib3MFAccessor::Begin(const FunctionCallbackInfo<Value>& args) 
-{
-		Isolate* isolate = args.GetIsolate();
-		HandleScope scope(isolate);
-		try {
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
-        if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method Begin.");
-        if (wrapperTable->m_Accessor_Begin == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method Accessor::Begin.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Accessor_Begin(instanceHandle);
-        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -12527,49 +12506,49 @@ void CLib3MFAccessor::Begin(const FunctionCallbackInfo<Value>& args)
 }
 
 /*************************************************************************************************************************
- Class CLib3MFImplicitPortAccessor Implementation
+ Class CLib3MFImplicitPortIterator Implementation
 **************************************************************************************************************************/
 
-CLib3MFImplicitPortAccessor::CLib3MFImplicitPortAccessor()
+CLib3MFImplicitPortIterator::CLib3MFImplicitPortIterator()
 		: CLib3MFBaseClass()
 {
 }
 
-CLib3MFImplicitPortAccessor::~CLib3MFImplicitPortAccessor()
+CLib3MFImplicitPortIterator::~CLib3MFImplicitPortIterator()
 {
 }
 
-void CLib3MFImplicitPortAccessor::Init()
+void CLib3MFImplicitPortIterator::Init()
 {
 		Isolate* isolate = Isolate::GetCurrent();
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFImplicitPortAccessor"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFImplicitPortIterator"));
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
-		NODE_SET_PROTOTYPE_METHOD(tpl, "Get", Get);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCurrent", GetCurrent);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
 
-void CLib3MFImplicitPortAccessor::New(const FunctionCallbackInfo<Value>& args)
+void CLib3MFImplicitPortIterator::New(const FunctionCallbackInfo<Value>& args)
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 
 		if (args.IsConstructCall()) {
 				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
-				CLib3MFImplicitPortAccessor * implicitportaccessorInstance = new CLib3MFImplicitPortAccessor();
-				implicitportaccessorInstance->Wrap(args.This());
+				CLib3MFImplicitPortIterator * implicitportiteratorInstance = new CLib3MFImplicitPortIterator();
+				implicitportiteratorInstance->Wrap(args.This());
 				args.GetReturnValue().Set(args.This());
 		} else {
-				RaiseError(isolate, "Lib3MFImplicitPortAccessor: Invalid call to Constructor");
+				RaiseError(isolate, "Lib3MFImplicitPortIterator: Invalid call to Constructor");
 		}
 }
 
-Local<Object> CLib3MFImplicitPortAccessor::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+Local<Object> CLib3MFImplicitPortIterator::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
 {
 		Isolate* isolate = Isolate::GetCurrent();
 		HandleScope scope(isolate);
@@ -12583,7 +12562,7 @@ Local<Object> CLib3MFImplicitPortAccessor::NewInstance(Local<Object> pParent, Li
 }
 
 
-void CLib3MFImplicitPortAccessor::Get(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFImplicitPortIterator::GetCurrent(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
@@ -12591,11 +12570,11 @@ void CLib3MFImplicitPortAccessor::Get(const FunctionCallbackInfo<Value>& args)
         Lib3MFHandle hReturnPort = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method Get.");
-        if (wrapperTable->m_ImplicitPortAccessor_Get == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method ImplicitPortAccessor::Get.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCurrent.");
+        if (wrapperTable->m_ImplicitPortIterator_GetCurrent == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ImplicitPortIterator::GetCurrent.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitPortAccessor_Get(instanceHandle, &hReturnPort);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitPortIterator_GetCurrent(instanceHandle, &hReturnPort);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjPort = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnPort);
         args.GetReturnValue().Set(instanceObjPort);
@@ -12890,17 +12869,17 @@ void CLib3MFImplicitNode::GetOutputs(const FunctionCallbackInfo<Value>& args)
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		try {
-        Lib3MFHandle hReturnAccessor = nullptr;
+        Lib3MFHandle hReturnIterator = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
             throw std::runtime_error("Could not get wrapper table for Lib3MF method GetOutputs.");
         if (wrapperTable->m_ImplicitNode_GetOutputs == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ImplicitNode::GetOutputs.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitNode_GetOutputs(instanceHandle, &hReturnAccessor);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitNode_GetOutputs(instanceHandle, &hReturnIterator);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjAccessor = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnAccessor);
-        args.GetReturnValue().Set(instanceObjAccessor);
+        Local<Object> instanceObjIterator = CLib3MFImplicitPortIterator::NewInstance(args.Holder(), hReturnIterator);
+        args.GetReturnValue().Set(instanceObjIterator);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -13192,49 +13171,49 @@ void CLib3MFImplicitMatrix::SetMatrix(const FunctionCallbackInfo<Value>& args)
 }
 
 /*************************************************************************************************************************
- Class CLib3MFNodeAccessor Implementation
+ Class CLib3MFNodeIterator Implementation
 **************************************************************************************************************************/
 
-CLib3MFNodeAccessor::CLib3MFNodeAccessor()
+CLib3MFNodeIterator::CLib3MFNodeIterator()
 		: CLib3MFBaseClass()
 {
 }
 
-CLib3MFNodeAccessor::~CLib3MFNodeAccessor()
+CLib3MFNodeIterator::~CLib3MFNodeIterator()
 {
 }
 
-void CLib3MFNodeAccessor::Init()
+void CLib3MFNodeIterator::Init()
 {
 		Isolate* isolate = Isolate::GetCurrent();
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFNodeAccessor"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFNodeIterator"));
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
-		NODE_SET_PROTOTYPE_METHOD(tpl, "Get", Get);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCurrent", GetCurrent);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
 
-void CLib3MFNodeAccessor::New(const FunctionCallbackInfo<Value>& args)
+void CLib3MFNodeIterator::New(const FunctionCallbackInfo<Value>& args)
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 
 		if (args.IsConstructCall()) {
 				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
-				CLib3MFNodeAccessor * nodeaccessorInstance = new CLib3MFNodeAccessor();
-				nodeaccessorInstance->Wrap(args.This());
+				CLib3MFNodeIterator * nodeiteratorInstance = new CLib3MFNodeIterator();
+				nodeiteratorInstance->Wrap(args.This());
 				args.GetReturnValue().Set(args.This());
 		} else {
-				RaiseError(isolate, "Lib3MFNodeAccessor: Invalid call to Constructor");
+				RaiseError(isolate, "Lib3MFNodeIterator: Invalid call to Constructor");
 		}
 }
 
-Local<Object> CLib3MFNodeAccessor::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+Local<Object> CLib3MFNodeIterator::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
 {
 		Isolate* isolate = Isolate::GetCurrent();
 		HandleScope scope(isolate);
@@ -13248,7 +13227,7 @@ Local<Object> CLib3MFNodeAccessor::NewInstance(Local<Object> pParent, Lib3MFHand
 }
 
 
-void CLib3MFNodeAccessor::Get(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFNodeIterator::GetCurrent(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
@@ -13256,11 +13235,11 @@ void CLib3MFNodeAccessor::Get(const FunctionCallbackInfo<Value>& args)
         Lib3MFHandle hReturnNode = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method Get.");
-        if (wrapperTable->m_NodeAccessor_Get == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method NodeAccessor::Get.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCurrent.");
+        if (wrapperTable->m_NodeIterator_GetCurrent == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method NodeIterator::GetCurrent.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_NodeAccessor_Get(instanceHandle, &hReturnNode);
+        Lib3MFResult errorCode = wrapperTable->m_NodeIterator_GetCurrent(instanceHandle, &hReturnNode);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjNode = CLib3MFImplicitNode::NewInstance(args.Holder(), hReturnNode);
         args.GetReturnValue().Set(instanceObjNode);
@@ -13485,17 +13464,17 @@ void CLib3MFImplicitFunction::GetNodes(const FunctionCallbackInfo<Value>& args)
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		try {
-        Lib3MFHandle hReturnAccessor = nullptr;
+        Lib3MFHandle hReturnIterator = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
             throw std::runtime_error("Could not get wrapper table for Lib3MF method GetNodes.");
         if (wrapperTable->m_ImplicitFunction_GetNodes == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::GetNodes.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_GetNodes(instanceHandle, &hReturnAccessor);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_GetNodes(instanceHandle, &hReturnIterator);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjAccessor = CLib3MFNodeAccessor::NewInstance(args.Holder(), hReturnAccessor);
-        args.GetReturnValue().Set(instanceObjAccessor);
+        Local<Object> instanceObjIterator = CLib3MFNodeIterator::NewInstance(args.Holder(), hReturnIterator);
+        args.GetReturnValue().Set(instanceObjIterator);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -13566,17 +13545,17 @@ void CLib3MFImplicitFunction::GetInputs(const FunctionCallbackInfo<Value>& args)
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		try {
-        Lib3MFHandle hReturnAccessor = nullptr;
+        Lib3MFHandle hReturnIterator = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
             throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputs.");
         if (wrapperTable->m_ImplicitFunction_GetInputs == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::GetInputs.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_GetInputs(instanceHandle, &hReturnAccessor);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_GetInputs(instanceHandle, &hReturnIterator);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjAccessor = CLib3MFImplicitPortAccessor::NewInstance(args.Holder(), hReturnAccessor);
-        args.GetReturnValue().Set(instanceObjAccessor);
+        Local<Object> instanceObjIterator = CLib3MFImplicitPortIterator::NewInstance(args.Holder(), hReturnIterator);
+        args.GetReturnValue().Set(instanceObjIterator);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -13647,17 +13626,17 @@ void CLib3MFImplicitFunction::GetOutputs(const FunctionCallbackInfo<Value>& args
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		try {
-        Lib3MFHandle hReturnAccessor = nullptr;
+        Lib3MFHandle hReturnIterator = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
             throw std::runtime_error("Could not get wrapper table for Lib3MF method GetOutputs.");
         if (wrapperTable->m_ImplicitFunction_GetOutputs == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::GetOutputs.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_GetOutputs(instanceHandle, &hReturnAccessor);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_GetOutputs(instanceHandle, &hReturnIterator);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjAccessor = CLib3MFImplicitPortAccessor::NewInstance(args.Holder(), hReturnAccessor);
-        args.GetReturnValue().Set(instanceObjAccessor);
+        Local<Object> instanceObjIterator = CLib3MFImplicitPortIterator::NewInstance(args.Holder(), hReturnIterator);
+        args.GetReturnValue().Set(instanceObjIterator);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

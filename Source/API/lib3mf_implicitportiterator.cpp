@@ -24,11 +24,11 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CAccessor
+Abstract: This is a stub class definition of CImplicitPortIterator
 
 */
 
-#include "lib3mf_accessor.hpp"
+#include "lib3mf_implicitportiterator.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
@@ -37,25 +37,10 @@ Abstract: This is a stub class definition of CAccessor
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CAccessor 
+ Class definition of CImplicitPortIterator 
 **************************************************************************************************************************/
 
-Lib3MF_uint64 CAccessor::GetSize()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-bool CAccessor::Next()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-bool CAccessor::Prev()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-void CAccessor::Begin()
+IImplicitPort * CImplicitPortIterator::GetCurrent()
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }

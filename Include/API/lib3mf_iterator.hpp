@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CAccessor
+Abstract: This is the class declaration of CIterator
 
 */
 
 
-#ifndef __LIB3MF_ACCESSOR
-#define __LIB3MF_ACCESSOR
+#ifndef __LIB3MF_ITERATOR
+#define __LIB3MF_ITERATOR
 
 #include "lib3mf_interfaces.hpp"
 
@@ -49,10 +49,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CAccessor 
+ Class declaration of CIterator 
 **************************************************************************************************************************/
 
-class CAccessor : public virtual IAccessor, public virtual CBase {
+class CIterator : public virtual IIterator, public virtual CBase {
 private:
 
 	/**
@@ -77,27 +77,22 @@ public:
 	*/
 
 	/**
-	* IAccessor::GetSize - Returns the number of elements
-	* @return The number of elements
+	* IIterator::MoveNext - Iterates to the next item in the list.
+	* @return Iterates to the next item in the list.
 	*/
-	Lib3MF_uint64 GetSize() override;
+	bool MoveNext() override;
 
 	/**
-	* IAccessor::Next - Go to the next element
-	* @return Returns true, if there is a next element
+	* IIterator::MovePrevious - Iterates to the previous item in the list.
+	* @return Iterates to the previous item in the list.
 	*/
-	bool Next() override;
+	bool MovePrevious() override;
 
 	/**
-	* IAccessor::Prev - Go to the previous element
-	* @return Returns true, if there is a previous element
+	* IIterator::Count - Returns the number of items the iterator captures.
+	* @return returns the number of items the iterator captures.
 	*/
-	bool Prev() override;
-
-	/**
-	* IAccessor::Begin - Go to the first element
-	*/
-	void Begin() override;
+	Lib3MF_uint64 Count() override;
 
 };
 
@@ -107,4 +102,4 @@ public:
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-#endif // __LIB3MF_ACCESSOR
+#endif // __LIB3MF_ITERATOR

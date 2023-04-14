@@ -2160,24 +2160,23 @@
 		</method>
 	</class>
 
-	<class name="Accessor" parent="Base">
-		<method name="GetSize" description="Returns the number of elements">
-			<param name="Size" type="uint64" pass="return" description="The number of elements" />
+	<class name="Iterator" parent="Base">
+		<method name="MoveNext" description="Iterates to the next item in the list.">
+			<param name="HasNext" type="bool" pass="return"
+				description="Iterates to the next item in the list." />
 		</method>
-		<method name="Next" description="Go to the next element">
-			<param name="Result" type="bool" pass="return"
-				description="Returns true, if there is a next element" />
+		<method name="MovePrevious" description="Iterates to the previous item in the list.">
+			<param name="HasPrevious" type="bool" pass="return"
+				description="Iterates to the previous item in the list." />
 		</method>
-		<method name="Prev" description="Go to the previous element">
-			<param name="Result" type="bool" pass="return"
-				description="Returns true, if there is a previous element" />
-		</method>
-		<method name="Begin" description="Go to the first element">
+		<method name="Count" description="Returns the number of items the iterator captures.">
+			<param name="Count" type="uint64" pass="return"
+				description="returns the number of items the iterator captures." />
 		</method>
 	</class>
 
-	<class name="ImplicitPortAccessor" parent="Accessor">
-		<method name="Get" description="Returns the current element">
+	<class name="ImplicitPortIterator" parent="Iterator">
+		<method name="GetCurrent" description="Returns the current element">
 			<param name="Port" type="class" class="ImplicitPort" pass="return"
 				description="The current element" />
 		</method>
@@ -2224,7 +2223,7 @@
 		</method>
 
 		<method name="GetOutputs" description="Retrieves the outputs">
-			<param name="Accessor" type="class" class="ImplicitPort" pass="return"
+			<param name="Iterator" type="class" class="ImplicitPortIterator" pass="return"
 				description="the accessor to the outputs" />
 		</method>
 	</class>
@@ -2260,8 +2259,8 @@
 		</method>
 	</class>
 
-	<class name="NodeAccessor" parent="Accessor">
-		<method name="Get" description="Returns the current element">
+	<class name="NodeIterator" parent="Iterator">
+		<method name="GetCurrent" description="Returns the current element">
 			<param name="Node" type="class" class="ImplicitNode" pass="return"
 				description="The current element" />
 		</method>
@@ -2293,8 +2292,8 @@
 		</method>
 
 		<method name="GetNodes" description="Retrieves the nodes">
-			<param name="Accessor" type="class" class="NodeAccessor" pass="return"
-				description="the accessor to the nodes" />
+			<param name="Iterator" type="class" class="NodeIterator" pass="return"
+				description="iterator for the list of nodes" />
 		</method>
 
 		<method name="RemoveNode" description="Removes a node">
@@ -2310,8 +2309,8 @@
 		</method>
 
 		<method name="GetInputs" description="Retrieves the inputs">
-			<param name="Accessor" type="class" class="ImplicitPortAccessor" pass="return"
-				description="the accessor to the inputs" />
+			<param name="Iterator" type="class" class="ImplicitPortIterator" pass="return"
+				description="iterator for the list of inputs" />
 		</method>
 
 		<method name="RemoveInput" description="Removes an input">
@@ -2327,8 +2326,8 @@
 		</method>
 
 		<method name="GetOutputs" description="Retrieves the outputs">
-			<param name="Accessor" type="class" class="ImplicitPortAccessor" pass="return"
-				description="the accessor to the outputs" />
+			<param name="Iterator" type="class" class="ImplicitPortIterator" pass="return"
+				description="iterator for the outputs" />
 		</method>
 
 		<method name="RemoveOutput" description="Removes an output">

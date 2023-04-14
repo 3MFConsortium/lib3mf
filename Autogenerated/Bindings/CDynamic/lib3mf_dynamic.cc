@@ -366,11 +366,10 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ImplicitPort_SetIdentifier = NULL;
 	pWrapperTable->m_ImplicitPort_GetDisplayName = NULL;
 	pWrapperTable->m_ImplicitPort_SetDisplayName = NULL;
-	pWrapperTable->m_Accessor_GetSize = NULL;
-	pWrapperTable->m_Accessor_Next = NULL;
-	pWrapperTable->m_Accessor_Prev = NULL;
-	pWrapperTable->m_Accessor_Begin = NULL;
-	pWrapperTable->m_ImplicitPortAccessor_Get = NULL;
+	pWrapperTable->m_Iterator_MoveNext = NULL;
+	pWrapperTable->m_Iterator_MovePrevious = NULL;
+	pWrapperTable->m_Iterator_Count = NULL;
+	pWrapperTable->m_ImplicitPortIterator_GetCurrent = NULL;
 	pWrapperTable->m_ImplicitNode_GetIdentifier = NULL;
 	pWrapperTable->m_ImplicitNode_SetIdentifier = NULL;
 	pWrapperTable->m_ImplicitNode_GetDisplayName = NULL;
@@ -385,7 +384,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ImplicitVector_Get = NULL;
 	pWrapperTable->m_ImplicitMatrix_GetMatrix = NULL;
 	pWrapperTable->m_ImplicitMatrix_SetMatrix = NULL;
-	pWrapperTable->m_NodeAccessor_Get = NULL;
+	pWrapperTable->m_NodeIterator_GetCurrent = NULL;
 	pWrapperTable->m_ImplicitFunction_GetIdentifier = NULL;
 	pWrapperTable->m_ImplicitFunction_SetIdentifier = NULL;
 	pWrapperTable->m_ImplicitFunction_GetDisplayName = NULL;
@@ -3491,48 +3490,39 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_Accessor_GetSize = (PLib3MFAccessor_GetSizePtr) GetProcAddress(hLibrary, "lib3mf_accessor_getsize");
+	pWrapperTable->m_Iterator_MoveNext = (PLib3MFIterator_MoveNextPtr) GetProcAddress(hLibrary, "lib3mf_iterator_movenext");
 	#else // _WIN32
-	pWrapperTable->m_Accessor_GetSize = (PLib3MFAccessor_GetSizePtr) dlsym(hLibrary, "lib3mf_accessor_getsize");
+	pWrapperTable->m_Iterator_MoveNext = (PLib3MFIterator_MoveNextPtr) dlsym(hLibrary, "lib3mf_iterator_movenext");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_Accessor_GetSize == NULL)
+	if (pWrapperTable->m_Iterator_MoveNext == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_Accessor_Next = (PLib3MFAccessor_NextPtr) GetProcAddress(hLibrary, "lib3mf_accessor_next");
+	pWrapperTable->m_Iterator_MovePrevious = (PLib3MFIterator_MovePreviousPtr) GetProcAddress(hLibrary, "lib3mf_iterator_moveprevious");
 	#else // _WIN32
-	pWrapperTable->m_Accessor_Next = (PLib3MFAccessor_NextPtr) dlsym(hLibrary, "lib3mf_accessor_next");
+	pWrapperTable->m_Iterator_MovePrevious = (PLib3MFIterator_MovePreviousPtr) dlsym(hLibrary, "lib3mf_iterator_moveprevious");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_Accessor_Next == NULL)
+	if (pWrapperTable->m_Iterator_MovePrevious == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_Accessor_Prev = (PLib3MFAccessor_PrevPtr) GetProcAddress(hLibrary, "lib3mf_accessor_prev");
+	pWrapperTable->m_Iterator_Count = (PLib3MFIterator_CountPtr) GetProcAddress(hLibrary, "lib3mf_iterator_count");
 	#else // _WIN32
-	pWrapperTable->m_Accessor_Prev = (PLib3MFAccessor_PrevPtr) dlsym(hLibrary, "lib3mf_accessor_prev");
+	pWrapperTable->m_Iterator_Count = (PLib3MFIterator_CountPtr) dlsym(hLibrary, "lib3mf_iterator_count");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_Accessor_Prev == NULL)
+	if (pWrapperTable->m_Iterator_Count == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_Accessor_Begin = (PLib3MFAccessor_BeginPtr) GetProcAddress(hLibrary, "lib3mf_accessor_begin");
+	pWrapperTable->m_ImplicitPortIterator_GetCurrent = (PLib3MFImplicitPortIterator_GetCurrentPtr) GetProcAddress(hLibrary, "lib3mf_implicitportiterator_getcurrent");
 	#else // _WIN32
-	pWrapperTable->m_Accessor_Begin = (PLib3MFAccessor_BeginPtr) dlsym(hLibrary, "lib3mf_accessor_begin");
+	pWrapperTable->m_ImplicitPortIterator_GetCurrent = (PLib3MFImplicitPortIterator_GetCurrentPtr) dlsym(hLibrary, "lib3mf_implicitportiterator_getcurrent");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_Accessor_Begin == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
-	pWrapperTable->m_ImplicitPortAccessor_Get = (PLib3MFImplicitPortAccessor_GetPtr) GetProcAddress(hLibrary, "lib3mf_implicitportaccessor_get");
-	#else // _WIN32
-	pWrapperTable->m_ImplicitPortAccessor_Get = (PLib3MFImplicitPortAccessor_GetPtr) dlsym(hLibrary, "lib3mf_implicitportaccessor_get");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_ImplicitPortAccessor_Get == NULL)
+	if (pWrapperTable->m_ImplicitPortIterator_GetCurrent == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -3662,12 +3652,12 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_NodeAccessor_Get = (PLib3MFNodeAccessor_GetPtr) GetProcAddress(hLibrary, "lib3mf_nodeaccessor_get");
+	pWrapperTable->m_NodeIterator_GetCurrent = (PLib3MFNodeIterator_GetCurrentPtr) GetProcAddress(hLibrary, "lib3mf_nodeiterator_getcurrent");
 	#else // _WIN32
-	pWrapperTable->m_NodeAccessor_Get = (PLib3MFNodeAccessor_GetPtr) dlsym(hLibrary, "lib3mf_nodeaccessor_get");
+	pWrapperTable->m_NodeIterator_GetCurrent = (PLib3MFNodeIterator_GetCurrentPtr) dlsym(hLibrary, "lib3mf_nodeiterator_getcurrent");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_NodeAccessor_Get == NULL)
+	if (pWrapperTable->m_NodeIterator_GetCurrent == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

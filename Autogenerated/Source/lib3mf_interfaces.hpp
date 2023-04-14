@@ -106,13 +106,13 @@ class IImageStack;
 class IAttachment;
 class ITexture2D;
 class IImplicitPort;
-class IAccessor;
-class IImplicitPortAccessor;
+class IIterator;
+class IImplicitPortIterator;
 class IImplicitNode;
 class IImplicitConstant;
 class IImplicitVector;
 class IImplicitMatrix;
-class INodeAccessor;
+class INodeIterator;
 class IImplicitFunction;
 class IBuildItem;
 class IBuildItemIterator;
@@ -3458,72 +3458,67 @@ typedef IBaseSharedPtr<IImplicitPort> PIImplicitPort;
 
 
 /*************************************************************************************************************************
- Class interface for Accessor 
+ Class interface for Iterator 
 **************************************************************************************************************************/
 
-class IAccessor : public virtual IBase {
+class IIterator : public virtual IBase {
 public:
 	/**
-	* IAccessor::ClassTypeId - Get Class Type Id
+	* IIterator::ClassTypeId - Get Class Type Id
 	* @return Class type as a 64 bits integer
 	*/
 	Lib3MF_uint64 ClassTypeId() override
 	{
-		return 0xF94265ED198E4784UL; // First 64 bits of SHA1 of a string: "Lib3MF::Accessor"
+		return 0x52F06268CD098EFEUL; // First 64 bits of SHA1 of a string: "Lib3MF::Iterator"
 	}
 
 	/**
-	* IAccessor::GetSize - Returns the number of elements
-	* @return The number of elements
+	* IIterator::MoveNext - Iterates to the next item in the list.
+	* @return Iterates to the next item in the list.
 	*/
-	virtual Lib3MF_uint64 GetSize() = 0;
+	virtual bool MoveNext() = 0;
 
 	/**
-	* IAccessor::Next - Go to the next element
-	* @return Returns true, if there is a next element
+	* IIterator::MovePrevious - Iterates to the previous item in the list.
+	* @return Iterates to the previous item in the list.
 	*/
-	virtual bool Next() = 0;
+	virtual bool MovePrevious() = 0;
 
 	/**
-	* IAccessor::Prev - Go to the previous element
-	* @return Returns true, if there is a previous element
+	* IIterator::Count - Returns the number of items the iterator captures.
+	* @return returns the number of items the iterator captures.
 	*/
-	virtual bool Prev() = 0;
-
-	/**
-	* IAccessor::Begin - Go to the first element
-	*/
-	virtual void Begin() = 0;
+	virtual Lib3MF_uint64 Count() = 0;
 
 };
 
-typedef IBaseSharedPtr<IAccessor> PIAccessor;
+typedef IBaseSharedPtr<IIterator> PIIterator;
 
 
 /*************************************************************************************************************************
- Class interface for ImplicitPortAccessor 
+ Class interface for ImplicitPortIterator 
 **************************************************************************************************************************/
 
-class IImplicitPortAccessor : public virtual IAccessor {
+class IImplicitPortIterator : public virtual IIterator {
 public:
 	/**
-	* IImplicitPortAccessor::ClassTypeId - Get Class Type Id
+	* IImplicitPortIterator::ClassTypeId - Get Class Type Id
 	* @return Class type as a 64 bits integer
 	*/
 	Lib3MF_uint64 ClassTypeId() override
 	{
-		return 0x258087F875881ADDUL; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPortAccessor"
+		return 0xC62268F2D7C7012CUL; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPortIterator"
 	}
 
 	/**
-	* IImplicitPortAccessor::Get - Returns the current element
+	* IImplicitPortIterator::GetCurrent - Returns the current element
 	* @return The current element
 	*/
-	virtual IImplicitPort * Get() = 0;
+	virtual IImplicitPort * GetCurrent() = 0;
 
 };
 
-typedef IBaseSharedPtr<IImplicitPortAccessor> PIImplicitPortAccessor;
+typedef IBaseSharedPtr<IImplicitPortIterator> PIImplicitPortIterator;
 
 
 /*************************************************************************************************************************
@@ -3597,7 +3592,7 @@ public:
 	* IImplicitNode::GetOutputs - Retrieves the outputs
 	* @return the accessor to the outputs
 	*/
-	virtual IImplicitPort * GetOutputs() = 0;
+	virtual IImplicitPortIterator * GetOutputs() = 0;
 
 };
 
@@ -3695,29 +3690,29 @@ typedef IBaseSharedPtr<IImplicitMatrix> PIImplicitMatrix;
 
 
 /*************************************************************************************************************************
- Class interface for NodeAccessor 
+ Class interface for NodeIterator 
 **************************************************************************************************************************/
 
-class INodeAccessor : public virtual IAccessor {
+class INodeIterator : public virtual IIterator {
 public:
 	/**
-	* INodeAccessor::ClassTypeId - Get Class Type Id
+	* INodeIterator::ClassTypeId - Get Class Type Id
 	* @return Class type as a 64 bits integer
 	*/
 	Lib3MF_uint64 ClassTypeId() override
 	{
-		return 0xE0E0FC011B210DE0UL; // First 64 bits of SHA1 of a string: "Lib3MF::NodeAccessor"
+		return 0xFC006BC888CAB4D0UL; // First 64 bits of SHA1 of a string: "Lib3MF::NodeIterator"
 	}
 
 	/**
-	* INodeAccessor::Get - Returns the current element
+	* INodeIterator::GetCurrent - Returns the current element
 	* @return The current element
 	*/
-	virtual IImplicitNode * Get() = 0;
+	virtual IImplicitNode * GetCurrent() = 0;
 
 };
 
-typedef IBaseSharedPtr<INodeAccessor> PINodeAccessor;
+typedef IBaseSharedPtr<INodeIterator> PINodeIterator;
 
 
 /*************************************************************************************************************************
@@ -3770,9 +3765,9 @@ public:
 
 	/**
 	* IImplicitFunction::GetNodes - Retrieves the nodes
-	* @return the accessor to the nodes
+	* @return iterator for the list of nodes
 	*/
-	virtual INodeAccessor * GetNodes() = 0;
+	virtual INodeIterator * GetNodes() = 0;
 
 	/**
 	* IImplicitFunction::RemoveNode - Removes a node
@@ -3789,9 +3784,9 @@ public:
 
 	/**
 	* IImplicitFunction::GetInputs - Retrieves the inputs
-	* @return the accessor to the inputs
+	* @return iterator for the list of inputs
 	*/
-	virtual IImplicitPortAccessor * GetInputs() = 0;
+	virtual IImplicitPortIterator * GetInputs() = 0;
 
 	/**
 	* IImplicitFunction::RemoveInput - Removes an input
@@ -3808,9 +3803,9 @@ public:
 
 	/**
 	* IImplicitFunction::GetOutputs - Retrieves the outputs
-	* @return the accessor to the outputs
+	* @return iterator for the outputs
 	*/
-	virtual IImplicitPortAccessor * GetOutputs() = 0;
+	virtual IImplicitPortIterator * GetOutputs() = 0;
 
 	/**
 	* IImplicitFunction::RemoveOutput - Removes an output

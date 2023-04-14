@@ -1323,20 +1323,19 @@ public:
 };
 
 /*************************************************************************************************************************
- Class CLib3MFAccessor 
+ Class CLib3MFIterator 
 **************************************************************************************************************************/
-class CLib3MFAccessor : public CLib3MFBaseClass {
+class CLib3MFIterator : public CLib3MFBaseClass {
 private:
 	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static v8::Persistent<v8::Function> constructor;
-	static void GetSize(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void Next(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void Prev(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void Begin(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void MoveNext(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void MovePrevious(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void Count(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
-	CLib3MFAccessor();
-	~CLib3MFAccessor();
+	CLib3MFIterator();
+	~CLib3MFIterator();
 	
 	static void Init();
 	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
@@ -1344,17 +1343,17 @@ public:
 };
 
 /*************************************************************************************************************************
- Class CLib3MFImplicitPortAccessor 
+ Class CLib3MFImplicitPortIterator 
 **************************************************************************************************************************/
-class CLib3MFImplicitPortAccessor : public CLib3MFBaseClass {
+class CLib3MFImplicitPortIterator : public CLib3MFBaseClass {
 private:
 	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static v8::Persistent<v8::Function> constructor;
-	static void Get(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetCurrent(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
-	CLib3MFImplicitPortAccessor();
-	~CLib3MFImplicitPortAccessor();
+	CLib3MFImplicitPortIterator();
+	~CLib3MFImplicitPortIterator();
 	
 	static void Init();
 	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
@@ -1444,17 +1443,17 @@ public:
 };
 
 /*************************************************************************************************************************
- Class CLib3MFNodeAccessor 
+ Class CLib3MFNodeIterator 
 **************************************************************************************************************************/
-class CLib3MFNodeAccessor : public CLib3MFBaseClass {
+class CLib3MFNodeIterator : public CLib3MFBaseClass {
 private:
 	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static v8::Persistent<v8::Function> constructor;
-	static void Get(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetCurrent(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
-	CLib3MFNodeAccessor();
-	~CLib3MFNodeAccessor();
+	CLib3MFNodeIterator();
+	~CLib3MFNodeIterator();
 	
 	static void Init();
 	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);

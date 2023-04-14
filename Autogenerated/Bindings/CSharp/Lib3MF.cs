@@ -1343,20 +1343,17 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitport_setdisplayname", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitPort_SetDisplayName (IntPtr Handle, byte[] ADisplayName);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_accessor_getsize", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Accessor_GetSize (IntPtr Handle, out UInt64 ASize);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_iterator_movenext", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Iterator_MoveNext (IntPtr Handle, out Byte AHasNext);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_accessor_next", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Accessor_Next (IntPtr Handle, out Byte AResult);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_iterator_moveprevious", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Iterator_MovePrevious (IntPtr Handle, out Byte AHasPrevious);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_accessor_prev", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Accessor_Prev (IntPtr Handle, out Byte AResult);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_iterator_count", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Iterator_Count (IntPtr Handle, out UInt64 ACount);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_accessor_begin", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Accessor_Begin (IntPtr Handle);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitportaccessor_get", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitPortAccessor_Get (IntPtr Handle, out IntPtr APort);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitportiterator_getcurrent", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitPortIterator_GetCurrent (IntPtr Handle, out IntPtr APort);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_getidentifier", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitNode_GetIdentifier (IntPtr Handle, UInt32 sizeIdentifier, out UInt32 neededIdentifier, IntPtr dataIdentifier);
@@ -1383,7 +1380,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 ImplicitNode_AddOutput (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName, out IntPtr APort);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_getoutputs", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitNode_GetOutputs (IntPtr Handle, out IntPtr AAccessor);
+			public unsafe extern static Int32 ImplicitNode_GetOutputs (IntPtr Handle, out IntPtr AIterator);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitconstant_getvalue", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitConstant_GetValue (IntPtr Handle, out Single AValue);
@@ -1400,8 +1397,8 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitmatrix_setmatrix", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitMatrix_SetMatrix (IntPtr Handle, InternalTransform AMatrix);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_nodeaccessor_get", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 NodeAccessor_Get (IntPtr Handle, out IntPtr ANode);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_nodeiterator_getcurrent", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 NodeIterator_GetCurrent (IntPtr Handle, out IntPtr ANode);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_getidentifier", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_GetIdentifier (IntPtr Handle, UInt32 sizeIdentifier, out UInt32 neededIdentifier, IntPtr dataIdentifier);
@@ -1419,7 +1416,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 ImplicitFunction_AddNode (IntPtr Handle, Int32 ANodeType, byte[] AIdentifier, byte[] ADisplayName, out IntPtr ANode);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_getnodes", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitFunction_GetNodes (IntPtr Handle, out IntPtr AAccessor);
+			public unsafe extern static Int32 ImplicitFunction_GetNodes (IntPtr Handle, out IntPtr AIterator);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_removenode", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_RemoveNode (IntPtr Handle, IntPtr ANode);
@@ -1428,7 +1425,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 ImplicitFunction_AddInput (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_getinputs", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitFunction_GetInputs (IntPtr Handle, out IntPtr AAccessor);
+			public unsafe extern static Int32 ImplicitFunction_GetInputs (IntPtr Handle, out IntPtr AIterator);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_removeinput", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_RemoveInput (IntPtr Handle, IntPtr AInput);
@@ -1437,7 +1434,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 ImplicitFunction_AddOutput (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_getoutputs", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitFunction_GetOutputs (IntPtr Handle, out IntPtr AAccessor);
+			public unsafe extern static Int32 ImplicitFunction_GetOutputs (IntPtr Handle, out IntPtr AIterator);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_removeoutput", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_RemoveOutput (IntPtr Handle, IntPtr AOutput);
@@ -2351,13 +2348,13 @@ namespace Lib3MF {
 					case 0x8CE7A1191A63A35D: Object = new CAttachment(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Attachment"
 					case 0xE0441CF976B36319: Object = new CTexture2D(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Texture2D"
 					case 0xD5C49B04AF1963CD: Object = new CImplicitPort(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPort"
-					case 0xF94265ED198E4784: Object = new CAccessor(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Accessor"
-					case 0x258087F875881ADD: Object = new CImplicitPortAccessor(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPortAccessor"
+					case 0x52F06268CD098EFE: Object = new CIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Iterator"
+					case 0xC62268F2D7C7012C: Object = new CImplicitPortIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPortIterator"
 					case 0xE72592A7725AB29B: Object = new CImplicitNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitNode"
 					case 0xFDD0E00663954DA8: Object = new CImplicitConstant(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitConstant"
 					case 0x2B3F23DD95A4DF56: Object = new CImplicitVector(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitVector"
 					case 0x7D48084ED0AE80FE: Object = new CImplicitMatrix(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitMatrix"
-					case 0xE0E0FC011B210DE0: Object = new CNodeAccessor(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::NodeAccessor"
+					case 0xFC006BC888CAB4D0: Object = new CNodeIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::NodeIterator"
 					case 0x6CE54469EEA83BC1: Object = new CImplicitFunction(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitFunction"
 					case 0x68FB2D5FFC4BA12A: Object = new CBuildItem(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItem"
 					case 0xA7D21BD364910860: Object = new CBuildItemIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItemIterator"
@@ -5587,55 +5584,49 @@ namespace Lib3MF {
 
 	}
 
-	public class CAccessor : CBase
+	public class CIterator : CBase
 	{
-		public CAccessor (IntPtr NewHandle) : base (NewHandle)
+		public CIterator (IntPtr NewHandle) : base (NewHandle)
 		{
 		}
 
-		public UInt64 GetSize ()
+		public bool MoveNext ()
 		{
-			UInt64 resultSize = 0;
+			Byte resultHasNext = 0;
 
-			CheckError(Internal.Lib3MFWrapper.Accessor_GetSize (Handle, out resultSize));
-			return resultSize;
+			CheckError(Internal.Lib3MFWrapper.Iterator_MoveNext (Handle, out resultHasNext));
+			return (resultHasNext != 0);
 		}
 
-		public bool Next ()
+		public bool MovePrevious ()
 		{
-			Byte resultResult = 0;
+			Byte resultHasPrevious = 0;
 
-			CheckError(Internal.Lib3MFWrapper.Accessor_Next (Handle, out resultResult));
-			return (resultResult != 0);
+			CheckError(Internal.Lib3MFWrapper.Iterator_MovePrevious (Handle, out resultHasPrevious));
+			return (resultHasPrevious != 0);
 		}
 
-		public bool Prev ()
+		public UInt64 Count ()
 		{
-			Byte resultResult = 0;
+			UInt64 resultCount = 0;
 
-			CheckError(Internal.Lib3MFWrapper.Accessor_Prev (Handle, out resultResult));
-			return (resultResult != 0);
-		}
-
-		public void Begin ()
-		{
-
-			CheckError(Internal.Lib3MFWrapper.Accessor_Begin (Handle));
+			CheckError(Internal.Lib3MFWrapper.Iterator_Count (Handle, out resultCount));
+			return resultCount;
 		}
 
 	}
 
-	public class CImplicitPortAccessor : CAccessor
+	public class CImplicitPortIterator : CIterator
 	{
-		public CImplicitPortAccessor (IntPtr NewHandle) : base (NewHandle)
+		public CImplicitPortIterator (IntPtr NewHandle) : base (NewHandle)
 		{
 		}
 
-		public CImplicitPort Get ()
+		public CImplicitPort GetCurrent ()
 		{
 			IntPtr newPort = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitPortAccessor_Get (Handle, out newPort));
+			CheckError(Internal.Lib3MFWrapper.ImplicitPortIterator_GetCurrent (Handle, out newPort));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newPort);
 		}
 
@@ -5725,12 +5716,12 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newPort);
 		}
 
-		public CImplicitPort GetOutputs ()
+		public CImplicitPortIterator GetOutputs ()
 		{
-			IntPtr newAccessor = IntPtr.Zero;
+			IntPtr newIterator = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitNode_GetOutputs (Handle, out newAccessor));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newAccessor);
+			CheckError(Internal.Lib3MFWrapper.ImplicitNode_GetOutputs (Handle, out newIterator));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPortIterator>(newIterator);
 		}
 
 	}
@@ -5796,17 +5787,17 @@ namespace Lib3MF {
 
 	}
 
-	public class CNodeAccessor : CAccessor
+	public class CNodeIterator : CIterator
 	{
-		public CNodeAccessor (IntPtr NewHandle) : base (NewHandle)
+		public CNodeIterator (IntPtr NewHandle) : base (NewHandle)
 		{
 		}
 
-		public CImplicitNode Get ()
+		public CImplicitNode GetCurrent ()
 		{
 			IntPtr newNode = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.NodeAccessor_Get (Handle, out newNode));
+			CheckError(Internal.Lib3MFWrapper.NodeIterator_GetCurrent (Handle, out newNode));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitNode>(newNode);
 		}
 
@@ -5871,12 +5862,12 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitNode>(newNode);
 		}
 
-		public CNodeAccessor GetNodes ()
+		public CNodeIterator GetNodes ()
 		{
-			IntPtr newAccessor = IntPtr.Zero;
+			IntPtr newIterator = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_GetNodes (Handle, out newAccessor));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CNodeAccessor>(newAccessor);
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_GetNodes (Handle, out newIterator));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CNodeIterator>(newIterator);
 		}
 
 		public void RemoveNode (CImplicitNode ANode)
@@ -5896,12 +5887,12 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddInput (Handle, byteIdentifier, byteDisplayName));
 		}
 
-		public CImplicitPortAccessor GetInputs ()
+		public CImplicitPortIterator GetInputs ()
 		{
-			IntPtr newAccessor = IntPtr.Zero;
+			IntPtr newIterator = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_GetInputs (Handle, out newAccessor));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPortAccessor>(newAccessor);
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_GetInputs (Handle, out newIterator));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPortIterator>(newIterator);
 		}
 
 		public void RemoveInput (CImplicitPort AInput)
@@ -5921,12 +5912,12 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddOutput (Handle, byteIdentifier, byteDisplayName));
 		}
 
-		public CImplicitPortAccessor GetOutputs ()
+		public CImplicitPortIterator GetOutputs ()
 		{
-			IntPtr newAccessor = IntPtr.Zero;
+			IntPtr newIterator = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_GetOutputs (Handle, out newAccessor));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPortAccessor>(newAccessor);
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_GetOutputs (Handle, out newIterator));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPortIterator>(newIterator);
 		}
 
 		public void RemoveOutput (CImplicitPort AOutput)

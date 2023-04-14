@@ -482,13 +482,13 @@ type
 	TLib3MFAttachment = class;
 	TLib3MFTexture2D = class;
 	TLib3MFImplicitPort = class;
-	TLib3MFAccessor = class;
-	TLib3MFImplicitPortAccessor = class;
+	TLib3MFIterator = class;
+	TLib3MFImplicitPortIterator = class;
 	TLib3MFImplicitNode = class;
 	TLib3MFImplicitConstant = class;
 	TLib3MFImplicitVector = class;
 	TLib3MFImplicitMatrix = class;
-	TLib3MFNodeAccessor = class;
+	TLib3MFNodeIterator = class;
 	TLib3MFImplicitFunction = class;
 	TLib3MFBuildItem = class;
 	TLib3MFBuildItemIterator = class;
@@ -3831,57 +3831,49 @@ type
 	
 
 (*************************************************************************************************************************
- Function type definitions for Accessor
+ Function type definitions for Iterator
 **************************************************************************************************************************)
 
 	(**
-	* Returns the number of elements
+	* Iterates to the next item in the list.
 	*
-	* @param[in] pAccessor - Accessor instance.
-	* @param[out] pSize - The number of elements
+	* @param[in] pIterator - Iterator instance.
+	* @param[out] pHasNext - Iterates to the next item in the list.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFAccessor_GetSizeFunc = function(pAccessor: TLib3MFHandle; out pSize: QWord): TLib3MFResult; cdecl;
+	TLib3MFIterator_MoveNextFunc = function(pIterator: TLib3MFHandle; out pHasNext: Byte): TLib3MFResult; cdecl;
 	
 	(**
-	* Go to the next element
+	* Iterates to the previous item in the list.
 	*
-	* @param[in] pAccessor - Accessor instance.
-	* @param[out] pResult - Returns true, if there is a next element
+	* @param[in] pIterator - Iterator instance.
+	* @param[out] pHasPrevious - Iterates to the previous item in the list.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFAccessor_NextFunc = function(pAccessor: TLib3MFHandle; out pResult: Byte): TLib3MFResult; cdecl;
+	TLib3MFIterator_MovePreviousFunc = function(pIterator: TLib3MFHandle; out pHasPrevious: Byte): TLib3MFResult; cdecl;
 	
 	(**
-	* Go to the previous element
+	* Returns the number of items the iterator captures.
 	*
-	* @param[in] pAccessor - Accessor instance.
-	* @param[out] pResult - Returns true, if there is a previous element
+	* @param[in] pIterator - Iterator instance.
+	* @param[out] pCount - returns the number of items the iterator captures.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFAccessor_PrevFunc = function(pAccessor: TLib3MFHandle; out pResult: Byte): TLib3MFResult; cdecl;
-	
-	(**
-	* Go to the first element
-	*
-	* @param[in] pAccessor - Accessor instance.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFAccessor_BeginFunc = function(pAccessor: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFIterator_CountFunc = function(pIterator: TLib3MFHandle; out pCount: QWord): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
- Function type definitions for ImplicitPortAccessor
+ Function type definitions for ImplicitPortIterator
 **************************************************************************************************************************)
 
 	(**
 	* Returns the current element
 	*
-	* @param[in] pImplicitPortAccessor - ImplicitPortAccessor instance.
+	* @param[in] pImplicitPortIterator - ImplicitPortIterator instance.
 	* @param[out] pPort - The current element
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitPortAccessor_GetFunc = function(pImplicitPortAccessor: TLib3MFHandle; out pPort: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitPortIterator_GetCurrentFunc = function(pImplicitPortIterator: TLib3MFHandle; out pPort: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -3972,10 +3964,10 @@ type
 	* Retrieves the outputs
 	*
 	* @param[in] pImplicitNode - ImplicitNode instance.
-	* @param[out] pAccessor - the accessor to the outputs
+	* @param[out] pIterator - the accessor to the outputs
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitNode_GetOutputsFunc = function(pImplicitNode: TLib3MFHandle; out pAccessor: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitNode_GetOutputsFunc = function(pImplicitNode: TLib3MFHandle; out pIterator: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -4039,17 +4031,17 @@ type
 	
 
 (*************************************************************************************************************************
- Function type definitions for NodeAccessor
+ Function type definitions for NodeIterator
 **************************************************************************************************************************)
 
 	(**
 	* Returns the current element
 	*
-	* @param[in] pNodeAccessor - NodeAccessor instance.
+	* @param[in] pNodeIterator - NodeIterator instance.
 	* @param[out] pNode - The current element
 	* @return error code or 0 (success)
 	*)
-	TLib3MFNodeAccessor_GetFunc = function(pNodeAccessor: TLib3MFHandle; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFNodeIterator_GetCurrentFunc = function(pNodeIterator: TLib3MFHandle; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -4112,10 +4104,10 @@ type
 	* Retrieves the nodes
 	*
 	* @param[in] pImplicitFunction - ImplicitFunction instance.
-	* @param[out] pAccessor - the accessor to the nodes
+	* @param[out] pIterator - iterator for the list of nodes
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitFunction_GetNodesFunc = function(pImplicitFunction: TLib3MFHandle; out pAccessor: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_GetNodesFunc = function(pImplicitFunction: TLib3MFHandle; out pIterator: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Removes a node
@@ -4140,10 +4132,10 @@ type
 	* Retrieves the inputs
 	*
 	* @param[in] pImplicitFunction - ImplicitFunction instance.
-	* @param[out] pAccessor - the accessor to the inputs
+	* @param[out] pIterator - iterator for the list of inputs
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitFunction_GetInputsFunc = function(pImplicitFunction: TLib3MFHandle; out pAccessor: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_GetInputsFunc = function(pImplicitFunction: TLib3MFHandle; out pIterator: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Removes an input
@@ -4168,10 +4160,10 @@ type
 	* Retrieves the outputs
 	*
 	* @param[in] pImplicitFunction - ImplicitFunction instance.
-	* @param[out] pAccessor - the accessor to the outputs
+	* @param[out] pIterator - iterator for the outputs
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitFunction_GetOutputsFunc = function(pImplicitFunction: TLib3MFHandle; out pAccessor: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_GetOutputsFunc = function(pImplicitFunction: TLib3MFHandle; out pIterator: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Removes an output
@@ -6897,29 +6889,28 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 
 (*************************************************************************************************************************
- Class definition for Accessor
+ Class definition for Iterator
 **************************************************************************************************************************)
 
-	TLib3MFAccessor = class(TLib3MFBase)
+	TLib3MFIterator = class(TLib3MFBase)
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
-		function GetSize(): QWord;
-		function Next(): Boolean;
-		function Prev(): Boolean;
-		procedure Begin();
+		function MoveNext(): Boolean;
+		function MovePrevious(): Boolean;
+		function Count(): QWord;
 	end;
 
 
 (*************************************************************************************************************************
- Class definition for ImplicitPortAccessor
+ Class definition for ImplicitPortIterator
 **************************************************************************************************************************)
 
-	TLib3MFImplicitPortAccessor = class(TLib3MFAccessor)
+	TLib3MFImplicitPortIterator = class(TLib3MFIterator)
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
-		function Get(): TLib3MFImplicitPort;
+		function GetCurrent(): TLib3MFImplicitPort;
 	end;
 
 
@@ -6939,7 +6930,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function AddInput(const AIdentifier: String; const ADisplayName: String): TLib3MFImplicitPort;
 		function GetInputs(): TLib3MFImplicitPort;
 		function AddOutput(const AIdentifier: String; const ADisplayName: String): TLib3MFImplicitPort;
-		function GetOutputs(): TLib3MFImplicitPort;
+		function GetOutputs(): TLib3MFImplicitPortIterator;
 	end;
 
 
@@ -6982,14 +6973,14 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 
 (*************************************************************************************************************************
- Class definition for NodeAccessor
+ Class definition for NodeIterator
 **************************************************************************************************************************)
 
-	TLib3MFNodeAccessor = class(TLib3MFAccessor)
+	TLib3MFNodeIterator = class(TLib3MFIterator)
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
-		function Get(): TLib3MFImplicitNode;
+		function GetCurrent(): TLib3MFImplicitNode;
 	end;
 
 
@@ -7006,13 +6997,13 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetDisplayName(): String;
 		procedure SetDisplayName(const ADisplayName: String);
 		function AddNode(const ANodeType: TLib3MFImplicitNodeType; const AIdentifier: String; const ADisplayName: String): TLib3MFImplicitNode;
-		function GetNodes(): TLib3MFNodeAccessor;
+		function GetNodes(): TLib3MFNodeIterator;
 		procedure RemoveNode(const ANode: TLib3MFImplicitNode);
 		procedure AddInput(const AIdentifier: String; const ADisplayName: String);
-		function GetInputs(): TLib3MFImplicitPortAccessor;
+		function GetInputs(): TLib3MFImplicitPortIterator;
 		procedure RemoveInput(const AInput: TLib3MFImplicitPort);
 		procedure AddOutput(const AIdentifier: String; const ADisplayName: String);
-		function GetOutputs(): TLib3MFImplicitPortAccessor;
+		function GetOutputs(): TLib3MFImplicitPortIterator;
 		procedure RemoveOutput(const AOutput: TLib3MFImplicitPort);
 	end;
 
@@ -7618,11 +7609,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFImplicitPort_SetIdentifierFunc: TLib3MFImplicitPort_SetIdentifierFunc;
 		FLib3MFImplicitPort_GetDisplayNameFunc: TLib3MFImplicitPort_GetDisplayNameFunc;
 		FLib3MFImplicitPort_SetDisplayNameFunc: TLib3MFImplicitPort_SetDisplayNameFunc;
-		FLib3MFAccessor_GetSizeFunc: TLib3MFAccessor_GetSizeFunc;
-		FLib3MFAccessor_NextFunc: TLib3MFAccessor_NextFunc;
-		FLib3MFAccessor_PrevFunc: TLib3MFAccessor_PrevFunc;
-		FLib3MFAccessor_BeginFunc: TLib3MFAccessor_BeginFunc;
-		FLib3MFImplicitPortAccessor_GetFunc: TLib3MFImplicitPortAccessor_GetFunc;
+		FLib3MFIterator_MoveNextFunc: TLib3MFIterator_MoveNextFunc;
+		FLib3MFIterator_MovePreviousFunc: TLib3MFIterator_MovePreviousFunc;
+		FLib3MFIterator_CountFunc: TLib3MFIterator_CountFunc;
+		FLib3MFImplicitPortIterator_GetCurrentFunc: TLib3MFImplicitPortIterator_GetCurrentFunc;
 		FLib3MFImplicitNode_GetIdentifierFunc: TLib3MFImplicitNode_GetIdentifierFunc;
 		FLib3MFImplicitNode_SetIdentifierFunc: TLib3MFImplicitNode_SetIdentifierFunc;
 		FLib3MFImplicitNode_GetDisplayNameFunc: TLib3MFImplicitNode_GetDisplayNameFunc;
@@ -7637,7 +7627,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFImplicitVector_GetFunc: TLib3MFImplicitVector_GetFunc;
 		FLib3MFImplicitMatrix_GetMatrixFunc: TLib3MFImplicitMatrix_GetMatrixFunc;
 		FLib3MFImplicitMatrix_SetMatrixFunc: TLib3MFImplicitMatrix_SetMatrixFunc;
-		FLib3MFNodeAccessor_GetFunc: TLib3MFNodeAccessor_GetFunc;
+		FLib3MFNodeIterator_GetCurrentFunc: TLib3MFNodeIterator_GetCurrentFunc;
 		FLib3MFImplicitFunction_GetIdentifierFunc: TLib3MFImplicitFunction_GetIdentifierFunc;
 		FLib3MFImplicitFunction_SetIdentifierFunc: TLib3MFImplicitFunction_SetIdentifierFunc;
 		FLib3MFImplicitFunction_GetDisplayNameFunc: TLib3MFImplicitFunction_GetDisplayNameFunc;
@@ -8154,11 +8144,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFImplicitPort_SetIdentifierFunc: TLib3MFImplicitPort_SetIdentifierFunc read FLib3MFImplicitPort_SetIdentifierFunc;
 		property Lib3MFImplicitPort_GetDisplayNameFunc: TLib3MFImplicitPort_GetDisplayNameFunc read FLib3MFImplicitPort_GetDisplayNameFunc;
 		property Lib3MFImplicitPort_SetDisplayNameFunc: TLib3MFImplicitPort_SetDisplayNameFunc read FLib3MFImplicitPort_SetDisplayNameFunc;
-		property Lib3MFAccessor_GetSizeFunc: TLib3MFAccessor_GetSizeFunc read FLib3MFAccessor_GetSizeFunc;
-		property Lib3MFAccessor_NextFunc: TLib3MFAccessor_NextFunc read FLib3MFAccessor_NextFunc;
-		property Lib3MFAccessor_PrevFunc: TLib3MFAccessor_PrevFunc read FLib3MFAccessor_PrevFunc;
-		property Lib3MFAccessor_BeginFunc: TLib3MFAccessor_BeginFunc read FLib3MFAccessor_BeginFunc;
-		property Lib3MFImplicitPortAccessor_GetFunc: TLib3MFImplicitPortAccessor_GetFunc read FLib3MFImplicitPortAccessor_GetFunc;
+		property Lib3MFIterator_MoveNextFunc: TLib3MFIterator_MoveNextFunc read FLib3MFIterator_MoveNextFunc;
+		property Lib3MFIterator_MovePreviousFunc: TLib3MFIterator_MovePreviousFunc read FLib3MFIterator_MovePreviousFunc;
+		property Lib3MFIterator_CountFunc: TLib3MFIterator_CountFunc read FLib3MFIterator_CountFunc;
+		property Lib3MFImplicitPortIterator_GetCurrentFunc: TLib3MFImplicitPortIterator_GetCurrentFunc read FLib3MFImplicitPortIterator_GetCurrentFunc;
 		property Lib3MFImplicitNode_GetIdentifierFunc: TLib3MFImplicitNode_GetIdentifierFunc read FLib3MFImplicitNode_GetIdentifierFunc;
 		property Lib3MFImplicitNode_SetIdentifierFunc: TLib3MFImplicitNode_SetIdentifierFunc read FLib3MFImplicitNode_SetIdentifierFunc;
 		property Lib3MFImplicitNode_GetDisplayNameFunc: TLib3MFImplicitNode_GetDisplayNameFunc read FLib3MFImplicitNode_GetDisplayNameFunc;
@@ -8173,7 +8162,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFImplicitVector_GetFunc: TLib3MFImplicitVector_GetFunc read FLib3MFImplicitVector_GetFunc;
 		property Lib3MFImplicitMatrix_GetMatrixFunc: TLib3MFImplicitMatrix_GetMatrixFunc read FLib3MFImplicitMatrix_GetMatrixFunc;
 		property Lib3MFImplicitMatrix_SetMatrixFunc: TLib3MFImplicitMatrix_SetMatrixFunc read FLib3MFImplicitMatrix_SetMatrixFunc;
-		property Lib3MFNodeAccessor_GetFunc: TLib3MFNodeAccessor_GetFunc read FLib3MFNodeAccessor_GetFunc;
+		property Lib3MFNodeIterator_GetCurrentFunc: TLib3MFNodeIterator_GetCurrentFunc read FLib3MFNodeIterator_GetCurrentFunc;
 		property Lib3MFImplicitFunction_GetIdentifierFunc: TLib3MFImplicitFunction_GetIdentifierFunc read FLib3MFImplicitFunction_GetIdentifierFunc;
 		property Lib3MFImplicitFunction_SetIdentifierFunc: TLib3MFImplicitFunction_SetIdentifierFunc read FLib3MFImplicitFunction_SetIdentifierFunc;
 		property Lib3MFImplicitFunction_GetDisplayNameFunc: TLib3MFImplicitFunction_GetDisplayNameFunc read FLib3MFImplicitFunction_GetDisplayNameFunc;
@@ -8493,13 +8482,13 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function TLib3MFPolymorphicFactoryMakeAttachment(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFAttachment;
 	function TLib3MFPolymorphicFactoryMakeTexture2D(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFTexture2D;
 	function TLib3MFPolymorphicFactoryMakeImplicitPort(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitPort;
-	function TLib3MFPolymorphicFactoryMakeAccessor(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFAccessor;
-	function TLib3MFPolymorphicFactoryMakeImplicitPortAccessor(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitPortAccessor;
+	function TLib3MFPolymorphicFactoryMakeIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFIterator;
+	function TLib3MFPolymorphicFactoryMakeImplicitPortIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitPortIterator;
 	function TLib3MFPolymorphicFactoryMakeImplicitNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitNode;
 	function TLib3MFPolymorphicFactoryMakeImplicitConstant(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitConstant;
 	function TLib3MFPolymorphicFactoryMakeImplicitVector(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitVector;
 	function TLib3MFPolymorphicFactoryMakeImplicitMatrix(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitMatrix;
-	function TLib3MFPolymorphicFactoryMakeNodeAccessor(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFNodeAccessor;
+	function TLib3MFPolymorphicFactoryMakeNodeIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFNodeIterator;
 	function TLib3MFPolymorphicFactoryMakeImplicitFunction(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitFunction;
 	function TLib3MFPolymorphicFactoryMakeBuildItem(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBuildItem;
 	function TLib3MFPolymorphicFactoryMakeBuildItemIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBuildItemIterator;
@@ -9184,13 +9173,13 @@ implementation
 			QWord($8CE7A1191A63A35D): begin Obj := TLIB3MFAttachment.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Attachment"
 			QWord($E0441CF976B36319): begin Obj := TLIB3MFTexture2D.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Texture2D"
 			QWord($D5C49B04AF1963CD): begin Obj := TLIB3MFImplicitPort.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPort"
-			QWord($F94265ED198E4784): begin Obj := TLIB3MFAccessor.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Accessor"
-			QWord($258087F875881ADD): begin Obj := TLIB3MFImplicitPortAccessor.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPortAccessor"
+			QWord($52F06268CD098EFE): begin Obj := TLIB3MFIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Iterator"
+			QWord($C62268F2D7C7012C): begin Obj := TLIB3MFImplicitPortIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPortIterator"
 			QWord($E72592A7725AB29B): begin Obj := TLIB3MFImplicitNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitNode"
 			QWord($FDD0E00663954DA8): begin Obj := TLIB3MFImplicitConstant.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitConstant"
 			QWord($2B3F23DD95A4DF56): begin Obj := TLIB3MFImplicitVector.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitVector"
 			QWord($7D48084ED0AE80FE): begin Obj := TLIB3MFImplicitMatrix.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitMatrix"
-			QWord($E0E0FC011B210DE0): begin Obj := TLIB3MFNodeAccessor.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::NodeAccessor"
+			QWord($FC006BC888CAB4D0): begin Obj := TLIB3MFNodeIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::NodeIterator"
 			QWord($6CE54469EEA83BC1): begin Obj := TLIB3MFImplicitFunction.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitFunction"
 			QWord($68FB2D5FFC4BA12A): begin Obj := TLIB3MFBuildItem.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItem"
 			QWord($A7D21BD364910860): begin Obj := TLIB3MFBuildItemIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItemIterator"
@@ -9426,13 +9415,13 @@ implementation
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFImplicitPort, TLIB3MFImplicitPort>.Make(Wrapper, Handle);
 	end;
-	function TLib3MFPolymorphicFactoryMakeAccessor(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFAccessor;
+	function TLib3MFPolymorphicFactoryMakeIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFIterator;
 	begin
-		Result := TLib3MFPolymorphicFactory<TLIB3MFAccessor, TLIB3MFAccessor>.Make(Wrapper, Handle);
+		Result := TLib3MFPolymorphicFactory<TLIB3MFIterator, TLIB3MFIterator>.Make(Wrapper, Handle);
 	end;
-	function TLib3MFPolymorphicFactoryMakeImplicitPortAccessor(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitPortAccessor;
+	function TLib3MFPolymorphicFactoryMakeImplicitPortIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitPortIterator;
 	begin
-		Result := TLib3MFPolymorphicFactory<TLIB3MFImplicitPortAccessor, TLIB3MFImplicitPortAccessor>.Make(Wrapper, Handle);
+		Result := TLib3MFPolymorphicFactory<TLIB3MFImplicitPortIterator, TLIB3MFImplicitPortIterator>.Make(Wrapper, Handle);
 	end;
 	function TLib3MFPolymorphicFactoryMakeImplicitNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitNode;
 	begin
@@ -9450,9 +9439,9 @@ implementation
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFImplicitMatrix, TLIB3MFImplicitMatrix>.Make(Wrapper, Handle);
 	end;
-	function TLib3MFPolymorphicFactoryMakeNodeAccessor(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFNodeAccessor;
+	function TLib3MFPolymorphicFactoryMakeNodeIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFNodeIterator;
 	begin
-		Result := TLib3MFPolymorphicFactory<TLIB3MFNodeAccessor, TLIB3MFNodeAccessor>.Make(Wrapper, Handle);
+		Result := TLib3MFPolymorphicFactory<TLIB3MFNodeIterator, TLIB3MFNodeIterator>.Make(Wrapper, Handle);
 	end;
 	function TLib3MFPolymorphicFactoryMakeImplicitFunction(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitFunction;
 	begin
@@ -13027,68 +13016,63 @@ implementation
 	end;
 
 (*************************************************************************************************************************
- Class implementation for Accessor
+ Class implementation for Iterator
 **************************************************************************************************************************)
 
-	constructor TLib3MFAccessor.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	constructor TLib3MFIterator.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 	begin
 		inherited Create(AWrapper, AHandle);
 	end;
 
-	destructor TLib3MFAccessor.Destroy;
+	destructor TLib3MFIterator.Destroy;
 	begin
 		inherited;
 	end;
 
-	function TLib3MFAccessor.GetSize(): QWord;
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFAccessor_GetSizeFunc(FHandle, Result));
-	end;
-
-	function TLib3MFAccessor.Next(): Boolean;
+	function TLib3MFIterator.MoveNext(): Boolean;
 	var
-		ResultResult: Byte;
+		ResultHasNext: Byte;
 	begin
-		ResultResult := 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFAccessor_NextFunc(FHandle, ResultResult));
-		Result := (ResultResult <> 0);
+		ResultHasNext := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFIterator_MoveNextFunc(FHandle, ResultHasNext));
+		Result := (ResultHasNext <> 0);
 	end;
 
-	function TLib3MFAccessor.Prev(): Boolean;
+	function TLib3MFIterator.MovePrevious(): Boolean;
 	var
-		ResultResult: Byte;
+		ResultHasPrevious: Byte;
 	begin
-		ResultResult := 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFAccessor_PrevFunc(FHandle, ResultResult));
-		Result := (ResultResult <> 0);
+		ResultHasPrevious := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFIterator_MovePreviousFunc(FHandle, ResultHasPrevious));
+		Result := (ResultHasPrevious <> 0);
 	end;
 
-	procedure TLib3MFAccessor.Begin();
+	function TLib3MFIterator.Count(): QWord;
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFAccessor_BeginFunc(FHandle));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFIterator_CountFunc(FHandle, Result));
 	end;
 
 (*************************************************************************************************************************
- Class implementation for ImplicitPortAccessor
+ Class implementation for ImplicitPortIterator
 **************************************************************************************************************************)
 
-	constructor TLib3MFImplicitPortAccessor.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	constructor TLib3MFImplicitPortIterator.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 	begin
 		inherited Create(AWrapper, AHandle);
 	end;
 
-	destructor TLib3MFImplicitPortAccessor.Destroy;
+	destructor TLib3MFImplicitPortIterator.Destroy;
 	begin
 		inherited;
 	end;
 
-	function TLib3MFImplicitPortAccessor.Get(): TLib3MFImplicitPort;
+	function TLib3MFImplicitPortIterator.GetCurrent(): TLib3MFImplicitPort;
 	var
 		HPort: TLib3MFHandle;
 	begin
 		Result := nil;
 		HPort := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitPortAccessor_GetFunc(FHandle, HPort));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitPortIterator_GetCurrentFunc(FHandle, HPort));
 		if Assigned(HPort) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HPort);
 	end;
@@ -13187,15 +13171,15 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HPort);
 	end;
 
-	function TLib3MFImplicitNode.GetOutputs(): TLib3MFImplicitPort;
+	function TLib3MFImplicitNode.GetOutputs(): TLib3MFImplicitPortIterator;
 	var
-		HAccessor: TLib3MFHandle;
+		HIterator: TLib3MFHandle;
 	begin
 		Result := nil;
-		HAccessor := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitNode_GetOutputsFunc(FHandle, HAccessor));
-		if Assigned(HAccessor) then
-			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HAccessor);
+		HIterator := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitNode_GetOutputsFunc(FHandle, HIterator));
+		if Assigned(HIterator) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPortIterator, TLib3MFImplicitPortIterator>.Make(FWrapper, HIterator);
 	end;
 
 (*************************************************************************************************************************
@@ -13266,26 +13250,26 @@ implementation
 	end;
 
 (*************************************************************************************************************************
- Class implementation for NodeAccessor
+ Class implementation for NodeIterator
 **************************************************************************************************************************)
 
-	constructor TLib3MFNodeAccessor.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	constructor TLib3MFNodeIterator.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 	begin
 		inherited Create(AWrapper, AHandle);
 	end;
 
-	destructor TLib3MFNodeAccessor.Destroy;
+	destructor TLib3MFNodeIterator.Destroy;
 	begin
 		inherited;
 	end;
 
-	function TLib3MFNodeAccessor.Get(): TLib3MFImplicitNode;
+	function TLib3MFNodeIterator.GetCurrent(): TLib3MFImplicitNode;
 	var
 		HNode: TLib3MFHandle;
 	begin
 		Result := nil;
 		HNode := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFNodeAccessor_GetFunc(FHandle, HNode));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNodeIterator_GetCurrentFunc(FHandle, HNode));
 		if Assigned(HNode) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitNode, TLib3MFImplicitNode>.Make(FWrapper, HNode);
 	end;
@@ -13353,15 +13337,15 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitNode, TLib3MFImplicitNode>.Make(FWrapper, HNode);
 	end;
 
-	function TLib3MFImplicitFunction.GetNodes(): TLib3MFNodeAccessor;
+	function TLib3MFImplicitFunction.GetNodes(): TLib3MFNodeIterator;
 	var
-		HAccessor: TLib3MFHandle;
+		HIterator: TLib3MFHandle;
 	begin
 		Result := nil;
-		HAccessor := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_GetNodesFunc(FHandle, HAccessor));
-		if Assigned(HAccessor) then
-			Result := TLib3MFPolymorphicFactory<TLib3MFNodeAccessor, TLib3MFNodeAccessor>.Make(FWrapper, HAccessor);
+		HIterator := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_GetNodesFunc(FHandle, HIterator));
+		if Assigned(HIterator) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFNodeIterator, TLib3MFNodeIterator>.Make(FWrapper, HIterator);
 	end;
 
 	procedure TLib3MFImplicitFunction.RemoveNode(const ANode: TLib3MFImplicitNode);
@@ -13380,15 +13364,15 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddInputFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName)));
 	end;
 
-	function TLib3MFImplicitFunction.GetInputs(): TLib3MFImplicitPortAccessor;
+	function TLib3MFImplicitFunction.GetInputs(): TLib3MFImplicitPortIterator;
 	var
-		HAccessor: TLib3MFHandle;
+		HIterator: TLib3MFHandle;
 	begin
 		Result := nil;
-		HAccessor := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_GetInputsFunc(FHandle, HAccessor));
-		if Assigned(HAccessor) then
-			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPortAccessor, TLib3MFImplicitPortAccessor>.Make(FWrapper, HAccessor);
+		HIterator := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_GetInputsFunc(FHandle, HIterator));
+		if Assigned(HIterator) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPortIterator, TLib3MFImplicitPortIterator>.Make(FWrapper, HIterator);
 	end;
 
 	procedure TLib3MFImplicitFunction.RemoveInput(const AInput: TLib3MFImplicitPort);
@@ -13407,15 +13391,15 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddOutputFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName)));
 	end;
 
-	function TLib3MFImplicitFunction.GetOutputs(): TLib3MFImplicitPortAccessor;
+	function TLib3MFImplicitFunction.GetOutputs(): TLib3MFImplicitPortIterator;
 	var
-		HAccessor: TLib3MFHandle;
+		HIterator: TLib3MFHandle;
 	begin
 		Result := nil;
-		HAccessor := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_GetOutputsFunc(FHandle, HAccessor));
-		if Assigned(HAccessor) then
-			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPortAccessor, TLib3MFImplicitPortAccessor>.Make(FWrapper, HAccessor);
+		HIterator := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_GetOutputsFunc(FHandle, HIterator));
+		if Assigned(HIterator) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPortIterator, TLib3MFImplicitPortIterator>.Make(FWrapper, HIterator);
 	end;
 
 	procedure TLib3MFImplicitFunction.RemoveOutput(const AOutput: TLib3MFImplicitPort);
@@ -15576,11 +15560,10 @@ implementation
 		FLib3MFImplicitPort_SetIdentifierFunc := LoadFunction('lib3mf_implicitport_setidentifier');
 		FLib3MFImplicitPort_GetDisplayNameFunc := LoadFunction('lib3mf_implicitport_getdisplayname');
 		FLib3MFImplicitPort_SetDisplayNameFunc := LoadFunction('lib3mf_implicitport_setdisplayname');
-		FLib3MFAccessor_GetSizeFunc := LoadFunction('lib3mf_accessor_getsize');
-		FLib3MFAccessor_NextFunc := LoadFunction('lib3mf_accessor_next');
-		FLib3MFAccessor_PrevFunc := LoadFunction('lib3mf_accessor_prev');
-		FLib3MFAccessor_BeginFunc := LoadFunction('lib3mf_accessor_begin');
-		FLib3MFImplicitPortAccessor_GetFunc := LoadFunction('lib3mf_implicitportaccessor_get');
+		FLib3MFIterator_MoveNextFunc := LoadFunction('lib3mf_iterator_movenext');
+		FLib3MFIterator_MovePreviousFunc := LoadFunction('lib3mf_iterator_moveprevious');
+		FLib3MFIterator_CountFunc := LoadFunction('lib3mf_iterator_count');
+		FLib3MFImplicitPortIterator_GetCurrentFunc := LoadFunction('lib3mf_implicitportiterator_getcurrent');
 		FLib3MFImplicitNode_GetIdentifierFunc := LoadFunction('lib3mf_implicitnode_getidentifier');
 		FLib3MFImplicitNode_SetIdentifierFunc := LoadFunction('lib3mf_implicitnode_setidentifier');
 		FLib3MFImplicitNode_GetDisplayNameFunc := LoadFunction('lib3mf_implicitnode_getdisplayname');
@@ -15595,7 +15578,7 @@ implementation
 		FLib3MFImplicitVector_GetFunc := LoadFunction('lib3mf_implicitvector_get');
 		FLib3MFImplicitMatrix_GetMatrixFunc := LoadFunction('lib3mf_implicitmatrix_getmatrix');
 		FLib3MFImplicitMatrix_SetMatrixFunc := LoadFunction('lib3mf_implicitmatrix_setmatrix');
-		FLib3MFNodeAccessor_GetFunc := LoadFunction('lib3mf_nodeaccessor_get');
+		FLib3MFNodeIterator_GetCurrentFunc := LoadFunction('lib3mf_nodeiterator_getcurrent');
 		FLib3MFImplicitFunction_GetIdentifierFunc := LoadFunction('lib3mf_implicitfunction_getidentifier');
 		FLib3MFImplicitFunction_SetIdentifierFunc := LoadFunction('lib3mf_implicitfunction_setidentifier');
 		FLib3MFImplicitFunction_GetDisplayNameFunc := LoadFunction('lib3mf_implicitfunction_getdisplayname');
@@ -16749,19 +16732,16 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitport_setdisplayname'), @FLib3MFImplicitPort_SetDisplayNameFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_accessor_getsize'), @FLib3MFAccessor_GetSizeFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_iterator_movenext'), @FLib3MFIterator_MoveNextFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_accessor_next'), @FLib3MFAccessor_NextFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_iterator_moveprevious'), @FLib3MFIterator_MovePreviousFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_accessor_prev'), @FLib3MFAccessor_PrevFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_iterator_count'), @FLib3MFIterator_CountFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_accessor_begin'), @FLib3MFAccessor_BeginFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitportaccessor_get'), @FLib3MFImplicitPortAccessor_GetFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitportiterator_getcurrent'), @FLib3MFImplicitPortIterator_GetCurrentFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_getidentifier'), @FLib3MFImplicitNode_GetIdentifierFunc);
@@ -16806,7 +16786,7 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitmatrix_setmatrix'), @FLib3MFImplicitMatrix_SetMatrixFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_nodeaccessor_get'), @FLib3MFNodeAccessor_GetFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_nodeiterator_getcurrent'), @FLib3MFNodeIterator_GetCurrentFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_getidentifier'), @FLib3MFImplicitFunction_GetIdentifierFunc);

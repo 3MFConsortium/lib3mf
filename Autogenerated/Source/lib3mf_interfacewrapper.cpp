@@ -11787,27 +11787,27 @@ Lib3MFResult lib3mf_implicitport_setdisplayname(Lib3MF_ImplicitPort pImplicitPor
 
 
 /*************************************************************************************************************************
- Class implementation for Accessor
+ Class implementation for Iterator
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_accessor_getsize(Lib3MF_Accessor pAccessor, Lib3MF_uint64 * pSize)
+Lib3MFResult lib3mf_iterator_movenext(Lib3MF_Iterator pIterator, bool * pHasNext)
 {
-	IBase* pIBaseClass = (IBase *)pAccessor;
+	IBase* pIBaseClass = (IBase *)pIterator;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pAccessor, "Accessor", "GetSize");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pIterator, "Iterator", "MoveNext");
 		}
-		if (pSize == nullptr)
+		if (pHasNext == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IAccessor* pIAccessor = dynamic_cast<IAccessor*>(pIBaseClass);
-		if (!pIAccessor)
+		IIterator* pIIterator = dynamic_cast<IIterator*>(pIBaseClass);
+		if (!pIIterator)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		*pSize = pIAccessor->GetSize();
+		*pHasNext = pIIterator->MoveNext();
 
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addUInt64Result("Size", *pSize);
+			pJournalEntry->addBooleanResult("HasNext", *pHasNext);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -11823,25 +11823,25 @@ Lib3MFResult lib3mf_accessor_getsize(Lib3MF_Accessor pAccessor, Lib3MF_uint64 * 
 	}
 }
 
-Lib3MFResult lib3mf_accessor_next(Lib3MF_Accessor pAccessor, bool * pResult)
+Lib3MFResult lib3mf_iterator_moveprevious(Lib3MF_Iterator pIterator, bool * pHasPrevious)
 {
-	IBase* pIBaseClass = (IBase *)pAccessor;
+	IBase* pIBaseClass = (IBase *)pIterator;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pAccessor, "Accessor", "Next");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pIterator, "Iterator", "MovePrevious");
 		}
-		if (pResult == nullptr)
+		if (pHasPrevious == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IAccessor* pIAccessor = dynamic_cast<IAccessor*>(pIBaseClass);
-		if (!pIAccessor)
+		IIterator* pIIterator = dynamic_cast<IIterator*>(pIBaseClass);
+		if (!pIIterator)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		*pResult = pIAccessor->Next();
+		*pHasPrevious = pIIterator->MovePrevious();
 
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addBooleanResult("Result", *pResult);
+			pJournalEntry->addBooleanResult("HasPrevious", *pHasPrevious);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -11857,56 +11857,25 @@ Lib3MFResult lib3mf_accessor_next(Lib3MF_Accessor pAccessor, bool * pResult)
 	}
 }
 
-Lib3MFResult lib3mf_accessor_prev(Lib3MF_Accessor pAccessor, bool * pResult)
+Lib3MFResult lib3mf_iterator_count(Lib3MF_Iterator pIterator, Lib3MF_uint64 * pCount)
 {
-	IBase* pIBaseClass = (IBase *)pAccessor;
+	IBase* pIBaseClass = (IBase *)pIterator;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pAccessor, "Accessor", "Prev");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pIterator, "Iterator", "Count");
 		}
-		if (pResult == nullptr)
+		if (pCount == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IAccessor* pIAccessor = dynamic_cast<IAccessor*>(pIBaseClass);
-		if (!pIAccessor)
+		IIterator* pIIterator = dynamic_cast<IIterator*>(pIBaseClass);
+		if (!pIIterator)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		*pResult = pIAccessor->Prev();
+		*pCount = pIIterator->Count();
 
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addBooleanResult("Result", *pResult);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_accessor_begin(Lib3MF_Accessor pAccessor)
-{
-	IBase* pIBaseClass = (IBase *)pAccessor;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pAccessor, "Accessor", "Begin");
-		}
-		IAccessor* pIAccessor = dynamic_cast<IAccessor*>(pIBaseClass);
-		if (!pIAccessor)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIAccessor->Begin();
-
-		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt64Result("Count", *pCount);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -11924,25 +11893,25 @@ Lib3MFResult lib3mf_accessor_begin(Lib3MF_Accessor pAccessor)
 
 
 /*************************************************************************************************************************
- Class implementation for ImplicitPortAccessor
+ Class implementation for ImplicitPortIterator
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_implicitportaccessor_get(Lib3MF_ImplicitPortAccessor pImplicitPortAccessor, Lib3MF_ImplicitPort * pPort)
+Lib3MFResult lib3mf_implicitportiterator_getcurrent(Lib3MF_ImplicitPortIterator pImplicitPortIterator, Lib3MF_ImplicitPort * pPort)
 {
-	IBase* pIBaseClass = (IBase *)pImplicitPortAccessor;
+	IBase* pIBaseClass = (IBase *)pImplicitPortIterator;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitPortAccessor, "ImplicitPortAccessor", "Get");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitPortIterator, "ImplicitPortIterator", "GetCurrent");
 		}
 		if (pPort == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		IBase* pBasePort(nullptr);
-		IImplicitPortAccessor* pIImplicitPortAccessor = dynamic_cast<IImplicitPortAccessor*>(pIBaseClass);
-		if (!pIImplicitPortAccessor)
+		IImplicitPortIterator* pIImplicitPortIterator = dynamic_cast<IImplicitPortIterator*>(pIBaseClass);
+		if (!pIImplicitPortIterator)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBasePort = pIImplicitPortAccessor->Get();
+		pBasePort = pIImplicitPortIterator->GetCurrent();
 
 		*pPort = (IBase*)(pBasePort);
 		if (pJournalEntry.get() != nullptr) {
@@ -12306,7 +12275,7 @@ Lib3MFResult lib3mf_implicitnode_addoutput(Lib3MF_ImplicitNode pImplicitNode, co
 	}
 }
 
-Lib3MFResult lib3mf_implicitnode_getoutputs(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_ImplicitPort * pAccessor)
+Lib3MFResult lib3mf_implicitnode_getoutputs(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_ImplicitPortIterator * pIterator)
 {
 	IBase* pIBaseClass = (IBase *)pImplicitNode;
 
@@ -12315,18 +12284,18 @@ Lib3MFResult lib3mf_implicitnode_getoutputs(Lib3MF_ImplicitNode pImplicitNode, L
 		if (m_GlobalJournal.get() != nullptr)  {
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitNode, "ImplicitNode", "GetOutputs");
 		}
-		if (pAccessor == nullptr)
+		if (pIterator == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseAccessor(nullptr);
+		IBase* pBaseIterator(nullptr);
 		IImplicitNode* pIImplicitNode = dynamic_cast<IImplicitNode*>(pIBaseClass);
 		if (!pIImplicitNode)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseAccessor = pIImplicitNode->GetOutputs();
+		pBaseIterator = pIImplicitNode->GetOutputs();
 
-		*pAccessor = (IBase*)(pBaseAccessor);
+		*pIterator = (IBase*)(pBaseIterator);
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("Accessor", *pAccessor);
+			pJournalEntry->addHandleResult("Iterator", *pIterator);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -12519,25 +12488,25 @@ Lib3MFResult lib3mf_implicitmatrix_setmatrix(Lib3MF_ImplicitMatrix pImplicitMatr
 
 
 /*************************************************************************************************************************
- Class implementation for NodeAccessor
+ Class implementation for NodeIterator
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_nodeaccessor_get(Lib3MF_NodeAccessor pNodeAccessor, Lib3MF_ImplicitNode * pNode)
+Lib3MFResult lib3mf_nodeiterator_getcurrent(Lib3MF_NodeIterator pNodeIterator, Lib3MF_ImplicitNode * pNode)
 {
-	IBase* pIBaseClass = (IBase *)pNodeAccessor;
+	IBase* pIBaseClass = (IBase *)pNodeIterator;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pNodeAccessor, "NodeAccessor", "Get");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pNodeIterator, "NodeIterator", "GetCurrent");
 		}
 		if (pNode == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		IBase* pBaseNode(nullptr);
-		INodeAccessor* pINodeAccessor = dynamic_cast<INodeAccessor*>(pIBaseClass);
-		if (!pINodeAccessor)
+		INodeIterator* pINodeIterator = dynamic_cast<INodeIterator*>(pIBaseClass);
+		if (!pINodeIterator)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseNode = pINodeAccessor->Get();
+		pBaseNode = pINodeIterator->GetCurrent();
 
 		*pNode = (IBase*)(pBaseNode);
 		if (pJournalEntry.get() != nullptr) {
@@ -12788,7 +12757,7 @@ Lib3MFResult lib3mf_implicitfunction_addnode(Lib3MF_ImplicitFunction pImplicitFu
 	}
 }
 
-Lib3MFResult lib3mf_implicitfunction_getnodes(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_NodeAccessor * pAccessor)
+Lib3MFResult lib3mf_implicitfunction_getnodes(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_NodeIterator * pIterator)
 {
 	IBase* pIBaseClass = (IBase *)pImplicitFunction;
 
@@ -12797,18 +12766,18 @@ Lib3MFResult lib3mf_implicitfunction_getnodes(Lib3MF_ImplicitFunction pImplicitF
 		if (m_GlobalJournal.get() != nullptr)  {
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "GetNodes");
 		}
-		if (pAccessor == nullptr)
+		if (pIterator == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseAccessor(nullptr);
+		IBase* pBaseIterator(nullptr);
 		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
 		if (!pIImplicitFunction)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseAccessor = pIImplicitFunction->GetNodes();
+		pBaseIterator = pIImplicitFunction->GetNodes();
 
-		*pAccessor = (IBase*)(pBaseAccessor);
+		*pIterator = (IBase*)(pBaseIterator);
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("Accessor", *pAccessor);
+			pJournalEntry->addHandleResult("Iterator", *pIterator);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -12900,7 +12869,7 @@ Lib3MFResult lib3mf_implicitfunction_addinput(Lib3MF_ImplicitFunction pImplicitF
 	}
 }
 
-Lib3MFResult lib3mf_implicitfunction_getinputs(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPortAccessor * pAccessor)
+Lib3MFResult lib3mf_implicitfunction_getinputs(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPortIterator * pIterator)
 {
 	IBase* pIBaseClass = (IBase *)pImplicitFunction;
 
@@ -12909,18 +12878,18 @@ Lib3MFResult lib3mf_implicitfunction_getinputs(Lib3MF_ImplicitFunction pImplicit
 		if (m_GlobalJournal.get() != nullptr)  {
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "GetInputs");
 		}
-		if (pAccessor == nullptr)
+		if (pIterator == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseAccessor(nullptr);
+		IBase* pBaseIterator(nullptr);
 		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
 		if (!pIImplicitFunction)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseAccessor = pIImplicitFunction->GetInputs();
+		pBaseIterator = pIImplicitFunction->GetInputs();
 
-		*pAccessor = (IBase*)(pBaseAccessor);
+		*pIterator = (IBase*)(pBaseIterator);
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("Accessor", *pAccessor);
+			pJournalEntry->addHandleResult("Iterator", *pIterator);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -13012,7 +12981,7 @@ Lib3MFResult lib3mf_implicitfunction_addoutput(Lib3MF_ImplicitFunction pImplicit
 	}
 }
 
-Lib3MFResult lib3mf_implicitfunction_getoutputs(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPortAccessor * pAccessor)
+Lib3MFResult lib3mf_implicitfunction_getoutputs(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPortIterator * pIterator)
 {
 	IBase* pIBaseClass = (IBase *)pImplicitFunction;
 
@@ -13021,18 +12990,18 @@ Lib3MFResult lib3mf_implicitfunction_getoutputs(Lib3MF_ImplicitFunction pImplici
 		if (m_GlobalJournal.get() != nullptr)  {
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "GetOutputs");
 		}
-		if (pAccessor == nullptr)
+		if (pIterator == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseAccessor(nullptr);
+		IBase* pBaseIterator(nullptr);
 		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
 		if (!pIImplicitFunction)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseAccessor = pIImplicitFunction->GetOutputs();
+		pBaseIterator = pIImplicitFunction->GetOutputs();
 
-		*pAccessor = (IBase*)(pBaseAccessor);
+		*pIterator = (IBase*)(pBaseIterator);
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("Accessor", *pAccessor);
+			pJournalEntry->addHandleResult("Iterator", *pIterator);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -19667,16 +19636,14 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_implicitport_getdisplayname;
 	if (sProcName == "lib3mf_implicitport_setdisplayname") 
 		*ppProcAddress = (void*) &lib3mf_implicitport_setdisplayname;
-	if (sProcName == "lib3mf_accessor_getsize") 
-		*ppProcAddress = (void*) &lib3mf_accessor_getsize;
-	if (sProcName == "lib3mf_accessor_next") 
-		*ppProcAddress = (void*) &lib3mf_accessor_next;
-	if (sProcName == "lib3mf_accessor_prev") 
-		*ppProcAddress = (void*) &lib3mf_accessor_prev;
-	if (sProcName == "lib3mf_accessor_begin") 
-		*ppProcAddress = (void*) &lib3mf_accessor_begin;
-	if (sProcName == "lib3mf_implicitportaccessor_get") 
-		*ppProcAddress = (void*) &lib3mf_implicitportaccessor_get;
+	if (sProcName == "lib3mf_iterator_movenext") 
+		*ppProcAddress = (void*) &lib3mf_iterator_movenext;
+	if (sProcName == "lib3mf_iterator_moveprevious") 
+		*ppProcAddress = (void*) &lib3mf_iterator_moveprevious;
+	if (sProcName == "lib3mf_iterator_count") 
+		*ppProcAddress = (void*) &lib3mf_iterator_count;
+	if (sProcName == "lib3mf_implicitportiterator_getcurrent") 
+		*ppProcAddress = (void*) &lib3mf_implicitportiterator_getcurrent;
 	if (sProcName == "lib3mf_implicitnode_getidentifier") 
 		*ppProcAddress = (void*) &lib3mf_implicitnode_getidentifier;
 	if (sProcName == "lib3mf_implicitnode_setidentifier") 
@@ -19705,8 +19672,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_implicitmatrix_getmatrix;
 	if (sProcName == "lib3mf_implicitmatrix_setmatrix") 
 		*ppProcAddress = (void*) &lib3mf_implicitmatrix_setmatrix;
-	if (sProcName == "lib3mf_nodeaccessor_get") 
-		*ppProcAddress = (void*) &lib3mf_nodeaccessor_get;
+	if (sProcName == "lib3mf_nodeiterator_getcurrent") 
+		*ppProcAddress = (void*) &lib3mf_nodeiterator_getcurrent;
 	if (sProcName == "lib3mf_implicitfunction_getidentifier") 
 		*ppProcAddress = (void*) &lib3mf_implicitfunction_getidentifier;
 	if (sProcName == "lib3mf_implicitfunction_setidentifier") 

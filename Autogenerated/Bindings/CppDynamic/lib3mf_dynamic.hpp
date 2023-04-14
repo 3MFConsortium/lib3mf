@@ -112,13 +112,13 @@ class CImageStack;
 class CAttachment;
 class CTexture2D;
 class CImplicitPort;
-class CAccessor;
-class CImplicitPortAccessor;
+class CIterator;
+class CImplicitPortIterator;
 class CImplicitNode;
 class CImplicitConstant;
 class CImplicitVector;
 class CImplicitMatrix;
-class CNodeAccessor;
+class CNodeIterator;
 class CImplicitFunction;
 class CBuildItem;
 class CBuildItemIterator;
@@ -191,13 +191,13 @@ typedef CImageStack CLib3MFImageStack;
 typedef CAttachment CLib3MFAttachment;
 typedef CTexture2D CLib3MFTexture2D;
 typedef CImplicitPort CLib3MFImplicitPort;
-typedef CAccessor CLib3MFAccessor;
-typedef CImplicitPortAccessor CLib3MFImplicitPortAccessor;
+typedef CIterator CLib3MFIterator;
+typedef CImplicitPortIterator CLib3MFImplicitPortIterator;
 typedef CImplicitNode CLib3MFImplicitNode;
 typedef CImplicitConstant CLib3MFImplicitConstant;
 typedef CImplicitVector CLib3MFImplicitVector;
 typedef CImplicitMatrix CLib3MFImplicitMatrix;
-typedef CNodeAccessor CLib3MFNodeAccessor;
+typedef CNodeIterator CLib3MFNodeIterator;
 typedef CImplicitFunction CLib3MFImplicitFunction;
 typedef CBuildItem CLib3MFBuildItem;
 typedef CBuildItemIterator CLib3MFBuildItemIterator;
@@ -270,13 +270,13 @@ typedef std::shared_ptr<CImageStack> PImageStack;
 typedef std::shared_ptr<CAttachment> PAttachment;
 typedef std::shared_ptr<CTexture2D> PTexture2D;
 typedef std::shared_ptr<CImplicitPort> PImplicitPort;
-typedef std::shared_ptr<CAccessor> PAccessor;
-typedef std::shared_ptr<CImplicitPortAccessor> PImplicitPortAccessor;
+typedef std::shared_ptr<CIterator> PIterator;
+typedef std::shared_ptr<CImplicitPortIterator> PImplicitPortIterator;
 typedef std::shared_ptr<CImplicitNode> PImplicitNode;
 typedef std::shared_ptr<CImplicitConstant> PImplicitConstant;
 typedef std::shared_ptr<CImplicitVector> PImplicitVector;
 typedef std::shared_ptr<CImplicitMatrix> PImplicitMatrix;
-typedef std::shared_ptr<CNodeAccessor> PNodeAccessor;
+typedef std::shared_ptr<CNodeIterator> PNodeIterator;
 typedef std::shared_ptr<CImplicitFunction> PImplicitFunction;
 typedef std::shared_ptr<CBuildItem> PBuildItem;
 typedef std::shared_ptr<CBuildItemIterator> PBuildItemIterator;
@@ -349,13 +349,13 @@ typedef PImageStack PLib3MFImageStack;
 typedef PAttachment PLib3MFAttachment;
 typedef PTexture2D PLib3MFTexture2D;
 typedef PImplicitPort PLib3MFImplicitPort;
-typedef PAccessor PLib3MFAccessor;
-typedef PImplicitPortAccessor PLib3MFImplicitPortAccessor;
+typedef PIterator PLib3MFIterator;
+typedef PImplicitPortIterator PLib3MFImplicitPortIterator;
 typedef PImplicitNode PLib3MFImplicitNode;
 typedef PImplicitConstant PLib3MFImplicitConstant;
 typedef PImplicitVector PLib3MFImplicitVector;
 typedef PImplicitMatrix PLib3MFImplicitMatrix;
-typedef PNodeAccessor PLib3MFNodeAccessor;
+typedef PNodeIterator PLib3MFNodeIterator;
 typedef PImplicitFunction PLib3MFImplicitFunction;
 typedef PBuildItem PLib3MFBuildItem;
 typedef PBuildItemIterator PLib3MFBuildItemIterator;
@@ -728,13 +728,13 @@ private:
 	friend class CAttachment;
 	friend class CTexture2D;
 	friend class CImplicitPort;
-	friend class CAccessor;
-	friend class CImplicitPortAccessor;
+	friend class CIterator;
+	friend class CImplicitPortIterator;
 	friend class CImplicitNode;
 	friend class CImplicitConstant;
 	friend class CImplicitVector;
 	friend class CImplicitMatrix;
-	friend class CNodeAccessor;
+	friend class CNodeIterator;
 	friend class CImplicitFunction;
 	friend class CBuildItem;
 	friend class CBuildItemIterator;
@@ -1990,40 +1990,39 @@ public:
 };
 	
 /*************************************************************************************************************************
- Class CAccessor 
+ Class CIterator 
 **************************************************************************************************************************/
-class CAccessor : public CBase {
+class CIterator : public CBase {
 public:
 	
 	/**
-	* CAccessor::CAccessor - Constructor for Accessor class.
+	* CIterator::CIterator - Constructor for Iterator class.
 	*/
-	CAccessor(CWrapper* pWrapper, Lib3MFHandle pHandle)
+	CIterator(CWrapper* pWrapper, Lib3MFHandle pHandle)
 		: CBase(pWrapper, pHandle)
 	{
 	}
 	
-	inline Lib3MF_uint64 GetSize();
-	inline bool Next();
-	inline bool Prev();
-	inline void Begin();
+	inline bool MoveNext();
+	inline bool MovePrevious();
+	inline Lib3MF_uint64 Count();
 };
 	
 /*************************************************************************************************************************
- Class CImplicitPortAccessor 
+ Class CImplicitPortIterator 
 **************************************************************************************************************************/
-class CImplicitPortAccessor : public CAccessor {
+class CImplicitPortIterator : public CIterator {
 public:
 	
 	/**
-	* CImplicitPortAccessor::CImplicitPortAccessor - Constructor for ImplicitPortAccessor class.
+	* CImplicitPortIterator::CImplicitPortIterator - Constructor for ImplicitPortIterator class.
 	*/
-	CImplicitPortAccessor(CWrapper* pWrapper, Lib3MFHandle pHandle)
-		: CAccessor(pWrapper, pHandle)
+	CImplicitPortIterator(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CIterator(pWrapper, pHandle)
 	{
 	}
 	
-	inline PImplicitPort Get();
+	inline PImplicitPort GetCurrent();
 };
 	
 /*************************************************************************************************************************
@@ -2048,7 +2047,7 @@ public:
 	inline PImplicitPort AddInput(const std::string & sIdentifier, const std::string & sDisplayName);
 	inline PImplicitPort GetInputs();
 	inline PImplicitPort AddOutput(const std::string & sIdentifier, const std::string & sDisplayName);
-	inline PImplicitPort GetOutputs();
+	inline PImplicitPortIterator GetOutputs();
 };
 	
 /*************************************************************************************************************************
@@ -2105,20 +2104,20 @@ public:
 };
 	
 /*************************************************************************************************************************
- Class CNodeAccessor 
+ Class CNodeIterator 
 **************************************************************************************************************************/
-class CNodeAccessor : public CAccessor {
+class CNodeIterator : public CIterator {
 public:
 	
 	/**
-	* CNodeAccessor::CNodeAccessor - Constructor for NodeAccessor class.
+	* CNodeIterator::CNodeIterator - Constructor for NodeIterator class.
 	*/
-	CNodeAccessor(CWrapper* pWrapper, Lib3MFHandle pHandle)
-		: CAccessor(pWrapper, pHandle)
+	CNodeIterator(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CIterator(pWrapper, pHandle)
 	{
 	}
 	
-	inline PImplicitNode Get();
+	inline PImplicitNode GetCurrent();
 };
 	
 /*************************************************************************************************************************
@@ -2140,13 +2139,13 @@ public:
 	inline std::string GetDisplayName();
 	inline void SetDisplayName(const std::string & sDisplayName);
 	inline PImplicitNode AddNode(const eImplicitNodeType eNodeType, const std::string & sIdentifier, const std::string & sDisplayName);
-	inline PNodeAccessor GetNodes();
+	inline PNodeIterator GetNodes();
 	inline void RemoveNode(classParam<CImplicitNode> pNode);
 	inline void AddInput(const std::string & sIdentifier, const std::string & sDisplayName);
-	inline PImplicitPortAccessor GetInputs();
+	inline PImplicitPortIterator GetInputs();
 	inline void RemoveInput(classParam<CImplicitPort> pInput);
 	inline void AddOutput(const std::string & sIdentifier, const std::string & sDisplayName);
-	inline PImplicitPortAccessor GetOutputs();
+	inline PImplicitPortIterator GetOutputs();
 	inline void RemoveOutput(classParam<CImplicitPort> pOutput);
 };
 	
@@ -2553,13 +2552,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0x8CE7A1191A63A35DUL: return new CAttachment(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Attachment"
 		case 0xE0441CF976B36319UL: return new CTexture2D(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Texture2D"
 		case 0xD5C49B04AF1963CDUL: return new CImplicitPort(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPort"
-		case 0xF94265ED198E4784UL: return new CAccessor(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Accessor"
-		case 0x258087F875881ADDUL: return new CImplicitPortAccessor(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPortAccessor"
+		case 0x52F06268CD098EFEUL: return new CIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Iterator"
+		case 0xC62268F2D7C7012CUL: return new CImplicitPortIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPortIterator"
 		case 0xE72592A7725AB29BUL: return new CImplicitNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitNode"
 		case 0xFDD0E00663954DA8UL: return new CImplicitConstant(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitConstant"
 		case 0x2B3F23DD95A4DF56UL: return new CImplicitVector(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitVector"
 		case 0x7D48084ED0AE80FEUL: return new CImplicitMatrix(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitMatrix"
-		case 0xE0E0FC011B210DE0UL: return new CNodeAccessor(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::NodeAccessor"
+		case 0xFC006BC888CAB4D0UL: return new CNodeIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::NodeIterator"
 		case 0x6CE54469EEA83BC1UL: return new CImplicitFunction(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitFunction"
 		case 0x68FB2D5FFC4BA12AUL: return new CBuildItem(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItem"
 		case 0xA7D21BD364910860UL: return new CBuildItemIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItemIterator"
@@ -3176,11 +3175,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ImplicitPort_SetIdentifier = nullptr;
 		pWrapperTable->m_ImplicitPort_GetDisplayName = nullptr;
 		pWrapperTable->m_ImplicitPort_SetDisplayName = nullptr;
-		pWrapperTable->m_Accessor_GetSize = nullptr;
-		pWrapperTable->m_Accessor_Next = nullptr;
-		pWrapperTable->m_Accessor_Prev = nullptr;
-		pWrapperTable->m_Accessor_Begin = nullptr;
-		pWrapperTable->m_ImplicitPortAccessor_Get = nullptr;
+		pWrapperTable->m_Iterator_MoveNext = nullptr;
+		pWrapperTable->m_Iterator_MovePrevious = nullptr;
+		pWrapperTable->m_Iterator_Count = nullptr;
+		pWrapperTable->m_ImplicitPortIterator_GetCurrent = nullptr;
 		pWrapperTable->m_ImplicitNode_GetIdentifier = nullptr;
 		pWrapperTable->m_ImplicitNode_SetIdentifier = nullptr;
 		pWrapperTable->m_ImplicitNode_GetDisplayName = nullptr;
@@ -3195,7 +3193,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ImplicitVector_Get = nullptr;
 		pWrapperTable->m_ImplicitMatrix_GetMatrix = nullptr;
 		pWrapperTable->m_ImplicitMatrix_SetMatrix = nullptr;
-		pWrapperTable->m_NodeAccessor_Get = nullptr;
+		pWrapperTable->m_NodeIterator_GetCurrent = nullptr;
 		pWrapperTable->m_ImplicitFunction_GetIdentifier = nullptr;
 		pWrapperTable->m_ImplicitFunction_SetIdentifier = nullptr;
 		pWrapperTable->m_ImplicitFunction_GetDisplayName = nullptr;
@@ -6297,48 +6295,39 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_Accessor_GetSize = (PLib3MFAccessor_GetSizePtr) GetProcAddress(hLibrary, "lib3mf_accessor_getsize");
+		pWrapperTable->m_Iterator_MoveNext = (PLib3MFIterator_MoveNextPtr) GetProcAddress(hLibrary, "lib3mf_iterator_movenext");
 		#else // _WIN32
-		pWrapperTable->m_Accessor_GetSize = (PLib3MFAccessor_GetSizePtr) dlsym(hLibrary, "lib3mf_accessor_getsize");
+		pWrapperTable->m_Iterator_MoveNext = (PLib3MFIterator_MoveNextPtr) dlsym(hLibrary, "lib3mf_iterator_movenext");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_Accessor_GetSize == nullptr)
+		if (pWrapperTable->m_Iterator_MoveNext == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_Accessor_Next = (PLib3MFAccessor_NextPtr) GetProcAddress(hLibrary, "lib3mf_accessor_next");
+		pWrapperTable->m_Iterator_MovePrevious = (PLib3MFIterator_MovePreviousPtr) GetProcAddress(hLibrary, "lib3mf_iterator_moveprevious");
 		#else // _WIN32
-		pWrapperTable->m_Accessor_Next = (PLib3MFAccessor_NextPtr) dlsym(hLibrary, "lib3mf_accessor_next");
+		pWrapperTable->m_Iterator_MovePrevious = (PLib3MFIterator_MovePreviousPtr) dlsym(hLibrary, "lib3mf_iterator_moveprevious");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_Accessor_Next == nullptr)
+		if (pWrapperTable->m_Iterator_MovePrevious == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_Accessor_Prev = (PLib3MFAccessor_PrevPtr) GetProcAddress(hLibrary, "lib3mf_accessor_prev");
+		pWrapperTable->m_Iterator_Count = (PLib3MFIterator_CountPtr) GetProcAddress(hLibrary, "lib3mf_iterator_count");
 		#else // _WIN32
-		pWrapperTable->m_Accessor_Prev = (PLib3MFAccessor_PrevPtr) dlsym(hLibrary, "lib3mf_accessor_prev");
+		pWrapperTable->m_Iterator_Count = (PLib3MFIterator_CountPtr) dlsym(hLibrary, "lib3mf_iterator_count");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_Accessor_Prev == nullptr)
+		if (pWrapperTable->m_Iterator_Count == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_Accessor_Begin = (PLib3MFAccessor_BeginPtr) GetProcAddress(hLibrary, "lib3mf_accessor_begin");
+		pWrapperTable->m_ImplicitPortIterator_GetCurrent = (PLib3MFImplicitPortIterator_GetCurrentPtr) GetProcAddress(hLibrary, "lib3mf_implicitportiterator_getcurrent");
 		#else // _WIN32
-		pWrapperTable->m_Accessor_Begin = (PLib3MFAccessor_BeginPtr) dlsym(hLibrary, "lib3mf_accessor_begin");
+		pWrapperTable->m_ImplicitPortIterator_GetCurrent = (PLib3MFImplicitPortIterator_GetCurrentPtr) dlsym(hLibrary, "lib3mf_implicitportiterator_getcurrent");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_Accessor_Begin == nullptr)
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		#ifdef _WIN32
-		pWrapperTable->m_ImplicitPortAccessor_Get = (PLib3MFImplicitPortAccessor_GetPtr) GetProcAddress(hLibrary, "lib3mf_implicitportaccessor_get");
-		#else // _WIN32
-		pWrapperTable->m_ImplicitPortAccessor_Get = (PLib3MFImplicitPortAccessor_GetPtr) dlsym(hLibrary, "lib3mf_implicitportaccessor_get");
-		dlerror();
-		#endif // _WIN32
-		if (pWrapperTable->m_ImplicitPortAccessor_Get == nullptr)
+		if (pWrapperTable->m_ImplicitPortIterator_GetCurrent == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -6468,12 +6457,12 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_NodeAccessor_Get = (PLib3MFNodeAccessor_GetPtr) GetProcAddress(hLibrary, "lib3mf_nodeaccessor_get");
+		pWrapperTable->m_NodeIterator_GetCurrent = (PLib3MFNodeIterator_GetCurrentPtr) GetProcAddress(hLibrary, "lib3mf_nodeiterator_getcurrent");
 		#else // _WIN32
-		pWrapperTable->m_NodeAccessor_Get = (PLib3MFNodeAccessor_GetPtr) dlsym(hLibrary, "lib3mf_nodeaccessor_get");
+		pWrapperTable->m_NodeIterator_GetCurrent = (PLib3MFNodeIterator_GetCurrentPtr) dlsym(hLibrary, "lib3mf_nodeiterator_getcurrent");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_NodeAccessor_Get == nullptr)
+		if (pWrapperTable->m_NodeIterator_GetCurrent == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -9456,24 +9445,20 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitPort_SetDisplayName == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_accessor_getsize", (void**)&(pWrapperTable->m_Accessor_GetSize));
-		if ( (eLookupError != 0) || (pWrapperTable->m_Accessor_GetSize == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_iterator_movenext", (void**)&(pWrapperTable->m_Iterator_MoveNext));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Iterator_MoveNext == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_accessor_next", (void**)&(pWrapperTable->m_Accessor_Next));
-		if ( (eLookupError != 0) || (pWrapperTable->m_Accessor_Next == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_iterator_moveprevious", (void**)&(pWrapperTable->m_Iterator_MovePrevious));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Iterator_MovePrevious == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_accessor_prev", (void**)&(pWrapperTable->m_Accessor_Prev));
-		if ( (eLookupError != 0) || (pWrapperTable->m_Accessor_Prev == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_iterator_count", (void**)&(pWrapperTable->m_Iterator_Count));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Iterator_Count == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_accessor_begin", (void**)&(pWrapperTable->m_Accessor_Begin));
-		if ( (eLookupError != 0) || (pWrapperTable->m_Accessor_Begin == nullptr) )
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		eLookupError = (*pLookup)("lib3mf_implicitportaccessor_get", (void**)&(pWrapperTable->m_ImplicitPortAccessor_Get));
-		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitPortAccessor_Get == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_implicitportiterator_getcurrent", (void**)&(pWrapperTable->m_ImplicitPortIterator_GetCurrent));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitPortIterator_GetCurrent == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_implicitnode_getidentifier", (void**)&(pWrapperTable->m_ImplicitNode_GetIdentifier));
@@ -9532,8 +9517,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitMatrix_SetMatrix == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_nodeaccessor_get", (void**)&(pWrapperTable->m_NodeAccessor_Get));
-		if ( (eLookupError != 0) || (pWrapperTable->m_NodeAccessor_Get == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_nodeiterator_getcurrent", (void**)&(pWrapperTable->m_NodeIterator_GetCurrent));
+		if ( (eLookupError != 0) || (pWrapperTable->m_NodeIterator_GetCurrent == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_implicitfunction_getidentifier", (void**)&(pWrapperTable->m_ImplicitFunction_GetIdentifier));
@@ -14339,65 +14324,57 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	 * Method definitions for class CAccessor
+	 * Method definitions for class CIterator
 	 */
 	
 	/**
-	* CAccessor::GetSize - Returns the number of elements
-	* @return The number of elements
+	* CIterator::MoveNext - Iterates to the next item in the list.
+	* @return Iterates to the next item in the list.
 	*/
-	Lib3MF_uint64 CAccessor::GetSize()
+	bool CIterator::MoveNext()
 	{
-		Lib3MF_uint64 resultSize = 0;
-		CheckError(m_pWrapper->m_WrapperTable.m_Accessor_GetSize(m_pHandle, &resultSize));
+		bool resultHasNext = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Iterator_MoveNext(m_pHandle, &resultHasNext));
 		
-		return resultSize;
+		return resultHasNext;
 	}
 	
 	/**
-	* CAccessor::Next - Go to the next element
-	* @return Returns true, if there is a next element
+	* CIterator::MovePrevious - Iterates to the previous item in the list.
+	* @return Iterates to the previous item in the list.
 	*/
-	bool CAccessor::Next()
+	bool CIterator::MovePrevious()
 	{
-		bool resultResult = 0;
-		CheckError(m_pWrapper->m_WrapperTable.m_Accessor_Next(m_pHandle, &resultResult));
+		bool resultHasPrevious = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Iterator_MovePrevious(m_pHandle, &resultHasPrevious));
 		
-		return resultResult;
+		return resultHasPrevious;
 	}
 	
 	/**
-	* CAccessor::Prev - Go to the previous element
-	* @return Returns true, if there is a previous element
+	* CIterator::Count - Returns the number of items the iterator captures.
+	* @return returns the number of items the iterator captures.
 	*/
-	bool CAccessor::Prev()
+	Lib3MF_uint64 CIterator::Count()
 	{
-		bool resultResult = 0;
-		CheckError(m_pWrapper->m_WrapperTable.m_Accessor_Prev(m_pHandle, &resultResult));
+		Lib3MF_uint64 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Iterator_Count(m_pHandle, &resultCount));
 		
-		return resultResult;
+		return resultCount;
 	}
 	
 	/**
-	* CAccessor::Begin - Go to the first element
-	*/
-	void CAccessor::Begin()
-	{
-		CheckError(m_pWrapper->m_WrapperTable.m_Accessor_Begin(m_pHandle));
-	}
-	
-	/**
-	 * Method definitions for class CImplicitPortAccessor
+	 * Method definitions for class CImplicitPortIterator
 	 */
 	
 	/**
-	* CImplicitPortAccessor::Get - Returns the current element
+	* CImplicitPortIterator::GetCurrent - Returns the current element
 	* @return The current element
 	*/
-	PImplicitPort CImplicitPortAccessor::Get()
+	PImplicitPort CImplicitPortIterator::GetCurrent()
 	{
 		Lib3MFHandle hPort = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitPortAccessor_Get(m_pHandle, &hPort));
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitPortIterator_GetCurrent(m_pHandle, &hPort));
 		
 		if (!hPort) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -14522,15 +14499,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	* CImplicitNode::GetOutputs - Retrieves the outputs
 	* @return the accessor to the outputs
 	*/
-	PImplicitPort CImplicitNode::GetOutputs()
+	PImplicitPortIterator CImplicitNode::GetOutputs()
 	{
-		Lib3MFHandle hAccessor = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_GetOutputs(m_pHandle, &hAccessor));
+		Lib3MFHandle hIterator = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_GetOutputs(m_pHandle, &hIterator));
 		
-		if (!hAccessor) {
+		if (!hIterator) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hAccessor)));
+		return std::shared_ptr<CImplicitPortIterator>(dynamic_cast<CImplicitPortIterator*>(m_pWrapper->polymorphicFactory(hIterator)));
 	}
 	
 	/**
@@ -14600,17 +14577,17 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	 * Method definitions for class CNodeAccessor
+	 * Method definitions for class CNodeIterator
 	 */
 	
 	/**
-	* CNodeAccessor::Get - Returns the current element
+	* CNodeIterator::GetCurrent - Returns the current element
 	* @return The current element
 	*/
-	PImplicitNode CNodeAccessor::Get()
+	PImplicitNode CNodeIterator::GetCurrent()
 	{
 		Lib3MFHandle hNode = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_NodeAccessor_Get(m_pHandle, &hNode));
+		CheckError(m_pWrapper->m_WrapperTable.m_NodeIterator_GetCurrent(m_pHandle, &hNode));
 		
 		if (!hNode) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -14690,17 +14667,17 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	
 	/**
 	* CImplicitFunction::GetNodes - Retrieves the nodes
-	* @return the accessor to the nodes
+	* @return iterator for the list of nodes
 	*/
-	PNodeAccessor CImplicitFunction::GetNodes()
+	PNodeIterator CImplicitFunction::GetNodes()
 	{
-		Lib3MFHandle hAccessor = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_GetNodes(m_pHandle, &hAccessor));
+		Lib3MFHandle hIterator = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_GetNodes(m_pHandle, &hIterator));
 		
-		if (!hAccessor) {
+		if (!hIterator) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::shared_ptr<CNodeAccessor>(dynamic_cast<CNodeAccessor*>(m_pWrapper->polymorphicFactory(hAccessor)));
+		return std::shared_ptr<CNodeIterator>(dynamic_cast<CNodeIterator*>(m_pWrapper->polymorphicFactory(hIterator)));
 	}
 	
 	/**
@@ -14725,17 +14702,17 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	
 	/**
 	* CImplicitFunction::GetInputs - Retrieves the inputs
-	* @return the accessor to the inputs
+	* @return iterator for the list of inputs
 	*/
-	PImplicitPortAccessor CImplicitFunction::GetInputs()
+	PImplicitPortIterator CImplicitFunction::GetInputs()
 	{
-		Lib3MFHandle hAccessor = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_GetInputs(m_pHandle, &hAccessor));
+		Lib3MFHandle hIterator = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_GetInputs(m_pHandle, &hIterator));
 		
-		if (!hAccessor) {
+		if (!hIterator) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::shared_ptr<CImplicitPortAccessor>(dynamic_cast<CImplicitPortAccessor*>(m_pWrapper->polymorphicFactory(hAccessor)));
+		return std::shared_ptr<CImplicitPortIterator>(dynamic_cast<CImplicitPortIterator*>(m_pWrapper->polymorphicFactory(hIterator)));
 	}
 	
 	/**
@@ -14760,17 +14737,17 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	
 	/**
 	* CImplicitFunction::GetOutputs - Retrieves the outputs
-	* @return the accessor to the outputs
+	* @return iterator for the outputs
 	*/
-	PImplicitPortAccessor CImplicitFunction::GetOutputs()
+	PImplicitPortIterator CImplicitFunction::GetOutputs()
 	{
-		Lib3MFHandle hAccessor = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_GetOutputs(m_pHandle, &hAccessor));
+		Lib3MFHandle hIterator = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_GetOutputs(m_pHandle, &hIterator));
 		
-		if (!hAccessor) {
+		if (!hIterator) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::shared_ptr<CImplicitPortAccessor>(dynamic_cast<CImplicitPortAccessor*>(m_pWrapper->polymorphicFactory(hAccessor)));
+		return std::shared_ptr<CImplicitPortIterator>(dynamic_cast<CImplicitPortIterator*>(m_pWrapper->polymorphicFactory(hIterator)));
 	}
 	
 	/**

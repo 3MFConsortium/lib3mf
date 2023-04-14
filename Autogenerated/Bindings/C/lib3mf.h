@@ -3326,56 +3326,48 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitport_getdisplayname(Lib3MF_ImplicitP
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitport_setdisplayname(Lib3MF_ImplicitPort pImplicitPort, const char * pDisplayName);
 
 /*************************************************************************************************************************
- Class definition for Accessor
+ Class definition for Iterator
 **************************************************************************************************************************/
 
 /**
-* Returns the number of elements
+* Iterates to the next item in the list.
 *
-* @param[in] pAccessor - Accessor instance.
-* @param[out] pSize - The number of elements
+* @param[in] pIterator - Iterator instance.
+* @param[out] pHasNext - Iterates to the next item in the list.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_accessor_getsize(Lib3MF_Accessor pAccessor, Lib3MF_uint64 * pSize);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_iterator_movenext(Lib3MF_Iterator pIterator, bool * pHasNext);
 
 /**
-* Go to the next element
+* Iterates to the previous item in the list.
 *
-* @param[in] pAccessor - Accessor instance.
-* @param[out] pResult - Returns true, if there is a next element
+* @param[in] pIterator - Iterator instance.
+* @param[out] pHasPrevious - Iterates to the previous item in the list.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_accessor_next(Lib3MF_Accessor pAccessor, bool * pResult);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_iterator_moveprevious(Lib3MF_Iterator pIterator, bool * pHasPrevious);
 
 /**
-* Go to the previous element
+* Returns the number of items the iterator captures.
 *
-* @param[in] pAccessor - Accessor instance.
-* @param[out] pResult - Returns true, if there is a previous element
+* @param[in] pIterator - Iterator instance.
+* @param[out] pCount - returns the number of items the iterator captures.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_accessor_prev(Lib3MF_Accessor pAccessor, bool * pResult);
-
-/**
-* Go to the first element
-*
-* @param[in] pAccessor - Accessor instance.
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_accessor_begin(Lib3MF_Accessor pAccessor);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_iterator_count(Lib3MF_Iterator pIterator, Lib3MF_uint64 * pCount);
 
 /*************************************************************************************************************************
- Class definition for ImplicitPortAccessor
+ Class definition for ImplicitPortIterator
 **************************************************************************************************************************/
 
 /**
 * Returns the current element
 *
-* @param[in] pImplicitPortAccessor - ImplicitPortAccessor instance.
+* @param[in] pImplicitPortIterator - ImplicitPortIterator instance.
 * @param[out] pPort - The current element
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitportaccessor_get(Lib3MF_ImplicitPortAccessor pImplicitPortAccessor, Lib3MF_ImplicitPort * pPort);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitportiterator_getcurrent(Lib3MF_ImplicitPortIterator pImplicitPortIterator, Lib3MF_ImplicitPort * pPort);
 
 /*************************************************************************************************************************
  Class definition for ImplicitNode
@@ -3465,10 +3457,10 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_addoutput(Lib3MF_ImplicitNode p
 * Retrieves the outputs
 *
 * @param[in] pImplicitNode - ImplicitNode instance.
-* @param[out] pAccessor - the accessor to the outputs
+* @param[out] pIterator - the accessor to the outputs
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getoutputs(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_ImplicitPort * pAccessor);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getoutputs(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_ImplicitPortIterator * pIterator);
 
 /*************************************************************************************************************************
  Class definition for ImplicitConstant
@@ -3528,17 +3520,17 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitmatrix_getmatrix(Lib3MF_ImplicitMatr
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitmatrix_setmatrix(Lib3MF_ImplicitMatrix pImplicitMatrix, const sLib3MFTransform * pMatrix);
 
 /*************************************************************************************************************************
- Class definition for NodeAccessor
+ Class definition for NodeIterator
 **************************************************************************************************************************/
 
 /**
 * Returns the current element
 *
-* @param[in] pNodeAccessor - NodeAccessor instance.
+* @param[in] pNodeIterator - NodeIterator instance.
 * @param[out] pNode - The current element
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_nodeaccessor_get(Lib3MF_NodeAccessor pNodeAccessor, Lib3MF_ImplicitNode * pNode);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_nodeiterator_getcurrent(Lib3MF_NodeIterator pNodeIterator, Lib3MF_ImplicitNode * pNode);
 
 /*************************************************************************************************************************
  Class definition for ImplicitFunction
@@ -3600,10 +3592,10 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addnode(Lib3MF_ImplicitFunc
 * Retrieves the nodes
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
-* @param[out] pAccessor - the accessor to the nodes
+* @param[out] pIterator - iterator for the list of nodes
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_getnodes(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_NodeAccessor * pAccessor);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_getnodes(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_NodeIterator * pIterator);
 
 /**
 * Removes a node
@@ -3628,10 +3620,10 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addinput(Lib3MF_ImplicitFun
 * Retrieves the inputs
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
-* @param[out] pAccessor - the accessor to the inputs
+* @param[out] pIterator - iterator for the list of inputs
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_getinputs(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPortAccessor * pAccessor);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_getinputs(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPortIterator * pIterator);
 
 /**
 * Removes an input
@@ -3656,10 +3648,10 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addoutput(Lib3MF_ImplicitFu
 * Retrieves the outputs
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
-* @param[out] pAccessor - the accessor to the outputs
+* @param[out] pIterator - iterator for the outputs
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_getoutputs(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPortAccessor * pAccessor);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_getoutputs(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPortIterator * pIterator);
 
 /**
 * Removes an output

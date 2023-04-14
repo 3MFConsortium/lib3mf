@@ -118,7 +118,7 @@ namespace Lib3MF
              * IImplicitFunction::GetNodes - Retrieves the nodes
              * @return the accessor to the nodes
              */
-            INodeAccessor * GetNodes() override;
+            INodeIterator * GetNodes() override;
 
             /**
              * IImplicitFunction::RemoveNode - Removes a node
@@ -138,7 +138,7 @@ namespace Lib3MF
              * IImplicitFunction::GetInputs - Retrieves the inputs
              * @return the accessor to the inputs
              */
-            IImplicitPortAccessor * GetInputs() override;
+            IImplicitPortIterator * GetInputs() override;
 
             /**
              * IImplicitFunction::RemoveInput - Removes an input
@@ -158,7 +158,7 @@ namespace Lib3MF
              * IImplicitFunction::GetOutputs - Retrieves the outputs
              * @return the accessor to the outputs
              */
-            IImplicitPortAccessor * GetOutputs() override;
+            IImplicitPortIterator * GetOutputs() override;
 
             /**
              * IImplicitFunction::RemoveOutput - Removes an output

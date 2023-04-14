@@ -24,24 +24,70 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CImplicitPortAccessor
+Abstract: This is the class declaration of CImplicitPortIterator
 
 */
 
-#include "lib3mf_implicitportaccessor.hpp"
-#include "lib3mf_interfaceexception.hpp"
+
+#ifndef __LIB3MF_IMPLICITPORTITERATOR
+#define __LIB3MF_IMPLICITPORTITERATOR
+
+#include "lib3mf_interfaces.hpp"
+
+// Parent classes
+#include "lib3mf_iterator.hpp"
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 // Include custom headers here.
 
 
-using namespace Lib3MF::Impl;
+namespace Lib3MF {
+namespace Impl {
+
 
 /*************************************************************************************************************************
- Class definition of CImplicitPortAccessor 
+ Class declaration of CImplicitPortIterator 
 **************************************************************************************************************************/
 
-IImplicitPort * CImplicitPortAccessor::Get()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
+class CImplicitPortIterator : public virtual IImplicitPortIterator, public virtual CIterator {
+private:
 
+	/**
+	* Put private members here.
+	*/
+
+protected:
+
+	/**
+	* Put protected members here.
+	*/
+
+public:
+
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
+
+
+	/**
+	* Public member functions to implement.
+	*/
+
+	/**
+	* IImplicitPortIterator::GetCurrent - Returns the current element
+	* @return The current element
+	*/
+	IImplicitPort * GetCurrent() override;
+
+};
+
+} // namespace Impl
+} // namespace Lib3MF
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#endif // __LIB3MF_IMPLICITPORTITERATOR

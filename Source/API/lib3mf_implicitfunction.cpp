@@ -78,7 +78,7 @@ IImplicitNode * CImplicitFunction::AddNode(const Lib3MF::eImplicitNodeType eNode
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-INodeAccessor * CImplicitFunction::GetNodes()
+INodeIterator * CImplicitFunction::GetNodes()
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
@@ -93,7 +93,7 @@ void CImplicitFunction::AddInput(const std::string & sIdentifier, const std::str
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IImplicitPortAccessor * CImplicitFunction::GetInputs()
+IImplicitPortIterator * CImplicitFunction::GetInputs()
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
@@ -108,7 +108,7 @@ void CImplicitFunction::AddOutput(const std::string & sIdentifier, const std::st
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IImplicitPortAccessor * CImplicitFunction::GetOutputs()
+IImplicitPortIterator * CImplicitFunction::GetOutputs()
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
