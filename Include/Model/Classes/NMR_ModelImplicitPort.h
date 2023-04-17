@@ -44,6 +44,9 @@ namespace NMR
         std::string m_displayname;
 
       public:
+        CModelImplicitPort(ImplicitIdentifier const & identifier, std::string const & displayname);
+        CModelImplicitPort() = delete;
+
         ImplicitIdentifier const & getIdentifier() const;
         std::string const & getDisplayName() const;
         void setIdentifier(ImplicitIdentifier const & identifier);

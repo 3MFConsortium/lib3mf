@@ -3578,7 +3578,7 @@ public:
 	* IImplicitNode::GetInputs - Retrieves the inputs
 	* @return the accessor to the inputs
 	*/
-	virtual IImplicitPort * GetInputs() = 0;
+	virtual IImplicitPortIterator * GetInputs() = 0;
 
 	/**
 	* IImplicitNode::AddOutput - Add an output

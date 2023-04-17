@@ -33,30 +33,33 @@ Abstract: This is a stub class definition of CImplicitPort
 
 // Include custom headers here.
 
-
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CImplicitPort 
+ Class definition of CImplicitPort
 **************************************************************************************************************************/
+
+Lib3MF::Impl::CImplicitPort::CImplicitPort(NMR::PModelImplicitPort pImplicitPort)
+    : m_pImplicitPort(pImplicitPort)
+{
+}
 
 std::string CImplicitPort::GetIdentifier()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CImplicitPort::SetIdentifier(const std::string & sIdentifier)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 std::string CImplicitPort::GetDisplayName()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CImplicitPort::SetDisplayName(const std::string & sDisplayName)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
-

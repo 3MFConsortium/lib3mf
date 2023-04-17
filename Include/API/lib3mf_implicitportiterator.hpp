@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CImplicitPortIterator
 #endif
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelImplicitNode.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -58,7 +58,7 @@ private:
 	/**
 	* Put private members here.
 	*/
-
+	NMR::PPorts m_pPorts;
 protected:
 
 	/**
@@ -66,7 +66,7 @@ protected:
 	*/
 
 public:
-
+	CImplicitPortIterator(NMR::PPorts pPorts);
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/

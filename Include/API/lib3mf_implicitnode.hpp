@@ -56,7 +56,6 @@ namespace Lib3MF
         {
           private:
             NMR::PModelImplicitNode m_pImplicitNode;
-
           protected:
             /**
              * Put protected members here.
@@ -93,6 +92,38 @@ namespace Lib3MF
              * @param[in] sDisplayName - the display name
              */
             void SetDisplayName(const std::string & sDisplayName) override;
+
+            Lib3MF::eImplicitNodeType GetNodeType() override;
+
+            /**
+             * IImplicitNode::AddInput - Add an input
+             * @param[in] sIdentifier - the identifier of the input
+             * @param[in] sDisplayName - the display name of the input
+             * @return
+             */
+            IImplicitPort * AddInput(const std::string & sIdentifier,
+                                     const std::string & sDisplayName) override;
+
+            /**
+             * IImplicitNode::GetInputs - Retrieves the inputs
+             * @return the accessor to the inputs
+             */
+            IImplicitPortIterator * GetInputs() override;
+
+            /**
+             * IImplicitNode::AddOutput - Add an output
+             * @param[in] sIdentifier - the identifier of the output
+             * @param[in] sDisplayName - the display name of the output
+             * @return
+             */
+            IImplicitPort * AddOutput(const std::string & sIdentifier,
+                                      const std::string & sDisplayName) override;
+
+            /**
+             * IImplicitNode::GetOutputs - Retrieves the outputs
+             * @return the accessor to the outputs
+             */
+            IImplicitPortIterator * GetOutputs() override;
         };
 
     } // namespace Impl

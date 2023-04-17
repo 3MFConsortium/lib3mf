@@ -30,6 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Common/Platform/NMR_SAL.h>
 #include <Model/Classes/NMR_ModelImplicitPort.h>
+#include <lib3mf_types.hpp>
 
 #include <memory>
 #include <string>
@@ -37,26 +38,40 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace NMR
 {
-    using Inputs = std::vector<PModelImplicitPort>;
-    using Ouputs = std::vector<PModelImplicitPort>;
+    using Ports = std::vector<PModelImplicitPort>;
+    using PPorts = std::shared_ptr<Ports>;
 
     class CModelImplicitNode
     {
       private:
         ImplicitIdentifier m_identifier;
         std::string m_displayname;
+        Lib3MF::eImplicitNodeType m_type;
 
-        Inputs m_inputs;
-        Ouputs m_outputs;
+        PPorts m_inputs;
+        PPorts m_outputs;
 
       public:
+        CModelImplicitNode(Lib3MF::eImplicitNodeType type, ImplicitIdentifier const & identifier, std::string const & displayname);
+
+
         ImplicitIdentifier const & getIdentifier() const;
         std::string const & getDisplayName() const;
         void setIdentifier(ImplicitIdentifier const & identifier);
         void setDisplayName(std::string const & displayname);
 
-        Inputs const & getInputs() const;
-        Ouputs const & getOutputs() const;
+        void setType(Lib3MF::eImplicitNodeType type);
+        Lib3MF::eImplicitNodeType getNodeType() const;
+
+        PModelImplicitPort addInput(const std::string & sIdentifier,
+                                     const std::string & sDisplayName);
+
+        PModelImplicitPort addOutput(const std::string & sIdentifier,
+                                      const std::string & sDisplayName);
+
+
+        PPorts getInputs() const;
+        PPorts getOutputs() const;
     };
 
     using PModelImplicitNode = std::shared_ptr<CModelImplicitNode>;

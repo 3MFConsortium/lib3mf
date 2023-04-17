@@ -31,6 +31,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace NMR
 {
+    CModelImplicitPort::CModelImplicitPort(ImplicitIdentifier const & identifier,
+                                           std::string const & displayname) : m_identifier(identifier),
+                                                                              m_displayname(displayname)
+    {
+    }
     ImplicitIdentifier const & CModelImplicitPort::getIdentifier() const
     {
         return m_identifier;

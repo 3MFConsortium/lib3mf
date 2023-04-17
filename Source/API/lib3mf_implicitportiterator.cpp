@@ -40,6 +40,11 @@ using namespace Lib3MF::Impl;
  Class definition of CImplicitPortIterator 
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CImplicitPortIterator::CImplicitPortIterator(NMR::PPorts pPorts) : m_pPorts(pPorts)
+{
+}
+
+
 IImplicitPort * CImplicitPortIterator::GetCurrent()
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);

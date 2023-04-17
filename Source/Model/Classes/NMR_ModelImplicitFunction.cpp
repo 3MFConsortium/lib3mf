@@ -56,6 +56,14 @@ namespace NMR
         m_displayname = displayname;
     }
 
+    PModelImplicitNode CModelImplicitFunction::addNode(const Lib3MF::eImplicitNodeType eNodeType,
+                                                       const std::string & sIdentifier,
+                                                       const std::string & sDisplayName)
+    {
+        auto node = std::make_shared<CModelImplicitNode>(eNodeType, sIdentifier, sDisplayName);
+        m_nodes.push_back(node);
+        return node;
+    }
     ImplicitNodes const & NMR::CModelImplicitFunction::getNodes() const
     {
         return m_nodes;

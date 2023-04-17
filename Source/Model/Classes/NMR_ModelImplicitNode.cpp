@@ -31,6 +31,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace NMR
 {
+    CModelImplicitNode::CModelImplicitNode(Lib3MF::eImplicitNodeType type,
+                                           ImplicitIdentifier const & identifier,
+                                           std::string const & displayname)
+        : m_type(type)
+        , m_identifier(identifier)
+        , m_displayname(displayname)
+    {
+        m_outputs = std::make_shared<Ports>();
+        m_inputs = std::make_shared<Ports>();
+    }
+
     ImplicitIdentifier const & CModelImplicitNode::getIdentifier() const
     {
         return m_identifier;
@@ -49,5 +60,42 @@ namespace NMR
     void CModelImplicitNode::setDisplayName(std::string const & displayname)
     {
         m_displayname = displayname;
+    }
+
+    void NMR::CModelImplicitNode::setType(Lib3MF::eImplicitNodeType type)
+    {
+        m_type = type;
+    }
+
+    Lib3MF::eImplicitNodeType CModelImplicitNode::getNodeType() const
+    {
+        return m_type;
+    }
+
+    PModelImplicitPort CModelImplicitNode::addInput(const std::string & sIdentifier,
+                                                    const std::string & sDisplayName)
+    {
+
+        auto newPort = std::make_shared<CModelImplicitPort>(sIdentifier, sDisplayName);
+        m_inputs->push_back(newPort);
+        return newPort;
+    }
+
+    PModelImplicitPort CModelImplicitNode::addOutput(const std::string & sIdentifier,
+                                                     const std::string & sDisplayName)
+    {
+        auto newPort = std::make_shared<CModelImplicitPort>(sIdentifier, sDisplayName);
+        m_outputs->push_back(newPort);
+        return newPort;
+    }
+
+    PPorts NMR::CModelImplicitNode::getInputs() const
+    {
+        return m_inputs;
+    }
+
+    PPorts CModelImplicitNode::getOutputs() const
+    {
+        return m_outputs;
     }
 }

@@ -29,6 +29,7 @@ Abstract: This is a stub class definition of CImplicitFunction
 */
 
 #include "lib3mf_implicitfunction.hpp"
+#include "lib3mf_implicitnode.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
@@ -75,7 +76,8 @@ void CImplicitFunction::SetDisplayName(const std::string & sDisplayName)
 
 IImplicitNode * CImplicitFunction::AddNode(const Lib3MF::eImplicitNodeType eNodeType, const std::string & sIdentifier, const std::string & sDisplayName)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto newNode = function()->addNode(eNodeType, sIdentifier, sDisplayName);
+	return new CImplicitNode(newNode);
 }
 
 INodeIterator * CImplicitFunction::GetNodes()
