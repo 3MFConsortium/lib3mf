@@ -71,86 +71,22 @@ namespace NMR
 
     void CModelWriterNode_Implicit::writeImplicitFunctionElements(CModelImplicitFunction & function)
     {
-        for (auto & node : function.getNodes())
+        for (auto node : *function.getNodes())
         {
             writeImplicitNode(*node);
         }
     }
 
-    std::string elementNameFromNodeType(Lib3MF::eImplicitNodeType nodeType)
-    {
-        switch (nodeType)
-        {
-        case Lib3MF::eImplicitNodeType::Addition:
-            return "addition";
-        case Lib3MF::eImplicitNodeType::Subtraction:
-            return "subtraction";
-        case Lib3MF::eImplicitNodeType::Multiplication:
-            return "multiplication";
-        case Lib3MF::eImplicitNodeType::Division:
-            return "division";
-        case Lib3MF::eImplicitNodeType::Constant:
-            return "constant";
-        case Lib3MF::eImplicitNodeType::ConstVec:
-            return "constVec";
-        case Lib3MF::eImplicitNodeType::ConstMat:
-            return "constMat";
-        case Lib3MF::eImplicitNodeType::ComposeVector:
-            return "composeVector";
-        case Lib3MF::eImplicitNodeType::ComposeMatrix:
-            return "composeMatrix";
-        case Lib3MF::eImplicitNodeType::ComposeMatrixFromColumnVectors:
-            return "composeMatrixFromColumnVectors";
-        case Lib3MF::eImplicitNodeType::DotProduct:
-            return "dotProduct";
-        case Lib3MF::eImplicitNodeType::CrossProduct:
-            return "crossProduct";
-        case Lib3MF::eImplicitNodeType::MatVecMultiplication:
-            return "matVecMultiplication";
-        case Lib3MF::eImplicitNodeType::Transpose:
-            return "transpose";
-        case Lib3MF::eImplicitNodeType::Sinus:
-            return "sinus";
-        case Lib3MF::eImplicitNodeType::Cosinus:
-            return "cosinus";
-        case Lib3MF::eImplicitNodeType::Tan:
-            return "tan";
-        case Lib3MF::eImplicitNodeType::ArcSin:
-            return "arcSin";
-        case Lib3MF::eImplicitNodeType::ArcCos:
-            return "arcCos";
-        case Lib3MF::eImplicitNodeType::ArcTan:
-            return "arcTan";
-        case Lib3MF::eImplicitNodeType::Min:
-            return "min";
-        case Lib3MF::eImplicitNodeType::Max:
-            return "max";
-        case Lib3MF::eImplicitNodeType::Abs:
-            return "abs";
-        case Lib3MF::eImplicitNodeType::Fmod:
-            return "fmod";
-        case Lib3MF::eImplicitNodeType::Pow:
-            return "pow";
-        case Lib3MF::eImplicitNodeType::Sqrt:
-            return "sqrt";
-        case Lib3MF::eImplicitNodeType::FunctionCall:
-            return "functionCall";
-        case Lib3MF::eImplicitNodeType::Dot:
-            return "dot";
-        case Lib3MF::eImplicitNodeType::Cross:
-            return "cross";
-        case Lib3MF::eImplicitNodeType::Mesh:
-            return "mesh";
-        default:
-            return "";
-        }
-    }
+   
 
     void CModelWriterNode_Implicit::writeImplicitNode(CModelImplicitNode & node)
     {
-        auto name = elementNameFromNodeType(Lib3MF::eImplicitNodeType::Addition);
+        auto name = elementNameFromNodeType(node.getNodeType());
         writeStartElementWithPrefix(name.c_str(), XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 
+        writeStringAttribute(XML_3MF_ELEMENT_IMPLICIT_NODE_ID, node.getIdentifier());
+        writeStringAttribute(XML_3MF_ELEMENT_IMPLICIT_NODE_DISPLAY_NAME, node.getDisplayName());
+        
         writeFullEndElement();
     }
 }

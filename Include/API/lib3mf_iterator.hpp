@@ -58,7 +58,7 @@ private:
 	/**
 	* Put private members here.
 	*/
-	Lib3MF_int32 m_nCurrentIndex;
+	Lib3MF_int32 m_nCurrentIndex = -1;
 protected:
 
 	/**

@@ -41,6 +41,9 @@ namespace NMR
     using Ports = std::vector<PModelImplicitPort>;
     using PPorts = std::shared_ptr<Ports>;
 
+    std::string elementNameFromNodeType(Lib3MF::eImplicitNodeType nodeType);
+
+
     class CModelImplicitNode
     {
       private:
@@ -53,6 +56,7 @@ namespace NMR
 
       public:
         CModelImplicitNode(Lib3MF::eImplicitNodeType type, ImplicitIdentifier const & identifier, std::string const & displayname);
+        CModelImplicitNode(Lib3MF::eImplicitNodeType type);
 
 
         ImplicitIdentifier const & getIdentifier() const;

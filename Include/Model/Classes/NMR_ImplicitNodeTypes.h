@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2023 3MF Consortium
 
 All rights reserved.
 
@@ -24,34 +24,45 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CImplicitPortIterator
+--*/
 
-*/
+#pragma once
 
-#include "lib3mf_implicitportiterator.hpp"
-#include "lib3mf_interfaceexception.hpp"
+#include <lib3mf_types.hpp>
 
-// Include custom headers here.
-#include "lib3mf_implicitport.hpp"
+#include <string>
+#include <vector>
 
-using namespace Lib3MF::Impl;
-
-/*************************************************************************************************************************
- Class definition of CImplicitPortIterator 
-**************************************************************************************************************************/
-
-Lib3MF::Impl::CImplicitPortIterator::CImplicitPortIterator(NMR::PPorts pPorts) : m_pPorts(pPorts)
+namespace NMR
 {
-}
+    namespace implicit
+    {
+        using PortIdentifier = std::string;
+        using ExpectedPorts = std::vector<PortIdentifier>;
 
-Lib3MF_uint64 Lib3MF::Impl::CImplicitPortIterator::Count()
-{
-    return m_pPorts->size();
-}
+        class NodeType
+        {
+          public:
+            NodeType(std::string const & name,
+                     ExpectedPorts const & inputs,
+                     ExpectedPorts const & outputs,
+                     Lib3MF::eImplicitNodeType type);
+            NodeType() = delete;
 
-IImplicitPort * CImplicitPortIterator::GetCurrent()
-{
-	throwIfInvalidIndex();
-	return new CImplicitPort(m_pPorts->at(getCurrentIndex()));
-}
+            std::string const & getName() const;
+            ExpectedPorts const & getInputs() const;
+            ExpectedPorts const & getOutputs() const;
+            Lib3MF::eImplicitNodeType getType() const;
 
+          private:
+            std::string m_name;
+            ExpectedPorts m_inputs;
+            ExpectedPorts m_outputs;
+            Lib3MF::eImplicitNodeType m_type;
+        };
+
+        using NodeTypes = std::vector<NodeType>;
+
+        NodeTypes const & getNodeTypes();
+    }
+}

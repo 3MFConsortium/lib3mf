@@ -28,7 +28,6 @@ Abstract: This is the class declaration of CNodeIterator
 
 */
 
-
 #ifndef __LIB3MF_NODEITERATOR
 #define __LIB3MF_NODEITERATOR
 
@@ -42,49 +41,52 @@ Abstract: This is the class declaration of CNodeIterator
 #endif
 
 // Include custom headers here.
+#include "lib3mf_implicitfunction.hpp"
+#include "lib3mf_implicitnode.hpp"
 
+namespace Lib3MF
+{
+    namespace Impl
+    {
 
-namespace Lib3MF {
-namespace Impl {
+        /*************************************************************************************************************************
+         Class declaration of CNodeIterator
+        **************************************************************************************************************************/
 
+        class CNodeIterator : public virtual INodeIterator, public virtual CIterator
+        {
+          private:
+            /**
+             * Put private members here.
+             */
+            NMR::PImplicitNodes m_pNodes;
 
-/*************************************************************************************************************************
- Class declaration of CNodeIterator 
-**************************************************************************************************************************/
+          protected:
+            /**
+             * Put protected members here.
+             */
 
-class CNodeIterator : public virtual INodeIterator, public virtual CIterator {
-private:
+          public:
+            CNodeIterator(NMR::PImplicitNodes pNodes);
+            CNodeIterator() = delete;
+            /**
+             * Put additional public members here. They will not be visible in the external API.
+             */
 
-	/**
-	* Put private members here.
-	*/
+            /**
+             * Public member functions to implement.
+             */
 
-protected:
+            /**
+             * INodeIterator::GetCurrent - Returns the current element
+             * @return The current element
+             */
+            IImplicitNode * GetCurrent() override;
 
-	/**
-	* Put protected members here.
-	*/
+            Lib3MF_uint64 Count() override;
+        };
 
-public:
-
-	/**
-	* Put additional public members here. They will not be visible in the external API.
-	*/
-
-
-	/**
-	* Public member functions to implement.
-	*/
-
-	/**
-	* INodeIterator::GetCurrent - Returns the current element
-	* @return The current element
-	*/
-	IImplicitNode * GetCurrent() override;
-
-};
-
-} // namespace Impl
+    } // namespace Impl
 } // namespace Lib3MF
 
 #ifdef _MSC_VER

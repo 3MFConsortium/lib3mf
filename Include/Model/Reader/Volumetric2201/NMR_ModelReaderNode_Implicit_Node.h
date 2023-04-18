@@ -36,15 +36,15 @@ Reader for nodes of graph representing a function for implicit modelling
 
 namespace NMR
 {
-    class CModelReaderNode_Volumetric2201_ImplicitNode : public CModelReaderNode
+    class CModelReaderNode_Implicit_Node : public CModelReaderNode
     {
       private:
         CModelImplicitNode * m_pImplicitNode;
         CModel * m_pModel;
 
       public:
-        CModelReaderNode_Volumetric2201_ImplicitNode() = delete;
-        CModelReaderNode_Volumetric2201_ImplicitNode(_In_ CModel * pModel,
+        CModelReaderNode_Implicit_Node() = delete;
+        CModelReaderNode_Implicit_Node(_In_ CModel * pModel,
                                                      _In_ CModelImplicitNode * pImplicitNode,
                                                      _In_ PModelWarnings pWarnings);
 
@@ -58,6 +58,6 @@ namespace NMR
                               _In_ CXmlReader * pXMLReader) override;
     };
 
-    typedef std::shared_ptr<CModelReaderNode_Volumetric2201_ImplicitNode>
-      PModelReaderNode_Volumetric2201_ImplicitNode;
+    typedef std::shared_ptr<CModelReaderNode_Implicit_Node>
+      PModelReaderNode_Implicit_Node;
 }

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2023 3MF Consortium
 
 All rights reserved.
 
@@ -24,34 +24,53 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CImplicitPortIterator
+--*/
 
-*/
+#include "Model/Classes/NMR_ImplicitNodeTypes.h"
 
-#include "lib3mf_implicitportiterator.hpp"
-#include "lib3mf_interfaceexception.hpp"
-
-// Include custom headers here.
-#include "lib3mf_implicitport.hpp"
-
-using namespace Lib3MF::Impl;
-
-/*************************************************************************************************************************
- Class definition of CImplicitPortIterator 
-**************************************************************************************************************************/
-
-Lib3MF::Impl::CImplicitPortIterator::CImplicitPortIterator(NMR::PPorts pPorts) : m_pPorts(pPorts)
+namespace NMR
 {
-}
+    namespace implicit
+    {
 
-Lib3MF_uint64 Lib3MF::Impl::CImplicitPortIterator::Count()
-{
-    return m_pPorts->size();
-}
+        NodeType::NodeType(std::string const & name,
+                           ExpectedPorts const & inputs,
+                           ExpectedPorts const & outputs,
+                           Lib3MF::eImplicitNodeType type)
+            : m_name(name)
+            , m_inputs(inputs)
+            , m_outputs(outputs)
+            , m_type(type)
+        {
+        }
 
-IImplicitPort * CImplicitPortIterator::GetCurrent()
-{
-	throwIfInvalidIndex();
-	return new CImplicitPort(m_pPorts->at(getCurrentIndex()));
-}
+        std::string const & NodeType::getName() const
+        {
+            return m_name;
+        }
 
+        ExpectedPorts const & NodeType::getInputs() const
+        {
+            return m_inputs;
+        }
+
+        ExpectedPorts const & NodeType::getOutputs() const
+        {
+            return m_outputs;
+        }
+
+        Lib3MF::eImplicitNodeType NodeType::getType() const
+        {
+            return m_type;
+        }
+
+        NodeTypes const & getNodeTypes()
+        {
+            static NodeTypes nodeTypes = {
+              {"addition", {"A", "B"}, {"sum"}, Lib3MF::eImplicitNodeType::Addition},
+              {"subtraction", {"A", "B"}, {"difference"}, Lib3MF::eImplicitNodeType::Subtraction}};
+
+            return nodeTypes;
+        }
+    }
+}

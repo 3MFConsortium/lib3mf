@@ -33,6 +33,7 @@ namespace NMR
 {
     CModelImplicitFunction::CModelImplicitFunction(const ModelResourceID sID, CModel * pModel) : CModelResource(sID, pModel)
     {
+        m_nodes = std::make_shared<ImplicitNodes>();
     }
 
 
@@ -61,10 +62,18 @@ namespace NMR
                                                        const std::string & sDisplayName)
     {
         auto node = std::make_shared<CModelImplicitNode>(eNodeType, sIdentifier, sDisplayName);
-        m_nodes.push_back(node);
+        m_nodes->push_back(node);
         return node;
     }
-    ImplicitNodes const & NMR::CModelImplicitFunction::getNodes() const
+
+    PModelImplicitNode CModelImplicitFunction::addNode(const Lib3MF::eImplicitNodeType eNodeType)
+    {
+        auto node = std::make_shared<CModelImplicitNode>(eNodeType);
+        m_nodes->push_back(node);
+        return node;
+    }
+
+    PImplicitNodes NMR::CModelImplicitFunction::getNodes() const
     {
         return m_nodes;
     }

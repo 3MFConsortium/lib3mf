@@ -41,7 +41,7 @@ NMR_ModelReaderNode_Volumetric2201_ImageStack.cpp covers the official 3MF volume
 
 namespace NMR
 {
-    CModelReaderNode_Volumetric2201_ImplicitNode::CModelReaderNode_Volumetric2201_ImplicitNode(
+    CModelReaderNode_Implicit_Node::CModelReaderNode_Implicit_Node(
       _In_ CModel * pModel,
       _In_ CModelImplicitNode * pImplicitNode,
       _In_ PModelWarnings pWarnings)
@@ -54,10 +54,13 @@ namespace NMR
         m_pImplicitNode = pImplicitNode;
     }
 
-    void CModelReaderNode_Volumetric2201_ImplicitNode::parseXML(_In_ CXmlReader * pXMLReader)
+    void CModelReaderNode_Implicit_Node::parseXML(_In_ CXmlReader * pXMLReader)
     {
         __NMRASSERT(pXMLReader);
 
+        // Parse name
+        parseName(pXMLReader);
+        
         // Parse Attributes
         parseAttributes(pXMLReader);
 
@@ -66,7 +69,7 @@ namespace NMR
     }
 
     void
-    CModelReaderNode_Volumetric2201_ImplicitNode::OnAttribute(_In_z_ const nfChar * pAttributeName,
+    CModelReaderNode_Implicit_Node::OnAttribute(_In_z_ const nfChar * pAttributeName,
                                                               _In_z_ const nfChar * pAttributeValue)
     {
         if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICITNODE_IDENTIFIER) == 0)
@@ -79,7 +82,7 @@ namespace NMR
         }
     }
 
-    void NMR::CModelReaderNode_Volumetric2201_ImplicitNode::OnNSChildElement(
+    void NMR::CModelReaderNode_Implicit_Node::OnNSChildElement(
       _In_z_ const nfChar * pChildName,
       _In_z_ const nfChar * pNameSpace,
       _In_ CXmlReader * pXMLReader)

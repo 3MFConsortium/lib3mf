@@ -39,13 +39,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace NMR
 {
     using ImplicitNodes = std::vector<PModelImplicitNode>;
+    using PImplicitNodes = std::shared_ptr<ImplicitNodes>;
 
     class CModelImplicitFunction : public CModelResource
     {
       private:
         ImplicitIdentifier m_identifier;
         std::string m_displayname;
-        ImplicitNodes m_nodes;
+        PImplicitNodes m_nodes;
 
       public:
         CModelImplicitFunction(_In_ const ModelResourceID sID, _In_ CModel * pModel);
@@ -58,8 +59,10 @@ namespace NMR
         PModelImplicitNode addNode(const Lib3MF::eImplicitNodeType eNodeType,
                      const std::string & sIdentifier,
                      const std::string & sDisplayName);
+        
+        PModelImplicitNode addNode(const Lib3MF::eImplicitNodeType eNodeType);
 
-        ImplicitNodes const & getNodes() const;
+        PImplicitNodes getNodes() const;
     };
 
     using PModelImplicitFunction = std::shared_ptr<CModelImplicitFunction>;

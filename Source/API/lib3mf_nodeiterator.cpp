@@ -33,15 +33,24 @@ Abstract: This is a stub class definition of CNodeIterator
 
 // Include custom headers here.
 
-
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CNodeIterator 
+ Class definition of CNodeIterator
 **************************************************************************************************************************/
 
 IImplicitNode * CNodeIterator::GetCurrent()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	throwIfInvalidIndex();
+	return new CImplicitNode(m_pNodes->at(getCurrentIndex()));
 }
 
+Lib3MF::Impl::CNodeIterator::CNodeIterator(NMR::PImplicitNodes pNodes)
+    : m_pNodes(pNodes)
+{
+}
+
+Lib3MF_uint64 Lib3MF::Impl::CNodeIterator::Count()
+{
+    return m_pNodes->size();
+}

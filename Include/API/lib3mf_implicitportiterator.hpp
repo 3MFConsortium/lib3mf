@@ -82,6 +82,8 @@ public:
 	*/
 	IImplicitPort * GetCurrent() override;
 
+	Lib3MF_uint64 Count() override;
+
 };
 
 } // namespace Impl

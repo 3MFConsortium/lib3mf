@@ -33,7 +33,7 @@ Abstract: This is a stub class definition of CImplicitFunction
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-
+#include "lib3mf_nodeiterator.hpp"
 
 using namespace Lib3MF::Impl;
 
@@ -82,7 +82,7 @@ IImplicitNode * CImplicitFunction::AddNode(const Lib3MF::eImplicitNodeType eNode
 
 INodeIterator * CImplicitFunction::GetNodes()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return new CNodeIterator(function()->getNodes());
 }
 
 void CImplicitFunction::RemoveNode(IImplicitNode* pNode)
