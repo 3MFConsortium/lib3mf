@@ -33,6 +33,7 @@ Reader for implicit function ressources
 
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_ImplicitNodeTypes.h"
 
 namespace NMR
 {
@@ -45,6 +46,8 @@ namespace NMR
         ModelResourceID m_nID = 0;
 
         std::string m_displayName;
+        const static implicit::NodeTypes m_nodeTypes;
+        
       public:
         CModelReaderNode_ImplicitFunction() = delete;
         CModelReaderNode_ImplicitFunction(_In_ CModel * pModel, _In_ PModelWarnings pWarnings);
@@ -57,6 +60,8 @@ namespace NMR
         void OnNSChildElement(_In_z_ const nfChar * pChildName,
                               _In_z_ const nfChar * pNameSpace,
                               _In_ CXmlReader * pXMLReader) override;
+
+                            
     };
 
     typedef std::shared_ptr<CModelReaderNode_ImplicitFunction> PModelReaderNode_ImplicitFunction;

@@ -12245,6 +12245,7 @@ void CLib3MFImplicitPort::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetIdentifier", SetIdentifier);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetDisplayName", GetDisplayName);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetDisplayName", SetDisplayName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetType", GetType);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -12375,6 +12376,28 @@ void CLib3MFImplicitPort::SetDisplayName(const FunctionCallbackInfo<Value>& args
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_ImplicitPort_SetDisplayName(instanceHandle, sDisplayName.c_str());
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFImplicitPort::GetType(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        eLib3MFImplicitPortType eReturnImplicitPortType;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetType.");
+        if (wrapperTable->m_ImplicitPort_GetType == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ImplicitPort::GetType.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitPort_GetType(instanceHandle, &eReturnImplicitPortType);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::New(isolate, (int)eReturnImplicitPortType));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -12813,17 +12836,17 @@ void CLib3MFImplicitNode::GetInputs(const FunctionCallbackInfo<Value>& args)
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		try {
-        Lib3MFHandle hReturnAccessor = nullptr;
+        Lib3MFHandle hReturnIterator = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
             throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputs.");
         if (wrapperTable->m_ImplicitNode_GetInputs == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ImplicitNode::GetInputs.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitNode_GetInputs(instanceHandle, &hReturnAccessor);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitNode_GetInputs(instanceHandle, &hReturnIterator);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjAccessor = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnAccessor);
-        args.GetReturnValue().Set(instanceObjAccessor);
+        Local<Object> instanceObjIterator = CLib3MFImplicitPortIterator::NewInstance(args.Holder(), hReturnIterator);
+        args.GetReturnValue().Set(instanceObjIterator);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -18569,6 +18592,9 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Dot"), Integer::New(isolate, 28));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Cross"), Integer::New(isolate, 29));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Mesh"), Integer::New(isolate, 30));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitPortType_Scalar"), Integer::New(isolate, 1));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitPortType_Vector"), Integer::New(isolate, 2));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitPortType_Matrix"), Integer::New(isolate, 3));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eEncryptionAlgorithm_AES256_GCM"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eWrappingAlgorithm_RSA_OAEP"), Integer::New(isolate, 0));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA1"), Integer::New(isolate, 160));

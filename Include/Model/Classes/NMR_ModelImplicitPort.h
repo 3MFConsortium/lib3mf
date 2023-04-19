@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include <Common/Platform/NMR_SAL.h>
+#include <lib3mf_types.hpp>
 #include <memory>
 #include <string>
 
@@ -42,6 +42,7 @@ namespace NMR
       private:
         ImplicitIdentifier m_identifier;
         std::string m_displayname;
+        Lib3MF::eImplicitPortType m_type = Lib3MF::eImplicitPortType::Scalar;
 
       public:
         CModelImplicitPort(ImplicitIdentifier const & identifier, std::string const & displayname);
@@ -51,6 +52,9 @@ namespace NMR
         std::string const & getDisplayName() const;
         void setIdentifier(ImplicitIdentifier const & identifier);
         void setDisplayName(std::string const & displayname);
+
+        Lib3MF::eImplicitPortType getType() const;
+        void setType(Lib3MF::eImplicitPortType type);
     };
 
     using PModelImplicitPort = std::shared_ptr<CModelImplicitPort>;

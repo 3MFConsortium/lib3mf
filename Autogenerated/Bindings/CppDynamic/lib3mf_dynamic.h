@@ -3312,6 +3312,15 @@ typedef Lib3MFResult (*PLib3MFImplicitPort_GetDisplayNamePtr) (Lib3MF_ImplicitPo
 */
 typedef Lib3MFResult (*PLib3MFImplicitPort_SetDisplayNamePtr) (Lib3MF_ImplicitPort pImplicitPort, const char * pDisplayName);
 
+/**
+* Retrieves the type of the port
+*
+* @param[in] pImplicitPort - ImplicitPort instance.
+* @param[out] pImplicitPortType - the type
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitPort_GetTypePtr) (Lib3MF_ImplicitPort pImplicitPort, Lib3MF::eImplicitPortType * pImplicitPortType);
+
 /*************************************************************************************************************************
  Class definition for Iterator
 **************************************************************************************************************************/
@@ -3424,10 +3433,10 @@ typedef Lib3MFResult (*PLib3MFImplicitNode_AddInputPtr) (Lib3MF_ImplicitNode pIm
 * Retrieves the inputs
 *
 * @param[in] pImplicitNode - ImplicitNode instance.
-* @param[out] pAccessor - the accessor to the inputs
+* @param[out] pIterator - the iterator for the inputs
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitNode_GetInputsPtr) (Lib3MF_ImplicitNode pImplicitNode, Lib3MF_ImplicitPort * pAccessor);
+typedef Lib3MFResult (*PLib3MFImplicitNode_GetInputsPtr) (Lib3MF_ImplicitNode pImplicitNode, Lib3MF_ImplicitPortIterator * pIterator);
 
 /**
 * Add an output
@@ -3444,7 +3453,7 @@ typedef Lib3MFResult (*PLib3MFImplicitNode_AddOutputPtr) (Lib3MF_ImplicitNode pI
 * Retrieves the outputs
 *
 * @param[in] pImplicitNode - ImplicitNode instance.
-* @param[out] pIterator - the accessor to the outputs
+* @param[out] pIterator - the iterator the outputs
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFImplicitNode_GetOutputsPtr) (Lib3MF_ImplicitNode pImplicitNode, Lib3MF_ImplicitPortIterator * pIterator);
@@ -5727,6 +5736,7 @@ typedef struct {
 	PLib3MFImplicitPort_SetIdentifierPtr m_ImplicitPort_SetIdentifier;
 	PLib3MFImplicitPort_GetDisplayNamePtr m_ImplicitPort_GetDisplayName;
 	PLib3MFImplicitPort_SetDisplayNamePtr m_ImplicitPort_SetDisplayName;
+	PLib3MFImplicitPort_GetTypePtr m_ImplicitPort_GetType;
 	PLib3MFIterator_MoveNextPtr m_Iterator_MoveNext;
 	PLib3MFIterator_MovePreviousPtr m_Iterator_MovePrevious;
 	PLib3MFIterator_CountPtr m_Iterator_Count;

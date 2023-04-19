@@ -27,6 +27,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --*/
 
 #include "Model/Classes/NMR_ImplicitNodeTypes.h"
+#include "Common/NMR_Exception.h"
+#include "Model/Classes/NMR_ModelImplicitNode.h"
 
 namespace NMR
 {
@@ -35,12 +37,11 @@ namespace NMR
 
         NodeType::NodeType(std::string const & name,
                            ExpectedPorts const & inputs,
-                           ExpectedPorts const & outputs,
-                           Lib3MF::eImplicitNodeType type)
+                           ExpectedPorts const & outputs)
             : m_name(name)
             , m_inputs(inputs)
             , m_outputs(outputs)
-            , m_type(type)
+
         {
         }
 
@@ -58,19 +59,70 @@ namespace NMR
         {
             return m_outputs;
         }
-
-        Lib3MF::eImplicitNodeType NodeType::getType() const
+        using namespace Lib3MF;
+        NodeTypes::NodeTypes()
+            : m_nodeTypes{
+                // clang-format off
+                // type, {name, {inputs}, {outputs}}
+                {eImplicitNodeType::Addition,    {"addition", {"A", "B"}, {"sum"}}},
+                {eImplicitNodeType::Subtraction, {"subtraction", {"A", "B"}, {"difference"}}},
+                {eImplicitNodeType::Multiplication, {"multiplication", {"A", "B"}, {"product"}}},
+                {eImplicitNodeType::Division, {"division", {"A", "B"}, {"quotient"}}},
+                {eImplicitNodeType::Constant, {"constant", {}, {"value"}}},
+                {eImplicitNodeType::ConstVec, {"constvec", {}, {"value"}}},
+                {eImplicitNodeType::ConstMat, {"constmat", {}, {"value"}}},
+                {eImplicitNodeType::ComposeVector, {"composeVector", {"A", "B", "C"}, {"value"}}},
+                {eImplicitNodeType::ComposeMatrix, {"composeMatrix", {"A", "B", "C", "D", "E", "F", "G", "H", "I"}, {"value"}}},
+                {eImplicitNodeType::ComposeMatrixFromColumnVectors, {"composeMatrixFromColumnVectors", {"A", "B", "C"}, {"value"}}},
+                {eImplicitNodeType::DotProduct, {"dotproduct", {"A", "B"}, {"product"}}},
+                {eImplicitNodeType::CrossProduct, {"crossproduct", {"A", "B"}, {"crossproduct"}}},
+                {eImplicitNodeType::MatVecMultiplication, {"matrixvectormultiplication", {"A", "B"}, {"product"}}},
+                {eImplicitNodeType::Transpose, {"transpose", {"A"}, {"transposed"}}},
+                {eImplicitNodeType::Sinus, {"sinus", {"A"}, {"sinus"}}},
+                {eImplicitNodeType::Cosinus, {"cosinus", {"A"}, {"cosinus"}}},
+                {eImplicitNodeType::Tan, {"tan", {"A"}, {"tan"}}},
+                {eImplicitNodeType::ArcSin, {"arcsin", {"A"}, {"arcsin"}}},
+                {eImplicitNodeType::ArcCos, {"arccos", {"A"}, {"arccos"}}},
+                {eImplicitNodeType::ArcTan, {"arctan", {"A"}, {"arctan"}}},
+                {eImplicitNodeType::Min, {"min", {"A", "B"}, {"min"}}},
+                {eImplicitNodeType::Max, {"max", {"A", "B"}, {"max"}}},
+                {eImplicitNodeType::Abs, {"abs", {"A"}, {"abs"}}},
+                {eImplicitNodeType::Fmod, {"fmod", {"A", "B"}, {"fmod"}}},
+                {eImplicitNodeType::Pow, {"pow", {"A", "B"}, {"pow"}}},
+                {eImplicitNodeType::Sqrt, {"sqrt", {"A"}, {"sqrt"}}},
+                {eImplicitNodeType::Mesh, {"mesh", {"point", "mesh"}, {"value"}}}
+                // clang-format on
+              }
         {
-            return m_type;
         }
 
-        NodeTypes const & getNodeTypes()
+        NodeType const & NodeTypes::getNodeType(Lib3MF::eImplicitNodeType type) const
         {
-            static NodeTypes nodeTypes = {
-              {"addition", {"A", "B"}, {"sum"}, Lib3MF::eImplicitNodeType::Addition},
-              {"subtraction", {"A", "B"}, {"difference"}, Lib3MF::eImplicitNodeType::Subtraction}};
-
-            return nodeTypes;
+            auto it = m_nodeTypes.find(type);
+            if (it == m_nodeTypes.end())
+            {
+                throw CNMRException(NMR_ERROR_UNKNOWN_NODETYPE_IMPLICITMODEL);
+            }
+            return it->second;
         }
+        NodeTypesMap const & NodeTypes::getTypes() const
+        {
+            return m_nodeTypes;
+        }
+
+        void NodeTypes::addExpectedPortsToNode(NMR::CModelImplicitNode & node) const
+        {
+            auto const & nodeType = getNodeType(node.getNodeType());
+
+            for (auto const & input : nodeType.getInputs())
+            {
+                node.addInput(input, input);
+            }
+            for (auto const & output : nodeType.getOutputs())
+            {
+                node.addOutput(output, output);
+            }
+        }
+
     }
 }

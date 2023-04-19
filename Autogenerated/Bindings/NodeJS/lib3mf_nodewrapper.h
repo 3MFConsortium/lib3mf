@@ -1312,6 +1312,7 @@ private:
 	static void SetIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetDisplayName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetDisplayName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetType(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFImplicitPort();

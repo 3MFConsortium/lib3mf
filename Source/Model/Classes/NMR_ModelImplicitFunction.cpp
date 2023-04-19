@@ -4,7 +4,7 @@ Copyright (C) 2023 3MF Consortium
 
 All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification,
+Redistribution and use in source and binary forms, with or without modification,276529
 are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this
@@ -27,10 +27,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --*/
 
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
+#include "Model/Classes/NMR_ImplicitNodeTypes.h"
 #include "Common/NMR_Exception.h"
 
 namespace NMR
 {
+    const implicit::NodeTypes CModelImplicitFunction::m_nodeTypes;
+
     CModelImplicitFunction::CModelImplicitFunction(const ModelResourceID sID, CModel * pModel) : CModelResource(sID, pModel)
     {
         m_nodes = std::make_shared<ImplicitNodes>();
@@ -62,6 +65,7 @@ namespace NMR
                                                        const std::string & sDisplayName)
     {
         auto node = std::make_shared<CModelImplicitNode>(eNodeType, sIdentifier, sDisplayName);
+        m_nodeTypes.addExpectedPortsToNode(*node);
         m_nodes->push_back(node);
         return node;
     }
@@ -69,6 +73,7 @@ namespace NMR
     PModelImplicitNode CModelImplicitFunction::addNode(const Lib3MF::eImplicitNodeType eNodeType)
     {
         auto node = std::make_shared<CModelImplicitNode>(eNodeType);
+        m_nodeTypes.addExpectedPortsToNode(*node);
         m_nodes->push_back(node);
         return node;
     }

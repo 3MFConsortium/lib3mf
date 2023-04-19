@@ -40,6 +40,11 @@ namespace NMR
 {
     using ImplicitNodes = std::vector<PModelImplicitNode>;
     using PImplicitNodes = std::shared_ptr<ImplicitNodes>;
+    
+    namespace implicit
+    {
+      class NodeTypes;
+    }
 
     class CModelImplicitFunction : public CModelResource
     {
@@ -47,7 +52,7 @@ namespace NMR
         ImplicitIdentifier m_identifier;
         std::string m_displayname;
         PImplicitNodes m_nodes;
-
+        static const implicit::NodeTypes m_nodeTypes;
       public:
         CModelImplicitFunction(_In_ const ModelResourceID sID, _In_ CModel * pModel);
 

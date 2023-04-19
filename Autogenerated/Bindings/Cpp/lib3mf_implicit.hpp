@@ -1963,6 +1963,7 @@ public:
 	inline void SetIdentifier(const std::string & sIdentifier);
 	inline std::string GetDisplayName();
 	inline void SetDisplayName(const std::string & sDisplayName);
+	inline eImplicitPortType GetType();
 };
 	
 /*************************************************************************************************************************
@@ -2021,7 +2022,7 @@ public:
 	inline void SetDisplayName(const std::string & sDisplayName);
 	inline eImplicitNodeType GetNodeType();
 	inline PImplicitPort AddInput(const std::string & sIdentifier, const std::string & sDisplayName);
-	inline PImplicitPort GetInputs();
+	inline PImplicitPortIterator GetInputs();
 	inline PImplicitPort AddOutput(const std::string & sIdentifier, const std::string & sDisplayName);
 	inline PImplicitPortIterator GetOutputs();
 };
@@ -6874,6 +6875,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CImplicitPort::GetType - Retrieves the type of the port
+	* @return the type
+	*/
+	eImplicitPortType CImplicitPort::GetType()
+	{
+		eImplicitPortType resultImplicitPortType = (eImplicitPortType) 0;
+		CheckError(lib3mf_implicitport_gettype(m_pHandle, &resultImplicitPortType));
+		
+		return resultImplicitPortType;
+	}
+	
+	/**
 	 * Method definitions for class CIterator
 	 */
 	
@@ -7015,17 +7028,17 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	
 	/**
 	* CImplicitNode::GetInputs - Retrieves the inputs
-	* @return the accessor to the inputs
+	* @return the iterator for the inputs
 	*/
-	PImplicitPort CImplicitNode::GetInputs()
+	PImplicitPortIterator CImplicitNode::GetInputs()
 	{
-		Lib3MFHandle hAccessor = nullptr;
-		CheckError(lib3mf_implicitnode_getinputs(m_pHandle, &hAccessor));
+		Lib3MFHandle hIterator = nullptr;
+		CheckError(lib3mf_implicitnode_getinputs(m_pHandle, &hIterator));
 		
-		if (!hAccessor) {
+		if (!hIterator) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hAccessor)));
+		return std::shared_ptr<CImplicitPortIterator>(dynamic_cast<CImplicitPortIterator*>(m_pWrapper->polymorphicFactory(hIterator)));
 	}
 	
 	/**
@@ -7047,7 +7060,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	
 	/**
 	* CImplicitNode::GetOutputs - Retrieves the outputs
-	* @return the accessor to the outputs
+	* @return the iterator the outputs
 	*/
 	PImplicitPortIterator CImplicitNode::GetOutputs()
 	{

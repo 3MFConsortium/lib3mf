@@ -2934,6 +2934,15 @@ Lib3MFResult CCall_lib3mf_implicitport_setdisplayname(Lib3MFHandle libraryHandle
 }
 
 
+Lib3MFResult CCall_lib3mf_implicitport_gettype(Lib3MFHandle libraryHandle, Lib3MF_ImplicitPort pImplicitPort, eLib3MFImplicitPortType * pImplicitPortType)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitPort_GetType (pImplicitPort, pImplicitPortType);
+}
+
+
 Lib3MFResult CCall_lib3mf_iterator_movenext(Lib3MFHandle libraryHandle, Lib3MF_Iterator pIterator, bool * pHasNext)
 {
 	if (libraryHandle == 0) 
@@ -3024,12 +3033,12 @@ Lib3MFResult CCall_lib3mf_implicitnode_addinput(Lib3MFHandle libraryHandle, Lib3
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitnode_getinputs(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, Lib3MF_ImplicitPort * pAccessor)
+Lib3MFResult CCall_lib3mf_implicitnode_getinputs(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, Lib3MF_ImplicitPortIterator * pIterator)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitNode_GetInputs (pImplicitNode, pAccessor);
+	return wrapperTable->m_ImplicitNode_GetInputs (pImplicitNode, pIterator);
 }
 
 
@@ -5007,6 +5016,15 @@ const (
 	ImplicitNodeType_Dot = 28
 	ImplicitNodeType_Cross = 29
 	ImplicitNodeType_Mesh = 30
+)
+
+// ImplicitPortType represents a Lib3MF enum.
+type ImplicitPortType int
+
+const (
+	ImplicitPortType_Scalar = 1
+	ImplicitPortType_Vector = 2
+	ImplicitPortType_Matrix = 3
 )
 
 // EncryptionAlgorithm represents a Lib3MF enum.
@@ -9326,6 +9344,16 @@ func (inst ImplicitPort) SetDisplayName(displayName string) error {
 	return nil
 }
 
+// GetType retrieves the type of the port.
+func (inst ImplicitPort) GetType() (ImplicitPortType, error) {
+	var implicitPortType C.eLib3MFImplicitPortType
+	ret := C.CCall_lib3mf_implicitport_gettype(inst.wrapperRef.LibraryHandle, inst.Ref, &implicitPortType)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return ImplicitPortType(implicitPortType), nil
+}
+
 
 // Iterator represents a Lib3MF class.
 type Iterator struct {
@@ -9469,13 +9497,13 @@ func (inst ImplicitNode) AddInput(identifier string, displayName string) (Implic
 }
 
 // GetInputs retrieves the inputs.
-func (inst ImplicitNode) GetInputs() (ImplicitPort, error) {
-	var accessor ref
-	ret := C.CCall_lib3mf_implicitnode_getinputs(inst.wrapperRef.LibraryHandle, inst.Ref, &accessor)
+func (inst ImplicitNode) GetInputs() (ImplicitPortIterator, error) {
+	var iterator ref
+	ret := C.CCall_lib3mf_implicitnode_getinputs(inst.wrapperRef.LibraryHandle, inst.Ref, &iterator)
 	if ret != 0 {
-		return ImplicitPort{}, makeError(uint32(ret))
+		return ImplicitPortIterator{}, makeError(uint32(ret))
 	}
-	return inst.wrapperRef.NewImplicitPort(accessor), nil
+	return inst.wrapperRef.NewImplicitPortIterator(iterator), nil
 }
 
 // AddOutput add an output.

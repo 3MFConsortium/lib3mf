@@ -432,6 +432,15 @@ namespace Lib3MF {
     Mesh = 30 /** Calculates the signed distance to a mesh */
   };
   
+  /**
+  * enum class eImplicitPortType - The type of the port
+  */
+  enum class eImplicitPortType : Lib3MF_int32 {
+    Scalar = 1, /** Scalar */
+    Vector = 2, /** Vector */
+    Matrix = 3 /** 4x4 Matrix */
+  };
+  
   enum class eEncryptionAlgorithm : Lib3MF_int32 {
     AES256_GCM = 1 /** http://www.w3.org/2009/xmlenc11#aes256-gcm */
   };
@@ -626,6 +635,7 @@ typedef Lib3MF::eChannelName eLib3MFChannelName;
 typedef Lib3MF::eCompositionMethod eLib3MFCompositionMethod;
 typedef Lib3MF::eCompositionSpace eLib3MFCompositionSpace;
 typedef Lib3MF::eImplicitNodeType eLib3MFImplicitNodeType;
+typedef Lib3MF::eImplicitPortType eLib3MFImplicitPortType;
 typedef Lib3MF::eEncryptionAlgorithm eLib3MFEncryptionAlgorithm;
 typedef Lib3MF::eWrappingAlgorithm eLib3MFWrappingAlgorithm;
 typedef Lib3MF::eMgfAlgorithm eLib3MFMgfAlgorithm;

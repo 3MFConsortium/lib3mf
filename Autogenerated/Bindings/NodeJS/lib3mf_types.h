@@ -431,6 +431,15 @@ typedef enum eLib3MFImplicitNodeType {
   eImplicitNodeTypeMesh = 30 /** Calculates the signed distance to a mesh */
 } eLib3MFImplicitNodeType;
 
+/**
+* enum eLib3MFImplicitPortType - The type of the port
+*/
+typedef enum eLib3MFImplicitPortType {
+  eImplicitPortTypeScalar = 1, /** Scalar */
+  eImplicitPortTypeVector = 2, /** Vector */
+  eImplicitPortTypeMatrix = 3 /** 4x4 Matrix */
+} eLib3MFImplicitPortType;
+
 typedef enum eLib3MFEncryptionAlgorithm {
   eEncryptionAlgorithmAES256_GCM = 1 /** http://www.w3.org/2009/xmlenc11#aes256-gcm */
 } eLib3MFEncryptionAlgorithm;
@@ -540,6 +549,11 @@ typedef union {
   eLib3MFImplicitNodeType m_enum;
   int m_code;
 } structEnumLib3MFImplicitNodeType;
+
+typedef union {
+  eLib3MFImplicitPortType m_enum;
+  int m_code;
+} structEnumLib3MFImplicitPortType;
 
 typedef union {
   eLib3MFEncryptionAlgorithm m_enum;

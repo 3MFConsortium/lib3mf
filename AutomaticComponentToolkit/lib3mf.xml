@@ -2144,6 +2144,12 @@
 		<option name="Mesh" description="Calculates the signed distance to a mesh" value="30" />
 	</enum>
 
+	<enum name="ImplicitPortType" description="The type of the port">
+		<option name="Scalar" description="Scalar" value="1" />
+		<option name="Vector" description="Vector" value="2" />
+		<option name="Matrix" description="4x4 Matrix" value="3" />
+	</enum>
+
 
 	<class name="ImplicitPort">
 		<method name="GetIdentifier" description="Retrieves the identifier of the port">
@@ -2157,6 +2163,9 @@
 		</method>
 		<method name="SetDisplayName" description="Sets the display name of the port">
 			<param name="DisplayName" type="string" pass="in" description="the display name" />
+		</method>
+		<method name="GetType" description="Retrieves the type of the port">
+			<param name="ImplicitPortType" type="enum" class="ImplicitPortType" pass="return" description="the type" />
 		</method>
 	</class>
 
@@ -2210,8 +2219,8 @@
 		</method>
 
 		<method name="GetInputs" description="Retrieves the inputs">
-			<param name="Accessor" type="class" class="ImplicitPort" pass="return"
-				description="the accessor to the inputs" />
+			<param name="Iterator" type="class" class="ImplicitPortIterator" pass="return"
+				description="the iterator for the inputs" />
 		</method>
 
 		<method name="AddOutput" description="Add an output">
@@ -2224,7 +2233,7 @@
 
 		<method name="GetOutputs" description="Retrieves the outputs">
 			<param name="Iterator" type="class" class="ImplicitPortIterator" pass="return"
-				description="the accessor to the outputs" />
+				description="the iterator the outputs" />
 		</method>
 	</class>
 

@@ -1398,6 +1398,9 @@ Model error codes (0x8XXX)
 // Duplicate attribute in vector3d field composed
 #define NMR_ERROR_DUPLICATE_ATTRIBUTE_VECTOR3DFIELDCOMPOSED 0x8837
 
+// Unknown node type in implict model
+#define NMR_ERROR_UNKNOWN_NODETYPE_IMPLICITMODEL 0x8838
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

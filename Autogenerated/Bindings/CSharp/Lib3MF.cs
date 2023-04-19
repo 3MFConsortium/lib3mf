@@ -192,6 +192,12 @@ namespace Lib3MF {
 		Mesh = 30
 	};
 
+	public enum eImplicitPortType {
+		Scalar = 1,
+		Vector = 2,
+		Matrix = 3
+	};
+
 	public enum eEncryptionAlgorithm {
 		AES256_GCM = 1
 	};
@@ -1343,6 +1349,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitport_setdisplayname", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitPort_SetDisplayName (IntPtr Handle, byte[] ADisplayName);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitport_gettype", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitPort_GetType (IntPtr Handle, out Int32 AImplicitPortType);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_iterator_movenext", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Iterator_MoveNext (IntPtr Handle, out Byte AHasNext);
 
@@ -1374,7 +1383,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 ImplicitNode_AddInput (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName, out IntPtr APort);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_getinputs", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitNode_GetInputs (IntPtr Handle, out IntPtr AAccessor);
+			public unsafe extern static Int32 ImplicitNode_GetInputs (IntPtr Handle, out IntPtr AIterator);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_addoutput", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitNode_AddOutput (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName, out IntPtr APort);
@@ -5582,6 +5591,14 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.ImplicitPort_SetDisplayName (Handle, byteDisplayName));
 		}
 
+		public eImplicitPortType GetType ()
+		{
+			Int32 resultImplicitPortType = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitPort_GetType (Handle, out resultImplicitPortType));
+			return (eImplicitPortType) (resultImplicitPortType);
+		}
+
 	}
 
 	public class CIterator : CBase
@@ -5698,12 +5715,12 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newPort);
 		}
 
-		public CImplicitPort GetInputs ()
+		public CImplicitPortIterator GetInputs ()
 		{
-			IntPtr newAccessor = IntPtr.Zero;
+			IntPtr newIterator = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitNode_GetInputs (Handle, out newAccessor));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newAccessor);
+			CheckError(Internal.Lib3MFWrapper.ImplicitNode_GetInputs (Handle, out newIterator));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPortIterator>(newIterator);
 		}
 
 		public CImplicitPort AddOutput (String AIdentifier, String ADisplayName)

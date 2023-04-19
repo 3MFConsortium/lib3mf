@@ -31,22 +31,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <lib3mf_types.hpp>
 
 #include <string>
+#include <map>
 #include <vector>
 
 namespace NMR
 {
+    class CModelImplicitNode;
     namespace implicit
     {
         using PortIdentifier = std::string;
         using ExpectedPorts = std::vector<PortIdentifier>;
-
+        
         class NodeType
         {
           public:
             NodeType(std::string const & name,
                      ExpectedPorts const & inputs,
-                     ExpectedPorts const & outputs,
-                     Lib3MF::eImplicitNodeType type);
+                     ExpectedPorts const & outputs);
+                     
             NodeType() = delete;
 
             std::string const & getName() const;
@@ -58,10 +60,30 @@ namespace NMR
             std::string m_name;
             ExpectedPorts m_inputs;
             ExpectedPorts m_outputs;
-            Lib3MF::eImplicitNodeType m_type;
         };
 
-        using NodeTypes = std::vector<NodeType>;
+        using NodeTypesMap = std::map<Lib3MF::eImplicitNodeType, NodeType>;
+        
+        class NodeTypes
+        {
+          public:
+            NodeTypes();
+            NodeTypes(NodeTypes const & other) = delete;
+            NodeTypes(NodeTypes && other) = delete;
+            NodeTypes & operator=(NodeTypes const & other) = delete;
+            NodeTypes & operator=(NodeTypes && other) = delete;
+
+            NodeType const & getNodeType(Lib3MF::eImplicitNodeType type) const;
+
+            NodeTypesMap const& getTypes() const;
+
+            void addExpectedPortsToNode(NMR::CModelImplicitNode & node) const;
+
+          private:
+            const NodeTypesMap m_nodeTypes;
+        };
+
+        
 
         NodeTypes const & getNodeTypes();
     }

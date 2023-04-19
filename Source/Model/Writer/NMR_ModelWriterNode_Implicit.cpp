@@ -32,7 +32,6 @@ Writer node for implicit functions
 #include "Common/NMR_Exception.h"
 #include "lib3mf_types.hpp"
 
-
 namespace NMR
 {
     CModelWriterNode_Implicit::CModelWriterNode_Implicit(_In_ CModel * pModel,
@@ -77,16 +76,86 @@ namespace NMR
         }
     }
 
-   
-
     void CModelWriterNode_Implicit::writeImplicitNode(CModelImplicitNode & node)
     {
         auto name = elementNameFromNodeType(node.getNodeType());
-        writeStartElementWithPrefix(name.c_str(), XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+        writeStartElement(name.c_str());
+        {
+            writeStringAttribute(XML_3MF_ELEMENT_IMPLICIT_NODE_ID, node.getIdentifier());
+            writeStringAttribute(XML_3MF_ELEMENT_IMPLICIT_NODE_DISPLAY_NAME, node.getDisplayName());
 
-        writeStringAttribute(XML_3MF_ELEMENT_IMPLICIT_NODE_ID, node.getIdentifier());
-        writeStringAttribute(XML_3MF_ELEMENT_IMPLICIT_NODE_DISPLAY_NAME, node.getDisplayName());
-        
+            writeStartElement(XML_3MF_ELEMENT_IMPLICIT_NODE_INPUT);
+            {
+                auto inputs = node.getInputs();
+                writeImplicitInputs(*inputs);
+            }
+            writeFullEndElement();
+
+            writeStartElement(XML_3MF_ELEMENT_IMPLICIT_NODE_OUTPUT);
+            {
+                auto outputs = node.getOutputs();
+                writeImplicitOutputs(*outputs);
+            }
+            writeFullEndElement();
+        }
         writeFullEndElement();
+    }
+
+    const char * portTypeToRefName(Lib3MF::eImplicitPortType type)
+    {
+        switch (type)
+        {
+        case Lib3MF::eImplicitPortType::Scalar:
+            return XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_SCALAR_REF;
+        case Lib3MF::eImplicitPortType::Vector:
+            return XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_VECTOR_REF;
+        case Lib3MF::eImplicitPortType::Matrix:
+            return XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_MATRIX_REF;
+        default:
+            return "Invalid";
+        }
+    }
+
+    void NMR::CModelWriterNode_Implicit::writeImplicitInputs(NMR::Ports & ports)
+    {
+        for (auto & port : ports)
+        {
+            writeStartElement(portTypeToRefName(port->getType()));
+            {
+                writeStringAttribute(XML_3MF_ELEMENT_IMPLICIT_PORT_ID, port->getIdentifier());
+                writeStringAttribute(XML_3MF_ELEMENT_IMPLICIT_PORT_DISPLAY_NAME,
+                                     port->getDisplayName());
+            }
+            writeFullEndElement();
+        }
+    }
+
+    const char * portTypeToName(Lib3MF::eImplicitPortType type)
+    {
+        switch (type)
+        {
+        case Lib3MF::eImplicitPortType::Scalar:
+            return XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_SCALAR;
+        case Lib3MF::eImplicitPortType::Vector:
+            return XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_VECTOR;
+        case Lib3MF::eImplicitPortType::Matrix:
+            return XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_MATRIX;
+        default:
+            return "Invalid";
+        }
+    }
+
+    void NMR::CModelWriterNode_Implicit::writeImplicitOutputs(NMR::Ports & ports)
+    {
+        for (auto & port : ports)
+        {
+            writeStartElement(portTypeToName(port->getType()));
+            {
+                writeStringAttribute(XML_3MF_ELEMENT_IMPLICIT_PORT_ID, port->getIdentifier());
+                writeStringAttribute(XML_3MF_ELEMENT_IMPLICIT_PORT_DISPLAY_NAME,
+                                     port->getDisplayName());
+            }
+            writeFullEndElement();
+        }
     }
 }

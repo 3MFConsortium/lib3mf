@@ -33,11 +33,11 @@ Reader for implicit function ressources
 
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Node.h"
 
+#include "Model/Classes/NMR_ImplicitNodeTypes.h"
 #include "Model/Classes/NMR_Model.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelConstants_Implicit.h"
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
-#include "Model/Classes/NMR_ImplicitNodeTypes.h"
 
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
@@ -45,6 +45,8 @@ Reader for implicit function ressources
 
 namespace NMR
 {
+
+    const implicit::NodeTypes CModelReaderNode_ImplicitFunction::m_nodeTypes;
 
     NMR::CModelReaderNode_ImplicitFunction::CModelReaderNode_ImplicitFunction(
       CModel * pModel,
@@ -69,12 +71,11 @@ namespace NMR
         // Create Implicit Function
         m_pImplicitFunction = std::make_shared<CModelImplicitFunction>(m_nID, m_pModel);
         m_pImplicitFunction->setDisplayName(m_displayName);
-        
+
         // Parse Content
         parseContent(pXMLReader);
 
-         m_pModel->addResource(m_pImplicitFunction);
-         
+        m_pModel->addResource(m_pImplicitFunction);
     }
 
     void CModelReaderNode_ImplicitFunction::OnAttribute(const nfChar * pAttributeName,
@@ -88,7 +89,6 @@ namespace NMR
         else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICITNODE_DISPLAYNAME) == 0)
         {
             m_displayName = pAttributeValue;
-            
         }
     }
     void CModelReaderNode_ImplicitFunction::OnNSChildElement(const nfChar * pChildName,
@@ -99,16 +99,18 @@ namespace NMR
         __NMRASSERT(pXMLReader);
         __NMRASSERT(pNameSpace);
 
-        auto nodeTypes = NMR::implicit::getNodeTypes();
-       
-        for (auto const &nodeType : nodeTypes)
+        auto const & nodeTypes = m_nodeTypes.getTypes();
+
+        for (auto const & nodeType : nodeTypes) // maeh, no structured bindings in C++11
         {
-            if (strcmp(pChildName, nodeType.getName().c_str()) == 0)
+            // first is the node type, second is the node type info
+            if (strcmp(pChildName, nodeType.second.getName().c_str()) == 0)
             {
-                auto implicitNode =  m_pImplicitFunction->addNode(nodeType.getType());
-                auto node = std::make_shared<NMR::CModelReaderNode_Implicit_Node>(m_pModel, implicitNode.get(), m_pWarnings);
+                auto implicitNode = m_pImplicitFunction->addNode(nodeType.first);
+                auto node = std::make_shared<NMR::CModelReaderNode_Implicit_Node>(
+                  m_pModel, implicitNode.get(), m_pWarnings);
                 node->parseXML(pXMLReader);
-             
+
                 return;
             }
         }

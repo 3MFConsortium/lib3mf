@@ -3452,6 +3452,12 @@ public:
 	*/
 	virtual void SetDisplayName(const std::string & sDisplayName) = 0;
 
+	/**
+	* IImplicitPort::GetType - Retrieves the type of the port
+	* @return the type
+	*/
+	virtual Lib3MF::eImplicitPortType GetType() = 0;
+
 };
 
 typedef IBaseSharedPtr<IImplicitPort> PIImplicitPort;
@@ -3576,7 +3582,7 @@ public:
 
 	/**
 	* IImplicitNode::GetInputs - Retrieves the inputs
-	* @return the accessor to the inputs
+	* @return the iterator for the inputs
 	*/
 	virtual IImplicitPortIterator * GetInputs() = 0;
 
@@ -3590,7 +3596,7 @@ public:
 
 	/**
 	* IImplicitNode::GetOutputs - Retrieves the outputs
-	* @return the accessor to the outputs
+	* @return the iterator the outputs
 	*/
 	virtual IImplicitPortIterator * GetOutputs() = 0;
 

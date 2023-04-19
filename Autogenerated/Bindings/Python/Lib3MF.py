@@ -448,6 +448,7 @@ class FunctionTable:
 	lib3mf_implicitport_setidentifier = None
 	lib3mf_implicitport_getdisplayname = None
 	lib3mf_implicitport_setdisplayname = None
+	lib3mf_implicitport_gettype = None
 	lib3mf_iterator_movenext = None
 	lib3mf_iterator_moveprevious = None
 	lib3mf_iterator_count = None
@@ -799,6 +800,12 @@ class ImplicitNodeType(CTypesEnum):
 	Dot = 28
 	Cross = 29
 	Mesh = 30
+'''Definition of ImplicitPortType
+'''
+class ImplicitPortType(CTypesEnum):
+	Scalar = 1
+	Vector = 2
+	Matrix = 3
 '''Definition of EncryptionAlgorithm
 '''
 class EncryptionAlgorithm(CTypesEnum):
@@ -3026,6 +3033,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
 			self.lib.lib3mf_implicitport_setdisplayname = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitport_gettype")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32))
+			self.lib.lib3mf_implicitport_gettype = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_iterator_movenext")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -5169,6 +5182,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_implicitport_setdisplayname.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitport_setdisplayname.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_implicitport_gettype.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitport_gettype.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32)]
 			
 			self.lib.lib3mf_iterator_movenext.restype = ctypes.c_int32
 			self.lib.lib3mf_iterator_movenext.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
@@ -8830,6 +8846,12 @@ class ImplicitPort(Base):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitport_setdisplayname(self._handle, pDisplayName))
 		
 	
+	def GetType(self):
+		pImplicitPortType = ctypes.c_int32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitport_gettype(self._handle, pImplicitPortType))
+		
+		return ImplicitPortType(pImplicitPortType.value)
+	
 
 
 ''' Class Implementation for Iterator
@@ -8930,14 +8952,14 @@ class ImplicitNode(Base):
 		return PortObject
 	
 	def GetInputs(self):
-		AccessorHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitnode_getinputs(self._handle, AccessorHandle))
-		if AccessorHandle:
-			AccessorObject = self._wrapper._polymorphicFactory(AccessorHandle)
+		IteratorHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitnode_getinputs(self._handle, IteratorHandle))
+		if IteratorHandle:
+			IteratorObject = self._wrapper._polymorphicFactory(IteratorHandle)
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
-		return AccessorObject
+		return IteratorObject
 	
 	def AddOutput(self, Identifier, DisplayName):
 		pIdentifier = ctypes.c_char_p(str.encode(Identifier))

@@ -366,6 +366,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ImplicitPort_SetIdentifier = NULL;
 	pWrapperTable->m_ImplicitPort_GetDisplayName = NULL;
 	pWrapperTable->m_ImplicitPort_SetDisplayName = NULL;
+	pWrapperTable->m_ImplicitPort_GetType = NULL;
 	pWrapperTable->m_Iterator_MoveNext = NULL;
 	pWrapperTable->m_Iterator_MovePrevious = NULL;
 	pWrapperTable->m_Iterator_Count = NULL;
@@ -3487,6 +3488,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_ImplicitPort_SetDisplayName == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitPort_GetType = (PLib3MFImplicitPort_GetTypePtr) GetProcAddress(hLibrary, "lib3mf_implicitport_gettype");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitPort_GetType = (PLib3MFImplicitPort_GetTypePtr) dlsym(hLibrary, "lib3mf_implicitport_gettype");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitPort_GetType == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

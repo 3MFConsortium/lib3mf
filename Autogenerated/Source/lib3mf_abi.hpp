@@ -3325,6 +3325,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitport_getdisplayname(Lib3MF_ImplicitP
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitport_setdisplayname(Lib3MF_ImplicitPort pImplicitPort, const char * pDisplayName);
 
+/**
+* Retrieves the type of the port
+*
+* @param[in] pImplicitPort - ImplicitPort instance.
+* @param[out] pImplicitPortType - the type
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitport_gettype(Lib3MF_ImplicitPort pImplicitPort, Lib3MF::eImplicitPortType * pImplicitPortType);
+
 /*************************************************************************************************************************
  Class definition for Iterator
 **************************************************************************************************************************/
@@ -3437,10 +3446,10 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_addinput(Lib3MF_ImplicitNode pI
 * Retrieves the inputs
 *
 * @param[in] pImplicitNode - ImplicitNode instance.
-* @param[out] pAccessor - the accessor to the inputs
+* @param[out] pIterator - the iterator for the inputs
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getinputs(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_ImplicitPort * pAccessor);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getinputs(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_ImplicitPortIterator * pIterator);
 
 /**
 * Add an output
@@ -3457,7 +3466,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_addoutput(Lib3MF_ImplicitNode p
 * Retrieves the outputs
 *
 * @param[in] pImplicitNode - ImplicitNode instance.
-* @param[out] pIterator - the accessor to the outputs
+* @param[out] pIterator - the iterator the outputs
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getoutputs(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_ImplicitPortIterator * pIterator);

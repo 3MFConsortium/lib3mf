@@ -43,7 +43,6 @@ namespace NMR
 
     std::string elementNameFromNodeType(Lib3MF::eImplicitNodeType nodeType);
 
-
     class CModelImplicitNode
     {
       private:
@@ -55,9 +54,10 @@ namespace NMR
         PPorts m_outputs;
 
       public:
-        CModelImplicitNode(Lib3MF::eImplicitNodeType type, ImplicitIdentifier const & identifier, std::string const & displayname);
+        CModelImplicitNode(Lib3MF::eImplicitNodeType type,
+                           ImplicitIdentifier const & identifier,
+                           std::string const & displayname);
         CModelImplicitNode(Lib3MF::eImplicitNodeType type);
-
 
         ImplicitIdentifier const & getIdentifier() const;
         std::string const & getDisplayName() const;
@@ -68,11 +68,10 @@ namespace NMR
         Lib3MF::eImplicitNodeType getNodeType() const;
 
         PModelImplicitPort addInput(const std::string & sIdentifier,
-                                     const std::string & sDisplayName);
+                                    const std::string & sDisplayName);
 
         PModelImplicitPort addOutput(const std::string & sIdentifier,
-                                      const std::string & sDisplayName);
-
+                                     const std::string & sDisplayName);
 
         PPorts getInputs() const;
         PPorts getOutputs() const;

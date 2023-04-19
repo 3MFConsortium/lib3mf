@@ -493,6 +493,7 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATE_ATTRIBUTE_SCALARFIELDCOMPOSED: return "Duplicate attribute in a ScalarFieldComposed element";
 		case NMR_ERROR_MISSING_ATTRIBUTE_VECTOR3DFIELDCOMPOSED: return "Missing attribute in a Vector3DFieldComposed element";
 		case NMR_ERROR_DUPLICATE_ATTRIBUTE_VECTOR3DFIELDCOMPOSED: return "Duplicate attribute in a Vector3DFieldComposed element";
+		case NMR_ERROR_UNKNOWN_NODETYPE_IMPLICITMODEL: return "Unknown node type in implicit model";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

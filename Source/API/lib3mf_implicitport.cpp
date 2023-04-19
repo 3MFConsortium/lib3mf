@@ -30,6 +30,7 @@ Abstract: This is a stub class definition of CImplicitPort
 
 #include "lib3mf_implicitport.hpp"
 #include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_types.hpp"
 
 // Include custom headers here.
 
@@ -46,20 +47,25 @@ Lib3MF::Impl::CImplicitPort::CImplicitPort(NMR::PModelImplicitPort pImplicitPort
 
 std::string CImplicitPort::GetIdentifier()
 {
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+    return m_pImplicitPort->getIdentifier();
 }
 
 void CImplicitPort::SetIdentifier(const std::string & sIdentifier)
 {
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+    m_pImplicitPort->setIdentifier(sIdentifier);
 }
 
 std::string CImplicitPort::GetDisplayName()
 {
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+    return m_pImplicitPort->getDisplayName();
 }
 
 void CImplicitPort::SetDisplayName(const std::string & sDisplayName)
 {
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+    m_pImplicitPort->setDisplayName(sDisplayName);
+}
+
+Lib3MF::eImplicitPortType CImplicitPort::GetType()
+{
+    return m_pImplicitPort->getType();
 }
