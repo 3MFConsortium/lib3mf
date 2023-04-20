@@ -152,7 +152,7 @@ namespace NMR
                                                     const std::string & sDisplayName)
     {
 
-        auto newPort = std::make_shared<CModelImplicitPort>(sIdentifier, sDisplayName);
+        auto newPort = std::make_shared<CModelImplicitPort>(this, sIdentifier, sDisplayName);
         m_inputs->push_back(newPort);
         return newPort;
     }
@@ -160,7 +160,7 @@ namespace NMR
     PModelImplicitPort CModelImplicitNode::addOutput(const std::string & sIdentifier,
                                                      const std::string & sDisplayName)
     {
-        auto newPort = std::make_shared<CModelImplicitPort>(sIdentifier, sDisplayName);
+        auto newPort = std::make_shared<CModelImplicitPort>(this, sIdentifier, sDisplayName);
         m_outputs->push_back(newPort);
         return newPort;
     }
@@ -173,5 +173,25 @@ namespace NMR
     PPorts CModelImplicitNode::getOutputs() const
     {
         return m_outputs;
+    }
+
+    PModelImplicitPort NMR::CModelImplicitNode::findInput(const std::string & sIdentifier)
+    {
+        for (auto & port : *m_inputs) {
+            if (port->getIdentifier() == sIdentifier) {
+                return port;
+            }
+        }
+        return {};
+    }
+
+    PModelImplicitPort CModelImplicitNode::findOutput(const std::string & sIdentifier)
+    {
+        for (auto & port : *m_outputs) {
+            if (port->getIdentifier() == sIdentifier) {
+                return port;
+            }
+        }
+        return {};
     }
 }

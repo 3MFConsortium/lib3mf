@@ -31,9 +31,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace NMR
 {
-    CModelImplicitPort::CModelImplicitPort(ImplicitIdentifier const & identifier,
+    CModelImplicitPort::CModelImplicitPort(CModelImplicitNode * parent,
+                                           ImplicitIdentifier const & identifier,
                                            std::string const & displayname)
-        : m_identifier(identifier)
+        : m_parent(parent)
+        , m_identifier(identifier)
         , m_displayname(displayname)
     {
     }
@@ -65,5 +67,20 @@ namespace NMR
     void CModelImplicitPort::setType(Lib3MF::eImplicitPortType type)
     {
         m_type = type;
+    }
+
+    ImplicitIdentifier const & NMR::CModelImplicitPort::getReference() const
+    {
+        return m_reference;
+    }
+
+    void NMR::CModelImplicitPort::setReference(ImplicitIdentifier const & reference)
+    {
+        m_reference = reference;
+    }
+
+    CModelImplicitNode * NMR::CModelImplicitPort::getParent() const
+    {
+        return m_parent;
     }
 }

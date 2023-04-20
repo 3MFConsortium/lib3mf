@@ -1988,6 +1988,8 @@ public:
 	inline std::string GetDisplayName();
 	inline void SetDisplayName(const std::string & sDisplayName);
 	inline eImplicitPortType GetType();
+	inline std::string GetReference();
+	inline void SetReference(const std::string & sReference);
 };
 	
 /*************************************************************************************************************************
@@ -2148,6 +2150,8 @@ public:
 	inline void AddOutput(const std::string & sIdentifier, const std::string & sDisplayName);
 	inline PImplicitPortIterator GetOutputs();
 	inline void RemoveOutput(classParam<CImplicitPort> pOutput);
+	inline void AddLink(classParam<CImplicitPort> pSource, classParam<CImplicitPort> pTarget);
+	inline void AddLinkByNames(const std::string & sSource, const std::string & sTarget);
 };
 	
 /*************************************************************************************************************************
@@ -3177,6 +3181,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ImplicitPort_GetDisplayName = nullptr;
 		pWrapperTable->m_ImplicitPort_SetDisplayName = nullptr;
 		pWrapperTable->m_ImplicitPort_GetType = nullptr;
+		pWrapperTable->m_ImplicitPort_GetReference = nullptr;
+		pWrapperTable->m_ImplicitPort_SetReference = nullptr;
 		pWrapperTable->m_Iterator_MoveNext = nullptr;
 		pWrapperTable->m_Iterator_MovePrevious = nullptr;
 		pWrapperTable->m_Iterator_Count = nullptr;
@@ -3209,6 +3215,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ImplicitFunction_AddOutput = nullptr;
 		pWrapperTable->m_ImplicitFunction_GetOutputs = nullptr;
 		pWrapperTable->m_ImplicitFunction_RemoveOutput = nullptr;
+		pWrapperTable->m_ImplicitFunction_AddLink = nullptr;
+		pWrapperTable->m_ImplicitFunction_AddLinkByNames = nullptr;
 		pWrapperTable->m_BuildItem_GetObjectResource = nullptr;
 		pWrapperTable->m_BuildItem_GetUUID = nullptr;
 		pWrapperTable->m_BuildItem_SetUUID = nullptr;
@@ -6306,6 +6314,24 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ImplicitPort_GetReference = (PLib3MFImplicitPort_GetReferencePtr) GetProcAddress(hLibrary, "lib3mf_implicitport_getreference");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitPort_GetReference = (PLib3MFImplicitPort_GetReferencePtr) dlsym(hLibrary, "lib3mf_implicitport_getreference");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitPort_GetReference == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitPort_SetReference = (PLib3MFImplicitPort_SetReferencePtr) GetProcAddress(hLibrary, "lib3mf_implicitport_setreference");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitPort_SetReference = (PLib3MFImplicitPort_SetReferencePtr) dlsym(hLibrary, "lib3mf_implicitport_setreference");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitPort_SetReference == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_Iterator_MoveNext = (PLib3MFIterator_MoveNextPtr) GetProcAddress(hLibrary, "lib3mf_iterator_movenext");
 		#else // _WIN32
 		pWrapperTable->m_Iterator_MoveNext = (PLib3MFIterator_MoveNextPtr) dlsym(hLibrary, "lib3mf_iterator_movenext");
@@ -6591,6 +6617,24 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_ImplicitFunction_RemoveOutput == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitFunction_AddLink = (PLib3MFImplicitFunction_AddLinkPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addlink");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitFunction_AddLink = (PLib3MFImplicitFunction_AddLinkPtr) dlsym(hLibrary, "lib3mf_implicitfunction_addlink");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitFunction_AddLink == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitFunction_AddLinkByNames = (PLib3MFImplicitFunction_AddLinkByNamesPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addlinkbynames");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitFunction_AddLinkByNames = (PLib3MFImplicitFunction_AddLinkByNamesPtr) dlsym(hLibrary, "lib3mf_implicitfunction_addlinkbynames");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitFunction_AddLinkByNames == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -9460,6 +9504,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitPort_GetType == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_implicitport_getreference", (void**)&(pWrapperTable->m_ImplicitPort_GetReference));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitPort_GetReference == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitport_setreference", (void**)&(pWrapperTable->m_ImplicitPort_SetReference));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitPort_SetReference == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_iterator_movenext", (void**)&(pWrapperTable->m_Iterator_MoveNext));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Iterator_MoveNext == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -9586,6 +9638,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_implicitfunction_removeoutput", (void**)&(pWrapperTable->m_ImplicitFunction_RemoveOutput));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_RemoveOutput == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitfunction_addlink", (void**)&(pWrapperTable->m_ImplicitFunction_AddLink));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_AddLink == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitfunction_addlinkbynames", (void**)&(pWrapperTable->m_ImplicitFunction_AddLinkByNames));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_AddLinkByNames == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_builditem_getobjectresource", (void**)&(pWrapperTable->m_BuildItem_GetObjectResource));
@@ -14351,6 +14411,30 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CImplicitPort::GetReference - Retrieves the reference of the port, only used for input ports
+	* @return the reference
+	*/
+	std::string CImplicitPort::GetReference()
+	{
+		Lib3MF_uint32 bytesNeededReference = 0;
+		Lib3MF_uint32 bytesWrittenReference = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitPort_GetReference(m_pHandle, 0, &bytesNeededReference, nullptr));
+		std::vector<char> bufferReference(bytesNeededReference);
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitPort_GetReference(m_pHandle, bytesNeededReference, &bytesWrittenReference, &bufferReference[0]));
+		
+		return std::string(&bufferReference[0]);
+	}
+	
+	/**
+	* CImplicitPort::SetReference - Sets the reference of the port, only used for input ports
+	* @param[in] sReference - the reference
+	*/
+	void CImplicitPort::SetReference(const std::string & sReference)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitPort_SetReference(m_pHandle, sReference.c_str()));
+	}
+	
+	/**
 	 * Method definitions for class CIterator
 	 */
 	
@@ -14785,6 +14869,28 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	{
 		Lib3MFHandle hOutput = pOutput.GetHandle();
 		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_RemoveOutput(m_pHandle, hOutput));
+	}
+	
+	/**
+	* CImplicitFunction::AddLink - Add a link
+	* @param[in] pSource - the source port
+	* @param[in] pTarget - the target port
+	*/
+	void CImplicitFunction::AddLink(classParam<CImplicitPort> pSource, classParam<CImplicitPort> pTarget)
+	{
+		Lib3MFHandle hSource = pSource.GetHandle();
+		Lib3MFHandle hTarget = pTarget.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddLink(m_pHandle, hSource, hTarget));
+	}
+	
+	/**
+	* CImplicitFunction::AddLinkByNames - Add a link
+	* @param[in] sSource - name of the source port in the format nodename.portname
+	* @param[in] sTarget - name of the target port in the format nodename.portname
+	*/
+	void CImplicitFunction::AddLinkByNames(const std::string & sSource, const std::string & sTarget)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddLinkByNames(m_pHandle, sSource.c_str(), sTarget.c_str()));
 	}
 	
 	/**

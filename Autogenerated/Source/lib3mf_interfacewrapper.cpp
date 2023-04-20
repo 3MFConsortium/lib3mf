@@ -11819,6 +11819,97 @@ Lib3MFResult lib3mf_implicitport_gettype(Lib3MF_ImplicitPort pImplicitPort, eLib
 	}
 }
 
+Lib3MFResult lib3mf_implicitport_getreference(Lib3MF_ImplicitPort pImplicitPort, const Lib3MF_uint32 nReferenceBufferSize, Lib3MF_uint32* pReferenceNeededChars, char * pReferenceBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitPort;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitPort, "ImplicitPort", "GetReference");
+		}
+		if ( (!pReferenceBuffer) && !(pReferenceNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sReference("");
+		IImplicitPort* pIImplicitPort = dynamic_cast<IImplicitPort*>(pIBaseClass);
+		if (!pIImplicitPort)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pReferenceBuffer == nullptr);
+		if (isCacheCall) {
+			sReference = pIImplicitPort->GetReference();
+
+			pIImplicitPort->_setCache (new ParameterCache_1<std::string> (sReference));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIImplicitPort->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sReference);
+			pIImplicitPort->_setCache (nullptr);
+		}
+		
+		if (pReferenceNeededChars)
+			*pReferenceNeededChars = (Lib3MF_uint32) (sReference.size()+1);
+		if (pReferenceBuffer) {
+			if (sReference.size() >= nReferenceBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iReference = 0; iReference < sReference.size(); iReference++)
+				pReferenceBuffer[iReference] = sReference[iReference];
+			pReferenceBuffer[sReference.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("Reference", sReference.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitport_setreference(Lib3MF_ImplicitPort pImplicitPort, const char * pReference)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitPort;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitPort, "ImplicitPort", "SetReference");
+			pJournalEntry->addStringParameter("Reference", pReference);
+		}
+		if (pReference == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sReference(pReference);
+		IImplicitPort* pIImplicitPort = dynamic_cast<IImplicitPort*>(pIBaseClass);
+		if (!pIImplicitPort)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIImplicitPort->SetReference(sReference);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 
 /*************************************************************************************************************************
  Class implementation for Iterator
@@ -13071,6 +13162,88 @@ Lib3MFResult lib3mf_implicitfunction_removeoutput(Lib3MF_ImplicitFunction pImpli
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
 		pIImplicitFunction->RemoveOutput(pIOutput);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addlink(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPort pSource, Lib3MF_ImplicitPort pTarget)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddLink");
+			pJournalEntry->addHandleParameter("Source", pSource);
+			pJournalEntry->addHandleParameter("Target", pTarget);
+		}
+		IBase* pIBaseClassSource = (IBase *)pSource;
+		IImplicitPort* pISource = dynamic_cast<IImplicitPort*>(pIBaseClassSource);
+		if (!pISource)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IBase* pIBaseClassTarget = (IBase *)pTarget;
+		IImplicitPort* pITarget = dynamic_cast<IImplicitPort*>(pIBaseClassTarget);
+		if (!pITarget)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIImplicitFunction->AddLink(pISource, pITarget);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addlinkbynames(Lib3MF_ImplicitFunction pImplicitFunction, const char * pSource, const char * pTarget)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddLinkByNames");
+			pJournalEntry->addStringParameter("Source", pSource);
+			pJournalEntry->addStringParameter("Target", pTarget);
+		}
+		if (pSource == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTarget == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sSource(pSource);
+		std::string sTarget(pTarget);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIImplicitFunction->AddLinkByNames(sSource, sTarget);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -19672,6 +19845,10 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_implicitport_setdisplayname;
 	if (sProcName == "lib3mf_implicitport_gettype") 
 		*ppProcAddress = (void*) &lib3mf_implicitport_gettype;
+	if (sProcName == "lib3mf_implicitport_getreference") 
+		*ppProcAddress = (void*) &lib3mf_implicitport_getreference;
+	if (sProcName == "lib3mf_implicitport_setreference") 
+		*ppProcAddress = (void*) &lib3mf_implicitport_setreference;
 	if (sProcName == "lib3mf_iterator_movenext") 
 		*ppProcAddress = (void*) &lib3mf_iterator_movenext;
 	if (sProcName == "lib3mf_iterator_moveprevious") 
@@ -19736,6 +19913,10 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_implicitfunction_getoutputs;
 	if (sProcName == "lib3mf_implicitfunction_removeoutput") 
 		*ppProcAddress = (void*) &lib3mf_implicitfunction_removeoutput;
+	if (sProcName == "lib3mf_implicitfunction_addlink") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addlink;
+	if (sProcName == "lib3mf_implicitfunction_addlinkbynames") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addlinkbynames;
 	if (sProcName == "lib3mf_builditem_getobjectresource") 
 		*ppProcAddress = (void*) &lib3mf_builditem_getobjectresource;
 	if (sProcName == "lib3mf_builditem_getuuid") 

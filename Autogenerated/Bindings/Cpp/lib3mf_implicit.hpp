@@ -1964,6 +1964,8 @@ public:
 	inline std::string GetDisplayName();
 	inline void SetDisplayName(const std::string & sDisplayName);
 	inline eImplicitPortType GetType();
+	inline std::string GetReference();
+	inline void SetReference(const std::string & sReference);
 };
 	
 /*************************************************************************************************************************
@@ -2124,6 +2126,8 @@ public:
 	inline void AddOutput(const std::string & sIdentifier, const std::string & sDisplayName);
 	inline PImplicitPortIterator GetOutputs();
 	inline void RemoveOutput(classParam<CImplicitPort> pOutput);
+	inline void AddLink(classParam<CImplicitPort> pSource, classParam<CImplicitPort> pTarget);
+	inline void AddLinkByNames(const std::string & sSource, const std::string & sTarget);
 };
 	
 /*************************************************************************************************************************
@@ -6887,6 +6891,30 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CImplicitPort::GetReference - Retrieves the reference of the port, only used for input ports
+	* @return the reference
+	*/
+	std::string CImplicitPort::GetReference()
+	{
+		Lib3MF_uint32 bytesNeededReference = 0;
+		Lib3MF_uint32 bytesWrittenReference = 0;
+		CheckError(lib3mf_implicitport_getreference(m_pHandle, 0, &bytesNeededReference, nullptr));
+		std::vector<char> bufferReference(bytesNeededReference);
+		CheckError(lib3mf_implicitport_getreference(m_pHandle, bytesNeededReference, &bytesWrittenReference, &bufferReference[0]));
+		
+		return std::string(&bufferReference[0]);
+	}
+	
+	/**
+	* CImplicitPort::SetReference - Sets the reference of the port, only used for input ports
+	* @param[in] sReference - the reference
+	*/
+	void CImplicitPort::SetReference(const std::string & sReference)
+	{
+		CheckError(lib3mf_implicitport_setreference(m_pHandle, sReference.c_str()));
+	}
+	
+	/**
 	 * Method definitions for class CIterator
 	 */
 	
@@ -7321,6 +7349,28 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	{
 		Lib3MFHandle hOutput = pOutput.GetHandle();
 		CheckError(lib3mf_implicitfunction_removeoutput(m_pHandle, hOutput));
+	}
+	
+	/**
+	* CImplicitFunction::AddLink - Add a link
+	* @param[in] pSource - the source port
+	* @param[in] pTarget - the target port
+	*/
+	void CImplicitFunction::AddLink(classParam<CImplicitPort> pSource, classParam<CImplicitPort> pTarget)
+	{
+		Lib3MFHandle hSource = pSource.GetHandle();
+		Lib3MFHandle hTarget = pTarget.GetHandle();
+		CheckError(lib3mf_implicitfunction_addlink(m_pHandle, hSource, hTarget));
+	}
+	
+	/**
+	* CImplicitFunction::AddLinkByNames - Add a link
+	* @param[in] sSource - name of the source port in the format nodename.portname
+	* @param[in] sTarget - name of the target port in the format nodename.portname
+	*/
+	void CImplicitFunction::AddLinkByNames(const std::string & sSource, const std::string & sTarget)
+	{
+		CheckError(lib3mf_implicitfunction_addlinkbynames(m_pHandle, sSource.c_str(), sTarget.c_str()));
 	}
 	
 	/**

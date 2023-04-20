@@ -36,7 +36,6 @@ Reader for implicit function ressources
 #include "Model/Classes/NMR_ImplicitNodeTypes.h"
 #include "Model/Classes/NMR_Model.h"
 #include "Model/Classes/NMR_ModelConstants.h"
-#include "Model/Classes/NMR_ModelConstants_Implicit.h"
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
 
 #include "Common/NMR_Exception.h"
@@ -82,11 +81,11 @@ namespace NMR
                                                         const nfChar * pAttributeValue)
     {
 
-        if (strcmp(pAttributeName, XML_3MF_ELEMENT_IMPLICIT_FUNCTION_ID) == 0)
+        if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_ID) == 0)
         {
             m_nID = fnStringToUint32(pAttributeValue);
         }
-        else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICITNODE_DISPLAYNAME) == 0)
+        else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_DISPLAY_NAME) == 0)
         {
             m_displayName = pAttributeValue;
         }

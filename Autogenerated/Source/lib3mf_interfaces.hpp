@@ -3458,6 +3458,18 @@ public:
 	*/
 	virtual Lib3MF::eImplicitPortType GetType() = 0;
 
+	/**
+	* IImplicitPort::GetReference - Retrieves the reference of the port, only used for input ports
+	* @return the reference
+	*/
+	virtual std::string GetReference() = 0;
+
+	/**
+	* IImplicitPort::SetReference - Sets the reference of the port, only used for input ports
+	* @param[in] sReference - the reference
+	*/
+	virtual void SetReference(const std::string & sReference) = 0;
+
 };
 
 typedef IBaseSharedPtr<IImplicitPort> PIImplicitPort;
@@ -3818,6 +3830,20 @@ public:
 	* @param[in] pOutput - The output to be removed
 	*/
 	virtual void RemoveOutput(IImplicitPort* pOutput) = 0;
+
+	/**
+	* IImplicitFunction::AddLink - Add a link
+	* @param[in] pSource - the source port
+	* @param[in] pTarget - the target port
+	*/
+	virtual void AddLink(IImplicitPort* pSource, IImplicitPort* pTarget) = 0;
+
+	/**
+	* IImplicitFunction::AddLinkByNames - Add a link
+	* @param[in] sSource - name of the source port in the format nodename.portname
+	* @param[in] sTarget - name of the target port in the format nodename.portname
+	*/
+	virtual void AddLinkByNames(const std::string & sSource, const std::string & sTarget) = 0;
 
 };
 

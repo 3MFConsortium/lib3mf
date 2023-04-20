@@ -1401,6 +1401,18 @@ Model error codes (0x8XXX)
 // Unknown node type in implict model
 #define NMR_ERROR_UNKNOWN_NODETYPE_IMPLICITMODEL 0x8838
 
+// Invalid source node in implicit function
+#define NMR_ERROR_IMPLICIT_FUNCTION_INVALID_SOURCE_NODE 0x8839
+
+// Invalid target node in implicit function
+#define NMR_ERROR_IMPLICIT_FUNCTION_INVALID_TARGET_NODE 0x883A
+
+// Invalid source port in implicit function
+#define NMR_ERROR_IMPLICIT_FUNCTION_INVALID_SOURCE_PORT 0x883B
+
+// Invalid target port in implicit function
+#define NMR_ERROR_IMPLICIT_FUNCTION_INVALID_TARGET_PORT 0x883C
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

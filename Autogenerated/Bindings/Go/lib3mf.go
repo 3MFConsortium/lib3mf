@@ -2943,6 +2943,24 @@ Lib3MFResult CCall_lib3mf_implicitport_gettype(Lib3MFHandle libraryHandle, Lib3M
 }
 
 
+Lib3MFResult CCall_lib3mf_implicitport_getreference(Lib3MFHandle libraryHandle, Lib3MF_ImplicitPort pImplicitPort, const Lib3MF_uint32 nReferenceBufferSize, Lib3MF_uint32* pReferenceNeededChars, char * pReferenceBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitPort_GetReference (pImplicitPort, nReferenceBufferSize, pReferenceNeededChars, pReferenceBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitport_setreference(Lib3MFHandle libraryHandle, Lib3MF_ImplicitPort pImplicitPort, const char * pReference)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitPort_SetReference (pImplicitPort, pReference);
+}
+
+
 Lib3MFResult CCall_lib3mf_iterator_movenext(Lib3MFHandle libraryHandle, Lib3MF_Iterator pIterator, bool * pHasNext)
 {
 	if (libraryHandle == 0) 
@@ -3228,6 +3246,24 @@ Lib3MFResult CCall_lib3mf_implicitfunction_removeoutput(Lib3MFHandle libraryHand
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_ImplicitFunction_RemoveOutput (pImplicitFunction, pOutput);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addlink(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPort pSource, Lib3MF_ImplicitPort pTarget)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddLink (pImplicitFunction, pSource, pTarget);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addlinkbynames(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pSource, const char * pTarget)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddLinkByNames (pImplicitFunction, pSource, pTarget);
 }
 
 
@@ -9354,6 +9390,32 @@ func (inst ImplicitPort) GetType() (ImplicitPortType, error) {
 	return ImplicitPortType(implicitPortType), nil
 }
 
+// GetReference retrieves the reference of the port, only used for input ports.
+func (inst ImplicitPort) GetReference() (string, error) {
+	var neededforreference C.uint32_t
+	var filledinreference C.uint32_t
+	ret := C.CCall_lib3mf_implicitport_getreference(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforreference, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizereference := neededforreference
+	bufferreference := make([]byte, bufferSizereference)
+	ret = C.CCall_lib3mf_implicitport_getreference(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizereference, &filledinreference, (*C.char)(unsafe.Pointer(&bufferreference[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferreference[:(filledinreference-1)]), nil
+}
+
+// SetReference sets the reference of the port, only used for input ports.
+func (inst ImplicitPort) SetReference(reference string) error {
+	ret := C.CCall_lib3mf_implicitport_setreference(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(reference)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
 
 // Iterator represents a Lib3MF class.
 type Iterator struct {
@@ -9765,6 +9827,24 @@ func (inst ImplicitFunction) GetOutputs() (ImplicitPortIterator, error) {
 // RemoveOutput removes an output.
 func (inst ImplicitFunction) RemoveOutput(output ImplicitPort) error {
 	ret := C.CCall_lib3mf_implicitfunction_removeoutput(inst.wrapperRef.LibraryHandle, inst.Ref, output.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// AddLink add a link.
+func (inst ImplicitFunction) AddLink(source ImplicitPort, target ImplicitPort) error {
+	ret := C.CCall_lib3mf_implicitfunction_addlink(inst.wrapperRef.LibraryHandle, inst.Ref, source.Ref, target.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// AddLinkByNames add a link.
+func (inst ImplicitFunction) AddLinkByNames(source string, target string) error {
+	ret := C.CCall_lib3mf_implicitfunction_addlinkbynames(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(source)[0])), (*C.char)(unsafe.Pointer(&[]byte(target)[0])))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}

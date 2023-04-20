@@ -40,11 +40,22 @@ namespace NMR
 {
     using ImplicitNodes = std::vector<PModelImplicitNode>;
     using PImplicitNodes = std::shared_ptr<ImplicitNodes>;
-    
+
     namespace implicit
     {
-      class NodeTypes;
+        class NodeTypes;
     }
+
+
+    // Extract node name (before the first dot) from a node identifier
+    std::string extractNodeName(const ImplicitIdentifier & sIdentifier);
+
+    // Extract port name (after the first dot) from a node identifier
+    std::string extractPortName(const ImplicitIdentifier & sIdentifier);
+
+    // Concatenate node name and port name to a reference identifier
+    ImplicitIdentifier makeReferenceIdentifier(const ImplicitIdentifier & sNodeIdentifier,
+                                               const ImplicitIdentifier & sPortIdentifier);
 
     class CModelImplicitFunction : public CModelResource
     {
@@ -53,6 +64,8 @@ namespace NMR
         std::string m_displayname;
         PImplicitNodes m_nodes;
         static const implicit::NodeTypes m_nodeTypes;
+
+        CModelImplicitNode * findNode(const ImplicitIdentifier & sIdentifier) const;
       public:
         CModelImplicitFunction(_In_ const ModelResourceID sID, _In_ CModel * pModel);
 
@@ -62,12 +75,18 @@ namespace NMR
         void setDisplayName(std::string const & displayname);
 
         PModelImplicitNode addNode(const Lib3MF::eImplicitNodeType eNodeType,
-                     const std::string & sIdentifier,
-                     const std::string & sDisplayName);
-        
+                                   const std::string & sIdentifier,
+                                   const std::string & sDisplayName);
+
         PModelImplicitNode addNode(const Lib3MF::eImplicitNodeType eNodeType);
 
         PImplicitNodes getNodes() const;
+
+        void addLink(const ImplicitIdentifier & sSourceNodeIdentifier,
+                     const ImplicitIdentifier & sTargetNodeIdentifier);
+
+        void addLink(CModelImplicitPort const & pSourcePort,
+                     CModelImplicitPort & pTargetPort);
     };
 
     using PModelImplicitFunction = std::shared_ptr<CModelImplicitFunction>;

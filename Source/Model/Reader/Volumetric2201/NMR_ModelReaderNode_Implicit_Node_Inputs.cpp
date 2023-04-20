@@ -29,8 +29,8 @@ NMR_ModelReaderNode_Volumetric2201_ImageStack.cpp covers the official 3MF volume
 
 --*/
 
-#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Node.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Node_Inputs.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Port.h"
 
 #include "Model/Classes/NMR_Model.h"
 #include "Model/Classes/NMR_ModelConstants.h"
@@ -41,70 +41,38 @@ NMR_ModelReaderNode_Volumetric2201_ImageStack.cpp covers the official 3MF volume
 
 namespace NMR
 {
-    CModelReaderNode_Implicit_Node::CModelReaderNode_Implicit_Node(
-      _In_ CModel * pModel,
-      _In_ CModelImplicitNode * pImplicitNode,
+    CModelReaderNode_Implicit_Node_Inputs::CModelReaderNode_Implicit_Node_Inputs(
+      _In_ CModelImplicitNode * pParentNode,
       _In_ PModelWarnings pWarnings)
         : CModelReaderNode(pWarnings)
     {
-        __NMRASSERT(pModel);
-        __NMRASSERT(pImplicitNode);
-
-        m_pModel = pModel;
-        m_pImplicitNode = pImplicitNode;
+        __NMRASSERT(pParentNode);
+        m_pImplicitNode = pParentNode;
     }
 
-    void CModelReaderNode_Implicit_Node::parseXML(_In_ CXmlReader * pXMLReader)
+    void CModelReaderNode_Implicit_Node_Inputs::parseXML(_In_ CXmlReader * pXMLReader)
     {
         __NMRASSERT(pXMLReader);
 
         // Parse name
         parseName(pXMLReader);
-        
-        // Parse Attributes
-        parseAttributes(pXMLReader);
 
         // Parse Content
         parseContent(pXMLReader);
     }
 
-    void
-    CModelReaderNode_Implicit_Node::OnAttribute(_In_z_ const nfChar * pAttributeName,
-                                                              _In_z_ const nfChar * pAttributeValue)
+    void CModelReaderNode_Implicit_Node_Inputs::OnNSChildElement(const nfChar * pChildName,
+                                                           const nfChar * pNameSpace,
+                                                           CXmlReader * pXMLReader)
     {
-        if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_ID) == 0)
-        {
-            m_pImplicitNode->setIdentifier(pAttributeValue);
-        }
-        else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_DISPLAY_NAME) == 0)
-        {
-            m_pImplicitNode->setDisplayName(pAttributeValue);
-        }
-    }
 
-    void NMR::CModelReaderNode_Implicit_Node::OnNSChildElement(
-      _In_z_ const nfChar * pChildName,
-      _In_z_ const nfChar * pNameSpace,
-      _In_ CXmlReader * pXMLReader)
-    {
-        __NMRASSERT(pChildName);
-        __NMRASSERT(pXMLReader);
-        __NMRASSERT(pNameSpace);
+        auto port = m_pImplicitNode->findInput(pChildName);
+        if (port != nullptr)
+        {
+            port = m_pImplicitNode->addInput(pChildName, pChildName);
+        }
 
-        if (strcmp(pNameSpace, XML_3MF_NAMESPACE_VOLUMETRICSPEC) == 0)
-        {
-            if (strcmp(pChildName, XML_3MF_ELEMENT_IMPLICIT_NODE_INPUT) == 0)
-            {
-                
-                auto pXMLNode = std::make_shared<CModelReaderNode_Implicit_Node_Inputs>(
-                  m_pImplicitNode, m_pWarnings);
-                pXMLNode->parseXML(pXMLReader);
-            }
-        }
-        else
-        {
-            m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT),
-                                      mrwInvalidOptionalValue);
-        }
+        // auto pXMLNode = std::make_shared<CModelReaderNode_Implicit_Port>(port, m_pWarnings);
+        // pXMLNode->parseXML(pXMLReader);
     }
 }

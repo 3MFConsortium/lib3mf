@@ -120,3 +120,27 @@ void CImplicitFunction::RemoveOutput(IImplicitPort* pOutput)
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
+// /**
+// 	* IImplicitFunction::AddLink - Add a link
+// 	* @param[in] pSource - the source port
+// 	* @param[in] pTarget - the target port
+// 	*/
+// 	virtual void AddLink(IImplicitPort* pSource, IImplicitPort* pTarget) = 0;
+
+// 	/**
+// 	* IImplicitFunction::AddLinkByNames - Add a link
+// 	* @param[in] sSource - name of the source port in the format nodename.portname
+// 	* @param[in] sTarget - name of the target port in the format nodename.portname
+// 	*/
+// 	virtual void AddLinkByNames(const std::string & sSource, const std::string & sTarget) = 0;
+
+
+void CImplicitFunction::AddLink(IImplicitPort* pSource, IImplicitPort* pTarget)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+void CImplicitFunction::AddLinkByNames(const std::string & sSource, const std::string & sTarget)
+{
+	m_function->addLink(sSource, sTarget);
+}

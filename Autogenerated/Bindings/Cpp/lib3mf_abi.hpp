@@ -3334,6 +3334,26 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitport_setdisplayname(Lib3MF_ImplicitP
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitport_gettype(Lib3MF_ImplicitPort pImplicitPort, Lib3MF::eImplicitPortType * pImplicitPortType);
 
+/**
+* Retrieves the reference of the port, only used for input ports
+*
+* @param[in] pImplicitPort - ImplicitPort instance.
+* @param[in] nReferenceBufferSize - size of the buffer (including trailing 0)
+* @param[out] pReferenceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pReferenceBuffer -  buffer of the reference, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitport_getreference(Lib3MF_ImplicitPort pImplicitPort, const Lib3MF_uint32 nReferenceBufferSize, Lib3MF_uint32* pReferenceNeededChars, char * pReferenceBuffer);
+
+/**
+* Sets the reference of the port, only used for input ports
+*
+* @param[in] pImplicitPort - ImplicitPort instance.
+* @param[in] pReference - the reference
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitport_setreference(Lib3MF_ImplicitPort pImplicitPort, const char * pReference);
+
 /*************************************************************************************************************************
  Class definition for Iterator
 **************************************************************************************************************************/
@@ -3670,6 +3690,26 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_getoutputs(Lib3MF_ImplicitF
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_removeoutput(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPort pOutput);
+
+/**
+* Add a link
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pSource - the source port
+* @param[in] pTarget - the target port
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addlink(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPort pSource, Lib3MF_ImplicitPort pTarget);
+
+/**
+* Add a link
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pSource - name of the source port in the format nodename.portname
+* @param[in] pTarget - name of the target port in the format nodename.portname
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addlinkbynames(Lib3MF_ImplicitFunction pImplicitFunction, const char * pSource, const char * pTarget);
 
 /*************************************************************************************************************************
  Class definition for BuildItem

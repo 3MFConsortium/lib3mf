@@ -69,3 +69,13 @@ Lib3MF::eImplicitPortType CImplicitPort::GetType()
 {
     return m_pImplicitPort->getType();
 }
+
+std::string CImplicitPort::GetReference()
+{
+    return m_pImplicitPort->getReference();
+}
+
+void CImplicitPort::SetReference(const std::string & sReference)
+{
+    m_pImplicitPort->setReference(sReference);
+}

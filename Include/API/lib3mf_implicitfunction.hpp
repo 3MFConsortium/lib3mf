@@ -165,6 +165,20 @@ namespace Lib3MF
              * @param[in] pOutput - The output to be removed
              */
             void RemoveOutput(IImplicitPort * pOutput) override;
+
+            /**
+             * IImplicitFunction::AddLink - Add a link
+             * @param[in] pSource - the source port
+             * @param[in] pTarget - the target port
+             */
+            void AddLink(IImplicitPort * pSource, IImplicitPort * pTarget) override;
+
+            /**
+             * IImplicitFunction::AddLinkByNames - Add a link
+             * @param[in] sSource - name of the source port in the format nodename.portname
+             * @param[in] sTarget - name of the target port in the format nodename.portname
+             */
+            void AddLinkByNames(const std::string & sSource, const std::string & sTarget) override;
         };
 
     } // namespace Impl

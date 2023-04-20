@@ -1313,6 +1313,8 @@ private:
 	static void GetDisplayName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetDisplayName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetType(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetReference(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetReference(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFImplicitPort();
@@ -1481,6 +1483,8 @@ private:
 	static void AddOutput(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetOutputs(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void RemoveOutput(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddLink(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddLinkByNames(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFImplicitFunction();

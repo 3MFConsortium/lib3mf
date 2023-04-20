@@ -27,18 +27,31 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --*/
 
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
-#include "Model/Classes/NMR_ImplicitNodeTypes.h"
 #include "Common/NMR_Exception.h"
+#include "Model/Classes/NMR_ImplicitNodeTypes.h"
 
 namespace NMR
 {
     const implicit::NodeTypes CModelImplicitFunction::m_nodeTypes;
 
-    CModelImplicitFunction::CModelImplicitFunction(const ModelResourceID sID, CModel * pModel) : CModelResource(sID, pModel)
+    CModelImplicitNode *
+    CModelImplicitFunction::findNode(const ImplicitIdentifier & sIdentifier) const
+    {
+        for (auto & node : *m_nodes)
+        {
+            if (node->getIdentifier() == sIdentifier)
+            {
+                return node.get();
+            }
+        }
+        return nullptr;
+    }
+
+    CModelImplicitFunction::CModelImplicitFunction(const ModelResourceID sID, CModel * pModel)
+        : CModelResource(sID, pModel)
     {
         m_nodes = std::make_shared<ImplicitNodes>();
     }
-
 
     std::string const & CModelImplicitFunction::getIdentifier() const
     {
@@ -81,5 +94,81 @@ namespace NMR
     PImplicitNodes NMR::CModelImplicitFunction::getNodes() const
     {
         return m_nodes;
+    }
+
+    void NMR::CModelImplicitFunction::addLink(const ImplicitIdentifier & sSourceNodeIdentifier,
+                                              const ImplicitIdentifier & sTargetNodeIdentifier)
+
+    {
+        auto const sourceNodeName = extractNodeName(sSourceNodeIdentifier);
+        auto const sourceNode = findNode(sourceNodeName);
+
+        if (sourceNode == nullptr)
+        {
+            throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_INVALID_SOURCE_NODE);
+        }
+        auto const targetNodeName = extractNodeName(sTargetNodeIdentifier);
+
+        auto const targetNode = findNode(targetNodeName);
+        if (targetNode == nullptr)
+        {
+            throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_INVALID_TARGET_NODE);
+        }
+        auto const sourcePortName = extractPortName(sSourceNodeIdentifier);
+        auto const targetPortName = extractPortName(sTargetNodeIdentifier);
+        if (sourcePortName.empty())
+        {
+            throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_INVALID_SOURCE_PORT);
+        }
+        if (targetPortName.empty())
+        {
+            throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_INVALID_TARGET_PORT);
+        }
+        auto sourcePort = sourceNode->findOutput(sourcePortName);
+        auto targetPort = targetNode->findInput(targetPortName);
+        if (!sourcePort)
+        {
+            throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_INVALID_SOURCE_PORT);
+        }
+        if (!targetPort)
+        {
+            throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_INVALID_TARGET_PORT);
+        }
+
+        targetPort->setReference(sSourceNodeIdentifier);
+        sourcePort->setReference(sTargetNodeIdentifier); // won't be visible in the xml
+    }
+
+    void CModelImplicitFunction::addLink(CModelImplicitPort const & pSourcePort,
+                                         CModelImplicitPort & pTargetPort)
+    {
+        pTargetPort.setReference(makeReferenceIdentifier(pSourcePort.getParent()->getIdentifier(),
+                                                         pSourcePort.getIdentifier()));
+    }
+
+    std::string extractNodeName(const ImplicitIdentifier & sIdentifier)
+    {
+        auto pos = sIdentifier.find_last_of(".");
+        if (pos == std::string::npos)
+        {
+            return "";
+        }
+        return sIdentifier.substr(0, pos);
+    }
+
+    std::string extractPortName(const ImplicitIdentifier & sIdentifier)
+    {
+        auto pos = sIdentifier.find_last_of(".");
+        if (pos == std::string::npos)
+        {
+            return sIdentifier;
+        }
+        return sIdentifier.substr(pos + 1);
+    }
+
+    ImplicitIdentifier makeReferenceIdentifier(const ImplicitIdentifier & sNodeIdentifier,
+                                               const ImplicitIdentifier & sPortIdentifier)
+    {
+        return sNodeIdentifier + "." + sPortIdentifier;
     }
 }

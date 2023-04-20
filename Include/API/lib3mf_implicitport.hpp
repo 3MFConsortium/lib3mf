@@ -104,6 +104,20 @@ namespace Lib3MF
              * @return the type
              */
             Lib3MF::eImplicitPortType GetType() override;
+
+            /**
+             * IImplicitPort::GetReference - Retrieves the reference of the port, only used for
+             * input ports
+             * @return the reference
+             */
+            std::string GetReference() override;
+
+            /**
+             * IImplicitPort::SetReference - Sets the reference of the port, only used for input
+             * ports
+             * @param[in] sReference - the reference
+             */
+            void SetReference(const std::string & sReference) override;
         };
 
     } // namespace Impl

@@ -506,6 +506,82 @@ namespace Lib3MF
         EXPECT_FALSE(functionIterator->MoveNext());
     }
 
+    void comparePorts(Lib3MF::PImplicitPortIterator const & portIterator1,
+                      Lib3MF::PImplicitPortIterator const & portIterator2,
+                      bool ignoreReference = false)
+    {
+        ASSERT_EQ(portIterator1->Count(), portIterator2->Count());
+        while (portIterator1->MoveNext())
+        {
+            EXPECT_TRUE(portIterator2->MoveNext());
+
+            auto port1 = portIterator1->GetCurrent();
+            auto port2 = portIterator2->GetCurrent();
+
+            EXPECT_EQ(port1->GetIdentifier(), port2->GetIdentifier());
+            EXPECT_EQ(port1->GetType(), port2->GetType());
+            EXPECT_EQ(port1->GetDisplayName(), port2->GetDisplayName());
+            if (!ignoreReference)
+            {
+                EXPECT_EQ(port1->GetReference(), port2->GetReference());
+            }
+        }
+        EXPECT_FALSE(portIterator2->MoveNext());
+    }
+
+    void compareFunctions(PImplicitFunction const & function1, PImplicitFunction const & function2)
+    {
+        EXPECT_EQ(function1->GetDisplayName(), function2->GetDisplayName());
+        EXPECT_EQ(function1->GetModelResourceID(), function2->GetModelResourceID());
+
+        auto nodeIterator1 = function1->GetNodes();
+        auto nodeIterator2 = function2->GetNodes();
+        ASSERT_EQ(nodeIterator1->Count(), nodeIterator2->Count());
+        while (nodeIterator1->MoveNext())
+        {
+            EXPECT_TRUE(nodeIterator2->MoveNext());
+
+            auto node1 = nodeIterator1->GetCurrent();
+            auto node2 = nodeIterator2->GetCurrent();
+
+            EXPECT_EQ(node1->GetIdentifier(), node2->GetIdentifier());
+            EXPECT_EQ(node1->GetNodeType(), node2->GetNodeType());
+            EXPECT_EQ(node1->GetDisplayName(), node2->GetDisplayName());
+
+            comparePorts(node1->GetInputs(), node2->GetInputs());
+            comparePorts(node1->GetOutputs(), node2->GetOutputs(), true); // ignore reference
+        }
+        EXPECT_FALSE(nodeIterator2->MoveNext());
+
+        // auto inputs1 = function1->GetInputs();
+        // auto inputs2 = function2->GetInputs();
+        // ASSERT_EQ(inputs1->Count(), inputs2->Count());
+        // while (inputs1->MoveNext())
+        // {
+        //     EXPECT_TRUE(inputs2->MoveNext());
+        //     EXPECT_EQ(inputs1->GetCurrent()->GetDisplayName(),
+        //               inputs2->GetCurrent()->GetDisplayName());
+        //     EXPECT_EQ(inputs1->GetCurrent()->GetIdentifier(),
+        //               inputs2->GetCurrent()->GetIdentifier());
+        //     EXPECT_EQ(inputs1->GetCurrent()->GetType(), inputs2->GetCurrent()->GetType());
+        // }
+        // EXPECT_FALSE(inputs2->MoveNext());
+
+        // auto outputs1 = function1->GetOutputs();
+        // auto outputs2 = function2->GetOutputs();
+        // ASSERT_EQ(outputs1->Count(), outputs2->Count());
+        // while (outputs1->MoveNext())
+        // {
+        //     EXPECT_TRUE(outputs2->MoveNext());
+        //     EXPECT_EQ(outputs1->GetCurrent()->GetDisplayName(),
+        //               outputs2->GetCurrent()->GetDisplayName());
+        //     EXPECT_EQ(outputs1->GetCurrent()->GetIdentifier(),
+        //               outputs2->GetCurrent()->GetIdentifier());
+        //     EXPECT_EQ(outputs1->GetCurrent()->GetType(), outputs2->GetCurrent()->GetType());
+        // }
+        // EXPECT_FALSE(outputs2->MoveNext());
+    }
+
     // Function with multiple nodes and links between them
     TEST_F(Volumetric, AddFunction_MultipleNodesAndLinksAreWrittenTo3mfFile)
     {
@@ -523,6 +599,7 @@ namespace Lib3MF
           Lib3MF::eImplicitNodeType::Multiplication, "multiplication_1", "multiplication 3");
 
         // Add some links
+        newFunction->AddLinkByNames("addition_1.sum", "substraction_1.A");
 
         // Write to file
         writer3MF->WriteToFile(Volumetric::OutFolder + "AddFunctionWithMultipleNodesAndLinks.3mf");
@@ -536,24 +613,11 @@ namespace Lib3MF
         auto functionIterator = ioModel->GetFunctions();
         ASSERT_EQ(functionIterator->Count(), 1);
 
-		// Check the nodes
-		EXPECT_TRUE(functionIterator->MoveNext());
-		EXPECT_EQ(functionIterator->GetCurrentFunction()->GetModelResourceID(), expectedResourceId);
+        // Check the nodes
+        EXPECT_TRUE(functionIterator->MoveNext());
+        EXPECT_EQ(functionIterator->GetCurrentFunction()->GetModelResourceID(), expectedResourceId);
 
-		auto nodeIterator = functionIterator->GetCurrentFunction()->GetNodes();
-		ASSERT_EQ(nodeIterator->Count(), 3);
-		EXPECT_TRUE(nodeIterator->MoveNext());
-		EXPECT_EQ(nodeIterator->GetCurrent()->GetNodeType(), Lib3MF::eImplicitNodeType::Addition);
-		EXPECT_EQ(nodeIterator->GetCurrent()->GetDisplayName(), "addition 1");
-
-		EXPECT_TRUE(nodeIterator->MoveNext());
-		EXPECT_EQ(nodeIterator->GetCurrent()->GetNodeType(), Lib3MF::eImplicitNodeType::Subtraction);
-		EXPECT_EQ(nodeIterator->GetCurrent()->GetDisplayName(), "substraction 1");
-
-		EXPECT_TRUE(nodeIterator->MoveNext());
-		EXPECT_EQ(nodeIterator->GetCurrent()->GetNodeType(), Lib3MF::eImplicitNodeType::Multiplication);
-		EXPECT_EQ(nodeIterator->GetCurrent()->GetDisplayName(), "multiplication 3");
-
-		EXPECT_FALSE(functionIterator->MoveNext());
+        // Compare the functions
+        compareFunctions(newFunction, functionIterator->GetCurrentFunction());
     }
 }

@@ -2165,7 +2165,16 @@
 			<param name="DisplayName" type="string" pass="in" description="the display name" />
 		</method>
 		<method name="GetType" description="Retrieves the type of the port">
-			<param name="ImplicitPortType" type="enum" class="ImplicitPortType" pass="return" description="the type" />
+			<param name="ImplicitPortType" type="enum" class="ImplicitPortType" pass="return"
+				description="the type" />
+		</method>
+		<method name="GetReference"
+			description="Retrieves the reference of the port, only used for input ports">
+			<param name="Reference" type="string" pass="return" description="the reference" />
+		</method>
+		<method name="SetReference"
+			description="Sets the reference of the port, only used for input ports">
+			<param name="Reference" type="string" pass="in" description="the reference" />
 		</method>
 	</class>
 
@@ -2342,6 +2351,21 @@
 		<method name="RemoveOutput" description="Removes an output">
 			<param name="Output" type="class" class="ImplicitPort" pass="in"
 				description="The output to be removed" />
+		</method>
+
+		<method name="AddLink" description="Add a link">
+			<param name="Source" type="class" class="ImplicitPort" pass="in"
+				description="the source port" />
+			<param name="Target" type="class" class="ImplicitPort" pass="in"
+				description="the target port" />
+		</method>
+
+
+		<method name="AddLinkByNames" description="Add a link">
+			<param name="Source" type="string" pass="in"
+				description="name of the source port in the format nodename.portname" />
+			<param name="Target" type="string" pass="in"
+				description="name of the target port in the format nodename.portname" />
 		</method>
 	</class>
 
@@ -3244,7 +3268,8 @@
 				description="returns the resource iterator" />
 		</method>
 
-		<method name="AddFunction" description="adds a function (e.g. for implicit geometries) to the model">
+		<method name="AddFunction"
+			description="adds a function (e.g. for implicit geometries) to the model">
 			<param name="FunctionInstance" type="handle" class="ImplicitFunction" pass="return"
 				description="returns the function instance" />
 		</method>

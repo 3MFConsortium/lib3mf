@@ -3321,6 +3321,26 @@ typedef Lib3MFResult (*PLib3MFImplicitPort_SetDisplayNamePtr) (Lib3MF_ImplicitPo
 */
 typedef Lib3MFResult (*PLib3MFImplicitPort_GetTypePtr) (Lib3MF_ImplicitPort pImplicitPort, eLib3MFImplicitPortType * pImplicitPortType);
 
+/**
+* Retrieves the reference of the port, only used for input ports
+*
+* @param[in] pImplicitPort - ImplicitPort instance.
+* @param[in] nReferenceBufferSize - size of the buffer (including trailing 0)
+* @param[out] pReferenceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pReferenceBuffer -  buffer of the reference, may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitPort_GetReferencePtr) (Lib3MF_ImplicitPort pImplicitPort, const Lib3MF_uint32 nReferenceBufferSize, Lib3MF_uint32* pReferenceNeededChars, char * pReferenceBuffer);
+
+/**
+* Sets the reference of the port, only used for input ports
+*
+* @param[in] pImplicitPort - ImplicitPort instance.
+* @param[in] pReference - the reference
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitPort_SetReferencePtr) (Lib3MF_ImplicitPort pImplicitPort, const char * pReference);
+
 /*************************************************************************************************************************
  Class definition for Iterator
 **************************************************************************************************************************/
@@ -3657,6 +3677,26 @@ typedef Lib3MFResult (*PLib3MFImplicitFunction_GetOutputsPtr) (Lib3MF_ImplicitFu
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFImplicitFunction_RemoveOutputPtr) (Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPort pOutput);
+
+/**
+* Add a link
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pSource - the source port
+* @param[in] pTarget - the target port
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddLinkPtr) (Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPort pSource, Lib3MF_ImplicitPort pTarget);
+
+/**
+* Add a link
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pSource - name of the source port in the format nodename.portname
+* @param[in] pTarget - name of the target port in the format nodename.portname
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddLinkByNamesPtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pSource, const char * pTarget);
 
 /*************************************************************************************************************************
  Class definition for BuildItem
@@ -5737,6 +5777,8 @@ typedef struct {
 	PLib3MFImplicitPort_GetDisplayNamePtr m_ImplicitPort_GetDisplayName;
 	PLib3MFImplicitPort_SetDisplayNamePtr m_ImplicitPort_SetDisplayName;
 	PLib3MFImplicitPort_GetTypePtr m_ImplicitPort_GetType;
+	PLib3MFImplicitPort_GetReferencePtr m_ImplicitPort_GetReference;
+	PLib3MFImplicitPort_SetReferencePtr m_ImplicitPort_SetReference;
 	PLib3MFIterator_MoveNextPtr m_Iterator_MoveNext;
 	PLib3MFIterator_MovePreviousPtr m_Iterator_MovePrevious;
 	PLib3MFIterator_CountPtr m_Iterator_Count;
@@ -5769,6 +5811,8 @@ typedef struct {
 	PLib3MFImplicitFunction_AddOutputPtr m_ImplicitFunction_AddOutput;
 	PLib3MFImplicitFunction_GetOutputsPtr m_ImplicitFunction_GetOutputs;
 	PLib3MFImplicitFunction_RemoveOutputPtr m_ImplicitFunction_RemoveOutput;
+	PLib3MFImplicitFunction_AddLinkPtr m_ImplicitFunction_AddLink;
+	PLib3MFImplicitFunction_AddLinkByNamesPtr m_ImplicitFunction_AddLinkByNames;
 	PLib3MFBuildItem_GetObjectResourcePtr m_BuildItem_GetObjectResource;
 	PLib3MFBuildItem_GetUUIDPtr m_BuildItem_GetUUID;
 	PLib3MFBuildItem_SetUUIDPtr m_BuildItem_SetUUID;

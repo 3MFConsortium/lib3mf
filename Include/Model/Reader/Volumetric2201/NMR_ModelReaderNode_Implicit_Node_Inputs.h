@@ -25,15 +25,35 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-
-NMR_ModelConstants_Implicit.h defines the 3MF Model Constants of the implicit part of the volumetric
-extension.
+Reader for ports of a node of a graph representing a function for implicit modelling
 
 --*/
-#ifndef __NMR_MESHINFORMATION_SLICES
-#define __NMR_MESHINFORMATION_SLICES
 
-#define XML_3MF_ATTRIBUTE_IMPLICITNODE_IDENTIFIER "identifier"
-#define XML_3MF_ATTRIBUTE_IMPLICITNODE_DISPLAYNAME "displayname"
+#pragma once
 
-#endif
+#include "Model/Classes/NMR_ModelImplicitNode.h"
+#include "Model/Reader/NMR_ModelReaderNode.h"
+
+namespace NMR
+{
+
+    class CModelReaderNode_Implicit_Node_Inputs : public CModelReaderNode
+    {
+      private:
+        CModelImplicitNode * m_pImplicitNode;
+
+      public:
+        CModelReaderNode_Implicit_Node_Inputs() = delete;
+        CModelReaderNode_Implicit_Node_Inputs(_In_ CModelImplicitNode * pParentNode,
+                                        _In_ PModelWarnings pWarnings
+                                       );
+
+        void parseXML(_In_ CXmlReader * pXMLReader) override;
+
+        void OnNSChildElement(_In_z_ const nfChar * pChildName,
+                              _In_z_ const nfChar * pNameSpace,
+                              _In_ CXmlReader * pXMLReader) override;
+    };
+
+    typedef std::shared_ptr<CModelReaderNode_Implicit_Node_Inputs> PModelReaderNode_Implicit_Node_Inputs;
+}

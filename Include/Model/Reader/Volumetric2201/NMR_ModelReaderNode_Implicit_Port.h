@@ -25,39 +25,33 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-
+Reader for a single port of a node of a graph representing a function for implicit modelling
 
 --*/
 
 #pragma once
 
-#include "Common/3MF_ProgressMonitor.h"
-#include "Common/Platform/NMR_XmlWriter.h"
-#include "Model/Classes/NMR_ModelConstants.h"
-#include "Model/Classes/NMR_ModelImplicitFunction.h"
 #include "Model/Classes/NMR_ModelImplicitNode.h"
-#include "Model/Writer/NMR_ModelWriterNode_ModelBase.h"
+#include "Model/Reader/NMR_ModelReaderNode.h"
 
 namespace NMR
 {
-    class CModelWriterNode_Implicit : public CModelWriterNode_ModelBase
+    class CModelReaderNode_Implicit_Port : public CModelReaderNode
     {
+      private:
+        CModelImplicitPort * m_pPort;
 
       public:
-        CModelWriterNode_Implicit() = delete;
-        CModelWriterNode_Implicit(CModel * pModel,
-                                  CXmlWriter * pXMLWriter,
-                                  PProgressMonitor pProgressMonitor);
+        CModelReaderNode_Implicit_Port() = delete;
+        CModelReaderNode_Implicit_Port(_In_ CModelImplicitPort * pImplicitport,
+                                       _In_ PModelWarnings pWarnings);
 
-        void writeImplicitFunctions();
+        void parseXML(_In_ CXmlReader * pXMLReader) override;
 
-        void writeToXML() override;
+        void OnAttribute(_In_z_ const nfChar * pAttributeName,
+                         _In_z_ const nfChar * pAttributeValue) override;
 
-      private:
-        void writeImplicitFunctionElements(CModelImplicitFunction & function);
-        void writeImplicitNode(CModelImplicitNode & node);
-        void writeImplicitOutputs(NMR::Ports & ports);
-        void writeImplicitInputs(NMR::Ports & ports);
     };
 
+    typedef std::shared_ptr<CModelReaderNode_Implicit_Port> PModelReaderNode_Implicit_Port;
 }

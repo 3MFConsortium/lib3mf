@@ -449,6 +449,8 @@ class FunctionTable:
 	lib3mf_implicitport_getdisplayname = None
 	lib3mf_implicitport_setdisplayname = None
 	lib3mf_implicitport_gettype = None
+	lib3mf_implicitport_getreference = None
+	lib3mf_implicitport_setreference = None
 	lib3mf_iterator_movenext = None
 	lib3mf_iterator_moveprevious = None
 	lib3mf_iterator_count = None
@@ -481,6 +483,8 @@ class FunctionTable:
 	lib3mf_implicitfunction_addoutput = None
 	lib3mf_implicitfunction_getoutputs = None
 	lib3mf_implicitfunction_removeoutput = None
+	lib3mf_implicitfunction_addlink = None
+	lib3mf_implicitfunction_addlinkbynames = None
 	lib3mf_builditem_getobjectresource = None
 	lib3mf_builditem_getuuid = None
 	lib3mf_builditem_setuuid = None
@@ -3039,6 +3043,18 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32))
 			self.lib.lib3mf_implicitport_gettype = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitport_getreference")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_implicitport_getreference = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitport_setreference")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
+			self.lib.lib3mf_implicitport_setreference = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_iterator_movenext")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -3230,6 +3246,18 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
 			self.lib.lib3mf_implicitfunction_removeoutput = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_addlink")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)
+			self.lib.lib3mf_implicitfunction_addlink = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_addlinkbynames")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
+			self.lib.lib3mf_implicitfunction_addlinkbynames = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_builditem_getobjectresource")), methodAddress)
 			if err != 0:
@@ -5186,6 +5214,12 @@ class Wrapper:
 			self.lib.lib3mf_implicitport_gettype.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitport_gettype.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32)]
 			
+			self.lib.lib3mf_implicitport_getreference.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitport_getreference.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_implicitport_setreference.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitport_setreference.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
 			self.lib.lib3mf_iterator_movenext.restype = ctypes.c_int32
 			self.lib.lib3mf_iterator_movenext.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
 			
@@ -5281,6 +5315,12 @@ class Wrapper:
 			
 			self.lib.lib3mf_implicitfunction_removeoutput.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitfunction_removeoutput.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+			
+			self.lib.lib3mf_implicitfunction_addlink.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitfunction_addlink.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p]
+			
+			self.lib.lib3mf_implicitfunction_addlinkbynames.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitfunction_addlinkbynames.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
 			
 			self.lib.lib3mf_builditem_getobjectresource.restype = ctypes.c_int32
 			self.lib.lib3mf_builditem_getobjectresource.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -8852,6 +8892,22 @@ class ImplicitPort(Base):
 		
 		return ImplicitPortType(pImplicitPortType.value)
 	
+	def GetReference(self):
+		nReferenceBufferSize = ctypes.c_uint64(0)
+		nReferenceNeededChars = ctypes.c_uint64(0)
+		pReferenceBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitport_getreference(self._handle, nReferenceBufferSize, nReferenceNeededChars, pReferenceBuffer))
+		nReferenceBufferSize = ctypes.c_uint64(nReferenceNeededChars.value)
+		pReferenceBuffer = (ctypes.c_char * (nReferenceNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitport_getreference(self._handle, nReferenceBufferSize, nReferenceNeededChars, pReferenceBuffer))
+		
+		return pReferenceBuffer.value.decode()
+	
+	def SetReference(self, Reference):
+		pReference = ctypes.c_char_p(str.encode(Reference))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitport_setreference(self._handle, pReference))
+		
+	
 
 
 ''' Class Implementation for Iterator
@@ -9166,6 +9222,26 @@ class ImplicitFunction(Resource):
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_removeoutput(self._handle, OutputHandle))
+		
+	
+	def AddLink(self, SourceObject, TargetObject):
+		SourceHandle = None
+		if SourceObject:
+			SourceHandle = SourceObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		TargetHandle = None
+		if TargetObject:
+			TargetHandle = TargetObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_addlink(self._handle, SourceHandle, TargetHandle))
+		
+	
+	def AddLinkByNames(self, Source, Target):
+		pSource = ctypes.c_char_p(str.encode(Source))
+		pTarget = ctypes.c_char_p(str.encode(Target))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_addlinkbynames(self._handle, pSource, pTarget))
 		
 	
 

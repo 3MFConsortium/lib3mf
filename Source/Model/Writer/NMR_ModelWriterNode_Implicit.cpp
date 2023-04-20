@@ -34,9 +34,9 @@ Writer node for implicit functions
 
 namespace NMR
 {
-    CModelWriterNode_Implicit::CModelWriterNode_Implicit(_In_ CModel * pModel,
-                                                         _In_ CXmlWriter * pXMLWriter,
-                                                         _In_ PProgressMonitor pProgressMonitor)
+    CModelWriterNode_Implicit::CModelWriterNode_Implicit(CModel * pModel,
+                                                         CXmlWriter * pXMLWriter,
+                                                         PProgressMonitor pProgressMonitor)
         : CModelWriterNode_ModelBase(pModel, pXMLWriter, pProgressMonitor)
     {
     }
@@ -52,13 +52,14 @@ namespace NMR
 
             writeStartElementWithPrefix(XML_3MF_ELEMENT_IMPLICIT_FUNCTION,
                                         XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-            writeIntAttribute(XML_3MF_ELEMENT_IMPLICIT_FUNCTION_ID,
-                              pFunction->getPackageResourceID()->getModelResourceID());
-            writeStringAttribute(XML_3MF_ELEMENT_IMPLICIT_FUNCTION_DISPLAY_NAME,
-                                 pFunction->getDisplayName());
+            {
+                writeIntAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_ID,
+                                  pFunction->getPackageResourceID()->getModelResourceID());
+                writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_DISPLAY_NAME,
+                                     pFunction->getDisplayName());
 
-            writeImplicitFunctionElements(*pFunction);
-
+                writeImplicitFunctionElements(*pFunction);
+            }
             writeFullEndElement();
         }
     }
@@ -81,8 +82,8 @@ namespace NMR
         auto name = elementNameFromNodeType(node.getNodeType());
         writeStartElement(name.c_str());
         {
-            writeStringAttribute(XML_3MF_ELEMENT_IMPLICIT_NODE_ID, node.getIdentifier());
-            writeStringAttribute(XML_3MF_ELEMENT_IMPLICIT_NODE_DISPLAY_NAME, node.getDisplayName());
+            writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_ID, node.getIdentifier());
+            writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_DISPLAY_NAME, node.getDisplayName());
 
             writeStartElement(XML_3MF_ELEMENT_IMPLICIT_NODE_INPUT);
             {
@@ -122,9 +123,10 @@ namespace NMR
         {
             writeStartElement(portTypeToRefName(port->getType()));
             {
-                writeStringAttribute(XML_3MF_ELEMENT_IMPLICIT_PORT_ID, port->getIdentifier());
-                writeStringAttribute(XML_3MF_ELEMENT_IMPLICIT_PORT_DISPLAY_NAME,
+                writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_PORT_ID, port->getIdentifier());
+                writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_PORT_DISPLAY_NAME,
                                      port->getDisplayName());
+                writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_PORT_REFERENCE, port->getReference());
             }
             writeFullEndElement();
         }
@@ -151,8 +153,8 @@ namespace NMR
         {
             writeStartElement(portTypeToName(port->getType()));
             {
-                writeStringAttribute(XML_3MF_ELEMENT_IMPLICIT_PORT_ID, port->getIdentifier());
-                writeStringAttribute(XML_3MF_ELEMENT_IMPLICIT_PORT_DISPLAY_NAME,
+                writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_PORT_ID, port->getIdentifier());
+                writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_PORT_DISPLAY_NAME,
                                      port->getDisplayName());
             }
             writeFullEndElement();

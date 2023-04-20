@@ -1352,6 +1352,12 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitport_gettype", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitPort_GetType (IntPtr Handle, out Int32 AImplicitPortType);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitport_getreference", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitPort_GetReference (IntPtr Handle, UInt32 sizeReference, out UInt32 neededReference, IntPtr dataReference);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitport_setreference", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitPort_SetReference (IntPtr Handle, byte[] AReference);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_iterator_movenext", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Iterator_MoveNext (IntPtr Handle, out Byte AHasNext);
 
@@ -1447,6 +1453,12 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_removeoutput", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_RemoveOutput (IntPtr Handle, IntPtr AOutput);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addlink", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddLink (IntPtr Handle, IntPtr ASource, IntPtr ATarget);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addlinkbynames", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddLinkByNames (IntPtr Handle, byte[] ASource, byte[] ATarget);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_builditem_getobjectresource", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BuildItem_GetObjectResource (IntPtr Handle, out IntPtr AObjectResource);
@@ -5599,6 +5611,27 @@ namespace Lib3MF {
 			return (eImplicitPortType) (resultImplicitPortType);
 		}
 
+		public String GetReference ()
+		{
+			UInt32 sizeReference = 0;
+			UInt32 neededReference = 0;
+			CheckError(Internal.Lib3MFWrapper.ImplicitPort_GetReference (Handle, sizeReference, out neededReference, IntPtr.Zero));
+			sizeReference = neededReference;
+			byte[] bytesReference = new byte[sizeReference];
+			GCHandle dataReference = GCHandle.Alloc(bytesReference, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitPort_GetReference (Handle, sizeReference, out neededReference, dataReference.AddrOfPinnedObject()));
+			dataReference.Free();
+			return Encoding.UTF8.GetString(bytesReference).TrimEnd(char.MinValue);
+		}
+
+		public void SetReference (String AReference)
+		{
+			byte[] byteReference = Encoding.UTF8.GetBytes(AReference + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitPort_SetReference (Handle, byteReference));
+		}
+
 	}
 
 	public class CIterator : CBase
@@ -5944,6 +5977,26 @@ namespace Lib3MF {
 				AOutputHandle = AOutput.GetHandle();
 
 			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_RemoveOutput (Handle, AOutputHandle));
+		}
+
+		public void AddLink (CImplicitPort ASource, CImplicitPort ATarget)
+		{
+			IntPtr ASourceHandle = IntPtr.Zero;
+			if (ASource != null)
+				ASourceHandle = ASource.GetHandle();
+			IntPtr ATargetHandle = IntPtr.Zero;
+			if (ATarget != null)
+				ATargetHandle = ATarget.GetHandle();
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddLink (Handle, ASourceHandle, ATargetHandle));
+		}
+
+		public void AddLinkByNames (String ASource, String ATarget)
+		{
+			byte[] byteSource = Encoding.UTF8.GetBytes(ASource + char.MinValue);
+			byte[] byteTarget = Encoding.UTF8.GetBytes(ATarget + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddLinkByNames (Handle, byteSource, byteTarget));
 		}
 
 	}
