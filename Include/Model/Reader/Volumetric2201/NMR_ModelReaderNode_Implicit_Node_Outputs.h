@@ -25,7 +25,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-Reader for a single port of a node of a graph representing a function for implicit modelling
+Reader for ports of a node of a graph representing a function for implicit modelling
 
 --*/
 
@@ -37,35 +37,23 @@ Reader for a single port of a node of a graph representing a function for implic
 namespace NMR
 {
 
-    enum class ImplicitPortType
-    {
-        Input,
-        Output
-    };
-
-    class CModelReaderNode_Implicit_Port : public CModelReaderNode
+    class CModelReaderNode_Implicit_Node_Outputs : public CModelReaderNode
     {
       private:
-        CModelImplicitNode * m_pParentNode;
-
-        std::string m_identifier;
-        std::string m_displayName;
-        std::string m_reference;
-        ImplicitPortType m_type;
+        CModelImplicitNode * m_pImplicitNode;
 
       public:
-        CModelReaderNode_Implicit_Port() = delete;
-        CModelReaderNode_Implicit_Port(CModelImplicitNode * pParentNode,
-                                       PModelWarnings pWarnings,
-                                       ImplicitPortType type);
+        CModelReaderNode_Implicit_Node_Outputs() = delete;
+        CModelReaderNode_Implicit_Node_Outputs(_In_ CModelImplicitNode * pParentNode,
+                                        _In_ PModelWarnings pWarnings
+                                       );
 
-        void parseXML(CXmlReader * pXMLReader) override;
+        void parseXML(_In_ CXmlReader * pXMLReader) override;
 
-        void OnAttribute(const nfChar * pAttributeName, const nfChar * pAttributeValue) override;
-
-        void createInput();
-        void createOutput();
+        void OnNSChildElement(_In_z_ const nfChar * pChildName,
+                              _In_z_ const nfChar * pNameSpace,
+                              _In_ CXmlReader * pXMLReader) override;
     };
 
-    typedef std::shared_ptr<CModelReaderNode_Implicit_Port> PModelReaderNode_Implicit_Port;
+    typedef std::shared_ptr<CModelReaderNode_Implicit_Node_Outputs> PModelReaderNode_Implicit_Node_Outputs;
 }

@@ -543,12 +543,13 @@ namespace Lib3MF
 
             auto node1 = nodeIterator1->GetCurrent();
             auto node2 = nodeIterator2->GetCurrent();
-
+            std::cout << "node1: " << node1->GetIdentifier() << std::endl;
+            std::cout << "node2: " << node2->GetIdentifier() << std::endl;
             EXPECT_EQ(node1->GetIdentifier(), node2->GetIdentifier());
             EXPECT_EQ(node1->GetNodeType(), node2->GetNodeType());
             EXPECT_EQ(node1->GetDisplayName(), node2->GetDisplayName());
 
-            comparePorts(node1->GetInputs(), node2->GetInputs());
+            comparePorts(node1->GetInputs(), node2->GetInputs(), false);
             comparePorts(node1->GetOutputs(), node2->GetOutputs(), true); // ignore reference
         }
         EXPECT_FALSE(nodeIterator2->MoveNext());

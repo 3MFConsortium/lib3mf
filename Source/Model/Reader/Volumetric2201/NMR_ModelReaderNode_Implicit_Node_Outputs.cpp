@@ -29,7 +29,7 @@ NMR_ModelReaderNode_Volumetric2201_ImageStack.cpp covers the official 3MF volume
 
 --*/
 
-#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Node_Inputs.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Node_Outputs.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Port.h"
 
 #include "Model/Classes/NMR_Model.h"
@@ -39,11 +39,9 @@ NMR_ModelReaderNode_Volumetric2201_ImageStack.cpp covers the official 3MF volume
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 
-#include <iostream>
-
 namespace NMR
 {
-    CModelReaderNode_Implicit_Node_Inputs::CModelReaderNode_Implicit_Node_Inputs(
+    CModelReaderNode_Implicit_Node_Outputs::CModelReaderNode_Implicit_Node_Outputs(
       _In_ CModelImplicitNode * pParentNode,
       _In_ PModelWarnings pWarnings)
         : CModelReaderNode(pWarnings)
@@ -52,7 +50,7 @@ namespace NMR
         m_pImplicitNode = pParentNode;
     }
 
-    void CModelReaderNode_Implicit_Node_Inputs::parseXML(_In_ CXmlReader * pXMLReader)
+    void CModelReaderNode_Implicit_Node_Outputs::parseXML(_In_ CXmlReader * pXMLReader)
     {
         __NMRASSERT(pXMLReader);
 
@@ -63,11 +61,11 @@ namespace NMR
         parseContent(pXMLReader);
     }
 
-    void CModelReaderNode_Implicit_Node_Inputs::OnNSChildElement(const nfChar * pChildName,
+    void CModelReaderNode_Implicit_Node_Outputs::OnNSChildElement(const nfChar * pChildName,
                                                            const nfChar * pNameSpace,
                                                            CXmlReader * pXMLReader)
     {
-        auto pXMLNode = std::make_shared<CModelReaderNode_Implicit_Port>(m_pImplicitNode, m_pWarnings, ImplicitPortType::Input);
+        auto pXMLNode = std::make_shared<CModelReaderNode_Implicit_Port>(m_pImplicitNode, m_pWarnings, ImplicitPortType::Output);
         pXMLNode->parseXML(pXMLReader);
     }
 }

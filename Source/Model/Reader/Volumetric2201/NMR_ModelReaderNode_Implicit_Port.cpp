@@ -38,48 +38,81 @@ NMR_ModelReaderNode_Volumetric2201_ImageStack.cpp covers the official 3MF volume
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 
+#include <iostream>
+
 namespace NMR
 {
-    CModelReaderNode_Implicit_Port::CModelReaderNode_Implicit_Port(
-      _In_ CModelImplicitPort * pImplicitPort,
-      _In_ PModelWarnings pWarnings)
+    CModelReaderNode_Implicit_Port::CModelReaderNode_Implicit_Port(CModelImplicitNode * pParentNode,
+                                                                   PModelWarnings pWarnings,
+                                                                   ImplicitPortType type)
         : CModelReaderNode(pWarnings)
+        , m_type(type)
     {
 
-        __NMRASSERT(pImplicitPort);
-        m_pPort = pImplicitPort;
+        __NMRASSERT(pParentNode);
+        m_pParentNode = pParentNode;
     }
 
-    void CModelReaderNode_Implicit_Port::parseXML(_In_ CXmlReader * pXMLReader)
+    void CModelReaderNode_Implicit_Port::parseXML(CXmlReader * pXMLReader)
     {
         __NMRASSERT(pXMLReader);
 
         // Parse name
         parseName(pXMLReader);
-        
+
         // Parse Attributes
         parseAttributes(pXMLReader);
 
         // Parse Content
         parseContent(pXMLReader);
+
+        // Create Implicit Port
+        switch (m_type)
+        {
+        case ImplicitPortType::Input:
+            createInput();
+            break;
+        case ImplicitPortType::Output:
+            createOutput();
+            break;
+        }
     }
 
-    void
-    CModelReaderNode_Implicit_Port::OnAttribute(_In_z_ const nfChar * pAttributeName,
-                                                              _In_z_ const nfChar * pAttributeValue)
+    void CModelReaderNode_Implicit_Port::OnAttribute(const nfChar * pAttributeName,
+                                                     const nfChar * pAttributeValue)
     {
         if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_PORT_ID) == 0)
         {
-            m_pPort->setIdentifier(pAttributeValue);
+            m_identifier = pAttributeValue;
         }
         else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_PORT_DISPLAY_NAME) == 0)
         {
-            m_pPort->setDisplayName(pAttributeValue);
-        } 
+            m_displayName = pAttributeValue;
+        }
         else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_PORT_REFERENCE) == 0)
         {
-            m_pPort->setReference(pAttributeValue);
+            m_reference = pAttributeValue;
         }
     }
 
+    void CModelReaderNode_Implicit_Port::createInput()
+    {
+        auto input = m_pParentNode->findInput(m_identifier);
+        if (!input)
+        {
+            input = m_pParentNode->addInput(m_identifier, m_displayName);
+        }
+        input->setDisplayName(m_displayName);
+        input->setReference(m_reference);
+    }
+
+    void NMR::CModelReaderNode_Implicit_Port::createOutput()
+    {
+        auto output = m_pParentNode->findOutput(m_identifier);
+        if (!output)
+        {
+            output = m_pParentNode->addOutput(m_identifier, m_displayName);
+        }
+        output->setDisplayName(m_displayName);
+    }
 }
