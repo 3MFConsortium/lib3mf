@@ -25,35 +25,40 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-Reader for output ports of a node
+Reader for an output element
 
 --*/
 
 #pragma once
 
-#include "Model/Classes/NMR_ModelImplicitNode.h"
+#include "Model/Classes/NMR_ModelImplicitFunction.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
 
 namespace NMR
 {
-
-    class CModelReaderNode_Implicit_Node_Outputs : public CModelReaderNode
+    class CModelReaderNode_Implicit_Function_Output : public CModelReaderNode
     {
       private:
-        CModelImplicitNode * m_pImplicitNode;
+        CModelImplicitFunction * m_pParentFunction;
 
+        std::string m_identifier;
+        std::string m_displayName;
+        std::string m_reference;
+        Lib3MF::eImplicitPortType m_portType;
+        void createOutput();
       public:
-        CModelReaderNode_Implicit_Node_Outputs() = delete;
-        CModelReaderNode_Implicit_Node_Outputs(_In_ CModelImplicitNode * pParentNode,
-                                        _In_ PModelWarnings pWarnings
+        CModelReaderNode_Implicit_Function_Output() = delete;
+        CModelReaderNode_Implicit_Function_Output(CModelImplicitFunction * pParentFunction,
+                                       PModelWarnings pWarnings, 
+                                       Lib3MF::eImplicitPortType portType
                                        );
 
-        void parseXML(_In_ CXmlReader * pXMLReader) override;
+        void parseXML(CXmlReader * pXMLReader) override;
 
-        void OnNSChildElement(_In_z_ const nfChar * pChildName,
-                              _In_z_ const nfChar * pNameSpace,
-                              _In_ CXmlReader * pXMLReader) override;
+        void OnAttribute(const nfChar * pAttributeName, const nfChar * pAttributeValue) override;
+
+        
     };
 
-    typedef std::shared_ptr<CModelReaderNode_Implicit_Node_Outputs> PModelReaderNode_Implicit_Node_Outputs;
+    typedef std::shared_ptr<CModelReaderNode_Implicit_Function_Output> PModelReaderNode_Implicit_Function_Output;
 }

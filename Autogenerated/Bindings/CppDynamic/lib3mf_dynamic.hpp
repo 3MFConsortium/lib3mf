@@ -2147,7 +2147,7 @@ public:
 	inline PImplicitPort AddInput(const std::string & sIdentifier, const std::string & sDisplayName, const eImplicitPortType eType);
 	inline PImplicitPortIterator GetInputs();
 	inline void RemoveInput(classParam<CImplicitPort> pInput);
-	inline void AddOutput(const std::string & sIdentifier, const std::string & sDisplayName);
+	inline PImplicitPort AddOutput(const std::string & sIdentifier, const std::string & sDisplayName, const eImplicitPortType eType);
 	inline PImplicitPortIterator GetOutputs();
 	inline void RemoveOutput(classParam<CImplicitPort> pOutput);
 	inline void AddLink(classParam<CImplicitPort> pSource, classParam<CImplicitPort> pTarget);
@@ -14848,10 +14848,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	* CImplicitFunction::AddOutput - Add an output
 	* @param[in] sIdentifier - the identifier of the output
 	* @param[in] sDisplayName - the display name of the output
+	* @param[in] eType - the type of the input
+	* @return The added input port
 	*/
-	void CImplicitFunction::AddOutput(const std::string & sIdentifier, const std::string & sDisplayName)
+	PImplicitPort CImplicitFunction::AddOutput(const std::string & sIdentifier, const std::string & sDisplayName, const eImplicitPortType eType)
 	{
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddOutput(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str()));
+		Lib3MFHandle hPort = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddOutput(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), eType, &hPort));
+		
+		if (!hPort) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hPort)));
 	}
 	
 	/**

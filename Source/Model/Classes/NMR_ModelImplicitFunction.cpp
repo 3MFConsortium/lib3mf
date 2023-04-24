@@ -162,7 +162,9 @@ namespace NMR
                                                          const std::string & sDisplayName,
                                                          const Lib3MF::eImplicitPortType ePortType)
     {
-        return PModelImplicitPort();
+        auto newPort = std::make_shared<CModelImplicitPort>(sPortIdentifier, sDisplayName, ePortType);
+        m_outputs->push_back(newPort);
+        return newPort;
     }
 
     PPorts CModelImplicitFunction::getInputs() const
@@ -173,6 +175,30 @@ namespace NMR
     PPorts CModelImplicitFunction::getOutputs() const
     {
         return m_outputs;
+    }
+
+    PModelImplicitPort CModelImplicitFunction::findInput(const std::string & sIdentifier)
+    {
+        for (auto & port : *m_inputs)
+        {
+            if (port->getIdentifier() == sIdentifier)
+            {
+                return port;
+            }
+        }
+        return {};
+    }
+
+    PModelImplicitPort CModelImplicitFunction::findOutput(const std::string & sIdentifier)
+    {
+        for (auto & port : *m_outputs)
+        {
+            if (port->getIdentifier() == sIdentifier)
+            {
+                return port;
+            }
+        }
+        return {};
     }
 
     std::string extractNodeName(const ImplicitIdentifier & sIdentifier)

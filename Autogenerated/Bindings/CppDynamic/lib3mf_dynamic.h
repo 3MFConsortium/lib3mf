@@ -3658,9 +3658,11 @@ typedef Lib3MFResult (*PLib3MFImplicitFunction_RemoveInputPtr) (Lib3MF_ImplicitF
 * @param[in] pImplicitFunction - ImplicitFunction instance.
 * @param[in] pIdentifier - the identifier of the output
 * @param[in] pDisplayName - the display name of the output
+* @param[in] eType - the type of the input
+* @param[out] pPort - The added input port
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitFunction_AddOutputPtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName);
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddOutputPtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, Lib3MF::eImplicitPortType eType, Lib3MF_ImplicitPort * pPort);
 
 /**
 * Retrieves the outputs

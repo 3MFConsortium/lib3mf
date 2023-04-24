@@ -3222,12 +3222,12 @@ Lib3MFResult CCall_lib3mf_implicitfunction_removeinput(Lib3MFHandle libraryHandl
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitfunction_addoutput(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName)
+Lib3MFResult CCall_lib3mf_implicitfunction_addoutput(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, eLib3MFImplicitPortType eType, Lib3MF_ImplicitPort * pPort)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitFunction_AddOutput (pImplicitFunction, pIdentifier, pDisplayName);
+	return wrapperTable->m_ImplicitFunction_AddOutput (pImplicitFunction, pIdentifier, pDisplayName, eType, pPort);
 }
 
 
@@ -9807,12 +9807,13 @@ func (inst ImplicitFunction) RemoveInput(input ImplicitPort) error {
 }
 
 // AddOutput add an output.
-func (inst ImplicitFunction) AddOutput(identifier string, displayName string) error {
-	ret := C.CCall_lib3mf_implicitfunction_addoutput(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])))
+func (inst ImplicitFunction) AddOutput(identifier string, displayName string, _type ImplicitPortType) (ImplicitPort, error) {
+	var port ref
+	ret := C.CCall_lib3mf_implicitfunction_addoutput(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), C.eLib3MFImplicitPortType(_type), &port)
 	if ret != 0 {
-		return makeError(uint32(ret))
+		return ImplicitPort{}, makeError(uint32(ret))
 	}
-	return nil
+	return inst.wrapperRef.NewImplicitPort(port), nil
 }
 
 // GetOutputs retrieves the outputs.

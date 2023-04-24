@@ -1,3 +1,5 @@
+
+
 /*++
 
 Copyright (C) 2023 3MF Consortium
@@ -25,47 +27,29 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-Reader for ports of a node of a graph representing a function for implicit modelling
+Coverter for PortType
 
 --*/
 
-#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Node_Inputs.h"
-#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Port.h"
+#pragma once
 
-#include "Model/Classes/NMR_Model.h"
+#include "lib3mf_types.hpp"
 #include "Model/Classes/NMR_ModelConstants.h"
 
-#include "Common/NMR_Exception.h"
-#include "Common/NMR_Exception_Windows.h"
-#include "Common/NMR_StringUtils.h"
+#include <string>
 
 namespace NMR
 {
-    CModelReaderNode_Implicit_Node_Inputs::CModelReaderNode_Implicit_Node_Inputs(
-      _In_ CModelImplicitNode * pParentNode,
-      _In_ PModelWarnings pWarnings)
-        : CModelReaderNode(pWarnings)
+
+    namespace implicit
     {
-        __NMRASSERT(pParentNode);
-        m_pImplicitNode = pParentNode;
-    }
+        const char * portTypeToRefName(Lib3MF::eImplicitPortType type);
 
-    void CModelReaderNode_Implicit_Node_Inputs::parseXML(_In_ CXmlReader * pXMLReader)
-    {
-        __NMRASSERT(pXMLReader);
+        const char * portTypeToName(Lib3MF::eImplicitPortType type);
 
-        // Parse name
-        parseName(pXMLReader);
+        Lib3MF::eImplicitPortType portTypeFromName(const std::string & name);
 
-        // Parse Content
-        parseContent(pXMLReader);
-    }
+        Lib3MF::eImplicitPortType portTypeFromRefName(const std::string & name);
 
-    void CModelReaderNode_Implicit_Node_Inputs::OnNSChildElement(const nfChar * pChildName,
-                                                           const nfChar * pNameSpace,
-                                                           CXmlReader * pXMLReader)
-    {
-        auto pXMLNode = std::make_shared<CModelReaderNode_Implicit_Port>(m_pImplicitNode, m_pWarnings, ImplicitPortType::Input);
-        pXMLNode->parseXML(pXMLReader);
     }
 }

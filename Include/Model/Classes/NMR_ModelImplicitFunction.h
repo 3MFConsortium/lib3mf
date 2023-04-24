@@ -100,6 +100,9 @@ namespace NMR
 
         PPorts getInputs() const;
         PPorts getOutputs() const;
+
+        PModelImplicitPort findInput(const std::string & sIdentifier);
+        PModelImplicitPort findOutput(const std::string & sIdentifier);
     };
 
     using PModelImplicitFunction = std::shared_ptr<CModelImplicitFunction>;

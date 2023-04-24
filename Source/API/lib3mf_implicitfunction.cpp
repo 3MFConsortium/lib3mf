@@ -35,6 +35,7 @@ Abstract: This is a stub class definition of CImplicitFunction
 
 // Include custom headers here.
 #include "lib3mf_nodeiterator.hpp"
+#include "lib3mf_implicitportiterator.hpp"
 
 using namespace Lib3MF::Impl;
 
@@ -101,7 +102,7 @@ IImplicitPort *  CImplicitFunction::AddInput(const std::string & sIdentifier,
 
 IImplicitPortIterator * CImplicitFunction::GetInputs()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	 return new CImplicitPortIterator(m_function->getInputs());
 }
 
 void CImplicitFunction::RemoveInput(IImplicitPort* pInput)
@@ -109,35 +110,22 @@ void CImplicitFunction::RemoveInput(IImplicitPort* pInput)
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CImplicitFunction::AddOutput(const std::string & sIdentifier, const std::string & sDisplayName)
+IImplicitPort * CImplicitFunction::AddOutput(const std::string & sIdentifier,
+                                              const std::string & sDisplayName,
+                                              const Lib3MF::eImplicitPortType eType)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return new CImplicitPort(function()->addOutput(sIdentifier, sDisplayName, eType));
 }
 
 IImplicitPortIterator * CImplicitFunction::GetOutputs()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return new CImplicitPortIterator(m_function->getOutputs());
 }
 
 void CImplicitFunction::RemoveOutput(IImplicitPort* pOutput)
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
-
-// /**
-// 	* IImplicitFunction::AddLink - Add a link
-// 	* @param[in] pSource - the source port
-// 	* @param[in] pTarget - the target port
-// 	*/
-// 	virtual void AddLink(IImplicitPort* pSource, IImplicitPort* pTarget) = 0;
-
-// 	/**
-// 	* IImplicitFunction::AddLinkByNames - Add a link
-// 	* @param[in] sSource - name of the source port in the format nodename.portname
-// 	* @param[in] sTarget - name of the target port in the format nodename.portname
-// 	*/
-// 	virtual void AddLinkByNames(const std::string & sSource, const std::string & sTarget) = 0;
-
 
 void CImplicitFunction::AddLink(IImplicitPort* pSource, IImplicitPort* pTarget)
 {

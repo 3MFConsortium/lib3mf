@@ -13688,18 +13688,25 @@ void CLib3MFImplicitFunction::AddOutput(const FunctionCallbackInfo<Value>& args)
         if (!args[1]->IsString()) {
             throw std::runtime_error("Expected string parameter 1 (DisplayName)");
         }
+        if (!args[2]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 2 (Type)");
+        }
         v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
         std::string sIdentifier = *sutf8Identifier;
         v8::String::Utf8Value sutf8DisplayName(isolate, args[1]);
         std::string sDisplayName = *sutf8DisplayName;
+        unsigned int eType = (unsigned int) args[2]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        Lib3MFHandle hReturnPort = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
             throw std::runtime_error("Could not get wrapper table for Lib3MF method AddOutput.");
         if (wrapperTable->m_ImplicitFunction_AddOutput == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::AddOutput.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddOutput(instanceHandle, sIdentifier.c_str(), sDisplayName.c_str());
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddOutput(instanceHandle, sIdentifier.c_str(), sDisplayName.c_str(), (eLib3MFImplicitPortType) eType, &hReturnPort);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjPort = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnPort);
+        args.GetReturnValue().Set(instanceObjPort);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

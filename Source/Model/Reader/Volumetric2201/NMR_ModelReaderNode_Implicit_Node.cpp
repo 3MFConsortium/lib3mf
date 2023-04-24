@@ -25,7 +25,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-NMR_ModelReaderNode_Volumetric2201_ImageStack.cpp covers the official 3MF volumetric extension.
+Reader for nodes of graph representing a function for implicit modelling
 
 --*/
 
@@ -39,8 +39,6 @@ NMR_ModelReaderNode_Volumetric2201_ImageStack.cpp covers the official 3MF volume
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
-
-#include <iostream>
 
 namespace NMR
 {

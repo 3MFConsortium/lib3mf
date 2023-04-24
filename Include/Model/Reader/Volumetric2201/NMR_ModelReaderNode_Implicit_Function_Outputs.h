@@ -25,35 +25,36 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-Reader for output ports of a node
+Reader for inputs (arguments) of a function for implicit modelling
 
 --*/
 
 #pragma once
 
-#include "Model/Classes/NMR_ModelImplicitNode.h"
+#include "Model/Classes/NMR_ModelImplicitFunction.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
+
 
 namespace NMR
 {
 
-    class CModelReaderNode_Implicit_Node_Outputs : public CModelReaderNode
+    class CModelReaderNode_Implicit_Function_Outputs : public CModelReaderNode
     {
       private:
-        CModelImplicitNode * m_pImplicitNode;
+        CModelImplicitFunction * m_pImplicitFunction;
 
       public:
-        CModelReaderNode_Implicit_Node_Outputs() = delete;
-        CModelReaderNode_Implicit_Node_Outputs(_In_ CModelImplicitNode * pParentNode,
-                                        _In_ PModelWarnings pWarnings
-                                       );
+        CModelReaderNode_Implicit_Function_Outputs() = delete;
+        CModelReaderNode_Implicit_Function_Outputs(CModelImplicitFunction * pParentFunction,
+                                              PModelWarnings pWarnings);
 
-        void parseXML(_In_ CXmlReader * pXMLReader) override;
+        void parseXML(CXmlReader * pXMLReader) override;
 
-        void OnNSChildElement(_In_z_ const nfChar * pChildName,
-                              _In_z_ const nfChar * pNameSpace,
-                              _In_ CXmlReader * pXMLReader) override;
+        void OnNSChildElement(const nfChar * pChildName,
+                              const nfChar * pNameSpace,
+                              CXmlReader * pXMLReader) override;
     };
 
-    typedef std::shared_ptr<CModelReaderNode_Implicit_Node_Outputs> PModelReaderNode_Implicit_Node_Outputs;
+    typedef std::shared_ptr<CModelReaderNode_Implicit_Function_Outputs>
+      PModelReaderNode_Implicit_Function_Outputs;
 }

@@ -3818,8 +3818,10 @@ public:
 	* IImplicitFunction::AddOutput - Add an output
 	* @param[in] sIdentifier - the identifier of the output
 	* @param[in] sDisplayName - the display name of the output
+	* @param[in] eType - the type of the input
+	* @return The added input port
 	*/
-	virtual void AddOutput(const std::string & sIdentifier, const std::string & sDisplayName) = 0;
+	virtual IImplicitPort * AddOutput(const std::string & sIdentifier, const std::string & sDisplayName, const Lib3MF::eImplicitPortType eType) = 0;
 
 	/**
 	* IImplicitFunction::GetOutputs - Retrieves the outputs

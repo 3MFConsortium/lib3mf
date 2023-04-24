@@ -13073,7 +13073,7 @@ Lib3MFResult lib3mf_implicitfunction_removeinput(Lib3MF_ImplicitFunction pImplic
 	}
 }
 
-Lib3MFResult lib3mf_implicitfunction_addoutput(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName)
+Lib3MFResult lib3mf_implicitfunction_addoutput(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, eLib3MFImplicitPortType eType, Lib3MF_ImplicitPort * pPort)
 {
 	IBase* pIBaseClass = (IBase *)pImplicitFunction;
 
@@ -13083,20 +13083,26 @@ Lib3MFResult lib3mf_implicitfunction_addoutput(Lib3MF_ImplicitFunction pImplicit
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddOutput");
 			pJournalEntry->addStringParameter("Identifier", pIdentifier);
 			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addEnumParameter("Type", "ImplicitPortType", (Lib3MF_int32)(eType));
 		}
 		if (pIdentifier == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		if (pDisplayName == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pPort == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		std::string sIdentifier(pIdentifier);
 		std::string sDisplayName(pDisplayName);
+		IBase* pBasePort(nullptr);
 		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
 		if (!pIImplicitFunction)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIImplicitFunction->AddOutput(sIdentifier, sDisplayName);
+		pBasePort = pIImplicitFunction->AddOutput(sIdentifier, sDisplayName, eType);
 
+		*pPort = (IBase*)(pBasePort);
 		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Port", *pPort);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;

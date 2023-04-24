@@ -43,6 +43,7 @@ namespace NMR
         Output
     };
 
+    
     class CModelReaderNode_Implicit_Port : public CModelReaderNode
     {
       private:

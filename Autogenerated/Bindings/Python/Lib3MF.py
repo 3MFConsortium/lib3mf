@@ -3232,7 +3232,7 @@ class Wrapper:
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_addoutput")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ImplicitPortType, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_implicitfunction_addoutput = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_getoutputs")), methodAddress)
@@ -5308,7 +5308,7 @@ class Wrapper:
 			self.lib.lib3mf_implicitfunction_removeinput.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
 			
 			self.lib.lib3mf_implicitfunction_addoutput.restype = ctypes.c_int32
-			self.lib.lib3mf_implicitfunction_addoutput.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
+			self.lib.lib3mf_implicitfunction_addoutput.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ImplicitPortType, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_implicitfunction_getoutputs.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitfunction_getoutputs.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -9205,11 +9205,17 @@ class ImplicitFunction(Resource):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_removeinput(self._handle, InputHandle))
 		
 	
-	def AddOutput(self, Identifier, DisplayName):
+	def AddOutput(self, Identifier, DisplayName, Type):
 		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
 		pDisplayName = ctypes.c_char_p(str.encode(DisplayName))
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_addoutput(self._handle, pIdentifier, pDisplayName))
+		PortHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_addoutput(self._handle, pIdentifier, pDisplayName, Type, PortHandle))
+		if PortHandle:
+			PortObject = self._wrapper._polymorphicFactory(PortHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
+		return PortObject
 	
 	def GetOutputs(self):
 		IteratorHandle = ctypes.c_void_p()

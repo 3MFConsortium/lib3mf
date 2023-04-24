@@ -38,6 +38,8 @@ namespace NMR
     using ImplicitIdentifier = std::string;
     class CModelImplicitNode;
 
+   
+
     class CModelImplicitPort
     {
       private:
@@ -46,10 +48,18 @@ namespace NMR
         Lib3MF::eImplicitPortType m_type = Lib3MF::eImplicitPortType::Scalar;
         ImplicitIdentifier m_reference;
         CModelImplicitNode * m_parent = nullptr;
+
       public:
-        CModelImplicitPort(CModelImplicitNode * parent, ImplicitIdentifier const & identifier, std::string const & displayname);
-        CModelImplicitPort(ImplicitIdentifier const & identifier, std::string const & displayname, Lib3MF::eImplicitPortType type);
-        CModelImplicitPort(ImplicitIdentifier const & identifier, std::string const & displayname, Lib3MF::eImplicitPortType type, ImplicitIdentifier const & reference);
+        CModelImplicitPort(CModelImplicitNode * parent,
+                           ImplicitIdentifier const & identifier,
+                           std::string const & displayname);
+        CModelImplicitPort(ImplicitIdentifier const & identifier,
+                           std::string const & displayname,
+                           Lib3MF::eImplicitPortType type);
+        CModelImplicitPort(ImplicitIdentifier const & identifier,
+                           std::string const & displayname,
+                           Lib3MF::eImplicitPortType type,
+                           ImplicitIdentifier const & reference);
         CModelImplicitPort() = delete;
 
         ImplicitIdentifier const & getIdentifier() const;

@@ -1413,6 +1413,9 @@ Model error codes (0x8XXX)
 // Invalid target port in implicit function
 #define NMR_ERROR_IMPLICIT_FUNCTION_INVALID_TARGET_PORT 0x883C
 
+// Invalid port type in implicit function
+#define NMR_ERROR_IMPLICIT_FUNCTION_INVALID_PORT_TYPE 0x883D
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

@@ -25,12 +25,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-Reader for ports of a node of a graph representing a function for implicit modelling
+Reader for ports of a  function for implicit modelling
 
 --*/
 
-#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Node_Inputs.h"
-#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Port.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Function_Inputs.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Function_Input.h"
+#include "Model/Reader/Volumetric2201/NMR_Implicit_PortType_Convert.h"
 
 #include "Model/Classes/NMR_Model.h"
 #include "Model/Classes/NMR_ModelConstants.h"
@@ -41,16 +42,16 @@ Reader for ports of a node of a graph representing a function for implicit model
 
 namespace NMR
 {
-    CModelReaderNode_Implicit_Node_Inputs::CModelReaderNode_Implicit_Node_Inputs(
-      _In_ CModelImplicitNode * pParentNode,
-      _In_ PModelWarnings pWarnings)
+    CModelReaderNode_Implicit_Function_Inputs::CModelReaderNode_Implicit_Function_Inputs(
+      CModelImplicitFunction * pParentFunction,
+      PModelWarnings pWarnings)
         : CModelReaderNode(pWarnings)
     {
-        __NMRASSERT(pParentNode);
-        m_pImplicitNode = pParentNode;
+        __NMRASSERT(pParentFunction);
+        m_pImplicitFunction = pParentFunction;
     }
 
-    void CModelReaderNode_Implicit_Node_Inputs::parseXML(_In_ CXmlReader * pXMLReader)
+    void CModelReaderNode_Implicit_Function_Inputs::parseXML(_In_ CXmlReader * pXMLReader)
     {
         __NMRASSERT(pXMLReader);
 
@@ -61,11 +62,15 @@ namespace NMR
         parseContent(pXMLReader);
     }
 
-    void CModelReaderNode_Implicit_Node_Inputs::OnNSChildElement(const nfChar * pChildName,
-                                                           const nfChar * pNameSpace,
-                                                           CXmlReader * pXMLReader)
+
+
+    void CModelReaderNode_Implicit_Function_Inputs::OnNSChildElement(const nfChar * pChildName,
+                                                                     const nfChar * pNameSpace,
+                                                                     CXmlReader * pXMLReader)
     {
-        auto pXMLNode = std::make_shared<CModelReaderNode_Implicit_Port>(m_pImplicitNode, m_pWarnings, ImplicitPortType::Input);
+        
+        auto pXMLNode = std::make_shared<CModelReaderNode_Implicit_Function_Input>(
+          m_pImplicitFunction, m_pWarnings, implicit::portTypeFromName(pChildName));
         pXMLNode->parseXML(pXMLReader);
     }
 }

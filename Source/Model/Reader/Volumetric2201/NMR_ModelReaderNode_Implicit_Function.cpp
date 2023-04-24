@@ -30,7 +30,8 @@ Reader for implicit function ressources
 --*/
 
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Function.h"
-
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Function_Inputs.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Function_Outputs.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Node.h"
 
 #include "Model/Classes/NMR_ImplicitNodeTypes.h"
@@ -97,6 +98,23 @@ namespace NMR
         __NMRASSERT(pChildName);
         __NMRASSERT(pXMLReader);
         __NMRASSERT(pNameSpace);
+
+        // inputs
+        if (strcmp(pChildName, XML_3MF_ELEMENT_IMPLICIT_FUNCTION_INPUT) == 0)
+        {
+            auto node = std::make_shared<NMR::CModelReaderNode_Implicit_Function_Inputs>(m_pImplicitFunction.get(), m_pWarnings);
+            node->parseXML(pXMLReader);
+            return;
+        }
+
+        // output
+        if (strcmp(pChildName, XML_3MF_ELEMENT_IMPLICIT_FUNCTION_OUTPUT) == 0)
+        {
+            auto node = std::make_shared<NMR::CModelReaderNode_Implicit_Function_Outputs>(m_pImplicitFunction.get(), m_pWarnings);
+            node->parseXML(pXMLReader);
+            return;
+        }
+
 
         auto const & nodeTypes = m_nodeTypes.getTypes();
 

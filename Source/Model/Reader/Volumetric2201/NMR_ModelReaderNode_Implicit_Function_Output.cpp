@@ -25,12 +25,11 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-Reader for ports of a node of a graph representing a function for implicit modelling
+Reader for an output element
 
 --*/
 
-#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Node_Inputs.h"
-#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Port.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Function_Output.h"
 
 #include "Model/Classes/NMR_Model.h"
 #include "Model/Classes/NMR_ModelConstants.h"
@@ -39,33 +38,65 @@ Reader for ports of a node of a graph representing a function for implicit model
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 
+#include <iostream>
+
 namespace NMR
 {
-    CModelReaderNode_Implicit_Node_Inputs::CModelReaderNode_Implicit_Node_Inputs(
-      _In_ CModelImplicitNode * pParentNode,
-      _In_ PModelWarnings pWarnings)
+    CModelReaderNode_Implicit_Function_Output::CModelReaderNode_Implicit_Function_Output(
+      CModelImplicitFunction * pParentFunction,
+      PModelWarnings pWarnings,
+      Lib3MF::eImplicitPortType portType)
         : CModelReaderNode(pWarnings)
+        , m_portType(portType)
     {
-        __NMRASSERT(pParentNode);
-        m_pImplicitNode = pParentNode;
+
+        __NMRASSERT(pParentFunction);
+        m_pParentFunction = pParentFunction;
     }
 
-    void CModelReaderNode_Implicit_Node_Inputs::parseXML(_In_ CXmlReader * pXMLReader)
+    void CModelReaderNode_Implicit_Function_Output::parseXML(CXmlReader * pXMLReader)
     {
         __NMRASSERT(pXMLReader);
 
         // Parse name
         parseName(pXMLReader);
 
+        // Parse Attributes
+        parseAttributes(pXMLReader);
+
         // Parse Content
         parseContent(pXMLReader);
+
+        // Create Port
+        createOutput();
     }
 
-    void CModelReaderNode_Implicit_Node_Inputs::OnNSChildElement(const nfChar * pChildName,
-                                                           const nfChar * pNameSpace,
-                                                           CXmlReader * pXMLReader)
+    void CModelReaderNode_Implicit_Function_Output::OnAttribute(const nfChar * pAttributeName,
+                                                               const nfChar * pAttributeValue)
     {
-        auto pXMLNode = std::make_shared<CModelReaderNode_Implicit_Port>(m_pImplicitNode, m_pWarnings, ImplicitPortType::Input);
-        pXMLNode->parseXML(pXMLReader);
+        if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_PORT_ID) == 0)
+        {
+            m_identifier = pAttributeValue;
+        }
+        else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_PORT_DISPLAY_NAME) == 0)
+        {
+            m_displayName = pAttributeValue;
+        }
+        else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_PORT_REFERENCE) == 0)
+        {
+            m_reference = pAttributeValue;
+        }
     }
+
+    void CModelReaderNode_Implicit_Function_Output::createOutput()
+    {
+        auto output = m_pParentFunction->findOutput(m_identifier);
+        if (!output)
+        {
+            output = m_pParentFunction->addOutput(m_identifier, m_displayName, m_portType);
+        }
+        output->setDisplayName(m_displayName);
+        output->setReference(m_reference);
+    }
+
 }
