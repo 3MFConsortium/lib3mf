@@ -58,13 +58,13 @@ private:
 	/**
 	* Put private members here.
 	*/
-	Lib3MF_int32 m_nCurrentIndex = -1;
+	Lib3MF_int64 m_nCurrentIndex = -1;
 protected:
 
 	/**
 	* Put protected members here.
 	*/
-	Lib3MF_int32 getCurrentIndex();
+	Lib3MF_int64 getCurrentIndex();
 	void throwIfInvalidIndex();
 public:
 

@@ -29,6 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Model/Classes/NMR_ModelImplicitPort.h"
 #include "Common/NMR_Exception.h"
 
+
 namespace NMR
 {
     CModelImplicitPort::CModelImplicitPort(CModelImplicitNode * parent,
@@ -39,6 +40,26 @@ namespace NMR
         , m_displayname(displayname)
     {
     }
+    CModelImplicitPort::CModelImplicitPort(ImplicitIdentifier const & identifier,
+                                           std::string const & displayname,
+                                           Lib3MF::eImplicitPortType type)
+        : m_identifier(identifier)
+        , m_displayname(displayname)
+        , m_type(type)
+    {
+    }
+
+    CModelImplicitPort::CModelImplicitPort(ImplicitIdentifier const & identifier,
+                                           std::string const & displayname,
+                                           Lib3MF::eImplicitPortType type,
+                                           ImplicitIdentifier const & reference)
+        : m_identifier(identifier)
+        , m_displayname(displayname)
+        , m_type(type)
+        , m_reference(reference)
+    {
+    }
+
     ImplicitIdentifier const & CModelImplicitPort::getIdentifier() const
     {
         return m_identifier;

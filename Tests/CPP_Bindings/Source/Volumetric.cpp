@@ -543,8 +543,6 @@ namespace Lib3MF
 
             auto node1 = nodeIterator1->GetCurrent();
             auto node2 = nodeIterator2->GetCurrent();
-            std::cout << "node1: " << node1->GetIdentifier() << std::endl;
-            std::cout << "node2: " << node2->GetIdentifier() << std::endl;
             EXPECT_EQ(node1->GetIdentifier(), node2->GetIdentifier());
             EXPECT_EQ(node1->GetNodeType(), node2->GetNodeType());
             EXPECT_EQ(node1->GetDisplayName(), node2->GetDisplayName());
@@ -554,33 +552,33 @@ namespace Lib3MF
         }
         EXPECT_FALSE(nodeIterator2->MoveNext());
 
-        // auto inputs1 = function1->GetInputs();
-        // auto inputs2 = function2->GetInputs();
-        // ASSERT_EQ(inputs1->Count(), inputs2->Count());
-        // while (inputs1->MoveNext())
-        // {
-        //     EXPECT_TRUE(inputs2->MoveNext());
-        //     EXPECT_EQ(inputs1->GetCurrent()->GetDisplayName(),
-        //               inputs2->GetCurrent()->GetDisplayName());
-        //     EXPECT_EQ(inputs1->GetCurrent()->GetIdentifier(),
-        //               inputs2->GetCurrent()->GetIdentifier());
-        //     EXPECT_EQ(inputs1->GetCurrent()->GetType(), inputs2->GetCurrent()->GetType());
-        // }
-        // EXPECT_FALSE(inputs2->MoveNext());
+        auto inputs1 = function1->GetInputs();
+        auto inputs2 = function2->GetInputs();
+        ASSERT_EQ(inputs1->Count(), inputs2->Count());
+        while (inputs1->MoveNext())
+        {
+            EXPECT_TRUE(inputs2->MoveNext());
+            EXPECT_EQ(inputs1->GetCurrent()->GetDisplayName(),
+                      inputs2->GetCurrent()->GetDisplayName());
+            EXPECT_EQ(inputs1->GetCurrent()->GetIdentifier(),
+                      inputs2->GetCurrent()->GetIdentifier());
+            EXPECT_EQ(inputs1->GetCurrent()->GetType(), inputs2->GetCurrent()->GetType());
+        }
+        EXPECT_FALSE(inputs2->MoveNext());
 
-        // auto outputs1 = function1->GetOutputs();
-        // auto outputs2 = function2->GetOutputs();
-        // ASSERT_EQ(outputs1->Count(), outputs2->Count());
-        // while (outputs1->MoveNext())
-        // {
-        //     EXPECT_TRUE(outputs2->MoveNext());
-        //     EXPECT_EQ(outputs1->GetCurrent()->GetDisplayName(),
-        //               outputs2->GetCurrent()->GetDisplayName());
-        //     EXPECT_EQ(outputs1->GetCurrent()->GetIdentifier(),
-        //               outputs2->GetCurrent()->GetIdentifier());
-        //     EXPECT_EQ(outputs1->GetCurrent()->GetType(), outputs2->GetCurrent()->GetType());
-        // }
-        // EXPECT_FALSE(outputs2->MoveNext());
+        auto outputs1 = function1->GetOutputs();
+        auto outputs2 = function2->GetOutputs();
+        ASSERT_EQ(outputs1->Count(), outputs2->Count());
+        while (outputs1->MoveNext())
+        {
+            EXPECT_TRUE(outputs2->MoveNext());
+            EXPECT_EQ(outputs1->GetCurrent()->GetDisplayName(),
+                      outputs2->GetCurrent()->GetDisplayName());
+            EXPECT_EQ(outputs1->GetCurrent()->GetIdentifier(),
+                      outputs2->GetCurrent()->GetIdentifier());
+            EXPECT_EQ(outputs1->GetCurrent()->GetType(), outputs2->GetCurrent()->GetType());
+        }
+        EXPECT_FALSE(outputs2->MoveNext());
     }
 
     // Function with multiple nodes and links between them
@@ -590,6 +588,8 @@ namespace Lib3MF
         std::string const displayName = "test";
         newFunction->SetDisplayName(displayName);
         auto const expectedResourceId = newFunction->GetModelResourceID();
+
+        auto functionArgument = newFunction->AddInput("pos","position", Lib3MF::eImplicitPortType::Vector);
 
         // Add some nodes
         auto addNode =

@@ -3195,12 +3195,12 @@ Lib3MFResult CCall_lib3mf_implicitfunction_removenode(Lib3MFHandle libraryHandle
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitfunction_addinput(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName)
+Lib3MFResult CCall_lib3mf_implicitfunction_addinput(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, eLib3MFImplicitPortType eType, Lib3MF_ImplicitPort * pPort)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitFunction_AddInput (pImplicitFunction, pIdentifier, pDisplayName);
+	return wrapperTable->m_ImplicitFunction_AddInput (pImplicitFunction, pIdentifier, pDisplayName, eType, pPort);
 }
 
 
@@ -9778,12 +9778,13 @@ func (inst ImplicitFunction) RemoveNode(node ImplicitNode) error {
 }
 
 // AddInput add an input.
-func (inst ImplicitFunction) AddInput(identifier string, displayName string) error {
-	ret := C.CCall_lib3mf_implicitfunction_addinput(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])))
+func (inst ImplicitFunction) AddInput(identifier string, displayName string, _type ImplicitPortType) (ImplicitPort, error) {
+	var port ref
+	ret := C.CCall_lib3mf_implicitfunction_addinput(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), C.eLib3MFImplicitPortType(_type), &port)
 	if ret != 0 {
-		return makeError(uint32(ret))
+		return ImplicitPort{}, makeError(uint32(ret))
 	}
-	return nil
+	return inst.wrapperRef.NewImplicitPort(port), nil
 }
 
 // GetInputs retrieves the inputs.

@@ -1437,7 +1437,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 ImplicitFunction_RemoveNode (IntPtr Handle, IntPtr ANode);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addinput", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitFunction_AddInput (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName);
+			public unsafe extern static Int32 ImplicitFunction_AddInput (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName, Int32 AType, out IntPtr APort);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_getinputs", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_GetInputs (IntPtr Handle, out IntPtr AIterator);
@@ -5929,12 +5929,15 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_RemoveNode (Handle, ANodeHandle));
 		}
 
-		public void AddInput (String AIdentifier, String ADisplayName)
+		public CImplicitPort AddInput (String AIdentifier, String ADisplayName, eImplicitPortType AType)
 		{
 			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
 			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			Int32 enumType = (Int32) AType;
+			IntPtr newPort = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddInput (Handle, byteIdentifier, byteDisplayName));
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddInput (Handle, byteIdentifier, byteDisplayName, enumType, out newPort));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newPort);
 		}
 
 		public CImplicitPortIterator GetInputs ()

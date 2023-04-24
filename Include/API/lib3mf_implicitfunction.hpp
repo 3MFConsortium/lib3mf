@@ -130,9 +130,12 @@ namespace Lib3MF
              * IImplicitFunction::AddInput - Add an input
              * @param[in] sIdentifier - the identifier of the input
              * @param[in] sDisplayName - the display name of the input
+             * @param[in] eType - the type of the input
+             * @return The added input port
              */
-            void AddInput(const std::string & sIdentifier,
-                          const std::string & sDisplayName) override;
+            IImplicitPort * AddInput(const std::string & sIdentifier,
+                                     const std::string & sDisplayName,
+                                     const Lib3MF::eImplicitPortType eType) override;
 
             /**
              * IImplicitFunction::GetInputs - Retrieves the inputs

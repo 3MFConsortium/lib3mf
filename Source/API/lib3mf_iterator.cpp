@@ -41,7 +41,7 @@ using namespace Lib3MF::Impl;
 
 bool CIterator::MoveNext()
 {
-    auto const numItems = Count();
+    auto const numItems = static_cast<Lib3MF_int64>(Count());
     m_nCurrentIndex++;
 
     if (m_nCurrentIndex >= numItems)
@@ -74,13 +74,13 @@ Lib3MF_uint64 CIterator::Count()
     throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-Lib3MF_int32 Lib3MF::Impl::CIterator::getCurrentIndex()
+Lib3MF_int64 Lib3MF::Impl::CIterator::getCurrentIndex()
 {
     return m_nCurrentIndex;
 }
 
 void Lib3MF::Impl::CIterator::throwIfInvalidIndex()
 {
-    if ((m_nCurrentIndex < 0) || (m_nCurrentIndex >= Count()))
+    if ((m_nCurrentIndex < 0) || (m_nCurrentIndex >= static_cast<Lib3MF_int64>(Count())))
         throw ELib3MFInterfaceException(LIB3MF_ERROR_ITERATORINVALIDINDEX);
 }

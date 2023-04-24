@@ -4159,9 +4159,11 @@ type
 	* @param[in] pImplicitFunction - ImplicitFunction instance.
 	* @param[in] pIdentifier - the identifier of the input
 	* @param[in] pDisplayName - the display name of the input
+	* @param[in] eType - the type of the input
+	* @param[out] pPort - The added input port
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitFunction_AddInputFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_AddInputFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const eType: Integer; out pPort: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves the inputs
@@ -7057,7 +7059,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function AddNode(const ANodeType: TLib3MFImplicitNodeType; const AIdentifier: String; const ADisplayName: String): TLib3MFImplicitNode;
 		function GetNodes(): TLib3MFNodeIterator;
 		procedure RemoveNode(const ANode: TLib3MFImplicitNode);
-		procedure AddInput(const AIdentifier: String; const ADisplayName: String);
+		function AddInput(const AIdentifier: String; const ADisplayName: String; const AType: TLib3MFImplicitPortType): TLib3MFImplicitPort;
 		function GetInputs(): TLib3MFImplicitPortIterator;
 		procedure RemoveInput(const AInput: TLib3MFImplicitPort);
 		procedure AddOutput(const AIdentifier: String; const ADisplayName: String);
@@ -13482,9 +13484,15 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_RemoveNodeFunc(FHandle, ANodeHandle));
 	end;
 
-	procedure TLib3MFImplicitFunction.AddInput(const AIdentifier: String; const ADisplayName: String);
+	function TLib3MFImplicitFunction.AddInput(const AIdentifier: String; const ADisplayName: String; const AType: TLib3MFImplicitPortType): TLib3MFImplicitPort;
+	var
+		HPort: TLib3MFHandle;
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddInputFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName)));
+		Result := nil;
+		HPort := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddInputFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), convertImplicitPortTypeToConst(AType), HPort));
+		if Assigned(HPort) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HPort);
 	end;
 
 	function TLib3MFImplicitFunction.GetInputs(): TLib3MFImplicitPortIterator;

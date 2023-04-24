@@ -2324,6 +2324,10 @@
 				description="the identifier of the input" />
 			<param name="DisplayName" type="string" pass="in"
 				description="the display name of the input" />
+			<param name="Type" type="enum" class="ImplicitPortType" pass="in"
+				description="the type of the input" />
+			<param name="Port" type="class" class="ImplicitPort" pass="return"
+				description="The added input port" />
 		</method>
 
 		<method name="GetInputs" description="Retrieves the inputs">

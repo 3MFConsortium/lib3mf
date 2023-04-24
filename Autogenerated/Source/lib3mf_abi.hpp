@@ -3641,9 +3641,11 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_removenode(Lib3MF_ImplicitF
 * @param[in] pImplicitFunction - ImplicitFunction instance.
 * @param[in] pIdentifier - the identifier of the input
 * @param[in] pDisplayName - the display name of the input
+* @param[in] eType - the type of the input
+* @param[out] pPort - The added input port
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addinput(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addinput(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, Lib3MF::eImplicitPortType eType, Lib3MF_ImplicitPort * pPort);
 
 /**
 * Retrieves the inputs

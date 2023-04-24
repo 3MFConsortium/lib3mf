@@ -29,6 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
 #include "Common/NMR_Exception.h"
 #include "Model/Classes/NMR_ImplicitNodeTypes.h"
+#include <Model/Classes/NMR_ModelImplicitPort.h>
 
 namespace NMR
 {
@@ -51,6 +52,8 @@ namespace NMR
         : CModelResource(sID, pModel)
     {
         m_nodes = std::make_shared<ImplicitNodes>();
+        m_inputs = std::make_shared<Ports>();
+        m_outputs = std::make_shared<Ports>();
     }
 
     std::string const & CModelImplicitFunction::getIdentifier() const
@@ -144,6 +147,32 @@ namespace NMR
     {
         pTargetPort.setReference(makeReferenceIdentifier(pSourcePort.getParent()->getIdentifier(),
                                                          pSourcePort.getIdentifier()));
+    }
+
+    PModelImplicitPort CModelImplicitFunction::addInput(const std::string & sPortIdentifier,
+                                                   const std::string & sDisplayName,
+                                                   const Lib3MF::eImplicitPortType ePortType)
+    {
+        auto newPort = std::make_shared<CModelImplicitPort>(sPortIdentifier, sDisplayName, ePortType);
+        m_inputs->push_back(newPort);
+        return newPort;
+    }
+
+    PModelImplicitPort CModelImplicitFunction::addOutput(const std::string & sPortIdentifier,
+                                                         const std::string & sDisplayName,
+                                                         const Lib3MF::eImplicitPortType ePortType)
+    {
+        return PModelImplicitPort();
+    }
+
+    PPorts CModelImplicitFunction::getInputs() const
+    {
+        return m_inputs;
+    }
+
+    PPorts CModelImplicitFunction::getOutputs() const
+    {
+        return m_outputs;
     }
 
     std::string extractNodeName(const ImplicitIdentifier & sIdentifier)

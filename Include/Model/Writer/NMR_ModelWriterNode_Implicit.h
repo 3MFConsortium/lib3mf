@@ -58,6 +58,9 @@ namespace NMR
         void writeImplicitNode(CModelImplicitNode & node);
         void writeImplicitOutputs(NMR::Ports & ports);
         void writeImplicitInputs(NMR::Ports & ports);
+
+        void writeImplicitFunctionInputs(NMR::Ports & ports);
+        void writeImplicitFunctionOutputs(NMR::Ports & ports);
     };
 
 }

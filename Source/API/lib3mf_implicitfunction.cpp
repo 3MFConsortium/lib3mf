@@ -30,6 +30,7 @@ Abstract: This is a stub class definition of CImplicitFunction
 
 #include "lib3mf_implicitfunction.hpp"
 #include "lib3mf_implicitnode.hpp"
+#include "lib3mf_implicitport.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
@@ -90,9 +91,12 @@ void CImplicitFunction::RemoveNode(IImplicitNode* pNode)
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CImplicitFunction::AddInput(const std::string & sIdentifier, const std::string & sDisplayName)
+IImplicitPort *  CImplicitFunction::AddInput(const std::string & sIdentifier,
+                                     const std::string & sDisplayName,
+                                     const Lib3MF::eImplicitPortType eType)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	
+	return new CImplicitPort(function()->addInput(sIdentifier, sDisplayName, eType));
 }
 
 IImplicitPortIterator * CImplicitFunction::GetInputs()

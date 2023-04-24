@@ -48,6 +48,8 @@ namespace NMR
         CModelImplicitNode * m_parent = nullptr;
       public:
         CModelImplicitPort(CModelImplicitNode * parent, ImplicitIdentifier const & identifier, std::string const & displayname);
+        CModelImplicitPort(ImplicitIdentifier const & identifier, std::string const & displayname, Lib3MF::eImplicitPortType type);
+        CModelImplicitPort(ImplicitIdentifier const & identifier, std::string const & displayname, Lib3MF::eImplicitPortType type, ImplicitIdentifier const & reference);
         CModelImplicitPort() = delete;
 
         ImplicitIdentifier const & getIdentifier() const;

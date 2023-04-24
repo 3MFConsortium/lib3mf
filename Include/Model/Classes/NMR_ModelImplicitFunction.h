@@ -46,7 +46,6 @@ namespace NMR
         class NodeTypes;
     }
 
-
     // Extract node name (before the first dot) from a node identifier
     std::string extractNodeName(const ImplicitIdentifier & sIdentifier);
 
@@ -66,6 +65,10 @@ namespace NMR
         static const implicit::NodeTypes m_nodeTypes;
 
         CModelImplicitNode * findNode(const ImplicitIdentifier & sIdentifier) const;
+
+        PPorts m_inputs;
+        PPorts m_outputs;
+
       public:
         CModelImplicitFunction(_In_ const ModelResourceID sID, _In_ CModel * pModel);
 
@@ -85,8 +88,18 @@ namespace NMR
         void addLink(const ImplicitIdentifier & sSourceNodeIdentifier,
                      const ImplicitIdentifier & sTargetNodeIdentifier);
 
-        void addLink(CModelImplicitPort const & pSourcePort,
-                     CModelImplicitPort & pTargetPort);
+        void addLink(CModelImplicitPort const & pSourcePort, CModelImplicitPort & pTargetPort);
+
+        PModelImplicitPort addInput(const std::string & sPortIdentifier,
+                                    const std::string & sDisplayName,
+                                    const Lib3MF::eImplicitPortType ePortType);
+
+        PModelImplicitPort addOutput(const std::string & sPortIdentifier,
+                                     const std::string & sDisplayName,
+                                     const Lib3MF::eImplicitPortType ePortType);
+
+        PPorts getInputs() const;
+        PPorts getOutputs() const;
     };
 
     using PModelImplicitFunction = std::shared_ptr<CModelImplicitFunction>;
