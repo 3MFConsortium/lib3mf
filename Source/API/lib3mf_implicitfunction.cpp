@@ -136,3 +136,13 @@ void CImplicitFunction::AddLinkByNames(const std::string & sSource, const std::s
 {
 	m_function->addLink(sSource, sTarget);
 }
+
+IImplicitPort * CImplicitFunction::FindInput(const std::string & sIdentifier)
+{
+	return new CImplicitPort(m_function->findInput(sIdentifier));
+}
+
+IImplicitPort * CImplicitFunction::FindOutput(const std::string & sIdentifier)
+{
+	return new CImplicitPort(m_function->findOutput(sIdentifier));
+}

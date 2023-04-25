@@ -1379,6 +1379,8 @@ private:
 	static void GetInputs(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddOutput(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetOutputs(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void FindInput(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void FindOutput(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFImplicitNode();
@@ -1484,6 +1486,8 @@ private:
 	static void GetOutputs(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void RemoveOutput(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddLink(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void FindInput(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void FindOutput(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddLinkByNames(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:

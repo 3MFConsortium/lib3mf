@@ -29,9 +29,9 @@ Abstract: This is a stub class definition of CImplicitNode
 */
 
 #include "lib3mf_implicitnode.hpp"
-#include "lib3mf_interfaceexception.hpp"
 #include "lib3mf_implicitport.hpp"
 #include "lib3mf_implicitportiterator.hpp"
+#include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
 
@@ -66,17 +66,19 @@ CImplicitNode::CImplicitNode(NMR::PModelImplicitNode pImplicitNode)
 {
 }
 
- Lib3MF::eImplicitNodeType CImplicitNode::GetNodeType()
+Lib3MF::eImplicitNodeType CImplicitNode::GetNodeType()
 {
     return m_pImplicitNode->getNodeType();
 }
 
-IImplicitPort * CImplicitNode::AddInput(const std::string & sIdentifier, const std::string & sDisplayName)
+IImplicitPort * CImplicitNode::AddInput(const std::string & sIdentifier,
+                                        const std::string & sDisplayName)
 {
     return new CImplicitPort(m_pImplicitNode->addInput(sIdentifier, sDisplayName));
 }
 
-IImplicitPort * CImplicitNode::AddOutput(const std::string & sIdentifier, const std::string & sDisplayName)
+IImplicitPort * CImplicitNode::AddOutput(const std::string & sIdentifier,
+                                         const std::string & sDisplayName)
 {
     return new CImplicitPort(m_pImplicitNode->addOutput(sIdentifier, sDisplayName));
 }
@@ -89,5 +91,15 @@ IImplicitPortIterator * CImplicitNode::GetOutputs()
 IImplicitPortIterator * CImplicitNode::GetInputs()
 {
     return new CImplicitPortIterator(m_pImplicitNode->getInputs());
+}
+
+IImplicitPort * CImplicitNode::FindInput(const std::string & sIdentifier)
+{
+    return new CImplicitPort(m_pImplicitNode->findInput(sIdentifier));
+}
+
+IImplicitPort * CImplicitNode::FindOutput(const std::string & sIdentifier)
+{
+    return new CImplicitPort(m_pImplicitNode->findOutput(sIdentifier));
 }
 

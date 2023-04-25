@@ -3478,6 +3478,26 @@ typedef Lib3MFResult (*PLib3MFImplicitNode_AddOutputPtr) (Lib3MF_ImplicitNode pI
 */
 typedef Lib3MFResult (*PLib3MFImplicitNode_GetOutputsPtr) (Lib3MF_ImplicitNode pImplicitNode, Lib3MF_ImplicitPortIterator * pIterator);
 
+/**
+* Retrieves an input
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[in] pIdentifier - the identifier of the input
+* @param[out] pInput - the input port
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitNode_FindInputPtr) (Lib3MF_ImplicitNode pImplicitNode, const char * pIdentifier, Lib3MF_ImplicitPort * pInput);
+
+/**
+* Retrieves an output
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[in] pIdentifier - the identifier of the output
+* @param[out] pOutput - the output port
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitNode_FindOutputPtr) (Lib3MF_ImplicitNode pImplicitNode, const char * pIdentifier, Lib3MF_ImplicitPort * pOutput);
+
 /*************************************************************************************************************************
  Class definition for ImplicitConstant
 **************************************************************************************************************************/
@@ -3691,6 +3711,26 @@ typedef Lib3MFResult (*PLib3MFImplicitFunction_RemoveOutputPtr) (Lib3MF_Implicit
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFImplicitFunction_AddLinkPtr) (Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPort pSource, Lib3MF_ImplicitPort pTarget);
+
+/**
+* Retrieves an input
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the input
+* @param[out] pInput - the input port
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitFunction_FindInputPtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, Lib3MF_ImplicitPort * pInput);
+
+/**
+* Retrieves an output
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the output
+* @param[out] pOutput - the output port
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitFunction_FindOutputPtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, Lib3MF_ImplicitPort * pOutput);
 
 /**
 * Add a link
@@ -5796,6 +5836,8 @@ typedef struct {
 	PLib3MFImplicitNode_GetInputsPtr m_ImplicitNode_GetInputs;
 	PLib3MFImplicitNode_AddOutputPtr m_ImplicitNode_AddOutput;
 	PLib3MFImplicitNode_GetOutputsPtr m_ImplicitNode_GetOutputs;
+	PLib3MFImplicitNode_FindInputPtr m_ImplicitNode_FindInput;
+	PLib3MFImplicitNode_FindOutputPtr m_ImplicitNode_FindOutput;
 	PLib3MFImplicitConstant_GetValuePtr m_ImplicitConstant_GetValue;
 	PLib3MFImplicitConstant_SetValuePtr m_ImplicitConstant_SetValue;
 	PLib3MFImplicitVector_GetPtr m_ImplicitVector_Get;
@@ -5816,6 +5858,8 @@ typedef struct {
 	PLib3MFImplicitFunction_GetOutputsPtr m_ImplicitFunction_GetOutputs;
 	PLib3MFImplicitFunction_RemoveOutputPtr m_ImplicitFunction_RemoveOutput;
 	PLib3MFImplicitFunction_AddLinkPtr m_ImplicitFunction_AddLink;
+	PLib3MFImplicitFunction_FindInputPtr m_ImplicitFunction_FindInput;
+	PLib3MFImplicitFunction_FindOutputPtr m_ImplicitFunction_FindOutput;
 	PLib3MFImplicitFunction_AddLinkByNamesPtr m_ImplicitFunction_AddLinkByNames;
 	PLib3MFBuildItem_GetObjectResourcePtr m_BuildItem_GetObjectResource;
 	PLib3MFBuildItem_GetUUIDPtr m_BuildItem_GetUUID;

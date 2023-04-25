@@ -4004,6 +4004,26 @@ type
 	*)
 	TLib3MFImplicitNode_GetOutputsFunc = function(pImplicitNode: TLib3MFHandle; out pIterator: TLib3MFHandle): TLib3MFResult; cdecl;
 	
+	(**
+	* Retrieves an input
+	*
+	* @param[in] pImplicitNode - ImplicitNode instance.
+	* @param[in] pIdentifier - the identifier of the input
+	* @param[out] pInput - the input port
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitNode_FindInputFunc = function(pImplicitNode: TLib3MFHandle; const pIdentifier: PAnsiChar; out pInput: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves an output
+	*
+	* @param[in] pImplicitNode - ImplicitNode instance.
+	* @param[in] pIdentifier - the identifier of the output
+	* @param[out] pOutput - the output port
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitNode_FindOutputFunc = function(pImplicitNode: TLib3MFHandle; const pIdentifier: PAnsiChar; out pOutput: TLib3MFHandle): TLib3MFResult; cdecl;
+	
 
 (*************************************************************************************************************************
  Function type definitions for ImplicitConstant
@@ -4222,6 +4242,26 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFImplicitFunction_AddLinkFunc = function(pImplicitFunction: TLib3MFHandle; const pSource: TLib3MFHandle; const pTarget: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves an input
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the input
+	* @param[out] pInput - the input port
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_FindInputFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; out pInput: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves an output
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the output
+	* @param[out] pOutput - the output port
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_FindOutputFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; out pOutput: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Add a link
@@ -6993,6 +7033,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetInputs(): TLib3MFImplicitPortIterator;
 		function AddOutput(const AIdentifier: String; const ADisplayName: String): TLib3MFImplicitPort;
 		function GetOutputs(): TLib3MFImplicitPortIterator;
+		function FindInput(const AIdentifier: String): TLib3MFImplicitPort;
+		function FindOutput(const AIdentifier: String): TLib3MFImplicitPort;
 	end;
 
 
@@ -7068,6 +7110,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetOutputs(): TLib3MFImplicitPortIterator;
 		procedure RemoveOutput(const AOutput: TLib3MFImplicitPort);
 		procedure AddLink(const ASource: TLib3MFImplicitPort; const ATarget: TLib3MFImplicitPort);
+		function FindInput(const AIdentifier: String): TLib3MFImplicitPort;
+		function FindOutput(const AIdentifier: String): TLib3MFImplicitPort;
 		procedure AddLinkByNames(const ASource: String; const ATarget: String);
 	end;
 
@@ -7689,6 +7733,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFImplicitNode_GetInputsFunc: TLib3MFImplicitNode_GetInputsFunc;
 		FLib3MFImplicitNode_AddOutputFunc: TLib3MFImplicitNode_AddOutputFunc;
 		FLib3MFImplicitNode_GetOutputsFunc: TLib3MFImplicitNode_GetOutputsFunc;
+		FLib3MFImplicitNode_FindInputFunc: TLib3MFImplicitNode_FindInputFunc;
+		FLib3MFImplicitNode_FindOutputFunc: TLib3MFImplicitNode_FindOutputFunc;
 		FLib3MFImplicitConstant_GetValueFunc: TLib3MFImplicitConstant_GetValueFunc;
 		FLib3MFImplicitConstant_SetValueFunc: TLib3MFImplicitConstant_SetValueFunc;
 		FLib3MFImplicitVector_GetFunc: TLib3MFImplicitVector_GetFunc;
@@ -7709,6 +7755,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFImplicitFunction_GetOutputsFunc: TLib3MFImplicitFunction_GetOutputsFunc;
 		FLib3MFImplicitFunction_RemoveOutputFunc: TLib3MFImplicitFunction_RemoveOutputFunc;
 		FLib3MFImplicitFunction_AddLinkFunc: TLib3MFImplicitFunction_AddLinkFunc;
+		FLib3MFImplicitFunction_FindInputFunc: TLib3MFImplicitFunction_FindInputFunc;
+		FLib3MFImplicitFunction_FindOutputFunc: TLib3MFImplicitFunction_FindOutputFunc;
 		FLib3MFImplicitFunction_AddLinkByNamesFunc: TLib3MFImplicitFunction_AddLinkByNamesFunc;
 		FLib3MFBuildItem_GetObjectResourceFunc: TLib3MFBuildItem_GetObjectResourceFunc;
 		FLib3MFBuildItem_GetUUIDFunc: TLib3MFBuildItem_GetUUIDFunc;
@@ -8229,6 +8277,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFImplicitNode_GetInputsFunc: TLib3MFImplicitNode_GetInputsFunc read FLib3MFImplicitNode_GetInputsFunc;
 		property Lib3MFImplicitNode_AddOutputFunc: TLib3MFImplicitNode_AddOutputFunc read FLib3MFImplicitNode_AddOutputFunc;
 		property Lib3MFImplicitNode_GetOutputsFunc: TLib3MFImplicitNode_GetOutputsFunc read FLib3MFImplicitNode_GetOutputsFunc;
+		property Lib3MFImplicitNode_FindInputFunc: TLib3MFImplicitNode_FindInputFunc read FLib3MFImplicitNode_FindInputFunc;
+		property Lib3MFImplicitNode_FindOutputFunc: TLib3MFImplicitNode_FindOutputFunc read FLib3MFImplicitNode_FindOutputFunc;
 		property Lib3MFImplicitConstant_GetValueFunc: TLib3MFImplicitConstant_GetValueFunc read FLib3MFImplicitConstant_GetValueFunc;
 		property Lib3MFImplicitConstant_SetValueFunc: TLib3MFImplicitConstant_SetValueFunc read FLib3MFImplicitConstant_SetValueFunc;
 		property Lib3MFImplicitVector_GetFunc: TLib3MFImplicitVector_GetFunc read FLib3MFImplicitVector_GetFunc;
@@ -8249,6 +8299,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFImplicitFunction_GetOutputsFunc: TLib3MFImplicitFunction_GetOutputsFunc read FLib3MFImplicitFunction_GetOutputsFunc;
 		property Lib3MFImplicitFunction_RemoveOutputFunc: TLib3MFImplicitFunction_RemoveOutputFunc read FLib3MFImplicitFunction_RemoveOutputFunc;
 		property Lib3MFImplicitFunction_AddLinkFunc: TLib3MFImplicitFunction_AddLinkFunc read FLib3MFImplicitFunction_AddLinkFunc;
+		property Lib3MFImplicitFunction_FindInputFunc: TLib3MFImplicitFunction_FindInputFunc read FLib3MFImplicitFunction_FindInputFunc;
+		property Lib3MFImplicitFunction_FindOutputFunc: TLib3MFImplicitFunction_FindOutputFunc read FLib3MFImplicitFunction_FindOutputFunc;
 		property Lib3MFImplicitFunction_AddLinkByNamesFunc: TLib3MFImplicitFunction_AddLinkByNamesFunc read FLib3MFImplicitFunction_AddLinkByNamesFunc;
 		property Lib3MFBuildItem_GetObjectResourceFunc: TLib3MFBuildItem_GetObjectResourceFunc read FLib3MFBuildItem_GetObjectResourceFunc;
 		property Lib3MFBuildItem_GetUUIDFunc: TLib3MFBuildItem_GetUUIDFunc read FLib3MFBuildItem_GetUUIDFunc;
@@ -13309,6 +13361,28 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPortIterator, TLib3MFImplicitPortIterator>.Make(FWrapper, HIterator);
 	end;
 
+	function TLib3MFImplicitNode.FindInput(const AIdentifier: String): TLib3MFImplicitPort;
+	var
+		HInput: TLib3MFHandle;
+	begin
+		Result := nil;
+		HInput := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitNode_FindInputFunc(FHandle, PAnsiChar(AIdentifier), HInput));
+		if Assigned(HInput) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HInput);
+	end;
+
+	function TLib3MFImplicitNode.FindOutput(const AIdentifier: String): TLib3MFImplicitPort;
+	var
+		HOutput: TLib3MFHandle;
+	begin
+		Result := nil;
+		HOutput := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitNode_FindOutputFunc(FHandle, PAnsiChar(AIdentifier), HOutput));
+		if Assigned(HOutput) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HOutput);
+	end;
+
 (*************************************************************************************************************************
  Class implementation for ImplicitConstant
 **************************************************************************************************************************)
@@ -13566,6 +13640,28 @@ implementation
 		else
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATarget is a nil value.');
 		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddLinkFunc(FHandle, ASourceHandle, ATargetHandle));
+	end;
+
+	function TLib3MFImplicitFunction.FindInput(const AIdentifier: String): TLib3MFImplicitPort;
+	var
+		HInput: TLib3MFHandle;
+	begin
+		Result := nil;
+		HInput := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_FindInputFunc(FHandle, PAnsiChar(AIdentifier), HInput));
+		if Assigned(HInput) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HInput);
+	end;
+
+	function TLib3MFImplicitFunction.FindOutput(const AIdentifier: String): TLib3MFImplicitPort;
+	var
+		HOutput: TLib3MFHandle;
+	begin
+		Result := nil;
+		HOutput := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_FindOutputFunc(FHandle, PAnsiChar(AIdentifier), HOutput));
+		if Assigned(HOutput) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HOutput);
 	end;
 
 	procedure TLib3MFImplicitFunction.AddLinkByNames(const ASource: String; const ATarget: String);
@@ -15736,6 +15832,8 @@ implementation
 		FLib3MFImplicitNode_GetInputsFunc := LoadFunction('lib3mf_implicitnode_getinputs');
 		FLib3MFImplicitNode_AddOutputFunc := LoadFunction('lib3mf_implicitnode_addoutput');
 		FLib3MFImplicitNode_GetOutputsFunc := LoadFunction('lib3mf_implicitnode_getoutputs');
+		FLib3MFImplicitNode_FindInputFunc := LoadFunction('lib3mf_implicitnode_findinput');
+		FLib3MFImplicitNode_FindOutputFunc := LoadFunction('lib3mf_implicitnode_findoutput');
 		FLib3MFImplicitConstant_GetValueFunc := LoadFunction('lib3mf_implicitconstant_getvalue');
 		FLib3MFImplicitConstant_SetValueFunc := LoadFunction('lib3mf_implicitconstant_setvalue');
 		FLib3MFImplicitVector_GetFunc := LoadFunction('lib3mf_implicitvector_get');
@@ -15756,6 +15854,8 @@ implementation
 		FLib3MFImplicitFunction_GetOutputsFunc := LoadFunction('lib3mf_implicitfunction_getoutputs');
 		FLib3MFImplicitFunction_RemoveOutputFunc := LoadFunction('lib3mf_implicitfunction_removeoutput');
 		FLib3MFImplicitFunction_AddLinkFunc := LoadFunction('lib3mf_implicitfunction_addlink');
+		FLib3MFImplicitFunction_FindInputFunc := LoadFunction('lib3mf_implicitfunction_findinput');
+		FLib3MFImplicitFunction_FindOutputFunc := LoadFunction('lib3mf_implicitfunction_findoutput');
 		FLib3MFImplicitFunction_AddLinkByNamesFunc := LoadFunction('lib3mf_implicitfunction_addlinkbynames');
 		FLib3MFBuildItem_GetObjectResourceFunc := LoadFunction('lib3mf_builditem_getobjectresource');
 		FLib3MFBuildItem_GetUUIDFunc := LoadFunction('lib3mf_builditem_getuuid');
@@ -16945,6 +17045,12 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_getoutputs'), @FLib3MFImplicitNode_GetOutputsFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_findinput'), @FLib3MFImplicitNode_FindInputFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_findoutput'), @FLib3MFImplicitNode_FindOutputFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitconstant_getvalue'), @FLib3MFImplicitConstant_GetValueFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -17003,6 +17109,12 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addlink'), @FLib3MFImplicitFunction_AddLinkFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_findinput'), @FLib3MFImplicitFunction_FindInputFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_findoutput'), @FLib3MFImplicitFunction_FindOutputFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addlinkbynames'), @FLib3MFImplicitFunction_AddLinkByNamesFunc);

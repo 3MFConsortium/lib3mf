@@ -157,8 +157,8 @@ namespace Lib3MF
              * @return The added input port
              */
             IImplicitPort * AddOutput(const std::string & sIdentifier,
-                                              const std::string & sDisplayName,
-                                              const Lib3MF::eImplicitPortType eType) override;
+                                      const std::string & sDisplayName,
+                                      const Lib3MF::eImplicitPortType eType) override;
 
             /**
              * IImplicitFunction::GetOutputs - Retrieves the outputs
@@ -185,6 +185,20 @@ namespace Lib3MF
              * @param[in] sTarget - name of the target port in the format nodename.portname
              */
             void AddLinkByNames(const std::string & sSource, const std::string & sTarget) override;
+
+            /**
+             * IImplicitFunction::FindInput - Retrieves an input
+             * @param[in] sIdentifier - the identifier of the input
+             * @return the input port
+             */
+            IImplicitPort * FindInput(const std::string & sIdentifier) override;
+
+            /**
+             * IImplicitFunction::FindOutput - Retrieves an output
+             * @param[in] sIdentifier - the identifier of the output
+             * @return the output port
+             */
+            IImplicitPort * FindOutput(const std::string & sIdentifier) override;
         };
 
     } // namespace Impl

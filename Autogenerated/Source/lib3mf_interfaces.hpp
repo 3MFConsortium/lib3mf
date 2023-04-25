@@ -3612,6 +3612,20 @@ public:
 	*/
 	virtual IImplicitPortIterator * GetOutputs() = 0;
 
+	/**
+	* IImplicitNode::FindInput - Retrieves an input
+	* @param[in] sIdentifier - the identifier of the input
+	* @return the input port
+	*/
+	virtual IImplicitPort * FindInput(const std::string & sIdentifier) = 0;
+
+	/**
+	* IImplicitNode::FindOutput - Retrieves an output
+	* @param[in] sIdentifier - the identifier of the output
+	* @return the output port
+	*/
+	virtual IImplicitPort * FindOutput(const std::string & sIdentifier) = 0;
+
 };
 
 typedef IBaseSharedPtr<IImplicitNode> PIImplicitNode;
@@ -3841,6 +3855,20 @@ public:
 	* @param[in] pTarget - the target port
 	*/
 	virtual void AddLink(IImplicitPort* pSource, IImplicitPort* pTarget) = 0;
+
+	/**
+	* IImplicitFunction::FindInput - Retrieves an input
+	* @param[in] sIdentifier - the identifier of the input
+	* @return the input port
+	*/
+	virtual IImplicitPort * FindInput(const std::string & sIdentifier) = 0;
+
+	/**
+	* IImplicitFunction::FindOutput - Retrieves an output
+	* @param[in] sIdentifier - the identifier of the output
+	* @return the output port
+	*/
+	virtual IImplicitPort * FindOutput(const std::string & sIdentifier) = 0;
 
 	/**
 	* IImplicitFunction::AddLinkByNames - Add a link

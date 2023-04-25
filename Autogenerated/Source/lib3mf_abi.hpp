@@ -3491,6 +3491,26 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_addoutput(Lib3MF_ImplicitNode p
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getoutputs(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_ImplicitPortIterator * pIterator);
 
+/**
+* Retrieves an input
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[in] pIdentifier - the identifier of the input
+* @param[out] pInput - the input port
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_findinput(Lib3MF_ImplicitNode pImplicitNode, const char * pIdentifier, Lib3MF_ImplicitPort * pInput);
+
+/**
+* Retrieves an output
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[in] pIdentifier - the identifier of the output
+* @param[out] pOutput - the output port
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_findoutput(Lib3MF_ImplicitNode pImplicitNode, const char * pIdentifier, Lib3MF_ImplicitPort * pOutput);
+
 /*************************************************************************************************************************
  Class definition for ImplicitConstant
 **************************************************************************************************************************/
@@ -3704,6 +3724,26 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_removeoutput(Lib3MF_Implici
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addlink(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPort pSource, Lib3MF_ImplicitPort pTarget);
+
+/**
+* Retrieves an input
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the input
+* @param[out] pInput - the input port
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_findinput(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, Lib3MF_ImplicitPort * pInput);
+
+/**
+* Retrieves an output
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the output
+* @param[out] pOutput - the output port
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_findoutput(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, Lib3MF_ImplicitPort * pOutput);
 
 /**
 * Add a link

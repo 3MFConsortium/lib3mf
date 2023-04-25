@@ -602,10 +602,12 @@ namespace Lib3MF
 
         // Add some links
         newFunction->AddLinkByNames("addition_1.sum", "substraction_1.A");
+        // Alternative way to add links
+        mulNode->FindInput("A")->SetReference("addition_1.sum");
 
         auto output = newFunction->AddOutput(
           "shape", "signed distance to the surface", Lib3MF::eImplicitPortType::Vector);
-          output->SetReference("substraction_1.difference");
+        output->SetReference("substraction_1.difference");
 
         // Write to file
         writer3MF->WriteToFile(Volumetric::OutFolder + "AddFunctionWithMultipleNodesAndLinks.3mf");

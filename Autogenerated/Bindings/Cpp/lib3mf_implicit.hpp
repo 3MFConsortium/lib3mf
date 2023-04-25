@@ -2027,6 +2027,8 @@ public:
 	inline PImplicitPortIterator GetInputs();
 	inline PImplicitPort AddOutput(const std::string & sIdentifier, const std::string & sDisplayName);
 	inline PImplicitPortIterator GetOutputs();
+	inline PImplicitPort FindInput(const std::string & sIdentifier);
+	inline PImplicitPort FindOutput(const std::string & sIdentifier);
 };
 	
 /*************************************************************************************************************************
@@ -2127,6 +2129,8 @@ public:
 	inline PImplicitPortIterator GetOutputs();
 	inline void RemoveOutput(classParam<CImplicitPort> pOutput);
 	inline void AddLink(classParam<CImplicitPort> pSource, classParam<CImplicitPort> pTarget);
+	inline PImplicitPort FindInput(const std::string & sIdentifier);
+	inline PImplicitPort FindOutput(const std::string & sIdentifier);
 	inline void AddLinkByNames(const std::string & sSource, const std::string & sTarget);
 };
 	
@@ -7102,6 +7106,38 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CImplicitNode::FindInput - Retrieves an input
+	* @param[in] sIdentifier - the identifier of the input
+	* @return the input port
+	*/
+	PImplicitPort CImplicitNode::FindInput(const std::string & sIdentifier)
+	{
+		Lib3MFHandle hInput = nullptr;
+		CheckError(lib3mf_implicitnode_findinput(m_pHandle, sIdentifier.c_str(), &hInput));
+		
+		if (!hInput) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hInput)));
+	}
+	
+	/**
+	* CImplicitNode::FindOutput - Retrieves an output
+	* @param[in] sIdentifier - the identifier of the output
+	* @return the output port
+	*/
+	PImplicitPort CImplicitNode::FindOutput(const std::string & sIdentifier)
+	{
+		Lib3MFHandle hOutput = nullptr;
+		CheckError(lib3mf_implicitnode_findoutput(m_pHandle, sIdentifier.c_str(), &hOutput));
+		
+		if (!hOutput) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hOutput)));
+	}
+	
+	/**
 	 * Method definitions for class CImplicitConstant
 	 */
 	
@@ -7377,6 +7413,38 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		Lib3MFHandle hSource = pSource.GetHandle();
 		Lib3MFHandle hTarget = pTarget.GetHandle();
 		CheckError(lib3mf_implicitfunction_addlink(m_pHandle, hSource, hTarget));
+	}
+	
+	/**
+	* CImplicitFunction::FindInput - Retrieves an input
+	* @param[in] sIdentifier - the identifier of the input
+	* @return the input port
+	*/
+	PImplicitPort CImplicitFunction::FindInput(const std::string & sIdentifier)
+	{
+		Lib3MFHandle hInput = nullptr;
+		CheckError(lib3mf_implicitfunction_findinput(m_pHandle, sIdentifier.c_str(), &hInput));
+		
+		if (!hInput) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hInput)));
+	}
+	
+	/**
+	* CImplicitFunction::FindOutput - Retrieves an output
+	* @param[in] sIdentifier - the identifier of the output
+	* @return the output port
+	*/
+	PImplicitPort CImplicitFunction::FindOutput(const std::string & sIdentifier)
+	{
+		Lib3MFHandle hOutput = nullptr;
+		CheckError(lib3mf_implicitfunction_findoutput(m_pHandle, sIdentifier.c_str(), &hOutput));
+		
+		if (!hOutput) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hOutput)));
 	}
 	
 	/**

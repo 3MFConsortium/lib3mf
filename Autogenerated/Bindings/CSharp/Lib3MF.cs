@@ -1397,6 +1397,12 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_getoutputs", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitNode_GetOutputs (IntPtr Handle, out IntPtr AIterator);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_findinput", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitNode_FindInput (IntPtr Handle, byte[] AIdentifier, out IntPtr AInput);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_findoutput", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitNode_FindOutput (IntPtr Handle, byte[] AIdentifier, out IntPtr AOutput);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitconstant_getvalue", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitConstant_GetValue (IntPtr Handle, out Single AValue);
 
@@ -1456,6 +1462,12 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addlink", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_AddLink (IntPtr Handle, IntPtr ASource, IntPtr ATarget);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_findinput", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_FindInput (IntPtr Handle, byte[] AIdentifier, out IntPtr AInput);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_findoutput", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_FindOutput (IntPtr Handle, byte[] AIdentifier, out IntPtr AOutput);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addlinkbynames", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_AddLinkByNames (IntPtr Handle, byte[] ASource, byte[] ATarget);
@@ -5774,6 +5786,24 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPortIterator>(newIterator);
 		}
 
+		public CImplicitPort FindInput (String AIdentifier)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			IntPtr newInput = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitNode_FindInput (Handle, byteIdentifier, out newInput));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newInput);
+		}
+
+		public CImplicitPort FindOutput (String AIdentifier)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			IntPtr newOutput = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitNode_FindOutput (Handle, byteIdentifier, out newOutput));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newOutput);
+		}
+
 	}
 
 	public class CImplicitConstant : CImplicitNode
@@ -5995,6 +6025,24 @@ namespace Lib3MF {
 				ATargetHandle = ATarget.GetHandle();
 
 			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddLink (Handle, ASourceHandle, ATargetHandle));
+		}
+
+		public CImplicitPort FindInput (String AIdentifier)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			IntPtr newInput = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_FindInput (Handle, byteIdentifier, out newInput));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newInput);
+		}
+
+		public CImplicitPort FindOutput (String AIdentifier)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			IntPtr newOutput = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_FindOutput (Handle, byteIdentifier, out newOutput));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newOutput);
 		}
 
 		public void AddLinkByNames (String ASource, String ATarget)
