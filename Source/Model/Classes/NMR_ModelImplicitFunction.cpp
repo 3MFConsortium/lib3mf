@@ -138,6 +138,11 @@ namespace NMR
             throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_INVALID_TARGET_PORT);
         }
 
+        if (sourcePort->getType() != targetPort->getType())
+        {
+            throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_INVALID_PORT_TYPE);
+        }
+
         targetPort->setReference(sSourceNodeIdentifier);
         sourcePort->setReference(sTargetNodeIdentifier); // won't be visible in the xml
     }
