@@ -1403,6 +1403,12 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_findoutput", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitNode_FindOutput (IntPtr Handle, byte[] AIdentifier, out IntPtr AOutput);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_setconstant", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitNode_SetConstant (IntPtr Handle, Double AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_getconstant", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitNode_GetConstant (IntPtr Handle, out Double AValue);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitconstant_getvalue", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitConstant_GetValue (IntPtr Handle, out Single AValue);
 
@@ -5802,6 +5808,20 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.ImplicitNode_FindOutput (Handle, byteIdentifier, out newOutput));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newOutput);
+		}
+
+		public void SetConstant (Double AValue)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitNode_SetConstant (Handle, AValue));
+		}
+
+		public Double GetConstant ()
+		{
+			Double resultValue = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitNode_GetConstant (Handle, out resultValue));
+			return resultValue;
 		}
 
 	}

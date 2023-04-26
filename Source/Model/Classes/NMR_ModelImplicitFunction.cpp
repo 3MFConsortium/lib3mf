@@ -27,9 +27,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --*/
 
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
+
 #include "Common/NMR_Exception.h"
 #include "Model/Classes/NMR_ImplicitNodeTypes.h"
-#include <Model/Classes/NMR_ModelImplicitPort.h>
+#include "Model/Classes/NMR_ModelImplicitPort.h"
 
 namespace NMR
 {
@@ -80,7 +81,8 @@ namespace NMR
                                                        const std::string & sIdentifier,
                                                        const std::string & sDisplayName)
     {
-        auto node = std::make_shared<CModelImplicitNode>(eNodeType, sIdentifier, sDisplayName);
+        auto node = std::make_shared<CModelImplicitNode>(eNodeType, sIdentifier, sDisplayName); 
+
         m_nodeTypes.addExpectedPortsToNode(*node);
         m_nodes->push_back(node);
         return node;
@@ -88,10 +90,7 @@ namespace NMR
 
     PModelImplicitNode CModelImplicitFunction::addNode(const Lib3MF::eImplicitNodeType eNodeType)
     {
-        auto node = std::make_shared<CModelImplicitNode>(eNodeType);
-        m_nodeTypes.addExpectedPortsToNode(*node);
-        m_nodes->push_back(node);
-        return node;
+        return addNode(eNodeType, "", "");
     }
 
     PImplicitNodes NMR::CModelImplicitFunction::getNodes() const
@@ -155,10 +154,11 @@ namespace NMR
     }
 
     PModelImplicitPort CModelImplicitFunction::addInput(const std::string & sPortIdentifier,
-                                                   const std::string & sDisplayName,
-                                                   const Lib3MF::eImplicitPortType ePortType)
+                                                        const std::string & sDisplayName,
+                                                        const Lib3MF::eImplicitPortType ePortType)
     {
-        auto newPort = std::make_shared<CModelImplicitPort>(sPortIdentifier, sDisplayName, ePortType);
+        auto newPort =
+          std::make_shared<CModelImplicitPort>(sPortIdentifier, sDisplayName, ePortType);
         m_inputs->push_back(newPort);
         return newPort;
     }
@@ -167,7 +167,8 @@ namespace NMR
                                                          const std::string & sDisplayName,
                                                          const Lib3MF::eImplicitPortType ePortType)
     {
-        auto newPort = std::make_shared<CModelImplicitPort>(sPortIdentifier, sDisplayName, ePortType);
+        auto newPort =
+          std::make_shared<CModelImplicitPort>(sPortIdentifier, sDisplayName, ePortType);
         m_outputs->push_back(newPort);
         return newPort;
     }

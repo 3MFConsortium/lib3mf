@@ -12695,6 +12695,8 @@ void CLib3MFImplicitNode::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOutputs", GetOutputs);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "FindInput", FindInput);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "FindOutput", FindOutput);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetConstant", SetConstant);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetConstant", GetConstant);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -13015,6 +13017,52 @@ void CLib3MFImplicitNode::FindOutput(const FunctionCallbackInfo<Value>& args)
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjOutput = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnOutput);
         args.GetReturnValue().Set(instanceObjOutput);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFImplicitNode::SetConstant(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsNumber()) {
+            throw std::runtime_error("Expected double parameter 0 (Value)");
+        }
+        double dValue = (double) args[0]->NumberValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetConstant.");
+        if (wrapperTable->m_ImplicitNode_SetConstant == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ImplicitNode::SetConstant.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitNode_SetConstant(instanceHandle, dValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFImplicitNode::GetConstant(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        double dReturnValue = 0.0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetConstant.");
+        if (wrapperTable->m_ImplicitNode_GetConstant == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ImplicitNode::GetConstant.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitNode_GetConstant(instanceHandle, &dReturnValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Number::New(isolate, dReturnValue));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

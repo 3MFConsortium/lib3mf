@@ -547,6 +547,11 @@ namespace Lib3MF
             EXPECT_EQ(node1->GetNodeType(), node2->GetNodeType());
             EXPECT_EQ(node1->GetDisplayName(), node2->GetDisplayName());
 
+            if (node1->GetNodeType() == Lib3MF::eImplicitNodeType::Constant)
+            {
+                EXPECT_EQ(node1->GetConstant(), node2->GetConstant());
+            }
+           
             comparePorts(node1->GetInputs(), node2->GetInputs(), false);
             comparePorts(node1->GetOutputs(), node2->GetOutputs(), true); // ignore reference
         }
@@ -616,6 +621,42 @@ namespace Lib3MF
         PModel ioModel = wrapper->CreateModel();
         PReader ioReader = ioModel->QueryReader("3mf");
         ioReader->ReadFromFile(Volumetric::OutFolder + "AddFunctionWithMultipleNodesAndLinks.3mf");
+
+        // Check the function
+        auto functionIterator = ioModel->GetFunctions();
+        ASSERT_EQ(functionIterator->Count(), 1);
+
+        // Check the nodes
+        EXPECT_TRUE(functionIterator->MoveNext());
+        EXPECT_EQ(functionIterator->GetCurrentFunction()->GetModelResourceID(), expectedResourceId);
+
+        // Compare the functions
+        compareFunctions(newFunction, functionIterator->GetCurrentFunction());
+    }
+
+    // Function with constant node
+    TEST_F(Volumetric, AddFunction_ConstantNodeIsWrittenTo3mfFile)
+    {
+        PImplicitFunction newFunction = model->AddFunction();
+        std::string const displayName = "test";
+        newFunction->SetDisplayName(displayName);
+        auto const expectedResourceId = newFunction->GetModelResourceID();
+
+        auto functionArgument =
+          newFunction->AddInput("pos", "position", Lib3MF::eImplicitPortType::Vector);
+
+        // Add some nodes
+        auto constNode =
+          newFunction->AddNode(Lib3MF::eImplicitNodeType::Constant, "constant_1", "constant 1");
+        constNode->SetConstant(1.23456);
+
+        // Write to file
+        writer3MF->WriteToFile(Volumetric::OutFolder + "AddFunctionWithConstantNode.3mf");
+
+        // Read from file
+        PModel ioModel = wrapper->CreateModel();
+        PReader ioReader = ioModel->QueryReader("3mf");
+        ioReader->ReadFromFile(Volumetric::OutFolder + "AddFunctionWithConstantNode.3mf");
 
         // Check the function
         auto functionIterator = ioModel->GetFunctions();

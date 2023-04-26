@@ -3096,6 +3096,24 @@ Lib3MFResult CCall_lib3mf_implicitnode_findoutput(Lib3MFHandle libraryHandle, Li
 }
 
 
+Lib3MFResult CCall_lib3mf_implicitnode_setconstant(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, Lib3MF_double dValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitNode_SetConstant (pImplicitNode, dValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitnode_getconstant(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, Lib3MF_double * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitNode_GetConstant (pImplicitNode, pValue);
+}
+
+
 Lib3MFResult CCall_lib3mf_implicitconstant_getvalue(Lib3MFHandle libraryHandle, Lib3MF_ImplicitConstant pImplicitConstant, Lib3MF_single * pValue)
 {
 	if (libraryHandle == 0) 
@@ -9642,6 +9660,25 @@ func (inst ImplicitNode) FindOutput(identifier string) (ImplicitPort, error) {
 		return ImplicitPort{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewImplicitPort(output), nil
+}
+
+// SetConstant sets the constant value of the node. Throws an error, if the node type not is Constant.
+func (inst ImplicitNode) SetConstant(value float64) error {
+	ret := C.CCall_lib3mf_implicitnode_setconstant(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetConstant retrieves the constant value of the node. Throws an error, if the node type is not Constant.
+func (inst ImplicitNode) GetConstant() (float64, error) {
+	var value C.double
+	ret := C.CCall_lib3mf_implicitnode_getconstant(inst.wrapperRef.LibraryHandle, inst.Ref, &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(value), nil
 }
 
 

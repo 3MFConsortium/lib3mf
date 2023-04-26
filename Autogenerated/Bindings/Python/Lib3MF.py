@@ -466,6 +466,8 @@ class FunctionTable:
 	lib3mf_implicitnode_getoutputs = None
 	lib3mf_implicitnode_findinput = None
 	lib3mf_implicitnode_findoutput = None
+	lib3mf_implicitnode_setconstant = None
+	lib3mf_implicitnode_getconstant = None
 	lib3mf_implicitconstant_getvalue = None
 	lib3mf_implicitconstant_setvalue = None
 	lib3mf_implicitvector_get = None
@@ -3149,6 +3151,18 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_implicitnode_findoutput = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitnode_setconstant")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_double)
+			self.lib.lib3mf_implicitnode_setconstant = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitnode_getconstant")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_implicitnode_getconstant = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitconstant_getvalue")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -5292,6 +5306,12 @@ class Wrapper:
 			
 			self.lib.lib3mf_implicitnode_findoutput.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitnode_findoutput.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_implicitnode_setconstant.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitnode_setconstant.argtypes = [ctypes.c_void_p, ctypes.c_double]
+			
+			self.lib.lib3mf_implicitnode_getconstant.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitnode_getconstant.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
 			
 			self.lib.lib3mf_implicitconstant_getvalue.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitconstant_getvalue.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_float)]
@@ -9100,6 +9120,17 @@ class ImplicitNode(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return OutputObject
+	
+	def SetConstant(self, Value):
+		dValue = ctypes.c_double(Value)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitnode_setconstant(self._handle, dValue))
+		
+	
+	def GetConstant(self):
+		pValue = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitnode_getconstant(self._handle, pValue))
+		
+		return pValue.value
 	
 
 

@@ -2258,6 +2258,14 @@
 			<param name="Output" type="class" class="ImplicitPort" pass="return"
 				description="the output port" />
 		</method>
+
+		<method name="SetConstant" description="Sets the constant value of the node. Throws an error, if the node type not is Constant">
+			<param name="Value" type="double" pass="in" description="the value" />
+		</method>
+
+		<method name="GetConstant" description="Retrieves the constant value of the node. Throws an error, if the node type is not Constant">
+			<param name="Value" type="double" pass="return" description="the value" />
+		</method>
 	</class>
 
 	<class name="ImplicitConstant" parent="ImplicitNode">

@@ -384,6 +384,8 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ImplicitNode_GetOutputs = NULL;
 	pWrapperTable->m_ImplicitNode_FindInput = NULL;
 	pWrapperTable->m_ImplicitNode_FindOutput = NULL;
+	pWrapperTable->m_ImplicitNode_SetConstant = NULL;
+	pWrapperTable->m_ImplicitNode_GetConstant = NULL;
 	pWrapperTable->m_ImplicitConstant_GetValue = NULL;
 	pWrapperTable->m_ImplicitConstant_SetValue = NULL;
 	pWrapperTable->m_ImplicitVector_Get = NULL;
@@ -3658,6 +3660,24 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_ImplicitNode_FindOutput == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitNode_SetConstant = (PLib3MFImplicitNode_SetConstantPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_setconstant");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitNode_SetConstant = (PLib3MFImplicitNode_SetConstantPtr) dlsym(hLibrary, "lib3mf_implicitnode_setconstant");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitNode_SetConstant == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitNode_GetConstant = (PLib3MFImplicitNode_GetConstantPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_getconstant");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitNode_GetConstant = (PLib3MFImplicitNode_GetConstantPtr) dlsym(hLibrary, "lib3mf_implicitnode_getconstant");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitNode_GetConstant == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

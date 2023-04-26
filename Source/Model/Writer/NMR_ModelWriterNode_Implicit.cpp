@@ -73,7 +73,7 @@ namespace NMR
     {
         writeImplicitFunctionInputs(*function.getInputs());
         writeImplicitFunctionOutputs(*function.getOutputs());
-        
+
         for (auto node : *function.getNodes())
         {
             writeImplicitNode(*node);
@@ -89,12 +89,21 @@ namespace NMR
             writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_DISPLAY_NAME,
                                  node.getDisplayName());
 
-            writeStartElement(XML_3MF_ELEMENT_IMPLICIT_NODE_INPUT);
+            if (node.getNodeType() == Lib3MF::eImplicitNodeType::Constant)
             {
-                auto inputs = node.getInputs();
-                writeImplicitInputs(*inputs);
+
+                writeDoubleAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_VALUE, node.getConstant());
             }
-            writeFullEndElement();
+
+            auto inputs = node.getInputs();
+            if (!inputs->empty())
+            {
+                writeStartElement(XML_3MF_ELEMENT_IMPLICIT_NODE_INPUT);
+                {
+                    writeImplicitInputs(*inputs);
+                }
+                writeFullEndElement();
+            }
 
             writeStartElement(XML_3MF_ELEMENT_IMPLICIT_NODE_OUTPUT);
             {
@@ -155,7 +164,7 @@ namespace NMR
     void CModelWriterNode_Implicit::writeImplicitFunctionInputs(NMR::Ports & ports)
     {
         writeStartElement(XML_3MF_ELEMENT_IMPLICIT_FUNCTION_INPUT);
-        
+
         for (auto & port : ports)
         {
             writeStartElement(portTypeToName(port->getType()));
@@ -172,7 +181,7 @@ namespace NMR
     void CModelWriterNode_Implicit::writeImplicitFunctionOutputs(NMR::Ports & ports)
     {
         writeStartElement(XML_3MF_ELEMENT_IMPLICIT_FUNCTION_OUTPUT);
-        
+
         for (auto & port : ports)
         {
             writeStartElement(portTypeToRefName(port->getType()));
@@ -180,7 +189,7 @@ namespace NMR
                 writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_PORT_ID, port->getIdentifier());
                 writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_PORT_DISPLAY_NAME,
                                      port->getDisplayName());
-                                       writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_PORT_REFERENCE,
+                writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_PORT_REFERENCE,
                                      port->getReference());
             }
             writeFullEndElement();

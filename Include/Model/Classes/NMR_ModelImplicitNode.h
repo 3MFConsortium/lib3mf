@@ -35,6 +35,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <memory>
 #include <string>
 #include <vector>
+#include <variant>
+#include <optional>
 
 namespace NMR
 {
@@ -42,7 +44,7 @@ namespace NMR
     using PPorts = std::shared_ptr<Ports>;
 
     std::string elementNameFromNodeType(Lib3MF::eImplicitNodeType nodeType);
-
+  
     class CModelImplicitNode
     {
       private:
@@ -53,6 +55,12 @@ namespace NMR
         PPorts m_inputs;
         PPorts m_outputs;
 
+        // Optional values for constants
+        double m_constant = 0.;
+        std::unique_ptr<std::string> m_stringValue;
+        std::unique_ptr<std::vector<double>> m_vectorValue;
+        std::unique_ptr<std::vector<double>> m_matrixValue;
+    
       public:
         CModelImplicitNode(Lib3MF::eImplicitNodeType type,
                            ImplicitIdentifier const & identifier,
@@ -78,6 +86,9 @@ namespace NMR
 
         PModelImplicitPort findInput(const std::string & sIdentifier);
         PModelImplicitPort findOutput(const std::string & sIdentifier);
+
+        void setConstant(double value);
+        double getConstant() const;
     };
 
     using PModelImplicitNode = std::shared_ptr<CModelImplicitNode>;

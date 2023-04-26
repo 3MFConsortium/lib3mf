@@ -3626,6 +3626,18 @@ public:
 	*/
 	virtual IImplicitPort * FindOutput(const std::string & sIdentifier) = 0;
 
+	/**
+	* IImplicitNode::SetConstant - Sets the constant value of the node. Throws an error, if the node type not is Constant
+	* @param[in] dValue - the value
+	*/
+	virtual void SetConstant(const Lib3MF_double dValue) = 0;
+
+	/**
+	* IImplicitNode::GetConstant - Retrieves the constant value of the node. Throws an error, if the node type is not Constant
+	* @return the value
+	*/
+	virtual Lib3MF_double GetConstant() = 0;
+
 };
 
 typedef IBaseSharedPtr<IImplicitNode> PIImplicitNode;

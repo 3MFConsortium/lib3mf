@@ -2029,6 +2029,8 @@ public:
 	inline PImplicitPortIterator GetOutputs();
 	inline PImplicitPort FindInput(const std::string & sIdentifier);
 	inline PImplicitPort FindOutput(const std::string & sIdentifier);
+	inline void SetConstant(const Lib3MF_double dValue);
+	inline Lib3MF_double GetConstant();
 };
 	
 /*************************************************************************************************************************
@@ -7135,6 +7137,27 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hOutput)));
+	}
+	
+	/**
+	* CImplicitNode::SetConstant - Sets the constant value of the node. Throws an error, if the node type not is Constant
+	* @param[in] dValue - the value
+	*/
+	void CImplicitNode::SetConstant(const Lib3MF_double dValue)
+	{
+		CheckError(lib3mf_implicitnode_setconstant(m_pHandle, dValue));
+	}
+	
+	/**
+	* CImplicitNode::GetConstant - Retrieves the constant value of the node. Throws an error, if the node type is not Constant
+	* @return the value
+	*/
+	Lib3MF_double CImplicitNode::GetConstant()
+	{
+		Lib3MF_double resultValue = 0;
+		CheckError(lib3mf_implicitnode_getconstant(m_pHandle, &resultValue));
+		
+		return resultValue;
 	}
 	
 	/**

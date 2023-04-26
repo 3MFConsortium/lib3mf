@@ -42,6 +42,8 @@ namespace NMR
         CModelImplicitNode * m_pImplicitNode;
         CModel * m_pModel;
 
+        double m_value;
+
       public:
         CModelReaderNode_Implicit_Node() = delete;
         CModelReaderNode_Implicit_Node(_In_ CModel * pModel,

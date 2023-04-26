@@ -1381,6 +1381,8 @@ private:
 	static void GetOutputs(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void FindInput(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void FindOutput(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetConstant(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetConstant(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFImplicitNode();

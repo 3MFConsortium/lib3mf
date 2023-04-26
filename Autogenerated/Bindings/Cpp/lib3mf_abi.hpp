@@ -3511,6 +3511,24 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_findinput(Lib3MF_ImplicitNode p
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_findoutput(Lib3MF_ImplicitNode pImplicitNode, const char * pIdentifier, Lib3MF_ImplicitPort * pOutput);
 
+/**
+* Sets the constant value of the node. Throws an error, if the node type not is Constant
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[in] dValue - the value
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_setconstant(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_double dValue);
+
+/**
+* Retrieves the constant value of the node. Throws an error, if the node type is not Constant
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[out] pValue - the value
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getconstant(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_double * pValue);
+
 /*************************************************************************************************************************
  Class definition for ImplicitConstant
 **************************************************************************************************************************/

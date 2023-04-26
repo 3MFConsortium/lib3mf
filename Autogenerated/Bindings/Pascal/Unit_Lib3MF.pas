@@ -4024,6 +4024,24 @@ type
 	*)
 	TLib3MFImplicitNode_FindOutputFunc = function(pImplicitNode: TLib3MFHandle; const pIdentifier: PAnsiChar; out pOutput: TLib3MFHandle): TLib3MFResult; cdecl;
 	
+	(**
+	* Sets the constant value of the node. Throws an error, if the node type not is Constant
+	*
+	* @param[in] pImplicitNode - ImplicitNode instance.
+	* @param[in] dValue - the value
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitNode_SetConstantFunc = function(pImplicitNode: TLib3MFHandle; const dValue: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the constant value of the node. Throws an error, if the node type is not Constant
+	*
+	* @param[in] pImplicitNode - ImplicitNode instance.
+	* @param[out] pValue - the value
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitNode_GetConstantFunc = function(pImplicitNode: TLib3MFHandle; out pValue: Double): TLib3MFResult; cdecl;
+	
 
 (*************************************************************************************************************************
  Function type definitions for ImplicitConstant
@@ -7035,6 +7053,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetOutputs(): TLib3MFImplicitPortIterator;
 		function FindInput(const AIdentifier: String): TLib3MFImplicitPort;
 		function FindOutput(const AIdentifier: String): TLib3MFImplicitPort;
+		procedure SetConstant(const AValue: Double);
+		function GetConstant(): Double;
 	end;
 
 
@@ -7735,6 +7755,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFImplicitNode_GetOutputsFunc: TLib3MFImplicitNode_GetOutputsFunc;
 		FLib3MFImplicitNode_FindInputFunc: TLib3MFImplicitNode_FindInputFunc;
 		FLib3MFImplicitNode_FindOutputFunc: TLib3MFImplicitNode_FindOutputFunc;
+		FLib3MFImplicitNode_SetConstantFunc: TLib3MFImplicitNode_SetConstantFunc;
+		FLib3MFImplicitNode_GetConstantFunc: TLib3MFImplicitNode_GetConstantFunc;
 		FLib3MFImplicitConstant_GetValueFunc: TLib3MFImplicitConstant_GetValueFunc;
 		FLib3MFImplicitConstant_SetValueFunc: TLib3MFImplicitConstant_SetValueFunc;
 		FLib3MFImplicitVector_GetFunc: TLib3MFImplicitVector_GetFunc;
@@ -8279,6 +8301,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFImplicitNode_GetOutputsFunc: TLib3MFImplicitNode_GetOutputsFunc read FLib3MFImplicitNode_GetOutputsFunc;
 		property Lib3MFImplicitNode_FindInputFunc: TLib3MFImplicitNode_FindInputFunc read FLib3MFImplicitNode_FindInputFunc;
 		property Lib3MFImplicitNode_FindOutputFunc: TLib3MFImplicitNode_FindOutputFunc read FLib3MFImplicitNode_FindOutputFunc;
+		property Lib3MFImplicitNode_SetConstantFunc: TLib3MFImplicitNode_SetConstantFunc read FLib3MFImplicitNode_SetConstantFunc;
+		property Lib3MFImplicitNode_GetConstantFunc: TLib3MFImplicitNode_GetConstantFunc read FLib3MFImplicitNode_GetConstantFunc;
 		property Lib3MFImplicitConstant_GetValueFunc: TLib3MFImplicitConstant_GetValueFunc read FLib3MFImplicitConstant_GetValueFunc;
 		property Lib3MFImplicitConstant_SetValueFunc: TLib3MFImplicitConstant_SetValueFunc read FLib3MFImplicitConstant_SetValueFunc;
 		property Lib3MFImplicitVector_GetFunc: TLib3MFImplicitVector_GetFunc read FLib3MFImplicitVector_GetFunc;
@@ -13383,6 +13407,16 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HOutput);
 	end;
 
+	procedure TLib3MFImplicitNode.SetConstant(const AValue: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitNode_SetConstantFunc(FHandle, AValue));
+	end;
+
+	function TLib3MFImplicitNode.GetConstant(): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitNode_GetConstantFunc(FHandle, Result));
+	end;
+
 (*************************************************************************************************************************
  Class implementation for ImplicitConstant
 **************************************************************************************************************************)
@@ -15834,6 +15868,8 @@ implementation
 		FLib3MFImplicitNode_GetOutputsFunc := LoadFunction('lib3mf_implicitnode_getoutputs');
 		FLib3MFImplicitNode_FindInputFunc := LoadFunction('lib3mf_implicitnode_findinput');
 		FLib3MFImplicitNode_FindOutputFunc := LoadFunction('lib3mf_implicitnode_findoutput');
+		FLib3MFImplicitNode_SetConstantFunc := LoadFunction('lib3mf_implicitnode_setconstant');
+		FLib3MFImplicitNode_GetConstantFunc := LoadFunction('lib3mf_implicitnode_getconstant');
 		FLib3MFImplicitConstant_GetValueFunc := LoadFunction('lib3mf_implicitconstant_getvalue');
 		FLib3MFImplicitConstant_SetValueFunc := LoadFunction('lib3mf_implicitconstant_setvalue');
 		FLib3MFImplicitVector_GetFunc := LoadFunction('lib3mf_implicitvector_get');
@@ -17049,6 +17085,12 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_findoutput'), @FLib3MFImplicitNode_FindOutputFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_setconstant'), @FLib3MFImplicitNode_SetConstantFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_getconstant'), @FLib3MFImplicitNode_GetConstantFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitconstant_getvalue'), @FLib3MFImplicitConstant_GetValueFunc);

@@ -2053,6 +2053,8 @@ public:
 	inline PImplicitPortIterator GetOutputs();
 	inline PImplicitPort FindInput(const std::string & sIdentifier);
 	inline PImplicitPort FindOutput(const std::string & sIdentifier);
+	inline void SetConstant(const Lib3MF_double dValue);
+	inline Lib3MF_double GetConstant();
 };
 	
 /*************************************************************************************************************************
@@ -3202,6 +3204,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ImplicitNode_GetOutputs = nullptr;
 		pWrapperTable->m_ImplicitNode_FindInput = nullptr;
 		pWrapperTable->m_ImplicitNode_FindOutput = nullptr;
+		pWrapperTable->m_ImplicitNode_SetConstant = nullptr;
+		pWrapperTable->m_ImplicitNode_GetConstant = nullptr;
 		pWrapperTable->m_ImplicitConstant_GetValue = nullptr;
 		pWrapperTable->m_ImplicitConstant_SetValue = nullptr;
 		pWrapperTable->m_ImplicitVector_Get = nullptr;
@@ -6475,6 +6479,24 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ImplicitNode_SetConstant = (PLib3MFImplicitNode_SetConstantPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_setconstant");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitNode_SetConstant = (PLib3MFImplicitNode_SetConstantPtr) dlsym(hLibrary, "lib3mf_implicitnode_setconstant");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitNode_SetConstant == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitNode_GetConstant = (PLib3MFImplicitNode_GetConstantPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_getconstant");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitNode_GetConstant = (PLib3MFImplicitNode_GetConstantPtr) dlsym(hLibrary, "lib3mf_implicitnode_getconstant");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitNode_GetConstant == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_ImplicitConstant_GetValue = (PLib3MFImplicitConstant_GetValuePtr) GetProcAddress(hLibrary, "lib3mf_implicitconstant_getvalue");
 		#else // _WIN32
 		pWrapperTable->m_ImplicitConstant_GetValue = (PLib3MFImplicitConstant_GetValuePtr) dlsym(hLibrary, "lib3mf_implicitconstant_getvalue");
@@ -9614,6 +9636,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_implicitnode_findoutput", (void**)&(pWrapperTable->m_ImplicitNode_FindOutput));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_FindOutput == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitnode_setconstant", (void**)&(pWrapperTable->m_ImplicitNode_SetConstant));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_SetConstant == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitnode_getconstant", (void**)&(pWrapperTable->m_ImplicitNode_GetConstant));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_GetConstant == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_implicitconstant_getvalue", (void**)&(pWrapperTable->m_ImplicitConstant_GetValue));
@@ -14711,6 +14741,27 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hOutput)));
+	}
+	
+	/**
+	* CImplicitNode::SetConstant - Sets the constant value of the node. Throws an error, if the node type not is Constant
+	* @param[in] dValue - the value
+	*/
+	void CImplicitNode::SetConstant(const Lib3MF_double dValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_SetConstant(m_pHandle, dValue));
+	}
+	
+	/**
+	* CImplicitNode::GetConstant - Retrieves the constant value of the node. Throws an error, if the node type is not Constant
+	* @return the value
+	*/
+	Lib3MF_double CImplicitNode::GetConstant()
+	{
+		Lib3MF_double resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_GetConstant(m_pHandle, &resultValue));
+		
+		return resultValue;
 	}
 	
 	/**

@@ -29,7 +29,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Model/Classes/NMR_ModelImplicitNode.h"
 #include "Common/NMR_Exception.h"
 
-
 namespace NMR
 {
     std::string elementNameFromNodeType(Lib3MF::eImplicitNodeType nodeType)
@@ -112,12 +111,13 @@ namespace NMR
         m_inputs = std::make_shared<Ports>();
     }
 
-    CModelImplicitNode::CModelImplicitNode(Lib3MF::eImplicitNodeType type) : m_type(type)
+    CModelImplicitNode::CModelImplicitNode(Lib3MF::eImplicitNodeType type)
+        : m_type(type)
     {
         m_outputs = std::make_shared<Ports>();
         m_inputs = std::make_shared<Ports>();
     }
-    
+
     ImplicitIdentifier const & CModelImplicitNode::getIdentifier() const
     {
         return m_identifier;
@@ -177,8 +177,10 @@ namespace NMR
 
     PModelImplicitPort NMR::CModelImplicitNode::findInput(const std::string & sIdentifier)
     {
-        for (auto & port : *m_inputs) {
-            if (port->getIdentifier() == sIdentifier) {
+        for (auto & port : *m_inputs)
+        {
+            if (port->getIdentifier() == sIdentifier)
+            {
                 return port;
             }
         }
@@ -187,11 +189,27 @@ namespace NMR
 
     PModelImplicitPort CModelImplicitNode::findOutput(const std::string & sIdentifier)
     {
-        for (auto & port : *m_outputs) {
-            if (port->getIdentifier() == sIdentifier) {
+        for (auto & port : *m_outputs)
+        {
+            if (port->getIdentifier() == sIdentifier)
+            {
                 return port;
             }
         }
         return {};
+    }
+
+    void NMR::CModelImplicitNode::setConstant(double value)
+    {
+        if (m_type != Lib3MF::eImplicitNodeType::Constant)
+            throw CNMRException(NMR_ERROR_INVALIDPARAM);
+        m_constant = value;
+    }
+    double CModelImplicitNode::getConstant() const
+    {
+        if (m_type != Lib3MF::eImplicitNodeType::Constant)
+            throw CNMRException(NMR_ERROR_INVALIDPARAM);
+                    
+        return m_constant;
     }
 }

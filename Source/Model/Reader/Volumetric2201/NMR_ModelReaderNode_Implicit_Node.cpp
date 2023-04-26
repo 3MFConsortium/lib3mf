@@ -80,6 +80,11 @@ namespace NMR
         {
             m_pImplicitNode->setDisplayName(pAttributeValue);
         }
+        else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_VALUE) == 0 &&
+                 m_pImplicitNode->getNodeType() == Lib3MF::eImplicitNodeType::Constant)
+        {
+            m_pImplicitNode->setConstant(strtod(pAttributeValue, nullptr));
+        }
     }
 
     void NMR::CModelReaderNode_Implicit_Node::OnNSChildElement(_In_z_ const nfChar * pChildName,

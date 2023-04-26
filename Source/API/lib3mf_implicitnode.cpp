@@ -103,3 +103,12 @@ IImplicitPort * CImplicitNode::FindOutput(const std::string & sIdentifier)
     return new CImplicitPort(m_pImplicitNode->findOutput(sIdentifier));
 }
 
+void CImplicitNode::SetConstant(const Lib3MF_double dConstant)
+{
+    m_pImplicitNode->setConstant(dConstant);
+}
+
+Lib3MF_double CImplicitNode::GetConstant()
+{
+    return m_pImplicitNode->getConstant();
+}
