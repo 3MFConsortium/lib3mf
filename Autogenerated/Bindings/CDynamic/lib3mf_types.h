@@ -648,7 +648,7 @@ typedef struct sLib3MFVector {
 } sLib3MFVector;
 
 typedef struct sLib3MFMatrix4x4 {
-    Lib3MF_double m_Value[4];
+    Lib3MF_double m_Field[4][4];
 } sLib3MFMatrix4x4;
 
 #pragma pack ()

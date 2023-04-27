@@ -2934,21 +2934,21 @@ Lib3MFResult CCall_lib3mf_implicitport_setdisplayname(Lib3MFHandle libraryHandle
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitport_gettype(Lib3MFHandle libraryHandle, Lib3MF_ImplicitPort pImplicitPort, eLib3MFImplicitPortType * pImplicitPortType)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitPort_GetType (pImplicitPort, pImplicitPortType);
-}
-
-
 Lib3MFResult CCall_lib3mf_implicitport_settype(Lib3MFHandle libraryHandle, Lib3MF_ImplicitPort pImplicitPort, eLib3MFImplicitPortType eImplicitPortType)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_ImplicitPort_SetType (pImplicitPort, eImplicitPortType);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitport_gettype(Lib3MFHandle libraryHandle, Lib3MF_ImplicitPort pImplicitPort, eLib3MFImplicitPortType * pImplicitPortType)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitPort_GetType (pImplicitPort, pImplicitPortType);
 }
 
 
@@ -5237,7 +5237,7 @@ type Vector struct {
 
 // Matrix4x4 represents a Lib3MF struct.
 type Matrix4x4 struct {
-	Value[4] float64
+	Field[4][4] float64
 }
 
 // Error constants for Lib3MF.
@@ -9440,6 +9440,15 @@ func (inst ImplicitPort) SetDisplayName(displayName string) error {
 	return nil
 }
 
+// SetType sets the type of the port.
+func (inst ImplicitPort) SetType(implicitPortType ImplicitPortType) error {
+	ret := C.CCall_lib3mf_implicitport_settype(inst.wrapperRef.LibraryHandle, inst.Ref, C.eLib3MFImplicitPortType(implicitPortType))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
 // GetType retrieves the type of the port.
 func (inst ImplicitPort) GetType() (ImplicitPortType, error) {
 	var implicitPortType C.eLib3MFImplicitPortType
@@ -9448,15 +9457,6 @@ func (inst ImplicitPort) GetType() (ImplicitPortType, error) {
 		return 0, makeError(uint32(ret))
 	}
 	return ImplicitPortType(implicitPortType), nil
-}
-
-// SetType sets the type of the port.
-func (inst ImplicitPort) SetType(implicitPortType ImplicitPortType) error {
-	ret := C.CCall_lib3mf_implicitport_settype(inst.wrapperRef.LibraryHandle, inst.Ref, C.eLib3MFImplicitPortType(implicitPortType))
-	if ret != 0 {
-		return makeError(uint32(ret))
-	}
-	return nil
 }
 
 // GetReference retrieves the reference of the port, only used for input ports.

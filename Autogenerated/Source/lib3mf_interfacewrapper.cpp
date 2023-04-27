@@ -11785,6 +11785,38 @@ Lib3MFResult lib3mf_implicitport_setdisplayname(Lib3MF_ImplicitPort pImplicitPor
 	}
 }
 
+Lib3MFResult lib3mf_implicitport_settype(Lib3MF_ImplicitPort pImplicitPort, eLib3MFImplicitPortType eImplicitPortType)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitPort;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitPort, "ImplicitPort", "SetType");
+			pJournalEntry->addEnumParameter("ImplicitPortType", "ImplicitPortType", (Lib3MF_int32)(eImplicitPortType));
+		}
+		IImplicitPort* pIImplicitPort = dynamic_cast<IImplicitPort*>(pIBaseClass);
+		if (!pIImplicitPort)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIImplicitPort->SetType(eImplicitPortType);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_implicitport_gettype(Lib3MF_ImplicitPort pImplicitPort, eLib3MFImplicitPortType * pImplicitPortType)
 {
 	IBase* pIBaseClass = (IBase *)pImplicitPort;
@@ -11804,38 +11836,6 @@ Lib3MFResult lib3mf_implicitport_gettype(Lib3MF_ImplicitPort pImplicitPort, eLib
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->addEnumResult("ImplicitPortType", "ImplicitPortType", (Lib3MF_int32)(*pImplicitPortType));
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_implicitport_settype(Lib3MF_ImplicitPort pImplicitPort, eLib3MFImplicitPortType eImplicitPortType)
-{
-	IBase* pIBaseClass = (IBase *)pImplicitPort;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitPort, "ImplicitPort", "SetType");
-			pJournalEntry->addEnumParameter("ImplicitPortType", "ImplicitPortType", (Lib3MF_int32)(eImplicitPortType));
-		}
-		IImplicitPort* pIImplicitPort = dynamic_cast<IImplicitPort*>(pIBaseClass);
-		if (!pIImplicitPort)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIImplicitPort->SetType(eImplicitPortType);
-
-		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -20066,10 +20066,10 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_implicitport_getdisplayname;
 	if (sProcName == "lib3mf_implicitport_setdisplayname") 
 		*ppProcAddress = (void*) &lib3mf_implicitport_setdisplayname;
-	if (sProcName == "lib3mf_implicitport_gettype") 
-		*ppProcAddress = (void*) &lib3mf_implicitport_gettype;
 	if (sProcName == "lib3mf_implicitport_settype") 
 		*ppProcAddress = (void*) &lib3mf_implicitport_settype;
+	if (sProcName == "lib3mf_implicitport_gettype") 
+		*ppProcAddress = (void*) &lib3mf_implicitport_gettype;
 	if (sProcName == "lib3mf_implicitport_getreference") 
 		*ppProcAddress = (void*) &lib3mf_implicitport_getreference;
 	if (sProcName == "lib3mf_implicitport_setreference") 

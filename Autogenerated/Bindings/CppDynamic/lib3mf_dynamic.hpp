@@ -1972,8 +1972,8 @@ public:
 	inline void SetIdentifier(const std::string & sIdentifier);
 	inline std::string GetDisplayName();
 	inline void SetDisplayName(const std::string & sDisplayName);
-	inline eImplicitPortType GetType();
 	inline void SetType(const eImplicitPortType eImplicitPortType);
+	inline eImplicitPortType GetType();
 	inline std::string GetReference();
 	inline void SetReference(const std::string & sReference);
 };
@@ -3120,8 +3120,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ImplicitPort_SetIdentifier = nullptr;
 		pWrapperTable->m_ImplicitPort_GetDisplayName = nullptr;
 		pWrapperTable->m_ImplicitPort_SetDisplayName = nullptr;
-		pWrapperTable->m_ImplicitPort_GetType = nullptr;
 		pWrapperTable->m_ImplicitPort_SetType = nullptr;
+		pWrapperTable->m_ImplicitPort_GetType = nullptr;
 		pWrapperTable->m_ImplicitPort_GetReference = nullptr;
 		pWrapperTable->m_ImplicitPort_SetReference = nullptr;
 		pWrapperTable->m_Iterator_MoveNext = nullptr;
@@ -6251,21 +6251,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_ImplicitPort_GetType = (PLib3MFImplicitPort_GetTypePtr) GetProcAddress(hLibrary, "lib3mf_implicitport_gettype");
-		#else // _WIN32
-		pWrapperTable->m_ImplicitPort_GetType = (PLib3MFImplicitPort_GetTypePtr) dlsym(hLibrary, "lib3mf_implicitport_gettype");
-		dlerror();
-		#endif // _WIN32
-		if (pWrapperTable->m_ImplicitPort_GetType == nullptr)
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		#ifdef _WIN32
 		pWrapperTable->m_ImplicitPort_SetType = (PLib3MFImplicitPort_SetTypePtr) GetProcAddress(hLibrary, "lib3mf_implicitport_settype");
 		#else // _WIN32
 		pWrapperTable->m_ImplicitPort_SetType = (PLib3MFImplicitPort_SetTypePtr) dlsym(hLibrary, "lib3mf_implicitport_settype");
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_ImplicitPort_SetType == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitPort_GetType = (PLib3MFImplicitPort_GetTypePtr) GetProcAddress(hLibrary, "lib3mf_implicitport_gettype");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitPort_GetType = (PLib3MFImplicitPort_GetTypePtr) dlsym(hLibrary, "lib3mf_implicitport_gettype");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitPort_GetType == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -9500,12 +9500,12 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitPort_SetDisplayName == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_implicitport_gettype", (void**)&(pWrapperTable->m_ImplicitPort_GetType));
-		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitPort_GetType == nullptr) )
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
 		eLookupError = (*pLookup)("lib3mf_implicitport_settype", (void**)&(pWrapperTable->m_ImplicitPort_SetType));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitPort_SetType == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitport_gettype", (void**)&(pWrapperTable->m_ImplicitPort_GetType));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitPort_GetType == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_implicitport_getreference", (void**)&(pWrapperTable->m_ImplicitPort_GetReference));
@@ -14423,6 +14423,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CImplicitPort::SetType - Sets the type of the port
+	* @param[in] eImplicitPortType - the type
+	*/
+	void CImplicitPort::SetType(const eImplicitPortType eImplicitPortType)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitPort_SetType(m_pHandle, eImplicitPortType));
+	}
+	
+	/**
 	* CImplicitPort::GetType - Retrieves the type of the port
 	* @return the type
 	*/
@@ -14432,15 +14441,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitPort_GetType(m_pHandle, &resultImplicitPortType));
 		
 		return resultImplicitPortType;
-	}
-	
-	/**
-	* CImplicitPort::SetType - Sets the type of the port
-	* @param[in] eImplicitPortType - the type
-	*/
-	void CImplicitPort::SetType(const eImplicitPortType eImplicitPortType)
-	{
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitPort_SetType(m_pHandle, eImplicitPortType));
 	}
 	
 	/**

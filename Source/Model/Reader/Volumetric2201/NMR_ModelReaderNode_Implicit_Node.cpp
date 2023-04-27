@@ -40,6 +40,8 @@ Reader for nodes of graph representing a function for implicit modelling
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 
+#include <sstream>
+
 namespace NMR
 {
     CModelReaderNode_Implicit_Node::CModelReaderNode_Implicit_Node(
@@ -67,6 +69,31 @@ namespace NMR
 
         // Parse Content
         parseContent(pXMLReader);
+    }
+
+    Lib3MF::sMatrix4x4 matFromString(std::string const & str)
+    {
+        Lib3MF::sMatrix4x4 mat;
+        std::stringstream ss(str);
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                if (!(ss >> mat.m_Field[i][j]))
+                {
+                    throw CNMRException(NMR_ERROR_NOTENOUGHVALUESINMATRIXSTRING);
+                }
+            }
+        }
+
+        // Check if there is any extra content in the input string
+        std::string extra;
+        if (ss >> extra && !extra.empty())
+        {
+            throw CNMRException(NMR_ERROR_TOOMANYVALUESINMATRIXSTRING);
+        }
+
+        return mat;
     }
 
     void CModelReaderNode_Implicit_Node::OnAttribute(_In_z_ const nfChar * pAttributeName,
@@ -100,6 +127,13 @@ namespace NMR
                 m_vector.m_Coordinates[2] = strtod(pAttributeValue, nullptr);
             }
             m_pImplicitNode->setVector(m_vector);
+        }
+        else if (m_pImplicitNode->getNodeType() == Lib3MF::eImplicitNodeType::ConstMat)
+        {
+            if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_MATRIX) == 0)
+            {
+                m_pImplicitNode->setMatrix(matFromString(pAttributeValue));
+            }
         }
     }
 

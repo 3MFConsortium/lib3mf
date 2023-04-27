@@ -1196,9 +1196,11 @@ sLib3MFMatrix4x4 convertObjectToLib3MFMatrix4x4(Isolate* isolate, const Local<Va
 	sLib3MFMatrix4x4 sMatrix4x4;
 	Local<Context> context = isolate->GetCurrentContext();
 	int rowIndex;
+	int columnIndex;
 
-	for (rowIndex = 0; rowIndex < 4; rowIndex++)
-		sMatrix4x4.m_Value[rowIndex] = 0.0;
+	for (columnIndex = 0; columnIndex < 4; columnIndex++)
+		for (rowIndex = 0; rowIndex < 4; rowIndex++)
+			sMatrix4x4.m_Field[columnIndex][rowIndex] = 0.0;
 
 	if (pParamValue->IsObject()) {
 		MaybeLocal<Object> maybeObject = pParamValue->ToObject(context);
@@ -1206,31 +1208,44 @@ sLib3MFMatrix4x4 convertObjectToLib3MFMatrix4x4(Isolate* isolate, const Local<Va
 		if (!maybeObject.IsEmpty()) {
 			Local<Object> obj = maybeObject.ToLocalChecked();
 
-			// Value Member
-			MaybeLocal<Value> maybeValValue = obj->Get(context, String::NewFromUtf8(isolate, "Value"));
-			if (!maybeValValue.IsEmpty()) {
-				Local<Value> valValue = maybeValValue.ToLocalChecked();
-				if (valValue->IsArray()) {
-					Local<Array> arrayValue = Local<Array>::Cast(valValue);
-					for (int rowIndex = 0; rowIndex < 4; rowIndex++) {
-						MaybeLocal<Value> mlocalValue = arrayValue->Get(context, rowIndex);
-						Local<Value> localValue;
-						if (mlocalValue.ToLocal(&localValue)) {
-							if (localValue->IsNumber()) {
-								MaybeLocal<Number> localNumber = localValue->ToNumber(context);
-								sMatrix4x4.m_Value[rowIndex] = localNumber.ToLocalChecked()->NumberValue(isolate->GetCurrentContext()).ToChecked();
+			// Field Member
+			MaybeLocal<Value> maybeValField = obj->Get(context, String::NewFromUtf8(isolate, "Field"));
+			if (!maybeValField.IsEmpty()) {
+				Local<Value> valField = maybeValField.ToLocalChecked();
+				if (valField->IsArray()) {
+					Local<Array> arrayField = Local<Array>::Cast(valField);
+					for (int colIndex = 0; colIndex < 4; colIndex++) {
+						MaybeLocal<Value> mlocalCol = arrayField->Get(context, colIndex);
+						Local<Value> localCol;
+						if (mlocalCol.ToLocal(&localCol)) {
+					  if (localCol->IsArray()) {
+								Local<Array> localColArray = Local<Array>::Cast(localCol);
+								for (int rowIndex = 0; rowIndex < 4; rowIndex++) {
+									MaybeLocal<Value> mlocalValue = localColArray->Get(context, rowIndex);
+									Local<Value> localValue;
+									if (mlocalValue.ToLocal(&localValue)) {
+										if (localValue->IsNumber()) {
+											MaybeLocal<Number> localNumber = localValue->ToNumber(context);
+											sMatrix4x4.m_Field[colIndex][rowIndex] = localNumber.ToLocalChecked()->NumberValue(isolate->GetCurrentContext()).ToChecked();
+										} else {
+											isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Field array entry is not a number" )));
+										}
+									} else {
+										isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Field array entry is invalid" )));
+									}
+								}
 							} else {
-								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Value array entry is not a number" )));
+								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Field array entry is not an array" )));
 							}
 						} else {
-							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Value array entry is invalid" )));
+							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Field array entry is invalid" )));
 						}
 					}
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Value member is not an array" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Field member is not an array" )));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Value member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Field member not found in object" )));
 			}
 
 
@@ -1249,11 +1264,15 @@ sLib3MFMatrix4x4 convertObjectToLib3MFMatrix4x4(Isolate* isolate, const Local<Va
 Local<Object> convertLib3MFMatrix4x4ToObject(Isolate* isolate, sLib3MFMatrix4x4 sMatrix4x4)
 {
 	Local<Object> returnInstance = Object::New(isolate);
-	Local<Array> newValue = Array::New(isolate, 4);
-	for (int rowIndex = 0; rowIndex < 4; rowIndex++) {
-		newValue->Set(rowIndex, Number::New(isolate, sMatrix4x4.m_Value[rowIndex]));
+	Local<Array> newField = Array::New(isolate, 4);
+	for (int colIndex = 0; colIndex < 4; colIndex++) {
+		Local<Array> colArray = Array::New(isolate, 4);
+		for (int rowIndex = 0; rowIndex < 4; rowIndex++) {
+			colArray->Set(rowIndex, Number::New(isolate, sMatrix4x4.m_Field[colIndex][rowIndex]));
+		}
+		newField->Set(colIndex, colArray);
 	}
-	returnInstance->Set(String::NewFromUtf8(isolate, "Value"), newValue);
+	returnInstance->Set(String::NewFromUtf8(isolate, "Field"), newField);
 
 
 	return returnInstance;
@@ -12313,8 +12332,8 @@ void CLib3MFImplicitPort::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetIdentifier", SetIdentifier);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetDisplayName", GetDisplayName);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetDisplayName", SetDisplayName);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "GetType", GetType);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetType", SetType);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetType", GetType);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetReference", GetReference);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetReference", SetReference);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
@@ -12454,28 +12473,6 @@ void CLib3MFImplicitPort::SetDisplayName(const FunctionCallbackInfo<Value>& args
 }
 
 
-void CLib3MFImplicitPort::GetType(const FunctionCallbackInfo<Value>& args) 
-{
-		Isolate* isolate = args.GetIsolate();
-		HandleScope scope(isolate);
-		try {
-        eLib3MFImplicitPortType eReturnImplicitPortType;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
-        if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetType.");
-        if (wrapperTable->m_ImplicitPort_GetType == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method ImplicitPort::GetType.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitPort_GetType(instanceHandle, &eReturnImplicitPortType);
-        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(Integer::New(isolate, (int)eReturnImplicitPortType));
-
-		} catch (std::exception & E) {
-				RaiseError(isolate, E.what());
-		}
-}
-
-
 void CLib3MFImplicitPort::SetType(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
@@ -12493,6 +12490,28 @@ void CLib3MFImplicitPort::SetType(const FunctionCallbackInfo<Value>& args)
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_ImplicitPort_SetType(instanceHandle, (eLib3MFImplicitPortType) eImplicitPortType);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFImplicitPort::GetType(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        eLib3MFImplicitPortType eReturnImplicitPortType;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetType.");
+        if (wrapperTable->m_ImplicitPort_GetType == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ImplicitPort::GetType.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitPort_GetType(instanceHandle, &eReturnImplicitPortType);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::New(isolate, (int)eReturnImplicitPortType));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

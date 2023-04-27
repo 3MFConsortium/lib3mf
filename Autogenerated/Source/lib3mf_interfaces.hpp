@@ -3450,16 +3450,16 @@ public:
 	virtual void SetDisplayName(const std::string & sDisplayName) = 0;
 
 	/**
-	* IImplicitPort::GetType - Retrieves the type of the port
-	* @return the type
-	*/
-	virtual Lib3MF::eImplicitPortType GetType() = 0;
-
-	/**
 	* IImplicitPort::SetType - Sets the type of the port
 	* @param[in] eImplicitPortType - the type
 	*/
 	virtual void SetType(const Lib3MF::eImplicitPortType eImplicitPortType) = 0;
+
+	/**
+	* IImplicitPort::GetType - Retrieves the type of the port
+	* @return the type
+	*/
+	virtual Lib3MF::eImplicitPortType GetType() = 0;
 
 	/**
 	* IImplicitPort::GetReference - Retrieves the reference of the port, only used for input ports

@@ -1948,8 +1948,8 @@ public:
 	inline void SetIdentifier(const std::string & sIdentifier);
 	inline std::string GetDisplayName();
 	inline void SetDisplayName(const std::string & sDisplayName);
-	inline eImplicitPortType GetType();
 	inline void SetType(const eImplicitPortType eImplicitPortType);
+	inline eImplicitPortType GetType();
 	inline std::string GetReference();
 	inline void SetReference(const std::string & sReference);
 };
@@ -6819,6 +6819,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CImplicitPort::SetType - Sets the type of the port
+	* @param[in] eImplicitPortType - the type
+	*/
+	void CImplicitPort::SetType(const eImplicitPortType eImplicitPortType)
+	{
+		CheckError(lib3mf_implicitport_settype(m_pHandle, eImplicitPortType));
+	}
+	
+	/**
 	* CImplicitPort::GetType - Retrieves the type of the port
 	* @return the type
 	*/
@@ -6828,15 +6837,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		CheckError(lib3mf_implicitport_gettype(m_pHandle, &resultImplicitPortType));
 		
 		return resultImplicitPortType;
-	}
-	
-	/**
-	* CImplicitPort::SetType - Sets the type of the port
-	* @param[in] eImplicitPortType - the type
-	*/
-	void CImplicitPort::SetType(const eImplicitPortType eImplicitPortType)
-	{
-		CheckError(lib3mf_implicitport_settype(m_pHandle, eImplicitPortType));
 	}
 	
 	/**

@@ -1312,8 +1312,8 @@ private:
 	static void SetIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetDisplayName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetDisplayName(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetType(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetType(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetType(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetReference(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetReference(const v8::FunctionCallbackInfo<v8::Value>& args);
 

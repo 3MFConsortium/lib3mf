@@ -3313,15 +3313,6 @@ typedef Lib3MFResult (*PLib3MFImplicitPort_GetDisplayNamePtr) (Lib3MF_ImplicitPo
 typedef Lib3MFResult (*PLib3MFImplicitPort_SetDisplayNamePtr) (Lib3MF_ImplicitPort pImplicitPort, const char * pDisplayName);
 
 /**
-* Retrieves the type of the port
-*
-* @param[in] pImplicitPort - ImplicitPort instance.
-* @param[out] pImplicitPortType - the type
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFImplicitPort_GetTypePtr) (Lib3MF_ImplicitPort pImplicitPort, eLib3MFImplicitPortType * pImplicitPortType);
-
-/**
 * Sets the type of the port
 *
 * @param[in] pImplicitPort - ImplicitPort instance.
@@ -3329,6 +3320,15 @@ typedef Lib3MFResult (*PLib3MFImplicitPort_GetTypePtr) (Lib3MF_ImplicitPort pImp
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFImplicitPort_SetTypePtr) (Lib3MF_ImplicitPort pImplicitPort, eLib3MFImplicitPortType eImplicitPortType);
+
+/**
+* Retrieves the type of the port
+*
+* @param[in] pImplicitPort - ImplicitPort instance.
+* @param[out] pImplicitPortType - the type
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitPort_GetTypePtr) (Lib3MF_ImplicitPort pImplicitPort, eLib3MFImplicitPortType * pImplicitPortType);
 
 /**
 * Retrieves the reference of the port, only used for input ports
@@ -5826,8 +5826,8 @@ typedef struct {
 	PLib3MFImplicitPort_SetIdentifierPtr m_ImplicitPort_SetIdentifier;
 	PLib3MFImplicitPort_GetDisplayNamePtr m_ImplicitPort_GetDisplayName;
 	PLib3MFImplicitPort_SetDisplayNamePtr m_ImplicitPort_SetDisplayName;
-	PLib3MFImplicitPort_GetTypePtr m_ImplicitPort_GetType;
 	PLib3MFImplicitPort_SetTypePtr m_ImplicitPort_SetType;
+	PLib3MFImplicitPort_GetTypePtr m_ImplicitPort_GetType;
 	PLib3MFImplicitPort_GetReferencePtr m_ImplicitPort_GetReference;
 	PLib3MFImplicitPort_SetReferencePtr m_ImplicitPort_SetReference;
 	PLib3MFIterator_MoveNextPtr m_Iterator_MoveNext;

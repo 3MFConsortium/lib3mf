@@ -303,7 +303,7 @@ namespace Lib3MF {
 
 	public struct sMatrix4x4
 	{
-		public Double[] Value;
+		public Double[][] Field;
 	}
 
 
@@ -398,10 +398,10 @@ namespace Lib3MF {
 			[FieldOffset(0)] public fixed Double Coordinates[3];
 		}
 
-		[StructLayout(LayoutKind.Explicit, Size=32)]
+		[StructLayout(LayoutKind.Explicit, Size=128)]
 		public unsafe struct InternalMatrix4x4
 		{
-			[FieldOffset(0)] public fixed Double Value[4];
+			[FieldOffset(0)] public fixed Double Field[16];
 		}
 
 
@@ -1361,11 +1361,11 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitport_setdisplayname", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitPort_SetDisplayName (IntPtr Handle, byte[] ADisplayName);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitport_gettype", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitPort_GetType (IntPtr Handle, out Int32 AImplicitPortType);
-
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitport_settype", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitPort_SetType (IntPtr Handle, Int32 AImplicitPortType);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitport_gettype", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitPort_GetType (IntPtr Handle, out Int32 AImplicitPortType);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitport_getreference", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitPort_GetReference (IntPtr Handle, UInt32 sizeReference, out UInt32 neededReference, IntPtr dataReference);
@@ -2304,9 +2304,12 @@ namespace Lib3MF {
 			public unsafe static sMatrix4x4 convertInternalToStruct_Matrix4x4 (InternalMatrix4x4 intMatrix4x4)
 			{
 				sMatrix4x4 Matrix4x4;
-				Matrix4x4.Value = new Double[4];
-				for (int rowIndex = 0; rowIndex < 4; rowIndex++) {
-					Matrix4x4.Value[rowIndex] = intMatrix4x4.Value[rowIndex];
+				Matrix4x4.Field = new Double[4][];
+				for (int colIndex = 0; colIndex < 4; colIndex++) {
+					Matrix4x4.Field[colIndex] = new Double[4];
+					for (int rowIndex = 0; rowIndex < 4; rowIndex++) {
+						Matrix4x4.Field[colIndex][rowIndex] = intMatrix4x4.Field[colIndex * 4 + rowIndex];
+					}
 				}
 
 				return Matrix4x4;
@@ -2315,8 +2318,10 @@ namespace Lib3MF {
 			public unsafe static InternalMatrix4x4 convertStructToInternal_Matrix4x4 (sMatrix4x4 Matrix4x4)
 			{
 				InternalMatrix4x4 intMatrix4x4;
-				for (int rowIndex = 0; rowIndex < 4; rowIndex++) {
-					intMatrix4x4.Value[rowIndex] = Matrix4x4.Value[rowIndex];
+				for (int colIndex = 0; colIndex < 4; colIndex++) {
+					for (int rowIndex = 0; rowIndex < 4; rowIndex++) {
+						intMatrix4x4.Field[colIndex * 4 + rowIndex] = Matrix4x4.Field[colIndex][rowIndex];
+					}
 				}
 
 				return intMatrix4x4;
@@ -5651,19 +5656,19 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.ImplicitPort_SetDisplayName (Handle, byteDisplayName));
 		}
 
+		public void SetType (eImplicitPortType AImplicitPortType)
+		{
+			Int32 enumImplicitPortType = (Int32) AImplicitPortType;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitPort_SetType (Handle, enumImplicitPortType));
+		}
+
 		public eImplicitPortType GetType ()
 		{
 			Int32 resultImplicitPortType = 0;
 
 			CheckError(Internal.Lib3MFWrapper.ImplicitPort_GetType (Handle, out resultImplicitPortType));
 			return (eImplicitPortType) (resultImplicitPortType);
-		}
-
-		public void SetType (eImplicitPortType AImplicitPortType)
-		{
-			Int32 enumImplicitPortType = (Int32) AImplicitPortType;
-
-			CheckError(Internal.Lib3MFWrapper.ImplicitPort_SetType (Handle, enumImplicitPortType));
 		}
 
 		public String GetReference ()

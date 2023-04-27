@@ -635,19 +635,29 @@ namespace Lib3MF
     }
 
     // Function with constant node
-    TEST_F(Volumetric, AddFunction_ConstantNodeIsWrittenTo3mfFile)
+    TEST_F(Volumetric, ImplicitSphere)
     {
         PImplicitFunction newFunction = model->AddFunction();
-        std::string const displayName = "test";
-        newFunction->SetDisplayName(displayName);
+        newFunction->SetDisplayName("sphere");
         auto const expectedResourceId = newFunction->GetModelResourceID();
 
         auto functionArgument =
           newFunction->AddInput("pos", "position", Lib3MF::eImplicitPortType::Vector);
 
         // Add some nodes
-        auto constNode =
-          newFunction->AddNode(Lib3MF::eImplicitNodeType::Constant, "constant_1", "constant 1");
+        auto constMatrixNode =
+          newFunction->AddNode(Lib3MF::eImplicitNodeType::ConstMat, "matrix_1", "unused example matrix");
+        
+        // clang-format off
+        constMatrixNode->SetMatrix(
+          {1.23456, 2.34567, 3.45678, 4.56789,
+           5.67890, 6.78901, 7.89012, 8.90123, 
+           9.01234, 10.12345, 11.23456, 12.34567, 
+           13.45678, 14.56789, 15.67890, 16.78901});
+        // clang-format on
+        
+        auto constNode = newFunction->AddNode(
+          Lib3MF::eImplicitNodeType::Constant, "radius", "radius of the spehere");
         constNode->SetConstant(1.23456);
 
         auto constVecNode = newFunction->AddNode(
@@ -655,9 +665,9 @@ namespace Lib3MF
         constVecNode->SetVector({1.23456, 2.34567, 3.45678});
         constVecNode->FindOutput("value")->SetType(Lib3MF::eImplicitPortType::Vector);
 
-        auto subNode =
-          newFunction->AddNode(Lib3MF::eImplicitNodeType::Subtraction, "translate_1", "Translation");
-        
+        auto subNode = newFunction->AddNode(
+          Lib3MF::eImplicitNodeType::Subtraction, "translate_1", "Translation");
+
         auto subInputA = subNode->FindInput("A");
         auto subInputB = subNode->FindInput("B");
         subInputA->SetType(Lib3MF::eImplicitPortType::Vector);
@@ -668,13 +678,18 @@ namespace Lib3MF
 
         auto distanceToSpehereNode = newFunction->AddNode(
           Lib3MF::eImplicitNodeType::Length, "distance_1", "distance to sphere");
-       
+
         distanceToSpehereNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
         distanceToSpehereNode->FindInput("A")->SetReference("translate_1.difference");
- 
+
+        // Substract radius from distance
+        auto subNode2 = newFunction->AddNode(
+          Lib3MF::eImplicitNodeType::Subtraction, "distance_2", "distance to sphere");
+        subNode2->FindInput("A")->SetReference("distance_1.length");
+
         auto output = newFunction->AddOutput(
           "shape", "signed distance to the surface", Lib3MF::eImplicitPortType::Scalar);
-        output->SetReference("distance_1.length");
+        output->SetReference("distance_2.length");
 
         // Write to file
         writer3MF->WriteToFile(Volumetric::OutFolder + "AddFunctionWithConstantNode.3mf");
@@ -683,7 +698,6 @@ namespace Lib3MF
         PModel ioModel = wrapper->CreateModel();
         PReader ioReader = ioModel->QueryReader("3mf");
         ioReader->ReadFromFile(Volumetric::OutFolder + "AddFunctionWithConstantNode.3mf");
-
 
         // write ioModel to file
         PWriter ioWriter = ioModel->QueryWriter("3mf");

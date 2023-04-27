@@ -535,7 +535,7 @@ namespace Lib3MF {
   } sVector;
   
   typedef struct sMatrix4x4 {
-      Lib3MF_double m_Value[4];
+      Lib3MF_double m_Field[4][4];
   } sMatrix4x4;
   
   #pragma pack ()

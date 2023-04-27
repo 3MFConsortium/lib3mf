@@ -448,8 +448,8 @@ class FunctionTable:
 	lib3mf_implicitport_setidentifier = None
 	lib3mf_implicitport_getdisplayname = None
 	lib3mf_implicitport_setdisplayname = None
-	lib3mf_implicitport_gettype = None
 	lib3mf_implicitport_settype = None
+	lib3mf_implicitport_gettype = None
 	lib3mf_implicitport_getreference = None
 	lib3mf_implicitport_setreference = None
 	lib3mf_iterator_movenext = None
@@ -953,7 +953,7 @@ class Vector(ctypes.Structure):
 class Matrix4x4(ctypes.Structure):
 	_pack_ = 1
 	_fields_ = [
-		("Value", ctypes.c_double * 4)
+		("Field", (ctypes.c_double * 4) * 4)
 	]
 
 '''Definition of Function Types
@@ -3051,17 +3051,17 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
 			self.lib.lib3mf_implicitport_setdisplayname = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitport_gettype")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32))
-			self.lib.lib3mf_implicitport_gettype = methodType(int(methodAddress.value))
-			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitport_settype")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ImplicitPortType)
 			self.lib.lib3mf_implicitport_settype = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitport_gettype")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32))
+			self.lib.lib3mf_implicitport_gettype = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitport_getreference")), methodAddress)
 			if err != 0:
@@ -5261,11 +5261,11 @@ class Wrapper:
 			self.lib.lib3mf_implicitport_setdisplayname.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitport_setdisplayname.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
 			
-			self.lib.lib3mf_implicitport_gettype.restype = ctypes.c_int32
-			self.lib.lib3mf_implicitport_gettype.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32)]
-			
 			self.lib.lib3mf_implicitport_settype.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitport_settype.argtypes = [ctypes.c_void_p, ImplicitPortType]
+			
+			self.lib.lib3mf_implicitport_gettype.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitport_gettype.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32)]
 			
 			self.lib.lib3mf_implicitport_getreference.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitport_getreference.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
@@ -8948,15 +8948,15 @@ class ImplicitPort(Base):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitport_setdisplayname(self._handle, pDisplayName))
 		
 	
+	def SetType(self, ImplicitPortType):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitport_settype(self._handle, ImplicitPortType))
+		
+	
 	def GetType(self):
 		pImplicitPortType = ctypes.c_int32()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitport_gettype(self._handle, pImplicitPortType))
 		
 		return ImplicitPortType(pImplicitPortType.value)
-	
-	def SetType(self, ImplicitPortType):
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitport_settype(self._handle, ImplicitPortType))
-		
 	
 	def GetReference(self):
 		nReferenceBufferSize = ctypes.c_uint64(0)

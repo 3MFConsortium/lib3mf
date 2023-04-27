@@ -397,7 +397,7 @@ type
 
 	PLib3MFMatrix4x4 = ^TLib3MFMatrix4x4;
 	TLib3MFMatrix4x4 = packed record
-		FValue: array [0..3] of Double;
+		FField: array [0..3, 0..3] of Double;
 	end;
 
 
@@ -3840,15 +3840,6 @@ type
 	TLib3MFImplicitPort_SetDisplayNameFunc = function(pImplicitPort: TLib3MFHandle; const pDisplayName: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
-	* Retrieves the type of the port
-	*
-	* @param[in] pImplicitPort - ImplicitPort instance.
-	* @param[out] pImplicitPortType - the type
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImplicitPort_GetTypeFunc = function(pImplicitPort: TLib3MFHandle; out pImplicitPortType: Integer): TLib3MFResult; cdecl;
-	
-	(**
 	* Sets the type of the port
 	*
 	* @param[in] pImplicitPort - ImplicitPort instance.
@@ -3856,6 +3847,15 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFImplicitPort_SetTypeFunc = function(pImplicitPort: TLib3MFHandle; const eImplicitPortType: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the type of the port
+	*
+	* @param[in] pImplicitPort - ImplicitPort instance.
+	* @param[out] pImplicitPortType - the type
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitPort_GetTypeFunc = function(pImplicitPort: TLib3MFHandle; out pImplicitPortType: Integer): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves the reference of the port, only used for input ports
@@ -6991,8 +6991,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure SetIdentifier(const AIdentifier: String);
 		function GetDisplayName(): String;
 		procedure SetDisplayName(const ADisplayName: String);
-		function GetType(): TLib3MFImplicitPortType;
 		procedure SetType(const AImplicitPortType: TLib3MFImplicitPortType);
+		function GetType(): TLib3MFImplicitPortType;
 		function GetReference(): String;
 		procedure SetReference(const AReference: String);
 	end;
@@ -7693,8 +7693,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFImplicitPort_SetIdentifierFunc: TLib3MFImplicitPort_SetIdentifierFunc;
 		FLib3MFImplicitPort_GetDisplayNameFunc: TLib3MFImplicitPort_GetDisplayNameFunc;
 		FLib3MFImplicitPort_SetDisplayNameFunc: TLib3MFImplicitPort_SetDisplayNameFunc;
-		FLib3MFImplicitPort_GetTypeFunc: TLib3MFImplicitPort_GetTypeFunc;
 		FLib3MFImplicitPort_SetTypeFunc: TLib3MFImplicitPort_SetTypeFunc;
+		FLib3MFImplicitPort_GetTypeFunc: TLib3MFImplicitPort_GetTypeFunc;
 		FLib3MFImplicitPort_GetReferenceFunc: TLib3MFImplicitPort_GetReferenceFunc;
 		FLib3MFImplicitPort_SetReferenceFunc: TLib3MFImplicitPort_SetReferenceFunc;
 		FLib3MFIterator_MoveNextFunc: TLib3MFIterator_MoveNextFunc;
@@ -8239,8 +8239,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFImplicitPort_SetIdentifierFunc: TLib3MFImplicitPort_SetIdentifierFunc read FLib3MFImplicitPort_SetIdentifierFunc;
 		property Lib3MFImplicitPort_GetDisplayNameFunc: TLib3MFImplicitPort_GetDisplayNameFunc read FLib3MFImplicitPort_GetDisplayNameFunc;
 		property Lib3MFImplicitPort_SetDisplayNameFunc: TLib3MFImplicitPort_SetDisplayNameFunc read FLib3MFImplicitPort_SetDisplayNameFunc;
-		property Lib3MFImplicitPort_GetTypeFunc: TLib3MFImplicitPort_GetTypeFunc read FLib3MFImplicitPort_GetTypeFunc;
 		property Lib3MFImplicitPort_SetTypeFunc: TLib3MFImplicitPort_SetTypeFunc read FLib3MFImplicitPort_SetTypeFunc;
+		property Lib3MFImplicitPort_GetTypeFunc: TLib3MFImplicitPort_GetTypeFunc read FLib3MFImplicitPort_GetTypeFunc;
 		property Lib3MFImplicitPort_GetReferenceFunc: TLib3MFImplicitPort_GetReferenceFunc read FLib3MFImplicitPort_GetReferenceFunc;
 		property Lib3MFImplicitPort_SetReferenceFunc: TLib3MFImplicitPort_SetReferenceFunc read FLib3MFImplicitPort_SetReferenceFunc;
 		property Lib3MFIterator_MoveNextFunc: TLib3MFIterator_MoveNextFunc read FLib3MFIterator_MoveNextFunc;
@@ -13130,6 +13130,11 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitPort_SetDisplayNameFunc(FHandle, PAnsiChar(ADisplayName)));
 	end;
 
+	procedure TLib3MFImplicitPort.SetType(const AImplicitPortType: TLib3MFImplicitPortType);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitPort_SetTypeFunc(FHandle, convertImplicitPortTypeToConst(AImplicitPortType)));
+	end;
+
 	function TLib3MFImplicitPort.GetType(): TLib3MFImplicitPortType;
 	var
 		ResultImplicitPortType: Integer;
@@ -13137,11 +13142,6 @@ implementation
 		ResultImplicitPortType := 0;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitPort_GetTypeFunc(FHandle, ResultImplicitPortType));
 		Result := convertConstToImplicitPortType(ResultImplicitPortType);
-	end;
-
-	procedure TLib3MFImplicitPort.SetType(const AImplicitPortType: TLib3MFImplicitPortType);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitPort_SetTypeFunc(FHandle, convertImplicitPortTypeToConst(AImplicitPortType)));
 	end;
 
 	function TLib3MFImplicitPort.GetReference(): String;
@@ -15748,8 +15748,8 @@ implementation
 		FLib3MFImplicitPort_SetIdentifierFunc := LoadFunction('lib3mf_implicitport_setidentifier');
 		FLib3MFImplicitPort_GetDisplayNameFunc := LoadFunction('lib3mf_implicitport_getdisplayname');
 		FLib3MFImplicitPort_SetDisplayNameFunc := LoadFunction('lib3mf_implicitport_setdisplayname');
-		FLib3MFImplicitPort_GetTypeFunc := LoadFunction('lib3mf_implicitport_gettype');
 		FLib3MFImplicitPort_SetTypeFunc := LoadFunction('lib3mf_implicitport_settype');
+		FLib3MFImplicitPort_GetTypeFunc := LoadFunction('lib3mf_implicitport_gettype');
 		FLib3MFImplicitPort_GetReferenceFunc := LoadFunction('lib3mf_implicitport_getreference');
 		FLib3MFImplicitPort_SetReferenceFunc := LoadFunction('lib3mf_implicitport_setreference');
 		FLib3MFIterator_MoveNextFunc := LoadFunction('lib3mf_iterator_movenext');
@@ -16931,10 +16931,10 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitport_setdisplayname'), @FLib3MFImplicitPort_SetDisplayNameFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitport_gettype'), @FLib3MFImplicitPort_GetTypeFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitport_settype'), @FLib3MFImplicitPort_SetTypeFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitport_settype'), @FLib3MFImplicitPort_SetTypeFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitport_gettype'), @FLib3MFImplicitPort_GetTypeFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitport_getreference'), @FLib3MFImplicitPort_GetReferenceFunc);

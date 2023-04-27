@@ -2210,7 +2210,7 @@
 	</struct>
 
 	<struct name="Matrix4x4">
-		<member name="Value" type="double" rows="4" cols="4" />
+		<member name="Field" type="double" columns="4" rows="4"/>
 	</struct>
 
 	<class name="ImplicitNode">

@@ -33,6 +33,8 @@ Writer node for implicit functions
 #include "Common/NMR_Exception.h"
 #include "lib3mf_types.hpp"
 
+#include <sstream>
+
 namespace NMR
 {
     const implicit::NodeTypes CModelWriterNode_Implicit::m_nodeTypes;
@@ -83,6 +85,20 @@ namespace NMR
         }
     }
 
+    std::string mat4x4ToString(Lib3MF::sMatrix4x4 const & mat)
+    {
+        std::stringstream outStream;
+        outStream << mat.m_Field[0][0] << " " << mat.m_Field[0][1] << " " << mat.m_Field[0][2] << " "
+           << mat.m_Field[0][3] << " " << mat.m_Field[1][0] << " " << mat.m_Field[1][1] << " "
+           << mat.m_Field[1][2] << " " << mat.m_Field[1][3] << " " << mat.m_Field[2][0] << " "
+           << mat.m_Field[2][1] << " " << mat.m_Field[2][2] << " " << mat.m_Field[2][3] << " "
+           << mat.m_Field[3][0] << " " << mat.m_Field[3][1] << " " << mat.m_Field[3][2] << " "
+           << mat.m_Field[3][3];
+        return outStream.str();
+    }
+
+   
+
     void CModelWriterNode_Implicit::writeImplicitNode(CModelImplicitNode & node)
     {
         
@@ -105,6 +121,11 @@ namespace NMR
                 writeDoubleAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_Y, vec.m_Coordinates[1]);
                 writeDoubleAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_Z, vec.m_Coordinates[2]);
             }
+              else if (node.getNodeType() == Lib3MF::eImplicitNodeType::ConstMat)
+              {
+                auto const mat = node.getMatrix();
+                writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_MATRIX, mat4x4ToString(mat));
+              }
 
             auto inputs = node.getInputs();
             if (!inputs->empty())
