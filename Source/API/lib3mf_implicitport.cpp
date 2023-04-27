@@ -65,6 +65,11 @@ void CImplicitPort::SetDisplayName(const std::string & sDisplayName)
     m_pImplicitPort->setDisplayName(sDisplayName);
 }
 
+void CImplicitPort::SetType(const Lib3MF::eImplicitPortType eType)
+{
+    m_pImplicitPort->setType(eType);
+}
+
 Lib3MF::eImplicitPortType CImplicitPort::GetType()
 {
     return m_pImplicitPort->getType();

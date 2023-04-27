@@ -3335,6 +3335,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitport_setdisplayname(Lib3MF_ImplicitP
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitport_gettype(Lib3MF_ImplicitPort pImplicitPort, eLib3MFImplicitPortType * pImplicitPortType);
 
 /**
+* Sets the type of the port
+*
+* @param[in] pImplicitPort - ImplicitPort instance.
+* @param[in] eImplicitPortType - the type
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitport_settype(Lib3MF_ImplicitPort pImplicitPort, eLib3MFImplicitPortType eImplicitPortType);
+
+/**
 * Retrieves the reference of the port, only used for input ports
 *
 * @param[in] pImplicitPort - ImplicitPort instance.
@@ -3512,7 +3521,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_findinput(Lib3MF_ImplicitNode p
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_findoutput(Lib3MF_ImplicitNode pImplicitNode, const char * pIdentifier, Lib3MF_ImplicitPort * pOutput);
 
 /**
-* Sets the constant value of the node. Throws an error, if the node type not is Constant
+* Sets the constant value of the node. Throws an error, if the node type not is of type Constant
 *
 * @param[in] pImplicitNode - ImplicitNode instance.
 * @param[in] dValue - the value
@@ -3521,7 +3530,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_findoutput(Lib3MF_ImplicitNode 
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_setconstant(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_double dValue);
 
 /**
-* Retrieves the constant value of the node. Throws an error, if the node type is not Constant
+* Retrieves the constant value of the node. Throws an error, if the node type is not of type Constant
 *
 * @param[in] pImplicitNode - ImplicitNode instance.
 * @param[out] pValue - the value
@@ -3529,62 +3538,41 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_setconstant(Lib3MF_ImplicitNode
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getconstant(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_double * pValue);
 
-/*************************************************************************************************************************
- Class definition for ImplicitConstant
-**************************************************************************************************************************/
+/**
+* Sets the vector value of the node. Throws an error, if the node type is not of type ConstVec
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[in] pValue - the value
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_setvector(Lib3MF_ImplicitNode pImplicitNode, const sLib3MFVector * pValue);
 
 /**
-* Retrieves the value of the constant
+* Retrieves the vector value of the node. Throws an error, if the node type is not of type ConstVec
 *
-* @param[in] pImplicitConstant - ImplicitConstant instance.
+* @param[in] pImplicitNode - ImplicitNode instance.
 * @param[out] pValue - the value
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitconstant_getvalue(Lib3MF_ImplicitConstant pImplicitConstant, Lib3MF_single * pValue);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getvector(Lib3MF_ImplicitNode pImplicitNode, sLib3MFVector * pValue);
 
 /**
-* Sets the value of the constant
+* Sets the matrix value of the node. Throws an error, if the node type is not of type ConstMat
 *
-* @param[in] pImplicitConstant - ImplicitConstant instance.
-* @param[in] fValue - the value
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[in] pValue - the value
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitconstant_setvalue(Lib3MF_ImplicitConstant pImplicitConstant, Lib3MF_single fValue);
-
-/*************************************************************************************************************************
- Class definition for ImplicitVector
-**************************************************************************************************************************/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_setmatrix(Lib3MF_ImplicitNode pImplicitNode, const sLib3MFMatrix4x4 * pValue);
 
 /**
-* Retrieves the x value of the vector
+* Retrieves the matrix value of the node. Throws an error, if the node type is not of type ConstMat
 *
-* @param[in] pImplicitVector - ImplicitVector instance.
-* @param[out] pValue - the value
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[out] pValue - the matrix
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitvector_get(Lib3MF_ImplicitVector pImplicitVector, sLib3MFVector * pValue);
-
-/*************************************************************************************************************************
- Class definition for ImplicitMatrix
-**************************************************************************************************************************/
-
-/**
-* Retrieves the matrix
-*
-* @param[in] pImplicitMatrix - ImplicitMatrix instance.
-* @param[out] pMatrix - the matrix
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitmatrix_getmatrix(Lib3MF_ImplicitMatrix pImplicitMatrix, sLib3MFTransform * pMatrix);
-
-/**
-* Sets the matrix
-*
-* @param[in] pImplicitMatrix - ImplicitMatrix instance.
-* @param[in] pMatrix - the matrix
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitmatrix_setmatrix(Lib3MF_ImplicitMatrix pImplicitMatrix, const sLib3MFTransform * pMatrix);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getmatrix(Lib3MF_ImplicitNode pImplicitNode, sLib3MFMatrix4x4 * pValue);
 
 /*************************************************************************************************************************
  Class definition for NodeIterator

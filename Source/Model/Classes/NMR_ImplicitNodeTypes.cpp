@@ -90,7 +90,8 @@ namespace NMR
                 {eImplicitNodeType::Fmod, {"fmod", {"A", "B"}, {"fmod"}}},
                 {eImplicitNodeType::Pow, {"pow", {"A", "B"}, {"pow"}}},
                 {eImplicitNodeType::Sqrt, {"sqrt", {"A"}, {"sqrt"}}},
-                {eImplicitNodeType::Mesh, {"mesh", {"point", "mesh"}, {"value"}}}
+                {eImplicitNodeType::Mesh, {"mesh", {"point", "mesh"}, {"value"}}},
+                {eImplicitNodeType::Length , {"length", {"A"}, {"length"}}}
                 // clang-format on
               }
         {

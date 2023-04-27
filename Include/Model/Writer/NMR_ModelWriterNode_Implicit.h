@@ -40,6 +40,11 @@ Abstract:
 
 namespace NMR
 {
+    namespace implicit
+    {
+        class NodeTypes;
+    }
+
     class CModelWriterNode_Implicit : public CModelWriterNode_ModelBase
     {
 
@@ -54,6 +59,8 @@ namespace NMR
         void writeToXML() override;
 
       private:
+        static const implicit::NodeTypes m_nodeTypes;
+
         void writeImplicitFunctionElements(CModelImplicitFunction & function);
         void writeImplicitNode(CModelImplicitNode & node);
         void writeImplicitOutputs(NMR::Ports & ports);

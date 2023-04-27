@@ -254,9 +254,6 @@ typedef Lib3MFHandle Lib3MF_ImplicitPort;
 typedef Lib3MFHandle Lib3MF_Iterator;
 typedef Lib3MFHandle Lib3MF_ImplicitPortIterator;
 typedef Lib3MFHandle Lib3MF_ImplicitNode;
-typedef Lib3MFHandle Lib3MF_ImplicitConstant;
-typedef Lib3MFHandle Lib3MF_ImplicitVector;
-typedef Lib3MFHandle Lib3MF_ImplicitMatrix;
 typedef Lib3MFHandle Lib3MF_NodeIterator;
 typedef Lib3MFHandle Lib3MF_ImplicitFunction;
 typedef Lib3MFHandle Lib3MF_BuildItem;
@@ -428,7 +425,8 @@ typedef enum eLib3MFImplicitNodeType {
   eImplicitNodeTypeFunctionCall = 27, /** Calls a function */
   eImplicitNodeTypeDot = 28, /** Calculates the dot product of two vector values */
   eImplicitNodeTypeCross = 29, /** Calculates the cross product of two vector values */
-  eImplicitNodeTypeMesh = 30 /** Calculates the signed distance to a mesh */
+  eImplicitNodeTypeMesh = 30, /** Calculates the signed distance to a mesh */
+  eImplicitNodeTypeLength = 31 /** Calculates the length of a vector */
 } eLib3MFImplicitNodeType;
 
 /**
@@ -646,8 +644,12 @@ typedef struct sLib3MFBall {
 } sLib3MFBall;
 
 typedef struct sLib3MFVector {
-    Lib3MF_single m_Coordinates[3];
+    Lib3MF_double m_Coordinates[3];
 } sLib3MFVector;
+
+typedef struct sLib3MFMatrix4x4 {
+    Lib3MF_double m_Value[4];
+} sLib3MFMatrix4x4;
 
 #pragma pack ()
 

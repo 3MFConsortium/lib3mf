@@ -1313,6 +1313,7 @@ private:
 	static void GetDisplayName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetDisplayName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetType(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetType(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetReference(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetReference(const v8::FunctionCallbackInfo<v8::Value>& args);
 
@@ -1383,66 +1384,14 @@ private:
 	static void FindOutput(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetConstant(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetConstant(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetVector(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetVector(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetMatrix(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetMatrix(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFImplicitNode();
 	~CLib3MFImplicitNode();
-	
-	static void Init();
-	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
-	
-};
-
-/*************************************************************************************************************************
- Class CLib3MFImplicitConstant 
-**************************************************************************************************************************/
-class CLib3MFImplicitConstant : public CLib3MFBaseClass {
-private:
-	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static v8::Persistent<v8::Function> constructor;
-	static void GetValue(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void SetValue(const v8::FunctionCallbackInfo<v8::Value>& args);
-
-public:
-	CLib3MFImplicitConstant();
-	~CLib3MFImplicitConstant();
-	
-	static void Init();
-	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
-	
-};
-
-/*************************************************************************************************************************
- Class CLib3MFImplicitVector 
-**************************************************************************************************************************/
-class CLib3MFImplicitVector : public CLib3MFBaseClass {
-private:
-	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static v8::Persistent<v8::Function> constructor;
-	static void Get(const v8::FunctionCallbackInfo<v8::Value>& args);
-
-public:
-	CLib3MFImplicitVector();
-	~CLib3MFImplicitVector();
-	
-	static void Init();
-	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
-	
-};
-
-/*************************************************************************************************************************
- Class CLib3MFImplicitMatrix 
-**************************************************************************************************************************/
-class CLib3MFImplicitMatrix : public CLib3MFBaseClass {
-private:
-	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static v8::Persistent<v8::Function> constructor;
-	static void GetMatrix(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void SetMatrix(const v8::FunctionCallbackInfo<v8::Value>& args);
-
-public:
-	CLib3MFImplicitMatrix();
-	~CLib3MFImplicitMatrix();
 	
 	static void Init();
 	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);

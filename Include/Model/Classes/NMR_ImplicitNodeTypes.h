@@ -78,7 +78,7 @@ namespace NMR
             NodeTypesMap const& getTypes() const;
 
             void addExpectedPortsToNode(NMR::CModelImplicitNode & node) const;
-
+            
           private:
             const NodeTypesMap m_nodeTypes;
         };

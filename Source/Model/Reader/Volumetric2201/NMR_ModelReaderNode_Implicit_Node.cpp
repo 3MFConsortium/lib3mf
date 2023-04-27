@@ -80,10 +80,26 @@ namespace NMR
         {
             m_pImplicitNode->setDisplayName(pAttributeValue);
         }
-        else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_VALUE) == 0 &&
-                 m_pImplicitNode->getNodeType() == Lib3MF::eImplicitNodeType::Constant)
+        else if (m_pImplicitNode->getNodeType() == Lib3MF::eImplicitNodeType::Constant &&
+                 strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_VALUE) == 0)
         {
             m_pImplicitNode->setConstant(strtod(pAttributeValue, nullptr));
+        }
+        else if (m_pImplicitNode->getNodeType() == Lib3MF::eImplicitNodeType::ConstVec)
+        {
+            if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_X) == 0)
+            {
+                m_vector.m_Coordinates[0] = strtod(pAttributeValue, nullptr);
+            }
+            else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_Y) == 0)
+            {
+                m_vector.m_Coordinates[1] = strtod(pAttributeValue, nullptr);
+            }
+            else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_Z) == 0)
+            {
+                m_vector.m_Coordinates[2] = strtod(pAttributeValue, nullptr);
+            }
+            m_pImplicitNode->setVector(m_vector);
         }
     }
 

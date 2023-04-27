@@ -43,7 +43,7 @@ namespace NMR
     using Ports = std::vector<PModelImplicitPort>;
     using PPorts = std::shared_ptr<Ports>;
 
-    std::string elementNameFromNodeType(Lib3MF::eImplicitNodeType nodeType);
+    // std::string elementNameFromNodeType(Lib3MF::eImplicitNodeType nodeType);
   
     class CModelImplicitNode
     {
@@ -57,9 +57,8 @@ namespace NMR
 
         // Optional values for constants
         double m_constant = 0.;
-        std::unique_ptr<std::string> m_stringValue;
-        std::unique_ptr<std::vector<double>> m_vectorValue;
-        std::unique_ptr<std::vector<double>> m_matrixValue;
+        std::unique_ptr<Lib3MF::sVector> m_vector;
+        std::unique_ptr<Lib3MF::sMatrix4x4> m_matrix;
     
       public:
         CModelImplicitNode(Lib3MF::eImplicitNodeType type,
@@ -89,6 +88,14 @@ namespace NMR
 
         void setConstant(double value);
         double getConstant() const;
+
+        void setVector(const Lib3MF::sVector & value);
+        Lib3MF::sVector getVector() const;
+
+
+        void setMatrix(const Lib3MF::sMatrix4x4 & value);
+        Lib3MF::sMatrix4x4 getMatrix() const;
+
     };
 
     using PModelImplicitNode = std::shared_ptr<CModelImplicitNode>;

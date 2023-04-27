@@ -109,9 +109,6 @@ class IImplicitPort;
 class IIterator;
 class IImplicitPortIterator;
 class IImplicitNode;
-class IImplicitConstant;
-class IImplicitVector;
-class IImplicitMatrix;
 class INodeIterator;
 class IImplicitFunction;
 class IBuildItem;
@@ -3459,6 +3456,12 @@ public:
 	virtual Lib3MF::eImplicitPortType GetType() = 0;
 
 	/**
+	* IImplicitPort::SetType - Sets the type of the port
+	* @param[in] eImplicitPortType - the type
+	*/
+	virtual void SetType(const Lib3MF::eImplicitPortType eImplicitPortType) = 0;
+
+	/**
 	* IImplicitPort::GetReference - Retrieves the reference of the port, only used for input ports
 	* @return the reference
 	*/
@@ -3627,110 +3630,44 @@ public:
 	virtual IImplicitPort * FindOutput(const std::string & sIdentifier) = 0;
 
 	/**
-	* IImplicitNode::SetConstant - Sets the constant value of the node. Throws an error, if the node type not is Constant
+	* IImplicitNode::SetConstant - Sets the constant value of the node. Throws an error, if the node type not is of type Constant
 	* @param[in] dValue - the value
 	*/
 	virtual void SetConstant(const Lib3MF_double dValue) = 0;
 
 	/**
-	* IImplicitNode::GetConstant - Retrieves the constant value of the node. Throws an error, if the node type is not Constant
+	* IImplicitNode::GetConstant - Retrieves the constant value of the node. Throws an error, if the node type is not of type Constant
 	* @return the value
 	*/
 	virtual Lib3MF_double GetConstant() = 0;
 
+	/**
+	* IImplicitNode::SetVector - Sets the vector value of the node. Throws an error, if the node type is not of type ConstVec
+	* @param[in] Value - the value
+	*/
+	virtual void SetVector(const Lib3MF::sVector Value) = 0;
+
+	/**
+	* IImplicitNode::GetVector - Retrieves the vector value of the node. Throws an error, if the node type is not of type ConstVec
+	* @return the value
+	*/
+	virtual Lib3MF::sVector GetVector() = 0;
+
+	/**
+	* IImplicitNode::SetMatrix - Sets the matrix value of the node. Throws an error, if the node type is not of type ConstMat
+	* @param[in] Value - the value
+	*/
+	virtual void SetMatrix(const Lib3MF::sMatrix4x4 Value) = 0;
+
+	/**
+	* IImplicitNode::GetMatrix - Retrieves the matrix value of the node. Throws an error, if the node type is not of type ConstMat
+	* @return the matrix
+	*/
+	virtual Lib3MF::sMatrix4x4 GetMatrix() = 0;
+
 };
 
 typedef IBaseSharedPtr<IImplicitNode> PIImplicitNode;
-
-
-/*************************************************************************************************************************
- Class interface for ImplicitConstant 
-**************************************************************************************************************************/
-
-class IImplicitConstant : public virtual IImplicitNode {
-public:
-	/**
-	* IImplicitConstant::ClassTypeId - Get Class Type Id
-	* @return Class type as a 64 bits integer
-	*/
-	Lib3MF_uint64 ClassTypeId() override
-	{
-		return 0xFDD0E00663954DA8UL; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitConstant"
-	}
-
-	/**
-	* IImplicitConstant::GetValue - Retrieves the value of the constant
-	* @return the value
-	*/
-	virtual Lib3MF_single GetValue() = 0;
-
-	/**
-	* IImplicitConstant::SetValue - Sets the value of the constant
-	* @param[in] fValue - the value
-	*/
-	virtual void SetValue(const Lib3MF_single fValue) = 0;
-
-};
-
-typedef IBaseSharedPtr<IImplicitConstant> PIImplicitConstant;
-
-
-/*************************************************************************************************************************
- Class interface for ImplicitVector 
-**************************************************************************************************************************/
-
-class IImplicitVector : public virtual IImplicitNode {
-public:
-	/**
-	* IImplicitVector::ClassTypeId - Get Class Type Id
-	* @return Class type as a 64 bits integer
-	*/
-	Lib3MF_uint64 ClassTypeId() override
-	{
-		return 0x2B3F23DD95A4DF56UL; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitVector"
-	}
-
-	/**
-	* IImplicitVector::Get - Retrieves the x value of the vector
-	* @return the value
-	*/
-	virtual Lib3MF::sVector Get() = 0;
-
-};
-
-typedef IBaseSharedPtr<IImplicitVector> PIImplicitVector;
-
-
-/*************************************************************************************************************************
- Class interface for ImplicitMatrix 
-**************************************************************************************************************************/
-
-class IImplicitMatrix : public virtual IImplicitNode {
-public:
-	/**
-	* IImplicitMatrix::ClassTypeId - Get Class Type Id
-	* @return Class type as a 64 bits integer
-	*/
-	Lib3MF_uint64 ClassTypeId() override
-	{
-		return 0x7D48084ED0AE80FEUL; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitMatrix"
-	}
-
-	/**
-	* IImplicitMatrix::GetMatrix - Retrieves the matrix
-	* @return the matrix
-	*/
-	virtual Lib3MF::sTransform GetMatrix() = 0;
-
-	/**
-	* IImplicitMatrix::SetMatrix - Sets the matrix
-	* @param[in] Matrix - the matrix
-	*/
-	virtual void SetMatrix(const Lib3MF::sTransform Matrix) = 0;
-
-};
-
-typedef IBaseSharedPtr<IImplicitMatrix> PIImplicitMatrix;
 
 
 /*************************************************************************************************************************

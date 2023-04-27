@@ -189,7 +189,8 @@ namespace Lib3MF {
 		FunctionCall = 27,
 		Dot = 28,
 		Cross = 29,
-		Mesh = 30
+		Mesh = 30,
+		Length = 31
 	};
 
 	public enum eImplicitPortType {
@@ -297,7 +298,12 @@ namespace Lib3MF {
 
 	public struct sVector
 	{
-		public Single[] Coordinates;
+		public Double[] Coordinates;
+	}
+
+	public struct sMatrix4x4
+	{
+		public Double[] Value;
 	}
 
 
@@ -386,10 +392,16 @@ namespace Lib3MF {
 			[FieldOffset(4)] public Double Radius;
 		}
 
-		[StructLayout(LayoutKind.Explicit, Size=12)]
+		[StructLayout(LayoutKind.Explicit, Size=24)]
 		public unsafe struct InternalVector
 		{
-			[FieldOffset(0)] public fixed Single Coordinates[3];
+			[FieldOffset(0)] public fixed Double Coordinates[3];
+		}
+
+		[StructLayout(LayoutKind.Explicit, Size=32)]
+		public unsafe struct InternalMatrix4x4
+		{
+			[FieldOffset(0)] public fixed Double Value[4];
 		}
 
 
@@ -1352,6 +1364,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitport_gettype", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitPort_GetType (IntPtr Handle, out Int32 AImplicitPortType);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitport_settype", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitPort_SetType (IntPtr Handle, Int32 AImplicitPortType);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitport_getreference", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitPort_GetReference (IntPtr Handle, UInt32 sizeReference, out UInt32 neededReference, IntPtr dataReference);
 
@@ -1409,20 +1424,17 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_getconstant", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitNode_GetConstant (IntPtr Handle, out Double AValue);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitconstant_getvalue", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitConstant_GetValue (IntPtr Handle, out Single AValue);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_setvector", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitNode_SetVector (IntPtr Handle, InternalVector AValue);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitconstant_setvalue", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitConstant_SetValue (IntPtr Handle, Single AValue);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_getvector", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitNode_GetVector (IntPtr Handle, out InternalVector AValue);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitvector_get", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitVector_Get (IntPtr Handle, out InternalVector AValue);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_setmatrix", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitNode_SetMatrix (IntPtr Handle, InternalMatrix4x4 AValue);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitmatrix_getmatrix", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitMatrix_GetMatrix (IntPtr Handle, out InternalTransform AMatrix);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitmatrix_setmatrix", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitMatrix_SetMatrix (IntPtr Handle, InternalTransform AMatrix);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_getmatrix", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitNode_GetMatrix (IntPtr Handle, out InternalMatrix4x4 AValue);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_nodeiterator_getcurrent", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 NodeIterator_GetCurrent (IntPtr Handle, out IntPtr ANode);
@@ -2271,7 +2283,7 @@ namespace Lib3MF {
 			public unsafe static sVector convertInternalToStruct_Vector (InternalVector intVector)
 			{
 				sVector Vector;
-				Vector.Coordinates = new Single[3];
+				Vector.Coordinates = new Double[3];
 				for (int rowIndex = 0; rowIndex < 3; rowIndex++) {
 					Vector.Coordinates[rowIndex] = intVector.Coordinates[rowIndex];
 				}
@@ -2287,6 +2299,27 @@ namespace Lib3MF {
 				}
 
 				return intVector;
+			}
+
+			public unsafe static sMatrix4x4 convertInternalToStruct_Matrix4x4 (InternalMatrix4x4 intMatrix4x4)
+			{
+				sMatrix4x4 Matrix4x4;
+				Matrix4x4.Value = new Double[4];
+				for (int rowIndex = 0; rowIndex < 4; rowIndex++) {
+					Matrix4x4.Value[rowIndex] = intMatrix4x4.Value[rowIndex];
+				}
+
+				return Matrix4x4;
+			}
+
+			public unsafe static InternalMatrix4x4 convertStructToInternal_Matrix4x4 (sMatrix4x4 Matrix4x4)
+			{
+				InternalMatrix4x4 intMatrix4x4;
+				for (int rowIndex = 0; rowIndex < 4; rowIndex++) {
+					intMatrix4x4.Value[rowIndex] = Matrix4x4.Value[rowIndex];
+				}
+
+				return intMatrix4x4;
 			}
 
 			public static void ThrowError(IntPtr Handle, Int32 errorCode)
@@ -2390,9 +2423,6 @@ namespace Lib3MF {
 					case 0x52F06268CD098EFE: Object = new CIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Iterator"
 					case 0xC62268F2D7C7012C: Object = new CImplicitPortIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPortIterator"
 					case 0xE72592A7725AB29B: Object = new CImplicitNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitNode"
-					case 0xFDD0E00663954DA8: Object = new CImplicitConstant(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitConstant"
-					case 0x2B3F23DD95A4DF56: Object = new CImplicitVector(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitVector"
-					case 0x7D48084ED0AE80FE: Object = new CImplicitMatrix(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitMatrix"
 					case 0xFC006BC888CAB4D0: Object = new CNodeIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::NodeIterator"
 					case 0x6CE54469EEA83BC1: Object = new CImplicitFunction(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitFunction"
 					case 0x68FB2D5FFC4BA12A: Object = new CBuildItem(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItem"
@@ -5629,6 +5659,13 @@ namespace Lib3MF {
 			return (eImplicitPortType) (resultImplicitPortType);
 		}
 
+		public void SetType (eImplicitPortType AImplicitPortType)
+		{
+			Int32 enumImplicitPortType = (Int32) AImplicitPortType;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitPort_SetType (Handle, enumImplicitPortType));
+		}
+
 		public String GetReference ()
 		{
 			UInt32 sizeReference = 0;
@@ -5824,65 +5861,34 @@ namespace Lib3MF {
 			return resultValue;
 		}
 
-	}
-
-	public class CImplicitConstant : CImplicitNode
-	{
-		public CImplicitConstant (IntPtr NewHandle) : base (NewHandle)
+		public void SetVector (sVector AValue)
 		{
+			Internal.InternalVector intValue = Internal.Lib3MFWrapper.convertStructToInternal_Vector (AValue);
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitNode_SetVector (Handle, intValue));
 		}
 
-		public Single GetValue ()
-		{
-			Single resultValue = 0;
-
-			CheckError(Internal.Lib3MFWrapper.ImplicitConstant_GetValue (Handle, out resultValue));
-			return resultValue;
-		}
-
-		public void SetValue (Single AValue)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.ImplicitConstant_SetValue (Handle, AValue));
-		}
-
-	}
-
-	public class CImplicitVector : CImplicitNode
-	{
-		public CImplicitVector (IntPtr NewHandle) : base (NewHandle)
-		{
-		}
-
-		public sVector Get ()
+		public sVector GetVector ()
 		{
 			Internal.InternalVector intresultValue;
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitVector_Get (Handle, out intresultValue));
+			CheckError(Internal.Lib3MFWrapper.ImplicitNode_GetVector (Handle, out intresultValue));
 			return Internal.Lib3MFWrapper.convertInternalToStruct_Vector (intresultValue);
 		}
 
-	}
-
-	public class CImplicitMatrix : CImplicitNode
-	{
-		public CImplicitMatrix (IntPtr NewHandle) : base (NewHandle)
+		public void SetMatrix (sMatrix4x4 AValue)
 		{
+			Internal.InternalMatrix4x4 intValue = Internal.Lib3MFWrapper.convertStructToInternal_Matrix4x4 (AValue);
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitNode_SetMatrix (Handle, intValue));
 		}
 
-		public sTransform GetMatrix ()
+		public sMatrix4x4 GetMatrix ()
 		{
-			Internal.InternalTransform intresultMatrix;
+			Internal.InternalMatrix4x4 intresultValue;
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitMatrix_GetMatrix (Handle, out intresultMatrix));
-			return Internal.Lib3MFWrapper.convertInternalToStruct_Transform (intresultMatrix);
-		}
-
-		public void SetMatrix (sTransform AMatrix)
-		{
-			Internal.InternalTransform intMatrix = Internal.Lib3MFWrapper.convertStructToInternal_Transform (AMatrix);
-
-			CheckError(Internal.Lib3MFWrapper.ImplicitMatrix_SetMatrix (Handle, intMatrix));
+			CheckError(Internal.Lib3MFWrapper.ImplicitNode_GetMatrix (Handle, out intresultValue));
+			return Internal.Lib3MFWrapper.convertInternalToStruct_Matrix4x4 (intresultValue);
 		}
 
 	}

@@ -367,6 +367,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ImplicitPort_GetDisplayName = NULL;
 	pWrapperTable->m_ImplicitPort_SetDisplayName = NULL;
 	pWrapperTable->m_ImplicitPort_GetType = NULL;
+	pWrapperTable->m_ImplicitPort_SetType = NULL;
 	pWrapperTable->m_ImplicitPort_GetReference = NULL;
 	pWrapperTable->m_ImplicitPort_SetReference = NULL;
 	pWrapperTable->m_Iterator_MoveNext = NULL;
@@ -386,11 +387,10 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ImplicitNode_FindOutput = NULL;
 	pWrapperTable->m_ImplicitNode_SetConstant = NULL;
 	pWrapperTable->m_ImplicitNode_GetConstant = NULL;
-	pWrapperTable->m_ImplicitConstant_GetValue = NULL;
-	pWrapperTable->m_ImplicitConstant_SetValue = NULL;
-	pWrapperTable->m_ImplicitVector_Get = NULL;
-	pWrapperTable->m_ImplicitMatrix_GetMatrix = NULL;
-	pWrapperTable->m_ImplicitMatrix_SetMatrix = NULL;
+	pWrapperTable->m_ImplicitNode_SetVector = NULL;
+	pWrapperTable->m_ImplicitNode_GetVector = NULL;
+	pWrapperTable->m_ImplicitNode_SetMatrix = NULL;
+	pWrapperTable->m_ImplicitNode_GetMatrix = NULL;
 	pWrapperTable->m_NodeIterator_GetCurrent = NULL;
 	pWrapperTable->m_ImplicitFunction_GetIdentifier = NULL;
 	pWrapperTable->m_ImplicitFunction_SetIdentifier = NULL;
@@ -3510,6 +3510,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_ImplicitPort_SetType = (PLib3MFImplicitPort_SetTypePtr) GetProcAddress(hLibrary, "lib3mf_implicitport_settype");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitPort_SetType = (PLib3MFImplicitPort_SetTypePtr) dlsym(hLibrary, "lib3mf_implicitport_settype");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitPort_SetType == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_ImplicitPort_GetReference = (PLib3MFImplicitPort_GetReferencePtr) GetProcAddress(hLibrary, "lib3mf_implicitport_getreference");
 	#else // _WIN32
 	pWrapperTable->m_ImplicitPort_GetReference = (PLib3MFImplicitPort_GetReferencePtr) dlsym(hLibrary, "lib3mf_implicitport_getreference");
@@ -3681,48 +3690,39 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ImplicitConstant_GetValue = (PLib3MFImplicitConstant_GetValuePtr) GetProcAddress(hLibrary, "lib3mf_implicitconstant_getvalue");
+	pWrapperTable->m_ImplicitNode_SetVector = (PLib3MFImplicitNode_SetVectorPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_setvector");
 	#else // _WIN32
-	pWrapperTable->m_ImplicitConstant_GetValue = (PLib3MFImplicitConstant_GetValuePtr) dlsym(hLibrary, "lib3mf_implicitconstant_getvalue");
+	pWrapperTable->m_ImplicitNode_SetVector = (PLib3MFImplicitNode_SetVectorPtr) dlsym(hLibrary, "lib3mf_implicitnode_setvector");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ImplicitConstant_GetValue == NULL)
+	if (pWrapperTable->m_ImplicitNode_SetVector == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ImplicitConstant_SetValue = (PLib3MFImplicitConstant_SetValuePtr) GetProcAddress(hLibrary, "lib3mf_implicitconstant_setvalue");
+	pWrapperTable->m_ImplicitNode_GetVector = (PLib3MFImplicitNode_GetVectorPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_getvector");
 	#else // _WIN32
-	pWrapperTable->m_ImplicitConstant_SetValue = (PLib3MFImplicitConstant_SetValuePtr) dlsym(hLibrary, "lib3mf_implicitconstant_setvalue");
+	pWrapperTable->m_ImplicitNode_GetVector = (PLib3MFImplicitNode_GetVectorPtr) dlsym(hLibrary, "lib3mf_implicitnode_getvector");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ImplicitConstant_SetValue == NULL)
+	if (pWrapperTable->m_ImplicitNode_GetVector == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ImplicitVector_Get = (PLib3MFImplicitVector_GetPtr) GetProcAddress(hLibrary, "lib3mf_implicitvector_get");
+	pWrapperTable->m_ImplicitNode_SetMatrix = (PLib3MFImplicitNode_SetMatrixPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_setmatrix");
 	#else // _WIN32
-	pWrapperTable->m_ImplicitVector_Get = (PLib3MFImplicitVector_GetPtr) dlsym(hLibrary, "lib3mf_implicitvector_get");
+	pWrapperTable->m_ImplicitNode_SetMatrix = (PLib3MFImplicitNode_SetMatrixPtr) dlsym(hLibrary, "lib3mf_implicitnode_setmatrix");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ImplicitVector_Get == NULL)
+	if (pWrapperTable->m_ImplicitNode_SetMatrix == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ImplicitMatrix_GetMatrix = (PLib3MFImplicitMatrix_GetMatrixPtr) GetProcAddress(hLibrary, "lib3mf_implicitmatrix_getmatrix");
+	pWrapperTable->m_ImplicitNode_GetMatrix = (PLib3MFImplicitNode_GetMatrixPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_getmatrix");
 	#else // _WIN32
-	pWrapperTable->m_ImplicitMatrix_GetMatrix = (PLib3MFImplicitMatrix_GetMatrixPtr) dlsym(hLibrary, "lib3mf_implicitmatrix_getmatrix");
+	pWrapperTable->m_ImplicitNode_GetMatrix = (PLib3MFImplicitNode_GetMatrixPtr) dlsym(hLibrary, "lib3mf_implicitnode_getmatrix");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ImplicitMatrix_GetMatrix == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
-	pWrapperTable->m_ImplicitMatrix_SetMatrix = (PLib3MFImplicitMatrix_SetMatrixPtr) GetProcAddress(hLibrary, "lib3mf_implicitmatrix_setmatrix");
-	#else // _WIN32
-	pWrapperTable->m_ImplicitMatrix_SetMatrix = (PLib3MFImplicitMatrix_SetMatrixPtr) dlsym(hLibrary, "lib3mf_implicitmatrix_setmatrix");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_ImplicitMatrix_SetMatrix == NULL)
+	if (pWrapperTable->m_ImplicitNode_GetMatrix == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

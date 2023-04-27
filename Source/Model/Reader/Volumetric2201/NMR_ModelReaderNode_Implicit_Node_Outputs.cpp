@@ -30,6 +30,7 @@ Reader for output ports of a node
 --*/
 
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Node_Outputs.h"
+#include "Model/Reader/Volumetric2201/NMR_Implicit_PortType_Convert.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Port.h"
 
 #include "Model/Classes/NMR_Model.h"
@@ -62,10 +63,16 @@ namespace NMR
     }
 
     void CModelReaderNode_Implicit_Node_Outputs::OnNSChildElement(const nfChar * pChildName,
-                                                           const nfChar * pNameSpace,
-                                                           CXmlReader * pXMLReader)
+                                                                  const nfChar * pNameSpace,
+                                                                  CXmlReader * pXMLReader)
     {
-        auto pXMLNode = std::make_shared<CModelReaderNode_Implicit_Port>(m_pImplicitNode, m_pWarnings, ImplicitPortType::Output);
-        pXMLNode->parseXML(pXMLReader);
+
+        Lib3MF::eImplicitPortType portType;
+        if (implicit::portTypeFromName(pChildName, portType))
+        {
+            auto pXMLNode = CModelReaderNode_Implicit_Port(
+              m_pImplicitNode, m_pWarnings, portType, ImplicitPortInOut::Output);
+            pXMLNode.parseXML(pXMLReader);
+        }
     }
 }

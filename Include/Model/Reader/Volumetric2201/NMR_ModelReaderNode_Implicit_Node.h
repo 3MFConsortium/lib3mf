@@ -43,7 +43,7 @@ namespace NMR
         CModel * m_pModel;
 
         double m_value;
-
+        Lib3MF::sVector m_vector;
       public:
         CModelReaderNode_Implicit_Node() = delete;
         CModelReaderNode_Implicit_Node(_In_ CModel * pModel,

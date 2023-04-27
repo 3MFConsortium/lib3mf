@@ -33,8 +33,8 @@ Coverter for PortType
 
 #pragma once
 
-#include "lib3mf_types.hpp"
 #include "Model/Classes/NMR_ModelConstants.h"
+#include "lib3mf_types.hpp"
 
 #include <string>
 
@@ -47,9 +47,9 @@ namespace NMR
 
         const char * portTypeToName(Lib3MF::eImplicitPortType type);
 
-        Lib3MF::eImplicitPortType portTypeFromName(const std::string & name);
+        bool portTypeFromRefName(std::string const & name, Lib3MF::eImplicitPortType & resultType);
 
-        Lib3MF::eImplicitPortType portTypeFromRefName(const std::string & name);
+        bool portTypeFromName(std::string const & name, Lib3MF::eImplicitPortType & resultType);
 
     }
 }

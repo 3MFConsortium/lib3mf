@@ -37,7 +37,7 @@ Reader for a single port of a node of a graph representing a function for implic
 namespace NMR
 {
 
-    enum class ImplicitPortType
+    enum class ImplicitPortInOut
     {
         Input,
         Output
@@ -52,13 +52,15 @@ namespace NMR
         std::string m_identifier;
         std::string m_displayName;
         std::string m_reference;
-        ImplicitPortType m_type;
+        ImplicitPortInOut m_inOut;
+        Lib3MF::eImplicitPortType m_portType;
 
       public:
         CModelReaderNode_Implicit_Port() = delete;
         CModelReaderNode_Implicit_Port(CModelImplicitNode * pParentNode,
                                        PModelWarnings pWarnings,
-                                       ImplicitPortType type);
+                                       Lib3MF::eImplicitPortType portType,
+                                       ImplicitPortInOut inOut);
 
         void parseXML(CXmlReader * pXMLReader) override;
 

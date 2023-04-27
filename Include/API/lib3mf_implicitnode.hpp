@@ -153,6 +153,34 @@ namespace Lib3MF
              * @return the value
              */
             Lib3MF_double GetConstant() override;
+
+            /**
+             * IImplicitNode::SetVector - Sets the vector value of the node. Throws an error, if the
+             * node type is not of type ConstVec
+             * @param[in] Value - the value
+             */
+            void SetVector(const Lib3MF::sVector Value) override;
+
+            /**
+             * IImplicitNode::GetVector - Retrieves the vector value of the node. Throws an error,
+             * if the node type is not of type ConstVec
+             * @return the value
+             */
+            Lib3MF::sVector GetVector() override;
+
+            /**
+             * IImplicitNode::SetMatrix - Sets the matrix value of the node. Throws an error, if the
+             * node type is not of type ConstMat
+             * @param[in] Value - the value
+             */
+            void SetMatrix(const Lib3MF::sMatrix4x4 Value) override;
+
+            /**
+             * IImplicitNode::GetMatrix - Retrieves the matrix value of the node. Throws an error,
+             * if the node type is not of type ConstMat
+             * @return the value
+             */
+            Lib3MF::sMatrix4x4 GetMatrix() override;
         };
 
     } // namespace Impl

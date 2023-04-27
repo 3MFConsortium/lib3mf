@@ -38,17 +38,16 @@ Reader for a single port of a node of a graph representing a function for implic
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 
-#include <iostream>
-
 namespace NMR
 {
     CModelReaderNode_Implicit_Port::CModelReaderNode_Implicit_Port(CModelImplicitNode * pParentNode,
                                                                    PModelWarnings pWarnings,
-                                                                   ImplicitPortType type)
+                                                                   Lib3MF::eImplicitPortType portType,
+                                                                   ImplicitPortInOut inOut)
         : CModelReaderNode(pWarnings)
-        , m_type(type)
+        , m_portType(portType),
+         m_inOut(inOut)
     {
-
         __NMRASSERT(pParentNode);
         m_pParentNode = pParentNode;
     }
@@ -67,12 +66,12 @@ namespace NMR
         parseContent(pXMLReader);
 
         // Create Implicit Port
-        switch (m_type)
+        switch (m_inOut)
         {
-        case ImplicitPortType::Input:
+        case ImplicitPortInOut::Input:
             createInput();
             break;
-        case ImplicitPortType::Output:
+        case ImplicitPortInOut::Output:
             createOutput();
             break;
         }
@@ -102,6 +101,7 @@ namespace NMR
         {
             input = m_pParentNode->addInput(m_identifier, m_displayName);
         }
+        input->setType(m_portType);
         input->setDisplayName(m_displayName);
         input->setReference(m_reference);
     }
@@ -113,6 +113,7 @@ namespace NMR
         {
             output = m_pParentNode->addOutput(m_identifier, m_displayName);
         }
+        output->setType(m_portType);
         output->setDisplayName(m_displayName);
     }
 }

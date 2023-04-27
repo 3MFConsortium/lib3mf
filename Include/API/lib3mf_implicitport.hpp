@@ -100,6 +100,12 @@ namespace Lib3MF
             void SetDisplayName(const std::string & sDisplayName) override;
 
             /**
+             * IImplicitPort::SetType - Sets the type of the port
+             * @param[in] eImplicitPortType - the type
+             */
+            void SetType(const Lib3MF::eImplicitPortType eImplicitPortType) override;
+
+            /**
              * IImplicitPort::GetType - Retrieves the type of the port
              * @return the type
              */

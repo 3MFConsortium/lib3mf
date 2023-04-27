@@ -102,7 +102,8 @@ namespace NMR
         // inputs
         if (strcmp(pChildName, XML_3MF_ELEMENT_IMPLICIT_FUNCTION_INPUT) == 0)
         {
-            auto node = std::make_shared<NMR::CModelReaderNode_Implicit_Function_Inputs>(m_pImplicitFunction.get(), m_pWarnings);
+            auto node = std::make_shared<NMR::CModelReaderNode_Implicit_Function_Inputs>(
+              m_pImplicitFunction.get(), m_pWarnings);
             node->parseXML(pXMLReader);
             return;
         }
@@ -110,11 +111,11 @@ namespace NMR
         // output
         if (strcmp(pChildName, XML_3MF_ELEMENT_IMPLICIT_FUNCTION_OUTPUT) == 0)
         {
-            auto node = std::make_shared<NMR::CModelReaderNode_Implicit_Function_Outputs>(m_pImplicitFunction.get(), m_pWarnings);
+            auto node = std::make_shared<NMR::CModelReaderNode_Implicit_Function_Outputs>(
+              m_pImplicitFunction.get(), m_pWarnings);
             node->parseXML(pXMLReader);
             return;
         }
-
 
         auto const & nodeTypes = m_nodeTypes.getTypes();
 
@@ -124,9 +125,9 @@ namespace NMR
             if (strcmp(pChildName, nodeType.second.getName().c_str()) == 0)
             {
                 auto implicitNode = m_pImplicitFunction->addNode(nodeType.first);
-                auto node = std::make_shared<NMR::CModelReaderNode_Implicit_Node>(
-                  m_pModel, implicitNode.get(), m_pWarnings);
-                node->parseXML(pXMLReader);
+                auto node =
+                  NMR::CModelReaderNode_Implicit_Node(m_pModel, implicitNode.get(), m_pWarnings);
+                node.parseXML(pXMLReader);
 
                 return;
             }

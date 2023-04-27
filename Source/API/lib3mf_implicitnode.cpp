@@ -112,3 +112,23 @@ Lib3MF_double CImplicitNode::GetConstant()
 {
     return m_pImplicitNode->getConstant();
 }
+
+void CImplicitNode::SetVector(const Lib3MF::sVector Value)
+{
+    m_pImplicitNode->setVector(Value);
+}
+
+Lib3MF::sVector CImplicitNode::GetVector()
+{
+    return m_pImplicitNode->getVector();
+}
+
+void CImplicitNode::SetMatrix(const Lib3MF::sMatrix4x4 Value)
+{
+    m_pImplicitNode->setMatrix(Value);
+}
+
+Lib3MF::sMatrix4x4 CImplicitNode::GetMatrix()
+{
+    return m_pImplicitNode->getMatrix();
+}

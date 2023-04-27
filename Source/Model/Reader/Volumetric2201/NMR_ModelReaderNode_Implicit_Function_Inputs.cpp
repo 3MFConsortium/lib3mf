@@ -30,8 +30,8 @@ Reader for ports of a  function for implicit modelling
 --*/
 
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Function_Inputs.h"
-#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Function_Input.h"
 #include "Model/Reader/Volumetric2201/NMR_Implicit_PortType_Convert.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Function_Input.h"
 
 #include "Model/Classes/NMR_Model.h"
 #include "Model/Classes/NMR_ModelConstants.h"
@@ -62,15 +62,16 @@ namespace NMR
         parseContent(pXMLReader);
     }
 
-
-
     void CModelReaderNode_Implicit_Function_Inputs::OnNSChildElement(const nfChar * pChildName,
                                                                      const nfChar * pNameSpace,
                                                                      CXmlReader * pXMLReader)
     {
-        
-        auto pXMLNode = std::make_shared<CModelReaderNode_Implicit_Function_Input>(
-          m_pImplicitFunction, m_pWarnings, implicit::portTypeFromName(pChildName));
-        pXMLNode->parseXML(pXMLReader);
+        Lib3MF::eImplicitPortType portType;
+        if (implicit::portTypeFromName(pChildName, portType))
+        {
+            auto pXMLNode = std::make_shared<CModelReaderNode_Implicit_Function_Input>(
+              m_pImplicitFunction, m_pWarnings, portType);
+            pXMLNode->parseXML(pXMLReader);
+        }
     }
 }

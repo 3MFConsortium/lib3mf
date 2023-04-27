@@ -31,12 +31,13 @@ Helper methods for reading implicit ports
 
 #include "Model/Reader/Volumetric2201/NMR_Implicit_PortType_Convert.h"
 #include "Common/NMR_Exception.h"
+#include <iostream>
 
 namespace NMR
 {
     namespace implicit
     {
- const char * portTypeToRefName(Lib3MF::eImplicitPortType type)
+        const char * portTypeToRefName(Lib3MF::eImplicitPortType type)
         {
             switch (type)
             {
@@ -66,27 +67,46 @@ namespace NMR
             }
         }
 
-        Lib3MF::eImplicitPortType portTypeFromName(const std::string & name)
-        {
-            if (name == XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_SCALAR)
-                return Lib3MF::eImplicitPortType::Scalar;
-            if (name == XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_VECTOR)
-                return Lib3MF::eImplicitPortType::Vector;
-            if (name == XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_MATRIX)
-                return Lib3MF::eImplicitPortType::Matrix;
-            throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_INVALID_PORT_TYPE);
-            
-        }
-
-        Lib3MF::eImplicitPortType portTypeFromRefName(const std::string & name)
+        bool portTypeFromRefName(std::string const & name, Lib3MF::eImplicitPortType & resultType)
         {
             if (name == XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_SCALAR_REF)
-                return Lib3MF::eImplicitPortType::Scalar;
+            {
+                resultType = Lib3MF::eImplicitPortType::Scalar;
+                return true;
+            }
             if (name == XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_VECTOR_REF)
-                return Lib3MF::eImplicitPortType::Vector;
+            {
+                resultType = Lib3MF::eImplicitPortType::Vector;
+                return true;
+            }
             if (name == XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_MATRIX_REF)
-                return Lib3MF::eImplicitPortType::Matrix;
-            throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_INVALID_PORT_TYPE);
+            {
+                resultType = Lib3MF::eImplicitPortType::Matrix;
+                return true;
+            }
+
+            return false;
+        }
+
+        bool portTypeFromName(std::string const & name, Lib3MF::eImplicitPortType & resultType)
+        {
+            if (name == XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_SCALAR)
+            {
+                resultType = Lib3MF::eImplicitPortType::Scalar;
+                return true;
+            }
+            if (name == XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_VECTOR)
+            {
+                resultType = Lib3MF::eImplicitPortType::Vector;
+                return true;
+            }
+            if (name == XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_MATRIX)
+            {
+                resultType = Lib3MF::eImplicitPortType::Matrix;
+                return true;
+            }
+
+            return false;
         }
     }
 }

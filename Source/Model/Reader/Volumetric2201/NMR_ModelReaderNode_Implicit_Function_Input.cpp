@@ -38,8 +38,6 @@ Reader for a single input of a function for implicit modelling
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 
-#include <iostream>
-
 namespace NMR
 {
     CModelReaderNode_Implicit_Function_Input::CModelReaderNode_Implicit_Function_Input(

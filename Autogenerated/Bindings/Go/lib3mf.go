@@ -2943,6 +2943,15 @@ Lib3MFResult CCall_lib3mf_implicitport_gettype(Lib3MFHandle libraryHandle, Lib3M
 }
 
 
+Lib3MFResult CCall_lib3mf_implicitport_settype(Lib3MFHandle libraryHandle, Lib3MF_ImplicitPort pImplicitPort, eLib3MFImplicitPortType eImplicitPortType)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitPort_SetType (pImplicitPort, eImplicitPortType);
+}
+
+
 Lib3MFResult CCall_lib3mf_implicitport_getreference(Lib3MFHandle libraryHandle, Lib3MF_ImplicitPort pImplicitPort, const Lib3MF_uint32 nReferenceBufferSize, Lib3MF_uint32* pReferenceNeededChars, char * pReferenceBuffer)
 {
 	if (libraryHandle == 0) 
@@ -3114,48 +3123,39 @@ Lib3MFResult CCall_lib3mf_implicitnode_getconstant(Lib3MFHandle libraryHandle, L
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitconstant_getvalue(Lib3MFHandle libraryHandle, Lib3MF_ImplicitConstant pImplicitConstant, Lib3MF_single * pValue)
+Lib3MFResult CCall_lib3mf_implicitnode_setvector(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, const sLib3MFVector * pValue)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitConstant_GetValue (pImplicitConstant, pValue);
+	return wrapperTable->m_ImplicitNode_SetVector (pImplicitNode, pValue);
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitconstant_setvalue(Lib3MFHandle libraryHandle, Lib3MF_ImplicitConstant pImplicitConstant, Lib3MF_single fValue)
+Lib3MFResult CCall_lib3mf_implicitnode_getvector(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, sLib3MFVector * pValue)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitConstant_SetValue (pImplicitConstant, fValue);
+	return wrapperTable->m_ImplicitNode_GetVector (pImplicitNode, pValue);
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitvector_get(Lib3MFHandle libraryHandle, Lib3MF_ImplicitVector pImplicitVector, sLib3MFVector * pValue)
+Lib3MFResult CCall_lib3mf_implicitnode_setmatrix(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, const sLib3MFMatrix4x4 * pValue)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitVector_Get (pImplicitVector, pValue);
+	return wrapperTable->m_ImplicitNode_SetMatrix (pImplicitNode, pValue);
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitmatrix_getmatrix(Lib3MFHandle libraryHandle, Lib3MF_ImplicitMatrix pImplicitMatrix, sLib3MFTransform * pMatrix)
+Lib3MFResult CCall_lib3mf_implicitnode_getmatrix(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, sLib3MFMatrix4x4 * pValue)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitMatrix_GetMatrix (pImplicitMatrix, pMatrix);
-}
-
-
-Lib3MFResult CCall_lib3mf_implicitmatrix_setmatrix(Lib3MFHandle libraryHandle, Lib3MF_ImplicitMatrix pImplicitMatrix, const sLib3MFTransform * pMatrix)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitMatrix_SetMatrix (pImplicitMatrix, pMatrix);
+	return wrapperTable->m_ImplicitNode_GetMatrix (pImplicitNode, pValue);
 }
 
 
@@ -5106,6 +5106,7 @@ const (
 	ImplicitNodeType_Dot = 28
 	ImplicitNodeType_Cross = 29
 	ImplicitNodeType_Mesh = 30
+	ImplicitNodeType_Length = 31
 )
 
 // ImplicitPortType represents a Lib3MF enum.
@@ -5231,7 +5232,12 @@ type Ball struct {
 
 // Vector represents a Lib3MF struct.
 type Vector struct {
-	Coordinates[3] float32
+	Coordinates[3] float64
+}
+
+// Matrix4x4 represents a Lib3MF struct.
+type Matrix4x4 struct {
+	Value[4] float64
 }
 
 // Error constants for Lib3MF.
@@ -9444,6 +9450,15 @@ func (inst ImplicitPort) GetType() (ImplicitPortType, error) {
 	return ImplicitPortType(implicitPortType), nil
 }
 
+// SetType sets the type of the port.
+func (inst ImplicitPort) SetType(implicitPortType ImplicitPortType) error {
+	ret := C.CCall_lib3mf_implicitport_settype(inst.wrapperRef.LibraryHandle, inst.Ref, C.eLib3MFImplicitPortType(implicitPortType))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
 // GetReference retrieves the reference of the port, only used for input ports.
 func (inst ImplicitPort) GetReference() (string, error) {
 	var neededforreference C.uint32_t
@@ -9662,7 +9677,7 @@ func (inst ImplicitNode) FindOutput(identifier string) (ImplicitPort, error) {
 	return inst.wrapperRef.NewImplicitPort(output), nil
 }
 
-// SetConstant sets the constant value of the node. Throws an error, if the node type not is Constant.
+// SetConstant sets the constant value of the node. Throws an error, if the node type not is of type Constant.
 func (inst ImplicitNode) SetConstant(value float64) error {
 	ret := C.CCall_lib3mf_implicitnode_setconstant(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(value))
 	if ret != 0 {
@@ -9671,7 +9686,7 @@ func (inst ImplicitNode) SetConstant(value float64) error {
 	return nil
 }
 
-// GetConstant retrieves the constant value of the node. Throws an error, if the node type is not Constant.
+// GetConstant retrieves the constant value of the node. Throws an error, if the node type is not of type Constant.
 func (inst ImplicitNode) GetConstant() (float64, error) {
 	var value C.double
 	ret := C.CCall_lib3mf_implicitnode_getconstant(inst.wrapperRef.LibraryHandle, inst.Ref, &value)
@@ -9681,82 +9696,42 @@ func (inst ImplicitNode) GetConstant() (float64, error) {
 	return float64(value), nil
 }
 
-
-// ImplicitConstant represents a Lib3MF class.
-type ImplicitConstant struct {
-	ImplicitNode
-}
-
-func (wrapper Wrapper) NewImplicitConstant(r ref) ImplicitConstant {
-	return ImplicitConstant{wrapper.NewImplicitNode(r)}
-}
-
-// GetValue retrieves the value of the constant.
-func (inst ImplicitConstant) GetValue() (float32, error) {
-	var value C.float
-	ret := C.CCall_lib3mf_implicitconstant_getvalue(inst.wrapperRef.LibraryHandle, inst.Ref, &value)
-	if ret != 0 {
-		return 0, makeError(uint32(ret))
-	}
-	return float32(value), nil
-}
-
-// SetValue sets the value of the constant.
-func (inst ImplicitConstant) SetValue(value float32) error {
-	ret := C.CCall_lib3mf_implicitconstant_setvalue(inst.wrapperRef.LibraryHandle, inst.Ref, C.float(value))
+// SetVector sets the vector value of the node. Throws an error, if the node type is not of type ConstVec.
+func (inst ImplicitNode) SetVector(value Vector) error {
+	ret := C.CCall_lib3mf_implicitnode_setvector(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.sLib3MFVector)(unsafe.Pointer(&value)))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
 	return nil
 }
 
-
-// ImplicitVector represents a Lib3MF class.
-type ImplicitVector struct {
-	ImplicitNode
-}
-
-func (wrapper Wrapper) NewImplicitVector(r ref) ImplicitVector {
-	return ImplicitVector{wrapper.NewImplicitNode(r)}
-}
-
-// Get retrieves the x value of the vector.
-func (inst ImplicitVector) Get() (Vector, error) {
+// GetVector retrieves the vector value of the node. Throws an error, if the node type is not of type ConstVec.
+func (inst ImplicitNode) GetVector() (Vector, error) {
 	var value C.sLib3MFVector
-	ret := C.CCall_lib3mf_implicitvector_get(inst.wrapperRef.LibraryHandle, inst.Ref, &value)
+	ret := C.CCall_lib3mf_implicitnode_getvector(inst.wrapperRef.LibraryHandle, inst.Ref, &value)
 	if ret != 0 {
 		return Vector{}, makeError(uint32(ret))
 	}
 	return *(*Vector)(unsafe.Pointer(&value)), nil
 }
 
-
-// ImplicitMatrix represents a Lib3MF class.
-type ImplicitMatrix struct {
-	ImplicitNode
-}
-
-func (wrapper Wrapper) NewImplicitMatrix(r ref) ImplicitMatrix {
-	return ImplicitMatrix{wrapper.NewImplicitNode(r)}
-}
-
-// GetMatrix retrieves the matrix.
-func (inst ImplicitMatrix) GetMatrix() (Transform, error) {
-	var matrix C.sLib3MFTransform
-	ret := C.CCall_lib3mf_implicitmatrix_getmatrix(inst.wrapperRef.LibraryHandle, inst.Ref, &matrix)
-	if ret != 0 {
-		return Transform{}, makeError(uint32(ret))
-	}
-	return *(*Transform)(unsafe.Pointer(&matrix)), nil
-}
-
-// SetMatrix sets the matrix.
-func (inst ImplicitMatrix) SetMatrix(matrix Transform) error {
-	ret := C.CCall_lib3mf_implicitmatrix_setmatrix(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.sLib3MFTransform)(unsafe.Pointer(&matrix)))
+// SetMatrix sets the matrix value of the node. Throws an error, if the node type is not of type ConstMat.
+func (inst ImplicitNode) SetMatrix(value Matrix4x4) error {
+	ret := C.CCall_lib3mf_implicitnode_setmatrix(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.sLib3MFMatrix4x4)(unsafe.Pointer(&value)))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
 	return nil
+}
+
+// GetMatrix retrieves the matrix value of the node. Throws an error, if the node type is not of type ConstMat.
+func (inst ImplicitNode) GetMatrix() (Matrix4x4, error) {
+	var value C.sLib3MFMatrix4x4
+	ret := C.CCall_lib3mf_implicitnode_getmatrix(inst.wrapperRef.LibraryHandle, inst.Ref, &value)
+	if ret != 0 {
+		return Matrix4x4{}, makeError(uint32(ret))
+	}
+	return *(*Matrix4x4)(unsafe.Pointer(&value)), nil
 }
 
 

@@ -253,9 +253,6 @@ typedef Lib3MFHandle Lib3MF_ImplicitPort;
 typedef Lib3MFHandle Lib3MF_Iterator;
 typedef Lib3MFHandle Lib3MF_ImplicitPortIterator;
 typedef Lib3MFHandle Lib3MF_ImplicitNode;
-typedef Lib3MFHandle Lib3MF_ImplicitConstant;
-typedef Lib3MFHandle Lib3MF_ImplicitVector;
-typedef Lib3MFHandle Lib3MF_ImplicitMatrix;
 typedef Lib3MFHandle Lib3MF_NodeIterator;
 typedef Lib3MFHandle Lib3MF_ImplicitFunction;
 typedef Lib3MFHandle Lib3MF_BuildItem;
@@ -429,7 +426,8 @@ namespace Lib3MF {
     FunctionCall = 27, /** Calls a function */
     Dot = 28, /** Calculates the dot product of two vector values */
     Cross = 29, /** Calculates the cross product of two vector values */
-    Mesh = 30 /** Calculates the signed distance to a mesh */
+    Mesh = 30, /** Calculates the signed distance to a mesh */
+    Length = 31 /** Calculates the length of a vector */
   };
   
   /**
@@ -533,8 +531,12 @@ namespace Lib3MF {
   } sBall;
   
   typedef struct sVector {
-      Lib3MF_single m_Coordinates[3];
+      Lib3MF_double m_Coordinates[3];
   } sVector;
+  
+  typedef struct sMatrix4x4 {
+      Lib3MF_double m_Value[4];
+  } sMatrix4x4;
   
   #pragma pack ()
   
@@ -654,6 +656,7 @@ typedef Lib3MF::sColor sLib3MFColor;
 typedef Lib3MF::sBeam sLib3MFBeam;
 typedef Lib3MF::sBall sLib3MFBall;
 typedef Lib3MF::sVector sLib3MFVector;
+typedef Lib3MF::sMatrix4x4 sLib3MFMatrix4x4;
 typedef Lib3MF::ProgressCallback Lib3MFProgressCallback;
 typedef Lib3MF::WriteCallback Lib3MFWriteCallback;
 typedef Lib3MF::ReadCallback Lib3MFReadCallback;

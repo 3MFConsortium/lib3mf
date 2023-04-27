@@ -551,7 +551,7 @@ namespace Lib3MF
             {
                 EXPECT_EQ(node1->GetConstant(), node2->GetConstant());
             }
-           
+
             comparePorts(node1->GetInputs(), node2->GetInputs(), false);
             comparePorts(node1->GetOutputs(), node2->GetOutputs(), true); // ignore reference
         }
@@ -650,6 +650,32 @@ namespace Lib3MF
           newFunction->AddNode(Lib3MF::eImplicitNodeType::Constant, "constant_1", "constant 1");
         constNode->SetConstant(1.23456);
 
+        auto constVecNode = newFunction->AddNode(
+          Lib3MF::eImplicitNodeType::ConstVec, "vector_1", "translation vector");
+        constVecNode->SetVector({1.23456, 2.34567, 3.45678});
+        constVecNode->FindOutput("value")->SetType(Lib3MF::eImplicitPortType::Vector);
+
+        auto subNode =
+          newFunction->AddNode(Lib3MF::eImplicitNodeType::Subtraction, "translate_1", "Translation");
+        
+        auto subInputA = subNode->FindInput("A");
+        auto subInputB = subNode->FindInput("B");
+        subInputA->SetType(Lib3MF::eImplicitPortType::Vector);
+        subInputB->SetType(Lib3MF::eImplicitPortType::Vector);
+        subInputA->SetReference("pos");
+        subInputB->SetReference("vector_1.value");
+        subNode->FindOutput("difference")->SetType(Lib3MF::eImplicitPortType::Vector);
+
+        auto distanceToSpehereNode = newFunction->AddNode(
+          Lib3MF::eImplicitNodeType::Length, "distance_1", "distance to sphere");
+       
+        distanceToSpehereNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
+        distanceToSpehereNode->FindInput("A")->SetReference("translate_1.difference");
+ 
+        auto output = newFunction->AddOutput(
+          "shape", "signed distance to the surface", Lib3MF::eImplicitPortType::Scalar);
+        output->SetReference("distance_1.length");
+
         // Write to file
         writer3MF->WriteToFile(Volumetric::OutFolder + "AddFunctionWithConstantNode.3mf");
 
@@ -657,6 +683,11 @@ namespace Lib3MF
         PModel ioModel = wrapper->CreateModel();
         PReader ioReader = ioModel->QueryReader("3mf");
         ioReader->ReadFromFile(Volumetric::OutFolder + "AddFunctionWithConstantNode.3mf");
+
+
+        // write ioModel to file
+        PWriter ioWriter = ioModel->QueryWriter("3mf");
+        ioWriter->WriteToFile(Volumetric::OutFolder + "AddFunctionWithConstantNodeAsRead.3mf");
 
         // Check the function
         auto functionIterator = ioModel->GetFunctions();

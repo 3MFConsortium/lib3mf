@@ -2142,6 +2142,7 @@
 		<option name="Cross" description="Calculates the cross product of two vector values"
 			value="29" />
 		<option name="Mesh" description="Calculates the signed distance to a mesh" value="30" />
+		<option name="Length" description="Calculates the length of a vector" value="31" />
 	</enum>
 
 	<enum name="ImplicitPortType" description="The type of the port">
@@ -2163,6 +2164,10 @@
 		</method>
 		<method name="SetDisplayName" description="Sets the display name of the port">
 			<param name="DisplayName" type="string" pass="in" description="the display name" />
+		</method>
+		<method name="SetType" description="Sets the type of the port">
+			<param name="ImplicitPortType" type="enum" class="ImplicitPortType" pass="in"
+				description="the type" />
 		</method>
 		<method name="GetType" description="Retrieves the type of the port">
 			<param name="ImplicitPortType" type="enum" class="ImplicitPortType" pass="return"
@@ -2199,6 +2204,14 @@
 				description="The current element" />
 		</method>
 	</class>
+
+	<struct name="Vector">
+		<member name="Coordinates" type="double" rows="3" />
+	</struct>
+
+	<struct name="Matrix4x4">
+		<member name="Value" type="double" rows="4" cols="4" />
+	</struct>
 
 	<class name="ImplicitNode">
 		<method name="GetIdentifier" description="Retrieves the identifier of the node">
@@ -2259,43 +2272,38 @@
 				description="the output port" />
 		</method>
 
-		<method name="SetConstant" description="Sets the constant value of the node. Throws an error, if the node type not is Constant">
+		<method name="SetConstant"
+			description="Sets the constant value of the node. Throws an error, if the node type not is of type Constant">
 			<param name="Value" type="double" pass="in" description="the value" />
 		</method>
 
-		<method name="GetConstant" description="Retrieves the constant value of the node. Throws an error, if the node type is not Constant">
+		<method name="GetConstant"
+			description="Retrieves the constant value of the node. Throws an error, if the node type is not of type Constant">
 			<param name="Value" type="double" pass="return" description="the value" />
 		</method>
-	</class>
 
-	<class name="ImplicitConstant" parent="ImplicitNode">
-		<method name="GetValue" description="Retrieves the value of the constant">
-			<param name="Value" type="single" pass="return" description="the value" />
+		<method name="SetVector"
+			description="Sets the vector value of the node. Throws an error, if the node type is not of type ConstVec">
+			<param name="Value" type="struct" class="Vector" pass="in"
+				description="the value" />
 		</method>
-		<method name="SetValue" description="Sets the value of the constant">
-			<param name="Value" type="single" pass="in" description="the value" />
-		</method>
-	</class>
 
-	<struct name="Vector">
-		<member name="Coordinates" type="single" rows="3" />
-	</struct>
-
-	<class name="ImplicitVector" parent="ImplicitNode">
-		<method name="Get" description="Retrieves the x value of the vector">
+		<method name="GetVector"
+			description="Retrieves the vector value of the node. Throws an error, if the node type is not of type ConstVec">
 			<param name="Value" type="struct" class="Vector" pass="return"
 				description="the value" />
 		</method>
 
-	</class>
-
-	<class name="ImplicitMatrix" parent="ImplicitNode">
-		<method name="GetMatrix" description="Retrieves the matrix">
-			<param name="Matrix" type="struct" class="Transform" pass="return"
-				description="the matrix" />
+		<method name="SetMatrix"
+			description="Sets the matrix value of the node. Throws an error, if the node type is not of type ConstMat">
+			<param name="Value" type="struct" class="Matrix4x4" pass="in"
+				description="the value" />
 		</method>
-		<method name="SetMatrix" description="Sets the matrix">
-			<param name="Matrix" type="struct" class="Transform" pass="in" description="the matrix" />
+
+		<method name="GetMatrix"
+			description="Retrieves the matrix value of the node. Throws an error, if the node type is not of type ConstMat">
+			<param name="Value" type="struct" class="Matrix4x4" pass="return"
+				description="the matrix" />
 		</method>
 	</class>
 

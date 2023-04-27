@@ -29,11 +29,14 @@ Writer node for implicit functions
 
 --*/
 #include "Model/Writer/NMR_ModelWriterNode_Implicit.h"
+#include "Model/Classes/NMR_ImplicitNodeTypes.h"
 #include "Common/NMR_Exception.h"
 #include "lib3mf_types.hpp"
 
 namespace NMR
 {
+    const implicit::NodeTypes CModelWriterNode_Implicit::m_nodeTypes;
+
     CModelWriterNode_Implicit::CModelWriterNode_Implicit(CModel * pModel,
                                                          CXmlWriter * pXMLWriter,
                                                          PProgressMonitor pProgressMonitor)
@@ -82,7 +85,8 @@ namespace NMR
 
     void CModelWriterNode_Implicit::writeImplicitNode(CModelImplicitNode & node)
     {
-        auto name = elementNameFromNodeType(node.getNodeType());
+        
+        auto name = m_nodeTypes.getNodeType(node.getNodeType()).getName();
         writeStartElement(name.c_str());
         {
             writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_ID, node.getIdentifier());
@@ -93,6 +97,13 @@ namespace NMR
             {
 
                 writeDoubleAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_VALUE, node.getConstant());
+            }
+            else if (node.getNodeType() == Lib3MF::eImplicitNodeType::ConstVec)
+            {
+                auto vec = node.getVector();
+                writeDoubleAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_X, vec.m_Coordinates[0]);
+                writeDoubleAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_Y, vec.m_Coordinates[1]);
+                writeDoubleAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_Z, vec.m_Coordinates[2]);
             }
 
             auto inputs = node.getInputs();
