@@ -152,7 +152,7 @@ namespace NMR
     {
         if (m_type != Lib3MF::eImplicitNodeType::ConstVec)
             throw CNMRException(NMR_ERROR_INVALIDPARAM);
-        m_vector = std::make_unique<Lib3MF::sVector>(value);
+        m_vector = std::unique_ptr<Lib3MF::sVector>(new Lib3MF::sVector(value));
     }
 
     Lib3MF::sVector CModelImplicitNode::getVector() const
@@ -169,7 +169,7 @@ namespace NMR
     {
         if (m_type != Lib3MF::eImplicitNodeType::ConstMat)
             throw CNMRException(NMR_ERROR_INVALIDPARAM);
-        m_matrix = std::make_unique<Lib3MF::sMatrix4x4>(value);
+        m_matrix = std::unique_ptr<Lib3MF::sMatrix4x4>(new Lib3MF::sMatrix4x4(value));
     }
 
     Lib3MF::sMatrix4x4 CModelImplicitNode::getMatrix() const
