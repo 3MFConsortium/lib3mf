@@ -42,7 +42,7 @@ using namespace Lib3MF::Impl;
 IImplicitNode * CNodeIterator::GetCurrent()
 {
 	throwIfInvalidIndex();
-	return new CImplicitNode(m_pNodes->at(static_cast<Lib3MF_uint64>(getCurrentIndex())));
+	return new CImplicitNode(m_pNodes->at(static_cast<size_t>(getCurrentIndex())));
 }
 
 Lib3MF::Impl::CNodeIterator::CNodeIterator(NMR::PImplicitNodes pNodes)
