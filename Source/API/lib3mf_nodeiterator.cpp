@@ -52,5 +52,5 @@ Lib3MF::Impl::CNodeIterator::CNodeIterator(NMR::PImplicitNodes pNodes)
 
 Lib3MF_uint64 Lib3MF::Impl::CNodeIterator::Count()
 {
-    return m_pNodes->size();
+    return static_cast<Lib3MF_uint64>(m_pNodes->size());
 }
