@@ -46,12 +46,12 @@ Lib3MF::Impl::CImplicitPortIterator::CImplicitPortIterator(NMR::PPorts pPorts) :
 
 Lib3MF_uint64 Lib3MF::Impl::CImplicitPortIterator::Count()
 {
-    return m_pPorts->size();
+    return static_cast<Lib3MF_uint64>(m_pPorts->size());
 }
 
 IImplicitPort * CImplicitPortIterator::GetCurrent()
 {
 	throwIfInvalidIndex();
-	return new CImplicitPort(m_pPorts->at(getCurrentIndex()));
+	return new CImplicitPort(m_pPorts->at(static_cast<size_t>(getCurrentIndex())));
 }
 
