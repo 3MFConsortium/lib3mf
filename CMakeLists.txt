@@ -18,6 +18,11 @@ project(lib3mf
   DESCRIPTION "An implementation of the 3D Manufacturing Format file standard"
 )
 
+find_program(buildcache_program buildcache)
+if(buildcache_program)
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${buildcache_program}")
+endif()
+
 set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
 set(CMAKE_INSTALL_INCLUDEDIR include/lib3mf CACHE PATH "directory for installing header files")
