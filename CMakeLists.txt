@@ -113,9 +113,9 @@ if (${MSVC})
   # Note the generator expression to limit the scope to c++ compiler, otherwise the RC compiler would get the arguments as well.
   # Works with ninja, but not with the VS build generators
   if (CMAKE_GENERATOR MATCHES "Ninja")
-    target_compile_definitions(${PROJECT_NAME} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-DNOMINMAX /Wv:18>)
+    target_compile_options(${PROJECT_NAME} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-DNOMINMAX /Wv:18>)
   else()
-    target_compile_definitions(${PROJECT_NAME} PUBLIC -DNOMINMAX /Wv:18>)
+    target_compile_options(${PROJECT_NAME} PUBLIC -DNOMINMAX /Wv:18>)
   endif()
 endif()
 
