@@ -78,6 +78,10 @@
 		<error name="UNKOWNPROGRESSIDENTIFIER" code="140" description="A progress identifier is unknown"/>
 		<error name="ELEMENTCOUNTEXCEEDSLIMIT" code="141" description="An element buffer exceeds its spec limit"/>
 		<error name="INVALIDRESOURCE" code="142" description="A resource is invalid"/>
+		<error name="INVALIDNODEINDEX" code="143" description="Invalid node index"/>
+		<error name="INVALIDATTRIBUTEINDEX" code="144" description="Invalid attribute index"/>
+		
+		
 
 		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices"/>		
 		<error name="INVALIDKEYSTORE" code="3000" description="The keystore object is invalid"/>
@@ -469,6 +473,243 @@
 			<param name="Count" type="uint64" pass="return" description="returns the number of resoucres the iterator captures."/>
 		</method>
 	</class>
+
+
+	<class name="CustomXMLAttribute" parent="Base" description="An custom XML attribute of a DOM Tree.">
+		
+		<method name="GetName" description="Retrieves name of the attribute.">
+			<param name="Name" type="string" pass="return" description="returns the name of the attribute." />
+		</method>
+				
+		<method name="GetValue" description="Retrieves value of the attribute as string.">
+			<param name="Value" type="string" pass="return" description="returns the value of the attribute." />
+		</method>
+
+		<method name="IsValidInteger" description="Checks if the value is a valid integer in the given range.">
+			<param name="MinValue" type="int64" pass="in" description="Minimum allowed value" />
+			<param name="MaxValue" type="int64" pass="in" description="Maximum allowed value" />
+			<param name="IsValid" type="bool" pass="return" description="returns if the value is a valid integer." />
+		</method>
+
+		<method name="GetIntegerValue" description="Returns the value as integer. Fails if the value is not a valid integer in the given range.">
+			<param name="MinValue" type="int64" pass="in" description="Minimum allowed value" />
+			<param name="MaxValue" type="int64" pass="in" description="Maximum allowed value" />
+			<param name="Value" type="int64" pass="return" description="returns the value." />
+		</method>
+
+		<method name="IsValidDouble" description="Checks if the value is a valid double in the given range.">
+			<param name="MinValue" type="double" pass="in" description="Minimum allowed value" />
+			<param name="MaxValue" type="double" pass="in" description="Maximum allowed value" />
+			<param name="IsValid" type="bool" pass="return" description="returns if the value is a valid double." />
+		</method>
+
+		<method name="GetDoubleValue" description="Returns the value as double. Fails if the value is not a valid double in the given range.">
+			<param name="MinValue" type="double" pass="in" description="Minimum allowed value" />
+			<param name="MaxValue" type="double" pass="in" description="Maximum allowed value" />
+			<param name="Value" type="double" pass="return" description="returns the value ." />
+		</method>
+		
+		<method name="IsValidBool" description="Checks if the value is a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.">
+			<param name="IsValid" type="bool" pass="return" description="returns if the value is a valid bool." />
+		</method>
+
+		<method name="GetBoolValue" description="Returns the value as bool. Fails if the value is not a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.">
+			<param name="MinValue" type="double" pass="in" description="Minimum allowed value" />
+			<param name="MaxValue" type="double" pass="in" description="Maximum allowed value" />
+			<param name="Value" type="bool" pass="return" description="returns the value ." />
+		</method>
+
+		<method name="SetValue" description="Sets the value of the attribute as string.">
+			<param name="Value" type="string" pass="in" description="new value of the attribute." />
+		</method>
+		
+		<method name="SetIntegerValue" description="Sets the value of the attribute as integer.">
+			<param name="Value" type="int64" pass="in" description="new value of the attribute." />
+		</method>
+
+		<method name="SetDoubleValue" description="Sets the value of the attribute as double.">
+			<param name="Value" type="double" pass="in" description="new value of the attribute." />
+		</method>
+
+		<method name="SetBoolValue" description="Sets the value of the attribute as bool.">
+			<param name="Value" type="bool" pass="in" description="new value of the attribute." />
+		</method>
+
+		<method name="Remove" description="Removes the attribute from its parent node. All subsequent calls to the class will fail.">
+		</method>
+		
+	</class>
+
+
+	<class name="CustomXMLNode" parent="Base" description="A custom XML attribute of a DOM tree.">
+
+		<method name="GetName" description="Retrieves name of the node.">
+			<param name="Name" type="string" pass="return" description="returns the name of the node." />
+		</method>
+				
+		<method name="GetNameSpace" description="Retrieves namespace of the node.">
+			<param name="NameSpace" type="string" pass="return" description="returns the namespace of the node." />
+		</method>
+
+		<method name="GetAttributeCount" description="Returns number of attributes.">
+			<param name="Count" type="uint64" pass="return" description="returns the number of attributes." />
+		</method>
+				
+		<method name="GetAttribute" description="Returns attribute instance. Fails if Index is out of range.">
+			<param name="Index" type="uint64" pass="in" description="Index of the attribute to return (0-based)." />
+			<param name="AttributeInstance" type="class" class="CustomXMLAttribute" pass="return" description="XML Document attribute." />
+		</method>
+
+		<method name="HasAttribute" description="Returns if attribute of a specific name exists.">
+			<param name="Name" type="string" pass="in" description="Name of the attribute." />
+			<param name="AttributeExists" type="bool" pass="return" description="Returns if the attribute exists." />
+		</method>
+
+		<method name="FindAttribute" description="Returns attribute instance of a specific name. ">
+			<param name="Name" type="string" pass="in" description="Name of the attribute." />
+			<param name="MustExist" type="bool" pass="in" description="If true, the call fails if attribute does not exist. If falls, the call will return null if the attribute does not exist." />			
+			<param name="AttributeInstance" type="optionalclass" class="CustomXMLAttribute" pass="return" description="XML Document attribute." />
+		</method>
+
+		<method name="RemoveAttribute" description="Removes the attribute with a specific name. Does nothing if attribute does not exist.">
+			<param name="Name" type="string" pass="in" description="Name of the attribute." />
+			<param name="AttributeRemoved" type="bool" pass="return" description="Returns true if an attribute was removed." />			
+		</method>
+
+		<method name="RemoveAttributeByIndex" description="Removes the attribute with a specific index. Fails if index is invalid">
+			<param name="Index" type="uint64" pass="in" description="Index of the attribute to remove (0-based)." />
+			<param name="AttributeRemoved" type="bool" pass="return" description="Returns true if an attribute was removed." />			
+		</method>
+
+		<method name="AddAttribute" description="Adds an attribute with a specific name and string value. Fails if attribute already exists.">
+			<param name="Name" type="string" pass="in" description="Name of the attribute." />
+			<param name="Value" type="string" pass="in" description="Value of the attribute." />
+		</method>
+
+		<method name="AddIntegerAttribute" description="Adds an attribute with a specific name and integer value. Fails if attribute already exists.">
+			<param name="Name" type="string" pass="in" description="Name of the attribute." />
+			<param name="Value" type="int64" pass="in" description="Value of the attribute." />
+		</method>
+
+		<method name="AddDoubleAttribute" description="Adds an attribute with a specific name and double value. Fails if attribute already exists.">
+			<param name="Name" type="string" pass="in" description="Name of the attribute." />
+			<param name="Value" type="double" pass="in" description="Value of the attribute." />
+		</method>
+
+		<method name="AddBoolAttribute" description="Adds an attribute with a specific name and bool value. Fails if attribute already exists.">
+			<param name="Name" type="string" pass="in" description="Name of the attribute." />
+			<param name="Value" type="bool" pass="in" description="Value of the attribute." />
+		</method>
+
+		<method name="GetChildren" description="Returns all the child nodes of the XML Node.">
+			<param name="ChildNodes" type="class" class="CustomXMLNodes" pass="return" description="returns the list of child nodes." />
+		</method>
+
+		<method name="CountChildrenByName" description="Returns how many children of the XML Node have a specific name.">
+			<param name="Name" type="string" pass="in" description="Name of the node." />
+			<param name="Count" type="uint64" pass="return" description="returns the number children with the specified name." />
+		</method>
+				
+		<method name="GetChildrenByName" description="Returns all the child nodes of the XML Node with a specific name.">
+			<param name="Name" type="string" pass="in" description="Name of the child." />
+			<param name="ChildNodes" type="class" class="CustomXMLNodes" pass="return" description="returns the list of child nodes." />
+		</method>
+
+		<method name="HasChild" description="Returns if a child with a specific name exist.">
+			<param name="Name" type="string" pass="in" description="Name of the child." />
+			<param name="ChildExists" type="bool" pass="return" description="returns if a child with a specific name exists." />
+		</method>
+
+		<method name="HasUniqueChild" description="Returns if a child with a specific name exist once and only once.">
+			<param name="Name" type="string" pass="in" description="Name of the child." />
+			<param name="ChildExists" type="bool" pass="return" description="returns if a child with a specific name exists once and only once." />
+		</method>
+
+		<method name="FindChild" description="Returns child with a specific name. Throws an error if name does not exist once and only once.">
+			<param name="Name" type="string" pass="in" description="Name of the child." />
+			<param name="MustExist" type="bool" pass="in" description="If true, the call fails if child does not exist. If falls, the call will return null if the child does not exist." />			
+			<param name="ChildInstance" type="optionalclass" class="CustomXMLNode" pass="return" description="returns child instance or null." />
+		</method>
+		
+		<method name="AddChild" description="Adds a new child with a specific name.">
+			<param name="Name" type="string" pass="in" description="Name of the child." />
+			<param name="ChildInstance" type="class" class="CustomXMLNode" pass="return" description="returns child instance." />
+		</method>
+
+		<method name="RemoveChild" description="Removes a specific child. All subsequent calls to the child will fail after the call.">
+			<param name="ChildInstance" type="class" class="CustomXMLNode" pass="in" description="child instance to remove. Fails if given instance is not a child of the node." />
+		</method>
+
+		<method name="RemoveChildrenWithName" description="Removes all children with a specific name. Does nothing if no child with the name exists. All subsequent calls to the deleted children will fail after the call.">
+			<param name="Name" type="string" pass="in" description="Name of the children." />
+			<param name="NumberOfDeletedChildren" type="uint64" pass="return" description="Returns how many children have been deleted." />
+		</method>
+
+		<method name="Remove" description="Removes the node from its parent. The root node of the document can not be removed. Any subsequent call to the node fails after this.">
+		</method>
+
+		
+		
+	</class>
+
+	<class name="CustomXMLNodes" parent="Base" description="An list of XML document nodes.">
+
+		<method name="GetNodeCount" description="Returns number of nodes.">
+			<param name="Count" type="uint64" pass="return" description="returns the number of nodes in the list." />
+		</method>
+				
+		<method name="GetNode" description="Returns node instance. Fails if Index is out of range.">
+			<param name="Index" type="uint64" pass="in" description="Index of the node to return (0-based)." />
+			<param name="NodeInstance" type="class" class="CustomXMLNode" pass="return" description="XML Node node." />
+		</method>
+
+		<method name="CountNodesByName" description="Returns how many nodes of the XML Node have a specific name.">
+			<param name="Name" type="string" pass="in" description="Name of the node." />
+			<param name="Count" type="uint64" pass="return" description="returns the number of nodes with the specified name." />
+		</method>
+
+		<method name="GetNodesByName" description="Returns all the nodes nodes of the XML Node with a specific name.">
+			<param name="Name" type="string" pass="in" description="Name of the node." />
+			<param name="Nodes" type="class" class="CustomXMLNodes" pass="return" description="returns the list of node nodes." />
+		</method>
+				
+		<method name="HasNode" description="Returns if a node with a specific name exist.">
+			<param name="Name" type="string" pass="in" description="Name of the node." />
+			<param name="NodeExists" type="bool" pass="return" description="returns if a node with a specific name exists." />
+		</method>
+
+		<method name="HasUniqueNode" description="Returns if a node with a specific name exist once and only once.">
+			<param name="Name" type="string" pass="in" description="Name of the node." />
+			<param name="NodeExists" type="bool" pass="return" description="returns if a node with a specific name exists once and only once." />
+		</method>
+
+		<method name="FindNode" description="Returns node with a specific name. Throws an error if name does not exist once and only once.">
+			<param name="Name" type="string" pass="in" description="Name of the node." />
+			<param name="MustExist" type="bool" pass="in" description="If true, the call fails if node does not exist. If falls, the call will return null if the node does not exist." />			
+			<param name="NodeInstance" type="optionalclass" class="CustomXMLNode" pass="return" description="returns node instance." />
+		</method>
+
+
+				
+	</class>
+
+	<class name="CustomDOMTree" parent="Base" description="encapsulates a custom DOM tree in the XML File">
+	
+		<method name="GetNameSpace" description="Returns the namespace identifier for the DOM Tree.">
+			<param name="NameSpace" type="string" pass="return" description="returns the namespace of the DOM Tree."/>
+		</method>
+		
+		<method name="GetRootNode" description="Returns root node of the tree.">
+			<param name="RootNode" type="class" class="CustomXMLNode" pass="return" description="Root node of the document." />
+		</method>	
+
+		<method name="SaveToString" description="Saves the XML tree into a string.">
+			<param name="AddLineBreaks" type="bool" pass="in" description="If true, line breaks and indentation will be added to the output string." />
+			<param name="XMLString" type="string" pass="return" description="String with the XML Content." />
+		</method>	
+		
+	</class>
+
 
 	<class name="SliceStackIterator" parent="ResourceIterator">
 		<method name="GetCurrentSliceStack" description="Returns the SliceStack the iterator points at.">
@@ -1360,7 +1601,6 @@
 		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
 	    <param name="PointData" type="structarray" class="Position2D" pass="out" description="The point data array" />
 	</method>
-	
   </class>
   
 	

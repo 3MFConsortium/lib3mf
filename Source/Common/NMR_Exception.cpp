@@ -133,6 +133,13 @@ namespace NMR {
 		case NMR_ERROR_COULDNOTINITDEFLATE: return "Failed to initialize a zlib buffer";
 		case NMR_ERROR_TOOMANYSLICES: return "Too many slices";
 		case NMR_ERROR_DUPLICATEVALUE: return "Duplicate value";
+		case NMR_ERROR_ROOTNODECANNOTBEDELETED: return "Root node can not be deleted";
+		case NMR_ERROR_TRIEDTOACCESSINVALIDATEDNODE: return "Tried to access invalidated node";
+		case NMR_ERROR_XMLCHILDNODEISNOTUNIQUE: return "XML child node is not unique";
+		case NMR_ERROR_XMLCHILDNODENOTFOUND: return "XML child node not found";
+		case NMR_ERROR_XMLATTRIBUTENOTFOUND: return "XML attribute not found";
+		case NMR_ERROR_DUPLICATEXMLATTRIBUTE: return "Duplicate XML attribute";
+
 
 		// Unhandled exception
 		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;

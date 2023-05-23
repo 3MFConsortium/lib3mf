@@ -305,6 +305,24 @@ NMR_ErrorConst.h defines all error code constants.
 // Duplicate value
 #define NMR_ERROR_DUPLICATEVALUE 0x1054
 
+// Root node can not be deleted
+#define NMR_ERROR_ROOTNODECANNOTBEDELETED 0x1055
+
+// Tried to access invalidated node
+#define NMR_ERROR_TRIEDTOACCESSINVALIDATEDNODE 0x1056
+
+// XML child node is not unique
+#define NMR_ERROR_XMLCHILDNODEISNOTUNIQUE 0x1057
+
+// XML child node not found
+#define NMR_ERROR_XMLCHILDNODENOTFOUND 0x1058
+
+// XML attribute not found
+#define NMR_ERROR_XMLATTRIBUTENOTFOUND 0x1059
+
+// Duplicate XML attribute
+#define NMR_ERROR_DUPLICATEXMLATTRIBUTE 0x105A
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/

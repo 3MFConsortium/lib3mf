@@ -53,6 +53,10 @@ Source/API/lib3mf_multipropertygroupiterator.cpp
 Source/API/lib3mf_contentencryptionparams.cpp
 Source/API/lib3mf_accessright.cpp
 Source/API/lib3mf_consumer.cpp
+Source/API/lib3mf_customdomtree.cpp
+Source/API/lib3mf_customxmlattribute.cpp
+Source/API/lib3mf_customxmlnode.cpp
+Source/API/lib3mf_customxmlnodes.cpp
 Source/API/lib3mf_resourcedata.cpp
 Source/API/lib3mf_resourcedatagroup.cpp
 Source/API/lib3mf_keystore.cpp
@@ -130,6 +134,9 @@ Source/Common/Platform/NMR_XmlReader.cpp
 Source/Common/Platform/NMR_XmlWriter.cpp
 Source/Common/Platform/NMR_XmlWriter_Native.cpp
 Source/Model/Classes/NMR_PackageResourceID.cpp
+Source/Model/Classes/NMR_CustomXMLAttribute.cpp
+Source/Model/Classes/NMR_CustomXMLNode.cpp
+Source/Model/Classes/NMR_CustomXMLTree.cpp
 Source/Model/Classes/NMR_Model.cpp
 Source/Model/Classes/NMR_ModelAttachment.cpp
 Source/Model/Classes/NMR_ModelBaseMaterial.cpp
