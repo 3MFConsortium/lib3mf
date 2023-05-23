@@ -30,6 +30,7 @@ Abstract: This is a stub class definition of CToolpathLayerReader
 
 #include "lib3mf_toolpathlayerreader.hpp"
 #include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_customdomtree.hpp"
 
 using namespace Lib3MF::Impl;
 
@@ -137,4 +138,22 @@ void CToolpathLayerReader::GetSegmentPointData(const Lib3MF_uint32 nIndex, Lib3M
 		}
 	}
 }
+
+Lib3MF_uint32 CToolpathLayerReader::GetCustomDataCount()
+{
+	return m_pReadData->getCustomXMLDataCount();
+}
+
+ICustomDOMTree* CToolpathLayerReader::GetCustomData(const Lib3MF_uint32 nIndex)
+{
+	return new CCustomDOMTree(m_pReadData->getCustomXMLData (nIndex));
+}
+
+void CToolpathLayerReader::GetCustomDataName(const Lib3MF_uint32 nIndex, std::string& sNameSpace, std::string& sDataName)
+{
+	auto pCustomData = m_pReadData->getCustomXMLData(nIndex);
+	sNameSpace = pCustomData->getNameSpace();
+	sDataName = pCustomData->getRootName();
+}
+
 

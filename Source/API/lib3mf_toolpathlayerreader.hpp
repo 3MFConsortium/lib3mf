@@ -82,6 +82,12 @@ public:
 
 	void GetSegmentPointData(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer) override;
 
+	Lib3MF_uint32 GetCustomDataCount() override;
+
+	ICustomDOMTree* GetCustomData(const Lib3MF_uint32 nIndex) override;
+
+	void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string& sNameSpace, std::string& sDataName) override;
+
 };
 
 } // namespace Impl

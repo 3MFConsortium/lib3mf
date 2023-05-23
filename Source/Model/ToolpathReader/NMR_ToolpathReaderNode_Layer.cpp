@@ -28,6 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --*/
 
 #include "Model/ToolpathReader/NMR_ToolpathReaderNode_Layer.h" 
+#include "Model/ToolpathReader/NMR_ToolpathReaderNode_Data.h" 
 #include "Model/ToolpathReader/NMR_ToolpathReaderNode_Parts.h" 
 #include "Model/ToolpathReader/NMR_ToolpathReaderNode_Profiles.h" 
 #include "Model/ToolpathReader/NMR_ToolpathReaderNode_Segments.h" 
@@ -90,6 +91,10 @@ namespace NMR {
 			}
 			else if (strcmp(pChildName, XML_3MF_TOOLPATHELEMENT_SEGMENTS) == 0) {
 				PToolpathReaderNode_Segments pXMLNode = std::make_shared<CToolpathReaderNode_Segments>(m_pWarnings, m_pProgressMonitor, m_pReadData);
+				pXMLNode->parseXML(pXMLReader);
+			}
+			else if (strcmp(pChildName, XML_3MF_TOOLPATHELEMENT_DATA) == 0) {
+				PToolpathReaderNode_Data pXMLNode = std::make_shared<CToolpathReaderNode_Data>(m_pWarnings, m_pProgressMonitor, m_pReadData);
 				pXMLNode->parseXML(pXMLReader);
 			}
 			else

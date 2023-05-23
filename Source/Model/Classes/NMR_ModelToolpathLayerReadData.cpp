@@ -148,4 +148,25 @@ namespace NMR {
 		return iIter->second;
 	}
 
+	uint32_t CModelToolpathLayerReadData::getCustomXMLDataCount()
+	{
+		return (uint32_t) m_CustomXMLData.size();
+	}
+
+	PCustomXMLTree CModelToolpathLayerReadData::getCustomXMLData(uint32_t nIndex)
+	{
+		if (nIndex >= m_CustomXMLData.size ())
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_CustomXMLData.at(nIndex);
+	}
+
+	void CModelToolpathLayerReadData::addCustomXMLData(PCustomXMLTree pCustomXMLTree)
+	{
+		if (pCustomXMLTree.get () == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		m_CustomXMLData.push_back(pCustomXMLTree);
+	}
+
 }

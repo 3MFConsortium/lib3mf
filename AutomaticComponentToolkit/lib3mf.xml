@@ -1601,6 +1601,23 @@
 		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
 	    <param name="PointData" type="structarray" class="Position2D" pass="out" description="The point data array" />
 	</method>
+	
+
+	<method name="GetCustomDataCount" description="Retrieves the count of custom data elements.">
+		<param name="Count" type="uint32" pass="return" description="Count" />
+	</method>
+	
+	<method name="GetCustomData" description="Retrieves the custom data.">
+		<param name="Index" type="uint32" pass="in" description="Index of the Custom Data. 0-based. MUST be smaller than Data Count" />
+		<param name="Data" type="class" class="CustomDOMTree" pass="return" description="DOM Tree of the data." />
+	</method>
+
+	<method name="GetCustomDataName" description="Retrieves the node name of the custom data.">
+		<param name="Index" type="uint32" pass="in" description="Index of the Custom Data. 0-based. MUST be smaller than Data Count" />
+		<param name="NameSpace" type="string" pass="out" description="Namespace of the custom data tree." />
+		<param name="DataName" type="string" pass="out" description="Root name of the data tree." />
+	</method>
+	
   </class>
   
 	
@@ -1637,7 +1654,14 @@
       <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
       <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
       <param name="PointData" type="structarray" class="Position2D" pass="in" description="The point data" />
-    </method>
+    </method>	
+
+	<method name="AddCustomData" description="Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.">
+		<param name="NameSpace" type="string" pass="in" description="Namespace of the custom data tree. MUST not be empty." />
+		<param name="NameSpacePrefix" type="string" pass="in" description="Namespace prefix of the custom data tree. Namespace prefix MUST be unique to the layer." />
+		<param name="DataName" type="string" pass="in" description="Root name of the data tree. MUST not be empty. MUST be a valid XML name string." />
+		<param name="Data" type="class" class="CustomDOMTree" pass="return" description="DOM Tree of the data." />
+	</method>	
 
 	<method name="Finish" description="finishes all writing of the layer and compresses toolpath data.">
     </method>

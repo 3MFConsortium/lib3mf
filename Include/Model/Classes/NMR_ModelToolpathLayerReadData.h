@@ -37,6 +37,7 @@ NMR_ModelToolpath.h defines the Model Toolpath Layer Data.
 #include "Common/NMR_PagedVector.h" 
 
 #include "Model/Classes/NMR_ModelToolpath.h" 
+#include "Model/Classes/NMR_CustomXMLTree.h" 
 #include "Model/Writer/NMR_ModelWriter.h" 
 #include "Model/Writer/NMR_ModelWriter_3MF.h" 
 
@@ -81,6 +82,8 @@ namespace NMR {
 
 		double m_dUnits;
 
+		std::vector<PCustomXMLTree> m_CustomXMLData;
+
 	public:
 		CModelToolpathLayerReadData() = delete;
 		CModelToolpathLayerReadData(_In_ PModelToolpath pModelToolpath);
@@ -101,6 +104,10 @@ namespace NMR {
 
 		void registerUUID (nfUint32 nID, std::string sUUID);
 		std::string mapIDtoUUID(nfUint32 nID);
+
+		uint32_t getCustomXMLDataCount();
+		PCustomXMLTree getCustomXMLData(uint32_t nIndex);
+		void addCustomXMLData(PCustomXMLTree pCustomXMLTree);
 
 	};
 
