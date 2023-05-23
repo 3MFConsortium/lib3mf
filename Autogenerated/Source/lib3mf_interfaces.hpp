@@ -58,6 +58,10 @@ class IReader;
 class IPackagePart;
 class IResource;
 class IResourceIterator;
+class ICustomXMLAttribute;
+class ICustomXMLNode;
+class ICustomXMLNodes;
+class ICustomDOMTree;
 class ISliceStackIterator;
 class IObjectIterator;
 class IMeshObjectIterator;
@@ -688,6 +692,390 @@ public:
 };
 
 typedef IBaseSharedPtr<IResourceIterator> PIResourceIterator;
+
+
+/*************************************************************************************************************************
+ Class interface for CustomXMLAttribute 
+**************************************************************************************************************************/
+
+class ICustomXMLAttribute : public virtual IBase {
+public:
+	/**
+	* ICustomXMLAttribute::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xEA18C54DBD42B5F6UL; // First 64 bits of SHA1 of a string: "Lib3MF::CustomXMLAttribute"
+	}
+
+	/**
+	* ICustomXMLAttribute::GetName - Retrieves name of the attribute.
+	* @return returns the name of the attribute.
+	*/
+	virtual std::string GetName() = 0;
+
+	/**
+	* ICustomXMLAttribute::GetValue - Retrieves value of the attribute as string.
+	* @return returns the value of the attribute.
+	*/
+	virtual std::string GetValue() = 0;
+
+	/**
+	* ICustomXMLAttribute::IsValidInteger - Checks if the value is a valid integer in the given range.
+	* @param[in] nMinValue - Minimum allowed value
+	* @param[in] nMaxValue - Maximum allowed value
+	* @return returns if the value is a valid integer.
+	*/
+	virtual bool IsValidInteger(const Lib3MF_int64 nMinValue, const Lib3MF_int64 nMaxValue) = 0;
+
+	/**
+	* ICustomXMLAttribute::GetIntegerValue - Returns the value as integer. Fails if the value is not a valid integer in the given range.
+	* @param[in] nMinValue - Minimum allowed value
+	* @param[in] nMaxValue - Maximum allowed value
+	* @return returns the value.
+	*/
+	virtual Lib3MF_int64 GetIntegerValue(const Lib3MF_int64 nMinValue, const Lib3MF_int64 nMaxValue) = 0;
+
+	/**
+	* ICustomXMLAttribute::IsValidDouble - Checks if the value is a valid double in the given range.
+	* @param[in] dMinValue - Minimum allowed value
+	* @param[in] dMaxValue - Maximum allowed value
+	* @return returns if the value is a valid double.
+	*/
+	virtual bool IsValidDouble(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue) = 0;
+
+	/**
+	* ICustomXMLAttribute::GetDoubleValue - Returns the value as double. Fails if the value is not a valid double in the given range.
+	* @param[in] dMinValue - Minimum allowed value
+	* @param[in] dMaxValue - Maximum allowed value
+	* @return returns the value .
+	*/
+	virtual Lib3MF_double GetDoubleValue(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue) = 0;
+
+	/**
+	* ICustomXMLAttribute::IsValidBool - Checks if the value is a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+	* @return returns if the value is a valid bool.
+	*/
+	virtual bool IsValidBool() = 0;
+
+	/**
+	* ICustomXMLAttribute::GetBoolValue - Returns the value as bool. Fails if the value is not a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+	* @param[in] dMinValue - Minimum allowed value
+	* @param[in] dMaxValue - Maximum allowed value
+	* @return returns the value .
+	*/
+	virtual bool GetBoolValue(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue) = 0;
+
+	/**
+	* ICustomXMLAttribute::SetValue - Sets the value of the attribute as string.
+	* @param[in] sValue - new value of the attribute.
+	*/
+	virtual void SetValue(const std::string & sValue) = 0;
+
+	/**
+	* ICustomXMLAttribute::SetIntegerValue - Sets the value of the attribute as integer.
+	* @param[in] nValue - new value of the attribute.
+	*/
+	virtual void SetIntegerValue(const Lib3MF_int64 nValue) = 0;
+
+	/**
+	* ICustomXMLAttribute::SetDoubleValue - Sets the value of the attribute as double.
+	* @param[in] dValue - new value of the attribute.
+	*/
+	virtual void SetDoubleValue(const Lib3MF_double dValue) = 0;
+
+	/**
+	* ICustomXMLAttribute::SetBoolValue - Sets the value of the attribute as bool.
+	* @param[in] bValue - new value of the attribute.
+	*/
+	virtual void SetBoolValue(const bool bValue) = 0;
+
+	/**
+	* ICustomXMLAttribute::Remove - Removes the attribute from its parent node. All subsequent calls to the class will fail.
+	*/
+	virtual void Remove() = 0;
+
+};
+
+typedef IBaseSharedPtr<ICustomXMLAttribute> PICustomXMLAttribute;
+
+
+/*************************************************************************************************************************
+ Class interface for CustomXMLNode 
+**************************************************************************************************************************/
+
+class ICustomXMLNode : public virtual IBase {
+public:
+	/**
+	* ICustomXMLNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x26B5AD02041EDF96UL; // First 64 bits of SHA1 of a string: "Lib3MF::CustomXMLNode"
+	}
+
+	/**
+	* ICustomXMLNode::GetName - Retrieves name of the node.
+	* @return returns the name of the node.
+	*/
+	virtual std::string GetName() = 0;
+
+	/**
+	* ICustomXMLNode::GetNameSpace - Retrieves namespace of the node.
+	* @return returns the namespace of the node.
+	*/
+	virtual std::string GetNameSpace() = 0;
+
+	/**
+	* ICustomXMLNode::GetAttributeCount - Returns number of attributes.
+	* @return returns the number of attributes.
+	*/
+	virtual Lib3MF_uint64 GetAttributeCount() = 0;
+
+	/**
+	* ICustomXMLNode::GetAttribute - Returns attribute instance. Fails if Index is out of range.
+	* @param[in] nIndex - Index of the attribute to return (0-based).
+	* @return XML Document attribute.
+	*/
+	virtual ICustomXMLAttribute * GetAttribute(const Lib3MF_uint64 nIndex) = 0;
+
+	/**
+	* ICustomXMLNode::HasAttribute - Returns if attribute of a specific name exists.
+	* @param[in] sName - Name of the attribute.
+	* @return Returns if the attribute exists.
+	*/
+	virtual bool HasAttribute(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNode::FindAttribute - Returns attribute instance of a specific name. 
+	* @param[in] sName - Name of the attribute.
+	* @param[in] bMustExist - If true, the call fails if attribute does not exist. If falls, the call will return null if the attribute does not exist.
+	* @return XML Document attribute.
+	*/
+	virtual ICustomXMLAttribute * FindAttribute(const std::string & sName, const bool bMustExist) = 0;
+
+	/**
+	* ICustomXMLNode::RemoveAttribute - Removes the attribute with a specific name. Does nothing if attribute does not exist.
+	* @param[in] sName - Name of the attribute.
+	* @return Returns true if an attribute was removed.
+	*/
+	virtual bool RemoveAttribute(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNode::RemoveAttributeByIndex - Removes the attribute with a specific index. Fails if index is invalid
+	* @param[in] nIndex - Index of the attribute to remove (0-based).
+	* @return Returns true if an attribute was removed.
+	*/
+	virtual bool RemoveAttributeByIndex(const Lib3MF_uint64 nIndex) = 0;
+
+	/**
+	* ICustomXMLNode::AddAttribute - Adds an attribute with a specific name and string value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] sValue - Value of the attribute.
+	*/
+	virtual void AddAttribute(const std::string & sName, const std::string & sValue) = 0;
+
+	/**
+	* ICustomXMLNode::AddIntegerAttribute - Adds an attribute with a specific name and integer value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] nValue - Value of the attribute.
+	*/
+	virtual void AddIntegerAttribute(const std::string & sName, const Lib3MF_int64 nValue) = 0;
+
+	/**
+	* ICustomXMLNode::AddDoubleAttribute - Adds an attribute with a specific name and double value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] dValue - Value of the attribute.
+	*/
+	virtual void AddDoubleAttribute(const std::string & sName, const Lib3MF_double dValue) = 0;
+
+	/**
+	* ICustomXMLNode::AddBoolAttribute - Adds an attribute with a specific name and bool value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] bValue - Value of the attribute.
+	*/
+	virtual void AddBoolAttribute(const std::string & sName, const bool bValue) = 0;
+
+	/**
+	* ICustomXMLNode::GetChildren - Returns all the child nodes of the XML Node.
+	* @return returns the list of child nodes.
+	*/
+	virtual ICustomXMLNodes * GetChildren() = 0;
+
+	/**
+	* ICustomXMLNode::CountChildrenByName - Returns how many children of the XML Node have a specific name.
+	* @param[in] sName - Name of the node.
+	* @return returns the number children with the specified name.
+	*/
+	virtual Lib3MF_uint64 CountChildrenByName(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNode::GetChildrenByName - Returns all the child nodes of the XML Node with a specific name.
+	* @param[in] sName - Name of the child.
+	* @return returns the list of child nodes.
+	*/
+	virtual ICustomXMLNodes * GetChildrenByName(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNode::HasChild - Returns if a child with a specific name exist.
+	* @param[in] sName - Name of the child.
+	* @return returns if a child with a specific name exists.
+	*/
+	virtual bool HasChild(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNode::HasUniqueChild - Returns if a child with a specific name exist once and only once.
+	* @param[in] sName - Name of the child.
+	* @return returns if a child with a specific name exists once and only once.
+	*/
+	virtual bool HasUniqueChild(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNode::FindChild - Returns child with a specific name. Throws an error if name does not exist once and only once.
+	* @param[in] sName - Name of the child.
+	* @param[in] bMustExist - If true, the call fails if child does not exist. If falls, the call will return null if the child does not exist.
+	* @return returns child instance or null.
+	*/
+	virtual ICustomXMLNode * FindChild(const std::string & sName, const bool bMustExist) = 0;
+
+	/**
+	* ICustomXMLNode::AddChild - Adds a new child with a specific name.
+	* @param[in] sName - Name of the child.
+	* @return returns child instance.
+	*/
+	virtual ICustomXMLNode * AddChild(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNode::RemoveChild - Removes a specific child. All subsequent calls to the child will fail after the call.
+	* @param[in] pChildInstance - child instance to remove. Fails if given instance is not a child of the node.
+	*/
+	virtual void RemoveChild(ICustomXMLNode* pChildInstance) = 0;
+
+	/**
+	* ICustomXMLNode::RemoveChildrenWithName - Removes all children with a specific name. Does nothing if no child with the name exists. All subsequent calls to the deleted children will fail after the call.
+	* @param[in] sName - Name of the children.
+	* @return Returns how many children have been deleted.
+	*/
+	virtual Lib3MF_uint64 RemoveChildrenWithName(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNode::Remove - Removes the node from its parent. The root node of the document can not be removed. Any subsequent call to the node fails after this.
+	*/
+	virtual void Remove() = 0;
+
+};
+
+typedef IBaseSharedPtr<ICustomXMLNode> PICustomXMLNode;
+
+
+/*************************************************************************************************************************
+ Class interface for CustomXMLNodes 
+**************************************************************************************************************************/
+
+class ICustomXMLNodes : public virtual IBase {
+public:
+	/**
+	* ICustomXMLNodes::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x8C4B47C97D310E89UL; // First 64 bits of SHA1 of a string: "Lib3MF::CustomXMLNodes"
+	}
+
+	/**
+	* ICustomXMLNodes::GetNodeCount - Returns number of nodes.
+	* @return returns the number of nodes in the list.
+	*/
+	virtual Lib3MF_uint64 GetNodeCount() = 0;
+
+	/**
+	* ICustomXMLNodes::GetNode - Returns node instance. Fails if Index is out of range.
+	* @param[in] nIndex - Index of the node to return (0-based).
+	* @return XML Node node.
+	*/
+	virtual ICustomXMLNode * GetNode(const Lib3MF_uint64 nIndex) = 0;
+
+	/**
+	* ICustomXMLNodes::CountNodesByName - Returns how many nodes of the XML Node have a specific name.
+	* @param[in] sName - Name of the node.
+	* @return returns the number of nodes with the specified name.
+	*/
+	virtual Lib3MF_uint64 CountNodesByName(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNodes::GetNodesByName - Returns all the nodes nodes of the XML Node with a specific name.
+	* @param[in] sName - Name of the node.
+	* @return returns the list of node nodes.
+	*/
+	virtual ICustomXMLNodes * GetNodesByName(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNodes::HasNode - Returns if a node with a specific name exist.
+	* @param[in] sName - Name of the node.
+	* @return returns if a node with a specific name exists.
+	*/
+	virtual bool HasNode(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNodes::HasUniqueNode - Returns if a node with a specific name exist once and only once.
+	* @param[in] sName - Name of the node.
+	* @return returns if a node with a specific name exists once and only once.
+	*/
+	virtual bool HasUniqueNode(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNodes::FindNode - Returns node with a specific name. Throws an error if name does not exist once and only once.
+	* @param[in] sName - Name of the node.
+	* @param[in] bMustExist - If true, the call fails if node does not exist. If falls, the call will return null if the node does not exist.
+	* @return returns node instance.
+	*/
+	virtual ICustomXMLNode * FindNode(const std::string & sName, const bool bMustExist) = 0;
+
+};
+
+typedef IBaseSharedPtr<ICustomXMLNodes> PICustomXMLNodes;
+
+
+/*************************************************************************************************************************
+ Class interface for CustomDOMTree 
+**************************************************************************************************************************/
+
+class ICustomDOMTree : public virtual IBase {
+public:
+	/**
+	* ICustomDOMTree::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x5E0CF70A6DB6256AUL; // First 64 bits of SHA1 of a string: "Lib3MF::CustomDOMTree"
+	}
+
+	/**
+	* ICustomDOMTree::GetNameSpace - Returns the namespace identifier for the DOM Tree.
+	* @return returns the namespace of the DOM Tree.
+	*/
+	virtual std::string GetNameSpace() = 0;
+
+	/**
+	* ICustomDOMTree::GetRootNode - Returns root node of the tree.
+	* @return Root node of the document.
+	*/
+	virtual ICustomXMLNode * GetRootNode() = 0;
+
+	/**
+	* ICustomDOMTree::SaveToString - Saves the XML tree into a string.
+	* @param[in] bAddLineBreaks - If true, line breaks and indentation will be added to the output string.
+	* @return String with the XML Content.
+	*/
+	virtual std::string SaveToString(const bool bAddLineBreaks) = 0;
+
+};
+
+typedef IBaseSharedPtr<ICustomDOMTree> PICustomDOMTree;
 
 
 /*************************************************************************************************************************
@@ -2751,6 +3139,27 @@ public:
 	*/
 	virtual void GetSegmentPointData(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer) = 0;
 
+	/**
+	* IToolpathLayerReader::GetCustomDataCount - Retrieves the count of custom data elements.
+	* @return Count
+	*/
+	virtual Lib3MF_uint32 GetCustomDataCount() = 0;
+
+	/**
+	* IToolpathLayerReader::GetCustomData - Retrieves the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @return DOM Tree of the data.
+	*/
+	virtual ICustomDOMTree * GetCustomData(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetCustomDataName - Retrieves the node name of the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @param[out] sNameSpace - Namespace of the custom data tree.
+	* @param[out] sDataName - Root name of the data tree.
+	*/
+	virtual void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName) = 0;
+
 };
 
 typedef IBaseSharedPtr<IToolpathLayerReader> PIToolpathLayerReader;
@@ -2817,6 +3226,15 @@ public:
 	* @param[in] pPointDataBuffer - The point data
 	*/
 	virtual void WritePolyline(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer) = 0;
+
+	/**
+	* IToolpathLayerData::AddCustomData - Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sNameSpacePrefix - Namespace prefix of the custom data tree. Namespace prefix MUST be unique to the layer.
+	* @param[in] sDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
+	* @return DOM Tree of the data.
+	*/
+	virtual ICustomDOMTree * AddCustomData(const std::string & sNameSpace, const std::string & sNameSpacePrefix, const std::string & sDataName) = 0;
 
 	/**
 	* IToolpathLayerData::Finish - finishes all writing of the layer and compresses toolpath data.

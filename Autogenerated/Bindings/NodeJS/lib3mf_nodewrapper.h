@@ -231,6 +231,119 @@ public:
 };
 
 /*************************************************************************************************************************
+ Class CLib3MFCustomXMLAttribute 
+**************************************************************************************************************************/
+class CLib3MFCustomXMLAttribute : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetValue(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void IsValidInteger(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetIntegerValue(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void IsValidDouble(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetDoubleValue(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void IsValidBool(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetBoolValue(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetValue(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetIntegerValue(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetDoubleValue(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetBoolValue(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void Remove(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFCustomXMLAttribute();
+	~CLib3MFCustomXMLAttribute();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFCustomXMLNode 
+**************************************************************************************************************************/
+class CLib3MFCustomXMLNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetNameSpace(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetAttributeCount(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetAttribute(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void HasAttribute(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void FindAttribute(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void RemoveAttribute(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void RemoveAttributeByIndex(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddAttribute(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddIntegerAttribute(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddDoubleAttribute(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddBoolAttribute(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetChildren(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void CountChildrenByName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetChildrenByName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void HasChild(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void HasUniqueChild(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void FindChild(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddChild(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void RemoveChild(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void RemoveChildrenWithName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void Remove(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFCustomXMLNode();
+	~CLib3MFCustomXMLNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFCustomXMLNodes 
+**************************************************************************************************************************/
+class CLib3MFCustomXMLNodes : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetNodeCount(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void CountNodesByName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetNodesByName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void HasNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void HasUniqueNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void FindNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFCustomXMLNodes();
+	~CLib3MFCustomXMLNodes();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFCustomDOMTree 
+**************************************************************************************************************************/
+class CLib3MFCustomDOMTree : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetNameSpace(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetRootNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SaveToString(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFCustomDOMTree();
+	~CLib3MFCustomDOMTree();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
  Class CLib3MFSliceStackIterator 
 **************************************************************************************************************************/
 class CLib3MFSliceStackIterator : public CLib3MFBaseClass {
@@ -949,6 +1062,9 @@ private:
 	static void GetSegmentPart(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentPartUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentPointData(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetCustomDataCount(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetCustomDataName(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFToolpathLayerReader();
@@ -972,6 +1088,7 @@ private:
 	static void WriteHatchData(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WriteLoop(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WritePolyline(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void Finish(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:

@@ -64,6 +64,10 @@ class CReader;
 class CPackagePart;
 class CResource;
 class CResourceIterator;
+class CCustomXMLAttribute;
+class CCustomXMLNode;
+class CCustomXMLNodes;
+class CCustomDOMTree;
 class CSliceStackIterator;
 class CObjectIterator;
 class CMeshObjectIterator;
@@ -117,6 +121,10 @@ typedef CReader CLib3MFReader;
 typedef CPackagePart CLib3MFPackagePart;
 typedef CResource CLib3MFResource;
 typedef CResourceIterator CLib3MFResourceIterator;
+typedef CCustomXMLAttribute CLib3MFCustomXMLAttribute;
+typedef CCustomXMLNode CLib3MFCustomXMLNode;
+typedef CCustomXMLNodes CLib3MFCustomXMLNodes;
+typedef CCustomDOMTree CLib3MFCustomDOMTree;
 typedef CSliceStackIterator CLib3MFSliceStackIterator;
 typedef CObjectIterator CLib3MFObjectIterator;
 typedef CMeshObjectIterator CLib3MFMeshObjectIterator;
@@ -170,6 +178,10 @@ typedef std::shared_ptr<CReader> PReader;
 typedef std::shared_ptr<CPackagePart> PPackagePart;
 typedef std::shared_ptr<CResource> PResource;
 typedef std::shared_ptr<CResourceIterator> PResourceIterator;
+typedef std::shared_ptr<CCustomXMLAttribute> PCustomXMLAttribute;
+typedef std::shared_ptr<CCustomXMLNode> PCustomXMLNode;
+typedef std::shared_ptr<CCustomXMLNodes> PCustomXMLNodes;
+typedef std::shared_ptr<CCustomDOMTree> PCustomDOMTree;
 typedef std::shared_ptr<CSliceStackIterator> PSliceStackIterator;
 typedef std::shared_ptr<CObjectIterator> PObjectIterator;
 typedef std::shared_ptr<CMeshObjectIterator> PMeshObjectIterator;
@@ -223,6 +235,10 @@ typedef PReader PLib3MFReader;
 typedef PPackagePart PLib3MFPackagePart;
 typedef PResource PLib3MFResource;
 typedef PResourceIterator PLib3MFResourceIterator;
+typedef PCustomXMLAttribute PLib3MFCustomXMLAttribute;
+typedef PCustomXMLNode PLib3MFCustomXMLNode;
+typedef PCustomXMLNodes PLib3MFCustomXMLNodes;
+typedef PCustomDOMTree PLib3MFCustomDOMTree;
 typedef PSliceStackIterator PLib3MFSliceStackIterator;
 typedef PObjectIterator PLib3MFObjectIterator;
 typedef PMeshObjectIterator PLib3MFMeshObjectIterator;
@@ -379,6 +395,8 @@ public:
 			case LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER: return "UNKOWNPROGRESSIDENTIFIER";
 			case LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: return "ELEMENTCOUNTEXCEEDSLIMIT";
 			case LIB3MF_ERROR_INVALIDRESOURCE: return "INVALIDRESOURCE";
+			case LIB3MF_ERROR_INVALIDNODEINDEX: return "INVALIDNODEINDEX";
+			case LIB3MF_ERROR_INVALIDATTRIBUTEINDEX: return "INVALIDATTRIBUTEINDEX";
 			case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "BEAMLATTICE_INVALID_OBJECTTYPE";
 			case LIB3MF_ERROR_INVALIDKEYSTORE: return "INVALIDKEYSTORE";
 			case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "INVALIDKEYSTORECONSUMER";
@@ -434,6 +452,8 @@ public:
 			case LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER: return "A progress identifier is unknown";
 			case LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: return "An element buffer exceeds its spec limit";
 			case LIB3MF_ERROR_INVALIDRESOURCE: return "A resource is invalid";
+			case LIB3MF_ERROR_INVALIDNODEINDEX: return "Invalid node index";
+			case LIB3MF_ERROR_INVALIDATTRIBUTEINDEX: return "Invalid attribute index";
 			case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "This object type is not valid for beamlattices";
 			case LIB3MF_ERROR_INVALIDKEYSTORE: return "The keystore object is invalid";
 			case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "The consumer keystore object is invalid";
@@ -584,6 +604,10 @@ private:
 	friend class CPackagePart;
 	friend class CResource;
 	friend class CResourceIterator;
+	friend class CCustomXMLAttribute;
+	friend class CCustomXMLNode;
+	friend class CCustomXMLNodes;
+	friend class CCustomDOMTree;
 	friend class CSliceStackIterator;
 	friend class CObjectIterator;
 	friend class CMeshObjectIterator;
@@ -821,6 +845,115 @@ public:
 	inline PResource GetCurrent();
 	inline PResourceIterator Clone();
 	inline Lib3MF_uint64 Count();
+};
+	
+/*************************************************************************************************************************
+ Class CCustomXMLAttribute 
+**************************************************************************************************************************/
+class CCustomXMLAttribute : public CBase {
+public:
+	
+	/**
+	* CCustomXMLAttribute::CCustomXMLAttribute - Constructor for CustomXMLAttribute class.
+	*/
+	CCustomXMLAttribute(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetName();
+	inline std::string GetValue();
+	inline bool IsValidInteger(const Lib3MF_int64 nMinValue, const Lib3MF_int64 nMaxValue);
+	inline Lib3MF_int64 GetIntegerValue(const Lib3MF_int64 nMinValue, const Lib3MF_int64 nMaxValue);
+	inline bool IsValidDouble(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue);
+	inline Lib3MF_double GetDoubleValue(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue);
+	inline bool IsValidBool();
+	inline bool GetBoolValue(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue);
+	inline void SetValue(const std::string & sValue);
+	inline void SetIntegerValue(const Lib3MF_int64 nValue);
+	inline void SetDoubleValue(const Lib3MF_double dValue);
+	inline void SetBoolValue(const bool bValue);
+	inline void Remove();
+};
+	
+/*************************************************************************************************************************
+ Class CCustomXMLNode 
+**************************************************************************************************************************/
+class CCustomXMLNode : public CBase {
+public:
+	
+	/**
+	* CCustomXMLNode::CCustomXMLNode - Constructor for CustomXMLNode class.
+	*/
+	CCustomXMLNode(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetName();
+	inline std::string GetNameSpace();
+	inline Lib3MF_uint64 GetAttributeCount();
+	inline PCustomXMLAttribute GetAttribute(const Lib3MF_uint64 nIndex);
+	inline bool HasAttribute(const std::string & sName);
+	inline PCustomXMLAttribute FindAttribute(const std::string & sName, const bool bMustExist);
+	inline bool RemoveAttribute(const std::string & sName);
+	inline bool RemoveAttributeByIndex(const Lib3MF_uint64 nIndex);
+	inline void AddAttribute(const std::string & sName, const std::string & sValue);
+	inline void AddIntegerAttribute(const std::string & sName, const Lib3MF_int64 nValue);
+	inline void AddDoubleAttribute(const std::string & sName, const Lib3MF_double dValue);
+	inline void AddBoolAttribute(const std::string & sName, const bool bValue);
+	inline PCustomXMLNodes GetChildren();
+	inline Lib3MF_uint64 CountChildrenByName(const std::string & sName);
+	inline PCustomXMLNodes GetChildrenByName(const std::string & sName);
+	inline bool HasChild(const std::string & sName);
+	inline bool HasUniqueChild(const std::string & sName);
+	inline PCustomXMLNode FindChild(const std::string & sName, const bool bMustExist);
+	inline PCustomXMLNode AddChild(const std::string & sName);
+	inline void RemoveChild(classParam<CCustomXMLNode> pChildInstance);
+	inline Lib3MF_uint64 RemoveChildrenWithName(const std::string & sName);
+	inline void Remove();
+};
+	
+/*************************************************************************************************************************
+ Class CCustomXMLNodes 
+**************************************************************************************************************************/
+class CCustomXMLNodes : public CBase {
+public:
+	
+	/**
+	* CCustomXMLNodes::CCustomXMLNodes - Constructor for CustomXMLNodes class.
+	*/
+	CCustomXMLNodes(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline Lib3MF_uint64 GetNodeCount();
+	inline PCustomXMLNode GetNode(const Lib3MF_uint64 nIndex);
+	inline Lib3MF_uint64 CountNodesByName(const std::string & sName);
+	inline PCustomXMLNodes GetNodesByName(const std::string & sName);
+	inline bool HasNode(const std::string & sName);
+	inline bool HasUniqueNode(const std::string & sName);
+	inline PCustomXMLNode FindNode(const std::string & sName, const bool bMustExist);
+};
+	
+/*************************************************************************************************************************
+ Class CCustomDOMTree 
+**************************************************************************************************************************/
+class CCustomDOMTree : public CBase {
+public:
+	
+	/**
+	* CCustomDOMTree::CCustomDOMTree - Constructor for CustomDOMTree class.
+	*/
+	CCustomDOMTree(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetNameSpace();
+	inline PCustomXMLNode GetRootNode();
+	inline std::string SaveToString(const bool bAddLineBreaks);
 };
 	
 /*************************************************************************************************************************
@@ -1520,6 +1653,9 @@ public:
 	inline PBuildItem GetSegmentPart(const Lib3MF_uint32 nIndex);
 	inline std::string GetSegmentPartUUID(const Lib3MF_uint32 nIndex);
 	inline void GetSegmentPointData(const Lib3MF_uint32 nIndex, std::vector<sPosition2D> & PointDataBuffer);
+	inline Lib3MF_uint32 GetCustomDataCount();
+	inline PCustomDOMTree GetCustomData(const Lib3MF_uint32 nIndex);
+	inline void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName);
 };
 	
 /*************************************************************************************************************************
@@ -1542,6 +1678,7 @@ public:
 	inline void WriteHatchData(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
 	inline void WriteLoop(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
 	inline void WritePolyline(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
+	inline PCustomDOMTree AddCustomData(const std::string & sNameSpace, const std::string & sNameSpacePrefix, const std::string & sDataName);
 	inline void Finish();
 };
 	
@@ -1856,6 +1993,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0x0E55A826D377483EUL: return new CPackagePart(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::PackagePart"
 		case 0xDFE3889D1B269CBBUL: return new CResource(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Resource"
 		case 0x460F3515E2621DBEUL: return new CResourceIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ResourceIterator"
+		case 0xEA18C54DBD42B5F6UL: return new CCustomXMLAttribute(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::CustomXMLAttribute"
+		case 0x26B5AD02041EDF96UL: return new CCustomXMLNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::CustomXMLNode"
+		case 0x8C4B47C97D310E89UL: return new CCustomXMLNodes(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::CustomXMLNodes"
+		case 0x5E0CF70A6DB6256AUL: return new CCustomDOMTree(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::CustomDOMTree"
 		case 0x69684DB99FA813F6UL: return new CSliceStackIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::SliceStackIterator"
 		case 0xDE92510BD2112288UL: return new CObjectIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ObjectIterator"
 		case 0xF4196034E2B9FDE6UL: return new CMeshObjectIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObjectIterator"
@@ -2225,6 +2366,51 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ResourceIterator_GetCurrent = nullptr;
 		pWrapperTable->m_ResourceIterator_Clone = nullptr;
 		pWrapperTable->m_ResourceIterator_Count = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_GetName = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_GetValue = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_IsValidInteger = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_GetIntegerValue = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_IsValidDouble = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_GetDoubleValue = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_IsValidBool = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_GetBoolValue = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_SetValue = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_SetIntegerValue = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_SetDoubleValue = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_SetBoolValue = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_Remove = nullptr;
+		pWrapperTable->m_CustomXMLNode_GetName = nullptr;
+		pWrapperTable->m_CustomXMLNode_GetNameSpace = nullptr;
+		pWrapperTable->m_CustomXMLNode_GetAttributeCount = nullptr;
+		pWrapperTable->m_CustomXMLNode_GetAttribute = nullptr;
+		pWrapperTable->m_CustomXMLNode_HasAttribute = nullptr;
+		pWrapperTable->m_CustomXMLNode_FindAttribute = nullptr;
+		pWrapperTable->m_CustomXMLNode_RemoveAttribute = nullptr;
+		pWrapperTable->m_CustomXMLNode_RemoveAttributeByIndex = nullptr;
+		pWrapperTable->m_CustomXMLNode_AddAttribute = nullptr;
+		pWrapperTable->m_CustomXMLNode_AddIntegerAttribute = nullptr;
+		pWrapperTable->m_CustomXMLNode_AddDoubleAttribute = nullptr;
+		pWrapperTable->m_CustomXMLNode_AddBoolAttribute = nullptr;
+		pWrapperTable->m_CustomXMLNode_GetChildren = nullptr;
+		pWrapperTable->m_CustomXMLNode_CountChildrenByName = nullptr;
+		pWrapperTable->m_CustomXMLNode_GetChildrenByName = nullptr;
+		pWrapperTable->m_CustomXMLNode_HasChild = nullptr;
+		pWrapperTable->m_CustomXMLNode_HasUniqueChild = nullptr;
+		pWrapperTable->m_CustomXMLNode_FindChild = nullptr;
+		pWrapperTable->m_CustomXMLNode_AddChild = nullptr;
+		pWrapperTable->m_CustomXMLNode_RemoveChild = nullptr;
+		pWrapperTable->m_CustomXMLNode_RemoveChildrenWithName = nullptr;
+		pWrapperTable->m_CustomXMLNode_Remove = nullptr;
+		pWrapperTable->m_CustomXMLNodes_GetNodeCount = nullptr;
+		pWrapperTable->m_CustomXMLNodes_GetNode = nullptr;
+		pWrapperTable->m_CustomXMLNodes_CountNodesByName = nullptr;
+		pWrapperTable->m_CustomXMLNodes_GetNodesByName = nullptr;
+		pWrapperTable->m_CustomXMLNodes_HasNode = nullptr;
+		pWrapperTable->m_CustomXMLNodes_HasUniqueNode = nullptr;
+		pWrapperTable->m_CustomXMLNodes_FindNode = nullptr;
+		pWrapperTable->m_CustomDOMTree_GetNameSpace = nullptr;
+		pWrapperTable->m_CustomDOMTree_GetRootNode = nullptr;
+		pWrapperTable->m_CustomDOMTree_SaveToString = nullptr;
 		pWrapperTable->m_SliceStackIterator_GetCurrentSliceStack = nullptr;
 		pWrapperTable->m_ObjectIterator_GetCurrentObject = nullptr;
 		pWrapperTable->m_MeshObjectIterator_GetCurrentMeshObject = nullptr;
@@ -2444,12 +2630,16 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentPart = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentPointData = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetCustomDataCount = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetCustomData = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetCustomDataName = nullptr;
 		pWrapperTable->m_ToolpathLayerData_GetLayerDataUUID = nullptr;
 		pWrapperTable->m_ToolpathLayerData_RegisterProfile = nullptr;
 		pWrapperTable->m_ToolpathLayerData_RegisterBuildItem = nullptr;
 		pWrapperTable->m_ToolpathLayerData_WriteHatchData = nullptr;
 		pWrapperTable->m_ToolpathLayerData_WriteLoop = nullptr;
 		pWrapperTable->m_ToolpathLayerData_WritePolyline = nullptr;
+		pWrapperTable->m_ToolpathLayerData_AddCustomData = nullptr;
 		pWrapperTable->m_ToolpathLayerData_Finish = nullptr;
 		pWrapperTable->m_Toolpath_GetUnits = nullptr;
 		pWrapperTable->m_Toolpath_GetLayerCount = nullptr;
@@ -3024,6 +3214,411 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_ResourceIterator_Count == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_GetName = (PLib3MFCustomXMLAttribute_GetNamePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_getname");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_GetName = (PLib3MFCustomXMLAttribute_GetNamePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_getname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_GetName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_GetValue = (PLib3MFCustomXMLAttribute_GetValuePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_getvalue");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_GetValue = (PLib3MFCustomXMLAttribute_GetValuePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_getvalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_GetValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_IsValidInteger = (PLib3MFCustomXMLAttribute_IsValidIntegerPtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_isvalidinteger");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_IsValidInteger = (PLib3MFCustomXMLAttribute_IsValidIntegerPtr) dlsym(hLibrary, "lib3mf_customxmlattribute_isvalidinteger");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_IsValidInteger == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_GetIntegerValue = (PLib3MFCustomXMLAttribute_GetIntegerValuePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_getintegervalue");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_GetIntegerValue = (PLib3MFCustomXMLAttribute_GetIntegerValuePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_getintegervalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_GetIntegerValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_IsValidDouble = (PLib3MFCustomXMLAttribute_IsValidDoublePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_isvaliddouble");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_IsValidDouble = (PLib3MFCustomXMLAttribute_IsValidDoublePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_isvaliddouble");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_IsValidDouble == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_GetDoubleValue = (PLib3MFCustomXMLAttribute_GetDoubleValuePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_getdoublevalue");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_GetDoubleValue = (PLib3MFCustomXMLAttribute_GetDoubleValuePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_getdoublevalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_GetDoubleValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_IsValidBool = (PLib3MFCustomXMLAttribute_IsValidBoolPtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_isvalidbool");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_IsValidBool = (PLib3MFCustomXMLAttribute_IsValidBoolPtr) dlsym(hLibrary, "lib3mf_customxmlattribute_isvalidbool");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_IsValidBool == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_GetBoolValue = (PLib3MFCustomXMLAttribute_GetBoolValuePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_getboolvalue");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_GetBoolValue = (PLib3MFCustomXMLAttribute_GetBoolValuePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_getboolvalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_GetBoolValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_SetValue = (PLib3MFCustomXMLAttribute_SetValuePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_setvalue");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_SetValue = (PLib3MFCustomXMLAttribute_SetValuePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_setvalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_SetValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_SetIntegerValue = (PLib3MFCustomXMLAttribute_SetIntegerValuePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_setintegervalue");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_SetIntegerValue = (PLib3MFCustomXMLAttribute_SetIntegerValuePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_setintegervalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_SetIntegerValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_SetDoubleValue = (PLib3MFCustomXMLAttribute_SetDoubleValuePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_setdoublevalue");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_SetDoubleValue = (PLib3MFCustomXMLAttribute_SetDoubleValuePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_setdoublevalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_SetDoubleValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_SetBoolValue = (PLib3MFCustomXMLAttribute_SetBoolValuePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_setboolvalue");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_SetBoolValue = (PLib3MFCustomXMLAttribute_SetBoolValuePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_setboolvalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_SetBoolValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_Remove = (PLib3MFCustomXMLAttribute_RemovePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_remove");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_Remove = (PLib3MFCustomXMLAttribute_RemovePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_remove");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_Remove == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_GetName = (PLib3MFCustomXMLNode_GetNamePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_getname");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_GetName = (PLib3MFCustomXMLNode_GetNamePtr) dlsym(hLibrary, "lib3mf_customxmlnode_getname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_GetName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_GetNameSpace = (PLib3MFCustomXMLNode_GetNameSpacePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_getnamespace");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_GetNameSpace = (PLib3MFCustomXMLNode_GetNameSpacePtr) dlsym(hLibrary, "lib3mf_customxmlnode_getnamespace");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_GetNameSpace == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_GetAttributeCount = (PLib3MFCustomXMLNode_GetAttributeCountPtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_getattributecount");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_GetAttributeCount = (PLib3MFCustomXMLNode_GetAttributeCountPtr) dlsym(hLibrary, "lib3mf_customxmlnode_getattributecount");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_GetAttributeCount == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_GetAttribute = (PLib3MFCustomXMLNode_GetAttributePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_getattribute");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_GetAttribute = (PLib3MFCustomXMLNode_GetAttributePtr) dlsym(hLibrary, "lib3mf_customxmlnode_getattribute");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_GetAttribute == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_HasAttribute = (PLib3MFCustomXMLNode_HasAttributePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_hasattribute");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_HasAttribute = (PLib3MFCustomXMLNode_HasAttributePtr) dlsym(hLibrary, "lib3mf_customxmlnode_hasattribute");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_HasAttribute == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_FindAttribute = (PLib3MFCustomXMLNode_FindAttributePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_findattribute");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_FindAttribute = (PLib3MFCustomXMLNode_FindAttributePtr) dlsym(hLibrary, "lib3mf_customxmlnode_findattribute");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_FindAttribute == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_RemoveAttribute = (PLib3MFCustomXMLNode_RemoveAttributePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_removeattribute");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_RemoveAttribute = (PLib3MFCustomXMLNode_RemoveAttributePtr) dlsym(hLibrary, "lib3mf_customxmlnode_removeattribute");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_RemoveAttribute == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_RemoveAttributeByIndex = (PLib3MFCustomXMLNode_RemoveAttributeByIndexPtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_removeattributebyindex");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_RemoveAttributeByIndex = (PLib3MFCustomXMLNode_RemoveAttributeByIndexPtr) dlsym(hLibrary, "lib3mf_customxmlnode_removeattributebyindex");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_RemoveAttributeByIndex == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_AddAttribute = (PLib3MFCustomXMLNode_AddAttributePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_addattribute");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_AddAttribute = (PLib3MFCustomXMLNode_AddAttributePtr) dlsym(hLibrary, "lib3mf_customxmlnode_addattribute");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_AddAttribute == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_AddIntegerAttribute = (PLib3MFCustomXMLNode_AddIntegerAttributePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_addintegerattribute");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_AddIntegerAttribute = (PLib3MFCustomXMLNode_AddIntegerAttributePtr) dlsym(hLibrary, "lib3mf_customxmlnode_addintegerattribute");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_AddIntegerAttribute == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_AddDoubleAttribute = (PLib3MFCustomXMLNode_AddDoubleAttributePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_adddoubleattribute");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_AddDoubleAttribute = (PLib3MFCustomXMLNode_AddDoubleAttributePtr) dlsym(hLibrary, "lib3mf_customxmlnode_adddoubleattribute");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_AddDoubleAttribute == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_AddBoolAttribute = (PLib3MFCustomXMLNode_AddBoolAttributePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_addboolattribute");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_AddBoolAttribute = (PLib3MFCustomXMLNode_AddBoolAttributePtr) dlsym(hLibrary, "lib3mf_customxmlnode_addboolattribute");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_AddBoolAttribute == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_GetChildren = (PLib3MFCustomXMLNode_GetChildrenPtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_getchildren");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_GetChildren = (PLib3MFCustomXMLNode_GetChildrenPtr) dlsym(hLibrary, "lib3mf_customxmlnode_getchildren");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_GetChildren == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_CountChildrenByName = (PLib3MFCustomXMLNode_CountChildrenByNamePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_countchildrenbyname");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_CountChildrenByName = (PLib3MFCustomXMLNode_CountChildrenByNamePtr) dlsym(hLibrary, "lib3mf_customxmlnode_countchildrenbyname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_CountChildrenByName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_GetChildrenByName = (PLib3MFCustomXMLNode_GetChildrenByNamePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_getchildrenbyname");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_GetChildrenByName = (PLib3MFCustomXMLNode_GetChildrenByNamePtr) dlsym(hLibrary, "lib3mf_customxmlnode_getchildrenbyname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_GetChildrenByName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_HasChild = (PLib3MFCustomXMLNode_HasChildPtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_haschild");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_HasChild = (PLib3MFCustomXMLNode_HasChildPtr) dlsym(hLibrary, "lib3mf_customxmlnode_haschild");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_HasChild == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_HasUniqueChild = (PLib3MFCustomXMLNode_HasUniqueChildPtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_hasuniquechild");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_HasUniqueChild = (PLib3MFCustomXMLNode_HasUniqueChildPtr) dlsym(hLibrary, "lib3mf_customxmlnode_hasuniquechild");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_HasUniqueChild == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_FindChild = (PLib3MFCustomXMLNode_FindChildPtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_findchild");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_FindChild = (PLib3MFCustomXMLNode_FindChildPtr) dlsym(hLibrary, "lib3mf_customxmlnode_findchild");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_FindChild == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_AddChild = (PLib3MFCustomXMLNode_AddChildPtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_addchild");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_AddChild = (PLib3MFCustomXMLNode_AddChildPtr) dlsym(hLibrary, "lib3mf_customxmlnode_addchild");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_AddChild == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_RemoveChild = (PLib3MFCustomXMLNode_RemoveChildPtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_removechild");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_RemoveChild = (PLib3MFCustomXMLNode_RemoveChildPtr) dlsym(hLibrary, "lib3mf_customxmlnode_removechild");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_RemoveChild == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_RemoveChildrenWithName = (PLib3MFCustomXMLNode_RemoveChildrenWithNamePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_removechildrenwithname");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_RemoveChildrenWithName = (PLib3MFCustomXMLNode_RemoveChildrenWithNamePtr) dlsym(hLibrary, "lib3mf_customxmlnode_removechildrenwithname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_RemoveChildrenWithName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_Remove = (PLib3MFCustomXMLNode_RemovePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_remove");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_Remove = (PLib3MFCustomXMLNode_RemovePtr) dlsym(hLibrary, "lib3mf_customxmlnode_remove");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_Remove == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNodes_GetNodeCount = (PLib3MFCustomXMLNodes_GetNodeCountPtr) GetProcAddress(hLibrary, "lib3mf_customxmlnodes_getnodecount");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNodes_GetNodeCount = (PLib3MFCustomXMLNodes_GetNodeCountPtr) dlsym(hLibrary, "lib3mf_customxmlnodes_getnodecount");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNodes_GetNodeCount == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNodes_GetNode = (PLib3MFCustomXMLNodes_GetNodePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnodes_getnode");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNodes_GetNode = (PLib3MFCustomXMLNodes_GetNodePtr) dlsym(hLibrary, "lib3mf_customxmlnodes_getnode");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNodes_GetNode == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNodes_CountNodesByName = (PLib3MFCustomXMLNodes_CountNodesByNamePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnodes_countnodesbyname");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNodes_CountNodesByName = (PLib3MFCustomXMLNodes_CountNodesByNamePtr) dlsym(hLibrary, "lib3mf_customxmlnodes_countnodesbyname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNodes_CountNodesByName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNodes_GetNodesByName = (PLib3MFCustomXMLNodes_GetNodesByNamePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnodes_getnodesbyname");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNodes_GetNodesByName = (PLib3MFCustomXMLNodes_GetNodesByNamePtr) dlsym(hLibrary, "lib3mf_customxmlnodes_getnodesbyname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNodes_GetNodesByName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNodes_HasNode = (PLib3MFCustomXMLNodes_HasNodePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnodes_hasnode");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNodes_HasNode = (PLib3MFCustomXMLNodes_HasNodePtr) dlsym(hLibrary, "lib3mf_customxmlnodes_hasnode");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNodes_HasNode == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNodes_HasUniqueNode = (PLib3MFCustomXMLNodes_HasUniqueNodePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnodes_hasuniquenode");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNodes_HasUniqueNode = (PLib3MFCustomXMLNodes_HasUniqueNodePtr) dlsym(hLibrary, "lib3mf_customxmlnodes_hasuniquenode");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNodes_HasUniqueNode == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNodes_FindNode = (PLib3MFCustomXMLNodes_FindNodePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnodes_findnode");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNodes_FindNode = (PLib3MFCustomXMLNodes_FindNodePtr) dlsym(hLibrary, "lib3mf_customxmlnodes_findnode");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNodes_FindNode == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomDOMTree_GetNameSpace = (PLib3MFCustomDOMTree_GetNameSpacePtr) GetProcAddress(hLibrary, "lib3mf_customdomtree_getnamespace");
+		#else // _WIN32
+		pWrapperTable->m_CustomDOMTree_GetNameSpace = (PLib3MFCustomDOMTree_GetNameSpacePtr) dlsym(hLibrary, "lib3mf_customdomtree_getnamespace");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomDOMTree_GetNameSpace == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomDOMTree_GetRootNode = (PLib3MFCustomDOMTree_GetRootNodePtr) GetProcAddress(hLibrary, "lib3mf_customdomtree_getrootnode");
+		#else // _WIN32
+		pWrapperTable->m_CustomDOMTree_GetRootNode = (PLib3MFCustomDOMTree_GetRootNodePtr) dlsym(hLibrary, "lib3mf_customdomtree_getrootnode");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomDOMTree_GetRootNode == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomDOMTree_SaveToString = (PLib3MFCustomDOMTree_SaveToStringPtr) GetProcAddress(hLibrary, "lib3mf_customdomtree_savetostring");
+		#else // _WIN32
+		pWrapperTable->m_CustomDOMTree_SaveToString = (PLib3MFCustomDOMTree_SaveToStringPtr) dlsym(hLibrary, "lib3mf_customdomtree_savetostring");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomDOMTree_SaveToString == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -4998,6 +5593,33 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetCustomDataCount = (PLib3MFToolpathLayerReader_GetCustomDataCountPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getcustomdatacount");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetCustomDataCount = (PLib3MFToolpathLayerReader_GetCustomDataCountPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getcustomdatacount");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetCustomDataCount == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetCustomData = (PLib3MFToolpathLayerReader_GetCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getcustomdata");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetCustomData = (PLib3MFToolpathLayerReader_GetCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getcustomdata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetCustomData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetCustomDataName = (PLib3MFToolpathLayerReader_GetCustomDataNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getcustomdataname");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetCustomDataName = (PLib3MFToolpathLayerReader_GetCustomDataNamePtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getcustomdataname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetCustomDataName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_ToolpathLayerData_GetLayerDataUUID = (PLib3MFToolpathLayerData_GetLayerDataUUIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_getlayerdatauuid");
 		#else // _WIN32
 		pWrapperTable->m_ToolpathLayerData_GetLayerDataUUID = (PLib3MFToolpathLayerData_GetLayerDataUUIDPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_getlayerdatauuid");
@@ -5049,6 +5671,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_ToolpathLayerData_WritePolyline == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_AddCustomData = (PLib3MFToolpathLayerData_AddCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_addcustomdata");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_AddCustomData = (PLib3MFToolpathLayerData_AddCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_addcustomdata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_AddCustomData == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -6567,6 +7198,186 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ResourceIterator_Count == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_getname", (void**)&(pWrapperTable->m_CustomXMLAttribute_GetName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_GetName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_getvalue", (void**)&(pWrapperTable->m_CustomXMLAttribute_GetValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_GetValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_isvalidinteger", (void**)&(pWrapperTable->m_CustomXMLAttribute_IsValidInteger));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_IsValidInteger == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_getintegervalue", (void**)&(pWrapperTable->m_CustomXMLAttribute_GetIntegerValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_GetIntegerValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_isvaliddouble", (void**)&(pWrapperTable->m_CustomXMLAttribute_IsValidDouble));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_IsValidDouble == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_getdoublevalue", (void**)&(pWrapperTable->m_CustomXMLAttribute_GetDoubleValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_GetDoubleValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_isvalidbool", (void**)&(pWrapperTable->m_CustomXMLAttribute_IsValidBool));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_IsValidBool == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_getboolvalue", (void**)&(pWrapperTable->m_CustomXMLAttribute_GetBoolValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_GetBoolValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_setvalue", (void**)&(pWrapperTable->m_CustomXMLAttribute_SetValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_SetValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_setintegervalue", (void**)&(pWrapperTable->m_CustomXMLAttribute_SetIntegerValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_SetIntegerValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_setdoublevalue", (void**)&(pWrapperTable->m_CustomXMLAttribute_SetDoubleValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_SetDoubleValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_setboolvalue", (void**)&(pWrapperTable->m_CustomXMLAttribute_SetBoolValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_SetBoolValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_remove", (void**)&(pWrapperTable->m_CustomXMLAttribute_Remove));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_Remove == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_getname", (void**)&(pWrapperTable->m_CustomXMLNode_GetName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_GetName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_getnamespace", (void**)&(pWrapperTable->m_CustomXMLNode_GetNameSpace));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_GetNameSpace == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_getattributecount", (void**)&(pWrapperTable->m_CustomXMLNode_GetAttributeCount));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_GetAttributeCount == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_getattribute", (void**)&(pWrapperTable->m_CustomXMLNode_GetAttribute));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_GetAttribute == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_hasattribute", (void**)&(pWrapperTable->m_CustomXMLNode_HasAttribute));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_HasAttribute == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_findattribute", (void**)&(pWrapperTable->m_CustomXMLNode_FindAttribute));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_FindAttribute == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_removeattribute", (void**)&(pWrapperTable->m_CustomXMLNode_RemoveAttribute));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_RemoveAttribute == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_removeattributebyindex", (void**)&(pWrapperTable->m_CustomXMLNode_RemoveAttributeByIndex));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_RemoveAttributeByIndex == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_addattribute", (void**)&(pWrapperTable->m_CustomXMLNode_AddAttribute));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_AddAttribute == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_addintegerattribute", (void**)&(pWrapperTable->m_CustomXMLNode_AddIntegerAttribute));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_AddIntegerAttribute == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_adddoubleattribute", (void**)&(pWrapperTable->m_CustomXMLNode_AddDoubleAttribute));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_AddDoubleAttribute == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_addboolattribute", (void**)&(pWrapperTable->m_CustomXMLNode_AddBoolAttribute));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_AddBoolAttribute == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_getchildren", (void**)&(pWrapperTable->m_CustomXMLNode_GetChildren));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_GetChildren == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_countchildrenbyname", (void**)&(pWrapperTable->m_CustomXMLNode_CountChildrenByName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_CountChildrenByName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_getchildrenbyname", (void**)&(pWrapperTable->m_CustomXMLNode_GetChildrenByName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_GetChildrenByName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_haschild", (void**)&(pWrapperTable->m_CustomXMLNode_HasChild));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_HasChild == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_hasuniquechild", (void**)&(pWrapperTable->m_CustomXMLNode_HasUniqueChild));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_HasUniqueChild == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_findchild", (void**)&(pWrapperTable->m_CustomXMLNode_FindChild));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_FindChild == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_addchild", (void**)&(pWrapperTable->m_CustomXMLNode_AddChild));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_AddChild == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_removechild", (void**)&(pWrapperTable->m_CustomXMLNode_RemoveChild));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_RemoveChild == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_removechildrenwithname", (void**)&(pWrapperTable->m_CustomXMLNode_RemoveChildrenWithName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_RemoveChildrenWithName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_remove", (void**)&(pWrapperTable->m_CustomXMLNode_Remove));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_Remove == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnodes_getnodecount", (void**)&(pWrapperTable->m_CustomXMLNodes_GetNodeCount));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNodes_GetNodeCount == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnodes_getnode", (void**)&(pWrapperTable->m_CustomXMLNodes_GetNode));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNodes_GetNode == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnodes_countnodesbyname", (void**)&(pWrapperTable->m_CustomXMLNodes_CountNodesByName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNodes_CountNodesByName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnodes_getnodesbyname", (void**)&(pWrapperTable->m_CustomXMLNodes_GetNodesByName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNodes_GetNodesByName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnodes_hasnode", (void**)&(pWrapperTable->m_CustomXMLNodes_HasNode));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNodes_HasNode == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnodes_hasuniquenode", (void**)&(pWrapperTable->m_CustomXMLNodes_HasUniqueNode));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNodes_HasUniqueNode == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnodes_findnode", (void**)&(pWrapperTable->m_CustomXMLNodes_FindNode));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNodes_FindNode == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customdomtree_getnamespace", (void**)&(pWrapperTable->m_CustomDOMTree_GetNameSpace));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomDOMTree_GetNameSpace == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customdomtree_getrootnode", (void**)&(pWrapperTable->m_CustomDOMTree_GetRootNode));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomDOMTree_GetRootNode == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customdomtree_savetostring", (void**)&(pWrapperTable->m_CustomDOMTree_SaveToString));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomDOMTree_SaveToString == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_slicestackiterator_getcurrentslicestack", (void**)&(pWrapperTable->m_SliceStackIterator_GetCurrentSliceStack));
 		if ( (eLookupError != 0) || (pWrapperTable->m_SliceStackIterator_GetCurrentSliceStack == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -7443,6 +8254,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentPointData == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getcustomdatacount", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetCustomDataCount));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetCustomDataCount == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getcustomdata", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetCustomData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetCustomData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getcustomdataname", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetCustomDataName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetCustomDataName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_getlayerdatauuid", (void**)&(pWrapperTable->m_ToolpathLayerData_GetLayerDataUUID));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_GetLayerDataUUID == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -7465,6 +8288,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_writepolyline", (void**)&(pWrapperTable->m_ToolpathLayerData_WritePolyline));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_WritePolyline == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_addcustomdata", (void**)&(pWrapperTable->m_ToolpathLayerData_AddCustomData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_AddCustomData == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_finish", (void**)&(pWrapperTable->m_ToolpathLayerData_Finish));
@@ -8571,6 +9398,615 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		CheckError(m_pWrapper->m_WrapperTable.m_ResourceIterator_Count(m_pHandle, &resultCount));
 		
 		return resultCount;
+	}
+	
+	/**
+	 * Method definitions for class CCustomXMLAttribute
+	 */
+	
+	/**
+	* CCustomXMLAttribute::GetName - Retrieves name of the attribute.
+	* @return returns the name of the attribute.
+	*/
+	std::string CCustomXMLAttribute::GetName()
+	{
+		Lib3MF_uint32 bytesNeededName = 0;
+		Lib3MF_uint32 bytesWrittenName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_GetName(m_pHandle, 0, &bytesNeededName, nullptr));
+		std::vector<char> bufferName(bytesNeededName);
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_GetName(m_pHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]));
+		
+		return std::string(&bufferName[0]);
+	}
+	
+	/**
+	* CCustomXMLAttribute::GetValue - Retrieves value of the attribute as string.
+	* @return returns the value of the attribute.
+	*/
+	std::string CCustomXMLAttribute::GetValue()
+	{
+		Lib3MF_uint32 bytesNeededValue = 0;
+		Lib3MF_uint32 bytesWrittenValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_GetValue(m_pHandle, 0, &bytesNeededValue, nullptr));
+		std::vector<char> bufferValue(bytesNeededValue);
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_GetValue(m_pHandle, bytesNeededValue, &bytesWrittenValue, &bufferValue[0]));
+		
+		return std::string(&bufferValue[0]);
+	}
+	
+	/**
+	* CCustomXMLAttribute::IsValidInteger - Checks if the value is a valid integer in the given range.
+	* @param[in] nMinValue - Minimum allowed value
+	* @param[in] nMaxValue - Maximum allowed value
+	* @return returns if the value is a valid integer.
+	*/
+	bool CCustomXMLAttribute::IsValidInteger(const Lib3MF_int64 nMinValue, const Lib3MF_int64 nMaxValue)
+	{
+		bool resultIsValid = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_IsValidInteger(m_pHandle, nMinValue, nMaxValue, &resultIsValid));
+		
+		return resultIsValid;
+	}
+	
+	/**
+	* CCustomXMLAttribute::GetIntegerValue - Returns the value as integer. Fails if the value is not a valid integer in the given range.
+	* @param[in] nMinValue - Minimum allowed value
+	* @param[in] nMaxValue - Maximum allowed value
+	* @return returns the value.
+	*/
+	Lib3MF_int64 CCustomXMLAttribute::GetIntegerValue(const Lib3MF_int64 nMinValue, const Lib3MF_int64 nMaxValue)
+	{
+		Lib3MF_int64 resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_GetIntegerValue(m_pHandle, nMinValue, nMaxValue, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CCustomXMLAttribute::IsValidDouble - Checks if the value is a valid double in the given range.
+	* @param[in] dMinValue - Minimum allowed value
+	* @param[in] dMaxValue - Maximum allowed value
+	* @return returns if the value is a valid double.
+	*/
+	bool CCustomXMLAttribute::IsValidDouble(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue)
+	{
+		bool resultIsValid = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_IsValidDouble(m_pHandle, dMinValue, dMaxValue, &resultIsValid));
+		
+		return resultIsValid;
+	}
+	
+	/**
+	* CCustomXMLAttribute::GetDoubleValue - Returns the value as double. Fails if the value is not a valid double in the given range.
+	* @param[in] dMinValue - Minimum allowed value
+	* @param[in] dMaxValue - Maximum allowed value
+	* @return returns the value .
+	*/
+	Lib3MF_double CCustomXMLAttribute::GetDoubleValue(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue)
+	{
+		Lib3MF_double resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_GetDoubleValue(m_pHandle, dMinValue, dMaxValue, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CCustomXMLAttribute::IsValidBool - Checks if the value is a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+	* @return returns if the value is a valid bool.
+	*/
+	bool CCustomXMLAttribute::IsValidBool()
+	{
+		bool resultIsValid = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_IsValidBool(m_pHandle, &resultIsValid));
+		
+		return resultIsValid;
+	}
+	
+	/**
+	* CCustomXMLAttribute::GetBoolValue - Returns the value as bool. Fails if the value is not a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+	* @param[in] dMinValue - Minimum allowed value
+	* @param[in] dMaxValue - Maximum allowed value
+	* @return returns the value .
+	*/
+	bool CCustomXMLAttribute::GetBoolValue(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue)
+	{
+		bool resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_GetBoolValue(m_pHandle, dMinValue, dMaxValue, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CCustomXMLAttribute::SetValue - Sets the value of the attribute as string.
+	* @param[in] sValue - new value of the attribute.
+	*/
+	void CCustomXMLAttribute::SetValue(const std::string & sValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_SetValue(m_pHandle, sValue.c_str()));
+	}
+	
+	/**
+	* CCustomXMLAttribute::SetIntegerValue - Sets the value of the attribute as integer.
+	* @param[in] nValue - new value of the attribute.
+	*/
+	void CCustomXMLAttribute::SetIntegerValue(const Lib3MF_int64 nValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_SetIntegerValue(m_pHandle, nValue));
+	}
+	
+	/**
+	* CCustomXMLAttribute::SetDoubleValue - Sets the value of the attribute as double.
+	* @param[in] dValue - new value of the attribute.
+	*/
+	void CCustomXMLAttribute::SetDoubleValue(const Lib3MF_double dValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_SetDoubleValue(m_pHandle, dValue));
+	}
+	
+	/**
+	* CCustomXMLAttribute::SetBoolValue - Sets the value of the attribute as bool.
+	* @param[in] bValue - new value of the attribute.
+	*/
+	void CCustomXMLAttribute::SetBoolValue(const bool bValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_SetBoolValue(m_pHandle, bValue));
+	}
+	
+	/**
+	* CCustomXMLAttribute::Remove - Removes the attribute from its parent node. All subsequent calls to the class will fail.
+	*/
+	void CCustomXMLAttribute::Remove()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_Remove(m_pHandle));
+	}
+	
+	/**
+	 * Method definitions for class CCustomXMLNode
+	 */
+	
+	/**
+	* CCustomXMLNode::GetName - Retrieves name of the node.
+	* @return returns the name of the node.
+	*/
+	std::string CCustomXMLNode::GetName()
+	{
+		Lib3MF_uint32 bytesNeededName = 0;
+		Lib3MF_uint32 bytesWrittenName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_GetName(m_pHandle, 0, &bytesNeededName, nullptr));
+		std::vector<char> bufferName(bytesNeededName);
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_GetName(m_pHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]));
+		
+		return std::string(&bufferName[0]);
+	}
+	
+	/**
+	* CCustomXMLNode::GetNameSpace - Retrieves namespace of the node.
+	* @return returns the namespace of the node.
+	*/
+	std::string CCustomXMLNode::GetNameSpace()
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_GetNameSpace(m_pHandle, 0, &bytesNeededNameSpace, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_GetNameSpace(m_pHandle, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0]));
+		
+		return std::string(&bufferNameSpace[0]);
+	}
+	
+	/**
+	* CCustomXMLNode::GetAttributeCount - Returns number of attributes.
+	* @return returns the number of attributes.
+	*/
+	Lib3MF_uint64 CCustomXMLNode::GetAttributeCount()
+	{
+		Lib3MF_uint64 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_GetAttributeCount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CCustomXMLNode::GetAttribute - Returns attribute instance. Fails if Index is out of range.
+	* @param[in] nIndex - Index of the attribute to return (0-based).
+	* @return XML Document attribute.
+	*/
+	PCustomXMLAttribute CCustomXMLNode::GetAttribute(const Lib3MF_uint64 nIndex)
+	{
+		Lib3MFHandle hAttributeInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_GetAttribute(m_pHandle, nIndex, &hAttributeInstance));
+		
+		if (!hAttributeInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLAttribute>(dynamic_cast<CCustomXMLAttribute*>(m_pWrapper->polymorphicFactory(hAttributeInstance)));
+	}
+	
+	/**
+	* CCustomXMLNode::HasAttribute - Returns if attribute of a specific name exists.
+	* @param[in] sName - Name of the attribute.
+	* @return Returns if the attribute exists.
+	*/
+	bool CCustomXMLNode::HasAttribute(const std::string & sName)
+	{
+		bool resultAttributeExists = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_HasAttribute(m_pHandle, sName.c_str(), &resultAttributeExists));
+		
+		return resultAttributeExists;
+	}
+	
+	/**
+	* CCustomXMLNode::FindAttribute - Returns attribute instance of a specific name. 
+	* @param[in] sName - Name of the attribute.
+	* @param[in] bMustExist - If true, the call fails if attribute does not exist. If falls, the call will return null if the attribute does not exist.
+	* @return XML Document attribute.
+	*/
+	PCustomXMLAttribute CCustomXMLNode::FindAttribute(const std::string & sName, const bool bMustExist)
+	{
+		Lib3MFHandle hAttributeInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_FindAttribute(m_pHandle, sName.c_str(), bMustExist, &hAttributeInstance));
+		
+		if (hAttributeInstance) {
+			return std::shared_ptr<CCustomXMLAttribute>(dynamic_cast<CCustomXMLAttribute*>(m_pWrapper->polymorphicFactory(hAttributeInstance)));
+		} else {
+			return nullptr;
+		}
+	}
+	
+	/**
+	* CCustomXMLNode::RemoveAttribute - Removes the attribute with a specific name. Does nothing if attribute does not exist.
+	* @param[in] sName - Name of the attribute.
+	* @return Returns true if an attribute was removed.
+	*/
+	bool CCustomXMLNode::RemoveAttribute(const std::string & sName)
+	{
+		bool resultAttributeRemoved = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_RemoveAttribute(m_pHandle, sName.c_str(), &resultAttributeRemoved));
+		
+		return resultAttributeRemoved;
+	}
+	
+	/**
+	* CCustomXMLNode::RemoveAttributeByIndex - Removes the attribute with a specific index. Fails if index is invalid
+	* @param[in] nIndex - Index of the attribute to remove (0-based).
+	* @return Returns true if an attribute was removed.
+	*/
+	bool CCustomXMLNode::RemoveAttributeByIndex(const Lib3MF_uint64 nIndex)
+	{
+		bool resultAttributeRemoved = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_RemoveAttributeByIndex(m_pHandle, nIndex, &resultAttributeRemoved));
+		
+		return resultAttributeRemoved;
+	}
+	
+	/**
+	* CCustomXMLNode::AddAttribute - Adds an attribute with a specific name and string value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] sValue - Value of the attribute.
+	*/
+	void CCustomXMLNode::AddAttribute(const std::string & sName, const std::string & sValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_AddAttribute(m_pHandle, sName.c_str(), sValue.c_str()));
+	}
+	
+	/**
+	* CCustomXMLNode::AddIntegerAttribute - Adds an attribute with a specific name and integer value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] nValue - Value of the attribute.
+	*/
+	void CCustomXMLNode::AddIntegerAttribute(const std::string & sName, const Lib3MF_int64 nValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_AddIntegerAttribute(m_pHandle, sName.c_str(), nValue));
+	}
+	
+	/**
+	* CCustomXMLNode::AddDoubleAttribute - Adds an attribute with a specific name and double value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] dValue - Value of the attribute.
+	*/
+	void CCustomXMLNode::AddDoubleAttribute(const std::string & sName, const Lib3MF_double dValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_AddDoubleAttribute(m_pHandle, sName.c_str(), dValue));
+	}
+	
+	/**
+	* CCustomXMLNode::AddBoolAttribute - Adds an attribute with a specific name and bool value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] bValue - Value of the attribute.
+	*/
+	void CCustomXMLNode::AddBoolAttribute(const std::string & sName, const bool bValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_AddBoolAttribute(m_pHandle, sName.c_str(), bValue));
+	}
+	
+	/**
+	* CCustomXMLNode::GetChildren - Returns all the child nodes of the XML Node.
+	* @return returns the list of child nodes.
+	*/
+	PCustomXMLNodes CCustomXMLNode::GetChildren()
+	{
+		Lib3MFHandle hChildNodes = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_GetChildren(m_pHandle, &hChildNodes));
+		
+		if (!hChildNodes) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNodes>(dynamic_cast<CCustomXMLNodes*>(m_pWrapper->polymorphicFactory(hChildNodes)));
+	}
+	
+	/**
+	* CCustomXMLNode::CountChildrenByName - Returns how many children of the XML Node have a specific name.
+	* @param[in] sName - Name of the node.
+	* @return returns the number children with the specified name.
+	*/
+	Lib3MF_uint64 CCustomXMLNode::CountChildrenByName(const std::string & sName)
+	{
+		Lib3MF_uint64 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_CountChildrenByName(m_pHandle, sName.c_str(), &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CCustomXMLNode::GetChildrenByName - Returns all the child nodes of the XML Node with a specific name.
+	* @param[in] sName - Name of the child.
+	* @return returns the list of child nodes.
+	*/
+	PCustomXMLNodes CCustomXMLNode::GetChildrenByName(const std::string & sName)
+	{
+		Lib3MFHandle hChildNodes = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_GetChildrenByName(m_pHandle, sName.c_str(), &hChildNodes));
+		
+		if (!hChildNodes) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNodes>(dynamic_cast<CCustomXMLNodes*>(m_pWrapper->polymorphicFactory(hChildNodes)));
+	}
+	
+	/**
+	* CCustomXMLNode::HasChild - Returns if a child with a specific name exist.
+	* @param[in] sName - Name of the child.
+	* @return returns if a child with a specific name exists.
+	*/
+	bool CCustomXMLNode::HasChild(const std::string & sName)
+	{
+		bool resultChildExists = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_HasChild(m_pHandle, sName.c_str(), &resultChildExists));
+		
+		return resultChildExists;
+	}
+	
+	/**
+	* CCustomXMLNode::HasUniqueChild - Returns if a child with a specific name exist once and only once.
+	* @param[in] sName - Name of the child.
+	* @return returns if a child with a specific name exists once and only once.
+	*/
+	bool CCustomXMLNode::HasUniqueChild(const std::string & sName)
+	{
+		bool resultChildExists = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_HasUniqueChild(m_pHandle, sName.c_str(), &resultChildExists));
+		
+		return resultChildExists;
+	}
+	
+	/**
+	* CCustomXMLNode::FindChild - Returns child with a specific name. Throws an error if name does not exist once and only once.
+	* @param[in] sName - Name of the child.
+	* @param[in] bMustExist - If true, the call fails if child does not exist. If falls, the call will return null if the child does not exist.
+	* @return returns child instance or null.
+	*/
+	PCustomXMLNode CCustomXMLNode::FindChild(const std::string & sName, const bool bMustExist)
+	{
+		Lib3MFHandle hChildInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_FindChild(m_pHandle, sName.c_str(), bMustExist, &hChildInstance));
+		
+		if (hChildInstance) {
+			return std::shared_ptr<CCustomXMLNode>(dynamic_cast<CCustomXMLNode*>(m_pWrapper->polymorphicFactory(hChildInstance)));
+		} else {
+			return nullptr;
+		}
+	}
+	
+	/**
+	* CCustomXMLNode::AddChild - Adds a new child with a specific name.
+	* @param[in] sName - Name of the child.
+	* @return returns child instance.
+	*/
+	PCustomXMLNode CCustomXMLNode::AddChild(const std::string & sName)
+	{
+		Lib3MFHandle hChildInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_AddChild(m_pHandle, sName.c_str(), &hChildInstance));
+		
+		if (!hChildInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNode>(dynamic_cast<CCustomXMLNode*>(m_pWrapper->polymorphicFactory(hChildInstance)));
+	}
+	
+	/**
+	* CCustomXMLNode::RemoveChild - Removes a specific child. All subsequent calls to the child will fail after the call.
+	* @param[in] pChildInstance - child instance to remove. Fails if given instance is not a child of the node.
+	*/
+	void CCustomXMLNode::RemoveChild(classParam<CCustomXMLNode> pChildInstance)
+	{
+		Lib3MFHandle hChildInstance = pChildInstance.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_RemoveChild(m_pHandle, hChildInstance));
+	}
+	
+	/**
+	* CCustomXMLNode::RemoveChildrenWithName - Removes all children with a specific name. Does nothing if no child with the name exists. All subsequent calls to the deleted children will fail after the call.
+	* @param[in] sName - Name of the children.
+	* @return Returns how many children have been deleted.
+	*/
+	Lib3MF_uint64 CCustomXMLNode::RemoveChildrenWithName(const std::string & sName)
+	{
+		Lib3MF_uint64 resultNumberOfDeletedChildren = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_RemoveChildrenWithName(m_pHandle, sName.c_str(), &resultNumberOfDeletedChildren));
+		
+		return resultNumberOfDeletedChildren;
+	}
+	
+	/**
+	* CCustomXMLNode::Remove - Removes the node from its parent. The root node of the document can not be removed. Any subsequent call to the node fails after this.
+	*/
+	void CCustomXMLNode::Remove()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_Remove(m_pHandle));
+	}
+	
+	/**
+	 * Method definitions for class CCustomXMLNodes
+	 */
+	
+	/**
+	* CCustomXMLNodes::GetNodeCount - Returns number of nodes.
+	* @return returns the number of nodes in the list.
+	*/
+	Lib3MF_uint64 CCustomXMLNodes::GetNodeCount()
+	{
+		Lib3MF_uint64 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNodes_GetNodeCount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CCustomXMLNodes::GetNode - Returns node instance. Fails if Index is out of range.
+	* @param[in] nIndex - Index of the node to return (0-based).
+	* @return XML Node node.
+	*/
+	PCustomXMLNode CCustomXMLNodes::GetNode(const Lib3MF_uint64 nIndex)
+	{
+		Lib3MFHandle hNodeInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNodes_GetNode(m_pHandle, nIndex, &hNodeInstance));
+		
+		if (!hNodeInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNode>(dynamic_cast<CCustomXMLNode*>(m_pWrapper->polymorphicFactory(hNodeInstance)));
+	}
+	
+	/**
+	* CCustomXMLNodes::CountNodesByName - Returns how many nodes of the XML Node have a specific name.
+	* @param[in] sName - Name of the node.
+	* @return returns the number of nodes with the specified name.
+	*/
+	Lib3MF_uint64 CCustomXMLNodes::CountNodesByName(const std::string & sName)
+	{
+		Lib3MF_uint64 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNodes_CountNodesByName(m_pHandle, sName.c_str(), &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CCustomXMLNodes::GetNodesByName - Returns all the nodes nodes of the XML Node with a specific name.
+	* @param[in] sName - Name of the node.
+	* @return returns the list of node nodes.
+	*/
+	PCustomXMLNodes CCustomXMLNodes::GetNodesByName(const std::string & sName)
+	{
+		Lib3MFHandle hNodes = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNodes_GetNodesByName(m_pHandle, sName.c_str(), &hNodes));
+		
+		if (!hNodes) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNodes>(dynamic_cast<CCustomXMLNodes*>(m_pWrapper->polymorphicFactory(hNodes)));
+	}
+	
+	/**
+	* CCustomXMLNodes::HasNode - Returns if a node with a specific name exist.
+	* @param[in] sName - Name of the node.
+	* @return returns if a node with a specific name exists.
+	*/
+	bool CCustomXMLNodes::HasNode(const std::string & sName)
+	{
+		bool resultNodeExists = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNodes_HasNode(m_pHandle, sName.c_str(), &resultNodeExists));
+		
+		return resultNodeExists;
+	}
+	
+	/**
+	* CCustomXMLNodes::HasUniqueNode - Returns if a node with a specific name exist once and only once.
+	* @param[in] sName - Name of the node.
+	* @return returns if a node with a specific name exists once and only once.
+	*/
+	bool CCustomXMLNodes::HasUniqueNode(const std::string & sName)
+	{
+		bool resultNodeExists = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNodes_HasUniqueNode(m_pHandle, sName.c_str(), &resultNodeExists));
+		
+		return resultNodeExists;
+	}
+	
+	/**
+	* CCustomXMLNodes::FindNode - Returns node with a specific name. Throws an error if name does not exist once and only once.
+	* @param[in] sName - Name of the node.
+	* @param[in] bMustExist - If true, the call fails if node does not exist. If falls, the call will return null if the node does not exist.
+	* @return returns node instance.
+	*/
+	PCustomXMLNode CCustomXMLNodes::FindNode(const std::string & sName, const bool bMustExist)
+	{
+		Lib3MFHandle hNodeInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNodes_FindNode(m_pHandle, sName.c_str(), bMustExist, &hNodeInstance));
+		
+		if (hNodeInstance) {
+			return std::shared_ptr<CCustomXMLNode>(dynamic_cast<CCustomXMLNode*>(m_pWrapper->polymorphicFactory(hNodeInstance)));
+		} else {
+			return nullptr;
+		}
+	}
+	
+	/**
+	 * Method definitions for class CCustomDOMTree
+	 */
+	
+	/**
+	* CCustomDOMTree::GetNameSpace - Returns the namespace identifier for the DOM Tree.
+	* @return returns the namespace of the DOM Tree.
+	*/
+	std::string CCustomDOMTree::GetNameSpace()
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomDOMTree_GetNameSpace(m_pHandle, 0, &bytesNeededNameSpace, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomDOMTree_GetNameSpace(m_pHandle, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0]));
+		
+		return std::string(&bufferNameSpace[0]);
+	}
+	
+	/**
+	* CCustomDOMTree::GetRootNode - Returns root node of the tree.
+	* @return Root node of the document.
+	*/
+	PCustomXMLNode CCustomDOMTree::GetRootNode()
+	{
+		Lib3MFHandle hRootNode = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomDOMTree_GetRootNode(m_pHandle, &hRootNode));
+		
+		if (!hRootNode) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNode>(dynamic_cast<CCustomXMLNode*>(m_pWrapper->polymorphicFactory(hRootNode)));
+	}
+	
+	/**
+	* CCustomDOMTree::SaveToString - Saves the XML tree into a string.
+	* @param[in] bAddLineBreaks - If true, line breaks and indentation will be added to the output string.
+	* @return String with the XML Content.
+	*/
+	std::string CCustomDOMTree::SaveToString(const bool bAddLineBreaks)
+	{
+		Lib3MF_uint32 bytesNeededXMLString = 0;
+		Lib3MF_uint32 bytesWrittenXMLString = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomDOMTree_SaveToString(m_pHandle, bAddLineBreaks, 0, &bytesNeededXMLString, nullptr));
+		std::vector<char> bufferXMLString(bytesNeededXMLString);
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomDOMTree_SaveToString(m_pHandle, bAddLineBreaks, bytesNeededXMLString, &bytesWrittenXMLString, &bufferXMLString[0]));
+		
+		return std::string(&bufferXMLString[0]);
 	}
 	
 	/**
@@ -11403,6 +12839,54 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CToolpathLayerReader::GetCustomDataCount - Retrieves the count of custom data elements.
+	* @return Count
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::GetCustomDataCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetCustomDataCount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetCustomData - Retrieves the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @return DOM Tree of the data.
+	*/
+	PCustomDOMTree CToolpathLayerReader::GetCustomData(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hData = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetCustomData(m_pHandle, nIndex, &hData));
+		
+		if (!hData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomDOMTree>(dynamic_cast<CCustomDOMTree*>(m_pWrapper->polymorphicFactory(hData)));
+	}
+	
+	/**
+	* CToolpathLayerReader::GetCustomDataName - Retrieves the node name of the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @param[out] sNameSpace - Namespace of the custom data tree.
+	* @param[out] sDataName - Root name of the data tree.
+	*/
+	void CToolpathLayerReader::GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName)
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		Lib3MF_uint32 bytesNeededDataName = 0;
+		Lib3MF_uint32 bytesWrittenDataName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetCustomDataName(m_pHandle, nIndex, 0, &bytesNeededNameSpace, nullptr, 0, &bytesNeededDataName, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		std::vector<char> bufferDataName(bytesNeededDataName);
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetCustomDataName(m_pHandle, nIndex, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0], bytesNeededDataName, &bytesWrittenDataName, &bufferDataName[0]));
+		sNameSpace = std::string(&bufferNameSpace[0]);
+		sDataName = std::string(&bufferDataName[0]);
+	}
+	
+	/**
 	 * Method definitions for class CToolpathLayerData
 	 */
 	
@@ -11480,6 +12964,24 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	void CToolpathLayerData::WritePolyline(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer)
 	{
 		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_WritePolyline(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::AddCustomData - Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sNameSpacePrefix - Namespace prefix of the custom data tree. Namespace prefix MUST be unique to the layer.
+	* @param[in] sDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
+	* @return DOM Tree of the data.
+	*/
+	PCustomDOMTree CToolpathLayerData::AddCustomData(const std::string & sNameSpace, const std::string & sNameSpacePrefix, const std::string & sDataName)
+	{
+		Lib3MFHandle hData = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_AddCustomData(m_pHandle, sNameSpace.c_str(), sNameSpacePrefix.c_str(), sDataName.c_str(), &hData));
+		
+		if (!hData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomDOMTree>(dynamic_cast<CCustomDOMTree*>(m_pWrapper->polymorphicFactory(hData)));
 	}
 	
 	/**

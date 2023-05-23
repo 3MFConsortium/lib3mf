@@ -48,6 +48,10 @@ Persistent<Function> CLib3MFReader::constructor;
 Persistent<Function> CLib3MFPackagePart::constructor;
 Persistent<Function> CLib3MFResource::constructor;
 Persistent<Function> CLib3MFResourceIterator::constructor;
+Persistent<Function> CLib3MFCustomXMLAttribute::constructor;
+Persistent<Function> CLib3MFCustomXMLNode::constructor;
+Persistent<Function> CLib3MFCustomXMLNodes::constructor;
+Persistent<Function> CLib3MFCustomDOMTree::constructor;
 Persistent<Function> CLib3MFSliceStackIterator::constructor;
 Persistent<Function> CLib3MFObjectIterator::constructor;
 Persistent<Function> CLib3MFMeshObjectIterator::constructor;
@@ -2608,6 +2612,1502 @@ void CLib3MFResourceIterator::Count(const FunctionCallbackInfo<Value>& args)
         Lib3MFResult errorCode = wrapperTable->m_ResourceIterator_Count(instanceHandle, &nReturnCount);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
+ Class CLib3MFCustomXMLAttribute Implementation
+**************************************************************************************************************************/
+
+CLib3MFCustomXMLAttribute::CLib3MFCustomXMLAttribute()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFCustomXMLAttribute::~CLib3MFCustomXMLAttribute()
+{
+}
+
+void CLib3MFCustomXMLAttribute::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFCustomXMLAttribute"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetName", GetName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetValue", GetValue);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "IsValidInteger", IsValidInteger);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetIntegerValue", GetIntegerValue);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "IsValidDouble", IsValidDouble);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetDoubleValue", GetDoubleValue);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "IsValidBool", IsValidBool);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetBoolValue", GetBoolValue);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetValue", SetValue);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetIntegerValue", SetIntegerValue);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetDoubleValue", SetDoubleValue);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetBoolValue", SetBoolValue);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "Remove", Remove);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFCustomXMLAttribute::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFCustomXMLAttribute * customxmlattributeInstance = new CLib3MFCustomXMLAttribute();
+				customxmlattributeInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFCustomXMLAttribute: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFCustomXMLAttribute::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFCustomXMLAttribute::GetName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int bytesNeededName = 0;
+        unsigned int bytesWrittenName = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetName.");
+        if (wrapperTable->m_CustomXMLAttribute_GetName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLAttribute::GetName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_CustomXMLAttribute_GetName(instanceHandle, 0, &bytesNeededName, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferName;
+        bufferName.resize(bytesNeededName);
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLAttribute_GetName(instanceHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferName[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLAttribute::GetValue(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int bytesNeededValue = 0;
+        unsigned int bytesWrittenValue = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetValue.");
+        if (wrapperTable->m_CustomXMLAttribute_GetValue == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLAttribute::GetValue.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_CustomXMLAttribute_GetValue(instanceHandle, 0, &bytesNeededValue, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferValue;
+        bufferValue.resize(bytesNeededValue);
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLAttribute_GetValue(instanceHandle, bytesNeededValue, &bytesWrittenValue, &bufferValue[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferValue[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLAttribute::IsValidInteger(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected int64 parameter 0 (MinValue)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected int64 parameter 1 (MaxValue)");
+        }
+        v8::String::Utf8Value sutf8MinValue(isolate, args[0]);
+        std::string sMinValue = *sutf8MinValue;
+        int64_t nMinValue = stoll(sMinValue);
+        v8::String::Utf8Value sutf8MaxValue(isolate, args[1]);
+        std::string sMaxValue = *sutf8MaxValue;
+        int64_t nMaxValue = stoll(sMaxValue);
+        bool bReturnIsValid = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method IsValidInteger.");
+        if (wrapperTable->m_CustomXMLAttribute_IsValidInteger == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLAttribute::IsValidInteger.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLAttribute_IsValidInteger(instanceHandle, nMinValue, nMaxValue, &bReturnIsValid);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnIsValid));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLAttribute::GetIntegerValue(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected int64 parameter 0 (MinValue)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected int64 parameter 1 (MaxValue)");
+        }
+        v8::String::Utf8Value sutf8MinValue(isolate, args[0]);
+        std::string sMinValue = *sutf8MinValue;
+        int64_t nMinValue = stoll(sMinValue);
+        v8::String::Utf8Value sutf8MaxValue(isolate, args[1]);
+        std::string sMaxValue = *sutf8MaxValue;
+        int64_t nMaxValue = stoll(sMaxValue);
+         int64_t nReturnValue = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetIntegerValue.");
+        if (wrapperTable->m_CustomXMLAttribute_GetIntegerValue == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLAttribute::GetIntegerValue.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLAttribute_GetIntegerValue(instanceHandle, nMinValue, nMaxValue, &nReturnValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnValue).c_str() ));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLAttribute::IsValidDouble(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsNumber()) {
+            throw std::runtime_error("Expected double parameter 0 (MinValue)");
+        }
+        if (!args[1]->IsNumber()) {
+            throw std::runtime_error("Expected double parameter 1 (MaxValue)");
+        }
+        double dMinValue = (double) args[0]->NumberValue(isolate->GetCurrentContext()).ToChecked();
+        double dMaxValue = (double) args[1]->NumberValue(isolate->GetCurrentContext()).ToChecked();
+        bool bReturnIsValid = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method IsValidDouble.");
+        if (wrapperTable->m_CustomXMLAttribute_IsValidDouble == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLAttribute::IsValidDouble.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLAttribute_IsValidDouble(instanceHandle, dMinValue, dMaxValue, &bReturnIsValid);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnIsValid));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLAttribute::GetDoubleValue(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsNumber()) {
+            throw std::runtime_error("Expected double parameter 0 (MinValue)");
+        }
+        if (!args[1]->IsNumber()) {
+            throw std::runtime_error("Expected double parameter 1 (MaxValue)");
+        }
+        double dMinValue = (double) args[0]->NumberValue(isolate->GetCurrentContext()).ToChecked();
+        double dMaxValue = (double) args[1]->NumberValue(isolate->GetCurrentContext()).ToChecked();
+        double dReturnValue = 0.0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetDoubleValue.");
+        if (wrapperTable->m_CustomXMLAttribute_GetDoubleValue == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLAttribute::GetDoubleValue.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLAttribute_GetDoubleValue(instanceHandle, dMinValue, dMaxValue, &dReturnValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Number::New(isolate, dReturnValue));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLAttribute::IsValidBool(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        bool bReturnIsValid = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method IsValidBool.");
+        if (wrapperTable->m_CustomXMLAttribute_IsValidBool == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLAttribute::IsValidBool.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLAttribute_IsValidBool(instanceHandle, &bReturnIsValid);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnIsValid));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLAttribute::GetBoolValue(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsNumber()) {
+            throw std::runtime_error("Expected double parameter 0 (MinValue)");
+        }
+        if (!args[1]->IsNumber()) {
+            throw std::runtime_error("Expected double parameter 1 (MaxValue)");
+        }
+        double dMinValue = (double) args[0]->NumberValue(isolate->GetCurrentContext()).ToChecked();
+        double dMaxValue = (double) args[1]->NumberValue(isolate->GetCurrentContext()).ToChecked();
+        bool bReturnValue = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetBoolValue.");
+        if (wrapperTable->m_CustomXMLAttribute_GetBoolValue == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLAttribute::GetBoolValue.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLAttribute_GetBoolValue(instanceHandle, dMinValue, dMaxValue, &bReturnValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnValue));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLAttribute::SetValue(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Value)");
+        }
+        v8::String::Utf8Value sutf8Value(isolate, args[0]);
+        std::string sValue = *sutf8Value;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetValue.");
+        if (wrapperTable->m_CustomXMLAttribute_SetValue == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLAttribute::SetValue.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLAttribute_SetValue(instanceHandle, sValue.c_str());
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLAttribute::SetIntegerValue(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected int64 parameter 0 (Value)");
+        }
+        v8::String::Utf8Value sutf8Value(isolate, args[0]);
+        std::string sValue = *sutf8Value;
+        int64_t nValue = stoll(sValue);
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetIntegerValue.");
+        if (wrapperTable->m_CustomXMLAttribute_SetIntegerValue == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLAttribute::SetIntegerValue.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLAttribute_SetIntegerValue(instanceHandle, nValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLAttribute::SetDoubleValue(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsNumber()) {
+            throw std::runtime_error("Expected double parameter 0 (Value)");
+        }
+        double dValue = (double) args[0]->NumberValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetDoubleValue.");
+        if (wrapperTable->m_CustomXMLAttribute_SetDoubleValue == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLAttribute::SetDoubleValue.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLAttribute_SetDoubleValue(instanceHandle, dValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLAttribute::SetBoolValue(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsBoolean()) {
+            throw std::runtime_error("Expected bool parameter 0 (Value)");
+        }
+        bool bValue = args[0]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetBoolValue.");
+        if (wrapperTable->m_CustomXMLAttribute_SetBoolValue == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLAttribute::SetBoolValue.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLAttribute_SetBoolValue(instanceHandle, bValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLAttribute::Remove(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method Remove.");
+        if (wrapperTable->m_CustomXMLAttribute_Remove == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLAttribute::Remove.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLAttribute_Remove(instanceHandle);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
+ Class CLib3MFCustomXMLNode Implementation
+**************************************************************************************************************************/
+
+CLib3MFCustomXMLNode::CLib3MFCustomXMLNode()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFCustomXMLNode::~CLib3MFCustomXMLNode()
+{
+}
+
+void CLib3MFCustomXMLNode::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFCustomXMLNode"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetName", GetName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetNameSpace", GetNameSpace);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetAttributeCount", GetAttributeCount);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetAttribute", GetAttribute);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "HasAttribute", HasAttribute);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "FindAttribute", FindAttribute);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveAttribute", RemoveAttribute);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveAttributeByIndex", RemoveAttributeByIndex);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddAttribute", AddAttribute);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddIntegerAttribute", AddIntegerAttribute);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddDoubleAttribute", AddDoubleAttribute);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddBoolAttribute", AddBoolAttribute);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetChildren", GetChildren);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "CountChildrenByName", CountChildrenByName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetChildrenByName", GetChildrenByName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "HasChild", HasChild);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "HasUniqueChild", HasUniqueChild);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "FindChild", FindChild);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddChild", AddChild);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveChild", RemoveChild);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveChildrenWithName", RemoveChildrenWithName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "Remove", Remove);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFCustomXMLNode::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFCustomXMLNode * customxmlnodeInstance = new CLib3MFCustomXMLNode();
+				customxmlnodeInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFCustomXMLNode: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFCustomXMLNode::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFCustomXMLNode::GetName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int bytesNeededName = 0;
+        unsigned int bytesWrittenName = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetName.");
+        if (wrapperTable->m_CustomXMLNode_GetName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::GetName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_CustomXMLNode_GetName(instanceHandle, 0, &bytesNeededName, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferName;
+        bufferName.resize(bytesNeededName);
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_GetName(instanceHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferName[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNode::GetNameSpace(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int bytesNeededNameSpace = 0;
+        unsigned int bytesWrittenNameSpace = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetNameSpace.");
+        if (wrapperTable->m_CustomXMLNode_GetNameSpace == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::GetNameSpace.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_CustomXMLNode_GetNameSpace(instanceHandle, 0, &bytesNeededNameSpace, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferNameSpace;
+        bufferNameSpace.resize(bytesNeededNameSpace);
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_GetNameSpace(instanceHandle, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferNameSpace[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNode::GetAttributeCount(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        uint64_t nReturnCount = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetAttributeCount.");
+        if (wrapperTable->m_CustomXMLNode_GetAttributeCount == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::GetAttributeCount.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_GetAttributeCount(instanceHandle, &nReturnCount);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNode::GetAttribute(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected uint64 parameter 0 (Index)");
+        }
+        v8::String::Utf8Value sutf8Index(isolate, args[0]);
+        std::string sIndex = *sutf8Index;
+        uint64_t nIndex = stoull(sIndex);
+        Lib3MFHandle hReturnAttributeInstance = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetAttribute.");
+        if (wrapperTable->m_CustomXMLNode_GetAttribute == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::GetAttribute.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_GetAttribute(instanceHandle, nIndex, &hReturnAttributeInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjAttributeInstance = CLib3MFCustomXMLAttribute::NewInstance(args.Holder(), hReturnAttributeInstance);
+        args.GetReturnValue().Set(instanceObjAttributeInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNode::HasAttribute(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Name)");
+        }
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
+        std::string sName = *sutf8Name;
+        bool bReturnAttributeExists = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method HasAttribute.");
+        if (wrapperTable->m_CustomXMLNode_HasAttribute == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::HasAttribute.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_HasAttribute(instanceHandle, sName.c_str(), &bReturnAttributeExists);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnAttributeExists));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNode::FindAttribute(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Name)");
+        }
+        if (!args[1]->IsBoolean()) {
+            throw std::runtime_error("Expected bool parameter 1 (MustExist)");
+        }
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
+        std::string sName = *sutf8Name;
+        bool bMustExist = args[1]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
+        Lib3MFHandle hReturnAttributeInstance = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method FindAttribute.");
+        if (wrapperTable->m_CustomXMLNode_FindAttribute == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::FindAttribute.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_FindAttribute(instanceHandle, sName.c_str(), bMustExist, &hReturnAttributeInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjAttributeInstance = CLib3MFCustomXMLAttribute::NewInstance(args.Holder(), hReturnAttributeInstance);
+        args.GetReturnValue().Set(instanceObjAttributeInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNode::RemoveAttribute(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Name)");
+        }
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
+        std::string sName = *sutf8Name;
+        bool bReturnAttributeRemoved = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method RemoveAttribute.");
+        if (wrapperTable->m_CustomXMLNode_RemoveAttribute == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::RemoveAttribute.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_RemoveAttribute(instanceHandle, sName.c_str(), &bReturnAttributeRemoved);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnAttributeRemoved));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNode::RemoveAttributeByIndex(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected uint64 parameter 0 (Index)");
+        }
+        v8::String::Utf8Value sutf8Index(isolate, args[0]);
+        std::string sIndex = *sutf8Index;
+        uint64_t nIndex = stoull(sIndex);
+        bool bReturnAttributeRemoved = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method RemoveAttributeByIndex.");
+        if (wrapperTable->m_CustomXMLNode_RemoveAttributeByIndex == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::RemoveAttributeByIndex.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_RemoveAttributeByIndex(instanceHandle, nIndex, &bReturnAttributeRemoved);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnAttributeRemoved));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNode::AddAttribute(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Name)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (Value)");
+        }
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
+        std::string sName = *sutf8Name;
+        v8::String::Utf8Value sutf8Value(isolate, args[1]);
+        std::string sValue = *sutf8Value;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddAttribute.");
+        if (wrapperTable->m_CustomXMLNode_AddAttribute == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::AddAttribute.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_AddAttribute(instanceHandle, sName.c_str(), sValue.c_str());
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNode::AddIntegerAttribute(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Name)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected int64 parameter 1 (Value)");
+        }
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
+        std::string sName = *sutf8Name;
+        v8::String::Utf8Value sutf8Value(isolate, args[1]);
+        std::string sValue = *sutf8Value;
+        int64_t nValue = stoll(sValue);
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddIntegerAttribute.");
+        if (wrapperTable->m_CustomXMLNode_AddIntegerAttribute == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::AddIntegerAttribute.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_AddIntegerAttribute(instanceHandle, sName.c_str(), nValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNode::AddDoubleAttribute(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Name)");
+        }
+        if (!args[1]->IsNumber()) {
+            throw std::runtime_error("Expected double parameter 1 (Value)");
+        }
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
+        std::string sName = *sutf8Name;
+        double dValue = (double) args[1]->NumberValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddDoubleAttribute.");
+        if (wrapperTable->m_CustomXMLNode_AddDoubleAttribute == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::AddDoubleAttribute.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_AddDoubleAttribute(instanceHandle, sName.c_str(), dValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNode::AddBoolAttribute(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Name)");
+        }
+        if (!args[1]->IsBoolean()) {
+            throw std::runtime_error("Expected bool parameter 1 (Value)");
+        }
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
+        std::string sName = *sutf8Name;
+        bool bValue = args[1]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddBoolAttribute.");
+        if (wrapperTable->m_CustomXMLNode_AddBoolAttribute == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::AddBoolAttribute.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_AddBoolAttribute(instanceHandle, sName.c_str(), bValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNode::GetChildren(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnChildNodes = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetChildren.");
+        if (wrapperTable->m_CustomXMLNode_GetChildren == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::GetChildren.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_GetChildren(instanceHandle, &hReturnChildNodes);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjChildNodes = CLib3MFCustomXMLNodes::NewInstance(args.Holder(), hReturnChildNodes);
+        args.GetReturnValue().Set(instanceObjChildNodes);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNode::CountChildrenByName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Name)");
+        }
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
+        std::string sName = *sutf8Name;
+        uint64_t nReturnCount = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method CountChildrenByName.");
+        if (wrapperTable->m_CustomXMLNode_CountChildrenByName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::CountChildrenByName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_CountChildrenByName(instanceHandle, sName.c_str(), &nReturnCount);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNode::GetChildrenByName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Name)");
+        }
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
+        std::string sName = *sutf8Name;
+        Lib3MFHandle hReturnChildNodes = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetChildrenByName.");
+        if (wrapperTable->m_CustomXMLNode_GetChildrenByName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::GetChildrenByName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_GetChildrenByName(instanceHandle, sName.c_str(), &hReturnChildNodes);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjChildNodes = CLib3MFCustomXMLNodes::NewInstance(args.Holder(), hReturnChildNodes);
+        args.GetReturnValue().Set(instanceObjChildNodes);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNode::HasChild(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Name)");
+        }
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
+        std::string sName = *sutf8Name;
+        bool bReturnChildExists = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method HasChild.");
+        if (wrapperTable->m_CustomXMLNode_HasChild == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::HasChild.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_HasChild(instanceHandle, sName.c_str(), &bReturnChildExists);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnChildExists));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNode::HasUniqueChild(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Name)");
+        }
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
+        std::string sName = *sutf8Name;
+        bool bReturnChildExists = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method HasUniqueChild.");
+        if (wrapperTable->m_CustomXMLNode_HasUniqueChild == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::HasUniqueChild.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_HasUniqueChild(instanceHandle, sName.c_str(), &bReturnChildExists);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnChildExists));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNode::FindChild(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Name)");
+        }
+        if (!args[1]->IsBoolean()) {
+            throw std::runtime_error("Expected bool parameter 1 (MustExist)");
+        }
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
+        std::string sName = *sutf8Name;
+        bool bMustExist = args[1]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
+        Lib3MFHandle hReturnChildInstance = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method FindChild.");
+        if (wrapperTable->m_CustomXMLNode_FindChild == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::FindChild.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_FindChild(instanceHandle, sName.c_str(), bMustExist, &hReturnChildInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjChildInstance = CLib3MFCustomXMLNode::NewInstance(args.Holder(), hReturnChildInstance);
+        args.GetReturnValue().Set(instanceObjChildInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNode::AddChild(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Name)");
+        }
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
+        std::string sName = *sutf8Name;
+        Lib3MFHandle hReturnChildInstance = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddChild.");
+        if (wrapperTable->m_CustomXMLNode_AddChild == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::AddChild.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_AddChild(instanceHandle, sName.c_str(), &hReturnChildInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjChildInstance = CLib3MFCustomXMLNode::NewInstance(args.Holder(), hReturnChildInstance);
+        args.GetReturnValue().Set(instanceObjChildInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNode::RemoveChild(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsObject()) {
+            throw std::runtime_error("Expected class parameter 0 (ChildInstance)");
+        }
+        Local<Object> objChildInstance = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+        CLib3MFCustomXMLNode * instanceChildInstance = ObjectWrap::Unwrap<CLib3MFCustomXMLNode>(objChildInstance);
+        if (instanceChildInstance == nullptr)
+            throw std::runtime_error("Invalid Object parameter 0 (ChildInstance)");
+        Lib3MFHandle hChildInstance = instanceChildInstance->getHandle( objChildInstance );
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method RemoveChild.");
+        if (wrapperTable->m_CustomXMLNode_RemoveChild == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::RemoveChild.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_RemoveChild(instanceHandle, hChildInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNode::RemoveChildrenWithName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Name)");
+        }
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
+        std::string sName = *sutf8Name;
+        uint64_t nReturnNumberOfDeletedChildren = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method RemoveChildrenWithName.");
+        if (wrapperTable->m_CustomXMLNode_RemoveChildrenWithName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::RemoveChildrenWithName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_RemoveChildrenWithName(instanceHandle, sName.c_str(), &nReturnNumberOfDeletedChildren);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnNumberOfDeletedChildren).c_str()));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNode::Remove(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method Remove.");
+        if (wrapperTable->m_CustomXMLNode_Remove == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNode::Remove.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNode_Remove(instanceHandle);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
+ Class CLib3MFCustomXMLNodes Implementation
+**************************************************************************************************************************/
+
+CLib3MFCustomXMLNodes::CLib3MFCustomXMLNodes()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFCustomXMLNodes::~CLib3MFCustomXMLNodes()
+{
+}
+
+void CLib3MFCustomXMLNodes::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFCustomXMLNodes"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetNodeCount", GetNodeCount);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetNode", GetNode);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "CountNodesByName", CountNodesByName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetNodesByName", GetNodesByName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "HasNode", HasNode);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "HasUniqueNode", HasUniqueNode);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "FindNode", FindNode);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFCustomXMLNodes::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFCustomXMLNodes * customxmlnodesInstance = new CLib3MFCustomXMLNodes();
+				customxmlnodesInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFCustomXMLNodes: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFCustomXMLNodes::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFCustomXMLNodes::GetNodeCount(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        uint64_t nReturnCount = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetNodeCount.");
+        if (wrapperTable->m_CustomXMLNodes_GetNodeCount == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNodes::GetNodeCount.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNodes_GetNodeCount(instanceHandle, &nReturnCount);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNodes::GetNode(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected uint64 parameter 0 (Index)");
+        }
+        v8::String::Utf8Value sutf8Index(isolate, args[0]);
+        std::string sIndex = *sutf8Index;
+        uint64_t nIndex = stoull(sIndex);
+        Lib3MFHandle hReturnNodeInstance = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetNode.");
+        if (wrapperTable->m_CustomXMLNodes_GetNode == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNodes::GetNode.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNodes_GetNode(instanceHandle, nIndex, &hReturnNodeInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjNodeInstance = CLib3MFCustomXMLNode::NewInstance(args.Holder(), hReturnNodeInstance);
+        args.GetReturnValue().Set(instanceObjNodeInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNodes::CountNodesByName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Name)");
+        }
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
+        std::string sName = *sutf8Name;
+        uint64_t nReturnCount = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method CountNodesByName.");
+        if (wrapperTable->m_CustomXMLNodes_CountNodesByName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNodes::CountNodesByName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNodes_CountNodesByName(instanceHandle, sName.c_str(), &nReturnCount);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNodes::GetNodesByName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Name)");
+        }
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
+        std::string sName = *sutf8Name;
+        Lib3MFHandle hReturnNodes = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetNodesByName.");
+        if (wrapperTable->m_CustomXMLNodes_GetNodesByName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNodes::GetNodesByName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNodes_GetNodesByName(instanceHandle, sName.c_str(), &hReturnNodes);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjNodes = CLib3MFCustomXMLNodes::NewInstance(args.Holder(), hReturnNodes);
+        args.GetReturnValue().Set(instanceObjNodes);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNodes::HasNode(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Name)");
+        }
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
+        std::string sName = *sutf8Name;
+        bool bReturnNodeExists = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method HasNode.");
+        if (wrapperTable->m_CustomXMLNodes_HasNode == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNodes::HasNode.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNodes_HasNode(instanceHandle, sName.c_str(), &bReturnNodeExists);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnNodeExists));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNodes::HasUniqueNode(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Name)");
+        }
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
+        std::string sName = *sutf8Name;
+        bool bReturnNodeExists = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method HasUniqueNode.");
+        if (wrapperTable->m_CustomXMLNodes_HasUniqueNode == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNodes::HasUniqueNode.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNodes_HasUniqueNode(instanceHandle, sName.c_str(), &bReturnNodeExists);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnNodeExists));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomXMLNodes::FindNode(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Name)");
+        }
+        if (!args[1]->IsBoolean()) {
+            throw std::runtime_error("Expected bool parameter 1 (MustExist)");
+        }
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
+        std::string sName = *sutf8Name;
+        bool bMustExist = args[1]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
+        Lib3MFHandle hReturnNodeInstance = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method FindNode.");
+        if (wrapperTable->m_CustomXMLNodes_FindNode == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomXMLNodes::FindNode.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomXMLNodes_FindNode(instanceHandle, sName.c_str(), bMustExist, &hReturnNodeInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjNodeInstance = CLib3MFCustomXMLNode::NewInstance(args.Holder(), hReturnNodeInstance);
+        args.GetReturnValue().Set(instanceObjNodeInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
+ Class CLib3MFCustomDOMTree Implementation
+**************************************************************************************************************************/
+
+CLib3MFCustomDOMTree::CLib3MFCustomDOMTree()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFCustomDOMTree::~CLib3MFCustomDOMTree()
+{
+}
+
+void CLib3MFCustomDOMTree::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFCustomDOMTree"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetNameSpace", GetNameSpace);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetRootNode", GetRootNode);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SaveToString", SaveToString);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFCustomDOMTree::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFCustomDOMTree * customdomtreeInstance = new CLib3MFCustomDOMTree();
+				customdomtreeInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFCustomDOMTree: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFCustomDOMTree::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFCustomDOMTree::GetNameSpace(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int bytesNeededNameSpace = 0;
+        unsigned int bytesWrittenNameSpace = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetNameSpace.");
+        if (wrapperTable->m_CustomDOMTree_GetNameSpace == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomDOMTree::GetNameSpace.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_CustomDOMTree_GetNameSpace(instanceHandle, 0, &bytesNeededNameSpace, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferNameSpace;
+        bufferNameSpace.resize(bytesNeededNameSpace);
+        Lib3MFResult errorCode = wrapperTable->m_CustomDOMTree_GetNameSpace(instanceHandle, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferNameSpace[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomDOMTree::GetRootNode(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnRootNode = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetRootNode.");
+        if (wrapperTable->m_CustomDOMTree_GetRootNode == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomDOMTree::GetRootNode.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_CustomDOMTree_GetRootNode(instanceHandle, &hReturnRootNode);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjRootNode = CLib3MFCustomXMLNode::NewInstance(args.Holder(), hReturnRootNode);
+        args.GetReturnValue().Set(instanceObjRootNode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFCustomDOMTree::SaveToString(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsBoolean()) {
+            throw std::runtime_error("Expected bool parameter 0 (AddLineBreaks)");
+        }
+        bool bAddLineBreaks = args[0]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int bytesNeededXMLString = 0;
+        unsigned int bytesWrittenXMLString = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SaveToString.");
+        if (wrapperTable->m_CustomDOMTree_SaveToString == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method CustomDOMTree::SaveToString.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_CustomDOMTree_SaveToString(instanceHandle, bAddLineBreaks, 0, &bytesNeededXMLString, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferXMLString;
+        bufferXMLString.resize(bytesNeededXMLString);
+        Lib3MFResult errorCode = wrapperTable->m_CustomDOMTree_SaveToString(instanceHandle, bAddLineBreaks, bytesNeededXMLString, &bytesWrittenXMLString, &bufferXMLString[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferXMLString[0]));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -9734,6 +11234,9 @@ void CLib3MFToolpathLayerReader::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPart", GetSegmentPart);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPartUUID", GetSegmentPartUUID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPointData", GetSegmentPointData);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCustomDataCount", GetCustomDataCount);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCustomData", GetCustomData);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCustomDataName", GetCustomDataName);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -9985,6 +11488,93 @@ void CLib3MFToolpathLayerReader::GetSegmentPointData(const FunctionCallbackInfo<
 		}
 }
 
+
+void CLib3MFToolpathLayerReader::GetCustomDataCount(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int nReturnCount = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCustomDataCount.");
+        if (wrapperTable->m_ToolpathLayerReader_GetCustomDataCount == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetCustomDataCount.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetCustomDataCount(instanceHandle, &nReturnCount);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnCount));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::GetCustomData(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        Lib3MFHandle hReturnData = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCustomData.");
+        if (wrapperTable->m_ToolpathLayerReader_GetCustomData == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetCustomData.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetCustomData(instanceHandle, nIndex, &hReturnData);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjData = CLib3MFCustomDOMTree::NewInstance(args.Holder(), hReturnData);
+        args.GetReturnValue().Set(instanceObjData);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::GetCustomDataName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        Local<Object> outObject = Object::New(isolate);
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int bytesNeededNameSpace = 0;
+        unsigned int bytesWrittenNameSpace = 0;
+        unsigned int bytesNeededDataName = 0;
+        unsigned int bytesWrittenDataName = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCustomDataName.");
+        if (wrapperTable->m_ToolpathLayerReader_GetCustomDataName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetCustomDataName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_ToolpathLayerReader_GetCustomDataName(instanceHandle, nIndex, 0, &bytesNeededNameSpace, nullptr, 0, &bytesNeededDataName, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferNameSpace;
+        bufferNameSpace.resize(bytesNeededNameSpace);
+        std::vector<char> bufferDataName;
+        bufferDataName.resize(bytesNeededDataName);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetCustomDataName(instanceHandle, nIndex, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0], bytesNeededDataName, &bytesWrittenDataName, &bufferDataName[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "NameSpace"), String::NewFromUtf8(isolate, &bufferNameSpace[0]));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "DataName"), String::NewFromUtf8(isolate, &bufferDataName[0]));
+        args.GetReturnValue().Set(outObject);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
 /*************************************************************************************************************************
  Class CLib3MFToolpathLayerData Implementation
 **************************************************************************************************************************/
@@ -10014,6 +11604,7 @@ void CLib3MFToolpathLayerData::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "WriteHatchData", WriteHatchData);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "WriteLoop", WriteLoop);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "WritePolyline", WritePolyline);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddCustomData", AddCustomData);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "Finish", Finish);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
@@ -10212,6 +11803,44 @@ void CLib3MFToolpathLayerData::WritePolyline(const FunctionCallbackInfo<Value>& 
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WritePolyline(instanceHandle, nProfileID, nPartID, 0, nullptr);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::AddCustomData(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (NameSpace)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (NameSpacePrefix)");
+        }
+        if (!args[2]->IsString()) {
+            throw std::runtime_error("Expected string parameter 2 (DataName)");
+        }
+        v8::String::Utf8Value sutf8NameSpace(isolate, args[0]);
+        std::string sNameSpace = *sutf8NameSpace;
+        v8::String::Utf8Value sutf8NameSpacePrefix(isolate, args[1]);
+        std::string sNameSpacePrefix = *sutf8NameSpacePrefix;
+        v8::String::Utf8Value sutf8DataName(isolate, args[2]);
+        std::string sDataName = *sutf8DataName;
+        Lib3MFHandle hReturnData = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddCustomData.");
+        if (wrapperTable->m_ToolpathLayerData_AddCustomData == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::AddCustomData.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_AddCustomData(instanceHandle, sNameSpace.c_str(), sNameSpacePrefix.c_str(), sDataName.c_str(), &hReturnData);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjData = CLib3MFCustomDOMTree::NewInstance(args.Holder(), hReturnData);
+        args.GetReturnValue().Set(instanceObjData);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

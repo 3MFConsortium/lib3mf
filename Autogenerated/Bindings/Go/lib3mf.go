@@ -450,6 +450,411 @@ Lib3MFResult CCall_lib3mf_resourceiterator_count(Lib3MFHandle libraryHandle, Lib
 }
 
 
+Lib3MFResult CCall_lib3mf_customxmlattribute_getname(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_GetName (pCustomXMLAttribute, nNameBufferSize, pNameNeededChars, pNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_getvalue(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, const Lib3MF_uint32 nValueBufferSize, Lib3MF_uint32* pValueNeededChars, char * pValueBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_GetValue (pCustomXMLAttribute, nValueBufferSize, pValueNeededChars, pValueBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_isvalidinteger(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_int64 nMinValue, Lib3MF_int64 nMaxValue, bool * pIsValid)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_IsValidInteger (pCustomXMLAttribute, nMinValue, nMaxValue, pIsValid);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_getintegervalue(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_int64 nMinValue, Lib3MF_int64 nMaxValue, Lib3MF_int64 * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_GetIntegerValue (pCustomXMLAttribute, nMinValue, nMaxValue, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_isvaliddouble(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_double dMinValue, Lib3MF_double dMaxValue, bool * pIsValid)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_IsValidDouble (pCustomXMLAttribute, dMinValue, dMaxValue, pIsValid);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_getdoublevalue(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_double dMinValue, Lib3MF_double dMaxValue, Lib3MF_double * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_GetDoubleValue (pCustomXMLAttribute, dMinValue, dMaxValue, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_isvalidbool(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, bool * pIsValid)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_IsValidBool (pCustomXMLAttribute, pIsValid);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_getboolvalue(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_double dMinValue, Lib3MF_double dMaxValue, bool * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_GetBoolValue (pCustomXMLAttribute, dMinValue, dMaxValue, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_setvalue(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, const char * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_SetValue (pCustomXMLAttribute, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_setintegervalue(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_int64 nValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_SetIntegerValue (pCustomXMLAttribute, nValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_setdoublevalue(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_double dValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_SetDoubleValue (pCustomXMLAttribute, dValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_setboolvalue(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, bool bValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_SetBoolValue (pCustomXMLAttribute, bValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_remove(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_Remove (pCustomXMLAttribute);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_getname(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_GetName (pCustomXMLNode, nNameBufferSize, pNameNeededChars, pNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_getnamespace(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_GetNameSpace (pCustomXMLNode, nNameSpaceBufferSize, pNameSpaceNeededChars, pNameSpaceBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_getattributecount(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_uint64 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_GetAttributeCount (pCustomXMLNode, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_getattribute(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_uint64 nIndex, Lib3MF_CustomXMLAttribute * pAttributeInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_GetAttribute (pCustomXMLNode, nIndex, pAttributeInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_hasattribute(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool * pAttributeExists)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_HasAttribute (pCustomXMLNode, pName, pAttributeExists);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_findattribute(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool bMustExist, Lib3MF_CustomXMLAttribute * pAttributeInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_FindAttribute (pCustomXMLNode, pName, bMustExist, pAttributeInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_removeattribute(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool * pAttributeRemoved)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_RemoveAttribute (pCustomXMLNode, pName, pAttributeRemoved);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_removeattributebyindex(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_uint64 nIndex, bool * pAttributeRemoved)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_RemoveAttributeByIndex (pCustomXMLNode, nIndex, pAttributeRemoved);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_addattribute(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, const char * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_AddAttribute (pCustomXMLNode, pName, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_addintegerattribute(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_int64 nValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_AddIntegerAttribute (pCustomXMLNode, pName, nValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_adddoubleattribute(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_double dValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_AddDoubleAttribute (pCustomXMLNode, pName, dValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_addboolattribute(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool bValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_AddBoolAttribute (pCustomXMLNode, pName, bValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_getchildren(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_CustomXMLNodes * pChildNodes)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_GetChildren (pCustomXMLNode, pChildNodes);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_countchildrenbyname(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_uint64 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_CountChildrenByName (pCustomXMLNode, pName, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_getchildrenbyname(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_CustomXMLNodes * pChildNodes)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_GetChildrenByName (pCustomXMLNode, pName, pChildNodes);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_haschild(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool * pChildExists)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_HasChild (pCustomXMLNode, pName, pChildExists);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_hasuniquechild(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool * pChildExists)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_HasUniqueChild (pCustomXMLNode, pName, pChildExists);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_findchild(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool bMustExist, Lib3MF_CustomXMLNode * pChildInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_FindChild (pCustomXMLNode, pName, bMustExist, pChildInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_addchild(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_CustomXMLNode * pChildInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_AddChild (pCustomXMLNode, pName, pChildInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_removechild(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_CustomXMLNode pChildInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_RemoveChild (pCustomXMLNode, pChildInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_removechildrenwithname(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_uint64 * pNumberOfDeletedChildren)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_RemoveChildrenWithName (pCustomXMLNode, pName, pNumberOfDeletedChildren);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_remove(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_Remove (pCustomXMLNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnodes_getnodecount(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNodes pCustomXMLNodes, Lib3MF_uint64 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNodes_GetNodeCount (pCustomXMLNodes, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnodes_getnode(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNodes pCustomXMLNodes, Lib3MF_uint64 nIndex, Lib3MF_CustomXMLNode * pNodeInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNodes_GetNode (pCustomXMLNodes, nIndex, pNodeInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnodes_countnodesbyname(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, Lib3MF_uint64 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNodes_CountNodesByName (pCustomXMLNodes, pName, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnodes_getnodesbyname(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, Lib3MF_CustomXMLNodes * pNodes)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNodes_GetNodesByName (pCustomXMLNodes, pName, pNodes);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnodes_hasnode(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, bool * pNodeExists)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNodes_HasNode (pCustomXMLNodes, pName, pNodeExists);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnodes_hasuniquenode(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, bool * pNodeExists)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNodes_HasUniqueNode (pCustomXMLNodes, pName, pNodeExists);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnodes_findnode(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, bool bMustExist, Lib3MF_CustomXMLNode * pNodeInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNodes_FindNode (pCustomXMLNodes, pName, bMustExist, pNodeInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_customdomtree_getnamespace(Lib3MFHandle libraryHandle, Lib3MF_CustomDOMTree pCustomDOMTree, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomDOMTree_GetNameSpace (pCustomDOMTree, nNameSpaceBufferSize, pNameSpaceNeededChars, pNameSpaceBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_customdomtree_getrootnode(Lib3MFHandle libraryHandle, Lib3MF_CustomDOMTree pCustomDOMTree, Lib3MF_CustomXMLNode * pRootNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomDOMTree_GetRootNode (pCustomDOMTree, pRootNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_customdomtree_savetostring(Lib3MFHandle libraryHandle, Lib3MF_CustomDOMTree pCustomDOMTree, bool bAddLineBreaks, const Lib3MF_uint32 nXMLStringBufferSize, Lib3MF_uint32* pXMLStringNeededChars, char * pXMLStringBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomDOMTree_SaveToString (pCustomDOMTree, bAddLineBreaks, nXMLStringBufferSize, pXMLStringNeededChars, pXMLStringBuffer);
+}
+
+
 Lib3MFResult CCall_lib3mf_slicestackiterator_getcurrentslicestack(Lib3MFHandle libraryHandle, Lib3MF_SliceStackIterator pSliceStackIterator, Lib3MF_SliceStack * pResource)
 {
 	if (libraryHandle == 0) 
@@ -2421,6 +2826,33 @@ Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentpointdata(Lib3MFHandle l
 }
 
 
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getcustomdatacount(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetCustomDataCount (pToolpathLayerReader, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getcustomdata(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_CustomDOMTree * pData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetCustomData (pToolpathLayerReader, nIndex, pData);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getcustomdataname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer, const Lib3MF_uint32 nDataNameBufferSize, Lib3MF_uint32* pDataNameNeededChars, char * pDataNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetCustomDataName (pToolpathLayerReader, nIndex, nNameSpaceBufferSize, pNameSpaceNeededChars, pNameSpaceBuffer, nDataNameBufferSize, pDataNameNeededChars, pDataNameBuffer);
+}
+
+
 Lib3MFResult CCall_lib3mf_toolpathlayerdata_getlayerdatauuid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer)
 {
 	if (libraryHandle == 0) 
@@ -2472,6 +2904,15 @@ Lib3MFResult CCall_lib3mf_toolpathlayerdata_writepolyline(Lib3MFHandle libraryHa
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_ToolpathLayerData_WritePolyline (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_addcustomdata(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, const char * pNameSpace, const char * pNameSpacePrefix, const char * pDataName, Lib3MF_CustomDOMTree * pData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_AddCustomData (pToolpathLayerData, pNameSpace, pNameSpacePrefix, pDataName, pData);
 }
 
 
@@ -4123,6 +4564,8 @@ const LIB3MF_ERROR_INVALIDPROPERTYCOUNT = 132;
 const LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER = 140;
 const LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT = 141;
 const LIB3MF_ERROR_INVALIDRESOURCE = 142;
+const LIB3MF_ERROR_INVALIDNODEINDEX = 143;
+const LIB3MF_ERROR_INVALIDATTRIBUTEINDEX = 144;
 const LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE = 2000;
 const LIB3MF_ERROR_INVALIDKEYSTORE = 3000;
 const LIB3MF_ERROR_INVALIDKEYSTORECONSUMER = 3001;
@@ -4219,6 +4662,10 @@ func errorMessage(errorcode uint32) string {
 		return "An element buffer exceeds its spec limit";
 	case LIB3MF_ERROR_INVALIDRESOURCE:
 		return "A resource is invalid";
+	case LIB3MF_ERROR_INVALIDNODEINDEX:
+		return "Invalid node index";
+	case LIB3MF_ERROR_INVALIDATTRIBUTEINDEX:
+		return "Invalid attribute index";
 	case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE:
 		return "This object type is not valid for beamlattices";
 	case LIB3MF_ERROR_INVALIDKEYSTORE:
@@ -4874,6 +5321,542 @@ func (inst ResourceIterator) Count() (uint64, error) {
 		return 0, makeError(uint32(ret))
 	}
 	return uint64(count), nil
+}
+
+
+// CustomXMLAttribute represents a Lib3MF class.
+type CustomXMLAttribute struct {
+	Base
+}
+
+func (wrapper Wrapper) NewCustomXMLAttribute(r ref) CustomXMLAttribute {
+	return CustomXMLAttribute{wrapper.NewBase(r)}
+}
+
+// GetName retrieves name of the attribute.
+func (inst CustomXMLAttribute) GetName() (string, error) {
+	var neededforname C.uint32_t
+	var filledinname C.uint32_t
+	ret := C.CCall_lib3mf_customxmlattribute_getname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforname, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizename := neededforname
+	buffername := make([]byte, bufferSizename)
+	ret = C.CCall_lib3mf_customxmlattribute_getname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizename, &filledinname, (*C.char)(unsafe.Pointer(&buffername[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffername[:(filledinname-1)]), nil
+}
+
+// GetValue retrieves value of the attribute as string.
+func (inst CustomXMLAttribute) GetValue() (string, error) {
+	var neededforvalue C.uint32_t
+	var filledinvalue C.uint32_t
+	ret := C.CCall_lib3mf_customxmlattribute_getvalue(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforvalue, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizevalue := neededforvalue
+	buffervalue := make([]byte, bufferSizevalue)
+	ret = C.CCall_lib3mf_customxmlattribute_getvalue(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizevalue, &filledinvalue, (*C.char)(unsafe.Pointer(&buffervalue[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffervalue[:(filledinvalue-1)]), nil
+}
+
+// IsValidInteger checks if the value is a valid integer in the given range.
+func (inst CustomXMLAttribute) IsValidInteger(minValue int64, maxValue int64) (bool, error) {
+	var isValid C.bool
+	ret := C.CCall_lib3mf_customxmlattribute_isvalidinteger(inst.wrapperRef.LibraryHandle, inst.Ref, C.int64_t(minValue), C.int64_t(maxValue), &isValid)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(isValid), nil
+}
+
+// GetIntegerValue returns the value as integer. Fails if the value is not a valid integer in the given range.
+func (inst CustomXMLAttribute) GetIntegerValue(minValue int64, maxValue int64) (int64, error) {
+	var value C.int64_t
+	ret := C.CCall_lib3mf_customxmlattribute_getintegervalue(inst.wrapperRef.LibraryHandle, inst.Ref, C.int64_t(minValue), C.int64_t(maxValue), &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return int64(value), nil
+}
+
+// IsValidDouble checks if the value is a valid double in the given range.
+func (inst CustomXMLAttribute) IsValidDouble(minValue float64, maxValue float64) (bool, error) {
+	var isValid C.bool
+	ret := C.CCall_lib3mf_customxmlattribute_isvaliddouble(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(minValue), C.double(maxValue), &isValid)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(isValid), nil
+}
+
+// GetDoubleValue returns the value as double. Fails if the value is not a valid double in the given range.
+func (inst CustomXMLAttribute) GetDoubleValue(minValue float64, maxValue float64) (float64, error) {
+	var value C.double
+	ret := C.CCall_lib3mf_customxmlattribute_getdoublevalue(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(minValue), C.double(maxValue), &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(value), nil
+}
+
+// IsValidBool checks if the value is a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+func (inst CustomXMLAttribute) IsValidBool() (bool, error) {
+	var isValid C.bool
+	ret := C.CCall_lib3mf_customxmlattribute_isvalidbool(inst.wrapperRef.LibraryHandle, inst.Ref, &isValid)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(isValid), nil
+}
+
+// GetBoolValue returns the value as bool. Fails if the value is not a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+func (inst CustomXMLAttribute) GetBoolValue(minValue float64, maxValue float64) (bool, error) {
+	var value C.bool
+	ret := C.CCall_lib3mf_customxmlattribute_getboolvalue(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(minValue), C.double(maxValue), &value)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(value), nil
+}
+
+// SetValue sets the value of the attribute as string.
+func (inst CustomXMLAttribute) SetValue(value string) error {
+	ret := C.CCall_lib3mf_customxmlattribute_setvalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(value)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SetIntegerValue sets the value of the attribute as integer.
+func (inst CustomXMLAttribute) SetIntegerValue(value int64) error {
+	ret := C.CCall_lib3mf_customxmlattribute_setintegervalue(inst.wrapperRef.LibraryHandle, inst.Ref, C.int64_t(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SetDoubleValue sets the value of the attribute as double.
+func (inst CustomXMLAttribute) SetDoubleValue(value float64) error {
+	ret := C.CCall_lib3mf_customxmlattribute_setdoublevalue(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SetBoolValue sets the value of the attribute as bool.
+func (inst CustomXMLAttribute) SetBoolValue(value bool) error {
+	ret := C.CCall_lib3mf_customxmlattribute_setboolvalue(inst.wrapperRef.LibraryHandle, inst.Ref, C.bool(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// Remove removes the attribute from its parent node. All subsequent calls to the class will fail.
+func (inst CustomXMLAttribute) Remove() error {
+	ret := C.CCall_lib3mf_customxmlattribute_remove(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// CustomXMLNode represents a Lib3MF class.
+type CustomXMLNode struct {
+	Base
+}
+
+func (wrapper Wrapper) NewCustomXMLNode(r ref) CustomXMLNode {
+	return CustomXMLNode{wrapper.NewBase(r)}
+}
+
+// GetName retrieves name of the node.
+func (inst CustomXMLNode) GetName() (string, error) {
+	var neededforname C.uint32_t
+	var filledinname C.uint32_t
+	ret := C.CCall_lib3mf_customxmlnode_getname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforname, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizename := neededforname
+	buffername := make([]byte, bufferSizename)
+	ret = C.CCall_lib3mf_customxmlnode_getname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizename, &filledinname, (*C.char)(unsafe.Pointer(&buffername[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffername[:(filledinname-1)]), nil
+}
+
+// GetNameSpace retrieves namespace of the node.
+func (inst CustomXMLNode) GetNameSpace() (string, error) {
+	var neededfornameSpace C.uint32_t
+	var filledinnameSpace C.uint32_t
+	ret := C.CCall_lib3mf_customxmlnode_getnamespace(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededfornameSpace, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizenameSpace := neededfornameSpace
+	buffernameSpace := make([]byte, bufferSizenameSpace)
+	ret = C.CCall_lib3mf_customxmlnode_getnamespace(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizenameSpace, &filledinnameSpace, (*C.char)(unsafe.Pointer(&buffernameSpace[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffernameSpace[:(filledinnameSpace-1)]), nil
+}
+
+// GetAttributeCount returns number of attributes.
+func (inst CustomXMLNode) GetAttributeCount() (uint64, error) {
+	var count C.uint64_t
+	ret := C.CCall_lib3mf_customxmlnode_getattributecount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint64(count), nil
+}
+
+// GetAttribute returns attribute instance. Fails if Index is out of range.
+func (inst CustomXMLNode) GetAttribute(index uint64) (CustomXMLAttribute, error) {
+	var attributeInstance ref
+	ret := C.CCall_lib3mf_customxmlnode_getattribute(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint64_t(index), &attributeInstance)
+	if ret != 0 {
+		return CustomXMLAttribute{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomXMLAttribute(attributeInstance), nil
+}
+
+// HasAttribute returns if attribute of a specific name exists.
+func (inst CustomXMLNode) HasAttribute(name string) (bool, error) {
+	var attributeExists C.bool
+	ret := C.CCall_lib3mf_customxmlnode_hasattribute(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &attributeExists)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(attributeExists), nil
+}
+
+// FindAttribute returns attribute instance of a specific name. .
+func (inst CustomXMLNode) FindAttribute(name string, mustExist bool) (*CustomXMLAttribute, error) {
+	var attributeInstance ref
+	ret := C.CCall_lib3mf_customxmlnode_findattribute(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), C.bool(mustExist), &attributeInstance)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	var _attributeInstancePtr *CustomXMLAttribute
+	if attributeInstance != nil {
+		_attributeInstancePtrVal := inst.wrapperRef.NewCustomXMLAttribute(attributeInstance)
+		_attributeInstancePtr = &_attributeInstancePtrVal
+	}
+	return _attributeInstancePtr, nil
+}
+
+// RemoveAttribute removes the attribute with a specific name. Does nothing if attribute does not exist.
+func (inst CustomXMLNode) RemoveAttribute(name string) (bool, error) {
+	var attributeRemoved C.bool
+	ret := C.CCall_lib3mf_customxmlnode_removeattribute(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &attributeRemoved)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(attributeRemoved), nil
+}
+
+// RemoveAttributeByIndex removes the attribute with a specific index. Fails if index is invalid.
+func (inst CustomXMLNode) RemoveAttributeByIndex(index uint64) (bool, error) {
+	var attributeRemoved C.bool
+	ret := C.CCall_lib3mf_customxmlnode_removeattributebyindex(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint64_t(index), &attributeRemoved)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(attributeRemoved), nil
+}
+
+// AddAttribute adds an attribute with a specific name and string value. Fails if attribute already exists.
+func (inst CustomXMLNode) AddAttribute(name string, value string) error {
+	ret := C.CCall_lib3mf_customxmlnode_addattribute(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), (*C.char)(unsafe.Pointer(&[]byte(value)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// AddIntegerAttribute adds an attribute with a specific name and integer value. Fails if attribute already exists.
+func (inst CustomXMLNode) AddIntegerAttribute(name string, value int64) error {
+	ret := C.CCall_lib3mf_customxmlnode_addintegerattribute(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), C.int64_t(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// AddDoubleAttribute adds an attribute with a specific name and double value. Fails if attribute already exists.
+func (inst CustomXMLNode) AddDoubleAttribute(name string, value float64) error {
+	ret := C.CCall_lib3mf_customxmlnode_adddoubleattribute(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), C.double(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// AddBoolAttribute adds an attribute with a specific name and bool value. Fails if attribute already exists.
+func (inst CustomXMLNode) AddBoolAttribute(name string, value bool) error {
+	ret := C.CCall_lib3mf_customxmlnode_addboolattribute(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), C.bool(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetChildren returns all the child nodes of the XML Node.
+func (inst CustomXMLNode) GetChildren() (CustomXMLNodes, error) {
+	var childNodes ref
+	ret := C.CCall_lib3mf_customxmlnode_getchildren(inst.wrapperRef.LibraryHandle, inst.Ref, &childNodes)
+	if ret != 0 {
+		return CustomXMLNodes{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomXMLNodes(childNodes), nil
+}
+
+// CountChildrenByName returns how many children of the XML Node have a specific name.
+func (inst CustomXMLNode) CountChildrenByName(name string) (uint64, error) {
+	var count C.uint64_t
+	ret := C.CCall_lib3mf_customxmlnode_countchildrenbyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint64(count), nil
+}
+
+// GetChildrenByName returns all the child nodes of the XML Node with a specific name.
+func (inst CustomXMLNode) GetChildrenByName(name string) (CustomXMLNodes, error) {
+	var childNodes ref
+	ret := C.CCall_lib3mf_customxmlnode_getchildrenbyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &childNodes)
+	if ret != 0 {
+		return CustomXMLNodes{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomXMLNodes(childNodes), nil
+}
+
+// HasChild returns if a child with a specific name exist.
+func (inst CustomXMLNode) HasChild(name string) (bool, error) {
+	var childExists C.bool
+	ret := C.CCall_lib3mf_customxmlnode_haschild(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &childExists)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(childExists), nil
+}
+
+// HasUniqueChild returns if a child with a specific name exist once and only once.
+func (inst CustomXMLNode) HasUniqueChild(name string) (bool, error) {
+	var childExists C.bool
+	ret := C.CCall_lib3mf_customxmlnode_hasuniquechild(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &childExists)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(childExists), nil
+}
+
+// FindChild returns child with a specific name. Throws an error if name does not exist once and only once.
+func (inst CustomXMLNode) FindChild(name string, mustExist bool) (*CustomXMLNode, error) {
+	var childInstance ref
+	ret := C.CCall_lib3mf_customxmlnode_findchild(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), C.bool(mustExist), &childInstance)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	var _childInstancePtr *CustomXMLNode
+	if childInstance != nil {
+		_childInstancePtrVal := inst.wrapperRef.NewCustomXMLNode(childInstance)
+		_childInstancePtr = &_childInstancePtrVal
+	}
+	return _childInstancePtr, nil
+}
+
+// AddChild adds a new child with a specific name.
+func (inst CustomXMLNode) AddChild(name string) (CustomXMLNode, error) {
+	var childInstance ref
+	ret := C.CCall_lib3mf_customxmlnode_addchild(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &childInstance)
+	if ret != 0 {
+		return CustomXMLNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomXMLNode(childInstance), nil
+}
+
+// RemoveChild removes a specific child. All subsequent calls to the child will fail after the call.
+func (inst CustomXMLNode) RemoveChild(childInstance CustomXMLNode) error {
+	ret := C.CCall_lib3mf_customxmlnode_removechild(inst.wrapperRef.LibraryHandle, inst.Ref, childInstance.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// RemoveChildrenWithName removes all children with a specific name. Does nothing if no child with the name exists. All subsequent calls to the deleted children will fail after the call.
+func (inst CustomXMLNode) RemoveChildrenWithName(name string) (uint64, error) {
+	var numberOfDeletedChildren C.uint64_t
+	ret := C.CCall_lib3mf_customxmlnode_removechildrenwithname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &numberOfDeletedChildren)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint64(numberOfDeletedChildren), nil
+}
+
+// Remove removes the node from its parent. The root node of the document can not be removed. Any subsequent call to the node fails after this.
+func (inst CustomXMLNode) Remove() error {
+	ret := C.CCall_lib3mf_customxmlnode_remove(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// CustomXMLNodes represents a Lib3MF class.
+type CustomXMLNodes struct {
+	Base
+}
+
+func (wrapper Wrapper) NewCustomXMLNodes(r ref) CustomXMLNodes {
+	return CustomXMLNodes{wrapper.NewBase(r)}
+}
+
+// GetNodeCount returns number of nodes.
+func (inst CustomXMLNodes) GetNodeCount() (uint64, error) {
+	var count C.uint64_t
+	ret := C.CCall_lib3mf_customxmlnodes_getnodecount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint64(count), nil
+}
+
+// GetNode returns node instance. Fails if Index is out of range.
+func (inst CustomXMLNodes) GetNode(index uint64) (CustomXMLNode, error) {
+	var nodeInstance ref
+	ret := C.CCall_lib3mf_customxmlnodes_getnode(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint64_t(index), &nodeInstance)
+	if ret != 0 {
+		return CustomXMLNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomXMLNode(nodeInstance), nil
+}
+
+// CountNodesByName returns how many nodes of the XML Node have a specific name.
+func (inst CustomXMLNodes) CountNodesByName(name string) (uint64, error) {
+	var count C.uint64_t
+	ret := C.CCall_lib3mf_customxmlnodes_countnodesbyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint64(count), nil
+}
+
+// GetNodesByName returns all the nodes nodes of the XML Node with a specific name.
+func (inst CustomXMLNodes) GetNodesByName(name string) (CustomXMLNodes, error) {
+	var nodes ref
+	ret := C.CCall_lib3mf_customxmlnodes_getnodesbyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &nodes)
+	if ret != 0 {
+		return CustomXMLNodes{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomXMLNodes(nodes), nil
+}
+
+// HasNode returns if a node with a specific name exist.
+func (inst CustomXMLNodes) HasNode(name string) (bool, error) {
+	var nodeExists C.bool
+	ret := C.CCall_lib3mf_customxmlnodes_hasnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &nodeExists)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(nodeExists), nil
+}
+
+// HasUniqueNode returns if a node with a specific name exist once and only once.
+func (inst CustomXMLNodes) HasUniqueNode(name string) (bool, error) {
+	var nodeExists C.bool
+	ret := C.CCall_lib3mf_customxmlnodes_hasuniquenode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &nodeExists)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(nodeExists), nil
+}
+
+// FindNode returns node with a specific name. Throws an error if name does not exist once and only once.
+func (inst CustomXMLNodes) FindNode(name string, mustExist bool) (*CustomXMLNode, error) {
+	var nodeInstance ref
+	ret := C.CCall_lib3mf_customxmlnodes_findnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), C.bool(mustExist), &nodeInstance)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	var _nodeInstancePtr *CustomXMLNode
+	if nodeInstance != nil {
+		_nodeInstancePtrVal := inst.wrapperRef.NewCustomXMLNode(nodeInstance)
+		_nodeInstancePtr = &_nodeInstancePtrVal
+	}
+	return _nodeInstancePtr, nil
+}
+
+
+// CustomDOMTree represents a Lib3MF class.
+type CustomDOMTree struct {
+	Base
+}
+
+func (wrapper Wrapper) NewCustomDOMTree(r ref) CustomDOMTree {
+	return CustomDOMTree{wrapper.NewBase(r)}
+}
+
+// GetNameSpace returns the namespace identifier for the DOM Tree.
+func (inst CustomDOMTree) GetNameSpace() (string, error) {
+	var neededfornameSpace C.uint32_t
+	var filledinnameSpace C.uint32_t
+	ret := C.CCall_lib3mf_customdomtree_getnamespace(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededfornameSpace, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizenameSpace := neededfornameSpace
+	buffernameSpace := make([]byte, bufferSizenameSpace)
+	ret = C.CCall_lib3mf_customdomtree_getnamespace(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizenameSpace, &filledinnameSpace, (*C.char)(unsafe.Pointer(&buffernameSpace[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffernameSpace[:(filledinnameSpace-1)]), nil
+}
+
+// GetRootNode returns root node of the tree.
+func (inst CustomDOMTree) GetRootNode() (CustomXMLNode, error) {
+	var rootNode ref
+	ret := C.CCall_lib3mf_customdomtree_getrootnode(inst.wrapperRef.LibraryHandle, inst.Ref, &rootNode)
+	if ret != 0 {
+		return CustomXMLNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomXMLNode(rootNode), nil
+}
+
+// SaveToString saves the XML tree into a string.
+func (inst CustomDOMTree) SaveToString(addLineBreaks bool) (string, error) {
+	var neededforxMLString C.uint32_t
+	var filledinxMLString C.uint32_t
+	ret := C.CCall_lib3mf_customdomtree_savetostring(inst.wrapperRef.LibraryHandle, inst.Ref, C.bool(addLineBreaks), 0, &neededforxMLString, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizexMLString := neededforxMLString
+	bufferxMLString := make([]byte, bufferSizexMLString)
+	ret = C.CCall_lib3mf_customdomtree_savetostring(inst.wrapperRef.LibraryHandle, inst.Ref, C.bool(addLineBreaks), bufferSizexMLString, &filledinxMLString, (*C.char)(unsafe.Pointer(&bufferxMLString[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferxMLString[:(filledinxMLString-1)]), nil
 }
 
 
@@ -7617,6 +8600,47 @@ func (inst ToolpathLayerReader) GetSegmentPointData(index uint32, pointData []Po
 	return pointData[:int(neededforpointData)], nil
 }
 
+// GetCustomDataCount retrieves the count of custom data elements.
+func (inst ToolpathLayerReader) GetCustomDataCount() (uint32, error) {
+	var count C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getcustomdatacount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(count), nil
+}
+
+// GetCustomData retrieves the custom data.
+func (inst ToolpathLayerReader) GetCustomData(index uint32) (CustomDOMTree, error) {
+	var data ref
+	ret := C.CCall_lib3mf_toolpathlayerreader_getcustomdata(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &data)
+	if ret != 0 {
+		return CustomDOMTree{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomDOMTree(data), nil
+}
+
+// GetCustomDataName retrieves the node name of the custom data.
+func (inst ToolpathLayerReader) GetCustomDataName(index uint32) (string, string, error) {
+	var neededfornameSpace C.uint32_t
+	var filledinnameSpace C.uint32_t
+	var neededfordataName C.uint32_t
+	var filledindataName C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getcustomdataname(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededfornameSpace, nil, 0, &neededfordataName, nil)
+	if ret != 0 {
+		return "", "", makeError(uint32(ret))
+	}
+	bufferSizenameSpace := neededfornameSpace
+	buffernameSpace := make([]byte, bufferSizenameSpace)
+	bufferSizedataName := neededfordataName
+	bufferdataName := make([]byte, bufferSizedataName)
+	ret = C.CCall_lib3mf_toolpathlayerreader_getcustomdataname(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), bufferSizenameSpace, &filledinnameSpace, (*C.char)(unsafe.Pointer(&buffernameSpace[0])), bufferSizedataName, &filledindataName, (*C.char)(unsafe.Pointer(&bufferdataName[0])))
+	if ret != 0 {
+		return "", "", makeError(uint32(ret))
+	}
+	return string(buffernameSpace[:(filledinnameSpace-1)]), string(bufferdataName[:(filledindataName-1)]), nil
+}
+
 
 // ToolpathLayerData represents a Lib3MF class.
 type ToolpathLayerData struct {
@@ -7689,6 +8713,16 @@ func (inst ToolpathLayerData) WritePolyline(profileID uint32, partID uint32, poi
 		return makeError(uint32(ret))
 	}
 	return nil
+}
+
+// AddCustomData adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
+func (inst ToolpathLayerData) AddCustomData(nameSpace string, nameSpacePrefix string, dataName string) (CustomDOMTree, error) {
+	var data ref
+	ret := C.CCall_lib3mf_toolpathlayerdata_addcustomdata(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(nameSpacePrefix)[0])), (*C.char)(unsafe.Pointer(&[]byte(dataName)[0])), &data)
+	if ret != 0 {
+		return CustomDOMTree{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomDOMTree(data), nil
 }
 
 // Finish finishes all writing of the layer and compresses toolpath data.

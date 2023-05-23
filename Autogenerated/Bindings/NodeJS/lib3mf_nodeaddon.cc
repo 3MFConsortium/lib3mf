@@ -55,6 +55,10 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFPackagePart::Init();
 	CLib3MFResource::Init();
 	CLib3MFResourceIterator::Init();
+	CLib3MFCustomXMLAttribute::Init();
+	CLib3MFCustomXMLNode::Init();
+	CLib3MFCustomXMLNodes::Init();
+	CLib3MFCustomDOMTree::Init();
 	CLib3MFSliceStackIterator::Init();
 	CLib3MFObjectIterator::Init();
 	CLib3MFMeshObjectIterator::Init();

@@ -1615,6 +1615,1784 @@ Lib3MFResult lib3mf_resourceiterator_count(Lib3MF_ResourceIterator pResourceIter
 
 
 /*************************************************************************************************************************
+ Class implementation for CustomXMLAttribute
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_customxmlattribute_getname(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLAttribute;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLAttribute, "CustomXMLAttribute", "GetName");
+		}
+		if ( (!pNameBuffer) && !(pNameNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName("");
+		ICustomXMLAttribute* pICustomXMLAttribute = dynamic_cast<ICustomXMLAttribute*>(pIBaseClass);
+		if (!pICustomXMLAttribute)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pNameBuffer == nullptr);
+		if (isCacheCall) {
+			sName = pICustomXMLAttribute->GetName();
+
+			pICustomXMLAttribute->_setCache (new ParameterCache_1<std::string> (sName));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pICustomXMLAttribute->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sName);
+			pICustomXMLAttribute->_setCache (nullptr);
+		}
+		
+		if (pNameNeededChars)
+			*pNameNeededChars = (Lib3MF_uint32) (sName.size()+1);
+		if (pNameBuffer) {
+			if (sName.size() >= nNameBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iName = 0; iName < sName.size(); iName++)
+				pNameBuffer[iName] = sName[iName];
+			pNameBuffer[sName.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("Name", sName.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlattribute_getvalue(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, const Lib3MF_uint32 nValueBufferSize, Lib3MF_uint32* pValueNeededChars, char * pValueBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLAttribute;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLAttribute, "CustomXMLAttribute", "GetValue");
+		}
+		if ( (!pValueBuffer) && !(pValueNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sValue("");
+		ICustomXMLAttribute* pICustomXMLAttribute = dynamic_cast<ICustomXMLAttribute*>(pIBaseClass);
+		if (!pICustomXMLAttribute)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pValueBuffer == nullptr);
+		if (isCacheCall) {
+			sValue = pICustomXMLAttribute->GetValue();
+
+			pICustomXMLAttribute->_setCache (new ParameterCache_1<std::string> (sValue));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pICustomXMLAttribute->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sValue);
+			pICustomXMLAttribute->_setCache (nullptr);
+		}
+		
+		if (pValueNeededChars)
+			*pValueNeededChars = (Lib3MF_uint32) (sValue.size()+1);
+		if (pValueBuffer) {
+			if (sValue.size() >= nValueBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iValue = 0; iValue < sValue.size(); iValue++)
+				pValueBuffer[iValue] = sValue[iValue];
+			pValueBuffer[sValue.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("Value", sValue.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlattribute_isvalidinteger(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_int64 nMinValue, Lib3MF_int64 nMaxValue, bool * pIsValid)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLAttribute;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLAttribute, "CustomXMLAttribute", "IsValidInteger");
+			pJournalEntry->addInt64Parameter("MinValue", nMinValue);
+			pJournalEntry->addInt64Parameter("MaxValue", nMaxValue);
+		}
+		if (pIsValid == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		ICustomXMLAttribute* pICustomXMLAttribute = dynamic_cast<ICustomXMLAttribute*>(pIBaseClass);
+		if (!pICustomXMLAttribute)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pIsValid = pICustomXMLAttribute->IsValidInteger(nMinValue, nMaxValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("IsValid", *pIsValid);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlattribute_getintegervalue(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_int64 nMinValue, Lib3MF_int64 nMaxValue, Lib3MF_int64 * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLAttribute;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLAttribute, "CustomXMLAttribute", "GetIntegerValue");
+			pJournalEntry->addInt64Parameter("MinValue", nMinValue);
+			pJournalEntry->addInt64Parameter("MaxValue", nMaxValue);
+		}
+		if (pValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		ICustomXMLAttribute* pICustomXMLAttribute = dynamic_cast<ICustomXMLAttribute*>(pIBaseClass);
+		if (!pICustomXMLAttribute)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pValue = pICustomXMLAttribute->GetIntegerValue(nMinValue, nMaxValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addInt64Result("Value", *pValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlattribute_isvaliddouble(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_double dMinValue, Lib3MF_double dMaxValue, bool * pIsValid)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLAttribute;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLAttribute, "CustomXMLAttribute", "IsValidDouble");
+			pJournalEntry->addDoubleParameter("MinValue", dMinValue);
+			pJournalEntry->addDoubleParameter("MaxValue", dMaxValue);
+		}
+		if (pIsValid == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		ICustomXMLAttribute* pICustomXMLAttribute = dynamic_cast<ICustomXMLAttribute*>(pIBaseClass);
+		if (!pICustomXMLAttribute)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pIsValid = pICustomXMLAttribute->IsValidDouble(dMinValue, dMaxValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("IsValid", *pIsValid);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlattribute_getdoublevalue(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_double dMinValue, Lib3MF_double dMaxValue, Lib3MF_double * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLAttribute;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLAttribute, "CustomXMLAttribute", "GetDoubleValue");
+			pJournalEntry->addDoubleParameter("MinValue", dMinValue);
+			pJournalEntry->addDoubleParameter("MaxValue", dMaxValue);
+		}
+		if (pValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		ICustomXMLAttribute* pICustomXMLAttribute = dynamic_cast<ICustomXMLAttribute*>(pIBaseClass);
+		if (!pICustomXMLAttribute)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pValue = pICustomXMLAttribute->GetDoubleValue(dMinValue, dMaxValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addDoubleResult("Value", *pValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlattribute_isvalidbool(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, bool * pIsValid)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLAttribute;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLAttribute, "CustomXMLAttribute", "IsValidBool");
+		}
+		if (pIsValid == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		ICustomXMLAttribute* pICustomXMLAttribute = dynamic_cast<ICustomXMLAttribute*>(pIBaseClass);
+		if (!pICustomXMLAttribute)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pIsValid = pICustomXMLAttribute->IsValidBool();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("IsValid", *pIsValid);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlattribute_getboolvalue(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_double dMinValue, Lib3MF_double dMaxValue, bool * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLAttribute;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLAttribute, "CustomXMLAttribute", "GetBoolValue");
+			pJournalEntry->addDoubleParameter("MinValue", dMinValue);
+			pJournalEntry->addDoubleParameter("MaxValue", dMaxValue);
+		}
+		if (pValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		ICustomXMLAttribute* pICustomXMLAttribute = dynamic_cast<ICustomXMLAttribute*>(pIBaseClass);
+		if (!pICustomXMLAttribute)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pValue = pICustomXMLAttribute->GetBoolValue(dMinValue, dMaxValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("Value", *pValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlattribute_setvalue(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, const char * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLAttribute;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLAttribute, "CustomXMLAttribute", "SetValue");
+			pJournalEntry->addStringParameter("Value", pValue);
+		}
+		if (pValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sValue(pValue);
+		ICustomXMLAttribute* pICustomXMLAttribute = dynamic_cast<ICustomXMLAttribute*>(pIBaseClass);
+		if (!pICustomXMLAttribute)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pICustomXMLAttribute->SetValue(sValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlattribute_setintegervalue(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_int64 nValue)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLAttribute;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLAttribute, "CustomXMLAttribute", "SetIntegerValue");
+			pJournalEntry->addInt64Parameter("Value", nValue);
+		}
+		ICustomXMLAttribute* pICustomXMLAttribute = dynamic_cast<ICustomXMLAttribute*>(pIBaseClass);
+		if (!pICustomXMLAttribute)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pICustomXMLAttribute->SetIntegerValue(nValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlattribute_setdoublevalue(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_double dValue)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLAttribute;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLAttribute, "CustomXMLAttribute", "SetDoubleValue");
+			pJournalEntry->addDoubleParameter("Value", dValue);
+		}
+		ICustomXMLAttribute* pICustomXMLAttribute = dynamic_cast<ICustomXMLAttribute*>(pIBaseClass);
+		if (!pICustomXMLAttribute)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pICustomXMLAttribute->SetDoubleValue(dValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlattribute_setboolvalue(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, bool bValue)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLAttribute;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLAttribute, "CustomXMLAttribute", "SetBoolValue");
+			pJournalEntry->addBooleanParameter("Value", bValue);
+		}
+		ICustomXMLAttribute* pICustomXMLAttribute = dynamic_cast<ICustomXMLAttribute*>(pIBaseClass);
+		if (!pICustomXMLAttribute)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pICustomXMLAttribute->SetBoolValue(bValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlattribute_remove(Lib3MF_CustomXMLAttribute pCustomXMLAttribute)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLAttribute;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLAttribute, "CustomXMLAttribute", "Remove");
+		}
+		ICustomXMLAttribute* pICustomXMLAttribute = dynamic_cast<ICustomXMLAttribute*>(pIBaseClass);
+		if (!pICustomXMLAttribute)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pICustomXMLAttribute->Remove();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for CustomXMLNode
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_customxmlnode_getname(Lib3MF_CustomXMLNode pCustomXMLNode, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "GetName");
+		}
+		if ( (!pNameBuffer) && !(pNameNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName("");
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pNameBuffer == nullptr);
+		if (isCacheCall) {
+			sName = pICustomXMLNode->GetName();
+
+			pICustomXMLNode->_setCache (new ParameterCache_1<std::string> (sName));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pICustomXMLNode->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sName);
+			pICustomXMLNode->_setCache (nullptr);
+		}
+		
+		if (pNameNeededChars)
+			*pNameNeededChars = (Lib3MF_uint32) (sName.size()+1);
+		if (pNameBuffer) {
+			if (sName.size() >= nNameBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iName = 0; iName < sName.size(); iName++)
+				pNameBuffer[iName] = sName[iName];
+			pNameBuffer[sName.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("Name", sName.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnode_getnamespace(Lib3MF_CustomXMLNode pCustomXMLNode, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "GetNameSpace");
+		}
+		if ( (!pNameSpaceBuffer) && !(pNameSpaceNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace("");
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pNameSpaceBuffer == nullptr);
+		if (isCacheCall) {
+			sNameSpace = pICustomXMLNode->GetNameSpace();
+
+			pICustomXMLNode->_setCache (new ParameterCache_1<std::string> (sNameSpace));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pICustomXMLNode->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sNameSpace);
+			pICustomXMLNode->_setCache (nullptr);
+		}
+		
+		if (pNameSpaceNeededChars)
+			*pNameSpaceNeededChars = (Lib3MF_uint32) (sNameSpace.size()+1);
+		if (pNameSpaceBuffer) {
+			if (sNameSpace.size() >= nNameSpaceBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iNameSpace = 0; iNameSpace < sNameSpace.size(); iNameSpace++)
+				pNameSpaceBuffer[iNameSpace] = sNameSpace[iNameSpace];
+			pNameSpaceBuffer[sNameSpace.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("NameSpace", sNameSpace.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnode_getattributecount(Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_uint64 * pCount)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "GetAttributeCount");
+		}
+		if (pCount == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pCount = pICustomXMLNode->GetAttributeCount();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt64Result("Count", *pCount);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnode_getattribute(Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_uint64 nIndex, Lib3MF_CustomXMLAttribute * pAttributeInstance)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "GetAttribute");
+			pJournalEntry->addUInt64Parameter("Index", nIndex);
+		}
+		if (pAttributeInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseAttributeInstance(nullptr);
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseAttributeInstance = pICustomXMLNode->GetAttribute(nIndex);
+
+		*pAttributeInstance = (IBase*)(pBaseAttributeInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("AttributeInstance", *pAttributeInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnode_hasattribute(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool * pAttributeExists)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "HasAttribute");
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pAttributeExists == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pAttributeExists = pICustomXMLNode->HasAttribute(sName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("AttributeExists", *pAttributeExists);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnode_findattribute(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool bMustExist, Lib3MF_CustomXMLAttribute * pAttributeInstance)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "FindAttribute");
+			pJournalEntry->addStringParameter("Name", pName);
+			pJournalEntry->addBooleanParameter("MustExist", bMustExist);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pAttributeInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		IBase* pBaseAttributeInstance(nullptr);
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseAttributeInstance = pICustomXMLNode->FindAttribute(sName, bMustExist);
+
+		*pAttributeInstance = (IBase*)(pBaseAttributeInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("AttributeInstance", *pAttributeInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnode_removeattribute(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool * pAttributeRemoved)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "RemoveAttribute");
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pAttributeRemoved == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pAttributeRemoved = pICustomXMLNode->RemoveAttribute(sName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("AttributeRemoved", *pAttributeRemoved);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnode_removeattributebyindex(Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_uint64 nIndex, bool * pAttributeRemoved)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "RemoveAttributeByIndex");
+			pJournalEntry->addUInt64Parameter("Index", nIndex);
+		}
+		if (pAttributeRemoved == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pAttributeRemoved = pICustomXMLNode->RemoveAttributeByIndex(nIndex);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("AttributeRemoved", *pAttributeRemoved);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnode_addattribute(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, const char * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "AddAttribute");
+			pJournalEntry->addStringParameter("Name", pName);
+			pJournalEntry->addStringParameter("Value", pValue);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		std::string sValue(pValue);
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pICustomXMLNode->AddAttribute(sName, sValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnode_addintegerattribute(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_int64 nValue)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "AddIntegerAttribute");
+			pJournalEntry->addStringParameter("Name", pName);
+			pJournalEntry->addInt64Parameter("Value", nValue);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pICustomXMLNode->AddIntegerAttribute(sName, nValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnode_adddoubleattribute(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_double dValue)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "AddDoubleAttribute");
+			pJournalEntry->addStringParameter("Name", pName);
+			pJournalEntry->addDoubleParameter("Value", dValue);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pICustomXMLNode->AddDoubleAttribute(sName, dValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnode_addboolattribute(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool bValue)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "AddBoolAttribute");
+			pJournalEntry->addStringParameter("Name", pName);
+			pJournalEntry->addBooleanParameter("Value", bValue);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pICustomXMLNode->AddBoolAttribute(sName, bValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnode_getchildren(Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_CustomXMLNodes * pChildNodes)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "GetChildren");
+		}
+		if (pChildNodes == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseChildNodes(nullptr);
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseChildNodes = pICustomXMLNode->GetChildren();
+
+		*pChildNodes = (IBase*)(pBaseChildNodes);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("ChildNodes", *pChildNodes);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnode_countchildrenbyname(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_uint64 * pCount)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "CountChildrenByName");
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pCount == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pCount = pICustomXMLNode->CountChildrenByName(sName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt64Result("Count", *pCount);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnode_getchildrenbyname(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_CustomXMLNodes * pChildNodes)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "GetChildrenByName");
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pChildNodes == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		IBase* pBaseChildNodes(nullptr);
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseChildNodes = pICustomXMLNode->GetChildrenByName(sName);
+
+		*pChildNodes = (IBase*)(pBaseChildNodes);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("ChildNodes", *pChildNodes);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnode_haschild(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool * pChildExists)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "HasChild");
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pChildExists == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pChildExists = pICustomXMLNode->HasChild(sName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("ChildExists", *pChildExists);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnode_hasuniquechild(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool * pChildExists)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "HasUniqueChild");
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pChildExists == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pChildExists = pICustomXMLNode->HasUniqueChild(sName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("ChildExists", *pChildExists);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnode_findchild(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool bMustExist, Lib3MF_CustomXMLNode * pChildInstance)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "FindChild");
+			pJournalEntry->addStringParameter("Name", pName);
+			pJournalEntry->addBooleanParameter("MustExist", bMustExist);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pChildInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		IBase* pBaseChildInstance(nullptr);
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseChildInstance = pICustomXMLNode->FindChild(sName, bMustExist);
+
+		*pChildInstance = (IBase*)(pBaseChildInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("ChildInstance", *pChildInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnode_addchild(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_CustomXMLNode * pChildInstance)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "AddChild");
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pChildInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		IBase* pBaseChildInstance(nullptr);
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseChildInstance = pICustomXMLNode->AddChild(sName);
+
+		*pChildInstance = (IBase*)(pBaseChildInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("ChildInstance", *pChildInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnode_removechild(Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_CustomXMLNode pChildInstance)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "RemoveChild");
+			pJournalEntry->addHandleParameter("ChildInstance", pChildInstance);
+		}
+		IBase* pIBaseClassChildInstance = (IBase *)pChildInstance;
+		ICustomXMLNode* pIChildInstance = dynamic_cast<ICustomXMLNode*>(pIBaseClassChildInstance);
+		if (!pIChildInstance)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pICustomXMLNode->RemoveChild(pIChildInstance);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnode_removechildrenwithname(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_uint64 * pNumberOfDeletedChildren)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "RemoveChildrenWithName");
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNumberOfDeletedChildren == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pNumberOfDeletedChildren = pICustomXMLNode->RemoveChildrenWithName(sName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt64Result("NumberOfDeletedChildren", *pNumberOfDeletedChildren);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnode_remove(Lib3MF_CustomXMLNode pCustomXMLNode)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNode, "CustomXMLNode", "Remove");
+		}
+		ICustomXMLNode* pICustomXMLNode = dynamic_cast<ICustomXMLNode*>(pIBaseClass);
+		if (!pICustomXMLNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pICustomXMLNode->Remove();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for CustomXMLNodes
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_customxmlnodes_getnodecount(Lib3MF_CustomXMLNodes pCustomXMLNodes, Lib3MF_uint64 * pCount)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNodes;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNodes, "CustomXMLNodes", "GetNodeCount");
+		}
+		if (pCount == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		ICustomXMLNodes* pICustomXMLNodes = dynamic_cast<ICustomXMLNodes*>(pIBaseClass);
+		if (!pICustomXMLNodes)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pCount = pICustomXMLNodes->GetNodeCount();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt64Result("Count", *pCount);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnodes_getnode(Lib3MF_CustomXMLNodes pCustomXMLNodes, Lib3MF_uint64 nIndex, Lib3MF_CustomXMLNode * pNodeInstance)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNodes;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNodes, "CustomXMLNodes", "GetNode");
+			pJournalEntry->addUInt64Parameter("Index", nIndex);
+		}
+		if (pNodeInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseNodeInstance(nullptr);
+		ICustomXMLNodes* pICustomXMLNodes = dynamic_cast<ICustomXMLNodes*>(pIBaseClass);
+		if (!pICustomXMLNodes)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNodeInstance = pICustomXMLNodes->GetNode(nIndex);
+
+		*pNodeInstance = (IBase*)(pBaseNodeInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("NodeInstance", *pNodeInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnodes_countnodesbyname(Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, Lib3MF_uint64 * pCount)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNodes;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNodes, "CustomXMLNodes", "CountNodesByName");
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pCount == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		ICustomXMLNodes* pICustomXMLNodes = dynamic_cast<ICustomXMLNodes*>(pIBaseClass);
+		if (!pICustomXMLNodes)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pCount = pICustomXMLNodes->CountNodesByName(sName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt64Result("Count", *pCount);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnodes_getnodesbyname(Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, Lib3MF_CustomXMLNodes * pNodes)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNodes;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNodes, "CustomXMLNodes", "GetNodesByName");
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNodes == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		IBase* pBaseNodes(nullptr);
+		ICustomXMLNodes* pICustomXMLNodes = dynamic_cast<ICustomXMLNodes*>(pIBaseClass);
+		if (!pICustomXMLNodes)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNodes = pICustomXMLNodes->GetNodesByName(sName);
+
+		*pNodes = (IBase*)(pBaseNodes);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Nodes", *pNodes);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnodes_hasnode(Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, bool * pNodeExists)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNodes;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNodes, "CustomXMLNodes", "HasNode");
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNodeExists == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		ICustomXMLNodes* pICustomXMLNodes = dynamic_cast<ICustomXMLNodes*>(pIBaseClass);
+		if (!pICustomXMLNodes)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pNodeExists = pICustomXMLNodes->HasNode(sName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("NodeExists", *pNodeExists);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnodes_hasuniquenode(Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, bool * pNodeExists)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNodes;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNodes, "CustomXMLNodes", "HasUniqueNode");
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNodeExists == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		ICustomXMLNodes* pICustomXMLNodes = dynamic_cast<ICustomXMLNodes*>(pIBaseClass);
+		if (!pICustomXMLNodes)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pNodeExists = pICustomXMLNodes->HasUniqueNode(sName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("NodeExists", *pNodeExists);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customxmlnodes_findnode(Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, bool bMustExist, Lib3MF_CustomXMLNode * pNodeInstance)
+{
+	IBase* pIBaseClass = (IBase *)pCustomXMLNodes;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomXMLNodes, "CustomXMLNodes", "FindNode");
+			pJournalEntry->addStringParameter("Name", pName);
+			pJournalEntry->addBooleanParameter("MustExist", bMustExist);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNodeInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		IBase* pBaseNodeInstance(nullptr);
+		ICustomXMLNodes* pICustomXMLNodes = dynamic_cast<ICustomXMLNodes*>(pIBaseClass);
+		if (!pICustomXMLNodes)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNodeInstance = pICustomXMLNodes->FindNode(sName, bMustExist);
+
+		*pNodeInstance = (IBase*)(pBaseNodeInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("NodeInstance", *pNodeInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for CustomDOMTree
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_customdomtree_getnamespace(Lib3MF_CustomDOMTree pCustomDOMTree, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pCustomDOMTree;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomDOMTree, "CustomDOMTree", "GetNameSpace");
+		}
+		if ( (!pNameSpaceBuffer) && !(pNameSpaceNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace("");
+		ICustomDOMTree* pICustomDOMTree = dynamic_cast<ICustomDOMTree*>(pIBaseClass);
+		if (!pICustomDOMTree)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pNameSpaceBuffer == nullptr);
+		if (isCacheCall) {
+			sNameSpace = pICustomDOMTree->GetNameSpace();
+
+			pICustomDOMTree->_setCache (new ParameterCache_1<std::string> (sNameSpace));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pICustomDOMTree->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sNameSpace);
+			pICustomDOMTree->_setCache (nullptr);
+		}
+		
+		if (pNameSpaceNeededChars)
+			*pNameSpaceNeededChars = (Lib3MF_uint32) (sNameSpace.size()+1);
+		if (pNameSpaceBuffer) {
+			if (sNameSpace.size() >= nNameSpaceBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iNameSpace = 0; iNameSpace < sNameSpace.size(); iNameSpace++)
+				pNameSpaceBuffer[iNameSpace] = sNameSpace[iNameSpace];
+			pNameSpaceBuffer[sNameSpace.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("NameSpace", sNameSpace.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customdomtree_getrootnode(Lib3MF_CustomDOMTree pCustomDOMTree, Lib3MF_CustomXMLNode * pRootNode)
+{
+	IBase* pIBaseClass = (IBase *)pCustomDOMTree;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomDOMTree, "CustomDOMTree", "GetRootNode");
+		}
+		if (pRootNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseRootNode(nullptr);
+		ICustomDOMTree* pICustomDOMTree = dynamic_cast<ICustomDOMTree*>(pIBaseClass);
+		if (!pICustomDOMTree)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseRootNode = pICustomDOMTree->GetRootNode();
+
+		*pRootNode = (IBase*)(pBaseRootNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("RootNode", *pRootNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_customdomtree_savetostring(Lib3MF_CustomDOMTree pCustomDOMTree, bool bAddLineBreaks, const Lib3MF_uint32 nXMLStringBufferSize, Lib3MF_uint32* pXMLStringNeededChars, char * pXMLStringBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pCustomDOMTree;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomDOMTree, "CustomDOMTree", "SaveToString");
+			pJournalEntry->addBooleanParameter("AddLineBreaks", bAddLineBreaks);
+		}
+		if ( (!pXMLStringBuffer) && !(pXMLStringNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sXMLString("");
+		ICustomDOMTree* pICustomDOMTree = dynamic_cast<ICustomDOMTree*>(pIBaseClass);
+		if (!pICustomDOMTree)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pXMLStringBuffer == nullptr);
+		if (isCacheCall) {
+			sXMLString = pICustomDOMTree->SaveToString(bAddLineBreaks);
+
+			pICustomDOMTree->_setCache (new ParameterCache_1<std::string> (sXMLString));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pICustomDOMTree->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sXMLString);
+			pICustomDOMTree->_setCache (nullptr);
+		}
+		
+		if (pXMLStringNeededChars)
+			*pXMLStringNeededChars = (Lib3MF_uint32) (sXMLString.size()+1);
+		if (pXMLStringBuffer) {
+			if (sXMLString.size() >= nXMLStringBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iXMLString = 0; iXMLString < sXMLString.size(); iXMLString++)
+				pXMLStringBuffer[iXMLString] = sXMLString[iXMLString];
+			pXMLStringBuffer[sXMLString.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("XMLString", sXMLString.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
  Class implementation for SliceStackIterator
 **************************************************************************************************************************/
 Lib3MFResult lib3mf_slicestackiterator_getcurrentslicestack(Lib3MF_SliceStackIterator pSliceStackIterator, Lib3MF_SliceStack * pResource)
@@ -9928,6 +11706,147 @@ Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpointdata(Lib3MF_ToolpathLayer
 	}
 }
 
+Lib3MFResult lib3mf_toolpathlayerreader_getcustomdatacount(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 * pCount)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "GetCustomDataCount");
+		}
+		if (pCount == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
+		if (!pIToolpathLayerReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pCount = pIToolpathLayerReader->GetCustomDataCount();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("Count", *pCount);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerreader_getcustomdata(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_CustomDOMTree * pData)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "GetCustomData");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+		}
+		if (pData == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseData(nullptr);
+		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
+		if (!pIToolpathLayerReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseData = pIToolpathLayerReader->GetCustomData(nIndex);
+
+		*pData = (IBase*)(pBaseData);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Data", *pData);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerreader_getcustomdataname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer, const Lib3MF_uint32 nDataNameBufferSize, Lib3MF_uint32* pDataNameNeededChars, char * pDataNameBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "GetCustomDataName");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+		}
+		if ( (!pNameSpaceBuffer) && !(pNameSpaceNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pDataNameBuffer) && !(pDataNameNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace("");
+		std::string sDataName("");
+		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
+		if (!pIToolpathLayerReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pNameSpaceBuffer == nullptr) || (pDataNameBuffer == nullptr);
+		if (isCacheCall) {
+			pIToolpathLayerReader->GetCustomDataName(nIndex, sNameSpace, sDataName);
+
+			pIToolpathLayerReader->_setCache (new ParameterCache_2<std::string, std::string> (sNameSpace, sDataName));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_2<std::string, std::string>*> (pIToolpathLayerReader->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sNameSpace, sDataName);
+			pIToolpathLayerReader->_setCache (nullptr);
+		}
+		
+		if (pNameSpaceNeededChars)
+			*pNameSpaceNeededChars = (Lib3MF_uint32) (sNameSpace.size()+1);
+		if (pNameSpaceBuffer) {
+			if (sNameSpace.size() >= nNameSpaceBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iNameSpace = 0; iNameSpace < sNameSpace.size(); iNameSpace++)
+				pNameSpaceBuffer[iNameSpace] = sNameSpace[iNameSpace];
+			pNameSpaceBuffer[sNameSpace.size()] = 0;
+		}
+		if (pDataNameNeededChars)
+			*pDataNameNeededChars = (Lib3MF_uint32) (sDataName.size()+1);
+		if (pDataNameBuffer) {
+			if (sDataName.size() >= nDataNameBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iDataName = 0; iDataName < sDataName.size(); iDataName++)
+				pDataNameBuffer[iDataName] = sDataName[iDataName];
+			pDataNameBuffer[sDataName.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("NameSpace", sNameSpace.c_str());
+			pJournalEntry->addStringResult("DataName", sDataName.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 
 /*************************************************************************************************************************
  Class implementation for ToolpathLayerData
@@ -10158,6 +12077,54 @@ Lib3MFResult lib3mf_toolpathlayerdata_writepolyline(Lib3MF_ToolpathLayerData pTo
 		pIToolpathLayerData->WritePolyline(nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer);
 
 		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerdata_addcustomdata(Lib3MF_ToolpathLayerData pToolpathLayerData, const char * pNameSpace, const char * pNameSpacePrefix, const char * pDataName, Lib3MF_CustomDOMTree * pData)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerData, "ToolpathLayerData", "AddCustomData");
+			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
+			pJournalEntry->addStringParameter("NameSpacePrefix", pNameSpacePrefix);
+			pJournalEntry->addStringParameter("DataName", pDataName);
+		}
+		if (pNameSpace == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNameSpacePrefix == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDataName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pData == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace(pNameSpace);
+		std::string sNameSpacePrefix(pNameSpacePrefix);
+		std::string sDataName(pDataName);
+		IBase* pBaseData(nullptr);
+		IToolpathLayerData* pIToolpathLayerData = dynamic_cast<IToolpathLayerData*>(pIBaseClass);
+		if (!pIToolpathLayerData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseData = pIToolpathLayerData->AddCustomData(sNameSpace, sNameSpacePrefix, sDataName);
+
+		*pData = (IBase*)(pBaseData);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Data", *pData);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -15239,6 +17206,96 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_resourceiterator_clone;
 	if (sProcName == "lib3mf_resourceiterator_count") 
 		*ppProcAddress = (void*) &lib3mf_resourceiterator_count;
+	if (sProcName == "lib3mf_customxmlattribute_getname") 
+		*ppProcAddress = (void*) &lib3mf_customxmlattribute_getname;
+	if (sProcName == "lib3mf_customxmlattribute_getvalue") 
+		*ppProcAddress = (void*) &lib3mf_customxmlattribute_getvalue;
+	if (sProcName == "lib3mf_customxmlattribute_isvalidinteger") 
+		*ppProcAddress = (void*) &lib3mf_customxmlattribute_isvalidinteger;
+	if (sProcName == "lib3mf_customxmlattribute_getintegervalue") 
+		*ppProcAddress = (void*) &lib3mf_customxmlattribute_getintegervalue;
+	if (sProcName == "lib3mf_customxmlattribute_isvaliddouble") 
+		*ppProcAddress = (void*) &lib3mf_customxmlattribute_isvaliddouble;
+	if (sProcName == "lib3mf_customxmlattribute_getdoublevalue") 
+		*ppProcAddress = (void*) &lib3mf_customxmlattribute_getdoublevalue;
+	if (sProcName == "lib3mf_customxmlattribute_isvalidbool") 
+		*ppProcAddress = (void*) &lib3mf_customxmlattribute_isvalidbool;
+	if (sProcName == "lib3mf_customxmlattribute_getboolvalue") 
+		*ppProcAddress = (void*) &lib3mf_customxmlattribute_getboolvalue;
+	if (sProcName == "lib3mf_customxmlattribute_setvalue") 
+		*ppProcAddress = (void*) &lib3mf_customxmlattribute_setvalue;
+	if (sProcName == "lib3mf_customxmlattribute_setintegervalue") 
+		*ppProcAddress = (void*) &lib3mf_customxmlattribute_setintegervalue;
+	if (sProcName == "lib3mf_customxmlattribute_setdoublevalue") 
+		*ppProcAddress = (void*) &lib3mf_customxmlattribute_setdoublevalue;
+	if (sProcName == "lib3mf_customxmlattribute_setboolvalue") 
+		*ppProcAddress = (void*) &lib3mf_customxmlattribute_setboolvalue;
+	if (sProcName == "lib3mf_customxmlattribute_remove") 
+		*ppProcAddress = (void*) &lib3mf_customxmlattribute_remove;
+	if (sProcName == "lib3mf_customxmlnode_getname") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_getname;
+	if (sProcName == "lib3mf_customxmlnode_getnamespace") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_getnamespace;
+	if (sProcName == "lib3mf_customxmlnode_getattributecount") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_getattributecount;
+	if (sProcName == "lib3mf_customxmlnode_getattribute") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_getattribute;
+	if (sProcName == "lib3mf_customxmlnode_hasattribute") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_hasattribute;
+	if (sProcName == "lib3mf_customxmlnode_findattribute") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_findattribute;
+	if (sProcName == "lib3mf_customxmlnode_removeattribute") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_removeattribute;
+	if (sProcName == "lib3mf_customxmlnode_removeattributebyindex") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_removeattributebyindex;
+	if (sProcName == "lib3mf_customxmlnode_addattribute") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_addattribute;
+	if (sProcName == "lib3mf_customxmlnode_addintegerattribute") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_addintegerattribute;
+	if (sProcName == "lib3mf_customxmlnode_adddoubleattribute") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_adddoubleattribute;
+	if (sProcName == "lib3mf_customxmlnode_addboolattribute") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_addboolattribute;
+	if (sProcName == "lib3mf_customxmlnode_getchildren") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_getchildren;
+	if (sProcName == "lib3mf_customxmlnode_countchildrenbyname") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_countchildrenbyname;
+	if (sProcName == "lib3mf_customxmlnode_getchildrenbyname") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_getchildrenbyname;
+	if (sProcName == "lib3mf_customxmlnode_haschild") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_haschild;
+	if (sProcName == "lib3mf_customxmlnode_hasuniquechild") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_hasuniquechild;
+	if (sProcName == "lib3mf_customxmlnode_findchild") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_findchild;
+	if (sProcName == "lib3mf_customxmlnode_addchild") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_addchild;
+	if (sProcName == "lib3mf_customxmlnode_removechild") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_removechild;
+	if (sProcName == "lib3mf_customxmlnode_removechildrenwithname") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_removechildrenwithname;
+	if (sProcName == "lib3mf_customxmlnode_remove") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnode_remove;
+	if (sProcName == "lib3mf_customxmlnodes_getnodecount") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnodes_getnodecount;
+	if (sProcName == "lib3mf_customxmlnodes_getnode") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnodes_getnode;
+	if (sProcName == "lib3mf_customxmlnodes_countnodesbyname") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnodes_countnodesbyname;
+	if (sProcName == "lib3mf_customxmlnodes_getnodesbyname") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnodes_getnodesbyname;
+	if (sProcName == "lib3mf_customxmlnodes_hasnode") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnodes_hasnode;
+	if (sProcName == "lib3mf_customxmlnodes_hasuniquenode") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnodes_hasuniquenode;
+	if (sProcName == "lib3mf_customxmlnodes_findnode") 
+		*ppProcAddress = (void*) &lib3mf_customxmlnodes_findnode;
+	if (sProcName == "lib3mf_customdomtree_getnamespace") 
+		*ppProcAddress = (void*) &lib3mf_customdomtree_getnamespace;
+	if (sProcName == "lib3mf_customdomtree_getrootnode") 
+		*ppProcAddress = (void*) &lib3mf_customdomtree_getrootnode;
+	if (sProcName == "lib3mf_customdomtree_savetostring") 
+		*ppProcAddress = (void*) &lib3mf_customdomtree_savetostring;
 	if (sProcName == "lib3mf_slicestackiterator_getcurrentslicestack") 
 		*ppProcAddress = (void*) &lib3mf_slicestackiterator_getcurrentslicestack;
 	if (sProcName == "lib3mf_objectiterator_getcurrentobject") 
@@ -15677,6 +17734,12 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentpartuuid;
 	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentpointdata") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentpointdata;
+	if (sProcName == "lib3mf_toolpathlayerreader_getcustomdatacount") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getcustomdatacount;
+	if (sProcName == "lib3mf_toolpathlayerreader_getcustomdata") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getcustomdata;
+	if (sProcName == "lib3mf_toolpathlayerreader_getcustomdataname") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getcustomdataname;
 	if (sProcName == "lib3mf_toolpathlayerdata_getlayerdatauuid") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_getlayerdatauuid;
 	if (sProcName == "lib3mf_toolpathlayerdata_registerprofile") 
@@ -15689,6 +17752,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writeloop;
 	if (sProcName == "lib3mf_toolpathlayerdata_writepolyline") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writepolyline;
+	if (sProcName == "lib3mf_toolpathlayerdata_addcustomdata") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_addcustomdata;
 	if (sProcName == "lib3mf_toolpathlayerdata_finish") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_finish;
 	if (sProcName == "lib3mf_toolpath_getunits") 

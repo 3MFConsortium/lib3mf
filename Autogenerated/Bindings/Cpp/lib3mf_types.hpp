@@ -129,6 +129,8 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER 140 /** A progress identifier is unknown */
 #define LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT 141 /** An element buffer exceeds its spec limit */
 #define LIB3MF_ERROR_INVALIDRESOURCE 142 /** A resource is invalid */
+#define LIB3MF_ERROR_INVALIDNODEINDEX 143 /** Invalid node index */
+#define LIB3MF_ERROR_INVALIDATTRIBUTEINDEX 144 /** Invalid attribute index */
 #define LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE 2000 /** This object type is not valid for beamlattices */
 #define LIB3MF_ERROR_INVALIDKEYSTORE 3000 /** The keystore object is invalid */
 #define LIB3MF_ERROR_INVALIDKEYSTORECONSUMER 3001 /** The consumer keystore object is invalid */
@@ -184,6 +186,8 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
     case LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER: return "A progress identifier is unknown";
     case LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: return "An element buffer exceeds its spec limit";
     case LIB3MF_ERROR_INVALIDRESOURCE: return "A resource is invalid";
+    case LIB3MF_ERROR_INVALIDNODEINDEX: return "Invalid node index";
+    case LIB3MF_ERROR_INVALIDATTRIBUTEINDEX: return "Invalid attribute index";
     case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "This object type is not valid for beamlattices";
     case LIB3MF_ERROR_INVALIDKEYSTORE: return "The keystore object is invalid";
     case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "The consumer keystore object is invalid";
@@ -210,6 +214,10 @@ typedef Lib3MFHandle Lib3MF_Reader;
 typedef Lib3MFHandle Lib3MF_PackagePart;
 typedef Lib3MFHandle Lib3MF_Resource;
 typedef Lib3MFHandle Lib3MF_ResourceIterator;
+typedef Lib3MFHandle Lib3MF_CustomXMLAttribute;
+typedef Lib3MFHandle Lib3MF_CustomXMLNode;
+typedef Lib3MFHandle Lib3MF_CustomXMLNodes;
+typedef Lib3MFHandle Lib3MF_CustomDOMTree;
 typedef Lib3MFHandle Lib3MF_SliceStackIterator;
 typedef Lib3MFHandle Lib3MF_ObjectIterator;
 typedef Lib3MFHandle Lib3MF_MeshObjectIterator;

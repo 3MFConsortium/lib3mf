@@ -64,6 +64,10 @@ class CReader;
 class CPackagePart;
 class CResource;
 class CResourceIterator;
+class CCustomXMLAttribute;
+class CCustomXMLNode;
+class CCustomXMLNodes;
+class CCustomDOMTree;
 class CSliceStackIterator;
 class CObjectIterator;
 class CMeshObjectIterator;
@@ -117,6 +121,10 @@ typedef CReader CLib3MFReader;
 typedef CPackagePart CLib3MFPackagePart;
 typedef CResource CLib3MFResource;
 typedef CResourceIterator CLib3MFResourceIterator;
+typedef CCustomXMLAttribute CLib3MFCustomXMLAttribute;
+typedef CCustomXMLNode CLib3MFCustomXMLNode;
+typedef CCustomXMLNodes CLib3MFCustomXMLNodes;
+typedef CCustomDOMTree CLib3MFCustomDOMTree;
 typedef CSliceStackIterator CLib3MFSliceStackIterator;
 typedef CObjectIterator CLib3MFObjectIterator;
 typedef CMeshObjectIterator CLib3MFMeshObjectIterator;
@@ -170,6 +178,10 @@ typedef std::shared_ptr<CReader> PReader;
 typedef std::shared_ptr<CPackagePart> PPackagePart;
 typedef std::shared_ptr<CResource> PResource;
 typedef std::shared_ptr<CResourceIterator> PResourceIterator;
+typedef std::shared_ptr<CCustomXMLAttribute> PCustomXMLAttribute;
+typedef std::shared_ptr<CCustomXMLNode> PCustomXMLNode;
+typedef std::shared_ptr<CCustomXMLNodes> PCustomXMLNodes;
+typedef std::shared_ptr<CCustomDOMTree> PCustomDOMTree;
 typedef std::shared_ptr<CSliceStackIterator> PSliceStackIterator;
 typedef std::shared_ptr<CObjectIterator> PObjectIterator;
 typedef std::shared_ptr<CMeshObjectIterator> PMeshObjectIterator;
@@ -223,6 +235,10 @@ typedef PReader PLib3MFReader;
 typedef PPackagePart PLib3MFPackagePart;
 typedef PResource PLib3MFResource;
 typedef PResourceIterator PLib3MFResourceIterator;
+typedef PCustomXMLAttribute PLib3MFCustomXMLAttribute;
+typedef PCustomXMLNode PLib3MFCustomXMLNode;
+typedef PCustomXMLNodes PLib3MFCustomXMLNodes;
+typedef PCustomDOMTree PLib3MFCustomDOMTree;
 typedef PSliceStackIterator PLib3MFSliceStackIterator;
 typedef PObjectIterator PLib3MFObjectIterator;
 typedef PMeshObjectIterator PLib3MFMeshObjectIterator;
@@ -379,6 +395,8 @@ public:
 			case LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER: return "UNKOWNPROGRESSIDENTIFIER";
 			case LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: return "ELEMENTCOUNTEXCEEDSLIMIT";
 			case LIB3MF_ERROR_INVALIDRESOURCE: return "INVALIDRESOURCE";
+			case LIB3MF_ERROR_INVALIDNODEINDEX: return "INVALIDNODEINDEX";
+			case LIB3MF_ERROR_INVALIDATTRIBUTEINDEX: return "INVALIDATTRIBUTEINDEX";
 			case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "BEAMLATTICE_INVALID_OBJECTTYPE";
 			case LIB3MF_ERROR_INVALIDKEYSTORE: return "INVALIDKEYSTORE";
 			case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "INVALIDKEYSTORECONSUMER";
@@ -434,6 +452,8 @@ public:
 			case LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER: return "A progress identifier is unknown";
 			case LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: return "An element buffer exceeds its spec limit";
 			case LIB3MF_ERROR_INVALIDRESOURCE: return "A resource is invalid";
+			case LIB3MF_ERROR_INVALIDNODEINDEX: return "Invalid node index";
+			case LIB3MF_ERROR_INVALIDATTRIBUTEINDEX: return "Invalid attribute index";
 			case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "This object type is not valid for beamlattices";
 			case LIB3MF_ERROR_INVALIDKEYSTORE: return "The keystore object is invalid";
 			case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "The consumer keystore object is invalid";
@@ -560,6 +580,10 @@ private:
 	friend class CPackagePart;
 	friend class CResource;
 	friend class CResourceIterator;
+	friend class CCustomXMLAttribute;
+	friend class CCustomXMLNode;
+	friend class CCustomXMLNodes;
+	friend class CCustomDOMTree;
 	friend class CSliceStackIterator;
 	friend class CObjectIterator;
 	friend class CMeshObjectIterator;
@@ -797,6 +821,115 @@ public:
 	inline PResource GetCurrent();
 	inline PResourceIterator Clone();
 	inline Lib3MF_uint64 Count();
+};
+	
+/*************************************************************************************************************************
+ Class CCustomXMLAttribute 
+**************************************************************************************************************************/
+class CCustomXMLAttribute : public CBase {
+public:
+	
+	/**
+	* CCustomXMLAttribute::CCustomXMLAttribute - Constructor for CustomXMLAttribute class.
+	*/
+	CCustomXMLAttribute(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetName();
+	inline std::string GetValue();
+	inline bool IsValidInteger(const Lib3MF_int64 nMinValue, const Lib3MF_int64 nMaxValue);
+	inline Lib3MF_int64 GetIntegerValue(const Lib3MF_int64 nMinValue, const Lib3MF_int64 nMaxValue);
+	inline bool IsValidDouble(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue);
+	inline Lib3MF_double GetDoubleValue(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue);
+	inline bool IsValidBool();
+	inline bool GetBoolValue(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue);
+	inline void SetValue(const std::string & sValue);
+	inline void SetIntegerValue(const Lib3MF_int64 nValue);
+	inline void SetDoubleValue(const Lib3MF_double dValue);
+	inline void SetBoolValue(const bool bValue);
+	inline void Remove();
+};
+	
+/*************************************************************************************************************************
+ Class CCustomXMLNode 
+**************************************************************************************************************************/
+class CCustomXMLNode : public CBase {
+public:
+	
+	/**
+	* CCustomXMLNode::CCustomXMLNode - Constructor for CustomXMLNode class.
+	*/
+	CCustomXMLNode(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetName();
+	inline std::string GetNameSpace();
+	inline Lib3MF_uint64 GetAttributeCount();
+	inline PCustomXMLAttribute GetAttribute(const Lib3MF_uint64 nIndex);
+	inline bool HasAttribute(const std::string & sName);
+	inline PCustomXMLAttribute FindAttribute(const std::string & sName, const bool bMustExist);
+	inline bool RemoveAttribute(const std::string & sName);
+	inline bool RemoveAttributeByIndex(const Lib3MF_uint64 nIndex);
+	inline void AddAttribute(const std::string & sName, const std::string & sValue);
+	inline void AddIntegerAttribute(const std::string & sName, const Lib3MF_int64 nValue);
+	inline void AddDoubleAttribute(const std::string & sName, const Lib3MF_double dValue);
+	inline void AddBoolAttribute(const std::string & sName, const bool bValue);
+	inline PCustomXMLNodes GetChildren();
+	inline Lib3MF_uint64 CountChildrenByName(const std::string & sName);
+	inline PCustomXMLNodes GetChildrenByName(const std::string & sName);
+	inline bool HasChild(const std::string & sName);
+	inline bool HasUniqueChild(const std::string & sName);
+	inline PCustomXMLNode FindChild(const std::string & sName, const bool bMustExist);
+	inline PCustomXMLNode AddChild(const std::string & sName);
+	inline void RemoveChild(classParam<CCustomXMLNode> pChildInstance);
+	inline Lib3MF_uint64 RemoveChildrenWithName(const std::string & sName);
+	inline void Remove();
+};
+	
+/*************************************************************************************************************************
+ Class CCustomXMLNodes 
+**************************************************************************************************************************/
+class CCustomXMLNodes : public CBase {
+public:
+	
+	/**
+	* CCustomXMLNodes::CCustomXMLNodes - Constructor for CustomXMLNodes class.
+	*/
+	CCustomXMLNodes(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline Lib3MF_uint64 GetNodeCount();
+	inline PCustomXMLNode GetNode(const Lib3MF_uint64 nIndex);
+	inline Lib3MF_uint64 CountNodesByName(const std::string & sName);
+	inline PCustomXMLNodes GetNodesByName(const std::string & sName);
+	inline bool HasNode(const std::string & sName);
+	inline bool HasUniqueNode(const std::string & sName);
+	inline PCustomXMLNode FindNode(const std::string & sName, const bool bMustExist);
+};
+	
+/*************************************************************************************************************************
+ Class CCustomDOMTree 
+**************************************************************************************************************************/
+class CCustomDOMTree : public CBase {
+public:
+	
+	/**
+	* CCustomDOMTree::CCustomDOMTree - Constructor for CustomDOMTree class.
+	*/
+	CCustomDOMTree(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetNameSpace();
+	inline PCustomXMLNode GetRootNode();
+	inline std::string SaveToString(const bool bAddLineBreaks);
 };
 	
 /*************************************************************************************************************************
@@ -1496,6 +1629,9 @@ public:
 	inline PBuildItem GetSegmentPart(const Lib3MF_uint32 nIndex);
 	inline std::string GetSegmentPartUUID(const Lib3MF_uint32 nIndex);
 	inline void GetSegmentPointData(const Lib3MF_uint32 nIndex, std::vector<sPosition2D> & PointDataBuffer);
+	inline Lib3MF_uint32 GetCustomDataCount();
+	inline PCustomDOMTree GetCustomData(const Lib3MF_uint32 nIndex);
+	inline void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName);
 };
 	
 /*************************************************************************************************************************
@@ -1518,6 +1654,7 @@ public:
 	inline void WriteHatchData(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
 	inline void WriteLoop(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
 	inline void WritePolyline(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
+	inline PCustomDOMTree AddCustomData(const std::string & sNameSpace, const std::string & sNameSpacePrefix, const std::string & sDataName);
 	inline void Finish();
 };
 	
@@ -1832,6 +1969,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0x0E55A826D377483EUL: return new CPackagePart(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::PackagePart"
 		case 0xDFE3889D1B269CBBUL: return new CResource(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Resource"
 		case 0x460F3515E2621DBEUL: return new CResourceIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ResourceIterator"
+		case 0xEA18C54DBD42B5F6UL: return new CCustomXMLAttribute(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::CustomXMLAttribute"
+		case 0x26B5AD02041EDF96UL: return new CCustomXMLNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::CustomXMLNode"
+		case 0x8C4B47C97D310E89UL: return new CCustomXMLNodes(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::CustomXMLNodes"
+		case 0x5E0CF70A6DB6256AUL: return new CCustomDOMTree(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::CustomDOMTree"
 		case 0x69684DB99FA813F6UL: return new CSliceStackIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::SliceStackIterator"
 		case 0xDE92510BD2112288UL: return new CObjectIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ObjectIterator"
 		case 0xF4196034E2B9FDE6UL: return new CMeshObjectIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObjectIterator"
@@ -2661,6 +2802,615 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		CheckError(lib3mf_resourceiterator_count(m_pHandle, &resultCount));
 		
 		return resultCount;
+	}
+	
+	/**
+	 * Method definitions for class CCustomXMLAttribute
+	 */
+	
+	/**
+	* CCustomXMLAttribute::GetName - Retrieves name of the attribute.
+	* @return returns the name of the attribute.
+	*/
+	std::string CCustomXMLAttribute::GetName()
+	{
+		Lib3MF_uint32 bytesNeededName = 0;
+		Lib3MF_uint32 bytesWrittenName = 0;
+		CheckError(lib3mf_customxmlattribute_getname(m_pHandle, 0, &bytesNeededName, nullptr));
+		std::vector<char> bufferName(bytesNeededName);
+		CheckError(lib3mf_customxmlattribute_getname(m_pHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]));
+		
+		return std::string(&bufferName[0]);
+	}
+	
+	/**
+	* CCustomXMLAttribute::GetValue - Retrieves value of the attribute as string.
+	* @return returns the value of the attribute.
+	*/
+	std::string CCustomXMLAttribute::GetValue()
+	{
+		Lib3MF_uint32 bytesNeededValue = 0;
+		Lib3MF_uint32 bytesWrittenValue = 0;
+		CheckError(lib3mf_customxmlattribute_getvalue(m_pHandle, 0, &bytesNeededValue, nullptr));
+		std::vector<char> bufferValue(bytesNeededValue);
+		CheckError(lib3mf_customxmlattribute_getvalue(m_pHandle, bytesNeededValue, &bytesWrittenValue, &bufferValue[0]));
+		
+		return std::string(&bufferValue[0]);
+	}
+	
+	/**
+	* CCustomXMLAttribute::IsValidInteger - Checks if the value is a valid integer in the given range.
+	* @param[in] nMinValue - Minimum allowed value
+	* @param[in] nMaxValue - Maximum allowed value
+	* @return returns if the value is a valid integer.
+	*/
+	bool CCustomXMLAttribute::IsValidInteger(const Lib3MF_int64 nMinValue, const Lib3MF_int64 nMaxValue)
+	{
+		bool resultIsValid = 0;
+		CheckError(lib3mf_customxmlattribute_isvalidinteger(m_pHandle, nMinValue, nMaxValue, &resultIsValid));
+		
+		return resultIsValid;
+	}
+	
+	/**
+	* CCustomXMLAttribute::GetIntegerValue - Returns the value as integer. Fails if the value is not a valid integer in the given range.
+	* @param[in] nMinValue - Minimum allowed value
+	* @param[in] nMaxValue - Maximum allowed value
+	* @return returns the value.
+	*/
+	Lib3MF_int64 CCustomXMLAttribute::GetIntegerValue(const Lib3MF_int64 nMinValue, const Lib3MF_int64 nMaxValue)
+	{
+		Lib3MF_int64 resultValue = 0;
+		CheckError(lib3mf_customxmlattribute_getintegervalue(m_pHandle, nMinValue, nMaxValue, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CCustomXMLAttribute::IsValidDouble - Checks if the value is a valid double in the given range.
+	* @param[in] dMinValue - Minimum allowed value
+	* @param[in] dMaxValue - Maximum allowed value
+	* @return returns if the value is a valid double.
+	*/
+	bool CCustomXMLAttribute::IsValidDouble(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue)
+	{
+		bool resultIsValid = 0;
+		CheckError(lib3mf_customxmlattribute_isvaliddouble(m_pHandle, dMinValue, dMaxValue, &resultIsValid));
+		
+		return resultIsValid;
+	}
+	
+	/**
+	* CCustomXMLAttribute::GetDoubleValue - Returns the value as double. Fails if the value is not a valid double in the given range.
+	* @param[in] dMinValue - Minimum allowed value
+	* @param[in] dMaxValue - Maximum allowed value
+	* @return returns the value .
+	*/
+	Lib3MF_double CCustomXMLAttribute::GetDoubleValue(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue)
+	{
+		Lib3MF_double resultValue = 0;
+		CheckError(lib3mf_customxmlattribute_getdoublevalue(m_pHandle, dMinValue, dMaxValue, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CCustomXMLAttribute::IsValidBool - Checks if the value is a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+	* @return returns if the value is a valid bool.
+	*/
+	bool CCustomXMLAttribute::IsValidBool()
+	{
+		bool resultIsValid = 0;
+		CheckError(lib3mf_customxmlattribute_isvalidbool(m_pHandle, &resultIsValid));
+		
+		return resultIsValid;
+	}
+	
+	/**
+	* CCustomXMLAttribute::GetBoolValue - Returns the value as bool. Fails if the value is not a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+	* @param[in] dMinValue - Minimum allowed value
+	* @param[in] dMaxValue - Maximum allowed value
+	* @return returns the value .
+	*/
+	bool CCustomXMLAttribute::GetBoolValue(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue)
+	{
+		bool resultValue = 0;
+		CheckError(lib3mf_customxmlattribute_getboolvalue(m_pHandle, dMinValue, dMaxValue, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CCustomXMLAttribute::SetValue - Sets the value of the attribute as string.
+	* @param[in] sValue - new value of the attribute.
+	*/
+	void CCustomXMLAttribute::SetValue(const std::string & sValue)
+	{
+		CheckError(lib3mf_customxmlattribute_setvalue(m_pHandle, sValue.c_str()));
+	}
+	
+	/**
+	* CCustomXMLAttribute::SetIntegerValue - Sets the value of the attribute as integer.
+	* @param[in] nValue - new value of the attribute.
+	*/
+	void CCustomXMLAttribute::SetIntegerValue(const Lib3MF_int64 nValue)
+	{
+		CheckError(lib3mf_customxmlattribute_setintegervalue(m_pHandle, nValue));
+	}
+	
+	/**
+	* CCustomXMLAttribute::SetDoubleValue - Sets the value of the attribute as double.
+	* @param[in] dValue - new value of the attribute.
+	*/
+	void CCustomXMLAttribute::SetDoubleValue(const Lib3MF_double dValue)
+	{
+		CheckError(lib3mf_customxmlattribute_setdoublevalue(m_pHandle, dValue));
+	}
+	
+	/**
+	* CCustomXMLAttribute::SetBoolValue - Sets the value of the attribute as bool.
+	* @param[in] bValue - new value of the attribute.
+	*/
+	void CCustomXMLAttribute::SetBoolValue(const bool bValue)
+	{
+		CheckError(lib3mf_customxmlattribute_setboolvalue(m_pHandle, bValue));
+	}
+	
+	/**
+	* CCustomXMLAttribute::Remove - Removes the attribute from its parent node. All subsequent calls to the class will fail.
+	*/
+	void CCustomXMLAttribute::Remove()
+	{
+		CheckError(lib3mf_customxmlattribute_remove(m_pHandle));
+	}
+	
+	/**
+	 * Method definitions for class CCustomXMLNode
+	 */
+	
+	/**
+	* CCustomXMLNode::GetName - Retrieves name of the node.
+	* @return returns the name of the node.
+	*/
+	std::string CCustomXMLNode::GetName()
+	{
+		Lib3MF_uint32 bytesNeededName = 0;
+		Lib3MF_uint32 bytesWrittenName = 0;
+		CheckError(lib3mf_customxmlnode_getname(m_pHandle, 0, &bytesNeededName, nullptr));
+		std::vector<char> bufferName(bytesNeededName);
+		CheckError(lib3mf_customxmlnode_getname(m_pHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]));
+		
+		return std::string(&bufferName[0]);
+	}
+	
+	/**
+	* CCustomXMLNode::GetNameSpace - Retrieves namespace of the node.
+	* @return returns the namespace of the node.
+	*/
+	std::string CCustomXMLNode::GetNameSpace()
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		CheckError(lib3mf_customxmlnode_getnamespace(m_pHandle, 0, &bytesNeededNameSpace, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		CheckError(lib3mf_customxmlnode_getnamespace(m_pHandle, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0]));
+		
+		return std::string(&bufferNameSpace[0]);
+	}
+	
+	/**
+	* CCustomXMLNode::GetAttributeCount - Returns number of attributes.
+	* @return returns the number of attributes.
+	*/
+	Lib3MF_uint64 CCustomXMLNode::GetAttributeCount()
+	{
+		Lib3MF_uint64 resultCount = 0;
+		CheckError(lib3mf_customxmlnode_getattributecount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CCustomXMLNode::GetAttribute - Returns attribute instance. Fails if Index is out of range.
+	* @param[in] nIndex - Index of the attribute to return (0-based).
+	* @return XML Document attribute.
+	*/
+	PCustomXMLAttribute CCustomXMLNode::GetAttribute(const Lib3MF_uint64 nIndex)
+	{
+		Lib3MFHandle hAttributeInstance = nullptr;
+		CheckError(lib3mf_customxmlnode_getattribute(m_pHandle, nIndex, &hAttributeInstance));
+		
+		if (!hAttributeInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLAttribute>(dynamic_cast<CCustomXMLAttribute*>(m_pWrapper->polymorphicFactory(hAttributeInstance)));
+	}
+	
+	/**
+	* CCustomXMLNode::HasAttribute - Returns if attribute of a specific name exists.
+	* @param[in] sName - Name of the attribute.
+	* @return Returns if the attribute exists.
+	*/
+	bool CCustomXMLNode::HasAttribute(const std::string & sName)
+	{
+		bool resultAttributeExists = 0;
+		CheckError(lib3mf_customxmlnode_hasattribute(m_pHandle, sName.c_str(), &resultAttributeExists));
+		
+		return resultAttributeExists;
+	}
+	
+	/**
+	* CCustomXMLNode::FindAttribute - Returns attribute instance of a specific name. 
+	* @param[in] sName - Name of the attribute.
+	* @param[in] bMustExist - If true, the call fails if attribute does not exist. If falls, the call will return null if the attribute does not exist.
+	* @return XML Document attribute.
+	*/
+	PCustomXMLAttribute CCustomXMLNode::FindAttribute(const std::string & sName, const bool bMustExist)
+	{
+		Lib3MFHandle hAttributeInstance = nullptr;
+		CheckError(lib3mf_customxmlnode_findattribute(m_pHandle, sName.c_str(), bMustExist, &hAttributeInstance));
+		
+		if (hAttributeInstance) {
+			return std::shared_ptr<CCustomXMLAttribute>(dynamic_cast<CCustomXMLAttribute*>(m_pWrapper->polymorphicFactory(hAttributeInstance)));
+		} else {
+			return nullptr;
+		}
+	}
+	
+	/**
+	* CCustomXMLNode::RemoveAttribute - Removes the attribute with a specific name. Does nothing if attribute does not exist.
+	* @param[in] sName - Name of the attribute.
+	* @return Returns true if an attribute was removed.
+	*/
+	bool CCustomXMLNode::RemoveAttribute(const std::string & sName)
+	{
+		bool resultAttributeRemoved = 0;
+		CheckError(lib3mf_customxmlnode_removeattribute(m_pHandle, sName.c_str(), &resultAttributeRemoved));
+		
+		return resultAttributeRemoved;
+	}
+	
+	/**
+	* CCustomXMLNode::RemoveAttributeByIndex - Removes the attribute with a specific index. Fails if index is invalid
+	* @param[in] nIndex - Index of the attribute to remove (0-based).
+	* @return Returns true if an attribute was removed.
+	*/
+	bool CCustomXMLNode::RemoveAttributeByIndex(const Lib3MF_uint64 nIndex)
+	{
+		bool resultAttributeRemoved = 0;
+		CheckError(lib3mf_customxmlnode_removeattributebyindex(m_pHandle, nIndex, &resultAttributeRemoved));
+		
+		return resultAttributeRemoved;
+	}
+	
+	/**
+	* CCustomXMLNode::AddAttribute - Adds an attribute with a specific name and string value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] sValue - Value of the attribute.
+	*/
+	void CCustomXMLNode::AddAttribute(const std::string & sName, const std::string & sValue)
+	{
+		CheckError(lib3mf_customxmlnode_addattribute(m_pHandle, sName.c_str(), sValue.c_str()));
+	}
+	
+	/**
+	* CCustomXMLNode::AddIntegerAttribute - Adds an attribute with a specific name and integer value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] nValue - Value of the attribute.
+	*/
+	void CCustomXMLNode::AddIntegerAttribute(const std::string & sName, const Lib3MF_int64 nValue)
+	{
+		CheckError(lib3mf_customxmlnode_addintegerattribute(m_pHandle, sName.c_str(), nValue));
+	}
+	
+	/**
+	* CCustomXMLNode::AddDoubleAttribute - Adds an attribute with a specific name and double value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] dValue - Value of the attribute.
+	*/
+	void CCustomXMLNode::AddDoubleAttribute(const std::string & sName, const Lib3MF_double dValue)
+	{
+		CheckError(lib3mf_customxmlnode_adddoubleattribute(m_pHandle, sName.c_str(), dValue));
+	}
+	
+	/**
+	* CCustomXMLNode::AddBoolAttribute - Adds an attribute with a specific name and bool value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] bValue - Value of the attribute.
+	*/
+	void CCustomXMLNode::AddBoolAttribute(const std::string & sName, const bool bValue)
+	{
+		CheckError(lib3mf_customxmlnode_addboolattribute(m_pHandle, sName.c_str(), bValue));
+	}
+	
+	/**
+	* CCustomXMLNode::GetChildren - Returns all the child nodes of the XML Node.
+	* @return returns the list of child nodes.
+	*/
+	PCustomXMLNodes CCustomXMLNode::GetChildren()
+	{
+		Lib3MFHandle hChildNodes = nullptr;
+		CheckError(lib3mf_customxmlnode_getchildren(m_pHandle, &hChildNodes));
+		
+		if (!hChildNodes) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNodes>(dynamic_cast<CCustomXMLNodes*>(m_pWrapper->polymorphicFactory(hChildNodes)));
+	}
+	
+	/**
+	* CCustomXMLNode::CountChildrenByName - Returns how many children of the XML Node have a specific name.
+	* @param[in] sName - Name of the node.
+	* @return returns the number children with the specified name.
+	*/
+	Lib3MF_uint64 CCustomXMLNode::CountChildrenByName(const std::string & sName)
+	{
+		Lib3MF_uint64 resultCount = 0;
+		CheckError(lib3mf_customxmlnode_countchildrenbyname(m_pHandle, sName.c_str(), &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CCustomXMLNode::GetChildrenByName - Returns all the child nodes of the XML Node with a specific name.
+	* @param[in] sName - Name of the child.
+	* @return returns the list of child nodes.
+	*/
+	PCustomXMLNodes CCustomXMLNode::GetChildrenByName(const std::string & sName)
+	{
+		Lib3MFHandle hChildNodes = nullptr;
+		CheckError(lib3mf_customxmlnode_getchildrenbyname(m_pHandle, sName.c_str(), &hChildNodes));
+		
+		if (!hChildNodes) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNodes>(dynamic_cast<CCustomXMLNodes*>(m_pWrapper->polymorphicFactory(hChildNodes)));
+	}
+	
+	/**
+	* CCustomXMLNode::HasChild - Returns if a child with a specific name exist.
+	* @param[in] sName - Name of the child.
+	* @return returns if a child with a specific name exists.
+	*/
+	bool CCustomXMLNode::HasChild(const std::string & sName)
+	{
+		bool resultChildExists = 0;
+		CheckError(lib3mf_customxmlnode_haschild(m_pHandle, sName.c_str(), &resultChildExists));
+		
+		return resultChildExists;
+	}
+	
+	/**
+	* CCustomXMLNode::HasUniqueChild - Returns if a child with a specific name exist once and only once.
+	* @param[in] sName - Name of the child.
+	* @return returns if a child with a specific name exists once and only once.
+	*/
+	bool CCustomXMLNode::HasUniqueChild(const std::string & sName)
+	{
+		bool resultChildExists = 0;
+		CheckError(lib3mf_customxmlnode_hasuniquechild(m_pHandle, sName.c_str(), &resultChildExists));
+		
+		return resultChildExists;
+	}
+	
+	/**
+	* CCustomXMLNode::FindChild - Returns child with a specific name. Throws an error if name does not exist once and only once.
+	* @param[in] sName - Name of the child.
+	* @param[in] bMustExist - If true, the call fails if child does not exist. If falls, the call will return null if the child does not exist.
+	* @return returns child instance or null.
+	*/
+	PCustomXMLNode CCustomXMLNode::FindChild(const std::string & sName, const bool bMustExist)
+	{
+		Lib3MFHandle hChildInstance = nullptr;
+		CheckError(lib3mf_customxmlnode_findchild(m_pHandle, sName.c_str(), bMustExist, &hChildInstance));
+		
+		if (hChildInstance) {
+			return std::shared_ptr<CCustomXMLNode>(dynamic_cast<CCustomXMLNode*>(m_pWrapper->polymorphicFactory(hChildInstance)));
+		} else {
+			return nullptr;
+		}
+	}
+	
+	/**
+	* CCustomXMLNode::AddChild - Adds a new child with a specific name.
+	* @param[in] sName - Name of the child.
+	* @return returns child instance.
+	*/
+	PCustomXMLNode CCustomXMLNode::AddChild(const std::string & sName)
+	{
+		Lib3MFHandle hChildInstance = nullptr;
+		CheckError(lib3mf_customxmlnode_addchild(m_pHandle, sName.c_str(), &hChildInstance));
+		
+		if (!hChildInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNode>(dynamic_cast<CCustomXMLNode*>(m_pWrapper->polymorphicFactory(hChildInstance)));
+	}
+	
+	/**
+	* CCustomXMLNode::RemoveChild - Removes a specific child. All subsequent calls to the child will fail after the call.
+	* @param[in] pChildInstance - child instance to remove. Fails if given instance is not a child of the node.
+	*/
+	void CCustomXMLNode::RemoveChild(classParam<CCustomXMLNode> pChildInstance)
+	{
+		Lib3MFHandle hChildInstance = pChildInstance.GetHandle();
+		CheckError(lib3mf_customxmlnode_removechild(m_pHandle, hChildInstance));
+	}
+	
+	/**
+	* CCustomXMLNode::RemoveChildrenWithName - Removes all children with a specific name. Does nothing if no child with the name exists. All subsequent calls to the deleted children will fail after the call.
+	* @param[in] sName - Name of the children.
+	* @return Returns how many children have been deleted.
+	*/
+	Lib3MF_uint64 CCustomXMLNode::RemoveChildrenWithName(const std::string & sName)
+	{
+		Lib3MF_uint64 resultNumberOfDeletedChildren = 0;
+		CheckError(lib3mf_customxmlnode_removechildrenwithname(m_pHandle, sName.c_str(), &resultNumberOfDeletedChildren));
+		
+		return resultNumberOfDeletedChildren;
+	}
+	
+	/**
+	* CCustomXMLNode::Remove - Removes the node from its parent. The root node of the document can not be removed. Any subsequent call to the node fails after this.
+	*/
+	void CCustomXMLNode::Remove()
+	{
+		CheckError(lib3mf_customxmlnode_remove(m_pHandle));
+	}
+	
+	/**
+	 * Method definitions for class CCustomXMLNodes
+	 */
+	
+	/**
+	* CCustomXMLNodes::GetNodeCount - Returns number of nodes.
+	* @return returns the number of nodes in the list.
+	*/
+	Lib3MF_uint64 CCustomXMLNodes::GetNodeCount()
+	{
+		Lib3MF_uint64 resultCount = 0;
+		CheckError(lib3mf_customxmlnodes_getnodecount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CCustomXMLNodes::GetNode - Returns node instance. Fails if Index is out of range.
+	* @param[in] nIndex - Index of the node to return (0-based).
+	* @return XML Node node.
+	*/
+	PCustomXMLNode CCustomXMLNodes::GetNode(const Lib3MF_uint64 nIndex)
+	{
+		Lib3MFHandle hNodeInstance = nullptr;
+		CheckError(lib3mf_customxmlnodes_getnode(m_pHandle, nIndex, &hNodeInstance));
+		
+		if (!hNodeInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNode>(dynamic_cast<CCustomXMLNode*>(m_pWrapper->polymorphicFactory(hNodeInstance)));
+	}
+	
+	/**
+	* CCustomXMLNodes::CountNodesByName - Returns how many nodes of the XML Node have a specific name.
+	* @param[in] sName - Name of the node.
+	* @return returns the number of nodes with the specified name.
+	*/
+	Lib3MF_uint64 CCustomXMLNodes::CountNodesByName(const std::string & sName)
+	{
+		Lib3MF_uint64 resultCount = 0;
+		CheckError(lib3mf_customxmlnodes_countnodesbyname(m_pHandle, sName.c_str(), &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CCustomXMLNodes::GetNodesByName - Returns all the nodes nodes of the XML Node with a specific name.
+	* @param[in] sName - Name of the node.
+	* @return returns the list of node nodes.
+	*/
+	PCustomXMLNodes CCustomXMLNodes::GetNodesByName(const std::string & sName)
+	{
+		Lib3MFHandle hNodes = nullptr;
+		CheckError(lib3mf_customxmlnodes_getnodesbyname(m_pHandle, sName.c_str(), &hNodes));
+		
+		if (!hNodes) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNodes>(dynamic_cast<CCustomXMLNodes*>(m_pWrapper->polymorphicFactory(hNodes)));
+	}
+	
+	/**
+	* CCustomXMLNodes::HasNode - Returns if a node with a specific name exist.
+	* @param[in] sName - Name of the node.
+	* @return returns if a node with a specific name exists.
+	*/
+	bool CCustomXMLNodes::HasNode(const std::string & sName)
+	{
+		bool resultNodeExists = 0;
+		CheckError(lib3mf_customxmlnodes_hasnode(m_pHandle, sName.c_str(), &resultNodeExists));
+		
+		return resultNodeExists;
+	}
+	
+	/**
+	* CCustomXMLNodes::HasUniqueNode - Returns if a node with a specific name exist once and only once.
+	* @param[in] sName - Name of the node.
+	* @return returns if a node with a specific name exists once and only once.
+	*/
+	bool CCustomXMLNodes::HasUniqueNode(const std::string & sName)
+	{
+		bool resultNodeExists = 0;
+		CheckError(lib3mf_customxmlnodes_hasuniquenode(m_pHandle, sName.c_str(), &resultNodeExists));
+		
+		return resultNodeExists;
+	}
+	
+	/**
+	* CCustomXMLNodes::FindNode - Returns node with a specific name. Throws an error if name does not exist once and only once.
+	* @param[in] sName - Name of the node.
+	* @param[in] bMustExist - If true, the call fails if node does not exist. If falls, the call will return null if the node does not exist.
+	* @return returns node instance.
+	*/
+	PCustomXMLNode CCustomXMLNodes::FindNode(const std::string & sName, const bool bMustExist)
+	{
+		Lib3MFHandle hNodeInstance = nullptr;
+		CheckError(lib3mf_customxmlnodes_findnode(m_pHandle, sName.c_str(), bMustExist, &hNodeInstance));
+		
+		if (hNodeInstance) {
+			return std::shared_ptr<CCustomXMLNode>(dynamic_cast<CCustomXMLNode*>(m_pWrapper->polymorphicFactory(hNodeInstance)));
+		} else {
+			return nullptr;
+		}
+	}
+	
+	/**
+	 * Method definitions for class CCustomDOMTree
+	 */
+	
+	/**
+	* CCustomDOMTree::GetNameSpace - Returns the namespace identifier for the DOM Tree.
+	* @return returns the namespace of the DOM Tree.
+	*/
+	std::string CCustomDOMTree::GetNameSpace()
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		CheckError(lib3mf_customdomtree_getnamespace(m_pHandle, 0, &bytesNeededNameSpace, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		CheckError(lib3mf_customdomtree_getnamespace(m_pHandle, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0]));
+		
+		return std::string(&bufferNameSpace[0]);
+	}
+	
+	/**
+	* CCustomDOMTree::GetRootNode - Returns root node of the tree.
+	* @return Root node of the document.
+	*/
+	PCustomXMLNode CCustomDOMTree::GetRootNode()
+	{
+		Lib3MFHandle hRootNode = nullptr;
+		CheckError(lib3mf_customdomtree_getrootnode(m_pHandle, &hRootNode));
+		
+		if (!hRootNode) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNode>(dynamic_cast<CCustomXMLNode*>(m_pWrapper->polymorphicFactory(hRootNode)));
+	}
+	
+	/**
+	* CCustomDOMTree::SaveToString - Saves the XML tree into a string.
+	* @param[in] bAddLineBreaks - If true, line breaks and indentation will be added to the output string.
+	* @return String with the XML Content.
+	*/
+	std::string CCustomDOMTree::SaveToString(const bool bAddLineBreaks)
+	{
+		Lib3MF_uint32 bytesNeededXMLString = 0;
+		Lib3MF_uint32 bytesWrittenXMLString = 0;
+		CheckError(lib3mf_customdomtree_savetostring(m_pHandle, bAddLineBreaks, 0, &bytesNeededXMLString, nullptr));
+		std::vector<char> bufferXMLString(bytesNeededXMLString);
+		CheckError(lib3mf_customdomtree_savetostring(m_pHandle, bAddLineBreaks, bytesNeededXMLString, &bytesWrittenXMLString, &bufferXMLString[0]));
+		
+		return std::string(&bufferXMLString[0]);
 	}
 	
 	/**
@@ -5493,6 +6243,54 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CToolpathLayerReader::GetCustomDataCount - Retrieves the count of custom data elements.
+	* @return Count
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::GetCustomDataCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(lib3mf_toolpathlayerreader_getcustomdatacount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetCustomData - Retrieves the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @return DOM Tree of the data.
+	*/
+	PCustomDOMTree CToolpathLayerReader::GetCustomData(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hData = nullptr;
+		CheckError(lib3mf_toolpathlayerreader_getcustomdata(m_pHandle, nIndex, &hData));
+		
+		if (!hData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomDOMTree>(dynamic_cast<CCustomDOMTree*>(m_pWrapper->polymorphicFactory(hData)));
+	}
+	
+	/**
+	* CToolpathLayerReader::GetCustomDataName - Retrieves the node name of the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @param[out] sNameSpace - Namespace of the custom data tree.
+	* @param[out] sDataName - Root name of the data tree.
+	*/
+	void CToolpathLayerReader::GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName)
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		Lib3MF_uint32 bytesNeededDataName = 0;
+		Lib3MF_uint32 bytesWrittenDataName = 0;
+		CheckError(lib3mf_toolpathlayerreader_getcustomdataname(m_pHandle, nIndex, 0, &bytesNeededNameSpace, nullptr, 0, &bytesNeededDataName, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		std::vector<char> bufferDataName(bytesNeededDataName);
+		CheckError(lib3mf_toolpathlayerreader_getcustomdataname(m_pHandle, nIndex, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0], bytesNeededDataName, &bytesWrittenDataName, &bufferDataName[0]));
+		sNameSpace = std::string(&bufferNameSpace[0]);
+		sDataName = std::string(&bufferDataName[0]);
+	}
+	
+	/**
 	 * Method definitions for class CToolpathLayerData
 	 */
 	
@@ -5570,6 +6368,24 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	void CToolpathLayerData::WritePolyline(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer)
 	{
 		CheckError(lib3mf_toolpathlayerdata_writepolyline(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::AddCustomData - Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sNameSpacePrefix - Namespace prefix of the custom data tree. Namespace prefix MUST be unique to the layer.
+	* @param[in] sDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
+	* @return DOM Tree of the data.
+	*/
+	PCustomDOMTree CToolpathLayerData::AddCustomData(const std::string & sNameSpace, const std::string & sNameSpacePrefix, const std::string & sDataName)
+	{
+		Lib3MFHandle hData = nullptr;
+		CheckError(lib3mf_toolpathlayerdata_addcustomdata(m_pHandle, sNameSpace.c_str(), sNameSpacePrefix.c_str(), sDataName.c_str(), &hData));
+		
+		if (!hData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomDOMTree>(dynamic_cast<CCustomDOMTree*>(m_pWrapper->polymorphicFactory(hData)));
 	}
 	
 	/**

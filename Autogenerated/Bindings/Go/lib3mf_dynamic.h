@@ -472,6 +472,473 @@ typedef Lib3MFResult (*PLib3MFResourceIterator_ClonePtr) (Lib3MF_ResourceIterato
 typedef Lib3MFResult (*PLib3MFResourceIterator_CountPtr) (Lib3MF_ResourceIterator pResourceIterator, Lib3MF_uint64 * pCount);
 
 /*************************************************************************************************************************
+ Class definition for CustomXMLAttribute
+**************************************************************************************************************************/
+
+/**
+* Retrieves name of the attribute.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameBuffer -  buffer of returns the name of the attribute., may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLAttribute_GetNamePtr) (Lib3MF_CustomXMLAttribute pCustomXMLAttribute, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer);
+
+/**
+* Retrieves value of the attribute as string.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] nValueBufferSize - size of the buffer (including trailing 0)
+* @param[out] pValueNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pValueBuffer -  buffer of returns the value of the attribute., may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLAttribute_GetValuePtr) (Lib3MF_CustomXMLAttribute pCustomXMLAttribute, const Lib3MF_uint32 nValueBufferSize, Lib3MF_uint32* pValueNeededChars, char * pValueBuffer);
+
+/**
+* Checks if the value is a valid integer in the given range.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] nMinValue - Minimum allowed value
+* @param[in] nMaxValue - Maximum allowed value
+* @param[out] pIsValid - returns if the value is a valid integer.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLAttribute_IsValidIntegerPtr) (Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_int64 nMinValue, Lib3MF_int64 nMaxValue, bool * pIsValid);
+
+/**
+* Returns the value as integer. Fails if the value is not a valid integer in the given range.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] nMinValue - Minimum allowed value
+* @param[in] nMaxValue - Maximum allowed value
+* @param[out] pValue - returns the value.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLAttribute_GetIntegerValuePtr) (Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_int64 nMinValue, Lib3MF_int64 nMaxValue, Lib3MF_int64 * pValue);
+
+/**
+* Checks if the value is a valid double in the given range.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] dMinValue - Minimum allowed value
+* @param[in] dMaxValue - Maximum allowed value
+* @param[out] pIsValid - returns if the value is a valid double.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLAttribute_IsValidDoublePtr) (Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_double dMinValue, Lib3MF_double dMaxValue, bool * pIsValid);
+
+/**
+* Returns the value as double. Fails if the value is not a valid double in the given range.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] dMinValue - Minimum allowed value
+* @param[in] dMaxValue - Maximum allowed value
+* @param[out] pValue - returns the value .
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLAttribute_GetDoubleValuePtr) (Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_double dMinValue, Lib3MF_double dMaxValue, Lib3MF_double * pValue);
+
+/**
+* Checks if the value is a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[out] pIsValid - returns if the value is a valid bool.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLAttribute_IsValidBoolPtr) (Lib3MF_CustomXMLAttribute pCustomXMLAttribute, bool * pIsValid);
+
+/**
+* Returns the value as bool. Fails if the value is not a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] dMinValue - Minimum allowed value
+* @param[in] dMaxValue - Maximum allowed value
+* @param[out] pValue - returns the value .
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLAttribute_GetBoolValuePtr) (Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_double dMinValue, Lib3MF_double dMaxValue, bool * pValue);
+
+/**
+* Sets the value of the attribute as string.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] pValue - new value of the attribute.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLAttribute_SetValuePtr) (Lib3MF_CustomXMLAttribute pCustomXMLAttribute, const char * pValue);
+
+/**
+* Sets the value of the attribute as integer.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] nValue - new value of the attribute.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLAttribute_SetIntegerValuePtr) (Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_int64 nValue);
+
+/**
+* Sets the value of the attribute as double.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] dValue - new value of the attribute.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLAttribute_SetDoubleValuePtr) (Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_double dValue);
+
+/**
+* Sets the value of the attribute as bool.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] bValue - new value of the attribute.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLAttribute_SetBoolValuePtr) (Lib3MF_CustomXMLAttribute pCustomXMLAttribute, bool bValue);
+
+/**
+* Removes the attribute from its parent node. All subsequent calls to the class will fail.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLAttribute_RemovePtr) (Lib3MF_CustomXMLAttribute pCustomXMLAttribute);
+
+/*************************************************************************************************************************
+ Class definition for CustomXMLNode
+**************************************************************************************************************************/
+
+/**
+* Retrieves name of the node.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameBuffer -  buffer of returns the name of the node., may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_GetNamePtr) (Lib3MF_CustomXMLNode pCustomXMLNode, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer);
+
+/**
+* Retrieves namespace of the node.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameSpaceBuffer -  buffer of returns the namespace of the node., may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_GetNameSpacePtr) (Lib3MF_CustomXMLNode pCustomXMLNode, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer);
+
+/**
+* Returns number of attributes.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[out] pCount - returns the number of attributes.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_GetAttributeCountPtr) (Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_uint64 * pCount);
+
+/**
+* Returns attribute instance. Fails if Index is out of range.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] nIndex - Index of the attribute to return (0-based).
+* @param[out] pAttributeInstance - XML Document attribute.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_GetAttributePtr) (Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_uint64 nIndex, Lib3MF_CustomXMLAttribute * pAttributeInstance);
+
+/**
+* Returns if attribute of a specific name exists.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the attribute.
+* @param[out] pAttributeExists - Returns if the attribute exists.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_HasAttributePtr) (Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool * pAttributeExists);
+
+/**
+* Returns attribute instance of a specific name. 
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the attribute.
+* @param[in] bMustExist - If true, the call fails if attribute does not exist. If falls, the call will return null if the attribute does not exist.
+* @param[out] pAttributeInstance - XML Document attribute.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_FindAttributePtr) (Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool bMustExist, Lib3MF_CustomXMLAttribute * pAttributeInstance);
+
+/**
+* Removes the attribute with a specific name. Does nothing if attribute does not exist.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the attribute.
+* @param[out] pAttributeRemoved - Returns true if an attribute was removed.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_RemoveAttributePtr) (Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool * pAttributeRemoved);
+
+/**
+* Removes the attribute with a specific index. Fails if index is invalid
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] nIndex - Index of the attribute to remove (0-based).
+* @param[out] pAttributeRemoved - Returns true if an attribute was removed.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_RemoveAttributeByIndexPtr) (Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_uint64 nIndex, bool * pAttributeRemoved);
+
+/**
+* Adds an attribute with a specific name and string value. Fails if attribute already exists.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the attribute.
+* @param[in] pValue - Value of the attribute.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_AddAttributePtr) (Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, const char * pValue);
+
+/**
+* Adds an attribute with a specific name and integer value. Fails if attribute already exists.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the attribute.
+* @param[in] nValue - Value of the attribute.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_AddIntegerAttributePtr) (Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_int64 nValue);
+
+/**
+* Adds an attribute with a specific name and double value. Fails if attribute already exists.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the attribute.
+* @param[in] dValue - Value of the attribute.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_AddDoubleAttributePtr) (Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_double dValue);
+
+/**
+* Adds an attribute with a specific name and bool value. Fails if attribute already exists.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the attribute.
+* @param[in] bValue - Value of the attribute.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_AddBoolAttributePtr) (Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool bValue);
+
+/**
+* Returns all the child nodes of the XML Node.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[out] pChildNodes - returns the list of child nodes.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_GetChildrenPtr) (Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_CustomXMLNodes * pChildNodes);
+
+/**
+* Returns how many children of the XML Node have a specific name.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the node.
+* @param[out] pCount - returns the number children with the specified name.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_CountChildrenByNamePtr) (Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_uint64 * pCount);
+
+/**
+* Returns all the child nodes of the XML Node with a specific name.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the child.
+* @param[out] pChildNodes - returns the list of child nodes.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_GetChildrenByNamePtr) (Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_CustomXMLNodes * pChildNodes);
+
+/**
+* Returns if a child with a specific name exist.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the child.
+* @param[out] pChildExists - returns if a child with a specific name exists.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_HasChildPtr) (Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool * pChildExists);
+
+/**
+* Returns if a child with a specific name exist once and only once.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the child.
+* @param[out] pChildExists - returns if a child with a specific name exists once and only once.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_HasUniqueChildPtr) (Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool * pChildExists);
+
+/**
+* Returns child with a specific name. Throws an error if name does not exist once and only once.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the child.
+* @param[in] bMustExist - If true, the call fails if child does not exist. If falls, the call will return null if the child does not exist.
+* @param[out] pChildInstance - returns child instance or null.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_FindChildPtr) (Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool bMustExist, Lib3MF_CustomXMLNode * pChildInstance);
+
+/**
+* Adds a new child with a specific name.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the child.
+* @param[out] pChildInstance - returns child instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_AddChildPtr) (Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_CustomXMLNode * pChildInstance);
+
+/**
+* Removes a specific child. All subsequent calls to the child will fail after the call.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pChildInstance - child instance to remove. Fails if given instance is not a child of the node.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_RemoveChildPtr) (Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_CustomXMLNode pChildInstance);
+
+/**
+* Removes all children with a specific name. Does nothing if no child with the name exists. All subsequent calls to the deleted children will fail after the call.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the children.
+* @param[out] pNumberOfDeletedChildren - Returns how many children have been deleted.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_RemoveChildrenWithNamePtr) (Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_uint64 * pNumberOfDeletedChildren);
+
+/**
+* Removes the node from its parent. The root node of the document can not be removed. Any subsequent call to the node fails after this.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNode_RemovePtr) (Lib3MF_CustomXMLNode pCustomXMLNode);
+
+/*************************************************************************************************************************
+ Class definition for CustomXMLNodes
+**************************************************************************************************************************/
+
+/**
+* Returns number of nodes.
+*
+* @param[in] pCustomXMLNodes - CustomXMLNodes instance.
+* @param[out] pCount - returns the number of nodes in the list.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNodes_GetNodeCountPtr) (Lib3MF_CustomXMLNodes pCustomXMLNodes, Lib3MF_uint64 * pCount);
+
+/**
+* Returns node instance. Fails if Index is out of range.
+*
+* @param[in] pCustomXMLNodes - CustomXMLNodes instance.
+* @param[in] nIndex - Index of the node to return (0-based).
+* @param[out] pNodeInstance - XML Node node.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNodes_GetNodePtr) (Lib3MF_CustomXMLNodes pCustomXMLNodes, Lib3MF_uint64 nIndex, Lib3MF_CustomXMLNode * pNodeInstance);
+
+/**
+* Returns how many nodes of the XML Node have a specific name.
+*
+* @param[in] pCustomXMLNodes - CustomXMLNodes instance.
+* @param[in] pName - Name of the node.
+* @param[out] pCount - returns the number of nodes with the specified name.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNodes_CountNodesByNamePtr) (Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, Lib3MF_uint64 * pCount);
+
+/**
+* Returns all the nodes nodes of the XML Node with a specific name.
+*
+* @param[in] pCustomXMLNodes - CustomXMLNodes instance.
+* @param[in] pName - Name of the node.
+* @param[out] pNodes - returns the list of node nodes.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNodes_GetNodesByNamePtr) (Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, Lib3MF_CustomXMLNodes * pNodes);
+
+/**
+* Returns if a node with a specific name exist.
+*
+* @param[in] pCustomXMLNodes - CustomXMLNodes instance.
+* @param[in] pName - Name of the node.
+* @param[out] pNodeExists - returns if a node with a specific name exists.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNodes_HasNodePtr) (Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, bool * pNodeExists);
+
+/**
+* Returns if a node with a specific name exist once and only once.
+*
+* @param[in] pCustomXMLNodes - CustomXMLNodes instance.
+* @param[in] pName - Name of the node.
+* @param[out] pNodeExists - returns if a node with a specific name exists once and only once.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNodes_HasUniqueNodePtr) (Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, bool * pNodeExists);
+
+/**
+* Returns node with a specific name. Throws an error if name does not exist once and only once.
+*
+* @param[in] pCustomXMLNodes - CustomXMLNodes instance.
+* @param[in] pName - Name of the node.
+* @param[in] bMustExist - If true, the call fails if node does not exist. If falls, the call will return null if the node does not exist.
+* @param[out] pNodeInstance - returns node instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomXMLNodes_FindNodePtr) (Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, bool bMustExist, Lib3MF_CustomXMLNode * pNodeInstance);
+
+/*************************************************************************************************************************
+ Class definition for CustomDOMTree
+**************************************************************************************************************************/
+
+/**
+* Returns the namespace identifier for the DOM Tree.
+*
+* @param[in] pCustomDOMTree - CustomDOMTree instance.
+* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameSpaceBuffer -  buffer of returns the namespace of the DOM Tree., may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomDOMTree_GetNameSpacePtr) (Lib3MF_CustomDOMTree pCustomDOMTree, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer);
+
+/**
+* Returns root node of the tree.
+*
+* @param[in] pCustomDOMTree - CustomDOMTree instance.
+* @param[out] pRootNode - Root node of the document.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomDOMTree_GetRootNodePtr) (Lib3MF_CustomDOMTree pCustomDOMTree, Lib3MF_CustomXMLNode * pRootNode);
+
+/**
+* Saves the XML tree into a string.
+*
+* @param[in] pCustomDOMTree - CustomDOMTree instance.
+* @param[in] bAddLineBreaks - If true, line breaks and indentation will be added to the output string.
+* @param[in] nXMLStringBufferSize - size of the buffer (including trailing 0)
+* @param[out] pXMLStringNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pXMLStringBuffer -  buffer of String with the XML Content., may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFCustomDOMTree_SaveToStringPtr) (Lib3MF_CustomDOMTree pCustomDOMTree, bool bAddLineBreaks, const Lib3MF_uint32 nXMLStringBufferSize, Lib3MF_uint32* pXMLStringNeededChars, char * pXMLStringBuffer);
+
+/*************************************************************************************************************************
  Class definition for SliceStackIterator
 **************************************************************************************************************************/
 
@@ -2764,6 +3231,40 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentPartUUIDPtr) (Lib3MF
 */
 typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentPointDataPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, sLib3MFPosition2D * pPointDataBuffer);
 
+/**
+* Retrieves the count of custom data elements.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[out] pCount - Count
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetCustomDataCountPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 * pCount);
+
+/**
+* Retrieves the custom data.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+* @param[out] pData - DOM Tree of the data.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetCustomDataPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_CustomDOMTree * pData);
+
+/**
+* Retrieves the node name of the custom data.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameSpaceBuffer -  buffer of Namespace of the custom data tree., may be NULL
+* @param[in] nDataNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pDataNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pDataNameBuffer -  buffer of Root name of the data tree., may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetCustomDataNamePtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer, const Lib3MF_uint32 nDataNameBufferSize, Lib3MF_uint32* pDataNameNeededChars, char * pDataNameBuffer);
+
 /*************************************************************************************************************************
  Class definition for ToolpathLayerData
 **************************************************************************************************************************/
@@ -2834,6 +3335,18 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteLoopPtr) (Lib3MF_ToolpathLa
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFToolpathLayerData_WritePolylinePtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer);
+
+/**
+* Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] pNameSpace - Namespace of the custom data tree. MUST not be empty.
+* @param[in] pNameSpacePrefix - Namespace prefix of the custom data tree. Namespace prefix MUST be unique to the layer.
+* @param[in] pDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
+* @param[out] pData - DOM Tree of the data.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_AddCustomDataPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, const char * pNameSpace, const char * pNameSpacePrefix, const char * pDataName, Lib3MF_CustomDOMTree * pData);
 
 /**
 * finishes all writing of the layer and compresses toolpath data.
@@ -4380,6 +4893,51 @@ typedef struct {
 	PLib3MFResourceIterator_GetCurrentPtr m_ResourceIterator_GetCurrent;
 	PLib3MFResourceIterator_ClonePtr m_ResourceIterator_Clone;
 	PLib3MFResourceIterator_CountPtr m_ResourceIterator_Count;
+	PLib3MFCustomXMLAttribute_GetNamePtr m_CustomXMLAttribute_GetName;
+	PLib3MFCustomXMLAttribute_GetValuePtr m_CustomXMLAttribute_GetValue;
+	PLib3MFCustomXMLAttribute_IsValidIntegerPtr m_CustomXMLAttribute_IsValidInteger;
+	PLib3MFCustomXMLAttribute_GetIntegerValuePtr m_CustomXMLAttribute_GetIntegerValue;
+	PLib3MFCustomXMLAttribute_IsValidDoublePtr m_CustomXMLAttribute_IsValidDouble;
+	PLib3MFCustomXMLAttribute_GetDoubleValuePtr m_CustomXMLAttribute_GetDoubleValue;
+	PLib3MFCustomXMLAttribute_IsValidBoolPtr m_CustomXMLAttribute_IsValidBool;
+	PLib3MFCustomXMLAttribute_GetBoolValuePtr m_CustomXMLAttribute_GetBoolValue;
+	PLib3MFCustomXMLAttribute_SetValuePtr m_CustomXMLAttribute_SetValue;
+	PLib3MFCustomXMLAttribute_SetIntegerValuePtr m_CustomXMLAttribute_SetIntegerValue;
+	PLib3MFCustomXMLAttribute_SetDoubleValuePtr m_CustomXMLAttribute_SetDoubleValue;
+	PLib3MFCustomXMLAttribute_SetBoolValuePtr m_CustomXMLAttribute_SetBoolValue;
+	PLib3MFCustomXMLAttribute_RemovePtr m_CustomXMLAttribute_Remove;
+	PLib3MFCustomXMLNode_GetNamePtr m_CustomXMLNode_GetName;
+	PLib3MFCustomXMLNode_GetNameSpacePtr m_CustomXMLNode_GetNameSpace;
+	PLib3MFCustomXMLNode_GetAttributeCountPtr m_CustomXMLNode_GetAttributeCount;
+	PLib3MFCustomXMLNode_GetAttributePtr m_CustomXMLNode_GetAttribute;
+	PLib3MFCustomXMLNode_HasAttributePtr m_CustomXMLNode_HasAttribute;
+	PLib3MFCustomXMLNode_FindAttributePtr m_CustomXMLNode_FindAttribute;
+	PLib3MFCustomXMLNode_RemoveAttributePtr m_CustomXMLNode_RemoveAttribute;
+	PLib3MFCustomXMLNode_RemoveAttributeByIndexPtr m_CustomXMLNode_RemoveAttributeByIndex;
+	PLib3MFCustomXMLNode_AddAttributePtr m_CustomXMLNode_AddAttribute;
+	PLib3MFCustomXMLNode_AddIntegerAttributePtr m_CustomXMLNode_AddIntegerAttribute;
+	PLib3MFCustomXMLNode_AddDoubleAttributePtr m_CustomXMLNode_AddDoubleAttribute;
+	PLib3MFCustomXMLNode_AddBoolAttributePtr m_CustomXMLNode_AddBoolAttribute;
+	PLib3MFCustomXMLNode_GetChildrenPtr m_CustomXMLNode_GetChildren;
+	PLib3MFCustomXMLNode_CountChildrenByNamePtr m_CustomXMLNode_CountChildrenByName;
+	PLib3MFCustomXMLNode_GetChildrenByNamePtr m_CustomXMLNode_GetChildrenByName;
+	PLib3MFCustomXMLNode_HasChildPtr m_CustomXMLNode_HasChild;
+	PLib3MFCustomXMLNode_HasUniqueChildPtr m_CustomXMLNode_HasUniqueChild;
+	PLib3MFCustomXMLNode_FindChildPtr m_CustomXMLNode_FindChild;
+	PLib3MFCustomXMLNode_AddChildPtr m_CustomXMLNode_AddChild;
+	PLib3MFCustomXMLNode_RemoveChildPtr m_CustomXMLNode_RemoveChild;
+	PLib3MFCustomXMLNode_RemoveChildrenWithNamePtr m_CustomXMLNode_RemoveChildrenWithName;
+	PLib3MFCustomXMLNode_RemovePtr m_CustomXMLNode_Remove;
+	PLib3MFCustomXMLNodes_GetNodeCountPtr m_CustomXMLNodes_GetNodeCount;
+	PLib3MFCustomXMLNodes_GetNodePtr m_CustomXMLNodes_GetNode;
+	PLib3MFCustomXMLNodes_CountNodesByNamePtr m_CustomXMLNodes_CountNodesByName;
+	PLib3MFCustomXMLNodes_GetNodesByNamePtr m_CustomXMLNodes_GetNodesByName;
+	PLib3MFCustomXMLNodes_HasNodePtr m_CustomXMLNodes_HasNode;
+	PLib3MFCustomXMLNodes_HasUniqueNodePtr m_CustomXMLNodes_HasUniqueNode;
+	PLib3MFCustomXMLNodes_FindNodePtr m_CustomXMLNodes_FindNode;
+	PLib3MFCustomDOMTree_GetNameSpacePtr m_CustomDOMTree_GetNameSpace;
+	PLib3MFCustomDOMTree_GetRootNodePtr m_CustomDOMTree_GetRootNode;
+	PLib3MFCustomDOMTree_SaveToStringPtr m_CustomDOMTree_SaveToString;
 	PLib3MFSliceStackIterator_GetCurrentSliceStackPtr m_SliceStackIterator_GetCurrentSliceStack;
 	PLib3MFObjectIterator_GetCurrentObjectPtr m_ObjectIterator_GetCurrentObject;
 	PLib3MFMeshObjectIterator_GetCurrentMeshObjectPtr m_MeshObjectIterator_GetCurrentMeshObject;
@@ -4599,12 +5157,16 @@ typedef struct {
 	PLib3MFToolpathLayerReader_GetSegmentPartPtr m_ToolpathLayerReader_GetSegmentPart;
 	PLib3MFToolpathLayerReader_GetSegmentPartUUIDPtr m_ToolpathLayerReader_GetSegmentPartUUID;
 	PLib3MFToolpathLayerReader_GetSegmentPointDataPtr m_ToolpathLayerReader_GetSegmentPointData;
+	PLib3MFToolpathLayerReader_GetCustomDataCountPtr m_ToolpathLayerReader_GetCustomDataCount;
+	PLib3MFToolpathLayerReader_GetCustomDataPtr m_ToolpathLayerReader_GetCustomData;
+	PLib3MFToolpathLayerReader_GetCustomDataNamePtr m_ToolpathLayerReader_GetCustomDataName;
 	PLib3MFToolpathLayerData_GetLayerDataUUIDPtr m_ToolpathLayerData_GetLayerDataUUID;
 	PLib3MFToolpathLayerData_RegisterProfilePtr m_ToolpathLayerData_RegisterProfile;
 	PLib3MFToolpathLayerData_RegisterBuildItemPtr m_ToolpathLayerData_RegisterBuildItem;
 	PLib3MFToolpathLayerData_WriteHatchDataPtr m_ToolpathLayerData_WriteHatchData;
 	PLib3MFToolpathLayerData_WriteLoopPtr m_ToolpathLayerData_WriteLoop;
 	PLib3MFToolpathLayerData_WritePolylinePtr m_ToolpathLayerData_WritePolyline;
+	PLib3MFToolpathLayerData_AddCustomDataPtr m_ToolpathLayerData_AddCustomData;
 	PLib3MFToolpathLayerData_FinishPtr m_ToolpathLayerData_Finish;
 	PLib3MFToolpath_GetUnitsPtr m_Toolpath_GetUnits;
 	PLib3MFToolpath_GetLayerCountPtr m_Toolpath_GetLayerCount;
