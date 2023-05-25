@@ -240,6 +240,8 @@ Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceRefResources.cpp
 Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceStack.cpp
 Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_Vertex.cpp
 Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_Vertices.cpp
+Source/Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathData.cpp
+Source/Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathDataNode.cpp
 Source/Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathLayer.cpp
 Source/Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathLayers.cpp
 Source/Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathProfile.cpp
@@ -255,6 +257,8 @@ Source/Model/Reader/NMR_ModelReaderNode_StringValue.cpp
 Source/Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStoreResourceData.cpp
 Source/Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStoreResourceDataGroup.cpp
 Source/Model/ToolpathReader/NMR_ToolpathReader.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Data.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_DataNode.cpp
 Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Hatch.cpp
 Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Layer.cpp
 Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Part.cpp
