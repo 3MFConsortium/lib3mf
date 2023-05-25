@@ -12642,6 +12642,355 @@ Lib3MFResult lib3mf_toolpath_getprofileuuid(Lib3MF_Toolpath pToolpath, const cha
 	}
 }
 
+Lib3MFResult lib3mf_toolpath_getcustomdatacount(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pCount)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "GetCustomDataCount");
+		}
+		if (pCount == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pCount = pIToolpath->GetCustomDataCount();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("Count", *pCount);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_getcustomdata(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_CustomDOMTree * pData)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "GetCustomData");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+		}
+		if (pData == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseData(nullptr);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseData = pIToolpath->GetCustomData(nIndex);
+
+		*pData = (IBase*)(pBaseData);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Data", *pData);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_getcustomdataname(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer, const Lib3MF_uint32 nDataNameBufferSize, Lib3MF_uint32* pDataNameNeededChars, char * pDataNameBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "GetCustomDataName");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+		}
+		if ( (!pNameSpaceBuffer) && !(pNameSpaceNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pDataNameBuffer) && !(pDataNameNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace("");
+		std::string sDataName("");
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pNameSpaceBuffer == nullptr) || (pDataNameBuffer == nullptr);
+		if (isCacheCall) {
+			pIToolpath->GetCustomDataName(nIndex, sNameSpace, sDataName);
+
+			pIToolpath->_setCache (new ParameterCache_2<std::string, std::string> (sNameSpace, sDataName));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_2<std::string, std::string>*> (pIToolpath->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sNameSpace, sDataName);
+			pIToolpath->_setCache (nullptr);
+		}
+		
+		if (pNameSpaceNeededChars)
+			*pNameSpaceNeededChars = (Lib3MF_uint32) (sNameSpace.size()+1);
+		if (pNameSpaceBuffer) {
+			if (sNameSpace.size() >= nNameSpaceBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iNameSpace = 0; iNameSpace < sNameSpace.size(); iNameSpace++)
+				pNameSpaceBuffer[iNameSpace] = sNameSpace[iNameSpace];
+			pNameSpaceBuffer[sNameSpace.size()] = 0;
+		}
+		if (pDataNameNeededChars)
+			*pDataNameNeededChars = (Lib3MF_uint32) (sDataName.size()+1);
+		if (pDataNameBuffer) {
+			if (sDataName.size() >= nDataNameBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iDataName = 0; iDataName < sDataName.size(); iDataName++)
+				pDataNameBuffer[iDataName] = sDataName[iDataName];
+			pDataNameBuffer[sDataName.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("NameSpace", sNameSpace.c_str());
+			pJournalEntry->addStringResult("DataName", sDataName.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_hasuniquecustomdata(Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pDataName, bool * pCustomDataExists)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "HasUniqueCustomData");
+			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
+			pJournalEntry->addStringParameter("DataName", pDataName);
+		}
+		if (pNameSpace == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDataName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pCustomDataExists == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace(pNameSpace);
+		std::string sDataName(pDataName);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pCustomDataExists = pIToolpath->HasUniqueCustomData(sNameSpace, sDataName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("CustomDataExists", *pCustomDataExists);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_finduniquecustomdata(Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pDataName, Lib3MF_CustomDOMTree * pData)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "FindUniqueCustomData");
+			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
+			pJournalEntry->addStringParameter("DataName", pDataName);
+		}
+		if (pNameSpace == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDataName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pData == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace(pNameSpace);
+		std::string sDataName(pDataName);
+		IBase* pBaseData(nullptr);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseData = pIToolpath->FindUniqueCustomData(sNameSpace, sDataName);
+
+		*pData = (IBase*)(pBaseData);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Data", *pData);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_addcustomdata(Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pNameSpacePrefix, const char * pDataName, Lib3MF_CustomDOMTree * pData)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "AddCustomData");
+			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
+			pJournalEntry->addStringParameter("NameSpacePrefix", pNameSpacePrefix);
+			pJournalEntry->addStringParameter("DataName", pDataName);
+		}
+		if (pNameSpace == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNameSpacePrefix == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDataName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pData == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace(pNameSpace);
+		std::string sNameSpacePrefix(pNameSpacePrefix);
+		std::string sDataName(pDataName);
+		IBase* pBaseData(nullptr);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseData = pIToolpath->AddCustomData(sNameSpace, sNameSpacePrefix, sDataName);
+
+		*pData = (IBase*)(pBaseData);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Data", *pData);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_clearcustomdata(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pNumberOfDeletedItems)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "ClearCustomData");
+		}
+		if (pNumberOfDeletedItems == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pNumberOfDeletedItems = pIToolpath->ClearCustomData();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("NumberOfDeletedItems", *pNumberOfDeletedItems);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_deletecustomdata(Lib3MF_Toolpath pToolpath, Lib3MF_CustomDOMTree pData, bool * pSuccess)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "DeleteCustomData");
+			pJournalEntry->addHandleParameter("Data", pData);
+		}
+		if (pSuccess == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pIBaseClassData = (IBase *)pData;
+		ICustomDOMTree* pIData = dynamic_cast<ICustomDOMTree*>(pIBaseClassData);
+		if (!pIData)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pSuccess = pIToolpath->DeleteCustomData(pIData);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("Success", *pSuccess);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 
 /*************************************************************************************************************************
  Class implementation for ToolpathIterator
@@ -17780,6 +18129,22 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_toolpath_getprofile;
 	if (sProcName == "lib3mf_toolpath_getprofileuuid") 
 		*ppProcAddress = (void*) &lib3mf_toolpath_getprofileuuid;
+	if (sProcName == "lib3mf_toolpath_getcustomdatacount") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_getcustomdatacount;
+	if (sProcName == "lib3mf_toolpath_getcustomdata") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_getcustomdata;
+	if (sProcName == "lib3mf_toolpath_getcustomdataname") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_getcustomdataname;
+	if (sProcName == "lib3mf_toolpath_hasuniquecustomdata") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_hasuniquecustomdata;
+	if (sProcName == "lib3mf_toolpath_finduniquecustomdata") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_finduniquecustomdata;
+	if (sProcName == "lib3mf_toolpath_addcustomdata") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_addcustomdata;
+	if (sProcName == "lib3mf_toolpath_clearcustomdata") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_clearcustomdata;
+	if (sProcName == "lib3mf_toolpath_deletecustomdata") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_deletecustomdata;
 	if (sProcName == "lib3mf_toolpathiterator_getcurrenttoolpath") 
 		*ppProcAddress = (void*) &lib3mf_toolpathiterator_getcurrenttoolpath;
 	if (sProcName == "lib3mf_slicestack_getbottomz") 

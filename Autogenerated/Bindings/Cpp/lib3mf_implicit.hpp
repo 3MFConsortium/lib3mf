@@ -397,6 +397,8 @@ public:
 			case LIB3MF_ERROR_INVALIDRESOURCE: return "INVALIDRESOURCE";
 			case LIB3MF_ERROR_INVALIDNODEINDEX: return "INVALIDNODEINDEX";
 			case LIB3MF_ERROR_INVALIDATTRIBUTEINDEX: return "INVALIDATTRIBUTEINDEX";
+			case LIB3MF_ERROR_DUPLICATECUSTOMDATA: return "DUPLICATECUSTOMDATA";
+			case LIB3MF_ERROR_CUSTOMDATANOTFOUND: return "CUSTOMDATANOTFOUND";
 			case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "BEAMLATTICE_INVALID_OBJECTTYPE";
 			case LIB3MF_ERROR_INVALIDKEYSTORE: return "INVALIDKEYSTORE";
 			case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "INVALIDKEYSTORECONSUMER";
@@ -454,13 +456,15 @@ public:
 			case LIB3MF_ERROR_INVALIDRESOURCE: return "A resource is invalid";
 			case LIB3MF_ERROR_INVALIDNODEINDEX: return "Invalid node index";
 			case LIB3MF_ERROR_INVALIDATTRIBUTEINDEX: return "Invalid attribute index";
+			case LIB3MF_ERROR_DUPLICATECUSTOMDATA: return "Duplicate custom data";
+			case LIB3MF_ERROR_CUSTOMDATANOTFOUND: return "Custom data not found";
 			case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "This object type is not valid for beamlattices";
 			case LIB3MF_ERROR_INVALIDKEYSTORE: return "The keystore object is invalid";
 			case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "The consumer keystore object is invalid";
 			case LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND: return "A consumer has not been found";
 			case LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: return "A resource data has not been found";
 			case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: return "A Key or Conentent encryption callback has not been registered";
-			case LIB3MF_ERROR_INVALIDKEYSIZE: return "The key siue is invalid";
+			case LIB3MF_ERROR_INVALIDKEYSIZE: return "The key size is invalid";
 			case LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER: return "Not in toolpath header writing mode";
 			case LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA: return "Not in toolpath data writing mode";
 			case LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "Toolpath has already been written out";
@@ -1684,6 +1688,14 @@ public:
 	inline PToolpathProfile AddProfile(const std::string & sName);
 	inline PToolpathProfile GetProfile(const Lib3MF_uint32 nProfileIndex);
 	inline PToolpathProfile GetProfileUUID(const std::string & sProfileUUID);
+	inline Lib3MF_uint32 GetCustomDataCount();
+	inline PCustomDOMTree GetCustomData(const Lib3MF_uint32 nIndex);
+	inline void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName);
+	inline bool HasUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName);
+	inline PCustomDOMTree FindUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName);
+	inline PCustomDOMTree AddCustomData(const std::string & sNameSpace, const std::string & sNameSpacePrefix, const std::string & sDataName);
+	inline Lib3MF_uint32 ClearCustomData();
+	inline bool DeleteCustomData(classParam<CCustomDOMTree> pData);
 };
 	
 /*************************************************************************************************************************
@@ -6575,6 +6587,129 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CToolpathProfile>(dynamic_cast<CToolpathProfile*>(m_pWrapper->polymorphicFactory(hProfile)));
+	}
+	
+	/**
+	* CToolpath::GetCustomDataCount - Retrieves the count of custom data elements.
+	* @return Count
+	*/
+	Lib3MF_uint32 CToolpath::GetCustomDataCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(lib3mf_toolpath_getcustomdatacount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CToolpath::GetCustomData - Retrieves the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @return DOM Tree of the data.
+	*/
+	PCustomDOMTree CToolpath::GetCustomData(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hData = nullptr;
+		CheckError(lib3mf_toolpath_getcustomdata(m_pHandle, nIndex, &hData));
+		
+		if (!hData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomDOMTree>(dynamic_cast<CCustomDOMTree*>(m_pWrapper->polymorphicFactory(hData)));
+	}
+	
+	/**
+	* CToolpath::GetCustomDataName - Retrieves the node name of the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @param[out] sNameSpace - Namespace of the custom data tree.
+	* @param[out] sDataName - Root name of the data tree.
+	*/
+	void CToolpath::GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName)
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		Lib3MF_uint32 bytesNeededDataName = 0;
+		Lib3MF_uint32 bytesWrittenDataName = 0;
+		CheckError(lib3mf_toolpath_getcustomdataname(m_pHandle, nIndex, 0, &bytesNeededNameSpace, nullptr, 0, &bytesNeededDataName, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		std::vector<char> bufferDataName(bytesNeededDataName);
+		CheckError(lib3mf_toolpath_getcustomdataname(m_pHandle, nIndex, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0], bytesNeededDataName, &bytesWrittenDataName, &bufferDataName[0]));
+		sNameSpace = std::string(&bufferNameSpace[0]);
+		sDataName = std::string(&bufferDataName[0]);
+	}
+	
+	/**
+	* CToolpath::HasUniqueCustomData - Retrieves if custom data with a specific namespace and name combination exists.
+	* @param[in] sNameSpace - Namespace of the custom data tree.
+	* @param[in] sDataName - Root name of the data tree.
+	* @return Returns true if DOM Tree Exists.
+	*/
+	bool CToolpath::HasUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName)
+	{
+		bool resultCustomDataExists = 0;
+		CheckError(lib3mf_toolpath_hasuniquecustomdata(m_pHandle, sNameSpace.c_str(), sDataName.c_str(), &resultCustomDataExists));
+		
+		return resultCustomDataExists;
+	}
+	
+	/**
+	* CToolpath::FindUniqueCustomData - Retrieves the custom data with a specific namespace and name combination. Fails if combination is not unique.
+	* @param[in] sNameSpace - Namespace of the custom data tree.
+	* @param[in] sDataName - Root name of the data tree.
+	* @return DOM Tree of the data.
+	*/
+	PCustomDOMTree CToolpath::FindUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName)
+	{
+		Lib3MFHandle hData = nullptr;
+		CheckError(lib3mf_toolpath_finduniquecustomdata(m_pHandle, sNameSpace.c_str(), sDataName.c_str(), &hData));
+		
+		if (!hData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomDOMTree>(dynamic_cast<CCustomDOMTree*>(m_pWrapper->polymorphicFactory(hData)));
+	}
+	
+	/**
+	* CToolpath::AddCustomData - Adds a custom data DOM tree to the toolpath.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sNameSpacePrefix - Namespace prefix of the custom data tree. Namespace prefix MUST be unique to the document.
+	* @param[in] sDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
+	* @return DOM Tree of the data.
+	*/
+	PCustomDOMTree CToolpath::AddCustomData(const std::string & sNameSpace, const std::string & sNameSpacePrefix, const std::string & sDataName)
+	{
+		Lib3MFHandle hData = nullptr;
+		CheckError(lib3mf_toolpath_addcustomdata(m_pHandle, sNameSpace.c_str(), sNameSpacePrefix.c_str(), sDataName.c_str(), &hData));
+		
+		if (!hData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomDOMTree>(dynamic_cast<CCustomDOMTree*>(m_pWrapper->polymorphicFactory(hData)));
+	}
+	
+	/**
+	* CToolpath::ClearCustomData - Deletes all custom data.
+	* @return Returns number of deleted items.
+	*/
+	Lib3MF_uint32 CToolpath::ClearCustomData()
+	{
+		Lib3MF_uint32 resultNumberOfDeletedItems = 0;
+		CheckError(lib3mf_toolpath_clearcustomdata(m_pHandle, &resultNumberOfDeletedItems));
+		
+		return resultNumberOfDeletedItems;
+	}
+	
+	/**
+	* CToolpath::DeleteCustomData - Deletes a custom data instance from the list.
+	* @param[in] pData - DOM Tree of the data.
+	* @return Returns if deletion was successful.
+	*/
+	bool CToolpath::DeleteCustomData(classParam<CCustomDOMTree> pData)
+	{
+		Lib3MFHandle hData = pData.GetHandle();
+		bool resultSuccess = 0;
+		CheckError(lib3mf_toolpath_deletecustomdata(m_pHandle, hData, &resultSuccess));
+		
+		return resultSuccess;
 	}
 	
 	/**

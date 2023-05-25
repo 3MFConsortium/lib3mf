@@ -115,6 +115,8 @@ const
 	LIB3MF_ERROR_INVALIDRESOURCE = 142;
 	LIB3MF_ERROR_INVALIDNODEINDEX = 143;
 	LIB3MF_ERROR_INVALIDATTRIBUTEINDEX = 144;
+	LIB3MF_ERROR_DUPLICATECUSTOMDATA = 145;
+	LIB3MF_ERROR_CUSTOMDATANOTFOUND = 146;
 	LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE = 2000;
 	LIB3MF_ERROR_INVALIDKEYSTORE = 3000;
 	LIB3MF_ERROR_INVALIDKEYSTORECONSUMER = 3001;
@@ -3925,6 +3927,93 @@ type
 	*)
 	TLib3MFToolpath_GetProfileUUIDFunc = function(pToolpath: TLib3MFHandle; const pProfileUUID: PAnsiChar; out pProfile: TLib3MFHandle): TLib3MFResult; cdecl;
 	
+	(**
+	* Retrieves the count of custom data elements.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[out] pCount - Count
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetCustomDataCountFunc = function(pToolpath: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the custom data.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @param[out] pData - DOM Tree of the data.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetCustomDataFunc = function(pToolpath: TLib3MFHandle; const nIndex: Cardinal; out pData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the node name of the custom data.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameSpaceBuffer -  buffer of Namespace of the custom data tree., may be NULL
+	* @param[in] nDataNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pDataNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pDataNameBuffer -  buffer of Root name of the data tree., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetCustomDataNameFunc = function(pToolpath: TLib3MFHandle; const nIndex: Cardinal; const nNameSpaceBufferSize: Cardinal; out pNameSpaceNeededChars: Cardinal; pNameSpaceBuffer: PAnsiChar; const nDataNameBufferSize: Cardinal; out pDataNameNeededChars: Cardinal; pDataNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves if custom data with a specific namespace and name combination exists.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] pNameSpace - Namespace of the custom data tree.
+	* @param[in] pDataName - Root name of the data tree.
+	* @param[out] pCustomDataExists - Returns true if DOM Tree Exists.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_HasUniqueCustomDataFunc = function(pToolpath: TLib3MFHandle; const pNameSpace: PAnsiChar; const pDataName: PAnsiChar; out pCustomDataExists: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the custom data with a specific namespace and name combination. Fails if combination is not unique.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] pNameSpace - Namespace of the custom data tree.
+	* @param[in] pDataName - Root name of the data tree.
+	* @param[out] pData - DOM Tree of the data.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_FindUniqueCustomDataFunc = function(pToolpath: TLib3MFHandle; const pNameSpace: PAnsiChar; const pDataName: PAnsiChar; out pData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Adds a custom data DOM tree to the toolpath.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] pNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] pNameSpacePrefix - Namespace prefix of the custom data tree. Namespace prefix MUST be unique to the document.
+	* @param[in] pDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
+	* @param[out] pData - DOM Tree of the data.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_AddCustomDataFunc = function(pToolpath: TLib3MFHandle; const pNameSpace: PAnsiChar; const pNameSpacePrefix: PAnsiChar; const pDataName: PAnsiChar; out pData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Deletes all custom data.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[out] pNumberOfDeletedItems - Returns number of deleted items.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_ClearCustomDataFunc = function(pToolpath: TLib3MFHandle; out pNumberOfDeletedItems: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Deletes a custom data instance from the list.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] pData - DOM Tree of the data.
+	* @param[out] pSuccess - Returns if deletion was successful.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_DeleteCustomDataFunc = function(pToolpath: TLib3MFHandle; const pData: TLib3MFHandle; out pSuccess: Byte): TLib3MFResult; cdecl;
+	
 
 (*************************************************************************************************************************
  Function type definitions for ToolpathIterator
@@ -6123,6 +6212,14 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function AddProfile(const AName: String): TLib3MFToolpathProfile;
 		function GetProfile(const AProfileIndex: Cardinal): TLib3MFToolpathProfile;
 		function GetProfileUUID(const AProfileUUID: String): TLib3MFToolpathProfile;
+		function GetCustomDataCount(): Cardinal;
+		function GetCustomData(const AIndex: Cardinal): TLib3MFCustomDOMTree;
+		procedure GetCustomDataName(const AIndex: Cardinal; out ANameSpace: String; out ADataName: String);
+		function HasUniqueCustomData(const ANameSpace: String; const ADataName: String): Boolean;
+		function FindUniqueCustomData(const ANameSpace: String; const ADataName: String): TLib3MFCustomDOMTree;
+		function AddCustomData(const ANameSpace: String; const ANameSpacePrefix: String; const ADataName: String): TLib3MFCustomDOMTree;
+		function ClearCustomData(): Cardinal;
+		function DeleteCustomData(const AData: TLib3MFCustomDOMTree): Boolean;
 	end;
 
 
@@ -6676,6 +6773,14 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFToolpath_AddProfileFunc: TLib3MFToolpath_AddProfileFunc;
 		FLib3MFToolpath_GetProfileFunc: TLib3MFToolpath_GetProfileFunc;
 		FLib3MFToolpath_GetProfileUUIDFunc: TLib3MFToolpath_GetProfileUUIDFunc;
+		FLib3MFToolpath_GetCustomDataCountFunc: TLib3MFToolpath_GetCustomDataCountFunc;
+		FLib3MFToolpath_GetCustomDataFunc: TLib3MFToolpath_GetCustomDataFunc;
+		FLib3MFToolpath_GetCustomDataNameFunc: TLib3MFToolpath_GetCustomDataNameFunc;
+		FLib3MFToolpath_HasUniqueCustomDataFunc: TLib3MFToolpath_HasUniqueCustomDataFunc;
+		FLib3MFToolpath_FindUniqueCustomDataFunc: TLib3MFToolpath_FindUniqueCustomDataFunc;
+		FLib3MFToolpath_AddCustomDataFunc: TLib3MFToolpath_AddCustomDataFunc;
+		FLib3MFToolpath_ClearCustomDataFunc: TLib3MFToolpath_ClearCustomDataFunc;
+		FLib3MFToolpath_DeleteCustomDataFunc: TLib3MFToolpath_DeleteCustomDataFunc;
 		FLib3MFToolpathIterator_GetCurrentToolpathFunc: TLib3MFToolpathIterator_GetCurrentToolpathFunc;
 		FLib3MFSliceStack_GetBottomZFunc: TLib3MFSliceStack_GetBottomZFunc;
 		FLib3MFSliceStack_GetSliceCountFunc: TLib3MFSliceStack_GetSliceCountFunc;
@@ -7150,6 +7255,14 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFToolpath_AddProfileFunc: TLib3MFToolpath_AddProfileFunc read FLib3MFToolpath_AddProfileFunc;
 		property Lib3MFToolpath_GetProfileFunc: TLib3MFToolpath_GetProfileFunc read FLib3MFToolpath_GetProfileFunc;
 		property Lib3MFToolpath_GetProfileUUIDFunc: TLib3MFToolpath_GetProfileUUIDFunc read FLib3MFToolpath_GetProfileUUIDFunc;
+		property Lib3MFToolpath_GetCustomDataCountFunc: TLib3MFToolpath_GetCustomDataCountFunc read FLib3MFToolpath_GetCustomDataCountFunc;
+		property Lib3MFToolpath_GetCustomDataFunc: TLib3MFToolpath_GetCustomDataFunc read FLib3MFToolpath_GetCustomDataFunc;
+		property Lib3MFToolpath_GetCustomDataNameFunc: TLib3MFToolpath_GetCustomDataNameFunc read FLib3MFToolpath_GetCustomDataNameFunc;
+		property Lib3MFToolpath_HasUniqueCustomDataFunc: TLib3MFToolpath_HasUniqueCustomDataFunc read FLib3MFToolpath_HasUniqueCustomDataFunc;
+		property Lib3MFToolpath_FindUniqueCustomDataFunc: TLib3MFToolpath_FindUniqueCustomDataFunc read FLib3MFToolpath_FindUniqueCustomDataFunc;
+		property Lib3MFToolpath_AddCustomDataFunc: TLib3MFToolpath_AddCustomDataFunc read FLib3MFToolpath_AddCustomDataFunc;
+		property Lib3MFToolpath_ClearCustomDataFunc: TLib3MFToolpath_ClearCustomDataFunc read FLib3MFToolpath_ClearCustomDataFunc;
+		property Lib3MFToolpath_DeleteCustomDataFunc: TLib3MFToolpath_DeleteCustomDataFunc read FLib3MFToolpath_DeleteCustomDataFunc;
 		property Lib3MFToolpathIterator_GetCurrentToolpathFunc: TLib3MFToolpathIterator_GetCurrentToolpathFunc read FLib3MFToolpathIterator_GetCurrentToolpathFunc;
 		property Lib3MFSliceStack_GetBottomZFunc: TLib3MFSliceStack_GetBottomZFunc read FLib3MFSliceStack_GetBottomZFunc;
 		property Lib3MFSliceStack_GetSliceCountFunc: TLib3MFSliceStack_GetSliceCountFunc read FLib3MFSliceStack_GetSliceCountFunc;
@@ -8238,13 +8351,15 @@ implementation
 			LIB3MF_ERROR_INVALIDRESOURCE: ADescription := 'A resource is invalid';
 			LIB3MF_ERROR_INVALIDNODEINDEX: ADescription := 'Invalid node index';
 			LIB3MF_ERROR_INVALIDATTRIBUTEINDEX: ADescription := 'Invalid attribute index';
+			LIB3MF_ERROR_DUPLICATECUSTOMDATA: ADescription := 'Duplicate custom data';
+			LIB3MF_ERROR_CUSTOMDATANOTFOUND: ADescription := 'Custom data not found';
 			LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: ADescription := 'This object type is not valid for beamlattices';
 			LIB3MF_ERROR_INVALIDKEYSTORE: ADescription := 'The keystore object is invalid';
 			LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: ADescription := 'The consumer keystore object is invalid';
 			LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND: ADescription := 'A consumer has not been found';
 			LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: ADescription := 'A resource data has not been found';
 			LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: ADescription := 'A Key or Conentent encryption callback has not been registered';
-			LIB3MF_ERROR_INVALIDKEYSIZE: ADescription := 'The key siue is invalid';
+			LIB3MF_ERROR_INVALIDKEYSIZE: ADescription := 'The key size is invalid';
 			LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER: ADescription := 'Not in toolpath header writing mode';
 			LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA: ADescription := 'Not in toolpath data writing mode';
 			LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: ADescription := 'Toolpath has already been written out';
@@ -11766,6 +11881,93 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathProfile, TLib3MFToolpathProfile>.Make(FWrapper, HProfile);
 	end;
 
+	function TLib3MFToolpath.GetCustomDataCount(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetCustomDataCountFunc(FHandle, Result));
+	end;
+
+	function TLib3MFToolpath.GetCustomData(const AIndex: Cardinal): TLib3MFCustomDOMTree;
+	var
+		HData: TLib3MFHandle;
+	begin
+		Result := nil;
+		HData := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetCustomDataFunc(FHandle, AIndex, HData));
+		if Assigned(HData) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCustomDOMTree, TLib3MFCustomDOMTree>.Make(FWrapper, HData);
+	end;
+
+	procedure TLib3MFToolpath.GetCustomDataName(const AIndex: Cardinal; out ANameSpace: String; out ADataName: String);
+	var
+		bytesNeededNameSpace: Cardinal;
+		bytesWrittenNameSpace: Cardinal;
+		bufferNameSpace: array of Char;
+		bytesNeededDataName: Cardinal;
+		bytesWrittenDataName: Cardinal;
+		bufferDataName: array of Char;
+	begin
+		bytesNeededNameSpace:= 0;
+		bytesWrittenNameSpace:= 0;
+		bytesNeededDataName:= 0;
+		bytesWrittenDataName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetCustomDataNameFunc(FHandle, AIndex, 0, bytesNeededNameSpace, nil, 0, bytesNeededDataName, nil));
+		SetLength(bufferNameSpace, bytesNeededNameSpace);
+		SetLength(bufferDataName, bytesNeededDataName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetCustomDataNameFunc(FHandle, AIndex, bytesNeededNameSpace, bytesWrittenNameSpace, @bufferNameSpace[0], bytesNeededDataName, bytesWrittenDataName, @bufferDataName[0]));
+		ANameSpace := StrPas(@bufferNameSpace[0]);
+		ADataName := StrPas(@bufferDataName[0]);
+	end;
+
+	function TLib3MFToolpath.HasUniqueCustomData(const ANameSpace: String; const ADataName: String): Boolean;
+	var
+		ResultCustomDataExists: Byte;
+	begin
+		ResultCustomDataExists := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_HasUniqueCustomDataFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(ADataName), ResultCustomDataExists));
+		Result := (ResultCustomDataExists <> 0);
+	end;
+
+	function TLib3MFToolpath.FindUniqueCustomData(const ANameSpace: String; const ADataName: String): TLib3MFCustomDOMTree;
+	var
+		HData: TLib3MFHandle;
+	begin
+		Result := nil;
+		HData := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_FindUniqueCustomDataFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(ADataName), HData));
+		if Assigned(HData) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCustomDOMTree, TLib3MFCustomDOMTree>.Make(FWrapper, HData);
+	end;
+
+	function TLib3MFToolpath.AddCustomData(const ANameSpace: String; const ANameSpacePrefix: String; const ADataName: String): TLib3MFCustomDOMTree;
+	var
+		HData: TLib3MFHandle;
+	begin
+		Result := nil;
+		HData := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_AddCustomDataFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(ANameSpacePrefix), PAnsiChar(ADataName), HData));
+		if Assigned(HData) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCustomDOMTree, TLib3MFCustomDOMTree>.Make(FWrapper, HData);
+	end;
+
+	function TLib3MFToolpath.ClearCustomData(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_ClearCustomDataFunc(FHandle, Result));
+	end;
+
+	function TLib3MFToolpath.DeleteCustomData(const AData: TLib3MFCustomDOMTree): Boolean;
+	var
+		ADataHandle: TLib3MFHandle;
+		ResultSuccess: Byte;
+	begin
+		if Assigned(AData) then
+		ADataHandle := AData.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AData is a nil value.');
+		ResultSuccess := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_DeleteCustomDataFunc(FHandle, ADataHandle, ResultSuccess));
+		Result := (ResultSuccess <> 0);
+	end;
+
 (*************************************************************************************************************************
  Class implementation for ToolpathIterator
 **************************************************************************************************************************)
@@ -13506,6 +13708,14 @@ implementation
 		FLib3MFToolpath_AddProfileFunc := LoadFunction('lib3mf_toolpath_addprofile');
 		FLib3MFToolpath_GetProfileFunc := LoadFunction('lib3mf_toolpath_getprofile');
 		FLib3MFToolpath_GetProfileUUIDFunc := LoadFunction('lib3mf_toolpath_getprofileuuid');
+		FLib3MFToolpath_GetCustomDataCountFunc := LoadFunction('lib3mf_toolpath_getcustomdatacount');
+		FLib3MFToolpath_GetCustomDataFunc := LoadFunction('lib3mf_toolpath_getcustomdata');
+		FLib3MFToolpath_GetCustomDataNameFunc := LoadFunction('lib3mf_toolpath_getcustomdataname');
+		FLib3MFToolpath_HasUniqueCustomDataFunc := LoadFunction('lib3mf_toolpath_hasuniquecustomdata');
+		FLib3MFToolpath_FindUniqueCustomDataFunc := LoadFunction('lib3mf_toolpath_finduniquecustomdata');
+		FLib3MFToolpath_AddCustomDataFunc := LoadFunction('lib3mf_toolpath_addcustomdata');
+		FLib3MFToolpath_ClearCustomDataFunc := LoadFunction('lib3mf_toolpath_clearcustomdata');
+		FLib3MFToolpath_DeleteCustomDataFunc := LoadFunction('lib3mf_toolpath_deletecustomdata');
 		FLib3MFToolpathIterator_GetCurrentToolpathFunc := LoadFunction('lib3mf_toolpathiterator_getcurrenttoolpath');
 		FLib3MFSliceStack_GetBottomZFunc := LoadFunction('lib3mf_slicestack_getbottomz');
 		FLib3MFSliceStack_GetSliceCountFunc := LoadFunction('lib3mf_slicestack_getslicecount');
@@ -14637,6 +14847,30 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getprofileuuid'), @FLib3MFToolpath_GetProfileUUIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getcustomdatacount'), @FLib3MFToolpath_GetCustomDataCountFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getcustomdata'), @FLib3MFToolpath_GetCustomDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getcustomdataname'), @FLib3MFToolpath_GetCustomDataNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_hasuniquecustomdata'), @FLib3MFToolpath_HasUniqueCustomDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_finduniquecustomdata'), @FLib3MFToolpath_FindUniqueCustomDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_addcustomdata'), @FLib3MFToolpath_AddCustomDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_clearcustomdata'), @FLib3MFToolpath_ClearCustomDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_deletecustomdata'), @FLib3MFToolpath_DeleteCustomDataFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathiterator_getcurrenttoolpath'), @FLib3MFToolpathIterator_GetCurrentToolpathFunc);

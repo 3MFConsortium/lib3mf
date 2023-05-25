@@ -3344,6 +3344,65 @@ public:
 	*/
 	virtual IToolpathProfile * GetProfileUUID(const std::string & sProfileUUID) = 0;
 
+	/**
+	* IToolpath::GetCustomDataCount - Retrieves the count of custom data elements.
+	* @return Count
+	*/
+	virtual Lib3MF_uint32 GetCustomDataCount() = 0;
+
+	/**
+	* IToolpath::GetCustomData - Retrieves the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @return DOM Tree of the data.
+	*/
+	virtual ICustomDOMTree * GetCustomData(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpath::GetCustomDataName - Retrieves the node name of the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @param[out] sNameSpace - Namespace of the custom data tree.
+	* @param[out] sDataName - Root name of the data tree.
+	*/
+	virtual void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName) = 0;
+
+	/**
+	* IToolpath::HasUniqueCustomData - Retrieves if custom data with a specific namespace and name combination exists.
+	* @param[in] sNameSpace - Namespace of the custom data tree.
+	* @param[in] sDataName - Root name of the data tree.
+	* @return Returns true if DOM Tree Exists.
+	*/
+	virtual bool HasUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName) = 0;
+
+	/**
+	* IToolpath::FindUniqueCustomData - Retrieves the custom data with a specific namespace and name combination. Fails if combination is not unique.
+	* @param[in] sNameSpace - Namespace of the custom data tree.
+	* @param[in] sDataName - Root name of the data tree.
+	* @return DOM Tree of the data.
+	*/
+	virtual ICustomDOMTree * FindUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName) = 0;
+
+	/**
+	* IToolpath::AddCustomData - Adds a custom data DOM tree to the toolpath.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sNameSpacePrefix - Namespace prefix of the custom data tree. Namespace prefix MUST be unique to the document.
+	* @param[in] sDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
+	* @return DOM Tree of the data.
+	*/
+	virtual ICustomDOMTree * AddCustomData(const std::string & sNameSpace, const std::string & sNameSpacePrefix, const std::string & sDataName) = 0;
+
+	/**
+	* IToolpath::ClearCustomData - Deletes all custom data.
+	* @return Returns number of deleted items.
+	*/
+	virtual Lib3MF_uint32 ClearCustomData() = 0;
+
+	/**
+	* IToolpath::DeleteCustomData - Deletes a custom data instance from the list.
+	* @param[in] pData - DOM Tree of the data.
+	* @return Returns if deletion was successful.
+	*/
+	virtual bool DeleteCustomData(ICustomDOMTree* pData) = 0;
+
 };
 
 typedef IBaseSharedPtr<IToolpath> PIToolpath;

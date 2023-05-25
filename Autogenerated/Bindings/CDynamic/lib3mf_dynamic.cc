@@ -377,6 +377,14 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Toolpath_AddProfile = NULL;
 	pWrapperTable->m_Toolpath_GetProfile = NULL;
 	pWrapperTable->m_Toolpath_GetProfileUUID = NULL;
+	pWrapperTable->m_Toolpath_GetCustomDataCount = NULL;
+	pWrapperTable->m_Toolpath_GetCustomData = NULL;
+	pWrapperTable->m_Toolpath_GetCustomDataName = NULL;
+	pWrapperTable->m_Toolpath_HasUniqueCustomData = NULL;
+	pWrapperTable->m_Toolpath_FindUniqueCustomData = NULL;
+	pWrapperTable->m_Toolpath_AddCustomData = NULL;
+	pWrapperTable->m_Toolpath_ClearCustomData = NULL;
+	pWrapperTable->m_Toolpath_DeleteCustomData = NULL;
 	pWrapperTable->m_ToolpathIterator_GetCurrentToolpath = NULL;
 	pWrapperTable->m_SliceStack_GetBottomZ = NULL;
 	pWrapperTable->m_SliceStack_GetSliceCount = NULL;
@@ -3525,6 +3533,78 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Toolpath_GetProfileUUID == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_GetCustomDataCount = (PLib3MFToolpath_GetCustomDataCountPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getcustomdatacount");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_GetCustomDataCount = (PLib3MFToolpath_GetCustomDataCountPtr) dlsym(hLibrary, "lib3mf_toolpath_getcustomdatacount");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_GetCustomDataCount == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_GetCustomData = (PLib3MFToolpath_GetCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getcustomdata");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_GetCustomData = (PLib3MFToolpath_GetCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpath_getcustomdata");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_GetCustomData == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_GetCustomDataName = (PLib3MFToolpath_GetCustomDataNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getcustomdataname");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_GetCustomDataName = (PLib3MFToolpath_GetCustomDataNamePtr) dlsym(hLibrary, "lib3mf_toolpath_getcustomdataname");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_GetCustomDataName == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_HasUniqueCustomData = (PLib3MFToolpath_HasUniqueCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_hasuniquecustomdata");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_HasUniqueCustomData = (PLib3MFToolpath_HasUniqueCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpath_hasuniquecustomdata");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_HasUniqueCustomData == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_FindUniqueCustomData = (PLib3MFToolpath_FindUniqueCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_finduniquecustomdata");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_FindUniqueCustomData = (PLib3MFToolpath_FindUniqueCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpath_finduniquecustomdata");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_FindUniqueCustomData == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_AddCustomData = (PLib3MFToolpath_AddCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_addcustomdata");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_AddCustomData = (PLib3MFToolpath_AddCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpath_addcustomdata");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_AddCustomData == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_ClearCustomData = (PLib3MFToolpath_ClearCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_clearcustomdata");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_ClearCustomData = (PLib3MFToolpath_ClearCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpath_clearcustomdata");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_ClearCustomData == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_DeleteCustomData = (PLib3MFToolpath_DeleteCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_deletecustomdata");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_DeleteCustomData = (PLib3MFToolpath_DeleteCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpath_deletecustomdata");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_DeleteCustomData == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

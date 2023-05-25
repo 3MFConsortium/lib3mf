@@ -1119,6 +1119,14 @@ private:
 	static void AddProfile(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetProfile(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetProfileUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetCustomDataCount(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetCustomDataName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void HasUniqueCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void FindUniqueCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void ClearCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void DeleteCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFToolpath();

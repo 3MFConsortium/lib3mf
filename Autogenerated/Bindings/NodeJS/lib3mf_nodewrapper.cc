@@ -11902,6 +11902,14 @@ void CLib3MFToolpath::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddProfile", AddProfile);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetProfile", GetProfile);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetProfileUUID", GetProfileUUID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCustomDataCount", GetCustomDataCount);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCustomData", GetCustomData);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCustomDataName", GetCustomDataName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "HasUniqueCustomData", HasUniqueCustomData);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "FindUniqueCustomData", FindUniqueCustomData);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddCustomData", AddCustomData);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "ClearCustomData", ClearCustomData);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "DeleteCustomData", DeleteCustomData);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -12254,6 +12262,248 @@ void CLib3MFToolpath::GetProfileUUID(const FunctionCallbackInfo<Value>& args)
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjProfile = CLib3MFToolpathProfile::NewInstance(args.Holder(), hReturnProfile);
         args.GetReturnValue().Set(instanceObjProfile);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::GetCustomDataCount(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int nReturnCount = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCustomDataCount.");
+        if (wrapperTable->m_Toolpath_GetCustomDataCount == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetCustomDataCount.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetCustomDataCount(instanceHandle, &nReturnCount);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnCount));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::GetCustomData(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        Lib3MFHandle hReturnData = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCustomData.");
+        if (wrapperTable->m_Toolpath_GetCustomData == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetCustomData.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetCustomData(instanceHandle, nIndex, &hReturnData);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjData = CLib3MFCustomDOMTree::NewInstance(args.Holder(), hReturnData);
+        args.GetReturnValue().Set(instanceObjData);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::GetCustomDataName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        Local<Object> outObject = Object::New(isolate);
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int bytesNeededNameSpace = 0;
+        unsigned int bytesWrittenNameSpace = 0;
+        unsigned int bytesNeededDataName = 0;
+        unsigned int bytesWrittenDataName = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCustomDataName.");
+        if (wrapperTable->m_Toolpath_GetCustomDataName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetCustomDataName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_Toolpath_GetCustomDataName(instanceHandle, nIndex, 0, &bytesNeededNameSpace, nullptr, 0, &bytesNeededDataName, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferNameSpace;
+        bufferNameSpace.resize(bytesNeededNameSpace);
+        std::vector<char> bufferDataName;
+        bufferDataName.resize(bytesNeededDataName);
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetCustomDataName(instanceHandle, nIndex, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0], bytesNeededDataName, &bytesWrittenDataName, &bufferDataName[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "NameSpace"), String::NewFromUtf8(isolate, &bufferNameSpace[0]));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "DataName"), String::NewFromUtf8(isolate, &bufferDataName[0]));
+        args.GetReturnValue().Set(outObject);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::HasUniqueCustomData(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (NameSpace)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (DataName)");
+        }
+        v8::String::Utf8Value sutf8NameSpace(isolate, args[0]);
+        std::string sNameSpace = *sutf8NameSpace;
+        v8::String::Utf8Value sutf8DataName(isolate, args[1]);
+        std::string sDataName = *sutf8DataName;
+        bool bReturnCustomDataExists = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method HasUniqueCustomData.");
+        if (wrapperTable->m_Toolpath_HasUniqueCustomData == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::HasUniqueCustomData.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_HasUniqueCustomData(instanceHandle, sNameSpace.c_str(), sDataName.c_str(), &bReturnCustomDataExists);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnCustomDataExists));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::FindUniqueCustomData(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (NameSpace)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (DataName)");
+        }
+        v8::String::Utf8Value sutf8NameSpace(isolate, args[0]);
+        std::string sNameSpace = *sutf8NameSpace;
+        v8::String::Utf8Value sutf8DataName(isolate, args[1]);
+        std::string sDataName = *sutf8DataName;
+        Lib3MFHandle hReturnData = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method FindUniqueCustomData.");
+        if (wrapperTable->m_Toolpath_FindUniqueCustomData == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::FindUniqueCustomData.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_FindUniqueCustomData(instanceHandle, sNameSpace.c_str(), sDataName.c_str(), &hReturnData);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjData = CLib3MFCustomDOMTree::NewInstance(args.Holder(), hReturnData);
+        args.GetReturnValue().Set(instanceObjData);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::AddCustomData(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (NameSpace)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (NameSpacePrefix)");
+        }
+        if (!args[2]->IsString()) {
+            throw std::runtime_error("Expected string parameter 2 (DataName)");
+        }
+        v8::String::Utf8Value sutf8NameSpace(isolate, args[0]);
+        std::string sNameSpace = *sutf8NameSpace;
+        v8::String::Utf8Value sutf8NameSpacePrefix(isolate, args[1]);
+        std::string sNameSpacePrefix = *sutf8NameSpacePrefix;
+        v8::String::Utf8Value sutf8DataName(isolate, args[2]);
+        std::string sDataName = *sutf8DataName;
+        Lib3MFHandle hReturnData = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddCustomData.");
+        if (wrapperTable->m_Toolpath_AddCustomData == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::AddCustomData.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_AddCustomData(instanceHandle, sNameSpace.c_str(), sNameSpacePrefix.c_str(), sDataName.c_str(), &hReturnData);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjData = CLib3MFCustomDOMTree::NewInstance(args.Holder(), hReturnData);
+        args.GetReturnValue().Set(instanceObjData);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::ClearCustomData(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int nReturnNumberOfDeletedItems = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method ClearCustomData.");
+        if (wrapperTable->m_Toolpath_ClearCustomData == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::ClearCustomData.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_ClearCustomData(instanceHandle, &nReturnNumberOfDeletedItems);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnNumberOfDeletedItems));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::DeleteCustomData(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsObject()) {
+            throw std::runtime_error("Expected class parameter 0 (Data)");
+        }
+        Local<Object> objData = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+        CLib3MFCustomDOMTree * instanceData = ObjectWrap::Unwrap<CLib3MFCustomDOMTree>(objData);
+        if (instanceData == nullptr)
+            throw std::runtime_error("Invalid Object parameter 0 (Data)");
+        Lib3MFHandle hData = instanceData->getHandle( objData );
+        bool bReturnSuccess = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method DeleteCustomData.");
+        if (wrapperTable->m_Toolpath_DeleteCustomData == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::DeleteCustomData.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_DeleteCustomData(instanceHandle, hData, &bReturnSuccess);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnSuccess));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

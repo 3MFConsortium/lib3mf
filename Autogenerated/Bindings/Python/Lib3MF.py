@@ -102,6 +102,8 @@ class ErrorCodes(enum.IntEnum):
 	INVALIDRESOURCE = 142
 	INVALIDNODEINDEX = 143
 	INVALIDATTRIBUTEINDEX = 144
+	DUPLICATECUSTOMDATA = 145
+	CUSTOMDATANOTFOUND = 146
 	BEAMLATTICE_INVALID_OBJECTTYPE = 2000
 	INVALIDKEYSTORE = 3000
 	INVALIDKEYSTORECONSUMER = 3001
@@ -465,6 +467,14 @@ class FunctionTable:
 	lib3mf_toolpath_addprofile = None
 	lib3mf_toolpath_getprofile = None
 	lib3mf_toolpath_getprofileuuid = None
+	lib3mf_toolpath_getcustomdatacount = None
+	lib3mf_toolpath_getcustomdata = None
+	lib3mf_toolpath_getcustomdataname = None
+	lib3mf_toolpath_hasuniquecustomdata = None
+	lib3mf_toolpath_finduniquecustomdata = None
+	lib3mf_toolpath_addcustomdata = None
+	lib3mf_toolpath_clearcustomdata = None
+	lib3mf_toolpath_deletecustomdata = None
 	lib3mf_toolpathiterator_getcurrenttoolpath = None
 	lib3mf_slicestack_getbottomz = None
 	lib3mf_slicestack_getslicecount = None
@@ -2991,6 +3001,54 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_toolpath_getprofileuuid = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getcustomdatacount")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpath_getcustomdatacount = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getcustomdata")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpath_getcustomdata = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getcustomdataname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpath_getcustomdataname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_hasuniquecustomdata")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_toolpath_hasuniquecustomdata = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_finduniquecustomdata")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpath_finduniquecustomdata = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_addcustomdata")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpath_addcustomdata = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_clearcustomdata")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpath_clearcustomdata = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_deletecustomdata")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_toolpath_deletecustomdata = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathiterator_getcurrenttoolpath")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -4735,6 +4793,30 @@ class Wrapper:
 			
 			self.lib.lib3mf_toolpath_getprofileuuid.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpath_getprofileuuid.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpath_getcustomdatacount.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_getcustomdatacount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpath_getcustomdata.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_getcustomdata.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpath_getcustomdataname.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_getcustomdataname.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpath_hasuniquecustomdata.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_hasuniquecustomdata.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_toolpath_finduniquecustomdata.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_finduniquecustomdata.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpath_addcustomdata.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_addcustomdata.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpath_clearcustomdata.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_clearcustomdata.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpath_deletecustomdata.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_deletecustomdata.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
 			
 			self.lib.lib3mf_toolpathiterator_getcurrenttoolpath.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathiterator_getcurrenttoolpath.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -8276,6 +8358,90 @@ class Toolpath(Resource):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return ProfileObject
+	
+	def GetCustomDataCount(self):
+		pCount = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getcustomdatacount(self._handle, pCount))
+		
+		return pCount.value
+	
+	def GetCustomData(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		DataHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getcustomdata(self._handle, nIndex, DataHandle))
+		if DataHandle:
+			DataObject = self._wrapper._polymorphicFactory(DataHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return DataObject
+	
+	def GetCustomDataName(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		nNameSpaceBufferSize = ctypes.c_uint64(0)
+		nNameSpaceNeededChars = ctypes.c_uint64(0)
+		pNameSpaceBuffer = ctypes.c_char_p(None)
+		nDataNameBufferSize = ctypes.c_uint64(0)
+		nDataNameNeededChars = ctypes.c_uint64(0)
+		pDataNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getcustomdataname(self._handle, nIndex, nNameSpaceBufferSize, nNameSpaceNeededChars, pNameSpaceBuffer, nDataNameBufferSize, nDataNameNeededChars, pDataNameBuffer))
+		nNameSpaceBufferSize = ctypes.c_uint64(nNameSpaceNeededChars.value)
+		pNameSpaceBuffer = (ctypes.c_char * (nNameSpaceNeededChars.value))()
+		nDataNameBufferSize = ctypes.c_uint64(nDataNameNeededChars.value)
+		pDataNameBuffer = (ctypes.c_char * (nDataNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getcustomdataname(self._handle, nIndex, nNameSpaceBufferSize, nNameSpaceNeededChars, pNameSpaceBuffer, nDataNameBufferSize, nDataNameNeededChars, pDataNameBuffer))
+		
+		return pNameSpaceBuffer.value.decode(), pDataNameBuffer.value.decode()
+	
+	def HasUniqueCustomData(self, NameSpace, DataName):
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pDataName = ctypes.c_char_p(str.encode(DataName))
+		pCustomDataExists = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_hasuniquecustomdata(self._handle, pNameSpace, pDataName, pCustomDataExists))
+		
+		return pCustomDataExists.value
+	
+	def FindUniqueCustomData(self, NameSpace, DataName):
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pDataName = ctypes.c_char_p(str.encode(DataName))
+		DataHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_finduniquecustomdata(self._handle, pNameSpace, pDataName, DataHandle))
+		if DataHandle:
+			DataObject = self._wrapper._polymorphicFactory(DataHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return DataObject
+	
+	def AddCustomData(self, NameSpace, NameSpacePrefix, DataName):
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pNameSpacePrefix = ctypes.c_char_p(str.encode(NameSpacePrefix))
+		pDataName = ctypes.c_char_p(str.encode(DataName))
+		DataHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_addcustomdata(self._handle, pNameSpace, pNameSpacePrefix, pDataName, DataHandle))
+		if DataHandle:
+			DataObject = self._wrapper._polymorphicFactory(DataHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return DataObject
+	
+	def ClearCustomData(self):
+		pNumberOfDeletedItems = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_clearcustomdata(self._handle, pNumberOfDeletedItems))
+		
+		return pNumberOfDeletedItems.value
+	
+	def DeleteCustomData(self, DataObject):
+		DataHandle = None
+		if DataObject:
+			DataHandle = DataObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		pSuccess = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_deletecustomdata(self._handle, DataHandle, pSuccess))
+		
+		return pSuccess.value
 	
 
 

@@ -397,6 +397,8 @@ public:
 			case LIB3MF_ERROR_INVALIDRESOURCE: return "INVALIDRESOURCE";
 			case LIB3MF_ERROR_INVALIDNODEINDEX: return "INVALIDNODEINDEX";
 			case LIB3MF_ERROR_INVALIDATTRIBUTEINDEX: return "INVALIDATTRIBUTEINDEX";
+			case LIB3MF_ERROR_DUPLICATECUSTOMDATA: return "DUPLICATECUSTOMDATA";
+			case LIB3MF_ERROR_CUSTOMDATANOTFOUND: return "CUSTOMDATANOTFOUND";
 			case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "BEAMLATTICE_INVALID_OBJECTTYPE";
 			case LIB3MF_ERROR_INVALIDKEYSTORE: return "INVALIDKEYSTORE";
 			case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "INVALIDKEYSTORECONSUMER";
@@ -454,13 +456,15 @@ public:
 			case LIB3MF_ERROR_INVALIDRESOURCE: return "A resource is invalid";
 			case LIB3MF_ERROR_INVALIDNODEINDEX: return "Invalid node index";
 			case LIB3MF_ERROR_INVALIDATTRIBUTEINDEX: return "Invalid attribute index";
+			case LIB3MF_ERROR_DUPLICATECUSTOMDATA: return "Duplicate custom data";
+			case LIB3MF_ERROR_CUSTOMDATANOTFOUND: return "Custom data not found";
 			case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "This object type is not valid for beamlattices";
 			case LIB3MF_ERROR_INVALIDKEYSTORE: return "The keystore object is invalid";
 			case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "The consumer keystore object is invalid";
 			case LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND: return "A consumer has not been found";
 			case LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: return "A resource data has not been found";
 			case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: return "A Key or Conentent encryption callback has not been registered";
-			case LIB3MF_ERROR_INVALIDKEYSIZE: return "The key siue is invalid";
+			case LIB3MF_ERROR_INVALIDKEYSIZE: return "The key size is invalid";
 			case LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER: return "Not in toolpath header writing mode";
 			case LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA: return "Not in toolpath data writing mode";
 			case LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "Toolpath has already been written out";
@@ -1708,6 +1712,14 @@ public:
 	inline PToolpathProfile AddProfile(const std::string & sName);
 	inline PToolpathProfile GetProfile(const Lib3MF_uint32 nProfileIndex);
 	inline PToolpathProfile GetProfileUUID(const std::string & sProfileUUID);
+	inline Lib3MF_uint32 GetCustomDataCount();
+	inline PCustomDOMTree GetCustomData(const Lib3MF_uint32 nIndex);
+	inline void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName);
+	inline bool HasUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName);
+	inline PCustomDOMTree FindUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName);
+	inline PCustomDOMTree AddCustomData(const std::string & sNameSpace, const std::string & sNameSpacePrefix, const std::string & sDataName);
+	inline Lib3MF_uint32 ClearCustomData();
+	inline bool DeleteCustomData(classParam<CCustomDOMTree> pData);
 };
 	
 /*************************************************************************************************************************
@@ -2653,6 +2665,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Toolpath_AddProfile = nullptr;
 		pWrapperTable->m_Toolpath_GetProfile = nullptr;
 		pWrapperTable->m_Toolpath_GetProfileUUID = nullptr;
+		pWrapperTable->m_Toolpath_GetCustomDataCount = nullptr;
+		pWrapperTable->m_Toolpath_GetCustomData = nullptr;
+		pWrapperTable->m_Toolpath_GetCustomDataName = nullptr;
+		pWrapperTable->m_Toolpath_HasUniqueCustomData = nullptr;
+		pWrapperTable->m_Toolpath_FindUniqueCustomData = nullptr;
+		pWrapperTable->m_Toolpath_AddCustomData = nullptr;
+		pWrapperTable->m_Toolpath_ClearCustomData = nullptr;
+		pWrapperTable->m_Toolpath_DeleteCustomData = nullptr;
 		pWrapperTable->m_ToolpathIterator_GetCurrentToolpath = nullptr;
 		pWrapperTable->m_SliceStack_GetBottomZ = nullptr;
 		pWrapperTable->m_SliceStack_GetSliceCount = nullptr;
@@ -5800,6 +5820,78 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_GetCustomDataCount = (PLib3MFToolpath_GetCustomDataCountPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getcustomdatacount");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_GetCustomDataCount = (PLib3MFToolpath_GetCustomDataCountPtr) dlsym(hLibrary, "lib3mf_toolpath_getcustomdatacount");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_GetCustomDataCount == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_GetCustomData = (PLib3MFToolpath_GetCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getcustomdata");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_GetCustomData = (PLib3MFToolpath_GetCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpath_getcustomdata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_GetCustomData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_GetCustomDataName = (PLib3MFToolpath_GetCustomDataNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getcustomdataname");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_GetCustomDataName = (PLib3MFToolpath_GetCustomDataNamePtr) dlsym(hLibrary, "lib3mf_toolpath_getcustomdataname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_GetCustomDataName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_HasUniqueCustomData = (PLib3MFToolpath_HasUniqueCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_hasuniquecustomdata");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_HasUniqueCustomData = (PLib3MFToolpath_HasUniqueCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpath_hasuniquecustomdata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_HasUniqueCustomData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_FindUniqueCustomData = (PLib3MFToolpath_FindUniqueCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_finduniquecustomdata");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_FindUniqueCustomData = (PLib3MFToolpath_FindUniqueCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpath_finduniquecustomdata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_FindUniqueCustomData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_AddCustomData = (PLib3MFToolpath_AddCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_addcustomdata");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_AddCustomData = (PLib3MFToolpath_AddCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpath_addcustomdata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_AddCustomData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_ClearCustomData = (PLib3MFToolpath_ClearCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_clearcustomdata");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_ClearCustomData = (PLib3MFToolpath_ClearCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpath_clearcustomdata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_ClearCustomData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_DeleteCustomData = (PLib3MFToolpath_DeleteCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_deletecustomdata");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_DeleteCustomData = (PLib3MFToolpath_DeleteCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpath_deletecustomdata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_DeleteCustomData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_ToolpathIterator_GetCurrentToolpath = (PLib3MFToolpathIterator_GetCurrentToolpathPtr) GetProcAddress(hLibrary, "lib3mf_toolpathiterator_getcurrenttoolpath");
 		#else // _WIN32
 		pWrapperTable->m_ToolpathIterator_GetCurrentToolpath = (PLib3MFToolpathIterator_GetCurrentToolpathPtr) dlsym(hLibrary, "lib3mf_toolpathiterator_getcurrenttoolpath");
@@ -8344,6 +8436,38 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_toolpath_getprofileuuid", (void**)&(pWrapperTable->m_Toolpath_GetProfileUUID));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_GetProfileUUID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_getcustomdatacount", (void**)&(pWrapperTable->m_Toolpath_GetCustomDataCount));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_GetCustomDataCount == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_getcustomdata", (void**)&(pWrapperTable->m_Toolpath_GetCustomData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_GetCustomData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_getcustomdataname", (void**)&(pWrapperTable->m_Toolpath_GetCustomDataName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_GetCustomDataName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_hasuniquecustomdata", (void**)&(pWrapperTable->m_Toolpath_HasUniqueCustomData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_HasUniqueCustomData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_finduniquecustomdata", (void**)&(pWrapperTable->m_Toolpath_FindUniqueCustomData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_FindUniqueCustomData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_addcustomdata", (void**)&(pWrapperTable->m_Toolpath_AddCustomData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_AddCustomData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_clearcustomdata", (void**)&(pWrapperTable->m_Toolpath_ClearCustomData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_ClearCustomData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_deletecustomdata", (void**)&(pWrapperTable->m_Toolpath_DeleteCustomData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_DeleteCustomData == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_toolpathiterator_getcurrenttoolpath", (void**)&(pWrapperTable->m_ToolpathIterator_GetCurrentToolpath));
@@ -13171,6 +13295,129 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CToolpathProfile>(dynamic_cast<CToolpathProfile*>(m_pWrapper->polymorphicFactory(hProfile)));
+	}
+	
+	/**
+	* CToolpath::GetCustomDataCount - Retrieves the count of custom data elements.
+	* @return Count
+	*/
+	Lib3MF_uint32 CToolpath::GetCustomDataCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetCustomDataCount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CToolpath::GetCustomData - Retrieves the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @return DOM Tree of the data.
+	*/
+	PCustomDOMTree CToolpath::GetCustomData(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hData = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetCustomData(m_pHandle, nIndex, &hData));
+		
+		if (!hData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomDOMTree>(dynamic_cast<CCustomDOMTree*>(m_pWrapper->polymorphicFactory(hData)));
+	}
+	
+	/**
+	* CToolpath::GetCustomDataName - Retrieves the node name of the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @param[out] sNameSpace - Namespace of the custom data tree.
+	* @param[out] sDataName - Root name of the data tree.
+	*/
+	void CToolpath::GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName)
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		Lib3MF_uint32 bytesNeededDataName = 0;
+		Lib3MF_uint32 bytesWrittenDataName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetCustomDataName(m_pHandle, nIndex, 0, &bytesNeededNameSpace, nullptr, 0, &bytesNeededDataName, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		std::vector<char> bufferDataName(bytesNeededDataName);
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetCustomDataName(m_pHandle, nIndex, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0], bytesNeededDataName, &bytesWrittenDataName, &bufferDataName[0]));
+		sNameSpace = std::string(&bufferNameSpace[0]);
+		sDataName = std::string(&bufferDataName[0]);
+	}
+	
+	/**
+	* CToolpath::HasUniqueCustomData - Retrieves if custom data with a specific namespace and name combination exists.
+	* @param[in] sNameSpace - Namespace of the custom data tree.
+	* @param[in] sDataName - Root name of the data tree.
+	* @return Returns true if DOM Tree Exists.
+	*/
+	bool CToolpath::HasUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName)
+	{
+		bool resultCustomDataExists = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_HasUniqueCustomData(m_pHandle, sNameSpace.c_str(), sDataName.c_str(), &resultCustomDataExists));
+		
+		return resultCustomDataExists;
+	}
+	
+	/**
+	* CToolpath::FindUniqueCustomData - Retrieves the custom data with a specific namespace and name combination. Fails if combination is not unique.
+	* @param[in] sNameSpace - Namespace of the custom data tree.
+	* @param[in] sDataName - Root name of the data tree.
+	* @return DOM Tree of the data.
+	*/
+	PCustomDOMTree CToolpath::FindUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName)
+	{
+		Lib3MFHandle hData = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_FindUniqueCustomData(m_pHandle, sNameSpace.c_str(), sDataName.c_str(), &hData));
+		
+		if (!hData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomDOMTree>(dynamic_cast<CCustomDOMTree*>(m_pWrapper->polymorphicFactory(hData)));
+	}
+	
+	/**
+	* CToolpath::AddCustomData - Adds a custom data DOM tree to the toolpath.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sNameSpacePrefix - Namespace prefix of the custom data tree. Namespace prefix MUST be unique to the document.
+	* @param[in] sDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
+	* @return DOM Tree of the data.
+	*/
+	PCustomDOMTree CToolpath::AddCustomData(const std::string & sNameSpace, const std::string & sNameSpacePrefix, const std::string & sDataName)
+	{
+		Lib3MFHandle hData = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_AddCustomData(m_pHandle, sNameSpace.c_str(), sNameSpacePrefix.c_str(), sDataName.c_str(), &hData));
+		
+		if (!hData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomDOMTree>(dynamic_cast<CCustomDOMTree*>(m_pWrapper->polymorphicFactory(hData)));
+	}
+	
+	/**
+	* CToolpath::ClearCustomData - Deletes all custom data.
+	* @return Returns number of deleted items.
+	*/
+	Lib3MF_uint32 CToolpath::ClearCustomData()
+	{
+		Lib3MF_uint32 resultNumberOfDeletedItems = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_ClearCustomData(m_pHandle, &resultNumberOfDeletedItems));
+		
+		return resultNumberOfDeletedItems;
+	}
+	
+	/**
+	* CToolpath::DeleteCustomData - Deletes a custom data instance from the list.
+	* @param[in] pData - DOM Tree of the data.
+	* @return Returns if deletion was successful.
+	*/
+	bool CToolpath::DeleteCustomData(classParam<CCustomDOMTree> pData)
+	{
+		Lib3MFHandle hData = pData.GetHandle();
+		bool resultSuccess = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_DeleteCustomData(m_pHandle, hData, &resultSuccess));
+		
+		return resultSuccess;
 	}
 	
 	/**

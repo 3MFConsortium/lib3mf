@@ -3481,6 +3481,93 @@ typedef Lib3MFResult (*PLib3MFToolpath_GetProfilePtr) (Lib3MF_Toolpath pToolpath
 */
 typedef Lib3MFResult (*PLib3MFToolpath_GetProfileUUIDPtr) (Lib3MF_Toolpath pToolpath, const char * pProfileUUID, Lib3MF_ToolpathProfile * pProfile);
 
+/**
+* Retrieves the count of custom data elements.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[out] pCount - Count
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_GetCustomDataCountPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pCount);
+
+/**
+* Retrieves the custom data.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+* @param[out] pData - DOM Tree of the data.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_GetCustomDataPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_CustomDOMTree * pData);
+
+/**
+* Retrieves the node name of the custom data.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameSpaceBuffer -  buffer of Namespace of the custom data tree., may be NULL
+* @param[in] nDataNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pDataNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pDataNameBuffer -  buffer of Root name of the data tree., may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_GetCustomDataNamePtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer, const Lib3MF_uint32 nDataNameBufferSize, Lib3MF_uint32* pDataNameNeededChars, char * pDataNameBuffer);
+
+/**
+* Retrieves if custom data with a specific namespace and name combination exists.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] pNameSpace - Namespace of the custom data tree.
+* @param[in] pDataName - Root name of the data tree.
+* @param[out] pCustomDataExists - Returns true if DOM Tree Exists.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_HasUniqueCustomDataPtr) (Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pDataName, bool * pCustomDataExists);
+
+/**
+* Retrieves the custom data with a specific namespace and name combination. Fails if combination is not unique.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] pNameSpace - Namespace of the custom data tree.
+* @param[in] pDataName - Root name of the data tree.
+* @param[out] pData - DOM Tree of the data.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_FindUniqueCustomDataPtr) (Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pDataName, Lib3MF_CustomDOMTree * pData);
+
+/**
+* Adds a custom data DOM tree to the toolpath.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] pNameSpace - Namespace of the custom data tree. MUST not be empty.
+* @param[in] pNameSpacePrefix - Namespace prefix of the custom data tree. Namespace prefix MUST be unique to the document.
+* @param[in] pDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
+* @param[out] pData - DOM Tree of the data.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_AddCustomDataPtr) (Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pNameSpacePrefix, const char * pDataName, Lib3MF_CustomDOMTree * pData);
+
+/**
+* Deletes all custom data.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[out] pNumberOfDeletedItems - Returns number of deleted items.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_ClearCustomDataPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pNumberOfDeletedItems);
+
+/**
+* Deletes a custom data instance from the list.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] pData - DOM Tree of the data.
+* @param[out] pSuccess - Returns if deletion was successful.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_DeleteCustomDataPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_CustomDOMTree pData, bool * pSuccess);
+
 /*************************************************************************************************************************
  Class definition for ToolpathIterator
 **************************************************************************************************************************/
@@ -5180,6 +5267,14 @@ typedef struct {
 	PLib3MFToolpath_AddProfilePtr m_Toolpath_AddProfile;
 	PLib3MFToolpath_GetProfilePtr m_Toolpath_GetProfile;
 	PLib3MFToolpath_GetProfileUUIDPtr m_Toolpath_GetProfileUUID;
+	PLib3MFToolpath_GetCustomDataCountPtr m_Toolpath_GetCustomDataCount;
+	PLib3MFToolpath_GetCustomDataPtr m_Toolpath_GetCustomData;
+	PLib3MFToolpath_GetCustomDataNamePtr m_Toolpath_GetCustomDataName;
+	PLib3MFToolpath_HasUniqueCustomDataPtr m_Toolpath_HasUniqueCustomData;
+	PLib3MFToolpath_FindUniqueCustomDataPtr m_Toolpath_FindUniqueCustomData;
+	PLib3MFToolpath_AddCustomDataPtr m_Toolpath_AddCustomData;
+	PLib3MFToolpath_ClearCustomDataPtr m_Toolpath_ClearCustomData;
+	PLib3MFToolpath_DeleteCustomDataPtr m_Toolpath_DeleteCustomData;
 	PLib3MFToolpathIterator_GetCurrentToolpathPtr m_ToolpathIterator_GetCurrentToolpath;
 	PLib3MFSliceStack_GetBottomZPtr m_SliceStack_GetBottomZ;
 	PLib3MFSliceStack_GetSliceCountPtr m_SliceStack_GetSliceCount;

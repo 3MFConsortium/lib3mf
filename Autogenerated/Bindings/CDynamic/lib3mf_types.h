@@ -132,13 +132,15 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_ERROR_INVALIDRESOURCE 142 /** A resource is invalid */
 #define LIB3MF_ERROR_INVALIDNODEINDEX 143 /** Invalid node index */
 #define LIB3MF_ERROR_INVALIDATTRIBUTEINDEX 144 /** Invalid attribute index */
+#define LIB3MF_ERROR_DUPLICATECUSTOMDATA 145 /** Duplicate custom data */
+#define LIB3MF_ERROR_CUSTOMDATANOTFOUND 146 /** Custom data not found */
 #define LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE 2000 /** This object type is not valid for beamlattices */
 #define LIB3MF_ERROR_INVALIDKEYSTORE 3000 /** The keystore object is invalid */
 #define LIB3MF_ERROR_INVALIDKEYSTORECONSUMER 3001 /** The consumer keystore object is invalid */
 #define LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND 3002 /** A consumer has not been found */
 #define LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND 3003 /** A resource data has not been found */
 #define LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED 3004 /** A Key or Conentent encryption callback has not been registered */
-#define LIB3MF_ERROR_INVALIDKEYSIZE 3005 /** The key siue is invalid */
+#define LIB3MF_ERROR_INVALIDKEYSIZE 3005 /** The key size is invalid */
 #define LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER 4000 /** Not in toolpath header writing mode */
 #define LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA 4001 /** Not in toolpath data writing mode */
 #define LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN 4002 /** Toolpath has already been written out */
@@ -189,13 +191,15 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
     case LIB3MF_ERROR_INVALIDRESOURCE: return "A resource is invalid";
     case LIB3MF_ERROR_INVALIDNODEINDEX: return "Invalid node index";
     case LIB3MF_ERROR_INVALIDATTRIBUTEINDEX: return "Invalid attribute index";
+    case LIB3MF_ERROR_DUPLICATECUSTOMDATA: return "Duplicate custom data";
+    case LIB3MF_ERROR_CUSTOMDATANOTFOUND: return "Custom data not found";
     case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "This object type is not valid for beamlattices";
     case LIB3MF_ERROR_INVALIDKEYSTORE: return "The keystore object is invalid";
     case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "The consumer keystore object is invalid";
     case LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND: return "A consumer has not been found";
     case LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: return "A resource data has not been found";
     case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: return "A Key or Conentent encryption callback has not been registered";
-    case LIB3MF_ERROR_INVALIDKEYSIZE: return "The key siue is invalid";
+    case LIB3MF_ERROR_INVALIDKEYSIZE: return "The key size is invalid";
     case LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER: return "Not in toolpath header writing mode";
     case LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA: return "Not in toolpath data writing mode";
     case LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "Toolpath has already been written out";

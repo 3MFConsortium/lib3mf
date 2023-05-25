@@ -3033,6 +3033,78 @@ Lib3MFResult CCall_lib3mf_toolpath_getprofileuuid(Lib3MFHandle libraryHandle, Li
 }
 
 
+Lib3MFResult CCall_lib3mf_toolpath_getcustomdatacount(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetCustomDataCount (pToolpath, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getcustomdata(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_CustomDOMTree * pData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetCustomData (pToolpath, nIndex, pData);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getcustomdataname(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer, const Lib3MF_uint32 nDataNameBufferSize, Lib3MF_uint32* pDataNameNeededChars, char * pDataNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetCustomDataName (pToolpath, nIndex, nNameSpaceBufferSize, pNameSpaceNeededChars, pNameSpaceBuffer, nDataNameBufferSize, pDataNameNeededChars, pDataNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_hasuniquecustomdata(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pDataName, bool * pCustomDataExists)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_HasUniqueCustomData (pToolpath, pNameSpace, pDataName, pCustomDataExists);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_finduniquecustomdata(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pDataName, Lib3MF_CustomDOMTree * pData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_FindUniqueCustomData (pToolpath, pNameSpace, pDataName, pData);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_addcustomdata(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pNameSpacePrefix, const char * pDataName, Lib3MF_CustomDOMTree * pData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_AddCustomData (pToolpath, pNameSpace, pNameSpacePrefix, pDataName, pData);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_clearcustomdata(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pNumberOfDeletedItems)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_ClearCustomData (pToolpath, pNumberOfDeletedItems);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_deletecustomdata(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_CustomDOMTree pData, bool * pSuccess)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_DeleteCustomData (pToolpath, pData, pSuccess);
+}
+
+
 Lib3MFResult CCall_lib3mf_toolpathiterator_getcurrenttoolpath(Lib3MFHandle libraryHandle, Lib3MF_ToolpathIterator pToolpathIterator, Lib3MF_Toolpath * pResource)
 {
 	if (libraryHandle == 0) 
@@ -4566,6 +4638,8 @@ const LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT = 141;
 const LIB3MF_ERROR_INVALIDRESOURCE = 142;
 const LIB3MF_ERROR_INVALIDNODEINDEX = 143;
 const LIB3MF_ERROR_INVALIDATTRIBUTEINDEX = 144;
+const LIB3MF_ERROR_DUPLICATECUSTOMDATA = 145;
+const LIB3MF_ERROR_CUSTOMDATANOTFOUND = 146;
 const LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE = 2000;
 const LIB3MF_ERROR_INVALIDKEYSTORE = 3000;
 const LIB3MF_ERROR_INVALIDKEYSTORECONSUMER = 3001;
@@ -4666,6 +4740,10 @@ func errorMessage(errorcode uint32) string {
 		return "Invalid node index";
 	case LIB3MF_ERROR_INVALIDATTRIBUTEINDEX:
 		return "Invalid attribute index";
+	case LIB3MF_ERROR_DUPLICATECUSTOMDATA:
+		return "Duplicate custom data";
+	case LIB3MF_ERROR_CUSTOMDATANOTFOUND:
+		return "Custom data not found";
 	case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE:
 		return "This object type is not valid for beamlattices";
 	case LIB3MF_ERROR_INVALIDKEYSTORE:
@@ -4679,7 +4757,7 @@ func errorMessage(errorcode uint32) string {
 	case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED:
 		return "A Key or Conentent encryption callback has not been registered";
 	case LIB3MF_ERROR_INVALIDKEYSIZE:
-		return "The key siue is invalid";
+		return "The key size is invalid";
 	case LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER:
 		return "Not in toolpath header writing mode";
 	case LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA:
@@ -8869,6 +8947,97 @@ func (inst Toolpath) GetProfileUUID(profileUUID string) (ToolpathProfile, error)
 		return ToolpathProfile{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewToolpathProfile(profile), nil
+}
+
+// GetCustomDataCount retrieves the count of custom data elements.
+func (inst Toolpath) GetCustomDataCount() (uint32, error) {
+	var count C.uint32_t
+	ret := C.CCall_lib3mf_toolpath_getcustomdatacount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(count), nil
+}
+
+// GetCustomData retrieves the custom data.
+func (inst Toolpath) GetCustomData(index uint32) (CustomDOMTree, error) {
+	var data ref
+	ret := C.CCall_lib3mf_toolpath_getcustomdata(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &data)
+	if ret != 0 {
+		return CustomDOMTree{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomDOMTree(data), nil
+}
+
+// GetCustomDataName retrieves the node name of the custom data.
+func (inst Toolpath) GetCustomDataName(index uint32) (string, string, error) {
+	var neededfornameSpace C.uint32_t
+	var filledinnameSpace C.uint32_t
+	var neededfordataName C.uint32_t
+	var filledindataName C.uint32_t
+	ret := C.CCall_lib3mf_toolpath_getcustomdataname(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededfornameSpace, nil, 0, &neededfordataName, nil)
+	if ret != 0 {
+		return "", "", makeError(uint32(ret))
+	}
+	bufferSizenameSpace := neededfornameSpace
+	buffernameSpace := make([]byte, bufferSizenameSpace)
+	bufferSizedataName := neededfordataName
+	bufferdataName := make([]byte, bufferSizedataName)
+	ret = C.CCall_lib3mf_toolpath_getcustomdataname(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), bufferSizenameSpace, &filledinnameSpace, (*C.char)(unsafe.Pointer(&buffernameSpace[0])), bufferSizedataName, &filledindataName, (*C.char)(unsafe.Pointer(&bufferdataName[0])))
+	if ret != 0 {
+		return "", "", makeError(uint32(ret))
+	}
+	return string(buffernameSpace[:(filledinnameSpace-1)]), string(bufferdataName[:(filledindataName-1)]), nil
+}
+
+// HasUniqueCustomData retrieves if custom data with a specific namespace and name combination exists.
+func (inst Toolpath) HasUniqueCustomData(nameSpace string, dataName string) (bool, error) {
+	var customDataExists C.bool
+	ret := C.CCall_lib3mf_toolpath_hasuniquecustomdata(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(dataName)[0])), &customDataExists)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(customDataExists), nil
+}
+
+// FindUniqueCustomData retrieves the custom data with a specific namespace and name combination. Fails if combination is not unique.
+func (inst Toolpath) FindUniqueCustomData(nameSpace string, dataName string) (CustomDOMTree, error) {
+	var data ref
+	ret := C.CCall_lib3mf_toolpath_finduniquecustomdata(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(dataName)[0])), &data)
+	if ret != 0 {
+		return CustomDOMTree{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomDOMTree(data), nil
+}
+
+// AddCustomData adds a custom data DOM tree to the toolpath.
+func (inst Toolpath) AddCustomData(nameSpace string, nameSpacePrefix string, dataName string) (CustomDOMTree, error) {
+	var data ref
+	ret := C.CCall_lib3mf_toolpath_addcustomdata(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(nameSpacePrefix)[0])), (*C.char)(unsafe.Pointer(&[]byte(dataName)[0])), &data)
+	if ret != 0 {
+		return CustomDOMTree{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomDOMTree(data), nil
+}
+
+// ClearCustomData deletes all custom data.
+func (inst Toolpath) ClearCustomData() (uint32, error) {
+	var numberOfDeletedItems C.uint32_t
+	ret := C.CCall_lib3mf_toolpath_clearcustomdata(inst.wrapperRef.LibraryHandle, inst.Ref, &numberOfDeletedItems)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(numberOfDeletedItems), nil
+}
+
+// DeleteCustomData deletes a custom data instance from the list.
+func (inst Toolpath) DeleteCustomData(data CustomDOMTree) (bool, error) {
+	var success C.bool
+	ret := C.CCall_lib3mf_toolpath_deletecustomdata(inst.wrapperRef.LibraryHandle, inst.Ref, data.Ref, &success)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(success), nil
 }
 
 

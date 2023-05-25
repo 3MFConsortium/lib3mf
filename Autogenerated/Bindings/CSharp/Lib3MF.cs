@@ -1326,6 +1326,30 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getprofileuuid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Toolpath_GetProfileUUID (IntPtr Handle, byte[] AProfileUUID, out IntPtr AProfile);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getcustomdatacount", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetCustomDataCount (IntPtr Handle, out UInt32 ACount);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getcustomdata", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetCustomData (IntPtr Handle, UInt32 AIndex, out IntPtr AData);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getcustomdataname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetCustomDataName (IntPtr Handle, UInt32 AIndex, UInt32 sizeNameSpace, out UInt32 neededNameSpace, IntPtr dataNameSpace, UInt32 sizeDataName, out UInt32 neededDataName, IntPtr dataDataName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_hasuniquecustomdata", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_HasUniqueCustomData (IntPtr Handle, byte[] ANameSpace, byte[] ADataName, out Byte ACustomDataExists);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_finduniquecustomdata", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_FindUniqueCustomData (IntPtr Handle, byte[] ANameSpace, byte[] ADataName, out IntPtr AData);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_addcustomdata", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_AddCustomData (IntPtr Handle, byte[] ANameSpace, byte[] ANameSpacePrefix, byte[] ADataName, out IntPtr AData);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_clearcustomdata", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_ClearCustomData (IntPtr Handle, out UInt32 ANumberOfDeletedItems);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_deletecustomdata", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_DeleteCustomData (IntPtr Handle, IntPtr AData, out Byte ASuccess);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathiterator_getcurrenttoolpath", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathIterator_GetCurrentToolpath (IntPtr Handle, out IntPtr AResource);
 
@@ -5473,6 +5497,93 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Toolpath_GetProfileUUID (Handle, byteProfileUUID, out newProfile));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpathProfile>(newProfile);
+		}
+
+		public UInt32 GetCustomDataCount ()
+		{
+			UInt32 resultCount = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetCustomDataCount (Handle, out resultCount));
+			return resultCount;
+		}
+
+		public CCustomDOMTree GetCustomData (UInt32 AIndex)
+		{
+			IntPtr newData = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetCustomData (Handle, AIndex, out newData));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CCustomDOMTree>(newData);
+		}
+
+		public void GetCustomDataName (UInt32 AIndex, out String ANameSpace, out String ADataName)
+		{
+			UInt32 sizeNameSpace = 0;
+			UInt32 neededNameSpace = 0;
+			UInt32 sizeDataName = 0;
+			UInt32 neededDataName = 0;
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetCustomDataName (Handle, AIndex, sizeNameSpace, out neededNameSpace, IntPtr.Zero, sizeDataName, out neededDataName, IntPtr.Zero));
+			sizeNameSpace = neededNameSpace;
+			byte[] bytesNameSpace = new byte[sizeNameSpace];
+			GCHandle dataNameSpace = GCHandle.Alloc(bytesNameSpace, GCHandleType.Pinned);
+			sizeDataName = neededDataName;
+			byte[] bytesDataName = new byte[sizeDataName];
+			GCHandle dataDataName = GCHandle.Alloc(bytesDataName, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetCustomDataName (Handle, AIndex, sizeNameSpace, out neededNameSpace, dataNameSpace.AddrOfPinnedObject(), sizeDataName, out neededDataName, dataDataName.AddrOfPinnedObject()));
+			dataNameSpace.Free();
+			ANameSpace = Encoding.UTF8.GetString(bytesNameSpace).TrimEnd(char.MinValue);
+			dataDataName.Free();
+			ADataName = Encoding.UTF8.GetString(bytesDataName).TrimEnd(char.MinValue);
+		}
+
+		public bool HasUniqueCustomData (String ANameSpace, String ADataName)
+		{
+			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
+			byte[] byteDataName = Encoding.UTF8.GetBytes(ADataName + char.MinValue);
+			Byte resultCustomDataExists = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_HasUniqueCustomData (Handle, byteNameSpace, byteDataName, out resultCustomDataExists));
+			return (resultCustomDataExists != 0);
+		}
+
+		public CCustomDOMTree FindUniqueCustomData (String ANameSpace, String ADataName)
+		{
+			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
+			byte[] byteDataName = Encoding.UTF8.GetBytes(ADataName + char.MinValue);
+			IntPtr newData = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_FindUniqueCustomData (Handle, byteNameSpace, byteDataName, out newData));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CCustomDOMTree>(newData);
+		}
+
+		public CCustomDOMTree AddCustomData (String ANameSpace, String ANameSpacePrefix, String ADataName)
+		{
+			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
+			byte[] byteNameSpacePrefix = Encoding.UTF8.GetBytes(ANameSpacePrefix + char.MinValue);
+			byte[] byteDataName = Encoding.UTF8.GetBytes(ADataName + char.MinValue);
+			IntPtr newData = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_AddCustomData (Handle, byteNameSpace, byteNameSpacePrefix, byteDataName, out newData));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CCustomDOMTree>(newData);
+		}
+
+		public UInt32 ClearCustomData ()
+		{
+			UInt32 resultNumberOfDeletedItems = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_ClearCustomData (Handle, out resultNumberOfDeletedItems));
+			return resultNumberOfDeletedItems;
+		}
+
+		public bool DeleteCustomData (CCustomDOMTree AData)
+		{
+			IntPtr ADataHandle = IntPtr.Zero;
+			if (AData != null)
+				ADataHandle = AData.GetHandle();
+			Byte resultSuccess = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_DeleteCustomData (Handle, ADataHandle, out resultSuccess));
+			return (resultSuccess != 0);
 		}
 
 	}
