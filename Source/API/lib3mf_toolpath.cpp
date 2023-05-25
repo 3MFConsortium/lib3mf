@@ -33,6 +33,7 @@ Abstract: This is a stub class definition of CToolpath
 #include "lib3mf_toolpathlayerdata.hpp"
 #include "lib3mf_attachment.hpp"
 #include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_customdomtree.hpp"
 
 #include "lib3mf_writer.hpp"
 #include "lib3mf_toolpathlayerreader.hpp"
@@ -176,3 +177,82 @@ IToolpathLayerReader* CToolpath::ReadLayerData(const Lib3MF_uint32 nIndex)
 
 	return new CToolpathLayerReader(pReader->getReadData());
 }
+
+Lib3MF_uint32 CToolpath::GetCustomDataCount()
+{
+	return m_pToolpath->getCustomXMLDataCount();
+}
+
+ICustomDOMTree* CToolpath::GetCustomData(const Lib3MF_uint32 nIndex)
+{
+	return new CCustomDOMTree(m_pToolpath->getCustomXMLData (nIndex));
+}
+
+void CToolpath::GetCustomDataName(const Lib3MF_uint32 nIndex, std::string& sNameSpace, std::string& sDataName)
+{
+	auto pXMLData = m_pToolpath->getCustomXMLData(nIndex);
+	sNameSpace = pXMLData->getNameSpace();
+	sDataName = pXMLData->getRootName();
+}
+
+bool CToolpath::HasUniqueCustomData(const std::string& sNameSpace, const std::string& sDataName)
+{
+	uint32_t nFoundData = 0;
+
+	uint32_t nDataCount = m_pToolpath->getCustomXMLDataCount();
+	for (uint32_t nIndex = 0; nIndex < nDataCount; nIndex++) {
+		auto pXMLData = m_pToolpath->getCustomXMLData(nIndex);
+		if ((sNameSpace == pXMLData->getNameSpace()) && (sDataName == pXMLData->getRootName()))
+			nFoundData++;
+	}
+
+	return (nFoundData == 1);
+
+}
+
+ICustomDOMTree* CToolpath::FindUniqueCustomData(const std::string& sNameSpace, const std::string& sDataName)
+{
+	NMR::PCustomXMLTree pFoundTree;
+
+	uint32_t nDataCount = m_pToolpath->getCustomXMLDataCount();
+	for (uint32_t nIndex = 0; nIndex < nDataCount; nIndex++) {
+		auto pXMLData = m_pToolpath->getCustomXMLData(nIndex);
+		if ((sNameSpace == pXMLData->getNameSpace()) && (sDataName == pXMLData->getRootName())) {
+			if (pFoundTree.get() != nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_DUPLICATECUSTOMDATA, "duplicate custom data: " + sDataName);
+
+			pFoundTree = pXMLData;
+		}
+			
+	}
+
+	if (pFoundTree.get() == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_CUSTOMDATANOTFOUND, "custom data not found: " + sDataName);
+
+	return new CCustomDOMTree(pFoundTree);
+}
+
+ICustomDOMTree* CToolpath::AddCustomData(const std::string& sNameSpace, const std::string& sNameSpacePrefix, const std::string& sDataName)
+{
+	auto pXMLData = std::make_shared<NMR::CCustomXMLTree>(sNameSpace, sDataName);
+	m_pToolpath->addCustomXMLData(pXMLData);
+	return new CCustomDOMTree(pXMLData);
+}
+
+Lib3MF_uint32 CToolpath::ClearCustomData()
+{
+	return m_pToolpath->clearCustomXMLData();
+}
+
+bool CToolpath::DeleteCustomData(ICustomDOMTree* pData)
+{
+	if (pData == nullptr)
+		return false;
+
+	auto pDataInstance = dynamic_cast<CCustomDOMTree*> (pData);
+	if (pDataInstance == nullptr)
+		return false;
+
+	return m_pToolpath->deleteCustomXMLData (pDataInstance->getXMLTreeInstance ().get ());
+}
+

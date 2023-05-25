@@ -368,6 +368,7 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_TOOLPATHPROFILE "toolpathprofile"
 #define XML_3MF_ELEMENT_TOOLPATHLAYERS "toolpathlayers"
 #define XML_3MF_ELEMENT_TOOLPATHLAYER "toolpathlayer"
+#define XML_3MF_ELEMENT_TOOLPATHDATA "toolpathdata"
 
 #define XML_3MF_ATTRIBUTE_TOOLPATH_ID                 "id"
 #define XML_3MF_ATTRIBUTE_TOOLPATH_UNITFACTOR         "unitfactor"

@@ -88,6 +88,23 @@ public:
 
 	IToolpathProfile * GetProfileUUID(const std::string & sProfileUUID) override;
 
+	Lib3MF_uint32 GetCustomDataCount() override;
+
+	ICustomDOMTree* GetCustomData(const Lib3MF_uint32 nIndex) override;
+
+	void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string& sNameSpace, std::string& sDataName) override;
+
+	bool HasUniqueCustomData(const std::string& sNameSpace, const std::string& sDataName) override;
+
+	ICustomDOMTree* FindUniqueCustomData(const std::string& sNameSpace, const std::string& sDataName) override;
+
+	ICustomDOMTree* AddCustomData(const std::string& sNameSpace, const std::string& sNameSpacePrefix, const std::string& sDataName) override;
+
+	Lib3MF_uint32 ClearCustomData() override;
+
+	bool DeleteCustomData(ICustomDOMTree* pData) override;
+
+
 };
 
 } // namespace Impl

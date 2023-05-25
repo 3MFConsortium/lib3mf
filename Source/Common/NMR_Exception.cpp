@@ -139,7 +139,7 @@ namespace NMR {
 		case NMR_ERROR_XMLCHILDNODENOTFOUND: return "XML child node not found";
 		case NMR_ERROR_XMLATTRIBUTENOTFOUND: return "XML attribute not found";
 		case NMR_ERROR_DUPLICATEXMLATTRIBUTE: return "Duplicate XML attribute";
-
+		case NMR_ERROR_TOOMANYCUSTOMXMLDATAENTRIES: return "Too many custom XML Data Entries";
 
 		// Unhandled exception
 		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;

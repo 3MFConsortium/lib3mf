@@ -62,6 +62,8 @@ public:
 
 	virtual ~CCustomDOMTree();
 
+	NMR::PCustomXMLTree getXMLTreeInstance ();
+
 	/**
 	* ICustomDOMTree::GetNameSpace - Returns the namespace identifier for the DOM Tree.
 	* @return returns the namespace of the DOM Tree.

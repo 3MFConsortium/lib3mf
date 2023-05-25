@@ -127,6 +127,50 @@ namespace NMR {
 		return nullptr;
 	}
 
+	uint32_t CModelToolpath::getCustomXMLDataCount()
+	{
+		return (uint32_t)m_CustomXMLData.size();
+	}
+
+	PCustomXMLTree CModelToolpath::getCustomXMLData(uint32_t nIndex)
+	{
+		if (nIndex >= m_CustomXMLData.size())
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_CustomXMLData.at(nIndex);
+
+	}
+
+	void CModelToolpath::addCustomXMLData(PCustomXMLTree pCustomXMLTree)
+	{
+		if (pCustomXMLTree.get () == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		if (m_CustomXMLData.size () >= XML_3MF_MAXRESOURCECOUNT)
+			throw CNMRException(NMR_ERROR_TOOMANYCUSTOMXMLDATAENTRIES);
+
+		m_CustomXMLData.push_back(pCustomXMLTree);
+	}
+
+	uint32_t CModelToolpath::clearCustomXMLData()
+	{
+		uint32_t nCount = (uint32_t)m_CustomXMLData.size();
+		m_CustomXMLData.clear();
+
+		return nCount;
+	}
+
+	bool CModelToolpath::deleteCustomXMLData(CCustomXMLTree* pCustomXMLTree)
+	{
+		for (auto iIter = m_CustomXMLData.begin(); iIter != m_CustomXMLData.end(); iIter++) {
+			if ((*iIter).get() == pCustomXMLTree) {
+				m_CustomXMLData.erase(iIter);
+				return true;
+			}
+		}
+		return false;
+
+	}
 
 }
 

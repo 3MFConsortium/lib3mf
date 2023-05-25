@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -24,52 +24,40 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CCustomDOMTree
 
-*/
+--*/
 
-#include "lib3mf_customdomtree.hpp"
-#include "lib3mf_interfaceexception.hpp"
-#include "lib3mf_customxmlnode.hpp"
+#ifndef __NMR_MODELREADERNODE_TOOLPATH1905_TOOLPATHDATA
+#define __NMR_MODELREADERNODE_TOOLPATH1905_TOOLPATHDATA
 
-// Include custom headers here.
+#include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_ModelToolpath.h"
+
+namespace NMR {
+
+	class CModelReaderNode_Toolpath1905_ToolpathData : public CModelReaderNode {
+	private:
+		CModel * m_pModel;
+		PModelWarnings m_pWarnings;
+		CModelToolpath * m_pToolpath;
+
+	protected:
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+	public:
+		CModelReaderNode_Toolpath1905_ToolpathData() = delete;
+		CModelReaderNode_Toolpath1905_ToolpathData(_In_ CModel * pModel, _In_ CModelToolpath * pToolpath, _In_ PModelWarnings pWarnings);
+
+		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
 
-using namespace Lib3MF::Impl;
+	};
 
-/*************************************************************************************************************************
- Class definition of CCustomDOMTree 
-**************************************************************************************************************************/
+	typedef std::shared_ptr <CModelReaderNode_Toolpath1905_ToolpathData> PModelReaderNode_Toolpath1905_ToolpathData;
 
-CCustomDOMTree::CCustomDOMTree(NMR::PCustomXMLTree pXMLTree)
-	: m_pXMLTree (pXMLTree)
-{
-	if (pXMLTree.get() == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 }
 
-CCustomDOMTree::~CCustomDOMTree()
-{
+#endif // __NMR_MODELREADERNODE_TOOLPATH1905_TOOLPATHDATA
 
-}
-
-NMR::PCustomXMLTree CCustomDOMTree::getXMLTreeInstance()
-{
-	return m_pXMLTree;
-}
-
-std::string CCustomDOMTree::GetNameSpace()
-{
-	return m_pXMLTree->getNameSpace();
-}
-
-ICustomXMLNode * CCustomDOMTree::GetRootNode()
-{
-	return new CCustomXMLNode(m_pXMLTree, m_pXMLTree->getRootNode ());
-}
-
-std::string CCustomDOMTree::SaveToString(const bool bAddLineBreaks)
-{
-	return m_pXMLTree->saveToString(bAddLineBreaks);
-}
 

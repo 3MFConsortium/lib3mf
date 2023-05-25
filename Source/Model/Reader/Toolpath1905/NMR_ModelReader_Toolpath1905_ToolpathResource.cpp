@@ -34,6 +34,7 @@ NMR_ModelReaderNode_Toolpath1905_ToolpathResource.h covers the official 3MF Tool
 #include "Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathResource.h"
 #include "Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathProfiles.h"
 #include "Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathLayers.h"
+#include "Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathData.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
@@ -118,6 +119,12 @@ namespace NMR {
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_TOOLPATHLAYERS) == 0) {
 
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Toolpath1905_ToolpathLayers>(
+					m_pModel, m_pToolpath.get(), m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+			}
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_TOOLPATHDATA) == 0) {
+
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Toolpath1905_ToolpathData>(
 					m_pModel, m_pToolpath.get(), m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}

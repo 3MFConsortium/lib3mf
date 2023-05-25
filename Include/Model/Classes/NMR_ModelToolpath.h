@@ -38,6 +38,7 @@ NMR_ModelToolpath.h defines the Model Toolpath.
 
 #include "Model/Classes/NMR_ModelResource.h" 
 #include "Model/Classes/NMR_ModelToolpathLayer.h" 
+#include "Model/Classes/NMR_CustomXMLTree.h"  
 #include "Model/Classes/NMR_ModelToolpathProfile.h" 
 #include "Model/Classes/NMR_Model.h"  
 #include <vector>
@@ -61,6 +62,8 @@ namespace NMR {
 		std::vector<PModelToolpathProfile> m_Profiles;
 		std::map<std::string, PModelToolpathProfile> m_ProfileMap;
 
+		std::vector<PCustomXMLTree> m_CustomXMLData;
+
 	public:
 		CModelToolpath() = delete;
 		CModelToolpath(_In_ const ModelResourceID sID, _In_ CModel * pModel, double dUnitFactor);
@@ -79,6 +82,12 @@ namespace NMR {
 		PModelToolpathProfile getProfileByUUID(std::string sUUID);
 
 		double getUnitFactor ();
+
+		uint32_t getCustomXMLDataCount();
+		PCustomXMLTree getCustomXMLData(uint32_t nIndex);
+		void addCustomXMLData(PCustomXMLTree pCustomXMLTree);
+		uint32_t clearCustomXMLData();
+		bool deleteCustomXMLData(CCustomXMLTree * pCustomXMLTree);
 
 	};
 

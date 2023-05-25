@@ -323,6 +323,9 @@ NMR_ErrorConst.h defines all error code constants.
 // Duplicate XML attribute
 #define NMR_ERROR_DUPLICATEXMLATTRIBUTE 0x105A
 
+// Too many custom XML Data Entries
+#define NMR_ERROR_TOOMANYCUSTOMXMLDATAENTRIES 0x105B
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/

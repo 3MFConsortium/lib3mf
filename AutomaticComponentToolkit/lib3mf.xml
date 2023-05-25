@@ -80,8 +80,8 @@
 		<error name="INVALIDRESOURCE" code="142" description="A resource is invalid"/>
 		<error name="INVALIDNODEINDEX" code="143" description="Invalid node index"/>
 		<error name="INVALIDATTRIBUTEINDEX" code="144" description="Invalid attribute index"/>
-		
-		
+		<error name="DUPLICATECUSTOMDATA" code="145" description="Duplicate custom data"/>
+		<error name="CUSTOMDATANOTFOUND" code="146" description="Custom data not found"/>
 
 		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices"/>		
 		<error name="INVALIDKEYSTORE" code="3000" description="The keystore object is invalid"/>
@@ -89,12 +89,13 @@
 		<error name="KEYSTORECONSUMERNOTFOUND" code="3002" description="A consumer has not been found"/>
 		<error name="KEYSTORERESOURCEDATANOTFOUND" code="3003" description="A resource data has not been found"/>
 		<error name="SECURECONTEXTNOTREGISTERED" code="3004" description="A Key or Conentent encryption callback has not been registered"/>
-		<error name="INVALIDKEYSIZE" code="3005" description="The key siue is invalid"/>
+		<error name="INVALIDKEYSIZE" code="3005" description="The key size is invalid"/>
 
 		<error name="TOOLPATH_NOTWRITINGHEADER" code="4000" description="Not in toolpath header writing mode" />
 		<error name="TOOLPATH_NOTWRITINGDATA" code="4001" description="Not in toolpath data writing mode" />
 		<error name="TOOLPATH_DATAHASBEENWRITTEN" code="4002" description="Toolpath has already been written out" />
 		<error name="TOOLPATH_INVALIDPOINTCOUNT" code="4003" description="Toolpath has an invalid number of points" />
+				
 		
 	</errors>
 
@@ -1729,6 +1730,49 @@
 		<method name="GetProfileUUID" description="Returns a profile of the toolpath by UUID.">
 			<param name="ProfileUUID" type="string" pass="in" description="UUID string." />
 			<param name="Profile" type="handle" class="ToolpathProfile" pass="return" description="Returns the profile." />
+		</method>
+		
+		<method name="GetCustomDataCount" description="Retrieves the count of custom data elements.">
+			<param name="Count" type="uint32" pass="return" description="Count" />
+		</method>
+		
+		<method name="GetCustomData" description="Retrieves the custom data.">
+			<param name="Index" type="uint32" pass="in" description="Index of the Custom Data. 0-based. MUST be smaller than Data Count" />
+			<param name="Data" type="class" class="CustomDOMTree" pass="return" description="DOM Tree of the data." />
+		</method>
+
+		<method name="GetCustomDataName" description="Retrieves the node name of the custom data.">
+			<param name="Index" type="uint32" pass="in" description="Index of the Custom Data. 0-based. MUST be smaller than Data Count" />
+			<param name="NameSpace" type="string" pass="out" description="Namespace of the custom data tree." />
+			<param name="DataName" type="string" pass="out" description="Root name of the data tree." />
+		</method>
+
+		<method name="HasUniqueCustomData" description="Retrieves if custom data with a specific namespace and name combination exists.">
+			<param name="NameSpace" type="string" pass="in" description="Namespace of the custom data tree." />
+			<param name="DataName" type="string" pass="in" description="Root name of the data tree." />
+			<param name="CustomDataExists" type="bool" pass="return" description="Returns true if DOM Tree Exists." />
+		</method>
+
+		<method name="FindUniqueCustomData" description="Retrieves the custom data with a specific namespace and name combination. Fails if combination is not unique.">
+			<param name="NameSpace" type="string" pass="in" description="Namespace of the custom data tree." />
+			<param name="DataName" type="string" pass="in" description="Root name of the data tree." />
+			<param name="Data" type="class" class="CustomDOMTree" pass="return" description="DOM Tree of the data." />
+		</method>
+		
+		<method name="AddCustomData" description="Adds a custom data DOM tree to the toolpath.">
+			<param name="NameSpace" type="string" pass="in" description="Namespace of the custom data tree. MUST not be empty." />
+			<param name="NameSpacePrefix" type="string" pass="in" description="Namespace prefix of the custom data tree. Namespace prefix MUST be unique to the document." />
+			<param name="DataName" type="string" pass="in" description="Root name of the data tree. MUST not be empty. MUST be a valid XML name string." />
+			<param name="Data" type="class" class="CustomDOMTree" pass="return" description="DOM Tree of the data." />
+		</method>
+
+		<method name="ClearCustomData" description="Deletes all custom data.">
+			<param name="NumberOfDeletedItems" type="uint32" pass="return" description="Returns number of deleted items." />
+		</method>
+		
+		<method name="DeleteCustomData" description="Deletes a custom data instance from the list.">
+			<param name="Data" type="class" class="CustomDOMTree" pass="in" description="DOM Tree of the data." />
+			<param name="Success" type="bool" pass="return" description="Returns if deletion was successful." />
 		</method>
 		
 	</class>	

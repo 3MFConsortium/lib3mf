@@ -80,17 +80,13 @@ namespace NMR {
 
 		std::map<uint32_t, std::string> m_UUIDMap;
 
-		double m_dUnits;
-
 		std::vector<PCustomXMLTree> m_CustomXMLData;
 
 	public:
 		CModelToolpathLayerReadData() = delete;
 		CModelToolpathLayerReadData(_In_ PModelToolpath pModelToolpath);
 
-		~CModelToolpathLayerReadData();
-
-		double getUnits();
+		~CModelToolpathLayerReadData();		
 
 		std::string getUUID();
 

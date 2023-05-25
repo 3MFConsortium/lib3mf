@@ -56,11 +56,6 @@ namespace NMR {
 
 	}
 
-	double CModelToolpathLayerReadData::getUnits()
-	{
-		return m_dUnits;
-	}
-
 	std::string CModelToolpathLayerReadData::getUUID()
 	{
 		return m_sUUID;
