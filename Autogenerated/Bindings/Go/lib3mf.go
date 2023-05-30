@@ -846,12 +846,12 @@ Lib3MFResult CCall_lib3mf_customdomtree_getrootnode(Lib3MFHandle libraryHandle, 
 }
 
 
-Lib3MFResult CCall_lib3mf_customdomtree_savetostring(Lib3MFHandle libraryHandle, Lib3MF_CustomDOMTree pCustomDOMTree, bool bAddLineBreaks, const Lib3MF_uint32 nXMLStringBufferSize, Lib3MF_uint32* pXMLStringNeededChars, char * pXMLStringBuffer)
+Lib3MFResult CCall_lib3mf_customdomtree_savetostring(Lib3MFHandle libraryHandle, Lib3MF_CustomDOMTree pCustomDOMTree, const Lib3MF_uint32 nXMLStringBufferSize, Lib3MF_uint32* pXMLStringNeededChars, char * pXMLStringBuffer)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_CustomDOMTree_SaveToString (pCustomDOMTree, bAddLineBreaks, nXMLStringBufferSize, pXMLStringNeededChars, pXMLStringBuffer);
+	return wrapperTable->m_CustomDOMTree_SaveToString (pCustomDOMTree, nXMLStringBufferSize, pXMLStringNeededChars, pXMLStringBuffer);
 }
 
 
@@ -5921,16 +5921,16 @@ func (inst CustomDOMTree) GetRootNode() (CustomXMLNode, error) {
 }
 
 // SaveToString saves the XML tree into a string.
-func (inst CustomDOMTree) SaveToString(addLineBreaks bool) (string, error) {
+func (inst CustomDOMTree) SaveToString() (string, error) {
 	var neededforxMLString C.uint32_t
 	var filledinxMLString C.uint32_t
-	ret := C.CCall_lib3mf_customdomtree_savetostring(inst.wrapperRef.LibraryHandle, inst.Ref, C.bool(addLineBreaks), 0, &neededforxMLString, nil)
+	ret := C.CCall_lib3mf_customdomtree_savetostring(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforxMLString, nil)
 	if ret != 0 {
 		return "", makeError(uint32(ret))
 	}
 	bufferSizexMLString := neededforxMLString
 	bufferxMLString := make([]byte, bufferSizexMLString)
-	ret = C.CCall_lib3mf_customdomtree_savetostring(inst.wrapperRef.LibraryHandle, inst.Ref, C.bool(addLineBreaks), bufferSizexMLString, &filledinxMLString, (*C.char)(unsafe.Pointer(&bufferxMLString[0])))
+	ret = C.CCall_lib3mf_customdomtree_savetostring(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizexMLString, &filledinxMLString, (*C.char)(unsafe.Pointer(&bufferxMLString[0])))
 	if ret != 0 {
 		return "", makeError(uint32(ret))
 	}

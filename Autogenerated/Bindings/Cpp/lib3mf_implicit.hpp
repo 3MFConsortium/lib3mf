@@ -933,7 +933,7 @@ public:
 	
 	inline std::string GetNameSpace();
 	inline PCustomXMLNode GetRootNode();
-	inline std::string SaveToString(const bool bAddLineBreaks);
+	inline std::string SaveToString();
 };
 	
 /*************************************************************************************************************************
@@ -3411,16 +3411,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	
 	/**
 	* CCustomDOMTree::SaveToString - Saves the XML tree into a string.
-	* @param[in] bAddLineBreaks - If true, line breaks and indentation will be added to the output string.
 	* @return String with the XML Content.
 	*/
-	std::string CCustomDOMTree::SaveToString(const bool bAddLineBreaks)
+	std::string CCustomDOMTree::SaveToString()
 	{
 		Lib3MF_uint32 bytesNeededXMLString = 0;
 		Lib3MF_uint32 bytesWrittenXMLString = 0;
-		CheckError(lib3mf_customdomtree_savetostring(m_pHandle, bAddLineBreaks, 0, &bytesNeededXMLString, nullptr));
+		CheckError(lib3mf_customdomtree_savetostring(m_pHandle, 0, &bytesNeededXMLString, nullptr));
 		std::vector<char> bufferXMLString(bytesNeededXMLString);
-		CheckError(lib3mf_customdomtree_savetostring(m_pHandle, bAddLineBreaks, bytesNeededXMLString, &bytesWrittenXMLString, &bufferXMLString[0]));
+		CheckError(lib3mf_customdomtree_savetostring(m_pHandle, bytesNeededXMLString, &bytesWrittenXMLString, &bufferXMLString[0]));
 		
 		return std::string(&bufferXMLString[0]);
 	}

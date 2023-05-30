@@ -1068,10 +1068,9 @@ public:
 
 	/**
 	* ICustomDOMTree::SaveToString - Saves the XML tree into a string.
-	* @param[in] bAddLineBreaks - If true, line breaks and indentation will be added to the output string.
 	* @return String with the XML Content.
 	*/
-	virtual std::string SaveToString(const bool bAddLineBreaks) = 0;
+	virtual std::string SaveToString() = 0;
 
 };
 

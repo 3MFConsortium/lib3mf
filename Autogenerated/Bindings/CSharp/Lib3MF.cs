@@ -598,7 +598,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 CustomDOMTree_GetRootNode (IntPtr Handle, out IntPtr ARootNode);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_customdomtree_savetostring", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 CustomDOMTree_SaveToString (IntPtr Handle, Byte AAddLineBreaks, UInt32 sizeXMLString, out UInt32 neededXMLString, IntPtr dataXMLString);
+			public unsafe extern static Int32 CustomDOMTree_SaveToString (IntPtr Handle, UInt32 sizeXMLString, out UInt32 neededXMLString, IntPtr dataXMLString);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_slicestackiterator_getcurrentslicestack", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 SliceStackIterator_GetCurrentSliceStack (IntPtr Handle, out IntPtr AResource);
@@ -2965,16 +2965,16 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CCustomXMLNode>(newRootNode);
 		}
 
-		public String SaveToString (bool AAddLineBreaks)
+		public String SaveToString ()
 		{
 			UInt32 sizeXMLString = 0;
 			UInt32 neededXMLString = 0;
-			CheckError(Internal.Lib3MFWrapper.CustomDOMTree_SaveToString (Handle, (Byte)( AAddLineBreaks ? 1 : 0 ), sizeXMLString, out neededXMLString, IntPtr.Zero));
+			CheckError(Internal.Lib3MFWrapper.CustomDOMTree_SaveToString (Handle, sizeXMLString, out neededXMLString, IntPtr.Zero));
 			sizeXMLString = neededXMLString;
 			byte[] bytesXMLString = new byte[sizeXMLString];
 			GCHandle dataXMLString = GCHandle.Alloc(bytesXMLString, GCHandleType.Pinned);
 
-			CheckError(Internal.Lib3MFWrapper.CustomDOMTree_SaveToString (Handle, (Byte)( AAddLineBreaks ? 1 : 0 ), sizeXMLString, out neededXMLString, dataXMLString.AddrOfPinnedObject()));
+			CheckError(Internal.Lib3MFWrapper.CustomDOMTree_SaveToString (Handle, sizeXMLString, out neededXMLString, dataXMLString.AddrOfPinnedObject()));
 			dataXMLString.Free();
 			return Encoding.UTF8.GetString(bytesXMLString).TrimEnd(char.MinValue);
 		}

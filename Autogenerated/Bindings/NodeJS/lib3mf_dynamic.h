@@ -930,13 +930,12 @@ typedef Lib3MFResult (*PLib3MFCustomDOMTree_GetRootNodePtr) (Lib3MF_CustomDOMTre
 * Saves the XML tree into a string.
 *
 * @param[in] pCustomDOMTree - CustomDOMTree instance.
-* @param[in] bAddLineBreaks - If true, line breaks and indentation will be added to the output string.
 * @param[in] nXMLStringBufferSize - size of the buffer (including trailing 0)
 * @param[out] pXMLStringNeededChars - will be filled with the count of the written bytes, or needed buffer size.
 * @param[out] pXMLStringBuffer -  buffer of String with the XML Content., may be NULL
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFCustomDOMTree_SaveToStringPtr) (Lib3MF_CustomDOMTree pCustomDOMTree, bool bAddLineBreaks, const Lib3MF_uint32 nXMLStringBufferSize, Lib3MF_uint32* pXMLStringNeededChars, char * pXMLStringBuffer);
+typedef Lib3MFResult (*PLib3MFCustomDOMTree_SaveToStringPtr) (Lib3MF_CustomDOMTree pCustomDOMTree, const Lib3MF_uint32 nXMLStringBufferSize, Lib3MF_uint32* pXMLStringNeededChars, char * pXMLStringBuffer);
 
 /*************************************************************************************************************************
  Class definition for SliceStackIterator

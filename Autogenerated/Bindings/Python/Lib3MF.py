@@ -1546,7 +1546,7 @@ class Wrapper:
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_customdomtree_savetostring")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_bool, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
 			self.lib.lib3mf_customdomtree_savetostring = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_slicestackiterator_getcurrentslicestack")), methodAddress)
@@ -4066,7 +4066,7 @@ class Wrapper:
 			self.lib.lib3mf_customdomtree_getrootnode.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_customdomtree_savetostring.restype = ctypes.c_int32
-			self.lib.lib3mf_customdomtree_savetostring.argtypes = [ctypes.c_void_p, ctypes.c_bool, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			self.lib.lib3mf_customdomtree_savetostring.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
 			self.lib.lib3mf_slicestackiterator_getcurrentslicestack.restype = ctypes.c_int32
 			self.lib.lib3mf_slicestackiterator_getcurrentslicestack.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -6201,15 +6201,14 @@ class CustomDOMTree(Base):
 		
 		return RootNodeObject
 	
-	def SaveToString(self, AddLineBreaks):
-		bAddLineBreaks = ctypes.c_bool(AddLineBreaks)
+	def SaveToString(self):
 		nXMLStringBufferSize = ctypes.c_uint64(0)
 		nXMLStringNeededChars = ctypes.c_uint64(0)
 		pXMLStringBuffer = ctypes.c_char_p(None)
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_customdomtree_savetostring(self._handle, bAddLineBreaks, nXMLStringBufferSize, nXMLStringNeededChars, pXMLStringBuffer))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_customdomtree_savetostring(self._handle, nXMLStringBufferSize, nXMLStringNeededChars, pXMLStringBuffer))
 		nXMLStringBufferSize = ctypes.c_uint64(nXMLStringNeededChars.value)
 		pXMLStringBuffer = (ctypes.c_char * (nXMLStringNeededChars.value))()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_customdomtree_savetostring(self._handle, bAddLineBreaks, nXMLStringBufferSize, nXMLStringNeededChars, pXMLStringBuffer))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_customdomtree_savetostring(self._handle, nXMLStringBufferSize, nXMLStringNeededChars, pXMLStringBuffer))
 		
 		return pXMLStringBuffer.value.decode()
 	

@@ -4089,10 +4089,6 @@ void CLib3MFCustomDOMTree::SaveToString(const FunctionCallbackInfo<Value>& args)
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		try {
-        if (!args[0]->IsBoolean()) {
-            throw std::runtime_error("Expected bool parameter 0 (AddLineBreaks)");
-        }
-        bool bAddLineBreaks = args[0]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
         unsigned int bytesNeededXMLString = 0;
         unsigned int bytesWrittenXMLString = 0;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
@@ -4101,11 +4097,11 @@ void CLib3MFCustomDOMTree::SaveToString(const FunctionCallbackInfo<Value>& args)
         if (wrapperTable->m_CustomDOMTree_SaveToString == nullptr)
             throw std::runtime_error("Could not call Lib3MF method CustomDOMTree::SaveToString.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult initErrorCode = wrapperTable->m_CustomDOMTree_SaveToString(instanceHandle, bAddLineBreaks, 0, &bytesNeededXMLString, nullptr);
+        Lib3MFResult initErrorCode = wrapperTable->m_CustomDOMTree_SaveToString(instanceHandle, 0, &bytesNeededXMLString, nullptr);
         CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
         std::vector<char> bufferXMLString;
         bufferXMLString.resize(bytesNeededXMLString);
-        Lib3MFResult errorCode = wrapperTable->m_CustomDOMTree_SaveToString(instanceHandle, bAddLineBreaks, bytesNeededXMLString, &bytesWrittenXMLString, &bufferXMLString[0]);
+        Lib3MFResult errorCode = wrapperTable->m_CustomDOMTree_SaveToString(instanceHandle, bytesNeededXMLString, &bytesWrittenXMLString, &bufferXMLString[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferXMLString[0]));
 

@@ -3334,7 +3334,7 @@ Lib3MFResult lib3mf_customdomtree_getrootnode(Lib3MF_CustomDOMTree pCustomDOMTre
 	}
 }
 
-Lib3MFResult lib3mf_customdomtree_savetostring(Lib3MF_CustomDOMTree pCustomDOMTree, bool bAddLineBreaks, const Lib3MF_uint32 nXMLStringBufferSize, Lib3MF_uint32* pXMLStringNeededChars, char * pXMLStringBuffer)
+Lib3MFResult lib3mf_customdomtree_savetostring(Lib3MF_CustomDOMTree pCustomDOMTree, const Lib3MF_uint32 nXMLStringBufferSize, Lib3MF_uint32* pXMLStringNeededChars, char * pXMLStringBuffer)
 {
 	IBase* pIBaseClass = (IBase *)pCustomDOMTree;
 
@@ -3342,7 +3342,6 @@ Lib3MFResult lib3mf_customdomtree_savetostring(Lib3MF_CustomDOMTree pCustomDOMTr
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pCustomDOMTree, "CustomDOMTree", "SaveToString");
-			pJournalEntry->addBooleanParameter("AddLineBreaks", bAddLineBreaks);
 		}
 		if ( (!pXMLStringBuffer) && !(pXMLStringNeededChars) )
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
@@ -3353,7 +3352,7 @@ Lib3MFResult lib3mf_customdomtree_savetostring(Lib3MF_CustomDOMTree pCustomDOMTr
 		
 		bool isCacheCall = (pXMLStringBuffer == nullptr);
 		if (isCacheCall) {
-			sXMLString = pICustomDOMTree->SaveToString(bAddLineBreaks);
+			sXMLString = pICustomDOMTree->SaveToString();
 
 			pICustomDOMTree->_setCache (new ParameterCache_1<std::string> (sXMLString));
 		}

@@ -1344,13 +1344,12 @@ type
 	* Saves the XML tree into a string.
 	*
 	* @param[in] pCustomDOMTree - CustomDOMTree instance.
-	* @param[in] bAddLineBreaks - If true, line breaks and indentation will be added to the output string.
 	* @param[in] nXMLStringBufferSize - size of the buffer (including trailing 0)
 	* @param[out] pXMLStringNeededChars - will be filled with the count of the written bytes, or needed buffer size.
 	* @param[out] pXMLStringBuffer -  buffer of String with the XML Content., may be NULL
 	* @return error code or 0 (success)
 	*)
-	TLib3MFCustomDOMTree_SaveToStringFunc = function(pCustomDOMTree: TLib3MFHandle; const bAddLineBreaks: Byte; const nXMLStringBufferSize: Cardinal; out pXMLStringNeededChars: Cardinal; pXMLStringBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	TLib3MFCustomDOMTree_SaveToStringFunc = function(pCustomDOMTree: TLib3MFHandle; const nXMLStringBufferSize: Cardinal; out pXMLStringNeededChars: Cardinal; pXMLStringBuffer: PAnsiChar): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -5617,7 +5616,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		destructor Destroy; override;
 		function GetNameSpace(): String;
 		function GetRootNode(): TLib3MFCustomXMLNode;
-		function SaveToString(const AAddLineBreaks: Boolean): String;
+		function SaveToString(): String;
 	end;
 
 
@@ -9244,7 +9243,7 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFCustomXMLNode, TLib3MFCustomXMLNode>.Make(FWrapper, HRootNode);
 	end;
 
-	function TLib3MFCustomDOMTree.SaveToString(const AAddLineBreaks: Boolean): String;
+	function TLib3MFCustomDOMTree.SaveToString(): String;
 	var
 		bytesNeededXMLString: Cardinal;
 		bytesWrittenXMLString: Cardinal;
@@ -9252,9 +9251,9 @@ implementation
 	begin
 		bytesNeededXMLString:= 0;
 		bytesWrittenXMLString:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomDOMTree_SaveToStringFunc(FHandle, Ord(AAddLineBreaks), 0, bytesNeededXMLString, nil));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomDOMTree_SaveToStringFunc(FHandle, 0, bytesNeededXMLString, nil));
 		SetLength(bufferXMLString, bytesNeededXMLString);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomDOMTree_SaveToStringFunc(FHandle, Ord(AAddLineBreaks), bytesNeededXMLString, bytesWrittenXMLString, @bufferXMLString[0]));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomDOMTree_SaveToStringFunc(FHandle, bytesNeededXMLString, bytesWrittenXMLString, @bufferXMLString[0]));
 		Result := StrPas(@bufferXMLString[0]);
 	end;
 
