@@ -606,13 +606,13 @@ namespace Lib3MF
           Lib3MF::eImplicitNodeType::Multiplication, "multiplication_1", "multiplication 3");
 
         // Add some links
-        newFunction->AddLinkByNames("addition_1.sum", "substraction_1.A");
+        newFunction->AddLinkByNames("addition_1.result", "substraction_1.A");
         // Alternative way to add links
-        mulNode->FindInput("A")->SetReference("addition_1.sum");
+        mulNode->FindInput("A")->SetReference("addition_1.result");
 
         auto output = newFunction->AddOutput(
           "shape", "signed distance to the surface", Lib3MF::eImplicitPortType::Vector);
-        output->SetReference("substraction_1.difference");
+        output->SetReference("substraction_1.result");
 
         // Write to file
         writer3MF->WriteToFile(Volumetric::OutFolder + "AddFunctionWithMultipleNodesAndLinks.3mf");
@@ -663,7 +663,7 @@ namespace Lib3MF
         auto constVecNode = newFunction->AddNode(
           Lib3MF::eImplicitNodeType::ConstVec, "vector_1", "translation vector");
         constVecNode->SetVector({1.23456, 2.34567, 3.45678});
-        constVecNode->FindOutput("value")->SetType(Lib3MF::eImplicitPortType::Vector);
+        constVecNode->FindOutput("vector")->SetType(Lib3MF::eImplicitPortType::Vector);
 
         auto subNode = newFunction->AddNode(
           Lib3MF::eImplicitNodeType::Subtraction, "translate_1", "Translation");
@@ -674,22 +674,22 @@ namespace Lib3MF
         subInputB->SetType(Lib3MF::eImplicitPortType::Vector);
         subInputA->SetReference("pos");
         subInputB->SetReference("vector_1.value");
-        subNode->FindOutput("difference")->SetType(Lib3MF::eImplicitPortType::Vector);
+        subNode->FindOutput("result")->SetType(Lib3MF::eImplicitPortType::Vector);
 
         auto distanceToSpehereNode = newFunction->AddNode(
           Lib3MF::eImplicitNodeType::Length, "distance_1", "distance to sphere");
 
         distanceToSpehereNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
-        distanceToSpehereNode->FindInput("A")->SetReference("translate_1.difference");
+        distanceToSpehereNode->FindInput("A")->SetReference("translate_1.result");
 
         // Substract radius from distance
         auto subNode2 = newFunction->AddNode(
           Lib3MF::eImplicitNodeType::Subtraction, "distance_2", "distance to sphere");
-        subNode2->FindInput("A")->SetReference("distance_1.length");
+        subNode2->FindInput("A")->SetReference("distance_1.result");
 
         auto output = newFunction->AddOutput(
           "shape", "signed distance to the surface", Lib3MF::eImplicitPortType::Scalar);
-        output->SetReference("distance_2.length");
+        output->SetReference("distance_2.result");
 
         // Write to file
         writer3MF->WriteToFile(Volumetric::OutFolder + "AddFunctionWithConstantNode.3mf");
