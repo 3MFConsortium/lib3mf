@@ -30,6 +30,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Model/Classes/NMR_CustomXMLNode.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
+#include "Common/Platform/NMR_XMLWriter_Native.h"
+#include "Common/Platform/NMR_ExportStream_Memory.h"
 
 namespace NMR {
 
@@ -60,9 +62,22 @@ namespace NMR {
 		return m_pRootNode;
 	}
 
-	std::string CCustomXMLTree::saveToString(bool bAddLineBreaks)
+	std::string CCustomXMLTree::saveToString()
 	{
-		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+		auto pExportStream = std::make_shared<CExportStreamMemory>();
+		auto pXMLWriter = std::make_shared<CXmlWriter_Native>(pExportStream);
+		pXMLWriter->WriteStartDocument();
+		pXMLWriter->WriteStartElement (nullptr, m_pRootNode->getName ().c_str (), m_sNameSpace.c_str ());
+
+		m_pRootNode->writeContentToXML(pXMLWriter.get());
+
+		pXMLWriter->WriteFullEndElement();
+
+		pXMLWriter->WriteEndDocument();
+		pXMLWriter->Flush();
+
+		pExportStream->seekPosition(0, true);
+		return std::string ((char*)pExportStream->getData(), pExportStream->getDataSize());
 	}
 
 }

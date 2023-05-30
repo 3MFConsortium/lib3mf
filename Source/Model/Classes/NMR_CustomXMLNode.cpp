@@ -307,6 +307,24 @@ namespace NMR {
 		return true;
 	}
 
+	void CCustomXMLNode::writeContentToXML(CXmlWriter* pXMLWriter)
+	{
+		__NMRASSERT(pXMLWriter);
+
+		for (auto pAttribute : m_Attributes) {
+			std::string sName = pAttribute->getName();
+			std::string sValue = pAttribute->getValue();
+			pXMLWriter->WriteAttributeString(nullptr, sName.c_str(), nullptr, sValue.c_str());			
+		}
+
+		for (auto pChild : m_Children) {
+			pXMLWriter->WriteStartElement(nullptr, pChild->getName ().c_str(), nullptr);
+			pChild->writeContentToXML(pXMLWriter);
+			pXMLWriter->WriteEndElement();
+		}
+
+
+	}
 
 
 }

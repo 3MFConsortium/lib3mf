@@ -81,7 +81,7 @@ public:
 	* @param[in] bAddLineBreaks - If true, line breaks and indentation will be added to the output string.
 	* @return String with the XML Content.
 	*/
-	std::string SaveToString(const bool bAddLineBreaks) override;
+	std::string SaveToString() override;
 
 };
 

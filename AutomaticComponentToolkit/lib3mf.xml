@@ -705,7 +705,6 @@
 		</method>	
 
 		<method name="SaveToString" description="Saves the XML tree into a string.">
-			<param name="AddLineBreaks" type="bool" pass="in" description="If true, line breaks and indentation will be added to the output string." />
 			<param name="XMLString" type="string" pass="return" description="String with the XML Content." />
 		</method>	
 		

@@ -36,6 +36,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include <memory>
 
+#include "Common/Platform/NMR_XmlWriter.h"
 #include "NMR_CustomXMLAttribute.h"
 
 namespace NMR {
@@ -114,6 +115,7 @@ namespace NMR {
 
 		bool removeAttributeByIndex(const uint64_t nIndex);
 
+		void writeContentToXML (CXmlWriter * pXMLWriter);
 	};
 
 }

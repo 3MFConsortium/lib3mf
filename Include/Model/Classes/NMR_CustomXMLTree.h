@@ -53,7 +53,7 @@ namespace NMR {
 
 		PCustomXMLNode getRootNode ();
 
-		std::string saveToString(bool bAddLineBreaks);
+		std::string saveToString();
 		
 	};
 	

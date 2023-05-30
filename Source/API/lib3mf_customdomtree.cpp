@@ -68,8 +68,8 @@ ICustomXMLNode * CCustomDOMTree::GetRootNode()
 	return new CCustomXMLNode(m_pXMLTree, m_pXMLTree->getRootNode ());
 }
 
-std::string CCustomDOMTree::SaveToString(const bool bAddLineBreaks)
+std::string CCustomDOMTree::SaveToString()
 {
-	return m_pXMLTree->saveToString(bAddLineBreaks);
+	return m_pXMLTree->saveToString();
 }
 
