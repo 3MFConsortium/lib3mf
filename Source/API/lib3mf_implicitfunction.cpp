@@ -43,16 +43,18 @@ using namespace Lib3MF::Impl;
  Class definition of CImplicitFunction 
 **************************************************************************************************************************/
 
-NMR::PModelImplicitFunction Lib3MF::Impl::CImplicitFunction::function() 
+NMR::CModelImplicitFunction* Lib3MF::Impl::CImplicitFunction::function() 
 {
-	if (m_function.get() == nullptr)
+
+	NMR::CModelImplicitFunction* pFunction = dynamic_cast<NMR::CModelImplicitFunction*>(resource().get());
+	if (pFunction == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
 
-	return m_function;
+	return pFunction;
 }
 
-Lib3MF::Impl::CImplicitFunction::CImplicitFunction(NMR::PModelImplicitFunction pResource)
-    : CResource(pResource), m_function(pResource)
+Lib3MF::Impl::CImplicitFunction::CImplicitFunction(NMR::PModelResource pResource)
+    : CResource(pResource)
 {
 }
 
@@ -102,7 +104,7 @@ IImplicitPort *  CImplicitFunction::AddInput(const std::string & sIdentifier,
 
 IImplicitPortIterator * CImplicitFunction::GetInputs()
 {
-	 return new CImplicitPortIterator(m_function->getInputs());
+	 return new CImplicitPortIterator(function()->getInputs());
 }
 
 void CImplicitFunction::RemoveInput(IImplicitPort* pInput)
@@ -119,7 +121,7 @@ IImplicitPort * CImplicitFunction::AddOutput(const std::string & sIdentifier,
 
 IImplicitPortIterator * CImplicitFunction::GetOutputs()
 {
-	return new CImplicitPortIterator(m_function->getOutputs());
+	return new CImplicitPortIterator(function()->getOutputs());
 }
 
 void CImplicitFunction::RemoveOutput(IImplicitPort* pOutput)
@@ -134,15 +136,15 @@ void CImplicitFunction::AddLink(IImplicitPort* pSource, IImplicitPort* pTarget)
 
 void CImplicitFunction::AddLinkByNames(const std::string & sSource, const std::string & sTarget)
 {
-	m_function->addLink(sSource, sTarget);
+	function()->addLink(sSource, sTarget);
 }
 
 IImplicitPort * CImplicitFunction::FindInput(const std::string & sIdentifier)
 {
-	return new CImplicitPort(m_function->findInput(sIdentifier));
+	return new CImplicitPort(function()->findInput(sIdentifier));
 }
 
 IImplicitPort * CImplicitFunction::FindOutput(const std::string & sIdentifier)
 {
-	return new CImplicitPort(m_function->findOutput(sIdentifier));
+	return new CImplicitPort(function()->findOutput(sIdentifier));
 }

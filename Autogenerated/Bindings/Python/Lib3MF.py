@@ -289,6 +289,10 @@ class FunctionTable:
 	lib3mf_scalarfieldfromimage3d_setscale = None
 	lib3mf_scalarfieldconstant_getvalue = None
 	lib3mf_scalarfieldconstant_setvalue = None
+	lib3mf_scalarfieldfunction_setfunction = None
+	lib3mf_scalarfieldfunction_getfunction = None
+	lib3mf_scalarfieldfunction_setoutput = None
+	lib3mf_scalarfieldfunction_getoutput = None
 	lib3mf_scalarfieldcomposed_setmethod = None
 	lib3mf_scalarfieldcomposed_getmethod = None
 	lib3mf_scalarfieldcomposed_getfactor1 = None
@@ -325,6 +329,10 @@ class FunctionTable:
 	lib3mf_vector3dfieldcomposed_vector3dfieldreference1 = None
 	lib3mf_vector3dfieldcomposed_vector3dfieldreference2 = None
 	lib3mf_vector3dfieldcomposed_scalarfieldreferencemask = None
+	lib3mf_vector3dfieldfunction_setfunction = None
+	lib3mf_vector3dfieldfunction_getfunction = None
+	lib3mf_vector3dfieldfunction_setoutput = None
+	lib3mf_vector3dfieldfunction_getoutput = None
 	lib3mf_fieldreference_getfieldresourceid = None
 	lib3mf_fieldreference_setfieldresourceid = None
 	lib3mf_fieldreference_gettransform = None
@@ -618,17 +626,21 @@ class FunctionTable:
 	lib3mf_model_addscalarfieldfromimage3d = None
 	lib3mf_model_addscalarfieldcomposed = None
 	lib3mf_model_addscalarfieldconstant = None
+	lib3mf_model_addscalarfieldfunction = None
 	lib3mf_model_getscalarfieldbyid = None
 	lib3mf_model_getscalarfieldfromimage3dbyid = None
 	lib3mf_model_getscalarfieldcomposedbyid = None
 	lib3mf_model_getscalarfieldconstantbyid = None
+	lib3mf_model_getscalarfieldfunctionbyid = None
 	lib3mf_model_addvector3dfieldfromimage3d = None
 	lib3mf_model_addvector3dfieldcomposed = None
 	lib3mf_model_addvector3dfieldconstant = None
+	lib3mf_model_addvector3dfieldfunction = None
 	lib3mf_model_getvector3dfieldbyid = None
 	lib3mf_model_getvector3dfieldfromimage3dbyid = None
 	lib3mf_model_getvector3dfieldcomposedbyid = None
 	lib3mf_model_getvector3dfieldconstantbyid = None
+	lib3mf_model_getvector3dfieldfunctionbyid = None
 	lib3mf_model_addbuilditem = None
 	lib3mf_model_removebuilditem = None
 	lib3mf_model_getmetadatagroup = None
@@ -2097,6 +2109,30 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_double)
 			self.lib.lib3mf_scalarfieldconstant_setvalue = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_scalarfieldfunction_setfunction")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
+			self.lib.lib3mf_scalarfieldfunction_setfunction = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_scalarfieldfunction_getfunction")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_scalarfieldfunction_getfunction = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_scalarfieldfunction_setoutput")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
+			self.lib.lib3mf_scalarfieldfunction_setoutput = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_scalarfieldfunction_getoutput")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_scalarfieldfunction_getoutput = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_scalarfieldcomposed_setmethod")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -2312,6 +2348,30 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_vector3dfieldcomposed_scalarfieldreferencemask = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_vector3dfieldfunction_setfunction")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
+			self.lib.lib3mf_vector3dfieldfunction_setfunction = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_vector3dfieldfunction_getfunction")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_vector3dfieldfunction_getfunction = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_vector3dfieldfunction_setoutput")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
+			self.lib.lib3mf_vector3dfieldfunction_setoutput = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_vector3dfieldfunction_getoutput")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_vector3dfieldfunction_getoutput = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_fieldreference_getfieldresourceid")), methodAddress)
 			if err != 0:
@@ -4071,6 +4131,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_addscalarfieldconstant = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_addscalarfieldfunction")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_addscalarfieldfunction = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getscalarfieldbyid")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -4095,6 +4161,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_getscalarfieldconstantbyid = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getscalarfieldfunctionbyid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_getscalarfieldfunctionbyid = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_addvector3dfieldfromimage3d")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -4112,6 +4184,12 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_addvector3dfieldconstant = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_addvector3dfieldfunction")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_addvector3dfieldfunction = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getvector3dfieldbyid")), methodAddress)
 			if err != 0:
@@ -4136,6 +4214,12 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_getvector3dfieldconstantbyid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getvector3dfieldfunctionbyid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_getvector3dfieldfunctionbyid = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_addbuilditem")), methodAddress)
 			if err != 0:
@@ -4784,6 +4868,18 @@ class Wrapper:
 			self.lib.lib3mf_scalarfieldconstant_setvalue.restype = ctypes.c_int32
 			self.lib.lib3mf_scalarfieldconstant_setvalue.argtypes = [ctypes.c_void_p, ctypes.c_double]
 			
+			self.lib.lib3mf_scalarfieldfunction_setfunction.restype = ctypes.c_int32
+			self.lib.lib3mf_scalarfieldfunction_setfunction.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+			
+			self.lib.lib3mf_scalarfieldfunction_getfunction.restype = ctypes.c_int32
+			self.lib.lib3mf_scalarfieldfunction_getfunction.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_scalarfieldfunction_setoutput.restype = ctypes.c_int32
+			self.lib.lib3mf_scalarfieldfunction_setoutput.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_scalarfieldfunction_getoutput.restype = ctypes.c_int32
+			self.lib.lib3mf_scalarfieldfunction_getoutput.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
 			self.lib.lib3mf_scalarfieldcomposed_setmethod.restype = ctypes.c_int32
 			self.lib.lib3mf_scalarfieldcomposed_setmethod.argtypes = [ctypes.c_void_p, CompositionMethod]
 			
@@ -4891,6 +4987,18 @@ class Wrapper:
 			
 			self.lib.lib3mf_vector3dfieldcomposed_scalarfieldreferencemask.restype = ctypes.c_int32
 			self.lib.lib3mf_vector3dfieldcomposed_scalarfieldreferencemask.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_vector3dfieldfunction_setfunction.restype = ctypes.c_int32
+			self.lib.lib3mf_vector3dfieldfunction_setfunction.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+			
+			self.lib.lib3mf_vector3dfieldfunction_getfunction.restype = ctypes.c_int32
+			self.lib.lib3mf_vector3dfieldfunction_getfunction.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_vector3dfieldfunction_setoutput.restype = ctypes.c_int32
+			self.lib.lib3mf_vector3dfieldfunction_setoutput.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_vector3dfieldfunction_getoutput.restype = ctypes.c_int32
+			self.lib.lib3mf_vector3dfieldfunction_getoutput.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
 			self.lib.lib3mf_fieldreference_getfieldresourceid.restype = ctypes.c_int32
 			self.lib.lib3mf_fieldreference_getfieldresourceid.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
@@ -5771,6 +5879,9 @@ class Wrapper:
 			self.lib.lib3mf_model_addscalarfieldconstant.restype = ctypes.c_int32
 			self.lib.lib3mf_model_addscalarfieldconstant.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
+			self.lib.lib3mf_model_addscalarfieldfunction.restype = ctypes.c_int32
+			self.lib.lib3mf_model_addscalarfieldfunction.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
 			self.lib.lib3mf_model_getscalarfieldbyid.restype = ctypes.c_int32
 			self.lib.lib3mf_model_getscalarfieldbyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
 			
@@ -5783,6 +5894,9 @@ class Wrapper:
 			self.lib.lib3mf_model_getscalarfieldconstantbyid.restype = ctypes.c_int32
 			self.lib.lib3mf_model_getscalarfieldconstantbyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
 			
+			self.lib.lib3mf_model_getscalarfieldfunctionbyid.restype = ctypes.c_int32
+			self.lib.lib3mf_model_getscalarfieldfunctionbyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
 			self.lib.lib3mf_model_addvector3dfieldfromimage3d.restype = ctypes.c_int32
 			self.lib.lib3mf_model_addvector3dfieldfromimage3d.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
@@ -5791,6 +5905,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_model_addvector3dfieldconstant.restype = ctypes.c_int32
 			self.lib.lib3mf_model_addvector3dfieldconstant.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_addvector3dfieldfunction.restype = ctypes.c_int32
+			self.lib.lib3mf_model_addvector3dfieldfunction.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_model_getvector3dfieldbyid.restype = ctypes.c_int32
 			self.lib.lib3mf_model_getvector3dfieldbyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
@@ -5803,6 +5920,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_model_getvector3dfieldconstantbyid.restype = ctypes.c_int32
 			self.lib.lib3mf_model_getvector3dfieldconstantbyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_getvector3dfieldfunctionbyid.restype = ctypes.c_int32
+			self.lib.lib3mf_model_getvector3dfieldfunctionbyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_model_addbuilditem.restype = ctypes.c_int32
 			self.lib.lib3mf_model_addbuilditem.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(Transform), ctypes.POINTER(ctypes.c_void_p)]
@@ -6122,6 +6242,8 @@ class Wrapper:
 				return ScalarFieldFromImage3D(handle, wrapper)
 			def getObjectById_D66C857B3150881C(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldConstant"
 				return ScalarFieldConstant(handle, wrapper)
+			def getObjectById_251D8DC232A4D362(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldFunction"
+				return ScalarFieldFunction(handle, wrapper)
 			def getObjectById_35E133BE92DFB6BF(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldComposed"
 				return ScalarFieldComposed(handle, wrapper)
 			def getObjectById_8829BAD18E5688FC(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldFromImage3D"
@@ -6130,6 +6252,8 @@ class Wrapper:
 				return Vector3DFieldConstant(handle, wrapper)
 			def getObjectById_238E197DF1603119(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldComposed"
 				return Vector3DFieldComposed(handle, wrapper)
+			def getObjectById_E0625152175C2274(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldFunction"
+				return Vector3DFieldFunction(handle, wrapper)
 			def getObjectById_1DAFE66A115A193C(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::FieldReference"
 				return FieldReference(handle, wrapper)
 			def getObjectById_2EC59C8B8BCD0C88(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldReference"
@@ -7578,6 +7702,48 @@ class ScalarFieldConstant(ScalarField):
 	
 
 
+''' Class Implementation for ScalarFieldFunction
+'''
+class ScalarFieldFunction(ScalarField):
+	def __init__(self, handle, wrapper):
+		ScalarField.__init__(self, handle, wrapper)
+	def SetFunction(self, FunctionObject):
+		FunctionHandle = None
+		if FunctionObject:
+			FunctionHandle = FunctionObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_scalarfieldfunction_setfunction(self._handle, FunctionHandle))
+		
+	
+	def GetFunction(self):
+		FunctionHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_scalarfieldfunction_getfunction(self._handle, FunctionHandle))
+		if FunctionHandle:
+			FunctionObject = self._wrapper._polymorphicFactory(FunctionHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return FunctionObject
+	
+	def SetOutput(self, Name):
+		pName = ctypes.c_char_p(str.encode(Name))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_scalarfieldfunction_setoutput(self._handle, pName))
+		
+	
+	def GetOutput(self):
+		nNameBufferSize = ctypes.c_uint64(0)
+		nNameNeededChars = ctypes.c_uint64(0)
+		pNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_scalarfieldfunction_getoutput(self._handle, nNameBufferSize, nNameNeededChars, pNameBuffer))
+		nNameBufferSize = ctypes.c_uint64(nNameNeededChars.value)
+		pNameBuffer = (ctypes.c_char * (nNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_scalarfieldfunction_getoutput(self._handle, nNameBufferSize, nNameNeededChars, pNameBuffer))
+		
+		return pNameBuffer.value.decode()
+	
+
+
 ''' Class Implementation for ScalarFieldComposed
 '''
 class ScalarFieldComposed(ScalarField):
@@ -7833,6 +7999,48 @@ class Vector3DFieldComposed(Vector3DField):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return TheScalarFieldReferenceMaskObject
+	
+
+
+''' Class Implementation for Vector3DFieldFunction
+'''
+class Vector3DFieldFunction(Vector3DField):
+	def __init__(self, handle, wrapper):
+		Vector3DField.__init__(self, handle, wrapper)
+	def SetFunction(self, FunctionObject):
+		FunctionHandle = None
+		if FunctionObject:
+			FunctionHandle = FunctionObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_vector3dfieldfunction_setfunction(self._handle, FunctionHandle))
+		
+	
+	def GetFunction(self):
+		FunctionHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_vector3dfieldfunction_getfunction(self._handle, FunctionHandle))
+		if FunctionHandle:
+			FunctionObject = self._wrapper._polymorphicFactory(FunctionHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return FunctionObject
+	
+	def SetOutput(self, Name):
+		pName = ctypes.c_char_p(str.encode(Name))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_vector3dfieldfunction_setoutput(self._handle, pName))
+		
+	
+	def GetOutput(self):
+		nNameBufferSize = ctypes.c_uint64(0)
+		nNameNeededChars = ctypes.c_uint64(0)
+		pNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_vector3dfieldfunction_getoutput(self._handle, nNameBufferSize, nNameNeededChars, pNameBuffer))
+		nNameBufferSize = ctypes.c_uint64(nNameNeededChars.value)
+		pNameBuffer = (ctypes.c_char * (nNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_vector3dfieldfunction_getoutput(self._handle, nNameBufferSize, nNameNeededChars, pNameBuffer))
+		
+		return pNameBuffer.value.decode()
 	
 
 
@@ -10626,6 +10834,16 @@ class Model(Base):
 		
 		return TheScalarFieldConstantObject
 	
+	def AddScalarFieldFunction(self):
+		TheScalarFieldFunctionHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_addscalarfieldfunction(self._handle, TheScalarFieldFunctionHandle))
+		if TheScalarFieldFunctionHandle:
+			TheScalarFieldFunctionObject = self._wrapper._polymorphicFactory(TheScalarFieldFunctionHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return TheScalarFieldFunctionObject
+	
 	def GetScalarFieldByID(self, UniqueResourceID):
 		nUniqueResourceID = ctypes.c_uint32(UniqueResourceID)
 		ScalarFieldInstanceHandle = ctypes.c_void_p()
@@ -10670,6 +10888,17 @@ class Model(Base):
 		
 		return ScalarFieldConstantInstanceObject
 	
+	def GetScalarFieldFunctionByID(self, UniqueResourceID):
+		nUniqueResourceID = ctypes.c_uint32(UniqueResourceID)
+		ScalarFieldFunctionInstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_getscalarfieldfunctionbyid(self._handle, nUniqueResourceID, ScalarFieldFunctionInstanceHandle))
+		if ScalarFieldFunctionInstanceHandle:
+			ScalarFieldFunctionInstanceObject = self._wrapper._polymorphicFactory(ScalarFieldFunctionInstanceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ScalarFieldFunctionInstanceObject
+	
 	def AddVector3DFieldFromImage3D(self, Image3DObject):
 		Image3DHandle = None
 		if Image3DObject:
@@ -10704,6 +10933,16 @@ class Model(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return TheVector3DFieldConstantObject
+	
+	def AddVector3DFieldFunction(self):
+		TheVector3DFieldFunctionHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_addvector3dfieldfunction(self._handle, TheVector3DFieldFunctionHandle))
+		if TheVector3DFieldFunctionHandle:
+			TheVector3DFieldFunctionObject = self._wrapper._polymorphicFactory(TheVector3DFieldFunctionHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return TheVector3DFieldFunctionObject
 	
 	def GetVector3DFieldByID(self, UniqueResourceID):
 		nUniqueResourceID = ctypes.c_uint32(UniqueResourceID)
@@ -10748,6 +10987,17 @@ class Model(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return Vector3DFieldConstantInstanceObject
+	
+	def GetVector3DFieldFunctionByID(self, UniqueResourceID):
+		nUniqueResourceID = ctypes.c_uint32(UniqueResourceID)
+		Vector3DFieldFunctionInstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_getvector3dfieldfunctionbyid(self._handle, nUniqueResourceID, Vector3DFieldFunctionInstanceHandle))
+		if Vector3DFieldFunctionInstanceHandle:
+			Vector3DFieldFunctionInstanceObject = self._wrapper._polymorphicFactory(Vector3DFieldFunctionInstanceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return Vector3DFieldFunctionInstanceObject
 	
 	def AddBuildItem(self, ObjectObject, Transform):
 		ObjectHandle = None

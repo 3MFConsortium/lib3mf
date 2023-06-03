@@ -1684,6 +1684,48 @@ typedef Lib3MFResult (*PLib3MFScalarFieldConstant_GetValuePtr) (Lib3MF_ScalarFie
 typedef Lib3MFResult (*PLib3MFScalarFieldConstant_SetValuePtr) (Lib3MF_ScalarFieldConstant pScalarFieldConstant, Lib3MF_double dValue);
 
 /*************************************************************************************************************************
+ Class definition for ScalarFieldFunction
+**************************************************************************************************************************/
+
+/**
+* Sets the function to be used for the scalar field.
+*
+* @param[in] pScalarFieldFunction - ScalarFieldFunction instance.
+* @param[in] pFunction - the function to be used for the scalar field
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldFunction_SetFunctionPtr) (Lib3MF_ScalarFieldFunction pScalarFieldFunction, Lib3MF_ImplicitFunction pFunction);
+
+/**
+* Returns the function to be used for the scalar field.
+*
+* @param[in] pScalarFieldFunction - ScalarFieldFunction instance.
+* @param[out] pFunction - the function to be used for the scalar field
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldFunction_GetFunctionPtr) (Lib3MF_ScalarFieldFunction pScalarFieldFunction, Lib3MF_ImplicitFunction * pFunction);
+
+/**
+* Sets the name of the function output to be used for the scalar field. The output must be a scalar
+*
+* @param[in] pScalarFieldFunction - ScalarFieldFunction instance.
+* @param[in] pName - the name of the scalar function output
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldFunction_SetOutputPtr) (Lib3MF_ScalarFieldFunction pScalarFieldFunction, const char * pName);
+
+/**
+* Returns the name of the function output used for the scalar field.
+*
+* @param[in] pScalarFieldFunction - ScalarFieldFunction instance.
+* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameBuffer -  buffer of the name of the scalar function output, may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarFieldFunction_GetOutputPtr) (Lib3MF_ScalarFieldFunction pScalarFieldFunction, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer);
+
+/*************************************************************************************************************************
  Class definition for ScalarFieldComposed
 **************************************************************************************************************************/
 
@@ -2026,6 +2068,48 @@ typedef Lib3MFResult (*PLib3MFVector3DFieldComposed_Vector3DFieldReference2Ptr) 
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFVector3DFieldComposed_ScalarFieldReferenceMaskPtr) (Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_ScalarFieldReference * pTheScalarFieldReferenceMask);
+
+/*************************************************************************************************************************
+ Class definition for Vector3DFieldFunction
+**************************************************************************************************************************/
+
+/**
+* Sets the function to be used for the scalar field.
+*
+* @param[in] pVector3DFieldFunction - Vector3DFieldFunction instance.
+* @param[in] pFunction - the function to be used for the scalar field
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldFunction_SetFunctionPtr) (Lib3MF_Vector3DFieldFunction pVector3DFieldFunction, Lib3MF_ImplicitFunction pFunction);
+
+/**
+* Returns the function to be used for the scalar field.
+*
+* @param[in] pVector3DFieldFunction - Vector3DFieldFunction instance.
+* @param[out] pFunction - the function to be used for the scalar field
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldFunction_GetFunctionPtr) (Lib3MF_Vector3DFieldFunction pVector3DFieldFunction, Lib3MF_ImplicitFunction * pFunction);
+
+/**
+* Sets the name of the function output to be used for the scalar field. The output must be a scalar
+*
+* @param[in] pVector3DFieldFunction - Vector3DFieldFunction instance.
+* @param[in] pName - the name of the scalar function output
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldFunction_SetOutputPtr) (Lib3MF_Vector3DFieldFunction pVector3DFieldFunction, const char * pName);
+
+/**
+* Returns the name of the function output used for the scalar field.
+*
+* @param[in] pVector3DFieldFunction - Vector3DFieldFunction instance.
+* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameBuffer -  buffer of the name of the scalar function output, may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldFunction_GetOutputPtr) (Lib3MF_Vector3DFieldFunction pVector3DFieldFunction, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer);
 
 /*************************************************************************************************************************
  Class definition for FieldReference
@@ -5028,6 +5112,15 @@ typedef Lib3MFResult (*PLib3MFModel_AddScalarFieldComposedPtr) (Lib3MF_Model pMo
 typedef Lib3MFResult (*PLib3MFModel_AddScalarFieldConstantPtr) (Lib3MF_Model pModel, Lib3MF_ScalarFieldConstant * pTheScalarFieldConstant);
 
 /**
+* creates a new ScalarFieldFunction Resource
+*
+* @param[in] pModel - Model instance.
+* @param[out] pTheScalarFieldFunction - returns the new ScalarFieldFunction instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_AddScalarFieldFunctionPtr) (Lib3MF_Model pModel, Lib3MF_ScalarFieldFunction * pTheScalarFieldFunction);
+
+/**
 * finds a ScalarField object by its UniqueResourceID
 *
 * @param[in] pModel - Model instance.
@@ -5068,6 +5161,16 @@ typedef Lib3MFResult (*PLib3MFModel_GetScalarFieldComposedByIDPtr) (Lib3MF_Model
 typedef Lib3MFResult (*PLib3MFModel_GetScalarFieldConstantByIDPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ScalarFieldConstant * pScalarFieldConstantInstance);
 
 /**
+* finds a ScalarFieldFunction object by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pScalarFieldFunctionInstance - returns the ScalarFieldFunction instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetScalarFieldFunctionByIDPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ScalarFieldFunction * pScalarFieldFunctionInstance);
+
+/**
 * creates a new Vector3DFieldFromImage3D Resource
 *
 * @param[in] pModel - Model instance.
@@ -5094,6 +5197,15 @@ typedef Lib3MFResult (*PLib3MFModel_AddVector3DFieldComposedPtr) (Lib3MF_Model p
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFModel_AddVector3DFieldConstantPtr) (Lib3MF_Model pModel, Lib3MF_Vector3DFieldConstant * pTheVector3DFieldConstant);
+
+/**
+* creates a new Vector3DFieldFunction Resource
+*
+* @param[in] pModel - Model instance.
+* @param[out] pTheVector3DFieldFunction - returns the new Vector3DFieldFunction instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_AddVector3DFieldFunctionPtr) (Lib3MF_Model pModel, Lib3MF_Vector3DFieldFunction * pTheVector3DFieldFunction);
 
 /**
 * finds a Vector3DField object by its UniqueResourceID
@@ -5134,6 +5246,16 @@ typedef Lib3MFResult (*PLib3MFModel_GetVector3DFieldComposedByIDPtr) (Lib3MF_Mod
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFModel_GetVector3DFieldConstantByIDPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Vector3DFieldConstant * pVector3DFieldConstantInstance);
+
+/**
+* finds a Vector3DFieldFunction object by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pVector3DFieldFunctionInstance - returns the Vector3DFieldFunction instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetVector3DFieldFunctionByIDPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Vector3DFieldFunction * pVector3DFieldFunctionInstance);
 
 /**
 * adds a build item to the model.
@@ -5667,6 +5789,10 @@ typedef struct {
 	PLib3MFScalarFieldFromImage3D_SetScalePtr m_ScalarFieldFromImage3D_SetScale;
 	PLib3MFScalarFieldConstant_GetValuePtr m_ScalarFieldConstant_GetValue;
 	PLib3MFScalarFieldConstant_SetValuePtr m_ScalarFieldConstant_SetValue;
+	PLib3MFScalarFieldFunction_SetFunctionPtr m_ScalarFieldFunction_SetFunction;
+	PLib3MFScalarFieldFunction_GetFunctionPtr m_ScalarFieldFunction_GetFunction;
+	PLib3MFScalarFieldFunction_SetOutputPtr m_ScalarFieldFunction_SetOutput;
+	PLib3MFScalarFieldFunction_GetOutputPtr m_ScalarFieldFunction_GetOutput;
 	PLib3MFScalarFieldComposed_SetMethodPtr m_ScalarFieldComposed_SetMethod;
 	PLib3MFScalarFieldComposed_GetMethodPtr m_ScalarFieldComposed_GetMethod;
 	PLib3MFScalarFieldComposed_GetFactor1Ptr m_ScalarFieldComposed_GetFactor1;
@@ -5703,6 +5829,10 @@ typedef struct {
 	PLib3MFVector3DFieldComposed_Vector3DFieldReference1Ptr m_Vector3DFieldComposed_Vector3DFieldReference1;
 	PLib3MFVector3DFieldComposed_Vector3DFieldReference2Ptr m_Vector3DFieldComposed_Vector3DFieldReference2;
 	PLib3MFVector3DFieldComposed_ScalarFieldReferenceMaskPtr m_Vector3DFieldComposed_ScalarFieldReferenceMask;
+	PLib3MFVector3DFieldFunction_SetFunctionPtr m_Vector3DFieldFunction_SetFunction;
+	PLib3MFVector3DFieldFunction_GetFunctionPtr m_Vector3DFieldFunction_GetFunction;
+	PLib3MFVector3DFieldFunction_SetOutputPtr m_Vector3DFieldFunction_SetOutput;
+	PLib3MFVector3DFieldFunction_GetOutputPtr m_Vector3DFieldFunction_GetOutput;
 	PLib3MFFieldReference_GetFieldResourceIDPtr m_FieldReference_GetFieldResourceID;
 	PLib3MFFieldReference_SetFieldResourceIDPtr m_FieldReference_SetFieldResourceID;
 	PLib3MFFieldReference_GetTransformPtr m_FieldReference_GetTransform;
@@ -5996,17 +6126,21 @@ typedef struct {
 	PLib3MFModel_AddScalarFieldFromImage3DPtr m_Model_AddScalarFieldFromImage3D;
 	PLib3MFModel_AddScalarFieldComposedPtr m_Model_AddScalarFieldComposed;
 	PLib3MFModel_AddScalarFieldConstantPtr m_Model_AddScalarFieldConstant;
+	PLib3MFModel_AddScalarFieldFunctionPtr m_Model_AddScalarFieldFunction;
 	PLib3MFModel_GetScalarFieldByIDPtr m_Model_GetScalarFieldByID;
 	PLib3MFModel_GetScalarFieldFromImage3DByIDPtr m_Model_GetScalarFieldFromImage3DByID;
 	PLib3MFModel_GetScalarFieldComposedByIDPtr m_Model_GetScalarFieldComposedByID;
 	PLib3MFModel_GetScalarFieldConstantByIDPtr m_Model_GetScalarFieldConstantByID;
+	PLib3MFModel_GetScalarFieldFunctionByIDPtr m_Model_GetScalarFieldFunctionByID;
 	PLib3MFModel_AddVector3DFieldFromImage3DPtr m_Model_AddVector3DFieldFromImage3D;
 	PLib3MFModel_AddVector3DFieldComposedPtr m_Model_AddVector3DFieldComposed;
 	PLib3MFModel_AddVector3DFieldConstantPtr m_Model_AddVector3DFieldConstant;
+	PLib3MFModel_AddVector3DFieldFunctionPtr m_Model_AddVector3DFieldFunction;
 	PLib3MFModel_GetVector3DFieldByIDPtr m_Model_GetVector3DFieldByID;
 	PLib3MFModel_GetVector3DFieldFromImage3DByIDPtr m_Model_GetVector3DFieldFromImage3DByID;
 	PLib3MFModel_GetVector3DFieldComposedByIDPtr m_Model_GetVector3DFieldComposedByID;
 	PLib3MFModel_GetVector3DFieldConstantByIDPtr m_Model_GetVector3DFieldConstantByID;
+	PLib3MFModel_GetVector3DFieldFunctionByIDPtr m_Model_GetVector3DFieldFunctionByID;
 	PLib3MFModel_AddBuildItemPtr m_Model_AddBuildItem;
 	PLib3MFModel_RemoveBuildItemPtr m_Model_RemoveBuildItem;
 	PLib3MFModel_GetMetaDataGroupPtr m_Model_GetMetaDataGroup;

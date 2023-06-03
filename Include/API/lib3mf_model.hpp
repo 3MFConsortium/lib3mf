@@ -240,6 +240,16 @@ public:
 	IFunctionIterator * GetFunctions() override;
 
 	IImplicitFunction * AddFunction() override;
+
+	IScalarFieldFunction * AddScalarFieldFunction() override;
+
+	IScalarFieldFunction * GetScalarFieldFunctionByID(const Lib3MF_uint32 nUniqueResourceID) override;
+
+	IVector3DFieldFunction * AddVector3DFieldFunction() override;
+
+	IVector3DFieldFunction * GetVector3DFieldFunctionByID(const Lib3MF_uint32 nUniqueResourceID) override;
+
+
 };
 
 }

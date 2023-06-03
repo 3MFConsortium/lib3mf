@@ -77,10 +77,12 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFVector3DField::Init();
 	CLib3MFScalarFieldFromImage3D::Init();
 	CLib3MFScalarFieldConstant::Init();
+	CLib3MFScalarFieldFunction::Init();
 	CLib3MFScalarFieldComposed::Init();
 	CLib3MFVector3DFieldFromImage3D::Init();
 	CLib3MFVector3DFieldConstant::Init();
 	CLib3MFVector3DFieldComposed::Init();
+	CLib3MFVector3DFieldFunction::Init();
 	CLib3MFFieldReference::Init();
 	CLib3MFScalarFieldReference::Init();
 	CLib3MFVector3DFieldReference::Init();

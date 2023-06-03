@@ -722,6 +722,27 @@ public:
 };
 
 /*************************************************************************************************************************
+ Class CLib3MFScalarFieldFunction 
+**************************************************************************************************************************/
+class CLib3MFScalarFieldFunction : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void SetFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetOutput(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutput(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFScalarFieldFunction();
+	~CLib3MFScalarFieldFunction();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
  Class CLib3MFScalarFieldComposed 
 **************************************************************************************************************************/
 class CLib3MFScalarFieldComposed : public CLib3MFBaseClass {
@@ -819,6 +840,27 @@ private:
 public:
 	CLib3MFVector3DFieldComposed();
 	~CLib3MFVector3DFieldComposed();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFVector3DFieldFunction 
+**************************************************************************************************************************/
+class CLib3MFVector3DFieldFunction : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void SetFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetOutput(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutput(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFVector3DFieldFunction();
+	~CLib3MFVector3DFieldFunction();
 	
 	static void Init();
 	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
@@ -1754,17 +1796,21 @@ private:
 	static void AddScalarFieldFromImage3D(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddScalarFieldComposed(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddScalarFieldConstant(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddScalarFieldFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetScalarFieldByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetScalarFieldFromImage3DByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetScalarFieldComposedByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetScalarFieldConstantByID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetScalarFieldFunctionByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddVector3DFieldFromImage3D(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddVector3DFieldComposed(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddVector3DFieldConstant(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddVector3DFieldFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetVector3DFieldByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetVector3DFieldFromImage3DByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetVector3DFieldComposedByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetVector3DFieldConstantByID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetVector3DFieldFunctionByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddBuildItem(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void RemoveBuildItem(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetMetaDataGroup(const v8::FunctionCallbackInfo<v8::Value>& args);

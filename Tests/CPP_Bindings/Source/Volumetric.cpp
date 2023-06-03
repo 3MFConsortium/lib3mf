@@ -672,8 +672,8 @@ namespace Lib3MF
         auto subInputB = subNode->FindInput("B");
         subInputA->SetType(Lib3MF::eImplicitPortType::Vector);
         subInputB->SetType(Lib3MF::eImplicitPortType::Vector);
-        subInputA->SetReference("pos");
-        subInputB->SetReference("vector_1.value");
+        subInputA->SetReference("inputs.pos");
+        subInputB->SetReference("vector_1.vector");
         subNode->FindOutput("result")->SetType(Lib3MF::eImplicitPortType::Vector);
 
         auto distanceToSpehereNode = newFunction->AddNode(
@@ -691,6 +691,17 @@ namespace Lib3MF
           "shape", "signed distance to the surface", Lib3MF::eImplicitPortType::Scalar);
         output->SetReference("distance_2.result");
 
+      // add the function as volume data defining a boundary to the mesh
+
+        // auto scalarField = model->AddScalarFieldFunction();
+        // scalarField->SetFunction(newFunction);
+        // scalarField->SetOutput("shape");
+        // auto theMesh = GetMesh();
+        // auto volumeData = theMesh->VolumeData();
+        // auto theBoundary = volumeData->CreateNewBoundary(scalarField.get());
+        
+
+
         // Write to file
         writer3MF->WriteToFile(Volumetric::OutFolder + "AddFunctionWithConstantNode.3mf");
 
@@ -698,10 +709,6 @@ namespace Lib3MF
         PModel ioModel = wrapper->CreateModel();
         PReader ioReader = ioModel->QueryReader("3mf");
         ioReader->ReadFromFile(Volumetric::OutFolder + "AddFunctionWithConstantNode.3mf");
-
-        // write ioModel to file
-        PWriter ioWriter = ioModel->QueryWriter("3mf");
-        ioWriter->WriteToFile(Volumetric::OutFolder + "AddFunctionWithConstantNodeAsRead.3mf");
 
         // Check the function
         auto functionIterator = ioModel->GetFunctions();

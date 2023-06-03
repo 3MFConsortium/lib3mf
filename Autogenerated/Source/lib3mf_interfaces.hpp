@@ -80,10 +80,12 @@ class IScalarField;
 class IVector3DField;
 class IScalarFieldFromImage3D;
 class IScalarFieldConstant;
+class IScalarFieldFunction;
 class IScalarFieldComposed;
 class IVector3DFieldFromImage3D;
 class IVector3DFieldConstant;
 class IVector3DFieldComposed;
+class IVector3DFieldFunction;
 class IFieldReference;
 class IScalarFieldReference;
 class IVector3DFieldReference;
@@ -1907,6 +1909,50 @@ typedef IBaseSharedPtr<IScalarFieldConstant> PIScalarFieldConstant;
 
 
 /*************************************************************************************************************************
+ Class interface for ScalarFieldFunction 
+**************************************************************************************************************************/
+
+class IScalarFieldFunction : public virtual IScalarField {
+public:
+	/**
+	* IScalarFieldFunction::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x251D8DC232A4D362UL; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldFunction"
+	}
+
+	/**
+	* IScalarFieldFunction::SetFunction - Sets the function to be used for the scalar field.
+	* @param[in] pFunction - the function to be used for the scalar field
+	*/
+	virtual void SetFunction(IImplicitFunction* pFunction) = 0;
+
+	/**
+	* IScalarFieldFunction::GetFunction - Returns the function to be used for the scalar field.
+	* @return the function to be used for the scalar field
+	*/
+	virtual IImplicitFunction * GetFunction() = 0;
+
+	/**
+	* IScalarFieldFunction::SetOutput - Sets the name of the function output to be used for the scalar field. The output must be a scalar
+	* @param[in] sName - the name of the scalar function output
+	*/
+	virtual void SetOutput(const std::string & sName) = 0;
+
+	/**
+	* IScalarFieldFunction::GetOutput - Returns the name of the function output used for the scalar field.
+	* @return the name of the scalar function output
+	*/
+	virtual std::string GetOutput() = 0;
+
+};
+
+typedef IBaseSharedPtr<IScalarFieldFunction> PIScalarFieldFunction;
+
+
+/*************************************************************************************************************************
  Class interface for ScalarFieldComposed 
 **************************************************************************************************************************/
 
@@ -2204,6 +2250,50 @@ public:
 };
 
 typedef IBaseSharedPtr<IVector3DFieldComposed> PIVector3DFieldComposed;
+
+
+/*************************************************************************************************************************
+ Class interface for Vector3DFieldFunction 
+**************************************************************************************************************************/
+
+class IVector3DFieldFunction : public virtual IVector3DField {
+public:
+	/**
+	* IVector3DFieldFunction::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xE0625152175C2274UL; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldFunction"
+	}
+
+	/**
+	* IVector3DFieldFunction::SetFunction - Sets the function to be used for the scalar field.
+	* @param[in] pFunction - the function to be used for the scalar field
+	*/
+	virtual void SetFunction(IImplicitFunction* pFunction) = 0;
+
+	/**
+	* IVector3DFieldFunction::GetFunction - Returns the function to be used for the scalar field.
+	* @return the function to be used for the scalar field
+	*/
+	virtual IImplicitFunction * GetFunction() = 0;
+
+	/**
+	* IVector3DFieldFunction::SetOutput - Sets the name of the function output to be used for the scalar field. The output must be a scalar
+	* @param[in] sName - the name of the scalar function output
+	*/
+	virtual void SetOutput(const std::string & sName) = 0;
+
+	/**
+	* IVector3DFieldFunction::GetOutput - Returns the name of the function output used for the scalar field.
+	* @return the name of the scalar function output
+	*/
+	virtual std::string GetOutput() = 0;
+
+};
+
+typedef IBaseSharedPtr<IVector3DFieldFunction> PIVector3DFieldFunction;
 
 
 /*************************************************************************************************************************
@@ -4879,6 +4969,12 @@ public:
 	virtual IScalarFieldConstant * AddScalarFieldConstant() = 0;
 
 	/**
+	* IModel::AddScalarFieldFunction - creates a new ScalarFieldFunction Resource
+	* @return returns the new ScalarFieldFunction instance
+	*/
+	virtual IScalarFieldFunction * AddScalarFieldFunction() = 0;
+
+	/**
 	* IModel::GetScalarFieldByID - finds a ScalarField object by its UniqueResourceID
 	* @param[in] nUniqueResourceID - UniqueResourceID
 	* @return returns the scalar field instance
@@ -4907,6 +5003,13 @@ public:
 	virtual IScalarFieldConstant * GetScalarFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
 
 	/**
+	* IModel::GetScalarFieldFunctionByID - finds a ScalarFieldFunction object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the ScalarFieldFunction instance
+	*/
+	virtual IScalarFieldFunction * GetScalarFieldFunctionByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
 	* IModel::AddVector3DFieldFromImage3D - creates a new Vector3DFieldFromImage3D Resource
 	* @param[in] pImage3D - image instance
 	* @return returns the new Vector3DFieldFromImage3D instance
@@ -4924,6 +5027,12 @@ public:
 	* @return returns the new Vector3DFieldConstant instance
 	*/
 	virtual IVector3DFieldConstant * AddVector3DFieldConstant() = 0;
+
+	/**
+	* IModel::AddVector3DFieldFunction - creates a new Vector3DFieldFunction Resource
+	* @return returns the new Vector3DFieldFunction instance
+	*/
+	virtual IVector3DFieldFunction * AddVector3DFieldFunction() = 0;
 
 	/**
 	* IModel::GetVector3DFieldByID - finds a Vector3DField object by its UniqueResourceID
@@ -4952,6 +5061,13 @@ public:
 	* @return returns the Vector3DFieldConstant instance
 	*/
 	virtual IVector3DFieldConstant * GetVector3DFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
+	* IModel::GetVector3DFieldFunctionByID - finds a Vector3DFieldFunction object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the Vector3DFieldFunction instance
+	*/
+	virtual IVector3DFieldFunction * GetVector3DFieldFunctionByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
 
 	/**
 	* IModel::AddBuildItem - adds a build item to the model.

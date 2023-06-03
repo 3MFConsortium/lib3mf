@@ -1130,6 +1130,11 @@
 			<param name="IsComposed" type="bool" pass="return"
 				description="returns, whether the scalar field is a ScalarFieldComposed" />
 		</method>
+		<method name="IsFunction"
+			description="Retrieves, if this ScalarField is a ScalarFieldFunction">
+			<param name="IsFunction" type="bool" pass="return"
+				description="returns, whether the scalar field is a ScalarFieldFunction" />
+		</method>
 	</class>
 
 	<class name="Vector3DField" parent="Resource">
@@ -1154,6 +1159,11 @@
 			description="Retrieves, if this Vector3DField is a Vector3DFieldComposed">
 			<param name="IsComposed" type="bool" pass="return"
 				description="returns, whether the 3d vector field is a Vector3DFieldComposed" />
+		</method>
+		<method name="IsFunction"
+			description="Retrieves, if this Vector3DField is a Vector3DFieldFunction">
+			<param name="IsFunction" type="bool" pass="return"
+				description="returns, whether the 3d vector field is a Vector3DFieldFunction" />
 		</method>
 	</class>
 
@@ -1230,6 +1240,26 @@
 		<method name="SetValue" description="Sets the constant value of this ScalarFieldConstant">
 			<param name="Value" type="double" pass="in"
 				description="the constant value of this ScalarFieldConstant" />
+		</method>
+	</class>
+
+	<class name="ScalarFieldFunction" parent="ScalarField">
+		<method name="SetFunction" description="Sets the function to be used for the scalar field.">
+			<param name="Function" type="class" class="ImplicitFunction" pass="in"
+				description="the function to be used for the scalar field" />
+		</method>
+		<method name="GetFunction"
+			description="Returns the function to be used for the scalar field.">
+			<param name="Function" type="class" class="ImplicitFunction" pass="return"
+				description="the function to be used for the scalar field" />
+		</method>
+		<method name="SetOutput" description="Sets the name of the function output to be used for the scalar field. The output must be a scalar">
+			<param name="Name" type="string" pass="in"
+				description="the name of the scalar function output" />
+		</method>
+		<method name="GetOutput" description="Returns the name of the function output used for the scalar field.">
+			<param name="Name" type="string" pass="return"
+				description="the name of the scalar function output" />
 		</method>
 	</class>
 
@@ -1418,6 +1448,28 @@
 			description="Access to the ScalarFieldReference for masking. Only relevant if the Method is mask.">
 			<param name="TheScalarFieldReferenceMask" type="class" class="ScalarFieldReference"
 				pass="return" description="ScalarFieldReference" />
+		</method>
+	</class>
+
+	<class name="Vector3DFieldFunction" parent="Vector3DField">
+		<method name="SetFunction" description="Sets the function to be used for the scalar field.">
+			<param name="Function" type="class" class="ImplicitFunction" pass="in"
+				description="the function to be used for the scalar field" />
+		</method>
+		<method name="GetFunction"
+			description="Returns the function to be used for the scalar field.">
+			<param name="Function" type="class" class="ImplicitFunction" pass="return"
+				description="the function to be used for the scalar field" />
+		</method>
+		<method name="SetOutput"
+			description="Sets the name of the function output to be used for the scalar field. The output must be a scalar">
+			<param name="Name" type="string" pass="in"
+				description="the name of the scalar function output" />
+		</method>
+		<method name="GetOutput"
+			description="Returns the name of the function output used for the scalar field.">
+			<param name="Name" type="string" pass="return"
+				description="the name of the scalar function output" />
 		</method>
 	</class>
 
@@ -3163,6 +3215,11 @@
 			<param name="TheScalarFieldConstant" type="class" class="ScalarFieldConstant"
 				pass="return" description="returns the new ScalarFieldConstant instance" />
 		</method>
+		<method name="AddScalarFieldFunction"
+			description="creates a new ScalarFieldFunction Resource">
+			<param name="TheScalarFieldFunction" type="class" class="ScalarFieldFunction"
+				pass="return" description="returns the new ScalarFieldFunction instance" />
+		</method>
 		<method name="GetScalarFieldByID"
 			description="finds a ScalarField object by its UniqueResourceID">
 			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
@@ -3187,6 +3244,12 @@
 			<param name="ScalarFieldConstantInstance" type="class" class="ScalarFieldConstant"
 				pass="return" description="returns the ScalarFieldConstant instance" />
 		</method>
+		<method name="GetScalarFieldFunctionByID"
+			description="finds a ScalarFieldFunction object by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
+			<param name="ScalarFieldFunctionInstance" type="class" class="ScalarFieldFunction"
+				pass="return" description="returns the ScalarFieldFunction instance" />
+		</method>
 		<method name="AddVector3DFieldFromImage3D"
 			description="creates a new Vector3DFieldFromImage3D Resource">
 			<param name="Image3D" type="class" class="Image3D" pass="in"
@@ -3203,6 +3266,11 @@
 			description="creates a new Vector3DFieldConstant Resource">
 			<param name="TheVector3DFieldConstant" type="class" class="Vector3DFieldConstant"
 				pass="return" description="returns the new Vector3DFieldConstant instance" />
+		</method>
+		<method name="AddVector3DFieldFunction"
+			description="creates a new Vector3DFieldFunction Resource">
+			<param name="Function" type="class" class="Vector3DFieldFunction"
+				pass="return" description="returns the new Vector3DFieldFunction instance" />
 		</method>
 		<method name="GetVector3DFieldByID"
 			description="finds a Vector3DField object by its UniqueResourceID">
@@ -3228,6 +3296,12 @@
 			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
 			<param name="Vector3DFieldConstantInstance" type="class" class="Vector3DFieldConstant"
 				pass="return" description="returns the Vector3DFieldConstant instance" />
+		</method>
+		<method name="GetVector3DFieldFunctionByID"
+			description="finds a Vector3DFieldFunction object by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
+			<param name="Vector3DFieldFunctionInstance" type="class" class="Vector3DFieldFunction"
+				pass="return" description="returns the Vector3DFieldFunction instance" />
 		</method>
 
 		<method name="AddBuildItem" description="adds a build item to the model.">

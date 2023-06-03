@@ -60,8 +60,7 @@ namespace Lib3MF
             /**
              * Put private members here.
              */
-            NMR::PModelImplicitFunction m_function;
-            NMR::PModelImplicitFunction function();
+            NMR::CModelImplicitFunction* function();
 
           protected:
             /**
@@ -74,7 +73,7 @@ namespace Lib3MF
              */
 
             CImplicitFunction() = delete;
-            CImplicitFunction(NMR::PModelImplicitFunction pResource);
+            CImplicitFunction(NMR::PModelResource pResource);
             /**
              * Public member functions to implement.
              */

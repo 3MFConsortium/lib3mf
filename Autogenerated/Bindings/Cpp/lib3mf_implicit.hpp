@@ -86,10 +86,12 @@ class CScalarField;
 class CVector3DField;
 class CScalarFieldFromImage3D;
 class CScalarFieldConstant;
+class CScalarFieldFunction;
 class CScalarFieldComposed;
 class CVector3DFieldFromImage3D;
 class CVector3DFieldConstant;
 class CVector3DFieldComposed;
+class CVector3DFieldFunction;
 class CFieldReference;
 class CScalarFieldReference;
 class CVector3DFieldReference;
@@ -162,10 +164,12 @@ typedef CScalarField CLib3MFScalarField;
 typedef CVector3DField CLib3MFVector3DField;
 typedef CScalarFieldFromImage3D CLib3MFScalarFieldFromImage3D;
 typedef CScalarFieldConstant CLib3MFScalarFieldConstant;
+typedef CScalarFieldFunction CLib3MFScalarFieldFunction;
 typedef CScalarFieldComposed CLib3MFScalarFieldComposed;
 typedef CVector3DFieldFromImage3D CLib3MFVector3DFieldFromImage3D;
 typedef CVector3DFieldConstant CLib3MFVector3DFieldConstant;
 typedef CVector3DFieldComposed CLib3MFVector3DFieldComposed;
+typedef CVector3DFieldFunction CLib3MFVector3DFieldFunction;
 typedef CFieldReference CLib3MFFieldReference;
 typedef CScalarFieldReference CLib3MFScalarFieldReference;
 typedef CVector3DFieldReference CLib3MFVector3DFieldReference;
@@ -238,10 +242,12 @@ typedef std::shared_ptr<CScalarField> PScalarField;
 typedef std::shared_ptr<CVector3DField> PVector3DField;
 typedef std::shared_ptr<CScalarFieldFromImage3D> PScalarFieldFromImage3D;
 typedef std::shared_ptr<CScalarFieldConstant> PScalarFieldConstant;
+typedef std::shared_ptr<CScalarFieldFunction> PScalarFieldFunction;
 typedef std::shared_ptr<CScalarFieldComposed> PScalarFieldComposed;
 typedef std::shared_ptr<CVector3DFieldFromImage3D> PVector3DFieldFromImage3D;
 typedef std::shared_ptr<CVector3DFieldConstant> PVector3DFieldConstant;
 typedef std::shared_ptr<CVector3DFieldComposed> PVector3DFieldComposed;
+typedef std::shared_ptr<CVector3DFieldFunction> PVector3DFieldFunction;
 typedef std::shared_ptr<CFieldReference> PFieldReference;
 typedef std::shared_ptr<CScalarFieldReference> PScalarFieldReference;
 typedef std::shared_ptr<CVector3DFieldReference> PVector3DFieldReference;
@@ -314,10 +320,12 @@ typedef PScalarField PLib3MFScalarField;
 typedef PVector3DField PLib3MFVector3DField;
 typedef PScalarFieldFromImage3D PLib3MFScalarFieldFromImage3D;
 typedef PScalarFieldConstant PLib3MFScalarFieldConstant;
+typedef PScalarFieldFunction PLib3MFScalarFieldFunction;
 typedef PScalarFieldComposed PLib3MFScalarFieldComposed;
 typedef PVector3DFieldFromImage3D PLib3MFVector3DFieldFromImage3D;
 typedef PVector3DFieldConstant PLib3MFVector3DFieldConstant;
 typedef PVector3DFieldComposed PLib3MFVector3DFieldComposed;
+typedef PVector3DFieldFunction PLib3MFVector3DFieldFunction;
 typedef PFieldReference PLib3MFFieldReference;
 typedef PScalarFieldReference PLib3MFScalarFieldReference;
 typedef PVector3DFieldReference PLib3MFVector3DFieldReference;
@@ -666,10 +674,12 @@ private:
 	friend class CVector3DField;
 	friend class CScalarFieldFromImage3D;
 	friend class CScalarFieldConstant;
+	friend class CScalarFieldFunction;
 	friend class CScalarFieldComposed;
 	friend class CVector3DFieldFromImage3D;
 	friend class CVector3DFieldConstant;
 	friend class CVector3DFieldComposed;
+	friend class CVector3DFieldFunction;
 	friend class CFieldReference;
 	friend class CScalarFieldReference;
 	friend class CVector3DFieldReference;
@@ -1376,6 +1386,26 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CScalarFieldFunction 
+**************************************************************************************************************************/
+class CScalarFieldFunction : public CScalarField {
+public:
+	
+	/**
+	* CScalarFieldFunction::CScalarFieldFunction - Constructor for ScalarFieldFunction class.
+	*/
+	CScalarFieldFunction(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CScalarField(pWrapper, pHandle)
+	{
+	}
+	
+	inline void SetFunction(classParam<CImplicitFunction> pFunction);
+	inline PImplicitFunction GetFunction();
+	inline void SetOutput(const std::string & sName);
+	inline std::string GetOutput();
+};
+	
+/*************************************************************************************************************************
  Class CScalarFieldComposed 
 **************************************************************************************************************************/
 class CScalarFieldComposed : public CScalarField {
@@ -1473,6 +1503,26 @@ public:
 	inline PVector3DFieldReference Vector3DFieldReference1();
 	inline PVector3DFieldReference Vector3DFieldReference2();
 	inline PScalarFieldReference ScalarFieldReferenceMask();
+};
+	
+/*************************************************************************************************************************
+ Class CVector3DFieldFunction 
+**************************************************************************************************************************/
+class CVector3DFieldFunction : public CVector3DField {
+public:
+	
+	/**
+	* CVector3DFieldFunction::CVector3DFieldFunction - Constructor for Vector3DFieldFunction class.
+	*/
+	CVector3DFieldFunction(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CVector3DField(pWrapper, pHandle)
+	{
+	}
+	
+	inline void SetFunction(classParam<CImplicitFunction> pFunction);
+	inline PImplicitFunction GetFunction();
+	inline void SetOutput(const std::string & sName);
+	inline std::string GetOutput();
 };
 	
 /*************************************************************************************************************************
@@ -2374,17 +2424,21 @@ public:
 	inline PScalarFieldFromImage3D AddScalarFieldFromImage3D(classParam<CImage3D> pImage3D);
 	inline PScalarFieldComposed AddScalarFieldComposed();
 	inline PScalarFieldConstant AddScalarFieldConstant();
+	inline PScalarFieldFunction AddScalarFieldFunction();
 	inline PScalarField GetScalarFieldByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PScalarFieldFromImage3D GetScalarFieldFromImage3DByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PScalarFieldComposed GetScalarFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PScalarFieldConstant GetScalarFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID);
+	inline PScalarFieldFunction GetScalarFieldFunctionByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PVector3DFieldFromImage3D AddVector3DFieldFromImage3D(classParam<CImage3D> pImage3D);
 	inline PVector3DFieldComposed AddVector3DFieldComposed();
 	inline PVector3DFieldConstant AddVector3DFieldConstant();
+	inline PVector3DFieldFunction AddVector3DFieldFunction();
 	inline PVector3DField GetVector3DFieldByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PVector3DFieldFromImage3D GetVector3DFieldFromImage3DByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PVector3DFieldComposed GetVector3DFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PVector3DFieldConstant GetVector3DFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID);
+	inline PVector3DFieldFunction GetVector3DFieldFunctionByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PBuildItem AddBuildItem(classParam<CObject> pObject, const sTransform & Transform);
 	inline void RemoveBuildItem(classParam<CBuildItem> pBuildItemInstance);
 	inline PMetaDataGroup GetMetaDataGroup();
@@ -2450,10 +2504,12 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0x8238AA0982B65912UL: return new CVector3DField(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DField"
 		case 0x34BAAE99C1A0884AUL: return new CScalarFieldFromImage3D(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldFromImage3D"
 		case 0xD66C857B3150881CUL: return new CScalarFieldConstant(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldConstant"
+		case 0x251D8DC232A4D362UL: return new CScalarFieldFunction(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldFunction"
 		case 0x35E133BE92DFB6BFUL: return new CScalarFieldComposed(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldComposed"
 		case 0x8829BAD18E5688FCUL: return new CVector3DFieldFromImage3D(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldFromImage3D"
 		case 0xFE4F20B130D7A54CUL: return new CVector3DFieldConstant(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldConstant"
 		case 0x238E197DF1603119UL: return new CVector3DFieldComposed(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldComposed"
+		case 0xE0625152175C2274UL: return new CVector3DFieldFunction(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldFunction"
 		case 0x1DAFE66A115A193CUL: return new CFieldReference(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::FieldReference"
 		case 0x2EC59C8B8BCD0C88UL: return new CScalarFieldReference(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldReference"
 		case 0x6DAF2470111B6F8AUL: return new CVector3DFieldReference(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldReference"
@@ -4799,6 +4855,59 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	 * Method definitions for class CScalarFieldFunction
+	 */
+	
+	/**
+	* CScalarFieldFunction::SetFunction - Sets the function to be used for the scalar field.
+	* @param[in] pFunction - the function to be used for the scalar field
+	*/
+	void CScalarFieldFunction::SetFunction(classParam<CImplicitFunction> pFunction)
+	{
+		Lib3MFHandle hFunction = pFunction.GetHandle();
+		CheckError(lib3mf_scalarfieldfunction_setfunction(m_pHandle, hFunction));
+	}
+	
+	/**
+	* CScalarFieldFunction::GetFunction - Returns the function to be used for the scalar field.
+	* @return the function to be used for the scalar field
+	*/
+	PImplicitFunction CScalarFieldFunction::GetFunction()
+	{
+		Lib3MFHandle hFunction = nullptr;
+		CheckError(lib3mf_scalarfieldfunction_getfunction(m_pHandle, &hFunction));
+		
+		if (!hFunction) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitFunction>(dynamic_cast<CImplicitFunction*>(m_pWrapper->polymorphicFactory(hFunction)));
+	}
+	
+	/**
+	* CScalarFieldFunction::SetOutput - Sets the name of the function output to be used for the scalar field. The output must be a scalar
+	* @param[in] sName - the name of the scalar function output
+	*/
+	void CScalarFieldFunction::SetOutput(const std::string & sName)
+	{
+		CheckError(lib3mf_scalarfieldfunction_setoutput(m_pHandle, sName.c_str()));
+	}
+	
+	/**
+	* CScalarFieldFunction::GetOutput - Returns the name of the function output used for the scalar field.
+	* @return the name of the scalar function output
+	*/
+	std::string CScalarFieldFunction::GetOutput()
+	{
+		Lib3MF_uint32 bytesNeededName = 0;
+		Lib3MF_uint32 bytesWrittenName = 0;
+		CheckError(lib3mf_scalarfieldfunction_getoutput(m_pHandle, 0, &bytesNeededName, nullptr));
+		std::vector<char> bufferName(bytesNeededName);
+		CheckError(lib3mf_scalarfieldfunction_getoutput(m_pHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]));
+		
+		return std::string(&bufferName[0]);
+	}
+	
+	/**
 	 * Method definitions for class CScalarFieldComposed
 	 */
 	
@@ -5222,6 +5331,59 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CScalarFieldReference>(dynamic_cast<CScalarFieldReference*>(m_pWrapper->polymorphicFactory(hTheScalarFieldReferenceMask)));
+	}
+	
+	/**
+	 * Method definitions for class CVector3DFieldFunction
+	 */
+	
+	/**
+	* CVector3DFieldFunction::SetFunction - Sets the function to be used for the scalar field.
+	* @param[in] pFunction - the function to be used for the scalar field
+	*/
+	void CVector3DFieldFunction::SetFunction(classParam<CImplicitFunction> pFunction)
+	{
+		Lib3MFHandle hFunction = pFunction.GetHandle();
+		CheckError(lib3mf_vector3dfieldfunction_setfunction(m_pHandle, hFunction));
+	}
+	
+	/**
+	* CVector3DFieldFunction::GetFunction - Returns the function to be used for the scalar field.
+	* @return the function to be used for the scalar field
+	*/
+	PImplicitFunction CVector3DFieldFunction::GetFunction()
+	{
+		Lib3MFHandle hFunction = nullptr;
+		CheckError(lib3mf_vector3dfieldfunction_getfunction(m_pHandle, &hFunction));
+		
+		if (!hFunction) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitFunction>(dynamic_cast<CImplicitFunction*>(m_pWrapper->polymorphicFactory(hFunction)));
+	}
+	
+	/**
+	* CVector3DFieldFunction::SetOutput - Sets the name of the function output to be used for the scalar field. The output must be a scalar
+	* @param[in] sName - the name of the scalar function output
+	*/
+	void CVector3DFieldFunction::SetOutput(const std::string & sName)
+	{
+		CheckError(lib3mf_vector3dfieldfunction_setoutput(m_pHandle, sName.c_str()));
+	}
+	
+	/**
+	* CVector3DFieldFunction::GetOutput - Returns the name of the function output used for the scalar field.
+	* @return the name of the scalar function output
+	*/
+	std::string CVector3DFieldFunction::GetOutput()
+	{
+		Lib3MF_uint32 bytesNeededName = 0;
+		Lib3MF_uint32 bytesWrittenName = 0;
+		CheckError(lib3mf_vector3dfieldfunction_getoutput(m_pHandle, 0, &bytesNeededName, nullptr));
+		std::vector<char> bufferName(bytesNeededName);
+		CheckError(lib3mf_vector3dfieldfunction_getoutput(m_pHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]));
+		
+		return std::string(&bufferName[0]);
 	}
 	
 	/**
@@ -9219,6 +9381,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CModel::AddScalarFieldFunction - creates a new ScalarFieldFunction Resource
+	* @return returns the new ScalarFieldFunction instance
+	*/
+	PScalarFieldFunction CModel::AddScalarFieldFunction()
+	{
+		Lib3MFHandle hTheScalarFieldFunction = nullptr;
+		CheckError(lib3mf_model_addscalarfieldfunction(m_pHandle, &hTheScalarFieldFunction));
+		
+		if (!hTheScalarFieldFunction) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CScalarFieldFunction>(dynamic_cast<CScalarFieldFunction*>(m_pWrapper->polymorphicFactory(hTheScalarFieldFunction)));
+	}
+	
+	/**
 	* CModel::GetScalarFieldByID - finds a ScalarField object by its UniqueResourceID
 	* @param[in] nUniqueResourceID - UniqueResourceID
 	* @return returns the scalar field instance
@@ -9283,6 +9460,22 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CModel::GetScalarFieldFunctionByID - finds a ScalarFieldFunction object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the ScalarFieldFunction instance
+	*/
+	PScalarFieldFunction CModel::GetScalarFieldFunctionByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hScalarFieldFunctionInstance = nullptr;
+		CheckError(lib3mf_model_getscalarfieldfunctionbyid(m_pHandle, nUniqueResourceID, &hScalarFieldFunctionInstance));
+		
+		if (!hScalarFieldFunctionInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CScalarFieldFunction>(dynamic_cast<CScalarFieldFunction*>(m_pWrapper->polymorphicFactory(hScalarFieldFunctionInstance)));
+	}
+	
+	/**
 	* CModel::AddVector3DFieldFromImage3D - creates a new Vector3DFieldFromImage3D Resource
 	* @param[in] pImage3D - image instance
 	* @return returns the new Vector3DFieldFromImage3D instance
@@ -9327,6 +9520,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CVector3DFieldConstant>(dynamic_cast<CVector3DFieldConstant*>(m_pWrapper->polymorphicFactory(hTheVector3DFieldConstant)));
+	}
+	
+	/**
+	* CModel::AddVector3DFieldFunction - creates a new Vector3DFieldFunction Resource
+	* @return returns the new Vector3DFieldFunction instance
+	*/
+	PVector3DFieldFunction CModel::AddVector3DFieldFunction()
+	{
+		Lib3MFHandle hTheVector3DFieldFunction = nullptr;
+		CheckError(lib3mf_model_addvector3dfieldfunction(m_pHandle, &hTheVector3DFieldFunction));
+		
+		if (!hTheVector3DFieldFunction) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVector3DFieldFunction>(dynamic_cast<CVector3DFieldFunction*>(m_pWrapper->polymorphicFactory(hTheVector3DFieldFunction)));
 	}
 	
 	/**
@@ -9391,6 +9599,22 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CVector3DFieldConstant>(dynamic_cast<CVector3DFieldConstant*>(m_pWrapper->polymorphicFactory(hVector3DFieldConstantInstance)));
+	}
+	
+	/**
+	* CModel::GetVector3DFieldFunctionByID - finds a Vector3DFieldFunction object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the Vector3DFieldFunction instance
+	*/
+	PVector3DFieldFunction CModel::GetVector3DFieldFunctionByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hVector3DFieldFunctionInstance = nullptr;
+		CheckError(lib3mf_model_getvector3dfieldfunctionbyid(m_pHandle, nUniqueResourceID, &hVector3DFieldFunctionInstance));
+		
+		if (!hVector3DFieldFunctionInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVector3DFieldFunction>(dynamic_cast<CVector3DFieldFunction*>(m_pWrapper->polymorphicFactory(hVector3DFieldFunctionInstance)));
 	}
 	
 	/**
