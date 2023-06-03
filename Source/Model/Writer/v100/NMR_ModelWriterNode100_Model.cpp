@@ -47,10 +47,12 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_ModelScalarFieldFromImage3D.h"
 #include "Model/Classes/NMR_ModelScalarFieldConstant.h"
 #include "Model/Classes/NMR_ModelScalarFieldComposed.h"
+#include "Model/Classes/NMR_ModelScalarFieldFunction.h"
 #include "Model/Classes/NMR_ModelVector3DField.h"
 #include "Model/Classes/NMR_ModelVector3DFieldFromImage3D.h"
 #include "Model/Classes/NMR_ModelVector3DFieldConstant.h"
 #include "Model/Classes/NMR_ModelVector3DFieldComposed.h"
+#include "Model/Classes/NMR_ModelVector3DFieldFunction.h"
 #include "Model/Classes/NMR_ModelCompositeMaterials.h"
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -877,6 +879,13 @@ namespace NMR {
 				}
 				writeEndElement();
 			}
+			else if (CModelScalarFieldFunction* pScalarFieldFunction = dynamic_cast<CModelScalarFieldFunction*>(pScalarField))
+			{
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_SCALARFIELDFUNCTION, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDFUNCTION_FUNCTION_ID, pScalarFieldFunction->getPackageResourceID()->getModelResourceID());
+				writeStringAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDFUNCTION_OUTPUT, pScalarFieldFunction->getOutputPortName());
+				writeEndElement();
+			}
 			else
 			{
 				throw CNMRException(-1); // TODO NMR_ERROR_UNKNOWN_SCALARFIELD_TYPE
@@ -972,7 +981,14 @@ namespace NMR {
 				}
 				writeEndElement();
 			}
-			else
+			else if (CModelVector3DFieldFunction* pVector3DFieldFunction = dynamic_cast<CModelVector3DFieldFunction*>(pVector3DField))
+			{
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_VECTOR3DFIELDFUNCTION, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDFUNCTION_FUNCTION_ID, pVector3DFieldFunction->getPackageResourceID()->getModelResourceID());
+				writeStringAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDFUNCTION_OUTPUT, pVector3DFieldFunction->getOutputPortName());
+				writeEndElement();
+			}
+			else 
 			{
 				throw CNMRException(-1); // TODO NMR_ERROR_UNKNOWN_VECTOR3DFIELD_TYPE
 			}

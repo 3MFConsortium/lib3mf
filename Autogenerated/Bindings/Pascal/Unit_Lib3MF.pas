@@ -1994,6 +1994,15 @@ type
 	*)
 	TLib3MFScalarField_IsComposedFunc = function(pScalarField: TLib3MFHandle; out pIsComposed: Byte): TLib3MFResult; cdecl;
 	
+	(**
+	* Retrieves, if this ScalarField is a ScalarFieldFunction
+	*
+	* @param[in] pScalarField - ScalarField instance.
+	* @param[out] pIsFunction - returns, whether the scalar field is a ScalarFieldFunction
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarField_IsFunctionFunc = function(pScalarField: TLib3MFHandle; out pIsFunction: Byte): TLib3MFResult; cdecl;
+	
 
 (*************************************************************************************************************************
  Function type definitions for Vector3DField
@@ -2045,6 +2054,15 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFVector3DField_IsComposedFunc = function(pVector3DField: TLib3MFHandle; out pIsComposed: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves, if this Vector3DField is a Vector3DFieldFunction
+	*
+	* @param[in] pVector3DField - Vector3DField instance.
+	* @param[out] pIsFunction - returns, whether the 3d vector field is a Vector3DFieldFunction
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DField_IsFunctionFunc = function(pVector3DField: TLib3MFHandle; out pIsFunction: Byte): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -5749,10 +5767,10 @@ type
 	* creates a new Vector3DFieldFunction Resource
 	*
 	* @param[in] pModel - Model instance.
-	* @param[out] pTheVector3DFieldFunction - returns the new Vector3DFieldFunction instance
+	* @param[out] pFunction - returns the new Vector3DFieldFunction instance
 	* @return error code or 0 (success)
 	*)
-	TLib3MFModel_AddVector3DFieldFunctionFunc = function(pModel: TLib3MFHandle; out pTheVector3DFieldFunction: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFModel_AddVector3DFieldFunctionFunc = function(pModel: TLib3MFHandle; out pFunction: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* finds a Vector3DField object by its UniqueResourceID
@@ -6620,6 +6638,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function IsFromImage3D(): Boolean;
 		function IsConstant(): Boolean;
 		function IsComposed(): Boolean;
+		function IsFunction(): Boolean;
 	end;
 
 
@@ -6636,6 +6655,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function IsFromImage3D(): Boolean;
 		function IsConstant(): Boolean;
 		function IsComposed(): Boolean;
+		function IsFunction(): Boolean;
 	end;
 
 
@@ -7675,11 +7695,13 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFScalarField_IsFromImage3DFunc: TLib3MFScalarField_IsFromImage3DFunc;
 		FLib3MFScalarField_IsConstantFunc: TLib3MFScalarField_IsConstantFunc;
 		FLib3MFScalarField_IsComposedFunc: TLib3MFScalarField_IsComposedFunc;
+		FLib3MFScalarField_IsFunctionFunc: TLib3MFScalarField_IsFunctionFunc;
 		FLib3MFVector3DField_GetNameFunc: TLib3MFVector3DField_GetNameFunc;
 		FLib3MFVector3DField_SetNameFunc: TLib3MFVector3DField_SetNameFunc;
 		FLib3MFVector3DField_IsFromImage3DFunc: TLib3MFVector3DField_IsFromImage3DFunc;
 		FLib3MFVector3DField_IsConstantFunc: TLib3MFVector3DField_IsConstantFunc;
 		FLib3MFVector3DField_IsComposedFunc: TLib3MFVector3DField_IsComposedFunc;
+		FLib3MFVector3DField_IsFunctionFunc: TLib3MFVector3DField_IsFunctionFunc;
 		FLib3MFScalarFieldFromImage3D_GetImageFunc: TLib3MFScalarFieldFromImage3D_GetImageFunc;
 		FLib3MFScalarFieldFromImage3D_SetImageFunc: TLib3MFScalarFieldFromImage3D_SetImageFunc;
 		FLib3MFScalarFieldFromImage3D_SetChannelFunc: TLib3MFScalarFieldFromImage3D_SetChannelFunc;
@@ -8233,11 +8255,13 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFScalarField_IsFromImage3DFunc: TLib3MFScalarField_IsFromImage3DFunc read FLib3MFScalarField_IsFromImage3DFunc;
 		property Lib3MFScalarField_IsConstantFunc: TLib3MFScalarField_IsConstantFunc read FLib3MFScalarField_IsConstantFunc;
 		property Lib3MFScalarField_IsComposedFunc: TLib3MFScalarField_IsComposedFunc read FLib3MFScalarField_IsComposedFunc;
+		property Lib3MFScalarField_IsFunctionFunc: TLib3MFScalarField_IsFunctionFunc read FLib3MFScalarField_IsFunctionFunc;
 		property Lib3MFVector3DField_GetNameFunc: TLib3MFVector3DField_GetNameFunc read FLib3MFVector3DField_GetNameFunc;
 		property Lib3MFVector3DField_SetNameFunc: TLib3MFVector3DField_SetNameFunc read FLib3MFVector3DField_SetNameFunc;
 		property Lib3MFVector3DField_IsFromImage3DFunc: TLib3MFVector3DField_IsFromImage3DFunc read FLib3MFVector3DField_IsFromImage3DFunc;
 		property Lib3MFVector3DField_IsConstantFunc: TLib3MFVector3DField_IsConstantFunc read FLib3MFVector3DField_IsConstantFunc;
 		property Lib3MFVector3DField_IsComposedFunc: TLib3MFVector3DField_IsComposedFunc read FLib3MFVector3DField_IsComposedFunc;
+		property Lib3MFVector3DField_IsFunctionFunc: TLib3MFVector3DField_IsFunctionFunc read FLib3MFVector3DField_IsFunctionFunc;
 		property Lib3MFScalarFieldFromImage3D_GetImageFunc: TLib3MFScalarFieldFromImage3D_GetImageFunc read FLib3MFScalarFieldFromImage3D_GetImageFunc;
 		property Lib3MFScalarFieldFromImage3D_SetImageFunc: TLib3MFScalarFieldFromImage3D_SetImageFunc read FLib3MFScalarFieldFromImage3D_SetImageFunc;
 		property Lib3MFScalarFieldFromImage3D_SetChannelFunc: TLib3MFScalarFieldFromImage3D_SetChannelFunc read FLib3MFScalarFieldFromImage3D_SetChannelFunc;
@@ -11442,6 +11466,15 @@ implementation
 		Result := (ResultIsComposed <> 0);
 	end;
 
+	function TLib3MFScalarField.IsFunction(): Boolean;
+	var
+		ResultIsFunction: Byte;
+	begin
+		ResultIsFunction := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarField_IsFunctionFunc(FHandle, ResultIsFunction));
+		Result := (ResultIsFunction <> 0);
+	end;
+
 (*************************************************************************************************************************
  Class implementation for Vector3DField
 **************************************************************************************************************************)
@@ -11500,6 +11533,15 @@ implementation
 		ResultIsComposed := 0;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DField_IsComposedFunc(FHandle, ResultIsComposed));
 		Result := (ResultIsComposed <> 0);
+	end;
+
+	function TLib3MFVector3DField.IsFunction(): Boolean;
+	var
+		ResultIsFunction: Byte;
+	begin
+		ResultIsFunction := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DField_IsFunctionFunc(FHandle, ResultIsFunction));
+		Result := (ResultIsFunction <> 0);
 	end;
 
 (*************************************************************************************************************************
@@ -15521,13 +15563,13 @@ implementation
 
 	function TLib3MFModel.AddVector3DFieldFunction(): TLib3MFVector3DFieldFunction;
 	var
-		HTheVector3DFieldFunction: TLib3MFHandle;
+		HFunction: TLib3MFHandle;
 	begin
 		Result := nil;
-		HTheVector3DFieldFunction := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddVector3DFieldFunctionFunc(FHandle, HTheVector3DFieldFunction));
-		if Assigned(HTheVector3DFieldFunction) then
-			Result := TLib3MFPolymorphicFactory<TLib3MFVector3DFieldFunction, TLib3MFVector3DFieldFunction>.Make(FWrapper, HTheVector3DFieldFunction);
+		HFunction := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddVector3DFieldFunctionFunc(FHandle, HFunction));
+		if Assigned(HFunction) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFVector3DFieldFunction, TLib3MFVector3DFieldFunction>.Make(FWrapper, HFunction);
 	end;
 
 	function TLib3MFModel.GetVector3DFieldByID(const AUniqueResourceID: Cardinal): TLib3MFVector3DField;
@@ -15920,11 +15962,13 @@ implementation
 		FLib3MFScalarField_IsFromImage3DFunc := LoadFunction('lib3mf_scalarfield_isfromimage3d');
 		FLib3MFScalarField_IsConstantFunc := LoadFunction('lib3mf_scalarfield_isconstant');
 		FLib3MFScalarField_IsComposedFunc := LoadFunction('lib3mf_scalarfield_iscomposed');
+		FLib3MFScalarField_IsFunctionFunc := LoadFunction('lib3mf_scalarfield_isfunction');
 		FLib3MFVector3DField_GetNameFunc := LoadFunction('lib3mf_vector3dfield_getname');
 		FLib3MFVector3DField_SetNameFunc := LoadFunction('lib3mf_vector3dfield_setname');
 		FLib3MFVector3DField_IsFromImage3DFunc := LoadFunction('lib3mf_vector3dfield_isfromimage3d');
 		FLib3MFVector3DField_IsConstantFunc := LoadFunction('lib3mf_vector3dfield_isconstant');
 		FLib3MFVector3DField_IsComposedFunc := LoadFunction('lib3mf_vector3dfield_iscomposed');
+		FLib3MFVector3DField_IsFunctionFunc := LoadFunction('lib3mf_vector3dfield_isfunction');
 		FLib3MFScalarFieldFromImage3D_GetImageFunc := LoadFunction('lib3mf_scalarfieldfromimage3d_getimage');
 		FLib3MFScalarFieldFromImage3D_SetImageFunc := LoadFunction('lib3mf_scalarfieldfromimage3d_setimage');
 		FLib3MFScalarFieldFromImage3D_SetChannelFunc := LoadFunction('lib3mf_scalarfieldfromimage3d_setchannel');
@@ -16759,6 +16803,9 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfield_iscomposed'), @FLib3MFScalarField_IsComposedFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfield_isfunction'), @FLib3MFScalarField_IsFunctionFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfield_getname'), @FLib3MFVector3DField_GetNameFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -16772,6 +16819,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfield_iscomposed'), @FLib3MFVector3DField_IsComposedFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfield_isfunction'), @FLib3MFVector3DField_IsFunctionFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldfromimage3d_getimage'), @FLib3MFScalarFieldFromImage3D_GetImageFunc);

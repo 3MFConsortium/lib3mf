@@ -188,11 +188,13 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ScalarField_IsFromImage3D = NULL;
 	pWrapperTable->m_ScalarField_IsConstant = NULL;
 	pWrapperTable->m_ScalarField_IsComposed = NULL;
+	pWrapperTable->m_ScalarField_IsFunction = NULL;
 	pWrapperTable->m_Vector3DField_GetName = NULL;
 	pWrapperTable->m_Vector3DField_SetName = NULL;
 	pWrapperTable->m_Vector3DField_IsFromImage3D = NULL;
 	pWrapperTable->m_Vector3DField_IsConstant = NULL;
 	pWrapperTable->m_Vector3DField_IsComposed = NULL;
+	pWrapperTable->m_Vector3DField_IsFunction = NULL;
 	pWrapperTable->m_ScalarFieldFromImage3D_GetImage = NULL;
 	pWrapperTable->m_ScalarFieldFromImage3D_SetImage = NULL;
 	pWrapperTable->m_ScalarFieldFromImage3D_SetChannel = NULL;
@@ -1911,6 +1913,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_ScalarField_IsFunction = (PLib3MFScalarField_IsFunctionPtr) GetProcAddress(hLibrary, "lib3mf_scalarfield_isfunction");
+	#else // _WIN32
+	pWrapperTable->m_ScalarField_IsFunction = (PLib3MFScalarField_IsFunctionPtr) dlsym(hLibrary, "lib3mf_scalarfield_isfunction");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ScalarField_IsFunction == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_Vector3DField_GetName = (PLib3MFVector3DField_GetNamePtr) GetProcAddress(hLibrary, "lib3mf_vector3dfield_getname");
 	#else // _WIN32
 	pWrapperTable->m_Vector3DField_GetName = (PLib3MFVector3DField_GetNamePtr) dlsym(hLibrary, "lib3mf_vector3dfield_getname");
@@ -1953,6 +1964,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Vector3DField_IsComposed == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Vector3DField_IsFunction = (PLib3MFVector3DField_IsFunctionPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfield_isfunction");
+	#else // _WIN32
+	pWrapperTable->m_Vector3DField_IsFunction = (PLib3MFVector3DField_IsFunctionPtr) dlsym(hLibrary, "lib3mf_vector3dfield_isfunction");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Vector3DField_IsFunction == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

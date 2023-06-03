@@ -42,7 +42,9 @@ namespace NMR
     void CModelScalarFieldFunction::setFunctionResourceID(UniqueResourceID ID)
     {
         if (!getModel()->findFunction(ID))
+        {
             throw CNMRException(NMR_ERROR_INVALIDPARAM);
+        }
 
         m_pFunctionResourceID = ID;
     }

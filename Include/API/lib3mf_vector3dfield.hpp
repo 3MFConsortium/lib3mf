@@ -88,6 +88,8 @@ public:
 
 	bool IsComposed() override;
 
+	bool IsFunction() override;
+
 };
 
 } // namespace Impl

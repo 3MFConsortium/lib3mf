@@ -1316,6 +1316,7 @@ public:
 	inline bool IsFromImage3D();
 	inline bool IsConstant();
 	inline bool IsComposed();
+	inline bool IsFunction();
 };
 	
 /*************************************************************************************************************************
@@ -1337,6 +1338,7 @@ public:
 	inline bool IsFromImage3D();
 	inline bool IsConstant();
 	inline bool IsComposed();
+	inline bool IsFunction();
 };
 	
 /*************************************************************************************************************************
@@ -4631,6 +4633,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CScalarField::IsFunction - Retrieves, if this ScalarField is a ScalarFieldFunction
+	* @return returns, whether the scalar field is a ScalarFieldFunction
+	*/
+	bool CScalarField::IsFunction()
+	{
+		bool resultIsFunction = 0;
+		CheckError(lib3mf_scalarfield_isfunction(m_pHandle, &resultIsFunction));
+		
+		return resultIsFunction;
+	}
+	
+	/**
 	 * Method definitions for class CVector3DField
 	 */
 	
@@ -4692,6 +4706,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		CheckError(lib3mf_vector3dfield_iscomposed(m_pHandle, &resultIsComposed));
 		
 		return resultIsComposed;
+	}
+	
+	/**
+	* CVector3DField::IsFunction - Retrieves, if this Vector3DField is a Vector3DFieldFunction
+	* @return returns, whether the 3d vector field is a Vector3DFieldFunction
+	*/
+	bool CVector3DField::IsFunction()
+	{
+		bool resultIsFunction = 0;
+		CheckError(lib3mf_vector3dfield_isfunction(m_pHandle, &resultIsFunction));
+		
+		return resultIsFunction;
 	}
 	
 	/**
@@ -9528,13 +9554,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PVector3DFieldFunction CModel::AddVector3DFieldFunction()
 	{
-		Lib3MFHandle hTheVector3DFieldFunction = nullptr;
-		CheckError(lib3mf_model_addvector3dfieldfunction(m_pHandle, &hTheVector3DFieldFunction));
+		Lib3MFHandle hFunction = nullptr;
+		CheckError(lib3mf_model_addvector3dfieldfunction(m_pHandle, &hFunction));
 		
-		if (!hTheVector3DFieldFunction) {
+		if (!hFunction) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::shared_ptr<CVector3DFieldFunction>(dynamic_cast<CVector3DFieldFunction*>(m_pWrapper->polymorphicFactory(hTheVector3DFieldFunction)));
+		return std::shared_ptr<CVector3DFieldFunction>(dynamic_cast<CVector3DFieldFunction*>(m_pWrapper->polymorphicFactory(hFunction)));
 	}
 	
 	/**

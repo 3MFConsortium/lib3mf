@@ -827,6 +827,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfield_iscomposed", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ScalarField_IsComposed (IntPtr Handle, out Byte AIsComposed);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfield_isfunction", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarField_IsFunction (IntPtr Handle, out Byte AIsFunction);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfield_getname", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Vector3DField_GetName (IntPtr Handle, UInt32 sizeName, out UInt32 neededName, IntPtr dataName);
 
@@ -841,6 +844,9 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfield_iscomposed", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Vector3DField_IsComposed (IntPtr Handle, out Byte AIsComposed);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfield_isfunction", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DField_IsFunction (IntPtr Handle, out Byte AIsFunction);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_getimage", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ScalarFieldFromImage3D_GetImage (IntPtr Handle, out IntPtr AImage3D);
@@ -1923,7 +1929,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 Model_AddVector3DFieldConstant (IntPtr Handle, out IntPtr ATheVector3DFieldConstant);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addvector3dfieldfunction", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_AddVector3DFieldFunction (IntPtr Handle, out IntPtr ATheVector3DFieldFunction);
+			public unsafe extern static Int32 Model_AddVector3DFieldFunction (IntPtr Handle, out IntPtr AFunction);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getvector3dfieldbyid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetVector3DFieldByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AVector3DFieldInstance);
@@ -3943,6 +3949,14 @@ namespace Lib3MF {
 			return (resultIsComposed != 0);
 		}
 
+		public bool IsFunction ()
+		{
+			Byte resultIsFunction = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarField_IsFunction (Handle, out resultIsFunction));
+			return (resultIsFunction != 0);
+		}
+
 	}
 
 	public class CVector3DField : CResource
@@ -3994,6 +4008,14 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Vector3DField_IsComposed (Handle, out resultIsComposed));
 			return (resultIsComposed != 0);
+		}
+
+		public bool IsFunction ()
+		{
+			Byte resultIsFunction = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DField_IsFunction (Handle, out resultIsFunction));
+			return (resultIsFunction != 0);
 		}
 
 	}
@@ -7549,10 +7571,10 @@ namespace Lib3MF {
 
 		public CVector3DFieldFunction AddVector3DFieldFunction ()
 		{
-			IntPtr newTheVector3DFieldFunction = IntPtr.Zero;
+			IntPtr newFunction = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.Model_AddVector3DFieldFunction (Handle, out newTheVector3DFieldFunction));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CVector3DFieldFunction>(newTheVector3DFieldFunction);
+			CheckError(Internal.Lib3MFWrapper.Model_AddVector3DFieldFunction (Handle, out newFunction));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CVector3DFieldFunction>(newFunction);
 		}
 
 		public CVector3DField GetVector3DFieldByID (UInt32 AUniqueResourceID)

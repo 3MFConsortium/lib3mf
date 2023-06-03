@@ -34,7 +34,6 @@ Abstract: This is a stub class definition of CScalarFieldFunction
 
 // Include custom headers here.
 
-
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************

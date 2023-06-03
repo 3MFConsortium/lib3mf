@@ -1725,6 +1725,12 @@ public:
 	*/
 	virtual bool IsComposed() = 0;
 
+	/**
+	* IScalarField::IsFunction - Retrieves, if this ScalarField is a ScalarFieldFunction
+	* @return returns, whether the scalar field is a ScalarFieldFunction
+	*/
+	virtual bool IsFunction() = 0;
+
 };
 
 typedef IBaseSharedPtr<IScalarField> PIScalarField;
@@ -1774,6 +1780,12 @@ public:
 	* @return returns, whether the 3d vector field is a Vector3DFieldComposed
 	*/
 	virtual bool IsComposed() = 0;
+
+	/**
+	* IVector3DField::IsFunction - Retrieves, if this Vector3DField is a Vector3DFieldFunction
+	* @return returns, whether the 3d vector field is a Vector3DFieldFunction
+	*/
+	virtual bool IsFunction() = 0;
 
 };
 

@@ -691,26 +691,26 @@ namespace Lib3MF
           "shape", "signed distance to the surface", Lib3MF::eImplicitPortType::Scalar);
         output->SetReference("distance_2.result");
 
-      // add the function as volume data defining a boundary to the mesh
+        // add the function as volume data defining a boundary to the mesh
+        auto scalarField = model->AddScalarFieldFunction();
+        ASSERT_NE(scalarField.get(), nullptr);
+        scalarField->SetFunction(newFunction.get());
+       
 
-        // auto scalarField = model->AddScalarFieldFunction();
-        // scalarField->SetFunction(newFunction);
-        // scalarField->SetOutput("shape");
-        // auto theMesh = GetMesh();
-        // auto volumeData = theMesh->VolumeData();
-        // auto theBoundary = volumeData->CreateNewBoundary(scalarField.get());
+        scalarField->SetOutput("shape");
+        auto theMesh = GetMesh();
+        auto volumeData = theMesh->VolumeData();
+        auto theBoundary = volumeData->CreateNewBoundary(scalarField.get());
         
-
-
         // Write to file
         writer3MF->WriteToFile(Volumetric::OutFolder + "AddFunctionWithConstantNode.3mf");
 
-        // Read from file
+        // // Read from file
         PModel ioModel = wrapper->CreateModel();
         PReader ioReader = ioModel->QueryReader("3mf");
         ioReader->ReadFromFile(Volumetric::OutFolder + "AddFunctionWithConstantNode.3mf");
 
-        // Check the function
+        // // Check the function
         auto functionIterator = ioModel->GetFunctions();
         ASSERT_EQ(functionIterator->Count(), 1);
 

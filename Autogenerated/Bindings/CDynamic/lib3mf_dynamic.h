@@ -1494,6 +1494,15 @@ typedef Lib3MFResult (*PLib3MFScalarField_IsConstantPtr) (Lib3MF_ScalarField pSc
 */
 typedef Lib3MFResult (*PLib3MFScalarField_IsComposedPtr) (Lib3MF_ScalarField pScalarField, bool * pIsComposed);
 
+/**
+* Retrieves, if this ScalarField is a ScalarFieldFunction
+*
+* @param[in] pScalarField - ScalarField instance.
+* @param[out] pIsFunction - returns, whether the scalar field is a ScalarFieldFunction
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFScalarField_IsFunctionPtr) (Lib3MF_ScalarField pScalarField, bool * pIsFunction);
+
 /*************************************************************************************************************************
  Class definition for Vector3DField
 **************************************************************************************************************************/
@@ -1544,6 +1553,15 @@ typedef Lib3MFResult (*PLib3MFVector3DField_IsConstantPtr) (Lib3MF_Vector3DField
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFVector3DField_IsComposedPtr) (Lib3MF_Vector3DField pVector3DField, bool * pIsComposed);
+
+/**
+* Retrieves, if this Vector3DField is a Vector3DFieldFunction
+*
+* @param[in] pVector3DField - Vector3DField instance.
+* @param[out] pIsFunction - returns, whether the 3d vector field is a Vector3DFieldFunction
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DField_IsFunctionPtr) (Lib3MF_Vector3DField pVector3DField, bool * pIsFunction);
 
 /*************************************************************************************************************************
  Class definition for ScalarFieldFromImage3D
@@ -5202,10 +5220,10 @@ typedef Lib3MFResult (*PLib3MFModel_AddVector3DFieldConstantPtr) (Lib3MF_Model p
 * creates a new Vector3DFieldFunction Resource
 *
 * @param[in] pModel - Model instance.
-* @param[out] pTheVector3DFieldFunction - returns the new Vector3DFieldFunction instance
+* @param[out] pFunction - returns the new Vector3DFieldFunction instance
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFModel_AddVector3DFieldFunctionPtr) (Lib3MF_Model pModel, Lib3MF_Vector3DFieldFunction * pTheVector3DFieldFunction);
+typedef Lib3MFResult (*PLib3MFModel_AddVector3DFieldFunctionPtr) (Lib3MF_Model pModel, Lib3MF_Vector3DFieldFunction * pFunction);
 
 /**
 * finds a Vector3DField object by its UniqueResourceID
@@ -5770,11 +5788,13 @@ typedef struct {
 	PLib3MFScalarField_IsFromImage3DPtr m_ScalarField_IsFromImage3D;
 	PLib3MFScalarField_IsConstantPtr m_ScalarField_IsConstant;
 	PLib3MFScalarField_IsComposedPtr m_ScalarField_IsComposed;
+	PLib3MFScalarField_IsFunctionPtr m_ScalarField_IsFunction;
 	PLib3MFVector3DField_GetNamePtr m_Vector3DField_GetName;
 	PLib3MFVector3DField_SetNamePtr m_Vector3DField_SetName;
 	PLib3MFVector3DField_IsFromImage3DPtr m_Vector3DField_IsFromImage3D;
 	PLib3MFVector3DField_IsConstantPtr m_Vector3DField_IsConstant;
 	PLib3MFVector3DField_IsComposedPtr m_Vector3DField_IsComposed;
+	PLib3MFVector3DField_IsFunctionPtr m_Vector3DField_IsFunction;
 	PLib3MFScalarFieldFromImage3D_GetImagePtr m_ScalarFieldFromImage3D_GetImage;
 	PLib3MFScalarFieldFromImage3D_SetImagePtr m_ScalarFieldFromImage3D_SetImage;
 	PLib3MFScalarFieldFromImage3D_SetChannelPtr m_ScalarFieldFromImage3D_SetChannel;

@@ -1332,6 +1332,15 @@ Lib3MFResult CCall_lib3mf_scalarfield_iscomposed(Lib3MFHandle libraryHandle, Lib
 }
 
 
+Lib3MFResult CCall_lib3mf_scalarfield_isfunction(Lib3MFHandle libraryHandle, Lib3MF_ScalarField pScalarField, bool * pIsFunction)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ScalarField_IsFunction (pScalarField, pIsFunction);
+}
+
+
 Lib3MFResult CCall_lib3mf_vector3dfield_getname(Lib3MFHandle libraryHandle, Lib3MF_Vector3DField pVector3DField, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer)
 {
 	if (libraryHandle == 0) 
@@ -1374,6 +1383,15 @@ Lib3MFResult CCall_lib3mf_vector3dfield_iscomposed(Lib3MFHandle libraryHandle, L
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_Vector3DField_IsComposed (pVector3DField, pIsComposed);
+}
+
+
+Lib3MFResult CCall_lib3mf_vector3dfield_isfunction(Lib3MFHandle libraryHandle, Lib3MF_Vector3DField pVector3DField, bool * pIsFunction)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Vector3DField_IsFunction (pVector3DField, pIsFunction);
 }
 
 
@@ -4617,12 +4635,12 @@ Lib3MFResult CCall_lib3mf_model_addvector3dfieldconstant(Lib3MFHandle libraryHan
 }
 
 
-Lib3MFResult CCall_lib3mf_model_addvector3dfieldfunction(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Vector3DFieldFunction * pTheVector3DFieldFunction)
+Lib3MFResult CCall_lib3mf_model_addvector3dfieldfunction(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Vector3DFieldFunction * pFunction)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_Model_AddVector3DFieldFunction (pModel, pTheVector3DFieldFunction);
+	return wrapperTable->m_Model_AddVector3DFieldFunction (pModel, pFunction);
 }
 
 
@@ -7375,6 +7393,16 @@ func (inst ScalarField) IsComposed() (bool, error) {
 	return bool(isComposed), nil
 }
 
+// IsFunction retrieves, if this ScalarField is a ScalarFieldFunction.
+func (inst ScalarField) IsFunction() (bool, error) {
+	var isFunction C.bool
+	ret := C.CCall_lib3mf_scalarfield_isfunction(inst.wrapperRef.LibraryHandle, inst.Ref, &isFunction)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(isFunction), nil
+}
+
 
 // Vector3DField represents a Lib3MF class.
 type Vector3DField struct {
@@ -7439,6 +7467,16 @@ func (inst Vector3DField) IsComposed() (bool, error) {
 		return false, makeError(uint32(ret))
 	}
 	return bool(isComposed), nil
+}
+
+// IsFunction retrieves, if this Vector3DField is a Vector3DFieldFunction.
+func (inst Vector3DField) IsFunction() (bool, error) {
+	var isFunction C.bool
+	ret := C.CCall_lib3mf_vector3dfield_isfunction(inst.wrapperRef.LibraryHandle, inst.Ref, &isFunction)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(isFunction), nil
 }
 
 
@@ -11763,12 +11801,12 @@ func (inst Model) AddVector3DFieldConstant() (Vector3DFieldConstant, error) {
 
 // AddVector3DFieldFunction creates a new Vector3DFieldFunction Resource.
 func (inst Model) AddVector3DFieldFunction() (Vector3DFieldFunction, error) {
-	var theVector3DFieldFunction ref
-	ret := C.CCall_lib3mf_model_addvector3dfieldfunction(inst.wrapperRef.LibraryHandle, inst.Ref, &theVector3DFieldFunction)
+	var function ref
+	ret := C.CCall_lib3mf_model_addvector3dfieldfunction(inst.wrapperRef.LibraryHandle, inst.Ref, &function)
 	if ret != 0 {
 		return Vector3DFieldFunction{}, makeError(uint32(ret))
 	}
-	return inst.wrapperRef.NewVector3DFieldFunction(theVector3DFieldFunction), nil
+	return inst.wrapperRef.NewVector3DFieldFunction(function), nil
 }
 
 // GetVector3DFieldByID finds a Vector3DField object by its UniqueResourceID.

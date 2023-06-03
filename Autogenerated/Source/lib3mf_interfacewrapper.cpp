@@ -5288,6 +5288,40 @@ Lib3MFResult lib3mf_scalarfield_iscomposed(Lib3MF_ScalarField pScalarField, bool
 	}
 }
 
+Lib3MFResult lib3mf_scalarfield_isfunction(Lib3MF_ScalarField pScalarField, bool * pIsFunction)
+{
+	IBase* pIBaseClass = (IBase *)pScalarField;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarField, "ScalarField", "IsFunction");
+		}
+		if (pIsFunction == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IScalarField* pIScalarField = dynamic_cast<IScalarField*>(pIBaseClass);
+		if (!pIScalarField)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pIsFunction = pIScalarField->IsFunction();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("IsFunction", *pIsFunction);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 
 /*************************************************************************************************************************
  Class implementation for Vector3DField
@@ -5470,6 +5504,40 @@ Lib3MFResult lib3mf_vector3dfield_iscomposed(Lib3MF_Vector3DField pVector3DField
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->addBooleanResult("IsComposed", *pIsComposed);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfield_isfunction(Lib3MF_Vector3DField pVector3DField, bool * pIsFunction)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DField;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DField, "Vector3DField", "IsFunction");
+		}
+		if (pIsFunction == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IVector3DField* pIVector3DField = dynamic_cast<IVector3DField*>(pIBaseClass);
+		if (!pIVector3DField)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pIsFunction = pIVector3DField->IsFunction();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("IsFunction", *pIsFunction);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -19018,7 +19086,7 @@ Lib3MFResult lib3mf_model_addvector3dfieldconstant(Lib3MF_Model pModel, Lib3MF_V
 	}
 }
 
-Lib3MFResult lib3mf_model_addvector3dfieldfunction(Lib3MF_Model pModel, Lib3MF_Vector3DFieldFunction * pTheVector3DFieldFunction)
+Lib3MFResult lib3mf_model_addvector3dfieldfunction(Lib3MF_Model pModel, Lib3MF_Vector3DFieldFunction * pFunction)
 {
 	IBase* pIBaseClass = (IBase *)pModel;
 
@@ -19027,18 +19095,18 @@ Lib3MFResult lib3mf_model_addvector3dfieldfunction(Lib3MF_Model pModel, Lib3MF_V
 		if (m_GlobalJournal.get() != nullptr)  {
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "AddVector3DFieldFunction");
 		}
-		if (pTheVector3DFieldFunction == nullptr)
+		if (pFunction == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseTheVector3DFieldFunction(nullptr);
+		IBase* pBaseFunction(nullptr);
 		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
 		if (!pIModel)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseTheVector3DFieldFunction = pIModel->AddVector3DFieldFunction();
+		pBaseFunction = pIModel->AddVector3DFieldFunction();
 
-		*pTheVector3DFieldFunction = (IBase*)(pBaseTheVector3DFieldFunction);
+		*pFunction = (IBase*)(pBaseFunction);
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("TheVector3DFieldFunction", *pTheVector3DFieldFunction);
+			pJournalEntry->addHandleResult("Function", *pFunction);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -20192,6 +20260,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_scalarfield_isconstant;
 	if (sProcName == "lib3mf_scalarfield_iscomposed") 
 		*ppProcAddress = (void*) &lib3mf_scalarfield_iscomposed;
+	if (sProcName == "lib3mf_scalarfield_isfunction") 
+		*ppProcAddress = (void*) &lib3mf_scalarfield_isfunction;
 	if (sProcName == "lib3mf_vector3dfield_getname") 
 		*ppProcAddress = (void*) &lib3mf_vector3dfield_getname;
 	if (sProcName == "lib3mf_vector3dfield_setname") 
@@ -20202,6 +20272,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_vector3dfield_isconstant;
 	if (sProcName == "lib3mf_vector3dfield_iscomposed") 
 		*ppProcAddress = (void*) &lib3mf_vector3dfield_iscomposed;
+	if (sProcName == "lib3mf_vector3dfield_isfunction") 
+		*ppProcAddress = (void*) &lib3mf_vector3dfield_isfunction;
 	if (sProcName == "lib3mf_scalarfieldfromimage3d_getimage") 
 		*ppProcAddress = (void*) &lib3mf_scalarfieldfromimage3d_getimage;
 	if (sProcName == "lib3mf_scalarfieldfromimage3d_setimage") 

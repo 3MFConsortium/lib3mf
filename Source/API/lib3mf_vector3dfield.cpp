@@ -35,6 +35,7 @@ Abstract: This is a stub class definition of CVector3DField
 #include "Model/Classes/NMR_ModelVector3DFieldFromImage3D.h"
 #include "Model/Classes/NMR_ModelVector3DFieldComposed.h"
 #include "Model/Classes/NMR_ModelVector3DFieldConstant.h"
+#include "Model/Classes/NMR_ModelVector3DFieldFunction.h"
 
 using namespace Lib3MF::Impl;
 
@@ -82,3 +83,7 @@ bool CVector3DField::IsComposed()
 	return (dynamic_cast<NMR::CModelVector3DFieldComposed*>(vector3DField()) != nullptr);
 }
 
+bool CVector3DField::IsFunction()
+{
+	return (dynamic_cast<NMR::CModelVector3DFieldFunction*>(vector3DField()) != nullptr);
+}

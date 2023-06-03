@@ -1507,6 +1507,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_scalarfield_isconstant(Lib3MF_ScalarField pS
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_scalarfield_iscomposed(Lib3MF_ScalarField pScalarField, bool * pIsComposed);
 
+/**
+* Retrieves, if this ScalarField is a ScalarFieldFunction
+*
+* @param[in] pScalarField - ScalarField instance.
+* @param[out] pIsFunction - returns, whether the scalar field is a ScalarFieldFunction
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_scalarfield_isfunction(Lib3MF_ScalarField pScalarField, bool * pIsFunction);
+
 /*************************************************************************************************************************
  Class definition for Vector3DField
 **************************************************************************************************************************/
@@ -1557,6 +1566,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_vector3dfield_isconstant(Lib3MF_Vector3DFiel
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_vector3dfield_iscomposed(Lib3MF_Vector3DField pVector3DField, bool * pIsComposed);
+
+/**
+* Retrieves, if this Vector3DField is a Vector3DFieldFunction
+*
+* @param[in] pVector3DField - Vector3DField instance.
+* @param[out] pIsFunction - returns, whether the 3d vector field is a Vector3DFieldFunction
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_vector3dfield_isfunction(Lib3MF_Vector3DField pVector3DField, bool * pIsFunction);
 
 /*************************************************************************************************************************
  Class definition for ScalarFieldFromImage3D
@@ -5215,10 +5233,10 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addvector3dfieldconstant(Lib3MF_Model 
 * creates a new Vector3DFieldFunction Resource
 *
 * @param[in] pModel - Model instance.
-* @param[out] pTheVector3DFieldFunction - returns the new Vector3DFieldFunction instance
+* @param[out] pFunction - returns the new Vector3DFieldFunction instance
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addvector3dfieldfunction(Lib3MF_Model pModel, Lib3MF_Vector3DFieldFunction * pTheVector3DFieldFunction);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addvector3dfieldfunction(Lib3MF_Model pModel, Lib3MF_Vector3DFieldFunction * pFunction);
 
 /**
 * finds a Vector3DField object by its UniqueResourceID

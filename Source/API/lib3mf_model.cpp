@@ -173,10 +173,13 @@ IResource* CModel::createIResourceFromModelResource(NMR::PModelResource pResourc
 	if (auto p = std::dynamic_pointer_cast<NMR::CModelScalarFieldComposed>(pResource)) {
 		return new CScalarFieldComposed(p);
 	}
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelScalarFieldFunction>(pResource)) {
+		return new CScalarFieldFunction(p);
+	}
+
 	if (auto p = std::dynamic_pointer_cast<NMR::CModelScalarField>(pResource)) {
 		return new CScalarField(p);
 	}
-
 	if (auto p = std::dynamic_pointer_cast<NMR::CModelVector3DFieldFromImage3D>(pResource)) {
 		return new CVector3DFieldFromImage3D(p);
 	}
@@ -186,9 +189,13 @@ IResource* CModel::createIResourceFromModelResource(NMR::PModelResource pResourc
 	if (auto p = std::dynamic_pointer_cast<NMR::CModelVector3DFieldComposed>(pResource)) {
 		return new CVector3DFieldComposed(p);
 	}
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelVector3DFieldFunction>(pResource)) {
+		return new CVector3DFieldFunction(p);
+	}
 	if (auto p = std::dynamic_pointer_cast<NMR::CModelVector3DField>(pResource)) {
 		return new CVector3DField(p);
 	}
+
 	
 	if (auto p= std::dynamic_pointer_cast<NMR::CModelImplicitFunction>(pResource)) {
 		return new CImplicitFunction(p);
@@ -1046,8 +1053,9 @@ IImplicitFunction * CModel::AddFunction()
 IScalarFieldFunction * CModel::AddScalarFieldFunction()
 {
 	NMR::ModelResourceID NewResourceID = model().generateResourceID();
-	NMR::PModelScalarFieldFunction pNewResource = std::make_shared<NMR::CModelScalarFieldFunction>(NewResourceID, &model());
-
+	NMR::PModelScalarFieldFunction pNewResource =
+	 std::make_shared<NMR::CModelScalarFieldFunction>(NewResourceID, &model());
+	
 	model().addResource(pNewResource);
 
 	return new CScalarFieldFunction(pNewResource);

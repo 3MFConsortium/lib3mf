@@ -641,6 +641,7 @@ private:
 	static void IsFromImage3D(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void IsConstant(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void IsComposed(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void IsFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFScalarField();
@@ -663,6 +664,7 @@ private:
 	static void IsFromImage3D(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void IsConstant(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void IsComposed(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void IsFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFVector3DField();

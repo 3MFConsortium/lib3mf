@@ -35,6 +35,7 @@ Abstract: This is a stub class definition of CScalarField
 #include "Model/Classes/NMR_ModelScalarFieldFromImage3D.h"
 #include "Model/Classes/NMR_ModelScalarFieldComposed.h"
 #include "Model/Classes/NMR_ModelScalarFieldConstant.h"
+#include "Model/Classes/NMR_ModelScalarFieldFunction.h"
 
 using namespace Lib3MF::Impl;
 
@@ -80,5 +81,10 @@ bool CScalarField::IsConstant()
 bool CScalarField::IsComposed()
 {
 	return (dynamic_cast<NMR::CModelScalarFieldComposed*>(scalarField()) != nullptr);
+}
+
+bool CScalarField::IsFunction()
+{
+	return (dynamic_cast<NMR::CModelScalarFieldFunction*>(scalarField()) != nullptr);
 }
 
