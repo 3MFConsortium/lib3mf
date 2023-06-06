@@ -739,4 +739,73 @@ namespace Lib3MF
         // Compare the functions
         compareFunctions(newFunction, functionIterator->GetCurrentFunction());
     }
+
+	TEST_F(Volumetric, ImplicitGyroid)
+	{
+		PImplicitFunction newFunction = model->AddFunction();
+		newFunction->SetDisplayName("gyroid");
+
+		auto functionArgument =
+			newFunction->AddInput("pos", "position", Lib3MF::eImplicitPortType::Vector);
+
+
+		auto decomposePos = newFunction->AddNode(
+			Lib3MF::eImplicitNodeType::DecomposeVector, "decomposePos", "decompose pos");
+
+		decomposePos->FindInput("vector")->SetType(Lib3MF::eImplicitPortType::Vector);
+		newFunction->AddLinkByNames("inputs.pos", "decomposePos.vector");
+
+		auto composeYZX = newFunction->AddNode(
+			Lib3MF::eImplicitNodeType::ComposeVector, "composeYZX", "compose yzx");
+        composeYZX->FindOutput("vector")->SetType(Lib3MF::eImplicitPortType::Vector);
+
+		newFunction->AddLinkByNames("decomposePos.z", "composeYZX.y");
+		newFunction->AddLinkByNames("decomposePos.y", "composeYZX.x");
+		newFunction->AddLinkByNames("decomposePos.x", "composeYZX.z");
+
+		// Add the necessay nodes and links for the gyroid (dot(sin(pos), cos(composeYZX))
+		auto sinNode = newFunction->AddNode(
+			Lib3MF::eImplicitNodeType::Sinus, "sin", "sin");
+		sinNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
+		sinNode->FindOutput("result")->SetType(Lib3MF::eImplicitPortType::Vector);
+		newFunction->AddLinkByNames("inputs.pos", "sin.A");
+
+		auto cosNode = newFunction->AddNode(
+			Lib3MF::eImplicitNodeType::Cosinus, "cos", "cos");
+		cosNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
+        cosNode->FindOutput("result")->SetType(Lib3MF::eImplicitPortType::Vector);
+		newFunction->AddLinkByNames("composeYZX.vector", "cos.A");
+
+		auto dotNode = newFunction->AddNode(
+			Lib3MF::eImplicitNodeType::Dot, "dot", "dot");
+
+		dotNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
+		dotNode->FindInput("B")->SetType(Lib3MF::eImplicitPortType::Vector);
+		newFunction->AddLinkByNames("sin.result","dot.A");
+		newFunction->AddLinkByNames("cos.result","dot.B");
+
+		auto output = newFunction->AddOutput(
+			"shape", "signed distance to the surface", Lib3MF::eImplicitPortType::Scalar);
+
+		output->SetReference("dot.result");
+
+		// write to file
+		writer3MF->WriteToFile(Volumetric::OutFolder + "ImplicitGyroid.3mf");
+
+		// read and compare
+    PModel ioModel = wrapper->CreateModel();
+    PReader ioReader = ioModel->QueryReader("3mf");
+    ioReader->ReadFromFile(Volumetric::OutFolder + "ImplicitGyroid.3mf");
+
+    // Check the function
+    auto functionIterator = ioModel->GetFunctions();
+    ASSERT_EQ(functionIterator->Count(), 1);
+
+    // Check the nodes
+    EXPECT_TRUE(functionIterator->MoveNext());
+
+    // Compare the functions
+    compareFunctions(newFunction, functionIterator->GetCurrentFunction());
+  }
+
 }

@@ -408,8 +408,8 @@ typedef enum eLib3MFImplicitNodeType {
   eImplicitNodeTypeComposeVector = 8, /** Creates a vector from three scalar values */
   eImplicitNodeTypeComposeMatrix = 9, /** Creates a matrix from nine scalar values */
   eImplicitNodeTypeComposeMatrixFromColumnVectors = 10, /** Creates a matrix from three vector values */
-  eImplicitNodeTypeDotProduct = 11, /** Calculates the dot product of two vector values */
-  eImplicitNodeTypeCrossProduct = 12, /** Calculates the cross product of two vector values */
+  eImplicitNodeTypeDot = 11, /** Calculates the dot product of two vector values */
+  eImplicitNodeTypeCross = 12, /** Calculates the cross product of two vector values */
   eImplicitNodeTypeMatVecMultiplication = 13, /** Multiplies a matrix with a vector */
   eImplicitNodeTypeTranspose = 14, /** Transposes a matrix */
   eImplicitNodeTypeSinus = 15, /** Calculates the sinus of a scalar value */
@@ -425,11 +425,9 @@ typedef enum eLib3MFImplicitNodeType {
   eImplicitNodeTypePow = 25, /** Calculates the power of two scalar values */
   eImplicitNodeTypeSqrt = 26, /** Calculates the square root of a scalar value */
   eImplicitNodeTypeFunctionCall = 27, /** Calls a function */
-  eImplicitNodeTypeDot = 28, /** Calculates the dot product of two vector values */
-  eImplicitNodeTypeCross = 29, /** Calculates the cross product of two vector values */
-  eImplicitNodeTypeMesh = 30, /** Calculates the signed distance to a mesh */
-  eImplicitNodeTypeLength = 31, /** Calculates the length of a vector */
-  eImplicitNodeTypeDecomposeVector = 32 /** Decomposes a vector into three scalar values */
+  eImplicitNodeTypeMesh = 28, /** Calculates the signed distance to a mesh */
+  eImplicitNodeTypeLength = 29, /** Calculates the length of a vector */
+  eImplicitNodeTypeDecomposeVector = 30 /** Decomposes a vector into three scalar values */
 } eLib3MFImplicitNodeType;
 
 /**

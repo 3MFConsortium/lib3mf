@@ -409,8 +409,8 @@ namespace Lib3MF {
     ComposeVector = 8, /** Creates a vector from three scalar values */
     ComposeMatrix = 9, /** Creates a matrix from nine scalar values */
     ComposeMatrixFromColumnVectors = 10, /** Creates a matrix from three vector values */
-    DotProduct = 11, /** Calculates the dot product of two vector values */
-    CrossProduct = 12, /** Calculates the cross product of two vector values */
+    Dot = 11, /** Calculates the dot product of two vector values */
+    Cross = 12, /** Calculates the cross product of two vector values */
     MatVecMultiplication = 13, /** Multiplies a matrix with a vector */
     Transpose = 14, /** Transposes a matrix */
     Sinus = 15, /** Calculates the sinus of a scalar value */
@@ -426,11 +426,9 @@ namespace Lib3MF {
     Pow = 25, /** Calculates the power of two scalar values */
     Sqrt = 26, /** Calculates the square root of a scalar value */
     FunctionCall = 27, /** Calls a function */
-    Dot = 28, /** Calculates the dot product of two vector values */
-    Cross = 29, /** Calculates the cross product of two vector values */
-    Mesh = 30, /** Calculates the signed distance to a mesh */
-    Length = 31, /** Calculates the length of a vector */
-    DecomposeVector = 32 /** Decomposes a vector into three scalar values */
+    Mesh = 28, /** Calculates the signed distance to a mesh */
+    Length = 29, /** Calculates the length of a vector */
+    DecomposeVector = 30 /** Decomposes a vector into three scalar values */
   };
   
   /**

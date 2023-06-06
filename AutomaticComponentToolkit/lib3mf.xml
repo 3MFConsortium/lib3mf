@@ -2170,9 +2170,9 @@
 			value="9" />
 		<option name="ComposeMatrixFromColumnVectors"
 			description="Creates a matrix from three vector values" value="10" />
-		<option name="DotProduct" description="Calculates the dot product of two vector values"
+		<option name="Dot" description="Calculates the dot product of two vector values"
 			value="11" />
-		<option name="CrossProduct" description="Calculates the cross product of two vector values"
+		<option name="Cross" description="Calculates the cross product of two vector values"
 			value="12" />
 		<option name="MatVecMultiplication" description="Multiplies a matrix with a vector"
 			value="13" />
@@ -2190,13 +2190,10 @@
 		<option name="Pow" description="Calculates the power of two scalar values" value="25" />
 		<option name="Sqrt" description="Calculates the square root of a scalar value" value="26" />
 		<option name="FunctionCall" description="Calls a function" value="27" />
-		<option name="Dot" description="Calculates the dot product of two vector values" value="28" />
-		<option name="Cross" description="Calculates the cross product of two vector values"
-			value="29" />
-		<option name="Mesh" description="Calculates the signed distance to a mesh" value="30" />
-		<option name="Length" description="Calculates the length of a vector" value="31" />
+		<option name="Mesh" description="Calculates the signed distance to a mesh" value="28" />
+		<option name="Length" description="Calculates the length of a vector" value="29" />
 		<option name="DecomposeVector" description="Decomposes a vector into three scalar values"
-			value="32" />
+			value="30" />
 	</enum>
 
 	<enum name="ImplicitPortType" description="The type of the port">

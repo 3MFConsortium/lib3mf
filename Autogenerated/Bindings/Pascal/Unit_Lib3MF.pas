@@ -258,8 +258,8 @@ type
 		eImplicitNodeTypeComposeVector,
 		eImplicitNodeTypeComposeMatrix,
 		eImplicitNodeTypeComposeMatrixFromColumnVectors,
-		eImplicitNodeTypeDotProduct,
-		eImplicitNodeTypeCrossProduct,
+		eImplicitNodeTypeDot,
+		eImplicitNodeTypeCross,
 		eImplicitNodeTypeMatVecMultiplication,
 		eImplicitNodeTypeTranspose,
 		eImplicitNodeTypeSinus,
@@ -275,8 +275,6 @@ type
 		eImplicitNodeTypePow,
 		eImplicitNodeTypeSqrt,
 		eImplicitNodeTypeFunctionCall,
-		eImplicitNodeTypeDot,
-		eImplicitNodeTypeCross,
 		eImplicitNodeTypeMesh,
 		eImplicitNodeTypeLength,
 		eImplicitNodeTypeDecomposeVector
@@ -9242,8 +9240,8 @@ implementation
 			eImplicitNodeTypeComposeVector: Result := 8;
 			eImplicitNodeTypeComposeMatrix: Result := 9;
 			eImplicitNodeTypeComposeMatrixFromColumnVectors: Result := 10;
-			eImplicitNodeTypeDotProduct: Result := 11;
-			eImplicitNodeTypeCrossProduct: Result := 12;
+			eImplicitNodeTypeDot: Result := 11;
+			eImplicitNodeTypeCross: Result := 12;
 			eImplicitNodeTypeMatVecMultiplication: Result := 13;
 			eImplicitNodeTypeTranspose: Result := 14;
 			eImplicitNodeTypeSinus: Result := 15;
@@ -9259,11 +9257,9 @@ implementation
 			eImplicitNodeTypePow: Result := 25;
 			eImplicitNodeTypeSqrt: Result := 26;
 			eImplicitNodeTypeFunctionCall: Result := 27;
-			eImplicitNodeTypeDot: Result := 28;
-			eImplicitNodeTypeCross: Result := 29;
-			eImplicitNodeTypeMesh: Result := 30;
-			eImplicitNodeTypeLength: Result := 31;
-			eImplicitNodeTypeDecomposeVector: Result := 32;
+			eImplicitNodeTypeMesh: Result := 28;
+			eImplicitNodeTypeLength: Result := 29;
+			eImplicitNodeTypeDecomposeVector: Result := 30;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
 		end;
@@ -9282,8 +9278,8 @@ implementation
 			8: Result := eImplicitNodeTypeComposeVector;
 			9: Result := eImplicitNodeTypeComposeMatrix;
 			10: Result := eImplicitNodeTypeComposeMatrixFromColumnVectors;
-			11: Result := eImplicitNodeTypeDotProduct;
-			12: Result := eImplicitNodeTypeCrossProduct;
+			11: Result := eImplicitNodeTypeDot;
+			12: Result := eImplicitNodeTypeCross;
 			13: Result := eImplicitNodeTypeMatVecMultiplication;
 			14: Result := eImplicitNodeTypeTranspose;
 			15: Result := eImplicitNodeTypeSinus;
@@ -9299,11 +9295,9 @@ implementation
 			25: Result := eImplicitNodeTypePow;
 			26: Result := eImplicitNodeTypeSqrt;
 			27: Result := eImplicitNodeTypeFunctionCall;
-			28: Result := eImplicitNodeTypeDot;
-			29: Result := eImplicitNodeTypeCross;
-			30: Result := eImplicitNodeTypeMesh;
-			31: Result := eImplicitNodeTypeLength;
-			32: Result := eImplicitNodeTypeDecomposeVector;
+			28: Result := eImplicitNodeTypeMesh;
+			29: Result := eImplicitNodeTypeLength;
+			30: Result := eImplicitNodeTypeDecomposeVector;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;

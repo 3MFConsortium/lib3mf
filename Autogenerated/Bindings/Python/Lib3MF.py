@@ -804,8 +804,8 @@ class ImplicitNodeType(CTypesEnum):
 	ComposeVector = 8
 	ComposeMatrix = 9
 	ComposeMatrixFromColumnVectors = 10
-	DotProduct = 11
-	CrossProduct = 12
+	Dot = 11
+	Cross = 12
 	MatVecMultiplication = 13
 	Transpose = 14
 	Sinus = 15
@@ -821,11 +821,9 @@ class ImplicitNodeType(CTypesEnum):
 	Pow = 25
 	Sqrt = 26
 	FunctionCall = 27
-	Dot = 28
-	Cross = 29
-	Mesh = 30
-	Length = 31
-	DecomposeVector = 32
+	Mesh = 28
+	Length = 29
+	DecomposeVector = 30
 '''Definition of ImplicitPortType
 '''
 class ImplicitPortType(CTypesEnum):

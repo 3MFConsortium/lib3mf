@@ -5212,8 +5212,8 @@ const (
 	ImplicitNodeType_ComposeVector = 8
 	ImplicitNodeType_ComposeMatrix = 9
 	ImplicitNodeType_ComposeMatrixFromColumnVectors = 10
-	ImplicitNodeType_DotProduct = 11
-	ImplicitNodeType_CrossProduct = 12
+	ImplicitNodeType_Dot = 11
+	ImplicitNodeType_Cross = 12
 	ImplicitNodeType_MatVecMultiplication = 13
 	ImplicitNodeType_Transpose = 14
 	ImplicitNodeType_Sinus = 15
@@ -5229,11 +5229,9 @@ const (
 	ImplicitNodeType_Pow = 25
 	ImplicitNodeType_Sqrt = 26
 	ImplicitNodeType_FunctionCall = 27
-	ImplicitNodeType_Dot = 28
-	ImplicitNodeType_Cross = 29
-	ImplicitNodeType_Mesh = 30
-	ImplicitNodeType_Length = 31
-	ImplicitNodeType_DecomposeVector = 32
+	ImplicitNodeType_Mesh = 28
+	ImplicitNodeType_Length = 29
+	ImplicitNodeType_DecomposeVector = 30
 )
 
 // ImplicitPortType represents a Lib3MF enum.

@@ -19272,8 +19272,8 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_ComposeVector"), Integer::New(isolate, 8));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_ComposeMatrix"), Integer::New(isolate, 9));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_ComposeMatrixFromColumnVectors"), Integer::New(isolate, 10));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_DotProduct"), Integer::New(isolate, 11));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_CrossProduct"), Integer::New(isolate, 12));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Dot"), Integer::New(isolate, 11));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Cross"), Integer::New(isolate, 12));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_MatVecMultiplication"), Integer::New(isolate, 13));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Transpose"), Integer::New(isolate, 14));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Sinus"), Integer::New(isolate, 15));
@@ -19289,11 +19289,9 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Pow"), Integer::New(isolate, 25));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Sqrt"), Integer::New(isolate, 26));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_FunctionCall"), Integer::New(isolate, 27));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Dot"), Integer::New(isolate, 28));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Cross"), Integer::New(isolate, 29));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Mesh"), Integer::New(isolate, 30));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Length"), Integer::New(isolate, 31));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_DecomposeVector"), Integer::New(isolate, 32));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Mesh"), Integer::New(isolate, 28));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Length"), Integer::New(isolate, 29));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_DecomposeVector"), Integer::New(isolate, 30));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitPortType_Scalar"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitPortType_Vector"), Integer::New(isolate, 2));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitPortType_Matrix"), Integer::New(isolate, 3));
