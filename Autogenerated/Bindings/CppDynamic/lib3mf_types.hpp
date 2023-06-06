@@ -429,7 +429,8 @@ namespace Lib3MF {
     Dot = 28, /** Calculates the dot product of two vector values */
     Cross = 29, /** Calculates the cross product of two vector values */
     Mesh = 30, /** Calculates the signed distance to a mesh */
-    Length = 31 /** Calculates the length of a vector */
+    Length = 31, /** Calculates the length of a vector */
+    DecomposeVector = 32 /** Decomposes a vector into three scalar values */
   };
   
   /**

@@ -91,7 +91,8 @@ namespace NMR
                 {eImplicitNodeType::Pow, {"pow", {"base", "exponent"}, {"result"}}},
                 {eImplicitNodeType::Sqrt, {"sqrt", {"A"}, {"result"}}},
                 {eImplicitNodeType::Mesh, {"mesh", {"point", "mesh"}, {"distance"}}},
-                {eImplicitNodeType::Length , {"length", {"A"}, {"result"}}}
+                {eImplicitNodeType::Length , {"length", {"A"}, {"result"}}},
+				{eImplicitNodeType::DecomposeVector , {"decomposevector", {"vector"}, {"x","y", "z"}}},
                 // clang-format on
               }
         {

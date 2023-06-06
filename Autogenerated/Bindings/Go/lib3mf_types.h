@@ -428,7 +428,8 @@ typedef enum eLib3MFImplicitNodeType {
   eImplicitNodeTypeDot = 28, /** Calculates the dot product of two vector values */
   eImplicitNodeTypeCross = 29, /** Calculates the cross product of two vector values */
   eImplicitNodeTypeMesh = 30, /** Calculates the signed distance to a mesh */
-  eImplicitNodeTypeLength = 31 /** Calculates the length of a vector */
+  eImplicitNodeTypeLength = 31, /** Calculates the length of a vector */
+  eImplicitNodeTypeDecomposeVector = 32 /** Decomposes a vector into three scalar values */
 } eLib3MFImplicitNodeType;
 
 /**

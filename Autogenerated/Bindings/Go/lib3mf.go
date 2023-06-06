@@ -5233,6 +5233,7 @@ const (
 	ImplicitNodeType_Cross = 29
 	ImplicitNodeType_Mesh = 30
 	ImplicitNodeType_Length = 31
+	ImplicitNodeType_DecomposeVector = 32
 )
 
 // ImplicitPortType represents a Lib3MF enum.

@@ -37,6 +37,7 @@ namespace NMR
 
     CModelScalarFieldFunction::CModelScalarFieldFunction(const ModelResourceID sID, CModel * pModel) : CModelScalarField(sID, pModel)
     {
+
     }
 
     void CModelScalarFieldFunction::setFunctionResourceID(UniqueResourceID ID)

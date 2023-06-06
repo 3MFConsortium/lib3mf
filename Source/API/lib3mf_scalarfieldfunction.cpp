@@ -43,6 +43,7 @@ using namespace Lib3MF::Impl;
 Lib3MF::Impl::CScalarFieldFunction::CScalarFieldFunction(
   NMR::PModelScalarFieldFunction pScalarFieldFunction) : CScalarField(pScalarFieldFunction), CResource(pScalarFieldFunction)
 {
+
 }
 
 void CScalarFieldFunction::SetFunction(IImplicitFunction * pFunction)

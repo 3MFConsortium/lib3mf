@@ -825,6 +825,7 @@ class ImplicitNodeType(CTypesEnum):
 	Cross = 29
 	Mesh = 30
 	Length = 31
+	DecomposeVector = 32
 '''Definition of ImplicitPortType
 '''
 class ImplicitPortType(CTypesEnum):

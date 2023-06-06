@@ -278,7 +278,8 @@ type
 		eImplicitNodeTypeDot,
 		eImplicitNodeTypeCross,
 		eImplicitNodeTypeMesh,
-		eImplicitNodeTypeLength
+		eImplicitNodeTypeLength,
+		eImplicitNodeTypeDecomposeVector
 	);
 
 	TLib3MFImplicitPortType = (
@@ -9262,6 +9263,7 @@ implementation
 			eImplicitNodeTypeCross: Result := 29;
 			eImplicitNodeTypeMesh: Result := 30;
 			eImplicitNodeTypeLength: Result := 31;
+			eImplicitNodeTypeDecomposeVector: Result := 32;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
 		end;
@@ -9301,6 +9303,7 @@ implementation
 			29: Result := eImplicitNodeTypeCross;
 			30: Result := eImplicitNodeTypeMesh;
 			31: Result := eImplicitNodeTypeLength;
+			32: Result := eImplicitNodeTypeDecomposeVector;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;

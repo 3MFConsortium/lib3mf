@@ -2195,6 +2195,8 @@
 			value="29" />
 		<option name="Mesh" description="Calculates the signed distance to a mesh" value="30" />
 		<option name="Length" description="Calculates the length of a vector" value="31" />
+		<option name="DecomposeVector" description="Decomposes a vector into three scalar values"
+			value="32" />
 	</enum>
 
 	<enum name="ImplicitPortType" description="The type of the port">

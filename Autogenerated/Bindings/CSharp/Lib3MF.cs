@@ -190,7 +190,8 @@ namespace Lib3MF {
 		Dot = 28,
 		Cross = 29,
 		Mesh = 30,
-		Length = 31
+		Length = 31,
+		DecomposeVector = 32
 	};
 
 	public enum eImplicitPortType {
