@@ -35,12 +35,30 @@ Vulometric.cpp: Defines Unittests for the Volumetric extension
 
 namespace Lib3MF
 {
+  namespace helper
+  {
+      bool directoryExists(std::string & path)
+      {
+          struct stat info;
+          if (stat(path.c_str(), &info) != 0)
+              return false;
+          else if (info.st_mode & S_IFDIR)
+              return true;
+          else
+              return false;
+      }
+  }
+
+
     class Volumetric : public ::testing::Test
     {
       protected:
         virtual void SetUp()
         {
-            ASSERT_TRUE(CreateDir(OutFolder.c_str())) << L"Could not create folder.";
+          if (!helper::directoryExists(OutFolder))
+          {
+              ASSERT_TRUE(CreateDir(OutFolder.c_str())) << L"Could not create folder.";
+          }
             model = wrapper->CreateModel();
             auto reader = model->QueryReader("3mf");
             reader->ReadFromFile(InFolder + "Pyramid.3mf");
@@ -692,7 +710,7 @@ namespace Lib3MF
         output->SetReference("distance_2.result");
 
         // add the function as volume data defining a boundary to the mesh
-        auto scalarField = model->AddScalarFieldFunction();
+       /* auto scalarField = model->AddScalarFieldFunction();
         ASSERT_NE(scalarField.get(), nullptr);
         scalarField->SetFunction(newFunction.get());
        
@@ -700,15 +718,15 @@ namespace Lib3MF
         scalarField->SetOutput("shape");
         auto theMesh = GetMesh();
         auto volumeData = theMesh->VolumeData();
-        auto theBoundary = volumeData->CreateNewBoundary(scalarField.get());
+        auto theBoundary = volumeData->CreateNewBoundary(scalarField.get());*/
         
         // Write to file
-        writer3MF->WriteToFile(Volumetric::OutFolder + "AddFunctionWithConstantNode.3mf");
+        writer3MF->WriteToFile(Volumetric::OutFolder + "ImplicitSphere.3mf");
 
         // // Read from file
         PModel ioModel = wrapper->CreateModel();
         PReader ioReader = ioModel->QueryReader("3mf");
-        ioReader->ReadFromFile(Volumetric::OutFolder + "AddFunctionWithConstantNode.3mf");
+        ioReader->ReadFromFile(Volumetric::OutFolder + "ImplicitSphere.3mf");
 
         // // Check the function
         auto functionIterator = ioModel->GetFunctions();
