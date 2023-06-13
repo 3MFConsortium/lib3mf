@@ -30,6 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Common/Platform/NMR_SAL.h>
 #include <Model/Classes/NMR_ModelImplicitPort.h>
+#include "Model/Classes/NMR_ModelMeshObject.h"
 #include <lib3mf_types.hpp>
 
 #include <memory>
@@ -40,14 +41,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace NMR
 {
-    using Ports = std::vector<PModelImplicitPort>;
-    using PPorts = std::shared_ptr<Ports>;
-  
     class CModelImplicitNode
     {
       private:
         ImplicitIdentifier m_identifier;
         std::string m_displayname;
+        std::string m_tag;
         Lib3MF::eImplicitNodeType m_type;
 
         PPorts m_inputs;
@@ -57,17 +56,25 @@ namespace NMR
         double m_constant = 0.;
         std::unique_ptr<Lib3MF::sVector> m_vector;
         std::unique_ptr<Lib3MF::sMatrix4x4> m_matrix;
+
+        // optional values for Mesh
+        PModelMeshObject m_pMeshObject;
+        // optional values for Function
+        // todo
     
       public:
         CModelImplicitNode(Lib3MF::eImplicitNodeType type,
                            ImplicitIdentifier const & identifier,
-                           std::string const & displayname);
+                           std::string const & displayname,
+                           std::string const & tag);
         CModelImplicitNode(Lib3MF::eImplicitNodeType type);
 
         ImplicitIdentifier const & getIdentifier() const;
         std::string const & getDisplayName() const;
+        std::string const& getTag() const;
         void setIdentifier(ImplicitIdentifier const & identifier);
         void setDisplayName(std::string const & displayname);
+        void setTag(std::string const& tag);
 
         void setType(Lib3MF::eImplicitNodeType type);
         Lib3MF::eImplicitNodeType getNodeType() const;
@@ -93,6 +100,9 @@ namespace NMR
 
         void setMatrix(const Lib3MF::sMatrix4x4 & value);
         Lib3MF::sMatrix4x4 getMatrix() const;
+
+        void CModelImplicitNode::setMesh(PModelMeshObject);
+        PModelMeshObject CModelImplicitNode::getMesh() const;
 
     };
 

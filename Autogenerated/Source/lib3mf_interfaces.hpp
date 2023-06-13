@@ -112,7 +112,9 @@ class IIterator;
 class IImplicitPortIterator;
 class IImplicitNode;
 class INodeIterator;
+class IFunction;
 class IImplicitFunction;
+class IFunctionFromImage3D;
 class IBuildItem;
 class IBuildItemIterator;
 class ISlice;
@@ -3684,6 +3686,18 @@ public:
 	virtual void SetDisplayName(const std::string & sDisplayName) = 0;
 
 	/**
+	* IImplicitNode::GetTag - Retrieves the tag of the node
+	* @return the tag
+	*/
+	virtual std::string GetTag() = 0;
+
+	/**
+	* IImplicitNode::SetTag - Sets the tag of the node
+	* @param[in] sTag - the tag
+	*/
+	virtual void SetTag(const std::string & sTag) = 0;
+
+	/**
 	* IImplicitNode::GetNodeType - Retrieves the type of the node
 	* @return the type of the node
 	*/
@@ -3767,6 +3781,30 @@ public:
 	*/
 	virtual Lib3MF::sMatrix4x4 GetMatrix() = 0;
 
+	/**
+	* IImplicitNode::SetMesh - Sets the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh
+	* @param[in] pValue - the mesh
+	*/
+	virtual void SetMesh(IMeshObject* pValue) = 0;
+
+	/**
+	* IImplicitNode::GetMesh - Retrieves the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh
+	* @return the mesh
+	*/
+	virtual IMeshObject * GetMesh() = 0;
+
+	/**
+	* IImplicitNode::SetFunction - Sets the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall
+	* @param[in] pValue - the function called
+	*/
+	virtual void SetFunction(IFunction* pValue) = 0;
+
+	/**
+	* IImplicitNode::GetFunction - Retrieves the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall
+	* @return the function called
+	*/
+	virtual IFunction * GetFunction() = 0;
+
 };
 
 typedef IBaseSharedPtr<IImplicitNode> PIImplicitNode;
@@ -3799,10 +3837,110 @@ typedef IBaseSharedPtr<INodeIterator> PINodeIterator;
 
 
 /*************************************************************************************************************************
+ Class interface for Function 
+**************************************************************************************************************************/
+
+class IFunction : public virtual IResource {
+public:
+	/**
+	* IFunction::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x9EFB2757CA1A5231UL; // First 64 bits of SHA1 of a string: "Lib3MF::Function"
+	}
+
+	/**
+	* IFunction::GetIdentifier - Retrieves the identifier of the function
+	* @return the identifier
+	*/
+	virtual std::string GetIdentifier() = 0;
+
+	/**
+	* IFunction::SetIdentifier - Sets the identifier of the function
+	* @param[in] sIdentifier - the identifier
+	*/
+	virtual void SetIdentifier(const std::string & sIdentifier) = 0;
+
+	/**
+	* IFunction::GetDisplayName - Retrieves the display name of the function
+	* @return the display name
+	*/
+	virtual std::string GetDisplayName() = 0;
+
+	/**
+	* IFunction::SetDisplayName - Sets the display name of the function
+	* @param[in] sDisplayName - the display name
+	*/
+	virtual void SetDisplayName(const std::string & sDisplayName) = 0;
+
+	/**
+	* IFunction::AddInput - Add an input
+	* @param[in] sIdentifier - the identifier of the input
+	* @param[in] sDisplayName - the display name of the input
+	* @param[in] eType - the type of the input
+	* @return The added input port
+	*/
+	virtual IImplicitPort * AddInput(const std::string & sIdentifier, const std::string & sDisplayName, const Lib3MF::eImplicitPortType eType) = 0;
+
+	/**
+	* IFunction::GetInputs - Retrieves the inputs
+	* @return iterator for the list of inputs
+	*/
+	virtual IImplicitPortIterator * GetInputs() = 0;
+
+	/**
+	* IFunction::RemoveInput - Removes an input
+	* @param[in] pInput - The input to be removed
+	*/
+	virtual void RemoveInput(IImplicitPort* pInput) = 0;
+
+	/**
+	* IFunction::AddOutput - Add an output
+	* @param[in] sIdentifier - the identifier of the output
+	* @param[in] sDisplayName - the display name of the output
+	* @param[in] eType - the type of the input
+	* @return The added input port
+	*/
+	virtual IImplicitPort * AddOutput(const std::string & sIdentifier, const std::string & sDisplayName, const Lib3MF::eImplicitPortType eType) = 0;
+
+	/**
+	* IFunction::GetOutputs - Retrieves the outputs
+	* @return iterator for the outputs
+	*/
+	virtual IImplicitPortIterator * GetOutputs() = 0;
+
+	/**
+	* IFunction::RemoveOutput - Removes an output
+	* @param[in] pOutput - The output to be removed
+	*/
+	virtual void RemoveOutput(IImplicitPort* pOutput) = 0;
+
+	/**
+	* IFunction::FindInput - Retrieves an input
+	* @param[in] sIdentifier - the identifier of the input
+	* @return the input port
+	*/
+	virtual IImplicitPort * FindInput(const std::string & sIdentifier) = 0;
+
+	/**
+	* IFunction::FindOutput - Retrieves an output
+	* @param[in] sIdentifier - the identifier of the output
+	* @return the output port
+	*/
+	virtual IImplicitPort * FindOutput(const std::string & sIdentifier) = 0;
+
+};
+
+typedef IBaseSharedPtr<IFunction> PIFunction;
+
+
+/*************************************************************************************************************************
  Class interface for ImplicitFunction 
 **************************************************************************************************************************/
 
-class IImplicitFunction : public virtual IResource {
+class IImplicitFunction : public virtual IFunction {
 public:
 	/**
 	* IImplicitFunction::ClassTypeId - Get Class Type Id
@@ -3814,37 +3952,14 @@ public:
 	}
 
 	/**
-	* IImplicitFunction::GetIdentifier - Retrieves the identifier of the function
-	* @return the identifier
-	*/
-	virtual std::string GetIdentifier() = 0;
-
-	/**
-	* IImplicitFunction::SetIdentifier - Sets the identifier of the function
-	* @param[in] sIdentifier - the identifier
-	*/
-	virtual void SetIdentifier(const std::string & sIdentifier) = 0;
-
-	/**
-	* IImplicitFunction::GetDisplayName - Retrieves the display name of the function
-	* @return the display name
-	*/
-	virtual std::string GetDisplayName() = 0;
-
-	/**
-	* IImplicitFunction::SetDisplayName - Sets the display name of the function
-	* @param[in] sDisplayName - the display name
-	*/
-	virtual void SetDisplayName(const std::string & sDisplayName) = 0;
-
-	/**
 	* IImplicitFunction::AddNode - Add a node
 	* @param[in] eNodeType - the type of the node
-	* @param[in] sIdentifier - the identifier of the input
-	* @param[in] sDisplayName - the display name of the input
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	virtual IImplicitNode * AddNode(const Lib3MF::eImplicitNodeType eNodeType, const std::string & sIdentifier, const std::string & sDisplayName) = 0;
+	virtual IImplicitNode * AddNode(const Lib3MF::eImplicitNodeType eNodeType, const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::GetNodes - Retrieves the nodes
@@ -3859,67 +3974,11 @@ public:
 	virtual void RemoveNode(IImplicitNode* pNode) = 0;
 
 	/**
-	* IImplicitFunction::AddInput - Add an input
-	* @param[in] sIdentifier - the identifier of the input
-	* @param[in] sDisplayName - the display name of the input
-	* @param[in] eType - the type of the input
-	* @return The added input port
-	*/
-	virtual IImplicitPort * AddInput(const std::string & sIdentifier, const std::string & sDisplayName, const Lib3MF::eImplicitPortType eType) = 0;
-
-	/**
-	* IImplicitFunction::GetInputs - Retrieves the inputs
-	* @return iterator for the list of inputs
-	*/
-	virtual IImplicitPortIterator * GetInputs() = 0;
-
-	/**
-	* IImplicitFunction::RemoveInput - Removes an input
-	* @param[in] pInput - The input to be removed
-	*/
-	virtual void RemoveInput(IImplicitPort* pInput) = 0;
-
-	/**
-	* IImplicitFunction::AddOutput - Add an output
-	* @param[in] sIdentifier - the identifier of the output
-	* @param[in] sDisplayName - the display name of the output
-	* @param[in] eType - the type of the input
-	* @return The added input port
-	*/
-	virtual IImplicitPort * AddOutput(const std::string & sIdentifier, const std::string & sDisplayName, const Lib3MF::eImplicitPortType eType) = 0;
-
-	/**
-	* IImplicitFunction::GetOutputs - Retrieves the outputs
-	* @return iterator for the outputs
-	*/
-	virtual IImplicitPortIterator * GetOutputs() = 0;
-
-	/**
-	* IImplicitFunction::RemoveOutput - Removes an output
-	* @param[in] pOutput - The output to be removed
-	*/
-	virtual void RemoveOutput(IImplicitPort* pOutput) = 0;
-
-	/**
 	* IImplicitFunction::AddLink - Add a link
 	* @param[in] pSource - the source port
 	* @param[in] pTarget - the target port
 	*/
 	virtual void AddLink(IImplicitPort* pSource, IImplicitPort* pTarget) = 0;
-
-	/**
-	* IImplicitFunction::FindInput - Retrieves an input
-	* @param[in] sIdentifier - the identifier of the input
-	* @return the input port
-	*/
-	virtual IImplicitPort * FindInput(const std::string & sIdentifier) = 0;
-
-	/**
-	* IImplicitFunction::FindOutput - Retrieves an output
-	* @param[in] sIdentifier - the identifier of the output
-	* @return the output port
-	*/
-	virtual IImplicitPort * FindOutput(const std::string & sIdentifier) = 0;
 
 	/**
 	* IImplicitFunction::AddLinkByNames - Add a link
@@ -3931,6 +3990,90 @@ public:
 };
 
 typedef IBaseSharedPtr<IImplicitFunction> PIImplicitFunction;
+
+
+/*************************************************************************************************************************
+ Class interface for FunctionFromImage3D 
+**************************************************************************************************************************/
+
+class IFunctionFromImage3D : public virtual IFunction {
+public:
+	/**
+	* IFunctionFromImage3D::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x9BD7D3C2026B8CE8UL; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionFromImage3D"
+	}
+
+	/**
+	* IFunctionFromImage3D::GetImage3D - Returns the selected 3D image.
+	* @return image instance
+	*/
+	virtual IImage3D * GetImage3D() = 0;
+
+	/**
+	* IFunctionFromImage3D::SetImage3D - Sets the 3D image of the selector.
+	* @param[in] pImage3D - image instance
+	*/
+	virtual void SetImage3D(IImage3D* pImage3D) = 0;
+
+	/**
+	* IFunctionFromImage3D::SetFilter - Sets the texture filter of the selector.
+	* @param[in] eFilter - texture filter
+	*/
+	virtual void SetFilter(const Lib3MF::eTextureFilter eFilter) = 0;
+
+	/**
+	* IFunctionFromImage3D::GetFilter - Returns the texture filter of the selector.
+	* @return texture filter
+	*/
+	virtual Lib3MF::eTextureFilter GetFilter() = 0;
+
+	/**
+	* IFunctionFromImage3D::SetTileStyles - Sets the tile styles of the selector.
+	* @param[in] eTileStyleU - tile style in U
+	* @param[in] eTileStyleV - tile style in V
+	* @param[in] eTileStyleW - tile style in W
+	*/
+	virtual void SetTileStyles(const Lib3MF::eTextureTileStyle eTileStyleU, const Lib3MF::eTextureTileStyle eTileStyleV, const Lib3MF::eTextureTileStyle eTileStyleW) = 0;
+
+	/**
+	* IFunctionFromImage3D::GetTileStyles - Retrieves the tile styles of the selector.
+	* @param[out] eTileStyleU - tile style in U
+	* @param[out] eTileStyleV - tile style in V
+	* @param[out] eTileStyleW - tile style in W
+	*/
+	virtual void GetTileStyles(Lib3MF::eTextureTileStyle & eTileStyleU, Lib3MF::eTextureTileStyle & eTileStyleV, Lib3MF::eTextureTileStyle & eTileStyleW) = 0;
+
+	/**
+	* IFunctionFromImage3D::GetOffset - returns the offset value for the pixel values in the Image3D
+	* @return the offset value for the pixel values in the Image3D
+	*/
+	virtual Lib3MF_double GetOffset() = 0;
+
+	/**
+	* IFunctionFromImage3D::SetOffset - Sets the offset value for the pixel values in the Image3D
+	* @param[in] dOffset - the offset value for the pixel values in the Image3D
+	*/
+	virtual void SetOffset(const Lib3MF_double dOffset) = 0;
+
+	/**
+	* IFunctionFromImage3D::GetScale - returns the scale value for the pixel values in the Image3D
+	* @return the scale value for the pixel values in the Image3D
+	*/
+	virtual Lib3MF_double GetScale() = 0;
+
+	/**
+	* IFunctionFromImage3D::SetScale - Sets the scale value for the pixel values in the Image3D
+	* @param[in] dScale - the scale value for the pixel values in the Image3D
+	*/
+	virtual void SetScale(const Lib3MF_double dScale) = 0;
+
+};
+
+typedef IBaseSharedPtr<IFunctionFromImage3D> PIFunctionFromImage3D;
 
 
 /*************************************************************************************************************************
@@ -5191,10 +5334,17 @@ public:
 	virtual IFunctionIterator * GetFunctions() = 0;
 
 	/**
-	* IModel::AddFunction - adds a function (e.g. for implicit geometries) to the model
+	* IModel::AddImplicitFunction - adds a function described by nodes to the model
 	* @return returns the function instance
 	*/
-	virtual IImplicitFunction * AddFunction() = 0;
+	virtual IImplicitFunction * AddImplicitFunction() = 0;
+
+	/**
+	* IModel::AddFunctionFromImage3D - adds a function defined by an image3d to the model
+	* @param[in] pImage3DInstance - the Image3D-instance used for this function
+	* @return returns the function instance
+	*/
+	virtual IFunctionFromImage3D * AddFunctionFromImage3D(IImage3D* pImage3DInstance) = 0;
 
 };
 

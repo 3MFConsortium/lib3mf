@@ -239,7 +239,9 @@ public:
 
 	IFunctionIterator * GetFunctions() override;
 
-	IImplicitFunction * AddFunction() override;
+	IImplicitFunction * AddImplicitFunction() override;
+
+	IFunctionFromImage3D* AddFunctionFromImage3D(IImage3D* pImage3DInstance) override;
 
 	IScalarFieldFunction * AddScalarFieldFunction() override;
 

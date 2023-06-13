@@ -50,11 +50,9 @@ namespace NMR
     }
 
     CModelImplicitFunction::CModelImplicitFunction(const ModelResourceID sID, CModel * pModel)
-        : CModelResource(sID, pModel)
+        : CModelFunction(sID, pModel)
     {
         m_nodes = std::make_shared<ImplicitNodes>();
-        m_inputs = std::make_shared<Ports>();
-        m_outputs = std::make_shared<Ports>();
     }
 
     std::string const & CModelImplicitFunction::getIdentifier() const
@@ -62,26 +60,17 @@ namespace NMR
         return m_identifier;
     }
 
-    std::string const & CModelImplicitFunction::getDisplayName() const
-    {
-        return m_displayname;
-    }
-
     void CModelImplicitFunction::setIdentifier(std::string const & identifier)
     {
         m_identifier = identifier;
     }
 
-    void CModelImplicitFunction::setDisplayName(std::string const & displayname)
-    {
-        m_displayname = displayname;
-    }
-
     PModelImplicitNode CModelImplicitFunction::addNode(const Lib3MF::eImplicitNodeType eNodeType,
                                                        const std::string & sIdentifier,
-                                                       const std::string & sDisplayName)
+                                                       const std::string & sDisplayName,
+                                                       const std::string & sTag)
     {
-        auto node = std::make_shared<CModelImplicitNode>(eNodeType, sIdentifier, sDisplayName); 
+        auto node = std::make_shared<CModelImplicitNode>(eNodeType, sIdentifier, sDisplayName, sTag); 
 
         m_nodeTypes.addExpectedPortsToNode(*node);
         m_nodes->push_back(node);
@@ -90,7 +79,7 @@ namespace NMR
 
     PModelImplicitNode CModelImplicitFunction::addNode(const Lib3MF::eImplicitNodeType eNodeType)
     {
-        return addNode(eNodeType, "", "");
+        return addNode(eNodeType, "", "", "");
     }
 
     PImplicitNodes NMR::CModelImplicitFunction::getNodes() const
@@ -170,60 +159,6 @@ namespace NMR
     {
         pTargetPort.setReference(makeReferenceIdentifier(pSourcePort.getParent()->getIdentifier(),
                                                          pSourcePort.getIdentifier()));
-    }
-
-    PModelImplicitPort CModelImplicitFunction::addInput(const std::string & sPortIdentifier,
-                                                        const std::string & sDisplayName,
-                                                        const Lib3MF::eImplicitPortType ePortType)
-    {
-        auto newPort =
-          std::make_shared<CModelImplicitPort>(sPortIdentifier, sDisplayName, ePortType);
-        m_inputs->push_back(newPort);
-        return newPort;
-    }
-
-    PModelImplicitPort CModelImplicitFunction::addOutput(const std::string & sPortIdentifier,
-                                                         const std::string & sDisplayName,
-                                                         const Lib3MF::eImplicitPortType ePortType)
-    {
-        auto newPort =
-          std::make_shared<CModelImplicitPort>(sPortIdentifier, sDisplayName, ePortType);
-        m_outputs->push_back(newPort);
-        return newPort;
-    }
-
-    PPorts CModelImplicitFunction::getInputs() const
-    {
-        return m_inputs;
-    }
-
-    PPorts CModelImplicitFunction::getOutputs() const
-    {
-        return m_outputs;
-    }
-
-    PModelImplicitPort CModelImplicitFunction::findInput(const std::string & sIdentifier)
-    {
-        for (auto & port : *m_inputs)
-        {
-            if (port->getIdentifier() == sIdentifier)
-            {
-                return port;
-            }
-        }
-        return {};
-    }
-
-    PModelImplicitPort CModelImplicitFunction::findOutput(const std::string & sIdentifier)
-    {
-        for (auto & port : *m_outputs)
-        {
-            if (port->getIdentifier() == sIdentifier)
-            {
-                return port;
-            }
-        }
-        return {};
     }
 
     std::string extractNodeName(const ImplicitIdentifier & sIdentifier)

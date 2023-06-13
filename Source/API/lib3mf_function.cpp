@@ -24,72 +24,89 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CImplicitFunction
+Abstract: This is a stub class definition of CFunction
 
 */
 
-#include "lib3mf_implicitfunction.hpp"
-#include "lib3mf_implicitnode.hpp"
-#include "lib3mf_implicitport.hpp"
+#include "lib3mf_function.hpp"
 #include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_implicitport.hpp"
+#include "lib3mf_implicitportiterator.hpp"
 
 // Include custom headers here.
-#include "lib3mf_nodeiterator.hpp"
-#include "lib3mf_implicitportiterator.hpp"
+
 
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CImplicitFunction 
+ Class definition of CFunction 
 **************************************************************************************************************************/
 
-NMR::CModelImplicitFunction* Lib3MF::Impl::CImplicitFunction::function() 
+NMR::CModelFunction* Lib3MF::Impl::CFunction::function()
 {
-
-	NMR::CModelImplicitFunction* pFunction = dynamic_cast<NMR::CModelImplicitFunction*>(resource().get());
+	NMR::CModelFunction* pFunction = dynamic_cast<NMR::CModelFunction*>(resource().get());
 	if (pFunction == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
 
 	return pFunction;
 }
 
-Lib3MF::Impl::CImplicitFunction::CImplicitFunction(NMR::PModelResource pResource)
-    : CResource(pResource), CFunction(pResource)
+Lib3MF::Impl::CFunction::CFunction(NMR::PModelResource pResource)
+	: CResource(pResource)
 {
 }
 
-std::string CImplicitFunction::GetIdentifier()
+std::string CFunction::GetDisplayName()
 {
-	return function()->getIdentifier();
+	return function()->getDisplayName();
 }
 
-void CImplicitFunction::SetIdentifier(const std::string & sIdentifier)
+void CFunction::SetDisplayName(const std::string& sDisplayName)
 {
-	function()->setIdentifier(sIdentifier);
+	function()->setDisplayName(sDisplayName);
 }
 
-IImplicitNode * CImplicitFunction::AddNode(const Lib3MF::eImplicitNodeType eNodeType, const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
+IImplicitPort* CFunction::AddInput(const std::string& sIdentifier,
+	const std::string& sDisplayName,
+	const Lib3MF::eImplicitPortType eType)
 {
-	auto newNode = function()->addNode(eNodeType, sIdentifier, sDisplayName, sTag);
-	return new CImplicitNode(newNode);
+
+	return new CImplicitPort(function()->addInput(sIdentifier, sDisplayName, eType));
 }
 
-INodeIterator * CImplicitFunction::GetNodes()
+IImplicitPortIterator* CFunction::GetInputs()
 {
-	return new CNodeIterator(function()->getNodes());
+	return new CImplicitPortIterator(function()->getInputs());
 }
 
-void CImplicitFunction::RemoveNode(IImplicitNode* pNode)
+void CFunction::RemoveInput(IImplicitPort* pInput)
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CImplicitFunction::AddLink(IImplicitPort* pSource, IImplicitPort* pTarget)
+IImplicitPort* CFunction::AddOutput(const std::string& sIdentifier,
+	const std::string& sDisplayName,
+	const Lib3MF::eImplicitPortType eType)
+{
+	return new CImplicitPort(function()->addOutput(sIdentifier, sDisplayName, eType));
+}
+
+IImplicitPortIterator* CFunction::GetOutputs()
+{
+	return new CImplicitPortIterator(function()->getOutputs());
+}
+
+void CFunction::RemoveOutput(IImplicitPort* pOutput)
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CImplicitFunction::AddLinkByNames(const std::string & sSource, const std::string & sTarget)
+IImplicitPort* CFunction::FindInput(const std::string& sIdentifier)
 {
-	function()->addLink(sSource, sTarget);
+	return new CImplicitPort(function()->findInput(sIdentifier));
+}
+
+IImplicitPort* CFunction::FindOutput(const std::string& sIdentifier)
+{
+	return new CImplicitPort(function()->findOutput(sIdentifier));
 }

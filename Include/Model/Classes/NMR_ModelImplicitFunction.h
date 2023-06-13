@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include "Model/Classes/NMR_ModelResource.h"
+#include "Model/Classes/NMR_ModelFunction.h"
 #include <Common/Platform/NMR_SAL.h>
 #include <Model/Classes/NMR_ModelImplicitNode.h>
 
@@ -56,30 +56,25 @@ namespace NMR
     ImplicitIdentifier makeReferenceIdentifier(const ImplicitIdentifier & sNodeIdentifier,
                                                const ImplicitIdentifier & sPortIdentifier);
 
-    class CModelImplicitFunction : public CModelResource
+    class CModelImplicitFunction : public CModelFunction
     {
       private:
         ImplicitIdentifier m_identifier;
-        std::string m_displayname;
         PImplicitNodes m_nodes;
         static const implicit::NodeTypes m_nodeTypes;
 
         CModelImplicitNode * findNode(const ImplicitIdentifier & sIdentifier) const;
 
-        PPorts m_inputs;
-        PPorts m_outputs;
-
       public:
         CModelImplicitFunction(_In_ const ModelResourceID sID, _In_ CModel * pModel);
 
         ImplicitIdentifier const & getIdentifier() const;
-        std::string const & getDisplayName() const;
         void setIdentifier(ImplicitIdentifier const & identifier);
-        void setDisplayName(std::string const & displayname);
 
         PModelImplicitNode addNode(const Lib3MF::eImplicitNodeType eNodeType,
                                    const std::string & sIdentifier,
-                                   const std::string & sDisplayName);
+                                   const std::string & sDisplayName,
+                                   const std::string & sTag);
 
         PModelImplicitNode addNode(const Lib3MF::eImplicitNodeType eNodeType);
 
@@ -89,20 +84,6 @@ namespace NMR
                      const ImplicitIdentifier & sTargetNodeIdentifier);
 
         void addLink(CModelImplicitPort const & pSourcePort, CModelImplicitPort & pTargetPort);
-
-        PModelImplicitPort addInput(const std::string & sPortIdentifier,
-                                    const std::string & sDisplayName,
-                                    const Lib3MF::eImplicitPortType ePortType);
-
-        PModelImplicitPort addOutput(const std::string & sPortIdentifier,
-                                     const std::string & sDisplayName,
-                                     const Lib3MF::eImplicitPortType ePortType);
-
-        PPorts getInputs() const;
-        PPorts getOutputs() const;
-
-        PModelImplicitPort findInput(const std::string & sIdentifier);
-        PModelImplicitPort findOutput(const std::string & sIdentifier);
     };
 
     using PModelImplicitFunction = std::shared_ptr<CModelImplicitFunction>;

@@ -108,6 +108,8 @@ namespace NMR
             writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_ID, node.getIdentifier());
             writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_DISPLAY_NAME,
                                  node.getDisplayName());
+            writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_TAG,
+                node.getTag());
 
             if (node.getNodeType() == Lib3MF::eImplicitNodeType::Constant)
             {

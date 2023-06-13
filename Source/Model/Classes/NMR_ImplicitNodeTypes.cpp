@@ -90,9 +90,12 @@ namespace NMR
                 {eImplicitNodeType::Fmod, {"fmod", {"A", "B"}, {"result"}}},
                 {eImplicitNodeType::Pow, {"pow", {"base", "exponent"}, {"result"}}},
                 {eImplicitNodeType::Sqrt, {"sqrt", {"A"}, {"result"}}},
-                {eImplicitNodeType::Mesh, {"mesh", {"point", "mesh"}, {"distance"}}},
+                {eImplicitNodeType::Mesh, {"mesh", {"point", "mesh"}, {"distance"}}}, // ?
+                // {eImplicitNodeType::Mesh, {"mesh", {"point"}, {"distance"}}} <- rather this?
+                // {eImplicitNodeType::FunctionCall, {"functioncall", {"*", "*", ...}, {"*", "*", ... }}}, ?
+                // both actually needs an attribute field: type, {name, {attributes}, {inputs}, {outputs}}
                 {eImplicitNodeType::Length , {"length", {"A"}, {"result"}}},
-				{eImplicitNodeType::DecomposeVector , {"decomposevector", {"vector"}, {"x","y", "z"}}},
+                {eImplicitNodeType::DecomposeVector , {"decomposevector", {"vector"}, {"x","y", "z"}}},
                 // clang-format on
               }
         {

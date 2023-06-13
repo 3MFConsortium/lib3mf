@@ -94,6 +94,18 @@ namespace Lib3MF
              */
             void SetDisplayName(const std::string & sDisplayName) override;
 
+            /**
+             * IImplicitNode::GetTag - Retrieves the tag of the node
+             * @return the tag
+             */
+            std::string GetTag() override;
+
+            /**
+            * IImplicitNode::SetTag - Sets the tag of the node
+            * @param[in] sTag - the tag
+            */
+            void SetTag(const std::string& sTag) override;
+
             Lib3MF::eImplicitNodeType GetNodeType() override;
 
             /**
@@ -181,6 +193,30 @@ namespace Lib3MF
              * @return the value
              */
             Lib3MF::sMatrix4x4 GetMatrix() override;
+
+            /**
+            * IImplicitNode::SetMesh - Sets the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh
+            * @param[in] pValue - the mesh
+            */
+            void SetMesh(IMeshObject* pValue) override;
+
+            /**
+            * IImplicitNode::GetMesh - Retrieves the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh
+            * @return the mesh
+            */
+            IMeshObject* GetMesh() override;
+
+            /**
+            * IImplicitNode::SetFunction - Sets the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall
+            * @param[in] pValue - the function called
+            */
+            void SetFunction(IFunction* pValue) override;
+
+            /**
+            * IImplicitNode::GetFunction - Retrieves the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall
+            * @return the function called
+            */
+            IFunction* GetFunction() override;
         };
 
     } // namespace Impl
