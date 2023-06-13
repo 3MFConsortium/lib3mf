@@ -2277,6 +2277,12 @@
 		<method name="SetDisplayName" description="Sets the display name of the node">
 			<param name="DisplayName" type="string" pass="in" description="the display name" />
 		</method>
+		<method name="GetTag" description="Retrieves the tag of the node">
+			<param name="Tag" type="string" pass="return" description="the tag" />
+		</method>
+		<method name="SetTag" description="Sets the tag of the node">
+			<param name="Tag" type="string" pass="in" description="the tag" />
+		</method>
 
 		<method name="GetNodeType" description="Retrieves the type of the node">
 			<param name="Type" type="enum" class="ImplicitNodeType" pass="return"
@@ -2356,6 +2362,27 @@
 			<param name="Value" type="struct" class="Matrix4x4" pass="return"
 				description="the matrix" />
 		</method>
+
+		<method name="SetMesh"
+			description="Sets the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh">
+			<param name="Value" type="class" class="MeshObject" pass="in" description="the mesh" />
+		</method>
+
+		<method name="GetMesh"
+			description="Retrieves the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh">
+			<param name="Value" type="class" class="MeshObject" pass="return" description="the mesh" />
+		</method>
+
+		<method name="SetFunction"
+			description="Sets the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall">
+			<param name="Value" type="class" class="Function" pass="in" description="the function called" />
+		</method>
+
+		<method name="GetFunction"
+			description="Retrieves the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall">
+			<param name="Value" type="class" class="Function" pass="return" description="the function called" />
+		</method>
+
 	</class>
 
 	<class name="NodeIterator" parent="Iterator">
@@ -2365,39 +2392,13 @@
 		</method>
 	</class>
 
-	<class name="ImplicitFunction" parent="Resource">
-		<method name="GetIdentifier" description="Retrieves the identifier of the function">
-			<param name="Identifier" type="string" pass="return" description="the identifier" />
-		</method>
-		<method name="SetIdentifier" description="Sets the identifier of the function">
-			<param name="Identifier" type="string" pass="in" description="the identifier" />
-		</method>
+
+	<class name="Function" parent="Resource">
 		<method name="GetDisplayName" description="Retrieves the display name of the function">
 			<param name="DisplayName" type="string" pass="return" description="the display name" />
 		</method>
 		<method name="SetDisplayName" description="Sets the display name of the function">
 			<param name="DisplayName" type="string" pass="in" description="the display name" />
-		</method>
-
-		<method name="AddNode" description="Add a node">
-			<param name="NodeType" type="enum" class="ImplicitNodeType" pass="in"
-				description="the type of the node" />
-			<param name="Identifier" type="string" pass="in"
-				description="the identifier of the input" />
-			<param name="DisplayName" type="string" pass="in"
-				description="the display name of the input" />
-			<param name="Node" type="class" class="ImplicitNode" pass="return"
-				description="the added node" />
-		</method>
-
-		<method name="GetNodes" description="Retrieves the nodes">
-			<param name="Iterator" type="class" class="NodeIterator" pass="return"
-				description="iterator for the list of nodes" />
-		</method>
-
-		<method name="RemoveNode" description="Removes a node">
-			<param name="Node" type="class" class="ImplicitNode" pass="in"
-				description="The node to be removed" />
 		</method>
 
 		<method name="AddInput" description="Add an input">
@@ -2442,13 +2443,6 @@
 				description="The output to be removed" />
 		</method>
 
-		<method name="AddLink" description="Add a link">
-			<param name="Source" type="class" class="ImplicitPort" pass="in"
-				description="the source port" />
-			<param name="Target" type="class" class="ImplicitPort" pass="in"
-				description="the target port" />
-		</method>
-
 		<method name="FindInput" description="Retrieves an input">
 			<param name="Identifier" type="string" pass="in"
 				description="the identifier of the input" />
@@ -2462,12 +2456,107 @@
 			<param name="Output" type="class" class="ImplicitPort" pass="return"
 				description="the output port" />
 		</method>
+	</class>
+	
+	<class name="ImplicitFunction" parent="Function">
+		<method name="GetIdentifier" description="Retrieves the identifier of the function">
+			<param name="Identifier" type="string" pass="return" description="the identifier" />
+		</method>
+		<method name="SetIdentifier" description="Sets the identifier of the function">
+			<param name="Identifier" type="string" pass="in" description="the identifier" />
+		</method>
+		
+		<method name="AddNode" description="Add a node">
+			<param name="NodeType" type="enum" class="ImplicitNodeType" pass="in"
+				description="the type of the node" />
+			<param name="Identifier" type="string" pass="in"
+				description="the identifier of the node" />
+			<param name="DisplayName" type="string" pass="in"
+				description="the display name of the node" />
+			<param name="Tag" type="string" pass="in"
+				description="the tag of the node" />
+			<param name="Node" type="class" class="ImplicitNode" pass="return"
+				description="the added node" />
+		</method>
+
+		<method name="GetNodes" description="Retrieves the nodes">
+			<param name="Iterator" type="class" class="NodeIterator" pass="return"
+				description="iterator for the list of nodes" />
+		</method>
+
+		<method name="RemoveNode" description="Removes a node">
+			<param name="Node" type="class" class="ImplicitNode" pass="in"
+				description="The node to be removed" />
+		</method>
+
+		<method name="AddLink" description="Add a link">
+			<param name="Source" type="class" class="ImplicitPort" pass="in"
+				description="the source port" />
+			<param name="Target" type="class" class="ImplicitPort" pass="in"
+				description="the target port" />
+		</method>
 
 		<method name="AddLinkByNames" description="Add a link">
 			<param name="Source" type="string" pass="in"
 				description="name of the source port in the format nodename.portname" />
 			<param name="Target" type="string" pass="in"
 				description="name of the target port in the format nodename.portname" />
+		</method>
+
+	</class>
+
+	<class name="FunctionFromImage3D" parent="Function">
+		<method name="GetImage3D" description="Returns the selected 3D image.">
+			<param name="Image3D" type="class" class="Image3D" pass="return"
+				description="image instance" />
+		</method>
+		<method name="SetImage3D" description="Sets the 3D image of the selector.">
+			<param name="Image3D" type="class" class="Image3D" pass="in"
+				description="image instance" />
+		</method>
+		<method name="SetFilter" description="Sets the texture filter of the selector.">
+			<param name="Filter" type="enum" class="TextureFilter" pass="in"
+				description="texture filter" />
+		</method>
+		<method name="GetFilter" description="Returns the texture filter of the selector.">
+			<param name="Filter" type="enum" class="TextureFilter" pass="return"
+				description="texture filter" />
+		</method>
+		<method name="SetTileStyles" description="Sets the tile styles of the selector.">
+			<param name="TileStyleU" type="enum" class="TextureTileStyle" pass="in"
+				description="tile style in U" />
+			<param name="TileStyleV" type="enum" class="TextureTileStyle" pass="in"
+				description="tile style in V" />
+			<param name="TileStyleW" type="enum" class="TextureTileStyle" pass="in"
+				description="tile style in W" />
+		</method>
+		<method name="GetTileStyles" description="Retrieves the tile styles of the selector.">
+			<param name="TileStyleU" type="enum" class="TextureTileStyle" pass="out"
+				description="tile style in U" />
+			<param name="TileStyleV" type="enum" class="TextureTileStyle" pass="out"
+				description="tile style in V" />
+			<param name="TileStyleW" type="enum" class="TextureTileStyle" pass="out"
+				description="tile style in W" />
+		</method>
+		<method name="GetOffset"
+			description="returns the offset value for the pixel values in the Image3D">
+			<param name="Offset" type="double" pass="return"
+				description="the offset value for the pixel values in the Image3D" />
+		</method>
+		<method name="SetOffset"
+			description="Sets the offset value for the pixel values in the Image3D">
+			<param name="Offset" type="double" pass="in"
+				description="the offset value for the pixel values in the Image3D" />
+		</method>
+		<method name="GetScale"
+			description="returns the scale value for the pixel values in the Image3D">
+			<param name="Scale" type="double" pass="return"
+				description="the scale value for the pixel values in the Image3D" />
+		</method>
+		<method name="SetScale"
+			description="Sets the scale value for the pixel values in the Image3D">
+			<param name="Scale" type="double" pass="in"
+				description="the scale value for the pixel values in the Image3D" />
 		</method>
 	</class>
 
@@ -3392,9 +3481,17 @@
 				description="returns the resource iterator" />
 		</method>
 
-		<method name="AddFunction"
-			description="adds a function (e.g. for implicit geometries) to the model">
+		<method name="AddImplicitFunction"
+			description="adds a function described by nodes to the model">
 			<param name="FunctionInstance" type="handle" class="ImplicitFunction" pass="return"
+				description="returns the function instance" />
+		</method>
+
+		<method name="AddFunctionFromImage3D"
+			description="adds a function defined by an image3d to the model">
+			<param name="Image3DInstance" type="handle" class="Image3D" pass="in"
+				description="the Image3D-instance used for this function" />
+			<param name="FunctionInstance" type="handle" class="FunctionFromImage3D" pass="return"
 				description="returns the function instance" />
 		</method>
 	</class>
