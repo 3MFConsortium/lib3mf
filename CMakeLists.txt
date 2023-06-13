@@ -120,7 +120,7 @@ if (${MSVC})
   if (CMAKE_GENERATOR MATCHES "Ninja")
     target_compile_options(${PROJECT_NAME} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-DNOMINMAX /Wv:18>)
   else()
-    target_compile_options(${PROJECT_NAME} PUBLIC -DNOMINMAX /Wv:18>)
+    target_compile_options(${PROJECT_NAME} PUBLIC -DNOMINMAX /Wv:18)
   endif()
 endif()
 
