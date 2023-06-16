@@ -94,7 +94,7 @@ namespace NMR
         void setConstant(double value);
         double getConstant() const;
 
-        void setVector(const Lib3MF::sVector & value);
+        void setVector(const Lib3MF::sVector & value);  
         Lib3MF::sVector getVector() const;
 
 
@@ -102,7 +102,7 @@ namespace NMR
         Lib3MF::sMatrix4x4 getMatrix() const;
 
         void setMesh(PModelMeshObject pMesh);
-        PModelMeshObject CModelImplicitNode::getMesh() const;
+        PModelMeshObject getMesh() const;
 
     };
 
