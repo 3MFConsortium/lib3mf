@@ -101,7 +101,7 @@ namespace NMR
         void setMatrix(const Lib3MF::sMatrix4x4 & value);
         Lib3MF::sMatrix4x4 getMatrix() const;
 
-        void CModelImplicitNode::setMesh(PModelMeshObject);
+        void CModelImplicitNode::setMesh(PModelMeshObject pMesh);
         PModelMeshObject CModelImplicitNode::getMesh() const;
 
     };
