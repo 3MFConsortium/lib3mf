@@ -30,6 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <lib3mf_types.hpp>
 #include <memory>
+#include <vector>
 #include <string>
 
 namespace NMR
@@ -77,4 +78,7 @@ namespace NMR
     };
 
     using PModelImplicitPort = std::shared_ptr<CModelImplicitPort>;
+
+    using Ports = std::vector<PModelImplicitPort>;
+    using PPorts = std::shared_ptr<Ports>;
 }

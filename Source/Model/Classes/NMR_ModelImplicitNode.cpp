@@ -37,10 +37,12 @@ namespace NMR
    
     CModelImplicitNode::CModelImplicitNode(Lib3MF::eImplicitNodeType type,
                                            ImplicitIdentifier const & identifier,
-                                           std::string const & displayname)
+                                           std::string const & displayname,
+                                           std::string const& tag)
         : m_type(type)
         , m_identifier(identifier)
         , m_displayname(displayname)
+        , m_tag(tag)
     {
         m_outputs = std::make_shared<Ports>();
         m_inputs = std::make_shared<Ports>();
@@ -63,12 +65,12 @@ namespace NMR
         return m_displayname;
     }
 
-    void CModelImplicitNode::setIdentifier(ImplicitIdentifier const & identifier)
+    void CModelImplicitNode::setIdentifier(ImplicitIdentifier const& identifier)
     {
         m_identifier = identifier;
     }
 
-    void CModelImplicitNode::setDisplayName(std::string const & displayname)
+    void CModelImplicitNode::setDisplayName(std::string const& displayname)
     {
         m_displayname = displayname;
     }
@@ -76,6 +78,16 @@ namespace NMR
     void NMR::CModelImplicitNode::setType(Lib3MF::eImplicitNodeType type)
     {
         m_type = type;
+    }
+
+    void CModelImplicitNode::setTag(std::string const& tag)
+    {
+        m_tag = tag;
+    }
+
+    std::string const& CModelImplicitNode::getTag() const
+    {
+        return m_tag;
     }
 
     Lib3MF::eImplicitNodeType CModelImplicitNode::getNodeType() const
@@ -165,7 +177,7 @@ namespace NMR
         return *m_vector;
     }
 
-    void CModelImplicitNode::setMatrix(const Lib3MF::sMatrix4x4 & value)
+    void CModelImplicitNode::setMatrix(const Lib3MF::sMatrix4x4& value)
     {
         if (m_type != Lib3MF::eImplicitNodeType::ConstMat)
             throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -180,5 +192,22 @@ namespace NMR
         if (!m_matrix)
             throw CNMRException(NMR_ERROR_INVALIDPARAM);
         return *m_matrix;
+    }
+
+    void CModelImplicitNode::setMesh(PModelMeshObject pMesh)
+    {
+        if (m_type != Lib3MF::eImplicitNodeType::Mesh)
+            throw CNMRException(NMR_ERROR_INVALIDPARAM);
+        m_pMeshObject = pMesh;
+    }
+
+    PModelMeshObject CModelImplicitNode::getMesh() const
+    {
+        if (m_type != Lib3MF::eImplicitNodeType::Mesh)
+            throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+        if (!m_pMeshObject)
+            throw CNMRException(NMR_ERROR_INVALIDPARAM);
+        return m_pMeshObject;
     }
 }

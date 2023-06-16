@@ -32,6 +32,8 @@ Abstract: This is a stub class definition of CImplicitNode
 #include "lib3mf_implicitport.hpp"
 #include "lib3mf_implicitportiterator.hpp"
 #include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_meshobject.hpp"
+#include <Model/Classes/NMR_ModelMeshObject.h>
 
 // Include custom headers here.
 
@@ -56,9 +58,19 @@ std::string CImplicitNode::GetDisplayName()
     return m_pImplicitNode->getDisplayName();
 }
 
-void CImplicitNode::SetDisplayName(const std::string & sDisplayName)
+void CImplicitNode::SetDisplayName(const std::string& sDisplayName)
 {
     m_pImplicitNode->setDisplayName(sDisplayName);
+}
+
+std::string CImplicitNode::GetTag()
+{
+    return m_pImplicitNode->getTag();
+}
+
+void CImplicitNode::SetTag(const std::string& sTag)
+{
+    m_pImplicitNode->setTag(sTag);
 }
 
 CImplicitNode::CImplicitNode(NMR::PModelImplicitNode pImplicitNode)
@@ -132,3 +144,32 @@ Lib3MF::sMatrix4x4 CImplicitNode::GetMatrix()
 {
     return m_pImplicitNode->getMatrix();
 }
+
+
+void CImplicitNode::SetMesh(IMeshObject* pValue)
+{
+    CMeshObject* pMeshObject = dynamic_cast<CMeshObject*>(pValue);
+    if (!pMeshObject)
+        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+    NMR::PModelMeshObject pModelMeshObject = std::static_pointer_cast<NMR::CModelMeshObject>(pMeshObject->resource());
+    if (!pModelMeshObject)
+        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+    m_pImplicitNode->setMesh(pModelMeshObject);
+}
+
+IMeshObject* CImplicitNode::GetMesh()
+{
+    return new CMeshObject(m_pImplicitNode->getMesh());
+}
+
+void CImplicitNode::SetFunction(IFunction* pValue)
+{
+    // m_pImplicitNode->setFunction();
+}
+
+IFunction* CImplicitNode::GetFunction()
+{
+    return nullptr;
+    // return m_pImplicitNode->getFunction();
+}
+

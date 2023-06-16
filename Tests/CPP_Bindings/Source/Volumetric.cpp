@@ -442,7 +442,7 @@ namespace Lib3MF
         EXPECT_EQ(resourceIteratorBefore->Count(), 2);
         auto functionIteratorBefore = model->GetFunctions();
         EXPECT_EQ(functionIteratorBefore->Count(), 0);
-        PImplicitFunction newFunction = model->AddFunction();
+        PImplicitFunction newFunction = model->AddImplicitFunction();
         std::string const displayName = "test";
         newFunction->SetDisplayName(displayName);
 
@@ -460,7 +460,7 @@ namespace Lib3MF
     TEST_F(Volumetric, AddFunction_AddedFunctionAreWrittenTo3mfFile)
     {
 
-        PImplicitFunction newFunction = model->AddFunction();
+        PImplicitFunction newFunction = model->AddImplicitFunction();
         std::string const displayName = "test";
         newFunction->SetDisplayName(displayName);
         auto const expectedResourceId = newFunction->GetModelResourceID();
@@ -483,14 +483,14 @@ namespace Lib3MF
     // Function with an "addition" node
     TEST_F(Volumetric, AddFunction_AddedFunctionWithAdditionNodeAreWrittenTo3mfFile)
     {
-        PImplicitFunction newFunction = model->AddFunction();
+        PImplicitFunction newFunction = model->AddImplicitFunction();
         std::string const displayName = "test";
         newFunction->SetDisplayName(displayName);
         auto const expectedResourceId = newFunction->GetModelResourceID();
 
         // Add an addition node
         auto node =
-          newFunction->AddNode(Lib3MF::eImplicitNodeType::Addition, "addition_1", "addition 1");
+          newFunction->AddNode(Lib3MF::eImplicitNodeType::Addition, "addition_1", "addition 1", "group_a");
 
         // Check if the node is added
         {
@@ -607,7 +607,7 @@ namespace Lib3MF
     // Function with multiple nodes and links between them
     TEST_F(Volumetric, AddFunction_MultipleNodesAndLinksAreWrittenTo3mfFile)
     {
-        PImplicitFunction newFunction = model->AddFunction();
+        PImplicitFunction newFunction = model->AddImplicitFunction();
         std::string const displayName = "test";
         newFunction->SetDisplayName(displayName);
         auto const expectedResourceId = newFunction->GetModelResourceID();
@@ -617,11 +617,11 @@ namespace Lib3MF
 
         // Add some nodes
         auto addNode =
-          newFunction->AddNode(Lib3MF::eImplicitNodeType::Addition, "addition_1", "addition 1");
+          newFunction->AddNode(Lib3MF::eImplicitNodeType::Addition, "addition_1", "addition 1", "group_a");
         auto subNode = newFunction->AddNode(
-          Lib3MF::eImplicitNodeType::Subtraction, "substraction_1", "substraction 1");
+          Lib3MF::eImplicitNodeType::Subtraction, "substraction_1", "substraction 1", "group_a");
         auto mulNode = newFunction->AddNode(
-          Lib3MF::eImplicitNodeType::Multiplication, "multiplication_1", "multiplication 3");
+          Lib3MF::eImplicitNodeType::Multiplication, "multiplication_1", "multiplication 3", "group_a");
 
         // Add some links
         newFunction->AddLinkByNames("addition_1.result", "substraction_1.A");
@@ -655,7 +655,7 @@ namespace Lib3MF
     // Function with constant node
     TEST_F(Volumetric, ImplicitSphere)
     {
-        PImplicitFunction newFunction = model->AddFunction();
+        PImplicitFunction newFunction = model->AddImplicitFunction();
         newFunction->SetDisplayName("sphere");
         auto const expectedResourceId = newFunction->GetModelResourceID();
 
@@ -664,7 +664,7 @@ namespace Lib3MF
 
         // Add some nodes
         auto constMatrixNode =
-          newFunction->AddNode(Lib3MF::eImplicitNodeType::ConstMat, "matrix_1", "unused example matrix");
+          newFunction->AddNode(Lib3MF::eImplicitNodeType::ConstMat, "matrix_1", "unused example matrix", "group_a");
         
         // clang-format off
         constMatrixNode->SetMatrix(
@@ -675,16 +675,16 @@ namespace Lib3MF
         // clang-format on
         
         auto constNode = newFunction->AddNode(
-          Lib3MF::eImplicitNodeType::Constant, "radius", "radius of the spehere");
+          Lib3MF::eImplicitNodeType::Constant, "radius", "radius of the spehere", "group_a");
         constNode->SetConstant(1.23456);
 
         auto constVecNode = newFunction->AddNode(
-          Lib3MF::eImplicitNodeType::ConstVec, "vector_1", "translation vector");
+          Lib3MF::eImplicitNodeType::ConstVec, "vector_1", "translation vector", "group_a");
         constVecNode->SetVector({1.23456, 2.34567, 3.45678});
         constVecNode->FindOutput("vector")->SetType(Lib3MF::eImplicitPortType::Vector);
 
         auto subNode = newFunction->AddNode(
-          Lib3MF::eImplicitNodeType::Subtraction, "translate_1", "Translation");
+          Lib3MF::eImplicitNodeType::Subtraction, "translate_1", "Translation", "group_a");
 
         auto subInputA = subNode->FindInput("A");
         auto subInputB = subNode->FindInput("B");
@@ -695,14 +695,14 @@ namespace Lib3MF
         subNode->FindOutput("result")->SetType(Lib3MF::eImplicitPortType::Vector);
 
         auto distanceToSpehereNode = newFunction->AddNode(
-          Lib3MF::eImplicitNodeType::Length, "distance_1", "distance to sphere");
+          Lib3MF::eImplicitNodeType::Length, "distance_1", "distance to sphere", "group_a");
 
         distanceToSpehereNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
         distanceToSpehereNode->FindInput("A")->SetReference("translate_1.result");
 
         // Substract radius from distance
         auto subNode2 = newFunction->AddNode(
-          Lib3MF::eImplicitNodeType::Subtraction, "distance_2", "distance to sphere");
+          Lib3MF::eImplicitNodeType::Subtraction, "distance_2", "distance to sphere", "group_a");
         subNode2->FindInput("A")->SetReference("distance_1.result");
 
         auto output = newFunction->AddOutput(
@@ -742,7 +742,7 @@ namespace Lib3MF
 
 	TEST_F(Volumetric, ImplicitGyroid)
 	{
-		PImplicitFunction newFunction = model->AddFunction();
+		PImplicitFunction newFunction = model->AddImplicitFunction();
 		newFunction->SetDisplayName("gyroid");
 
 		auto functionArgument =
@@ -750,13 +750,13 @@ namespace Lib3MF
 
 
 		auto decomposePos = newFunction->AddNode(
-			Lib3MF::eImplicitNodeType::DecomposeVector, "decomposePos", "decompose pos");
+			Lib3MF::eImplicitNodeType::DecomposeVector, "decomposePos", "decompose pos", "group_a");
 
 		decomposePos->FindInput("vector")->SetType(Lib3MF::eImplicitPortType::Vector);
 		newFunction->AddLinkByNames("inputs.pos", "decomposePos.vector");
 
 		auto composeYZX = newFunction->AddNode(
-			Lib3MF::eImplicitNodeType::ComposeVector, "composeYZX", "compose yzx");
+			Lib3MF::eImplicitNodeType::ComposeVector, "composeYZX", "compose yzx", "group_a");
         composeYZX->FindOutput("vector")->SetType(Lib3MF::eImplicitPortType::Vector);
 
 		newFunction->AddLinkByNames("decomposePos.z", "composeYZX.y");
@@ -765,19 +765,19 @@ namespace Lib3MF
 
 		// Add the necessay nodes and links for the gyroid (dot(sin(pos), cos(composeYZX))
 		auto sinNode = newFunction->AddNode(
-			Lib3MF::eImplicitNodeType::Sinus, "sin", "sin");
+			Lib3MF::eImplicitNodeType::Sinus, "sin", "sin", "group_a");
 		sinNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
 		sinNode->FindOutput("result")->SetType(Lib3MF::eImplicitPortType::Vector);
 		newFunction->AddLinkByNames("inputs.pos", "sin.A");
 
 		auto cosNode = newFunction->AddNode(
-			Lib3MF::eImplicitNodeType::Cosinus, "cos", "cos");
+			Lib3MF::eImplicitNodeType::Cosinus, "cos", "cos", "group_a");
 		cosNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
         cosNode->FindOutput("result")->SetType(Lib3MF::eImplicitPortType::Vector);
 		newFunction->AddLinkByNames("composeYZX.vector", "cos.A");
 
 		auto dotNode = newFunction->AddNode(
-			Lib3MF::eImplicitNodeType::Dot, "dot", "dot");
+			Lib3MF::eImplicitNodeType::Dot, "dot", "dot", "group_a");
 
 		dotNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
 		dotNode->FindInput("B")->SetType(Lib3MF::eImplicitPortType::Vector);

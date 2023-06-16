@@ -61,10 +61,9 @@ private:
 
 protected:
 
-	NMR::PModelResource resource();
-	NMR::CModel* model();
-
 public:
+	NMR::CModel* model();
+	NMR::PModelResource resource();
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.

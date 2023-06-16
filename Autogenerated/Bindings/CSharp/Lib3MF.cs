@@ -1426,6 +1426,12 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_setdisplayname", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitNode_SetDisplayName (IntPtr Handle, byte[] ADisplayName);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_gettag", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitNode_GetTag (IntPtr Handle, UInt32 sizeTag, out UInt32 neededTag, IntPtr dataTag);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_settag", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitNode_SetTag (IntPtr Handle, byte[] ATag);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_getnodetype", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitNode_GetNodeType (IntPtr Handle, out Int32 AType);
 
@@ -1465,23 +1471,59 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_getmatrix", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitNode_GetMatrix (IntPtr Handle, out InternalMatrix4x4 AValue);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_setmesh", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitNode_SetMesh (IntPtr Handle, IntPtr AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_getmesh", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitNode_GetMesh (IntPtr Handle, out IntPtr AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_setfunction", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitNode_SetFunction (IntPtr Handle, IntPtr AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_getfunction", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitNode_GetFunction (IntPtr Handle, out IntPtr AValue);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_nodeiterator_getcurrent", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 NodeIterator_GetCurrent (IntPtr Handle, out IntPtr ANode);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_getidentifier", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitFunction_GetIdentifier (IntPtr Handle, UInt32 sizeIdentifier, out UInt32 neededIdentifier, IntPtr dataIdentifier);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_function_getidentifier", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Function_GetIdentifier (IntPtr Handle, UInt32 sizeIdentifier, out UInt32 neededIdentifier, IntPtr dataIdentifier);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_setidentifier", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitFunction_SetIdentifier (IntPtr Handle, byte[] AIdentifier);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_function_setidentifier", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Function_SetIdentifier (IntPtr Handle, byte[] AIdentifier);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_getdisplayname", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitFunction_GetDisplayName (IntPtr Handle, UInt32 sizeDisplayName, out UInt32 neededDisplayName, IntPtr dataDisplayName);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_function_getdisplayname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Function_GetDisplayName (IntPtr Handle, UInt32 sizeDisplayName, out UInt32 neededDisplayName, IntPtr dataDisplayName);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_setdisplayname", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitFunction_SetDisplayName (IntPtr Handle, byte[] ADisplayName);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_function_setdisplayname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Function_SetDisplayName (IntPtr Handle, byte[] ADisplayName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_function_addinput", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Function_AddInput (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName, Int32 AType, out IntPtr APort);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_function_getinputs", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Function_GetInputs (IntPtr Handle, out IntPtr AIterator);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_function_removeinput", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Function_RemoveInput (IntPtr Handle, IntPtr AInput);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_function_addoutput", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Function_AddOutput (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName, Int32 AType, out IntPtr APort);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_function_getoutputs", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Function_GetOutputs (IntPtr Handle, out IntPtr AIterator);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_function_removeoutput", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Function_RemoveOutput (IntPtr Handle, IntPtr AOutput);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_function_findinput", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Function_FindInput (IntPtr Handle, byte[] AIdentifier, out IntPtr AInput);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_function_findoutput", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Function_FindOutput (IntPtr Handle, byte[] AIdentifier, out IntPtr AOutput);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addnode", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitFunction_AddNode (IntPtr Handle, Int32 ANodeType, byte[] AIdentifier, byte[] ADisplayName, out IntPtr ANode);
+			public unsafe extern static Int32 ImplicitFunction_AddNode (IntPtr Handle, Int32 ANodeType, byte[] AIdentifier, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_getnodes", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_GetNodes (IntPtr Handle, out IntPtr AIterator);
@@ -1489,35 +1531,41 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_removenode", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_RemoveNode (IntPtr Handle, IntPtr ANode);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addinput", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitFunction_AddInput (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName, Int32 AType, out IntPtr APort);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_getinputs", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitFunction_GetInputs (IntPtr Handle, out IntPtr AIterator);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_removeinput", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitFunction_RemoveInput (IntPtr Handle, IntPtr AInput);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addoutput", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitFunction_AddOutput (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName, Int32 AType, out IntPtr APort);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_getoutputs", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitFunction_GetOutputs (IntPtr Handle, out IntPtr AIterator);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_removeoutput", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitFunction_RemoveOutput (IntPtr Handle, IntPtr AOutput);
-
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addlink", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_AddLink (IntPtr Handle, IntPtr ASource, IntPtr ATarget);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_findinput", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitFunction_FindInput (IntPtr Handle, byte[] AIdentifier, out IntPtr AInput);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_findoutput", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitFunction_FindOutput (IntPtr Handle, byte[] AIdentifier, out IntPtr AOutput);
-
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addlinkbynames", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_AddLinkByNames (IntPtr Handle, byte[] ASource, byte[] ATarget);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionfromimage3d_getimage3d", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionFromImage3D_GetImage3D (IntPtr Handle, out IntPtr AImage3D);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionfromimage3d_setimage3d", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionFromImage3D_SetImage3D (IntPtr Handle, IntPtr AImage3D);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionfromimage3d_setfilter", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionFromImage3D_SetFilter (IntPtr Handle, Int32 AFilter);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionfromimage3d_getfilter", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionFromImage3D_GetFilter (IntPtr Handle, out Int32 AFilter);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionfromimage3d_settilestyles", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionFromImage3D_SetTileStyles (IntPtr Handle, Int32 ATileStyleU, Int32 ATileStyleV, Int32 ATileStyleW);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionfromimage3d_gettilestyles", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionFromImage3D_GetTileStyles (IntPtr Handle, out Int32 ATileStyleU, out Int32 ATileStyleV, out Int32 ATileStyleW);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionfromimage3d_getoffset", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionFromImage3D_GetOffset (IntPtr Handle, out Double AOffset);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionfromimage3d_setoffset", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionFromImage3D_SetOffset (IntPtr Handle, Double AOffset);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionfromimage3d_getscale", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionFromImage3D_GetScale (IntPtr Handle, out Double AScale);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionfromimage3d_setscale", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionFromImage3D_SetScale (IntPtr Handle, Double AScale);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_builditem_getobjectresource", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BuildItem_GetObjectResource (IntPtr Handle, out IntPtr AObjectResource);
@@ -1996,8 +2044,11 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getfunctions", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetFunctions (IntPtr Handle, out IntPtr ATheResourceIterator);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addfunction", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_AddFunction (IntPtr Handle, out IntPtr AFunctionInstance);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addimplicitfunction", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_AddImplicitFunction (IntPtr Handle, out IntPtr AFunctionInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addfunctionfromimage3d", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_AddFunctionFromImage3D (IntPtr Handle, IntPtr AImage3DInstance, out IntPtr AFunctionInstance);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_getlibraryversion", CharSet = CharSet.Ansi, CallingConvention=CallingConvention.Cdecl)]
 			public extern static Int32 GetLibraryVersion (out UInt32 AMajor, out UInt32 AMinor, out UInt32 AMicro);
@@ -2472,7 +2523,9 @@ namespace Lib3MF {
 					case 0xC62268F2D7C7012C: Object = new CImplicitPortIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPortIterator"
 					case 0xE72592A7725AB29B: Object = new CImplicitNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitNode"
 					case 0xFC006BC888CAB4D0: Object = new CNodeIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::NodeIterator"
+					case 0x9EFB2757CA1A5231: Object = new CFunction(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Function"
 					case 0x6CE54469EEA83BC1: Object = new CImplicitFunction(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitFunction"
+					case 0x9BD7D3C2026B8CE8: Object = new CFunctionFromImage3D(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionFromImage3D"
 					case 0x68FB2D5FFC4BA12A: Object = new CBuildItem(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItem"
 					case 0xA7D21BD364910860: Object = new CBuildItemIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItemIterator"
 					case 0x2198BCF4D8DF9C40: Object = new CSlice(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Slice"
@@ -5941,6 +5994,27 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.ImplicitNode_SetDisplayName (Handle, byteDisplayName));
 		}
 
+		public String GetTag ()
+		{
+			UInt32 sizeTag = 0;
+			UInt32 neededTag = 0;
+			CheckError(Internal.Lib3MFWrapper.ImplicitNode_GetTag (Handle, sizeTag, out neededTag, IntPtr.Zero));
+			sizeTag = neededTag;
+			byte[] bytesTag = new byte[sizeTag];
+			GCHandle dataTag = GCHandle.Alloc(bytesTag, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitNode_GetTag (Handle, sizeTag, out neededTag, dataTag.AddrOfPinnedObject()));
+			dataTag.Free();
+			return Encoding.UTF8.GetString(bytesTag).TrimEnd(char.MinValue);
+		}
+
+		public void SetTag (String ATag)
+		{
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitNode_SetTag (Handle, byteTag));
+		}
+
 		public eImplicitNodeType GetNodeType ()
 		{
 			Int32 resultType = 0;
@@ -6047,6 +6121,40 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.convertInternalToStruct_Matrix4x4 (intresultValue);
 		}
 
+		public void SetMesh (CMeshObject AValue)
+		{
+			IntPtr AValueHandle = IntPtr.Zero;
+			if (AValue != null)
+				AValueHandle = AValue.GetHandle();
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitNode_SetMesh (Handle, AValueHandle));
+		}
+
+		public CMeshObject GetMesh ()
+		{
+			IntPtr newValue = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitNode_GetMesh (Handle, out newValue));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CMeshObject>(newValue);
+		}
+
+		public void SetFunction (CFunction AValue)
+		{
+			IntPtr AValueHandle = IntPtr.Zero;
+			if (AValue != null)
+				AValueHandle = AValue.GetHandle();
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitNode_SetFunction (Handle, AValueHandle));
+		}
+
+		public CFunction GetFunction ()
+		{
+			IntPtr newValue = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitNode_GetFunction (Handle, out newValue));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CFunction>(newValue);
+		}
+
 	}
 
 	public class CNodeIterator : CIterator
@@ -6065,9 +6173,9 @@ namespace Lib3MF {
 
 	}
 
-	public class CImplicitFunction : CResource
+	public class CFunction : CResource
 	{
-		public CImplicitFunction (IntPtr NewHandle) : base (NewHandle)
+		public CFunction (IntPtr NewHandle) : base (NewHandle)
 		{
 		}
 
@@ -6075,12 +6183,12 @@ namespace Lib3MF {
 		{
 			UInt32 sizeIdentifier = 0;
 			UInt32 neededIdentifier = 0;
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_GetIdentifier (Handle, sizeIdentifier, out neededIdentifier, IntPtr.Zero));
+			CheckError(Internal.Lib3MFWrapper.Function_GetIdentifier (Handle, sizeIdentifier, out neededIdentifier, IntPtr.Zero));
 			sizeIdentifier = neededIdentifier;
 			byte[] bytesIdentifier = new byte[sizeIdentifier];
 			GCHandle dataIdentifier = GCHandle.Alloc(bytesIdentifier, GCHandleType.Pinned);
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_GetIdentifier (Handle, sizeIdentifier, out neededIdentifier, dataIdentifier.AddrOfPinnedObject()));
+			CheckError(Internal.Lib3MFWrapper.Function_GetIdentifier (Handle, sizeIdentifier, out neededIdentifier, dataIdentifier.AddrOfPinnedObject()));
 			dataIdentifier.Free();
 			return Encoding.UTF8.GetString(bytesIdentifier).TrimEnd(char.MinValue);
 		}
@@ -6089,19 +6197,19 @@ namespace Lib3MF {
 		{
 			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_SetIdentifier (Handle, byteIdentifier));
+			CheckError(Internal.Lib3MFWrapper.Function_SetIdentifier (Handle, byteIdentifier));
 		}
 
 		public String GetDisplayName ()
 		{
 			UInt32 sizeDisplayName = 0;
 			UInt32 neededDisplayName = 0;
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_GetDisplayName (Handle, sizeDisplayName, out neededDisplayName, IntPtr.Zero));
+			CheckError(Internal.Lib3MFWrapper.Function_GetDisplayName (Handle, sizeDisplayName, out neededDisplayName, IntPtr.Zero));
 			sizeDisplayName = neededDisplayName;
 			byte[] bytesDisplayName = new byte[sizeDisplayName];
 			GCHandle dataDisplayName = GCHandle.Alloc(bytesDisplayName, GCHandleType.Pinned);
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_GetDisplayName (Handle, sizeDisplayName, out neededDisplayName, dataDisplayName.AddrOfPinnedObject()));
+			CheckError(Internal.Lib3MFWrapper.Function_GetDisplayName (Handle, sizeDisplayName, out neededDisplayName, dataDisplayName.AddrOfPinnedObject()));
 			dataDisplayName.Free();
 			return Encoding.UTF8.GetString(bytesDisplayName).TrimEnd(char.MinValue);
 		}
@@ -6110,17 +6218,100 @@ namespace Lib3MF {
 		{
 			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_SetDisplayName (Handle, byteDisplayName));
+			CheckError(Internal.Lib3MFWrapper.Function_SetDisplayName (Handle, byteDisplayName));
 		}
 
-		public CImplicitNode AddNode (eImplicitNodeType ANodeType, String AIdentifier, String ADisplayName)
+		public CImplicitPort AddInput (String AIdentifier, String ADisplayName, eImplicitPortType AType)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			Int32 enumType = (Int32) AType;
+			IntPtr newPort = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Function_AddInput (Handle, byteIdentifier, byteDisplayName, enumType, out newPort));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newPort);
+		}
+
+		public CImplicitPortIterator GetInputs ()
+		{
+			IntPtr newIterator = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Function_GetInputs (Handle, out newIterator));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPortIterator>(newIterator);
+		}
+
+		public void RemoveInput (CImplicitPort AInput)
+		{
+			IntPtr AInputHandle = IntPtr.Zero;
+			if (AInput != null)
+				AInputHandle = AInput.GetHandle();
+
+			CheckError(Internal.Lib3MFWrapper.Function_RemoveInput (Handle, AInputHandle));
+		}
+
+		public CImplicitPort AddOutput (String AIdentifier, String ADisplayName, eImplicitPortType AType)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			Int32 enumType = (Int32) AType;
+			IntPtr newPort = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Function_AddOutput (Handle, byteIdentifier, byteDisplayName, enumType, out newPort));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newPort);
+		}
+
+		public CImplicitPortIterator GetOutputs ()
+		{
+			IntPtr newIterator = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Function_GetOutputs (Handle, out newIterator));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPortIterator>(newIterator);
+		}
+
+		public void RemoveOutput (CImplicitPort AOutput)
+		{
+			IntPtr AOutputHandle = IntPtr.Zero;
+			if (AOutput != null)
+				AOutputHandle = AOutput.GetHandle();
+
+			CheckError(Internal.Lib3MFWrapper.Function_RemoveOutput (Handle, AOutputHandle));
+		}
+
+		public CImplicitPort FindInput (String AIdentifier)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			IntPtr newInput = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Function_FindInput (Handle, byteIdentifier, out newInput));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newInput);
+		}
+
+		public CImplicitPort FindOutput (String AIdentifier)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			IntPtr newOutput = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Function_FindOutput (Handle, byteIdentifier, out newOutput));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newOutput);
+		}
+
+	}
+
+	public class CImplicitFunction : CFunction
+	{
+		public CImplicitFunction (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CImplicitNode AddNode (eImplicitNodeType ANodeType, String AIdentifier, String ADisplayName, String ATag)
 		{
 			Int32 enumNodeType = (Int32) ANodeType;
 			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
 			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
 			IntPtr newNode = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddNode (Handle, enumNodeType, byteIdentifier, byteDisplayName, out newNode));
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddNode (Handle, enumNodeType, byteIdentifier, byteDisplayName, byteTag, out newNode));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitNode>(newNode);
 		}
 
@@ -6141,62 +6332,6 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_RemoveNode (Handle, ANodeHandle));
 		}
 
-		public CImplicitPort AddInput (String AIdentifier, String ADisplayName, eImplicitPortType AType)
-		{
-			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
-			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
-			Int32 enumType = (Int32) AType;
-			IntPtr newPort = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddInput (Handle, byteIdentifier, byteDisplayName, enumType, out newPort));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newPort);
-		}
-
-		public CImplicitPortIterator GetInputs ()
-		{
-			IntPtr newIterator = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_GetInputs (Handle, out newIterator));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPortIterator>(newIterator);
-		}
-
-		public void RemoveInput (CImplicitPort AInput)
-		{
-			IntPtr AInputHandle = IntPtr.Zero;
-			if (AInput != null)
-				AInputHandle = AInput.GetHandle();
-
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_RemoveInput (Handle, AInputHandle));
-		}
-
-		public CImplicitPort AddOutput (String AIdentifier, String ADisplayName, eImplicitPortType AType)
-		{
-			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
-			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
-			Int32 enumType = (Int32) AType;
-			IntPtr newPort = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddOutput (Handle, byteIdentifier, byteDisplayName, enumType, out newPort));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newPort);
-		}
-
-		public CImplicitPortIterator GetOutputs ()
-		{
-			IntPtr newIterator = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_GetOutputs (Handle, out newIterator));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPortIterator>(newIterator);
-		}
-
-		public void RemoveOutput (CImplicitPort AOutput)
-		{
-			IntPtr AOutputHandle = IntPtr.Zero;
-			if (AOutput != null)
-				AOutputHandle = AOutput.GetHandle();
-
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_RemoveOutput (Handle, AOutputHandle));
-		}
-
 		public void AddLink (CImplicitPort ASource, CImplicitPort ATarget)
 		{
 			IntPtr ASourceHandle = IntPtr.Zero;
@@ -6209,30 +6344,101 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddLink (Handle, ASourceHandle, ATargetHandle));
 		}
 
-		public CImplicitPort FindInput (String AIdentifier)
-		{
-			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
-			IntPtr newInput = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_FindInput (Handle, byteIdentifier, out newInput));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newInput);
-		}
-
-		public CImplicitPort FindOutput (String AIdentifier)
-		{
-			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
-			IntPtr newOutput = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_FindOutput (Handle, byteIdentifier, out newOutput));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newOutput);
-		}
-
 		public void AddLinkByNames (String ASource, String ATarget)
 		{
 			byte[] byteSource = Encoding.UTF8.GetBytes(ASource + char.MinValue);
 			byte[] byteTarget = Encoding.UTF8.GetBytes(ATarget + char.MinValue);
 
 			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddLinkByNames (Handle, byteSource, byteTarget));
+		}
+
+	}
+
+	public class CFunctionFromImage3D : CFunction
+	{
+		public CFunctionFromImage3D (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CImage3D GetImage3D ()
+		{
+			IntPtr newImage3D = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.FunctionFromImage3D_GetImage3D (Handle, out newImage3D));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImage3D>(newImage3D);
+		}
+
+		public void SetImage3D (CImage3D AImage3D)
+		{
+			IntPtr AImage3DHandle = IntPtr.Zero;
+			if (AImage3D != null)
+				AImage3DHandle = AImage3D.GetHandle();
+
+			CheckError(Internal.Lib3MFWrapper.FunctionFromImage3D_SetImage3D (Handle, AImage3DHandle));
+		}
+
+		public void SetFilter (eTextureFilter AFilter)
+		{
+			Int32 enumFilter = (Int32) AFilter;
+
+			CheckError(Internal.Lib3MFWrapper.FunctionFromImage3D_SetFilter (Handle, enumFilter));
+		}
+
+		public eTextureFilter GetFilter ()
+		{
+			Int32 resultFilter = 0;
+
+			CheckError(Internal.Lib3MFWrapper.FunctionFromImage3D_GetFilter (Handle, out resultFilter));
+			return (eTextureFilter) (resultFilter);
+		}
+
+		public void SetTileStyles (eTextureTileStyle ATileStyleU, eTextureTileStyle ATileStyleV, eTextureTileStyle ATileStyleW)
+		{
+			Int32 enumTileStyleU = (Int32) ATileStyleU;
+			Int32 enumTileStyleV = (Int32) ATileStyleV;
+			Int32 enumTileStyleW = (Int32) ATileStyleW;
+
+			CheckError(Internal.Lib3MFWrapper.FunctionFromImage3D_SetTileStyles (Handle, enumTileStyleU, enumTileStyleV, enumTileStyleW));
+		}
+
+		public void GetTileStyles (out eTextureTileStyle ATileStyleU, out eTextureTileStyle ATileStyleV, out eTextureTileStyle ATileStyleW)
+		{
+			Int32 resultTileStyleU = 0;
+			Int32 resultTileStyleV = 0;
+			Int32 resultTileStyleW = 0;
+
+			CheckError(Internal.Lib3MFWrapper.FunctionFromImage3D_GetTileStyles (Handle, out resultTileStyleU, out resultTileStyleV, out resultTileStyleW));
+			ATileStyleU = (eTextureTileStyle) (resultTileStyleU);
+			ATileStyleV = (eTextureTileStyle) (resultTileStyleV);
+			ATileStyleW = (eTextureTileStyle) (resultTileStyleW);
+		}
+
+		public Double GetOffset ()
+		{
+			Double resultOffset = 0;
+
+			CheckError(Internal.Lib3MFWrapper.FunctionFromImage3D_GetOffset (Handle, out resultOffset));
+			return resultOffset;
+		}
+
+		public void SetOffset (Double AOffset)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.FunctionFromImage3D_SetOffset (Handle, AOffset));
+		}
+
+		public Double GetScale ()
+		{
+			Double resultScale = 0;
+
+			CheckError(Internal.Lib3MFWrapper.FunctionFromImage3D_GetScale (Handle, out resultScale));
+			return resultScale;
+		}
+
+		public void SetScale (Double AScale)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.FunctionFromImage3D_SetScale (Handle, AScale));
 		}
 
 	}
@@ -7756,12 +7962,23 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CFunctionIterator>(newTheResourceIterator);
 		}
 
-		public CImplicitFunction AddFunction ()
+		public CImplicitFunction AddImplicitFunction ()
 		{
 			IntPtr newFunctionInstance = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.Model_AddFunction (Handle, out newFunctionInstance));
+			CheckError(Internal.Lib3MFWrapper.Model_AddImplicitFunction (Handle, out newFunctionInstance));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitFunction>(newFunctionInstance);
+		}
+
+		public CFunctionFromImage3D AddFunctionFromImage3D (CImage3D AImage3DInstance)
+		{
+			IntPtr AImage3DInstanceHandle = IntPtr.Zero;
+			if (AImage3DInstance != null)
+				AImage3DInstanceHandle = AImage3DInstance.GetHandle();
+			IntPtr newFunctionInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_AddFunctionFromImage3D (Handle, AImage3DInstanceHandle, out newFunctionInstance));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CFunctionFromImage3D>(newFunctionInstance);
 		}
 
 	}

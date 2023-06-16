@@ -3554,6 +3554,26 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getdisplayname(Lib3MF_ImplicitN
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_setdisplayname(Lib3MF_ImplicitNode pImplicitNode, const char * pDisplayName);
 
 /**
+* Retrieves the tag of the node
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[in] nTagBufferSize - size of the buffer (including trailing 0)
+* @param[out] pTagNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pTagBuffer -  buffer of the tag, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_gettag(Lib3MF_ImplicitNode pImplicitNode, const Lib3MF_uint32 nTagBufferSize, Lib3MF_uint32* pTagNeededChars, char * pTagBuffer);
+
+/**
+* Sets the tag of the node
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[in] pTag - the tag
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_settag(Lib3MF_ImplicitNode pImplicitNode, const char * pTag);
+
+/**
 * Retrieves the type of the node
 *
 * @param[in] pImplicitNode - ImplicitNode instance.
@@ -3676,6 +3696,42 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_setmatrix(Lib3MF_ImplicitNode p
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getmatrix(Lib3MF_ImplicitNode pImplicitNode, Lib3MF::sMatrix4x4 * pValue);
 
+/**
+* Sets the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[in] pValue - the mesh
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_setmesh(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_MeshObject pValue);
+
+/**
+* Retrieves the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[out] pValue - the mesh
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getmesh(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_MeshObject * pValue);
+
+/**
+* Sets the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[in] pValue - the function called
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_setfunction(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Function pValue);
+
+/**
+* Retrieves the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[out] pValue - the function called
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getfunction(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Function * pValue);
+
 /*************************************************************************************************************************
  Class definition for NodeIterator
 **************************************************************************************************************************/
@@ -3690,60 +3746,145 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getmatrix(Lib3MF_ImplicitNode p
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_nodeiterator_getcurrent(Lib3MF_NodeIterator pNodeIterator, Lib3MF_ImplicitNode * pNode);
 
 /*************************************************************************************************************************
- Class definition for ImplicitFunction
+ Class definition for Function
 **************************************************************************************************************************/
 
 /**
 * Retrieves the identifier of the function
 *
-* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pFunction - Function instance.
 * @param[in] nIdentifierBufferSize - size of the buffer (including trailing 0)
 * @param[out] pIdentifierNeededChars - will be filled with the count of the written bytes, or needed buffer size.
 * @param[out] pIdentifierBuffer -  buffer of the identifier, may be NULL
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_getidentifier(Lib3MF_ImplicitFunction pImplicitFunction, const Lib3MF_uint32 nIdentifierBufferSize, Lib3MF_uint32* pIdentifierNeededChars, char * pIdentifierBuffer);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_function_getidentifier(Lib3MF_Function pFunction, const Lib3MF_uint32 nIdentifierBufferSize, Lib3MF_uint32* pIdentifierNeededChars, char * pIdentifierBuffer);
 
 /**
 * Sets the identifier of the function
 *
-* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pFunction - Function instance.
 * @param[in] pIdentifier - the identifier
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_setidentifier(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_function_setidentifier(Lib3MF_Function pFunction, const char * pIdentifier);
 
 /**
 * Retrieves the display name of the function
 *
-* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pFunction - Function instance.
 * @param[in] nDisplayNameBufferSize - size of the buffer (including trailing 0)
 * @param[out] pDisplayNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
 * @param[out] pDisplayNameBuffer -  buffer of the display name, may be NULL
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_getdisplayname(Lib3MF_ImplicitFunction pImplicitFunction, const Lib3MF_uint32 nDisplayNameBufferSize, Lib3MF_uint32* pDisplayNameNeededChars, char * pDisplayNameBuffer);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_function_getdisplayname(Lib3MF_Function pFunction, const Lib3MF_uint32 nDisplayNameBufferSize, Lib3MF_uint32* pDisplayNameNeededChars, char * pDisplayNameBuffer);
 
 /**
 * Sets the display name of the function
 *
-* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pFunction - Function instance.
 * @param[in] pDisplayName - the display name
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_setdisplayname(Lib3MF_ImplicitFunction pImplicitFunction, const char * pDisplayName);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_function_setdisplayname(Lib3MF_Function pFunction, const char * pDisplayName);
+
+/**
+* Add an input
+*
+* @param[in] pFunction - Function instance.
+* @param[in] pIdentifier - the identifier of the input
+* @param[in] pDisplayName - the display name of the input
+* @param[in] eType - the type of the input
+* @param[out] pPort - The added input port
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_function_addinput(Lib3MF_Function pFunction, const char * pIdentifier, const char * pDisplayName, Lib3MF::eImplicitPortType eType, Lib3MF_ImplicitPort * pPort);
+
+/**
+* Retrieves the inputs
+*
+* @param[in] pFunction - Function instance.
+* @param[out] pIterator - iterator for the list of inputs
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_function_getinputs(Lib3MF_Function pFunction, Lib3MF_ImplicitPortIterator * pIterator);
+
+/**
+* Removes an input
+*
+* @param[in] pFunction - Function instance.
+* @param[in] pInput - The input to be removed
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_function_removeinput(Lib3MF_Function pFunction, Lib3MF_ImplicitPort pInput);
+
+/**
+* Add an output
+*
+* @param[in] pFunction - Function instance.
+* @param[in] pIdentifier - the identifier of the output
+* @param[in] pDisplayName - the display name of the output
+* @param[in] eType - the type of the input
+* @param[out] pPort - The added input port
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_function_addoutput(Lib3MF_Function pFunction, const char * pIdentifier, const char * pDisplayName, Lib3MF::eImplicitPortType eType, Lib3MF_ImplicitPort * pPort);
+
+/**
+* Retrieves the outputs
+*
+* @param[in] pFunction - Function instance.
+* @param[out] pIterator - iterator for the outputs
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_function_getoutputs(Lib3MF_Function pFunction, Lib3MF_ImplicitPortIterator * pIterator);
+
+/**
+* Removes an output
+*
+* @param[in] pFunction - Function instance.
+* @param[in] pOutput - The output to be removed
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_function_removeoutput(Lib3MF_Function pFunction, Lib3MF_ImplicitPort pOutput);
+
+/**
+* Retrieves an input
+*
+* @param[in] pFunction - Function instance.
+* @param[in] pIdentifier - the identifier of the input
+* @param[out] pInput - the input port
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_function_findinput(Lib3MF_Function pFunction, const char * pIdentifier, Lib3MF_ImplicitPort * pInput);
+
+/**
+* Retrieves an output
+*
+* @param[in] pFunction - Function instance.
+* @param[in] pIdentifier - the identifier of the output
+* @param[out] pOutput - the output port
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_function_findoutput(Lib3MF_Function pFunction, const char * pIdentifier, Lib3MF_ImplicitPort * pOutput);
+
+/*************************************************************************************************************************
+ Class definition for ImplicitFunction
+**************************************************************************************************************************/
 
 /**
 * Add a node
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
 * @param[in] eNodeType - the type of the node
-* @param[in] pIdentifier - the identifier of the input
-* @param[in] pDisplayName - the display name of the input
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
 * @param[out] pNode - the added node
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addnode(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF::eImplicitNodeType eNodeType, const char * pIdentifier, const char * pDisplayName, Lib3MF_ImplicitNode * pNode);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addnode(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF::eImplicitNodeType eNodeType, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_ImplicitNode * pNode);
 
 /**
 * Retrieves the nodes
@@ -3764,66 +3905,6 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_getnodes(Lib3MF_ImplicitFun
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_removenode(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitNode pNode);
 
 /**
-* Add an input
-*
-* @param[in] pImplicitFunction - ImplicitFunction instance.
-* @param[in] pIdentifier - the identifier of the input
-* @param[in] pDisplayName - the display name of the input
-* @param[in] eType - the type of the input
-* @param[out] pPort - The added input port
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addinput(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, Lib3MF::eImplicitPortType eType, Lib3MF_ImplicitPort * pPort);
-
-/**
-* Retrieves the inputs
-*
-* @param[in] pImplicitFunction - ImplicitFunction instance.
-* @param[out] pIterator - iterator for the list of inputs
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_getinputs(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPortIterator * pIterator);
-
-/**
-* Removes an input
-*
-* @param[in] pImplicitFunction - ImplicitFunction instance.
-* @param[in] pInput - The input to be removed
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_removeinput(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPort pInput);
-
-/**
-* Add an output
-*
-* @param[in] pImplicitFunction - ImplicitFunction instance.
-* @param[in] pIdentifier - the identifier of the output
-* @param[in] pDisplayName - the display name of the output
-* @param[in] eType - the type of the input
-* @param[out] pPort - The added input port
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addoutput(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, Lib3MF::eImplicitPortType eType, Lib3MF_ImplicitPort * pPort);
-
-/**
-* Retrieves the outputs
-*
-* @param[in] pImplicitFunction - ImplicitFunction instance.
-* @param[out] pIterator - iterator for the outputs
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_getoutputs(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPortIterator * pIterator);
-
-/**
-* Removes an output
-*
-* @param[in] pImplicitFunction - ImplicitFunction instance.
-* @param[in] pOutput - The output to be removed
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_removeoutput(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPort pOutput);
-
-/**
 * Add a link
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
@@ -3834,26 +3915,6 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_removeoutput(Lib3MF_Implici
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addlink(Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF_ImplicitPort pSource, Lib3MF_ImplicitPort pTarget);
 
 /**
-* Retrieves an input
-*
-* @param[in] pImplicitFunction - ImplicitFunction instance.
-* @param[in] pIdentifier - the identifier of the input
-* @param[out] pInput - the input port
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_findinput(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, Lib3MF_ImplicitPort * pInput);
-
-/**
-* Retrieves an output
-*
-* @param[in] pImplicitFunction - ImplicitFunction instance.
-* @param[in] pIdentifier - the identifier of the output
-* @param[out] pOutput - the output port
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_findoutput(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, Lib3MF_ImplicitPort * pOutput);
-
-/**
 * Add a link
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
@@ -3862,6 +3923,104 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_findoutput(Lib3MF_ImplicitF
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addlinkbynames(Lib3MF_ImplicitFunction pImplicitFunction, const char * pSource, const char * pTarget);
+
+/*************************************************************************************************************************
+ Class definition for FunctionFromImage3D
+**************************************************************************************************************************/
+
+/**
+* Returns the selected 3D image.
+*
+* @param[in] pFunctionFromImage3D - FunctionFromImage3D instance.
+* @param[out] pImage3D - image instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionfromimage3d_getimage3d(Lib3MF_FunctionFromImage3D pFunctionFromImage3D, Lib3MF_Image3D * pImage3D);
+
+/**
+* Sets the 3D image of the selector.
+*
+* @param[in] pFunctionFromImage3D - FunctionFromImage3D instance.
+* @param[in] pImage3D - image instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionfromimage3d_setimage3d(Lib3MF_FunctionFromImage3D pFunctionFromImage3D, Lib3MF_Image3D pImage3D);
+
+/**
+* Sets the texture filter of the selector.
+*
+* @param[in] pFunctionFromImage3D - FunctionFromImage3D instance.
+* @param[in] eFilter - texture filter
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionfromimage3d_setfilter(Lib3MF_FunctionFromImage3D pFunctionFromImage3D, Lib3MF::eTextureFilter eFilter);
+
+/**
+* Returns the texture filter of the selector.
+*
+* @param[in] pFunctionFromImage3D - FunctionFromImage3D instance.
+* @param[out] pFilter - texture filter
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionfromimage3d_getfilter(Lib3MF_FunctionFromImage3D pFunctionFromImage3D, Lib3MF::eTextureFilter * pFilter);
+
+/**
+* Sets the tile styles of the selector.
+*
+* @param[in] pFunctionFromImage3D - FunctionFromImage3D instance.
+* @param[in] eTileStyleU - tile style in U
+* @param[in] eTileStyleV - tile style in V
+* @param[in] eTileStyleW - tile style in W
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionfromimage3d_settilestyles(Lib3MF_FunctionFromImage3D pFunctionFromImage3D, Lib3MF::eTextureTileStyle eTileStyleU, Lib3MF::eTextureTileStyle eTileStyleV, Lib3MF::eTextureTileStyle eTileStyleW);
+
+/**
+* Retrieves the tile styles of the selector.
+*
+* @param[in] pFunctionFromImage3D - FunctionFromImage3D instance.
+* @param[out] pTileStyleU - tile style in U
+* @param[out] pTileStyleV - tile style in V
+* @param[out] pTileStyleW - tile style in W
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionfromimage3d_gettilestyles(Lib3MF_FunctionFromImage3D pFunctionFromImage3D, Lib3MF::eTextureTileStyle * pTileStyleU, Lib3MF::eTextureTileStyle * pTileStyleV, Lib3MF::eTextureTileStyle * pTileStyleW);
+
+/**
+* returns the offset value for the pixel values in the Image3D
+*
+* @param[in] pFunctionFromImage3D - FunctionFromImage3D instance.
+* @param[out] pOffset - the offset value for the pixel values in the Image3D
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionfromimage3d_getoffset(Lib3MF_FunctionFromImage3D pFunctionFromImage3D, Lib3MF_double * pOffset);
+
+/**
+* Sets the offset value for the pixel values in the Image3D
+*
+* @param[in] pFunctionFromImage3D - FunctionFromImage3D instance.
+* @param[in] dOffset - the offset value for the pixel values in the Image3D
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionfromimage3d_setoffset(Lib3MF_FunctionFromImage3D pFunctionFromImage3D, Lib3MF_double dOffset);
+
+/**
+* returns the scale value for the pixel values in the Image3D
+*
+* @param[in] pFunctionFromImage3D - FunctionFromImage3D instance.
+* @param[out] pScale - the scale value for the pixel values in the Image3D
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionfromimage3d_getscale(Lib3MF_FunctionFromImage3D pFunctionFromImage3D, Lib3MF_double * pScale);
+
+/**
+* Sets the scale value for the pixel values in the Image3D
+*
+* @param[in] pFunctionFromImage3D - FunctionFromImage3D instance.
+* @param[in] dScale - the scale value for the pixel values in the Image3D
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionfromimage3d_setscale(Lib3MF_FunctionFromImage3D pFunctionFromImage3D, Lib3MF_double dScale);
 
 /*************************************************************************************************************************
  Class definition for BuildItem
@@ -5449,13 +5608,23 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getkeystore(Lib3MF_Model pModel, Lib3M
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getfunctions(Lib3MF_Model pModel, Lib3MF_FunctionIterator * pTheResourceIterator);
 
 /**
-* adds a function (e.g. for implicit geometries) to the model
+* adds a function described by nodes to the model
 *
 * @param[in] pModel - Model instance.
 * @param[out] pFunctionInstance - returns the function instance
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addfunction(Lib3MF_Model pModel, Lib3MF_ImplicitFunction * pFunctionInstance);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addimplicitfunction(Lib3MF_Model pModel, Lib3MF_ImplicitFunction * pFunctionInstance);
+
+/**
+* adds a function defined by an image3d to the model
+*
+* @param[in] pModel - Model instance.
+* @param[in] pImage3DInstance - the Image3D-instance used for this function
+* @param[out] pFunctionInstance - returns the function instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addfunctionfromimage3d(Lib3MF_Model pModel, Lib3MF_Image3D pImage3DInstance, Lib3MF_FunctionFromImage3D * pFunctionInstance);
 
 /*************************************************************************************************************************
  Global functions

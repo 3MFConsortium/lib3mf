@@ -107,6 +107,10 @@ namespace NMR
         {
             m_pImplicitNode->setDisplayName(pAttributeValue);
         }
+        else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_TAG) == 0)
+        {
+            m_pImplicitNode->setTag(pAttributeValue);
+        }
         else if (m_pImplicitNode->getNodeType() == Lib3MF::eImplicitNodeType::Constant &&
                  strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_VALUE) == 0)
         {

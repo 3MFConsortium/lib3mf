@@ -1040,14 +1040,25 @@ IFunctionIterator * CModel::GetFunctions()
 	return pResult.release();
 }
 
-IImplicitFunction * CModel::AddFunction()
+IImplicitFunction* CModel::AddImplicitFunction()
 {
-	NMR::ModelResourceID NewResourceID = model().generateResourceID();	
+	NMR::ModelResourceID NewResourceID = model().generateResourceID();
 	NMR::PModelImplicitFunction pNewResource = std::make_shared<NMR::CModelImplicitFunction>(NewResourceID, &model());
 
 	model().addResource(pNewResource);
 
 	return new CImplicitFunction(pNewResource);
+}
+
+IFunctionFromImage3D* CModel::AddFunctionFromImage3D(IImage3D* pImage3DInstance)
+{
+	//NMR::ModelResourceID NewResourceID = model().generateResourceID();
+	//NMR::PModelFunctionFromImage3D pNewResource = std::make_shared<NMR::CModelFunctionFromImage3D>(NewResourceID, &model());
+
+	//model().addResource(pNewResource);
+
+	//return new CFunctionFromImage3D(pNewResource);
+	return nullptr;
 }
 
 IScalarFieldFunction * CModel::AddScalarFieldFunction()
