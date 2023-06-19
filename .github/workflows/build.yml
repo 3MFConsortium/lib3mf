@@ -213,7 +213,7 @@ jobs:
           cmake --build . --config Release
           ./Release/Example_ExtractInfo.exe ../../Files/Helix.3mf
   deploy-macos:
-    runs-on: macos-10.15
+    runs-on: macos-11
     needs: [assemble-sdk]
     steps:
       - name: Download lib3mf_sdk artifact
