@@ -3782,28 +3782,16 @@ public:
 	virtual Lib3MF::sMatrix4x4 GetMatrix() = 0;
 
 	/**
-	* IImplicitNode::SetMesh - Sets the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh
-	* @param[in] pValue - the mesh
+	* IImplicitNode::SetResourceID - Sets the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
+	* @param[in] nValue - the id of the resource
 	*/
-	virtual void SetMesh(IMeshObject* pValue) = 0;
+	virtual void SetResourceID(const Lib3MF_uint32 nValue) = 0;
 
 	/**
-	* IImplicitNode::GetMesh - Retrieves the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh
-	* @return the mesh
+	* IImplicitNode::GetResourceID - Retrieves the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
+	* @return the id of the resource
 	*/
-	virtual IMeshObject * GetMesh() = 0;
-
-	/**
-	* IImplicitNode::SetFunction - Sets the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall
-	* @param[in] pValue - the function called
-	*/
-	virtual void SetFunction(IFunction* pValue) = 0;
-
-	/**
-	* IImplicitNode::GetFunction - Retrieves the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall
-	* @return the function called
-	*/
-	virtual IFunction * GetFunction() = 0;
+	virtual Lib3MF_uint32 GetResourceID() = 0;
 
 };
 
@@ -3850,18 +3838,6 @@ public:
 	{
 		return 0x9EFB2757CA1A5231UL; // First 64 bits of SHA1 of a string: "Lib3MF::Function"
 	}
-
-	/**
-	* IFunction::GetIdentifier - Retrieves the identifier of the function
-	* @return the identifier
-	*/
-	virtual std::string GetIdentifier() = 0;
-
-	/**
-	* IFunction::SetIdentifier - Sets the identifier of the function
-	* @param[in] sIdentifier - the identifier
-	*/
-	virtual void SetIdentifier(const std::string & sIdentifier) = 0;
 
 	/**
 	* IFunction::GetDisplayName - Retrieves the display name of the function
@@ -3950,6 +3926,18 @@ public:
 	{
 		return 0x6CE54469EEA83BC1UL; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitFunction"
 	}
+
+	/**
+	* IImplicitFunction::GetIdentifier - Retrieves the identifier of the function
+	* @return the identifier
+	*/
+	virtual std::string GetIdentifier() = 0;
+
+	/**
+	* IImplicitFunction::SetIdentifier - Sets the identifier of the function
+	* @param[in] sIdentifier - the identifier
+	*/
+	virtual void SetIdentifier(const std::string & sIdentifier) = 0;
 
 	/**
 	* IImplicitFunction::AddNode - Add a node

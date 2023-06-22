@@ -429,7 +429,8 @@ typedef enum eLib3MFImplicitNodeType {
   eImplicitNodeTypeFunctionCall = 27, /** Calls a function */
   eImplicitNodeTypeMesh = 28, /** Calculates the signed distance to a mesh */
   eImplicitNodeTypeLength = 29, /** Calculates the length of a vector */
-  eImplicitNodeTypeDecomposeVector = 30 /** Decomposes a vector into three scalar values */
+  eImplicitNodeTypeDecomposeVector = 30, /** Decomposes a vector into three scalar values */
+  eImplicitNodeTypeResource = 31 /** Selects a resource (function, mesh etc.) */
 } eLib3MFImplicitNodeType;
 
 /**

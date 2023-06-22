@@ -145,31 +145,13 @@ Lib3MF::sMatrix4x4 CImplicitNode::GetMatrix()
     return m_pImplicitNode->getMatrix();
 }
 
-
-void CImplicitNode::SetMesh(IMeshObject* pValue)
+void CImplicitNode::SetResourceID(const Lib3MF_uint32 nValue)
 {
-    CMeshObject* pMeshObject = dynamic_cast<CMeshObject*>(pValue);
-    if (!pMeshObject)
-        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-    NMR::PModelMeshObject pModelMeshObject = std::static_pointer_cast<NMR::CModelMeshObject>(pMeshObject->resource());
-    if (!pModelMeshObject)
-        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-    m_pImplicitNode->setMesh(pModelMeshObject);
+	m_pImplicitNode->setResourceID(nValue);
 }
 
-IMeshObject* CImplicitNode::GetMesh()
+Lib3MF_uint32 CImplicitNode::GetResourceID()
 {
-    return new CMeshObject(m_pImplicitNode->getMesh());
-}
-
-void CImplicitNode::SetFunction(IFunction* pValue)
-{
-    // m_pImplicitNode->setFunction();
-}
-
-IFunction* CImplicitNode::GetFunction()
-{
-    return nullptr;
-    // return m_pImplicitNode->getFunction();
+	return m_pImplicitNode->getResourceID();
 }
 

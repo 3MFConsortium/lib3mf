@@ -139,6 +139,13 @@ namespace NMR
                 m_pImplicitNode->setMatrix(matFromString(pAttributeValue));
             }
         }
+		else if (m_pImplicitNode->getNodeType() == Lib3MF::eImplicitNodeType::Resource)
+		{
+			if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_RESOURCE_ID) == 0)
+            {
+                m_pImplicitNode->setResourceID(std::stoi(pAttributeValue));
+            }
+		}
     }
 
     void NMR::CModelReaderNode_Implicit_Node::OnNSChildElement(_In_z_ const nfChar * pChildName,

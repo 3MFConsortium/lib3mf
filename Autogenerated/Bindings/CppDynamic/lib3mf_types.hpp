@@ -430,7 +430,8 @@ namespace Lib3MF {
     FunctionCall = 27, /** Calls a function */
     Mesh = 28, /** Calculates the signed distance to a mesh */
     Length = 29, /** Calculates the length of a vector */
-    DecomposeVector = 30 /** Decomposes a vector into three scalar values */
+    DecomposeVector = 30, /** Decomposes a vector into three scalar values */
+    Resource = 31 /** Selects a resource (function, mesh etc.) */
   };
   
   /**

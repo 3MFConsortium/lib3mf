@@ -2194,6 +2194,7 @@
 		<option name="Length" description="Calculates the length of a vector" value="29" />
 		<option name="DecomposeVector" description="Decomposes a vector into three scalar values"
 			value="30" />
+		<option name="Resource" description="Selects a resource (function, mesh etc.)" value="31" />
 	</enum>
 
 	<enum name="ImplicitPortType" description="The type of the port">
@@ -2363,26 +2364,15 @@
 				description="the matrix" />
 		</method>
 
-		<method name="SetMesh"
-			description="Sets the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh">
-			<param name="Value" type="class" class="MeshObject" pass="in" description="the mesh" />
+		<method name="SetResourceID"
+			description="Sets the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource">
+			<param name="Value" type="uint32" pass="in" description="the id of the resource" />
 		</method>
 
-		<method name="GetMesh"
-			description="Retrieves the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh">
-			<param name="Value" type="class" class="MeshObject" pass="return" description="the mesh" />
+		<method name="GetResourceID"
+			description="Retrieves the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource">
+			<param name="Value" type="uint32" pass="return" description="the id of the resource" />
 		</method>
-
-		<method name="SetFunction"
-			description="Sets the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall">
-			<param name="Value" type="class" class="Function" pass="in" description="the function called" />
-		</method>
-
-		<method name="GetFunction"
-			description="Retrieves the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall">
-			<param name="Value" type="class" class="Function" pass="return" description="the function called" />
-		</method>
-
 	</class>
 
 	<class name="NodeIterator" parent="Iterator">

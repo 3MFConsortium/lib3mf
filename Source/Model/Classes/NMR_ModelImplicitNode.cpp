@@ -194,20 +194,18 @@ namespace NMR
         return *m_matrix;
     }
 
-    void CModelImplicitNode::setMesh(PModelMeshObject pMesh)
+    void CModelImplicitNode::setResourceID(UniqueResourceID resourceID)
     {
-        if (m_type != Lib3MF::eImplicitNodeType::Mesh)
+        if (m_type != Lib3MF::eImplicitNodeType::Resource)
             throw CNMRException(NMR_ERROR_INVALIDPARAM);
-        m_pMeshObject = pMesh;
+        m_resourceID = resourceID;
     }
 
-    PModelMeshObject CModelImplicitNode::getMesh() const
+    UniqueResourceID CModelImplicitNode::getResourceID() const
     {
-        if (m_type != Lib3MF::eImplicitNodeType::Mesh)
+        if (m_type != Lib3MF::eImplicitNodeType::Resource)
             throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-        if (!m_pMeshObject)
-            throw CNMRException(NMR_ERROR_INVALIDPARAM);
-        return m_pMeshObject;
+            
+        return m_resourceID;
     }
 }

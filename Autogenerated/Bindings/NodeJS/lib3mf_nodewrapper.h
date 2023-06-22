@@ -1434,10 +1434,8 @@ private:
 	static void GetVector(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetMatrix(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetMatrix(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void SetMesh(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetMesh(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void SetFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetResourceID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetResourceID(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFImplicitNode();
@@ -1473,8 +1471,6 @@ class CLib3MFFunction : public CLib3MFBaseClass {
 private:
 	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static v8::Persistent<v8::Function> constructor;
-	static void GetIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void SetIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetDisplayName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetDisplayName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddInput(const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -1502,6 +1498,8 @@ class CLib3MFImplicitFunction : public CLib3MFBaseClass {
 private:
 	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static v8::Persistent<v8::Function> constructor;
+	static void GetIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetNodes(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void RemoveNode(const v8::FunctionCallbackInfo<v8::Value>& args);

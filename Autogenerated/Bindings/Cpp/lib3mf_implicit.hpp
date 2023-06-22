@@ -2085,10 +2085,8 @@ public:
 	inline sVector GetVector();
 	inline void SetMatrix(const sMatrix4x4 & Value);
 	inline sMatrix4x4 GetMatrix();
-	inline void SetMesh(classParam<CMeshObject> pValue);
-	inline PMeshObject GetMesh();
-	inline void SetFunction(classParam<CFunction> pValue);
-	inline PFunction GetFunction();
+	inline void SetResourceID(const Lib3MF_uint32 nValue);
+	inline Lib3MF_uint32 GetResourceID();
 };
 	
 /*************************************************************************************************************************
@@ -2122,8 +2120,6 @@ public:
 	{
 	}
 	
-	inline std::string GetIdentifier();
-	inline void SetIdentifier(const std::string & sIdentifier);
 	inline std::string GetDisplayName();
 	inline void SetDisplayName(const std::string & sDisplayName);
 	inline PImplicitPort AddInput(const std::string & sIdentifier, const std::string & sDisplayName, const eImplicitPortType eType);
@@ -2150,6 +2146,8 @@ public:
 	{
 	}
 	
+	inline std::string GetIdentifier();
+	inline void SetIdentifier(const std::string & sIdentifier);
 	inline PImplicitNode AddNode(const eImplicitNodeType eNodeType, const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PNodeIterator GetNodes();
 	inline void RemoveNode(classParam<CImplicitNode> pNode);
@@ -7419,53 +7417,24 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CImplicitNode::SetMesh - Sets the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh
-	* @param[in] pValue - the mesh
+	* CImplicitNode::SetResourceID - Sets the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
+	* @param[in] nValue - the id of the resource
 	*/
-	void CImplicitNode::SetMesh(classParam<CMeshObject> pValue)
+	void CImplicitNode::SetResourceID(const Lib3MF_uint32 nValue)
 	{
-		Lib3MFHandle hValue = pValue.GetHandle();
-		CheckError(lib3mf_implicitnode_setmesh(m_pHandle, hValue));
+		CheckError(lib3mf_implicitnode_setresourceid(m_pHandle, nValue));
 	}
 	
 	/**
-	* CImplicitNode::GetMesh - Retrieves the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh
-	* @return the mesh
+	* CImplicitNode::GetResourceID - Retrieves the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
+	* @return the id of the resource
 	*/
-	PMeshObject CImplicitNode::GetMesh()
+	Lib3MF_uint32 CImplicitNode::GetResourceID()
 	{
-		Lib3MFHandle hValue = nullptr;
-		CheckError(lib3mf_implicitnode_getmesh(m_pHandle, &hValue));
+		Lib3MF_uint32 resultValue = 0;
+		CheckError(lib3mf_implicitnode_getresourceid(m_pHandle, &resultValue));
 		
-		if (!hValue) {
-			CheckError(LIB3MF_ERROR_INVALIDPARAM);
-		}
-		return std::shared_ptr<CMeshObject>(dynamic_cast<CMeshObject*>(m_pWrapper->polymorphicFactory(hValue)));
-	}
-	
-	/**
-	* CImplicitNode::SetFunction - Sets the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall
-	* @param[in] pValue - the function called
-	*/
-	void CImplicitNode::SetFunction(classParam<CFunction> pValue)
-	{
-		Lib3MFHandle hValue = pValue.GetHandle();
-		CheckError(lib3mf_implicitnode_setfunction(m_pHandle, hValue));
-	}
-	
-	/**
-	* CImplicitNode::GetFunction - Retrieves the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall
-	* @return the function called
-	*/
-	PFunction CImplicitNode::GetFunction()
-	{
-		Lib3MFHandle hValue = nullptr;
-		CheckError(lib3mf_implicitnode_getfunction(m_pHandle, &hValue));
-		
-		if (!hValue) {
-			CheckError(LIB3MF_ERROR_INVALIDPARAM);
-		}
-		return std::shared_ptr<CFunction>(dynamic_cast<CFunction*>(m_pWrapper->polymorphicFactory(hValue)));
+		return resultValue;
 	}
 	
 	/**
@@ -7490,30 +7459,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	 * Method definitions for class CFunction
 	 */
-	
-	/**
-	* CFunction::GetIdentifier - Retrieves the identifier of the function
-	* @return the identifier
-	*/
-	std::string CFunction::GetIdentifier()
-	{
-		Lib3MF_uint32 bytesNeededIdentifier = 0;
-		Lib3MF_uint32 bytesWrittenIdentifier = 0;
-		CheckError(lib3mf_function_getidentifier(m_pHandle, 0, &bytesNeededIdentifier, nullptr));
-		std::vector<char> bufferIdentifier(bytesNeededIdentifier);
-		CheckError(lib3mf_function_getidentifier(m_pHandle, bytesNeededIdentifier, &bytesWrittenIdentifier, &bufferIdentifier[0]));
-		
-		return std::string(&bufferIdentifier[0]);
-	}
-	
-	/**
-	* CFunction::SetIdentifier - Sets the identifier of the function
-	* @param[in] sIdentifier - the identifier
-	*/
-	void CFunction::SetIdentifier(const std::string & sIdentifier)
-	{
-		CheckError(lib3mf_function_setidentifier(m_pHandle, sIdentifier.c_str()));
-	}
 	
 	/**
 	* CFunction::GetDisplayName - Retrieves the display name of the function
@@ -7660,6 +7605,30 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	 * Method definitions for class CImplicitFunction
 	 */
+	
+	/**
+	* CImplicitFunction::GetIdentifier - Retrieves the identifier of the function
+	* @return the identifier
+	*/
+	std::string CImplicitFunction::GetIdentifier()
+	{
+		Lib3MF_uint32 bytesNeededIdentifier = 0;
+		Lib3MF_uint32 bytesWrittenIdentifier = 0;
+		CheckError(lib3mf_implicitfunction_getidentifier(m_pHandle, 0, &bytesNeededIdentifier, nullptr));
+		std::vector<char> bufferIdentifier(bytesNeededIdentifier);
+		CheckError(lib3mf_implicitfunction_getidentifier(m_pHandle, bytesNeededIdentifier, &bytesWrittenIdentifier, &bufferIdentifier[0]));
+		
+		return std::string(&bufferIdentifier[0]);
+	}
+	
+	/**
+	* CImplicitFunction::SetIdentifier - Sets the identifier of the function
+	* @param[in] sIdentifier - the identifier
+	*/
+	void CImplicitFunction::SetIdentifier(const std::string & sIdentifier)
+	{
+		CheckError(lib3mf_implicitfunction_setidentifier(m_pHandle, sIdentifier.c_str()));
+	}
 	
 	/**
 	* CImplicitFunction::AddNode - Add a node

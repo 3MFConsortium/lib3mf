@@ -194,29 +194,18 @@ namespace Lib3MF
              */
             Lib3MF::sMatrix4x4 GetMatrix() override;
 
-            /**
-            * IImplicitNode::SetMesh - Sets the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh
-            * @param[in] pValue - the mesh
-            */
-            void SetMesh(IMeshObject* pValue) override;
 
-            /**
-            * IImplicitNode::GetMesh - Retrieves the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh
-            * @return the mesh
-            */
-            IMeshObject* GetMesh() override;
+			/**
+			* IImplicitNode::SetResourceID - Sets the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
+			* @param[in] nValue - the id of the resource
+			*/
+			void SetResourceID(const Lib3MF_uint32 nValue) override;
 
-            /**
-            * IImplicitNode::SetFunction - Sets the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall
-            * @param[in] pValue - the function called
-            */
-            void SetFunction(IFunction* pValue) override;
-
-            /**
-            * IImplicitNode::GetFunction - Retrieves the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall
-            * @return the function called
-            */
-            IFunction* GetFunction() override;
+			/**
+			* IImplicitNode::GetResourceID - Retrieves the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
+			* @return the id of the resource
+			*/
+			Lib3MF_uint32 GetResourceID() override;
         };
 
     } // namespace Impl

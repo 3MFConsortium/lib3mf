@@ -30,14 +30,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Common/Platform/NMR_SAL.h>
 #include <Model/Classes/NMR_ModelImplicitPort.h>
-#include "Model/Classes/NMR_ModelMeshObject.h"
+#include <Model/Classes/NMR_ModelMeshObject.h>
+#include <Model/Classes/NMR_ModelTypes.h>
 #include <lib3mf_types.hpp>
 
 #include <memory>
 #include <string>
 #include <vector>
-#include <variant>
-#include <optional>
 
 namespace NMR
 {
@@ -57,11 +56,9 @@ namespace NMR
         std::unique_ptr<Lib3MF::sVector> m_vector;
         std::unique_ptr<Lib3MF::sMatrix4x4> m_matrix;
 
-        // optional values for Mesh
-        PModelMeshObject m_pMeshObject;
-        // optional values for Function
-        // todo
-    
+        // resource ID for mesh objects, functions etc.
+        UniqueResourceID m_resourceID;
+
       public:
         CModelImplicitNode(Lib3MF::eImplicitNodeType type,
                            ImplicitIdentifier const & identifier,
@@ -101,8 +98,8 @@ namespace NMR
         void setMatrix(const Lib3MF::sMatrix4x4 & value);
         Lib3MF::sMatrix4x4 getMatrix() const;
 
-        void setMesh(PModelMeshObject pMesh);
-        PModelMeshObject getMesh() const;
+        void setResourceID(UniqueResourceID resourceID);
+        UniqueResourceID getResourceID() const;
 
     };
 

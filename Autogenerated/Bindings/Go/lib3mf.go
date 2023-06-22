@@ -3267,39 +3267,21 @@ Lib3MFResult CCall_lib3mf_implicitnode_getmatrix(Lib3MFHandle libraryHandle, Lib
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitnode_setmesh(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, Lib3MF_MeshObject pValue)
+Lib3MFResult CCall_lib3mf_implicitnode_setresourceid(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, Lib3MF_uint32 nValue)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitNode_SetMesh (pImplicitNode, pValue);
+	return wrapperTable->m_ImplicitNode_SetResourceID (pImplicitNode, nValue);
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitnode_getmesh(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, Lib3MF_MeshObject * pValue)
+Lib3MFResult CCall_lib3mf_implicitnode_getresourceid(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, Lib3MF_uint32 * pValue)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitNode_GetMesh (pImplicitNode, pValue);
-}
-
-
-Lib3MFResult CCall_lib3mf_implicitnode_setfunction(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Function pValue)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitNode_SetFunction (pImplicitNode, pValue);
-}
-
-
-Lib3MFResult CCall_lib3mf_implicitnode_getfunction(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Function * pValue)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitNode_GetFunction (pImplicitNode, pValue);
+	return wrapperTable->m_ImplicitNode_GetResourceID (pImplicitNode, pValue);
 }
 
 
@@ -3309,24 +3291,6 @@ Lib3MFResult CCall_lib3mf_nodeiterator_getcurrent(Lib3MFHandle libraryHandle, Li
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_NodeIterator_GetCurrent (pNodeIterator, pNode);
-}
-
-
-Lib3MFResult CCall_lib3mf_function_getidentifier(Lib3MFHandle libraryHandle, Lib3MF_Function pFunction, const Lib3MF_uint32 nIdentifierBufferSize, Lib3MF_uint32* pIdentifierNeededChars, char * pIdentifierBuffer)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_Function_GetIdentifier (pFunction, nIdentifierBufferSize, pIdentifierNeededChars, pIdentifierBuffer);
-}
-
-
-Lib3MFResult CCall_lib3mf_function_setidentifier(Lib3MFHandle libraryHandle, Lib3MF_Function pFunction, const char * pIdentifier)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_Function_SetIdentifier (pFunction, pIdentifier);
 }
 
 
@@ -3417,6 +3381,24 @@ Lib3MFResult CCall_lib3mf_function_findoutput(Lib3MFHandle libraryHandle, Lib3MF
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_Function_FindOutput (pFunction, pIdentifier, pOutput);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_getidentifier(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const Lib3MF_uint32 nIdentifierBufferSize, Lib3MF_uint32* pIdentifierNeededChars, char * pIdentifierBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_GetIdentifier (pImplicitFunction, nIdentifierBufferSize, pIdentifierNeededChars, pIdentifierBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_setidentifier(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_SetIdentifier (pImplicitFunction, pIdentifier);
 }
 
 
@@ -5385,6 +5367,7 @@ const (
 	ImplicitNodeType_Mesh = 28
 	ImplicitNodeType_Length = 29
 	ImplicitNodeType_DecomposeVector = 30
+	ImplicitNodeType_Resource = 31
 )
 
 // ImplicitPortType represents a Lib3MF enum.
@@ -10168,42 +10151,23 @@ func (inst ImplicitNode) GetMatrix() (Matrix4x4, error) {
 	return *(*Matrix4x4)(unsafe.Pointer(&value)), nil
 }
 
-// SetMesh sets the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh.
-func (inst ImplicitNode) SetMesh(value MeshObject) error {
-	ret := C.CCall_lib3mf_implicitnode_setmesh(inst.wrapperRef.LibraryHandle, inst.Ref, value.Ref)
+// SetResourceID sets the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource.
+func (inst ImplicitNode) SetResourceID(value uint32) error {
+	ret := C.CCall_lib3mf_implicitnode_setresourceid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(value))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
 	return nil
 }
 
-// GetMesh retrieves the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh.
-func (inst ImplicitNode) GetMesh() (MeshObject, error) {
-	var value ref
-	ret := C.CCall_lib3mf_implicitnode_getmesh(inst.wrapperRef.LibraryHandle, inst.Ref, &value)
+// GetResourceID retrieves the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource.
+func (inst ImplicitNode) GetResourceID() (uint32, error) {
+	var value C.uint32_t
+	ret := C.CCall_lib3mf_implicitnode_getresourceid(inst.wrapperRef.LibraryHandle, inst.Ref, &value)
 	if ret != 0 {
-		return MeshObject{}, makeError(uint32(ret))
+		return 0, makeError(uint32(ret))
 	}
-	return inst.wrapperRef.NewMeshObject(value), nil
-}
-
-// SetFunction sets the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall.
-func (inst ImplicitNode) SetFunction(value Function) error {
-	ret := C.CCall_lib3mf_implicitnode_setfunction(inst.wrapperRef.LibraryHandle, inst.Ref, value.Ref)
-	if ret != 0 {
-		return makeError(uint32(ret))
-	}
-	return nil
-}
-
-// GetFunction retrieves the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall.
-func (inst ImplicitNode) GetFunction() (Function, error) {
-	var value ref
-	ret := C.CCall_lib3mf_implicitnode_getfunction(inst.wrapperRef.LibraryHandle, inst.Ref, &value)
-	if ret != 0 {
-		return Function{}, makeError(uint32(ret))
-	}
-	return inst.wrapperRef.NewFunction(value), nil
+	return uint32(value), nil
 }
 
 
@@ -10234,32 +10198,6 @@ type Function struct {
 
 func (wrapper Wrapper) NewFunction(r ref) Function {
 	return Function{wrapper.NewResource(r)}
-}
-
-// GetIdentifier retrieves the identifier of the function.
-func (inst Function) GetIdentifier() (string, error) {
-	var neededforidentifier C.uint32_t
-	var filledinidentifier C.uint32_t
-	ret := C.CCall_lib3mf_function_getidentifier(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforidentifier, nil)
-	if ret != 0 {
-		return "", makeError(uint32(ret))
-	}
-	bufferSizeidentifier := neededforidentifier
-	bufferidentifier := make([]byte, bufferSizeidentifier)
-	ret = C.CCall_lib3mf_function_getidentifier(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizeidentifier, &filledinidentifier, (*C.char)(unsafe.Pointer(&bufferidentifier[0])))
-	if ret != 0 {
-		return "", makeError(uint32(ret))
-	}
-	return string(bufferidentifier[:(filledinidentifier-1)]), nil
-}
-
-// SetIdentifier sets the identifier of the function.
-func (inst Function) SetIdentifier(identifier string) error {
-	ret := C.CCall_lib3mf_function_setidentifier(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])))
-	if ret != 0 {
-		return makeError(uint32(ret))
-	}
-	return nil
 }
 
 // GetDisplayName retrieves the display name of the function.
@@ -10374,6 +10312,32 @@ type ImplicitFunction struct {
 
 func (wrapper Wrapper) NewImplicitFunction(r ref) ImplicitFunction {
 	return ImplicitFunction{wrapper.NewFunction(r)}
+}
+
+// GetIdentifier retrieves the identifier of the function.
+func (inst ImplicitFunction) GetIdentifier() (string, error) {
+	var neededforidentifier C.uint32_t
+	var filledinidentifier C.uint32_t
+	ret := C.CCall_lib3mf_implicitfunction_getidentifier(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforidentifier, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizeidentifier := neededforidentifier
+	bufferidentifier := make([]byte, bufferSizeidentifier)
+	ret = C.CCall_lib3mf_implicitfunction_getidentifier(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizeidentifier, &filledinidentifier, (*C.char)(unsafe.Pointer(&bufferidentifier[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferidentifier[:(filledinidentifier-1)]), nil
+}
+
+// SetIdentifier sets the identifier of the function.
+func (inst ImplicitFunction) SetIdentifier(identifier string) error {
+	ret := C.CCall_lib3mf_implicitfunction_setidentifier(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
 }
 
 // AddNode add a node.

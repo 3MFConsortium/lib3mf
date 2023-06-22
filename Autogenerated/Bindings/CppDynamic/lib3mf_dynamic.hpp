@@ -2109,10 +2109,8 @@ public:
 	inline sVector GetVector();
 	inline void SetMatrix(const sMatrix4x4 & Value);
 	inline sMatrix4x4 GetMatrix();
-	inline void SetMesh(classParam<CMeshObject> pValue);
-	inline PMeshObject GetMesh();
-	inline void SetFunction(classParam<CFunction> pValue);
-	inline PFunction GetFunction();
+	inline void SetResourceID(const Lib3MF_uint32 nValue);
+	inline Lib3MF_uint32 GetResourceID();
 };
 	
 /*************************************************************************************************************************
@@ -2146,8 +2144,6 @@ public:
 	{
 	}
 	
-	inline std::string GetIdentifier();
-	inline void SetIdentifier(const std::string & sIdentifier);
 	inline std::string GetDisplayName();
 	inline void SetDisplayName(const std::string & sDisplayName);
 	inline PImplicitPort AddInput(const std::string & sIdentifier, const std::string & sDisplayName, const eImplicitPortType eType);
@@ -2174,6 +2170,8 @@ public:
 	{
 	}
 	
+	inline std::string GetIdentifier();
+	inline void SetIdentifier(const std::string & sIdentifier);
 	inline PImplicitNode AddNode(const eImplicitNodeType eNodeType, const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PNodeIterator GetNodes();
 	inline void RemoveNode(classParam<CImplicitNode> pNode);
@@ -3276,13 +3274,9 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ImplicitNode_GetVector = nullptr;
 		pWrapperTable->m_ImplicitNode_SetMatrix = nullptr;
 		pWrapperTable->m_ImplicitNode_GetMatrix = nullptr;
-		pWrapperTable->m_ImplicitNode_SetMesh = nullptr;
-		pWrapperTable->m_ImplicitNode_GetMesh = nullptr;
-		pWrapperTable->m_ImplicitNode_SetFunction = nullptr;
-		pWrapperTable->m_ImplicitNode_GetFunction = nullptr;
+		pWrapperTable->m_ImplicitNode_SetResourceID = nullptr;
+		pWrapperTable->m_ImplicitNode_GetResourceID = nullptr;
 		pWrapperTable->m_NodeIterator_GetCurrent = nullptr;
-		pWrapperTable->m_Function_GetIdentifier = nullptr;
-		pWrapperTable->m_Function_SetIdentifier = nullptr;
 		pWrapperTable->m_Function_GetDisplayName = nullptr;
 		pWrapperTable->m_Function_SetDisplayName = nullptr;
 		pWrapperTable->m_Function_AddInput = nullptr;
@@ -3293,6 +3287,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Function_RemoveOutput = nullptr;
 		pWrapperTable->m_Function_FindInput = nullptr;
 		pWrapperTable->m_Function_FindOutput = nullptr;
+		pWrapperTable->m_ImplicitFunction_GetIdentifier = nullptr;
+		pWrapperTable->m_ImplicitFunction_SetIdentifier = nullptr;
 		pWrapperTable->m_ImplicitFunction_AddNode = nullptr;
 		pWrapperTable->m_ImplicitFunction_GetNodes = nullptr;
 		pWrapperTable->m_ImplicitFunction_RemoveNode = nullptr;
@@ -6734,39 +6730,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_ImplicitNode_SetMesh = (PLib3MFImplicitNode_SetMeshPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_setmesh");
+		pWrapperTable->m_ImplicitNode_SetResourceID = (PLib3MFImplicitNode_SetResourceIDPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_setresourceid");
 		#else // _WIN32
-		pWrapperTable->m_ImplicitNode_SetMesh = (PLib3MFImplicitNode_SetMeshPtr) dlsym(hLibrary, "lib3mf_implicitnode_setmesh");
+		pWrapperTable->m_ImplicitNode_SetResourceID = (PLib3MFImplicitNode_SetResourceIDPtr) dlsym(hLibrary, "lib3mf_implicitnode_setresourceid");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_ImplicitNode_SetMesh == nullptr)
+		if (pWrapperTable->m_ImplicitNode_SetResourceID == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_ImplicitNode_GetMesh = (PLib3MFImplicitNode_GetMeshPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_getmesh");
+		pWrapperTable->m_ImplicitNode_GetResourceID = (PLib3MFImplicitNode_GetResourceIDPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_getresourceid");
 		#else // _WIN32
-		pWrapperTable->m_ImplicitNode_GetMesh = (PLib3MFImplicitNode_GetMeshPtr) dlsym(hLibrary, "lib3mf_implicitnode_getmesh");
+		pWrapperTable->m_ImplicitNode_GetResourceID = (PLib3MFImplicitNode_GetResourceIDPtr) dlsym(hLibrary, "lib3mf_implicitnode_getresourceid");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_ImplicitNode_GetMesh == nullptr)
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		#ifdef _WIN32
-		pWrapperTable->m_ImplicitNode_SetFunction = (PLib3MFImplicitNode_SetFunctionPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_setfunction");
-		#else // _WIN32
-		pWrapperTable->m_ImplicitNode_SetFunction = (PLib3MFImplicitNode_SetFunctionPtr) dlsym(hLibrary, "lib3mf_implicitnode_setfunction");
-		dlerror();
-		#endif // _WIN32
-		if (pWrapperTable->m_ImplicitNode_SetFunction == nullptr)
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		#ifdef _WIN32
-		pWrapperTable->m_ImplicitNode_GetFunction = (PLib3MFImplicitNode_GetFunctionPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_getfunction");
-		#else // _WIN32
-		pWrapperTable->m_ImplicitNode_GetFunction = (PLib3MFImplicitNode_GetFunctionPtr) dlsym(hLibrary, "lib3mf_implicitnode_getfunction");
-		dlerror();
-		#endif // _WIN32
-		if (pWrapperTable->m_ImplicitNode_GetFunction == nullptr)
+		if (pWrapperTable->m_ImplicitNode_GetResourceID == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -6776,24 +6754,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_NodeIterator_GetCurrent == nullptr)
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		#ifdef _WIN32
-		pWrapperTable->m_Function_GetIdentifier = (PLib3MFFunction_GetIdentifierPtr) GetProcAddress(hLibrary, "lib3mf_function_getidentifier");
-		#else // _WIN32
-		pWrapperTable->m_Function_GetIdentifier = (PLib3MFFunction_GetIdentifierPtr) dlsym(hLibrary, "lib3mf_function_getidentifier");
-		dlerror();
-		#endif // _WIN32
-		if (pWrapperTable->m_Function_GetIdentifier == nullptr)
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		#ifdef _WIN32
-		pWrapperTable->m_Function_SetIdentifier = (PLib3MFFunction_SetIdentifierPtr) GetProcAddress(hLibrary, "lib3mf_function_setidentifier");
-		#else // _WIN32
-		pWrapperTable->m_Function_SetIdentifier = (PLib3MFFunction_SetIdentifierPtr) dlsym(hLibrary, "lib3mf_function_setidentifier");
-		dlerror();
-		#endif // _WIN32
-		if (pWrapperTable->m_Function_SetIdentifier == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -6884,6 +6844,24 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_Function_FindOutput == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitFunction_GetIdentifier = (PLib3MFImplicitFunction_GetIdentifierPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_getidentifier");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitFunction_GetIdentifier = (PLib3MFImplicitFunction_GetIdentifierPtr) dlsym(hLibrary, "lib3mf_implicitfunction_getidentifier");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitFunction_GetIdentifier == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitFunction_SetIdentifier = (PLib3MFImplicitFunction_SetIdentifierPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_setidentifier");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitFunction_SetIdentifier = (PLib3MFImplicitFunction_SetIdentifierPtr) dlsym(hLibrary, "lib3mf_implicitfunction_setidentifier");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitFunction_SetIdentifier == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -10077,32 +10055,16 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_GetMatrix == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_implicitnode_setmesh", (void**)&(pWrapperTable->m_ImplicitNode_SetMesh));
-		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_SetMesh == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_implicitnode_setresourceid", (void**)&(pWrapperTable->m_ImplicitNode_SetResourceID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_SetResourceID == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_implicitnode_getmesh", (void**)&(pWrapperTable->m_ImplicitNode_GetMesh));
-		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_GetMesh == nullptr) )
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		eLookupError = (*pLookup)("lib3mf_implicitnode_setfunction", (void**)&(pWrapperTable->m_ImplicitNode_SetFunction));
-		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_SetFunction == nullptr) )
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		eLookupError = (*pLookup)("lib3mf_implicitnode_getfunction", (void**)&(pWrapperTable->m_ImplicitNode_GetFunction));
-		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_GetFunction == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_implicitnode_getresourceid", (void**)&(pWrapperTable->m_ImplicitNode_GetResourceID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_GetResourceID == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_nodeiterator_getcurrent", (void**)&(pWrapperTable->m_NodeIterator_GetCurrent));
 		if ( (eLookupError != 0) || (pWrapperTable->m_NodeIterator_GetCurrent == nullptr) )
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		eLookupError = (*pLookup)("lib3mf_function_getidentifier", (void**)&(pWrapperTable->m_Function_GetIdentifier));
-		if ( (eLookupError != 0) || (pWrapperTable->m_Function_GetIdentifier == nullptr) )
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		eLookupError = (*pLookup)("lib3mf_function_setidentifier", (void**)&(pWrapperTable->m_Function_SetIdentifier));
-		if ( (eLookupError != 0) || (pWrapperTable->m_Function_SetIdentifier == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_function_getdisplayname", (void**)&(pWrapperTable->m_Function_GetDisplayName));
@@ -10143,6 +10105,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_function_findoutput", (void**)&(pWrapperTable->m_Function_FindOutput));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Function_FindOutput == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitfunction_getidentifier", (void**)&(pWrapperTable->m_ImplicitFunction_GetIdentifier));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_GetIdentifier == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitfunction_setidentifier", (void**)&(pWrapperTable->m_ImplicitFunction_SetIdentifier));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_SetIdentifier == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_implicitfunction_addnode", (void**)&(pWrapperTable->m_ImplicitFunction_AddNode));
@@ -15457,53 +15427,24 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CImplicitNode::SetMesh - Sets the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh
-	* @param[in] pValue - the mesh
+	* CImplicitNode::SetResourceID - Sets the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
+	* @param[in] nValue - the id of the resource
 	*/
-	void CImplicitNode::SetMesh(classParam<CMeshObject> pValue)
+	void CImplicitNode::SetResourceID(const Lib3MF_uint32 nValue)
 	{
-		Lib3MFHandle hValue = pValue.GetHandle();
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_SetMesh(m_pHandle, hValue));
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_SetResourceID(m_pHandle, nValue));
 	}
 	
 	/**
-	* CImplicitNode::GetMesh - Retrieves the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh
-	* @return the mesh
+	* CImplicitNode::GetResourceID - Retrieves the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
+	* @return the id of the resource
 	*/
-	PMeshObject CImplicitNode::GetMesh()
+	Lib3MF_uint32 CImplicitNode::GetResourceID()
 	{
-		Lib3MFHandle hValue = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_GetMesh(m_pHandle, &hValue));
+		Lib3MF_uint32 resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_GetResourceID(m_pHandle, &resultValue));
 		
-		if (!hValue) {
-			CheckError(LIB3MF_ERROR_INVALIDPARAM);
-		}
-		return std::shared_ptr<CMeshObject>(dynamic_cast<CMeshObject*>(m_pWrapper->polymorphicFactory(hValue)));
-	}
-	
-	/**
-	* CImplicitNode::SetFunction - Sets the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall
-	* @param[in] pValue - the function called
-	*/
-	void CImplicitNode::SetFunction(classParam<CFunction> pValue)
-	{
-		Lib3MFHandle hValue = pValue.GetHandle();
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_SetFunction(m_pHandle, hValue));
-	}
-	
-	/**
-	* CImplicitNode::GetFunction - Retrieves the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall
-	* @return the function called
-	*/
-	PFunction CImplicitNode::GetFunction()
-	{
-		Lib3MFHandle hValue = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_GetFunction(m_pHandle, &hValue));
-		
-		if (!hValue) {
-			CheckError(LIB3MF_ERROR_INVALIDPARAM);
-		}
-		return std::shared_ptr<CFunction>(dynamic_cast<CFunction*>(m_pWrapper->polymorphicFactory(hValue)));
+		return resultValue;
 	}
 	
 	/**
@@ -15528,30 +15469,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	 * Method definitions for class CFunction
 	 */
-	
-	/**
-	* CFunction::GetIdentifier - Retrieves the identifier of the function
-	* @return the identifier
-	*/
-	std::string CFunction::GetIdentifier()
-	{
-		Lib3MF_uint32 bytesNeededIdentifier = 0;
-		Lib3MF_uint32 bytesWrittenIdentifier = 0;
-		CheckError(m_pWrapper->m_WrapperTable.m_Function_GetIdentifier(m_pHandle, 0, &bytesNeededIdentifier, nullptr));
-		std::vector<char> bufferIdentifier(bytesNeededIdentifier);
-		CheckError(m_pWrapper->m_WrapperTable.m_Function_GetIdentifier(m_pHandle, bytesNeededIdentifier, &bytesWrittenIdentifier, &bufferIdentifier[0]));
-		
-		return std::string(&bufferIdentifier[0]);
-	}
-	
-	/**
-	* CFunction::SetIdentifier - Sets the identifier of the function
-	* @param[in] sIdentifier - the identifier
-	*/
-	void CFunction::SetIdentifier(const std::string & sIdentifier)
-	{
-		CheckError(m_pWrapper->m_WrapperTable.m_Function_SetIdentifier(m_pHandle, sIdentifier.c_str()));
-	}
 	
 	/**
 	* CFunction::GetDisplayName - Retrieves the display name of the function
@@ -15698,6 +15615,30 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	 * Method definitions for class CImplicitFunction
 	 */
+	
+	/**
+	* CImplicitFunction::GetIdentifier - Retrieves the identifier of the function
+	* @return the identifier
+	*/
+	std::string CImplicitFunction::GetIdentifier()
+	{
+		Lib3MF_uint32 bytesNeededIdentifier = 0;
+		Lib3MF_uint32 bytesWrittenIdentifier = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_GetIdentifier(m_pHandle, 0, &bytesNeededIdentifier, nullptr));
+		std::vector<char> bufferIdentifier(bytesNeededIdentifier);
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_GetIdentifier(m_pHandle, bytesNeededIdentifier, &bytesWrittenIdentifier, &bufferIdentifier[0]));
+		
+		return std::string(&bufferIdentifier[0]);
+	}
+	
+	/**
+	* CImplicitFunction::SetIdentifier - Sets the identifier of the function
+	* @param[in] sIdentifier - the identifier
+	*/
+	void CImplicitFunction::SetIdentifier(const std::string & sIdentifier)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_SetIdentifier(m_pHandle, sIdentifier.c_str()));
+	}
 	
 	/**
 	* CImplicitFunction::AddNode - Add a node

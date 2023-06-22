@@ -123,11 +123,15 @@ namespace NMR
                 writeDoubleAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_Y, vec.m_Coordinates[1]);
                 writeDoubleAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_Z, vec.m_Coordinates[2]);
             }
-              else if (node.getNodeType() == Lib3MF::eImplicitNodeType::ConstMat)
-              {
-                auto const mat = node.getMatrix();
-                writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_MATRIX, mat4x4ToString(mat));
-              }
+            else if (node.getNodeType() == Lib3MF::eImplicitNodeType::ConstMat)
+            {
+            auto const mat = node.getMatrix();
+            writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_MATRIX, mat4x4ToString(mat));
+            }
+            else if(node.getNodeType() == Lib3MF::eImplicitNodeType::Resource)
+            {
+				writeIntAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_RESOURCE_ID, node.getResourceID());
+            }
 
             auto inputs = node.getInputs();
             if (!inputs->empty())

@@ -808,4 +808,72 @@ namespace Lib3MF
     compareFunctions(newFunction, functionIterator->GetCurrentFunction());
   }
 
+  // Create a shell with the distance to a mesh provided by the mesh node
+  TEST_F(Volumetric, ShellFromMesh)
+  {
+
+    // Create a function
+    PImplicitFunction newFunction = model->AddImplicitFunction();
+    newFunction->SetDisplayName("shell");
+
+    // 
+    auto functionArgument =
+      newFunction->AddInput("pos", "position", Lib3MF::eImplicitPortType::Vector);
+
+
+    // Create a mesh node
+    auto meshNode = newFunction->AddNode(
+      Lib3MF::eImplicitNodeType::Mesh, "mesh", "mesh", "group_shell");
+	
+    meshNode->FindInput("point")->SetType(Lib3MF::eImplicitPortType::Vector);
+    newFunction->AddLinkByNames("inputs.pos", "mesh.point");
+
+    auto resourceNode = newFunction->AddNode(
+      Lib3MF::eImplicitNodeType::Resource, "meshResource", "mesh resource", "group_shell");
+
+    auto mesh = GetMesh();
+	resourceNode->SetResourceID(mesh->GetResourceID());
+    newFunction->AddLinkByNames("meshResource.value", "mesh.mesh");
+
+    auto absNode = newFunction->AddNode(
+      Lib3MF::eImplicitNodeType::Abs, "abs", "abs", "group_shell");
+
+    newFunction->AddLinkByNames("mesh.distance", "abs.A");
+
+    auto constScalarNode = newFunction->AddNode(
+      Lib3MF::eImplicitNodeType::Constant, "thickness", "thickness", "group_shell");
+
+    constScalarNode->SetConstant(2.);
+
+    
+    auto subtractionNode = newFunction->AddNode(
+      Lib3MF::eImplicitNodeType::Subtraction, "subtraction", "subtraction", "group_shell");
+
+    subtractionNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Scalar);
+
+    newFunction->AddLinkByNames("abs.result", "subtraction.A");
+    newFunction->AddLinkByNames("thickness.value", "subtraction.B");
+
+    auto output = newFunction->AddOutput(
+      "shape", "signed distance to the surface", Lib3MF::eImplicitPortType::Scalar);
+
+    output->SetReference("subtraction.result");
+
+    // write to file
+    writer3MF->WriteToFile(Volumetric::OutFolder + "ShellFromMesh.3mf");
+
+    // read and compare
+    PModel ioModel = wrapper->CreateModel();
+    PReader ioReader = ioModel->QueryReader("3mf");
+    ioReader->ReadFromFile(Volumetric::OutFolder + "ShellFromMesh.3mf");
+
+    // Check the function
+    auto functionIterator = ioModel->GetFunctions();
+    ASSERT_EQ(functionIterator->Count(), 1);
+
+    EXPECT_TRUE(functionIterator->MoveNext());
+
+    // Compare the functions
+    compareFunctions(newFunction, functionIterator->GetCurrentFunction());      
+  }
 }

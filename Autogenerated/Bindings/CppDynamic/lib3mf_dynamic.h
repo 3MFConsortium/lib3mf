@@ -3684,40 +3684,22 @@ typedef Lib3MFResult (*PLib3MFImplicitNode_SetMatrixPtr) (Lib3MF_ImplicitNode pI
 typedef Lib3MFResult (*PLib3MFImplicitNode_GetMatrixPtr) (Lib3MF_ImplicitNode pImplicitNode, Lib3MF::sMatrix4x4 * pValue);
 
 /**
-* Sets the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh
+* Sets the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
 *
 * @param[in] pImplicitNode - ImplicitNode instance.
-* @param[in] pValue - the mesh
+* @param[in] nValue - the id of the resource
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitNode_SetMeshPtr) (Lib3MF_ImplicitNode pImplicitNode, Lib3MF_MeshObject pValue);
+typedef Lib3MFResult (*PLib3MFImplicitNode_SetResourceIDPtr) (Lib3MF_ImplicitNode pImplicitNode, Lib3MF_uint32 nValue);
 
 /**
-* Retrieves the MeshID attribute of the node. Throws an error, if the node type is not of type Mesh
+* Retrieves the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
 *
 * @param[in] pImplicitNode - ImplicitNode instance.
-* @param[out] pValue - the mesh
+* @param[out] pValue - the id of the resource
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitNode_GetMeshPtr) (Lib3MF_ImplicitNode pImplicitNode, Lib3MF_MeshObject * pValue);
-
-/**
-* Sets the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall
-*
-* @param[in] pImplicitNode - ImplicitNode instance.
-* @param[in] pValue - the function called
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFImplicitNode_SetFunctionPtr) (Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Function pValue);
-
-/**
-* Retrieves the FunctionID attribute of the node. Throws an error, if the node type is not of type FunctionCall
-*
-* @param[in] pImplicitNode - ImplicitNode instance.
-* @param[out] pValue - the function called
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFImplicitNode_GetFunctionPtr) (Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Function * pValue);
+typedef Lib3MFResult (*PLib3MFImplicitNode_GetResourceIDPtr) (Lib3MF_ImplicitNode pImplicitNode, Lib3MF_uint32 * pValue);
 
 /*************************************************************************************************************************
  Class definition for NodeIterator
@@ -3735,26 +3717,6 @@ typedef Lib3MFResult (*PLib3MFNodeIterator_GetCurrentPtr) (Lib3MF_NodeIterator p
 /*************************************************************************************************************************
  Class definition for Function
 **************************************************************************************************************************/
-
-/**
-* Retrieves the identifier of the function
-*
-* @param[in] pFunction - Function instance.
-* @param[in] nIdentifierBufferSize - size of the buffer (including trailing 0)
-* @param[out] pIdentifierNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-* @param[out] pIdentifierBuffer -  buffer of the identifier, may be NULL
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFFunction_GetIdentifierPtr) (Lib3MF_Function pFunction, const Lib3MF_uint32 nIdentifierBufferSize, Lib3MF_uint32* pIdentifierNeededChars, char * pIdentifierBuffer);
-
-/**
-* Sets the identifier of the function
-*
-* @param[in] pFunction - Function instance.
-* @param[in] pIdentifier - the identifier
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFFunction_SetIdentifierPtr) (Lib3MF_Function pFunction, const char * pIdentifier);
 
 /**
 * Retrieves the display name of the function
@@ -3859,6 +3821,26 @@ typedef Lib3MFResult (*PLib3MFFunction_FindOutputPtr) (Lib3MF_Function pFunction
 /*************************************************************************************************************************
  Class definition for ImplicitFunction
 **************************************************************************************************************************/
+
+/**
+* Retrieves the identifier of the function
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] nIdentifierBufferSize - size of the buffer (including trailing 0)
+* @param[out] pIdentifierNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pIdentifierBuffer -  buffer of the identifier, may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitFunction_GetIdentifierPtr) (Lib3MF_ImplicitFunction pImplicitFunction, const Lib3MF_uint32 nIdentifierBufferSize, Lib3MF_uint32* pIdentifierNeededChars, char * pIdentifierBuffer);
+
+/**
+* Sets the identifier of the function
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitFunction_SetIdentifierPtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier);
 
 /**
 * Add a node
@@ -6172,13 +6154,9 @@ typedef struct {
 	PLib3MFImplicitNode_GetVectorPtr m_ImplicitNode_GetVector;
 	PLib3MFImplicitNode_SetMatrixPtr m_ImplicitNode_SetMatrix;
 	PLib3MFImplicitNode_GetMatrixPtr m_ImplicitNode_GetMatrix;
-	PLib3MFImplicitNode_SetMeshPtr m_ImplicitNode_SetMesh;
-	PLib3MFImplicitNode_GetMeshPtr m_ImplicitNode_GetMesh;
-	PLib3MFImplicitNode_SetFunctionPtr m_ImplicitNode_SetFunction;
-	PLib3MFImplicitNode_GetFunctionPtr m_ImplicitNode_GetFunction;
+	PLib3MFImplicitNode_SetResourceIDPtr m_ImplicitNode_SetResourceID;
+	PLib3MFImplicitNode_GetResourceIDPtr m_ImplicitNode_GetResourceID;
 	PLib3MFNodeIterator_GetCurrentPtr m_NodeIterator_GetCurrent;
-	PLib3MFFunction_GetIdentifierPtr m_Function_GetIdentifier;
-	PLib3MFFunction_SetIdentifierPtr m_Function_SetIdentifier;
 	PLib3MFFunction_GetDisplayNamePtr m_Function_GetDisplayName;
 	PLib3MFFunction_SetDisplayNamePtr m_Function_SetDisplayName;
 	PLib3MFFunction_AddInputPtr m_Function_AddInput;
@@ -6189,6 +6167,8 @@ typedef struct {
 	PLib3MFFunction_RemoveOutputPtr m_Function_RemoveOutput;
 	PLib3MFFunction_FindInputPtr m_Function_FindInput;
 	PLib3MFFunction_FindOutputPtr m_Function_FindOutput;
+	PLib3MFImplicitFunction_GetIdentifierPtr m_ImplicitFunction_GetIdentifier;
+	PLib3MFImplicitFunction_SetIdentifierPtr m_ImplicitFunction_SetIdentifier;
 	PLib3MFImplicitFunction_AddNodePtr m_ImplicitFunction_AddNode;
 	PLib3MFImplicitFunction_GetNodesPtr m_ImplicitFunction_GetNodes;
 	PLib3MFImplicitFunction_RemoveNodePtr m_ImplicitFunction_RemoveNode;
