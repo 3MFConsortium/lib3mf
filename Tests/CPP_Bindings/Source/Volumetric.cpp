@@ -816,32 +816,34 @@ namespace Lib3MF
     PImplicitFunction newFunction = model->AddImplicitFunction();
     newFunction->SetDisplayName("shell");
 
-    // 
+
     auto functionArgument =
       newFunction->AddInput("pos", "position", Lib3MF::eImplicitPortType::Vector);
 
-
-    // Create a mesh node
-    auto meshNode = newFunction->AddNode(
-      Lib3MF::eImplicitNodeType::Mesh, "mesh", "mesh", "group_shell");
-	
-    meshNode->FindInput("point")->SetType(Lib3MF::eImplicitPortType::Vector);
-    newFunction->AddLinkByNames("inputs.pos", "mesh.point");
-
     auto resourceNode = newFunction->AddNode(
-      Lib3MF::eImplicitNodeType::Resource, "meshResource", "mesh resource", "group_shell");
+        Lib3MF::eImplicitNodeType::Resource, "meshResource", "mesh resource", "group_shell");
 
     auto mesh = GetMesh();
-	resourceNode->SetResourceID(mesh->GetResourceID());
+    resourceNode->SetResourceID(mesh->GetResourceID());
+    resourceNode->FindOutput("value")->SetType(Lib3MF::eImplicitPortType::ResourceID);
+    
+    // Create a mesh node
+    auto meshNode = newFunction->AddNode(
+        Lib3MF::eImplicitNodeType::Mesh, "mesh", "mesh", "group_shell");
+
+    meshNode->FindInput("point")->SetType(Lib3MF::eImplicitPortType::Vector);
+    meshNode->FindInput("mesh")->SetType(Lib3MF::eImplicitPortType::ResourceID);
+    newFunction->AddLinkByNames("inputs.pos", "mesh.point");
+
     newFunction->AddLinkByNames("meshResource.value", "mesh.mesh");
 
     auto absNode = newFunction->AddNode(
-      Lib3MF::eImplicitNodeType::Abs, "abs", "abs", "group_shell");
+        Lib3MF::eImplicitNodeType::Abs, "abs", "abs", "group_shell");
 
     newFunction->AddLinkByNames("mesh.distance", "abs.A");
 
     auto constScalarNode = newFunction->AddNode(
-      Lib3MF::eImplicitNodeType::Constant, "thickness", "thickness", "group_shell");
+        Lib3MF::eImplicitNodeType::Constant, "thickness", "thickness", "group_shell");
 
     constScalarNode->SetConstant(2.);
 

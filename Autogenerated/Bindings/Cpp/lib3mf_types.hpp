@@ -440,7 +440,8 @@ namespace Lib3MF {
   enum class eImplicitPortType : Lib3MF_int32 {
     Scalar = 1, /** Scalar */
     Vector = 2, /** Vector */
-    Matrix = 3 /** 4x4 Matrix */
+    Matrix = 3, /** 4x4 Matrix */
+    ResourceID = 4 /** Resource ID */
   };
   
   enum class eEncryptionAlgorithm : Lib3MF_int32 {

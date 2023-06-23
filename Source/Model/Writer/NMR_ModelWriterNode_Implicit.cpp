@@ -163,6 +163,8 @@ namespace NMR
             return XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_VECTOR_REF;
         case Lib3MF::eImplicitPortType::Matrix:
             return XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_MATRIX_REF;
+		case Lib3MF::eImplicitPortType::ResourceID:
+			return XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_RESOURCE_REF;
         default:
             return "Invalid";
         }
@@ -194,6 +196,8 @@ namespace NMR
             return XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_VECTOR;
         case Lib3MF::eImplicitPortType::Matrix:
             return XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_MATRIX;
+		case Lib3MF::eImplicitPortType::ResourceID:
+			return XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_RESOURCE_ID;
         default:
             return "Invalid";
         }

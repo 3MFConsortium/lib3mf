@@ -19806,6 +19806,7 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitPortType_Scalar"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitPortType_Vector"), Integer::New(isolate, 2));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitPortType_Matrix"), Integer::New(isolate, 3));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitPortType_ResourceID"), Integer::New(isolate, 4));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eEncryptionAlgorithm_AES256_GCM"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eWrappingAlgorithm_RSA_OAEP"), Integer::New(isolate, 0));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA1"), Integer::New(isolate, 160));

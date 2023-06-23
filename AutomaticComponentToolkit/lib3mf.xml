@@ -2201,6 +2201,7 @@
 		<option name="Scalar" description="Scalar" value="1" />
 		<option name="Vector" description="Vector" value="2" />
 		<option name="Matrix" description="4x4 Matrix" value="3" />
+    <option name="ResourceID" description="Resource ID" value="4" />
 	</enum>
 
 

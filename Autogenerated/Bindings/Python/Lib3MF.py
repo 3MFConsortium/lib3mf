@@ -846,6 +846,7 @@ class ImplicitPortType(CTypesEnum):
 	Scalar = 1
 	Vector = 2
 	Matrix = 3
+	ResourceID = 4
 '''Definition of EncryptionAlgorithm
 '''
 class EncryptionAlgorithm(CTypesEnum):

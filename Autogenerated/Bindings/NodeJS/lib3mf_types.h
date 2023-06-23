@@ -439,7 +439,8 @@ typedef enum eLib3MFImplicitNodeType {
 typedef enum eLib3MFImplicitPortType {
   eImplicitPortTypeScalar = 1, /** Scalar */
   eImplicitPortTypeVector = 2, /** Vector */
-  eImplicitPortTypeMatrix = 3 /** 4x4 Matrix */
+  eImplicitPortTypeMatrix = 3, /** 4x4 Matrix */
+  eImplicitPortTypeResourceID = 4 /** Resource ID */
 } eLib3MFImplicitPortType;
 
 typedef enum eLib3MFEncryptionAlgorithm {

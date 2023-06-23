@@ -284,7 +284,8 @@ type
 	TLib3MFImplicitPortType = (
 		eImplicitPortTypeScalar,
 		eImplicitPortTypeVector,
-		eImplicitPortTypeMatrix
+		eImplicitPortTypeMatrix,
+		eImplicitPortTypeResourceID
 	);
 
 	TLib3MFEncryptionAlgorithm = (
@@ -9537,6 +9538,7 @@ implementation
 			eImplicitPortTypeScalar: Result := 1;
 			eImplicitPortTypeVector: Result := 2;
 			eImplicitPortTypeMatrix: Result := 3;
+			eImplicitPortTypeResourceID: Result := 4;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
 		end;
@@ -9548,6 +9550,7 @@ implementation
 			1: Result := eImplicitPortTypeScalar;
 			2: Result := eImplicitPortTypeVector;
 			3: Result := eImplicitPortTypeMatrix;
+			4: Result := eImplicitPortTypeResourceID;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;

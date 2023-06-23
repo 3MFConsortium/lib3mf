@@ -5377,6 +5377,7 @@ const (
 	ImplicitPortType_Scalar = 1
 	ImplicitPortType_Vector = 2
 	ImplicitPortType_Matrix = 3
+	ImplicitPortType_ResourceID = 4
 )
 
 // EncryptionAlgorithm represents a Lib3MF enum.

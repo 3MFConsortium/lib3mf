@@ -196,7 +196,8 @@ namespace Lib3MF {
 	public enum eImplicitPortType {
 		Scalar = 1,
 		Vector = 2,
-		Matrix = 3
+		Matrix = 3,
+		ResourceID = 4
 	};
 
 	public enum eEncryptionAlgorithm {
