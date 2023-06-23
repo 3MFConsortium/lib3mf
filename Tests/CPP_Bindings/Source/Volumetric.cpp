@@ -831,9 +831,9 @@ namespace Lib3MF
     auto meshNode = newFunction->AddNode(
         Lib3MF::eImplicitNodeType::Mesh, "mesh", "mesh", "group_shell");
 
-    meshNode->FindInput("point")->SetType(Lib3MF::eImplicitPortType::Vector);
+    meshNode->FindInput("pos")->SetType(Lib3MF::eImplicitPortType::Vector);
     meshNode->FindInput("mesh")->SetType(Lib3MF::eImplicitPortType::ResourceID);
-    newFunction->AddLinkByNames("inputs.pos", "mesh.point");
+    newFunction->AddLinkByNames("inputs.pos", "mesh.pos");
 
     newFunction->AddLinkByNames("meshResource.value", "mesh.mesh");
 
