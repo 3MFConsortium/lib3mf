@@ -65,6 +65,9 @@ namespace NMR {
 		// Parse name
 		parseName(pXMLReader);
 
+		// Set custom attributes to default value (0.0)
+		m_pReadData->clearSegmentAttributes();
+
 		// Parse attribute
 		parseAttributes(pXMLReader);
 
@@ -135,6 +138,11 @@ namespace NMR {
 
 	void CToolpathReaderNode_Segment::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
 	{
+		__NMRASSERT(pAttributeName);
+		__NMRASSERT(pAttributeValue);
+		__NMRASSERT(pNameSpace);
+
+		m_pReadData->storeSegmentAttribute(pNameSpace, pAttributeName, pAttributeValue);
 
 	}
 

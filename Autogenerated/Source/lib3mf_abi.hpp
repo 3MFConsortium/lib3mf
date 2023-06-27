@@ -67,6 +67,32 @@ extern "C" {
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_base_classtypeid(Lib3MF_Base pBase, Lib3MF_uint64 * pClassTypeId);
 
 /*************************************************************************************************************************
+ Class definition for BinaryStream
+**************************************************************************************************************************/
+
+/**
+* Retrieves an binary streams package path.
+*
+* @param[in] pBinaryStream - BinaryStream instance.
+* @param[in] nPathBufferSize - size of the buffer (including trailing 0)
+* @param[out] pPathNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pPathBuffer -  buffer of binary streams package path., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_binarystream_getpath(Lib3MF_BinaryStream pBinaryStream, const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char * pPathBuffer);
+
+/**
+* Retrieves an binary streams uuid.
+*
+* @param[in] pBinaryStream - BinaryStream instance.
+* @param[in] nUUIDBufferSize - size of the buffer (including trailing 0)
+* @param[out] pUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pUUIDBuffer -  buffer of binary streams uuid, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_binarystream_getuuid(Lib3MF_BinaryStream pBinaryStream, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer);
+
+/*************************************************************************************************************************
  Class definition for Writer
 **************************************************************************************************************************/
 
@@ -198,6 +224,26 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_writer_addkeywrappingcallback(Lib3MF_Writer 
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_writer_setcontentencryptioncallback(Lib3MF_Writer pWriter, Lib3MF::ContentEncryptionCallback pTheCallback, Lib3MF_pvoid pUserData);
+
+/**
+* Creates a binary stream object. Only applicable for 3MFz Writers.
+*
+* @param[in] pWriter - Writer instance.
+* @param[in] pPath - Package path to write into
+* @param[out] pBinaryStream - Returns a package path.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_writer_createbinarystream(Lib3MF_Writer pWriter, const char * pPath, Lib3MF_BinaryStream * pBinaryStream);
+
+/**
+* Sets a binary stream for a mesh object. Currently supported objects are Meshes and Toolpath layers.
+*
+* @param[in] pWriter - Writer instance.
+* @param[in] pInstance - Object instance to assign Binary stream to.
+* @param[in] pBinaryStream - Binary stream object to use for this layer.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_writer_assignbinarystream(Lib3MF_Writer pWriter, Lib3MF_Base pInstance, Lib3MF_BinaryStream pBinaryStream);
 
 /*************************************************************************************************************************
  Class definition for PersistentReaderSource
@@ -3244,6 +3290,74 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpartuuid(Lib3M
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpointdata(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer);
 
 /**
+* Retrieves a segment Uint32 attribute ID by Attribute Name. Will fail if Attribute does not exist.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] pNameSpace - Namespace of the custom attribute.
+* @param[in] pAttributeName - Name of the custom attribute.
+* @param[out] pID - Attribute ID.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_finduint32attributeid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID);
+
+/**
+* Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+* @param[in] nID - Attribute ID.
+* @param[out] pValue - Attribute Value.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentuint32attributebyid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 nID, Lib3MF_uint32 * pValue);
+
+/**
+* Retrieves a segment Uint32 attribute by Attribute Name. Will fail if Attribute does not exist.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+* @param[in] pNameSpace - Namespace of the custom attribute.
+* @param[in] pAttributeName - Name of the custom attribute.
+* @param[out] pValue - Attribute Value.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentuint32attributebyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pValue);
+
+/**
+* Retrieves a segment Double attribute ID by Attribute Name. Will fail if Attribute does not exist.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] pNameSpace - Namespace of the custom attribute.
+* @param[in] pAttributeName - Name of the custom attribute.
+* @param[out] pID - Attribute ID.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_finddoubleattributeid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID);
+
+/**
+* Retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+* @param[in] nID - Attribute ID.
+* @param[out] pValue - Attribute Value.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 nID, Lib3MF_double * pValue);
+
+/**
+* Retrieves a segment Double attribute by Attribute Name. Will fail if Attribute does not exist.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+* @param[in] pNameSpace - Namespace of the custom attribute.
+* @param[in] pAttributeName - Name of the custom attribute.
+* @param[out] pValue - Attribute Value.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const char * pNameSpace, const char * pAttributeName, Lib3MF_double * pValue);
+
+/**
 * Retrieves the count of custom data elements.
 *
 * @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
@@ -3579,6 +3693,26 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_clearcustomdata(Lib3MF_Toolpath pTo
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_deletecustomdata(Lib3MF_Toolpath pToolpath, Lib3MF_CustomDOMTree pData, bool * pSuccess);
+
+/**
+* Registers a UInt32 Attribute that each segment holds.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] pNameSpace - Namespace of the custom data tree. MUST not be empty.
+* @param[in] pAttributeName - Attribute name. MUST not be empty.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_registercustomuint32attribute(Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pAttributeName);
+
+/**
+* Registers a Double Attribute that each segment holds. Registering only applies to reader or writer objects created after the call.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] pNameSpace - Namespace of the custom data tree. MUST not be empty.
+* @param[in] pAttributeName - Attribute name. MUST not be empty.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_registercustomdoubleattribute(Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pAttributeName);
 
 /*************************************************************************************************************************
  Class definition for ToolpathIterator

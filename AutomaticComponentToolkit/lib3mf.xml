@@ -95,6 +95,8 @@
 		<error name="TOOLPATH_NOTWRITINGDATA" code="4001" description="Not in toolpath data writing mode" />
 		<error name="TOOLPATH_DATAHASBEENWRITTEN" code="4002" description="Toolpath has already been written out" />
 		<error name="TOOLPATH_INVALIDPOINTCOUNT" code="4003" description="Toolpath has an invalid number of points" />
+		<error name="TOOLPATH_ATTRIBUTEALREADYDEFINED" code="4004" description="Toolpath attribute already defined" />
+		
 				
 		
 	</errors>
@@ -310,6 +312,17 @@
 		</method>
 	</class>
 
+	<class name="BinaryStream" parent="Base">  
+		<method name="GetPath" description = "Retrieves an binary streams package path.">
+			<param name="Path" type="string" pass="return" description="binary streams package path." />
+		</method>
+
+		<method name="GetUUID" description = "Retrieves an binary streams uuid.">
+			<param name="UUID" type="string" pass="return" description="binary streams uuid" />
+		</method>
+	</class>
+
+
 	<class name="Writer" parent="Base">
 		<method name="WriteToFile" description="Writes out the model as file. The file type is specified by the Model Writer class.">
 			<param name="Filename" type="string" pass="in" description="Filename to write into"/>
@@ -358,6 +371,15 @@
 			<param name="TheCallback" type="functiontype" class="ContentEncryptionCallback" pass="in" description="The callback used to encrypt content"/>
 			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
 		</method>
+		<method name="CreateBinaryStream" description = "Creates a binary stream object. Only applicable for 3MFz Writers.">
+			<param name="Path" type="string" pass="in" description="Package path to write into" />
+			<param name="BinaryStream" type="class" class="BinaryStream" pass="return" description="Returns a package path." />
+		</method>
+		<method name="AssignBinaryStream" description="Sets a binary stream for a mesh object. Currently supported objects are Meshes and Toolpath layers.">
+			<param name="Instance" type="class" class="Base" pass="in" description="Object instance to assign Binary stream to." />
+			<param name="BinaryStream" type="class" class="BinaryStream" pass="in" description="Binary stream object to use for this layer." />
+		</method>
+		
 	</class>
 	
 
@@ -1601,7 +1623,44 @@
 		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
 	    <param name="PointData" type="structarray" class="Position2D" pass="out" description="The point data array" />
 	</method>
+
+	<method name="FindUint32AttributeID" description="Retrieves a segment Uint32 attribute ID by Attribute Name. Will fail if Attribute does not exist.">
+		<param name="NameSpace" type="string" pass="in" description="Namespace of the custom attribute." />
+		<param name="AttributeName" type="string" pass="in" description="Name of the custom attribute." />
+		<param name="ID" type="uint32" pass="return" description="Attribute ID." />
+	</method>
 	
+	<method name="GetSegmentUint32AttributeByID" description="Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.">
+		<param name="Index" type="uint32" pass="in" description="Segment Index. Must be between 0 and Count - 1." />
+		<param name="ID" type="uint32" pass="in" description="Attribute ID." />
+		<param name="Value" type="uint32" pass="return" description="Attribute Value." />
+	</method>
+
+	<method name="GetSegmentUint32AttributeByName" description="Retrieves a segment Uint32 attribute by Attribute Name. Will fail if Attribute does not exist.">
+		<param name="Index" type="uint32" pass="in" description="Segment Index. Must be between 0 and Count - 1." />
+		<param name="NameSpace" type="string" pass="in" description="Namespace of the custom attribute." />
+		<param name="AttributeName" type="string" pass="in" description="Name of the custom attribute." />
+		<param name="Value" type="uint32" pass="return" description="Attribute Value." />
+	</method>
+
+	<method name="FindDoubleAttributeID" description="Retrieves a segment Double attribute ID by Attribute Name. Will fail if Attribute does not exist.">
+		<param name="NameSpace" type="string" pass="in" description="Namespace of the custom attribute." />
+		<param name="AttributeName" type="string" pass="in" description="Name of the custom attribute." />
+		<param name="ID" type="uint32" pass="return" description="Attribute ID." />
+	</method>
+
+	<method name="GetSegmentDoubleAttributeByID" description="Retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.">
+		<param name="Index" type="uint32" pass="in" description="Segment Index. Must be between 0 and Count - 1." />
+		<param name="ID" type="uint32" pass="in" description="Attribute ID." />
+		<param name="Value" type="double" pass="return" description="Attribute Value." />
+	</method>
+
+	<method name="GetSegmentDoubleAttributeByName" description="Retrieves a segment Double attribute by Attribute Name. Will fail if Attribute does not exist.">
+		<param name="Index" type="uint32" pass="in" description="Segment Index. Must be between 0 and Count - 1." />
+		<param name="NameSpace" type="string" pass="in" description="Namespace of the custom attribute." />
+		<param name="AttributeName" type="string" pass="in" description="Name of the custom attribute." />
+		<param name="Value" type="double" pass="return" description="Attribute Value." />
+	</method>
 
 	<method name="GetCustomDataCount" description="Retrieves the count of custom data elements.">
 		<param name="Count" type="uint32" pass="return" description="Count" />
@@ -1773,7 +1832,17 @@
 			<param name="Data" type="class" class="CustomDOMTree" pass="in" description="DOM Tree of the data." />
 			<param name="Success" type="bool" pass="return" description="Returns if deletion was successful." />
 		</method>
+
+		<method name="RegisterCustomUint32Attribute" description="Registers a UInt32 Attribute that each segment holds.">
+			<param name="NameSpace" type="string" pass="in" description="Namespace of the custom data tree. MUST not be empty." />
+			<param name="AttributeName" type="string" pass="in" description="Attribute name. MUST not be empty." />
+		</method>
 		
+		<method name="RegisterCustomDoubleAttribute" description="Registers a Double Attribute that each segment holds. Registering only applies to reader or writer objects created after the call.">
+			<param name="NameSpace" type="string" pass="in" description="Namespace of the custom data tree. MUST not be empty." />
+			<param name="AttributeName" type="string" pass="in" description="Attribute name. MUST not be empty." />
+		</method>
+
 	</class>	
 
 	<class name="ToolpathIterator" parent="ResourceIterator">

@@ -342,6 +342,12 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_base_classtypeid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Base_ClassTypeId (IntPtr Handle, out UInt64 AClassTypeId);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_getpath", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BinaryStream_GetPath (IntPtr Handle, UInt32 sizePath, out UInt32 neededPath, IntPtr dataPath);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_getuuid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BinaryStream_GetUUID (IntPtr Handle, UInt32 sizeUUID, out UInt32 neededUUID, IntPtr dataUUID);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_writer_writetofile", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Writer_WriteToFile (IntPtr Handle, byte[] AFilename);
 
@@ -380,6 +386,12 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_writer_setcontentencryptioncallback", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Writer_SetContentEncryptionCallback (IntPtr Handle, IntPtr ATheCallback, UInt64 AUserData);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_writer_createbinarystream", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Writer_CreateBinaryStream (IntPtr Handle, byte[] APath, out IntPtr ABinaryStream);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_writer_assignbinarystream", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Writer_AssignBinaryStream (IntPtr Handle, IntPtr AInstance, IntPtr ABinaryStream);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_persistentreadersource_getsourcetype", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 PersistentReaderSource_GetSourceType (IntPtr Handle, out Int32 ASourceType);
@@ -1257,6 +1269,24 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentpointdata", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentPointData (IntPtr Handle, UInt32 AIndex, UInt64 sizePointData, out UInt64 neededPointData, IntPtr dataPointData);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_finduint32attributeid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_FindUint32AttributeID (IntPtr Handle, byte[] ANameSpace, byte[] AAttributeName, out UInt32 AID);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentuint32attributebyid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentUint32AttributeByID (IntPtr Handle, UInt32 AIndex, UInt32 AID, out UInt32 AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentuint32attributebyname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentUint32AttributeByName (IntPtr Handle, UInt32 AIndex, byte[] ANameSpace, byte[] AAttributeName, out UInt32 AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_finddoubleattributeid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_FindDoubleAttributeID (IntPtr Handle, byte[] ANameSpace, byte[] AAttributeName, out UInt32 AID);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentDoubleAttributeByID (IntPtr Handle, UInt32 AIndex, UInt32 AID, out Double AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentDoubleAttributeByName (IntPtr Handle, UInt32 AIndex, byte[] ANameSpace, byte[] AAttributeName, out Double AValue);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getcustomdatacount", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerReader_GetCustomDataCount (IntPtr Handle, out UInt32 ACount);
 
@@ -1349,6 +1379,12 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_deletecustomdata", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Toolpath_DeleteCustomData (IntPtr Handle, IntPtr AData, out Byte ASuccess);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_registercustomuint32attribute", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_RegisterCustomUint32Attribute (IntPtr Handle, byte[] ANameSpace, byte[] AAttributeName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_registercustomdoubleattribute", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_RegisterCustomDoubleAttribute (IntPtr Handle, byte[] ANameSpace, byte[] AAttributeName);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathiterator_getcurrenttoolpath", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathIterator_GetCurrentToolpath (IntPtr Handle, out IntPtr AResource);
@@ -2064,6 +2100,7 @@ namespace Lib3MF {
 					ThrowError (IntPtr.Zero, errorCode);
 				switch (resultClassTypeId) {
 					case 0x856632D0BAF1D8B7: Object = new CBase(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Base"
+					case 0xA0EB26254C981E1A: Object = new CBinaryStream(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BinaryStream"
 					case 0xE76F642F363FD7E9: Object = new CWriter(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Writer"
 					case 0xBE46884397CE1319: Object = new CPersistentReaderSource(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::PersistentReaderSource"
 					case 0x2D86831DA59FBE72: Object = new CReader(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Reader"
@@ -2177,6 +2214,42 @@ namespace Lib3MF {
 
 	}
 
+	public class CBinaryStream : CBase
+	{
+		public CBinaryStream (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public String GetPath ()
+		{
+			UInt32 sizePath = 0;
+			UInt32 neededPath = 0;
+			CheckError(Internal.Lib3MFWrapper.BinaryStream_GetPath (Handle, sizePath, out neededPath, IntPtr.Zero));
+			sizePath = neededPath;
+			byte[] bytesPath = new byte[sizePath];
+			GCHandle dataPath = GCHandle.Alloc(bytesPath, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.BinaryStream_GetPath (Handle, sizePath, out neededPath, dataPath.AddrOfPinnedObject()));
+			dataPath.Free();
+			return Encoding.UTF8.GetString(bytesPath).TrimEnd(char.MinValue);
+		}
+
+		public String GetUUID ()
+		{
+			UInt32 sizeUUID = 0;
+			UInt32 neededUUID = 0;
+			CheckError(Internal.Lib3MFWrapper.BinaryStream_GetUUID (Handle, sizeUUID, out neededUUID, IntPtr.Zero));
+			sizeUUID = neededUUID;
+			byte[] bytesUUID = new byte[sizeUUID];
+			GCHandle dataUUID = GCHandle.Alloc(bytesUUID, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.BinaryStream_GetUUID (Handle, sizeUUID, out neededUUID, dataUUID.AddrOfPinnedObject()));
+			dataUUID.Free();
+			return Encoding.UTF8.GetString(bytesUUID).TrimEnd(char.MinValue);
+		}
+
+	}
+
 	public class CWriter : CBase
 	{
 		public CWriter (IntPtr NewHandle) : base (NewHandle)
@@ -2284,6 +2357,27 @@ namespace Lib3MF {
 		{
 
 			CheckError(Internal.Lib3MFWrapper.Writer_SetContentEncryptionCallback (Handle, ATheCallback, AUserData));
+		}
+
+		public CBinaryStream CreateBinaryStream (String APath)
+		{
+			byte[] bytePath = Encoding.UTF8.GetBytes(APath + char.MinValue);
+			IntPtr newBinaryStream = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Writer_CreateBinaryStream (Handle, bytePath, out newBinaryStream));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CBinaryStream>(newBinaryStream);
+		}
+
+		public void AssignBinaryStream (CBase AInstance, CBinaryStream ABinaryStream)
+		{
+			IntPtr AInstanceHandle = IntPtr.Zero;
+			if (AInstance != null)
+				AInstanceHandle = AInstance.GetHandle();
+			IntPtr ABinaryStreamHandle = IntPtr.Zero;
+			if (ABinaryStream != null)
+				ABinaryStreamHandle = ABinaryStream.GetHandle();
+
+			CheckError(Internal.Lib3MFWrapper.Writer_AssignBinaryStream (Handle, AInstanceHandle, ABinaryStreamHandle));
 		}
 
 	}
@@ -5252,6 +5346,62 @@ namespace Lib3MF {
 				APointData[index] = Internal.Lib3MFWrapper.convertInternalToStruct_Position2D(arrayPointData[index]);
 		}
 
+		public UInt32 FindUint32AttributeID (String ANameSpace, String AAttributeName)
+		{
+			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
+			byte[] byteAttributeName = Encoding.UTF8.GetBytes(AAttributeName + char.MinValue);
+			UInt32 resultID = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_FindUint32AttributeID (Handle, byteNameSpace, byteAttributeName, out resultID));
+			return resultID;
+		}
+
+		public UInt32 GetSegmentUint32AttributeByID (UInt32 AIndex, UInt32 AID)
+		{
+			UInt32 resultValue = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentUint32AttributeByID (Handle, AIndex, AID, out resultValue));
+			return resultValue;
+		}
+
+		public UInt32 GetSegmentUint32AttributeByName (UInt32 AIndex, String ANameSpace, String AAttributeName)
+		{
+			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
+			byte[] byteAttributeName = Encoding.UTF8.GetBytes(AAttributeName + char.MinValue);
+			UInt32 resultValue = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentUint32AttributeByName (Handle, AIndex, byteNameSpace, byteAttributeName, out resultValue));
+			return resultValue;
+		}
+
+		public UInt32 FindDoubleAttributeID (String ANameSpace, String AAttributeName)
+		{
+			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
+			byte[] byteAttributeName = Encoding.UTF8.GetBytes(AAttributeName + char.MinValue);
+			UInt32 resultID = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_FindDoubleAttributeID (Handle, byteNameSpace, byteAttributeName, out resultID));
+			return resultID;
+		}
+
+		public Double GetSegmentDoubleAttributeByID (UInt32 AIndex, UInt32 AID)
+		{
+			Double resultValue = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentDoubleAttributeByID (Handle, AIndex, AID, out resultValue));
+			return resultValue;
+		}
+
+		public Double GetSegmentDoubleAttributeByName (UInt32 AIndex, String ANameSpace, String AAttributeName)
+		{
+			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
+			byte[] byteAttributeName = Encoding.UTF8.GetBytes(AAttributeName + char.MinValue);
+			Double resultValue = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentDoubleAttributeByName (Handle, AIndex, byteNameSpace, byteAttributeName, out resultValue));
+			return resultValue;
+		}
+
 		public UInt32 GetCustomDataCount ()
 		{
 			UInt32 resultCount = 0;
@@ -5584,6 +5734,22 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Toolpath_DeleteCustomData (Handle, ADataHandle, out resultSuccess));
 			return (resultSuccess != 0);
+		}
+
+		public void RegisterCustomUint32Attribute (String ANameSpace, String AAttributeName)
+		{
+			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
+			byte[] byteAttributeName = Encoding.UTF8.GetBytes(AAttributeName + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_RegisterCustomUint32Attribute (Handle, byteNameSpace, byteAttributeName));
+		}
+
+		public void RegisterCustomDoubleAttribute (String ANameSpace, String AAttributeName)
+		{
+			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
+			byte[] byteAttributeName = Encoding.UTF8.GetBytes(AAttributeName + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_RegisterCustomDoubleAttribute (Handle, byteNameSpace, byteAttributeName));
 		}
 
 	}

@@ -43,6 +43,7 @@ Abstract: This is the class declaration of CToolpath
 
 
 #include "Model/Classes/NMR_ModelToolpath.h"
+#include "Model/Classes/NMR_ModelToolpathLayerReadData.h"
 
 
 namespace Lib3MF {
@@ -54,10 +55,8 @@ namespace Impl {
 **************************************************************************************************************************/
 
 class CToolpath : public virtual IToolpath, public virtual CResource {
-private:
-
-
 protected:
+	std::map<std::pair<std::string, std::string>, NMR::eModelToolpathSegmentAttributeType> m_RegisteredAttributes;
 
 	NMR::PModelToolpath m_pToolpath;
 public:
@@ -103,6 +102,10 @@ public:
 	Lib3MF_uint32 ClearCustomData() override;
 
 	bool DeleteCustomData(ICustomDOMTree* pData) override;
+
+	void RegisterCustomUint32Attribute(const std::string& sNameSpace, const std::string& sAttributeName) override;
+
+	void RegisterCustomDoubleAttribute(const std::string& sNameSpace, const std::string& sAttributeName) override;
 
 
 };

@@ -173,6 +173,11 @@ IToolpathLayerReader* CToolpath::ReadLayerData(const Lib3MF_uint32 nIndex)
 	}
 
 	auto pReader = std::make_shared<NMR::CToolpathReader>(m_pToolpath, true);
+	auto pReadData = pReader->getReadData();
+	for (auto iIter : m_RegisteredAttributes) {
+		pReadData->registerCustomSegmentAttribute(iIter.first.first, iIter.first.second, iIter.second);
+	}
+
 	pReader->readStream(pLayerDataStream);
 
 	return new CToolpathLayerReader(pReader->getReadData());
@@ -254,5 +259,27 @@ bool CToolpath::DeleteCustomData(ICustomDOMTree* pData)
 		return false;
 
 	return m_pToolpath->deleteCustomXMLData (pDataInstance->getXMLTreeInstance ().get ());
+}
+
+void CToolpath::RegisterCustomUint32Attribute(const std::string& sNameSpace, const std::string& sAttributeName)
+{
+	auto key = std::make_pair(sNameSpace, sAttributeName);
+	auto iIter = m_RegisteredAttributes.find (key);
+
+	if (iIter != m_RegisteredAttributes.end())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED, "Toolpath attribute already defined: " + sNameSpace + "/" + sAttributeName);
+
+	m_RegisteredAttributes.insert(std::make_pair (key, NMR::eModelToolpathSegmentAttributeType::SegmentAttributeUint32));
+}
+
+void CToolpath::RegisterCustomDoubleAttribute(const std::string& sNameSpace, const std::string& sAttributeName)
+{
+	auto key = std::make_pair(sNameSpace, sAttributeName);
+	auto iIter = m_RegisteredAttributes.find(key);
+
+	if (iIter != m_RegisteredAttributes.end())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED, "Toolpath attribute already defined: " + sNameSpace + "/" + sAttributeName);
+
+	m_RegisteredAttributes.insert(std::make_pair(key, NMR::eModelToolpathSegmentAttributeType::SegmentAttributeDouble));
 }
 

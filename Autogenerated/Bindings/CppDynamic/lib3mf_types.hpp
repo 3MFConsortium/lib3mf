@@ -144,6 +144,7 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA 4001 /** Not in toolpath data writing mode */
 #define LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN 4002 /** Toolpath has already been written out */
 #define LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT 4003 /** Toolpath has an invalid number of points */
+#define LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED 4004 /** Toolpath attribute already defined */
 
 /*************************************************************************************************************************
  Error strings for Lib3MF
@@ -203,6 +204,7 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
     case LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA: return "Not in toolpath data writing mode";
     case LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "Toolpath has already been written out";
     case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "Toolpath has an invalid number of points";
+    case LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED: return "Toolpath attribute already defined";
     default: return "unknown error";
   }
 }
@@ -212,6 +214,7 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
 **************************************************************************************************************************/
 
 typedef Lib3MFHandle Lib3MF_Base;
+typedef Lib3MFHandle Lib3MF_BinaryStream;
 typedef Lib3MFHandle Lib3MF_Writer;
 typedef Lib3MFHandle Lib3MF_PersistentReaderSource;
 typedef Lib3MFHandle Lib3MF_Reader;

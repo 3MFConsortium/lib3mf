@@ -140,7 +140,45 @@ namespace NMR {
 		case NMR_ERROR_XMLATTRIBUTENOTFOUND: return "XML attribute not found";
 		case NMR_ERROR_DUPLICATEXMLATTRIBUTE: return "Duplicate XML attribute";
 		case NMR_ERROR_TOOMANYCUSTOMXMLDATAENTRIES: return "Too many custom XML Data Entries";
-
+		case NMR_ERROR_STREAMCHUNKALREADYOPEN: return "Stream Chunk already open";
+		case NMR_ERROR_NOSTREAMCHUNKOPEN: return "No Stream Chunk open";
+		case NMR_ERROR_STREAMWRITERALREADYFINISHED: return "Stream writer already finished";
+		case NMR_ERROR_STREAMWRITERNOTFINISHED: return "Stream writer not finished";
+		case NMR_ERROR_DUPLICATEBINARYSTREAM: return "Duplicate Binary Stream";
+		case NMR_ERROR_DUPLICATEBINARYSTREAMPATH: return "Duplicate Binary Stream Path";
+		case NMR_ERROR_COULDNOTCOMPRESSDATA: return "Could not compress data";
+		case NMR_ERROR_BINARYCHUNK_DISCRETIZATIONVALUEOUTOFRANGE: return "Discretization Value out of range";
+		case NMR_ERROR_DUPLICATEBINARYSTREAMUUID: return "Duplicate Binary Stream UUID";
+		case NMR_ERROR_BINARYSTREAMNOTFOUND: return "Binary stream not found";
+		case NMR_ERROR_BINARYSTREAMSNOTALLOWED: return "Binary streams not allowed";
+		case NMR_ERROR_INVALIDCHUNKSTREAM: return "Invalid binary chunk stream";
+		case NMR_ERROR_INVALIDCHUNKSTREAMSIGN: return "Invalid binary chunk stream sign";
+		case NMR_ERROR_INVALIDCHUNKSTREAMVERSION: return "Invalid binary chunk stream version";
+		case NMR_ERROR_TOOMANYBINARYCHUNKS: return "Too many binary chunks";
+		case NMR_ERROR_TOOMANYBINARYCHUNKENTRIES: return "Too many binary chunk entries";
+		case NMR_ERROR_DUPLICATECHUNKENTRY: return "Duplicate chunk entry in binary stream";
+		case NMR_ERROR_INVALIDFILECHUNKDATASIZE: return "Invalid file chunk data size";
+		case NMR_ERROR_INVALIDCHUNKCOMPRESSEDDATA: return "Invalid chunk compressed data";
+		case NMR_ERROR_COULDNOTUNCOMPRESSDATA: return "Could not uncompressed data";
+		case NMR_ERROR_BINARYCHUNKENTRYNOTFOUND: return "Binary chunk entry not found";
+		case NMR_ERROR_INVALIDCHUNKDATA: return "Invalid chunk data";
+		case NMR_ERROR_INVALIDCHUNKENTRYPOSITION: return "Invalid chunk entry position";
+		case NMR_ERROR_INVALIDCHUNKENTRYENDPOSITION: return "Invalid chunk entry end position";
+		case NMR_ERROR_INVALIDCHUNKENTRYSIZE: return "Invalid chunk entry size";
+		case NMR_ERROR_NOTENOUGHDATATOREADFROMCHUNK: return "Not enough data to read from chunk";
+		case NMR_ERROR_INVALIDCHUNKENTRYTYPE: return "Invalid chunk entry type";
+		case NMR_ERROR_UNEXPECTEDCHUNKDATATYPE: return "Unexpected chunk data type";
+		case NMR_ERROR_INVALIDFLOATVALUE: return "Invalid float value";
+		case NMR_ERROR_SEGMENTATTRIBUTEDEFINEDAFTERREADING: return "Segment attribute defined after reading";
+		case NMR_ERROR_INVALIDSEGMENTATTRIBUTETYPE: return "Invalid segment attribute type";
+		case NMR_ERROR_INVALIDSEGMENTATTRIBUTENAMESPACE: return "Invalid segment attribute namespace";
+		case NMR_ERROR_INVALIDSEGMENTATTRIBUTENAME: return "Invalid segment attribute name";
+		case NMR_ERROR_INVALIDSEGMENTATTRIBUTEID: return "Invalid segment attribute id";
+		case NMR_ERROR_INVALIDSEGMENTATTRIBUTEDATASIZE: return "Invalid segment attribute data size";
+		case NMR_ERROR_SEGMENTATTRIBUTEISNOTUINT32: return "Segment attribute is not uint32";
+		case NMR_ERROR_SEGMENTATTRIBUTEISNOTDOUBLE: return "Segment attribute is not double";
+		case NMR_ERROR_SEGMENTATTRIBUTENOTFOUND: return "Segment attribute not found";
+			
 		// Unhandled exception
 		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;
 

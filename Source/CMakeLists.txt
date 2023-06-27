@@ -8,6 +8,9 @@ if (USE_INCLUDED_LIBZIP)
   endif()
 endif()
 
+
+file(GLOB LIBLZMA_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/lzma/*.c")
+
 if (USE_INCLUDED_ZLIB)
   file(GLOB ZLIB_FILES ./Source/Libraries/zlib/*.c)
 endif()
@@ -18,6 +21,7 @@ file (GLOB CPPBASE64_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Librarie
 set(SRCS_PLATFORM
   ${LIBZIP_FILES}
   ${LIBZIP_FILES_PLATFORM}
+  ${LIBLZMA_FILES}
   Source/Common/Platform/NMR_Platform.cpp
   Source/Common/Platform/NMR_ImportStream_Native.cpp
   Source/Common/Platform/NMR_ExportStream_Native.cpp
@@ -35,6 +39,7 @@ Source/API/lib3mf_basematerialgroup.cpp
 Source/API/lib3mf_basematerialgroupiterator.cpp
 Source/API/lib3mf_beamlattice.cpp
 Source/API/lib3mf_beamset.cpp
+Source/API/lib3mf_binarystream.cpp
 Source/API/lib3mf_builditem.cpp
 Source/API/lib3mf_builditemiterator.cpp
 Source/API/lib3mf_colorgroup.cpp
@@ -83,6 +88,9 @@ Source/API/lib3mf_toolpathprofile.cpp
 Source/API/lib3mf_writer.cpp
 Source/API/lib3mf_utils.cpp
 Source/Common/3MF_ProgressMonitor.cpp
+Source/Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamCollection.cpp
+Source/Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamReader.cpp
+Source/Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamWriter.cpp
 Source/Common/Math/NMR_Matrix.cpp
 Source/Common/Math/NMR_PairMatchingTree.cpp
 Source/Common/Math/NMR_Vector.cpp

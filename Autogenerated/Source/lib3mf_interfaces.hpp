@@ -52,6 +52,7 @@ namespace Impl {
  Forward declarations of class interfaces
 */
 class IBase;
+class IBinaryStream;
 class IWriter;
 class IPersistentReaderSource;
 class IReader;
@@ -310,6 +311,38 @@ typedef IBaseSharedPtr<IBase> PIBase;
 
 
 /*************************************************************************************************************************
+ Class interface for BinaryStream 
+**************************************************************************************************************************/
+
+class IBinaryStream : public virtual IBase {
+public:
+	/**
+	* IBinaryStream::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xA0EB26254C981E1AUL; // First 64 bits of SHA1 of a string: "Lib3MF::BinaryStream"
+	}
+
+	/**
+	* IBinaryStream::GetPath - Retrieves an binary streams package path.
+	* @return binary streams package path.
+	*/
+	virtual std::string GetPath() = 0;
+
+	/**
+	* IBinaryStream::GetUUID - Retrieves an binary streams uuid.
+	* @return binary streams uuid
+	*/
+	virtual std::string GetUUID() = 0;
+
+};
+
+typedef IBaseSharedPtr<IBinaryStream> PIBinaryStream;
+
+
+/*************************************************************************************************************************
  Class interface for Writer 
 **************************************************************************************************************************/
 
@@ -411,6 +444,20 @@ public:
 	* @param[in] nUserData - Userdata that is passed to the callback function
 	*/
 	virtual void SetContentEncryptionCallback(const Lib3MF::ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData) = 0;
+
+	/**
+	* IWriter::CreateBinaryStream - Creates a binary stream object. Only applicable for 3MFz Writers.
+	* @param[in] sPath - Package path to write into
+	* @return Returns a package path.
+	*/
+	virtual IBinaryStream * CreateBinaryStream(const std::string & sPath) = 0;
+
+	/**
+	* IWriter::AssignBinaryStream - Sets a binary stream for a mesh object. Currently supported objects are Meshes and Toolpath layers.
+	* @param[in] pInstance - Object instance to assign Binary stream to.
+	* @param[in] pBinaryStream - Binary stream object to use for this layer.
+	*/
+	virtual void AssignBinaryStream(IBase* pInstance, IBinaryStream* pBinaryStream) = 0;
 
 };
 
@@ -3139,6 +3186,56 @@ public:
 	virtual void GetSegmentPointData(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer) = 0;
 
 	/**
+	* IToolpathLayerReader::FindUint32AttributeID - Retrieves a segment Uint32 attribute ID by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute ID.
+	*/
+	virtual Lib3MF_uint32 FindUint32AttributeID(const std::string & sNameSpace, const std::string & sAttributeName) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentUint32AttributeByID - Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nID - Attribute ID.
+	* @return Attribute Value.
+	*/
+	virtual Lib3MF_uint32 GetSegmentUint32AttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentUint32AttributeByName - Retrieves a segment Uint32 attribute by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute Value.
+	*/
+	virtual Lib3MF_uint32 GetSegmentUint32AttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName) = 0;
+
+	/**
+	* IToolpathLayerReader::FindDoubleAttributeID - Retrieves a segment Double attribute ID by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute ID.
+	*/
+	virtual Lib3MF_uint32 FindDoubleAttributeID(const std::string & sNameSpace, const std::string & sAttributeName) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentDoubleAttributeByID - Retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nID - Attribute ID.
+	* @return Attribute Value.
+	*/
+	virtual Lib3MF_double GetSegmentDoubleAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentDoubleAttributeByName - Retrieves a segment Double attribute by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute Value.
+	*/
+	virtual Lib3MF_double GetSegmentDoubleAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName) = 0;
+
+	/**
 	* IToolpathLayerReader::GetCustomDataCount - Retrieves the count of custom data elements.
 	* @return Count
 	*/
@@ -3401,6 +3498,20 @@ public:
 	* @return Returns if deletion was successful.
 	*/
 	virtual bool DeleteCustomData(ICustomDOMTree* pData) = 0;
+
+	/**
+	* IToolpath::RegisterCustomUint32Attribute - Registers a UInt32 Attribute that each segment holds.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sAttributeName - Attribute name. MUST not be empty.
+	*/
+	virtual void RegisterCustomUint32Attribute(const std::string & sNameSpace, const std::string & sAttributeName) = 0;
+
+	/**
+	* IToolpath::RegisterCustomDoubleAttribute - Registers a Double Attribute that each segment holds. Registering only applies to reader or writer objects created after the call.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sAttributeName - Attribute name. MUST not be empty.
+	*/
+	virtual void RegisterCustomDoubleAttribute(const std::string & sNameSpace, const std::string & sAttributeName) = 0;
 
 };
 

@@ -48,6 +48,8 @@ NMR_ModelToolpath.h defines the Model Toolpath Layer Data.
 #include <map>
 #include <string>
 
+#include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamWriter.h"
+
 namespace NMR {
 
 	class CModelToolpath;
@@ -75,19 +77,19 @@ namespace NMR {
 
 		double m_dUnits;
 
-		//NMR::CChunkedBinaryStreamWriter * getStreamWriter(std::string & sPath);
+		NMR::CChunkedBinaryStreamWriter * getStreamWriter(std::string & sPath);
 
 		NMR::PImportStream createStream();
 
 	public:
 		CModelToolpathLayerWriteData() = delete;
-		CModelToolpathLayerWriteData(_In_ CModelToolpath * pModelToolpath, _In_ NMR::PModelWriter_3MF pModelWriter, _In_ const std::string & sPackagePath);
+		CModelToolpathLayerWriteData(CModelToolpath * pModelToolpath, NMR::PModelWriter_3MF pModelWriter, const std::string & sPackagePath);
 
 		~CModelToolpathLayerWriteData();
 
-		nfUint32 RegisterProfile(_In_ PModelToolpathProfile pProfile);
+		nfUint32 RegisterProfile(PModelToolpathProfile pProfile);
 
-		nfUint32 RegisterPart(_In_ PModelBuildItem pBuildItem);
+		nfUint32 RegisterPart(PModelBuildItem pBuildItem);
 
 		void WriteHatchData(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nHatchCount, const nfInt32 * pX1Buffer, const nfInt32 * pY1Buffer, const nfInt32 * pX2Buffer, const nfInt32 * pY2Buffer);
 

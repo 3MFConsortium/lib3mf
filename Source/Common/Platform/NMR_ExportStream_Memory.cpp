@@ -40,7 +40,7 @@ namespace NMR {
 	}
 
 	nfBool CExportStreamMemory::seekPosition(_In_ nfUint64 position, _In_ nfBool bHasToSucceed) {
-		if (position >= m_Buffer.size() && bHasToSucceed) {
+		if (position > m_Buffer.size() && bHasToSucceed) {
 			throw CNMRException(NMR_ERROR_COULDNOTSEEKSTREAM);
 		}
 		m_Position = position;
@@ -48,7 +48,7 @@ namespace NMR {
 	}
 
 	nfBool CExportStreamMemory::seekForward(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed) {
-		if (bytes + m_Position >= m_Buffer.size() && bHasToSucceed) {
+		if (bytes + m_Position > m_Buffer.size() && bHasToSucceed) {
 			throw CNMRException(NMR_ERROR_COULDNOTSEEKSTREAM);
 		}
 		m_Position = bytes + m_Position;
@@ -56,7 +56,7 @@ namespace NMR {
 	}
 
 	nfBool CExportStreamMemory::seekFromEnd(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed) {
-		if (bytes >= m_Buffer.size() && bHasToSucceed) {
+		if (bytes > m_Buffer.size() && bHasToSucceed) {
 			throw CNMRException(NMR_ERROR_COULDNOTSEEKSTREAM);
 		}
 		m_Position = m_Buffer.size() - bytes;

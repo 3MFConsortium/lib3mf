@@ -49,6 +49,7 @@ void LoadLib3MF(const FunctionCallbackInfo<Value>& args)
 void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 {
 	CLib3MFBase::Init();
+	CLib3MFBinaryStream::Init();
 	CLib3MFWriter::Init();
 	CLib3MFPersistentReaderSource::Init();
 	CLib3MFReader::Init();

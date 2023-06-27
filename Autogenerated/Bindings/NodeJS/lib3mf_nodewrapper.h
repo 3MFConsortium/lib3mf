@@ -88,6 +88,25 @@ public:
 };
 
 /*************************************************************************************************************************
+ Class CLib3MFBinaryStream 
+**************************************************************************************************************************/
+class CLib3MFBinaryStream : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetPath(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFBinaryStream();
+	~CLib3MFBinaryStream();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
  Class CLib3MFWriter 
 **************************************************************************************************************************/
 class CLib3MFWriter : public CLib3MFBaseClass {
@@ -107,6 +126,8 @@ private:
 	static void GetWarningCount(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddKeyWrappingCallback(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetContentEncryptionCallback(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void CreateBinaryStream(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AssignBinaryStream(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFWriter();
@@ -1062,6 +1083,12 @@ private:
 	static void GetSegmentPart(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentPartUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentPointData(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void FindUint32AttributeID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentUint32AttributeByID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentUint32AttributeByName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void FindDoubleAttributeID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentDoubleAttributeByID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentDoubleAttributeByName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetCustomDataCount(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetCustomDataName(const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -1127,6 +1154,8 @@ private:
 	static void AddCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void ClearCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void DeleteCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void RegisterCustomUint32Attribute(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void RegisterCustomDoubleAttribute(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFToolpath();

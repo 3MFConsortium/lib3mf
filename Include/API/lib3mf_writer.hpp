@@ -114,6 +114,10 @@ public:
 
 	NMR::PModelWriter getModelWriter ();
 
+	IBinaryStream* CreateBinaryStream(const std::string& sPath);
+
+	void AssignBinaryStream(IBase* pInstance, IBinaryStream* pBinaryStream);
+
 };
 
 }

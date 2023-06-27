@@ -115,6 +115,7 @@ class ErrorCodes(enum.IntEnum):
 	TOOLPATH_NOTWRITINGDATA = 4001
 	TOOLPATH_DATAHASBEENWRITTEN = 4002
 	TOOLPATH_INVALIDPOINTCOUNT = 4003
+	TOOLPATH_ATTRIBUTEALREADYDEFINED = 4004
 
 '''Definition of Function Table
 '''
@@ -139,6 +140,8 @@ class FunctionTable:
 	lib3mf_getscaletransform = None
 	lib3mf_gettranslationtransform = None
 	lib3mf_base_classtypeid = None
+	lib3mf_binarystream_getpath = None
+	lib3mf_binarystream_getuuid = None
 	lib3mf_writer_writetofile = None
 	lib3mf_writer_getstreamsize = None
 	lib3mf_writer_writetobuffer = None
@@ -152,6 +155,8 @@ class FunctionTable:
 	lib3mf_writer_getwarningcount = None
 	lib3mf_writer_addkeywrappingcallback = None
 	lib3mf_writer_setcontentencryptioncallback = None
+	lib3mf_writer_createbinarystream = None
+	lib3mf_writer_assignbinarystream = None
 	lib3mf_persistentreadersource_getsourcetype = None
 	lib3mf_persistentreadersource_invalidatesourcedata = None
 	lib3mf_persistentreadersource_sourcedataisvalid = None
@@ -444,6 +449,12 @@ class FunctionTable:
 	lib3mf_toolpathlayerreader_getsegmentpart = None
 	lib3mf_toolpathlayerreader_getsegmentpartuuid = None
 	lib3mf_toolpathlayerreader_getsegmentpointdata = None
+	lib3mf_toolpathlayerreader_finduint32attributeid = None
+	lib3mf_toolpathlayerreader_getsegmentuint32attributebyid = None
+	lib3mf_toolpathlayerreader_getsegmentuint32attributebyname = None
+	lib3mf_toolpathlayerreader_finddoubleattributeid = None
+	lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid = None
+	lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname = None
 	lib3mf_toolpathlayerreader_getcustomdatacount = None
 	lib3mf_toolpathlayerreader_getcustomdata = None
 	lib3mf_toolpathlayerreader_getcustomdataname = None
@@ -475,6 +486,8 @@ class FunctionTable:
 	lib3mf_toolpath_addcustomdata = None
 	lib3mf_toolpath_clearcustomdata = None
 	lib3mf_toolpath_deletecustomdata = None
+	lib3mf_toolpath_registercustomuint32attribute = None
+	lib3mf_toolpath_registercustomdoubleattribute = None
 	lib3mf_toolpathiterator_getcurrenttoolpath = None
 	lib3mf_slicestack_getbottomz = None
 	lib3mf_slicestack_getslicecount = None
@@ -1033,6 +1046,18 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint64))
 			self.lib.lib3mf_base_classtypeid = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_binarystream_getpath")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_binarystream_getpath = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_binarystream_getuuid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_binarystream_getuuid = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_writer_writetofile")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -1110,6 +1135,18 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ContentEncryptionCallback, ctypes.c_void_p)
 			self.lib.lib3mf_writer_setcontentencryptioncallback = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_writer_createbinarystream")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_writer_createbinarystream = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_writer_assignbinarystream")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)
+			self.lib.lib3mf_writer_assignbinarystream = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_persistentreadersource_getsourcetype")), methodAddress)
 			if err != 0:
@@ -2863,6 +2900,42 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(Position2D))
 			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdata = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_finduint32attributeid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathlayerreader_finduint32attributeid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentuint32attributebyid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentuint32attributebyid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentuint32attributebyname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentuint32attributebyname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_finddoubleattributeid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathlayerreader_finddoubleattributeid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getcustomdatacount")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -3048,6 +3121,18 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
 			self.lib.lib3mf_toolpath_deletecustomdata = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_registercustomuint32attribute")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
+			self.lib.lib3mf_toolpath_registercustomuint32attribute = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_registercustomdoubleattribute")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
+			self.lib.lib3mf_toolpath_registercustomdoubleattribute = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathiterator_getcurrenttoolpath")), methodAddress)
 			if err != 0:
@@ -3810,6 +3895,12 @@ class Wrapper:
 			self.lib.lib3mf_base_classtypeid.restype = ctypes.c_int32
 			self.lib.lib3mf_base_classtypeid.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint64)]
 			
+			self.lib.lib3mf_binarystream_getpath.restype = ctypes.c_int32
+			self.lib.lib3mf_binarystream_getpath.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_binarystream_getuuid.restype = ctypes.c_int32
+			self.lib.lib3mf_binarystream_getuuid.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
 			self.lib.lib3mf_writer_writetofile.restype = ctypes.c_int32
 			self.lib.lib3mf_writer_writetofile.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
 			
@@ -3848,6 +3939,12 @@ class Wrapper:
 			
 			self.lib.lib3mf_writer_setcontentencryptioncallback.restype = ctypes.c_int32
 			self.lib.lib3mf_writer_setcontentencryptioncallback.argtypes = [ctypes.c_void_p, ContentEncryptionCallback, ctypes.c_void_p]
+			
+			self.lib.lib3mf_writer_createbinarystream.restype = ctypes.c_int32
+			self.lib.lib3mf_writer_createbinarystream.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_writer_assignbinarystream.restype = ctypes.c_int32
+			self.lib.lib3mf_writer_assignbinarystream.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p]
 			
 			self.lib.lib3mf_persistentreadersource_getsourcetype.restype = ctypes.c_int32
 			self.lib.lib3mf_persistentreadersource_getsourcetype.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32)]
@@ -4725,6 +4822,24 @@ class Wrapper:
 			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdata.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdata.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(Position2D)]
 			
+			self.lib.lib3mf_toolpathlayerreader_finduint32attributeid.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_finduint32attributeid.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentuint32attributebyid.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentuint32attributebyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentuint32attributebyname.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentuint32attributebyname.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathlayerreader_finddoubleattributeid.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_finddoubleattributeid.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_double)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_double)]
+			
 			self.lib.lib3mf_toolpathlayerreader_getcustomdatacount.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_getcustomdatacount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
 			
@@ -4817,6 +4932,12 @@ class Wrapper:
 			
 			self.lib.lib3mf_toolpath_deletecustomdata.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpath_deletecustomdata.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_toolpath_registercustomuint32attribute.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_registercustomuint32attribute.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpath_registercustomdoubleattribute.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_registercustomdoubleattribute.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
 			
 			self.lib.lib3mf_toolpathiterator_getcurrenttoolpath.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathiterator_getcurrenttoolpath.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -5374,6 +5495,8 @@ class Wrapper:
 				return method(handle, wrapper)
 			def getObjectById_856632D0BAF1D8B7(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Base"
 				return Base(handle, wrapper)
+			def getObjectById_A0EB26254C981E1A(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::BinaryStream"
+				return BinaryStream(handle, wrapper)
 			def getObjectById_E76F642F363FD7E9(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Writer"
 				return Writer(handle, wrapper)
 			def getObjectById_BE46884397CE1319(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::PersistentReaderSource"
@@ -5505,6 +5628,35 @@ class Base:
 	
 
 
+''' Class Implementation for BinaryStream
+'''
+class BinaryStream(Base):
+	def __init__(self, handle, wrapper):
+		Base.__init__(self, handle, wrapper)
+	def GetPath(self):
+		nPathBufferSize = ctypes.c_uint64(0)
+		nPathNeededChars = ctypes.c_uint64(0)
+		pPathBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_getpath(self._handle, nPathBufferSize, nPathNeededChars, pPathBuffer))
+		nPathBufferSize = ctypes.c_uint64(nPathNeededChars.value)
+		pPathBuffer = (ctypes.c_char * (nPathNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_getpath(self._handle, nPathBufferSize, nPathNeededChars, pPathBuffer))
+		
+		return pPathBuffer.value.decode()
+	
+	def GetUUID(self):
+		nUUIDBufferSize = ctypes.c_uint64(0)
+		nUUIDNeededChars = ctypes.c_uint64(0)
+		pUUIDBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_getuuid(self._handle, nUUIDBufferSize, nUUIDNeededChars, pUUIDBuffer))
+		nUUIDBufferSize = ctypes.c_uint64(nUUIDNeededChars.value)
+		pUUIDBuffer = (ctypes.c_char * (nUUIDNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_getuuid(self._handle, nUUIDBufferSize, nUUIDNeededChars, pUUIDBuffer))
+		
+		return pUUIDBuffer.value.decode()
+	
+
+
 ''' Class Implementation for Writer
 '''
 class Writer(Base):
@@ -5592,6 +5744,31 @@ class Writer(Base):
 	def SetContentEncryptionCallback(self, TheCallbackFunc, UserData):
 		pUserData = ctypes.c_void_p(UserData)
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_writer_setcontentencryptioncallback(self._handle, TheCallbackFunc, pUserData))
+		
+	
+	def CreateBinaryStream(self, Path):
+		pPath = ctypes.c_char_p(str.encode(Path))
+		BinaryStreamHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_writer_createbinarystream(self._handle, pPath, BinaryStreamHandle))
+		if BinaryStreamHandle:
+			BinaryStreamObject = self._wrapper._polymorphicFactory(BinaryStreamHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return BinaryStreamObject
+	
+	def AssignBinaryStream(self, InstanceObject, BinaryStreamObject):
+		InstanceHandle = None
+		if InstanceObject:
+			InstanceHandle = InstanceObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		BinaryStreamHandle = None
+		if BinaryStreamObject:
+			BinaryStreamHandle = BinaryStreamObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_writer_assignbinarystream(self._handle, InstanceHandle, BinaryStreamHandle))
 		
 	
 
@@ -8120,6 +8297,56 @@ class ToolpathLayerReader(Base):
 		
 		return [pPointDataBuffer[i] for i in range(nPointDataNeededCount.value)]
 	
+	def FindUint32AttributeID(self, NameSpace, AttributeName):
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
+		pID = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_finduint32attributeid(self._handle, pNameSpace, pAttributeName, pID))
+		
+		return pID.value
+	
+	def GetSegmentUint32AttributeByID(self, Index, ID):
+		nIndex = ctypes.c_uint32(Index)
+		nID = ctypes.c_uint32(ID)
+		pValue = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentuint32attributebyid(self._handle, nIndex, nID, pValue))
+		
+		return pValue.value
+	
+	def GetSegmentUint32AttributeByName(self, Index, NameSpace, AttributeName):
+		nIndex = ctypes.c_uint32(Index)
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
+		pValue = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentuint32attributebyname(self._handle, nIndex, pNameSpace, pAttributeName, pValue))
+		
+		return pValue.value
+	
+	def FindDoubleAttributeID(self, NameSpace, AttributeName):
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
+		pID = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_finddoubleattributeid(self._handle, pNameSpace, pAttributeName, pID))
+		
+		return pID.value
+	
+	def GetSegmentDoubleAttributeByID(self, Index, ID):
+		nIndex = ctypes.c_uint32(Index)
+		nID = ctypes.c_uint32(ID)
+		pValue = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid(self._handle, nIndex, nID, pValue))
+		
+		return pValue.value
+	
+	def GetSegmentDoubleAttributeByName(self, Index, NameSpace, AttributeName):
+		nIndex = ctypes.c_uint32(Index)
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
+		pValue = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname(self._handle, nIndex, pNameSpace, pAttributeName, pValue))
+		
+		return pValue.value
+	
 	def GetCustomDataCount(self):
 		pCount = ctypes.c_uint32()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getcustomdatacount(self._handle, pCount))
@@ -8441,6 +8668,18 @@ class Toolpath(Resource):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_deletecustomdata(self._handle, DataHandle, pSuccess))
 		
 		return pSuccess.value
+	
+	def RegisterCustomUint32Attribute(self, NameSpace, AttributeName):
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_registercustomuint32attribute(self._handle, pNameSpace, pAttributeName))
+		
+	
+	def RegisterCustomDoubleAttribute(self, NameSpace, AttributeName):
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_registercustomdoubleattribute(self._handle, pNameSpace, pAttributeName))
+		
 	
 
 

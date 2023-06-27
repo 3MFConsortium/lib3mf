@@ -88,6 +88,19 @@ public:
 
 	void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string& sNameSpace, std::string& sDataName) override;
 
+	Lib3MF_uint32 FindUint32AttributeID(const std::string& sNameSpace, const std::string& sAttributeName) override;
+
+	Lib3MF_uint32 GetSegmentUint32AttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID) override;
+
+	Lib3MF_uint32 GetSegmentUint32AttributeByName(const Lib3MF_uint32 nIndex, const std::string& sNameSpace, const std::string& sAttributeName) override;
+
+	Lib3MF_uint32 FindDoubleAttributeID(const std::string& sNameSpace, const std::string& sAttributeName) override;
+
+	Lib3MF_double GetSegmentDoubleAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID) override;
+
+	Lib3MF_double GetSegmentDoubleAttributeByName(const Lib3MF_uint32 nIndex, const std::string& sNameSpace, const std::string& sAttributeName) override;
+
+
 };
 
 } // namespace Impl

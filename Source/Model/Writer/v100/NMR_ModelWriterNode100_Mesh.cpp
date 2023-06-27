@@ -51,8 +51,10 @@ This is the class for exporting the 3mf mesh node.
 namespace NMR {
 
 	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
-		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension)
-		:CModelWriterNode_ModelBase(pModelMeshObject->getModel(), pXMLWriter, pProgressMonitor), m_nPosAfterDecPoint(nPosAfterDecPoint), m_nPutDoubleFactor((int)(pow(10, CModelWriterNode100_Mesh::m_nPosAfterDecPoint)))
+		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension,
+		CChunkedBinaryStreamWriter* pBinaryStreamWriter, const std::string& sBinaryStreamPath)
+		:CModelWriterNode_ModelBase(pModelMeshObject->getModel(), pXMLWriter, pProgressMonitor), m_nPosAfterDecPoint(nPosAfterDecPoint), m_nPutDoubleFactor((int)(pow(10, CModelWriterNode100_Mesh::m_nPosAfterDecPoint))),
+		m_pBinaryStreamWriter (pBinaryStreamWriter), m_sBinaryStreamPath (sBinaryStreamPath)
 	{
 		__NMRASSERT(pModelMeshObject != nullptr);
 		if (!pPropertyIndexMapping.get())
@@ -129,25 +131,69 @@ namespace NMR {
 		// Write Mesh Element
 		writeStartElement(XML_3MF_ELEMENT_MESH);
 
+		if (m_pBinaryStreamWriter != nullptr) {
+			writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_ATTRIBUTE_MESH_BINARY, m_sBinaryStreamPath.c_str());
+		}
+
 		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENODES);
 		// Write Vertices
 		writeStartElement(XML_3MF_ELEMENT_VERTICES);
-		for (nNodeIndex = 0; nNodeIndex < nNodeCount; nNodeIndex++) {
-			// Get Mesh Node
-			MESHNODE * pMeshNode = pMesh->getNode(nNodeIndex);
-			writeVertexData(pMeshNode);
+		if (m_pBinaryStreamWriter != nullptr) {
 
-			/* The following works, but would be a major output speed bottleneck!
+			float fUnits = 0.001f;
 
-			// Write Vertex
-			writeStartElement(XML_3MF_ELEMENT_VERTEX);
-			writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_X, pMeshNode->m_position.m_values.x);
-			writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_Y, pMeshNode->m_position.m_values.y);
-			writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_Z, pMeshNode->m_position.m_values.z);
-			writeEndElement(); */
+			if (nNodeCount > 0) {
 
-			if (nNodeIndex % PROGRESS_NODEUPDATE == PROGRESS_NODEUPDATE-1) {
-				m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+				MESHNODE* pMeshNode = pMesh->getNode(0);
+
+				std::vector<nfFloat> XValues;
+				std::vector<nfFloat> YValues;
+				std::vector<nfFloat> ZValues;
+				XValues.resize(nNodeCount);
+				YValues.resize(nNodeCount);
+				ZValues.resize(nNodeCount);
+
+				for (nNodeIndex = 0; nNodeIndex < nNodeCount; nNodeIndex++) {
+					// Get Mesh Node
+					MESHNODE* pMeshNode = pMesh->getNode(nNodeIndex);
+					XValues[nNodeIndex] = pMeshNode->m_position.m_fields[0];
+					YValues[nNodeIndex] = pMeshNode->m_position.m_fields[1];
+					ZValues[nNodeIndex] = pMeshNode->m_position.m_fields[2];
+				}
+
+				unsigned int binaryKeyX = m_pBinaryStreamWriter->addFloatArray(XValues.data(), nNodeCount, eptNoPredicition, fUnits);
+				unsigned int binaryKeyY = m_pBinaryStreamWriter->addFloatArray(YValues.data(), nNodeCount, eptNoPredicition, fUnits);
+				unsigned int binaryKeyZ = m_pBinaryStreamWriter->addFloatArray(ZValues.data(), nNodeCount, eptNoPredicition, fUnits);
+
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_VERTEX, XML_3MF_NAMESPACEPREFIX_BINARY);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_VERTEX_X, binaryKeyX);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_VERTEX_Y, binaryKeyY);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_VERTEX_Z, binaryKeyZ);
+				writeEndElement();
+
+			}
+
+		}
+		else {
+
+
+			for (nNodeIndex = 0; nNodeIndex < nNodeCount; nNodeIndex++) {
+				// Get Mesh Node
+				MESHNODE* pMeshNode = pMesh->getNode(nNodeIndex);
+				writeVertexData(pMeshNode);
+
+				/* The following works, but would be a major output speed bottleneck!
+
+				// Write Vertex
+				writeStartElement(XML_3MF_ELEMENT_VERTEX);
+				writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_X, pMeshNode->m_position.m_values.x);
+				writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_Y, pMeshNode->m_position.m_values.y);
+				writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_Z, pMeshNode->m_position.m_values.z);
+				writeEndElement(); */
+
+				if (nNodeIndex % PROGRESS_NODEUPDATE == PROGRESS_NODEUPDATE - 1) {
+					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+				}
 			}
 		}
 		writeFullEndElement();
@@ -178,73 +224,103 @@ namespace NMR {
 		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITETRIANGLES);
 		// Write Triangles
 		writeStartElement(XML_3MF_ELEMENT_TRIANGLES);
-		for (nFaceIndex = 0; nFaceIndex < nFaceCount; nFaceIndex++) {
-			if (nFaceIndex % PROGRESS_TRIANGLEUPDATE == PROGRESS_TRIANGLEUPDATE - 1) {
-				m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
-			}
+		if (m_pBinaryStreamWriter != nullptr) {
+			std::vector<nfInt32> Node1Indices;
+			std::vector<nfInt32> Node2Indices;
+			std::vector<nfInt32> Node3Indices;
+			Node1Indices.resize(nFaceCount);
+			Node2Indices.resize(nFaceCount);
+			Node3Indices.resize(nFaceCount);
 
-			// Get Mesh Face
-			MESHFACE * pMeshFace = pMesh->getFace(nFaceIndex);
+			for (nFaceIndex = 0; nFaceIndex < nFaceCount; nFaceIndex++) {
+				MESHFACE* pMeshFace = pMesh->getFace(nFaceIndex);
+				Node1Indices[nFaceIndex] = (nfInt32)pMeshFace->m_nodeindices[0];
+				Node2Indices[nFaceIndex] = (nfInt32)pMeshFace->m_nodeindices[1];
+				Node3Indices[nFaceIndex] = (nfInt32)pMeshFace->m_nodeindices[2]; 
+			} 
 
-			UniqueResourceID nPropertyID = 0;
-			ModelResourceIndex nPropertyIndex1 = 0;
-			ModelResourceIndex nPropertyIndex2 = 0;
-			ModelResourceIndex nPropertyIndex3 = 0;
+			unsigned int binaryKeyV1 = m_pBinaryStreamWriter->addIntArray(Node1Indices.data(), nFaceCount, eptNoPredicition);
+			unsigned int binaryKeyV2 = m_pBinaryStreamWriter->addIntArray(Node2Indices.data(), nFaceCount, eptNoPredicition);
+			unsigned int binaryKeyV3 = m_pBinaryStreamWriter->addIntArray(Node3Indices.data(), nFaceCount, eptNoPredicition);
 
-			nfChar * pAdditionalString = nullptr;
-			// Retrieve Property Indices
-			if (pProperties != nullptr) {
-				MESHINFORMATION_PROPERTIES* pFaceData = (MESHINFORMATION_PROPERTIES*)pProperties->getFaceData(nFaceIndex);
-				if (pFaceData != nullptr) {
-					if (pFaceData->m_nUniqueResourceID) {
-						nPropertyID = pFaceData->m_nUniqueResourceID;
-						nPropertyIndex1 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[0]);
-						nPropertyIndex2 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[1]);
-						nPropertyIndex3 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[2]);
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_TRIANGLE, XML_3MF_NAMESPACEPREFIX_BINARY);
+			writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_V1, binaryKeyV1);
+			writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_V2, binaryKeyV2);
+			writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_V3, binaryKeyV3);
+			writeEndElement();
+
+		}
+		else {
+
+			for (nFaceIndex = 0; nFaceIndex < nFaceCount; nFaceIndex++) {
+				if (nFaceIndex % PROGRESS_TRIANGLEUPDATE == PROGRESS_TRIANGLEUPDATE - 1) {
+					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+				}
+
+				// Get Mesh Face
+				MESHFACE* pMeshFace = pMesh->getFace(nFaceIndex);
+
+				UniqueResourceID nPropertyID = 0;
+				ModelResourceIndex nPropertyIndex1 = 0;
+				ModelResourceIndex nPropertyIndex2 = 0;
+				ModelResourceIndex nPropertyIndex3 = 0;
+
+				nfChar* pAdditionalString = nullptr;
+				// Retrieve Property Indices
+				if (pProperties != nullptr) {
+					MESHINFORMATION_PROPERTIES* pFaceData = (MESHINFORMATION_PROPERTIES*)pProperties->getFaceData(nFaceIndex);
+					if (pFaceData != nullptr) {
+						if (pFaceData->m_nUniqueResourceID) {
+							nPropertyID = pFaceData->m_nUniqueResourceID;
+							nPropertyIndex1 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[0]);
+							nPropertyIndex2 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[1]);
+							nPropertyIndex3 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[2]);
+						}
 					}
 				}
-			}
 
 
-			if (nPropertyID != 0) {
-				bMeshHasAProperty = true;
-				// TODO: this is slow
-				ModelResourceID nPropertyModelResourceID = m_pModel->findPackageResourceID(nPropertyID)->getModelResourceID();
-				if ((nPropertyIndex1 != nPropertyIndex2) || (nPropertyIndex1 != nPropertyIndex3)) {
-					writeFaceData_ThreeProperties(pMeshFace, nPropertyModelResourceID, nPropertyIndex1, nPropertyIndex2, nPropertyIndex3, pAdditionalString);
-				}
-				else {
-					if ((nPropertyID == nObjectLevelPropertyID) && (nPropertyIndex1 == nObjectLevelPropertyIndex)){
-						writeFaceData_Plain(pMeshFace, pAdditionalString);
-					} else {
-						writeFaceData_OneProperty(pMeshFace, nPropertyModelResourceID, nPropertyIndex1, pAdditionalString);
+				if (nPropertyID != 0) {
+					bMeshHasAProperty = true;
+					// TODO: this is slow
+					ModelResourceID nPropertyModelResourceID = m_pModel->findPackageResourceID(nPropertyID)->getModelResourceID();
+					if ((nPropertyIndex1 != nPropertyIndex2) || (nPropertyIndex1 != nPropertyIndex3)) {
+						writeFaceData_ThreeProperties(pMeshFace, nPropertyModelResourceID, nPropertyIndex1, nPropertyIndex2, nPropertyIndex3, pAdditionalString);
+					}
+					else {
+						if ((nPropertyID == nObjectLevelPropertyID) && (nPropertyIndex1 == nObjectLevelPropertyIndex)) {
+							writeFaceData_Plain(pMeshFace, pAdditionalString);
+						}
+						else {
+							writeFaceData_OneProperty(pMeshFace, nPropertyModelResourceID, nPropertyIndex1, pAdditionalString);
+						}
 					}
 				}
-			}
-			else
-			{
-				writeFaceData_Plain(pMeshFace, pAdditionalString);
-			}
-
-			/* The following works, but would be a major output speed bottleneck!
-
-			// Write Triangle
-			writeStartElement(XML_3MF_ELEMENT_TRIANGLE);
-			writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_V1, pMeshFace->m_nodeindices[0]);
-			writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_V2, pMeshFace->m_nodeindices[1]);
-			writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_V3, pMeshFace->m_nodeindices[2]);
-
-			// Write Property Indices
-			if (nPropertyID != 0) {
-				writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_PID, nPropertyID);
-				writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_P1, nPropertyIndex1);
-				if ((nPropertyIndex1 != nPropertyIndex2) || (nPropertyIndex1 != nPropertyIndex3)) {
-					writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_P2, nPropertyIndex2);
-					writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_P3, nPropertyIndex3);
+				else
+				{
+					writeFaceData_Plain(pMeshFace, pAdditionalString);
 				}
-			}
 
-			writeEndElement();  */
+				/* The following works, but would be a major output speed bottleneck!
+
+				// Write Triangle
+				writeStartElement(XML_3MF_ELEMENT_TRIANGLE);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_V1, pMeshFace->m_nodeindices[0]);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_V2, pMeshFace->m_nodeindices[1]);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_V3, pMeshFace->m_nodeindices[2]);
+
+				// Write Property Indices
+				if (nPropertyID != 0) {
+					writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_PID, nPropertyID);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_P1, nPropertyIndex1);
+					if ((nPropertyIndex1 != nPropertyIndex2) || (nPropertyIndex1 != nPropertyIndex3)) {
+						writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_P2, nPropertyIndex2);
+						writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_P3, nPropertyIndex3);
+					}
+				}
+
+				writeEndElement();  */
+			}
 		}
 		writeFullEndElement();
 

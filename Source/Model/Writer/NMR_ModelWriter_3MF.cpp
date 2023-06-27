@@ -101,8 +101,17 @@ namespace NMR {
 		model()->setCurrentPath(model()->rootPath());
 
 		pXMLWriter->WriteStartDocument();
-
+			
 		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, monitor(), GetDecimalPrecision(), true);
+		ModelNode.setWriteBinaryExtension(m_bAllowBinaryStreams);
+
+		for (auto iAssignmentIter : m_BinaryWriterAssignmentMap) {
+			auto iBinaryIter = m_BinaryWriterUUIDMap.find(iAssignmentIter.second);
+			if (iBinaryIter != m_BinaryWriterUUIDMap.end()) {
+				ModelNode.registerStreamWriter(iAssignmentIter.first, iBinaryIter->second.first, iBinaryIter->second.second.get());
+			}
+		}
+
 		ModelNode.writeToXML();
 
 		pXMLWriter->WriteEndDocument();

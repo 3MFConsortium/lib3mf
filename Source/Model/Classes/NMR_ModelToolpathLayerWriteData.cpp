@@ -47,7 +47,7 @@ NMR_ModelToolpathLayer.cpp defines the Model Toolpath Layer.
 
 namespace NMR {
 
-	CModelToolpathLayerWriteData::CModelToolpathLayerWriteData(_In_ CModelToolpath * pModelToolpath, _In_ NMR::PModelWriter_3MF pModelWriter, const std::string & sPackagePath)
+	CModelToolpathLayerWriteData::CModelToolpathLayerWriteData(CModelToolpath * pModelToolpath, NMR::PModelWriter_3MF pModelWriter, const std::string & sPackagePath)
 		: m_pModelToolpath (pModelToolpath), m_pModelWriter (pModelWriter), m_sPackagePath (sPackagePath)
 	{
 		if (pModelToolpath == nullptr)
@@ -63,7 +63,7 @@ namespace NMR {
 		m_pXmlWriter = std::make_shared<NMR::CXmlWriter_Native>(m_pExportStream);
 		m_pXmlWriter->WriteStartDocument();
 		m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_LAYER, XML_3MF_NAMESPACE_TOOLPATHSPEC);
-		//m_pXmlWriter->WriteAttributeString(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION, nullptr, XML_3MF_NAMESPACE_ZCOMPRESSION);
+		m_pXmlWriter->WriteAttributeString(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_BINARY, nullptr, XML_3MF_NAMESPACE_BINARYSPEC);
 
 		m_bWritingHeader = true;
 		m_bWritingData = false;
@@ -79,7 +79,7 @@ namespace NMR {
 			finishWriting ();
 	}
 
-	nfUint32 CModelToolpathLayerWriteData::RegisterProfile(_In_ PModelToolpathProfile pProfile)
+	nfUint32 CModelToolpathLayerWriteData::RegisterProfile(PModelToolpathProfile pProfile)
 	{
 		if (!m_bWritingHeader)
 			throw CNMRException(NMR_ERROR_TOOLPATH_NOTWRITINGHEADER);
@@ -92,7 +92,7 @@ namespace NMR {
 		return nNewID;
 	}
 
-	nfUint32 CModelToolpathLayerWriteData::RegisterPart(_In_ PModelBuildItem pBuildItem)
+	nfUint32 CModelToolpathLayerWriteData::RegisterPart(PModelBuildItem pBuildItem)
 	{
 		if (!m_bWritingHeader)
 			throw CNMRException(NMR_ERROR_TOOLPATH_NOTWRITINGHEADER);
@@ -108,7 +108,8 @@ namespace NMR {
 	void CModelToolpathLayerWriteData::WriteHatchData(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nHatchCount, const nfInt32 * pX1Buffer, const nfInt32 * pY1Buffer, const nfInt32 * pX2Buffer, const nfInt32 * pY2Buffer)
 	{
 		std::string sPath;
-		//NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter(sPath);
+		NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter(sPath);
+
 		if (pX1Buffer == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		if (pY1Buffer == nullptr)
@@ -131,7 +132,7 @@ namespace NMR {
 		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PROFILEID, nullptr, sProfileID.c_str());
 		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARTID, nullptr, sPartID.c_str());
 
-		/*if (pStreamWriter != nullptr) {
+		if (pStreamWriter != nullptr) {
 			unsigned int binaryKeyX1 = pStreamWriter->addIntArray(pX1Buffer, nHatchCount, eptDeltaPredicition);
 			unsigned int binaryKeyY1 = pStreamWriter->addIntArray(pY1Buffer, nHatchCount, eptDeltaPredicition);
 			unsigned int binaryKeyX2 = pStreamWriter->addIntArray(pX2Buffer, nHatchCount, eptDeltaPredicition);
@@ -142,20 +143,19 @@ namespace NMR {
 			std::string sKeyX2 = std::to_string(binaryKeyX2);
 			std::string sKeyY2 = std::to_string(binaryKeyY2);
 
-			m_pXmlWriter->WriteStartElement(XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION, XML_3MF_TOOLPATHELEMENT_HATCH, nullptr);
-			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION, XML_3MF_TOOLPATHATTRIBUTE_X1, nullptr, sKeyX1.c_str());
-			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION, XML_3MF_TOOLPATHATTRIBUTE_Y1, nullptr, sKeyY1.c_str());
-			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION, XML_3MF_TOOLPATHATTRIBUTE_X2, nullptr, sKeyX2.c_str());
-			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION, XML_3MF_TOOLPATHATTRIBUTE_Y2, nullptr, sKeyY2.c_str());
+			m_pXmlWriter->WriteStartElement(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHELEMENT_HATCH, nullptr);
+			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_X1, nullptr, sKeyX1.c_str());
+			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_Y1, nullptr, sKeyY1.c_str());
+			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_X2, nullptr, sKeyX2.c_str());
+			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_Y2, nullptr, sKeyY2.c_str());
 			m_pXmlWriter->WriteEndElement();
 
 
 		}
-		else { */
-
+		else { 
 
 			// TODO: make fast!
-			unsigned int nIndex;
+			uint32_t nIndex;
 			for (nIndex = 0; nIndex < nHatchCount; nIndex++) {
 				std::string sX1 = std::to_string(pX1Buffer[nIndex]);
 				std::string sY1 = std::to_string(pY1Buffer[nIndex]);
@@ -171,7 +171,7 @@ namespace NMR {
 
 			}
 
-		//}
+		}
 
 		m_pXmlWriter->WriteFullEndElement();
 
@@ -185,7 +185,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		std::string sPath;
-		//NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter(sPath);
+		NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter(sPath);
 
 		if (m_bWritingHeader)
 			finishHeader();
@@ -200,23 +200,23 @@ namespace NMR {
 		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PROFILEID, nullptr, sProfileID.c_str());
 		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARTID, nullptr, sPartID.c_str());
 
-		/*if (pStreamWriter != nullptr) {
+		if (pStreamWriter != nullptr) {
 			unsigned int binaryKeyX = pStreamWriter->addIntArray(pXBuffer, nPointCount, eptDeltaPredicition);
 			unsigned int binaryKeyY = pStreamWriter->addIntArray(pYBuffer, nPointCount, eptDeltaPredicition);
 
 			std::string sKeyX = std::to_string(binaryKeyX);
 			std::string sKeyY = std::to_string(binaryKeyY);
 
-			m_pXmlWriter->WriteStartElement(XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION, XML_3MF_TOOLPATHELEMENT_POINT, nullptr);
-			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION, XML_3MF_TOOLPATHATTRIBUTE_X1, nullptr, sKeyX.c_str());
-			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION, XML_3MF_TOOLPATHATTRIBUTE_Y1, nullptr, sKeyY.c_str());
+			m_pXmlWriter->WriteStartElement(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHELEMENT_POINT, nullptr);
+			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_X1, nullptr, sKeyX.c_str());
+			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_Y1, nullptr, sKeyY.c_str());
 			m_pXmlWriter->WriteEndElement();
 
 		}
 		else {
 
-		*/
-			unsigned int nIndex;
+		
+			uint32_t nIndex;
 			for (nIndex = 0; nIndex < nPointCount; nIndex++) {
 				std::string sX = std::to_string(pXBuffer[nIndex]);
 				std::string sY = std::to_string(pYBuffer[nIndex]);
@@ -227,7 +227,7 @@ namespace NMR {
 				m_pXmlWriter->WriteEndElement();
 			}
 
-		//}
+		}
 
 		m_pXmlWriter->WriteFullEndElement();
 
@@ -242,7 +242,7 @@ namespace NMR {
 		if (pYBuffer == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		//NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter(sPath);
+		NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter(sPath);
 		if (m_bWritingHeader)
 			finishHeader();
 		if (!m_bWritingData)
@@ -256,7 +256,7 @@ namespace NMR {
 		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PROFILEID, nullptr, sProfileID.c_str());
 		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARTID, nullptr, sPartID.c_str());
 
-		/*if (pStreamWriter != nullptr) {
+		if (pStreamWriter != nullptr) {
 
 			unsigned int binaryKeyX = pStreamWriter->addIntArray(pXBuffer, nPointCount, eptDeltaPredicition);
 			unsigned int binaryKeyY = pStreamWriter->addIntArray(pYBuffer, nPointCount, eptDeltaPredicition);
@@ -264,16 +264,16 @@ namespace NMR {
 			std::string sKeyX = std::to_string(binaryKeyX);
 			std::string sKeyY = std::to_string(binaryKeyY);
 
-			m_pXmlWriter->WriteStartElement(XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION, XML_3MF_TOOLPATHELEMENT_POINT, nullptr);
-			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION, XML_3MF_TOOLPATHATTRIBUTE_X1, nullptr, sKeyX.c_str());
-			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION, XML_3MF_TOOLPATHATTRIBUTE_Y1, nullptr, sKeyY.c_str());
+			m_pXmlWriter->WriteStartElement(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHELEMENT_POINT, nullptr);
+			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_X1, nullptr, sKeyX.c_str());
+			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_Y1, nullptr, sKeyY.c_str());
 
 			m_pXmlWriter->WriteEndElement();
 
 		}
-		else { */
+		else { 
 
-			unsigned int nIndex;
+			uint32_t nIndex;
 			for (nIndex = 0; nIndex < nPointCount; nIndex++) {
 				std::string sX = std::to_string(pXBuffer[nIndex]);
 				std::string sY = std::to_string(pYBuffer[nIndex]);
@@ -284,7 +284,7 @@ namespace NMR {
 				m_pXmlWriter->WriteEndElement();
 			}
 
-//		}
+		}
 
 		m_pXmlWriter->WriteFullEndElement();
 
@@ -294,7 +294,7 @@ namespace NMR {
 	{
 		std::string sPath;
 
-		//NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter(sPath);
+		NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter(sPath);
 
 		if (!m_bWritingHeader)
 			throw CNMRException(NMR_ERROR_TOOLPATH_NOTWRITINGHEADER);
@@ -331,8 +331,8 @@ namespace NMR {
 
 		m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_SEGMENTS, nullptr);
 
-		//if (pStreamWriter != nullptr)
-//			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_LZMACOMPRESSION, XML_3MF_TOOLPATHATTRIBUTE_BINARY, nullptr, sPath.c_str());
+		if (pStreamWriter != nullptr)
+			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_BINARY, nullptr, sPath.c_str());
 
 		m_bWritingData = true;
 
@@ -365,12 +365,12 @@ namespace NMR {
 
 	}
 
-	/*NMR::CChunkedBinaryStreamWriter * CModelToolpathLayerWriteData::getStreamWriter(std::string & sPath)
+	NMR::CChunkedBinaryStreamWriter * CModelToolpathLayerWriteData::getStreamWriter(std::string & sPath)
 	{
 	
 		return m_pModelWriter->findBinaryStream (m_sUUID, sPath);
 
-	}*/
+	}
 
 	double CModelToolpathLayerWriteData::getUnits()
 	{

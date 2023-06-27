@@ -73,6 +73,7 @@ These are given by the 3MF Standard
 #define PACKAGE_KEYSTORE_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/04/keystore"
 #define PACKAGE_ENCRYPTED_FILE_RELATIONSHIP "http://schemas.openxmlformats.org/package/2006/relationships/encryptedfile"
 #define PACKAGE_TOOLPATH_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/05/toolpath"
+#define PACKAGE_BINARY_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/05/binary"
 
 #define XML_3MF_NAMESPACE_XML "http://www.w3.org/XML/1998/namespace"
 #define XML_3MF_NAMESPACE_XMLNS "http://www.w3.org/2000/xmlns/"
@@ -86,6 +87,7 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACE_DIGITALSIGNATURESPEC "http://www.w3.org/2000/09/xmldsig#"
 #define XML_3MF_NAMESPACE_CIPHERVALUESPEC "http://www.w3.org/2001/04/xmlenc#"
 #define XML_3MF_NAMESPACE_TOOLPATHSPEC "http://schemas.microsoft.com/3dmanufacturing/toolpath/2019/05"
+#define XML_3MF_NAMESPACE_BINARYSPEC "http://schemas.microsoft.com/3dmanufacturing/binary/2023/05"
 
 #define XML_3MF_NAMESPACEPREFIX_MATERIAL "m"
 #define XML_3MF_NAMESPACEPREFIX_PRODUCTION "p"
@@ -93,6 +95,7 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACEPREFIX_SLICE "s"
 #define XML_3MF_NAMESPACEPREFIX_SECURECONTENT "sc"
 #define XML_3MF_NAMESPACEPREFIX_TOOLPATH "t"
+#define XML_3MF_NAMESPACEPREFIX_BINARY "bin"
 
 #define XML_3MF_ATTRIBUTE_XMLNS                     "xmlns"
 #define XML_3MF_ATTRIBUTE_PREFIX_XML                "xml"
@@ -165,6 +168,7 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_TRIANGLE_P1               "p1"
 #define XML_3MF_ATTRIBUTE_TRIANGLE_P2               "p2"
 #define XML_3MF_ATTRIBUTE_TRIANGLE_P3               "p3"
+#define XML_3MF_ATTRIBUTE_MESH_BINARY               "binary"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_V1            "v1"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_V2            "v2"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_NAME          "name"

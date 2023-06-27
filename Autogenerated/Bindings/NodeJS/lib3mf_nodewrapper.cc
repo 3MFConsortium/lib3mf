@@ -42,6 +42,7 @@ using namespace v8;
 
 Persistent<Function> CLib3MFWrapper::constructor;
 Persistent<Function> CLib3MFBase::constructor;
+Persistent<Function> CLib3MFBinaryStream::constructor;
 Persistent<Function> CLib3MFWriter::constructor;
 Persistent<Function> CLib3MFPersistentReaderSource::constructor;
 Persistent<Function> CLib3MFReader::constructor;
@@ -1237,6 +1238,117 @@ void CLib3MFBase::ClassTypeId(const FunctionCallbackInfo<Value>& args)
 }
 
 /*************************************************************************************************************************
+ Class CLib3MFBinaryStream Implementation
+**************************************************************************************************************************/
+
+CLib3MFBinaryStream::CLib3MFBinaryStream()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFBinaryStream::~CLib3MFBinaryStream()
+{
+}
+
+void CLib3MFBinaryStream::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFBinaryStream"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetPath", GetPath);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetUUID", GetUUID);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFBinaryStream::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFBinaryStream * binarystreamInstance = new CLib3MFBinaryStream();
+				binarystreamInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFBinaryStream: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFBinaryStream::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFBinaryStream::GetPath(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int bytesNeededPath = 0;
+        unsigned int bytesWrittenPath = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetPath.");
+        if (wrapperTable->m_BinaryStream_GetPath == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BinaryStream::GetPath.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_BinaryStream_GetPath(instanceHandle, 0, &bytesNeededPath, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferPath;
+        bufferPath.resize(bytesNeededPath);
+        Lib3MFResult errorCode = wrapperTable->m_BinaryStream_GetPath(instanceHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferPath[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFBinaryStream::GetUUID(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int bytesNeededUUID = 0;
+        unsigned int bytesWrittenUUID = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetUUID.");
+        if (wrapperTable->m_BinaryStream_GetUUID == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BinaryStream::GetUUID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_BinaryStream_GetUUID(instanceHandle, 0, &bytesNeededUUID, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferUUID;
+        bufferUUID.resize(bytesNeededUUID);
+        Lib3MFResult errorCode = wrapperTable->m_BinaryStream_GetUUID(instanceHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferUUID[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
  Class CLib3MFWriter Implementation
 **************************************************************************************************************************/
 
@@ -1272,6 +1384,8 @@ void CLib3MFWriter::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetWarningCount", GetWarningCount);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddKeyWrappingCallback", AddKeyWrappingCallback);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetContentEncryptionCallback", SetContentEncryptionCallback);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "CreateBinaryStream", CreateBinaryStream);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AssignBinaryStream", AssignBinaryStream);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -1622,6 +1736,70 @@ void CLib3MFWriter::SetContentEncryptionCallback(const FunctionCallbackInfo<Valu
             throw std::runtime_error("Could not call Lib3MF method Writer::SetContentEncryptionCallback.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_Writer_SetContentEncryptionCallback(instanceHandle, nullptr, (void*) nUserData);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFWriter::CreateBinaryStream(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Path)");
+        }
+        v8::String::Utf8Value sutf8Path(isolate, args[0]);
+        std::string sPath = *sutf8Path;
+        Lib3MFHandle hReturnBinaryStream = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method CreateBinaryStream.");
+        if (wrapperTable->m_Writer_CreateBinaryStream == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Writer::CreateBinaryStream.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Writer_CreateBinaryStream(instanceHandle, sPath.c_str(), &hReturnBinaryStream);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjBinaryStream = CLib3MFBinaryStream::NewInstance(args.Holder(), hReturnBinaryStream);
+        args.GetReturnValue().Set(instanceObjBinaryStream);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFWriter::AssignBinaryStream(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsObject()) {
+            throw std::runtime_error("Expected class parameter 0 (Instance)");
+        }
+        if (!args[1]->IsObject()) {
+            throw std::runtime_error("Expected class parameter 1 (BinaryStream)");
+        }
+        Local<Object> objInstance = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+        CLib3MFBase * instanceInstance = ObjectWrap::Unwrap<CLib3MFBase>(objInstance);
+        if (instanceInstance == nullptr)
+            throw std::runtime_error("Invalid Object parameter 0 (Instance)");
+        Lib3MFHandle hInstance = instanceInstance->getHandle( objInstance );
+        Local<Object> objBinaryStream = args[1]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+        CLib3MFBinaryStream * instanceBinaryStream = ObjectWrap::Unwrap<CLib3MFBinaryStream>(objBinaryStream);
+        if (instanceBinaryStream == nullptr)
+            throw std::runtime_error("Invalid Object parameter 1 (BinaryStream)");
+        Lib3MFHandle hBinaryStream = instanceBinaryStream->getHandle( objBinaryStream );
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AssignBinaryStream.");
+        if (wrapperTable->m_Writer_AssignBinaryStream == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Writer::AssignBinaryStream.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Writer_AssignBinaryStream(instanceHandle, hInstance, hBinaryStream);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {
@@ -11230,6 +11408,12 @@ void CLib3MFToolpathLayerReader::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPart", GetSegmentPart);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPartUUID", GetSegmentPartUUID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPointData", GetSegmentPointData);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "FindUint32AttributeID", FindUint32AttributeID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentUint32AttributeByID", GetSegmentUint32AttributeByID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentUint32AttributeByName", GetSegmentUint32AttributeByName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "FindDoubleAttributeID", FindDoubleAttributeID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentDoubleAttributeByID", GetSegmentDoubleAttributeByID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentDoubleAttributeByName", GetSegmentDoubleAttributeByName);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCustomDataCount", GetCustomDataCount);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCustomData", GetCustomData);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCustomDataName", GetCustomDataName);
@@ -11478,6 +11662,202 @@ void CLib3MFToolpathLayerReader::GetSegmentPointData(const FunctionCallbackInfo<
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentPointData(instanceHandle, nIndex, 0, nullptr, nullptr);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::FindUint32AttributeID(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (NameSpace)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (AttributeName)");
+        }
+        v8::String::Utf8Value sutf8NameSpace(isolate, args[0]);
+        std::string sNameSpace = *sutf8NameSpace;
+        v8::String::Utf8Value sutf8AttributeName(isolate, args[1]);
+        std::string sAttributeName = *sutf8AttributeName;
+        unsigned int nReturnID = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method FindUint32AttributeID.");
+        if (wrapperTable->m_ToolpathLayerReader_FindUint32AttributeID == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::FindUint32AttributeID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_FindUint32AttributeID(instanceHandle, sNameSpace.c_str(), sAttributeName.c_str(), &nReturnID);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnID));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::GetSegmentUint32AttributeByID(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 1 (ID)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nReturnValue = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentUint32AttributeByID.");
+        if (wrapperTable->m_ToolpathLayerReader_GetSegmentUint32AttributeByID == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentUint32AttributeByID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentUint32AttributeByID(instanceHandle, nIndex, nID, &nReturnValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnValue));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::GetSegmentUint32AttributeByName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (NameSpace)");
+        }
+        if (!args[2]->IsString()) {
+            throw std::runtime_error("Expected string parameter 2 (AttributeName)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        v8::String::Utf8Value sutf8NameSpace(isolate, args[1]);
+        std::string sNameSpace = *sutf8NameSpace;
+        v8::String::Utf8Value sutf8AttributeName(isolate, args[2]);
+        std::string sAttributeName = *sutf8AttributeName;
+        unsigned int nReturnValue = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentUint32AttributeByName.");
+        if (wrapperTable->m_ToolpathLayerReader_GetSegmentUint32AttributeByName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentUint32AttributeByName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentUint32AttributeByName(instanceHandle, nIndex, sNameSpace.c_str(), sAttributeName.c_str(), &nReturnValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnValue));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::FindDoubleAttributeID(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (NameSpace)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (AttributeName)");
+        }
+        v8::String::Utf8Value sutf8NameSpace(isolate, args[0]);
+        std::string sNameSpace = *sutf8NameSpace;
+        v8::String::Utf8Value sutf8AttributeName(isolate, args[1]);
+        std::string sAttributeName = *sutf8AttributeName;
+        unsigned int nReturnID = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method FindDoubleAttributeID.");
+        if (wrapperTable->m_ToolpathLayerReader_FindDoubleAttributeID == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::FindDoubleAttributeID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_FindDoubleAttributeID(instanceHandle, sNameSpace.c_str(), sAttributeName.c_str(), &nReturnID);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnID));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::GetSegmentDoubleAttributeByID(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 1 (ID)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        double dReturnValue = 0.0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentDoubleAttributeByID.");
+        if (wrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByID == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentDoubleAttributeByID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByID(instanceHandle, nIndex, nID, &dReturnValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Number::New(isolate, dReturnValue));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::GetSegmentDoubleAttributeByName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (NameSpace)");
+        }
+        if (!args[2]->IsString()) {
+            throw std::runtime_error("Expected string parameter 2 (AttributeName)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        v8::String::Utf8Value sutf8NameSpace(isolate, args[1]);
+        std::string sNameSpace = *sutf8NameSpace;
+        v8::String::Utf8Value sutf8AttributeName(isolate, args[2]);
+        std::string sAttributeName = *sutf8AttributeName;
+        double dReturnValue = 0.0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentDoubleAttributeByName.");
+        if (wrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentDoubleAttributeByName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByName(instanceHandle, nIndex, sNameSpace.c_str(), sAttributeName.c_str(), &dReturnValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Number::New(isolate, dReturnValue));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -11906,6 +12286,8 @@ void CLib3MFToolpath::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddCustomData", AddCustomData);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "ClearCustomData", ClearCustomData);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "DeleteCustomData", DeleteCustomData);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "RegisterCustomUint32Attribute", RegisterCustomUint32Attribute);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "RegisterCustomDoubleAttribute", RegisterCustomDoubleAttribute);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -12500,6 +12882,66 @@ void CLib3MFToolpath::DeleteCustomData(const FunctionCallbackInfo<Value>& args)
         Lib3MFResult errorCode = wrapperTable->m_Toolpath_DeleteCustomData(instanceHandle, hData, &bReturnSuccess);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         args.GetReturnValue().Set(Boolean::New(isolate, bReturnSuccess));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::RegisterCustomUint32Attribute(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (NameSpace)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (AttributeName)");
+        }
+        v8::String::Utf8Value sutf8NameSpace(isolate, args[0]);
+        std::string sNameSpace = *sutf8NameSpace;
+        v8::String::Utf8Value sutf8AttributeName(isolate, args[1]);
+        std::string sAttributeName = *sutf8AttributeName;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method RegisterCustomUint32Attribute.");
+        if (wrapperTable->m_Toolpath_RegisterCustomUint32Attribute == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::RegisterCustomUint32Attribute.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_RegisterCustomUint32Attribute(instanceHandle, sNameSpace.c_str(), sAttributeName.c_str());
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::RegisterCustomDoubleAttribute(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (NameSpace)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (AttributeName)");
+        }
+        v8::String::Utf8Value sutf8NameSpace(isolate, args[0]);
+        std::string sNameSpace = *sutf8NameSpace;
+        v8::String::Utf8Value sutf8AttributeName(isolate, args[1]);
+        std::string sAttributeName = *sutf8AttributeName;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method RegisterCustomDoubleAttribute.");
+        if (wrapperTable->m_Toolpath_RegisterCustomDoubleAttribute == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::RegisterCustomDoubleAttribute.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_RegisterCustomDoubleAttribute(instanceHandle, sNameSpace.c_str(), sAttributeName.c_str());
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

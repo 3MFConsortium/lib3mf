@@ -58,6 +58,7 @@ namespace Lib3MF {
 **************************************************************************************************************************/
 class CWrapper;
 class CBase;
+class CBinaryStream;
 class CWriter;
 class CPersistentReaderSource;
 class CReader;
@@ -115,6 +116,7 @@ class CModel;
 **************************************************************************************************************************/
 typedef CWrapper CLib3MFWrapper;
 typedef CBase CLib3MFBase;
+typedef CBinaryStream CLib3MFBinaryStream;
 typedef CWriter CLib3MFWriter;
 typedef CPersistentReaderSource CLib3MFPersistentReaderSource;
 typedef CReader CLib3MFReader;
@@ -172,6 +174,7 @@ typedef CModel CLib3MFModel;
 **************************************************************************************************************************/
 typedef std::shared_ptr<CWrapper> PWrapper;
 typedef std::shared_ptr<CBase> PBase;
+typedef std::shared_ptr<CBinaryStream> PBinaryStream;
 typedef std::shared_ptr<CWriter> PWriter;
 typedef std::shared_ptr<CPersistentReaderSource> PPersistentReaderSource;
 typedef std::shared_ptr<CReader> PReader;
@@ -229,6 +232,7 @@ typedef std::shared_ptr<CModel> PModel;
 **************************************************************************************************************************/
 typedef PWrapper PLib3MFWrapper;
 typedef PBase PLib3MFBase;
+typedef PBinaryStream PLib3MFBinaryStream;
 typedef PWriter PLib3MFWriter;
 typedef PPersistentReaderSource PLib3MFPersistentReaderSource;
 typedef PReader PLib3MFReader;
@@ -410,6 +414,7 @@ public:
 			case LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA: return "TOOLPATH_NOTWRITINGDATA";
 			case LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "TOOLPATH_DATAHASBEENWRITTEN";
 			case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "TOOLPATH_INVALIDPOINTCOUNT";
+			case LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED: return "TOOLPATH_ATTRIBUTEALREADYDEFINED";
 		}
 		return "UNKNOWN";
 	}
@@ -469,6 +474,7 @@ public:
 			case LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA: return "Not in toolpath data writing mode";
 			case LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "Toolpath has already been written out";
 			case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "Toolpath has an invalid number of points";
+			case LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED: return "Toolpath attribute already defined";
 		}
 		return "unknown error";
 	}
@@ -578,6 +584,7 @@ private:
 	}
 
 	friend class CBase;
+	friend class CBinaryStream;
 	friend class CWriter;
 	friend class CPersistentReaderSource;
 	friend class CReader;
@@ -691,6 +698,24 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CBinaryStream 
+**************************************************************************************************************************/
+class CBinaryStream : public CBase {
+public:
+	
+	/**
+	* CBinaryStream::CBinaryStream - Constructor for BinaryStream class.
+	*/
+	CBinaryStream(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetPath();
+	inline std::string GetUUID();
+};
+	
+/*************************************************************************************************************************
  Class CWriter 
 **************************************************************************************************************************/
 class CWriter : public CBase {
@@ -717,6 +742,8 @@ public:
 	inline Lib3MF_uint32 GetWarningCount();
 	inline void AddKeyWrappingCallback(const std::string & sConsumerID, const KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData);
 	inline void SetContentEncryptionCallback(const ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData);
+	inline PBinaryStream CreateBinaryStream(const std::string & sPath);
+	inline void AssignBinaryStream(classParam<CBase> pInstance, classParam<CBinaryStream> pBinaryStream);
 };
 	
 /*************************************************************************************************************************
@@ -1633,6 +1660,12 @@ public:
 	inline PBuildItem GetSegmentPart(const Lib3MF_uint32 nIndex);
 	inline std::string GetSegmentPartUUID(const Lib3MF_uint32 nIndex);
 	inline void GetSegmentPointData(const Lib3MF_uint32 nIndex, std::vector<sPosition2D> & PointDataBuffer);
+	inline Lib3MF_uint32 FindUint32AttributeID(const std::string & sNameSpace, const std::string & sAttributeName);
+	inline Lib3MF_uint32 GetSegmentUint32AttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID);
+	inline Lib3MF_uint32 GetSegmentUint32AttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName);
+	inline Lib3MF_uint32 FindDoubleAttributeID(const std::string & sNameSpace, const std::string & sAttributeName);
+	inline Lib3MF_double GetSegmentDoubleAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID);
+	inline Lib3MF_double GetSegmentDoubleAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName);
 	inline Lib3MF_uint32 GetCustomDataCount();
 	inline PCustomDOMTree GetCustomData(const Lib3MF_uint32 nIndex);
 	inline void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName);
@@ -1696,6 +1729,8 @@ public:
 	inline PCustomDOMTree AddCustomData(const std::string & sNameSpace, const std::string & sNameSpacePrefix, const std::string & sDataName);
 	inline Lib3MF_uint32 ClearCustomData();
 	inline bool DeleteCustomData(classParam<CCustomDOMTree> pData);
+	inline void RegisterCustomUint32Attribute(const std::string & sNameSpace, const std::string & sAttributeName);
+	inline void RegisterCustomDoubleAttribute(const std::string & sNameSpace, const std::string & sAttributeName);
 };
 	
 /*************************************************************************************************************************
@@ -1975,6 +2010,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	CheckError(nullptr, lib3mf_base_classtypeid(pHandle, &resultClassTypeId));
 	switch(resultClassTypeId) {
 		case 0x856632D0BAF1D8B7UL: return new CBase(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Base"
+		case 0xA0EB26254C981E1AUL: return new CBinaryStream(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BinaryStream"
 		case 0xE76F642F363FD7E9UL: return new CWriter(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Writer"
 		case 0xBE46884397CE1319UL: return new CPersistentReaderSource(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::PersistentReaderSource"
 		case 0x2D86831DA59FBE72UL: return new CReader(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Reader"
@@ -2324,6 +2360,40 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	 * Method definitions for class CBinaryStream
+	 */
+	
+	/**
+	* CBinaryStream::GetPath - Retrieves an binary streams package path.
+	* @return binary streams package path.
+	*/
+	std::string CBinaryStream::GetPath()
+	{
+		Lib3MF_uint32 bytesNeededPath = 0;
+		Lib3MF_uint32 bytesWrittenPath = 0;
+		CheckError(lib3mf_binarystream_getpath(m_pHandle, 0, &bytesNeededPath, nullptr));
+		std::vector<char> bufferPath(bytesNeededPath);
+		CheckError(lib3mf_binarystream_getpath(m_pHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]));
+		
+		return std::string(&bufferPath[0]);
+	}
+	
+	/**
+	* CBinaryStream::GetUUID - Retrieves an binary streams uuid.
+	* @return binary streams uuid
+	*/
+	std::string CBinaryStream::GetUUID()
+	{
+		Lib3MF_uint32 bytesNeededUUID = 0;
+		Lib3MF_uint32 bytesWrittenUUID = 0;
+		CheckError(lib3mf_binarystream_getuuid(m_pHandle, 0, &bytesNeededUUID, nullptr));
+		std::vector<char> bufferUUID(bytesNeededUUID);
+		CheckError(lib3mf_binarystream_getuuid(m_pHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]));
+		
+		return std::string(&bufferUUID[0]);
+	}
+	
+	/**
 	 * Method definitions for class CWriter
 	 */
 	
@@ -2472,6 +2542,34 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	void CWriter::SetContentEncryptionCallback(const ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData)
 	{
 		CheckError(lib3mf_writer_setcontentencryptioncallback(m_pHandle, pTheCallback, pUserData));
+	}
+	
+	/**
+	* CWriter::CreateBinaryStream - Creates a binary stream object. Only applicable for 3MFz Writers.
+	* @param[in] sPath - Package path to write into
+	* @return Returns a package path.
+	*/
+	PBinaryStream CWriter::CreateBinaryStream(const std::string & sPath)
+	{
+		Lib3MFHandle hBinaryStream = nullptr;
+		CheckError(lib3mf_writer_createbinarystream(m_pHandle, sPath.c_str(), &hBinaryStream));
+		
+		if (!hBinaryStream) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CBinaryStream>(dynamic_cast<CBinaryStream*>(m_pWrapper->polymorphicFactory(hBinaryStream)));
+	}
+	
+	/**
+	* CWriter::AssignBinaryStream - Sets a binary stream for a mesh object. Currently supported objects are Meshes and Toolpath layers.
+	* @param[in] pInstance - Object instance to assign Binary stream to.
+	* @param[in] pBinaryStream - Binary stream object to use for this layer.
+	*/
+	void CWriter::AssignBinaryStream(classParam<CBase> pInstance, classParam<CBinaryStream> pBinaryStream)
+	{
+		Lib3MFHandle hInstance = pInstance.GetHandle();
+		Lib3MFHandle hBinaryStream = pBinaryStream.GetHandle();
+		CheckError(lib3mf_writer_assignbinarystream(m_pHandle, hInstance, hBinaryStream));
 	}
 	
 	/**
@@ -6254,6 +6352,92 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CToolpathLayerReader::FindUint32AttributeID - Retrieves a segment Uint32 attribute ID by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute ID.
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::FindUint32AttributeID(const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		Lib3MF_uint32 resultID = 0;
+		CheckError(lib3mf_toolpathlayerreader_finduint32attributeid(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &resultID));
+		
+		return resultID;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentUint32AttributeByID - Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nID - Attribute ID.
+	* @return Attribute Value.
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::GetSegmentUint32AttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID)
+	{
+		Lib3MF_uint32 resultValue = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentuint32attributebyid(m_pHandle, nIndex, nID, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentUint32AttributeByName - Retrieves a segment Uint32 attribute by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute Value.
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::GetSegmentUint32AttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		Lib3MF_uint32 resultValue = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentuint32attributebyname(m_pHandle, nIndex, sNameSpace.c_str(), sAttributeName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathLayerReader::FindDoubleAttributeID - Retrieves a segment Double attribute ID by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute ID.
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::FindDoubleAttributeID(const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		Lib3MF_uint32 resultID = 0;
+		CheckError(lib3mf_toolpathlayerreader_finddoubleattributeid(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &resultID));
+		
+		return resultID;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentDoubleAttributeByID - Retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nID - Attribute ID.
+	* @return Attribute Value.
+	*/
+	Lib3MF_double CToolpathLayerReader::GetSegmentDoubleAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID)
+	{
+		Lib3MF_double resultValue = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid(m_pHandle, nIndex, nID, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentDoubleAttributeByName - Retrieves a segment Double attribute by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute Value.
+	*/
+	Lib3MF_double CToolpathLayerReader::GetSegmentDoubleAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		Lib3MF_double resultValue = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname(m_pHandle, nIndex, sNameSpace.c_str(), sAttributeName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
 	* CToolpathLayerReader::GetCustomDataCount - Retrieves the count of custom data elements.
 	* @return Count
 	*/
@@ -6709,6 +6893,26 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		CheckError(lib3mf_toolpath_deletecustomdata(m_pHandle, hData, &resultSuccess));
 		
 		return resultSuccess;
+	}
+	
+	/**
+	* CToolpath::RegisterCustomUint32Attribute - Registers a UInt32 Attribute that each segment holds.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sAttributeName - Attribute name. MUST not be empty.
+	*/
+	void CToolpath::RegisterCustomUint32Attribute(const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		CheckError(lib3mf_toolpath_registercustomuint32attribute(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str()));
+	}
+	
+	/**
+	* CToolpath::RegisterCustomDoubleAttribute - Registers a Double Attribute that each segment holds. Registering only applies to reader or writer objects created after the call.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sAttributeName - Attribute name. MUST not be empty.
+	*/
+	void CToolpath::RegisterCustomDoubleAttribute(const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		CheckError(lib3mf_toolpath_registercustomdoubleattribute(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str()));
 	}
 	
 	/**

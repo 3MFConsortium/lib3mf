@@ -216,6 +216,22 @@ namespace NMR {
 			}
 		}
 
+
+		// Write Binary Streams
+		for (auto iBinaryIter : m_BinaryWriterUUIDMap) {
+
+			auto pBinaryWriter = iBinaryIter.second.second;
+
+			if (!pBinaryWriter->isEmpty()) {
+				iBinaryIter.second.second->finishWriting();
+				POpcPackagePart pBinaryPart = m_pPackageWriter->addPart(iBinaryIter.second.first);
+				pModelPart->addRelationship("binary" + iBinaryIter.first, PACKAGE_BINARY_RELATIONSHIP_TYPE, pBinaryPart->getURI());
+				pBinaryWriter->copyToStream(pBinaryPart->getExportStream());
+			}
+
+		}
+
+
 		// Write Additional Attachments that are not part of the model
 		for (auto iAttachmentIter : m_AdditionalAttachments) {
 			CUUID uuid;

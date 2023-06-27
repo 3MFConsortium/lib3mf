@@ -156,4 +156,37 @@ void CToolpathLayerReader::GetCustomDataName(const Lib3MF_uint32 nIndex, std::st
 	sDataName = pCustomData->getRootName();
 }
 
+Lib3MF_uint32 CToolpathLayerReader::FindUint32AttributeID(const std::string& sNameSpace, const std::string& sAttributeName)
+{
+	return m_pReadData->findUint32Attribute(sNameSpace, sAttributeName, true);
+}
+
+
+Lib3MF_uint32 CToolpathLayerReader::GetSegmentUint32AttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID)
+{
+	return m_pReadData->getSegmentUint32Attribute(nIndex, nID);
+}
+
+Lib3MF_uint32 CToolpathLayerReader::GetSegmentUint32AttributeByName(const Lib3MF_uint32 nIndex, const std::string& sNameSpace, const std::string& sAttributeName)
+{
+	uint32_t nID = m_pReadData->findUint32Attribute(sNameSpace, sAttributeName, true);
+	return m_pReadData->getSegmentUint32Attribute(nIndex, nID);
+}
+
+Lib3MF_uint32 CToolpathLayerReader::FindDoubleAttributeID(const std::string& sNameSpace, const std::string& sAttributeName)
+{
+	return m_pReadData->findDoubleAttribute(sNameSpace, sAttributeName, true);
+}
+
+
+Lib3MF_double CToolpathLayerReader::GetSegmentDoubleAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID)
+{
+	return m_pReadData->getSegmentDoubleAttribute(nIndex, nID);
+}
+
+Lib3MF_double CToolpathLayerReader::GetSegmentDoubleAttributeByName(const Lib3MF_uint32 nIndex, const std::string& sNameSpace, const std::string& sAttributeName)
+{
+	uint32_t nID = m_pReadData->findDoubleAttribute(sNameSpace, sAttributeName, true);
+	return m_pReadData->getSegmentDoubleAttribute(nIndex, nID);
+}
 

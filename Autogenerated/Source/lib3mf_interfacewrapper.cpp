@@ -124,6 +124,122 @@ Lib3MFResult lib3mf_base_classtypeid(Lib3MF_Base pBase, Lib3MF_uint64 * pClassTy
 
 
 /*************************************************************************************************************************
+ Class implementation for BinaryStream
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_binarystream_getpath(Lib3MF_BinaryStream pBinaryStream, const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char * pPathBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pBinaryStream;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBinaryStream, "BinaryStream", "GetPath");
+		}
+		if ( (!pPathBuffer) && !(pPathNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sPath("");
+		IBinaryStream* pIBinaryStream = dynamic_cast<IBinaryStream*>(pIBaseClass);
+		if (!pIBinaryStream)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pPathBuffer == nullptr);
+		if (isCacheCall) {
+			sPath = pIBinaryStream->GetPath();
+
+			pIBinaryStream->_setCache (new ParameterCache_1<std::string> (sPath));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIBinaryStream->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sPath);
+			pIBinaryStream->_setCache (nullptr);
+		}
+		
+		if (pPathNeededChars)
+			*pPathNeededChars = (Lib3MF_uint32) (sPath.size()+1);
+		if (pPathBuffer) {
+			if (sPath.size() >= nPathBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iPath = 0; iPath < sPath.size(); iPath++)
+				pPathBuffer[iPath] = sPath[iPath];
+			pPathBuffer[sPath.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("Path", sPath.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_binarystream_getuuid(Lib3MF_BinaryStream pBinaryStream, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pBinaryStream;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBinaryStream, "BinaryStream", "GetUUID");
+		}
+		if ( (!pUUIDBuffer) && !(pUUIDNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sUUID("");
+		IBinaryStream* pIBinaryStream = dynamic_cast<IBinaryStream*>(pIBaseClass);
+		if (!pIBinaryStream)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pUUIDBuffer == nullptr);
+		if (isCacheCall) {
+			sUUID = pIBinaryStream->GetUUID();
+
+			pIBinaryStream->_setCache (new ParameterCache_1<std::string> (sUUID));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIBinaryStream->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sUUID);
+			pIBinaryStream->_setCache (nullptr);
+		}
+		
+		if (pUUIDNeededChars)
+			*pUUIDNeededChars = (Lib3MF_uint32) (sUUID.size()+1);
+		if (pUUIDBuffer) {
+			if (sUUID.size() >= nUUIDBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iUUID = 0; iUUID < sUUID.size(); iUUID++)
+				pUUIDBuffer[iUUID] = sUUID[iUUID];
+			pUUIDBuffer[sUUID.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("UUID", sUUID.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
  Class implementation for Writer
 **************************************************************************************************************************/
 Lib3MFResult lib3mf_writer_writetofile(Lib3MF_Writer pWriter, const char * pFilename)
@@ -569,6 +685,89 @@ Lib3MFResult lib3mf_writer_setcontentencryptioncallback(Lib3MF_Writer pWriter, L
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
 		pIWriter->SetContentEncryptionCallback(pTheCallback, pUserData);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_writer_createbinarystream(Lib3MF_Writer pWriter, const char * pPath, Lib3MF_BinaryStream * pBinaryStream)
+{
+	IBase* pIBaseClass = (IBase *)pWriter;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pWriter, "Writer", "CreateBinaryStream");
+			pJournalEntry->addStringParameter("Path", pPath);
+		}
+		if (pPath == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pBinaryStream == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sPath(pPath);
+		IBase* pBaseBinaryStream(nullptr);
+		IWriter* pIWriter = dynamic_cast<IWriter*>(pIBaseClass);
+		if (!pIWriter)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseBinaryStream = pIWriter->CreateBinaryStream(sPath);
+
+		*pBinaryStream = (IBase*)(pBaseBinaryStream);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("BinaryStream", *pBinaryStream);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_writer_assignbinarystream(Lib3MF_Writer pWriter, Lib3MF_Base pInstance, Lib3MF_BinaryStream pBinaryStream)
+{
+	IBase* pIBaseClass = (IBase *)pWriter;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pWriter, "Writer", "AssignBinaryStream");
+			pJournalEntry->addHandleParameter("Instance", pInstance);
+			pJournalEntry->addHandleParameter("BinaryStream", pBinaryStream);
+		}
+		IBase* pIBaseClassInstance = (IBase *)pInstance;
+		IBase* pIInstance = dynamic_cast<IBase*>(pIBaseClassInstance);
+		if (!pIInstance)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IBase* pIBaseClassBinaryStream = (IBase *)pBinaryStream;
+		IBinaryStream* pIBinaryStream = dynamic_cast<IBinaryStream*>(pIBaseClassBinaryStream);
+		if (!pIBinaryStream)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IWriter* pIWriter = dynamic_cast<IWriter*>(pIBaseClass);
+		if (!pIWriter)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIWriter->AssignBinaryStream(pIInstance, pIBinaryStream);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -11705,6 +11904,248 @@ Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpointdata(Lib3MF_ToolpathLayer
 	}
 }
 
+Lib3MFResult lib3mf_toolpathlayerreader_finduint32attributeid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "FindUint32AttributeID");
+			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
+			pJournalEntry->addStringParameter("AttributeName", pAttributeName);
+		}
+		if (pNameSpace == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pAttributeName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pID == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace(pNameSpace);
+		std::string sAttributeName(pAttributeName);
+		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
+		if (!pIToolpathLayerReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pID = pIToolpathLayerReader->FindUint32AttributeID(sNameSpace, sAttributeName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("ID", *pID);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerreader_getsegmentuint32attributebyid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 nID, Lib3MF_uint32 * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "GetSegmentUint32AttributeByID");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+			pJournalEntry->addUInt32Parameter("ID", nID);
+		}
+		if (pValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
+		if (!pIToolpathLayerReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pValue = pIToolpathLayerReader->GetSegmentUint32AttributeByID(nIndex, nID);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("Value", *pValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerreader_getsegmentuint32attributebyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "GetSegmentUint32AttributeByName");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
+			pJournalEntry->addStringParameter("AttributeName", pAttributeName);
+		}
+		if (pNameSpace == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pAttributeName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace(pNameSpace);
+		std::string sAttributeName(pAttributeName);
+		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
+		if (!pIToolpathLayerReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pValue = pIToolpathLayerReader->GetSegmentUint32AttributeByName(nIndex, sNameSpace, sAttributeName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("Value", *pValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerreader_finddoubleattributeid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "FindDoubleAttributeID");
+			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
+			pJournalEntry->addStringParameter("AttributeName", pAttributeName);
+		}
+		if (pNameSpace == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pAttributeName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pID == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace(pNameSpace);
+		std::string sAttributeName(pAttributeName);
+		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
+		if (!pIToolpathLayerReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pID = pIToolpathLayerReader->FindDoubleAttributeID(sNameSpace, sAttributeName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("ID", *pID);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 nID, Lib3MF_double * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "GetSegmentDoubleAttributeByID");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+			pJournalEntry->addUInt32Parameter("ID", nID);
+		}
+		if (pValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
+		if (!pIToolpathLayerReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pValue = pIToolpathLayerReader->GetSegmentDoubleAttributeByID(nIndex, nID);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addDoubleResult("Value", *pValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const char * pNameSpace, const char * pAttributeName, Lib3MF_double * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "GetSegmentDoubleAttributeByName");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
+			pJournalEntry->addStringParameter("AttributeName", pAttributeName);
+		}
+		if (pNameSpace == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pAttributeName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace(pNameSpace);
+		std::string sAttributeName(pAttributeName);
+		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
+		if (!pIToolpathLayerReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pValue = pIToolpathLayerReader->GetSegmentDoubleAttributeByName(nIndex, sNameSpace, sAttributeName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addDoubleResult("Value", *pValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_toolpathlayerreader_getcustomdatacount(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 * pCount)
 {
 	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
@@ -12975,6 +13416,84 @@ Lib3MFResult lib3mf_toolpath_deletecustomdata(Lib3MF_Toolpath pToolpath, Lib3MF_
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->addBooleanResult("Success", *pSuccess);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_registercustomuint32attribute(Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pAttributeName)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "RegisterCustomUint32Attribute");
+			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
+			pJournalEntry->addStringParameter("AttributeName", pAttributeName);
+		}
+		if (pNameSpace == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pAttributeName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace(pNameSpace);
+		std::string sAttributeName(pAttributeName);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpath->RegisterCustomUint32Attribute(sNameSpace, sAttributeName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_registercustomdoubleattribute(Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pAttributeName)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "RegisterCustomDoubleAttribute");
+			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
+			pJournalEntry->addStringParameter("AttributeName", pAttributeName);
+		}
+		if (pNameSpace == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pAttributeName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace(pNameSpace);
+		std::string sAttributeName(pAttributeName);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpath->RegisterCustomDoubleAttribute(sNameSpace, sAttributeName);
+
+		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -17472,6 +17991,10 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 	
 	if (sProcName == "lib3mf_base_classtypeid") 
 		*ppProcAddress = (void*) &lib3mf_base_classtypeid;
+	if (sProcName == "lib3mf_binarystream_getpath") 
+		*ppProcAddress = (void*) &lib3mf_binarystream_getpath;
+	if (sProcName == "lib3mf_binarystream_getuuid") 
+		*ppProcAddress = (void*) &lib3mf_binarystream_getuuid;
 	if (sProcName == "lib3mf_writer_writetofile") 
 		*ppProcAddress = (void*) &lib3mf_writer_writetofile;
 	if (sProcName == "lib3mf_writer_getstreamsize") 
@@ -17498,6 +18021,10 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_writer_addkeywrappingcallback;
 	if (sProcName == "lib3mf_writer_setcontentencryptioncallback") 
 		*ppProcAddress = (void*) &lib3mf_writer_setcontentencryptioncallback;
+	if (sProcName == "lib3mf_writer_createbinarystream") 
+		*ppProcAddress = (void*) &lib3mf_writer_createbinarystream;
+	if (sProcName == "lib3mf_writer_assignbinarystream") 
+		*ppProcAddress = (void*) &lib3mf_writer_assignbinarystream;
 	if (sProcName == "lib3mf_persistentreadersource_getsourcetype") 
 		*ppProcAddress = (void*) &lib3mf_persistentreadersource_getsourcetype;
 	if (sProcName == "lib3mf_persistentreadersource_invalidatesourcedata") 
@@ -18082,6 +18609,18 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentpartuuid;
 	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentpointdata") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentpointdata;
+	if (sProcName == "lib3mf_toolpathlayerreader_finduint32attributeid") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_finduint32attributeid;
+	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentuint32attributebyid") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentuint32attributebyid;
+	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentuint32attributebyname") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentuint32attributebyname;
+	if (sProcName == "lib3mf_toolpathlayerreader_finddoubleattributeid") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_finddoubleattributeid;
+	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid;
+	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname;
 	if (sProcName == "lib3mf_toolpathlayerreader_getcustomdatacount") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getcustomdatacount;
 	if (sProcName == "lib3mf_toolpathlayerreader_getcustomdata") 
@@ -18144,6 +18683,10 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_toolpath_clearcustomdata;
 	if (sProcName == "lib3mf_toolpath_deletecustomdata") 
 		*ppProcAddress = (void*) &lib3mf_toolpath_deletecustomdata;
+	if (sProcName == "lib3mf_toolpath_registercustomuint32attribute") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_registercustomuint32attribute;
+	if (sProcName == "lib3mf_toolpath_registercustomdoubleattribute") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_registercustomdoubleattribute;
 	if (sProcName == "lib3mf_toolpathiterator_getcurrenttoolpath") 
 		*ppProcAddress = (void*) &lib3mf_toolpathiterator_getcurrenttoolpath;
 	if (sProcName == "lib3mf_slicestack_getbottomz") 

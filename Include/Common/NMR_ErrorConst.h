@@ -326,6 +326,123 @@ NMR_ErrorConst.h defines all error code constants.
 // Too many custom XML Data Entries
 #define NMR_ERROR_TOOMANYCUSTOMXMLDATAENTRIES 0x105B
 
+// Stream Chunk already open
+#define NMR_ERROR_STREAMCHUNKALREADYOPEN 0x105C
+
+// No Stream Chunk open
+#define NMR_ERROR_NOSTREAMCHUNKOPEN 0x105D
+
+// Stream writer already finished
+#define NMR_ERROR_STREAMWRITERALREADYFINISHED 0x105E
+
+// Stream writer not finished
+#define NMR_ERROR_STREAMWRITERNOTFINISHED 0x105F
+
+// Duplicate Binary Stream
+#define NMR_ERROR_DUPLICATEBINARYSTREAM 0x1060
+
+// Duplicate Binary Stream Path
+#define NMR_ERROR_DUPLICATEBINARYSTREAMPATH 0x1061
+
+// Could not compress data
+#define NMR_ERROR_COULDNOTCOMPRESSDATA 0x1062
+
+// Discretization Value out of range
+#define NMR_ERROR_BINARYCHUNK_DISCRETIZATIONVALUEOUTOFRANGE 0x1063
+
+// Duplicate Binary Stream UUID
+#define NMR_ERROR_DUPLICATEBINARYSTREAMUUID 0x1064
+
+// Binary stream not found
+#define NMR_ERROR_BINARYSTREAMNOTFOUND 0x1065
+
+// Binary streams not allowed
+#define NMR_ERROR_BINARYSTREAMSNOTALLOWED 0x1066
+
+// Invalid binary chunk stream
+#define NMR_ERROR_INVALIDCHUNKSTREAM 0x1067
+
+// Invalid binary chunk stream sign
+#define NMR_ERROR_INVALIDCHUNKSTREAMSIGN 0x1068
+
+// Invalid binary chunk stream version
+#define NMR_ERROR_INVALIDCHUNKSTREAMVERSION 0x1069
+
+// Too many binary chunks
+#define NMR_ERROR_TOOMANYBINARYCHUNKS 0x106A
+
+// Too many binary chunk entries
+#define NMR_ERROR_TOOMANYBINARYCHUNKENTRIES 0x106B
+
+// Duplicate chunk entry in binary stream
+#define NMR_ERROR_DUPLICATECHUNKENTRY 0x106C
+
+// Invalid file chunk data size
+#define NMR_ERROR_INVALIDFILECHUNKDATASIZE 0x106D
+
+// Invalid chunk compressed data
+#define NMR_ERROR_INVALIDCHUNKCOMPRESSEDDATA 0x106E
+
+// Could not uncompressed data
+#define NMR_ERROR_COULDNOTUNCOMPRESSDATA 0x106F
+
+// Binary chunk entry not found
+#define NMR_ERROR_BINARYCHUNKENTRYNOTFOUND 0x1070
+
+// Invalid chunk entry index
+#define NMR_ERROR_INVALIDENTRYINDEX 0x1071
+
+// Invalid chunk data
+#define NMR_ERROR_INVALIDCHUNKDATA 0x1072
+
+// Invalid chunk entry position
+#define NMR_ERROR_INVALIDCHUNKENTRYPOSITION 0x1073
+
+// Invalid chunk entry end position
+#define NMR_ERROR_INVALIDCHUNKENTRYENDPOSITION 0x1074
+
+// Invalid chunk entry size
+#define NMR_ERROR_INVALIDCHUNKENTRYSIZE 0x1075
+
+// Not enough data to read from chunk
+#define NMR_ERROR_NOTENOUGHDATATOREADFROMCHUNK 0x1076
+
+// Invalid chunk entry type
+#define NMR_ERROR_INVALIDCHUNKENTRYTYPE 0x1077
+
+// Unexpected chunk data type
+#define NMR_ERROR_UNEXPECTEDCHUNKDATATYPE 0x1078
+
+// Invalid float value
+#define NMR_ERROR_INVALIDFLOATVALUE 0x1079
+
+// Segment attribute defined after reading
+#define NMR_ERROR_SEGMENTATTRIBUTEDEFINEDAFTERREADING 0x107A
+
+// Invalid segment attribute type
+#define NMR_ERROR_INVALIDSEGMENTATTRIBUTETYPE 0x107B
+
+// Invalid segment attribute namespace
+#define NMR_ERROR_INVALIDSEGMENTATTRIBUTENAMESPACE 0x107C
+
+// Invalid segment attribute name
+#define NMR_ERROR_INVALIDSEGMENTATTRIBUTENAME 0x107D
+
+// Invalid segment attribute id
+#define NMR_ERROR_INVALIDSEGMENTATTRIBUTEID 0x107E
+
+// Invalid segment attribute data size
+#define NMR_ERROR_INVALIDSEGMENTATTRIBUTEDATASIZE 0x107F
+
+// Segment attribute is not uint32 
+#define NMR_ERROR_SEGMENTATTRIBUTEISNOTUINT32 0x1080
+
+// Segment attribute is not double
+#define NMR_ERROR_SEGMENTATTRIBUTEISNOTDOUBLE 0x1081
+
+// Segment attribute not found
+#define NMR_ERROR_SEGMENTATTRIBUTENOTFOUND 0x1082
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/

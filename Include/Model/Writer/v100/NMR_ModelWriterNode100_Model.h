@@ -56,11 +56,15 @@ namespace NMR {
 		nfBool m_bWriteBeamLatticeExtension;
 		nfBool m_bWriteNurbsExtension;
 		nfBool m_bWriteSliceExtension;
+		nfBool m_bWriteToolpaths;
 		nfBool m_bWriteSecureContentExtension;
 		nfBool m_bWriteBaseMaterials;
 		nfBool m_bWriteObjects;
 		nfBool m_bIsRootModel;
 		nfBool m_bWriteCustomNamespaces;
+		nfBool m_bWriteBinaryExtension;
+
+		std::map<std::string, std::pair<std::string, CChunkedBinaryStreamWriter*>> m_BinaryStreamWriters;
 
 		void writeModelMetaData();
 		void writeMetaData(_In_ PModelMetaData pMetaData);
@@ -68,6 +72,7 @@ namespace NMR {
 
 		void writeResources();
 		void writeBaseMaterials();
+		void writeToolpaths();
 		void writeTextures2D();
 		void writeColors();
 		void writeTex2Coords();
@@ -89,10 +94,13 @@ namespace NMR {
 
 	public:
 		CModelWriterNode100_Model() = delete;
-		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor, _In_ nfUint32 nDecimalPrecision);
 		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor, _In_ nfUint32 nDecimalPrecision, _In_ nfBool bWritesRootModel);
 		
 		virtual void writeToXML();
+
+		void registerStreamWriter(const std::string& sInstanceUUID, const std::string& sPath, CChunkedBinaryStreamWriter* pBinaryStreamWriter);
+		void setWriteBinaryExtension(bool bWriteBinaryExtension);
+
 	};
 
 }
