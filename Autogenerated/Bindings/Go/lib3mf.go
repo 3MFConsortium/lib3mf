@@ -2862,39 +2862,48 @@ Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentpointdata(Lib3MFHandle l
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_finduint32attributeid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID)
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_findattributeinfobyname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID, eLib3MFToolpathAttributeType * pAttributeType)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_FindUint32AttributeID (pToolpathLayerReader, pNameSpace, pAttributeName, pID);
+	return wrapperTable->m_ToolpathLayerReader_FindAttributeInfoByName (pToolpathLayerReader, pNameSpace, pAttributeName, pID, pAttributeType);
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentuint32attributebyid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 nID, Lib3MF_uint32 * pValue)
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_findattributeidbyname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetSegmentUint32AttributeByID (pToolpathLayerReader, nIndex, nID, pValue);
+	return wrapperTable->m_ToolpathLayerReader_FindAttributeIDByName (pToolpathLayerReader, pNameSpace, pAttributeName, pID);
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentuint32attributebyname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pValue)
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_findattributevaluebyname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, eLib3MFToolpathAttributeType * pAttributeType)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetSegmentUint32AttributeByName (pToolpathLayerReader, nIndex, pNameSpace, pAttributeName, pValue);
+	return wrapperTable->m_ToolpathLayerReader_FindAttributeValueByName (pToolpathLayerReader, pNameSpace, pAttributeName, pAttributeType);
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_finddoubleattributeid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID)
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentintegerattributebyid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 nID, Lib3MF_int64 * pValue)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_FindDoubleAttributeID (pToolpathLayerReader, pNameSpace, pAttributeName, pID);
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByID (pToolpathLayerReader, nIndex, nID, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentintegerattributebyname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const char * pNameSpace, const char * pAttributeName, Lib3MF_int64 * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByName (pToolpathLayerReader, nIndex, pNameSpace, pAttributeName, pValue);
 }
 
 
@@ -4595,6 +4604,15 @@ const (
 	ToolpathSegmentType_Polyline = 3
 )
 
+// ToolpathAttributeType represents a Lib3MF enum.
+type ToolpathAttributeType int
+
+const (
+	ToolpathAttributeType_Unknown = 0
+	ToolpathAttributeType_Integer = 1
+	ToolpathAttributeType_Double = 2
+)
+
 // EncryptionAlgorithm represents a Lib3MF enum.
 type EncryptionAlgorithm int
 
@@ -4760,6 +4778,7 @@ const LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA = 4001;
 const LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN = 4002;
 const LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT = 4003;
 const LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED = 4004;
+const LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE = 4005;
 
 // WrappedError is an error that wraps a Lib3MF error.
 type WrappedError struct {
@@ -4877,6 +4896,8 @@ func errorMessage(errorcode uint32) string {
 		return "Toolpath has an invalid number of points";
 	case LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED:
 		return "Toolpath attribute already defined";
+	case LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE:
+		return "Toolpath attribute is of invalid type";
 	default:
 		return "unknown";
 	}
@@ -8852,44 +8873,55 @@ func (inst ToolpathLayerReader) GetSegmentPointData(index uint32, pointData []Po
 	return pointData[:int(neededforpointData)], nil
 }
 
-// FindUint32AttributeID retrieves a segment Uint32 attribute ID by Attribute Name. Will fail if Attribute does not exist.
-func (inst ToolpathLayerReader) FindUint32AttributeID(nameSpace string, attributeName string) (uint32, error) {
+// FindAttributeInfoByName retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
+func (inst ToolpathLayerReader) FindAttributeInfoByName(nameSpace string, attributeName string) (uint32, ToolpathAttributeType, error) {
 	var iD C.uint32_t
-	ret := C.CCall_lib3mf_toolpathlayerreader_finduint32attributeid(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &iD)
+	var attributeType C.eLib3MFToolpathAttributeType
+	ret := C.CCall_lib3mf_toolpathlayerreader_findattributeinfobyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &iD, &attributeType)
+	if ret != 0 {
+		return 0, 0, makeError(uint32(ret))
+	}
+	return uint32(iD), ToolpathAttributeType(attributeType), nil
+}
+
+// FindAttributeIDByName retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.
+func (inst ToolpathLayerReader) FindAttributeIDByName(nameSpace string, attributeName string) (uint32, error) {
+	var iD C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_findattributeidbyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &iD)
 	if ret != 0 {
 		return 0, makeError(uint32(ret))
 	}
 	return uint32(iD), nil
 }
 
-// GetSegmentUint32AttributeByID retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
-func (inst ToolpathLayerReader) GetSegmentUint32AttributeByID(index uint32, iD uint32) (uint32, error) {
-	var value C.uint32_t
-	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentuint32attributebyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), C.uint32_t(iD), &value)
+// FindAttributeValueByName retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.
+func (inst ToolpathLayerReader) FindAttributeValueByName(nameSpace string, attributeName string) (ToolpathAttributeType, error) {
+	var attributeType C.eLib3MFToolpathAttributeType
+	ret := C.CCall_lib3mf_toolpathlayerreader_findattributevaluebyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &attributeType)
 	if ret != 0 {
 		return 0, makeError(uint32(ret))
 	}
-	return uint32(value), nil
+	return ToolpathAttributeType(attributeType), nil
 }
 
-// GetSegmentUint32AttributeByName retrieves a segment Uint32 attribute by Attribute Name. Will fail if Attribute does not exist.
-func (inst ToolpathLayerReader) GetSegmentUint32AttributeByName(index uint32, nameSpace string, attributeName string) (uint32, error) {
-	var value C.uint32_t
-	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentuint32attributebyname(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &value)
+// GetSegmentIntegerAttributeByID retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
+func (inst ToolpathLayerReader) GetSegmentIntegerAttributeByID(index uint32, iD uint32) (int64, error) {
+	var value C.int64_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentintegerattributebyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), C.uint32_t(iD), &value)
 	if ret != 0 {
 		return 0, makeError(uint32(ret))
 	}
-	return uint32(value), nil
+	return int64(value), nil
 }
 
-// FindDoubleAttributeID retrieves a segment Double attribute ID by Attribute Name. Will fail if Attribute does not exist.
-func (inst ToolpathLayerReader) FindDoubleAttributeID(nameSpace string, attributeName string) (uint32, error) {
-	var iD C.uint32_t
-	ret := C.CCall_lib3mf_toolpathlayerreader_finddoubleattributeid(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &iD)
+// GetSegmentIntegerAttributeByName retrieves a segment integer attribute by Attribute Name. Will fail if Attribute does not exist or is of different type.
+func (inst ToolpathLayerReader) GetSegmentIntegerAttributeByName(index uint32, nameSpace string, attributeName string) (int64, error) {
+	var value C.int64_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentintegerattributebyname(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &value)
 	if ret != 0 {
 		return 0, makeError(uint32(ret))
 	}
-	return uint32(iD), nil
+	return int64(value), nil
 }
 
 // GetSegmentDoubleAttributeByID retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.

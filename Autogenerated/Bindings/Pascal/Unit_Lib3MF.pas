@@ -129,6 +129,7 @@ const
 	LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN = 4002;
 	LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT = 4003;
 	LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED = 4004;
+	LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE = 4005;
 
 (*************************************************************************************************************************
  Declaration of enums
@@ -248,6 +249,12 @@ type
 		eToolpathSegmentTypeHatch,
 		eToolpathSegmentTypeLoop,
 		eToolpathSegmentTypePolyline
+	);
+
+	TLib3MFToolpathAttributeType = (
+		eToolpathAttributeTypeUnknown,
+		eToolpathAttributeTypeInteger,
+		eToolpathAttributeTypeDouble
 	);
 
 	TLib3MFEncryptionAlgorithm = (
@@ -3724,7 +3731,19 @@ type
 	TLib3MFToolpathLayerReader_GetSegmentPointDataFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nPointDataCount: QWord; out pPointDataNeededCount: QWord; pPointDataBuffer: PLib3MFPosition2D): TLib3MFResult; cdecl;
 	
 	(**
-	* Retrieves a segment Uint32 attribute ID by Attribute Name. Will fail if Attribute does not exist.
+	* Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] pNameSpace - Namespace of the custom attribute.
+	* @param[in] pAttributeName - Name of the custom attribute.
+	* @param[out] pID - Attribute ID.
+	* @param[out] pAttributeType - Attribute Type.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_FindAttributeInfoByNameFunc = function(pToolpathLayerReader: TLib3MFHandle; const pNameSpace: PAnsiChar; const pAttributeName: PAnsiChar; out pID: Cardinal; out pAttributeType: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.
 	*
 	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
 	* @param[in] pNameSpace - Namespace of the custom attribute.
@@ -3732,7 +3751,18 @@ type
 	* @param[out] pID - Attribute ID.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFToolpathLayerReader_FindUint32AttributeIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const pNameSpace: PAnsiChar; const pAttributeName: PAnsiChar; out pID: Cardinal): TLib3MFResult; cdecl;
+	TLib3MFToolpathLayerReader_FindAttributeIDByNameFunc = function(pToolpathLayerReader: TLib3MFHandle; const pNameSpace: PAnsiChar; const pAttributeName: PAnsiChar; out pID: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] pNameSpace - Namespace of the custom attribute.
+	* @param[in] pAttributeName - Name of the custom attribute.
+	* @param[out] pAttributeType - Attribute Type.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_FindAttributeValueByNameFunc = function(pToolpathLayerReader: TLib3MFHandle; const pNameSpace: PAnsiChar; const pAttributeName: PAnsiChar; out pAttributeType: Integer): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
@@ -3743,10 +3773,10 @@ type
 	* @param[out] pValue - Attribute Value.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFToolpathLayerReader_GetSegmentUint32AttributeByIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nID: Cardinal; out pValue: Cardinal): TLib3MFResult; cdecl;
+	TLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nID: Cardinal; out pValue: Int64): TLib3MFResult; cdecl;
 	
 	(**
-	* Retrieves a segment Uint32 attribute by Attribute Name. Will fail if Attribute does not exist.
+	* Retrieves a segment integer attribute by Attribute Name. Will fail if Attribute does not exist or is of different type.
 	*
 	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
 	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
@@ -3755,18 +3785,7 @@ type
 	* @param[out] pValue - Attribute Value.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFToolpathLayerReader_GetSegmentUint32AttributeByNameFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const pNameSpace: PAnsiChar; const pAttributeName: PAnsiChar; out pValue: Cardinal): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves a segment Double attribute ID by Attribute Name. Will fail if Attribute does not exist.
-	*
-	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] pNameSpace - Namespace of the custom attribute.
-	* @param[in] pAttributeName - Name of the custom attribute.
-	* @param[out] pID - Attribute ID.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFToolpathLayerReader_FindDoubleAttributeIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const pNameSpace: PAnsiChar; const pAttributeName: PAnsiChar; out pID: Cardinal): TLib3MFResult; cdecl;
+	TLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const pNameSpace: PAnsiChar; const pAttributeName: PAnsiChar; out pValue: Int64): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.
@@ -6318,10 +6337,11 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetSegmentPart(const AIndex: Cardinal): TLib3MFBuildItem;
 		function GetSegmentPartUUID(const AIndex: Cardinal): String;
 		procedure GetSegmentPointData(const AIndex: Cardinal; out APointData: ArrayOfLib3MFPosition2D);
-		function FindUint32AttributeID(const ANameSpace: String; const AAttributeName: String): Cardinal;
-		function GetSegmentUint32AttributeByID(const AIndex: Cardinal; const AID: Cardinal): Cardinal;
-		function GetSegmentUint32AttributeByName(const AIndex: Cardinal; const ANameSpace: String; const AAttributeName: String): Cardinal;
-		function FindDoubleAttributeID(const ANameSpace: String; const AAttributeName: String): Cardinal;
+		procedure FindAttributeInfoByName(const ANameSpace: String; const AAttributeName: String; out AID: Cardinal; out AAttributeType: TLib3MFToolpathAttributeType);
+		function FindAttributeIDByName(const ANameSpace: String; const AAttributeName: String): Cardinal;
+		function FindAttributeValueByName(const ANameSpace: String; const AAttributeName: String): TLib3MFToolpathAttributeType;
+		function GetSegmentIntegerAttributeByID(const AIndex: Cardinal; const AID: Cardinal): Int64;
+		function GetSegmentIntegerAttributeByName(const AIndex: Cardinal; const ANameSpace: String; const AAttributeName: String): Int64;
 		function GetSegmentDoubleAttributeByID(const AIndex: Cardinal; const AID: Cardinal): Double;
 		function GetSegmentDoubleAttributeByName(const AIndex: Cardinal; const ANameSpace: String; const AAttributeName: String): Double;
 		function GetCustomDataCount(): Cardinal;
@@ -6913,10 +6933,11 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFToolpathLayerReader_GetSegmentPartFunc: TLib3MFToolpathLayerReader_GetSegmentPartFunc;
 		FLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc;
 		FLib3MFToolpathLayerReader_GetSegmentPointDataFunc: TLib3MFToolpathLayerReader_GetSegmentPointDataFunc;
-		FLib3MFToolpathLayerReader_FindUint32AttributeIDFunc: TLib3MFToolpathLayerReader_FindUint32AttributeIDFunc;
-		FLib3MFToolpathLayerReader_GetSegmentUint32AttributeByIDFunc: TLib3MFToolpathLayerReader_GetSegmentUint32AttributeByIDFunc;
-		FLib3MFToolpathLayerReader_GetSegmentUint32AttributeByNameFunc: TLib3MFToolpathLayerReader_GetSegmentUint32AttributeByNameFunc;
-		FLib3MFToolpathLayerReader_FindDoubleAttributeIDFunc: TLib3MFToolpathLayerReader_FindDoubleAttributeIDFunc;
+		FLib3MFToolpathLayerReader_FindAttributeInfoByNameFunc: TLib3MFToolpathLayerReader_FindAttributeInfoByNameFunc;
+		FLib3MFToolpathLayerReader_FindAttributeIDByNameFunc: TLib3MFToolpathLayerReader_FindAttributeIDByNameFunc;
+		FLib3MFToolpathLayerReader_FindAttributeValueByNameFunc: TLib3MFToolpathLayerReader_FindAttributeValueByNameFunc;
+		FLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc: TLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc;
+		FLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc: TLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc;
 		FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc: TLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc;
 		FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc: TLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc;
 		FLib3MFToolpathLayerReader_GetCustomDataCountFunc: TLib3MFToolpathLayerReader_GetCustomDataCountFunc;
@@ -7407,10 +7428,11 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFToolpathLayerReader_GetSegmentPartFunc: TLib3MFToolpathLayerReader_GetSegmentPartFunc read FLib3MFToolpathLayerReader_GetSegmentPartFunc;
 		property Lib3MFToolpathLayerReader_GetSegmentPartUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc read FLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc;
 		property Lib3MFToolpathLayerReader_GetSegmentPointDataFunc: TLib3MFToolpathLayerReader_GetSegmentPointDataFunc read FLib3MFToolpathLayerReader_GetSegmentPointDataFunc;
-		property Lib3MFToolpathLayerReader_FindUint32AttributeIDFunc: TLib3MFToolpathLayerReader_FindUint32AttributeIDFunc read FLib3MFToolpathLayerReader_FindUint32AttributeIDFunc;
-		property Lib3MFToolpathLayerReader_GetSegmentUint32AttributeByIDFunc: TLib3MFToolpathLayerReader_GetSegmentUint32AttributeByIDFunc read FLib3MFToolpathLayerReader_GetSegmentUint32AttributeByIDFunc;
-		property Lib3MFToolpathLayerReader_GetSegmentUint32AttributeByNameFunc: TLib3MFToolpathLayerReader_GetSegmentUint32AttributeByNameFunc read FLib3MFToolpathLayerReader_GetSegmentUint32AttributeByNameFunc;
-		property Lib3MFToolpathLayerReader_FindDoubleAttributeIDFunc: TLib3MFToolpathLayerReader_FindDoubleAttributeIDFunc read FLib3MFToolpathLayerReader_FindDoubleAttributeIDFunc;
+		property Lib3MFToolpathLayerReader_FindAttributeInfoByNameFunc: TLib3MFToolpathLayerReader_FindAttributeInfoByNameFunc read FLib3MFToolpathLayerReader_FindAttributeInfoByNameFunc;
+		property Lib3MFToolpathLayerReader_FindAttributeIDByNameFunc: TLib3MFToolpathLayerReader_FindAttributeIDByNameFunc read FLib3MFToolpathLayerReader_FindAttributeIDByNameFunc;
+		property Lib3MFToolpathLayerReader_FindAttributeValueByNameFunc: TLib3MFToolpathLayerReader_FindAttributeValueByNameFunc read FLib3MFToolpathLayerReader_FindAttributeValueByNameFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc: TLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc read FLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc: TLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc read FLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc;
 		property Lib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc: TLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc read FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc;
 		property Lib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc: TLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc read FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc;
 		property Lib3MFToolpathLayerReader_GetCustomDataCountFunc: TLib3MFToolpathLayerReader_GetCustomDataCountFunc read FLib3MFToolpathLayerReader_GetCustomDataCountFunc;
@@ -7639,6 +7661,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function convertConstToBlendMethod(const AValue: Integer): TLib3MFBlendMethod;
 	function convertToolpathSegmentTypeToConst(const AValue: TLib3MFToolpathSegmentType): Integer;
 	function convertConstToToolpathSegmentType(const AValue: Integer): TLib3MFToolpathSegmentType;
+	function convertToolpathAttributeTypeToConst(const AValue: TLib3MFToolpathAttributeType): Integer;
+	function convertConstToToolpathAttributeType(const AValue: Integer): TLib3MFToolpathAttributeType;
 	function convertEncryptionAlgorithmToConst(const AValue: TLib3MFEncryptionAlgorithm): Integer;
 	function convertConstToEncryptionAlgorithm(const AValue: Integer): TLib3MFEncryptionAlgorithm;
 	function convertWrappingAlgorithmToConst(const AValue: TLib3MFWrappingAlgorithm): Integer;
@@ -8089,6 +8113,29 @@ implementation
 			1: Result := eToolpathSegmentTypeHatch;
 			2: Result := eToolpathSegmentTypeLoop;
 			3: Result := eToolpathSegmentTypePolyline;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
+		end;
+	end;
+	
+	
+	function convertToolpathAttributeTypeToConst(const AValue: TLib3MFToolpathAttributeType): Integer;
+	begin
+		case AValue of
+			eToolpathAttributeTypeUnknown: Result := 0;
+			eToolpathAttributeTypeInteger: Result := 1;
+			eToolpathAttributeTypeDouble: Result := 2;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
+		end;
+	end;
+	
+	function convertConstToToolpathAttributeType(const AValue: Integer): TLib3MFToolpathAttributeType;
+	begin
+		case AValue of
+			0: Result := eToolpathAttributeTypeUnknown;
+			1: Result := eToolpathAttributeTypeInteger;
+			2: Result := eToolpathAttributeTypeDouble;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;
@@ -8554,6 +8601,7 @@ implementation
 			LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: ADescription := 'Toolpath has already been written out';
 			LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: ADescription := 'Toolpath has an invalid number of points';
 			LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED: ADescription := 'Toolpath attribute already defined';
+			LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE: ADescription := 'Toolpath attribute is of invalid type';
 			else
 				ADescription := 'unknown';
 		end;
@@ -11865,24 +11913,37 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPointDataFunc(FHandle, AIndex, countNeededPointData, countWrittenPointData, @APointData[0]));
 	end;
 
-	function TLib3MFToolpathLayerReader.FindUint32AttributeID(const ANameSpace: String; const AAttributeName: String): Cardinal;
+	procedure TLib3MFToolpathLayerReader.FindAttributeInfoByName(const ANameSpace: String; const AAttributeName: String; out AID: Cardinal; out AAttributeType: TLib3MFToolpathAttributeType);
+	var
+		ResultAttributeType: Integer;
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_FindUint32AttributeIDFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), Result));
+		ResultAttributeType := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_FindAttributeInfoByNameFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), AID, ResultAttributeType));
+		AAttributeType := convertConstToToolpathAttributeType(ResultAttributeType);
 	end;
 
-	function TLib3MFToolpathLayerReader.GetSegmentUint32AttributeByID(const AIndex: Cardinal; const AID: Cardinal): Cardinal;
+	function TLib3MFToolpathLayerReader.FindAttributeIDByName(const ANameSpace: String; const AAttributeName: String): Cardinal;
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentUint32AttributeByIDFunc(FHandle, AIndex, AID, Result));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_FindAttributeIDByNameFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), Result));
 	end;
 
-	function TLib3MFToolpathLayerReader.GetSegmentUint32AttributeByName(const AIndex: Cardinal; const ANameSpace: String; const AAttributeName: String): Cardinal;
+	function TLib3MFToolpathLayerReader.FindAttributeValueByName(const ANameSpace: String; const AAttributeName: String): TLib3MFToolpathAttributeType;
+	var
+		ResultAttributeType: Integer;
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentUint32AttributeByNameFunc(FHandle, AIndex, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), Result));
+		ResultAttributeType := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_FindAttributeValueByNameFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), ResultAttributeType));
+		Result := convertConstToToolpathAttributeType(ResultAttributeType);
 	end;
 
-	function TLib3MFToolpathLayerReader.FindDoubleAttributeID(const ANameSpace: String; const AAttributeName: String): Cardinal;
+	function TLib3MFToolpathLayerReader.GetSegmentIntegerAttributeByID(const AIndex: Cardinal; const AID: Cardinal): Int64;
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_FindDoubleAttributeIDFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), Result));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc(FHandle, AIndex, AID, Result));
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentIntegerAttributeByName(const AIndex: Cardinal; const ANameSpace: String; const AAttributeName: String): Int64;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc(FHandle, AIndex, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), Result));
 	end;
 
 	function TLib3MFToolpathLayerReader.GetSegmentDoubleAttributeByID(const AIndex: Cardinal; const AID: Cardinal): Double;
@@ -13988,10 +14049,11 @@ implementation
 		FLib3MFToolpathLayerReader_GetSegmentPartFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentpart');
 		FLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentpartuuid');
 		FLib3MFToolpathLayerReader_GetSegmentPointDataFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentpointdata');
-		FLib3MFToolpathLayerReader_FindUint32AttributeIDFunc := LoadFunction('lib3mf_toolpathlayerreader_finduint32attributeid');
-		FLib3MFToolpathLayerReader_GetSegmentUint32AttributeByIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentuint32attributebyid');
-		FLib3MFToolpathLayerReader_GetSegmentUint32AttributeByNameFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentuint32attributebyname');
-		FLib3MFToolpathLayerReader_FindDoubleAttributeIDFunc := LoadFunction('lib3mf_toolpathlayerreader_finddoubleattributeid');
+		FLib3MFToolpathLayerReader_FindAttributeInfoByNameFunc := LoadFunction('lib3mf_toolpathlayerreader_findattributeinfobyname');
+		FLib3MFToolpathLayerReader_FindAttributeIDByNameFunc := LoadFunction('lib3mf_toolpathlayerreader_findattributeidbyname');
+		FLib3MFToolpathLayerReader_FindAttributeValueByNameFunc := LoadFunction('lib3mf_toolpathlayerreader_findattributevaluebyname');
+		FLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentintegerattributebyid');
+		FLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentintegerattributebyname');
 		FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid');
 		FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname');
 		FLib3MFToolpathLayerReader_GetCustomDataCountFunc := LoadFunction('lib3mf_toolpathlayerreader_getcustomdatacount');
@@ -15103,16 +15165,19 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentpointdata'), @FLib3MFToolpathLayerReader_GetSegmentPointDataFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_finduint32attributeid'), @FLib3MFToolpathLayerReader_FindUint32AttributeIDFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_findattributeinfobyname'), @FLib3MFToolpathLayerReader_FindAttributeInfoByNameFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentuint32attributebyid'), @FLib3MFToolpathLayerReader_GetSegmentUint32AttributeByIDFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_findattributeidbyname'), @FLib3MFToolpathLayerReader_FindAttributeIDByNameFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentuint32attributebyname'), @FLib3MFToolpathLayerReader_GetSegmentUint32AttributeByNameFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_findattributevaluebyname'), @FLib3MFToolpathLayerReader_FindAttributeValueByNameFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_finddoubleattributeid'), @FLib3MFToolpathLayerReader_FindDoubleAttributeIDFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentintegerattributebyid'), @FLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentintegerattributebyname'), @FLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid'), @FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc);

@@ -146,6 +146,7 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN 4002 /** Toolpath has already been written out */
 #define LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT 4003 /** Toolpath has an invalid number of points */
 #define LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED 4004 /** Toolpath attribute already defined */
+#define LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE 4005 /** Toolpath attribute is of invalid type */
 
 /*************************************************************************************************************************
  Error strings for Lib3MF
@@ -206,6 +207,7 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
     case LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "Toolpath has already been written out";
     case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "Toolpath has an invalid number of points";
     case LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED: return "Toolpath attribute already defined";
+    case LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE: return "Toolpath attribute is of invalid type";
     default: return "unknown error";
   }
 }
@@ -386,6 +388,12 @@ typedef enum eLib3MFToolpathSegmentType {
   eToolpathSegmentTypePolyline = 3
 } eLib3MFToolpathSegmentType;
 
+typedef enum eLib3MFToolpathAttributeType {
+  eToolpathAttributeTypeUnknown = 0,
+  eToolpathAttributeTypeInteger = 1,
+  eToolpathAttributeTypeDouble = 2
+} eLib3MFToolpathAttributeType;
+
 typedef enum eLib3MFEncryptionAlgorithm {
   eEncryptionAlgorithmAES256_GCM = 1 /** http://www.w3.org/2009/xmlenc11#aes256-gcm */
 } eLib3MFEncryptionAlgorithm;
@@ -485,6 +493,11 @@ typedef union {
   eLib3MFToolpathSegmentType m_enum;
   int m_code;
 } structEnumLib3MFToolpathSegmentType;
+
+typedef union {
+  eLib3MFToolpathAttributeType m_enum;
+  int m_code;
+} structEnumLib3MFToolpathAttributeType;
 
 typedef union {
   eLib3MFEncryptionAlgorithm m_enum;

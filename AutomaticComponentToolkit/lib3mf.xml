@@ -96,6 +96,8 @@
 		<error name="TOOLPATH_DATAHASBEENWRITTEN" code="4002" description="Toolpath has already been written out" />
 		<error name="TOOLPATH_INVALIDPOINTCOUNT" code="4003" description="Toolpath has an invalid number of points" />
 		<error name="TOOLPATH_ATTRIBUTEALREADYDEFINED" code="4004" description="Toolpath attribute already defined" />
+		<error name="TOOLPATH_INVALIDATTRIBUTETYPE" code="4005" description="Toolpath attribute is of invalid type" />
+		
 		
 				
 		
@@ -214,6 +216,12 @@
 		<option name="Hatch" value="1" />
 		<option name="Loop" value="2" />
 		<option name="Polyline" value="3" />
+	</enum>
+
+	<enum name="ToolpathAttributeType">
+		<option name="Unknown" value="0" />
+		<option name="Integer" value="1" />
+		<option name="Double" value="2" />
 	</enum>
 
 	<struct name="Triangle">
@@ -1624,30 +1632,38 @@
 	    <param name="PointData" type="structarray" class="Position2D" pass="out" description="The point data array" />
 	</method>
 
-	<method name="FindUint32AttributeID" description="Retrieves a segment Uint32 attribute ID by Attribute Name. Will fail if Attribute does not exist.">
+	<method name="FindAttributeInfoByName" description="Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.">
+		<param name="NameSpace" type="string" pass="in" description="Namespace of the custom attribute." />
+		<param name="AttributeName" type="string" pass="in" description="Name of the custom attribute." />
+		<param name="ID" type="uint32" pass="out" description="Attribute ID." />
+		<param name="AttributeType" type="enum" class="ToolpathAttributeType" pass="out" description="Attribute Type." />		
+	</method>
+
+	<method name="FindAttributeIDByName" description="Retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.">
 		<param name="NameSpace" type="string" pass="in" description="Namespace of the custom attribute." />
 		<param name="AttributeName" type="string" pass="in" description="Name of the custom attribute." />
 		<param name="ID" type="uint32" pass="return" description="Attribute ID." />
 	</method>
-	
-	<method name="GetSegmentUint32AttributeByID" description="Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.">
+
+	<method name="FindAttributeValueByName" description="Retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.">
+		<param name="NameSpace" type="string" pass="in" description="Namespace of the custom attribute." />
+		<param name="AttributeName" type="string" pass="in" description="Name of the custom attribute." />
+		<param name="AttributeType" type="enum" class="ToolpathAttributeType" pass="return" description="Attribute Type." />
+	</method>
+
+	<method name="GetSegmentIntegerAttributeByID" description="Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.">
 		<param name="Index" type="uint32" pass="in" description="Segment Index. Must be between 0 and Count - 1." />
 		<param name="ID" type="uint32" pass="in" description="Attribute ID." />
-		<param name="Value" type="uint32" pass="return" description="Attribute Value." />
+		<param name="Value" type="int64" pass="return" description="Attribute Value." />
 	</method>
 
-	<method name="GetSegmentUint32AttributeByName" description="Retrieves a segment Uint32 attribute by Attribute Name. Will fail if Attribute does not exist.">
+	<method name="GetSegmentIntegerAttributeByName" description="Retrieves a segment integer attribute by Attribute Name. Will fail if Attribute does not exist or is of different type.">
 		<param name="Index" type="uint32" pass="in" description="Segment Index. Must be between 0 and Count - 1." />
 		<param name="NameSpace" type="string" pass="in" description="Namespace of the custom attribute." />
 		<param name="AttributeName" type="string" pass="in" description="Name of the custom attribute." />
-		<param name="Value" type="uint32" pass="return" description="Attribute Value." />
+		<param name="Value" type="int64" pass="return" description="Attribute Value." />
 	</method>
 
-	<method name="FindDoubleAttributeID" description="Retrieves a segment Double attribute ID by Attribute Name. Will fail if Attribute does not exist.">
-		<param name="NameSpace" type="string" pass="in" description="Namespace of the custom attribute." />
-		<param name="AttributeName" type="string" pass="in" description="Name of the custom attribute." />
-		<param name="ID" type="uint32" pass="return" description="Attribute ID." />
-	</method>
 
 	<method name="GetSegmentDoubleAttributeByID" description="Retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.">
 		<param name="Index" type="uint32" pass="in" description="Segment Index. Must be between 0 and Count - 1." />

@@ -1083,10 +1083,11 @@ private:
 	static void GetSegmentPart(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentPartUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentPointData(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void FindUint32AttributeID(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetSegmentUint32AttributeByID(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetSegmentUint32AttributeByName(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void FindDoubleAttributeID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void FindAttributeInfoByName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void FindAttributeIDByName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void FindAttributeValueByName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentIntegerAttributeByID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentIntegerAttributeByName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentDoubleAttributeByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentDoubleAttributeByName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetCustomDataCount(const v8::FunctionCallbackInfo<v8::Value>& args);

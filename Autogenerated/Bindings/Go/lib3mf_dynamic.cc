@@ -358,10 +358,11 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ToolpathLayerReader_GetSegmentPart = NULL;
 	pWrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID = NULL;
 	pWrapperTable->m_ToolpathLayerReader_GetSegmentPointData = NULL;
-	pWrapperTable->m_ToolpathLayerReader_FindUint32AttributeID = NULL;
-	pWrapperTable->m_ToolpathLayerReader_GetSegmentUint32AttributeByID = NULL;
-	pWrapperTable->m_ToolpathLayerReader_GetSegmentUint32AttributeByName = NULL;
-	pWrapperTable->m_ToolpathLayerReader_FindDoubleAttributeID = NULL;
+	pWrapperTable->m_ToolpathLayerReader_FindAttributeInfoByName = NULL;
+	pWrapperTable->m_ToolpathLayerReader_FindAttributeIDByName = NULL;
+	pWrapperTable->m_ToolpathLayerReader_FindAttributeValueByName = NULL;
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByID = NULL;
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByName = NULL;
 	pWrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByID = NULL;
 	pWrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByName = NULL;
 	pWrapperTable->m_ToolpathLayerReader_GetCustomDataCount = NULL;
@@ -3377,39 +3378,48 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ToolpathLayerReader_FindUint32AttributeID = (PLib3MFToolpathLayerReader_FindUint32AttributeIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_finduint32attributeid");
+	pWrapperTable->m_ToolpathLayerReader_FindAttributeInfoByName = (PLib3MFToolpathLayerReader_FindAttributeInfoByNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_findattributeinfobyname");
 	#else // _WIN32
-	pWrapperTable->m_ToolpathLayerReader_FindUint32AttributeID = (PLib3MFToolpathLayerReader_FindUint32AttributeIDPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_finduint32attributeid");
+	pWrapperTable->m_ToolpathLayerReader_FindAttributeInfoByName = (PLib3MFToolpathLayerReader_FindAttributeInfoByNamePtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_findattributeinfobyname");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ToolpathLayerReader_FindUint32AttributeID == NULL)
+	if (pWrapperTable->m_ToolpathLayerReader_FindAttributeInfoByName == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ToolpathLayerReader_GetSegmentUint32AttributeByID = (PLib3MFToolpathLayerReader_GetSegmentUint32AttributeByIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentuint32attributebyid");
+	pWrapperTable->m_ToolpathLayerReader_FindAttributeIDByName = (PLib3MFToolpathLayerReader_FindAttributeIDByNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_findattributeidbyname");
 	#else // _WIN32
-	pWrapperTable->m_ToolpathLayerReader_GetSegmentUint32AttributeByID = (PLib3MFToolpathLayerReader_GetSegmentUint32AttributeByIDPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentuint32attributebyid");
+	pWrapperTable->m_ToolpathLayerReader_FindAttributeIDByName = (PLib3MFToolpathLayerReader_FindAttributeIDByNamePtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_findattributeidbyname");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ToolpathLayerReader_GetSegmentUint32AttributeByID == NULL)
+	if (pWrapperTable->m_ToolpathLayerReader_FindAttributeIDByName == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ToolpathLayerReader_GetSegmentUint32AttributeByName = (PLib3MFToolpathLayerReader_GetSegmentUint32AttributeByNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentuint32attributebyname");
+	pWrapperTable->m_ToolpathLayerReader_FindAttributeValueByName = (PLib3MFToolpathLayerReader_FindAttributeValueByNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_findattributevaluebyname");
 	#else // _WIN32
-	pWrapperTable->m_ToolpathLayerReader_GetSegmentUint32AttributeByName = (PLib3MFToolpathLayerReader_GetSegmentUint32AttributeByNamePtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentuint32attributebyname");
+	pWrapperTable->m_ToolpathLayerReader_FindAttributeValueByName = (PLib3MFToolpathLayerReader_FindAttributeValueByNamePtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_findattributevaluebyname");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ToolpathLayerReader_GetSegmentUint32AttributeByName == NULL)
+	if (pWrapperTable->m_ToolpathLayerReader_FindAttributeValueByName == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ToolpathLayerReader_FindDoubleAttributeID = (PLib3MFToolpathLayerReader_FindDoubleAttributeIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_finddoubleattributeid");
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByID = (PLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentintegerattributebyid");
 	#else // _WIN32
-	pWrapperTable->m_ToolpathLayerReader_FindDoubleAttributeID = (PLib3MFToolpathLayerReader_FindDoubleAttributeIDPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_finddoubleattributeid");
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByID = (PLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentintegerattributebyid");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ToolpathLayerReader_FindDoubleAttributeID == NULL)
+	if (pWrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByID == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByName = (PLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentintegerattributebyname");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByName = (PLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNamePtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentintegerattributebyname");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByName == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

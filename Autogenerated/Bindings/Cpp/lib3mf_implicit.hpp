@@ -415,6 +415,7 @@ public:
 			case LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "TOOLPATH_DATAHASBEENWRITTEN";
 			case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "TOOLPATH_INVALIDPOINTCOUNT";
 			case LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED: return "TOOLPATH_ATTRIBUTEALREADYDEFINED";
+			case LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE: return "TOOLPATH_INVALIDATTRIBUTETYPE";
 		}
 		return "UNKNOWN";
 	}
@@ -475,6 +476,7 @@ public:
 			case LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "Toolpath has already been written out";
 			case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "Toolpath has an invalid number of points";
 			case LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED: return "Toolpath attribute already defined";
+			case LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE: return "Toolpath attribute is of invalid type";
 		}
 		return "unknown error";
 	}
@@ -1660,10 +1662,11 @@ public:
 	inline PBuildItem GetSegmentPart(const Lib3MF_uint32 nIndex);
 	inline std::string GetSegmentPartUUID(const Lib3MF_uint32 nIndex);
 	inline void GetSegmentPointData(const Lib3MF_uint32 nIndex, std::vector<sPosition2D> & PointDataBuffer);
-	inline Lib3MF_uint32 FindUint32AttributeID(const std::string & sNameSpace, const std::string & sAttributeName);
-	inline Lib3MF_uint32 GetSegmentUint32AttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID);
-	inline Lib3MF_uint32 GetSegmentUint32AttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName);
-	inline Lib3MF_uint32 FindDoubleAttributeID(const std::string & sNameSpace, const std::string & sAttributeName);
+	inline void FindAttributeInfoByName(const std::string & sNameSpace, const std::string & sAttributeName, Lib3MF_uint32 & nID, eToolpathAttributeType & eAttributeType);
+	inline Lib3MF_uint32 FindAttributeIDByName(const std::string & sNameSpace, const std::string & sAttributeName);
+	inline eToolpathAttributeType FindAttributeValueByName(const std::string & sNameSpace, const std::string & sAttributeName);
+	inline Lib3MF_int64 GetSegmentIntegerAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID);
+	inline Lib3MF_int64 GetSegmentIntegerAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName);
 	inline Lib3MF_double GetSegmentDoubleAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID);
 	inline Lib3MF_double GetSegmentDoubleAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName);
 	inline Lib3MF_uint32 GetCustomDataCount();
@@ -6352,60 +6355,72 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathLayerReader::FindUint32AttributeID - Retrieves a segment Uint32 attribute ID by Attribute Name. Will fail if Attribute does not exist.
+	* CToolpathLayerReader::FindAttributeInfoByName - Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @param[out] nID - Attribute ID.
+	* @param[out] eAttributeType - Attribute Type.
+	*/
+	void CToolpathLayerReader::FindAttributeInfoByName(const std::string & sNameSpace, const std::string & sAttributeName, Lib3MF_uint32 & nID, eToolpathAttributeType & eAttributeType)
+	{
+		CheckError(lib3mf_toolpathlayerreader_findattributeinfobyname(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &nID, &eAttributeType));
+	}
+	
+	/**
+	* CToolpathLayerReader::FindAttributeIDByName - Retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.
 	* @param[in] sNameSpace - Namespace of the custom attribute.
 	* @param[in] sAttributeName - Name of the custom attribute.
 	* @return Attribute ID.
 	*/
-	Lib3MF_uint32 CToolpathLayerReader::FindUint32AttributeID(const std::string & sNameSpace, const std::string & sAttributeName)
+	Lib3MF_uint32 CToolpathLayerReader::FindAttributeIDByName(const std::string & sNameSpace, const std::string & sAttributeName)
 	{
 		Lib3MF_uint32 resultID = 0;
-		CheckError(lib3mf_toolpathlayerreader_finduint32attributeid(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &resultID));
+		CheckError(lib3mf_toolpathlayerreader_findattributeidbyname(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &resultID));
 		
 		return resultID;
 	}
 	
 	/**
-	* CToolpathLayerReader::GetSegmentUint32AttributeByID - Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
+	* CToolpathLayerReader::FindAttributeValueByName - Retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute Type.
+	*/
+	eToolpathAttributeType CToolpathLayerReader::FindAttributeValueByName(const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		eToolpathAttributeType resultAttributeType = (eToolpathAttributeType) 0;
+		CheckError(lib3mf_toolpathlayerreader_findattributevaluebyname(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &resultAttributeType));
+		
+		return resultAttributeType;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentIntegerAttributeByID - Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
 	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
 	* @param[in] nID - Attribute ID.
 	* @return Attribute Value.
 	*/
-	Lib3MF_uint32 CToolpathLayerReader::GetSegmentUint32AttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID)
+	Lib3MF_int64 CToolpathLayerReader::GetSegmentIntegerAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID)
 	{
-		Lib3MF_uint32 resultValue = 0;
-		CheckError(lib3mf_toolpathlayerreader_getsegmentuint32attributebyid(m_pHandle, nIndex, nID, &resultValue));
+		Lib3MF_int64 resultValue = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentintegerattributebyid(m_pHandle, nIndex, nID, &resultValue));
 		
 		return resultValue;
 	}
 	
 	/**
-	* CToolpathLayerReader::GetSegmentUint32AttributeByName - Retrieves a segment Uint32 attribute by Attribute Name. Will fail if Attribute does not exist.
+	* CToolpathLayerReader::GetSegmentIntegerAttributeByName - Retrieves a segment integer attribute by Attribute Name. Will fail if Attribute does not exist or is of different type.
 	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
 	* @param[in] sNameSpace - Namespace of the custom attribute.
 	* @param[in] sAttributeName - Name of the custom attribute.
 	* @return Attribute Value.
 	*/
-	Lib3MF_uint32 CToolpathLayerReader::GetSegmentUint32AttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName)
+	Lib3MF_int64 CToolpathLayerReader::GetSegmentIntegerAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName)
 	{
-		Lib3MF_uint32 resultValue = 0;
-		CheckError(lib3mf_toolpathlayerreader_getsegmentuint32attributebyname(m_pHandle, nIndex, sNameSpace.c_str(), sAttributeName.c_str(), &resultValue));
+		Lib3MF_int64 resultValue = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentintegerattributebyname(m_pHandle, nIndex, sNameSpace.c_str(), sAttributeName.c_str(), &resultValue));
 		
 		return resultValue;
-	}
-	
-	/**
-	* CToolpathLayerReader::FindDoubleAttributeID - Retrieves a segment Double attribute ID by Attribute Name. Will fail if Attribute does not exist.
-	* @param[in] sNameSpace - Namespace of the custom attribute.
-	* @param[in] sAttributeName - Name of the custom attribute.
-	* @return Attribute ID.
-	*/
-	Lib3MF_uint32 CToolpathLayerReader::FindDoubleAttributeID(const std::string & sNameSpace, const std::string & sAttributeName)
-	{
-		Lib3MF_uint32 resultID = 0;
-		CheckError(lib3mf_toolpathlayerreader_finddoubleattributeid(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &resultID));
-		
-		return resultID;
 	}
 	
 	/**

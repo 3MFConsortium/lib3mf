@@ -116,6 +116,7 @@ class ErrorCodes(enum.IntEnum):
 	TOOLPATH_DATAHASBEENWRITTEN = 4002
 	TOOLPATH_INVALIDPOINTCOUNT = 4003
 	TOOLPATH_ATTRIBUTEALREADYDEFINED = 4004
+	TOOLPATH_INVALIDATTRIBUTETYPE = 4005
 
 '''Definition of Function Table
 '''
@@ -449,10 +450,11 @@ class FunctionTable:
 	lib3mf_toolpathlayerreader_getsegmentpart = None
 	lib3mf_toolpathlayerreader_getsegmentpartuuid = None
 	lib3mf_toolpathlayerreader_getsegmentpointdata = None
-	lib3mf_toolpathlayerreader_finduint32attributeid = None
-	lib3mf_toolpathlayerreader_getsegmentuint32attributebyid = None
-	lib3mf_toolpathlayerreader_getsegmentuint32attributebyname = None
-	lib3mf_toolpathlayerreader_finddoubleattributeid = None
+	lib3mf_toolpathlayerreader_findattributeinfobyname = None
+	lib3mf_toolpathlayerreader_findattributeidbyname = None
+	lib3mf_toolpathlayerreader_findattributevaluebyname = None
+	lib3mf_toolpathlayerreader_getsegmentintegerattributebyid = None
+	lib3mf_toolpathlayerreader_getsegmentintegerattributebyname = None
 	lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid = None
 	lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname = None
 	lib3mf_toolpathlayerreader_getcustomdatacount = None
@@ -728,6 +730,12 @@ class ToolpathSegmentType(CTypesEnum):
 	Hatch = 1
 	Loop = 2
 	Polyline = 3
+'''Definition of ToolpathAttributeType
+'''
+class ToolpathAttributeType(CTypesEnum):
+	Unknown = 0
+	Integer = 1
+	Double = 2
 '''Definition of EncryptionAlgorithm
 '''
 class EncryptionAlgorithm(CTypesEnum):
@@ -2900,29 +2908,35 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(Position2D))
 			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdata = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_finduint32attributeid")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_findattributeinfobyname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint32), ctypes.POINTER(ctypes.c_int32))
+			self.lib.lib3mf_toolpathlayerreader_findattributeinfobyname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_findattributeidbyname")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint32))
-			self.lib.lib3mf_toolpathlayerreader_finduint32attributeid = methodType(int(methodAddress.value))
+			self.lib.lib3mf_toolpathlayerreader_findattributeidbyname = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentuint32attributebyid")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_findattributevaluebyname")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32))
-			self.lib.lib3mf_toolpathlayerreader_getsegmentuint32attributebyid = methodType(int(methodAddress.value))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_int32))
+			self.lib.lib3mf_toolpathlayerreader_findattributevaluebyname = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentuint32attributebyname")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentintegerattributebyid")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint32))
-			self.lib.lib3mf_toolpathlayerreader_getsegmentuint32attributebyname = methodType(int(methodAddress.value))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_int64))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentintegerattributebyid = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_finddoubleattributeid")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentintegerattributebyname")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint32))
-			self.lib.lib3mf_toolpathlayerreader_finddoubleattributeid = methodType(int(methodAddress.value))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_int64))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentintegerattributebyname = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid")), methodAddress)
 			if err != 0:
@@ -4822,17 +4836,20 @@ class Wrapper:
 			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdata.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdata.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(Position2D)]
 			
-			self.lib.lib3mf_toolpathlayerreader_finduint32attributeid.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpathlayerreader_finduint32attributeid.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint32)]
+			self.lib.lib3mf_toolpathlayerreader_findattributeinfobyname.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_findattributeinfobyname.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint32), ctypes.POINTER(ctypes.c_int32)]
 			
-			self.lib.lib3mf_toolpathlayerreader_getsegmentuint32attributebyid.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpathlayerreader_getsegmentuint32attributebyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32)]
+			self.lib.lib3mf_toolpathlayerreader_findattributeidbyname.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_findattributeidbyname.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint32)]
 			
-			self.lib.lib3mf_toolpathlayerreader_getsegmentuint32attributebyname.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpathlayerreader_getsegmentuint32attributebyname.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint32)]
+			self.lib.lib3mf_toolpathlayerreader_findattributevaluebyname.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_findattributevaluebyname.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_int32)]
 			
-			self.lib.lib3mf_toolpathlayerreader_finddoubleattributeid.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpathlayerreader_finddoubleattributeid.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint32)]
+			self.lib.lib3mf_toolpathlayerreader_getsegmentintegerattributebyid.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentintegerattributebyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_int64)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentintegerattributebyname.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentintegerattributebyname.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_int64)]
 			
 			self.lib.lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_double)]
@@ -8297,38 +8314,47 @@ class ToolpathLayerReader(Base):
 		
 		return [pPointDataBuffer[i] for i in range(nPointDataNeededCount.value)]
 	
-	def FindUint32AttributeID(self, NameSpace, AttributeName):
+	def FindAttributeInfoByName(self, NameSpace, AttributeName):
 		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
 		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
 		pID = ctypes.c_uint32()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_finduint32attributeid(self._handle, pNameSpace, pAttributeName, pID))
+		pAttributeType = ctypes.c_int32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_findattributeinfobyname(self._handle, pNameSpace, pAttributeName, pID, pAttributeType))
+		
+		return pID.value, ToolpathAttributeType(pAttributeType.value)
+	
+	def FindAttributeIDByName(self, NameSpace, AttributeName):
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
+		pID = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_findattributeidbyname(self._handle, pNameSpace, pAttributeName, pID))
 		
 		return pID.value
 	
-	def GetSegmentUint32AttributeByID(self, Index, ID):
+	def FindAttributeValueByName(self, NameSpace, AttributeName):
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
+		pAttributeType = ctypes.c_int32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_findattributevaluebyname(self._handle, pNameSpace, pAttributeName, pAttributeType))
+		
+		return ToolpathAttributeType(pAttributeType.value)
+	
+	def GetSegmentIntegerAttributeByID(self, Index, ID):
 		nIndex = ctypes.c_uint32(Index)
 		nID = ctypes.c_uint32(ID)
-		pValue = ctypes.c_uint32()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentuint32attributebyid(self._handle, nIndex, nID, pValue))
+		pValue = ctypes.c_int64()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentintegerattributebyid(self._handle, nIndex, nID, pValue))
 		
 		return pValue.value
 	
-	def GetSegmentUint32AttributeByName(self, Index, NameSpace, AttributeName):
+	def GetSegmentIntegerAttributeByName(self, Index, NameSpace, AttributeName):
 		nIndex = ctypes.c_uint32(Index)
 		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
 		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
-		pValue = ctypes.c_uint32()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentuint32attributebyname(self._handle, nIndex, pNameSpace, pAttributeName, pValue))
+		pValue = ctypes.c_int64()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentintegerattributebyname(self._handle, nIndex, pNameSpace, pAttributeName, pValue))
 		
 		return pValue.value
-	
-	def FindDoubleAttributeID(self, NameSpace, AttributeName):
-		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
-		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
-		pID = ctypes.c_uint32()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_finddoubleattributeid(self._handle, pNameSpace, pAttributeName, pID))
-		
-		return pID.value
 	
 	def GetSegmentDoubleAttributeByID(self, Index, ID):
 		nIndex = ctypes.c_uint32(Index)

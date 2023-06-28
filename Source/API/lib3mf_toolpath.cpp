@@ -269,7 +269,7 @@ void CToolpath::RegisterCustomUint32Attribute(const std::string& sNameSpace, con
 	if (iIter != m_RegisteredAttributes.end())
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED, "Toolpath attribute already defined: " + sNameSpace + "/" + sAttributeName);
 
-	m_RegisteredAttributes.insert(std::make_pair (key, NMR::eModelToolpathSegmentAttributeType::SegmentAttributeUint32));
+	m_RegisteredAttributes.insert(std::make_pair (key, NMR::eModelToolpathSegmentAttributeType::SegmentAttributeInt64));
 }
 
 void CToolpath::RegisterCustomDoubleAttribute(const std::string& sNameSpace, const std::string& sAttributeName)

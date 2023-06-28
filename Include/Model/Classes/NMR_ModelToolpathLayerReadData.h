@@ -62,7 +62,7 @@ namespace NMR {
 
 	enum class eModelToolpathSegmentAttributeType : nfUint32 {
 		Unknown = 0,
-		SegmentAttributeUint32 = 1,
+		SegmentAttributeInt64 = 1,
 		SegmentAttributeDouble = 2,
 	};
 
@@ -72,11 +72,10 @@ namespace NMR {
 		nfUint32 m_nPartID;
 		nfUint32 m_nStartPoint;
 		nfUint32 m_nPointCount;
-		nfUint32* m_pUint32Attributes;
-		double* m_pDoubleAttributes;
+		nfInt64* m_pAttributeData;
 	} TOOLPATHREADSEGMENT;
 
-	typedef std::vector<nfByte> CToolpathLayerAttributePage;
+	typedef std::vector<int64_t> CToolpathLayerAttributePage;
 
 	class CModelToolpathLayerReadData {
 	private:
@@ -85,16 +84,15 @@ namespace NMR {
 		PModelToolpath m_pModelToolpath;
 
 		CPagedVector<TOOLPATHREADSEGMENT> m_Segments;
-		std::map<std::pair<std::string, std::string>, std::pair<uint32_t, eModelToolpathSegmentAttributeType>> m_SegmentAttributesDefinition;
-
-		std::vector<uint32_t> m_Uint32AttributesOfNextSegment;
-		std::vector<double> m_DoubleAttributesOfNextSegment;
+		std::vector<std::pair<eModelToolpathSegmentAttributeType, std::pair<std::string, std::string>>> m_SegmentAttributeDefinitions;
+		std::map<std::pair<std::string, std::string>, std::pair<uint32_t, eModelToolpathSegmentAttributeType>> m_SegmentAttributeMap;
+		std::vector<int64_t> m_AttributesOfNextSegment;
 
 		std::vector<CToolpathLayerAttributePage> m_AttributeBuffer;
 		CToolpathLayerAttributePage * m_pCurrentAttributePage;
 		size_t m_nCurrentPositionOnPage;
 
-		nfByte* allocAttributeBuffer(uint32_t nSize);
+		int64_t* allocAttributeBuffer(uint32_t nEntryCount);
 
 		CPagedVector<NVEC2> m_Points;
 		TOOLPATHREADSEGMENT * m_pCurrentSegment;
@@ -130,10 +128,9 @@ namespace NMR {
 
 		void clearSegmentAttributes ();
 		void storeSegmentAttribute (const std::string & sNameSpace, const std::string & sAttributeName, const std::string & sAttributeValue);
-		uint32_t getSegmentUint32Attribute(nfUint32 nSegmentIndex, uint32_t nAttributeID);
+		int64_t getSegmentIntegerAttribute(nfUint32 nSegmentIndex, uint32_t nAttributeID);
 		double getSegmentDoubleAttribute(nfUint32 nSegmentIndex, uint32_t nAttributeID);
-		uint32_t findUint32Attribute(const std::string& sNameSpace, const std::string& sAttributeName, bool bMustExist);
-		uint32_t findDoubleAttribute(const std::string& sNameSpace, const std::string& sAttributeName, bool bMustExist);
+		std::pair<uint32_t, eModelToolpathSegmentAttributeType> findAttribute(const std::string& sNameSpace, const std::string& sAttributeName, bool bMustExist);
 
 
 

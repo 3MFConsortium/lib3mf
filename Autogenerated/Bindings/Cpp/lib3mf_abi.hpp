@@ -3290,7 +3290,19 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpartuuid(Lib3M
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpointdata(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer);
 
 /**
-* Retrieves a segment Uint32 attribute ID by Attribute Name. Will fail if Attribute does not exist.
+* Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] pNameSpace - Namespace of the custom attribute.
+* @param[in] pAttributeName - Name of the custom attribute.
+* @param[out] pID - Attribute ID.
+* @param[out] pAttributeType - Attribute Type.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_findattributeinfobyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID, Lib3MF::eToolpathAttributeType * pAttributeType);
+
+/**
+* Retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.
 *
 * @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
 * @param[in] pNameSpace - Namespace of the custom attribute.
@@ -3298,7 +3310,18 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpointdata(Lib3
 * @param[out] pID - Attribute ID.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_finduint32attributeid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_findattributeidbyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID);
+
+/**
+* Retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] pNameSpace - Namespace of the custom attribute.
+* @param[in] pAttributeName - Name of the custom attribute.
+* @param[out] pAttributeType - Attribute Type.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_findattributevaluebyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF::eToolpathAttributeType * pAttributeType);
 
 /**
 * Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
@@ -3309,10 +3332,10 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_finduint32attributeid(Li
 * @param[out] pValue - Attribute Value.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentuint32attributebyid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 nID, Lib3MF_uint32 * pValue);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentintegerattributebyid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 nID, Lib3MF_int64 * pValue);
 
 /**
-* Retrieves a segment Uint32 attribute by Attribute Name. Will fail if Attribute does not exist.
+* Retrieves a segment integer attribute by Attribute Name. Will fail if Attribute does not exist or is of different type.
 *
 * @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
 * @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
@@ -3321,18 +3344,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentuint32attribut
 * @param[out] pValue - Attribute Value.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentuint32attributebyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pValue);
-
-/**
-* Retrieves a segment Double attribute ID by Attribute Name. Will fail if Attribute does not exist.
-*
-* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-* @param[in] pNameSpace - Namespace of the custom attribute.
-* @param[in] pAttributeName - Name of the custom attribute.
-* @param[out] pID - Attribute ID.
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_finddoubleattributeid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentintegerattributebyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const char * pNameSpace, const char * pAttributeName, Lib3MF_int64 * pValue);
 
 /**
 * Retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.

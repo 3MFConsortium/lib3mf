@@ -11904,14 +11904,59 @@ Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpointdata(Lib3MF_ToolpathLayer
 	}
 }
 
-Lib3MFResult lib3mf_toolpathlayerreader_finduint32attributeid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID)
+Lib3MFResult lib3mf_toolpathlayerreader_findattributeinfobyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID, eLib3MFToolpathAttributeType * pAttributeType)
 {
 	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "FindUint32AttributeID");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "FindAttributeInfoByName");
+			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
+			pJournalEntry->addStringParameter("AttributeName", pAttributeName);
+		}
+		if (pNameSpace == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pAttributeName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (!pID)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (!pAttributeType)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace(pNameSpace);
+		std::string sAttributeName(pAttributeName);
+		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
+		if (!pIToolpathLayerReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLayerReader->FindAttributeInfoByName(sNameSpace, sAttributeName, *pID, *pAttributeType);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("ID", *pID);
+			pJournalEntry->addEnumResult("AttributeType", "ToolpathAttributeType", (Lib3MF_int32)(*pAttributeType));
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerreader_findattributeidbyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "FindAttributeIDByName");
 			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
 			pJournalEntry->addStringParameter("AttributeName", pAttributeName);
 		}
@@ -11927,7 +11972,7 @@ Lib3MFResult lib3mf_toolpathlayerreader_finduint32attributeid(Lib3MF_ToolpathLay
 		if (!pIToolpathLayerReader)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		*pID = pIToolpathLayerReader->FindUint32AttributeID(sNameSpace, sAttributeName);
+		*pID = pIToolpathLayerReader->FindAttributeIDByName(sNameSpace, sAttributeName);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->addUInt32Result("ID", *pID);
@@ -11946,14 +11991,56 @@ Lib3MFResult lib3mf_toolpathlayerreader_finduint32attributeid(Lib3MF_ToolpathLay
 	}
 }
 
-Lib3MFResult lib3mf_toolpathlayerreader_getsegmentuint32attributebyid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 nID, Lib3MF_uint32 * pValue)
+Lib3MFResult lib3mf_toolpathlayerreader_findattributevaluebyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, eLib3MFToolpathAttributeType * pAttributeType)
 {
 	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "GetSegmentUint32AttributeByID");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "FindAttributeValueByName");
+			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
+			pJournalEntry->addStringParameter("AttributeName", pAttributeName);
+		}
+		if (pNameSpace == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pAttributeName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pAttributeType == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace(pNameSpace);
+		std::string sAttributeName(pAttributeName);
+		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
+		if (!pIToolpathLayerReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pAttributeType = pIToolpathLayerReader->FindAttributeValueByName(sNameSpace, sAttributeName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addEnumResult("AttributeType", "ToolpathAttributeType", (Lib3MF_int32)(*pAttributeType));
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerreader_getsegmentintegerattributebyid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 nID, Lib3MF_int64 * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "GetSegmentIntegerAttributeByID");
 			pJournalEntry->addUInt32Parameter("Index", nIndex);
 			pJournalEntry->addUInt32Parameter("ID", nID);
 		}
@@ -11963,10 +12050,10 @@ Lib3MFResult lib3mf_toolpathlayerreader_getsegmentuint32attributebyid(Lib3MF_Too
 		if (!pIToolpathLayerReader)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		*pValue = pIToolpathLayerReader->GetSegmentUint32AttributeByID(nIndex, nID);
+		*pValue = pIToolpathLayerReader->GetSegmentIntegerAttributeByID(nIndex, nID);
 
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addUInt32Result("Value", *pValue);
+			pJournalEntry->addInt64Result("Value", *pValue);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -11982,14 +12069,14 @@ Lib3MFResult lib3mf_toolpathlayerreader_getsegmentuint32attributebyid(Lib3MF_Too
 	}
 }
 
-Lib3MFResult lib3mf_toolpathlayerreader_getsegmentuint32attributebyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pValue)
+Lib3MFResult lib3mf_toolpathlayerreader_getsegmentintegerattributebyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const char * pNameSpace, const char * pAttributeName, Lib3MF_int64 * pValue)
 {
 	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "GetSegmentUint32AttributeByName");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "GetSegmentIntegerAttributeByName");
 			pJournalEntry->addUInt32Parameter("Index", nIndex);
 			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
 			pJournalEntry->addStringParameter("AttributeName", pAttributeName);
@@ -12006,52 +12093,10 @@ Lib3MFResult lib3mf_toolpathlayerreader_getsegmentuint32attributebyname(Lib3MF_T
 		if (!pIToolpathLayerReader)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		*pValue = pIToolpathLayerReader->GetSegmentUint32AttributeByName(nIndex, sNameSpace, sAttributeName);
+		*pValue = pIToolpathLayerReader->GetSegmentIntegerAttributeByName(nIndex, sNameSpace, sAttributeName);
 
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addUInt32Result("Value", *pValue);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_toolpathlayerreader_finddoubleattributeid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID)
-{
-	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "FindDoubleAttributeID");
-			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
-			pJournalEntry->addStringParameter("AttributeName", pAttributeName);
-		}
-		if (pNameSpace == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		if (pAttributeName == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		if (pID == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sNameSpace(pNameSpace);
-		std::string sAttributeName(pAttributeName);
-		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
-		if (!pIToolpathLayerReader)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		*pID = pIToolpathLayerReader->FindDoubleAttributeID(sNameSpace, sAttributeName);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addUInt32Result("ID", *pID);
+			pJournalEntry->addInt64Result("Value", *pValue);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -18609,14 +18654,16 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentpartuuid;
 	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentpointdata") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentpointdata;
-	if (sProcName == "lib3mf_toolpathlayerreader_finduint32attributeid") 
-		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_finduint32attributeid;
-	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentuint32attributebyid") 
-		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentuint32attributebyid;
-	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentuint32attributebyname") 
-		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentuint32attributebyname;
-	if (sProcName == "lib3mf_toolpathlayerreader_finddoubleattributeid") 
-		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_finddoubleattributeid;
+	if (sProcName == "lib3mf_toolpathlayerreader_findattributeinfobyname") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_findattributeinfobyname;
+	if (sProcName == "lib3mf_toolpathlayerreader_findattributeidbyname") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_findattributeidbyname;
+	if (sProcName == "lib3mf_toolpathlayerreader_findattributevaluebyname") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_findattributevaluebyname;
+	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentintegerattributebyid") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentintegerattributebyid;
+	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentintegerattributebyname") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentintegerattributebyname;
 	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid;
 	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname") 

@@ -11408,10 +11408,11 @@ void CLib3MFToolpathLayerReader::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPart", GetSegmentPart);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPartUUID", GetSegmentPartUUID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPointData", GetSegmentPointData);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "FindUint32AttributeID", FindUint32AttributeID);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentUint32AttributeByID", GetSegmentUint32AttributeByID);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentUint32AttributeByName", GetSegmentUint32AttributeByName);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "FindDoubleAttributeID", FindDoubleAttributeID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "FindAttributeInfoByName", FindAttributeInfoByName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "FindAttributeIDByName", FindAttributeIDByName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "FindAttributeValueByName", FindAttributeValueByName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentIntegerAttributeByID", GetSegmentIntegerAttributeByID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentIntegerAttributeByName", GetSegmentIntegerAttributeByName);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentDoubleAttributeByID", GetSegmentDoubleAttributeByID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentDoubleAttributeByName", GetSegmentDoubleAttributeByName);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCustomDataCount", GetCustomDataCount);
@@ -11669,7 +11670,43 @@ void CLib3MFToolpathLayerReader::GetSegmentPointData(const FunctionCallbackInfo<
 }
 
 
-void CLib3MFToolpathLayerReader::FindUint32AttributeID(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerReader::FindAttributeInfoByName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (NameSpace)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (AttributeName)");
+        }
+        Local<Object> outObject = Object::New(isolate);
+        v8::String::Utf8Value sutf8NameSpace(isolate, args[0]);
+        std::string sNameSpace = *sutf8NameSpace;
+        v8::String::Utf8Value sutf8AttributeName(isolate, args[1]);
+        std::string sAttributeName = *sutf8AttributeName;
+        unsigned int nReturnID = 0;
+        eLib3MFToolpathAttributeType eReturnAttributeType;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method FindAttributeInfoByName.");
+        if (wrapperTable->m_ToolpathLayerReader_FindAttributeInfoByName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::FindAttributeInfoByName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_FindAttributeInfoByName(instanceHandle, sNameSpace.c_str(), sAttributeName.c_str(), &nReturnID, &eReturnAttributeType);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ID"), Integer::NewFromUnsigned(isolate, nReturnID));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "AttributeType"), Integer::New(isolate, (int)eReturnAttributeType));
+        args.GetReturnValue().Set(outObject);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::FindAttributeIDByName(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
@@ -11687,11 +11724,11 @@ void CLib3MFToolpathLayerReader::FindUint32AttributeID(const FunctionCallbackInf
         unsigned int nReturnID = 0;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method FindUint32AttributeID.");
-        if (wrapperTable->m_ToolpathLayerReader_FindUint32AttributeID == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::FindUint32AttributeID.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method FindAttributeIDByName.");
+        if (wrapperTable->m_ToolpathLayerReader_FindAttributeIDByName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::FindAttributeIDByName.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_FindUint32AttributeID(instanceHandle, sNameSpace.c_str(), sAttributeName.c_str(), &nReturnID);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_FindAttributeIDByName(instanceHandle, sNameSpace.c_str(), sAttributeName.c_str(), &nReturnID);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnID));
 
@@ -11701,7 +11738,39 @@ void CLib3MFToolpathLayerReader::FindUint32AttributeID(const FunctionCallbackInf
 }
 
 
-void CLib3MFToolpathLayerReader::GetSegmentUint32AttributeByID(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerReader::FindAttributeValueByName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (NameSpace)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (AttributeName)");
+        }
+        v8::String::Utf8Value sutf8NameSpace(isolate, args[0]);
+        std::string sNameSpace = *sutf8NameSpace;
+        v8::String::Utf8Value sutf8AttributeName(isolate, args[1]);
+        std::string sAttributeName = *sutf8AttributeName;
+        eLib3MFToolpathAttributeType eReturnAttributeType;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method FindAttributeValueByName.");
+        if (wrapperTable->m_ToolpathLayerReader_FindAttributeValueByName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::FindAttributeValueByName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_FindAttributeValueByName(instanceHandle, sNameSpace.c_str(), sAttributeName.c_str(), &eReturnAttributeType);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::New(isolate, (int)eReturnAttributeType));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::GetSegmentIntegerAttributeByID(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
@@ -11714,16 +11783,16 @@ void CLib3MFToolpathLayerReader::GetSegmentUint32AttributeByID(const FunctionCal
         }
         unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         unsigned int nID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        unsigned int nReturnValue = 0;
+         int64_t nReturnValue = 0;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentUint32AttributeByID.");
-        if (wrapperTable->m_ToolpathLayerReader_GetSegmentUint32AttributeByID == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentUint32AttributeByID.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentIntegerAttributeByID.");
+        if (wrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByID == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentIntegerAttributeByID.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentUint32AttributeByID(instanceHandle, nIndex, nID, &nReturnValue);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByID(instanceHandle, nIndex, nID, &nReturnValue);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnValue));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnValue).c_str() ));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -11731,7 +11800,7 @@ void CLib3MFToolpathLayerReader::GetSegmentUint32AttributeByID(const FunctionCal
 }
 
 
-void CLib3MFToolpathLayerReader::GetSegmentUint32AttributeByName(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerReader::GetSegmentIntegerAttributeByName(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
@@ -11750,48 +11819,16 @@ void CLib3MFToolpathLayerReader::GetSegmentUint32AttributeByName(const FunctionC
         std::string sNameSpace = *sutf8NameSpace;
         v8::String::Utf8Value sutf8AttributeName(isolate, args[2]);
         std::string sAttributeName = *sutf8AttributeName;
-        unsigned int nReturnValue = 0;
+         int64_t nReturnValue = 0;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentUint32AttributeByName.");
-        if (wrapperTable->m_ToolpathLayerReader_GetSegmentUint32AttributeByName == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentUint32AttributeByName.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentIntegerAttributeByName.");
+        if (wrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentIntegerAttributeByName.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentUint32AttributeByName(instanceHandle, nIndex, sNameSpace.c_str(), sAttributeName.c_str(), &nReturnValue);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByName(instanceHandle, nIndex, sNameSpace.c_str(), sAttributeName.c_str(), &nReturnValue);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnValue));
-
-		} catch (std::exception & E) {
-				RaiseError(isolate, E.what());
-		}
-}
-
-
-void CLib3MFToolpathLayerReader::FindDoubleAttributeID(const FunctionCallbackInfo<Value>& args) 
-{
-		Isolate* isolate = args.GetIsolate();
-		HandleScope scope(isolate);
-		try {
-        if (!args[0]->IsString()) {
-            throw std::runtime_error("Expected string parameter 0 (NameSpace)");
-        }
-        if (!args[1]->IsString()) {
-            throw std::runtime_error("Expected string parameter 1 (AttributeName)");
-        }
-        v8::String::Utf8Value sutf8NameSpace(isolate, args[0]);
-        std::string sNameSpace = *sutf8NameSpace;
-        v8::String::Utf8Value sutf8AttributeName(isolate, args[1]);
-        std::string sAttributeName = *sutf8AttributeName;
-        unsigned int nReturnID = 0;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
-        if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method FindDoubleAttributeID.");
-        if (wrapperTable->m_ToolpathLayerReader_FindDoubleAttributeID == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::FindDoubleAttributeID.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_FindDoubleAttributeID(instanceHandle, sNameSpace.c_str(), sAttributeName.c_str(), &nReturnID);
-        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnID));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnValue).c_str() ));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -16689,6 +16726,9 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathSegmentType_Hatch"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathSegmentType_Loop"), Integer::New(isolate, 2));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathSegmentType_Polyline"), Integer::New(isolate, 3));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathAttributeType_Unknown"), Integer::New(isolate, 0));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathAttributeType_Integer"), Integer::New(isolate, 1));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathAttributeType_Double"), Integer::New(isolate, 2));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eEncryptionAlgorithm_AES256_GCM"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eWrappingAlgorithm_RSA_OAEP"), Integer::New(isolate, 0));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA1"), Integer::New(isolate, 160));

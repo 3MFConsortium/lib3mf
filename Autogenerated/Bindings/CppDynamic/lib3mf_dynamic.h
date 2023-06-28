@@ -3277,7 +3277,19 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentPartUUIDPtr) (Lib3MF
 typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentPointDataPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer);
 
 /**
-* Retrieves a segment Uint32 attribute ID by Attribute Name. Will fail if Attribute does not exist.
+* Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] pNameSpace - Namespace of the custom attribute.
+* @param[in] pAttributeName - Name of the custom attribute.
+* @param[out] pID - Attribute ID.
+* @param[out] pAttributeType - Attribute Type.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerReader_FindAttributeInfoByNamePtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID, Lib3MF::eToolpathAttributeType * pAttributeType);
+
+/**
+* Retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.
 *
 * @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
 * @param[in] pNameSpace - Namespace of the custom attribute.
@@ -3285,7 +3297,18 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentPointDataPtr) (Lib3M
 * @param[out] pID - Attribute ID.
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFToolpathLayerReader_FindUint32AttributeIDPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID);
+typedef Lib3MFResult (*PLib3MFToolpathLayerReader_FindAttributeIDByNamePtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID);
+
+/**
+* Retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] pNameSpace - Namespace of the custom attribute.
+* @param[in] pAttributeName - Name of the custom attribute.
+* @param[out] pAttributeType - Attribute Type.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerReader_FindAttributeValueByNamePtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF::eToolpathAttributeType * pAttributeType);
 
 /**
 * Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
@@ -3296,10 +3319,10 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerReader_FindUint32AttributeIDPtr) (Lib
 * @param[out] pValue - Attribute Value.
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentUint32AttributeByIDPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 nID, Lib3MF_uint32 * pValue);
+typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 nID, Lib3MF_int64 * pValue);
 
 /**
-* Retrieves a segment Uint32 attribute by Attribute Name. Will fail if Attribute does not exist.
+* Retrieves a segment integer attribute by Attribute Name. Will fail if Attribute does not exist or is of different type.
 *
 * @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
 * @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
@@ -3308,18 +3331,7 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentUint32AttributeByIDP
 * @param[out] pValue - Attribute Value.
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentUint32AttributeByNamePtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pValue);
-
-/**
-* Retrieves a segment Double attribute ID by Attribute Name. Will fail if Attribute does not exist.
-*
-* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-* @param[in] pNameSpace - Namespace of the custom attribute.
-* @param[in] pAttributeName - Name of the custom attribute.
-* @param[out] pID - Attribute ID.
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFToolpathLayerReader_FindDoubleAttributeIDPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID);
+typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNamePtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const char * pNameSpace, const char * pAttributeName, Lib3MF_int64 * pValue);
 
 /**
 * Retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.
@@ -5381,10 +5393,11 @@ typedef struct {
 	PLib3MFToolpathLayerReader_GetSegmentPartPtr m_ToolpathLayerReader_GetSegmentPart;
 	PLib3MFToolpathLayerReader_GetSegmentPartUUIDPtr m_ToolpathLayerReader_GetSegmentPartUUID;
 	PLib3MFToolpathLayerReader_GetSegmentPointDataPtr m_ToolpathLayerReader_GetSegmentPointData;
-	PLib3MFToolpathLayerReader_FindUint32AttributeIDPtr m_ToolpathLayerReader_FindUint32AttributeID;
-	PLib3MFToolpathLayerReader_GetSegmentUint32AttributeByIDPtr m_ToolpathLayerReader_GetSegmentUint32AttributeByID;
-	PLib3MFToolpathLayerReader_GetSegmentUint32AttributeByNamePtr m_ToolpathLayerReader_GetSegmentUint32AttributeByName;
-	PLib3MFToolpathLayerReader_FindDoubleAttributeIDPtr m_ToolpathLayerReader_FindDoubleAttributeID;
+	PLib3MFToolpathLayerReader_FindAttributeInfoByNamePtr m_ToolpathLayerReader_FindAttributeInfoByName;
+	PLib3MFToolpathLayerReader_FindAttributeIDByNamePtr m_ToolpathLayerReader_FindAttributeIDByName;
+	PLib3MFToolpathLayerReader_FindAttributeValueByNamePtr m_ToolpathLayerReader_FindAttributeValueByName;
+	PLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDPtr m_ToolpathLayerReader_GetSegmentIntegerAttributeByID;
+	PLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNamePtr m_ToolpathLayerReader_GetSegmentIntegerAttributeByName;
 	PLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDPtr m_ToolpathLayerReader_GetSegmentDoubleAttributeByID;
 	PLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNamePtr m_ToolpathLayerReader_GetSegmentDoubleAttributeByName;
 	PLib3MFToolpathLayerReader_GetCustomDataCountPtr m_ToolpathLayerReader_GetCustomDataCount;

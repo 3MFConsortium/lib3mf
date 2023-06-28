@@ -153,6 +153,12 @@ namespace Lib3MF {
 		Polyline = 3
 	};
 
+	public enum eToolpathAttributeType {
+		Unknown = 0,
+		Integer = 1,
+		Double = 2
+	};
+
 	public enum eEncryptionAlgorithm {
 		AES256_GCM = 1
 	};
@@ -1269,17 +1275,20 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentpointdata", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentPointData (IntPtr Handle, UInt32 AIndex, UInt64 sizePointData, out UInt64 neededPointData, IntPtr dataPointData);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_finduint32attributeid", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ToolpathLayerReader_FindUint32AttributeID (IntPtr Handle, byte[] ANameSpace, byte[] AAttributeName, out UInt32 AID);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_findattributeinfobyname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_FindAttributeInfoByName (IntPtr Handle, byte[] ANameSpace, byte[] AAttributeName, out UInt32 AID, out Int32 AAttributeType);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentuint32attributebyid", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentUint32AttributeByID (IntPtr Handle, UInt32 AIndex, UInt32 AID, out UInt32 AValue);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_findattributeidbyname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_FindAttributeIDByName (IntPtr Handle, byte[] ANameSpace, byte[] AAttributeName, out UInt32 AID);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentuint32attributebyname", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentUint32AttributeByName (IntPtr Handle, UInt32 AIndex, byte[] ANameSpace, byte[] AAttributeName, out UInt32 AValue);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_findattributevaluebyname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_FindAttributeValueByName (IntPtr Handle, byte[] ANameSpace, byte[] AAttributeName, out Int32 AAttributeType);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_finddoubleattributeid", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ToolpathLayerReader_FindDoubleAttributeID (IntPtr Handle, byte[] ANameSpace, byte[] AAttributeName, out UInt32 AID);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentintegerattributebyid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentIntegerAttributeByID (IntPtr Handle, UInt32 AIndex, UInt32 AID, out Int64 AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentintegerattributebyname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentIntegerAttributeByName (IntPtr Handle, UInt32 AIndex, byte[] ANameSpace, byte[] AAttributeName, out Int64 AValue);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentDoubleAttributeByID (IntPtr Handle, UInt32 AIndex, UInt32 AID, out Double AValue);
@@ -5346,42 +5355,52 @@ namespace Lib3MF {
 				APointData[index] = Internal.Lib3MFWrapper.convertInternalToStruct_Position2D(arrayPointData[index]);
 		}
 
-		public UInt32 FindUint32AttributeID (String ANameSpace, String AAttributeName)
+		public void FindAttributeInfoByName (String ANameSpace, String AAttributeName, out UInt32 AID, out eToolpathAttributeType AAttributeType)
+		{
+			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
+			byte[] byteAttributeName = Encoding.UTF8.GetBytes(AAttributeName + char.MinValue);
+			Int32 resultAttributeType = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_FindAttributeInfoByName (Handle, byteNameSpace, byteAttributeName, out AID, out resultAttributeType));
+			AAttributeType = (eToolpathAttributeType) (resultAttributeType);
+		}
+
+		public UInt32 FindAttributeIDByName (String ANameSpace, String AAttributeName)
 		{
 			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
 			byte[] byteAttributeName = Encoding.UTF8.GetBytes(AAttributeName + char.MinValue);
 			UInt32 resultID = 0;
 
-			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_FindUint32AttributeID (Handle, byteNameSpace, byteAttributeName, out resultID));
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_FindAttributeIDByName (Handle, byteNameSpace, byteAttributeName, out resultID));
 			return resultID;
 		}
 
-		public UInt32 GetSegmentUint32AttributeByID (UInt32 AIndex, UInt32 AID)
-		{
-			UInt32 resultValue = 0;
-
-			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentUint32AttributeByID (Handle, AIndex, AID, out resultValue));
-			return resultValue;
-		}
-
-		public UInt32 GetSegmentUint32AttributeByName (UInt32 AIndex, String ANameSpace, String AAttributeName)
+		public eToolpathAttributeType FindAttributeValueByName (String ANameSpace, String AAttributeName)
 		{
 			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
 			byte[] byteAttributeName = Encoding.UTF8.GetBytes(AAttributeName + char.MinValue);
-			UInt32 resultValue = 0;
+			Int32 resultAttributeType = 0;
 
-			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentUint32AttributeByName (Handle, AIndex, byteNameSpace, byteAttributeName, out resultValue));
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_FindAttributeValueByName (Handle, byteNameSpace, byteAttributeName, out resultAttributeType));
+			return (eToolpathAttributeType) (resultAttributeType);
+		}
+
+		public Int64 GetSegmentIntegerAttributeByID (UInt32 AIndex, UInt32 AID)
+		{
+			Int64 resultValue = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentIntegerAttributeByID (Handle, AIndex, AID, out resultValue));
 			return resultValue;
 		}
 
-		public UInt32 FindDoubleAttributeID (String ANameSpace, String AAttributeName)
+		public Int64 GetSegmentIntegerAttributeByName (UInt32 AIndex, String ANameSpace, String AAttributeName)
 		{
 			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
 			byte[] byteAttributeName = Encoding.UTF8.GetBytes(AAttributeName + char.MinValue);
-			UInt32 resultID = 0;
+			Int64 resultValue = 0;
 
-			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_FindDoubleAttributeID (Handle, byteNameSpace, byteAttributeName, out resultID));
-			return resultID;
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentIntegerAttributeByName (Handle, AIndex, byteNameSpace, byteAttributeName, out resultValue));
+			return resultValue;
 		}
 
 		public Double GetSegmentDoubleAttributeByID (UInt32 AIndex, UInt32 AID)

@@ -3186,37 +3186,46 @@ public:
 	virtual void GetSegmentPointData(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer) = 0;
 
 	/**
-	* IToolpathLayerReader::FindUint32AttributeID - Retrieves a segment Uint32 attribute ID by Attribute Name. Will fail if Attribute does not exist.
+	* IToolpathLayerReader::FindAttributeInfoByName - Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @param[out] nID - Attribute ID.
+	* @param[out] eAttributeType - Attribute Type.
+	*/
+	virtual void FindAttributeInfoByName(const std::string & sNameSpace, const std::string & sAttributeName, Lib3MF_uint32 & nID, Lib3MF::eToolpathAttributeType & eAttributeType) = 0;
+
+	/**
+	* IToolpathLayerReader::FindAttributeIDByName - Retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.
 	* @param[in] sNameSpace - Namespace of the custom attribute.
 	* @param[in] sAttributeName - Name of the custom attribute.
 	* @return Attribute ID.
 	*/
-	virtual Lib3MF_uint32 FindUint32AttributeID(const std::string & sNameSpace, const std::string & sAttributeName) = 0;
+	virtual Lib3MF_uint32 FindAttributeIDByName(const std::string & sNameSpace, const std::string & sAttributeName) = 0;
 
 	/**
-	* IToolpathLayerReader::GetSegmentUint32AttributeByID - Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
+	* IToolpathLayerReader::FindAttributeValueByName - Retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute Type.
+	*/
+	virtual Lib3MF::eToolpathAttributeType FindAttributeValueByName(const std::string & sNameSpace, const std::string & sAttributeName) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentIntegerAttributeByID - Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
 	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
 	* @param[in] nID - Attribute ID.
 	* @return Attribute Value.
 	*/
-	virtual Lib3MF_uint32 GetSegmentUint32AttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID) = 0;
+	virtual Lib3MF_int64 GetSegmentIntegerAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID) = 0;
 
 	/**
-	* IToolpathLayerReader::GetSegmentUint32AttributeByName - Retrieves a segment Uint32 attribute by Attribute Name. Will fail if Attribute does not exist.
+	* IToolpathLayerReader::GetSegmentIntegerAttributeByName - Retrieves a segment integer attribute by Attribute Name. Will fail if Attribute does not exist or is of different type.
 	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
 	* @param[in] sNameSpace - Namespace of the custom attribute.
 	* @param[in] sAttributeName - Name of the custom attribute.
 	* @return Attribute Value.
 	*/
-	virtual Lib3MF_uint32 GetSegmentUint32AttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName) = 0;
-
-	/**
-	* IToolpathLayerReader::FindDoubleAttributeID - Retrieves a segment Double attribute ID by Attribute Name. Will fail if Attribute does not exist.
-	* @param[in] sNameSpace - Namespace of the custom attribute.
-	* @param[in] sAttributeName - Name of the custom attribute.
-	* @return Attribute ID.
-	*/
-	virtual Lib3MF_uint32 FindDoubleAttributeID(const std::string & sNameSpace, const std::string & sAttributeName) = 0;
+	virtual Lib3MF_int64 GetSegmentIntegerAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName) = 0;
 
 	/**
 	* IToolpathLayerReader::GetSegmentDoubleAttributeByID - Retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.
