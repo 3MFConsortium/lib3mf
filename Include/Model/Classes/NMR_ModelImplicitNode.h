@@ -32,6 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Model/Classes/NMR_ModelImplicitPort.h>
 #include <Model/Classes/NMR_ModelMeshObject.h>
 #include <Model/Classes/NMR_ModelTypes.h>
+#include <Model/Classes/NMR_ModelResource.h>
 #include <lib3mf_types.hpp>
 
 #include <memory>
@@ -40,6 +41,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace NMR
 {
+    class CModelImplicitFunction;
+
     class CModelImplicitNode
     {
       private:
@@ -56,15 +59,18 @@ namespace NMR
         std::unique_ptr<Lib3MF::sVector> m_vector;
         std::unique_ptr<Lib3MF::sMatrix4x4> m_matrix;
 
-        // resource ID for mesh objects, functions etc.
-        UniqueResourceID m_resourceID;
+        // resource ID that is unique in the scope of a model to reference mesh objects, functions etc.
+        ModelResourceID m_modelResourceID;
+        
+        CModelImplicitFunction * m_parent = nullptr;
 
       public:
         CModelImplicitNode(Lib3MF::eImplicitNodeType type,
                            ImplicitIdentifier const & identifier,
                            std::string const & displayname,
-                           std::string const & tag);
-        CModelImplicitNode(Lib3MF::eImplicitNodeType type);
+                           std::string const & tag,
+                           CModelImplicitFunction * parent);
+        CModelImplicitNode(Lib3MF::eImplicitNodeType type, CModelImplicitFunction * parent);
 
         ImplicitIdentifier const & getIdentifier() const;
         std::string const & getDisplayName() const;
@@ -98,8 +104,9 @@ namespace NMR
         void setMatrix(const Lib3MF::sMatrix4x4 & value);
         Lib3MF::sMatrix4x4 getMatrix() const;
 
-        void setResourceID(UniqueResourceID resourceID);
-        UniqueResourceID getResourceID() const;
+        void setModelResourceID(UniqueResourceID resourceID);
+        ModelResourceID getModelResourceID() const;
+        PModelResource getResource() const;
 
     };
 

@@ -824,7 +824,8 @@ namespace Lib3MF
         Lib3MF::eImplicitNodeType::Resource, "meshResource", "mesh resource", "group_shell");
 
     auto mesh = GetMesh();
-    resourceNode->SetResourceID(mesh->GetResourceID());
+
+    resourceNode->SetResource(mesh.get());
     resourceNode->FindOutput("value")->SetType(Lib3MF::eImplicitPortType::ResourceID);
     
     // Create a mesh node

@@ -3267,21 +3267,21 @@ Lib3MFResult CCall_lib3mf_implicitnode_getmatrix(Lib3MFHandle libraryHandle, Lib
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitnode_setresourceid(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, Lib3MF_uint32 nValue)
+Lib3MFResult CCall_lib3mf_implicitnode_setresource(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Resource pResource)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitNode_SetResourceID (pImplicitNode, nValue);
+	return wrapperTable->m_ImplicitNode_SetResource (pImplicitNode, pResource);
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitnode_getresourceid(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, Lib3MF_uint32 * pValue)
+Lib3MFResult CCall_lib3mf_implicitnode_getresource(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Resource * pResource)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitNode_GetResourceID (pImplicitNode, pValue);
+	return wrapperTable->m_ImplicitNode_GetResource (pImplicitNode, pResource);
 }
 
 
@@ -10152,23 +10152,23 @@ func (inst ImplicitNode) GetMatrix() (Matrix4x4, error) {
 	return *(*Matrix4x4)(unsafe.Pointer(&value)), nil
 }
 
-// SetResourceID sets the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource.
-func (inst ImplicitNode) SetResourceID(value uint32) error {
-	ret := C.CCall_lib3mf_implicitnode_setresourceid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(value))
+// SetResource sets the Resource that the resourceid attribute of the node will point to. Throws an error, if the node type is not of type Resource.
+func (inst ImplicitNode) SetResource(resource Resource) error {
+	ret := C.CCall_lib3mf_implicitnode_setresource(inst.wrapperRef.LibraryHandle, inst.Ref, resource.Ref)
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
 	return nil
 }
 
-// GetResourceID retrieves the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource.
-func (inst ImplicitNode) GetResourceID() (uint32, error) {
-	var value C.uint32_t
-	ret := C.CCall_lib3mf_implicitnode_getresourceid(inst.wrapperRef.LibraryHandle, inst.Ref, &value)
+// GetResource retrieves the resource of the node. Throws an error, if the node type is not of type Resource.
+func (inst ImplicitNode) GetResource() (Resource, error) {
+	var resource ref
+	ret := C.CCall_lib3mf_implicitnode_getresource(inst.wrapperRef.LibraryHandle, inst.Ref, &resource)
 	if ret != 0 {
-		return 0, makeError(uint32(ret))
+		return Resource{}, makeError(uint32(ret))
 	}
-	return uint32(value), nil
+	return inst.wrapperRef.NewResource(resource), nil
 }
 
 

@@ -2085,8 +2085,8 @@ public:
 	inline sVector GetVector();
 	inline void SetMatrix(const sMatrix4x4 & Value);
 	inline sMatrix4x4 GetMatrix();
-	inline void SetResourceID(const Lib3MF_uint32 nValue);
-	inline Lib3MF_uint32 GetResourceID();
+	inline void SetResource(classParam<CResource> pResource);
+	inline PResource GetResource();
 };
 	
 /*************************************************************************************************************************
@@ -7417,24 +7417,28 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CImplicitNode::SetResourceID - Sets the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
-	* @param[in] nValue - the id of the resource
+	* CImplicitNode::SetResource - Sets the Resource that the resourceid attribute of the node will point to. Throws an error, if the node type is not of type Resource
+	* @param[in] pResource - the resource
 	*/
-	void CImplicitNode::SetResourceID(const Lib3MF_uint32 nValue)
+	void CImplicitNode::SetResource(classParam<CResource> pResource)
 	{
-		CheckError(lib3mf_implicitnode_setresourceid(m_pHandle, nValue));
+		Lib3MFHandle hResource = pResource.GetHandle();
+		CheckError(lib3mf_implicitnode_setresource(m_pHandle, hResource));
 	}
 	
 	/**
-	* CImplicitNode::GetResourceID - Retrieves the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
-	* @return the id of the resource
+	* CImplicitNode::GetResource - Retrieves the resource of the node. Throws an error, if the node type is not of type Resource
+	* @return the resource
 	*/
-	Lib3MF_uint32 CImplicitNode::GetResourceID()
+	PResource CImplicitNode::GetResource()
 	{
-		Lib3MF_uint32 resultValue = 0;
-		CheckError(lib3mf_implicitnode_getresourceid(m_pHandle, &resultValue));
+		Lib3MFHandle hResource = nullptr;
+		CheckError(lib3mf_implicitnode_getresource(m_pHandle, &hResource));
 		
-		return resultValue;
+		if (!hResource) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CResource>(dynamic_cast<CResource*>(m_pWrapper->polymorphicFactory(hResource)));
 	}
 	
 	/**

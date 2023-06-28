@@ -28,6 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "Model/Classes/NMR_ModelImplicitNode.h"
 #include "Model/Classes/NMR_ImplicitNodeTypes.h"
+#include "Model/Classes/NMR_ModelImplicitFunction.h"
 #include "Common/NMR_Exception.h"
 
 #include <memory>
@@ -38,18 +39,20 @@ namespace NMR
     CModelImplicitNode::CModelImplicitNode(Lib3MF::eImplicitNodeType type,
                                            ImplicitIdentifier const & identifier,
                                            std::string const & displayname,
-                                           std::string const& tag)
+                                           std::string const& tag,
+                                           CModelImplicitFunction * parent)
         : m_type(type)
         , m_identifier(identifier)
         , m_displayname(displayname)
         , m_tag(tag)
+        , m_parent(parent)
     {
         m_outputs = std::make_shared<Ports>();
         m_inputs = std::make_shared<Ports>();
     }
 
-    CModelImplicitNode::CModelImplicitNode(Lib3MF::eImplicitNodeType type)
-        : m_type(type)
+    CModelImplicitNode::CModelImplicitNode(Lib3MF::eImplicitNodeType type, CModelImplicitFunction * parent)
+        : m_type(type), m_parent(parent)
     {
         m_outputs = std::make_shared<Ports>();
         m_inputs = std::make_shared<Ports>();
@@ -194,18 +197,37 @@ namespace NMR
         return *m_matrix;
     }
 
-    void CModelImplicitNode::setResourceID(UniqueResourceID resourceID)
+    void CModelImplicitNode::setModelResourceID(UniqueResourceID resourceID)
     {
         if (m_type != Lib3MF::eImplicitNodeType::Resource)
             throw CNMRException(NMR_ERROR_INVALIDPARAM);
-        m_resourceID = resourceID;
+        m_modelResourceID = resourceID;
     }
 
-    UniqueResourceID CModelImplicitNode::getResourceID() const
+    UniqueResourceID CModelImplicitNode::getModelResourceID() const
     {
         if (m_type != Lib3MF::eImplicitNodeType::Resource)
             throw CNMRException(NMR_ERROR_INVALIDPARAM);
             
-        return m_resourceID;
+        return m_modelResourceID;
+    }
+
+    PModelResource NMR::CModelImplicitNode::getResource() const
+    {
+        if (m_parent == nullptr)
+        {
+            return nullptr;
+        }
+    
+        auto model = m_parent->getModel();
+
+        if (model == nullptr)
+        {
+            return nullptr;
+        }
+
+        return model->findResource(model->currentPath(), m_modelResourceID);
     }
 }
+
+

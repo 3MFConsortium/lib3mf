@@ -2109,8 +2109,8 @@ public:
 	inline sVector GetVector();
 	inline void SetMatrix(const sMatrix4x4 & Value);
 	inline sMatrix4x4 GetMatrix();
-	inline void SetResourceID(const Lib3MF_uint32 nValue);
-	inline Lib3MF_uint32 GetResourceID();
+	inline void SetResource(classParam<CResource> pResource);
+	inline PResource GetResource();
 };
 	
 /*************************************************************************************************************************
@@ -3274,8 +3274,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ImplicitNode_GetVector = nullptr;
 		pWrapperTable->m_ImplicitNode_SetMatrix = nullptr;
 		pWrapperTable->m_ImplicitNode_GetMatrix = nullptr;
-		pWrapperTable->m_ImplicitNode_SetResourceID = nullptr;
-		pWrapperTable->m_ImplicitNode_GetResourceID = nullptr;
+		pWrapperTable->m_ImplicitNode_SetResource = nullptr;
+		pWrapperTable->m_ImplicitNode_GetResource = nullptr;
 		pWrapperTable->m_NodeIterator_GetCurrent = nullptr;
 		pWrapperTable->m_Function_GetDisplayName = nullptr;
 		pWrapperTable->m_Function_SetDisplayName = nullptr;
@@ -6730,21 +6730,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_ImplicitNode_SetResourceID = (PLib3MFImplicitNode_SetResourceIDPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_setresourceid");
+		pWrapperTable->m_ImplicitNode_SetResource = (PLib3MFImplicitNode_SetResourcePtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_setresource");
 		#else // _WIN32
-		pWrapperTable->m_ImplicitNode_SetResourceID = (PLib3MFImplicitNode_SetResourceIDPtr) dlsym(hLibrary, "lib3mf_implicitnode_setresourceid");
+		pWrapperTable->m_ImplicitNode_SetResource = (PLib3MFImplicitNode_SetResourcePtr) dlsym(hLibrary, "lib3mf_implicitnode_setresource");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_ImplicitNode_SetResourceID == nullptr)
+		if (pWrapperTable->m_ImplicitNode_SetResource == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_ImplicitNode_GetResourceID = (PLib3MFImplicitNode_GetResourceIDPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_getresourceid");
+		pWrapperTable->m_ImplicitNode_GetResource = (PLib3MFImplicitNode_GetResourcePtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_getresource");
 		#else // _WIN32
-		pWrapperTable->m_ImplicitNode_GetResourceID = (PLib3MFImplicitNode_GetResourceIDPtr) dlsym(hLibrary, "lib3mf_implicitnode_getresourceid");
+		pWrapperTable->m_ImplicitNode_GetResource = (PLib3MFImplicitNode_GetResourcePtr) dlsym(hLibrary, "lib3mf_implicitnode_getresource");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_ImplicitNode_GetResourceID == nullptr)
+		if (pWrapperTable->m_ImplicitNode_GetResource == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -10055,12 +10055,12 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_GetMatrix == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_implicitnode_setresourceid", (void**)&(pWrapperTable->m_ImplicitNode_SetResourceID));
-		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_SetResourceID == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_implicitnode_setresource", (void**)&(pWrapperTable->m_ImplicitNode_SetResource));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_SetResource == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_implicitnode_getresourceid", (void**)&(pWrapperTable->m_ImplicitNode_GetResourceID));
-		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_GetResourceID == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_implicitnode_getresource", (void**)&(pWrapperTable->m_ImplicitNode_GetResource));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_GetResource == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_nodeiterator_getcurrent", (void**)&(pWrapperTable->m_NodeIterator_GetCurrent));
@@ -15427,24 +15427,28 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CImplicitNode::SetResourceID - Sets the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
-	* @param[in] nValue - the id of the resource
+	* CImplicitNode::SetResource - Sets the Resource that the resourceid attribute of the node will point to. Throws an error, if the node type is not of type Resource
+	* @param[in] pResource - the resource
 	*/
-	void CImplicitNode::SetResourceID(const Lib3MF_uint32 nValue)
+	void CImplicitNode::SetResource(classParam<CResource> pResource)
 	{
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_SetResourceID(m_pHandle, nValue));
+		Lib3MFHandle hResource = pResource.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_SetResource(m_pHandle, hResource));
 	}
 	
 	/**
-	* CImplicitNode::GetResourceID - Retrieves the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
-	* @return the id of the resource
+	* CImplicitNode::GetResource - Retrieves the resource of the node. Throws an error, if the node type is not of type Resource
+	* @return the resource
 	*/
-	Lib3MF_uint32 CImplicitNode::GetResourceID()
+	PResource CImplicitNode::GetResource()
 	{
-		Lib3MF_uint32 resultValue = 0;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_GetResourceID(m_pHandle, &resultValue));
+		Lib3MFHandle hResource = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_GetResource(m_pHandle, &hResource));
 		
-		return resultValue;
+		if (!hResource) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CResource>(dynamic_cast<CResource*>(m_pWrapper->polymorphicFactory(hResource)));
 	}
 	
 	/**

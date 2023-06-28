@@ -485,8 +485,8 @@ class FunctionTable:
 	lib3mf_implicitnode_getvector = None
 	lib3mf_implicitnode_setmatrix = None
 	lib3mf_implicitnode_getmatrix = None
-	lib3mf_implicitnode_setresourceid = None
-	lib3mf_implicitnode_getresourceid = None
+	lib3mf_implicitnode_setresource = None
+	lib3mf_implicitnode_getresource = None
 	lib3mf_nodeiterator_getcurrent = None
 	lib3mf_function_getdisplayname = None
 	lib3mf_function_setdisplayname = None
@@ -3303,17 +3303,17 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(Matrix4x4))
 			self.lib.lib3mf_implicitnode_getmatrix = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitnode_setresourceid")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitnode_setresource")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
-			self.lib.lib3mf_implicitnode_setresourceid = methodType(int(methodAddress.value))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
+			self.lib.lib3mf_implicitnode_setresource = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitnode_getresourceid")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitnode_getresource")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
-			self.lib.lib3mf_implicitnode_getresourceid = methodType(int(methodAddress.value))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_implicitnode_getresource = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_nodeiterator_getcurrent")), methodAddress)
 			if err != 0:
@@ -5576,11 +5576,11 @@ class Wrapper:
 			self.lib.lib3mf_implicitnode_getmatrix.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitnode_getmatrix.argtypes = [ctypes.c_void_p, ctypes.POINTER(Matrix4x4)]
 			
-			self.lib.lib3mf_implicitnode_setresourceid.restype = ctypes.c_int32
-			self.lib.lib3mf_implicitnode_setresourceid.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			self.lib.lib3mf_implicitnode_setresource.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitnode_setresource.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
 			
-			self.lib.lib3mf_implicitnode_getresourceid.restype = ctypes.c_int32
-			self.lib.lib3mf_implicitnode_getresourceid.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			self.lib.lib3mf_implicitnode_getresource.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitnode_getresource.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_nodeiterator_getcurrent.restype = ctypes.c_int32
 			self.lib.lib3mf_nodeiterator_getcurrent.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -9569,16 +9569,24 @@ class ImplicitNode(Base):
 		
 		return pValue
 	
-	def SetResourceID(self, Value):
-		nValue = ctypes.c_uint32(Value)
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitnode_setresourceid(self._handle, nValue))
+	def SetResource(self, ResourceObject):
+		ResourceHandle = None
+		if ResourceObject:
+			ResourceHandle = ResourceObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitnode_setresource(self._handle, ResourceHandle))
 		
 	
-	def GetResourceID(self):
-		pValue = ctypes.c_uint32()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitnode_getresourceid(self._handle, pValue))
+	def GetResource(self):
+		ResourceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitnode_getresource(self._handle, ResourceHandle))
+		if ResourceHandle:
+			ResourceObject = self._wrapper._polymorphicFactory(ResourceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
-		return pValue.value
+		return ResourceObject
 	
 
 

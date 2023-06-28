@@ -3697,22 +3697,22 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_setmatrix(Lib3MF_ImplicitNode p
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getmatrix(Lib3MF_ImplicitNode pImplicitNode, sLib3MFMatrix4x4 * pValue);
 
 /**
-* Sets the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
+* Sets the Resource that the resourceid attribute of the node will point to. Throws an error, if the node type is not of type Resource
 *
 * @param[in] pImplicitNode - ImplicitNode instance.
-* @param[in] nValue - the id of the resource
+* @param[in] pResource - the resource
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_setresourceid(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_uint32 nValue);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_setresource(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Resource pResource);
 
 /**
-* Retrieves the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
+* Retrieves the resource of the node. Throws an error, if the node type is not of type Resource
 *
 * @param[in] pImplicitNode - ImplicitNode instance.
-* @param[out] pValue - the id of the resource
+* @param[out] pResource - the resource
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getresourceid(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_uint32 * pValue);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getresource(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Resource * pResource);
 
 /*************************************************************************************************************************
  Class definition for NodeIterator

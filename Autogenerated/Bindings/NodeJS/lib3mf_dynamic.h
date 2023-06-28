@@ -3684,22 +3684,22 @@ typedef Lib3MFResult (*PLib3MFImplicitNode_SetMatrixPtr) (Lib3MF_ImplicitNode pI
 typedef Lib3MFResult (*PLib3MFImplicitNode_GetMatrixPtr) (Lib3MF_ImplicitNode pImplicitNode, sLib3MFMatrix4x4 * pValue);
 
 /**
-* Sets the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
+* Sets the Resource that the resourceid attribute of the node will point to. Throws an error, if the node type is not of type Resource
 *
 * @param[in] pImplicitNode - ImplicitNode instance.
-* @param[in] nValue - the id of the resource
+* @param[in] pResource - the resource
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitNode_SetResourceIDPtr) (Lib3MF_ImplicitNode pImplicitNode, Lib3MF_uint32 nValue);
+typedef Lib3MFResult (*PLib3MFImplicitNode_SetResourcePtr) (Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Resource pResource);
 
 /**
-* Retrieves the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
+* Retrieves the resource of the node. Throws an error, if the node type is not of type Resource
 *
 * @param[in] pImplicitNode - ImplicitNode instance.
-* @param[out] pValue - the id of the resource
+* @param[out] pResource - the resource
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitNode_GetResourceIDPtr) (Lib3MF_ImplicitNode pImplicitNode, Lib3MF_uint32 * pValue);
+typedef Lib3MFResult (*PLib3MFImplicitNode_GetResourcePtr) (Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Resource * pResource);
 
 /*************************************************************************************************************************
  Class definition for NodeIterator
@@ -6154,8 +6154,8 @@ typedef struct {
 	PLib3MFImplicitNode_GetVectorPtr m_ImplicitNode_GetVector;
 	PLib3MFImplicitNode_SetMatrixPtr m_ImplicitNode_SetMatrix;
 	PLib3MFImplicitNode_GetMatrixPtr m_ImplicitNode_GetMatrix;
-	PLib3MFImplicitNode_SetResourceIDPtr m_ImplicitNode_SetResourceID;
-	PLib3MFImplicitNode_GetResourceIDPtr m_ImplicitNode_GetResourceID;
+	PLib3MFImplicitNode_SetResourcePtr m_ImplicitNode_SetResource;
+	PLib3MFImplicitNode_GetResourcePtr m_ImplicitNode_GetResource;
 	PLib3MFNodeIterator_GetCurrentPtr m_NodeIterator_GetCurrent;
 	PLib3MFFunction_GetDisplayNamePtr m_Function_GetDisplayName;
 	PLib3MFFunction_SetDisplayNamePtr m_Function_SetDisplayName;

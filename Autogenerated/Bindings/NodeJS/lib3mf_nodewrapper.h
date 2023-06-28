@@ -1434,8 +1434,8 @@ private:
 	static void GetVector(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetMatrix(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetMatrix(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void SetResourceID(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetResourceID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetResource(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetResource(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFImplicitNode();

@@ -1473,11 +1473,11 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_getmatrix", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitNode_GetMatrix (IntPtr Handle, out InternalMatrix4x4 AValue);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_setresourceid", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitNode_SetResourceID (IntPtr Handle, UInt32 AValue);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_setresource", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitNode_SetResource (IntPtr Handle, IntPtr AResource);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_getresourceid", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitNode_GetResourceID (IntPtr Handle, out UInt32 AValue);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_getresource", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitNode_GetResource (IntPtr Handle, out IntPtr AResource);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_nodeiterator_getcurrent", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 NodeIterator_GetCurrent (IntPtr Handle, out IntPtr ANode);
@@ -6117,18 +6117,21 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.convertInternalToStruct_Matrix4x4 (intresultValue);
 		}
 
-		public void SetResourceID (UInt32 AValue)
+		public void SetResource (CResource AResource)
 		{
+			IntPtr AResourceHandle = IntPtr.Zero;
+			if (AResource != null)
+				AResourceHandle = AResource.GetHandle();
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitNode_SetResourceID (Handle, AValue));
+			CheckError(Internal.Lib3MFWrapper.ImplicitNode_SetResource (Handle, AResourceHandle));
 		}
 
-		public UInt32 GetResourceID ()
+		public CResource GetResource ()
 		{
-			UInt32 resultValue = 0;
+			IntPtr newResource = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitNode_GetResourceID (Handle, out resultValue));
-			return resultValue;
+			CheckError(Internal.Lib3MFWrapper.ImplicitNode_GetResource (Handle, out newResource));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CResource>(newResource);
 		}
 
 	}

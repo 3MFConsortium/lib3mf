@@ -145,13 +145,18 @@ Lib3MF::sMatrix4x4 CImplicitNode::GetMatrix()
     return m_pImplicitNode->getMatrix();
 }
 
-void CImplicitNode::SetResourceID(const Lib3MF_uint32 nValue)
+void Lib3MF::Impl::CImplicitNode::SetResource(IResource * pResource)
 {
-	m_pImplicitNode->setResourceID(nValue);
+    if (pResource == nullptr)
+    {
+        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+    }
+    m_pImplicitNode->setModelResourceID(pResource->GetModelResourceID());
 }
 
-Lib3MF_uint32 CImplicitNode::GetResourceID()
+
+IResource * Lib3MF::Impl::CImplicitNode::GetResource()
 {
-	return m_pImplicitNode->getResourceID();
+	return new CResource(m_pImplicitNode->getResource());
 }
 

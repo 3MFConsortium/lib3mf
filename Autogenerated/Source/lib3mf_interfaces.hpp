@@ -3782,16 +3782,16 @@ public:
 	virtual Lib3MF::sMatrix4x4 GetMatrix() = 0;
 
 	/**
-	* IImplicitNode::SetResourceID - Sets the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
-	* @param[in] nValue - the id of the resource
+	* IImplicitNode::SetResource - Sets the Resource that the resourceid attribute of the node will point to. Throws an error, if the node type is not of type Resource
+	* @param[in] pResource - the resource
 	*/
-	virtual void SetResourceID(const Lib3MF_uint32 nValue) = 0;
+	virtual void SetResource(IResource* pResource) = 0;
 
 	/**
-	* IImplicitNode::GetResourceID - Retrieves the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
-	* @return the id of the resource
+	* IImplicitNode::GetResource - Retrieves the resource of the node. Throws an error, if the node type is not of type Resource
+	* @return the resource
 	*/
-	virtual Lib3MF_uint32 GetResourceID() = 0;
+	virtual IResource * GetResource() = 0;
 
 };
 

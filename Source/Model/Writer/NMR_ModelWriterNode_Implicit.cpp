@@ -130,7 +130,12 @@ namespace NMR
             }
             else if(node.getNodeType() == Lib3MF::eImplicitNodeType::Resource)
             {
-				writeIntAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_RESOURCE_ID, node.getResourceID());
+				auto resource = node.getResource();
+				if (resource != nullptr)
+				{
+					writeIntAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_RESOURCE_ID, resource->getPackageResourceID()->getModelResourceID());
+				}
+				
             }
 
             auto inputs = node.getInputs();

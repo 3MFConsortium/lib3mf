@@ -13189,8 +13189,8 @@ void CLib3MFImplicitNode::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetVector", GetVector);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetMatrix", SetMatrix);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetMatrix", GetMatrix);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "SetResourceID", SetResourceID);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "GetResourceID", GetResourceID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetResource", SetResource);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetResource", GetResource);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -13708,22 +13708,26 @@ void CLib3MFImplicitNode::GetMatrix(const FunctionCallbackInfo<Value>& args)
 }
 
 
-void CLib3MFImplicitNode::SetResourceID(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFImplicitNode::SetResource(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		try {
-        if (!args[0]->IsUint32()) {
-            throw std::runtime_error("Expected uint32 parameter 0 (Value)");
+        if (!args[0]->IsObject()) {
+            throw std::runtime_error("Expected class parameter 0 (Resource)");
         }
-        unsigned int nValue = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        Local<Object> objResource = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+        CLib3MFResource * instanceResource = ObjectWrap::Unwrap<CLib3MFResource>(objResource);
+        if (instanceResource == nullptr)
+            throw std::runtime_error("Invalid Object parameter 0 (Resource)");
+        Lib3MFHandle hResource = instanceResource->getHandle( objResource );
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetResourceID.");
-        if (wrapperTable->m_ImplicitNode_SetResourceID == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method ImplicitNode::SetResourceID.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetResource.");
+        if (wrapperTable->m_ImplicitNode_SetResource == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ImplicitNode::SetResource.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitNode_SetResourceID(instanceHandle, nValue);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitNode_SetResource(instanceHandle, hResource);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {
@@ -13732,21 +13736,22 @@ void CLib3MFImplicitNode::SetResourceID(const FunctionCallbackInfo<Value>& args)
 }
 
 
-void CLib3MFImplicitNode::GetResourceID(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFImplicitNode::GetResource(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		try {
-        unsigned int nReturnValue = 0;
+        Lib3MFHandle hReturnResource = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetResourceID.");
-        if (wrapperTable->m_ImplicitNode_GetResourceID == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method ImplicitNode::GetResourceID.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetResource.");
+        if (wrapperTable->m_ImplicitNode_GetResource == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ImplicitNode::GetResource.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitNode_GetResourceID(instanceHandle, &nReturnValue);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitNode_GetResource(instanceHandle, &hReturnResource);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnValue));
+        Local<Object> instanceObjResource = CLib3MFResource::NewInstance(args.Holder(), hReturnResource);
+        args.GetReturnValue().Set(instanceObjResource);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

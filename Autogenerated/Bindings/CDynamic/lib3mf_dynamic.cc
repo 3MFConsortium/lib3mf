@@ -403,8 +403,8 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ImplicitNode_GetVector = NULL;
 	pWrapperTable->m_ImplicitNode_SetMatrix = NULL;
 	pWrapperTable->m_ImplicitNode_GetMatrix = NULL;
-	pWrapperTable->m_ImplicitNode_SetResourceID = NULL;
-	pWrapperTable->m_ImplicitNode_GetResourceID = NULL;
+	pWrapperTable->m_ImplicitNode_SetResource = NULL;
+	pWrapperTable->m_ImplicitNode_GetResource = NULL;
 	pWrapperTable->m_NodeIterator_GetCurrent = NULL;
 	pWrapperTable->m_Function_GetDisplayName = NULL;
 	pWrapperTable->m_Function_SetDisplayName = NULL;
@@ -3863,21 +3863,21 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ImplicitNode_SetResourceID = (PLib3MFImplicitNode_SetResourceIDPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_setresourceid");
+	pWrapperTable->m_ImplicitNode_SetResource = (PLib3MFImplicitNode_SetResourcePtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_setresource");
 	#else // _WIN32
-	pWrapperTable->m_ImplicitNode_SetResourceID = (PLib3MFImplicitNode_SetResourceIDPtr) dlsym(hLibrary, "lib3mf_implicitnode_setresourceid");
+	pWrapperTable->m_ImplicitNode_SetResource = (PLib3MFImplicitNode_SetResourcePtr) dlsym(hLibrary, "lib3mf_implicitnode_setresource");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ImplicitNode_SetResourceID == NULL)
+	if (pWrapperTable->m_ImplicitNode_SetResource == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ImplicitNode_GetResourceID = (PLib3MFImplicitNode_GetResourceIDPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_getresourceid");
+	pWrapperTable->m_ImplicitNode_GetResource = (PLib3MFImplicitNode_GetResourcePtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_getresource");
 	#else // _WIN32
-	pWrapperTable->m_ImplicitNode_GetResourceID = (PLib3MFImplicitNode_GetResourceIDPtr) dlsym(hLibrary, "lib3mf_implicitnode_getresourceid");
+	pWrapperTable->m_ImplicitNode_GetResource = (PLib3MFImplicitNode_GetResourcePtr) dlsym(hLibrary, "lib3mf_implicitnode_getresource");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ImplicitNode_GetResourceID == NULL)
+	if (pWrapperTable->m_ImplicitNode_GetResource == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

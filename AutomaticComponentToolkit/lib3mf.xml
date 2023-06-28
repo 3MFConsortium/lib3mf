@@ -2365,14 +2365,15 @@
 				description="the matrix" />
 		</method>
 
-		<method name="SetResourceID"
-			description="Sets the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource">
-			<param name="Value" type="uint32" pass="in" description="the id of the resource" />
+		<method name="SetResource"
+			description="Sets the Resource that the resourceid attribute of the node will point to. Throws an error, if the node type is not of type Resource">
+			<param name="Resource" type="class" class="Resource" pass="in"
+				description="the resource" />
 		</method>
 
-		<method name="GetResourceID"
-			description="Retrieves the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource">
-			<param name="Value" type="uint32" pass="return" description="the id of the resource" />
+		<method name="GetResource" description="Retrieves the resource of the node. Throws an error, if the node type is not of type Resource">
+			<param name="Resource" type="class" class="Resource" pass="return"
+				description="the resource" />
 		</method>
 	</class>
 

@@ -13237,21 +13237,26 @@ Lib3MFResult lib3mf_implicitnode_getmatrix(Lib3MF_ImplicitNode pImplicitNode, sL
 	}
 }
 
-Lib3MFResult lib3mf_implicitnode_setresourceid(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_uint32 nValue)
+Lib3MFResult lib3mf_implicitnode_setresource(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Resource pResource)
 {
 	IBase* pIBaseClass = (IBase *)pImplicitNode;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitNode, "ImplicitNode", "SetResourceID");
-			pJournalEntry->addUInt32Parameter("Value", nValue);
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitNode, "ImplicitNode", "SetResource");
+			pJournalEntry->addHandleParameter("Resource", pResource);
 		}
+		IBase* pIBaseClassResource = (IBase *)pResource;
+		IResource* pIResource = dynamic_cast<IResource*>(pIBaseClassResource);
+		if (!pIResource)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
 		IImplicitNode* pIImplicitNode = dynamic_cast<IImplicitNode*>(pIBaseClass);
 		if (!pIImplicitNode)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIImplicitNode->SetResourceID(nValue);
+		pIImplicitNode->SetResource(pIResource);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -13269,25 +13274,27 @@ Lib3MFResult lib3mf_implicitnode_setresourceid(Lib3MF_ImplicitNode pImplicitNode
 	}
 }
 
-Lib3MFResult lib3mf_implicitnode_getresourceid(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_uint32 * pValue)
+Lib3MFResult lib3mf_implicitnode_getresource(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Resource * pResource)
 {
 	IBase* pIBaseClass = (IBase *)pImplicitNode;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitNode, "ImplicitNode", "GetResourceID");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitNode, "ImplicitNode", "GetResource");
 		}
-		if (pValue == nullptr)
+		if (pResource == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseResource(nullptr);
 		IImplicitNode* pIImplicitNode = dynamic_cast<IImplicitNode*>(pIBaseClass);
 		if (!pIImplicitNode)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		*pValue = pIImplicitNode->GetResourceID();
+		pBaseResource = pIImplicitNode->GetResource();
 
+		*pResource = (IBase*)(pBaseResource);
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addUInt32Result("Value", *pValue);
+			pJournalEntry->addHandleResult("Resource", *pResource);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -21246,10 +21253,10 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_implicitnode_setmatrix;
 	if (sProcName == "lib3mf_implicitnode_getmatrix") 
 		*ppProcAddress = (void*) &lib3mf_implicitnode_getmatrix;
-	if (sProcName == "lib3mf_implicitnode_setresourceid") 
-		*ppProcAddress = (void*) &lib3mf_implicitnode_setresourceid;
-	if (sProcName == "lib3mf_implicitnode_getresourceid") 
-		*ppProcAddress = (void*) &lib3mf_implicitnode_getresourceid;
+	if (sProcName == "lib3mf_implicitnode_setresource") 
+		*ppProcAddress = (void*) &lib3mf_implicitnode_setresource;
+	if (sProcName == "lib3mf_implicitnode_getresource") 
+		*ppProcAddress = (void*) &lib3mf_implicitnode_getresource;
 	if (sProcName == "lib3mf_nodeiterator_getcurrent") 
 		*ppProcAddress = (void*) &lib3mf_nodeiterator_getcurrent;
 	if (sProcName == "lib3mf_function_getdisplayname") 

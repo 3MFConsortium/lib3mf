@@ -143,7 +143,7 @@ namespace NMR
 		{
 			if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_RESOURCE_ID) == 0)
             {
-                m_pImplicitNode->setResourceID(std::stoi(pAttributeValue));
+                m_pImplicitNode->setModelResourceID(std::stoi(pAttributeValue));
             }
 		}
     }
