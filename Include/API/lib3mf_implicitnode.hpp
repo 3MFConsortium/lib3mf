@@ -194,18 +194,17 @@ namespace Lib3MF
              */
             Lib3MF::sMatrix4x4 GetMatrix() override;
 
+            /**
+             * IImplicitNode::SetResource - Sets the Resource that the resourceid attribute of the node will point to. Throws an error, if the node type is not of type Resource
+             * @param[in] pResource - the resource
+             */
+            void SetResource(IResource *pResource) override;
 
-			/**
-			* IImplicitNode::SetResourceID - Sets the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
-			* @param[in] nValue - the id of the resource
-			*/
-			void SetResourceID(const Lib3MF_uint32 nValue) override;
-
-			/**
-			* IImplicitNode::GetResourceID - Retrieves the unique ResourceID attribute of the node. Throws an error, if the node type is not of type Resource
-			* @return the id of the resource
-			*/
-			Lib3MF_uint32 GetResourceID() override;
+            /**
+             * IImplicitNode::GetResource - Retrieves the resource of the node. Throws an error, if the node type is not of type Resource
+             * @return the resource
+             */
+            IResource *GetResource() override;
         };
 
     } // namespace Impl
