@@ -499,6 +499,7 @@ namespace NMR {
 		case NMR_ERROR_IMPLICIT_FUNCTION_INVALID_SOURCE_PORT : return "Invalid source port in implicit function";
 		case NMR_ERROR_IMPLICIT_FUNCTION_INVALID_TARGET_PORT : return "Invalid target port in implicit function";
 		case NMR_ERROR_IMPLICIT_FUNCTION_INVALID_PORT_TYPE : return "Invalid port type in implicit function";
+		case NMR_ERROR_IMPLICIT_PORT_DOES_NOT_EXIST : return "The port does not exist";
 
 
 		// XML Parser Error Constants(0x9XXX)

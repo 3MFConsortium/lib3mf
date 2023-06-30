@@ -879,4 +879,176 @@ namespace Lib3MF
     // Compare the functions
     compareFunctions(newFunction, functionIterator->GetCurrentFunction());      
   }
-}
+
+  TEST_F(Volumetric, SubFunction)
+  {
+      // Create a gyroid function
+      PImplicitFunction gyroidFunction = model->AddImplicitFunction();
+      {
+          gyroidFunction->SetDisplayName("gyroid");
+
+          auto functionArgument = gyroidFunction->AddInput(
+              "pos", "position", Lib3MF::eImplicitPortType::Vector);
+
+          auto decomposePos = gyroidFunction->AddNode(
+              Lib3MF::eImplicitNodeType::DecomposeVector, "decomposePos",
+              "decompose pos", "group_a");
+
+          decomposePos->FindInput("vector")->SetType(
+              Lib3MF::eImplicitPortType::Vector);
+          gyroidFunction->AddLinkByNames("inputs.pos", "decomposePos.vector");
+
+          auto composeYZX =
+              gyroidFunction->AddNode(Lib3MF::eImplicitNodeType::ComposeVector,
+                                      "composeYZX", "compose yzx", "group_a");
+          composeYZX->FindOutput("vector")->SetType(
+              Lib3MF::eImplicitPortType::Vector);
+
+          gyroidFunction->AddLinkByNames("decomposePos.z", "composeYZX.y");
+          gyroidFunction->AddLinkByNames("decomposePos.y", "composeYZX.x");
+          gyroidFunction->AddLinkByNames("decomposePos.x", "composeYZX.z");
+
+          // Add the necessay nodes and links for the gyroid (dot(sin(pos),
+          // cos(composeYZX))
+          auto sinNode = gyroidFunction->AddNode(
+              Lib3MF::eImplicitNodeType::Sinus, "sin", "sin", "group_a");
+          sinNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
+          sinNode->FindOutput("result")->SetType(
+              Lib3MF::eImplicitPortType::Vector);
+          gyroidFunction->AddLinkByNames("inputs.pos", "sin.A");
+
+          auto cosNode = gyroidFunction->AddNode(
+              Lib3MF::eImplicitNodeType::Cosinus, "cos", "cos", "group_a");
+          cosNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
+          cosNode->FindOutput("result")->SetType(
+              Lib3MF::eImplicitPortType::Vector);
+          gyroidFunction->AddLinkByNames("composeYZX.vector", "cos.A");
+
+          auto dotNode = gyroidFunction->AddNode(Lib3MF::eImplicitNodeType::Dot,
+                                                 "dot", "dot", "group_a");
+
+          dotNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
+          dotNode->FindInput("B")->SetType(Lib3MF::eImplicitPortType::Vector);
+          gyroidFunction->AddLinkByNames("sin.result", "dot.A");
+          gyroidFunction->AddLinkByNames("cos.result", "dot.B");
+
+          auto output = gyroidFunction->AddOutput(
+              "shape", "signed distance to the surface",
+              Lib3MF::eImplicitPortType::Scalar);
+
+          output->SetReference("dot.result");
+      }
+
+      PImplicitFunction newFunction = model->AddImplicitFunction();
+      newFunction->SetDisplayName("shell");
+
+      auto functionArgument = newFunction->AddInput(
+          "pos", "position", Lib3MF::eImplicitPortType::Vector);
+
+      auto resourceNode =
+          newFunction->AddNode(Lib3MF::eImplicitNodeType::Resource,
+                               "meshResource", "mesh resource", "group_shell");
+
+      auto mesh = GetMesh();
+
+      resourceNode->SetResource(mesh.get());
+      resourceNode->FindOutput("value")->SetType(
+          Lib3MF::eImplicitPortType::ResourceID);
+
+      // Create a mesh node
+      auto meshNode = newFunction->AddNode(Lib3MF::eImplicitNodeType::Mesh,
+                                           "mesh", "mesh", "group_shell");
+
+      meshNode->FindInput("pos")->SetType(Lib3MF::eImplicitPortType::Vector);
+      meshNode->FindInput("mesh")->SetType(
+          Lib3MF::eImplicitPortType::ResourceID);
+      newFunction->AddLinkByNames("inputs.pos", "mesh.pos");
+
+      newFunction->AddLinkByNames("meshResource.value", "mesh.mesh");
+
+      auto absNode = newFunction->AddNode(Lib3MF::eImplicitNodeType::Abs, "abs",
+                                          "abs", "group_shel l");
+
+      newFunction->AddLinkByNames("mesh.distance", "abs.A");
+
+      auto constScalarNode =
+          newFunction->AddNode(Lib3MF::eImplicitNodeType::Constant, "thickness",
+                               "thickness", "group_shell");
+
+      constScalarNode->SetConstant(2.);
+
+      auto subtractionNode =
+          newFunction->AddNode(Lib3MF::eImplicitNodeType::Subtraction,
+                               "subtraction", "subtraction", "group_shell");
+
+      subtractionNode->FindInput("A")->SetType(
+          Lib3MF::eImplicitPortType::Scalar);
+
+      newFunction->AddLinkByNames("abs.result", "subtraction.A");
+      newFunction->AddLinkByNames("thickness.value", "subtraction.B");
+
+      auto output =
+          newFunction->AddOutput("shape", "signed distance to the surface",
+                                 Lib3MF::eImplicitPortType::Scalar);
+
+      auto gyroidNode =
+          newFunction->AddNode(Lib3MF::eImplicitNodeType::FunctionCall,
+                               "gyroid", "gyroid", "group_gyroid");
+
+      auto funcitionIdNode =
+          newFunction->AddNode(Lib3MF::eImplicitNodeType::Resource,
+                               "gyroidID", "function resource", "group_gyroid");
+
+      funcitionIdNode->FindOutput("value")->SetType(
+          Lib3MF::eImplicitPortType::ResourceID);
+
+      funcitionIdNode->SetResource(gyroidFunction.get());
+
+      auto functionInput = gyroidNode->FindInput("functionID");
+      ASSERT_TRUE(functionInput);
+
+      functionInput->SetType(
+          Lib3MF::eImplicitPortType::ResourceID);
+
+      newFunction->AddLinkByNames("gyroidID.value", "gyroid.functionID");
+
+	  // Currently you have to add the inputs and outputs of the called function manually. We should automate this.
+      gyroidNode->AddInput("pos", "position")->SetType(
+          Lib3MF::eImplicitPortType::Vector);
+
+      gyroidNode->AddOutput("shape", "signed distance to the surface")
+          ->SetType(Lib3MF::eImplicitPortType::Scalar);
+
+      newFunction->AddLinkByNames("inputs.pos", "gyroid.pos");
+
+      auto maxNode = newFunction->AddNode(Lib3MF::eImplicitNodeType::Max, "max",
+                                          "max - intersection", "group_shell");
+
+      newFunction->AddLinkByNames("gyroid.shape", "max.A");
+      newFunction->AddLinkByNames("subtraction.result", "max.B");
+
+      // output->SetReference("subtraction.result");
+      output->SetReference("max.result");
+
+      // write to file
+      writer3MF->WriteToFile(Volumetric::OutFolder +
+                             "ShellWithGyroidSubfunction.3mf");
+
+      // read and compare
+      PModel ioModel = wrapper->CreateModel();
+      PReader ioReader = ioModel->QueryReader("3mf");
+      ioReader->ReadFromFile(Volumetric::OutFolder +
+                             "ShellWithGyroidSubfunction.3mf");
+
+      // Check the function
+      auto functionIterator = ioModel->GetFunctions();
+      ASSERT_EQ(functionIterator->Count(), 2);
+
+      EXPECT_TRUE(functionIterator->MoveNext());
+
+      // Compare the functions
+      compareFunctions(gyroidFunction, functionIterator->GetCurrentFunction());
+      EXPECT_TRUE(functionIterator->MoveNext());
+      compareFunctions(newFunction, functionIterator->GetCurrentFunction());
+  }
+  }

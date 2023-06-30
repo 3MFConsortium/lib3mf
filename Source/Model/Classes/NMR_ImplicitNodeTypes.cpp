@@ -91,8 +91,7 @@ namespace NMR
                 {eImplicitNodeType::Pow, {"pow", {"base", "exponent"}, {"result"}}},
                 {eImplicitNodeType::Sqrt, {"sqrt", {"A"}, {"result"}}},
                 {eImplicitNodeType::Mesh, {"mesh", {"pos", "mesh"}, {"distance"}}}, 
-                // {eImplicitNodeType::FunctionCall, {"functioncall", {"*", "*", ...}, {"*", "*", ... }}}, ?
-                // both actually needs an attribute field: type, {name, {attributes}, {inputs}, {outputs}}
+                {eImplicitNodeType::FunctionCall, {"functioncall", {"functionID"}, {}}}, // besides of the functionIdm inputs and outputs are user defined
                 {eImplicitNodeType::Length , {"length", {"A"}, {"result"}}},
                 {eImplicitNodeType::DecomposeVector , {"decomposevector", {"vector"}, {"x","y", "z"}}},
                 {eImplicitNodeType::Resource, {"resource", {}, {"value"}}}

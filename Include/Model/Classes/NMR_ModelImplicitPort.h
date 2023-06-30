@@ -50,6 +50,8 @@ namespace NMR
         ImplicitIdentifier m_reference;
         CModelImplicitNode * m_parent = nullptr;
 
+        void throwIfNotAnInstance() const;
+
       public:
         CModelImplicitPort(CModelImplicitNode * parent,
                            ImplicitIdentifier const & identifier,

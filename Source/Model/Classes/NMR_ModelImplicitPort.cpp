@@ -27,81 +27,97 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --*/
 
 #include "Model/Classes/NMR_ModelImplicitPort.h"
-#include "Common/NMR_Exception.h"
 
+#include "Common/NMR_Exception.h"
 
 namespace NMR
 {
-    CModelImplicitPort::CModelImplicitPort(CModelImplicitNode * parent,
-                                           ImplicitIdentifier const & identifier,
-                                           std::string const & displayname)
-        : m_parent(parent)
-        , m_identifier(identifier)
-        , m_displayname(displayname)
+    CModelImplicitPort::CModelImplicitPort(CModelImplicitNode* parent,
+
+                                           ImplicitIdentifier const& identifier,
+                                           std::string const& displayname)
+        : m_parent(parent), m_identifier(identifier), m_displayname(displayname)
     {
     }
-    CModelImplicitPort::CModelImplicitPort(ImplicitIdentifier const & identifier,
-                                           std::string const & displayname,
+
+    CModelImplicitPort::CModelImplicitPort(ImplicitIdentifier const& identifier,
+                                           std::string const& displayname,
                                            Lib3MF::eImplicitPortType type)
-        : m_identifier(identifier)
-        , m_displayname(displayname)
-        , m_type(type)
+        : m_identifier(identifier), m_displayname(displayname), m_type(type)
     {
     }
 
-    CModelImplicitPort::CModelImplicitPort(ImplicitIdentifier const & identifier,
-                                           std::string const & displayname,
+    CModelImplicitPort::CModelImplicitPort(ImplicitIdentifier const& identifier,
+                                           std::string const& displayname,
                                            Lib3MF::eImplicitPortType type,
-                                           ImplicitIdentifier const & reference)
-        : m_identifier(identifier)
-        , m_displayname(displayname)
-        , m_type(type)
-        , m_reference(reference)
+                                           ImplicitIdentifier const& reference)
+        : m_identifier(identifier),
+          m_displayname(displayname),
+          m_type(type),
+          m_reference(reference)
     {
     }
 
-    ImplicitIdentifier const & CModelImplicitPort::getIdentifier() const
+    ImplicitIdentifier const& CModelImplicitPort::getIdentifier() const
     {
+        throwIfNotAnInstance();
         return m_identifier;
     }
 
-    std::string const & CModelImplicitPort::getDisplayName() const
+    std::string const& CModelImplicitPort::getDisplayName() const
     {
+        throwIfNotAnInstance();
         return m_displayname;
     }
 
-    void CModelImplicitPort::setIdentifier(std::string const & identifier)
+    void CModelImplicitPort::setIdentifier(std::string const& identifier)
     {
+        throwIfNotAnInstance();
         m_identifier = identifier;
     }
 
-    void CModelImplicitPort::setDisplayName(std::string const & displayname)
+    void CModelImplicitPort::setDisplayName(std::string const& displayname)
     {
+        throwIfNotAnInstance();
         m_displayname = displayname;
     }
 
     Lib3MF::eImplicitPortType CModelImplicitPort::getType() const
     {
+        throwIfNotAnInstance();
         return m_type;
     }
 
     void CModelImplicitPort::setType(Lib3MF::eImplicitPortType type)
     {
+        throwIfNotAnInstance();
         m_type = type;
     }
 
-    ImplicitIdentifier const & NMR::CModelImplicitPort::getReference() const
+    ImplicitIdentifier const& NMR::CModelImplicitPort::getReference() const
     {
+        throwIfNotAnInstance();
         return m_reference;
     }
 
-    void NMR::CModelImplicitPort::setReference(ImplicitIdentifier const & reference)
+    void NMR::CModelImplicitPort::setReference(
+        ImplicitIdentifier const& reference)
     {
+        throwIfNotAnInstance();
         m_reference = reference;
     }
 
-    CModelImplicitNode * NMR::CModelImplicitPort::getParent() const
+    CModelImplicitNode* NMR::CModelImplicitPort::getParent() const
     {
+        throwIfNotAnInstance();
         return m_parent;
     }
-}
+
+    void CModelImplicitPort::throwIfNotAnInstance() const
+    {
+        if(!this)
+        {
+            throw CNMRException(NMR_ERROR_IMPLICIT_PORT_DOES_NOT_EXIST);
+        }
+    }
+}  // namespace NMR

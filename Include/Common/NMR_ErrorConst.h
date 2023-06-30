@@ -1416,6 +1416,9 @@ Model error codes (0x8XXX)
 // Invalid port type in implicit function
 #define NMR_ERROR_IMPLICIT_FUNCTION_INVALID_PORT_TYPE 0x883D
 
+// Port does not exist in node
+#define NMR_ERROR_IMPLICIT_PORT_DOES_NOT_EXIST 0x883E
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/
