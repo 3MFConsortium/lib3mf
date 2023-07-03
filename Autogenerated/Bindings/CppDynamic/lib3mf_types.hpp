@@ -146,6 +146,10 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT 4003 /** Toolpath has an invalid number of points */
 #define LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED 4004 /** Toolpath attribute already defined */
 #define LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE 4005 /** Toolpath attribute is of invalid type */
+#define LIB3MF_ERROR_EMPTYNAMESPACEPREFIX 4006 /** Empty namespace prefix. */
+#define LIB3MF_ERROR_EMPTYNAMESPACE 4007 /** Empty namespace. */
+#define LIB3MF_ERROR_INVALIDNAMESPACEPREFIX 4008 /** Invalid namespace prefix. */
+#define LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES 4009 /** Writer does not support namespaces. */
 
 /*************************************************************************************************************************
  Error strings for Lib3MF
@@ -207,6 +211,10 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
     case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "Toolpath has an invalid number of points";
     case LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED: return "Toolpath attribute already defined";
     case LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE: return "Toolpath attribute is of invalid type";
+    case LIB3MF_ERROR_EMPTYNAMESPACEPREFIX: return "Empty namespace prefix.";
+    case LIB3MF_ERROR_EMPTYNAMESPACE: return "Empty namespace.";
+    case LIB3MF_ERROR_INVALIDNAMESPACEPREFIX: return "Invalid namespace prefix.";
+    case LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES: return "Writer does not support namespaces.";
     default: return "unknown error";
   }
 }

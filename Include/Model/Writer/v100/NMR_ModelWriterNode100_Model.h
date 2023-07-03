@@ -101,6 +101,8 @@ namespace NMR {
 		void registerStreamWriter(const std::string& sInstanceUUID, const std::string& sPath, CChunkedBinaryStreamWriter* pBinaryStreamWriter);
 		void setWriteBinaryExtension(bool bWriteBinaryExtension);
 
+		void registerCustomNamespace (const std::string & sPrefix, const std::string & sNamespace);
+
 	};
 
 }

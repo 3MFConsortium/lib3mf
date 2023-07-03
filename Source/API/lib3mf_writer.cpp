@@ -43,6 +43,7 @@ Abstract: This is a stub class definition of CWriter
 #include "Common/NMR_SecureContext.h"
 #include "Model/Classes/NMR_KeyStore.h"
 #include "Common/NMR_ModelWarnings.h"
+#include "Common/NMR_StringUtils.h"
 
 
 
@@ -308,4 +309,19 @@ void CWriter::AssignBinaryStream(IBase* pInstance, IBinaryStream* pBinaryStream)
 			m_pWriter->assignBinaryStream(sUUID, pBinaryStream->GetUUID());
 		}
 	} 
+}
+
+
+
+void CWriter::RegisterCustomNamespace(const std::string& sPrefix, const std::string& sNameSpace)
+{
+	if (sPrefix.empty ())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_EMPTYNAMESPACEPREFIX);
+	if (sNameSpace.empty())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_EMPTYNAMESPACE);
+
+	if (!NMR::fnStringIsValidAlphanumericNameString (sPrefix))
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDNAMESPACEPREFIX);
+
+	m_pWriter->registerCustomNameSpace(sPrefix, sNameSpace);
 }

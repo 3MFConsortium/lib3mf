@@ -56,6 +56,9 @@ namespace NMR {
 		virtual void createPackage(_In_ CModel * pModel) = 0;
 		virtual void writePackageToStream(_In_ PExportStream pStream) = 0;
 		virtual void releasePackage() = 0;
+
+		// Namespace prefix mapping
+		std::map<std::string, std::string> m_CustomNameSpaces;
 	public:
 		CModelWriter_3MF() = delete;
 		CModelWriter_3MF(_In_ PModel pModel);
@@ -63,6 +66,9 @@ namespace NMR {
 		virtual void exportToStream(_In_ PExportStream pStream);
 
 		void addAdditionalAttachment(_In_ std::string sPath, _In_ PImportStream pStream, _In_ std::string sRelationShipType);
+
+		void registerCustomNameSpace(const std::string& sPrefix, const std::string& sNameSpace) override;
+		std::map<std::string, std::string> getCustomNamespaceMap();
 
 	};
 

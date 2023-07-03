@@ -117,6 +117,10 @@ class ErrorCodes(enum.IntEnum):
 	TOOLPATH_INVALIDPOINTCOUNT = 4003
 	TOOLPATH_ATTRIBUTEALREADYDEFINED = 4004
 	TOOLPATH_INVALIDATTRIBUTETYPE = 4005
+	EMPTYNAMESPACEPREFIX = 4006
+	EMPTYNAMESPACE = 4007
+	INVALIDNAMESPACEPREFIX = 4008
+	WRITERDOESNOTSUPPORTNAMESPACES = 4009
 
 '''Definition of Function Table
 '''
@@ -158,6 +162,7 @@ class FunctionTable:
 	lib3mf_writer_setcontentencryptioncallback = None
 	lib3mf_writer_createbinarystream = None
 	lib3mf_writer_assignbinarystream = None
+	lib3mf_writer_registercustomnamespace = None
 	lib3mf_persistentreadersource_getsourcetype = None
 	lib3mf_persistentreadersource_invalidatesourcedata = None
 	lib3mf_persistentreadersource_sourcedataisvalid = None
@@ -463,6 +468,8 @@ class FunctionTable:
 	lib3mf_toolpathlayerdata_getlayerdatauuid = None
 	lib3mf_toolpathlayerdata_registerprofile = None
 	lib3mf_toolpathlayerdata_registerbuilditem = None
+	lib3mf_toolpathlayerdata_setsegmentattribute = None
+	lib3mf_toolpathlayerdata_clearsegmentattributes = None
 	lib3mf_toolpathlayerdata_writehatchdata = None
 	lib3mf_toolpathlayerdata_writeloop = None
 	lib3mf_toolpathlayerdata_writepolyline = None
@@ -488,7 +495,7 @@ class FunctionTable:
 	lib3mf_toolpath_addcustomdata = None
 	lib3mf_toolpath_clearcustomdata = None
 	lib3mf_toolpath_deletecustomdata = None
-	lib3mf_toolpath_registercustomuint32attribute = None
+	lib3mf_toolpath_registercustomintegerattribute = None
 	lib3mf_toolpath_registercustomdoubleattribute = None
 	lib3mf_toolpathiterator_getcurrenttoolpath = None
 	lib3mf_slicestack_getbottomz = None
@@ -1155,6 +1162,12 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)
 			self.lib.lib3mf_writer_assignbinarystream = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_writer_registercustomnamespace")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
+			self.lib.lib3mf_writer_registercustomnamespace = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_persistentreadersource_getsourcetype")), methodAddress)
 			if err != 0:
@@ -2986,6 +2999,18 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
 			self.lib.lib3mf_toolpathlayerdata_registerbuilditem = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_setsegmentattribute")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p)
+			self.lib.lib3mf_toolpathlayerdata_setsegmentattribute = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_clearsegmentattributes")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_toolpathlayerdata_clearsegmentattributes = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_writehatchdata")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -3136,11 +3161,11 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
 			self.lib.lib3mf_toolpath_deletecustomdata = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_registercustomuint32attribute")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_registercustomintegerattribute")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
-			self.lib.lib3mf_toolpath_registercustomuint32attribute = methodType(int(methodAddress.value))
+			self.lib.lib3mf_toolpath_registercustomintegerattribute = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_registercustomdoubleattribute")), methodAddress)
 			if err != 0:
@@ -3959,6 +3984,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_writer_assignbinarystream.restype = ctypes.c_int32
 			self.lib.lib3mf_writer_assignbinarystream.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p]
+			
+			self.lib.lib3mf_writer_registercustomnamespace.restype = ctypes.c_int32
+			self.lib.lib3mf_writer_registercustomnamespace.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
 			
 			self.lib.lib3mf_persistentreadersource_getsourcetype.restype = ctypes.c_int32
 			self.lib.lib3mf_persistentreadersource_getsourcetype.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32)]
@@ -4875,6 +4903,12 @@ class Wrapper:
 			self.lib.lib3mf_toolpathlayerdata_registerbuilditem.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerdata_registerbuilditem.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
 			
+			self.lib.lib3mf_toolpathlayerdata_setsegmentattribute.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_setsegmentattribute.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathlayerdata_clearsegmentattributes.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_clearsegmentattributes.argtypes = [ctypes.c_void_p]
+			
 			self.lib.lib3mf_toolpathlayerdata_writehatchdata.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerdata_writehatchdata.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(Position2D)]
 			
@@ -4950,8 +4984,8 @@ class Wrapper:
 			self.lib.lib3mf_toolpath_deletecustomdata.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpath_deletecustomdata.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
 			
-			self.lib.lib3mf_toolpath_registercustomuint32attribute.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpath_registercustomuint32attribute.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
+			self.lib.lib3mf_toolpath_registercustomintegerattribute.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_registercustomintegerattribute.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
 			
 			self.lib.lib3mf_toolpath_registercustomdoubleattribute.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpath_registercustomdoubleattribute.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
@@ -5786,6 +5820,12 @@ class Writer(Base):
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_writer_assignbinarystream(self._handle, InstanceHandle, BinaryStreamHandle))
+		
+	
+	def RegisterCustomNamespace(self, Prefix, NameSpace):
+		pPrefix = ctypes.c_char_p(str.encode(Prefix))
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_writer_registercustomnamespace(self._handle, pPrefix, pNameSpace))
 		
 	
 
@@ -8447,6 +8487,17 @@ class ToolpathLayerData(Base):
 		
 		return pPartID.value
 	
+	def SetSegmentAttribute(self, NameSpace, AttributeName, Value):
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
+		pValue = ctypes.c_char_p(str.encode(Value))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_setsegmentattribute(self._handle, pNameSpace, pAttributeName, pValue))
+		
+	
+	def ClearSegmentAttributes(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_clearsegmentattributes(self._handle))
+		
+	
 	def WriteHatchData(self, ProfileID, PartID, PointData):
 		nProfileID = ctypes.c_uint32(ProfileID)
 		nPartID = ctypes.c_uint32(PartID)
@@ -8695,10 +8746,10 @@ class Toolpath(Resource):
 		
 		return pSuccess.value
 	
-	def RegisterCustomUint32Attribute(self, NameSpace, AttributeName):
+	def RegisterCustomIntegerAttribute(self, NameSpace, AttributeName):
 		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
 		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_registercustomuint32attribute(self._handle, pNameSpace, pAttributeName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_registercustomintegerattribute(self._handle, pNameSpace, pAttributeName))
 		
 	
 	def RegisterCustomDoubleAttribute(self, NameSpace, AttributeName):

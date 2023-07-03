@@ -119,7 +119,8 @@ IToolpathLayerData* CToolpath::AddLayer(const Lib3MF_uint32 nZMax, const std::st
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 
 
-	std::unique_ptr<CToolpathLayerData> pToolpathData(new CToolpathLayerData(std::make_shared<NMR::CModelToolpathLayerWriteData>(m_pToolpath.get(), pNMRModelWriter3MFInstance, sPath)));
+	auto pWriterData = std::make_shared<NMR::CModelToolpathLayerWriteData>(m_pToolpath.get(), pNMRModelWriter3MFInstance, sPath, pNMRModelWriter3MFInstance->getCustomNamespaceMap ());
+	std::unique_ptr<CToolpathLayerData> pToolpathData(new CToolpathLayerData(pWriterData));
 
 	m_pToolpath->addLayer(sPath, nZMax);
 
@@ -261,7 +262,7 @@ bool CToolpath::DeleteCustomData(ICustomDOMTree* pData)
 	return m_pToolpath->deleteCustomXMLData (pDataInstance->getXMLTreeInstance ().get ());
 }
 
-void CToolpath::RegisterCustomUint32Attribute(const std::string& sNameSpace, const std::string& sAttributeName)
+void CToolpath::RegisterCustomIntegerAttribute(const std::string& sNameSpace, const std::string& sAttributeName)
 {
 	auto key = std::make_pair(sNameSpace, sAttributeName);
 	auto iIter = m_RegisteredAttributes.find (key);

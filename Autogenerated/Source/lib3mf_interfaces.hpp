@@ -446,7 +446,7 @@ public:
 	virtual void SetContentEncryptionCallback(const Lib3MF::ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData) = 0;
 
 	/**
-	* IWriter::CreateBinaryStream - Creates a binary stream object. Only applicable for 3MFz Writers.
+	* IWriter::CreateBinaryStream - Creates a binary stream object. Only applicable for 3MF Writers.
 	* @param[in] sPath - Package path to write into
 	* @return Returns a package path.
 	*/
@@ -458,6 +458,13 @@ public:
 	* @param[in] pBinaryStream - Binary stream object to use for this layer.
 	*/
 	virtual void AssignBinaryStream(IBase* pInstance, IBinaryStream* pBinaryStream) = 0;
+
+	/**
+	* IWriter::RegisterCustomNamespace - Registers a custom 3MF Namespace. Fails if Prefix is already registered.
+	* @param[in] sPrefix - Prefix to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number
+	* @param[in] sNameSpace - Namespace to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number
+	*/
+	virtual void RegisterCustomNamespace(const std::string & sPrefix, const std::string & sNameSpace) = 0;
 
 };
 
@@ -3306,6 +3313,19 @@ public:
 	virtual Lib3MF_uint32 RegisterBuildItem(IBuildItem* pBuildItem) = 0;
 
 	/**
+	* IToolpathLayerData::SetSegmentAttribute - Sets Segment Attribute for all following segments that are added. Overrides previously set attribute.
+	* @param[in] sNameSpace - The namespace of the attribute to register.
+	* @param[in] sAttributeName - The name of the attribute to register.
+	* @param[in] sValue - The value of the attribute to register.
+	*/
+	virtual void SetSegmentAttribute(const std::string & sNameSpace, const std::string & sAttributeName, const std::string & sValue) = 0;
+
+	/**
+	* IToolpathLayerData::ClearSegmentAttributes - Clears current segment attributes.
+	*/
+	virtual void ClearSegmentAttributes() = 0;
+
+	/**
 	* IToolpathLayerData::WriteHatchData - writes hatch data to the layer.
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
@@ -3509,11 +3529,11 @@ public:
 	virtual bool DeleteCustomData(ICustomDOMTree* pData) = 0;
 
 	/**
-	* IToolpath::RegisterCustomUint32Attribute - Registers a UInt32 Attribute that each segment holds.
+	* IToolpath::RegisterCustomIntegerAttribute - Registers an Integer Attribute that each segment holds.
 	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
 	* @param[in] sAttributeName - Attribute name. MUST not be empty.
 	*/
-	virtual void RegisterCustomUint32Attribute(const std::string & sNameSpace, const std::string & sAttributeName) = 0;
+	virtual void RegisterCustomIntegerAttribute(const std::string & sNameSpace, const std::string & sAttributeName) = 0;
 
 	/**
 	* IToolpath::RegisterCustomDoubleAttribute - Registers a Double Attribute that each segment holds. Registering only applies to reader or writer objects created after the call.

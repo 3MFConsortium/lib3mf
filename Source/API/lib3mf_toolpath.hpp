@@ -103,7 +103,7 @@ public:
 
 	bool DeleteCustomData(ICustomDOMTree* pData) override;
 
-	void RegisterCustomUint32Attribute(const std::string& sNameSpace, const std::string& sAttributeName) override;
+	void RegisterCustomIntegerAttribute(const std::string& sNameSpace, const std::string& sAttributeName) override;
 
 	void RegisterCustomDoubleAttribute(const std::string& sNameSpace, const std::string& sAttributeName) override;
 

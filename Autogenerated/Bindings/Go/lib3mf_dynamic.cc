@@ -66,6 +66,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Writer_SetContentEncryptionCallback = NULL;
 	pWrapperTable->m_Writer_CreateBinaryStream = NULL;
 	pWrapperTable->m_Writer_AssignBinaryStream = NULL;
+	pWrapperTable->m_Writer_RegisterCustomNamespace = NULL;
 	pWrapperTable->m_PersistentReaderSource_GetSourceType = NULL;
 	pWrapperTable->m_PersistentReaderSource_InvalidateSourceData = NULL;
 	pWrapperTable->m_PersistentReaderSource_SourceDataIsValid = NULL;
@@ -371,6 +372,8 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ToolpathLayerData_GetLayerDataUUID = NULL;
 	pWrapperTable->m_ToolpathLayerData_RegisterProfile = NULL;
 	pWrapperTable->m_ToolpathLayerData_RegisterBuildItem = NULL;
+	pWrapperTable->m_ToolpathLayerData_SetSegmentAttribute = NULL;
+	pWrapperTable->m_ToolpathLayerData_ClearSegmentAttributes = NULL;
 	pWrapperTable->m_ToolpathLayerData_WriteHatchData = NULL;
 	pWrapperTable->m_ToolpathLayerData_WriteLoop = NULL;
 	pWrapperTable->m_ToolpathLayerData_WritePolyline = NULL;
@@ -396,7 +399,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Toolpath_AddCustomData = NULL;
 	pWrapperTable->m_Toolpath_ClearCustomData = NULL;
 	pWrapperTable->m_Toolpath_DeleteCustomData = NULL;
-	pWrapperTable->m_Toolpath_RegisterCustomUint32Attribute = NULL;
+	pWrapperTable->m_Toolpath_RegisterCustomIntegerAttribute = NULL;
 	pWrapperTable->m_Toolpath_RegisterCustomDoubleAttribute = NULL;
 	pWrapperTable->m_ToolpathIterator_GetCurrentToolpath = NULL;
 	pWrapperTable->m_SliceStack_GetBottomZ = NULL;
@@ -747,6 +750,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Writer_AssignBinaryStream == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Writer_RegisterCustomNamespace = (PLib3MFWriter_RegisterCustomNamespacePtr) GetProcAddress(hLibrary, "lib3mf_writer_registercustomnamespace");
+	#else // _WIN32
+	pWrapperTable->m_Writer_RegisterCustomNamespace = (PLib3MFWriter_RegisterCustomNamespacePtr) dlsym(hLibrary, "lib3mf_writer_registercustomnamespace");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Writer_RegisterCustomNamespace == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -3495,6 +3507,24 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerData_SetSegmentAttribute = (PLib3MFToolpathLayerData_SetSegmentAttributePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_setsegmentattribute");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerData_SetSegmentAttribute = (PLib3MFToolpathLayerData_SetSegmentAttributePtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_setsegmentattribute");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerData_SetSegmentAttribute == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerData_ClearSegmentAttributes = (PLib3MFToolpathLayerData_ClearSegmentAttributesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_clearsegmentattributes");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerData_ClearSegmentAttributes = (PLib3MFToolpathLayerData_ClearSegmentAttributesPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_clearsegmentattributes");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerData_ClearSegmentAttributes == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_ToolpathLayerData_WriteHatchData = (PLib3MFToolpathLayerData_WriteHatchDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writehatchdata");
 	#else // _WIN32
 	pWrapperTable->m_ToolpathLayerData_WriteHatchData = (PLib3MFToolpathLayerData_WriteHatchDataPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writehatchdata");
@@ -3720,12 +3750,12 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_Toolpath_RegisterCustomUint32Attribute = (PLib3MFToolpath_RegisterCustomUint32AttributePtr) GetProcAddress(hLibrary, "lib3mf_toolpath_registercustomuint32attribute");
+	pWrapperTable->m_Toolpath_RegisterCustomIntegerAttribute = (PLib3MFToolpath_RegisterCustomIntegerAttributePtr) GetProcAddress(hLibrary, "lib3mf_toolpath_registercustomintegerattribute");
 	#else // _WIN32
-	pWrapperTable->m_Toolpath_RegisterCustomUint32Attribute = (PLib3MFToolpath_RegisterCustomUint32AttributePtr) dlsym(hLibrary, "lib3mf_toolpath_registercustomuint32attribute");
+	pWrapperTable->m_Toolpath_RegisterCustomIntegerAttribute = (PLib3MFToolpath_RegisterCustomIntegerAttributePtr) dlsym(hLibrary, "lib3mf_toolpath_registercustomintegerattribute");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_Toolpath_RegisterCustomUint32Attribute == NULL)
+	if (pWrapperTable->m_Toolpath_RegisterCustomIntegerAttribute == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

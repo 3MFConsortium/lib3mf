@@ -71,6 +71,10 @@ public:
 
 	std::string GetLayerDataUUID() override;
 
+	void SetSegmentAttribute(const std::string& sNameSpace, const std::string& sAttributeName, const std::string& sValue) override;
+
+	void ClearSegmentAttributes() override;
+
 	Lib3MF_uint32 RegisterProfile(IToolpathProfile* pProfile) override;
 
 	Lib3MF_uint32 RegisterBuildItem(IBuildItem* pBuildItem) override;

@@ -924,6 +924,11 @@ namespace NMR {
 		m_bWriteBinaryExtension = bWriteBinaryExtension;
 	}
 
+	void CModelWriterNode100_Model::registerCustomNamespace(const std::string& sPrefix, const std::string& sNamespace)
+	{
+		m_pXMLWriter->RegisterCustomNameSpace(sNamespace, sPrefix);
+	}
+
 	void CModelWriterNode100_Model::writeToolpaths()
 	{
 		nfUint32 nCount = m_pModel->getResourceCount();

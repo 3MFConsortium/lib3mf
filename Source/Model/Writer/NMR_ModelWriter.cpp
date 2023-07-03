@@ -133,5 +133,11 @@ namespace NMR {
 		m_bAllowBinaryStreams = true;
 	}
 
+	void CModelWriter::registerCustomNameSpace(const std::string& sPrefix, const std::string& sNameSpace)
+	{
+		throw CNMRException(NMR_ERROR_WRITERDOESNOTSUPPORTNAMESPACES);
+	}
+
+
 
 }

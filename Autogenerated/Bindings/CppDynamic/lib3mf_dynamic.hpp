@@ -416,6 +416,10 @@ public:
 			case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "TOOLPATH_INVALIDPOINTCOUNT";
 			case LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED: return "TOOLPATH_ATTRIBUTEALREADYDEFINED";
 			case LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE: return "TOOLPATH_INVALIDATTRIBUTETYPE";
+			case LIB3MF_ERROR_EMPTYNAMESPACEPREFIX: return "EMPTYNAMESPACEPREFIX";
+			case LIB3MF_ERROR_EMPTYNAMESPACE: return "EMPTYNAMESPACE";
+			case LIB3MF_ERROR_INVALIDNAMESPACEPREFIX: return "INVALIDNAMESPACEPREFIX";
+			case LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES: return "WRITERDOESNOTSUPPORTNAMESPACES";
 		}
 		return "UNKNOWN";
 	}
@@ -477,6 +481,10 @@ public:
 			case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "Toolpath has an invalid number of points";
 			case LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED: return "Toolpath attribute already defined";
 			case LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE: return "Toolpath attribute is of invalid type";
+			case LIB3MF_ERROR_EMPTYNAMESPACEPREFIX: return "Empty namespace prefix.";
+			case LIB3MF_ERROR_EMPTYNAMESPACE: return "Empty namespace.";
+			case LIB3MF_ERROR_INVALIDNAMESPACEPREFIX: return "Invalid namespace prefix.";
+			case LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES: return "Writer does not support namespaces.";
 		}
 		return "unknown error";
 	}
@@ -770,6 +778,7 @@ public:
 	inline void SetContentEncryptionCallback(const ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData);
 	inline PBinaryStream CreateBinaryStream(const std::string & sPath);
 	inline void AssignBinaryStream(classParam<CBase> pInstance, classParam<CBinaryStream> pBinaryStream);
+	inline void RegisterCustomNamespace(const std::string & sPrefix, const std::string & sNameSpace);
 };
 	
 /*************************************************************************************************************************
@@ -1715,6 +1724,8 @@ public:
 	inline std::string GetLayerDataUUID();
 	inline Lib3MF_uint32 RegisterProfile(classParam<CToolpathProfile> pProfile);
 	inline Lib3MF_uint32 RegisterBuildItem(classParam<CBuildItem> pBuildItem);
+	inline void SetSegmentAttribute(const std::string & sNameSpace, const std::string & sAttributeName, const std::string & sValue);
+	inline void ClearSegmentAttributes();
 	inline void WriteHatchData(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
 	inline void WriteLoop(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
 	inline void WritePolyline(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
@@ -1756,7 +1767,7 @@ public:
 	inline PCustomDOMTree AddCustomData(const std::string & sNameSpace, const std::string & sNameSpacePrefix, const std::string & sDataName);
 	inline Lib3MF_uint32 ClearCustomData();
 	inline bool DeleteCustomData(classParam<CCustomDOMTree> pData);
-	inline void RegisterCustomUint32Attribute(const std::string & sNameSpace, const std::string & sAttributeName);
+	inline void RegisterCustomIntegerAttribute(const std::string & sNameSpace, const std::string & sAttributeName);
 	inline void RegisterCustomDoubleAttribute(const std::string & sNameSpace, const std::string & sAttributeName);
 };
 	
@@ -2393,6 +2404,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Writer_SetContentEncryptionCallback = nullptr;
 		pWrapperTable->m_Writer_CreateBinaryStream = nullptr;
 		pWrapperTable->m_Writer_AssignBinaryStream = nullptr;
+		pWrapperTable->m_Writer_RegisterCustomNamespace = nullptr;
 		pWrapperTable->m_PersistentReaderSource_GetSourceType = nullptr;
 		pWrapperTable->m_PersistentReaderSource_InvalidateSourceData = nullptr;
 		pWrapperTable->m_PersistentReaderSource_SourceDataIsValid = nullptr;
@@ -2698,6 +2710,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ToolpathLayerData_GetLayerDataUUID = nullptr;
 		pWrapperTable->m_ToolpathLayerData_RegisterProfile = nullptr;
 		pWrapperTable->m_ToolpathLayerData_RegisterBuildItem = nullptr;
+		pWrapperTable->m_ToolpathLayerData_SetSegmentAttribute = nullptr;
+		pWrapperTable->m_ToolpathLayerData_ClearSegmentAttributes = nullptr;
 		pWrapperTable->m_ToolpathLayerData_WriteHatchData = nullptr;
 		pWrapperTable->m_ToolpathLayerData_WriteLoop = nullptr;
 		pWrapperTable->m_ToolpathLayerData_WritePolyline = nullptr;
@@ -2723,7 +2737,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Toolpath_AddCustomData = nullptr;
 		pWrapperTable->m_Toolpath_ClearCustomData = nullptr;
 		pWrapperTable->m_Toolpath_DeleteCustomData = nullptr;
-		pWrapperTable->m_Toolpath_RegisterCustomUint32Attribute = nullptr;
+		pWrapperTable->m_Toolpath_RegisterCustomIntegerAttribute = nullptr;
 		pWrapperTable->m_Toolpath_RegisterCustomDoubleAttribute = nullptr;
 		pWrapperTable->m_ToolpathIterator_GetCurrentToolpath = nullptr;
 		pWrapperTable->m_SliceStack_GetBottomZ = nullptr;
@@ -3070,6 +3084,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_Writer_AssignBinaryStream == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Writer_RegisterCustomNamespace = (PLib3MFWriter_RegisterCustomNamespacePtr) GetProcAddress(hLibrary, "lib3mf_writer_registercustomnamespace");
+		#else // _WIN32
+		pWrapperTable->m_Writer_RegisterCustomNamespace = (PLib3MFWriter_RegisterCustomNamespacePtr) dlsym(hLibrary, "lib3mf_writer_registercustomnamespace");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Writer_RegisterCustomNamespace == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -5818,6 +5841,24 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_SetSegmentAttribute = (PLib3MFToolpathLayerData_SetSegmentAttributePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_setsegmentattribute");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_SetSegmentAttribute = (PLib3MFToolpathLayerData_SetSegmentAttributePtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_setsegmentattribute");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_SetSegmentAttribute == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_ClearSegmentAttributes = (PLib3MFToolpathLayerData_ClearSegmentAttributesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_clearsegmentattributes");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_ClearSegmentAttributes = (PLib3MFToolpathLayerData_ClearSegmentAttributesPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_clearsegmentattributes");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_ClearSegmentAttributes == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_ToolpathLayerData_WriteHatchData = (PLib3MFToolpathLayerData_WriteHatchDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writehatchdata");
 		#else // _WIN32
 		pWrapperTable->m_ToolpathLayerData_WriteHatchData = (PLib3MFToolpathLayerData_WriteHatchDataPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writehatchdata");
@@ -6043,12 +6084,12 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_Toolpath_RegisterCustomUint32Attribute = (PLib3MFToolpath_RegisterCustomUint32AttributePtr) GetProcAddress(hLibrary, "lib3mf_toolpath_registercustomuint32attribute");
+		pWrapperTable->m_Toolpath_RegisterCustomIntegerAttribute = (PLib3MFToolpath_RegisterCustomIntegerAttributePtr) GetProcAddress(hLibrary, "lib3mf_toolpath_registercustomintegerattribute");
 		#else // _WIN32
-		pWrapperTable->m_Toolpath_RegisterCustomUint32Attribute = (PLib3MFToolpath_RegisterCustomUint32AttributePtr) dlsym(hLibrary, "lib3mf_toolpath_registercustomuint32attribute");
+		pWrapperTable->m_Toolpath_RegisterCustomIntegerAttribute = (PLib3MFToolpath_RegisterCustomIntegerAttributePtr) dlsym(hLibrary, "lib3mf_toolpath_registercustomintegerattribute");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_Toolpath_RegisterCustomUint32Attribute == nullptr)
+		if (pWrapperTable->m_Toolpath_RegisterCustomIntegerAttribute == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -7363,6 +7404,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_Writer_AssignBinaryStream == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_writer_registercustomnamespace", (void**)&(pWrapperTable->m_Writer_RegisterCustomNamespace));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Writer_RegisterCustomNamespace == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_persistentreadersource_getsourcetype", (void**)&(pWrapperTable->m_PersistentReaderSource_GetSourceType));
 		if ( (eLookupError != 0) || (pWrapperTable->m_PersistentReaderSource_GetSourceType == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -8583,6 +8628,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_RegisterBuildItem == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_setsegmentattribute", (void**)&(pWrapperTable->m_ToolpathLayerData_SetSegmentAttribute));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_SetSegmentAttribute == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_clearsegmentattributes", (void**)&(pWrapperTable->m_ToolpathLayerData_ClearSegmentAttributes));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_ClearSegmentAttributes == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_writehatchdata", (void**)&(pWrapperTable->m_ToolpathLayerData_WriteHatchData));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_WriteHatchData == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -8683,8 +8736,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_DeleteCustomData == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_toolpath_registercustomuint32attribute", (void**)&(pWrapperTable->m_Toolpath_RegisterCustomUint32Attribute));
-		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_RegisterCustomUint32Attribute == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_toolpath_registercustomintegerattribute", (void**)&(pWrapperTable->m_Toolpath_RegisterCustomIntegerAttribute));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_RegisterCustomIntegerAttribute == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_toolpath_registercustomdoubleattribute", (void**)&(pWrapperTable->m_Toolpath_RegisterCustomDoubleAttribute));
@@ -9438,7 +9491,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CWriter::CreateBinaryStream - Creates a binary stream object. Only applicable for 3MFz Writers.
+	* CWriter::CreateBinaryStream - Creates a binary stream object. Only applicable for 3MF Writers.
 	* @param[in] sPath - Package path to write into
 	* @return Returns a package path.
 	*/
@@ -9463,6 +9516,16 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		Lib3MFHandle hInstance = pInstance.GetHandle();
 		Lib3MFHandle hBinaryStream = pBinaryStream.GetHandle();
 		CheckError(m_pWrapper->m_WrapperTable.m_Writer_AssignBinaryStream(m_pHandle, hInstance, hBinaryStream));
+	}
+	
+	/**
+	* CWriter::RegisterCustomNamespace - Registers a custom 3MF Namespace. Fails if Prefix is already registered.
+	* @param[in] sPrefix - Prefix to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number
+	* @param[in] sNameSpace - Namespace to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number
+	*/
+	void CWriter::RegisterCustomNamespace(const std::string & sPrefix, const std::string & sNameSpace)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Writer_RegisterCustomNamespace(m_pHandle, sPrefix.c_str(), sNameSpace.c_str()));
 	}
 	
 	/**
@@ -13438,6 +13501,25 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CToolpathLayerData::SetSegmentAttribute - Sets Segment Attribute for all following segments that are added. Overrides previously set attribute.
+	* @param[in] sNameSpace - The namespace of the attribute to register.
+	* @param[in] sAttributeName - The name of the attribute to register.
+	* @param[in] sValue - The value of the attribute to register.
+	*/
+	void CToolpathLayerData::SetSegmentAttribute(const std::string & sNameSpace, const std::string & sAttributeName, const std::string & sValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_SetSegmentAttribute(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), sValue.c_str()));
+	}
+	
+	/**
+	* CToolpathLayerData::ClearSegmentAttributes - Clears current segment attributes.
+	*/
+	void CToolpathLayerData::ClearSegmentAttributes()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_ClearSegmentAttributes(m_pHandle));
+	}
+	
+	/**
 	* CToolpathLayerData::WriteHatchData - writes hatch data to the layer.
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
@@ -13801,13 +13883,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpath::RegisterCustomUint32Attribute - Registers a UInt32 Attribute that each segment holds.
+	* CToolpath::RegisterCustomIntegerAttribute - Registers an Integer Attribute that each segment holds.
 	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
 	* @param[in] sAttributeName - Attribute name. MUST not be empty.
 	*/
-	void CToolpath::RegisterCustomUint32Attribute(const std::string & sNameSpace, const std::string & sAttributeName)
+	void CToolpath::RegisterCustomIntegerAttribute(const std::string & sNameSpace, const std::string & sAttributeName)
 	{
-		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_RegisterCustomUint32Attribute(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str()));
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_RegisterCustomIntegerAttribute(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str()));
 	}
 	
 	/**

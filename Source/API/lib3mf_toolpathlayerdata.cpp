@@ -34,6 +34,7 @@ Abstract: This is a stub class definition of CToolpathLayerData
 #include "lib3mf_object.hpp"
 #include "lib3mf_toolpathlayerreader.hpp"
 #include "lib3mf_builditem.hpp"
+#include "lib3mf_customdomtree.hpp"
 
 
 // Include custom headers here.
@@ -99,7 +100,9 @@ void CToolpathLayerData::Finish()
 
 ICustomDOMTree* CToolpathLayerData::AddCustomData(const std::string& sNameSpace, const std::string& sNameSpacePrefix, const std::string& sDataName)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pXMLData = std::make_shared<NMR::CCustomXMLTree>(sNameSpace, sDataName);
+	m_pLayerData->addCustomXMLData(pXMLData);
+	return new CCustomDOMTree(pXMLData);
 }
 
 
@@ -205,3 +208,12 @@ std::string CToolpathLayerData::GetLayerDataUUID()
 }
 
 
+void CToolpathLayerData::SetSegmentAttribute(const std::string& sNameSpace, const std::string& sAttributeName, const std::string& sValue)
+{
+	m_pLayerData->setCustomSegmentAttribute(sNameSpace, sAttributeName, sValue);
+}
+
+void CToolpathLayerData::ClearSegmentAttributes()
+{
+	m_pLayerData->clearCustomSegmentAttributes();
+}

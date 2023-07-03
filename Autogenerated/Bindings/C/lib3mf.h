@@ -226,7 +226,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_writer_addkeywrappingcallback(Lib3MF_Writer 
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_writer_setcontentencryptioncallback(Lib3MF_Writer pWriter, Lib3MFContentEncryptionCallback pTheCallback, Lib3MF_pvoid pUserData);
 
 /**
-* Creates a binary stream object. Only applicable for 3MFz Writers.
+* Creates a binary stream object. Only applicable for 3MF Writers.
 *
 * @param[in] pWriter - Writer instance.
 * @param[in] pPath - Package path to write into
@@ -244,6 +244,16 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_writer_createbinarystream(Lib3MF_Writer pWri
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_writer_assignbinarystream(Lib3MF_Writer pWriter, Lib3MF_Base pInstance, Lib3MF_BinaryStream pBinaryStream);
+
+/**
+* Registers a custom 3MF Namespace. Fails if Prefix is already registered.
+*
+* @param[in] pWriter - Writer instance.
+* @param[in] pPrefix - Prefix to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number
+* @param[in] pNameSpace - Namespace to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_writer_registercustomnamespace(Lib3MF_Writer pWriter, const char * pPrefix, const char * pNameSpace);
 
 /*************************************************************************************************************************
  Class definition for PersistentReaderSource
@@ -3439,6 +3449,25 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_registerprofile(Lib3MF_Too
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_registerbuilditem(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_BuildItem pBuildItem, Lib3MF_uint32 * pPartID);
 
 /**
+* Sets Segment Attribute for all following segments that are added. Overrides previously set attribute.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] pNameSpace - The namespace of the attribute to register.
+* @param[in] pAttributeName - The name of the attribute to register.
+* @param[in] pValue - The value of the attribute to register.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_setsegmentattribute(Lib3MF_ToolpathLayerData pToolpathLayerData, const char * pNameSpace, const char * pAttributeName, const char * pValue);
+
+/**
+* Clears current segment attributes.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_clearsegmentattributes(Lib3MF_ToolpathLayerData pToolpathLayerData);
+
+/**
 * writes hatch data to the layer.
 *
 * @param[in] pToolpathLayerData - ToolpathLayerData instance.
@@ -3707,14 +3736,14 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_clearcustomdata(Lib3MF_Toolpath pTo
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_deletecustomdata(Lib3MF_Toolpath pToolpath, Lib3MF_CustomDOMTree pData, bool * pSuccess);
 
 /**
-* Registers a UInt32 Attribute that each segment holds.
+* Registers an Integer Attribute that each segment holds.
 *
 * @param[in] pToolpath - Toolpath instance.
 * @param[in] pNameSpace - Namespace of the custom data tree. MUST not be empty.
 * @param[in] pAttributeName - Attribute name. MUST not be empty.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_registercustomuint32attribute(Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pAttributeName);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_registercustomintegerattribute(Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pAttributeName);
 
 /**
 * Registers a Double Attribute that each segment holds. Registering only applies to reader or writer objects created after the call.

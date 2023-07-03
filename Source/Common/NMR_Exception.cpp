@@ -178,7 +178,10 @@ namespace NMR {
 		case NMR_ERROR_SEGMENTATTRIBUTEISNOTUINT32: return "Segment attribute is not uint32";
 		case NMR_ERROR_SEGMENTATTRIBUTEISNOTDOUBLE: return "Segment attribute is not double";
 		case NMR_ERROR_SEGMENTATTRIBUTENOTFOUND: return "Segment attribute not found";
-			
+		case NMR_ERROR_NAMESPACEPREFIXALREADYDEFINED: return "Namespace prefix already defined";
+		case NMR_ERROR_WRITERDOESNOTSUPPORTNAMESPACES: return "Writer does not support namespaces";
+		case NMR_ERROR_NAMESPACEPREFIXISRESERVED: return "Namespace prefix is reserved";
+
 		// Unhandled exception
 		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;
 

@@ -234,6 +234,15 @@ Lib3MFResult CCall_lib3mf_writer_assignbinarystream(Lib3MFHandle libraryHandle, 
 }
 
 
+Lib3MFResult CCall_lib3mf_writer_registercustomnamespace(Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter, const char * pPrefix, const char * pNameSpace)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Writer_RegisterCustomNamespace (pWriter, pPrefix, pNameSpace);
+}
+
+
 Lib3MFResult CCall_lib3mf_persistentreadersource_getsourcetype(Lib3MFHandle libraryHandle, Lib3MF_PersistentReaderSource pPersistentReaderSource, eLib3MFPersistentReaderSourceType * pSourceType)
 {
 	if (libraryHandle == 0) 
@@ -2979,6 +2988,24 @@ Lib3MFResult CCall_lib3mf_toolpathlayerdata_registerbuilditem(Lib3MFHandle libra
 }
 
 
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_setsegmentattribute(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, const char * pNameSpace, const char * pAttributeName, const char * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_SetSegmentAttribute (pToolpathLayerData, pNameSpace, pAttributeName, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_clearsegmentattributes(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_ClearSegmentAttributes (pToolpathLayerData);
+}
+
+
 Lib3MFResult CCall_lib3mf_toolpathlayerdata_writehatchdata(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer)
 {
 	if (libraryHandle == 0) 
@@ -3204,12 +3231,12 @@ Lib3MFResult CCall_lib3mf_toolpath_deletecustomdata(Lib3MFHandle libraryHandle, 
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpath_registercustomuint32attribute(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pAttributeName)
+Lib3MFResult CCall_lib3mf_toolpath_registercustomintegerattribute(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pAttributeName)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_Toolpath_RegisterCustomUint32Attribute (pToolpath, pNameSpace, pAttributeName);
+	return wrapperTable->m_Toolpath_RegisterCustomIntegerAttribute (pToolpath, pNameSpace, pAttributeName);
 }
 
 
@@ -4779,6 +4806,10 @@ const LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN = 4002;
 const LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT = 4003;
 const LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED = 4004;
 const LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE = 4005;
+const LIB3MF_ERROR_EMPTYNAMESPACEPREFIX = 4006;
+const LIB3MF_ERROR_EMPTYNAMESPACE = 4007;
+const LIB3MF_ERROR_INVALIDNAMESPACEPREFIX = 4008;
+const LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES = 4009;
 
 // WrappedError is an error that wraps a Lib3MF error.
 type WrappedError struct {
@@ -4898,6 +4929,14 @@ func errorMessage(errorcode uint32) string {
 		return "Toolpath attribute already defined";
 	case LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE:
 		return "Toolpath attribute is of invalid type";
+	case LIB3MF_ERROR_EMPTYNAMESPACEPREFIX:
+		return "Empty namespace prefix.";
+	case LIB3MF_ERROR_EMPTYNAMESPACE:
+		return "Empty namespace.";
+	case LIB3MF_ERROR_INVALIDNAMESPACEPREFIX:
+		return "Invalid namespace prefix.";
+	case LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES:
+		return "Writer does not support namespaces.";
 	default:
 		return "unknown";
 	}
@@ -5240,7 +5279,7 @@ func (inst Writer) SetContentEncryptionCallback(theCallback ContentEncryptionCal
 	return nil
 }
 
-// CreateBinaryStream creates a binary stream object. Only applicable for 3MFz Writers.
+// CreateBinaryStream creates a binary stream object. Only applicable for 3MF Writers.
 func (inst Writer) CreateBinaryStream(path string) (BinaryStream, error) {
 	var binaryStream ref
 	ret := C.CCall_lib3mf_writer_createbinarystream(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(path)[0])), &binaryStream)
@@ -5253,6 +5292,15 @@ func (inst Writer) CreateBinaryStream(path string) (BinaryStream, error) {
 // AssignBinaryStream sets a binary stream for a mesh object. Currently supported objects are Meshes and Toolpath layers.
 func (inst Writer) AssignBinaryStream(instance Base, binaryStream BinaryStream) error {
 	ret := C.CCall_lib3mf_writer_assignbinarystream(inst.wrapperRef.LibraryHandle, inst.Ref, instance.Ref, binaryStream.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// RegisterCustomNamespace registers a custom 3MF Namespace. Fails if Prefix is already registered.
+func (inst Writer) RegisterCustomNamespace(prefix string, nameSpace string) error {
+	ret := C.CCall_lib3mf_writer_registercustomnamespace(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(prefix)[0])), (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
@@ -9032,6 +9080,24 @@ func (inst ToolpathLayerData) RegisterBuildItem(buildItem BuildItem) (uint32, er
 	return uint32(partID), nil
 }
 
+// SetSegmentAttribute sets Segment Attribute for all following segments that are added. Overrides previously set attribute.
+func (inst ToolpathLayerData) SetSegmentAttribute(nameSpace string, attributeName string, value string) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_setsegmentattribute(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), (*C.char)(unsafe.Pointer(&[]byte(value)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// ClearSegmentAttributes clears current segment attributes.
+func (inst ToolpathLayerData) ClearSegmentAttributes() error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_clearsegmentattributes(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
 // WriteHatchData writes hatch data to the layer.
 func (inst ToolpathLayerData) WriteHatchData(profileID uint32, partID uint32, pointData []Position2D) error {
 	ret := C.CCall_lib3mf_toolpathlayerdata_writehatchdata(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])))
@@ -9306,9 +9372,9 @@ func (inst Toolpath) DeleteCustomData(data CustomDOMTree) (bool, error) {
 	return bool(success), nil
 }
 
-// RegisterCustomUint32Attribute registers a UInt32 Attribute that each segment holds.
-func (inst Toolpath) RegisterCustomUint32Attribute(nameSpace string, attributeName string) error {
-	ret := C.CCall_lib3mf_toolpath_registercustomuint32attribute(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])))
+// RegisterCustomIntegerAttribute registers an Integer Attribute that each segment holds.
+func (inst Toolpath) RegisterCustomIntegerAttribute(nameSpace string, attributeName string) error {
+	ret := C.CCall_lib3mf_toolpath_registercustomintegerattribute(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}

@@ -182,6 +182,16 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDSEGMENTATTRIBUTENAME);
 
 		uint32_t nNewAttributeID;
+
+		auto iIter = m_SegmentAttributeMap.find(std::make_pair(sNameSpace, sAttributeName));
+		if (iIter != m_SegmentAttributeMap.end()) {
+			if (iIter->second.second != eSegmentType)
+				throw CNMRException(NMR_ERROR_INVALIDSEGMENTATTRIBUTETYPE);
+
+			return iIter->second.first;
+
+		}
+
 		
 		switch (eSegmentType) {
 		case eModelToolpathSegmentAttributeType::SegmentAttributeInt64:

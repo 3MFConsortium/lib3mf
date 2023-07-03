@@ -128,6 +128,7 @@ private:
 	static void SetContentEncryptionCallback(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void CreateBinaryStream(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AssignBinaryStream(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void RegisterCustomNamespace(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFWriter();
@@ -1113,6 +1114,8 @@ private:
 	static void GetLayerDataUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void RegisterProfile(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void RegisterBuildItem(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetSegmentAttribute(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void ClearSegmentAttributes(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WriteHatchData(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WriteLoop(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WritePolyline(const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -1155,7 +1158,7 @@ private:
 	static void AddCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void ClearCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void DeleteCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void RegisterCustomUint32Attribute(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void RegisterCustomIntegerAttribute(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void RegisterCustomDoubleAttribute(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:

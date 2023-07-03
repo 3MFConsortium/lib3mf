@@ -443,6 +443,15 @@ NMR_ErrorConst.h defines all error code constants.
 // Segment attribute not found
 #define NMR_ERROR_SEGMENTATTRIBUTENOTFOUND 0x1082
 
+// Namespace prefix already defined
+#define NMR_ERROR_NAMESPACEPREFIXALREADYDEFINED 0x1083
+
+// Writer does not support namespaces
+#define NMR_ERROR_WRITERDOESNOTSUPPORTNAMESPACES 0x1084
+
+// Namespace prefix is reserved
+#define NMR_ERROR_NAMESPACEPREFIXISRESERVED 0x1085
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/

@@ -130,10 +130,6 @@ const
 	LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT = 4003;
 	LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED = 4004;
 	LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE = 4005;
-	LIB3MF_ERROR_EMPTYNAMESPACEPREFIX = 4006;
-	LIB3MF_ERROR_EMPTYNAMESPACE = 4007;
-	LIB3MF_ERROR_INVALIDNAMESPACEPREFIX = 4008;
-	LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES = 4009;
 
 (*************************************************************************************************************************
  Declaration of enums
@@ -632,7 +628,7 @@ type
 	TLib3MFWriter_SetContentEncryptionCallbackFunc = function(pWriter: TLib3MFHandle; const pTheCallback: PLib3MF_ContentEncryptionCallback; const pUserData: Pointer): TLib3MFResult; cdecl;
 	
 	(**
-	* Creates a binary stream object. Only applicable for 3MF Writers.
+	* Creates a binary stream object. Only applicable for 3MFz Writers.
 	*
 	* @param[in] pWriter - Writer instance.
 	* @param[in] pPath - Package path to write into
@@ -650,16 +646,6 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFWriter_AssignBinaryStreamFunc = function(pWriter: TLib3MFHandle; const pInstance: TLib3MFHandle; const pBinaryStream: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Registers a custom 3MF Namespace. Fails if Prefix is already registered.
-	*
-	* @param[in] pWriter - Writer instance.
-	* @param[in] pPrefix - Prefix to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number
-	* @param[in] pNameSpace - Namespace to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number
-	* @return error code or 0 (success)
-	*)
-	TLib3MFWriter_RegisterCustomNamespaceFunc = function(pWriter: TLib3MFHandle; const pPrefix: PAnsiChar; const pNameSpace: PAnsiChar): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -5649,7 +5635,6 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure SetContentEncryptionCallback(const ATheCallback: PLib3MF_ContentEncryptionCallback; const AUserData: Pointer);
 		function CreateBinaryStream(const APath: String): TLib3MFBinaryStream;
 		procedure AssignBinaryStream(const AInstance: TLib3MFBase; const ABinaryStream: TLib3MFBinaryStream);
-		procedure RegisterCustomNamespace(const APrefix: String; const ANameSpace: String);
 	end;
 
 
@@ -6677,7 +6662,6 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFWriter_SetContentEncryptionCallbackFunc: TLib3MFWriter_SetContentEncryptionCallbackFunc;
 		FLib3MFWriter_CreateBinaryStreamFunc: TLib3MFWriter_CreateBinaryStreamFunc;
 		FLib3MFWriter_AssignBinaryStreamFunc: TLib3MFWriter_AssignBinaryStreamFunc;
-		FLib3MFWriter_RegisterCustomNamespaceFunc: TLib3MFWriter_RegisterCustomNamespaceFunc;
 		FLib3MFPersistentReaderSource_GetSourceTypeFunc: TLib3MFPersistentReaderSource_GetSourceTypeFunc;
 		FLib3MFPersistentReaderSource_InvalidateSourceDataFunc: TLib3MFPersistentReaderSource_InvalidateSourceDataFunc;
 		FLib3MFPersistentReaderSource_SourceDataIsValidFunc: TLib3MFPersistentReaderSource_SourceDataIsValidFunc;
@@ -7175,7 +7159,6 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFWriter_SetContentEncryptionCallbackFunc: TLib3MFWriter_SetContentEncryptionCallbackFunc read FLib3MFWriter_SetContentEncryptionCallbackFunc;
 		property Lib3MFWriter_CreateBinaryStreamFunc: TLib3MFWriter_CreateBinaryStreamFunc read FLib3MFWriter_CreateBinaryStreamFunc;
 		property Lib3MFWriter_AssignBinaryStreamFunc: TLib3MFWriter_AssignBinaryStreamFunc read FLib3MFWriter_AssignBinaryStreamFunc;
-		property Lib3MFWriter_RegisterCustomNamespaceFunc: TLib3MFWriter_RegisterCustomNamespaceFunc read FLib3MFWriter_RegisterCustomNamespaceFunc;
 		property Lib3MFPersistentReaderSource_GetSourceTypeFunc: TLib3MFPersistentReaderSource_GetSourceTypeFunc read FLib3MFPersistentReaderSource_GetSourceTypeFunc;
 		property Lib3MFPersistentReaderSource_InvalidateSourceDataFunc: TLib3MFPersistentReaderSource_InvalidateSourceDataFunc read FLib3MFPersistentReaderSource_InvalidateSourceDataFunc;
 		property Lib3MFPersistentReaderSource_SourceDataIsValidFunc: TLib3MFPersistentReaderSource_SourceDataIsValidFunc read FLib3MFPersistentReaderSource_SourceDataIsValidFunc;
@@ -8644,10 +8627,6 @@ implementation
 			LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: ADescription := 'Toolpath has an invalid number of points';
 			LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED: ADescription := 'Toolpath attribute already defined';
 			LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE: ADescription := 'Toolpath attribute is of invalid type';
-			LIB3MF_ERROR_EMPTYNAMESPACEPREFIX: ADescription := 'Empty namespace prefix.';
-			LIB3MF_ERROR_EMPTYNAMESPACE: ADescription := 'Empty namespace.';
-			LIB3MF_ERROR_INVALIDNAMESPACEPREFIX: ADescription := 'Invalid namespace prefix.';
-			LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES: ADescription := 'Writer does not support namespaces.';
 			else
 				ADescription := 'unknown';
 		end;
@@ -8865,11 +8844,6 @@ implementation
 		else
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ABinaryStream is a nil value.');
 		FWrapper.CheckError(Self, FWrapper.Lib3MFWriter_AssignBinaryStreamFunc(FHandle, AInstanceHandle, ABinaryStreamHandle));
-	end;
-
-	procedure TLib3MFWriter.RegisterCustomNamespace(const APrefix: String; const ANameSpace: String);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFWriter_RegisterCustomNamespaceFunc(FHandle, PAnsiChar(APrefix), PAnsiChar(ANameSpace)));
 	end;
 
 (*************************************************************************************************************************
@@ -13818,7 +13792,6 @@ implementation
 		FLib3MFWriter_SetContentEncryptionCallbackFunc := LoadFunction('lib3mf_writer_setcontentencryptioncallback');
 		FLib3MFWriter_CreateBinaryStreamFunc := LoadFunction('lib3mf_writer_createbinarystream');
 		FLib3MFWriter_AssignBinaryStreamFunc := LoadFunction('lib3mf_writer_assignbinarystream');
-		FLib3MFWriter_RegisterCustomNamespaceFunc := LoadFunction('lib3mf_writer_registercustomnamespace');
 		FLib3MFPersistentReaderSource_GetSourceTypeFunc := LoadFunction('lib3mf_persistentreadersource_getsourcetype');
 		FLib3MFPersistentReaderSource_InvalidateSourceDataFunc := LoadFunction('lib3mf_persistentreadersource_invalidatesourcedata');
 		FLib3MFPersistentReaderSource_SourceDataIsValidFunc := LoadFunction('lib3mf_persistentreadersource_sourcedataisvalid');
@@ -14351,9 +14324,6 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_writer_assignbinarystream'), @FLib3MFWriter_AssignBinaryStreamFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_writer_registercustomnamespace'), @FLib3MFWriter_RegisterCustomNamespaceFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_persistentreadersource_getsourcetype'), @FLib3MFPersistentReaderSource_GetSourceTypeFunc);

@@ -399,6 +399,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_writer_assignbinarystream", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Writer_AssignBinaryStream (IntPtr Handle, IntPtr AInstance, IntPtr ABinaryStream);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_writer_registercustomnamespace", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Writer_RegisterCustomNamespace (IntPtr Handle, byte[] APrefix, byte[] ANameSpace);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_persistentreadersource_getsourcetype", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 PersistentReaderSource_GetSourceType (IntPtr Handle, out Int32 ASourceType);
 
@@ -1314,6 +1317,12 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_registerbuilditem", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerData_RegisterBuildItem (IntPtr Handle, IntPtr ABuildItem, out UInt32 APartID);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_setsegmentattribute", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerData_SetSegmentAttribute (IntPtr Handle, byte[] ANameSpace, byte[] AAttributeName, byte[] AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_clearsegmentattributes", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerData_ClearSegmentAttributes (IntPtr Handle);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_writehatchdata", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerData_WriteHatchData (IntPtr Handle, UInt32 AProfileID, UInt32 APartID, UInt64 sizePointData, IntPtr dataPointData);
 
@@ -1389,8 +1398,8 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_deletecustomdata", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Toolpath_DeleteCustomData (IntPtr Handle, IntPtr AData, out Byte ASuccess);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_registercustomuint32attribute", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Toolpath_RegisterCustomUint32Attribute (IntPtr Handle, byte[] ANameSpace, byte[] AAttributeName);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_registercustomintegerattribute", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_RegisterCustomIntegerAttribute (IntPtr Handle, byte[] ANameSpace, byte[] AAttributeName);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_registercustomdoubleattribute", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Toolpath_RegisterCustomDoubleAttribute (IntPtr Handle, byte[] ANameSpace, byte[] AAttributeName);
@@ -2387,6 +2396,14 @@ namespace Lib3MF {
 				ABinaryStreamHandle = ABinaryStream.GetHandle();
 
 			CheckError(Internal.Lib3MFWrapper.Writer_AssignBinaryStream (Handle, AInstanceHandle, ABinaryStreamHandle));
+		}
+
+		public void RegisterCustomNamespace (String APrefix, String ANameSpace)
+		{
+			byte[] bytePrefix = Encoding.UTF8.GetBytes(APrefix + char.MinValue);
+			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.Writer_RegisterCustomNamespace (Handle, bytePrefix, byteNameSpace));
 		}
 
 	}
@@ -5502,6 +5519,21 @@ namespace Lib3MF {
 			return resultPartID;
 		}
 
+		public void SetSegmentAttribute (String ANameSpace, String AAttributeName, String AValue)
+		{
+			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
+			byte[] byteAttributeName = Encoding.UTF8.GetBytes(AAttributeName + char.MinValue);
+			byte[] byteValue = Encoding.UTF8.GetBytes(AValue + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_SetSegmentAttribute (Handle, byteNameSpace, byteAttributeName, byteValue));
+		}
+
+		public void ClearSegmentAttributes ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_ClearSegmentAttributes (Handle));
+		}
+
 		public void WriteHatchData (UInt32 AProfileID, UInt32 APartID, sPosition2D[] APointData)
 		{
 			Internal.InternalPosition2D[] intdataPointData = new Internal.InternalPosition2D[APointData.Length];
@@ -5755,12 +5787,12 @@ namespace Lib3MF {
 			return (resultSuccess != 0);
 		}
 
-		public void RegisterCustomUint32Attribute (String ANameSpace, String AAttributeName)
+		public void RegisterCustomIntegerAttribute (String ANameSpace, String AAttributeName)
 		{
 			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
 			byte[] byteAttributeName = Encoding.UTF8.GetBytes(AAttributeName + char.MinValue);
 
-			CheckError(Internal.Lib3MFWrapper.Toolpath_RegisterCustomUint32Attribute (Handle, byteNameSpace, byteAttributeName));
+			CheckError(Internal.Lib3MFWrapper.Toolpath_RegisterCustomIntegerAttribute (Handle, byteNameSpace, byteAttributeName));
 		}
 
 		public void RegisterCustomDoubleAttribute (String ANameSpace, String AAttributeName)

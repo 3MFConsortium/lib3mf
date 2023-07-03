@@ -416,6 +416,10 @@ public:
 			case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "TOOLPATH_INVALIDPOINTCOUNT";
 			case LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED: return "TOOLPATH_ATTRIBUTEALREADYDEFINED";
 			case LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE: return "TOOLPATH_INVALIDATTRIBUTETYPE";
+			case LIB3MF_ERROR_EMPTYNAMESPACEPREFIX: return "EMPTYNAMESPACEPREFIX";
+			case LIB3MF_ERROR_EMPTYNAMESPACE: return "EMPTYNAMESPACE";
+			case LIB3MF_ERROR_INVALIDNAMESPACEPREFIX: return "INVALIDNAMESPACEPREFIX";
+			case LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES: return "WRITERDOESNOTSUPPORTNAMESPACES";
 		}
 		return "UNKNOWN";
 	}
@@ -477,6 +481,10 @@ public:
 			case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "Toolpath has an invalid number of points";
 			case LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED: return "Toolpath attribute already defined";
 			case LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE: return "Toolpath attribute is of invalid type";
+			case LIB3MF_ERROR_EMPTYNAMESPACEPREFIX: return "Empty namespace prefix.";
+			case LIB3MF_ERROR_EMPTYNAMESPACE: return "Empty namespace.";
+			case LIB3MF_ERROR_INVALIDNAMESPACEPREFIX: return "Invalid namespace prefix.";
+			case LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES: return "Writer does not support namespaces.";
 		}
 		return "unknown error";
 	}
@@ -746,6 +754,7 @@ public:
 	inline void SetContentEncryptionCallback(const ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData);
 	inline PBinaryStream CreateBinaryStream(const std::string & sPath);
 	inline void AssignBinaryStream(classParam<CBase> pInstance, classParam<CBinaryStream> pBinaryStream);
+	inline void RegisterCustomNamespace(const std::string & sPrefix, const std::string & sNameSpace);
 };
 	
 /*************************************************************************************************************************
@@ -1691,6 +1700,8 @@ public:
 	inline std::string GetLayerDataUUID();
 	inline Lib3MF_uint32 RegisterProfile(classParam<CToolpathProfile> pProfile);
 	inline Lib3MF_uint32 RegisterBuildItem(classParam<CBuildItem> pBuildItem);
+	inline void SetSegmentAttribute(const std::string & sNameSpace, const std::string & sAttributeName, const std::string & sValue);
+	inline void ClearSegmentAttributes();
 	inline void WriteHatchData(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
 	inline void WriteLoop(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
 	inline void WritePolyline(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
@@ -1732,7 +1743,7 @@ public:
 	inline PCustomDOMTree AddCustomData(const std::string & sNameSpace, const std::string & sNameSpacePrefix, const std::string & sDataName);
 	inline Lib3MF_uint32 ClearCustomData();
 	inline bool DeleteCustomData(classParam<CCustomDOMTree> pData);
-	inline void RegisterCustomUint32Attribute(const std::string & sNameSpace, const std::string & sAttributeName);
+	inline void RegisterCustomIntegerAttribute(const std::string & sNameSpace, const std::string & sAttributeName);
 	inline void RegisterCustomDoubleAttribute(const std::string & sNameSpace, const std::string & sAttributeName);
 };
 	
@@ -2548,7 +2559,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CWriter::CreateBinaryStream - Creates a binary stream object. Only applicable for 3MFz Writers.
+	* CWriter::CreateBinaryStream - Creates a binary stream object. Only applicable for 3MF Writers.
 	* @param[in] sPath - Package path to write into
 	* @return Returns a package path.
 	*/
@@ -2573,6 +2584,16 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		Lib3MFHandle hInstance = pInstance.GetHandle();
 		Lib3MFHandle hBinaryStream = pBinaryStream.GetHandle();
 		CheckError(lib3mf_writer_assignbinarystream(m_pHandle, hInstance, hBinaryStream));
+	}
+	
+	/**
+	* CWriter::RegisterCustomNamespace - Registers a custom 3MF Namespace. Fails if Prefix is already registered.
+	* @param[in] sPrefix - Prefix to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number
+	* @param[in] sNameSpace - Namespace to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number
+	*/
+	void CWriter::RegisterCustomNamespace(const std::string & sPrefix, const std::string & sNameSpace)
+	{
+		CheckError(lib3mf_writer_registercustomnamespace(m_pHandle, sPrefix.c_str(), sNameSpace.c_str()));
 	}
 	
 	/**
@@ -6548,6 +6569,25 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CToolpathLayerData::SetSegmentAttribute - Sets Segment Attribute for all following segments that are added. Overrides previously set attribute.
+	* @param[in] sNameSpace - The namespace of the attribute to register.
+	* @param[in] sAttributeName - The name of the attribute to register.
+	* @param[in] sValue - The value of the attribute to register.
+	*/
+	void CToolpathLayerData::SetSegmentAttribute(const std::string & sNameSpace, const std::string & sAttributeName, const std::string & sValue)
+	{
+		CheckError(lib3mf_toolpathlayerdata_setsegmentattribute(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), sValue.c_str()));
+	}
+	
+	/**
+	* CToolpathLayerData::ClearSegmentAttributes - Clears current segment attributes.
+	*/
+	void CToolpathLayerData::ClearSegmentAttributes()
+	{
+		CheckError(lib3mf_toolpathlayerdata_clearsegmentattributes(m_pHandle));
+	}
+	
+	/**
 	* CToolpathLayerData::WriteHatchData - writes hatch data to the layer.
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
@@ -6911,13 +6951,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpath::RegisterCustomUint32Attribute - Registers a UInt32 Attribute that each segment holds.
+	* CToolpath::RegisterCustomIntegerAttribute - Registers an Integer Attribute that each segment holds.
 	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
 	* @param[in] sAttributeName - Attribute name. MUST not be empty.
 	*/
-	void CToolpath::RegisterCustomUint32Attribute(const std::string & sNameSpace, const std::string & sAttributeName)
+	void CToolpath::RegisterCustomIntegerAttribute(const std::string & sNameSpace, const std::string & sAttributeName)
 	{
-		CheckError(lib3mf_toolpath_registercustomuint32attribute(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str()));
+		CheckError(lib3mf_toolpath_registercustomintegerattribute(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str()));
 	}
 	
 	/**

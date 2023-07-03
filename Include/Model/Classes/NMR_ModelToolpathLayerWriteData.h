@@ -75,17 +75,28 @@ namespace NMR {
 		bool m_bWritingFinished;
 		unsigned int m_nIDCounter;
 
+		std::vector<PCustomXMLTree> m_CustomXMLData;
+		std::map<std::pair<std::string, std::string>, std::string> m_CustomSegmentAttributes;
+		std::map<std::string, std::string> m_NameSpaceToPrefixMap;
+		std::map<std::string, std::string> m_PrefixToNameSpaceMap;
+
 		double m_dUnits;
 
 		NMR::CChunkedBinaryStreamWriter * getStreamWriter(std::string & sPath);
 
 		NMR::PImportStream createStream();
 
+		void writeCustomXMLDataNode(PCustomXMLNode pXMLNode, const std::string & sNameSpace);
+
+		std::string findNameSpacePrefix(const std::string& sNameSpace);
+
 	public:
 		CModelToolpathLayerWriteData() = delete;
-		CModelToolpathLayerWriteData(CModelToolpath * pModelToolpath, NMR::PModelWriter_3MF pModelWriter, const std::string & sPackagePath);
+		CModelToolpathLayerWriteData(CModelToolpath * pModelToolpath, NMR::PModelWriter_3MF pModelWriter, const std::string & sPackagePath, std::map<std::string, std::string> PrefixToNameSpaceMap);
 
 		~CModelToolpathLayerWriteData();
+
+		void addCustomXMLData (PCustomXMLTree pXMLTree);
 
 		nfUint32 RegisterProfile(PModelToolpathProfile pProfile);
 
@@ -104,6 +115,12 @@ namespace NMR {
 		std::string getUUID();
 
 		void finishWriting();
+
+		void setCustomSegmentAttribute(const std::string& sNameSpace, const std::string& sAttributeName, const std::string& sValue);
+
+		void clearCustomSegmentAttributes();
+
+
 
 	};
 
