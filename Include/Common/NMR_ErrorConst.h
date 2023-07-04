@@ -452,6 +452,9 @@ NMR_ErrorConst.h defines all error code constants.
 // Namespace prefix is reserved
 #define NMR_ERROR_NAMESPACEPREFIXISRESERVED 0x1085
 
+// Namespace not found
+#define NMR_ERROR_NAMESPACENOTFOUND 0x1086
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/

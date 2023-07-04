@@ -487,5 +487,15 @@ namespace NMR {
 	{
 		m_CustomSegmentAttributes.clear();
 	}
+
+	std::string CModelToolpathLayerWriteData::findNameSpacePrefix(const std::string& sNameSpace)
+	{
+		auto iIter = m_NameSpaceToPrefixMap.find(sNameSpace);
+		if (iIter == m_NameSpaceToPrefixMap.end())
+			throw CNMRException(NMR_ERROR_NAMESPACENOTFOUND);
+
+		return iIter->second;
+	}
+
 }
 

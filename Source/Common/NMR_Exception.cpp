@@ -181,6 +181,7 @@ namespace NMR {
 		case NMR_ERROR_NAMESPACEPREFIXALREADYDEFINED: return "Namespace prefix already defined";
 		case NMR_ERROR_WRITERDOESNOTSUPPORTNAMESPACES: return "Writer does not support namespaces";
 		case NMR_ERROR_NAMESPACEPREFIXISRESERVED: return "Namespace prefix is reserved";
+		case NMR_ERROR_NAMESPACENOTFOUND: return "Namespace not found";
 
 		// Unhandled exception
 		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;
