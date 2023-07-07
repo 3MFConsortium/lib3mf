@@ -337,7 +337,7 @@ namespace NMR {
 		if (pXMLNode.get () == nullptr)
 			throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 
-		std::string sPrefix = "a";
+		std::string sPrefix = findNameSpacePrefix(sNameSpace);
 		std::string sNodeName = pXMLNode->getName ();
 		m_pXmlWriter->WriteStartElement(sPrefix.c_str (), sNodeName.c_str (), nullptr);
 
