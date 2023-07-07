@@ -355,7 +355,7 @@ namespace NMR {
 			writeCustomXMLDataNode(child, sNameSpace);
 		}
 
-		m_pXmlWriter->WriteFullEndElement();
+		m_pXmlWriter->WriteEndElement();
 	}
 
 	void CModelToolpathLayerWriteData::finishHeader()
