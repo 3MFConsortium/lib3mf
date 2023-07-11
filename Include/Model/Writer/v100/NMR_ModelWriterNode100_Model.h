@@ -39,6 +39,7 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_ModelComponentsObject.h" 
 #include "Model/Classes/NMR_ModelMeshObject.h" 
 #include "Common/Platform/NMR_XmlWriter.h"
+#include "Model/Classes/NMR_CustomXMLNode.h"
 
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
 
@@ -69,6 +70,8 @@ namespace NMR {
 		void writeModelMetaData();
 		void writeMetaData(_In_ PModelMetaData pMetaData);
 		void writeMetaDataGroup(_In_ PModelMetaDataGroup pMetaDataGroup);
+
+		void writeCustomToolpathXMLNode (PCustomXMLNode pXMLNode, const std::string & sPrefix);
 
 		void writeResources();
 		void writeBaseMaterials();

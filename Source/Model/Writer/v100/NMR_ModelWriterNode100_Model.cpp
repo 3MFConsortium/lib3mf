@@ -929,6 +929,31 @@ namespace NMR {
 		m_pXMLWriter->RegisterCustomNameSpace(sNamespace, sPrefix);
 	}
 
+	void CModelWriterNode100_Model::writeCustomToolpathXMLNode(PCustomXMLNode pXMLNode, const std::string& sPrefix)
+	{
+		__NMRASSERT(pXMLNode.get() != nullptr);
+
+		std::string sNodeName = pXMLNode->getName();
+
+		writeStartElementWithPrefix(sNodeName.c_str (), sPrefix.c_str ());
+
+		size_t nAttributeCount = pXMLNode->getAttributeCount();
+		for (size_t nAttributeIndex = 0; nAttributeIndex < nAttributeCount; nAttributeIndex++) {
+			auto pAttribute = pXMLNode->getAttributeByIndex(nAttributeIndex);
+			std::string sAttributeName = pAttribute->getName();
+			std::string sAttributeValue = pAttribute->getValue();
+			writeStringAttribute(sAttributeName.c_str(), sAttributeValue);
+		}
+
+		size_t nChildCount = pXMLNode->getChildCount();
+		for (size_t nChildIndex = 0; nChildIndex < nChildCount; nChildIndex++) {
+			writeCustomToolpathXMLNode(pXMLNode->getChildByIndex(nChildIndex), sPrefix);
+		}
+
+		writeEndElement();
+
+	}
+
 	void CModelWriterNode100_Model::writeToolpaths()
 	{
 		nfUint32 nCount = m_pModel->getResourceCount();
@@ -943,6 +968,23 @@ namespace NMR {
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHRESOURCE, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
 				writeIntAttribute(XML_3MF_ATTRIBUTE_TOOLPATH_ID, pToolpathResource->getPackageResourceID()->getUniqueID());
 				writeFloatAttribute(XML_3MF_ATTRIBUTE_TOOLPATH_UNITFACTOR, (nfFloat)pToolpathResource->getUnitFactor());
+
+				uint32_t nXMLDataCount = pToolpathResource->getCustomXMLDataCount();
+				if (nXMLDataCount > 0) {
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHDATA, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
+
+					for (uint32_t nXMLDataIndex = 0; nXMLDataIndex < nXMLDataCount; nXMLDataIndex++) {
+						auto pXMLData = pToolpathResource->getCustomXMLData(nXMLDataIndex);
+
+						std::string sNameSpacePrefix;
+						if (m_pXMLWriter->GetNamespacePrefix(pXMLData->getNameSpace(), sNameSpacePrefix)) {
+							writeCustomToolpathXMLNode (pXMLData->getRootNode (), sNameSpacePrefix);
+						}
+						
+					}
+
+					writeFullEndElement();
+				}
 
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHPROFILES, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
 				nfUint32 nProfileCount = pToolpathResource->getProfileCount();

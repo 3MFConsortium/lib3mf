@@ -86,6 +86,8 @@ namespace NMR {
 		std::vector<PCustomXMLNode> findChildrenWithName (const std::string & sName);
 
 		size_t getChildCount ();
+
+		PCustomXMLNode getChildByIndex(const size_t nIndex);
 		
 		bool hasChild (const std::string & sName);
 		

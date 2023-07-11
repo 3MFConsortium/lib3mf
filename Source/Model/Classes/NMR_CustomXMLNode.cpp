@@ -66,6 +66,16 @@ namespace NMR {
 		return m_Children;
 	}
 
+	PCustomXMLNode CCustomXMLNode::getChildByIndex(const size_t nIndex)
+	{
+		checkInvalidation();
+
+		if (nIndex >= m_Children.size())
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_Children.at(nIndex);
+	}
+
 	size_t CCustomXMLNode::getChildCount()
 	{
 		checkInvalidation();
