@@ -1333,7 +1333,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 ToolpathLayerData_WritePolyline (IntPtr Handle, UInt32 AProfileID, UInt32 APartID, UInt64 sizePointData, IntPtr dataPointData);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_addcustomdata", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ToolpathLayerData_AddCustomData (IntPtr Handle, byte[] ANameSpace, byte[] ANameSpacePrefix, byte[] ADataName, out IntPtr AData);
+			public unsafe extern static Int32 ToolpathLayerData_AddCustomData (IntPtr Handle, byte[] ANameSpace, byte[] ADataName, out IntPtr AData);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_finish", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerData_Finish (IntPtr Handle);
@@ -1390,7 +1390,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 Toolpath_FindUniqueCustomData (IntPtr Handle, byte[] ANameSpace, byte[] ADataName, out IntPtr AData);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_addcustomdata", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Toolpath_AddCustomData (IntPtr Handle, byte[] ANameSpace, byte[] ANameSpacePrefix, byte[] ADataName, out IntPtr AData);
+			public unsafe extern static Int32 Toolpath_AddCustomData (IntPtr Handle, byte[] ANameSpace, byte[] ADataName, out IntPtr AData);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_clearcustomdata", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Toolpath_ClearCustomData (IntPtr Handle, out UInt32 ANumberOfDeletedItems);
@@ -5567,14 +5567,13 @@ namespace Lib3MF {
 			dataPointData.Free ();
 		}
 
-		public CCustomDOMTree AddCustomData (String ANameSpace, String ANameSpacePrefix, String ADataName)
+		public CCustomDOMTree AddCustomData (String ANameSpace, String ADataName)
 		{
 			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
-			byte[] byteNameSpacePrefix = Encoding.UTF8.GetBytes(ANameSpacePrefix + char.MinValue);
 			byte[] byteDataName = Encoding.UTF8.GetBytes(ADataName + char.MinValue);
 			IntPtr newData = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_AddCustomData (Handle, byteNameSpace, byteNameSpacePrefix, byteDataName, out newData));
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_AddCustomData (Handle, byteNameSpace, byteDataName, out newData));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CCustomDOMTree>(newData);
 		}
 
@@ -5757,14 +5756,13 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CCustomDOMTree>(newData);
 		}
 
-		public CCustomDOMTree AddCustomData (String ANameSpace, String ANameSpacePrefix, String ADataName)
+		public CCustomDOMTree AddCustomData (String ANameSpace, String ADataName)
 		{
 			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
-			byte[] byteNameSpacePrefix = Encoding.UTF8.GetBytes(ANameSpacePrefix + char.MinValue);
 			byte[] byteDataName = Encoding.UTF8.GetBytes(ADataName + char.MinValue);
 			IntPtr newData = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.Toolpath_AddCustomData (Handle, byteNameSpace, byteNameSpacePrefix, byteDataName, out newData));
+			CheckError(Internal.Lib3MFWrapper.Toolpath_AddCustomData (Handle, byteNameSpace, byteDataName, out newData));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CCustomDOMTree>(newData);
 		}
 

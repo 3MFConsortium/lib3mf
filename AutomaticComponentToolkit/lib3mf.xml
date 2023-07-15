@@ -1751,7 +1751,6 @@
 
 	<method name="AddCustomData" description="Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.">
 		<param name="NameSpace" type="string" pass="in" description="Namespace of the custom data tree. MUST not be empty." />
-		<param name="NameSpacePrefix" type="string" pass="in" description="Namespace prefix of the custom data tree. Namespace prefix MUST be unique to the layer." />
 		<param name="DataName" type="string" pass="in" description="Root name of the data tree. MUST not be empty. MUST be a valid XML name string." />
 		<param name="Data" type="class" class="CustomDOMTree" pass="return" description="DOM Tree of the data." />
 	</method>	
@@ -1853,7 +1852,6 @@
 		
 		<method name="AddCustomData" description="Adds a custom data DOM tree to the toolpath.">
 			<param name="NameSpace" type="string" pass="in" description="Namespace of the custom data tree. MUST not be empty." />
-			<param name="NameSpacePrefix" type="string" pass="in" description="Namespace prefix of the custom data tree. Namespace prefix MUST be unique to the document." />
 			<param name="DataName" type="string" pass="in" description="Root name of the data tree. MUST not be empty. MUST be a valid XML name string." />
 			<param name="Data" type="class" class="CustomDOMTree" pass="return" description="DOM Tree of the data." />
 		</method>

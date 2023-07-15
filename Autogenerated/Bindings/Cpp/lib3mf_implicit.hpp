@@ -1705,7 +1705,7 @@ public:
 	inline void WriteHatchData(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
 	inline void WriteLoop(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
 	inline void WritePolyline(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
-	inline PCustomDOMTree AddCustomData(const std::string & sNameSpace, const std::string & sNameSpacePrefix, const std::string & sDataName);
+	inline PCustomDOMTree AddCustomData(const std::string & sNameSpace, const std::string & sDataName);
 	inline void Finish();
 };
 	
@@ -1740,7 +1740,7 @@ public:
 	inline void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName);
 	inline bool HasUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName);
 	inline PCustomDOMTree FindUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName);
-	inline PCustomDOMTree AddCustomData(const std::string & sNameSpace, const std::string & sNameSpacePrefix, const std::string & sDataName);
+	inline PCustomDOMTree AddCustomData(const std::string & sNameSpace, const std::string & sDataName);
 	inline Lib3MF_uint32 ClearCustomData();
 	inline bool DeleteCustomData(classParam<CCustomDOMTree> pData);
 	inline void RegisterCustomIntegerAttribute(const std::string & sNameSpace, const std::string & sAttributeName);
@@ -6623,14 +6623,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	* CToolpathLayerData::AddCustomData - Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
 	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
-	* @param[in] sNameSpacePrefix - Namespace prefix of the custom data tree. Namespace prefix MUST be unique to the layer.
 	* @param[in] sDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
 	* @return DOM Tree of the data.
 	*/
-	PCustomDOMTree CToolpathLayerData::AddCustomData(const std::string & sNameSpace, const std::string & sNameSpacePrefix, const std::string & sDataName)
+	PCustomDOMTree CToolpathLayerData::AddCustomData(const std::string & sNameSpace, const std::string & sDataName)
 	{
 		Lib3MFHandle hData = nullptr;
-		CheckError(lib3mf_toolpathlayerdata_addcustomdata(m_pHandle, sNameSpace.c_str(), sNameSpacePrefix.c_str(), sDataName.c_str(), &hData));
+		CheckError(lib3mf_toolpathlayerdata_addcustomdata(m_pHandle, sNameSpace.c_str(), sDataName.c_str(), &hData));
 		
 		if (!hData) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -6909,14 +6908,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	* CToolpath::AddCustomData - Adds a custom data DOM tree to the toolpath.
 	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
-	* @param[in] sNameSpacePrefix - Namespace prefix of the custom data tree. Namespace prefix MUST be unique to the document.
 	* @param[in] sDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
 	* @return DOM Tree of the data.
 	*/
-	PCustomDOMTree CToolpath::AddCustomData(const std::string & sNameSpace, const std::string & sNameSpacePrefix, const std::string & sDataName)
+	PCustomDOMTree CToolpath::AddCustomData(const std::string & sNameSpace, const std::string & sDataName)
 	{
 		Lib3MFHandle hData = nullptr;
-		CheckError(lib3mf_toolpath_addcustomdata(m_pHandle, sNameSpace.c_str(), sNameSpacePrefix.c_str(), sDataName.c_str(), &hData));
+		CheckError(lib3mf_toolpath_addcustomdata(m_pHandle, sNameSpace.c_str(), sDataName.c_str(), &hData));
 		
 		if (!hData) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);

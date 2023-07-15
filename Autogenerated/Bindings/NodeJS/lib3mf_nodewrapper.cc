@@ -12320,16 +12320,11 @@ void CLib3MFToolpathLayerData::AddCustomData(const FunctionCallbackInfo<Value>& 
             throw std::runtime_error("Expected string parameter 0 (NameSpace)");
         }
         if (!args[1]->IsString()) {
-            throw std::runtime_error("Expected string parameter 1 (NameSpacePrefix)");
-        }
-        if (!args[2]->IsString()) {
-            throw std::runtime_error("Expected string parameter 2 (DataName)");
+            throw std::runtime_error("Expected string parameter 1 (DataName)");
         }
         v8::String::Utf8Value sutf8NameSpace(isolate, args[0]);
         std::string sNameSpace = *sutf8NameSpace;
-        v8::String::Utf8Value sutf8NameSpacePrefix(isolate, args[1]);
-        std::string sNameSpacePrefix = *sutf8NameSpacePrefix;
-        v8::String::Utf8Value sutf8DataName(isolate, args[2]);
+        v8::String::Utf8Value sutf8DataName(isolate, args[1]);
         std::string sDataName = *sutf8DataName;
         Lib3MFHandle hReturnData = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
@@ -12338,7 +12333,7 @@ void CLib3MFToolpathLayerData::AddCustomData(const FunctionCallbackInfo<Value>& 
         if (wrapperTable->m_ToolpathLayerData_AddCustomData == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::AddCustomData.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_AddCustomData(instanceHandle, sNameSpace.c_str(), sNameSpacePrefix.c_str(), sDataName.c_str(), &hReturnData);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_AddCustomData(instanceHandle, sNameSpace.c_str(), sDataName.c_str(), &hReturnData);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjData = CLib3MFCustomDOMTree::NewInstance(args.Holder(), hReturnData);
         args.GetReturnValue().Set(instanceObjData);
@@ -12933,16 +12928,11 @@ void CLib3MFToolpath::AddCustomData(const FunctionCallbackInfo<Value>& args)
             throw std::runtime_error("Expected string parameter 0 (NameSpace)");
         }
         if (!args[1]->IsString()) {
-            throw std::runtime_error("Expected string parameter 1 (NameSpacePrefix)");
-        }
-        if (!args[2]->IsString()) {
-            throw std::runtime_error("Expected string parameter 2 (DataName)");
+            throw std::runtime_error("Expected string parameter 1 (DataName)");
         }
         v8::String::Utf8Value sutf8NameSpace(isolate, args[0]);
         std::string sNameSpace = *sutf8NameSpace;
-        v8::String::Utf8Value sutf8NameSpacePrefix(isolate, args[1]);
-        std::string sNameSpacePrefix = *sutf8NameSpacePrefix;
-        v8::String::Utf8Value sutf8DataName(isolate, args[2]);
+        v8::String::Utf8Value sutf8DataName(isolate, args[1]);
         std::string sDataName = *sutf8DataName;
         Lib3MFHandle hReturnData = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
@@ -12951,7 +12941,7 @@ void CLib3MFToolpath::AddCustomData(const FunctionCallbackInfo<Value>& args)
         if (wrapperTable->m_Toolpath_AddCustomData == nullptr)
             throw std::runtime_error("Could not call Lib3MF method Toolpath::AddCustomData.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Toolpath_AddCustomData(instanceHandle, sNameSpace.c_str(), sNameSpacePrefix.c_str(), sDataName.c_str(), &hReturnData);
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_AddCustomData(instanceHandle, sNameSpace.c_str(), sDataName.c_str(), &hReturnData);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjData = CLib3MFCustomDOMTree::NewInstance(args.Holder(), hReturnData);
         args.GetReturnValue().Set(instanceObjData);

@@ -3355,11 +3355,10 @@ public:
 	/**
 	* IToolpathLayerData::AddCustomData - Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
 	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
-	* @param[in] sNameSpacePrefix - Namespace prefix of the custom data tree. Namespace prefix MUST be unique to the layer.
 	* @param[in] sDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
 	* @return DOM Tree of the data.
 	*/
-	virtual ICustomDOMTree * AddCustomData(const std::string & sNameSpace, const std::string & sNameSpacePrefix, const std::string & sDataName) = 0;
+	virtual ICustomDOMTree * AddCustomData(const std::string & sNameSpace, const std::string & sDataName) = 0;
 
 	/**
 	* IToolpathLayerData::Finish - finishes all writing of the layer and compresses toolpath data.
@@ -3509,11 +3508,10 @@ public:
 	/**
 	* IToolpath::AddCustomData - Adds a custom data DOM tree to the toolpath.
 	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
-	* @param[in] sNameSpacePrefix - Namespace prefix of the custom data tree. Namespace prefix MUST be unique to the document.
 	* @param[in] sDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
 	* @return DOM Tree of the data.
 	*/
-	virtual ICustomDOMTree * AddCustomData(const std::string & sNameSpace, const std::string & sNameSpacePrefix, const std::string & sDataName) = 0;
+	virtual ICustomDOMTree * AddCustomData(const std::string & sNameSpace, const std::string & sDataName) = 0;
 
 	/**
 	* IToolpath::ClearCustomData - Deletes all custom data.

@@ -238,7 +238,7 @@ ICustomDOMTree* CToolpath::FindUniqueCustomData(const std::string& sNameSpace, c
 	return new CCustomDOMTree(pFoundTree);
 }
 
-ICustomDOMTree* CToolpath::AddCustomData(const std::string& sNameSpace, const std::string& sNameSpacePrefix, const std::string& sDataName)
+ICustomDOMTree* CToolpath::AddCustomData(const std::string& sNameSpace, const std::string& sDataName)
 {
 	auto pXMLData = std::make_shared<NMR::CCustomXMLTree>(sNameSpace, sDataName);
 	m_pToolpath->addCustomXMLData(pXMLData);

@@ -3033,12 +3033,12 @@ Lib3MFResult CCall_lib3mf_toolpathlayerdata_writepolyline(Lib3MFHandle libraryHa
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerdata_addcustomdata(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, const char * pNameSpace, const char * pNameSpacePrefix, const char * pDataName, Lib3MF_CustomDOMTree * pData)
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_addcustomdata(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, const char * pNameSpace, const char * pDataName, Lib3MF_CustomDOMTree * pData)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerData_AddCustomData (pToolpathLayerData, pNameSpace, pNameSpacePrefix, pDataName, pData);
+	return wrapperTable->m_ToolpathLayerData_AddCustomData (pToolpathLayerData, pNameSpace, pDataName, pData);
 }
 
 
@@ -3204,12 +3204,12 @@ Lib3MFResult CCall_lib3mf_toolpath_finduniquecustomdata(Lib3MFHandle libraryHand
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpath_addcustomdata(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pNameSpacePrefix, const char * pDataName, Lib3MF_CustomDOMTree * pData)
+Lib3MFResult CCall_lib3mf_toolpath_addcustomdata(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pDataName, Lib3MF_CustomDOMTree * pData)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_Toolpath_AddCustomData (pToolpath, pNameSpace, pNameSpacePrefix, pDataName, pData);
+	return wrapperTable->m_Toolpath_AddCustomData (pToolpath, pNameSpace, pDataName, pData);
 }
 
 
@@ -9126,9 +9126,9 @@ func (inst ToolpathLayerData) WritePolyline(profileID uint32, partID uint32, poi
 }
 
 // AddCustomData adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
-func (inst ToolpathLayerData) AddCustomData(nameSpace string, nameSpacePrefix string, dataName string) (CustomDOMTree, error) {
+func (inst ToolpathLayerData) AddCustomData(nameSpace string, dataName string) (CustomDOMTree, error) {
 	var data ref
-	ret := C.CCall_lib3mf_toolpathlayerdata_addcustomdata(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(nameSpacePrefix)[0])), (*C.char)(unsafe.Pointer(&[]byte(dataName)[0])), &data)
+	ret := C.CCall_lib3mf_toolpathlayerdata_addcustomdata(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(dataName)[0])), &data)
 	if ret != 0 {
 		return CustomDOMTree{}, makeError(uint32(ret))
 	}
@@ -9343,9 +9343,9 @@ func (inst Toolpath) FindUniqueCustomData(nameSpace string, dataName string) (Cu
 }
 
 // AddCustomData adds a custom data DOM tree to the toolpath.
-func (inst Toolpath) AddCustomData(nameSpace string, nameSpacePrefix string, dataName string) (CustomDOMTree, error) {
+func (inst Toolpath) AddCustomData(nameSpace string, dataName string) (CustomDOMTree, error) {
 	var data ref
-	ret := C.CCall_lib3mf_toolpath_addcustomdata(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(nameSpacePrefix)[0])), (*C.char)(unsafe.Pointer(&[]byte(dataName)[0])), &data)
+	ret := C.CCall_lib3mf_toolpath_addcustomdata(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(dataName)[0])), &data)
 	if ret != 0 {
 		return CustomDOMTree{}, makeError(uint32(ret))
 	}

@@ -98,7 +98,7 @@ void CToolpathLayerData::Finish()
 	m_pLayerData->finishWriting();
 }
 
-ICustomDOMTree* CToolpathLayerData::AddCustomData(const std::string& sNameSpace, const std::string& sNameSpacePrefix, const std::string& sDataName)
+ICustomDOMTree* CToolpathLayerData::AddCustomData(const std::string& sNameSpace, const std::string& sDataName)
 {
 	auto pXMLData = std::make_shared<NMR::CCustomXMLTree>(sNameSpace, sDataName);
 	m_pLayerData->addCustomXMLData(pXMLData);

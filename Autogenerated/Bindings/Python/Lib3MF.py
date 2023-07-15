@@ -3032,7 +3032,7 @@ class Wrapper:
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_addcustomdata")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_toolpathlayerdata_addcustomdata = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_finish")), methodAddress)
@@ -3146,7 +3146,7 @@ class Wrapper:
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_addcustomdata")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_toolpath_addcustomdata = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_clearcustomdata")), methodAddress)
@@ -4919,7 +4919,7 @@ class Wrapper:
 			self.lib.lib3mf_toolpathlayerdata_writepolyline.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(Position2D)]
 			
 			self.lib.lib3mf_toolpathlayerdata_addcustomdata.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpathlayerdata_addcustomdata.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_toolpathlayerdata_addcustomdata.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_toolpathlayerdata_finish.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerdata_finish.argtypes = [ctypes.c_void_p]
@@ -4976,7 +4976,7 @@ class Wrapper:
 			self.lib.lib3mf_toolpath_finduniquecustomdata.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_toolpath_addcustomdata.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpath_addcustomdata.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_toolpath_addcustomdata.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_toolpath_clearcustomdata.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpath_clearcustomdata.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
@@ -8522,12 +8522,11 @@ class ToolpathLayerData(Base):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_writepolyline(self._handle, nProfileID, nPartID, nPointDataCount, pPointDataBuffer))
 		
 	
-	def AddCustomData(self, NameSpace, NameSpacePrefix, DataName):
+	def AddCustomData(self, NameSpace, DataName):
 		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
-		pNameSpacePrefix = ctypes.c_char_p(str.encode(NameSpacePrefix))
 		pDataName = ctypes.c_char_p(str.encode(DataName))
 		DataHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_addcustomdata(self._handle, pNameSpace, pNameSpacePrefix, pDataName, DataHandle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_addcustomdata(self._handle, pNameSpace, pDataName, DataHandle))
 		if DataHandle:
 			DataObject = self._wrapper._polymorphicFactory(DataHandle)
 		else:
@@ -8716,12 +8715,11 @@ class Toolpath(Resource):
 		
 		return DataObject
 	
-	def AddCustomData(self, NameSpace, NameSpacePrefix, DataName):
+	def AddCustomData(self, NameSpace, DataName):
 		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
-		pNameSpacePrefix = ctypes.c_char_p(str.encode(NameSpacePrefix))
 		pDataName = ctypes.c_char_p(str.encode(DataName))
 		DataHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_addcustomdata(self._handle, pNameSpace, pNameSpacePrefix, pDataName, DataHandle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_addcustomdata(self._handle, pNameSpace, pDataName, DataHandle))
 		if DataHandle:
 			DataObject = self._wrapper._polymorphicFactory(DataHandle)
 		else:

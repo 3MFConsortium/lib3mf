@@ -97,7 +97,7 @@ public:
 
 	ICustomDOMTree* FindUniqueCustomData(const std::string& sNameSpace, const std::string& sDataName) override;
 
-	ICustomDOMTree* AddCustomData(const std::string& sNameSpace, const std::string& sNameSpacePrefix, const std::string& sDataName) override;
+	ICustomDOMTree* AddCustomData(const std::string& sNameSpace, const std::string& sDataName) override;
 
 	Lib3MF_uint32 ClearCustomData() override;
 

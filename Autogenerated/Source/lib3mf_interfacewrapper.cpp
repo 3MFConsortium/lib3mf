@@ -12690,7 +12690,7 @@ Lib3MFResult lib3mf_toolpathlayerdata_writepolyline(Lib3MF_ToolpathLayerData pTo
 	}
 }
 
-Lib3MFResult lib3mf_toolpathlayerdata_addcustomdata(Lib3MF_ToolpathLayerData pToolpathLayerData, const char * pNameSpace, const char * pNameSpacePrefix, const char * pDataName, Lib3MF_CustomDOMTree * pData)
+Lib3MFResult lib3mf_toolpathlayerdata_addcustomdata(Lib3MF_ToolpathLayerData pToolpathLayerData, const char * pNameSpace, const char * pDataName, Lib3MF_CustomDOMTree * pData)
 {
 	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
 
@@ -12699,26 +12699,22 @@ Lib3MFResult lib3mf_toolpathlayerdata_addcustomdata(Lib3MF_ToolpathLayerData pTo
 		if (m_GlobalJournal.get() != nullptr)  {
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerData, "ToolpathLayerData", "AddCustomData");
 			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
-			pJournalEntry->addStringParameter("NameSpacePrefix", pNameSpacePrefix);
 			pJournalEntry->addStringParameter("DataName", pDataName);
 		}
 		if (pNameSpace == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		if (pNameSpacePrefix == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		if (pDataName == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		if (pData == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		std::string sNameSpace(pNameSpace);
-		std::string sNameSpacePrefix(pNameSpacePrefix);
 		std::string sDataName(pDataName);
 		IBase* pBaseData(nullptr);
 		IToolpathLayerData* pIToolpathLayerData = dynamic_cast<IToolpathLayerData*>(pIBaseClass);
 		if (!pIToolpathLayerData)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseData = pIToolpathLayerData->AddCustomData(sNameSpace, sNameSpacePrefix, sDataName);
+		pBaseData = pIToolpathLayerData->AddCustomData(sNameSpace, sDataName);
 
 		*pData = (IBase*)(pBaseData);
 		if (pJournalEntry.get() != nullptr) {
@@ -13467,7 +13463,7 @@ Lib3MFResult lib3mf_toolpath_finduniquecustomdata(Lib3MF_Toolpath pToolpath, con
 	}
 }
 
-Lib3MFResult lib3mf_toolpath_addcustomdata(Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pNameSpacePrefix, const char * pDataName, Lib3MF_CustomDOMTree * pData)
+Lib3MFResult lib3mf_toolpath_addcustomdata(Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pDataName, Lib3MF_CustomDOMTree * pData)
 {
 	IBase* pIBaseClass = (IBase *)pToolpath;
 
@@ -13476,26 +13472,22 @@ Lib3MFResult lib3mf_toolpath_addcustomdata(Lib3MF_Toolpath pToolpath, const char
 		if (m_GlobalJournal.get() != nullptr)  {
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "AddCustomData");
 			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
-			pJournalEntry->addStringParameter("NameSpacePrefix", pNameSpacePrefix);
 			pJournalEntry->addStringParameter("DataName", pDataName);
 		}
 		if (pNameSpace == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		if (pNameSpacePrefix == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		if (pDataName == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		if (pData == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		std::string sNameSpace(pNameSpace);
-		std::string sNameSpacePrefix(pNameSpacePrefix);
 		std::string sDataName(pDataName);
 		IBase* pBaseData(nullptr);
 		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
 		if (!pIToolpath)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseData = pIToolpath->AddCustomData(sNameSpace, sNameSpacePrefix, sDataName);
+		pBaseData = pIToolpath->AddCustomData(sNameSpace, sDataName);
 
 		*pData = (IBase*)(pBaseData);
 		if (pJournalEntry.get() != nullptr) {

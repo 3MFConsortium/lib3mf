@@ -3508,12 +3508,11 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writepolyline(Lib3MF_Toolp
 *
 * @param[in] pToolpathLayerData - ToolpathLayerData instance.
 * @param[in] pNameSpace - Namespace of the custom data tree. MUST not be empty.
-* @param[in] pNameSpacePrefix - Namespace prefix of the custom data tree. Namespace prefix MUST be unique to the layer.
 * @param[in] pDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
 * @param[out] pData - DOM Tree of the data.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_addcustomdata(Lib3MF_ToolpathLayerData pToolpathLayerData, const char * pNameSpace, const char * pNameSpacePrefix, const char * pDataName, Lib3MF_CustomDOMTree * pData);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_addcustomdata(Lib3MF_ToolpathLayerData pToolpathLayerData, const char * pNameSpace, const char * pDataName, Lib3MF_CustomDOMTree * pData);
 
 /**
 * finishes all writing of the layer and compresses toolpath data.
@@ -3709,12 +3708,11 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_finduniquecustomdata(Lib3MF_Toolpat
 *
 * @param[in] pToolpath - Toolpath instance.
 * @param[in] pNameSpace - Namespace of the custom data tree. MUST not be empty.
-* @param[in] pNameSpacePrefix - Namespace prefix of the custom data tree. Namespace prefix MUST be unique to the document.
 * @param[in] pDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
 * @param[out] pData - DOM Tree of the data.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_addcustomdata(Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pNameSpacePrefix, const char * pDataName, Lib3MF_CustomDOMTree * pData);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_addcustomdata(Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pDataName, Lib3MF_CustomDOMTree * pData);
 
 /**
 * Deletes all custom data.

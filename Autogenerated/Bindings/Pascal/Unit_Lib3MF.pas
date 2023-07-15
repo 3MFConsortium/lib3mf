@@ -3954,12 +3954,11 @@ type
 	*
 	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
 	* @param[in] pNameSpace - Namespace of the custom data tree. MUST not be empty.
-	* @param[in] pNameSpacePrefix - Namespace prefix of the custom data tree. Namespace prefix MUST be unique to the layer.
 	* @param[in] pDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
 	* @param[out] pData - DOM Tree of the data.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFToolpathLayerData_AddCustomDataFunc = function(pToolpathLayerData: TLib3MFHandle; const pNameSpace: PAnsiChar; const pNameSpacePrefix: PAnsiChar; const pDataName: PAnsiChar; out pData: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFToolpathLayerData_AddCustomDataFunc = function(pToolpathLayerData: TLib3MFHandle; const pNameSpace: PAnsiChar; const pDataName: PAnsiChar; out pData: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* finishes all writing of the layer and compresses toolpath data.
@@ -4156,12 +4155,11 @@ type
 	*
 	* @param[in] pToolpath - Toolpath instance.
 	* @param[in] pNameSpace - Namespace of the custom data tree. MUST not be empty.
-	* @param[in] pNameSpacePrefix - Namespace prefix of the custom data tree. Namespace prefix MUST be unique to the document.
 	* @param[in] pDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
 	* @param[out] pData - DOM Tree of the data.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFToolpath_AddCustomDataFunc = function(pToolpath: TLib3MFHandle; const pNameSpace: PAnsiChar; const pNameSpacePrefix: PAnsiChar; const pDataName: PAnsiChar; out pData: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFToolpath_AddCustomDataFunc = function(pToolpath: TLib3MFHandle; const pNameSpace: PAnsiChar; const pDataName: PAnsiChar; out pData: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Deletes all custom data.
@@ -6400,7 +6398,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure WriteHatchData(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D);
 		procedure WriteLoop(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D);
 		procedure WritePolyline(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D);
-		function AddCustomData(const ANameSpace: String; const ANameSpacePrefix: String; const ADataName: String): TLib3MFCustomDOMTree;
+		function AddCustomData(const ANameSpace: String; const ADataName: String): TLib3MFCustomDOMTree;
 		procedure Finish();
 	end;
 
@@ -6430,7 +6428,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure GetCustomDataName(const AIndex: Cardinal; out ANameSpace: String; out ADataName: String);
 		function HasUniqueCustomData(const ANameSpace: String; const ADataName: String): Boolean;
 		function FindUniqueCustomData(const ANameSpace: String; const ADataName: String): TLib3MFCustomDOMTree;
-		function AddCustomData(const ANameSpace: String; const ANameSpacePrefix: String; const ADataName: String): TLib3MFCustomDOMTree;
+		function AddCustomData(const ANameSpace: String; const ADataName: String): TLib3MFCustomDOMTree;
 		function ClearCustomData(): Cardinal;
 		function DeleteCustomData(const AData: TLib3MFCustomDOMTree): Boolean;
 		procedure RegisterCustomIntegerAttribute(const ANameSpace: String; const AAttributeName: String);
@@ -12152,13 +12150,13 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WritePolylineFunc(FHandle, AProfileID, APartID, QWord(LenPointData), PtrPointData));
 	end;
 
-	function TLib3MFToolpathLayerData.AddCustomData(const ANameSpace: String; const ANameSpacePrefix: String; const ADataName: String): TLib3MFCustomDOMTree;
+	function TLib3MFToolpathLayerData.AddCustomData(const ANameSpace: String; const ADataName: String): TLib3MFCustomDOMTree;
 	var
 		HData: TLib3MFHandle;
 	begin
 		Result := nil;
 		HData := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_AddCustomDataFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(ANameSpacePrefix), PAnsiChar(ADataName), HData));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_AddCustomDataFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(ADataName), HData));
 		if Assigned(HData) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFCustomDOMTree, TLib3MFCustomDOMTree>.Make(FWrapper, HData);
 	end;
@@ -12349,13 +12347,13 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFCustomDOMTree, TLib3MFCustomDOMTree>.Make(FWrapper, HData);
 	end;
 
-	function TLib3MFToolpath.AddCustomData(const ANameSpace: String; const ANameSpacePrefix: String; const ADataName: String): TLib3MFCustomDOMTree;
+	function TLib3MFToolpath.AddCustomData(const ANameSpace: String; const ADataName: String): TLib3MFCustomDOMTree;
 	var
 		HData: TLib3MFHandle;
 	begin
 		Result := nil;
 		HData := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_AddCustomDataFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(ANameSpacePrefix), PAnsiChar(ADataName), HData));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_AddCustomDataFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(ADataName), HData));
 		if Assigned(HData) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFCustomDOMTree, TLib3MFCustomDOMTree>.Make(FWrapper, HData);
 	end;
