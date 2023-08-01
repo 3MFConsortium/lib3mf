@@ -50,7 +50,7 @@ using namespace Lib3MF::Impl;
 **************************************************************************************************************************/
 
 CVolumeData::CVolumeData(NMR::PModelMeshObject pMeshObject, NMR::PModelVolumeData pVolumeData)
-	:CBase(), m_pMeshObject(pMeshObject), m_pVolumeData(pVolumeData)
+	: m_pMeshObject(pMeshObject) , m_pVolumeData(pVolumeData)
 {
 }
 
