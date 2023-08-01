@@ -35,30 +35,115 @@ Vulometric.cpp: Defines Unittests for the Volumetric extension
 
 namespace Lib3MF
 {
-  namespace helper
-  {
-      bool directoryExists(std::string & path)
-      {
-          struct stat info;
-          if (stat(path.c_str(), &info) != 0)
-              return false;
-          else if (info.st_mode & S_IFDIR)
-              return true;
-          else
-              return false;
-      }
-  }
+    namespace helper
+    {
+        bool directoryExists(std::string& path)
+        {
+            struct stat info;
+            if(stat(path.c_str(), &info) != 0)
+                return false;
+            else if(info.st_mode & S_IFDIR)
+                return true;
+            else
+                return false;
+        }
 
+        void comparePorts(Lib3MF::PImplicitPortIterator const& portIterator1,
+                          Lib3MF::PImplicitPortIterator const& portIterator2,
+                          bool ignoreReference = false)
+        {
+            ASSERT_EQ(portIterator1->Count(), portIterator2->Count());
+            while(portIterator1->MoveNext())
+            {
+                EXPECT_TRUE(portIterator2->MoveNext());
+
+                auto port1 = portIterator1->GetCurrent();
+                auto port2 = portIterator2->GetCurrent();
+
+                EXPECT_EQ(port1->GetIdentifier(), port2->GetIdentifier());
+                EXPECT_EQ(port1->GetType(), port2->GetType());
+                EXPECT_EQ(port1->GetDisplayName(), port2->GetDisplayName());
+                if(!ignoreReference)
+                {
+                    EXPECT_EQ(port1->GetReference(), port2->GetReference());
+                }
+            }
+            EXPECT_FALSE(portIterator2->MoveNext());
+        }
+
+        void compareFunctions(PImplicitFunction const& function1,
+                              PImplicitFunction const& function2)
+        {
+            EXPECT_EQ(function1->GetDisplayName(), function2->GetDisplayName());
+            EXPECT_EQ(function1->GetModelResourceID(),
+                      function2->GetModelResourceID());
+
+            auto nodeIterator1 = function1->GetNodes();
+            auto nodeIterator2 = function2->GetNodes();
+            ASSERT_EQ(nodeIterator1->Count(), nodeIterator2->Count());
+            while(nodeIterator1->MoveNext())
+            {
+                EXPECT_TRUE(nodeIterator2->MoveNext());
+
+                auto node1 = nodeIterator1->GetCurrent();
+                auto node2 = nodeIterator2->GetCurrent();
+                EXPECT_EQ(node1->GetIdentifier(), node2->GetIdentifier());
+                EXPECT_EQ(node1->GetNodeType(), node2->GetNodeType());
+                EXPECT_EQ(node1->GetDisplayName(), node2->GetDisplayName());
+
+                if(node1->GetNodeType() == Lib3MF::eImplicitNodeType::Constant)
+                {
+                    EXPECT_EQ(node1->GetConstant(), node2->GetConstant());
+                }
+
+                comparePorts(node1->GetInputs(), node2->GetInputs(), false);
+                comparePorts(node1->GetOutputs(), node2->GetOutputs(),
+                             true);  // ignore reference
+            }
+            EXPECT_FALSE(nodeIterator2->MoveNext());
+
+            auto inputs1 = function1->GetInputs();
+            auto inputs2 = function2->GetInputs();
+            ASSERT_EQ(inputs1->Count(), inputs2->Count());
+            while(inputs1->MoveNext())
+            {
+                EXPECT_TRUE(inputs2->MoveNext());
+                EXPECT_EQ(inputs1->GetCurrent()->GetDisplayName(),
+                          inputs2->GetCurrent()->GetDisplayName());
+                EXPECT_EQ(inputs1->GetCurrent()->GetIdentifier(),
+                          inputs2->GetCurrent()->GetIdentifier());
+                EXPECT_EQ(inputs1->GetCurrent()->GetType(),
+                          inputs2->GetCurrent()->GetType());
+            }
+            EXPECT_FALSE(inputs2->MoveNext());
+
+            auto outputs1 = function1->GetOutputs();
+            auto outputs2 = function2->GetOutputs();
+            ASSERT_EQ(outputs1->Count(), outputs2->Count());
+            while(outputs1->MoveNext())
+            {
+                EXPECT_TRUE(outputs2->MoveNext());
+                EXPECT_EQ(outputs1->GetCurrent()->GetDisplayName(),
+                          outputs2->GetCurrent()->GetDisplayName());
+                EXPECT_EQ(outputs1->GetCurrent()->GetIdentifier(),
+                          outputs2->GetCurrent()->GetIdentifier());
+                EXPECT_EQ(outputs1->GetCurrent()->GetType(),
+                          outputs2->GetCurrent()->GetType());
+            }
+            EXPECT_FALSE(outputs2->MoveNext());
+        }
+    }  // namespace helper
 
     class Volumetric : public ::testing::Test
     {
-      protected:
+       protected:
         virtual void SetUp()
         {
-          if (!helper::directoryExists(OutFolder))
-          {
-              ASSERT_TRUE(CreateDir(OutFolder.c_str())) << L"Could not create folder.";
-          }
+            if(!helper::directoryExists(OutFolder))
+            {
+                ASSERT_TRUE(CreateDir(OutFolder.c_str()))
+                    << L"Could not create folder.";
+            }
             model = wrapper->CreateModel();
             auto reader = model->QueryReader("3mf");
             reader->ReadFromFile(InFolder + "Pyramid.3mf");
@@ -79,10 +164,7 @@ namespace Lib3MF
         static std::string InFolder;
         static std::string OutFolder;
 
-        static void SetUpTestCase()
-        {
-            wrapper = CWrapper::loadLibrary();
-        }
+        static void SetUpTestCase() { wrapper = CWrapper::loadLibrary(); }
         static PWrapper wrapper;
 
         PImageStack SetupSheetsFromFile();
@@ -95,18 +177,19 @@ namespace Lib3MF
     PImageStack Volumetric::SetupSheetsFromFile()
     {
         PImageStack pImageStack = model->AddImageStack(821, 819, 11);
-        for (int i = 0; i < 11; i++)
+        for(int i = 0; i < 11; i++)
         {
             std::string sNumber = "_";
             int k = i + 1;
-            if (k < 10)
+            if(k < 10)
             {
                 sNumber = sNumber + "0";
             }
             sNumber = sNumber + std::to_string(k);
 
             pImageStack->CreateSheetFromFile(
-              i, "/volume/layer" + sNumber + ".png", InFolder + "img" + sNumber + ".png");
+                i, "/volume/layer" + sNumber + ".png",
+                InFolder + "img" + sNumber + ".png");
         }
         return pImageStack;
     }
@@ -124,7 +207,8 @@ namespace Lib3MF
 
         // auto pVolumetricStack = model->AddVolumetricStack();
         // pVolumetricStack->AddDestinationChannel("channel", 0.0);
-        // auto pLayer = pVolumetricStack->AddLayer(wrapper->GetIdentityTransform(),
+        // auto pLayer =
+        // pVolumetricStack->AddLayer(wrapper->GetIdentityTransform(),
         // Lib3MF::eBlendMethod::Mix); auto pChannelSelector =
         // pLayer->AddChannelSelector(pImage3D.get(), "R", "channel");
 
@@ -132,7 +216,8 @@ namespace Lib3MF
         // auto volumeData = theMesh->VolumeData();
 
         // ASSERT_TRUE(volumeData->GetBoundary() == nullptr);
-        // auto levelset = volumeData->CreateNewLevelset(pVolumetricStack.get());
+        // auto levelset =
+        // volumeData->CreateNewLevelset(pVolumetricStack.get());
 
         // Lib3MF::sTransform sTransform = wrapper->GetIdentityTransform();
         // Lib3MF::sTransform sObtainedTransform = levelset->SetTransform();
@@ -140,27 +225,30 @@ namespace Lib3MF
         // sTransform.m_Fields[1][1] = 2.0;
         // levelset->SetTransform(sTransform);
         // sObtainedTransform = levelset->SetTransform();
-        // ASSERT_FLOAT_EQ(sObtainedTransform.m_Fields[1][1], sTransform.m_Fields[1][1]);
+        // ASSERT_FLOAT_EQ(sObtainedTransform.m_Fields[1][1],
+        // sTransform.m_Fields[1][1]);
 
         // double dVal = 0.4;
         // levelset->SetSolidThreshold(dVal);
         // ASSERT_EQ(dVal, levelset->GetSolidThreshold());
 
         // std::string sChannelName("DoesNtWork");
-        // ASSERT_SPECIFIC_THROW(levelset->SetChannel(sChannelName), ELib3MFException);
-        // double dBackground = 0.0;
-        // pVolumetricStack->GetDestinationChannel(0, sChannelName, dBackground);
-        // levelset->SetChannel(sChannelName);
+        // ASSERT_SPECIFIC_THROW(levelset->SetChannel(sChannelName),
+        // ELib3MFException); double dBackground = 0.0;
+        // pVolumetricStack->GetDestinationChannel(0, sChannelName,
+        // dBackground); levelset->SetChannel(sChannelName);
         // ASSERT_TRUE(levelset->GetChannel() == sChannelName);
 
-        // Volumetric::writer3MF->WriteToFile(Volumetric::OutFolder + "ColoredVolume.3mf");
+        // Volumetric::writer3MF->WriteToFile(Volumetric::OutFolder +
+        // "ColoredVolume.3mf");
     }
 
     TEST_F(Volumetric, VolumetricProperties)
     {
         auto pImage3D = SetupSheetsFromFile();
 
-        auto fieldFromImage3D = model->AddScalarFieldFromImage3D(pImage3D.get());
+        auto fieldFromImage3D =
+            model->AddScalarFieldFromImage3D(pImage3D.get());
         fieldFromImage3D->SetChannel(Lib3MF::eChannelName::Red);
         fieldFromImage3D->SetFilter(Lib3MF::eTextureFilter::Nearest);
         fieldFromImage3D->SetOffset(1.2);
@@ -178,16 +266,16 @@ namespace Lib3MF
         auto theMesh = GetMesh();
         auto volumeData = theMesh->VolumeData();
         std::string propertyName = "MyProperty";
-        auto theProperty =
-          volumeData->AddPropertyFromScalarField(propertyName, fieldFromImage3D.get());
+        auto theProperty = volumeData->AddPropertyFromScalarField(
+            propertyName, fieldFromImage3D.get());
         ASSERT_EQ(volumeData->GetPropertyCount(), 1);
         ASSERT_TRUE(theProperty->GetName() == propertyName);
         ASSERT_TRUE(theProperty->IsRequired());
         theProperty->SetIsRequired(false);
         ASSERT_FALSE(theProperty->IsRequired());
 
-        auto theConstantProperty =
-          volumeData->AddPropertyFromScalarField("MyConstantProperty", constantField.get());
+        auto theConstantProperty = volumeData->AddPropertyFromScalarField(
+            "MyConstantProperty", constantField.get());
         ASSERT_EQ(volumeData->GetPropertyCount(), 2);
 
         writer3MF->WriteToFile(Volumetric::OutFolder + "MyProperties.3mf");
@@ -205,20 +293,23 @@ namespace Lib3MF
             CompareVolumeData(ioModel, ioVolumeData, model, volumeData);
 
             PWriter ioWriter = ioModel->QueryWriter("3mf");
-            ioWriter->WriteToFile(Volumetric::OutFolder + "MyPropertiesReOut.3mf");
+            ioWriter->WriteToFile(Volumetric::OutFolder +
+                                  "MyPropertiesReOut.3mf");
         }
 
         volumeData->RemoveProperty(0);
         ASSERT_EQ(volumeData->GetPropertyCount(), 1);
 
-        writer3MF->WriteToFile(Volumetric::OutFolder + "MyProperties_after_deletion.3mf");
+        writer3MF->WriteToFile(Volumetric::OutFolder +
+                               "MyProperties_after_deletion.3mf");
     }
 
     TEST_F(Volumetric, VolumetricCompositionScalar)
     {
         auto pImage3D = SetupSheetsFromFile();
 
-        auto fieldFromImage3D = model->AddScalarFieldFromImage3D(pImage3D.get());
+        auto fieldFromImage3D =
+            model->AddScalarFieldFromImage3D(pImage3D.get());
 
         auto constantField = model->AddScalarFieldConstant();
         ASSERT_EQ(constantField->GetValue(), 0.);
@@ -228,16 +319,17 @@ namespace Lib3MF
 
         auto composedScalarField = model->AddScalarFieldComposed();
         composedScalarField->ScalarFieldReference1()->SetFieldResourceID(
-          fieldFromImage3D->GetUniqueResourceID());
+            fieldFromImage3D->GetUniqueResourceID());
         composedScalarField->ScalarFieldReference2()->SetFieldResourceID(
-          constantField->GetUniqueResourceID());
+            constantField->GetUniqueResourceID());
         composedScalarField->SetMethod(Lib3MF::eCompositionMethod::WeightedSum);
         composedScalarField->SetFactor1(1.0);
         composedScalarField->SetFactor2(-1.0);
 
         auto theMesh = GetMesh();
         auto volumeData = theMesh->VolumeData();
-        auto theBoundary = volumeData->CreateNewBoundary(composedScalarField.get());
+        auto theBoundary =
+            volumeData->CreateNewBoundary(composedScalarField.get());
         writer3MF->WriteToFile(Volumetric::OutFolder + "MyComposition.3mf");
 
         {
@@ -250,22 +342,23 @@ namespace Lib3MF
 
             ASSERT_TRUE(scalarFieldIterator->MoveNext());
             auto scalarField = scalarFieldIterator->GetCurrentScalarField();
-            auto fieldFromImage3DReIn =
-              ioModel->GetScalarFieldFromImage3DByID(scalarField->GetUniqueResourceID());
-            CompareScalarFieldFromImage3D(ioModel, fieldFromImage3DReIn, model, fieldFromImage3D);
+            auto fieldFromImage3DReIn = ioModel->GetScalarFieldFromImage3DByID(
+                scalarField->GetUniqueResourceID());
+            CompareScalarFieldFromImage3D(ioModel, fieldFromImage3DReIn, model,
+                                          fieldFromImage3D);
 
             ASSERT_TRUE(scalarFieldIterator->MoveNext());
             scalarField = scalarFieldIterator->GetCurrentScalarField();
-            auto constantFieldReIn =
-              ioModel->GetScalarFieldConstantByID(scalarField->GetUniqueResourceID());
+            auto constantFieldReIn = ioModel->GetScalarFieldConstantByID(
+                scalarField->GetUniqueResourceID());
             CompareScalarFieldConstant(constantFieldReIn, constantField);
 
             ASSERT_TRUE(scalarFieldIterator->MoveNext());
             scalarField = scalarFieldIterator->GetCurrentScalarField();
-            auto composedScalarFieldReIn =
-              ioModel->GetScalarFieldComposedByID(scalarField->GetUniqueResourceID());
-            CompareScalarFieldComposed(
-              ioModel, composedScalarFieldReIn, model, composedScalarField);
+            auto composedScalarFieldReIn = ioModel->GetScalarFieldComposedByID(
+                scalarField->GetUniqueResourceID());
+            CompareScalarFieldComposed(ioModel, composedScalarFieldReIn, model,
+                                       composedScalarField);
             ASSERT_FALSE(scalarFieldIterator->MoveNext());
 
             auto ioMeshObjects = ioModel->GetMeshObjects();
@@ -276,7 +369,8 @@ namespace Lib3MF
             CompareVolumeData(ioModel, ioVolumeData, model, volumeData);
 
             PWriter ioWriter = ioModel->QueryWriter("3mf");
-            ioWriter->WriteToFile(Volumetric::OutFolder + "MyCompositionReOut.3mf");
+            ioWriter->WriteToFile(Volumetric::OutFolder +
+                                  "MyCompositionReOut.3mf");
         }
     }
 
@@ -284,12 +378,14 @@ namespace Lib3MF
     {
         auto pImage3D = SetupSheetsFromFile();
 
-        auto fieldFromImage3D = model->AddScalarFieldFromImage3D(pImage3D.get());
+        auto fieldFromImage3D =
+            model->AddScalarFieldFromImage3D(pImage3D.get());
         fieldFromImage3D->SetChannel(Lib3MF::eChannelName::Red);
 
         auto theMesh = GetMesh();
         auto volumeData = theMesh->VolumeData();
-        auto theBoundary = volumeData->CreateNewBoundary(fieldFromImage3D.get());
+        auto theBoundary =
+            volumeData->CreateNewBoundary(fieldFromImage3D.get());
         theBoundary->SetSolidThreshold(.234);
 
         writer3MF->WriteToFile(Volumetric::OutFolder + "Boundary.3mf");
@@ -319,16 +415,19 @@ namespace Lib3MF
     {
         auto pImage3D = SetupSheetsFromFile();
 
-        auto vectorFieldFromImage3D = model->AddVector3DFieldFromImage3D(pImage3D.get());
+        auto vectorFieldFromImage3D =
+            model->AddVector3DFieldFromImage3D(pImage3D.get());
         vectorFieldFromImage3D->SetFilter(eTextureFilter::Nearest);
         vectorFieldFromImage3D->SetOffset(.1);
         vectorFieldFromImage3D->SetScale(0.9);
-        vectorFieldFromImage3D->SetTileStyles(
-          eTextureTileStyle::Clamp, eTextureTileStyle::Mirror, eTextureTileStyle::Wrap);
+        vectorFieldFromImage3D->SetTileStyles(eTextureTileStyle::Clamp,
+                                              eTextureTileStyle::Mirror,
+                                              eTextureTileStyle::Wrap);
 
         auto theMesh = GetMesh();
         auto volumeData = theMesh->VolumeData();
-        auto theColour = volumeData->CreateNewColor(vectorFieldFromImage3D.get());
+        auto theColour =
+            volumeData->CreateNewColor(vectorFieldFromImage3D.get());
 
         writer3MF->WriteToFile(Volumetric::OutFolder + "Color.3mf");
         {
@@ -345,8 +444,10 @@ namespace Lib3MF
 
             auto vectorFields = ioModel->GetVector3DFields();
             ASSERT_TRUE(vectorFields->MoveNext());
-            auto ioVectorFieldFromImage3D = vectorFields->GetCurrentVector3DField();
-            CompareVector3DFields(ioModel, ioVectorFieldFromImage3D, model, vectorFieldFromImage3D);
+            auto ioVectorFieldFromImage3D =
+                vectorFields->GetCurrentVector3DField();
+            CompareVector3DFields(ioModel, ioVectorFieldFromImage3D, model,
+                                  vectorFieldFromImage3D);
 
             PWriter ioWriter = ioModel->QueryWriter("3mf");
             ioWriter->WriteToFile(Volumetric::OutFolder + "ColorReOut.3mf");
@@ -361,7 +462,8 @@ namespace Lib3MF
     {
         auto pImage3D = SetupSheetsFromFile();
 
-        auto fieldFromImage3D = model->AddVector3DFieldFromImage3D(pImage3D.get());
+        auto fieldFromImage3D =
+            model->AddVector3DFieldFromImage3D(pImage3D.get());
 
         auto constantField = model->AddVector3DFieldConstant();
         ASSERT_EQ(constantField->GetValueX(), 0.);
@@ -379,10 +481,11 @@ namespace Lib3MF
 
         auto composedVector3DField = model->AddVector3DFieldComposed();
         composedVector3DField->Vector3DFieldReference1()->SetFieldResourceID(
-          fieldFromImage3D->GetUniqueResourceID());
+            fieldFromImage3D->GetUniqueResourceID());
         composedVector3DField->Vector3DFieldReference2()->SetFieldResourceID(
-          constantField->GetUniqueResourceID());
-        composedVector3DField->SetMethod(Lib3MF::eCompositionMethod::WeightedSum);
+            constantField->GetUniqueResourceID());
+        composedVector3DField->SetMethod(
+            Lib3MF::eCompositionMethod::WeightedSum);
         composedVector3DField->SetSpace(Lib3MF::eCompositionSpace::LinearColor);
         ASSERT_EQ(composedVector3DField->GetFactor1(), 1.);
         ASSERT_EQ(composedVector3DField->GetFactor2(), 1.);
@@ -393,35 +496,42 @@ namespace Lib3MF
 
         auto theMesh = GetMesh();
         auto volumeData = theMesh->VolumeData();
-        auto theBoundary = volumeData->CreateNewColor(composedVector3DField.get());
-        writer3MF->WriteToFile(Volumetric::OutFolder + "MyCompositionVector3D.3mf");
+        auto theBoundary =
+            volumeData->CreateNewColor(composedVector3DField.get());
+        writer3MF->WriteToFile(Volumetric::OutFolder +
+                               "MyCompositionVector3D.3mf");
 
         {
             PModel ioModel = wrapper->CreateModel();
             PReader ioReader = ioModel->QueryReader("3mf");
-            ioReader->ReadFromFile(Volumetric::OutFolder + "MyCompositionVector3D.3mf");
+            ioReader->ReadFromFile(Volumetric::OutFolder +
+                                   "MyCompositionVector3D.3mf");
 
             auto vector3DFieldIterator = ioModel->GetVector3DFields();
             ASSERT_EQ(vector3DFieldIterator->Count(), 3);
 
             ASSERT_TRUE(vector3DFieldIterator->MoveNext());
-            auto vector3DField = vector3DFieldIterator->GetCurrentVector3DField();
+            auto vector3DField =
+                vector3DFieldIterator->GetCurrentVector3DField();
             auto fieldFromImage3DReIn =
-              ioModel->GetVector3DFieldFromImage3DByID(vector3DField->GetUniqueResourceID());
-            CompareVector3DFieldFromImage3D(ioModel, fieldFromImage3DReIn, model, fieldFromImage3D);
+                ioModel->GetVector3DFieldFromImage3DByID(
+                    vector3DField->GetUniqueResourceID());
+            CompareVector3DFieldFromImage3D(ioModel, fieldFromImage3DReIn,
+                                            model, fieldFromImage3D);
 
             ASSERT_TRUE(vector3DFieldIterator->MoveNext());
             vector3DField = vector3DFieldIterator->GetCurrentVector3DField();
-            auto constantFieldReIn =
-              ioModel->GetVector3DFieldConstantByID(vector3DField->GetUniqueResourceID());
+            auto constantFieldReIn = ioModel->GetVector3DFieldConstantByID(
+                vector3DField->GetUniqueResourceID());
             CompareVector3DFieldConstant(constantFieldReIn, constantField);
 
             ASSERT_TRUE(vector3DFieldIterator->MoveNext());
             vector3DField = vector3DFieldIterator->GetCurrentVector3DField();
             auto composedVector3DFieldReIn =
-              ioModel->GetVector3DFieldComposedByID(vector3DField->GetUniqueResourceID());
-            CompareVector3DFieldComposed(
-              ioModel, composedVector3DFieldReIn, model, composedVector3DField);
+                ioModel->GetVector3DFieldComposedByID(
+                    vector3DField->GetUniqueResourceID());
+            CompareVector3DFieldComposed(ioModel, composedVector3DFieldReIn,
+                                         model, composedVector3DField);
             ASSERT_FALSE(vector3DFieldIterator->MoveNext());
 
             auto ioMeshObjects = ioModel->GetMeshObjects();
@@ -432,7 +542,8 @@ namespace Lib3MF
             CompareVolumeData(ioModel, ioVolumeData, model, volumeData);
 
             PWriter ioWriter = ioModel->QueryWriter("3mf");
-            ioWriter->WriteToFile(Volumetric::OutFolder + "MyCompositionVector3DReOut.3mf");
+            ioWriter->WriteToFile(Volumetric::OutFolder +
+                                  "MyCompositionVector3DReOut.3mf");
         }
     }
 
@@ -453,13 +564,13 @@ namespace Lib3MF
         ASSERT_EQ(functionIterator->Count(), 1);
 
         EXPECT_TRUE(functionIterator->MoveNext());
-        EXPECT_EQ(functionIterator->GetCurrentFunction()->GetDisplayName(), displayName);
+        EXPECT_EQ(functionIterator->GetCurrentFunction()->GetDisplayName(),
+                  displayName);
         EXPECT_FALSE(functionIterator->MoveNext());
     }
 
     TEST_F(Volumetric, AddFunction_AddedFunctionAreWrittenTo3mfFile)
     {
-
         PImplicitFunction newFunction = model->AddImplicitFunction();
         std::string const displayName = "test";
         newFunction->SetDisplayName(displayName);
@@ -475,13 +586,16 @@ namespace Lib3MF
         ASSERT_EQ(functionIterator->Count(), 1);
 
         EXPECT_TRUE(functionIterator->MoveNext());
-        EXPECT_EQ(functionIterator->GetCurrentFunction()->GetDisplayName(), displayName);
-        EXPECT_EQ(functionIterator->GetCurrentFunction()->GetModelResourceID(), expectedResourceId);
+        EXPECT_EQ(functionIterator->GetCurrentFunction()->GetDisplayName(),
+                  displayName);
+        EXPECT_EQ(functionIterator->GetCurrentFunction()->GetModelResourceID(),
+                  expectedResourceId);
         EXPECT_FALSE(functionIterator->MoveNext());
     }
 
     // Function with an "addition" node
-    TEST_F(Volumetric, AddFunction_AddedFunctionWithAdditionNodeAreWrittenTo3mfFile)
+    TEST_F(Volumetric,
+           AddFunction_AddedFunctionWithAdditionNodeAreWrittenTo3mfFile)
     {
         PImplicitFunction newFunction = model->AddImplicitFunction();
         std::string const displayName = "test";
@@ -489,23 +603,26 @@ namespace Lib3MF
         auto const expectedResourceId = newFunction->GetModelResourceID();
 
         // Add an addition node
-        auto node =
-          newFunction->AddNode(Lib3MF::eImplicitNodeType::Addition, "addition_1", "addition 1", "group_a");
+        auto node = newFunction->AddNode(Lib3MF::eImplicitNodeType::Addition,
+                                         "addition_1", "addition 1", "group_a");
 
         // Check if the node is added
         {
             auto nodeIterator = newFunction->GetNodes();
             ASSERT_EQ(nodeIterator->Count(), 1);
             EXPECT_TRUE(nodeIterator->MoveNext());
-            EXPECT_EQ(nodeIterator->GetCurrent()->GetIdentifier(), node->GetIdentifier());
+            EXPECT_EQ(nodeIterator->GetCurrent()->GetIdentifier(),
+                      node->GetIdentifier());
         }
         // Write to file
-        writer3MF->WriteToFile(Volumetric::OutFolder + "AddFunctionWithAdditionNode.3mf");
+        writer3MF->WriteToFile(Volumetric::OutFolder +
+                               "AddFunctionWithAdditionNode.3mf");
 
         // Read from file
         PModel ioModel = wrapper->CreateModel();
         PReader ioReader = ioModel->QueryReader("3mf");
-        ioReader->ReadFromFile(Volumetric::OutFolder + "AddFunctionWithAdditionNode.3mf");
+        ioReader->ReadFromFile(Volumetric::OutFolder +
+                               "AddFunctionWithAdditionNode.3mf");
 
         // Check the function
         auto functionIterator = ioModel->GetFunctions();
@@ -513,95 +630,17 @@ namespace Lib3MF
 
         // // Check the addtion node
         EXPECT_TRUE(functionIterator->MoveNext());
-        EXPECT_EQ(functionIterator->GetCurrentFunction()->GetModelResourceID(), expectedResourceId);
+        EXPECT_EQ(functionIterator->GetCurrentFunction()->GetModelResourceID(),
+                  expectedResourceId);
 
         auto nodeIterator = functionIterator->GetCurrentFunction()->GetNodes();
         ASSERT_EQ(nodeIterator->Count(), 1);
         EXPECT_TRUE(nodeIterator->MoveNext());
-        EXPECT_EQ(nodeIterator->GetCurrent()->GetNodeType(), Lib3MF::eImplicitNodeType::Addition);
+        EXPECT_EQ(nodeIterator->GetCurrent()->GetNodeType(),
+                  Lib3MF::eImplicitNodeType::Addition);
         EXPECT_EQ(nodeIterator->GetCurrent()->GetDisplayName(), "addition 1");
 
         EXPECT_FALSE(functionIterator->MoveNext());
-    }
-
-    void comparePorts(Lib3MF::PImplicitPortIterator const & portIterator1,
-                      Lib3MF::PImplicitPortIterator const & portIterator2,
-                      bool ignoreReference = false)
-    {
-        ASSERT_EQ(portIterator1->Count(), portIterator2->Count());
-        while (portIterator1->MoveNext())
-        {
-            EXPECT_TRUE(portIterator2->MoveNext());
-
-            auto port1 = portIterator1->GetCurrent();
-            auto port2 = portIterator2->GetCurrent();
-
-            EXPECT_EQ(port1->GetIdentifier(), port2->GetIdentifier());
-            EXPECT_EQ(port1->GetType(), port2->GetType());
-            EXPECT_EQ(port1->GetDisplayName(), port2->GetDisplayName());
-            if (!ignoreReference)
-            {
-                EXPECT_EQ(port1->GetReference(), port2->GetReference());
-            }
-        }
-        EXPECT_FALSE(portIterator2->MoveNext());
-    }
-
-    void compareFunctions(PImplicitFunction const & function1, PImplicitFunction const & function2)
-    {
-        EXPECT_EQ(function1->GetDisplayName(), function2->GetDisplayName());
-        EXPECT_EQ(function1->GetModelResourceID(), function2->GetModelResourceID());
-
-        auto nodeIterator1 = function1->GetNodes();
-        auto nodeIterator2 = function2->GetNodes();
-        ASSERT_EQ(nodeIterator1->Count(), nodeIterator2->Count());
-        while (nodeIterator1->MoveNext())
-        {
-            EXPECT_TRUE(nodeIterator2->MoveNext());
-
-            auto node1 = nodeIterator1->GetCurrent();
-            auto node2 = nodeIterator2->GetCurrent();
-            EXPECT_EQ(node1->GetIdentifier(), node2->GetIdentifier());
-            EXPECT_EQ(node1->GetNodeType(), node2->GetNodeType());
-            EXPECT_EQ(node1->GetDisplayName(), node2->GetDisplayName());
-
-            if (node1->GetNodeType() == Lib3MF::eImplicitNodeType::Constant)
-            {
-                EXPECT_EQ(node1->GetConstant(), node2->GetConstant());
-            }
-
-            comparePorts(node1->GetInputs(), node2->GetInputs(), false);
-            comparePorts(node1->GetOutputs(), node2->GetOutputs(), true); // ignore reference
-        }
-        EXPECT_FALSE(nodeIterator2->MoveNext());
-
-        auto inputs1 = function1->GetInputs();
-        auto inputs2 = function2->GetInputs();
-        ASSERT_EQ(inputs1->Count(), inputs2->Count());
-        while (inputs1->MoveNext())
-        {
-            EXPECT_TRUE(inputs2->MoveNext());
-            EXPECT_EQ(inputs1->GetCurrent()->GetDisplayName(),
-                      inputs2->GetCurrent()->GetDisplayName());
-            EXPECT_EQ(inputs1->GetCurrent()->GetIdentifier(),
-                      inputs2->GetCurrent()->GetIdentifier());
-            EXPECT_EQ(inputs1->GetCurrent()->GetType(), inputs2->GetCurrent()->GetType());
-        }
-        EXPECT_FALSE(inputs2->MoveNext());
-
-        auto outputs1 = function1->GetOutputs();
-        auto outputs2 = function2->GetOutputs();
-        ASSERT_EQ(outputs1->Count(), outputs2->Count());
-        while (outputs1->MoveNext())
-        {
-            EXPECT_TRUE(outputs2->MoveNext());
-            EXPECT_EQ(outputs1->GetCurrent()->GetDisplayName(),
-                      outputs2->GetCurrent()->GetDisplayName());
-            EXPECT_EQ(outputs1->GetCurrent()->GetIdentifier(),
-                      outputs2->GetCurrent()->GetIdentifier());
-            EXPECT_EQ(outputs1->GetCurrent()->GetType(), outputs2->GetCurrent()->GetType());
-        }
-        EXPECT_FALSE(outputs2->MoveNext());
     }
 
     // Function with multiple nodes and links between them
@@ -612,33 +651,39 @@ namespace Lib3MF
         newFunction->SetDisplayName(displayName);
         auto const expectedResourceId = newFunction->GetModelResourceID();
 
-        auto functionArgument =
-          newFunction->AddInput("pos", "position", Lib3MF::eImplicitPortType::Vector);
+        auto functionArgument = newFunction->AddInput(
+            "pos", "position", Lib3MF::eImplicitPortType::Vector);
 
         // Add some nodes
         auto addNode =
-          newFunction->AddNode(Lib3MF::eImplicitNodeType::Addition, "addition_1", "addition 1", "group_a");
-        auto subNode = newFunction->AddNode(
-          Lib3MF::eImplicitNodeType::Subtraction, "substraction_1", "substraction 1", "group_a");
+            newFunction->AddNode(Lib3MF::eImplicitNodeType::Addition,
+                                 "addition_1", "addition 1", "group_a");
+        auto subNode =
+            newFunction->AddNode(Lib3MF::eImplicitNodeType::Subtraction,
+                                 "substraction_1", "substraction 1", "group_a");
         auto mulNode = newFunction->AddNode(
-          Lib3MF::eImplicitNodeType::Multiplication, "multiplication_1", "multiplication 3", "group_a");
+            Lib3MF::eImplicitNodeType::Multiplication, "multiplication_1",
+            "multiplication 3", "group_a");
 
         // Add some links
         newFunction->AddLinkByNames("addition_1.result", "substraction_1.A");
         // Alternative way to add links
         mulNode->FindInput("A")->SetReference("addition_1.result");
 
-        auto output = newFunction->AddOutput(
-          "shape", "signed distance to the surface", Lib3MF::eImplicitPortType::Vector);
+        auto output =
+            newFunction->AddOutput("shape", "signed distance to the surface",
+                                   Lib3MF::eImplicitPortType::Vector);
         output->SetReference("substraction_1.result");
 
         // Write to file
-        writer3MF->WriteToFile(Volumetric::OutFolder + "AddFunctionWithMultipleNodesAndLinks.3mf");
+        writer3MF->WriteToFile(Volumetric::OutFolder +
+                               "AddFunctionWithMultipleNodesAndLinks.3mf");
 
         // Read from file
         PModel ioModel = wrapper->CreateModel();
         PReader ioReader = ioModel->QueryReader("3mf");
-        ioReader->ReadFromFile(Volumetric::OutFolder + "AddFunctionWithMultipleNodesAndLinks.3mf");
+        ioReader->ReadFromFile(Volumetric::OutFolder +
+                               "AddFunctionWithMultipleNodesAndLinks.3mf");
 
         // Check the function
         auto functionIterator = ioModel->GetFunctions();
@@ -646,10 +691,12 @@ namespace Lib3MF
 
         // Check the nodes
         EXPECT_TRUE(functionIterator->MoveNext());
-        EXPECT_EQ(functionIterator->GetCurrentFunction()->GetModelResourceID(), expectedResourceId);
+        EXPECT_EQ(functionIterator->GetCurrentFunction()->GetModelResourceID(),
+                  expectedResourceId);
 
         // Compare the functions
-        compareFunctions(newFunction, functionIterator->GetCurrentFunction());
+        helper::compareFunctions(newFunction,
+                                 functionIterator->GetCurrentFunction());
     }
 
     // Function with constant node
@@ -659,13 +706,14 @@ namespace Lib3MF
         newFunction->SetDisplayName("sphere");
         auto const expectedResourceId = newFunction->GetModelResourceID();
 
-        auto functionArgument =
-          newFunction->AddInput("pos", "position", Lib3MF::eImplicitPortType::Vector);
+        auto functionArgument = newFunction->AddInput(
+            "pos", "position", Lib3MF::eImplicitPortType::Vector);
 
         // Add some nodes
-        auto constMatrixNode =
-          newFunction->AddNode(Lib3MF::eImplicitNodeType::ConstMat, "matrix_1", "unused example matrix", "group_a");
-        
+        auto constMatrixNode = newFunction->AddNode(
+            Lib3MF::eImplicitNodeType::ConstMat, "matrix_1",
+            "unused example matrix", "group_a");
+
         // clang-format off
         constMatrixNode->SetMatrix(
           {1.23456, 2.34567, 3.45678, 4.56789,
@@ -673,18 +721,22 @@ namespace Lib3MF
            9.01234, 10.12345, 11.23456, 12.34567, 
            13.45678, 14.56789, 15.67890, 16.78901});
         // clang-format on
-        
-        auto constNode = newFunction->AddNode(
-          Lib3MF::eImplicitNodeType::Constant, "radius", "radius of the spehere", "group_a");
+
+        auto constNode =
+            newFunction->AddNode(Lib3MF::eImplicitNodeType::Constant, "radius",
+                                 "radius of the spehere", "group_a");
         constNode->SetConstant(1.23456);
 
-        auto constVecNode = newFunction->AddNode(
-          Lib3MF::eImplicitNodeType::ConstVec, "vector_1", "translation vector", "group_a");
+        auto constVecNode =
+            newFunction->AddNode(Lib3MF::eImplicitNodeType::ConstVec,
+                                 "vector_1", "translation vector", "group_a");
         constVecNode->SetVector({1.23456, 2.34567, 3.45678});
-        constVecNode->FindOutput("vector")->SetType(Lib3MF::eImplicitPortType::Vector);
+        constVecNode->FindOutput("vector")->SetType(
+            Lib3MF::eImplicitPortType::Vector);
 
-        auto subNode = newFunction->AddNode(
-          Lib3MF::eImplicitNodeType::Subtraction, "translate_1", "Translation", "group_a");
+        auto subNode =
+            newFunction->AddNode(Lib3MF::eImplicitNodeType::Subtraction,
+                                 "translate_1", "Translation", "group_a");
 
         auto subInputA = subNode->FindInput("A");
         auto subInputB = subNode->FindInput("B");
@@ -692,34 +744,41 @@ namespace Lib3MF
         subInputB->SetType(Lib3MF::eImplicitPortType::Vector);
         subInputA->SetReference("inputs.pos");
         subInputB->SetReference("vector_1.vector");
-        subNode->FindOutput("result")->SetType(Lib3MF::eImplicitPortType::Vector);
+        subNode->FindOutput("result")->SetType(
+            Lib3MF::eImplicitPortType::Vector);
 
-        auto distanceToSpehereNode = newFunction->AddNode(
-          Lib3MF::eImplicitNodeType::Length, "distance_1", "distance to sphere", "group_a");
+        auto distanceToSpehereNode =
+            newFunction->AddNode(Lib3MF::eImplicitNodeType::Length,
+                                 "distance_1", "distance to sphere", "group_a");
 
-        distanceToSpehereNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
-        distanceToSpehereNode->FindInput("A")->SetReference("translate_1.result");
+        distanceToSpehereNode->FindInput("A")->SetType(
+            Lib3MF::eImplicitPortType::Vector);
+        distanceToSpehereNode->FindInput("A")->SetReference(
+            "translate_1.result");
 
         // Substract radius from distance
-        auto subNode2 = newFunction->AddNode(
-          Lib3MF::eImplicitNodeType::Subtraction, "distance_2", "distance to sphere", "group_a");
+        auto subNode2 =
+            newFunction->AddNode(Lib3MF::eImplicitNodeType::Subtraction,
+                                 "distance_2", "distance to sphere", "group_a");
         subNode2->FindInput("A")->SetReference("distance_1.result");
 
-        auto output = newFunction->AddOutput(
-          "shape", "signed distance to the surface", Lib3MF::eImplicitPortType::Scalar);
+        auto output =
+            newFunction->AddOutput("shape", "signed distance to the surface",
+                                   Lib3MF::eImplicitPortType::Scalar);
         output->SetReference("distance_2.result");
 
         // add the function as volume data defining a boundary to the mesh
-       /* auto scalarField = model->AddScalarFieldFunction();
-        ASSERT_NE(scalarField.get(), nullptr);
-        scalarField->SetFunction(newFunction.get());
-       
-
-        scalarField->SetOutput("shape");
-        auto theMesh = GetMesh();
-        auto volumeData = theMesh->VolumeData();
-        auto theBoundary = volumeData->CreateNewBoundary(scalarField.get());*/
+        /* auto scalarField = model->AddScalarFieldFunction();
+         ASSERT_NE(scalarField.get(), nullptr);
+         scalarField->SetFunction(newFunction.get());
         
+
+
+         scalarField->SetOutput("shape");
+         auto theMesh = GetMesh();
+         auto volumeData = theMesh->VolumeData();
+         auto theBoundary = volumeData->CreateNewBoundary(scalarField.get());*/
+
         // Write to file
         writer3MF->WriteToFile(Volumetric::OutFolder + "ImplicitSphere.3mf");
 
@@ -734,321 +793,364 @@ namespace Lib3MF
 
         // Check the nodes
         EXPECT_TRUE(functionIterator->MoveNext());
-        EXPECT_EQ(functionIterator->GetCurrentFunction()->GetModelResourceID(), expectedResourceId);
+        EXPECT_EQ(functionIterator->GetCurrentFunction()->GetModelResourceID(),
+                  expectedResourceId);
 
         // Compare the functions
-        compareFunctions(newFunction, functionIterator->GetCurrentFunction());
+        helper::compareFunctions(newFunction,
+                                 functionIterator->GetCurrentFunction());
     }
 
-	TEST_F(Volumetric, ImplicitGyroid)
-	{
-		PImplicitFunction newFunction = model->AddImplicitFunction();
-		newFunction->SetDisplayName("gyroid");
+    TEST_F(Volumetric, ImplicitGyroid)
+    {
+        PImplicitFunction newFunction = model->AddImplicitFunction();
+        newFunction->SetDisplayName("gyroid");
 
-		auto functionArgument =
-			newFunction->AddInput("pos", "position", Lib3MF::eImplicitPortType::Vector);
+        auto functionArgument = newFunction->AddInput(
+            "pos", "position", Lib3MF::eImplicitPortType::Vector);
 
+        auto decomposePos =
+            newFunction->AddNode(Lib3MF::eImplicitNodeType::DecomposeVector,
+                                 "decomposePos", "decompose pos", "group_a");
 
-		auto decomposePos = newFunction->AddNode(
-			Lib3MF::eImplicitNodeType::DecomposeVector, "decomposePos", "decompose pos", "group_a");
+        decomposePos->FindInput("vector")->SetType(
+            Lib3MF::eImplicitPortType::Vector);
+        newFunction->AddLinkByNames("inputs.pos", "decomposePos.vector");
 
-		decomposePos->FindInput("vector")->SetType(Lib3MF::eImplicitPortType::Vector);
-		newFunction->AddLinkByNames("inputs.pos", "decomposePos.vector");
+        auto composeYZX =
+            newFunction->AddNode(Lib3MF::eImplicitNodeType::ComposeVector,
+                                 "composeYZX", "compose yzx", "group_a");
+        composeYZX->FindOutput("vector")->SetType(
+            Lib3MF::eImplicitPortType::Vector);
 
-		auto composeYZX = newFunction->AddNode(
-			Lib3MF::eImplicitNodeType::ComposeVector, "composeYZX", "compose yzx", "group_a");
-        composeYZX->FindOutput("vector")->SetType(Lib3MF::eImplicitPortType::Vector);
+        newFunction->AddLinkByNames("decomposePos.z", "composeYZX.y");
+        newFunction->AddLinkByNames("decomposePos.y", "composeYZX.x");
+        newFunction->AddLinkByNames("decomposePos.x", "composeYZX.z");
 
-		newFunction->AddLinkByNames("decomposePos.z", "composeYZX.y");
-		newFunction->AddLinkByNames("decomposePos.y", "composeYZX.x");
-		newFunction->AddLinkByNames("decomposePos.x", "composeYZX.z");
+        // Add the necessay nodes and links for the gyroid (dot(sin(pos),
+        // cos(composeYZX))
+        auto sinNode = newFunction->AddNode(Lib3MF::eImplicitNodeType::Sinus,
+                                            "sin", "sin", "group_a");
+        sinNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
+        sinNode->FindOutput("result")->SetType(
+            Lib3MF::eImplicitPortType::Vector);
+        newFunction->AddLinkByNames("inputs.pos", "sin.A");
 
-		// Add the necessay nodes and links for the gyroid (dot(sin(pos), cos(composeYZX))
-		auto sinNode = newFunction->AddNode(
-			Lib3MF::eImplicitNodeType::Sinus, "sin", "sin", "group_a");
-		sinNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
-		sinNode->FindOutput("result")->SetType(Lib3MF::eImplicitPortType::Vector);
-		newFunction->AddLinkByNames("inputs.pos", "sin.A");
+        auto cosNode = newFunction->AddNode(Lib3MF::eImplicitNodeType::Cosinus,
+                                            "cos", "cos", "group_a");
+        cosNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
+        cosNode->FindOutput("result")->SetType(
+            Lib3MF::eImplicitPortType::Vector);
+        newFunction->AddLinkByNames("composeYZX.vector", "cos.A");
 
-		auto cosNode = newFunction->AddNode(
-			Lib3MF::eImplicitNodeType::Cosinus, "cos", "cos", "group_a");
-		cosNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
-        cosNode->FindOutput("result")->SetType(Lib3MF::eImplicitPortType::Vector);
-		newFunction->AddLinkByNames("composeYZX.vector", "cos.A");
+        auto dotNode = newFunction->AddNode(Lib3MF::eImplicitNodeType::Dot,
+                                            "dot", "dot", "group_a");
 
-		auto dotNode = newFunction->AddNode(
-			Lib3MF::eImplicitNodeType::Dot, "dot", "dot", "group_a");
+        dotNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
+        dotNode->FindInput("B")->SetType(Lib3MF::eImplicitPortType::Vector);
+        newFunction->AddLinkByNames("sin.result", "dot.A");
+        newFunction->AddLinkByNames("cos.result", "dot.B");
 
-		dotNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
-		dotNode->FindInput("B")->SetType(Lib3MF::eImplicitPortType::Vector);
-		newFunction->AddLinkByNames("sin.result","dot.A");
-		newFunction->AddLinkByNames("cos.result","dot.B");
+        auto output =
+            newFunction->AddOutput("shape", "signed distance to the surface",
+                                   Lib3MF::eImplicitPortType::Scalar);
 
-		auto output = newFunction->AddOutput(
-			"shape", "signed distance to the surface", Lib3MF::eImplicitPortType::Scalar);
+        output->SetReference("dot.result");
 
-		output->SetReference("dot.result");
+        // write to file
+        writer3MF->WriteToFile(Volumetric::OutFolder + "ImplicitGyroid.3mf");
 
-		// write to file
-		writer3MF->WriteToFile(Volumetric::OutFolder + "ImplicitGyroid.3mf");
+        // read and compare
+        PModel ioModel = wrapper->CreateModel();
+        PReader ioReader = ioModel->QueryReader("3mf");
+        ioReader->ReadFromFile(Volumetric::OutFolder + "ImplicitGyroid.3mf");
 
-		// read and compare
-    PModel ioModel = wrapper->CreateModel();
-    PReader ioReader = ioModel->QueryReader("3mf");
-    ioReader->ReadFromFile(Volumetric::OutFolder + "ImplicitGyroid.3mf");
+        // Check the function
+        auto functionIterator = ioModel->GetFunctions();
+        ASSERT_EQ(functionIterator->Count(), 1);
 
-    // Check the function
-    auto functionIterator = ioModel->GetFunctions();
-    ASSERT_EQ(functionIterator->Count(), 1);
+        // Check the nodes
+        EXPECT_TRUE(functionIterator->MoveNext());
 
-    // Check the nodes
-    EXPECT_TRUE(functionIterator->MoveNext());
+        // Compare the functions
+        helper::compareFunctions(newFunction,
+                                 functionIterator->GetCurrentFunction());
+    }
 
-    // Compare the functions
-    compareFunctions(newFunction, functionIterator->GetCurrentFunction());
-  }
+    // Create a shell with the distance to a mesh provided by the mesh node
+    TEST_F(Volumetric, ShellFromMesh)
+    {
+        // Create a function
+        PImplicitFunction newFunction = model->AddImplicitFunction();
+        newFunction->SetDisplayName("shell");
 
-  // Create a shell with the distance to a mesh provided by the mesh node
-  TEST_F(Volumetric, ShellFromMesh)
-  {
+        auto functionArgument = newFunction->AddInput(
+            "pos", "position", Lib3MF::eImplicitPortType::Vector);
 
-    // Create a function
-    PImplicitFunction newFunction = model->AddImplicitFunction();
-    newFunction->SetDisplayName("shell");
+        auto resourceNode = newFunction->AddNode(
+            Lib3MF::eImplicitNodeType::Resource, "meshResource",
+            "mesh resource", "group_shell");
 
+        auto mesh = GetMesh();
 
-    auto functionArgument =
-      newFunction->AddInput("pos", "position", Lib3MF::eImplicitPortType::Vector);
+        resourceNode->SetResource(mesh.get());
+        resourceNode->FindOutput("value")->SetType(
+            Lib3MF::eImplicitPortType::ResourceID);
 
-    auto resourceNode = newFunction->AddNode(
-        Lib3MF::eImplicitNodeType::Resource, "meshResource", "mesh resource", "group_shell");
+        // Create a mesh node
+        auto meshNode = newFunction->AddNode(Lib3MF::eImplicitNodeType::Mesh,
+                                             "mesh", "mesh", "group_shell");
 
-    auto mesh = GetMesh();
+        meshNode->FindInput("pos")->SetType(Lib3MF::eImplicitPortType::Vector);
+        meshNode->FindInput("mesh")->SetType(
+            Lib3MF::eImplicitPortType::ResourceID);
+        newFunction->AddLinkByNames("inputs.pos", "mesh.pos");
 
-    resourceNode->SetResource(mesh.get());
-    resourceNode->FindOutput("value")->SetType(Lib3MF::eImplicitPortType::ResourceID);
+        newFunction->AddLinkByNames("meshResource.value", "mesh.mesh");
+
+        auto absNode = newFunction->AddNode(Lib3MF::eImplicitNodeType::Abs,
+                                            "abs", "abs", "group_shell");
+
+        newFunction->AddLinkByNames("mesh.distance", "abs.A");
+
+        auto constScalarNode =
+            newFunction->AddNode(Lib3MF::eImplicitNodeType::Constant,
+                                 "thickness", "thickness", "group_shell");
+
+        constScalarNode->SetConstant(2.);
+
+        auto subtractionNode =
+            newFunction->AddNode(Lib3MF::eImplicitNodeType::Subtraction,
+                                 "subtraction", "subtraction", "group_shell");
+
+        subtractionNode->FindInput("A")->SetType(
+            Lib3MF::eImplicitPortType::Scalar);
+
+        newFunction->AddLinkByNames("abs.result", "subtraction.A");
+        newFunction->AddLinkByNames("thickness.value", "subtraction.B");
+
+        auto output =
+            newFunction->AddOutput("shape", "signed distance to the surface",
+                                   Lib3MF::eImplicitPortType::Scalar);
+
+        output->SetReference("subtraction.result");
+
+        // write to file
+        writer3MF->WriteToFile(Volumetric::OutFolder + "ShellFromMesh.3mf");
+
+        // read and compare
+        PModel ioModel = wrapper->CreateModel();
+        PReader ioReader = ioModel->QueryReader("3mf");
+        ioReader->ReadFromFile(Volumetric::OutFolder + "ShellFromMesh.3mf");
+
+        // Check the function
+        auto functionIterator = ioModel->GetFunctions();
+        ASSERT_EQ(functionIterator->Count(), 1);
+
+        EXPECT_TRUE(functionIterator->MoveNext());
+
+        // Compare the functions
+        helper::compareFunctions(newFunction,
+                                 functionIterator->GetCurrentFunction());
+    }
+
+    TEST_F(Volumetric, SubFunction)
+    {
+        // Create a gyroid function
+        PImplicitFunction gyroidFunction = model->AddImplicitFunction();
+        {
+            gyroidFunction->SetDisplayName("gyroid");
+
+            auto functionArgument = gyroidFunction->AddInput(
+                "pos", "position", Lib3MF::eImplicitPortType::Vector);
+
+            auto decomposePos = gyroidFunction->AddNode(
+                Lib3MF::eImplicitNodeType::DecomposeVector, "decomposePos",
+                "decompose pos", "group_a");
+
+            decomposePos->FindInput("vector")->SetType(
+                Lib3MF::eImplicitPortType::Vector);
+            gyroidFunction->AddLinkByNames("inputs.pos", "decomposePos.vector");
+
+            auto composeYZX = gyroidFunction->AddNode(
+                Lib3MF::eImplicitNodeType::ComposeVector, "composeYZX",
+                "compose yzx", "group_a");
+            composeYZX->FindOutput("vector")->SetType(
+                Lib3MF::eImplicitPortType::Vector);
+
+            gyroidFunction->AddLinkByNames("decomposePos.z", "composeYZX.y");
+            gyroidFunction->AddLinkByNames("decomposePos.y", "composeYZX.x");
+            gyroidFunction->AddLinkByNames("decomposePos.x", "composeYZX.z");
+
+            // Add the necessay nodes and links for the gyroid (dot(sin(pos),
+            // cos(composeYZX))
+            auto sinNode = gyroidFunction->AddNode(
+                Lib3MF::eImplicitNodeType::Sinus, "sin", "sin", "group_a");
+            sinNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
+            sinNode->FindOutput("result")->SetType(
+                Lib3MF::eImplicitPortType::Vector);
+            gyroidFunction->AddLinkByNames("inputs.pos", "sin.A");
+
+            auto cosNode = gyroidFunction->AddNode(
+                Lib3MF::eImplicitNodeType::Cosinus, "cos", "cos", "group_a");
+            cosNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
+            cosNode->FindOutput("result")->SetType(
+                Lib3MF::eImplicitPortType::Vector);
+            gyroidFunction->AddLinkByNames("composeYZX.vector", "cos.A");
+
+            auto dotNode = gyroidFunction->AddNode(
+                Lib3MF::eImplicitNodeType::Dot, "dot", "dot", "group_a");
+
+            dotNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
+            dotNode->FindInput("B")->SetType(Lib3MF::eImplicitPortType::Vector);
+            gyroidFunction->AddLinkByNames("sin.result", "dot.A");
+            gyroidFunction->AddLinkByNames("cos.result", "dot.B");
+
+            auto output = gyroidFunction->AddOutput(
+                "shape", "signed distance to the surface",
+                Lib3MF::eImplicitPortType::Scalar);
+
+            output->SetReference("dot.result");
+        }
+
+        PImplicitFunction newFunction = model->AddImplicitFunction();
+        newFunction->SetDisplayName("shell");
+
+        auto functionArgument = newFunction->AddInput(
+            "pos", "position", Lib3MF::eImplicitPortType::Vector);
+
+        auto resourceNode = newFunction->AddNode(
+            Lib3MF::eImplicitNodeType::Resource, "meshResource",
+            "mesh resource", "group_shell");
+
+        auto mesh = GetMesh();
+
+        resourceNode->SetResource(mesh.get());
+        resourceNode->FindOutput("value")->SetType(
+            Lib3MF::eImplicitPortType::ResourceID);
+
+        // Create a mesh node
+        auto meshNode = newFunction->AddNode(Lib3MF::eImplicitNodeType::Mesh,
+                                             "mesh", "mesh", "group_shell");
+
+        meshNode->FindInput("pos")->SetType(Lib3MF::eImplicitPortType::Vector);
+        meshNode->FindInput("mesh")->SetType(
+            Lib3MF::eImplicitPortType::ResourceID);
+        newFunction->AddLinkByNames("inputs.pos", "mesh.pos");
+
+        newFunction->AddLinkByNames("meshResource.value", "mesh.mesh");
+
+        auto absNode = newFunction->AddNode(Lib3MF::eImplicitNodeType::Abs,
+                                            "abs", "abs", "group_shel l");
+
+        newFunction->AddLinkByNames("mesh.distance", "abs.A");
+
+        auto constScalarNode =
+            newFunction->AddNode(Lib3MF::eImplicitNodeType::Constant,
+                                 "thickness", "thickness", "group_shell");
+
+        constScalarNode->SetConstant(2.);
+
+        auto subtractionNode =
+            newFunction->AddNode(Lib3MF::eImplicitNodeType::Subtraction,
+                                 "subtraction", "subtraction", "group_shell");
+
+        subtractionNode->FindInput("A")->SetType(
+            Lib3MF::eImplicitPortType::Scalar);
+
+        newFunction->AddLinkByNames("abs.result", "subtraction.A");
+        newFunction->AddLinkByNames("thickness.value", "subtraction.B");
+
+        auto output =
+            newFunction->AddOutput("shape", "signed distance to the surface",
+                                   Lib3MF::eImplicitPortType::Scalar);
+
+        auto gyroidNode =
+            newFunction->AddNode(Lib3MF::eImplicitNodeType::FunctionCall,
+                                 "gyroid", "gyroid", "group_gyroid");
+
+        auto funcitionIdNode = newFunction->AddNode(
+            Lib3MF::eImplicitNodeType::Resource, "gyroidID",
+            "function resource", "group_gyroid");
+
+        funcitionIdNode->FindOutput("value")->SetType(
+            Lib3MF::eImplicitPortType::ResourceID);
+
+        funcitionIdNode->SetResource(gyroidFunction.get());
+
+        auto functionInput = gyroidNode->FindInput("functionID");
+        ASSERT_TRUE(functionInput);
+
+        functionInput->SetType(Lib3MF::eImplicitPortType::ResourceID);
+
+        newFunction->AddLinkByNames("gyroidID.value", "gyroid.functionID");
+
+        // Currently you have to add the inputs and outputs of the called
+        // function manually. We should automate this.
+        gyroidNode->AddInput("pos", "position")
+            ->SetType(Lib3MF::eImplicitPortType::Vector);
+
+        gyroidNode->AddOutput("shape", "signed distance to the surface")
+            ->SetType(Lib3MF::eImplicitPortType::Scalar);
+
+        newFunction->AddLinkByNames("inputs.pos", "gyroid.pos");
+
+        auto maxNode =
+            newFunction->AddNode(Lib3MF::eImplicitNodeType::Max, "max",
+                                 "max - intersection", "group_shell");
+
+        newFunction->AddLinkByNames("gyroid.shape", "max.A");
+        newFunction->AddLinkByNames("subtraction.result", "max.B");
+
+        // output->SetReference("subtraction.result");
+        output->SetReference("max.result");
+
+        // write to file
+        writer3MF->WriteToFile(Volumetric::OutFolder +
+                               "ShellWithGyroidSubfunction.3mf");
+
+        // read and compare
+        PModel ioModel = wrapper->CreateModel();
+        PReader ioReader = ioModel->QueryReader("3mf");
+        ioReader->ReadFromFile(Volumetric::OutFolder +
+                               "ShellWithGyroidSubfunction.3mf");
+
+        // Check the function
+        auto functionIterator = ioModel->GetFunctions();
+        ASSERT_EQ(functionIterator->Count(), 2);
+
+        EXPECT_TRUE(functionIterator->MoveNext());
+
+        // Compare the functions
+        helper::compareFunctions(gyroidFunction,
+                                 functionIterator->GetCurrentFunction());
+        EXPECT_TRUE(functionIterator->MoveNext());
+        helper::compareFunctions(newFunction,
+                                 functionIterator->GetCurrentFunction());
+    }
+
+    // Test for loading a 3MF file with an image stack
+    TEST_F(Volumetric, LoadImageStack)
+    {
+        // Read from file
+        PModel model = wrapper->CreateModel();
+        PReader reader = model->QueryReader("3mf");
+        reader->ReadFromFile(Volumetric::InFolder + "Boundary.3mf");
+
+        // check if the file was read correctly
+        auto readerWarnings = reader->GetWarningCount();
+        ASSERT_EQ(readerWarnings, 0);
+
+        // Check the image stack
+        auto image3dIterator = model->GetImage3Ds();
+        ASSERT_EQ(image3dIterator->Count(), 1);
+
+        while(image3dIterator->MoveNext())
+        {
+                auto image3d = image3dIterator->GetCurrentImage3D();
+                ASSERT_TRUE(image3d);
+                EXPECT_TRUE(image3d->IsImageStack());
+        }
+    }
     
-    // Create a mesh node
-    auto meshNode = newFunction->AddNode(
-        Lib3MF::eImplicitNodeType::Mesh, "mesh", "mesh", "group_shell");
-
-    meshNode->FindInput("pos")->SetType(Lib3MF::eImplicitPortType::Vector);
-    meshNode->FindInput("mesh")->SetType(Lib3MF::eImplicitPortType::ResourceID);
-    newFunction->AddLinkByNames("inputs.pos", "mesh.pos");
-
-    newFunction->AddLinkByNames("meshResource.value", "mesh.mesh");
-
-    auto absNode = newFunction->AddNode(
-        Lib3MF::eImplicitNodeType::Abs, "abs", "abs", "group_shell");
-
-    newFunction->AddLinkByNames("mesh.distance", "abs.A");
-
-    auto constScalarNode = newFunction->AddNode(
-        Lib3MF::eImplicitNodeType::Constant, "thickness", "thickness", "group_shell");
-
-    constScalarNode->SetConstant(2.);
-
-    
-    auto subtractionNode = newFunction->AddNode(
-      Lib3MF::eImplicitNodeType::Subtraction, "subtraction", "subtraction", "group_shell");
-
-    subtractionNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Scalar);
-
-    newFunction->AddLinkByNames("abs.result", "subtraction.A");
-    newFunction->AddLinkByNames("thickness.value", "subtraction.B");
-
-    auto output = newFunction->AddOutput(
-      "shape", "signed distance to the surface", Lib3MF::eImplicitPortType::Scalar);
-
-    output->SetReference("subtraction.result");
-
-    // write to file
-    writer3MF->WriteToFile(Volumetric::OutFolder + "ShellFromMesh.3mf");
-
-    // read and compare
-    PModel ioModel = wrapper->CreateModel();
-    PReader ioReader = ioModel->QueryReader("3mf");
-    ioReader->ReadFromFile(Volumetric::OutFolder + "ShellFromMesh.3mf");
-
-    // Check the function
-    auto functionIterator = ioModel->GetFunctions();
-    ASSERT_EQ(functionIterator->Count(), 1);
-
-    EXPECT_TRUE(functionIterator->MoveNext());
-
-    // Compare the functions
-    compareFunctions(newFunction, functionIterator->GetCurrentFunction());      
-  }
-
-  TEST_F(Volumetric, SubFunction)
-  {
-      // Create a gyroid function
-      PImplicitFunction gyroidFunction = model->AddImplicitFunction();
-      {
-          gyroidFunction->SetDisplayName("gyroid");
-
-          auto functionArgument = gyroidFunction->AddInput(
-              "pos", "position", Lib3MF::eImplicitPortType::Vector);
-
-          auto decomposePos = gyroidFunction->AddNode(
-              Lib3MF::eImplicitNodeType::DecomposeVector, "decomposePos",
-              "decompose pos", "group_a");
-
-          decomposePos->FindInput("vector")->SetType(
-              Lib3MF::eImplicitPortType::Vector);
-          gyroidFunction->AddLinkByNames("inputs.pos", "decomposePos.vector");
-
-          auto composeYZX =
-              gyroidFunction->AddNode(Lib3MF::eImplicitNodeType::ComposeVector,
-                                      "composeYZX", "compose yzx", "group_a");
-          composeYZX->FindOutput("vector")->SetType(
-              Lib3MF::eImplicitPortType::Vector);
-
-          gyroidFunction->AddLinkByNames("decomposePos.z", "composeYZX.y");
-          gyroidFunction->AddLinkByNames("decomposePos.y", "composeYZX.x");
-          gyroidFunction->AddLinkByNames("decomposePos.x", "composeYZX.z");
-
-          // Add the necessay nodes and links for the gyroid (dot(sin(pos),
-          // cos(composeYZX))
-          auto sinNode = gyroidFunction->AddNode(
-              Lib3MF::eImplicitNodeType::Sinus, "sin", "sin", "group_a");
-          sinNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
-          sinNode->FindOutput("result")->SetType(
-              Lib3MF::eImplicitPortType::Vector);
-          gyroidFunction->AddLinkByNames("inputs.pos", "sin.A");
-
-          auto cosNode = gyroidFunction->AddNode(
-              Lib3MF::eImplicitNodeType::Cosinus, "cos", "cos", "group_a");
-          cosNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
-          cosNode->FindOutput("result")->SetType(
-              Lib3MF::eImplicitPortType::Vector);
-          gyroidFunction->AddLinkByNames("composeYZX.vector", "cos.A");
-
-          auto dotNode = gyroidFunction->AddNode(Lib3MF::eImplicitNodeType::Dot,
-                                                 "dot", "dot", "group_a");
-
-          dotNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
-          dotNode->FindInput("B")->SetType(Lib3MF::eImplicitPortType::Vector);
-          gyroidFunction->AddLinkByNames("sin.result", "dot.A");
-          gyroidFunction->AddLinkByNames("cos.result", "dot.B");
-
-          auto output = gyroidFunction->AddOutput(
-              "shape", "signed distance to the surface",
-              Lib3MF::eImplicitPortType::Scalar);
-
-          output->SetReference("dot.result");
-      }
-
-      PImplicitFunction newFunction = model->AddImplicitFunction();
-      newFunction->SetDisplayName("shell");
-
-      auto functionArgument = newFunction->AddInput(
-          "pos", "position", Lib3MF::eImplicitPortType::Vector);
-
-      auto resourceNode =
-          newFunction->AddNode(Lib3MF::eImplicitNodeType::Resource,
-                               "meshResource", "mesh resource", "group_shell");
-
-      auto mesh = GetMesh();
-
-      resourceNode->SetResource(mesh.get());
-      resourceNode->FindOutput("value")->SetType(
-          Lib3MF::eImplicitPortType::ResourceID);
-
-      // Create a mesh node
-      auto meshNode = newFunction->AddNode(Lib3MF::eImplicitNodeType::Mesh,
-                                           "mesh", "mesh", "group_shell");
-
-      meshNode->FindInput("pos")->SetType(Lib3MF::eImplicitPortType::Vector);
-      meshNode->FindInput("mesh")->SetType(
-          Lib3MF::eImplicitPortType::ResourceID);
-      newFunction->AddLinkByNames("inputs.pos", "mesh.pos");
-
-      newFunction->AddLinkByNames("meshResource.value", "mesh.mesh");
-
-      auto absNode = newFunction->AddNode(Lib3MF::eImplicitNodeType::Abs, "abs",
-                                          "abs", "group_shel l");
-
-      newFunction->AddLinkByNames("mesh.distance", "abs.A");
-
-      auto constScalarNode =
-          newFunction->AddNode(Lib3MF::eImplicitNodeType::Constant, "thickness",
-                               "thickness", "group_shell");
-
-      constScalarNode->SetConstant(2.);
-
-      auto subtractionNode =
-          newFunction->AddNode(Lib3MF::eImplicitNodeType::Subtraction,
-                               "subtraction", "subtraction", "group_shell");
-
-      subtractionNode->FindInput("A")->SetType(
-          Lib3MF::eImplicitPortType::Scalar);
-
-      newFunction->AddLinkByNames("abs.result", "subtraction.A");
-      newFunction->AddLinkByNames("thickness.value", "subtraction.B");
-
-      auto output =
-          newFunction->AddOutput("shape", "signed distance to the surface",
-                                 Lib3MF::eImplicitPortType::Scalar);
-
-      auto gyroidNode =
-          newFunction->AddNode(Lib3MF::eImplicitNodeType::FunctionCall,
-                               "gyroid", "gyroid", "group_gyroid");
-
-      auto funcitionIdNode =
-          newFunction->AddNode(Lib3MF::eImplicitNodeType::Resource,
-                               "gyroidID", "function resource", "group_gyroid");
-
-      funcitionIdNode->FindOutput("value")->SetType(
-          Lib3MF::eImplicitPortType::ResourceID);
-
-      funcitionIdNode->SetResource(gyroidFunction.get());
-
-      auto functionInput = gyroidNode->FindInput("functionID");
-      ASSERT_TRUE(functionInput);
-
-      functionInput->SetType(
-          Lib3MF::eImplicitPortType::ResourceID);
-
-      newFunction->AddLinkByNames("gyroidID.value", "gyroid.functionID");
-
-	  // Currently you have to add the inputs and outputs of the called function manually. We should automate this.
-      gyroidNode->AddInput("pos", "position")->SetType(
-          Lib3MF::eImplicitPortType::Vector);
-
-      gyroidNode->AddOutput("shape", "signed distance to the surface")
-          ->SetType(Lib3MF::eImplicitPortType::Scalar);
-
-      newFunction->AddLinkByNames("inputs.pos", "gyroid.pos");
-
-      auto maxNode = newFunction->AddNode(Lib3MF::eImplicitNodeType::Max, "max",
-                                          "max - intersection", "group_shell");
-
-      newFunction->AddLinkByNames("gyroid.shape", "max.A");
-      newFunction->AddLinkByNames("subtraction.result", "max.B");
-
-      // output->SetReference("subtraction.result");
-      output->SetReference("max.result");
-
-      // write to file
-      writer3MF->WriteToFile(Volumetric::OutFolder +
-                             "ShellWithGyroidSubfunction.3mf");
-
-      // read and compare
-      PModel ioModel = wrapper->CreateModel();
-      PReader ioReader = ioModel->QueryReader("3mf");
-      ioReader->ReadFromFile(Volumetric::OutFolder +
-                             "ShellWithGyroidSubfunction.3mf");
-
-      // Check the function
-      auto functionIterator = ioModel->GetFunctions();
-      ASSERT_EQ(functionIterator->Count(), 2);
-
-      EXPECT_TRUE(functionIterator->MoveNext());
-
-      // Compare the functions
-      compareFunctions(gyroidFunction, functionIterator->GetCurrentFunction());
-      EXPECT_TRUE(functionIterator->MoveNext());
-      compareFunctions(newFunction, functionIterator->GetCurrentFunction());
-  }
-  }
+}  // namespace Lib3MF
