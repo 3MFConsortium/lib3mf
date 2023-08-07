@@ -1152,5 +1152,23 @@ namespace Lib3MF
                 EXPECT_TRUE(image3d->IsImageStack());
         }
     }
+
+    TEST_F(Volumetric, CreateImplicitWithFunctionFromImage3D)
+    {
+        // Create model
+        model = wrapper->CreateModel();
+        
+        // Create a new image stack
+        auto pImage3D = SetupSheetsFromFile();
+        
+        auto funcFromImage3d = model->AddFunctionFromImage3D(pImage3D.get());
+        ASSERT_TRUE(funcFromImage3d);
+        funcFromImage3d->SetDisplayName("function from image3d");
+
+        auto const funcImg3dId = funcFromImage3d->GetUniqueResourceID();
+        funcFromImage3d->SetTileStyles(Lib3MF::eTextureTileStyle::Wrap,
+                                       Lib3MF::eTextureTileStyle::Wrap,
+                                       Lib3MF::eTextureTileStyle::Wrap);
+    }
     
 }  // namespace Lib3MF
