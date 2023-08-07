@@ -54,7 +54,11 @@ namespace NMR
         {
             m_pProgressMonitor->IncrementProgress(1);
             CModelImplicitFunction * pFunction = m_pModel->getImplicitFunction(nIndex);
-
+            if (!pFunction)
+            {
+                continue;
+            }
+            
             writeStartElementWithPrefix(XML_3MF_ELEMENT_IMPLICIT_FUNCTION,
                                         XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
             {
