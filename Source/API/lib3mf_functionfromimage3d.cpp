@@ -33,60 +33,82 @@ Abstract: This is a stub class definition of CFunctionFromImage3D
 
 // Include custom headers here.
 
-
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CFunctionFromImage3D 
+ Class definition of CFunctionFromImage3D
 **************************************************************************************************************************/
 
 IImage3D * CFunctionFromImage3D::GetImage3D()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CFunctionFromImage3D::SetImage3D(IImage3D* pImage3D)
+NMR::CModelFunctionFromImage3D * Lib3MF::Impl::CFunctionFromImage3D::functionfromimage3d()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+    NMR::CModelFunctionFromImage3D * pFunctionFromImage3D =
+      dynamic_cast<NMR::CModelFunctionFromImage3D *>(resource().get());
+    if (pFunctionFromImage3D == nullptr)
+        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+
+    return pFunctionFromImage3D;
+}
+
+Lib3MF::Impl::CFunctionFromImage3D::CFunctionFromImage3D(NMR::PModelResource pResource)
+    : CResource(pResource)
+    , CFunction(pResource)
+{
+}
+
+void CFunctionFromImage3D::SetImage3D(IImage3D * pImage3D)
+{
+	functionfromimage3d()->setImage3DResourceID(pImage3D->GetUniqueResourceID());
 }
 
 void CFunctionFromImage3D::SetFilter(const Lib3MF::eTextureFilter eFilter)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	functionfromimage3d()->setFilter((NMR::eModelTextureFilter) eFilter);
 }
 
 Lib3MF::eTextureFilter CFunctionFromImage3D::GetFilter()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return (Lib3MF::eTextureFilter) functionfromimage3d()->getFilter();
 }
 
-void CFunctionFromImage3D::SetTileStyles(const Lib3MF::eTextureTileStyle eTileStyleU, const Lib3MF::eTextureTileStyle eTileStyleV, const Lib3MF::eTextureTileStyle eTileStyleW)
+void CFunctionFromImage3D::SetTileStyles(const Lib3MF::eTextureTileStyle eTileStyleU,
+                                         const Lib3MF::eTextureTileStyle eTileStyleV,
+                                         const Lib3MF::eTextureTileStyle eTileStyleW)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+    functionfromimage3d()->setTileStyleU((NMR::eModelTextureTileStyle) eTileStyleU);
+	functionfromimage3d()->setTileStyleV((NMR::eModelTextureTileStyle) eTileStyleV);
+	functionfromimage3d()->setTileStyleW((NMR::eModelTextureTileStyle) eTileStyleW);
 }
 
-void CFunctionFromImage3D::GetTileStyles(Lib3MF::eTextureTileStyle & eTileStyleU, Lib3MF::eTextureTileStyle & eTileStyleV, Lib3MF::eTextureTileStyle & eTileStyleW)
+void CFunctionFromImage3D::GetTileStyles(Lib3MF::eTextureTileStyle & eTileStyleU,
+                                         Lib3MF::eTextureTileStyle & eTileStyleV,
+                                         Lib3MF::eTextureTileStyle & eTileStyleW)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+    eTileStyleU = (Lib3MF::eTextureTileStyle) functionfromimage3d()->getTileStyleU();
+	eTileStyleV = (Lib3MF::eTextureTileStyle) functionfromimage3d()->getTileStyleV();
+	eTileStyleW = (Lib3MF::eTextureTileStyle) functionfromimage3d()->getTileStyleW();
 }
 
 Lib3MF_double CFunctionFromImage3D::GetOffset()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+    return functionfromimage3d()->getOffset();
 }
 
 void CFunctionFromImage3D::SetOffset(const Lib3MF_double dOffset)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+    functionfromimage3d()->setOffset(dOffset);
 }
 
 Lib3MF_double CFunctionFromImage3D::GetScale()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+    return functionfromimage3d()->getScale();
 }
 
 void CFunctionFromImage3D::SetScale(const Lib3MF_double dScale)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+    functionfromimage3d()->setScale(dScale);
 }
-

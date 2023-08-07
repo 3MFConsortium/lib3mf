@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CFunctionFromImage3D
 #endif
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelFunctionFromImage3D.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -58,6 +58,7 @@ private:
 	/**
 	* Put private members here.
 	*/
+	NMR::CModelFunctionFromImage3D* functionfromimage3d();
 
 protected:
 
@@ -70,7 +71,11 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
+	CFunctionFromImage3D() = delete;
+	CFunctionFromImage3D(NMR::PModelResource pResource);
 
 	/**
 	* Public member functions to implement.

@@ -30,6 +30,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace NMR
 {
+    NMR::CModelFunctionFromImage3D::CModelFunctionFromImage3D(const ModelResourceID sID,
+                                                              CModel * pModel)
+        : CModelFunction(sID, pModel)
+    {
+    }
+
     void CModelFunctionFromImage3D::setImage3DResourceID(const UniqueResourceID sID)
     {
         m_image3DResourceID = sID;
@@ -80,23 +86,23 @@ namespace NMR
         return m_filter;
     }
 
-    void CModelFunctionFromImage3D::setValueOffset(const double valueOffset)
+    void CModelFunctionFromImage3D::setOffset(double offset)
     {
-        m_valueOffset = valueOffset;
+        m_offset = offset;
     }
 
-    double CModelFunctionFromImage3D::getValueOffset()
+    double CModelFunctionFromImage3D::getOffset()
     {
-        return m_valueOffset;
+        return m_offset;
     }
 
-    void CModelFunctionFromImage3D::setValueScale(const double valueScale)
+    void CModelFunctionFromImage3D::setScale(double scale)
     {
-        m_valueScale = valueScale;
+        m_scale = scale;
     }
 
-    double CModelFunctionFromImage3D::getValueScale()
+    double CModelFunctionFromImage3D::getScale()
     {
-        return m_valueScale;
+        return m_scale;
     }
 } // namespace NMR

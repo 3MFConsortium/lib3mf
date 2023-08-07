@@ -75,6 +75,7 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_vector3dfieldfunction.hpp"
 #include "lib3mf_implicitfunction.hpp"
 #include "lib3mf_functioniterator.hpp"
+#include "lib3mf_functionfromimage3d.hpp"
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -95,6 +96,7 @@ Abstract: This is a stub class definition of CModel
 #include "Model/Classes/NMR_ModelVector3DFieldConstant.h"
 #include "Model/Classes/NMR_ModelVector3DFieldFunction.h"
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
+#include "Model/Classes/NMR_ModelFunctionFromImage3D.h"
 #include "Common/NMR_SecureContentTypes.h"
 #include "lib3mf_utils.hpp"
 
@@ -1052,13 +1054,12 @@ IImplicitFunction* CModel::AddImplicitFunction()
 
 IFunctionFromImage3D* CModel::AddFunctionFromImage3D(IImage3D* pImage3DInstance)
 {
-	//NMR::ModelResourceID NewResourceID = model().generateResourceID();
-	//NMR::PModelFunctionFromImage3D pNewResource = std::make_shared<NMR::CModelFunctionFromImage3D>(NewResourceID, &model());
+	NMR::ModelResourceID NewResourceID = model().generateResourceID();
+	NMR::PModelFunctionFromImage3D pNewResource = std::make_shared<NMR::CModelFunctionFromImage3D>(NewResourceID, &model());
 
-	//model().addResource(pNewResource);
+	model().addResource(pNewResource);
 
-	//return new CFunctionFromImage3D(pNewResource);
-	return nullptr;
+	return new CFunctionFromImage3D(pNewResource);
 }
 
 IScalarFieldFunction * CModel::AddScalarFieldFunction()

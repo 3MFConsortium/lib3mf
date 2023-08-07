@@ -52,8 +52,8 @@ namespace NMR {
 
 		eModelTextureFilter m_filter = {eModelTextureFilter::MODELTEXTUREFILTER_LINEAR};
 
-		double m_valueOffset = {};
-		double m_valueScale = {1.};
+		double m_offset = {};
+		double m_scale = {1.};
 	public:
 		CModelFunctionFromImage3D() = delete;
 		CModelFunctionFromImage3D(const ModelResourceID sID, CModel * pModel);
@@ -73,11 +73,11 @@ namespace NMR {
 		void setFilter(const eModelTextureFilter filter);
 		eModelTextureFilter getFilter();
 
-		void setValueOffset(const double valueOffset);
-		double getValueOffset();
+		void setOffset(double offset);
+		double getOffset();
 
-		void setValueScale(const double valueScale);
-		double getValueScale();
+		void setScale(double scale);
+		double getScale();
 	};
 
 	typedef std::shared_ptr <CModelFunctionFromImage3D> PModelFunctionFromImage3D;
