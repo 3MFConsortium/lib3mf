@@ -560,6 +560,11 @@ namespace NMR {
 		CModelImplicitFunction* pImplicitFunction = dynamic_cast<CModelImplicitFunction*>(pResource.get());
 		if (pImplicitFunction != nullptr)
 			m_FunctionLookup.push_back(pResource);
+		
+		CModelFunctionFromImage3D* pFunctionFromImage3D = dynamic_cast<CModelFunctionFromImage3D*>(pResource.get());
+		if (pFunctionFromImage3D != nullptr)
+			m_FunctionLookup.push_back(pResource);
+
 	}
 
 	// Clear all build items and Resources

@@ -1157,10 +1157,10 @@ namespace Lib3MF
     {
         // Create model
         model = wrapper->CreateModel();
-        
+
         // Create a new image stack
         auto pImage3D = SetupSheetsFromFile();
-        
+
         auto funcFromImage3d = model->AddFunctionFromImage3D(pImage3D.get());
         ASSERT_TRUE(funcFromImage3d);
         funcFromImage3d->SetDisplayName("function from image3d");
@@ -1169,6 +1169,10 @@ namespace Lib3MF
         funcFromImage3d->SetTileStyles(Lib3MF::eTextureTileStyle::Wrap,
                                        Lib3MF::eTextureTileStyle::Wrap,
                                        Lib3MF::eTextureTileStyle::Wrap);
+
+        // Write to file
+        writer3MF = model->QueryWriter("3mf");
+        writer3MF->WriteToFile(Volumetric::OutFolder + "FunctionFromImage3D.3mf");
     }
-    
+
 }  // namespace Lib3MF
