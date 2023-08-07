@@ -53,6 +53,7 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_ModelVector3DFieldConstant.h"
 #include "Model/Classes/NMR_ModelVector3DFieldComposed.h"
 #include "Model/Classes/NMR_ModelVector3DFieldFunction.h"
+#include "Model/Classes/NMR_ModelFunctionFromImage3D.h"
 #include "Model/Classes/NMR_ModelCompositeMaterials.h"
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -998,38 +999,75 @@ namespace NMR {
 
 	}
 
-        void CModelWriterNode100_Model::writeImplicitFunctions()
+        void CModelWriterNode100_Model::writeFunctionsFromImage3D()
         {
-			CModelWriterNode_Implicit implicitWriter(m_pModel, m_pXMLWriter, m_pProgressMonitor);
-			implicitWriter.writeImplicitFunctions();
-        }
+            nfUint32 nCount = m_pModel->getFunctionCount();
 
-
-        void CModelWriterNode100_Model::writeMultiProperties()
-        {
-            nfUint32 nCount = m_pModel->getMultiPropertyGroupCount();
-
-            for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++)
+            for (nfUint32 nIndex = 0u; nIndex < nCount; nIndex++)
             {
-                m_pProgressMonitor->IncrementProgress(1);
+                auto funcFromImg3D = m_pModel->getFunctionFromImage3D(nIndex);
+                if (!funcFromImg3D)
+                {
+                    continue;
+                }
+                writeStartElementWithPrefix(XML_3MF_ELEMENT_FUNCTION_FROM_IMAGE3D,
+                                            XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+                {
+                    writeIntAttribute(XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_IMAGE3DID,
+                                      funcFromImg3D->getPackageResourceID()->getModelResourceID());
+                    writeDoubleAttribute(XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_OFFSET,
+                                         funcFromImg3D->getOffset());
+                    writeDoubleAttribute(XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_SCALE,
+                                         funcFromImg3D->getScale());
 
-                CModelMultiPropertyGroupResource * pMultiPropertyGroup =
-                  m_pModel->getMultiPropertyGroup(nIndex);
-
-                pMultiPropertyGroup->buildResourceIndexMap();
-
-                writeStartElementWithPrefix(XML_3MF_ELEMENT_MULTIPROPERTIES,
-                                            XML_3MF_NAMESPACEPREFIX_MATERIAL);
-
-                writeMultiPropertyAttributes(pMultiPropertyGroup);
-
-                writeMultiPropertyMultiElements(pMultiPropertyGroup);
-
+                    writeStringAttribute(
+                      XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_TILESTYLEU,
+                      CModelTexture2DResource::tileStyleToString(funcFromImg3D->getTileStyleU()));
+                    writeStringAttribute(
+                      XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_TILESTYLEV,
+                      CModelTexture2DResource::tileStyleToString(funcFromImg3D->getTileStyleV()));
+                    writeStringAttribute(
+                      XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_TILESTYLEW,
+                      CModelTexture2DResource::tileStyleToString(funcFromImg3D->getTileStyleW()));
+                    writeStringAttribute(
+                      XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_FILTER,
+                      CModelTexture2DResource::filterToString(funcFromImg3D->getFilter()));
+                }
                 writeFullEndElement();
             }
+        }
+
+        void CModelWriterNode100_Model::writeImplicitFunctions()
+	{
+		CModelWriterNode_Implicit implicitWriter(m_pModel, m_pXMLWriter, m_pProgressMonitor);
+		implicitWriter.writeImplicitFunctions();
 	}
 
-	void CModelWriterNode100_Model::writeResources()
+	void CModelWriterNode100_Model::writeMultiProperties()
+	{
+		nfUint32 nCount = m_pModel->getMultiPropertyGroupCount();
+
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++)
+		{
+			m_pProgressMonitor->IncrementProgress(1);
+
+			CModelMultiPropertyGroupResource * pMultiPropertyGroup =
+				m_pModel->getMultiPropertyGroup(nIndex);
+
+			pMultiPropertyGroup->buildResourceIndexMap();
+
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_MULTIPROPERTIES,
+										XML_3MF_NAMESPACEPREFIX_MATERIAL);
+
+			writeMultiPropertyAttributes(pMultiPropertyGroup);
+
+			writeMultiPropertyMultiElements(pMultiPropertyGroup);
+
+			writeFullEndElement();
+		}
+	}
+
+    void CModelWriterNode100_Model::writeResources()
 	{
 		writeStartElement(XML_3MF_ELEMENT_RESOURCES);
 
@@ -1051,6 +1089,7 @@ namespace NMR {
 			if (m_bWriteVolumetricExtension) {
 				writeImage3Ds();
 				writeFields();
+				writeFunctionsFromImage3D();
 				writeImplicitFunctions();
 
 			}

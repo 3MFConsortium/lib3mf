@@ -111,6 +111,9 @@ namespace NMR {
 	class CModelImplicitFunction;
 	typedef std::shared_ptr <CModelImplicitFunction> PModelImplicitFunction;
 
+	class CModelFunctionFromImage3D;
+	typedef std::shared_ptr <CModelFunctionFromImage3D> PModelFunctionFromImage3D;
+
 	// The Model class implements the unification of all model-file in a 3MF package
 	// It should be understood as a "MultiModel"
 	class CModel {
@@ -324,7 +327,9 @@ namespace NMR {
 		_Ret_maybenull_ PModelImplicitFunction findFunction(_In_ UniqueResourceID nResourceID);
 		nfUint32 getFunctionCount();
 		PModelResource getFunctionResource(_In_ nfUint32 nIndex);
-		CModelImplicitFunction* getFunction(_In_ nfUint32 nIndex);
+		CModelImplicitFunction* getImplicitFunction(_In_ nfUint32 nIndex);
+		CModelFunctionFromImage3D* getFunctionFromImage3D(_In_ nfUint32 nIndex);
+
 		
 		// Clear all build items and Resources
 		void clearAll ();

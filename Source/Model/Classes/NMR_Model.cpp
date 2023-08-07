@@ -59,6 +59,7 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_ModelVector3DFieldComposed.h"
 #include "Model/Classes/NMR_ModelVector3DFieldFromImage3D.h"
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
+#include "Model/Classes/NMR_ModelFunctionFromImage3D.h"
 
 #include "Common/Mesh/NMR_Mesh.h"
 #include "Common/MeshInformation/NMR_MeshInformation.h"
@@ -1672,7 +1673,7 @@ namespace NMR {
 		return m_FunctionLookup[nIndex];
 	}
 
-	CModelImplicitFunction* CModel::getFunction(_In_ nfUint32 nIndex) {
+	CModelImplicitFunction* CModel::getImplicitFunction(_In_ nfUint32 nIndex) {
 		PModelResource pResource = getFunctionResource(nIndex);
 		if (pResource.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
@@ -1680,4 +1681,14 @@ namespace NMR {
 		return dynamic_cast<CModelImplicitFunction*>(pResource.get());
 	}
 
+	CModelFunctionFromImage3D * CModel::getFunctionFromImage3D(nfUint32 nIndex)
+	{
+		PModelResource pResource = getFunctionResource(nIndex);
+		if (pResource.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return dynamic_cast<CModelFunctionFromImage3D*>(pResource.get());
+	}
+
 }
+
