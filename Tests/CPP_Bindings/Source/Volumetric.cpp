@@ -132,6 +132,46 @@ namespace Lib3MF
             }
             EXPECT_FALSE(outputs2->MoveNext());
         }
+
+        // Interface of PFunctionFromImage3D
+        // inline PImage3D GetImage3D();
+        // inline void SetImage3D(classParam<CImage3D> pImage3D);
+        // inline void SetFilter(const eTextureFilter eFilter);
+        // inline eTextureFilter GetFilter();
+        // inline void SetTileStyles(const eTextureTileStyle eTileStyleU,
+        //                           const eTextureTileStyle eTileStyleV,
+        //                           const eTextureTileStyle eTileStyleW);
+        // inline void GetTileStyles(eTextureTileStyle& eTileStyleU,
+        //                           eTextureTileStyle& eTileStyleV,
+        //                           eTextureTileStyle& eTileStyleW);
+        // inline Lib3MF_double GetOffset();
+        // inline void SetOffset(const Lib3MF_double dOffset);
+        // inline Lib3MF_double GetScale();
+        // inline void SetScale(const Lib3MF_double dScale);
+        void compareFunctionsFromImage3D(PFunctionFromImage3D const& function1,
+                                         PFunctionFromImage3D const& function2)
+        {
+           
+            EXPECT_EQ(function1->GetDisplayName(), function2->GetDisplayName());
+            EXPECT_EQ(function1->GetModelResourceID(),
+                      function2->GetModelResourceID());
+
+            EXPECT_EQ(function1->GetImage3D()->GetResourceID(),
+                      function2->GetImage3D()->GetResourceID());
+
+            EXPECT_EQ(function1->GetFilter(), function2->GetFilter());
+
+            eTextureTileStyle eTileStyleU1, eTileStyleV1, eTileStyleW1;
+            eTextureTileStyle eTileStyleU2, eTileStyleV2, eTileStyleW2;
+            function1->GetTileStyles(eTileStyleU1, eTileStyleV1, eTileStyleW1);
+            function2->GetTileStyles(eTileStyleU2, eTileStyleV2, eTileStyleW2);
+            EXPECT_EQ(eTileStyleU1, eTileStyleU2);
+            EXPECT_EQ(eTileStyleV1, eTileStyleV2);
+            EXPECT_EQ(eTileStyleW1, eTileStyleW2);
+
+            EXPECT_EQ(function1->GetOffset(), function2->GetOffset());
+            EXPECT_EQ(function1->GetScale(), function2->GetScale());   
+        }
     }  // namespace helper
 
     class Volumetric : public ::testing::Test
@@ -1173,6 +1213,29 @@ namespace Lib3MF
         // Write to file
         writer3MF = model->QueryWriter("3mf");
         writer3MF->WriteToFile(Volumetric::OutFolder + "FunctionFromImage3D.3mf");
+
+        // Read and compare
+        PModel ioModel = wrapper->CreateModel();
+        PReader ioReader = ioModel->QueryReader("3mf");
+        ioReader->ReadFromFile(Volumetric::OutFolder + "FunctionFromImage3D.3mf");
+
+        // Check the function
+        auto functionIterator = ioModel->GetFunctions();
+        ASSERT_EQ(functionIterator->Count(), 1);
+
+        EXPECT_TRUE(functionIterator->MoveNext());
+        auto functionFromFile = functionIterator->GetCurrentFunction();
+        ASSERT_TRUE(functionFromFile);
+
+        PFunctionFromImage3D funcFromImage3dFromFile =
+            std::dynamic_pointer_cast<Lib3MF::CFunctionFromImage3D>(
+                functionFromFile);
+
+        ASSERT_TRUE(funcFromImage3dFromFile);
+
+        // Compare the functions
+        helper::compareFunctionsFromImage3D(funcFromImage3d,
+                                            funcFromImage3dFromFile);
     }
 
 }  // namespace Lib3MF
