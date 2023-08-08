@@ -3128,12 +3128,12 @@ namespace Lib3MF {
 		{
 		}
 
-		public CImplicitFunction GetCurrentFunction ()
+		public CFunction GetCurrentFunction ()
 		{
 			IntPtr newResource = IntPtr.Zero;
 
 			CheckError(Internal.Lib3MFWrapper.FunctionIterator_GetCurrentFunction (Handle, out newResource));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitFunction>(newResource);
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CFunction>(newResource);
 		}
 
 	}

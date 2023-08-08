@@ -41,9 +41,9 @@ using namespace Lib3MF::Impl;
  Class definition of CFunctionIterator 
 **************************************************************************************************************************/
 
-IImplicitFunction * CFunctionIterator::GetCurrentFunction()
+IFunction * CFunctionIterator::GetCurrentFunction()
 {
-	auto currentFunction = dynamic_cast<IImplicitFunction*>(GetCurrent());
+	auto currentFunction = dynamic_cast<IFunction*>(GetCurrent());
 	if (currentFunction == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 	return currentFunction;

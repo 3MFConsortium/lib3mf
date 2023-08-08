@@ -61,9 +61,16 @@ namespace NMR
         // Parse Attributes
         parseAttributes(pXMLReader);
 
-        // Create Implicit Function
-        m_pFunctionFromImage3D = std::make_shared<CModelFunctionFromImage3D>(m_imageID, m_pModel);
+        // Create FunctionFromImage3D
+        m_pFunctionFromImage3D =
+            std::make_shared<CModelFunctionFromImage3D>(m_nID, m_pModel);
         m_pFunctionFromImage3D->setDisplayName(m_displayName);
+        m_pFunctionFromImage3D->setImage3DResourceID(m_imageID);
+        m_pFunctionFromImage3D->setTileStyleU(m_tileStyleU);
+        m_pFunctionFromImage3D->setTileStyleV(m_tileStyleV);
+        m_pFunctionFromImage3D->setTileStyleW(m_tileStyleW);
+        m_pFunctionFromImage3D->setFilter(m_filter);
+       
 
         // Parse Content
         parseContent(pXMLReader);
@@ -118,8 +125,11 @@ namespace NMR
     void CModelReaderNode_FunctionFromImage3D::OnAttribute(const nfChar * pAttributeName,
                                                            const nfChar * pAttributeValue)
     {
-
-        if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_IMAGE3DID) == 0)
+        if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_ID) == 0)
+        {
+            m_nID = fnStringToUint32(pAttributeValue);
+        }
+        else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_IMAGE3DID) == 0)
         {
             m_imageID = fnStringToUint32(pAttributeValue);
         }

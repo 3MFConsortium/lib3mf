@@ -1957,7 +1957,7 @@ Lib3MFResult lib3mf_scalarfielditerator_getcurrentscalarfield(Lib3MF_ScalarField
 /*************************************************************************************************************************
  Class implementation for FunctionIterator
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_functioniterator_getcurrentfunction(Lib3MF_FunctionIterator pFunctionIterator, Lib3MF_ImplicitFunction * pResource)
+Lib3MFResult lib3mf_functioniterator_getcurrentfunction(Lib3MF_FunctionIterator pFunctionIterator, Lib3MF_Function * pResource)
 {
 	IBase* pIBaseClass = (IBase *)pFunctionIterator;
 

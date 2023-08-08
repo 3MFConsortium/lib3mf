@@ -43,6 +43,7 @@ namespace NMR
         PModelFunctionFromImage3D m_pFunctionFromImage3D;
         CModel * m_pModel = nullptr;
 
+        ModelResourceID m_nID = 0;
         ModelResourceID m_imageID = 0;
 
         std::string m_displayName;

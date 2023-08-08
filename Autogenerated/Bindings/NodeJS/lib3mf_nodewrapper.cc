@@ -3670,7 +3670,7 @@ void CLib3MFFunctionIterator::GetCurrentFunction(const FunctionCallbackInfo<Valu
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_FunctionIterator_GetCurrentFunction(instanceHandle, &hReturnResource);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjResource = CLib3MFImplicitFunction::NewInstance(args.Holder(), hReturnResource);
+        Local<Object> instanceObjResource = CLib3MFFunction::NewInstance(args.Holder(), hReturnResource);
         args.GetReturnValue().Set(instanceObjResource);
 
 		} catch (std::exception & E) {

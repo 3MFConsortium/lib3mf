@@ -108,6 +108,10 @@ namespace NMR {
 	class CModelVector3DField;
 	typedef std::shared_ptr <CModelVector3DField> PModelVector3DField;
 
+
+	class CModelFunction;
+	typedef std::shared_ptr <CModelFunction> PModelFunction;
+	
 	class CModelImplicitFunction;
 	typedef std::shared_ptr <CModelImplicitFunction> PModelImplicitFunction;
 
@@ -324,7 +328,7 @@ namespace NMR {
 		void mergeVector3DFields(_In_ CModel* pSourceModel, _In_ UniqueResourceIDMapping& oldToNewMapping);
 
 		// Convenience functions for Functions
-		_Ret_maybenull_ PModelImplicitFunction findFunction(_In_ UniqueResourceID nResourceID);
+		PModelFunction findFunction(UniqueResourceID nResourceID);
 		nfUint32 getFunctionCount();
 		PModelResource getFunctionResource(_In_ nfUint32 nIndex);
 		CModelImplicitFunction* getImplicitFunction(_In_ nfUint32 nIndex);

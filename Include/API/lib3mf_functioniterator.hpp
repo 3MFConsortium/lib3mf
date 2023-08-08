@@ -80,7 +80,7 @@ public:
 	* IFunctionIterator::GetCurrentFunction - Returns the Function the iterator points at.
 	* @return returns the Function instance.
 	*/
-	IImplicitFunction * GetCurrentFunction() override;
+	IFunction * GetCurrentFunction() override;
 
 };
 

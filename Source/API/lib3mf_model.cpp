@@ -203,6 +203,12 @@ IResource* CModel::createIResourceFromModelResource(NMR::PModelResource pResourc
 		return new CImplicitFunction(p);
 	}
 
+	if(auto p = std::dynamic_pointer_cast<NMR::CModelFunctionFromImage3D>(
+			pResource))
+	{
+        return new CFunctionFromImage3D(p);
+    }
+
 	if (bFailIfUnkownClass)
 		throw ELib3MFInterfaceException(NMR_ERROR_UNKNOWNMODELRESOURCE);
 
@@ -1056,10 +1062,10 @@ IFunctionFromImage3D* CModel::AddFunctionFromImage3D(IImage3D* pImage3DInstance)
 {
 	NMR::ModelResourceID NewResourceID = model().generateResourceID();
 	NMR::PModelFunctionFromImage3D pNewResource = std::make_shared<NMR::CModelFunctionFromImage3D>(NewResourceID, &model());
-
+    pNewResource->setImage3DResourceID(pImage3DInstance->GetResourceID());
 	model().addResource(pNewResource);
-
-	return new CFunctionFromImage3D(pNewResource);
+    auto newFunc = new CFunctionFromImage3D(pNewResource);
+	return newFunc;
 }
 
 IScalarFieldFunction * CModel::AddScalarFieldFunction()

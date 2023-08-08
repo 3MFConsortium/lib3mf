@@ -1005,7 +1005,7 @@ public:
 	* IFunctionIterator::GetCurrentFunction - Returns the Function the iterator points at.
 	* @return returns the Function instance.
 	*/
-	virtual IImplicitFunction * GetCurrentFunction() = 0;
+	virtual IFunction * GetCurrentFunction() = 0;
 
 };
 

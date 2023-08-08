@@ -1148,7 +1148,7 @@ public:
 	{
 	}
 	
-	inline PImplicitFunction GetCurrentFunction();
+	inline PFunction GetCurrentFunction();
 };
 	
 /*************************************************************************************************************************
@@ -11599,7 +11599,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	* CFunctionIterator::GetCurrentFunction - Returns the Function the iterator points at.
 	* @return returns the Function instance.
 	*/
-	PImplicitFunction CFunctionIterator::GetCurrentFunction()
+	PFunction CFunctionIterator::GetCurrentFunction()
 	{
 		Lib3MFHandle hResource = nullptr;
 		CheckError(m_pWrapper->m_WrapperTable.m_FunctionIterator_GetCurrentFunction(m_pHandle, &hResource));
@@ -11607,7 +11607,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if (!hResource) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::shared_ptr<CImplicitFunction>(dynamic_cast<CImplicitFunction*>(m_pWrapper->polymorphicFactory(hResource)));
+		return std::shared_ptr<CFunction>(dynamic_cast<CFunction*>(m_pWrapper->polymorphicFactory(hResource)));
 	}
 	
 	/**

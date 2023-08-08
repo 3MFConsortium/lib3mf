@@ -44,7 +44,7 @@ namespace NMR {
 
 	class CModelFunctionFromImage3D : public CModelFunction{
 	private:
-		UniqueResourceID m_image3DResourceID;
+		UniqueResourceID m_image3DResourceID{};
 		
 		eModelTextureTileStyle m_tileStyleU = {};
 		eModelTextureTileStyle m_tileStyleV = {};

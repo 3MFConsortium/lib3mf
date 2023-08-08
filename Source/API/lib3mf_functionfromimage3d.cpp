@@ -32,6 +32,7 @@ Abstract: This is a stub class definition of CFunctionFromImage3D
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
+#include "lib3mf_image3d.hpp"
 
 using namespace Lib3MF::Impl;
 
@@ -41,17 +42,24 @@ using namespace Lib3MF::Impl;
 
 IImage3D * CFunctionFromImage3D::GetImage3D()
 {
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+    auto id = functionfromimage3d()->getImage3DResourceID();
+    auto image = model()->findImage3D(id);
+
+    
+    if(!image)
+        throw ELib3MFInterfaceException(NMR_ERROR_INVALIDMODELRESOURCE);
+
+    return new CImage3D(image);
 }
 
 NMR::CModelFunctionFromImage3D * Lib3MF::Impl::CFunctionFromImage3D::functionfromimage3d()
 {
-    NMR::CModelFunctionFromImage3D * pFunctionFromImage3D =
-      dynamic_cast<NMR::CModelFunctionFromImage3D *>(resource().get());
-    if (pFunctionFromImage3D == nullptr)
+    auto pFunctionFromImage3D = std::dynamic_pointer_cast<NMR::CModelFunctionFromImage3D>(resource());
+    
+    if(!pFunctionFromImage3D) 
         throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
 
-    return pFunctionFromImage3D;
+    return pFunctionFromImage3D.get();
 }
 
 Lib3MF::Impl::CFunctionFromImage3D::CFunctionFromImage3D(NMR::PModelResource pResource)
@@ -62,6 +70,9 @@ Lib3MF::Impl::CFunctionFromImage3D::CFunctionFromImage3D(NMR::PModelResource pRe
 
 void CFunctionFromImage3D::SetImage3D(IImage3D * pImage3D)
 {
+    if (pImage3D == nullptr)
+        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
 	functionfromimage3d()->setImage3DResourceID(pImage3D->GetUniqueResourceID());
 }
 

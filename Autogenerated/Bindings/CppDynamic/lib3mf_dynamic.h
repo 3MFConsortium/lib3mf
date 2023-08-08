@@ -599,7 +599,7 @@ typedef Lib3MFResult (*PLib3MFScalarFieldIterator_GetCurrentScalarFieldPtr) (Lib
 * @param[out] pResource - returns the Function instance.
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFFunctionIterator_GetCurrentFunctionPtr) (Lib3MF_FunctionIterator pFunctionIterator, Lib3MF_ImplicitFunction * pResource);
+typedef Lib3MFResult (*PLib3MFFunctionIterator_GetCurrentFunctionPtr) (Lib3MF_FunctionIterator pFunctionIterator, Lib3MF_Function * pResource);
 
 /*************************************************************************************************************************
  Class definition for Vector3DFieldIterator

@@ -1013,12 +1013,21 @@ namespace NMR {
                 writeStartElementWithPrefix(XML_3MF_ELEMENT_FUNCTION_FROM_IMAGE3D,
                                             XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
                 {
-                    writeIntAttribute(XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_IMAGE3DID,
-                                      funcFromImg3D->getPackageResourceID()->getModelResourceID());
-                    writeDoubleAttribute(XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_OFFSET,
-                                         funcFromImg3D->getOffset());
-                    writeDoubleAttribute(XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_SCALE,
-                                         funcFromImg3D->getScale());
+                    writeIntAttribute(
+                        XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_ID,
+                        funcFromImg3D->getPackageResourceID()->getModelResourceID());
+                    writeStringAttribute(
+                        XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_DISPLAY_NAME,
+                        funcFromImg3D->getDisplayName());
+                    writeIntAttribute(
+                        XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_IMAGE3DID,
+                        funcFromImg3D->getImage3DResourceID());
+                    writeDoubleAttribute(
+                        XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_OFFSET,
+                        funcFromImg3D->getOffset());
+                    writeDoubleAttribute(
+                        XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_SCALE,
+                        funcFromImg3D->getScale());
 
                     writeStringAttribute(
                       XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_TILESTYLEU,

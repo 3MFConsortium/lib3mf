@@ -1657,9 +1657,9 @@ namespace NMR {
 		return size;
 	}
 
-	PModelImplicitFunction CModel::findFunction(_In_ UniqueResourceID nResourceID) {
+	PModelFunction CModel::findFunction(_In_ UniqueResourceID nResourceID) {
 		for (size_t i = 0; i < m_FunctionLookup.size(); i++) {
-			PModelImplicitFunction pFunction = std::dynamic_pointer_cast<CModelImplicitFunction>(m_FunctionLookup[i]);
+			PModelFunction pFunction = std::dynamic_pointer_cast<CModelFunction>(m_FunctionLookup[i]);
 			if (pFunction->getPackageResourceID()->getUniqueID() == nResourceID)
 				return pFunction;
 		}

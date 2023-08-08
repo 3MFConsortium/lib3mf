@@ -6627,7 +6627,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
-		function GetCurrentFunction(): TLib3MFImplicitFunction;
+		function GetCurrentFunction(): TLib3MFFunction;
 	end;
 
 
@@ -10832,7 +10832,7 @@ implementation
 		inherited;
 	end;
 
-	function TLib3MFFunctionIterator.GetCurrentFunction(): TLib3MFImplicitFunction;
+	function TLib3MFFunctionIterator.GetCurrentFunction(): TLib3MFFunction;
 	var
 		HResource: TLib3MFHandle;
 	begin
@@ -10840,7 +10840,7 @@ implementation
 		HResource := nil;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionIterator_GetCurrentFunctionFunc(FHandle, HResource));
 		if Assigned(HResource) then
-			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitFunction, TLib3MFImplicitFunction>.Make(FWrapper, HResource);
+			Result := TLib3MFPolymorphicFactory<TLib3MFFunction, TLib3MFFunction>.Make(FWrapper, HResource);
 	end;
 
 (*************************************************************************************************************************

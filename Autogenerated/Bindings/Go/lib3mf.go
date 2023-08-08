@@ -522,7 +522,7 @@ Lib3MFResult CCall_lib3mf_scalarfielditerator_getcurrentscalarfield(Lib3MFHandle
 }
 
 
-Lib3MFResult CCall_lib3mf_functioniterator_getcurrentfunction(Lib3MFHandle libraryHandle, Lib3MF_FunctionIterator pFunctionIterator, Lib3MF_ImplicitFunction * pResource)
+Lib3MFResult CCall_lib3mf_functioniterator_getcurrentfunction(Lib3MFHandle libraryHandle, Lib3MF_FunctionIterator pFunctionIterator, Lib3MF_Function * pResource)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
@@ -6483,13 +6483,13 @@ func (wrapper Wrapper) NewFunctionIterator(r ref) FunctionIterator {
 }
 
 // GetCurrentFunction returns the Function the iterator points at.
-func (inst FunctionIterator) GetCurrentFunction() (ImplicitFunction, error) {
+func (inst FunctionIterator) GetCurrentFunction() (Function, error) {
 	var resource ref
 	ret := C.CCall_lib3mf_functioniterator_getcurrentfunction(inst.wrapperRef.LibraryHandle, inst.Ref, &resource)
 	if ret != 0 {
-		return ImplicitFunction{}, makeError(uint32(ret))
+		return Function{}, makeError(uint32(ret))
 	}
-	return inst.wrapperRef.NewImplicitFunction(resource), nil
+	return inst.wrapperRef.NewFunction(resource), nil
 }
 
 

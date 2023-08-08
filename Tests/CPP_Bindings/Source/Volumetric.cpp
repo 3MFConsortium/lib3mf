@@ -71,7 +71,7 @@ namespace Lib3MF
             EXPECT_FALSE(portIterator2->MoveNext());
         }
 
-        void compareFunctions(PImplicitFunction const& function1,
+        void compareImplicitFunctions(PImplicitFunction const& function1,
                               PImplicitFunction const& function2)
         {
             EXPECT_EQ(function1->GetDisplayName(), function2->GetDisplayName());
@@ -133,21 +133,6 @@ namespace Lib3MF
             EXPECT_FALSE(outputs2->MoveNext());
         }
 
-        // Interface of PFunctionFromImage3D
-        // inline PImage3D GetImage3D();
-        // inline void SetImage3D(classParam<CImage3D> pImage3D);
-        // inline void SetFilter(const eTextureFilter eFilter);
-        // inline eTextureFilter GetFilter();
-        // inline void SetTileStyles(const eTextureTileStyle eTileStyleU,
-        //                           const eTextureTileStyle eTileStyleV,
-        //                           const eTextureTileStyle eTileStyleW);
-        // inline void GetTileStyles(eTextureTileStyle& eTileStyleU,
-        //                           eTextureTileStyle& eTileStyleV,
-        //                           eTextureTileStyle& eTileStyleW);
-        // inline Lib3MF_double GetOffset();
-        // inline void SetOffset(const Lib3MF_double dOffset);
-        // inline Lib3MF_double GetScale();
-        // inline void SetScale(const Lib3MF_double dScale);
         void compareFunctionsFromImage3D(PFunctionFromImage3D const& function1,
                                          PFunctionFromImage3D const& function2)
         {
@@ -171,6 +156,36 @@ namespace Lib3MF
 
             EXPECT_EQ(function1->GetOffset(), function2->GetOffset());
             EXPECT_EQ(function1->GetScale(), function2->GetScale());   
+        }
+
+        void compareFunctions(PFunction const& function1,
+                                      PFunction const& function2)
+        {
+            PImplicitFunction implicitFunction1 =
+                std::dynamic_pointer_cast<CImplicitFunction>(
+                    function1);
+
+            PImplicitFunction implicitFunction2 =
+                std::dynamic_pointer_cast<CImplicitFunction>(
+                    function2);
+
+            if (implicitFunction1 != nullptr && implicitFunction2 != nullptr)
+            {
+                compareImplicitFunctions(implicitFunction1, implicitFunction2);
+            }
+            else
+            {
+                PFunctionFromImage3D functionFromImage3D1 =
+                    std::dynamic_pointer_cast<CFunctionFromImage3D>(
+                        function1);
+
+                PFunctionFromImage3D functionFromImage3D2 =
+                    std::dynamic_pointer_cast<CFunctionFromImage3D>(
+                        function2);
+
+                compareFunctionsFromImage3D(functionFromImage3D1,
+                                            functionFromImage3D2);
+            }
         }
     }  // namespace helper
 
@@ -673,7 +688,10 @@ namespace Lib3MF
         EXPECT_EQ(functionIterator->GetCurrentFunction()->GetModelResourceID(),
                   expectedResourceId);
 
-        auto nodeIterator = functionIterator->GetCurrentFunction()->GetNodes();
+        PImplicitFunction currentImplicitFunction = std::dynamic_pointer_cast<CImplicitFunction>(functionIterator->GetCurrentFunction());
+        ASSERT_NE(currentImplicitFunction, nullptr);
+
+        auto nodeIterator = currentImplicitFunction->GetNodes();
         ASSERT_EQ(nodeIterator->Count(), 1);
         EXPECT_TRUE(nodeIterator->MoveNext());
         EXPECT_EQ(nodeIterator->GetCurrent()->GetNodeType(),
@@ -1210,6 +1228,8 @@ namespace Lib3MF
                                        Lib3MF::eTextureTileStyle::Wrap,
                                        Lib3MF::eTextureTileStyle::Wrap);
 
+      
+
         // Write to file
         writer3MF = model->QueryWriter("3mf");
         writer3MF->WriteToFile(Volumetric::OutFolder + "FunctionFromImage3D.3mf");
@@ -1227,15 +1247,17 @@ namespace Lib3MF
         auto functionFromFile = functionIterator->GetCurrentFunction();
         ASSERT_TRUE(functionFromFile);
 
-        PFunctionFromImage3D funcFromImage3dFromFile =
-            std::dynamic_pointer_cast<Lib3MF::CFunctionFromImage3D>(
-                functionFromFile);
+        EXPECT_EQ(funcFromImage3d->GetImage3D()->GetUniqueResourceID(),
+                  pImage3D->GetUniqueResourceID());
 
-        ASSERT_TRUE(funcFromImage3dFromFile);
+        PFunctionFromImage3D funcFromFileAsImage3D =
+            std::dynamic_pointer_cast<CFunctionFromImage3D>(functionFromFile);
+
+        EXPECT_EQ(funcFromFileAsImage3D->GetImage3D()->GetUniqueResourceID(),
+                  pImage3D->GetUniqueResourceID());
 
         // Compare the functions
-        helper::compareFunctionsFromImage3D(funcFromImage3d,
-                                            funcFromImage3dFromFile);
+        helper::compareFunctions(funcFromImage3d, functionFromFile);
     }
 
 }  // namespace Lib3MF

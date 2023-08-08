@@ -662,7 +662,7 @@
 
 	<class name="FunctionIterator" parent="ResourceIterator">
 		<method name="GetCurrentFunction" description="Returns the Function the iterator points at.">
-			<param name="Resource" type="handle" class="ImplicitFunction" pass="return"
+			<param name="Resource" type="handle" class="Function" pass="return"
 				description="returns the Function instance." />
 		</method>
 	</class>

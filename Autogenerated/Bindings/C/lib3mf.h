@@ -612,7 +612,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_scalarfielditerator_getcurrentscalarfield(Li
 * @param[out] pResource - returns the Function instance.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_functioniterator_getcurrentfunction(Lib3MF_FunctionIterator pFunctionIterator, Lib3MF_ImplicitFunction * pResource);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functioniterator_getcurrentfunction(Lib3MF_FunctionIterator pFunctionIterator, Lib3MF_Function * pResource);
 
 /*************************************************************************************************************************
  Class definition for Vector3DFieldIterator
