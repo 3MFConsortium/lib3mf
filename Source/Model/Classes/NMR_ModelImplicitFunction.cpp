@@ -87,71 +87,83 @@ namespace NMR
         return m_nodes;
     }
 
-    void NMR::CModelImplicitFunction::addLink(const ImplicitIdentifier & sSourceNodeIdentifier,
-                                              const ImplicitIdentifier & sTargetNodeIdentifier)
+    void NMR::CModelImplicitFunction::addLink(
+        const ImplicitIdentifier& sSourceNodeIdentifier,
+        const ImplicitIdentifier& sTargetNodeIdentifier)
 
     {
         auto const sourceNodeName = extractNodeName(sSourceNodeIdentifier);
 
-		PModelImplicitPort sourcePort;
-		if (sourceNodeName == "inputs")
-		{
-		   auto const sourcePortName = extractPortName(sSourceNodeIdentifier);
-           sourcePort = findInput(sourcePortName);
-		}
-		else
-		{
-			auto const sourceNode = findNode(sourceNodeName);
-			if (sourceNode == nullptr)
-			{
-				throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_INVALID_SOURCE_NODE);
-			}
-			auto const sourcePortName = extractPortName(sSourceNodeIdentifier);
-			if (sourcePortName.empty())
-			{
-				throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_INVALID_SOURCE_PORT);
-			}
-			sourcePort = sourceNode->findOutput(sourcePortName);
-
-		}
-		if (!sourcePort)
-		{
-			throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_INVALID_SOURCE_PORT);
-		}
-
-
+        PModelImplicitPort sourcePort;
+        if(sourceNodeName == "inputs")
+        {
+            auto const sourcePortName = extractPortName(sSourceNodeIdentifier);
+            sourcePort = findInput(sourcePortName);
+        }
+        else
+        {
+            auto const sourceNode = findNode(sourceNodeName);
+            if(sourceNode == nullptr)
+            {
+                throw CNMRException(
+                    NMR_ERROR_IMPLICIT_FUNCTION_INVALID_SOURCE_NODE);
+            }
+            auto const sourcePortName = extractPortName(sSourceNodeIdentifier);
+            if(sourcePortName.empty())
+            {
+                throw CNMRException(
+                    NMR_ERROR_IMPLICIT_FUNCTION_INVALID_SOURCE_PORT);
+            }
+            sourcePort = sourceNode->findOutput(sourcePortName);
+        }
+        if(!sourcePort)
+        {
+            throw CNMRException(
+                NMR_ERROR_IMPLICIT_FUNCTION_INVALID_SOURCE_PORT);
+        }
 
         auto const targetNodeName = extractNodeName(sTargetNodeIdentifier);
-        auto const targetNode = findNode(targetNodeName);
-        if (targetNode == nullptr)
-        {
-            throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_INVALID_TARGET_NODE);
-        }
-      
         auto const targetPortName = extractPortName(sTargetNodeIdentifier);
-       
-        if (targetPortName.empty())
+        NMR::PModelImplicitPort targetPort;
+        if(targetNodeName == "outputs")
         {
-            throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_INVALID_TARGET_PORT);
+            targetPort = findOutput(targetPortName);
         }
-      
-        auto targetPort = targetNode->findInput(targetPortName);
-       
-        if (!targetPort)
+        else
         {
-            throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_INVALID_TARGET_PORT);
+            auto const targetNode = findNode(targetNodeName);
+            if(targetNode == nullptr)
+            {
+                throw CNMRException(
+                    NMR_ERROR_IMPLICIT_FUNCTION_INVALID_TARGET_NODE);
+            }
+
+            if(targetPortName.empty())
+            {
+                throw CNMRException(
+                    NMR_ERROR_IMPLICIT_FUNCTION_INVALID_TARGET_PORT);
+            }
+
+            targetPort = targetNode->findInput(targetPortName);
         }
 
-        if (sourcePort->getType() != targetPort->getType())
+        if(!targetPort)
+        {
+            throw CNMRException(
+                NMR_ERROR_IMPLICIT_FUNCTION_INVALID_TARGET_PORT);
+        }
+
+        if(sourcePort->getType() != targetPort->getType())
         {
             throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_INVALID_PORT_TYPE);
         }
 
         targetPort->setReference(sSourceNodeIdentifier);
-		if (sourcePort)
-		{
-			sourcePort->setReference(sTargetNodeIdentifier); // won't be visible in the xml
-		}
+        if(sourcePort)
+        {
+            sourcePort->setReference(
+                sTargetNodeIdentifier);  // won't be visible in the xml
+        }
     }
 
     void CModelImplicitFunction::addLink(CModelImplicitPort const & pSourcePort,
