@@ -35,7 +35,161 @@ UnitTest_Utilities.cpp: Implementtion of Utilities for UnitTests
 
 Lib3MF::PWrapper Lib3MFTest::wrapper;
 
-void fnCreateBox(std::vector<Lib3MF::sPosition> &vctVertices, std::vector<Lib3MF::sTriangle> &vctTriangles) {
+namespace Lib3MF
+{
+    namespace helper
+    {
+        bool directoryExists(std::string& path)
+        {
+            struct stat info;
+            if(stat(path.c_str(), &info) != 0)
+                return false;
+            else if(info.st_mode & S_IFDIR)
+                return true;
+            else
+                return false;
+        }
+
+        void comparePorts(Lib3MF::PImplicitPortIterator const& portIterator1,
+                          Lib3MF::PImplicitPortIterator const& portIterator2,
+                          bool ignoreReference)
+        {
+            ASSERT_EQ(portIterator1->Count(), portIterator2->Count());
+            while(portIterator1->MoveNext())
+            {
+                EXPECT_TRUE(portIterator2->MoveNext());
+
+                auto port1 = portIterator1->GetCurrent();
+                auto port2 = portIterator2->GetCurrent();
+
+                EXPECT_EQ(port1->GetIdentifier(), port2->GetIdentifier());
+                EXPECT_EQ(port1->GetType(), port2->GetType());
+                EXPECT_EQ(port1->GetDisplayName(), port2->GetDisplayName());
+                if(!ignoreReference)
+                {
+                    EXPECT_EQ(port1->GetReference(), port2->GetReference());
+                }
+            }
+            EXPECT_FALSE(portIterator2->MoveNext());
+        }
+
+        void compareImplicitFunctions(PImplicitFunction const& function1,
+                                      PImplicitFunction const& function2)
+        {
+            EXPECT_EQ(function1->GetDisplayName(), function2->GetDisplayName());
+            EXPECT_EQ(function1->GetModelResourceID(),
+                      function2->GetModelResourceID());
+
+            auto nodeIterator1 = function1->GetNodes();
+            auto nodeIterator2 = function2->GetNodes();
+            ASSERT_EQ(nodeIterator1->Count(), nodeIterator2->Count());
+            while(nodeIterator1->MoveNext())
+            {
+                EXPECT_TRUE(nodeIterator2->MoveNext());
+
+                auto node1 = nodeIterator1->GetCurrent();
+                auto node2 = nodeIterator2->GetCurrent();
+                EXPECT_EQ(node1->GetIdentifier(), node2->GetIdentifier());
+                EXPECT_EQ(node1->GetNodeType(), node2->GetNodeType());
+                EXPECT_EQ(node1->GetDisplayName(), node2->GetDisplayName());
+
+                if(node1->GetNodeType() == Lib3MF::eImplicitNodeType::Constant)
+                {
+                    EXPECT_EQ(node1->GetConstant(), node2->GetConstant());
+                }
+
+                comparePorts(node1->GetInputs(), node2->GetInputs(), false);
+                comparePorts(node1->GetOutputs(), node2->GetOutputs(),
+                             true);  // ignore reference
+            }
+            EXPECT_FALSE(nodeIterator2->MoveNext());
+
+            auto inputs1 = function1->GetInputs();
+            auto inputs2 = function2->GetInputs();
+            ASSERT_EQ(inputs1->Count(), inputs2->Count());
+            while(inputs1->MoveNext())
+            {
+                EXPECT_TRUE(inputs2->MoveNext());
+                EXPECT_EQ(inputs1->GetCurrent()->GetDisplayName(),
+                          inputs2->GetCurrent()->GetDisplayName());
+                EXPECT_EQ(inputs1->GetCurrent()->GetIdentifier(),
+                          inputs2->GetCurrent()->GetIdentifier());
+                EXPECT_EQ(inputs1->GetCurrent()->GetType(),
+                          inputs2->GetCurrent()->GetType());
+            }
+            EXPECT_FALSE(inputs2->MoveNext());
+
+            auto outputs1 = function1->GetOutputs();
+            auto outputs2 = function2->GetOutputs();
+            ASSERT_EQ(outputs1->Count(), outputs2->Count());
+            while(outputs1->MoveNext())
+            {
+                EXPECT_TRUE(outputs2->MoveNext());
+                EXPECT_EQ(outputs1->GetCurrent()->GetDisplayName(),
+                          outputs2->GetCurrent()->GetDisplayName());
+                EXPECT_EQ(outputs1->GetCurrent()->GetIdentifier(),
+                          outputs2->GetCurrent()->GetIdentifier());
+                EXPECT_EQ(outputs1->GetCurrent()->GetType(),
+                          outputs2->GetCurrent()->GetType());
+            }
+            EXPECT_FALSE(outputs2->MoveNext());
+        }
+
+        void compareFunctionsFromImage3D(PFunctionFromImage3D const& function1,
+                                         PFunctionFromImage3D const& function2)
+        {
+            EXPECT_EQ(function1->GetDisplayName(), function2->GetDisplayName());
+            EXPECT_EQ(function1->GetModelResourceID(),
+                      function2->GetModelResourceID());
+
+            EXPECT_EQ(function1->GetImage3D()->GetResourceID(),
+                      function2->GetImage3D()->GetResourceID());
+
+            EXPECT_EQ(function1->GetFilter(), function2->GetFilter());
+
+            eTextureTileStyle eTileStyleU1, eTileStyleV1, eTileStyleW1;
+            eTextureTileStyle eTileStyleU2, eTileStyleV2, eTileStyleW2;
+            function1->GetTileStyles(eTileStyleU1, eTileStyleV1, eTileStyleW1);
+            function2->GetTileStyles(eTileStyleU2, eTileStyleV2, eTileStyleW2);
+            EXPECT_EQ(eTileStyleU1, eTileStyleU2);
+            EXPECT_EQ(eTileStyleV1, eTileStyleV2);
+            EXPECT_EQ(eTileStyleW1, eTileStyleW2);
+
+            EXPECT_EQ(function1->GetOffset(), function2->GetOffset());
+            EXPECT_EQ(function1->GetScale(), function2->GetScale());
+        }
+
+        void compareFunctions(PFunction const& function1,
+                              PFunction const& function2)
+        {
+            PImplicitFunction implicitFunction1 =
+                std::dynamic_pointer_cast<CImplicitFunction>(function1);
+
+            PImplicitFunction implicitFunction2 =
+                std::dynamic_pointer_cast<CImplicitFunction>(function2);
+
+            if(implicitFunction1 != nullptr && implicitFunction2 != nullptr)
+            {
+                compareImplicitFunctions(implicitFunction1, implicitFunction2);
+            }
+            else
+            {
+                PFunctionFromImage3D functionFromImage3D1 =
+                    std::dynamic_pointer_cast<CFunctionFromImage3D>(function1);
+
+                PFunctionFromImage3D functionFromImage3D2 =
+                    std::dynamic_pointer_cast<CFunctionFromImage3D>(function2);
+
+                compareFunctionsFromImage3D(functionFromImage3D1,
+                                            functionFromImage3D2);
+            }
+        }
+    }  // namespace Lib3MF
+} // namespace Lib3MF
+
+void fnCreateBox(std::vector<Lib3MF::sPosition>& vctVertices,
+                     std::vector<Lib3MF::sTriangle>& vctTriangles)
+    {
 	float fSizeX = 100.0f;
 	float fSizeY = 100.0f;
 	float fSizeZ = 100.0f;
@@ -115,57 +269,21 @@ void CompareTransforms(Lib3MF::sTransform t1, Lib3MF::sTransform t2)
 			ASSERT_EQ(t1.m_Fields[i][j], t2.m_Fields[i][j]);
 }
 
-void CompareFieldReferences(Lib3MF::PModel modelA, Lib3MF::PFieldReference A, Lib3MF::PModel modelB, Lib3MF::PFieldReference B)
+void CompareFunctionReferences(Lib3MF::PModel modelA, Lib3MF::PFunctionReference A, Lib3MF::PModel modelB, Lib3MF::PFunctionReference B)
 {
 	ASSERT_EQ(A == nullptr, B == nullptr);
 	if (A != nullptr && B != nullptr) {
-		CompareTransforms(A->GetTransform(), B->GetTransform());
+	
 
-		Lib3MF::PResource fieldResourceA = modelA->GetResourceByID(A->GetFieldResourceID());
-		Lib3MF::PResource fieldResourceB = modelB->GetResourceByID(B->GetFieldResourceID());
+		Lib3MF::PResource fieldResourceA = modelA->GetResourceByID(A->GetFunctionResourceID());
+		Lib3MF::PResource fieldResourceB = modelB->GetResourceByID(B->GetFunctionResourceID());
 
-		auto scalarFieldA = std::dynamic_pointer_cast<Lib3MF::CScalarField>(fieldResourceA);
-		auto scalarFieldB = std::dynamic_pointer_cast<Lib3MF::CScalarField>(fieldResourceB);
-		ASSERT_EQ(scalarFieldA == nullptr, scalarFieldB == nullptr);
-		if (scalarFieldA != nullptr && scalarFieldB != nullptr) {
-			CompareScalarFields(modelA, scalarFieldA, modelB, scalarFieldB);
-		}
-		auto vectorField3DA = std::dynamic_pointer_cast<Lib3MF::CVector3DField>(fieldResourceA);
-		auto vectorField3DB = std::dynamic_pointer_cast<Lib3MF::CVector3DField>(fieldResourceB);
-		ASSERT_EQ(vectorField3DA == nullptr, vectorField3DB == nullptr);
-		if (scalarFieldA != nullptr && scalarFieldB != nullptr) {
-			CompareVector3DFields(modelA, vectorField3DA, modelB, vectorField3DB);
-		}
-	}
-}
-
-void CompareScalarFieldReferences(Lib3MF::PModel modelA, Lib3MF::PScalarFieldReference A, Lib3MF::PModel modelB, Lib3MF::PScalarFieldReference B)
-{
-	ASSERT_EQ(A == nullptr, B == nullptr);
-	if (A != nullptr && B != nullptr) {
-		CompareTransforms(A->GetTransform(), B->GetTransform());
-
-		auto scalarFieldA = modelA->GetScalarFieldByID(A->GetFieldResourceID());
-		auto scalarFieldB = modelB->GetScalarFieldByID(B->GetFieldResourceID());
-		ASSERT_EQ(scalarFieldA == nullptr, scalarFieldB == nullptr);
-		if (scalarFieldA != nullptr && scalarFieldB != nullptr) {
-			CompareScalarFields(modelA, scalarFieldA, modelB, scalarFieldB);
-		}
-	}
-}
-
-void CompareVector3DFieldReferences(Lib3MF::PModel modelA, Lib3MF::PVector3DFieldReference A, Lib3MF::PModel modelB, Lib3MF::PVector3DFieldReference B)
-{
-	ASSERT_EQ(A == nullptr, B == nullptr);
-	if (A != nullptr && B != nullptr)
-	{
-		CompareTransforms(A->GetTransform(), B->GetTransform());
-
-		auto vectorField3DA = modelA->GetVector3DFieldByID(A->GetFieldResourceID());
-		auto vectorField3DB = modelB->GetVector3DFieldByID(B->GetFieldResourceID());
-		ASSERT_EQ(vectorField3DA == nullptr, vectorField3DB == nullptr);
-		if (vectorField3DA != nullptr && vectorField3DB != nullptr) {
-			CompareVector3DFields(modelA, vectorField3DA, modelB, vectorField3DB);
+		auto functionA = std::dynamic_pointer_cast<Lib3MF::CFunction>(fieldResourceA);
+		auto functionB = std::dynamic_pointer_cast<Lib3MF::CFunction>(fieldResourceB);
+		ASSERT_EQ(functionA == nullptr, functionB == nullptr);
+		if (functionA != nullptr && functionB != nullptr) {
+			// CompareScalarFields(modelA, functionA, modelB, functionB);
+			Lib3MF::helper::compareFunctions(functionA, functionB);
 		}
 	}
 }
@@ -198,140 +316,19 @@ void CompareImageStacks(Lib3MF::PImageStack i1, Lib3MF::PImageStack i2)
 	}
 }
 
-void CompareScalarFields(Lib3MF::PModel modelA, Lib3MF::PScalarField A, Lib3MF::PModel modelB, Lib3MF::PScalarField B)
-{
-	if (A->IsFromImage3D() && B->IsFromImage3D())
-	{
-		CompareScalarFieldFromImage3D(modelA, modelA->GetScalarFieldFromImage3DByID(A->GetUniqueResourceID()),
-			modelB, modelB->GetScalarFieldFromImage3DByID(B->GetUniqueResourceID()));
-	}
-
-	if (A->IsConstant() && B->IsConstant())
-	{
-		CompareScalarFieldConstant(modelA->GetScalarFieldConstantByID(A->GetUniqueResourceID()),
-			modelB->GetScalarFieldConstantByID(B->GetUniqueResourceID()));
-	}
-
-	if (A->IsComposed() && B->IsComposed())
-	{
-		CompareScalarFieldComposed(modelA, modelA->GetScalarFieldComposedByID(A->GetUniqueResourceID()),
-			modelB, modelB->GetScalarFieldComposedByID(B->GetUniqueResourceID()));
-	}
-}
-
-void CompareScalarFieldConstant(Lib3MF::PScalarFieldConstant A, Lib3MF::PScalarFieldConstant B)
-{
-	ASSERT_EQ(A == nullptr, B == nullptr);
-	if (A != nullptr && B != nullptr)
-	{
-		ASSERT_EQ(A->GetName(), B->GetName());
-		ASSERT_EQ(A->GetValue(), B->GetValue());
-	}
-}
-
-void CompareScalarFieldFromImage3D(Lib3MF::PModel modelA, Lib3MF::PScalarFieldFromImage3D A, Lib3MF::PModel modelB, Lib3MF::PScalarFieldFromImage3D B)
-{
-	ASSERT_EQ(A == nullptr, B == nullptr);
-	if (A != nullptr && B != nullptr)
-	{
-		ASSERT_EQ(A->GetName(), B->GetName());
-		CompareImage3Ds(modelA, A->GetImage(), modelB, B->GetImage());
-		ASSERT_EQ(A->GetOffset(), B->GetOffset());
-		ASSERT_EQ(A->GetScale(), B->GetScale());
-		ASSERT_EQ(A->GetFilter(), B->GetFilter());
-	}
-}
-
-void CompareScalarFieldComposed(Lib3MF::PModel modelA, Lib3MF::PScalarFieldComposed A, Lib3MF::PModel modelB, Lib3MF::PScalarFieldComposed B)
-{
-	ASSERT_EQ(A == nullptr, B == nullptr);
-	if (A != nullptr && B != nullptr)
-	{
-		ASSERT_EQ(A->GetName(), B->GetName());
-		ASSERT_EQ(A->GetFactor1(), B->GetFactor1());
-		ASSERT_EQ(A->GetFactor2(), B->GetFactor2());
-		ASSERT_EQ(A->GetMethod(), B->GetMethod());
-		CompareScalarFieldReferences(modelA, A->ScalarFieldReference1(), modelB, B->ScalarFieldReference1());
-		CompareScalarFieldReferences(modelA, A->ScalarFieldReference2(), modelB, B->ScalarFieldReference2());
-	}
-}
-
-void CompareVector3DFields(Lib3MF::PModel modelA, Lib3MF::PVector3DField A, Lib3MF::PModel modelB, Lib3MF::PVector3DField B)
-{
-	ASSERT_EQ(A == nullptr, B == nullptr);
-	if (A != nullptr && B != nullptr)
-	{
-		if (A->IsFromImage3D() && B->IsFromImage3D())
-		{
-			CompareVector3DFieldFromImage3D(modelA, modelA->GetVector3DFieldFromImage3DByID(A->GetUniqueResourceID()),
-				modelB, modelB->GetVector3DFieldFromImage3DByID(B->GetUniqueResourceID()));
-		}
-		if (A->IsConstant() && B->IsConstant())
-		{
-			CompareVector3DFieldConstant(modelA->GetVector3DFieldConstantByID(A->GetUniqueResourceID()),
-				modelB->GetVector3DFieldConstantByID(B->GetUniqueResourceID()));
-		}
-		if (A->IsComposed() && B->IsComposed())
-		{
-			CompareVector3DFieldComposed(modelA, modelA->GetVector3DFieldComposedByID(A->GetUniqueResourceID()),
-				modelB, modelB->GetVector3DFieldComposedByID(B->GetUniqueResourceID()));
-		}
-	}
-}
-
-void CompareVector3DFieldConstant(Lib3MF::PVector3DFieldConstant A, Lib3MF::PVector3DFieldConstant B)
-{
-	ASSERT_EQ(A == nullptr, B == nullptr);
-	if (A != nullptr && B != nullptr)
-	{
-		ASSERT_EQ(A->GetName(), B->GetName());
-		ASSERT_EQ(A->GetValueX(), B->GetValueX());
-		ASSERT_EQ(A->GetValueY(), B->GetValueY());
-		ASSERT_EQ(A->GetValueZ(), B->GetValueZ());
-	}
-}
-
-void CompareVector3DFieldFromImage3D(Lib3MF::PModel modelA, Lib3MF::PVector3DFieldFromImage3D A, Lib3MF::PModel modelB, Lib3MF::PVector3DFieldFromImage3D B)
-{
-	ASSERT_EQ(A == nullptr, B == nullptr);
-	if (A != nullptr && B != nullptr)
-	{
-		ASSERT_EQ(A->GetName(), B->GetName());
-		CompareImage3Ds(modelA, A->GetImage(), modelB, B->GetImage());
-		ASSERT_EQ(A->GetOffset(), B->GetOffset());
-		ASSERT_EQ(A->GetScale(), B->GetScale());
-		ASSERT_EQ(A->GetFilter(), B->GetFilter());
-	}
-}
-
-void CompareVector3DFieldComposed(Lib3MF::PModel modelA, Lib3MF::PVector3DFieldComposed A, Lib3MF::PModel modelB, Lib3MF::PVector3DFieldComposed B)
-{
-	ASSERT_EQ(A == nullptr, B == nullptr);
-	if (A != nullptr && B != nullptr)
-	{
-		ASSERT_EQ(A->GetName(), B->GetName());
-		ASSERT_EQ(A->GetFactor1(), B->GetFactor1());
-		ASSERT_EQ(A->GetFactor2(), B->GetFactor2());
-		ASSERT_EQ(A->GetMethod(), B->GetMethod());
-		ASSERT_EQ(A->GetSpace(), B->GetSpace());
-		CompareVector3DFieldReferences(modelA, A->Vector3DFieldReference1(), modelB, B->Vector3DFieldReference1());
-		CompareVector3DFieldReferences(modelA, A->Vector3DFieldReference2(), modelB, B->Vector3DFieldReference2());
-	}
-}
-
 void CompareVolumeData(Lib3MF::PModel modelA, Lib3MF::PVolumeData A, Lib3MF::PModel modelB, Lib3MF::PVolumeData B)
 {
 	ASSERT_EQ(A->GetBoundary() == nullptr, B->GetBoundary() == nullptr);
 	if (A->GetBoundary())
 	{
-		CompareScalarFieldReferences(modelA, A->GetBoundary(), modelB, B->GetBoundary());
+		CompareFunctionReferences(modelA, A->GetBoundary(), modelB, B->GetBoundary());
 		ASSERT_EQ(A->GetBoundary()->GetSolidThreshold(), B->GetBoundary()->GetSolidThreshold());
 	}
 
 	ASSERT_EQ(A->GetColor() == nullptr, B->GetColor() == nullptr);
 	if (A->GetColor())
 	{
-		CompareVector3DFieldReferences(modelA, A->GetColor(), modelB, B->GetColor());
+		CompareFunctionReferences(modelA, A->GetColor(), modelB, B->GetColor());
 	}
 
 	ASSERT_EQ(A->GetPropertyCount(), B->GetPropertyCount());
@@ -341,7 +338,7 @@ void CompareVolumeData(Lib3MF::PModel modelA, Lib3MF::PVolumeData A, Lib3MF::PMo
 		auto propertyB = B->GetProperty(i);
 		ASSERT_EQ(propertyA->GetName(), propertyB->GetName());
 		ASSERT_EQ(propertyA->IsRequired(), propertyB->IsRequired());
-		CompareFieldReferences(modelA, propertyA, modelB, propertyB);
+		CompareFunctionReferences(modelA, propertyA, modelB, propertyB);
 	}
 	// TODO
 	return;

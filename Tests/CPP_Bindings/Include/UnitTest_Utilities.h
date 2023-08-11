@@ -74,7 +74,31 @@ class Lib3MFTest : public ::testing::Test {
 	}
 	static Lib3MF::PWrapper wrapper;
 };
-	
+
+namespace Lib3MF
+{
+        namespace helper
+        {
+                bool directoryExists(std::string& path);
+
+                void comparePorts(
+                    Lib3MF::PImplicitPortIterator const& portIterator1,
+                    Lib3MF::PImplicitPortIterator const& portIterator2,
+                    bool ignoreReference = false);
+
+                void compareImplicitFunctions(
+                    PImplicitFunction const& function1,
+                    PImplicitFunction const& function2);
+
+                void compareFunctionsFromImage3D(
+                    PFunctionFromImage3D const& function1,
+                    PFunctionFromImage3D const& function2);
+
+                void compareFunctions(PFunction const& function1,
+                                      PFunction const& function2);
+
+        }  // namespace helper
+}  // namespace Lib3MF
 
 std::vector<Lib3MF_uint8> ReadFileIntoBuffer(std::string sFileName);
 void WriteBufferToFile(std::vector<Lib3MF_uint8> const & buffer, std::string sFileName);
@@ -84,21 +108,10 @@ sLib3MFTransform getIdentityTransform();
 void CompareColors(Lib3MF::sColor c1, Lib3MF::sColor c2);
 void CompareTransforms(Lib3MF::sTransform t1, Lib3MF::sTransform t2);
 
-void CompareFieldReferences(Lib3MF::PModel modelA, Lib3MF::PFieldReference A, Lib3MF::PModel modelB, Lib3MF::PFieldReference B);
-void CompareScalarFieldReferences(Lib3MF::PModel m1, Lib3MF::PScalarFieldReference s1, Lib3MF::PModel m2, Lib3MF::PScalarFieldReference s2);
-void CompareVector3DFieldReferences(Lib3MF::PModel m1, Lib3MF::PVector3DFieldReference s1, Lib3MF::PModel m2, Lib3MF::PVector3DFieldReference s2);
+void CompareFunctionReferences(Lib3MF::PModel modelA, Lib3MF::PFunctionReference A, Lib3MF::PModel modelB, Lib3MF::PFunctionReference B);
+
 void CompareImage3Ds(Lib3MF::PModel modelA, Lib3MF::PImage3D i1, Lib3MF::PModel modelB, Lib3MF::PImage3D i2);
 void CompareImageStacks(Lib3MF::PImageStack i1, Lib3MF::PImageStack i2);
-
-void CompareScalarFields(Lib3MF::PModel modelA, Lib3MF::PScalarField A, Lib3MF::PModel modelB, Lib3MF::PScalarField B);
-void CompareScalarFieldConstant(Lib3MF::PScalarFieldConstant A, Lib3MF::PScalarFieldConstant B);
-void CompareScalarFieldFromImage3D(Lib3MF::PModel modelA, Lib3MF::PScalarFieldFromImage3D A, Lib3MF::PModel modelB, Lib3MF::PScalarFieldFromImage3D B);
-void CompareScalarFieldComposed(Lib3MF::PModel modelA, Lib3MF::PScalarFieldComposed A, Lib3MF::PModel modelB, Lib3MF::PScalarFieldComposed B);
-
-void CompareVector3DFields(Lib3MF::PModel modelA, Lib3MF::PVector3DField A, Lib3MF::PModel modelB, Lib3MF::PVector3DField B);
-void CompareVector3DFieldConstant(Lib3MF::PVector3DFieldConstant A, Lib3MF::PVector3DFieldConstant B);
-void CompareVector3DFieldFromImage3D(Lib3MF::PModel modelA, Lib3MF::PVector3DFieldFromImage3D A, Lib3MF::PModel modelB, Lib3MF::PVector3DFieldFromImage3D B);
-void CompareVector3DFieldComposed(Lib3MF::PModel modelA, Lib3MF::PVector3DFieldComposed A, Lib3MF::PModel modelB, Lib3MF::PVector3DFieldComposed B);
 
 void CompareVolumeData(Lib3MF::PModel modelA, Lib3MF::PVolumeData A, Lib3MF::PModel modelB, Lib3MF::PVolumeData B);
 
