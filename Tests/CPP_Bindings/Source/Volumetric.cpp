@@ -581,6 +581,10 @@ namespace Lib3MF
                                    Lib3MF::eImplicitPortType::Vector);
         output->SetReference("substraction_1.result");
 
+        auto theMesh = GetMesh();
+        auto volumeData = theMesh->VolumeData();
+        auto theBoundary = volumeData->CreateNewBoundary(newFunction.get());
+
         // Write to file
         writer3MF->WriteToFile(Volumetric::OutFolder +
                                "AddFunctionWithMultipleNodesAndLinks.3mf");
@@ -673,17 +677,9 @@ namespace Lib3MF
                                    Lib3MF::eImplicitPortType::Scalar);
         output->SetReference("distance_2.result");
 
-        // add the function as volume data defining a boundary to the mesh
-        /* auto scalarField = model->AddScalarFieldFunction();
-         ASSERT_NE(scalarField.get(), nullptr);
-         scalarField->SetFunction(newFunction.get());
-        
-
-
-         scalarField->SetOutput("shape");
-         auto theMesh = GetMesh();
-         auto volumeData = theMesh->VolumeData();
-         auto theBoundary = volumeData->CreateNewBoundary(scalarField.get());*/
+        auto theMesh = GetMesh();
+        auto volumeData = theMesh->VolumeData();
+        auto theBoundary = volumeData->CreateNewBoundary(newFunction.get());
 
         // Write to file
         writer3MF->WriteToFile(Volumetric::OutFolder + "ImplicitSphere.3mf");
@@ -762,6 +758,10 @@ namespace Lib3MF
                                    Lib3MF::eImplicitPortType::Scalar);
 
         output->SetReference("dot.result");
+
+        auto theMesh = GetMesh();
+        auto volumeData = theMesh->VolumeData();
+        auto theBoundary = volumeData->CreateNewBoundary(newFunction.get());
 
         // write to file
         writer3MF->WriteToFile(Volumetric::OutFolder + "ImplicitGyroid.3mf");
@@ -1127,9 +1127,9 @@ namespace Lib3MF
         implicitFunction->AddLinkByNames("inputs.pos", "functionCall.pos");
         implicitFunction->AddLinkByNames("functionCall.color", "outputs.color");
 
-        // auto theMesh = GetMesh();
-        // auto volumeData = theMesh->VolumeData();
-        // auto theBoundary = volumeData->CreateNewBoundary(implicitFunction.get());
+        auto theMesh = GetMesh();
+        auto volumeData = theMesh->VolumeData();
+        auto theBoundary = volumeData->CreateNewColor(implicitFunction.get());
 
         // Write to file
         writer3MF = model->QueryWriter("3mf");
