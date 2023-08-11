@@ -34,8 +34,8 @@ NMR_VolumeDataColor.cpp implements the class CVolumeDataColor.
 
 namespace NMR {
 
-	CVolumeDataColor::CVolumeDataColor(PModelVector3DField pVector3DField)
-		: CVector3DFieldReference(pVector3DField)
+	CVolumeDataColor::CVolumeDataColor(PModelFunction pFunction)
+		: CFunctionReference(pFunction)
 	{
 	}
 

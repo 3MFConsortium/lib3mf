@@ -46,7 +46,7 @@ namespace NMR {
 	CModelReaderNode_Volumetric2201_Boundary::CModelReaderNode_Volumetric2201_Boundary(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
-		m_bHasFieldID = false;
+		m_bHasFunctionID = false;
 		m_bHasSolidThreshold = false;
 		m_bHasTransform = false;
 	}
@@ -68,21 +68,21 @@ namespace NMR {
 		if (!pModel)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		if (!m_bHasFieldID) {
+		if (!m_bHasFunctionID) {
 			throw CNMRException(NMR_ERROR_MISSINGVOLUMEDATAFIELDID);
 		}
 
-		PPackageResourceID pID = pModel->findPackageResourceID(pModel->currentPath(), m_nFieldID);
+		PPackageResourceID pID = pModel->findPackageResourceID(pModel->currentPath(), m_nFunctionID);
 		if (!pID.get()) {
 			throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
 		}
 		
-		auto pScalarField = pModel->findScalarField(pID->getUniqueID());
-		if (!pScalarField.get()) {
+		auto pFunction = pModel->findFunction(pID->getUniqueID());
+		if (!pFunction) {
 			throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
 		}
 
-		PVolumeDataBoundary pBoundary = std::make_shared<CVolumeDataBoundary>(pScalarField);
+		PVolumeDataBoundary pBoundary = std::make_shared<CVolumeDataBoundary>(pFunction);
 		if (m_bHasSolidThreshold)
 			pBoundary->setSolidThreshold(m_dSolidThreshold);
 		if (m_bHasTransform)
@@ -115,13 +115,13 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDVOLUMEDATASOLIDTHRESHOLD);
 		}
 
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_SCALARFIELDID) == 0) {
-			if (m_bHasFieldID)
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_FUNCTIONID) == 0) {
+			if (m_bHasFunctionID)
 				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAFIELDID);
 
-			m_bHasFieldID = true;
+			m_bHasFunctionID = true;
 
-			m_nFieldID = fnStringToUint32(pAttributeValue);
+			m_nFunctionID = fnStringToUint32(pAttributeValue);
 		}
 	}
 	

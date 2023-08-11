@@ -35,7 +35,7 @@ Abstract: This is the class declaration of CVolumeDataColor
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_vector3dfieldreference.hpp"
+#include "lib3mf_functionreference.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
@@ -52,7 +52,7 @@ namespace Impl {
  Class declaration of CVolumeDataColor 
 **************************************************************************************************************************/
 
-class CVolumeDataColor : public virtual IVolumeDataColor, public virtual CVector3DFieldReference {
+class CVolumeDataColor : public virtual IVolumeDataColor, public virtual CFunctionReference {
 private:
 
 	/**

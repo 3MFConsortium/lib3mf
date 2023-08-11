@@ -45,6 +45,7 @@ namespace NMR {
 		nfBool m_bHasTransform = false;
 
 		ModelResourceID m_nFieldID;
+		NMATRIX3 m_Transform = fnMATRIX3_identity();
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:

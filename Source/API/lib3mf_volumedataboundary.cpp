@@ -31,6 +31,8 @@ Abstract: This is a stub class definition of CVolumeDataBoundary
 #include "lib3mf_volumedataboundary.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
+#include "Common/NMR_FunctionReference.h"
+#include "Common/Mesh/NMR_VolumeDataBoundary.h"
 // Include custom headers here.
 
 
@@ -40,19 +42,20 @@ using namespace Lib3MF::Impl;
  Class definition of CVolumeDataBoundary 
 **************************************************************************************************************************/
 
-CVolumeDataBoundary::CVolumeDataBoundary(NMR::PVolumeDataBoundary pLevelset)
-	: CScalarFieldReference(pLevelset), CFieldReference(pLevelset) // TODO I am not sure about the second constructor here
+Lib3MF::Impl::CVolumeDataBoundary::CVolumeDataBoundary(
+    NMR::PVolumeDataBoundary pBoundary)
+    : CFunctionReference(pBoundary)
 {
-
 }
 
 NMR::PVolumeDataBoundary CVolumeDataBoundary::asVolumeDataBoundary()
 {
-	NMR::PVolumeDataBoundary pBoundary = std::dynamic_pointer_cast<NMR::CVolumeDataBoundary>(m_pFieldReference);
+	NMR::PVolumeDataBoundary pBoundary = std::dynamic_pointer_cast<NMR::CVolumeDataBoundary>(m_pFunctionReference);
 	if (pBoundary)
 		return pBoundary;
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 }
+
 
 Lib3MF_double CVolumeDataBoundary::GetSolidThreshold()
 {

@@ -41,8 +41,6 @@ XML Model Stream.
 #include "Model/Reader/v100/NMR_ModelReaderNode100_MultiProperties.h"
 #include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceStack.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Image3D.h"
-#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_ScalarField.h"
-#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Vector3DField.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Function.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_FunctionFromImage3D.h"
 
@@ -150,18 +148,6 @@ namespace NMR {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_IMAGE3D) == 0) {
 
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_Image3D>(
-					m_pModel, m_pWarnings);
-				pXMLNode->parseXML(pXMLReader);
-			}
-			else if (strcmp(pChildName, XML_3MF_ELEMENT_SCALARFIELD) == 0) {
-
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_ScalarField>(
-					m_pModel, m_pWarnings);
-				pXMLNode->parseXML(pXMLReader);
-			}
-			else if (strcmp(pChildName, XML_3MF_ELEMENT_VECTOR3DFIELD) == 0) {
-
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_Vector3DField>(
 					m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}

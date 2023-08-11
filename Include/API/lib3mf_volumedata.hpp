@@ -83,9 +83,9 @@ public:
 
 	IVolumeDataBoundary * GetBoundary() override;
 
-	IVolumeDataBoundary* CreateNewBoundary(IScalarField* pTheScalarField) override;
+    IVolumeDataBoundary* CreateNewBoundary(IFunction* pTheFunction) override;
 
-	void RemoveBoundary() override;
+    void RemoveBoundary() override;
 
 	IVolumeDataComposite * GetComposite() override;
 
@@ -95,7 +95,7 @@ public:
 
 	IVolumeDataColor * GetColor() override;
 
-	IVolumeDataColor * CreateNewColor(IVector3DField* pTheVector3DField) override;
+	IVolumeDataColor* CreateNewColor(IFunction* pTheFunction) override;
 
 	void RemoveColor() override;
 
@@ -103,10 +103,10 @@ public:
 
 	IVolumeDataProperty * GetProperty(const Lib3MF_uint32 nIndex) override;
 
-	IVolumeDataProperty* AddPropertyFromScalarField(const std::string& sName, IScalarField* pTheScalarField) override;
-	
-	IVolumeDataProperty* AddPropertyFromVector3DField(const std::string& sName, IVector3DField* pTheVector3DField) override;
+	IVolumeDataProperty* AddPropertyFromFunction(
+            const std::string& sName, IFunction* pTheFunction) override;
 
+    
 	void RemoveProperty(const Lib3MF_uint32 nIndex) override;
 
 };

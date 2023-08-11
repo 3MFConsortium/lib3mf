@@ -35,7 +35,7 @@ Abstract: This is the class declaration of CVolumeDataProperty
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_fieldreference.hpp"
+#include "lib3mf_functionreference.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
@@ -52,7 +52,7 @@ namespace Impl {
  Class declaration of CVolumeDataProperty 
 **************************************************************************************************************************/
 
-class CVolumeDataProperty : public virtual IVolumeDataProperty, public virtual CFieldReference {
+class CVolumeDataProperty : public virtual IVolumeDataProperty, public virtual CFunctionReference {
 private:
 
 	/**
@@ -80,9 +80,15 @@ public:
 
 	std::string GetName() override;
 
+	void SetFunctionOutputName(const std::string & sName) override;
+
+	std::string GetFunctionOutputName() override;
+
 	void SetIsRequired(const bool bIsRequired) override;
 
 	bool IsRequired() override;
+
+	
 
 };
 

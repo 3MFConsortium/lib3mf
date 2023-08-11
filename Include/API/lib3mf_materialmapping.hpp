@@ -35,7 +35,7 @@ Abstract: This is the class declaration of CMaterialMapping
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_scalarfieldreference.hpp"
+#include "lib3mf_functionreference.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
@@ -52,7 +52,7 @@ namespace Impl {
  Class declaration of CMaterialMapping 
 **************************************************************************************************************************/
 
-class CMaterialMapping : public virtual IMaterialMapping, public virtual CScalarFieldReference {
+class CMaterialMapping : public virtual IMaterialMapping, public virtual CFunctionReference {
 private:
 
 	/**

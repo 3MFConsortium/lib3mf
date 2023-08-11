@@ -82,28 +82,17 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
 		}
 
-		NMR::PModelResource pResource = pModel->findResource(pID);
-		NMR::PModelScalarField pScalarField = std::dynamic_pointer_cast<NMR::CModelScalarField>(pResource);
+		auto pFunction = pModel->findFunction(pID->getUniqueID());
 
 		NMR::PVolumeDataProperty pProperty;
-		if (pScalarField)
+		if (pFunction)
 		{
-			pProperty = std::make_shared<CVolumeDataProperty>(pScalarField, m_sName);
-		}
-		else
-		{
-			NMR::PModelVector3DField pVector3DField = std::dynamic_pointer_cast<NMR::CModelVector3DField>(pResource);
-			if (pVector3DField)
-			{
-				pProperty = std::make_shared<CVolumeDataProperty>(pVector3DField, m_sName);
-			}
+			pProperty = std::make_shared<CVolumeDataProperty>(pFunction, m_sName);
 		}
 
 		if (!pProperty) {
 			throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
 		}
-		if (m_bHasTransform)
-			pProperty->setTransform(m_Transform);
 		pProperty->setIsRequired(m_bRequired);
 		return pProperty;
 	}
@@ -128,7 +117,7 @@ namespace NMR {
 			m_sName = pAttributeValue;
 		}
 
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_FUNCTIONID) == 0) {
 			if (m_bHasFieldID)
 				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAFIELDID);
 

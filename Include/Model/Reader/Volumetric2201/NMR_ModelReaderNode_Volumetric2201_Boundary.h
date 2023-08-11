@@ -41,11 +41,11 @@ namespace NMR {
 
 	class CModelReaderNode_Volumetric2201_Boundary : public CModelReaderNode {
 	private:
-		nfBool m_bHasFieldID;
+		nfBool m_bHasFunctionID;
 		nfBool m_bHasSolidThreshold;
 		nfBool m_bHasTransform;
 
-		ModelResourceID m_nFieldID;
+		ModelResourceID m_nFunctionID;
 		double m_dSolidThreshold;
 		NMATRIX3 m_Transform;
 	protected:

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium
+Copyright (C) 2023 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,39 +24,35 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
+Abstract: This is a stub class definition of CFunctionReference
 
-NMR_ModelScalarField.h defines the Model Vector3DField Class.
-A model scalar field is the base class of different scalar field specializations.
---*/
+*/
 
-#ifndef __NMR_MODELVECTOR3DFIELD
-#define __NMR_MODELVECTOR3DFIELD
+#include "lib3mf_functionreference.hpp"
 
-#include "Model/Classes/NMR_Model.h"
-#include "Model/Classes/NMR_ModelResource.h"
-#include "Common/NMR_Types.h"
-#include "Common/Math/NMR_Matrix.h"
+#include "lib3mf_interfaceexception.hpp"
 
-#include <vector>
+// Include custom headers here.
 
-namespace NMR {
+using namespace Lib3MF::Impl;
 
-	class CModel;
-	typedef std::shared_ptr <CModel> PModel;
+/*************************************************************************************************************************
+ Class definition of CFunctionReference
+**************************************************************************************************************************/
 
-	class CModelVector3DField : public CModelResource { 
-	private:
-		std::string m_sName;
-	public:
-		CModelVector3DField() = delete;
-		CModelVector3DField(_In_ const ModelResourceID sID, _In_ CModel * pModel);
-
-		std::string getName();
-		void setName(_In_ std::string sName);
-	};
-
-	typedef std::shared_ptr <CModelVector3DField> PModelVector3DField;
+Lib3MF_uint32 CFunctionReference::GetFunctionResourceID()
+{
+    return m_pFunctionReference->getFunctionResourceID();
 }
 
-#endif // __NMR_MODELVECTOR3DFIELD
+void CFunctionReference::SetFunctionResourceID(
+    const Lib3MF_uint32 nUniqueResourceID)
+{
+    m_pFunctionReference->setFunctionResourceID(nUniqueResourceID);
+}
+
+Lib3MF::Impl::CFunctionReference::CFunctionReference(
+    NMR::PFunctionReference pFunctionReference)
+    : m_pFunctionReference(pFunctionReference)
+{
+}

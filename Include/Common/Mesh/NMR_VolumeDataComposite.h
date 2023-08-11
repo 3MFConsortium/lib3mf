@@ -35,17 +35,19 @@ NMR_VolumeComposite.h defines the class CVolumeDataComposite.
 
 #include <memory>
 #include "Common/NMR_Types.h"
-#include "Common/NMR_FieldReference.h"
+#include "Common/NMR_FunctionReference.h"
 #include "Model/Classes/NMR_ModelTypes.h"
 #include "Model/Classes/NMR_ModelBaseMaterials.h"
 
 namespace NMR {
 
+	class CModelFunction;
+	typedef std::shared_ptr<CModelFunction> PModelFunction;
 	// does not derive from the CVolumeBase, as CVolumeDataComposite contains
 	//  multiple ScalarFieldReferences, but is not a ScalarFieldReference itself.
 	class CVolumeDataComposite {
 	private:
-		std::vector<PScalarFieldReference> m_vctFieldReferences;
+		std::vector<PFunctionReference> m_vctFunctionReferences;
 		NMR::PModelBaseMaterialResource m_pBaseMaterialGroup;
 	public:
 		CVolumeDataComposite();
@@ -54,8 +56,8 @@ namespace NMR {
 		void setBaseMaterialGroup(PModelBaseMaterialResource );
 
 		nfUint32 materialMappingCount() const;
-		PScalarFieldReference getMaterialMapping(nfUint32);
-		PScalarFieldReference addMaterialMapping(PModelScalarField pScalarField);
+		PFunctionReference getMaterialMapping(nfUint32);
+		PFunctionReference addMaterialMapping(PModelFunction pFunction);
 		void removeMaterialMapping(nfUint32);
 	};
 

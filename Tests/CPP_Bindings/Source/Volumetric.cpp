@@ -1213,8 +1213,10 @@ namespace Lib3MF
 
     TEST_F(Volumetric, CreateImplicitWithFunctionFromImage3D)
     {
-        // Create model
+        // Create model and load pyramid
         model = wrapper->CreateModel();
+        auto reader = model->QueryReader("3mf");
+        reader->ReadFromFile(InFolder + "Pyramid.3mf");
 
         // Create a new image stack
         auto pImage3D = SetupSheetsFromFile();
@@ -1228,7 +1230,50 @@ namespace Lib3MF
                                        Lib3MF::eTextureTileStyle::Wrap,
                                        Lib3MF::eTextureTileStyle::Wrap);
 
-      
+
+        // Create a new implicit function
+        auto implicitFunction = model->AddImplicitFunction();
+        ASSERT_TRUE(implicitFunction);
+        implicitFunction->SetDisplayName("implicit function");
+
+        //Call a node to call the function from image3d
+        auto functionCallNode =
+            implicitFunction->AddNode(Lib3MF::eImplicitNodeType::FunctionCall,
+                                      "functionCall", "functionCall",
+                                      "group_functionCall");
+
+        auto functionIdNode = implicitFunction->AddNode(
+            Lib3MF::eImplicitNodeType::Resource, "functionID",
+            "function resource", "group_functionCall");
+
+        functionIdNode->FindOutput("value")->SetType(
+            Lib3MF::eImplicitPortType::ResourceID);
+
+        functionIdNode->SetResource(funcFromImage3d.get());
+
+        auto functionInput = functionCallNode->FindInput("functionID");
+        ASSERT_TRUE(functionInput);
+
+        functionInput->SetType(Lib3MF::eImplicitPortType::ResourceID);
+
+        implicitFunction->AddLinkByNames("functionID.value",
+                                         "functionCall.functionID");
+
+        // Currently you have to add the inputs and outputs of the called
+        // function manually. We should automate this.
+
+        functionCallNode->AddInput("pos", "position")
+            ->SetType(Lib3MF::eImplicitPortType::Vector);
+
+        functionCallNode->AddOutput("color", "signed distance to the surface")
+            ->SetType(Lib3MF::eImplicitPortType::Vector);
+
+        implicitFunction->AddLinkByNames("inputs.pos", "functionCall.pos");
+        implicitFunction->AddLinkByNames("functionCall.color", "outputs.color");
+
+        auto theMesh = GetMesh();
+        auto volumeData = theMesh->VolumeData();
+        // auto theBoundary = volumeData->CreateNewBoundary(implicitFunction.get());
 
         // Write to file
         writer3MF = model->QueryWriter("3mf");

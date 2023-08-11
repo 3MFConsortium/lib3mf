@@ -31,12 +31,12 @@ NMR_VolumeDataBoundary.cpp implements the class CVolumeDataBoundary.
 --*/
 
 #include "Common/Mesh/NMR_VolumeDataBoundary.h"
-#include "Model/Classes/NMR_ModelScalarField.h"
+#include "Model/Classes/NMR_ModelFunction.h"
 
 namespace NMR {
 
-	CVolumeDataBoundary::CVolumeDataBoundary(PModelScalarField pScalarField)
-		: CScalarFieldReference(pScalarField)
+	CVolumeDataBoundary::CVolumeDataBoundary(PModelFunction pFunction)
+		: CFunctionReference(pFunction)
 	{
 		
 	}

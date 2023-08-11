@@ -33,6 +33,8 @@ option(USE_INCLUDED_GTEST "Used included gtest" ON)
 option(USE_INCLUDED_SSL "Use included libressl" ON)
 option(BUILD_FOR_CODECOVERAGE "Build for code coverage analysis" OFF)
 
+add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
+
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
   add_definitions(-DBUILD_DLL)

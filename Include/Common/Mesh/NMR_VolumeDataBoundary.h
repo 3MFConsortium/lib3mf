@@ -35,19 +35,19 @@ NMR_VolumeDataBoundary.h defines the class CVolumeDataBoundary.
 
 #include "Common/NMR_Types.h"
 #include "Model/Classes/NMR_ModelTypes.h"
-#include "Common/NMR_FieldReference.h"
+#include "Common/NMR_FunctionReference.h"
 #include <string>
 
 namespace NMR {
-	class CModelScalarField;
-	typedef std::shared_ptr<CModelScalarField> PModelScalarField;
+	class CModelFunction;
+	typedef std::shared_ptr<CModelFunction> PModelFunction;
 
-	class CVolumeDataBoundary : public CScalarFieldReference {
+	class CVolumeDataBoundary : public CFunctionReference {
 	private:
 		nfDouble m_dSolidThreshold = 0.;
 	public:
 		CVolumeDataBoundary() = delete;
-		CVolumeDataBoundary(PModelScalarField pScalarField);
+		CVolumeDataBoundary(PModelFunction pFunction);
 
 		nfDouble getSolidThreshold();
 		void setSolidThreshold(nfDouble dSolidThreshold);

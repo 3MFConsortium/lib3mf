@@ -30,42 +30,52 @@ NMR_VolumeDataProperty.cpp implements the class CVolumeDataProperty.
 
 --*/
 
-#include "Common/Mesh/NMR_VolumeDataProperty.h" 
+#include "Common/Mesh/NMR_VolumeDataProperty.h"
 
-#include "Model/Classes/NMR_ModelScalarField.h"
-#include "Model/Classes/NMR_ModelVector3DField.h"
+#include "Model/Classes/NMR_ModelFunction.h"
 
-namespace NMR {
+namespace NMR
+{
 
-	CVolumeDataProperty::CVolumeDataProperty(PModelScalarField pScalarField, std::string sName)
-		: CFieldReference(pScalarField->getPackageResourceID()->getUniqueID()), m_sName(sName), m_bIsRequired(true)
-	{
-		
-	}
+    CVolumeDataProperty::CVolumeDataProperty(PModelFunction pFunction)
+        : CFunctionReference(pFunction), m_sName({}), m_bIsRequired(true)
+    {
+    }
 
-	CVolumeDataProperty::CVolumeDataProperty(PModelVector3DField pVectorField, std::string sName)
-		: CFieldReference(pVectorField->getPackageResourceID()->getUniqueID()), m_sName(sName), m_bIsRequired(true)
-	{
+    CVolumeDataProperty::CVolumeDataProperty(PModelFunction pFunction,
+                                             std::string sName)
+        : CFunctionReference(pFunction), m_sName(sName), m_bIsRequired(true)
+    {
+    }
 
-	}
+    std::string CVolumeDataProperty::getName()
+    {
+        return m_sName;
+    }
 
-	std::string CVolumeDataProperty::getName()
-	{
-		return m_sName;
-	}
-	
-	void CVolumeDataProperty::setName(std::string sPropertyName)
-	{
-		m_sName = sPropertyName;
-	}
+    void CVolumeDataProperty::setName(std::string sPropertyName)
+    {
+        m_sName = sPropertyName;
+    }
 
-	bool CVolumeDataProperty::isRequired()
-	{
-		return m_bIsRequired;
-	}
+    bool CVolumeDataProperty::isRequired()
+    {
+        return m_bIsRequired;
+    }
 
-	void CVolumeDataProperty::setIsRequired(bool bIsRequired)
-	{
-		m_bIsRequired = bIsRequired;
-	}
-}
+    void CVolumeDataProperty::setIsRequired(bool bIsRequired)
+    {
+        m_bIsRequired = bIsRequired;
+    }
+
+    void NMR::CVolumeDataProperty::setFunctionOutputName(
+        std::string sFunctionOutputName)
+    {
+        m_sFunctionOutputName = sFunctionOutputName;
+    }
+
+    std::string CVolumeDataProperty::getFunctionOutputName() const
+    {
+        return m_sFunctionOutputName;
+    }
+}  // namespace NMR

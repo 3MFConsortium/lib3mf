@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium
+Copyright (C) 2023 3MF Consortium
 
 All rights reserved.
 
@@ -26,36 +26,45 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelScalarFieldFromConstant.h defines the Model ScalarField Class.
+NMR_FunctionReference.h defines the class CFunctionReference.
+
 --*/
 
-#ifndef __NMR_MODELSCALARFIELDCONSTANT
-#define __NMR_MODELSCALARFIELDCONSTANT
+#pragma once
 
-#include "Model/Classes/NMR_Model.h"
-#include "Model/Classes/NMR_ModelScalarField.h"
 #include "Common/NMR_Types.h"
+#include "Common/Math/NMR_Geometry.h"
 #include "Common/Math/NMR_Matrix.h"
-
-#include <vector>
+#include "Model/Classes/NMR_ModelTypes.h"
+#include "Model/Classes/NMR_PackageResourceID.h"
 
 namespace NMR {
+	class CModelFunction;
+	typedef std::shared_ptr<CModelFunction> PModelFunction;
 
-	class CModel;
-	typedef std::shared_ptr <CModel> PModel;
-
-	class CModelScalarFieldConstant : public CModelScalarField {
+	class CFunctionReference {
 	private:
-		nfDouble m_dValue = 0.0;
-	public:
-		CModelScalarFieldConstant() = delete;
-		CModelScalarFieldConstant(_In_ const ModelResourceID sID, _In_ CModel * pModel);
+		UniqueResourceID m_pFunctionResourceID;
+		std::string m_outputPortName;
 
-		nfDouble getValue() const;
-		void setValue(nfDouble);
+		NMR::NMATRIX3 m_transform = NMR::fnMATRIX3_identity();
+		bool m_bHasTransform = false;
+	public:
+		CFunctionReference() = delete;
+		explicit CFunctionReference(UniqueResourceID functionResourceId);
+		explicit CFunctionReference(PModelFunction pFunction);
+
+		virtual void setFunctionResourceID(UniqueResourceID functionID);
+		virtual UniqueResourceID getFunctionResourceID() const;
+
+		void setOutputPortName(std::string outputPortName);
+		std::string getOutputPortName() const;
+
+		void setTransform(NMR::NMATRIX3 transform);
+		NMR::NMATRIX3 getTransform() const;
+
+		bool hasTransform() const;
 	};
 
-	typedef std::shared_ptr <CModelScalarFieldConstant> PModelScalarFieldConstant;
+	typedef std::shared_ptr <CFunctionReference> PFunctionReference;
 }
-
-#endif // __NMR_MODELSCALARFIELDCONSTANT

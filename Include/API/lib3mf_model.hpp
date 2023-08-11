@@ -203,53 +203,13 @@ public:
 
 	IImageStack* GetImageStackByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
-	IScalarFieldFromImage3D* AddScalarFieldFromImage3D(IImage3D* pImage3D) override;
-
-	IScalarFieldComposed* AddScalarFieldComposed() override;
-
-	IScalarFieldConstant* AddScalarFieldConstant() override;
-
-	IScalarField* GetScalarFieldByID(const Lib3MF_uint32 nUniqueResourceID) override;
-
-	IScalarFieldFromImage3D* GetScalarFieldFromImage3DByID(const Lib3MF_uint32 nUniqueResourceID) override;
-
-	IScalarFieldComposed* GetScalarFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID) override;
-
-	IScalarFieldConstant* GetScalarFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID) override;
-
-	IVector3DFieldFromImage3D* AddVector3DFieldFromImage3D(IImage3D* pImage3D) override;
-
-	IVector3DFieldComposed* AddVector3DFieldComposed() override;
-
-	IVector3DFieldConstant* AddVector3DFieldConstant() override;
-
-	IVector3DField* GetVector3DFieldByID(const Lib3MF_uint32 nUniqueResourceID) override;
-
-	IVector3DFieldFromImage3D* GetVector3DFieldFromImage3DByID(const Lib3MF_uint32 nUniqueResourceID) override;
-
-	IVector3DFieldComposed* GetVector3DFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID) override;
-
-	IVector3DFieldConstant* GetVector3DFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID) override;
-
 	IImage3DIterator * GetImage3Ds() override;
-
-	IScalarFieldIterator* GetScalarFields() override;
-
-	IVector3DFieldIterator* GetVector3DFields() override;
 
 	IFunctionIterator * GetFunctions() override;
 
 	IImplicitFunction * AddImplicitFunction() override;
 
 	IFunctionFromImage3D* AddFunctionFromImage3D(IImage3D* pImage3DInstance) override;
-
-	IScalarFieldFunction * AddScalarFieldFunction() override;
-
-	IScalarFieldFunction * GetScalarFieldFunctionByID(const Lib3MF_uint32 nUniqueResourceID) override;
-
-	IVector3DFieldFunction * AddVector3DFieldFunction() override;
-
-	IVector3DFieldFunction * GetVector3DFieldFunctionByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
 
 };

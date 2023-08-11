@@ -555,14 +555,8 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3diterator_getcurrentimage3d", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Image3DIterator_GetCurrentImage3D (IntPtr Handle, out IntPtr AResource);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfielditerator_getcurrentscalarfield", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldIterator_GetCurrentScalarField (IntPtr Handle, out IntPtr AResource);
-
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functioniterator_getcurrentfunction", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 FunctionIterator_GetCurrentFunction (IntPtr Handle, out IntPtr AResource);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfielditerator_getcurrentvector3dfield", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldIterator_GetCurrentVector3DField (IntPtr Handle, out IntPtr AResource);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_metadata_getnamespace", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 MetaData_GetNameSpace (IntPtr Handle, UInt32 sizeNameSpace, out UInt32 neededNameSpace, IntPtr dataNameSpace);
@@ -813,233 +807,11 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_beamlattice_getbeamset", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BeamLattice_GetBeamSet (IntPtr Handle, UInt32 AIndex, out IntPtr ABeamSet);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfield_getname", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarField_GetName (IntPtr Handle, UInt32 sizeName, out UInt32 neededName, IntPtr dataName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfield_setname", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarField_SetName (IntPtr Handle, byte[] AName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfield_isfromimage3d", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarField_IsFromImage3D (IntPtr Handle, out Byte AIsFromImage3D);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfield_isconstant", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarField_IsConstant (IntPtr Handle, out Byte AIsConstant);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfield_iscomposed", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarField_IsComposed (IntPtr Handle, out Byte AIsComposed);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfield_isfunction", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarField_IsFunction (IntPtr Handle, out Byte AIsFunction);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfield_getname", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DField_GetName (IntPtr Handle, UInt32 sizeName, out UInt32 neededName, IntPtr dataName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfield_setname", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DField_SetName (IntPtr Handle, byte[] AName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfield_isfromimage3d", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DField_IsFromImage3D (IntPtr Handle, out Byte AIsFromImage3D);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfield_isconstant", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DField_IsConstant (IntPtr Handle, out Byte AIsConstant);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfield_iscomposed", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DField_IsComposed (IntPtr Handle, out Byte AIsComposed);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfield_isfunction", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DField_IsFunction (IntPtr Handle, out Byte AIsFunction);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_getimage", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldFromImage3D_GetImage (IntPtr Handle, out IntPtr AImage3D);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_setimage", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldFromImage3D_SetImage (IntPtr Handle, IntPtr AImage3D);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_setchannel", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldFromImage3D_SetChannel (IntPtr Handle, Int32 AName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_getchannel", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldFromImage3D_GetChannel (IntPtr Handle, out Int32 AName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_setfilter", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldFromImage3D_SetFilter (IntPtr Handle, Int32 AFilter);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_getfilter", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldFromImage3D_GetFilter (IntPtr Handle, out Int32 AFilter);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_settilestyles", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldFromImage3D_SetTileStyles (IntPtr Handle, Int32 ATileStyleU, Int32 ATileStyleV, Int32 ATileStyleW);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_gettilestyles", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldFromImage3D_GetTileStyles (IntPtr Handle, out Int32 ATileStyleU, out Int32 ATileStyleV, out Int32 ATileStyleW);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_getoffset", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldFromImage3D_GetOffset (IntPtr Handle, out Double AOffset);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_setoffset", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldFromImage3D_SetOffset (IntPtr Handle, Double AOffset);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_getscale", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldFromImage3D_GetScale (IntPtr Handle, out Double AScale);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_setscale", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldFromImage3D_SetScale (IntPtr Handle, Double AScale);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldconstant_getvalue", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldConstant_GetValue (IntPtr Handle, out Double AValue);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldconstant_setvalue", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldConstant_SetValue (IntPtr Handle, Double AValue);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfunction_setfunction", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldFunction_SetFunction (IntPtr Handle, IntPtr AFunction);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfunction_getfunction", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldFunction_GetFunction (IntPtr Handle, out IntPtr AFunction);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfunction_setoutput", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldFunction_SetOutput (IntPtr Handle, byte[] AName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfunction_getoutput", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldFunction_GetOutput (IntPtr Handle, UInt32 sizeName, out UInt32 neededName, IntPtr dataName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldcomposed_setmethod", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldComposed_SetMethod (IntPtr Handle, Int32 ATheMethod);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldcomposed_getmethod", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldComposed_GetMethod (IntPtr Handle, out Int32 ATheMethod);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldcomposed_getfactor1", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldComposed_GetFactor1 (IntPtr Handle, out Double AFactor1);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldcomposed_setfactor1", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldComposed_SetFactor1 (IntPtr Handle, Double AFactor1);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldcomposed_getfactor2", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldComposed_GetFactor2 (IntPtr Handle, out Double AFactor2);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldcomposed_setfactor2", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldComposed_SetFactor2 (IntPtr Handle, Double AFactor2);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldcomposed_scalarfieldreference1", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldComposed_ScalarFieldReference1 (IntPtr Handle, out IntPtr ATheScalarFieldReference1);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldcomposed_scalarfieldreference2", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldComposed_ScalarFieldReference2 (IntPtr Handle, out IntPtr ATheScalarFieldReference1);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldcomposed_scalarfieldreferencemask", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldComposed_ScalarFieldReferenceMask (IntPtr Handle, out IntPtr ATheScalarFieldReferenceMask);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfromimage3d_getimage", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldFromImage3D_GetImage (IntPtr Handle, out IntPtr AImage3D);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfromimage3d_setimage", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldFromImage3D_SetImage (IntPtr Handle, IntPtr AImage3D);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfromimage3d_setfilter", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldFromImage3D_SetFilter (IntPtr Handle, Int32 AFilter);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfromimage3d_getfilter", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldFromImage3D_GetFilter (IntPtr Handle, out Int32 AFilter);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfromimage3d_settilestyles", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldFromImage3D_SetTileStyles (IntPtr Handle, Int32 ATileStyleU, Int32 ATileStyleV, Int32 ATileStyleW);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfromimage3d_gettilestyles", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldFromImage3D_GetTileStyles (IntPtr Handle, out Int32 ATileStyleU, out Int32 ATileStyleV, out Int32 ATileStyleW);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfromimage3d_getoffset", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldFromImage3D_GetOffset (IntPtr Handle, out Double AOffset);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfromimage3d_setoffset", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldFromImage3D_SetOffset (IntPtr Handle, Double AOffset);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfromimage3d_getscale", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldFromImage3D_GetScale (IntPtr Handle, out Double AScale);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfromimage3d_setscale", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldFromImage3D_SetScale (IntPtr Handle, Double AScale);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldconstant_getvaluex", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldConstant_GetValueX (IntPtr Handle, out Double AValueX);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldconstant_setvaluex", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldConstant_SetValueX (IntPtr Handle, Double AValueX);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldconstant_getvaluey", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldConstant_GetValueY (IntPtr Handle, out Double AValueY);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldconstant_setvaluey", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldConstant_SetValueY (IntPtr Handle, Double AValueY);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldconstant_getvaluez", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldConstant_GetValueZ (IntPtr Handle, out Double AValueZ);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldconstant_setvaluez", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldConstant_SetValueZ (IntPtr Handle, Double AValueZ);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_setmethod", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldComposed_SetMethod (IntPtr Handle, Int32 ATheMethod);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_getmethod", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldComposed_GetMethod (IntPtr Handle, out Int32 ATheMethod);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_setspace", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldComposed_SetSpace (IntPtr Handle, Int32 ATheSpace);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_getspace", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldComposed_GetSpace (IntPtr Handle, out Int32 ATheSpace);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_getfactor1", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldComposed_GetFactor1 (IntPtr Handle, out Double AFactor1);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_setfactor1", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldComposed_SetFactor1 (IntPtr Handle, Double AFactor1);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_getfactor2", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldComposed_GetFactor2 (IntPtr Handle, out Double AFactor2);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_setfactor2", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldComposed_SetFactor2 (IntPtr Handle, Double AFactor2);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_vector3dfieldreference1", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldComposed_Vector3DFieldReference1 (IntPtr Handle, out IntPtr ATheVector3DFieldReference1);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_vector3dfieldreference2", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldComposed_Vector3DFieldReference2 (IntPtr Handle, out IntPtr ATheVector3DFieldReference1);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_scalarfieldreferencemask", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldComposed_ScalarFieldReferenceMask (IntPtr Handle, out IntPtr ATheScalarFieldReferenceMask);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfunction_setfunction", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldFunction_SetFunction (IntPtr Handle, IntPtr AFunction);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfunction_getfunction", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldFunction_GetFunction (IntPtr Handle, out IntPtr AFunction);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfunction_setoutput", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldFunction_SetOutput (IntPtr Handle, byte[] AName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfunction_getoutput", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldFunction_GetOutput (IntPtr Handle, UInt32 sizeName, out UInt32 neededName, IntPtr dataName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_fieldreference_getfieldresourceid", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 FieldReference_GetFieldResourceID (IntPtr Handle, out UInt32 AUniqueResourceID);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_fieldreference_setfieldresourceid", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 FieldReference_SetFieldResourceID (IntPtr Handle, UInt32 AUniqueResourceID);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_fieldreference_gettransform", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 FieldReference_GetTransform (IntPtr Handle, out InternalTransform ATransform);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_fieldreference_settransform", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 FieldReference_SetTransform (IntPtr Handle, InternalTransform ATransform);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldreference_setscalarfield", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldReference_SetScalarField (IntPtr Handle, IntPtr ATheScalarField);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldreference_setvector3dfield", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldReference_SetVector3DField (IntPtr Handle, IntPtr ATheVector3DField);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_getfunctionresourceid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionReference_GetFunctionResourceID (IntPtr Handle, out UInt32 AUniqueResourceID);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_setfunctionresourceid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionReference_SetFunctionResourceID (IntPtr Handle, UInt32 AUniqueResourceID);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataboundary_getsolidthreshold", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataBoundary_GetSolidThreshold (IntPtr Handle, out Double ATheSolidThreshold);
@@ -1068,6 +840,12 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataproperty_getname", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataProperty_GetName (IntPtr Handle, UInt32 sizePropertyName, out UInt32 neededPropertyName, IntPtr dataPropertyName);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataproperty_setfunctionoutputname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 VolumeDataProperty_SetFunctionOutputName (IntPtr Handle, byte[] AName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataproperty_getfunctionoutputname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 VolumeDataProperty_GetFunctionOutputName (IntPtr Handle, UInt32 sizeName, out UInt32 neededName, IntPtr dataName);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataproperty_setisrequired", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataProperty_SetIsRequired (IntPtr Handle, Byte AIsRequired);
 
@@ -1078,7 +856,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 VolumeData_GetBoundary (IntPtr Handle, out IntPtr ATheBoundaryData);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_createnewboundary", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeData_CreateNewBoundary (IntPtr Handle, IntPtr ATheScalarField, out IntPtr ATheBoundaryData);
+			public unsafe extern static Int32 VolumeData_CreateNewBoundary (IntPtr Handle, IntPtr ATheFunction, out IntPtr ATheBoundaryData);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_removeboundary", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeData_RemoveBoundary (IntPtr Handle);
@@ -1096,7 +874,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 VolumeData_GetColor (IntPtr Handle, out IntPtr ATheColorData);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_createnewcolor", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeData_CreateNewColor (IntPtr Handle, IntPtr ATheVector3DField, out IntPtr ATheColorData);
+			public unsafe extern static Int32 VolumeData_CreateNewColor (IntPtr Handle, IntPtr ATheFunction, out IntPtr ATheColorData);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_removecolor", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeData_RemoveColor (IntPtr Handle);
@@ -1107,11 +885,8 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_getproperty", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeData_GetProperty (IntPtr Handle, UInt32 AIndex, out IntPtr ATheVolumeDataProperty);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_addpropertyfromscalarfield", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeData_AddPropertyFromScalarField (IntPtr Handle, byte[] AName, IntPtr ATheScalarField, out IntPtr ATheVolumeDataProperty);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_addpropertyfromvector3dfield", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeData_AddPropertyFromVector3DField (IntPtr Handle, byte[] AName, IntPtr ATheVector3DField, out IntPtr ATheVolumeDataProperty);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_addpropertyfromfunction", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 VolumeData_AddPropertyFromFunction (IntPtr Handle, byte[] AName, IntPtr ATheFunction, out IntPtr ATheVolumeDataProperty);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_removeproperty", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeData_RemoveProperty (IntPtr Handle, UInt32 AIndex);
@@ -1893,12 +1668,6 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getimage3ds", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetImage3Ds (IntPtr Handle, out IntPtr AResourceIterator);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getscalarfields", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_GetScalarFields (IntPtr Handle, out IntPtr AResourceIterator);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getvector3dfields", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_GetVector3DFields (IntPtr Handle, out IntPtr AResourceIterator);
-
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_mergetomodel", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_MergeToModel (IntPtr Handle, out IntPtr AMergedModelInstance);
 
@@ -1934,60 +1703,6 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getimagestackbyid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetImageStackByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AImageStackInstance);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addscalarfieldfromimage3d", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_AddScalarFieldFromImage3D (IntPtr Handle, IntPtr AImage3D, out IntPtr ATheScalarFieldFromImage3D);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addscalarfieldcomposed", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_AddScalarFieldComposed (IntPtr Handle, out IntPtr ATheScalarFieldComposed);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addscalarfieldconstant", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_AddScalarFieldConstant (IntPtr Handle, out IntPtr ATheScalarFieldConstant);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addscalarfieldfunction", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_AddScalarFieldFunction (IntPtr Handle, out IntPtr ATheScalarFieldFunction);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getscalarfieldbyid", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_GetScalarFieldByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AScalarFieldInstance);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getscalarfieldfromimage3dbyid", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_GetScalarFieldFromImage3DByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AScalarFieldFromImage3DInstance);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getscalarfieldcomposedbyid", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_GetScalarFieldComposedByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AScalarFieldComposedInstance);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getscalarfieldconstantbyid", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_GetScalarFieldConstantByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AScalarFieldConstantInstance);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getscalarfieldfunctionbyid", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_GetScalarFieldFunctionByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AScalarFieldFunctionInstance);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addvector3dfieldfromimage3d", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_AddVector3DFieldFromImage3D (IntPtr Handle, IntPtr AImage3D, out IntPtr ATheVector3DFieldFromImage3D);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addvector3dfieldcomposed", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_AddVector3DFieldComposed (IntPtr Handle, out IntPtr ATheVector3DFieldComposed);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addvector3dfieldconstant", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_AddVector3DFieldConstant (IntPtr Handle, out IntPtr ATheVector3DFieldConstant);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addvector3dfieldfunction", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_AddVector3DFieldFunction (IntPtr Handle, out IntPtr AFunction);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getvector3dfieldbyid", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_GetVector3DFieldByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AVector3DFieldInstance);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getvector3dfieldfromimage3dbyid", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_GetVector3DFieldFromImage3DByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AVector3DFieldFromImage3DInstance);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getvector3dfieldcomposedbyid", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_GetVector3DFieldComposedByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AVector3DFieldComposedInstance);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getvector3dfieldconstantbyid", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_GetVector3DFieldConstantByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AVector3DFieldConstantInstance);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getvector3dfieldfunctionbyid", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_GetVector3DFieldFunctionByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AVector3DFieldFunctionInstance);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addbuilditem", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_AddBuildItem (IntPtr Handle, IntPtr AObject, InternalTransform ATransform, out IntPtr ABuildItemInstance);
@@ -2475,27 +2190,13 @@ namespace Lib3MF {
 					case 0xA99CC6C3F70FB6F9: Object = new CCompositeMaterialsIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::CompositeMaterialsIterator"
 					case 0xC2BDF5D8CBBDB1F0: Object = new CMultiPropertyGroupIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MultiPropertyGroupIterator"
 					case 0xC4B8EC00A82BF336: Object = new CImage3DIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Image3DIterator"
-					case 0xDB00D7A0549F0D9B: Object = new CScalarFieldIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldIterator"
 					case 0x40E9035363ACE65E: Object = new CFunctionIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionIterator"
-					case 0xFBE6DA41D00E8AA8: Object = new CVector3DFieldIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldIterator"
 					case 0xD17716D063DE2C22: Object = new CMetaData(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaData"
 					case 0x0C3B85369E9B25D3: Object = new CMetaDataGroup(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaDataGroup"
 					case 0x2DA2136F577A779C: Object = new CObject(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Object"
 					case 0x3B3A6DC6EC610497: Object = new CMeshObject(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObject"
 					case 0x63B3B461B30B4BA5: Object = new CBeamLattice(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BeamLattice"
-					case 0xD287279D1D95FD5C: Object = new CScalarField(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarField"
-					case 0x8238AA0982B65912: Object = new CVector3DField(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DField"
-					case 0x34BAAE99C1A0884A: Object = new CScalarFieldFromImage3D(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldFromImage3D"
-					case 0xD66C857B3150881C: Object = new CScalarFieldConstant(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldConstant"
-					case 0x251D8DC232A4D362: Object = new CScalarFieldFunction(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldFunction"
-					case 0x35E133BE92DFB6BF: Object = new CScalarFieldComposed(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldComposed"
-					case 0x8829BAD18E5688FC: Object = new CVector3DFieldFromImage3D(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldFromImage3D"
-					case 0xFE4F20B130D7A54C: Object = new CVector3DFieldConstant(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldConstant"
-					case 0x238E197DF1603119: Object = new CVector3DFieldComposed(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldComposed"
-					case 0xE0625152175C2274: Object = new CVector3DFieldFunction(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldFunction"
-					case 0x1DAFE66A115A193C: Object = new CFieldReference(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::FieldReference"
-					case 0x2EC59C8B8BCD0C88: Object = new CScalarFieldReference(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ScalarFieldReference"
-					case 0x6DAF2470111B6F8A: Object = new CVector3DFieldReference(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Vector3DFieldReference"
+					case 0x4DF17E76926221C2: Object = new CFunctionReference(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionReference"
 					case 0xE7B8A8C7BC9DE5C1: Object = new CVolumeDataBoundary(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeDataBoundary"
 					case 0xD85B5B6143E787E3: Object = new CVolumeDataColor(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeDataColor"
 					case 0x241FE6B4817C3FE4: Object = new CMaterialMapping(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MaterialMapping"
@@ -3106,22 +2807,6 @@ namespace Lib3MF {
 
 	}
 
-	public class CScalarFieldIterator : CResourceIterator
-	{
-		public CScalarFieldIterator (IntPtr NewHandle) : base (NewHandle)
-		{
-		}
-
-		public CScalarField GetCurrentScalarField ()
-		{
-			IntPtr newResource = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldIterator_GetCurrentScalarField (Handle, out newResource));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CScalarField>(newResource);
-		}
-
-	}
-
 	public class CFunctionIterator : CResourceIterator
 	{
 		public CFunctionIterator (IntPtr NewHandle) : base (NewHandle)
@@ -3134,22 +2819,6 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.FunctionIterator_GetCurrentFunction (Handle, out newResource));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CFunction>(newResource);
-		}
-
-	}
-
-	public class CVector3DFieldIterator : CResourceIterator
-	{
-		public CVector3DFieldIterator (IntPtr NewHandle) : base (NewHandle)
-		{
-		}
-
-		public CVector3DField GetCurrentVector3DField ()
-		{
-			IntPtr newResource = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldIterator_GetCurrentVector3DField (Handle, out newResource));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CVector3DField>(newResource);
 		}
 
 	}
@@ -3946,722 +3615,29 @@ namespace Lib3MF {
 
 	}
 
-	public class CScalarField : CResource
+	public class CFunctionReference : CBase
 	{
-		public CScalarField (IntPtr NewHandle) : base (NewHandle)
+		public CFunctionReference (IntPtr NewHandle) : base (NewHandle)
 		{
 		}
 
-		public String GetName ()
-		{
-			UInt32 sizeName = 0;
-			UInt32 neededName = 0;
-			CheckError(Internal.Lib3MFWrapper.ScalarField_GetName (Handle, sizeName, out neededName, IntPtr.Zero));
-			sizeName = neededName;
-			byte[] bytesName = new byte[sizeName];
-			GCHandle dataName = GCHandle.Alloc(bytesName, GCHandleType.Pinned);
-
-			CheckError(Internal.Lib3MFWrapper.ScalarField_GetName (Handle, sizeName, out neededName, dataName.AddrOfPinnedObject()));
-			dataName.Free();
-			return Encoding.UTF8.GetString(bytesName).TrimEnd(char.MinValue);
-		}
-
-		public void SetName (String AName)
-		{
-			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
-
-			CheckError(Internal.Lib3MFWrapper.ScalarField_SetName (Handle, byteName));
-		}
-
-		public bool IsFromImage3D ()
-		{
-			Byte resultIsFromImage3D = 0;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarField_IsFromImage3D (Handle, out resultIsFromImage3D));
-			return (resultIsFromImage3D != 0);
-		}
-
-		public bool IsConstant ()
-		{
-			Byte resultIsConstant = 0;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarField_IsConstant (Handle, out resultIsConstant));
-			return (resultIsConstant != 0);
-		}
-
-		public bool IsComposed ()
-		{
-			Byte resultIsComposed = 0;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarField_IsComposed (Handle, out resultIsComposed));
-			return (resultIsComposed != 0);
-		}
-
-		public bool IsFunction ()
-		{
-			Byte resultIsFunction = 0;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarField_IsFunction (Handle, out resultIsFunction));
-			return (resultIsFunction != 0);
-		}
-
-	}
-
-	public class CVector3DField : CResource
-	{
-		public CVector3DField (IntPtr NewHandle) : base (NewHandle)
-		{
-		}
-
-		public String GetName ()
-		{
-			UInt32 sizeName = 0;
-			UInt32 neededName = 0;
-			CheckError(Internal.Lib3MFWrapper.Vector3DField_GetName (Handle, sizeName, out neededName, IntPtr.Zero));
-			sizeName = neededName;
-			byte[] bytesName = new byte[sizeName];
-			GCHandle dataName = GCHandle.Alloc(bytesName, GCHandleType.Pinned);
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DField_GetName (Handle, sizeName, out neededName, dataName.AddrOfPinnedObject()));
-			dataName.Free();
-			return Encoding.UTF8.GetString(bytesName).TrimEnd(char.MinValue);
-		}
-
-		public void SetName (String AName)
-		{
-			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DField_SetName (Handle, byteName));
-		}
-
-		public bool IsFromImage3D ()
-		{
-			Byte resultIsFromImage3D = 0;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DField_IsFromImage3D (Handle, out resultIsFromImage3D));
-			return (resultIsFromImage3D != 0);
-		}
-
-		public bool IsConstant ()
-		{
-			Byte resultIsConstant = 0;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DField_IsConstant (Handle, out resultIsConstant));
-			return (resultIsConstant != 0);
-		}
-
-		public bool IsComposed ()
-		{
-			Byte resultIsComposed = 0;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DField_IsComposed (Handle, out resultIsComposed));
-			return (resultIsComposed != 0);
-		}
-
-		public bool IsFunction ()
-		{
-			Byte resultIsFunction = 0;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DField_IsFunction (Handle, out resultIsFunction));
-			return (resultIsFunction != 0);
-		}
-
-	}
-
-	public class CScalarFieldFromImage3D : CScalarField
-	{
-		public CScalarFieldFromImage3D (IntPtr NewHandle) : base (NewHandle)
-		{
-		}
-
-		public CImage3D GetImage ()
-		{
-			IntPtr newImage3D = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_GetImage (Handle, out newImage3D));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImage3D>(newImage3D);
-		}
-
-		public void SetImage (CImage3D AImage3D)
-		{
-			IntPtr AImage3DHandle = IntPtr.Zero;
-			if (AImage3D != null)
-				AImage3DHandle = AImage3D.GetHandle();
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_SetImage (Handle, AImage3DHandle));
-		}
-
-		public void SetChannel (eChannelName AName)
-		{
-			Int32 enumName = (Int32) AName;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_SetChannel (Handle, enumName));
-		}
-
-		public eChannelName GetChannel ()
-		{
-			Int32 resultName = 0;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_GetChannel (Handle, out resultName));
-			return (eChannelName) (resultName);
-		}
-
-		public void SetFilter (eTextureFilter AFilter)
-		{
-			Int32 enumFilter = (Int32) AFilter;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_SetFilter (Handle, enumFilter));
-		}
-
-		public eTextureFilter GetFilter ()
-		{
-			Int32 resultFilter = 0;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_GetFilter (Handle, out resultFilter));
-			return (eTextureFilter) (resultFilter);
-		}
-
-		public void SetTileStyles (eTextureTileStyle ATileStyleU, eTextureTileStyle ATileStyleV, eTextureTileStyle ATileStyleW)
-		{
-			Int32 enumTileStyleU = (Int32) ATileStyleU;
-			Int32 enumTileStyleV = (Int32) ATileStyleV;
-			Int32 enumTileStyleW = (Int32) ATileStyleW;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_SetTileStyles (Handle, enumTileStyleU, enumTileStyleV, enumTileStyleW));
-		}
-
-		public void GetTileStyles (out eTextureTileStyle ATileStyleU, out eTextureTileStyle ATileStyleV, out eTextureTileStyle ATileStyleW)
-		{
-			Int32 resultTileStyleU = 0;
-			Int32 resultTileStyleV = 0;
-			Int32 resultTileStyleW = 0;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_GetTileStyles (Handle, out resultTileStyleU, out resultTileStyleV, out resultTileStyleW));
-			ATileStyleU = (eTextureTileStyle) (resultTileStyleU);
-			ATileStyleV = (eTextureTileStyle) (resultTileStyleV);
-			ATileStyleW = (eTextureTileStyle) (resultTileStyleW);
-		}
-
-		public Double GetOffset ()
-		{
-			Double resultOffset = 0;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_GetOffset (Handle, out resultOffset));
-			return resultOffset;
-		}
-
-		public void SetOffset (Double AOffset)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_SetOffset (Handle, AOffset));
-		}
-
-		public Double GetScale ()
-		{
-			Double resultScale = 0;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_GetScale (Handle, out resultScale));
-			return resultScale;
-		}
-
-		public void SetScale (Double AScale)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_SetScale (Handle, AScale));
-		}
-
-	}
-
-	public class CScalarFieldConstant : CScalarField
-	{
-		public CScalarFieldConstant (IntPtr NewHandle) : base (NewHandle)
-		{
-		}
-
-		public Double GetValue ()
-		{
-			Double resultValue = 0;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldConstant_GetValue (Handle, out resultValue));
-			return resultValue;
-		}
-
-		public void SetValue (Double AValue)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldConstant_SetValue (Handle, AValue));
-		}
-
-	}
-
-	public class CScalarFieldFunction : CScalarField
-	{
-		public CScalarFieldFunction (IntPtr NewHandle) : base (NewHandle)
-		{
-		}
-
-		public void SetFunction (CImplicitFunction AFunction)
-		{
-			IntPtr AFunctionHandle = IntPtr.Zero;
-			if (AFunction != null)
-				AFunctionHandle = AFunction.GetHandle();
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldFunction_SetFunction (Handle, AFunctionHandle));
-		}
-
-		public CImplicitFunction GetFunction ()
-		{
-			IntPtr newFunction = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldFunction_GetFunction (Handle, out newFunction));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitFunction>(newFunction);
-		}
-
-		public void SetOutput (String AName)
-		{
-			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldFunction_SetOutput (Handle, byteName));
-		}
-
-		public String GetOutput ()
-		{
-			UInt32 sizeName = 0;
-			UInt32 neededName = 0;
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldFunction_GetOutput (Handle, sizeName, out neededName, IntPtr.Zero));
-			sizeName = neededName;
-			byte[] bytesName = new byte[sizeName];
-			GCHandle dataName = GCHandle.Alloc(bytesName, GCHandleType.Pinned);
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldFunction_GetOutput (Handle, sizeName, out neededName, dataName.AddrOfPinnedObject()));
-			dataName.Free();
-			return Encoding.UTF8.GetString(bytesName).TrimEnd(char.MinValue);
-		}
-
-	}
-
-	public class CScalarFieldComposed : CScalarField
-	{
-		public CScalarFieldComposed (IntPtr NewHandle) : base (NewHandle)
-		{
-		}
-
-		public void SetMethod (eCompositionMethod ATheMethod)
-		{
-			Int32 enumTheMethod = (Int32) ATheMethod;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldComposed_SetMethod (Handle, enumTheMethod));
-		}
-
-		public eCompositionMethod GetMethod ()
-		{
-			Int32 resultTheMethod = 0;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldComposed_GetMethod (Handle, out resultTheMethod));
-			return (eCompositionMethod) (resultTheMethod);
-		}
-
-		public Double GetFactor1 ()
-		{
-			Double resultFactor1 = 0;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldComposed_GetFactor1 (Handle, out resultFactor1));
-			return resultFactor1;
-		}
-
-		public void SetFactor1 (Double AFactor1)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldComposed_SetFactor1 (Handle, AFactor1));
-		}
-
-		public Double GetFactor2 ()
-		{
-			Double resultFactor2 = 0;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldComposed_GetFactor2 (Handle, out resultFactor2));
-			return resultFactor2;
-		}
-
-		public void SetFactor2 (Double AFactor2)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldComposed_SetFactor2 (Handle, AFactor2));
-		}
-
-		public CScalarFieldReference ScalarFieldReference1 ()
-		{
-			IntPtr newTheScalarFieldReference1 = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldComposed_ScalarFieldReference1 (Handle, out newTheScalarFieldReference1));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CScalarFieldReference>(newTheScalarFieldReference1);
-		}
-
-		public CScalarFieldReference ScalarFieldReference2 ()
-		{
-			IntPtr newTheScalarFieldReference1 = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldComposed_ScalarFieldReference2 (Handle, out newTheScalarFieldReference1));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CScalarFieldReference>(newTheScalarFieldReference1);
-		}
-
-		public CScalarFieldReference ScalarFieldReferenceMask ()
-		{
-			IntPtr newTheScalarFieldReferenceMask = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldComposed_ScalarFieldReferenceMask (Handle, out newTheScalarFieldReferenceMask));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CScalarFieldReference>(newTheScalarFieldReferenceMask);
-		}
-
-	}
-
-	public class CVector3DFieldFromImage3D : CVector3DField
-	{
-		public CVector3DFieldFromImage3D (IntPtr NewHandle) : base (NewHandle)
-		{
-		}
-
-		public CImage3D GetImage ()
-		{
-			IntPtr newImage3D = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFromImage3D_GetImage (Handle, out newImage3D));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImage3D>(newImage3D);
-		}
-
-		public void SetImage (CImage3D AImage3D)
-		{
-			IntPtr AImage3DHandle = IntPtr.Zero;
-			if (AImage3D != null)
-				AImage3DHandle = AImage3D.GetHandle();
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFromImage3D_SetImage (Handle, AImage3DHandle));
-		}
-
-		public void SetFilter (eTextureFilter AFilter)
-		{
-			Int32 enumFilter = (Int32) AFilter;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFromImage3D_SetFilter (Handle, enumFilter));
-		}
-
-		public eTextureFilter GetFilter ()
-		{
-			Int32 resultFilter = 0;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFromImage3D_GetFilter (Handle, out resultFilter));
-			return (eTextureFilter) (resultFilter);
-		}
-
-		public void SetTileStyles (eTextureTileStyle ATileStyleU, eTextureTileStyle ATileStyleV, eTextureTileStyle ATileStyleW)
-		{
-			Int32 enumTileStyleU = (Int32) ATileStyleU;
-			Int32 enumTileStyleV = (Int32) ATileStyleV;
-			Int32 enumTileStyleW = (Int32) ATileStyleW;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFromImage3D_SetTileStyles (Handle, enumTileStyleU, enumTileStyleV, enumTileStyleW));
-		}
-
-		public void GetTileStyles (out eTextureTileStyle ATileStyleU, out eTextureTileStyle ATileStyleV, out eTextureTileStyle ATileStyleW)
-		{
-			Int32 resultTileStyleU = 0;
-			Int32 resultTileStyleV = 0;
-			Int32 resultTileStyleW = 0;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFromImage3D_GetTileStyles (Handle, out resultTileStyleU, out resultTileStyleV, out resultTileStyleW));
-			ATileStyleU = (eTextureTileStyle) (resultTileStyleU);
-			ATileStyleV = (eTextureTileStyle) (resultTileStyleV);
-			ATileStyleW = (eTextureTileStyle) (resultTileStyleW);
-		}
-
-		public Double GetOffset ()
-		{
-			Double resultOffset = 0;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFromImage3D_GetOffset (Handle, out resultOffset));
-			return resultOffset;
-		}
-
-		public void SetOffset (Double AOffset)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFromImage3D_SetOffset (Handle, AOffset));
-		}
-
-		public Double GetScale ()
-		{
-			Double resultScale = 0;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFromImage3D_GetScale (Handle, out resultScale));
-			return resultScale;
-		}
-
-		public void SetScale (Double AScale)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFromImage3D_SetScale (Handle, AScale));
-		}
-
-	}
-
-	public class CVector3DFieldConstant : CVector3DField
-	{
-		public CVector3DFieldConstant (IntPtr NewHandle) : base (NewHandle)
-		{
-		}
-
-		public Double GetValueX ()
-		{
-			Double resultValueX = 0;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldConstant_GetValueX (Handle, out resultValueX));
-			return resultValueX;
-		}
-
-		public void SetValueX (Double AValueX)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldConstant_SetValueX (Handle, AValueX));
-		}
-
-		public Double GetValueY ()
-		{
-			Double resultValueY = 0;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldConstant_GetValueY (Handle, out resultValueY));
-			return resultValueY;
-		}
-
-		public void SetValueY (Double AValueY)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldConstant_SetValueY (Handle, AValueY));
-		}
-
-		public Double GetValueZ ()
-		{
-			Double resultValueZ = 0;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldConstant_GetValueZ (Handle, out resultValueZ));
-			return resultValueZ;
-		}
-
-		public void SetValueZ (Double AValueZ)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldConstant_SetValueZ (Handle, AValueZ));
-		}
-
-	}
-
-	public class CVector3DFieldComposed : CVector3DField
-	{
-		public CVector3DFieldComposed (IntPtr NewHandle) : base (NewHandle)
-		{
-		}
-
-		public void SetMethod (eCompositionMethod ATheMethod)
-		{
-			Int32 enumTheMethod = (Int32) ATheMethod;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_SetMethod (Handle, enumTheMethod));
-		}
-
-		public eCompositionMethod GetMethod ()
-		{
-			Int32 resultTheMethod = 0;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_GetMethod (Handle, out resultTheMethod));
-			return (eCompositionMethod) (resultTheMethod);
-		}
-
-		public void SetSpace (eCompositionSpace ATheSpace)
-		{
-			Int32 enumTheSpace = (Int32) ATheSpace;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_SetSpace (Handle, enumTheSpace));
-		}
-
-		public eCompositionSpace GetSpace ()
-		{
-			Int32 resultTheSpace = 0;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_GetSpace (Handle, out resultTheSpace));
-			return (eCompositionSpace) (resultTheSpace);
-		}
-
-		public Double GetFactor1 ()
-		{
-			Double resultFactor1 = 0;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_GetFactor1 (Handle, out resultFactor1));
-			return resultFactor1;
-		}
-
-		public void SetFactor1 (Double AFactor1)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_SetFactor1 (Handle, AFactor1));
-		}
-
-		public Double GetFactor2 ()
-		{
-			Double resultFactor2 = 0;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_GetFactor2 (Handle, out resultFactor2));
-			return resultFactor2;
-		}
-
-		public void SetFactor2 (Double AFactor2)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_SetFactor2 (Handle, AFactor2));
-		}
-
-		public CVector3DFieldReference Vector3DFieldReference1 ()
-		{
-			IntPtr newTheVector3DFieldReference1 = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_Vector3DFieldReference1 (Handle, out newTheVector3DFieldReference1));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CVector3DFieldReference>(newTheVector3DFieldReference1);
-		}
-
-		public CVector3DFieldReference Vector3DFieldReference2 ()
-		{
-			IntPtr newTheVector3DFieldReference1 = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_Vector3DFieldReference2 (Handle, out newTheVector3DFieldReference1));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CVector3DFieldReference>(newTheVector3DFieldReference1);
-		}
-
-		public CScalarFieldReference ScalarFieldReferenceMask ()
-		{
-			IntPtr newTheScalarFieldReferenceMask = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_ScalarFieldReferenceMask (Handle, out newTheScalarFieldReferenceMask));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CScalarFieldReference>(newTheScalarFieldReferenceMask);
-		}
-
-	}
-
-	public class CVector3DFieldFunction : CVector3DField
-	{
-		public CVector3DFieldFunction (IntPtr NewHandle) : base (NewHandle)
-		{
-		}
-
-		public void SetFunction (CImplicitFunction AFunction)
-		{
-			IntPtr AFunctionHandle = IntPtr.Zero;
-			if (AFunction != null)
-				AFunctionHandle = AFunction.GetHandle();
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFunction_SetFunction (Handle, AFunctionHandle));
-		}
-
-		public CImplicitFunction GetFunction ()
-		{
-			IntPtr newFunction = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFunction_GetFunction (Handle, out newFunction));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitFunction>(newFunction);
-		}
-
-		public void SetOutput (String AName)
-		{
-			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFunction_SetOutput (Handle, byteName));
-		}
-
-		public String GetOutput ()
-		{
-			UInt32 sizeName = 0;
-			UInt32 neededName = 0;
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFunction_GetOutput (Handle, sizeName, out neededName, IntPtr.Zero));
-			sizeName = neededName;
-			byte[] bytesName = new byte[sizeName];
-			GCHandle dataName = GCHandle.Alloc(bytesName, GCHandleType.Pinned);
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFunction_GetOutput (Handle, sizeName, out neededName, dataName.AddrOfPinnedObject()));
-			dataName.Free();
-			return Encoding.UTF8.GetString(bytesName).TrimEnd(char.MinValue);
-		}
-
-	}
-
-	public class CFieldReference : CBase
-	{
-		public CFieldReference (IntPtr NewHandle) : base (NewHandle)
-		{
-		}
-
-		public UInt32 GetFieldResourceID ()
+		public UInt32 GetFunctionResourceID ()
 		{
 			UInt32 resultUniqueResourceID = 0;
 
-			CheckError(Internal.Lib3MFWrapper.FieldReference_GetFieldResourceID (Handle, out resultUniqueResourceID));
+			CheckError(Internal.Lib3MFWrapper.FunctionReference_GetFunctionResourceID (Handle, out resultUniqueResourceID));
 			return resultUniqueResourceID;
 		}
 
-		public void SetFieldResourceID (UInt32 AUniqueResourceID)
+		public void SetFunctionResourceID (UInt32 AUniqueResourceID)
 		{
 
-			CheckError(Internal.Lib3MFWrapper.FieldReference_SetFieldResourceID (Handle, AUniqueResourceID));
-		}
-
-		public sTransform GetTransform ()
-		{
-			Internal.InternalTransform intresultTransform;
-
-			CheckError(Internal.Lib3MFWrapper.FieldReference_GetTransform (Handle, out intresultTransform));
-			return Internal.Lib3MFWrapper.convertInternalToStruct_Transform (intresultTransform);
-		}
-
-		public void SetTransform (sTransform ATransform)
-		{
-			Internal.InternalTransform intTransform = Internal.Lib3MFWrapper.convertStructToInternal_Transform (ATransform);
-
-			CheckError(Internal.Lib3MFWrapper.FieldReference_SetTransform (Handle, intTransform));
+			CheckError(Internal.Lib3MFWrapper.FunctionReference_SetFunctionResourceID (Handle, AUniqueResourceID));
 		}
 
 	}
 
-	public class CScalarFieldReference : CFieldReference
-	{
-		public CScalarFieldReference (IntPtr NewHandle) : base (NewHandle)
-		{
-		}
-
-		public void SetScalarField (CScalarField ATheScalarField)
-		{
-			IntPtr ATheScalarFieldHandle = IntPtr.Zero;
-			if (ATheScalarField != null)
-				ATheScalarFieldHandle = ATheScalarField.GetHandle();
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldReference_SetScalarField (Handle, ATheScalarFieldHandle));
-		}
-
-	}
-
-	public class CVector3DFieldReference : CFieldReference
-	{
-		public CVector3DFieldReference (IntPtr NewHandle) : base (NewHandle)
-		{
-		}
-
-		public void SetVector3DField (CVector3DField ATheVector3DField)
-		{
-			IntPtr ATheVector3DFieldHandle = IntPtr.Zero;
-			if (ATheVector3DField != null)
-				ATheVector3DFieldHandle = ATheVector3DField.GetHandle();
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldReference_SetVector3DField (Handle, ATheVector3DFieldHandle));
-		}
-
-	}
-
-	public class CVolumeDataBoundary : CScalarFieldReference
+	public class CVolumeDataBoundary : CFunctionReference
 	{
 		public CVolumeDataBoundary (IntPtr NewHandle) : base (NewHandle)
 		{
@@ -4683,7 +3659,7 @@ namespace Lib3MF {
 
 	}
 
-	public class CVolumeDataColor : CVector3DFieldReference
+	public class CVolumeDataColor : CFunctionReference
 	{
 		public CVolumeDataColor (IntPtr NewHandle) : base (NewHandle)
 		{
@@ -4691,7 +3667,7 @@ namespace Lib3MF {
 
 	}
 
-	public class CMaterialMapping : CScalarFieldReference
+	public class CMaterialMapping : CFunctionReference
 	{
 		public CMaterialMapping (IntPtr NewHandle) : base (NewHandle)
 		{
@@ -4755,7 +3731,7 @@ namespace Lib3MF {
 
 	}
 
-	public class CVolumeDataProperty : CFieldReference
+	public class CVolumeDataProperty : CFunctionReference
 	{
 		public CVolumeDataProperty (IntPtr NewHandle) : base (NewHandle)
 		{
@@ -4773,6 +3749,27 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.VolumeDataProperty_GetName (Handle, sizePropertyName, out neededPropertyName, dataPropertyName.AddrOfPinnedObject()));
 			dataPropertyName.Free();
 			return Encoding.UTF8.GetString(bytesPropertyName).TrimEnd(char.MinValue);
+		}
+
+		public void SetFunctionOutputName (String AName)
+		{
+			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.VolumeDataProperty_SetFunctionOutputName (Handle, byteName));
+		}
+
+		public String GetFunctionOutputName ()
+		{
+			UInt32 sizeName = 0;
+			UInt32 neededName = 0;
+			CheckError(Internal.Lib3MFWrapper.VolumeDataProperty_GetFunctionOutputName (Handle, sizeName, out neededName, IntPtr.Zero));
+			sizeName = neededName;
+			byte[] bytesName = new byte[sizeName];
+			GCHandle dataName = GCHandle.Alloc(bytesName, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.VolumeDataProperty_GetFunctionOutputName (Handle, sizeName, out neededName, dataName.AddrOfPinnedObject()));
+			dataName.Free();
+			return Encoding.UTF8.GetString(bytesName).TrimEnd(char.MinValue);
 		}
 
 		public void SetIsRequired (bool AIsRequired)
@@ -4805,14 +3802,14 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CVolumeDataBoundary>(newTheBoundaryData);
 		}
 
-		public CVolumeDataBoundary CreateNewBoundary (CScalarField ATheScalarField)
+		public CVolumeDataBoundary CreateNewBoundary (CFunction ATheFunction)
 		{
-			IntPtr ATheScalarFieldHandle = IntPtr.Zero;
-			if (ATheScalarField != null)
-				ATheScalarFieldHandle = ATheScalarField.GetHandle();
+			IntPtr ATheFunctionHandle = IntPtr.Zero;
+			if (ATheFunction != null)
+				ATheFunctionHandle = ATheFunction.GetHandle();
 			IntPtr newTheBoundaryData = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.VolumeData_CreateNewBoundary (Handle, ATheScalarFieldHandle, out newTheBoundaryData));
+			CheckError(Internal.Lib3MFWrapper.VolumeData_CreateNewBoundary (Handle, ATheFunctionHandle, out newTheBoundaryData));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CVolumeDataBoundary>(newTheBoundaryData);
 		}
 
@@ -4852,14 +3849,14 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CVolumeDataColor>(newTheColorData);
 		}
 
-		public CVolumeDataColor CreateNewColor (CVector3DField ATheVector3DField)
+		public CVolumeDataColor CreateNewColor (CFunction ATheFunction)
 		{
-			IntPtr ATheVector3DFieldHandle = IntPtr.Zero;
-			if (ATheVector3DField != null)
-				ATheVector3DFieldHandle = ATheVector3DField.GetHandle();
+			IntPtr ATheFunctionHandle = IntPtr.Zero;
+			if (ATheFunction != null)
+				ATheFunctionHandle = ATheFunction.GetHandle();
 			IntPtr newTheColorData = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.VolumeData_CreateNewColor (Handle, ATheVector3DFieldHandle, out newTheColorData));
+			CheckError(Internal.Lib3MFWrapper.VolumeData_CreateNewColor (Handle, ATheFunctionHandle, out newTheColorData));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CVolumeDataColor>(newTheColorData);
 		}
 
@@ -4885,27 +3882,15 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CVolumeDataProperty>(newTheVolumeDataProperty);
 		}
 
-		public CVolumeDataProperty AddPropertyFromScalarField (String AName, CScalarField ATheScalarField)
+		public CVolumeDataProperty AddPropertyFromFunction (String AName, CFunction ATheFunction)
 		{
 			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
-			IntPtr ATheScalarFieldHandle = IntPtr.Zero;
-			if (ATheScalarField != null)
-				ATheScalarFieldHandle = ATheScalarField.GetHandle();
+			IntPtr ATheFunctionHandle = IntPtr.Zero;
+			if (ATheFunction != null)
+				ATheFunctionHandle = ATheFunction.GetHandle();
 			IntPtr newTheVolumeDataProperty = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.VolumeData_AddPropertyFromScalarField (Handle, byteName, ATheScalarFieldHandle, out newTheVolumeDataProperty));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CVolumeDataProperty>(newTheVolumeDataProperty);
-		}
-
-		public CVolumeDataProperty AddPropertyFromVector3DField (String AName, CVector3DField ATheVector3DField)
-		{
-			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
-			IntPtr ATheVector3DFieldHandle = IntPtr.Zero;
-			if (ATheVector3DField != null)
-				ATheVector3DFieldHandle = ATheVector3DField.GetHandle();
-			IntPtr newTheVolumeDataProperty = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.VolumeData_AddPropertyFromVector3DField (Handle, byteName, ATheVector3DFieldHandle, out newTheVolumeDataProperty));
+			CheckError(Internal.Lib3MFWrapper.VolumeData_AddPropertyFromFunction (Handle, byteName, ATheFunctionHandle, out newTheVolumeDataProperty));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CVolumeDataProperty>(newTheVolumeDataProperty);
 		}
 
@@ -7530,22 +6515,6 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CImage3DIterator>(newResourceIterator);
 		}
 
-		public CScalarFieldIterator GetScalarFields ()
-		{
-			IntPtr newResourceIterator = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Model_GetScalarFields (Handle, out newResourceIterator));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CScalarFieldIterator>(newResourceIterator);
-		}
-
-		public CVector3DFieldIterator GetVector3DFields ()
-		{
-			IntPtr newResourceIterator = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Model_GetVector3DFields (Handle, out newResourceIterator));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CVector3DFieldIterator>(newResourceIterator);
-		}
-
 		public CModel MergeToModel ()
 		{
 			IntPtr newMergedModelInstance = IntPtr.Zero;
@@ -7649,156 +6618,6 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Model_GetImageStackByID (Handle, AUniqueResourceID, out newImageStackInstance));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CImageStack>(newImageStackInstance);
-		}
-
-		public CScalarFieldFromImage3D AddScalarFieldFromImage3D (CImage3D AImage3D)
-		{
-			IntPtr AImage3DHandle = IntPtr.Zero;
-			if (AImage3D != null)
-				AImage3DHandle = AImage3D.GetHandle();
-			IntPtr newTheScalarFieldFromImage3D = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Model_AddScalarFieldFromImage3D (Handle, AImage3DHandle, out newTheScalarFieldFromImage3D));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CScalarFieldFromImage3D>(newTheScalarFieldFromImage3D);
-		}
-
-		public CScalarFieldComposed AddScalarFieldComposed ()
-		{
-			IntPtr newTheScalarFieldComposed = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Model_AddScalarFieldComposed (Handle, out newTheScalarFieldComposed));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CScalarFieldComposed>(newTheScalarFieldComposed);
-		}
-
-		public CScalarFieldConstant AddScalarFieldConstant ()
-		{
-			IntPtr newTheScalarFieldConstant = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Model_AddScalarFieldConstant (Handle, out newTheScalarFieldConstant));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CScalarFieldConstant>(newTheScalarFieldConstant);
-		}
-
-		public CScalarFieldFunction AddScalarFieldFunction ()
-		{
-			IntPtr newTheScalarFieldFunction = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Model_AddScalarFieldFunction (Handle, out newTheScalarFieldFunction));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CScalarFieldFunction>(newTheScalarFieldFunction);
-		}
-
-		public CScalarField GetScalarFieldByID (UInt32 AUniqueResourceID)
-		{
-			IntPtr newScalarFieldInstance = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Model_GetScalarFieldByID (Handle, AUniqueResourceID, out newScalarFieldInstance));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CScalarField>(newScalarFieldInstance);
-		}
-
-		public CScalarFieldFromImage3D GetScalarFieldFromImage3DByID (UInt32 AUniqueResourceID)
-		{
-			IntPtr newScalarFieldFromImage3DInstance = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Model_GetScalarFieldFromImage3DByID (Handle, AUniqueResourceID, out newScalarFieldFromImage3DInstance));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CScalarFieldFromImage3D>(newScalarFieldFromImage3DInstance);
-		}
-
-		public CScalarFieldComposed GetScalarFieldComposedByID (UInt32 AUniqueResourceID)
-		{
-			IntPtr newScalarFieldComposedInstance = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Model_GetScalarFieldComposedByID (Handle, AUniqueResourceID, out newScalarFieldComposedInstance));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CScalarFieldComposed>(newScalarFieldComposedInstance);
-		}
-
-		public CScalarFieldConstant GetScalarFieldConstantByID (UInt32 AUniqueResourceID)
-		{
-			IntPtr newScalarFieldConstantInstance = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Model_GetScalarFieldConstantByID (Handle, AUniqueResourceID, out newScalarFieldConstantInstance));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CScalarFieldConstant>(newScalarFieldConstantInstance);
-		}
-
-		public CScalarFieldFunction GetScalarFieldFunctionByID (UInt32 AUniqueResourceID)
-		{
-			IntPtr newScalarFieldFunctionInstance = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Model_GetScalarFieldFunctionByID (Handle, AUniqueResourceID, out newScalarFieldFunctionInstance));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CScalarFieldFunction>(newScalarFieldFunctionInstance);
-		}
-
-		public CVector3DFieldFromImage3D AddVector3DFieldFromImage3D (CImage3D AImage3D)
-		{
-			IntPtr AImage3DHandle = IntPtr.Zero;
-			if (AImage3D != null)
-				AImage3DHandle = AImage3D.GetHandle();
-			IntPtr newTheVector3DFieldFromImage3D = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Model_AddVector3DFieldFromImage3D (Handle, AImage3DHandle, out newTheVector3DFieldFromImage3D));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CVector3DFieldFromImage3D>(newTheVector3DFieldFromImage3D);
-		}
-
-		public CVector3DFieldComposed AddVector3DFieldComposed ()
-		{
-			IntPtr newTheVector3DFieldComposed = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Model_AddVector3DFieldComposed (Handle, out newTheVector3DFieldComposed));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CVector3DFieldComposed>(newTheVector3DFieldComposed);
-		}
-
-		public CVector3DFieldConstant AddVector3DFieldConstant ()
-		{
-			IntPtr newTheVector3DFieldConstant = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Model_AddVector3DFieldConstant (Handle, out newTheVector3DFieldConstant));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CVector3DFieldConstant>(newTheVector3DFieldConstant);
-		}
-
-		public CVector3DFieldFunction AddVector3DFieldFunction ()
-		{
-			IntPtr newFunction = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Model_AddVector3DFieldFunction (Handle, out newFunction));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CVector3DFieldFunction>(newFunction);
-		}
-
-		public CVector3DField GetVector3DFieldByID (UInt32 AUniqueResourceID)
-		{
-			IntPtr newVector3DFieldInstance = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Model_GetVector3DFieldByID (Handle, AUniqueResourceID, out newVector3DFieldInstance));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CVector3DField>(newVector3DFieldInstance);
-		}
-
-		public CVector3DFieldFromImage3D GetVector3DFieldFromImage3DByID (UInt32 AUniqueResourceID)
-		{
-			IntPtr newVector3DFieldFromImage3DInstance = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Model_GetVector3DFieldFromImage3DByID (Handle, AUniqueResourceID, out newVector3DFieldFromImage3DInstance));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CVector3DFieldFromImage3D>(newVector3DFieldFromImage3DInstance);
-		}
-
-		public CVector3DFieldComposed GetVector3DFieldComposedByID (UInt32 AUniqueResourceID)
-		{
-			IntPtr newVector3DFieldComposedInstance = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Model_GetVector3DFieldComposedByID (Handle, AUniqueResourceID, out newVector3DFieldComposedInstance));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CVector3DFieldComposed>(newVector3DFieldComposedInstance);
-		}
-
-		public CVector3DFieldConstant GetVector3DFieldConstantByID (UInt32 AUniqueResourceID)
-		{
-			IntPtr newVector3DFieldConstantInstance = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Model_GetVector3DFieldConstantByID (Handle, AUniqueResourceID, out newVector3DFieldConstantInstance));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CVector3DFieldConstant>(newVector3DFieldConstantInstance);
-		}
-
-		public CVector3DFieldFunction GetVector3DFieldFunctionByID (UInt32 AUniqueResourceID)
-		{
-			IntPtr newVector3DFieldFunctionInstance = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Model_GetVector3DFieldFunctionByID (Handle, AUniqueResourceID, out newVector3DFieldFunctionInstance));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CVector3DFieldFunction>(newVector3DFieldFunctionInstance);
 		}
 
 		public CBuildItem AddBuildItem (CObject AObject, sTransform ATransform)

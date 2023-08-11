@@ -35,7 +35,7 @@ Abstract: This is the class declaration of CVolumeDataBoundary
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_scalarfieldreference.hpp"
+#include "lib3mf_functionreference.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
@@ -52,13 +52,13 @@ namespace Impl {
  Class declaration of CVolumeDataBoundary 
 **************************************************************************************************************************/
 
-class CVolumeDataBoundary : public virtual IVolumeDataBoundary, public virtual CScalarFieldReference {
+class CVolumeDataBoundary : public virtual IVolumeDataBoundary, public virtual CFunctionReference {
 private:
 
 	/**
 	* Put private members here.
 	*/
-
+	NMR::PVolumeDataBoundary m_pBoundary;
 protected:
 
 	NMR::PVolumeDataBoundary asVolumeDataBoundary();

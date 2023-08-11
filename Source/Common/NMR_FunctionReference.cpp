@@ -26,42 +26,64 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelScalarFieldFunction.cpp implements the Model ScalarFieldFunction Class.
+This file implements the CFunctionReference class, which represents a reference
+to a function resource in a 3D Manufacturing Format (3MF) file. The class
+provides methods for setting and getting the unique resource ID of the
+referenced function.
+
 --*/
 
-#include "Model/Classes/NMR_ModelScalarFieldFunction.h"
-#include "Common/NMR_Exception.h"
+#include "Common/NMR_FunctionReference.h"
+
+#include "Model/Classes/NMR_ModelFunction.h"
 
 namespace NMR
 {
-
-    CModelScalarFieldFunction::CModelScalarFieldFunction(const ModelResourceID sID, CModel * pModel) : CModelScalarField(sID, pModel)
+    CFunctionReference::CFunctionReference(UniqueResourceID functionResourceId)
+        : m_pFunctionResourceID(functionResourceId)
     {
-
     }
 
-    void CModelScalarFieldFunction::setFunctionResourceID(UniqueResourceID ID)
+    CFunctionReference::CFunctionReference(PModelFunction pFunction)
+        : m_pFunctionResourceID(
+              pFunction ? pFunction->getPackageResourceID()->getUniqueID() : 0)
     {
-        if (!getModel()->findFunction(ID))
-        {
-            throw CNMRException(NMR_ERROR_INVALIDPARAM);
-        }
-
-        m_pFunctionResourceID = ID;
     }
 
-    UniqueResourceID CModelScalarFieldFunction::getFunctionResourceID() const
+    void CFunctionReference::setFunctionResourceID(UniqueResourceID functionID)
+    {
+        m_pFunctionResourceID = functionID;
+    }
+
+    UniqueResourceID CFunctionReference::getFunctionResourceID() const
     {
         return m_pFunctionResourceID;
     }
 
-    void CModelScalarFieldFunction::setOutputPortName(std::string const & name)
+    void NMR::CFunctionReference::setOutputPortName(std::string outputPortName)
     {
-        m_outputPortName = name;
+        m_outputPortName = outputPortName;
     }
 
-    std::string const & CModelScalarFieldFunction::getOutputPortName() const
+    std::string NMR::CFunctionReference::getOutputPortName() const
     {
         return m_outputPortName;
     }
-}
+
+    void CFunctionReference::setTransform(NMR::NMATRIX3 transform)
+    {
+        m_transform = transform;
+        m_bHasTransform = true;
+    }
+
+    bool CFunctionReference::hasTransform() const
+    {
+        return m_bHasTransform;
+    }
+
+    NMR::NMATRIX3 CFunctionReference::getTransform() const
+    {
+        return m_transform;
+    }
+
+}  // namespace NMR

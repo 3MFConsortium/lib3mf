@@ -379,10 +379,10 @@ namespace NMR {
 					writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_BOUNDARY, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 					PVolumeDataBoundary pBoundary = m_pModelMeshObject->getVolumeData()->getBoundary();
 
-					PPackageResourceID pID = m_pModel->findPackageResourceID(pBoundary->getFieldReferenceID());
+					PPackageResourceID pID = m_pModel->findPackageResourceID(pBoundary->getFunctionResourceID());
 					if (!pID)
 						throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
-					writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_SCALARFIELDID, pID->getModelResourceID());
+					writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FUNCTIONID, pID->getModelResourceID());
 
 					if (pBoundary->getSolidThreshold() != 0.0) {
 						writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_SOLIDTHRESHOLD, float(pBoundary->getSolidThreshold()));
@@ -405,10 +405,10 @@ namespace NMR {
 						if (!fnMATRIX3_isIdentity(pProperty->getTransform())) {
 							writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pProperty->getTransform()));
 						}
-						PPackageResourceID pID = m_pModel->findPackageResourceID(pProperty->getFieldReferenceID());
+						PPackageResourceID pID = m_pModel->findPackageResourceID(pProperty->getFunctionResourceID());
 						if (!pID)
 							throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
-						writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID, pID->getModelResourceID());
+						writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FUNCTIONID, pID->getModelResourceID());
 						if (!pProperty->isRequired())
 							writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY_REQUIRED, "false");
 						writeEndElement();
@@ -420,10 +420,10 @@ namespace NMR {
 					writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_COLOR, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 					PVolumeDataColor pColor = m_pModelMeshObject->getVolumeData()->getColor();
 
-					PPackageResourceID pID = m_pModel->findPackageResourceID(pColor->getFieldReferenceID());
+					PPackageResourceID pID = m_pModel->findPackageResourceID(pColor->getFunctionResourceID());
 					if (!pID)
 						throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
-					writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_VECTOR3DFIELDID, pID->getModelResourceID());
+					writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FUNCTIONID, pID->getModelResourceID());
 
 					if (!fnMATRIX3_isIdentity(pColor->getTransform())) {
 						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pColor->getTransform()));

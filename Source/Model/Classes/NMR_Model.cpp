@@ -50,14 +50,6 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_ModelSliceStack.h"
 #include "Model/Classes/NMR_ModelMetaDataGroup.h"
 #include "Model/Classes/NMR_KeyStore.h"
-#include "Model/Classes/NMR_ModelScalarField.h"
-#include "Model/Classes/NMR_ModelScalarFieldConstant.h"
-#include "Model/Classes/NMR_ModelScalarFieldComposed.h"
-#include "Model/Classes/NMR_ModelScalarFieldFromImage3D.h"
-#include "Model/Classes/NMR_ModelVector3DField.h"
-#include "Model/Classes/NMR_ModelVector3DFieldConstant.h"
-#include "Model/Classes/NMR_ModelVector3DFieldComposed.h"
-#include "Model/Classes/NMR_ModelVector3DFieldFromImage3D.h"
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
 #include "Model/Classes/NMR_ModelFunctionFromImage3D.h"
 
@@ -548,14 +540,6 @@ namespace NMR {
 		if (pImage3d != nullptr)
 			m_Image3DLookup.push_back(pResource);
 
-		CModelScalarField* pScalarField = dynamic_cast<CModelScalarField*>(pResource.get());
-		if (pScalarField != nullptr)
-			m_ScalarFieldLookup.push_back(pResource);
-
-		CModelVector3DField* pVector3DField = dynamic_cast<CModelVector3DField*>(pResource.get());
-		if (pVector3DField != nullptr)
-			m_Vector3DFieldLookup.push_back(pResource);
-
 
 		CModelImplicitFunction* pImplicitFunction = dynamic_cast<CModelImplicitFunction*>(pResource.get());
 		if (pImplicitFunction != nullptr)
@@ -584,8 +568,6 @@ namespace NMR {
 		m_CompositeMaterialsLookup.clear();
 		m_MultiPropertyGroupLookup.clear();
 		m_Image3DLookup.clear();
-		m_ScalarFieldLookup.clear();
-		m_Vector3DFieldLookup.clear();
 
 		m_MetaDataGroup->clear();
 
@@ -1043,215 +1025,6 @@ namespace NMR {
 				addResource(pNewImageStack);
 
 				oldToNewMapping[pOldImageStack->getPackageResourceID()->getUniqueID()] = pNewImageStack->getPackageResourceID()->getUniqueID();
-			}
-			else
-			{
-				throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
-			}
-		}
-	}
-
-	// Convenience functions for Scalar Fields
-	PModelScalarField CModel::findScalarField(_In_ UniqueResourceID nResourceID)
-	{
-		PModelResource pResource = findResource(nResourceID);
-		if (pResource != nullptr) {
-			PModelScalarField pScalarFieldResource = std::dynamic_pointer_cast<CModelScalarField>(pResource);
-			if (pScalarFieldResource.get() == nullptr)
-				throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
-			return pScalarFieldResource;
-		}
-		return nullptr;
-	}
-
-	nfUint32 CModel::getScalarFieldCount()
-	{
-		return (nfUint32)m_ScalarFieldLookup.size();
-	}
-
-	PModelResource CModel::getScalarFieldResource(_In_ nfUint32 nIndex)
-	{
-		nfUint32 nCount = getScalarFieldCount();
-		if (nIndex >= nCount)
-			throw CNMRException(NMR_ERROR_INVALIDINDEX);
-
-		return m_ScalarFieldLookup[nIndex];
-
-	}
-
-	CModelScalarField* CModel::getScalarField(_In_ nfUint32 nIndex)
-	{
-		CModelScalarField* pScalarField = dynamic_cast<CModelScalarField*> (getScalarFieldResource(nIndex).get());
-		if (pScalarField == nullptr)
-			throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
-
-		return pScalarField;
-	}
-
-	void CModel::mergeScalarFields(_In_ CModel* pSourceModel, _In_ UniqueResourceIDMapping& oldToNewMapping)
-	{
-		if (pSourceModel == nullptr)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		nfUint32 nCount = pSourceModel->getScalarFieldCount();
-		nfUint32 nIndex;
-
-		for (nIndex = 0; nIndex < nCount; nIndex++)
-		{
-			CModelScalarField * pOldScalarField = pSourceModel->getScalarField(nIndex);
-			if (pOldScalarField == nullptr)
-				throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-			if (CModelScalarFieldConstant* pOldScalarFieldConstant = dynamic_cast<CModelScalarFieldConstant*>(pOldScalarField))
-			{
-				PModelScalarFieldConstant pNewScalarFieldConstant = std::make_shared<CModelScalarFieldConstant>(generateResourceID(), this);
-				pNewScalarFieldConstant->setValue(pOldScalarFieldConstant->getValue());
-				pNewScalarFieldConstant->setName(pOldScalarFieldConstant->getName());
-
-				addResource(pNewScalarFieldConstant);
-
-				oldToNewMapping[pOldScalarField->getPackageResourceID()->getUniqueID()] = pNewScalarFieldConstant->getPackageResourceID()->getUniqueID();
-			}
-			else if (CModelScalarFieldComposed* pOldScalarFieldComposed = dynamic_cast<CModelScalarFieldComposed*>(pOldScalarField))
-			{
-				PModelScalarFieldComposed pNewScalarFieldComposed = std::make_shared<CModelScalarFieldComposed>(generateResourceID(), this);
-				pNewScalarFieldComposed->setName(pOldScalarFieldComposed->getName());
-				pNewScalarFieldComposed->setFactor1(pOldScalarFieldComposed->getFactor1());
-				pNewScalarFieldComposed->setFactor2(pOldScalarFieldComposed->getFactor2());
-				pNewScalarFieldComposed->setMethod(pOldScalarFieldComposed->getMethod());
-				pNewScalarFieldComposed->ScalarFieldReference1()->setTransform(pOldScalarFieldComposed->ScalarFieldReference1()->getTransform());
-				pNewScalarFieldComposed->ScalarFieldReference1()->setFieldReferenceID(oldToNewMapping[pOldScalarFieldComposed->ScalarFieldReference1()->getFieldReferenceID()]);
-				pNewScalarFieldComposed->ScalarFieldReference2()->setTransform(pOldScalarFieldComposed->ScalarFieldReference2()->getTransform());
-				pNewScalarFieldComposed->ScalarFieldReference2()->setFieldReferenceID(oldToNewMapping[pOldScalarFieldComposed->ScalarFieldReference2()->getFieldReferenceID()]);
-				if (pOldScalarFieldComposed->getMethod() == eModelCompositionMethod::MODELCOMPOSITIONMETHOD_MASK)
-				{
-					pNewScalarFieldComposed->ScalarFieldReferenceMask()->setTransform(pOldScalarFieldComposed->ScalarFieldReferenceMask()->getTransform());
-					pNewScalarFieldComposed->ScalarFieldReferenceMask()->setFieldReferenceID(oldToNewMapping[pOldScalarFieldComposed->ScalarFieldReferenceMask()->getFieldReferenceID()]);
-				}
-				addResource(pNewScalarFieldComposed);
-
-				oldToNewMapping[pOldScalarField->getPackageResourceID()->getUniqueID()] = pNewScalarFieldComposed->getPackageResourceID()->getUniqueID();
-			}
-			else if (CModelScalarFieldFromImage3D* pOldScalarFieldFromImage3D = dynamic_cast<CModelScalarFieldFromImage3D*>(pOldScalarField))
-			{
-				auto pID = findPackageResourceID(oldToNewMapping[pOldScalarFieldFromImage3D->getImage3DResourceID()->getUniqueID()]);
-				PModelScalarFieldFromImage3D pNewScalarFieldFromImage3D = std::make_shared<CModelScalarFieldFromImage3D>(generateResourceID(), this, pID);
-				pNewScalarFieldFromImage3D->setName(pOldScalarFieldFromImage3D->getName());
-				pNewScalarFieldFromImage3D->setOffset(pOldScalarFieldFromImage3D->getOffset());
-				pNewScalarFieldFromImage3D->setScale(pOldScalarFieldFromImage3D->getScale());
-				pNewScalarFieldFromImage3D->setChannel(pOldScalarFieldFromImage3D->getChannel());
-				pNewScalarFieldFromImage3D->setFilter(pOldScalarFieldFromImage3D->getFilter());
-				pNewScalarFieldFromImage3D->setTileStyleU(pOldScalarFieldFromImage3D->getTileStyleU());
-				pNewScalarFieldFromImage3D->setTileStyleV(pOldScalarFieldFromImage3D->getTileStyleV());
-				pNewScalarFieldFromImage3D->setTileStyleW(pOldScalarFieldFromImage3D->getTileStyleW());
-				addResource(pNewScalarFieldFromImage3D);
-
-				oldToNewMapping[pOldScalarField->getPackageResourceID()->getUniqueID()] = pNewScalarFieldFromImage3D->getPackageResourceID()->getUniqueID();
-			}
-			else
-			{
-				throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
-			}
-		}
-	}
-
-	// Convenience functions for Vector3D Fields
-	PModelVector3DField CModel::findVector3DField(_In_ UniqueResourceID nResourceID)
-	{
-		PModelResource pResource = findResource(nResourceID);
-		if (pResource != nullptr) {
-			PModelVector3DField pVector3DFieldResource = std::dynamic_pointer_cast<CModelVector3DField>(pResource);
-			if (pVector3DFieldResource.get() == nullptr)
-				throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
-			return pVector3DFieldResource;
-		}
-		return nullptr;
-	}
-
-	nfUint32 CModel::getVector3DFieldCount()
-	{
-		return (nfUint32)m_Vector3DFieldLookup.size();
-	}
-
-	PModelResource CModel::getVector3DFieldResource(_In_ nfUint32 nIndex)
-	{
-		nfUint32 nCount = getVector3DFieldCount();
-		if (nIndex >= nCount)
-			throw CNMRException(NMR_ERROR_INVALIDINDEX);
-
-		return m_Vector3DFieldLookup[nIndex];
-
-	}
-
-	CModelVector3DField* CModel::getVector3DField(_In_ nfUint32 nIndex)
-	{
-		CModelVector3DField* pVector3DField = dynamic_cast<CModelVector3DField*> (getVector3DFieldResource(nIndex).get());
-		if (pVector3DField == nullptr)
-			throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
-
-		return pVector3DField;
-	}
-
-	void CModel::mergeVector3DFields(_In_ CModel* pSourceModel, _In_ UniqueResourceIDMapping& oldToNewMapping)
-	{
-		if (pSourceModel == nullptr)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		nfUint32 nCount = pSourceModel->getVector3DFieldCount();
-		nfUint32 nIndex;
-
-		for (nIndex = 0; nIndex < nCount; nIndex++)
-		{
-			CModelVector3DField* pOldVector3DField = pSourceModel->getVector3DField(nIndex);
-			if (pOldVector3DField == nullptr)
-				throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-			if (CModelVector3DFieldConstant* pOldVector3DFieldConstant = dynamic_cast<CModelVector3DFieldConstant*>(pOldVector3DField))
-			{
-				PModelVector3DFieldConstant pNewVector3DFieldConstant = std::make_shared<CModelVector3DFieldConstant>(generateResourceID(), this);
-				pNewVector3DFieldConstant->setValueX(pOldVector3DFieldConstant->getValueX());
-				pNewVector3DFieldConstant->setValueY(pOldVector3DFieldConstant->getValueY());
-				pNewVector3DFieldConstant->setValueZ(pOldVector3DFieldConstant->getValueZ());
-				pNewVector3DFieldConstant->setName(pOldVector3DFieldConstant->getName());
-
-				addResource(pNewVector3DFieldConstant);
-
-				oldToNewMapping[pOldVector3DField->getPackageResourceID()->getUniqueID()] = pNewVector3DFieldConstant->getPackageResourceID()->getUniqueID();
-			}
-			else if (CModelVector3DFieldComposed* pOldVector3DFieldComposed = dynamic_cast<CModelVector3DFieldComposed*>(pOldVector3DField))
-			{
-				PModelVector3DFieldComposed pNewVector3DFieldComposed = std::make_shared<CModelVector3DFieldComposed>(generateResourceID(), this);
-				pNewVector3DFieldComposed->setName(pOldVector3DFieldComposed->getName());
-				pNewVector3DFieldComposed->setFactor1(pOldVector3DFieldComposed->getFactor1());
-				pNewVector3DFieldComposed->setFactor2(pOldVector3DFieldComposed->getFactor2());
-				pNewVector3DFieldComposed->setMethod(pOldVector3DFieldComposed->getMethod());
-				pNewVector3DFieldComposed->Vector3DFieldReference1()->setTransform(pOldVector3DFieldComposed->Vector3DFieldReference1()->getTransform());
-				pNewVector3DFieldComposed->Vector3DFieldReference1()->setFieldReferenceID(oldToNewMapping[pOldVector3DFieldComposed->Vector3DFieldReference1()->getFieldReferenceID()]);
-				pNewVector3DFieldComposed->Vector3DFieldReference2()->setTransform(pOldVector3DFieldComposed->Vector3DFieldReference2()->getTransform());
-				pNewVector3DFieldComposed->Vector3DFieldReference2()->setFieldReferenceID(oldToNewMapping[pOldVector3DFieldComposed->Vector3DFieldReference2()->getFieldReferenceID()]);
-				if (pOldVector3DFieldComposed->getMethod() == eModelCompositionMethod::MODELCOMPOSITIONMETHOD_MASK)
-				{
-					pNewVector3DFieldComposed->ScalarFieldReferenceMask()->setTransform(pOldVector3DFieldComposed->ScalarFieldReferenceMask()->getTransform());
-					pNewVector3DFieldComposed->ScalarFieldReferenceMask()->setFieldReferenceID(oldToNewMapping[pOldVector3DFieldComposed->ScalarFieldReferenceMask()->getFieldReferenceID()]);
-				}
-				addResource(pNewVector3DFieldComposed);
-
-				oldToNewMapping[pOldVector3DField->getPackageResourceID()->getUniqueID()] = pNewVector3DFieldComposed->getPackageResourceID()->getUniqueID();
-			}
-			else if (CModelVector3DFieldFromImage3D* pOldVector3DFieldFromImage3D = dynamic_cast<CModelVector3DFieldFromImage3D*>(pOldVector3DField))
-			{
-				auto pID = findPackageResourceID(oldToNewMapping[pOldVector3DFieldFromImage3D->getImage3DResourceID()->getUniqueID()]);
-				PModelVector3DFieldFromImage3D pNewVector3DFieldFromImage3D = std::make_shared<CModelVector3DFieldFromImage3D>(generateResourceID(), this, pID);
-				pNewVector3DFieldFromImage3D->setName(pOldVector3DFieldFromImage3D->getName());
-				pNewVector3DFieldFromImage3D->setOffset(pOldVector3DFieldFromImage3D->getOffset());
-				pNewVector3DFieldFromImage3D->setScale(pOldVector3DFieldFromImage3D->getScale());
-				pNewVector3DFieldFromImage3D->setFilter(pOldVector3DFieldFromImage3D->getFilter());
-				pNewVector3DFieldFromImage3D->setTileStyleU(pOldVector3DFieldFromImage3D->getTileStyleU());
-				pNewVector3DFieldFromImage3D->setTileStyleV(pOldVector3DFieldFromImage3D->getTileStyleV());
-				pNewVector3DFieldFromImage3D->setTileStyleW(pOldVector3DFieldFromImage3D->getTileStyleW());
-				addResource(pNewVector3DFieldFromImage3D);
-
-				oldToNewMapping[pOldVector3DField->getPackageResourceID()->getUniqueID()] = pNewVector3DFieldFromImage3D->getPackageResourceID()->getUniqueID();
 			}
 			else
 			{

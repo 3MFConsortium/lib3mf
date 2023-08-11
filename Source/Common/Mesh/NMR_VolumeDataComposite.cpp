@@ -51,21 +51,21 @@ namespace NMR {
 
 	nfUint32 CVolumeDataComposite::materialMappingCount() const
 	{
-		return (nfUint32)m_vctFieldReferences.size();
+		return (nfUint32)m_vctFunctionReferences.size();
 	}
 
-	PScalarFieldReference CVolumeDataComposite::getMaterialMapping(nfUint32 nIndex)
+	PFunctionReference CVolumeDataComposite::getMaterialMapping(nfUint32 nIndex)
 	{
 		if (nIndex >= materialMappingCount())
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
-		return m_vctFieldReferences[nIndex];
+		return m_vctFunctionReferences[nIndex];
 	}
 
-	PScalarFieldReference CVolumeDataComposite::addMaterialMapping(PModelScalarField pScalarField)
+	PFunctionReference CVolumeDataComposite::addMaterialMapping(PModelFunction pFunction)
 	{
-		PScalarFieldReference pScalarFieldReference = std::make_shared<CScalarFieldReference>(pScalarField);
-		m_vctFieldReferences.push_back(pScalarFieldReference);
-		return pScalarFieldReference;
+		PFunctionReference pFunctionReference = std::make_shared<CFunctionReference>(pFunction);
+		m_vctFunctionReferences.push_back(pFunctionReference);
+		return pFunctionReference;
 	}
 
 	void CVolumeDataComposite::removeMaterialMapping(nfUint32)

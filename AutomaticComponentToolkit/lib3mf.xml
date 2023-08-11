@@ -652,26 +652,10 @@
 		</method>
 	</class>
 
-	<class name="ScalarFieldIterator" parent="ResourceIterator">
-		<method name="GetCurrentScalarField"
-			description="Returns the ScalarField the iterator points at.">
-			<param name="Resource" type="handle" class="ScalarField" pass="return"
-				description="returns the ScalarField instance." />
-		</method>
-	</class>
-
 	<class name="FunctionIterator" parent="ResourceIterator">
 		<method name="GetCurrentFunction" description="Returns the Function the iterator points at.">
 			<param name="Resource" type="handle" class="Function" pass="return"
 				description="returns the Function instance." />
-		</method>
-	</class>
-
-	<class name="Vector3DFieldIterator" parent="ResourceIterator">
-		<method name="GetCurrentVector3DField"
-			description="Returns the Vector3DField the iterator points at.">
-			<param name="Resource" type="handle" class="Vector3DField" pass="return"
-				description="returns the Vector3DField instance." />
 		</method>
 	</class>
 
@@ -1107,411 +1091,19 @@
 		</method>
 	</class>
 
-	<class name="ScalarField" parent="Resource">
-		<method name="GetName" description="Gets the name of this ScalarField.">
-			<param name="Name" type="string" pass="return"
-				description="The name of this ScalarField." />
-		</method>
-		<method name="SetName" description="Sets the name of this ScalarField.">
-			<param name="Name" type="string" pass="in" description="The name of this ScalarField." />
-		</method>
-		<method name="IsFromImage3D"
-			description="Retrieves, if this ScalarField is a ScalarFieldFromImage3D">
-			<param name="IsFromImage3D" type="bool" pass="return"
-				description="returns, whether the scalar field is a ScalarFieldFromImage3D" />
-		</method>
-		<method name="IsConstant"
-			description="Retrieves, if this ScalarField is a ScalarFieldConstant">
-			<param name="IsConstant" type="bool" pass="return"
-				description="returns, whether the scalar field is a ScalarFieldConstant" />
-		</method>
-		<method name="IsComposed"
-			description="Retrieves, if this ScalarField is a ScalarFieldComposed">
-			<param name="IsComposed" type="bool" pass="return"
-				description="returns, whether the scalar field is a ScalarFieldComposed" />
-		</method>
-		<method name="IsFunction"
-			description="Retrieves, if this ScalarField is a ScalarFieldFunction">
-			<param name="IsFunction" type="bool" pass="return"
-				description="returns, whether the scalar field is a ScalarFieldFunction" />
-		</method>
-	</class>
-
-	<class name="Vector3DField" parent="Resource">
-		<method name="GetName" description="Gets the name of this Vector3DField.">
-			<param name="Name" type="string" pass="return"
-				description="The name of this Vector3DField." />
-		</method>
-		<method name="SetName" description="Sets the name of this Vector3DField.">
-			<param name="Name" type="string" pass="in" description="The name of this Vector3DField." />
-		</method>
-		<method name="IsFromImage3D"
-			description="Retrieves, if this Vector3DField is a Vector3DFieldFromImage3D">
-			<param name="IsFromImage3D" type="bool" pass="return"
-				description="returns, whether the 3d vector field is a Vector3DFieldFromImage3D" />
-		</method>
-		<method name="IsConstant"
-			description="Retrieves, if this Vector3DField is a Vector3DFieldConstant">
-			<param name="IsConstant" type="bool" pass="return"
-				description="returns, whether the 3d vector field is a Vector3DFieldConstant" />
-		</method>
-		<method name="IsComposed"
-			description="Retrieves, if this Vector3DField is a Vector3DFieldComposed">
-			<param name="IsComposed" type="bool" pass="return"
-				description="returns, whether the 3d vector field is a Vector3DFieldComposed" />
-		</method>
-		<method name="IsFunction"
-			description="Retrieves, if this Vector3DField is a Vector3DFieldFunction">
-			<param name="IsFunction" type="bool" pass="return"
-				description="returns, whether the 3d vector field is a Vector3DFieldFunction" />
-		</method>
-	</class>
-
-	<class name="ScalarFieldFromImage3D" parent="ScalarField">
-		<method name="GetImage" description="Returns the selected 3D image.">
-			<param name="Image3D" type="class" class="Image3D" pass="return"
-				description="image instance" />
-		</method>
-		<method name="SetImage" description="Sets the 3D image of the selector.">
-			<param name="Image3D" type="class" class="Image3D" pass="in"
-				description="image instance" />
-		</method>
-		<method name="SetChannel"
-			description="Sets the channel name to be picked from the referenced Image3D.">
-			<param name="Name" type="enum" class="ChannelName" pass="in"
-				description="Sets the channel name." />
-		</method>
-		<method name="GetChannel"
-			description="Gets the channel name to be picked from the referenced Image3D.">
-			<param name="Name" type="enum" class="ChannelName" pass="return"
-				description="Sets the channel name." />
-		</method>
-		<method name="SetFilter" description="Sets the texture filter of the selector.">
-			<param name="Filter" type="enum" class="TextureFilter" pass="in"
-				description="texture filter" />
-		</method>
-		<method name="GetFilter" description="Returns the texture filter of the selector.">
-			<param name="Filter" type="enum" class="TextureFilter" pass="return"
-				description="texture filter" />
-		</method>
-		<method name="SetTileStyles" description="Sets the tile styles of the selector.">
-			<param name="TileStyleU" type="enum" class="TextureTileStyle" pass="in"
-				description="tile style in U" />
-			<param name="TileStyleV" type="enum" class="TextureTileStyle" pass="in"
-				description="tile style in V" />
-			<param name="TileStyleW" type="enum" class="TextureTileStyle" pass="in"
-				description="tile style in W" />
-		</method>
-		<method name="GetTileStyles" description="Retrieves the tile styles of the selector.">
-			<param name="TileStyleU" type="enum" class="TextureTileStyle" pass="out"
-				description="tile style in U" />
-			<param name="TileStyleV" type="enum" class="TextureTileStyle" pass="out"
-				description="tile style in V" />
-			<param name="TileStyleW" type="enum" class="TextureTileStyle" pass="out"
-				description="tile style in W" />
-		</method>
-		<method name="GetOffset"
-			description="returns the offset value for the pixel values in the Image3D">
-			<param name="Offset" type="double" pass="return"
-				description="the offset value for the pixel values in the Image3D" />
-		</method>
-		<method name="SetOffset"
-			description="Sets the offset value for the pixel values in the Image3D">
-			<param name="Offset" type="double" pass="in"
-				description="the offset value for the pixel values in the Image3D" />
-		</method>
-		<method name="GetScale"
-			description="returns the scale value for the pixel values in the Image3D">
-			<param name="Scale" type="double" pass="return"
-				description="the scale value for the pixel values in the Image3D" />
-		</method>
-		<method name="SetScale"
-			description="Sets the scale value for the pixel values in the Image3D">
-			<param name="Scale" type="double" pass="in"
-				description="the scale value for the pixel values in the Image3D" />
-		</method>
-	</class>
-
-	<class name="ScalarFieldConstant" parent="ScalarField">
-		<method name="GetValue" description="returns the constant value of this ScalarFieldConstant">
-			<param name="Value" type="double" pass="return"
-				description="the constant value of this ScalarFieldConstant" />
-		</method>
-		<method name="SetValue" description="Sets the constant value of this ScalarFieldConstant">
-			<param name="Value" type="double" pass="in"
-				description="the constant value of this ScalarFieldConstant" />
-		</method>
-	</class>
-
-	<class name="ScalarFieldFunction" parent="ScalarField">
-		<method name="SetFunction" description="Sets the function to be used for the scalar field.">
-			<param name="Function" type="class" class="ImplicitFunction" pass="in"
-				description="the function to be used for the scalar field" />
-		</method>
-		<method name="GetFunction"
-			description="Returns the function to be used for the scalar field.">
-			<param name="Function" type="class" class="ImplicitFunction" pass="return"
-				description="the function to be used for the scalar field" />
-		</method>
-		<method name="SetOutput" description="Sets the name of the function output to be used for the scalar field. The output must be a scalar">
-			<param name="Name" type="string" pass="in"
-				description="the name of the scalar function output" />
-		</method>
-		<method name="GetOutput" description="Returns the name of the function output used for the scalar field.">
-			<param name="Name" type="string" pass="return"
-				description="the name of the scalar function output" />
-		</method>
-	</class>
-
-	<class name="ScalarFieldComposed" parent="ScalarField">
-		<method name="SetMethod" description="Sets the method to used for composition.">
-			<param name="TheMethod" type="enum" class="CompositionMethod" pass="in"
-				description="Sets the composition method." />
-		</method>
-		<method name="GetMethod" description="Gets the method to used for composition.">
-			<param name="TheMethod" type="enum" class="CompositionMethod" pass="return"
-				description="Gets the composition method." />
-		</method>
-		<method name="GetFactor1"
-			description="returns the factor scalar field 1 is multiplied with when composited">
-			<param name="Factor1" type="double" pass="return"
-				description="the factor scalar field 1 is multiplied with when composited" />
-		</method>
-		<method name="SetFactor1"
-			description="sets the factor scalar field 1 is multiplied with when composited">
-			<param name="Factor1" type="double" pass="in"
-				description="the factor scalar field 1 is multiplied with when composited" />
-		</method>
-		<method name="GetFactor2"
-			description="returns the factor scalar field 2 is multiplied with when composited">
-			<param name="Factor2" type="double" pass="return"
-				description="the factor scalar field 2 is multiplied with when composited" />
-		</method>
-		<method name="SetFactor2"
-			description="sets the factor scalar field 2 is multiplied with when composited">
-			<param name="Factor2" type="double" pass="in"
-				description="the factor scalar field 2 is multiplied with when composited" />
-		</method>
-		<method name="ScalarFieldReference1"
-			description="Access to the ScalarFieldReference for the first composited field">
-			<param name="TheScalarFieldReference1" type="class" class="ScalarFieldReference"
-				pass="return" description="ScalarFieldReference" />
-		</method>
-		<method name="ScalarFieldReference2"
-			description="Access to the ScalarFieldReference for the second composited field">
-			<param name="TheScalarFieldReference1" type="class" class="ScalarFieldReference"
-				pass="return" description="ScalarFieldReference" />
-		</method>
-		<method name="ScalarFieldReferenceMask"
-			description="Access to the ScalarFieldReference for masking. Only relevant if the Method is mask.">
-			<param name="TheScalarFieldReferenceMask" type="class" class="ScalarFieldReference"
-				pass="return" description="ScalarFieldReference" />
-		</method>
-	</class>
-
-	<class name="Vector3DFieldFromImage3D" parent="Vector3DField">
-		<method name="GetImage" description="Returns the selected 3D image.">
-			<param name="Image3D" type="class" class="Image3D" pass="return"
-				description="image instance" />
-		</method>
-		<method name="SetImage" description="Sets the 3D image of the selector.">
-			<param name="Image3D" type="class" class="Image3D" pass="in"
-				description="image instance" />
-		</method>
-		<method name="SetFilter" description="Sets the texture filter of the selector.">
-			<param name="Filter" type="enum" class="TextureFilter" pass="in"
-				description="texture filter" />
-		</method>
-		<method name="GetFilter" description="Returns the texture filter of the selector.">
-			<param name="Filter" type="enum" class="TextureFilter" pass="return"
-				description="texture filter" />
-		</method>
-		<method name="SetTileStyles" description="Sets the tile styles of the selector.">
-			<param name="TileStyleU" type="enum" class="TextureTileStyle" pass="in"
-				description="tile style in U" />
-			<param name="TileStyleV" type="enum" class="TextureTileStyle" pass="in"
-				description="tile style in V" />
-			<param name="TileStyleW" type="enum" class="TextureTileStyle" pass="in"
-				description="tile style in W" />
-		</method>
-		<method name="GetTileStyles" description="Retrieves the tile styles of the selector.">
-			<param name="TileStyleU" type="enum" class="TextureTileStyle" pass="out"
-				description="tile style in U" />
-			<param name="TileStyleV" type="enum" class="TextureTileStyle" pass="out"
-				description="tile style in V" />
-			<param name="TileStyleW" type="enum" class="TextureTileStyle" pass="out"
-				description="tile style in W" />
-		</method>
-		<method name="GetOffset"
-			description="returns the offset value for the pixel values in the Image3D">
-			<param name="Offset" type="double" pass="return"
-				description="the offset value for the pixel values in the Image3D" />
-		</method>
-		<method name="SetOffset"
-			description="Sets the offset value for the pixel values in the Image3D">
-			<param name="Offset" type="double" pass="in"
-				description="the offset value for the pixel values in the Image3D" />
-		</method>
-		<method name="GetScale"
-			description="returns the scale value for the pixel values in the Image3D">
-			<param name="Scale" type="double" pass="return"
-				description="the scale value for the pixel values in the Image3D" />
-		</method>
-		<method name="SetScale"
-			description="Sets the scale value for the pixel values in the Image3D">
-			<param name="Scale" type="double" pass="in"
-				description="the scale value for the pixel values in the Image3D" />
-		</method>
-	</class>
-
-	<class name="Vector3DFieldConstant" parent="Vector3DField">
-		<method name="GetValueX"
-			description="returns the constant x-value of this Vector3DFieldConstant">
-			<param name="ValueX" type="double" pass="return"
-				description="the constant x-value of this Vector3DFieldConstant" />
-		</method>
-		<method name="SetValueX"
-			description="Sets the constant x-value of this Vector3DFieldConstant">
-			<param name="ValueX" type="double" pass="in"
-				description="the constant x-value of this Vector3DFieldConstant" />
-		</method>
-		<method name="GetValueY"
-			description="returns the constant y-value of this Vector3DFieldConstant">
-			<param name="ValueY" type="double" pass="return"
-				description="the constant y-value of this Vector3DFieldConstant" />
-		</method>
-		<method name="SetValueY"
-			description="Sets the constant y-value of this Vector3DFieldConstant">
-			<param name="ValueY" type="double" pass="in"
-				description="the constant y-value of this Vector3DFieldConstant" />
-		</method>
-		<method name="GetValueZ"
-			description="returns the constant x-value of this Vector3DFieldConstant">
-			<param name="ValueZ" type="double" pass="return"
-				description="the constant x-value of this Vector3DFieldConstant" />
-		</method>
-		<method name="SetValueZ"
-			description="Sets the constant z-value of this Vector3DFieldConstant">
-			<param name="ValueZ" type="double" pass="in"
-				description="the constant z-value of this Vector3DFieldConstant" />
-		</method>
-	</class>
-
-	<class name="Vector3DFieldComposed" parent="Vector3DField">
-		<method name="SetMethod" description="Sets the method to used for composition.">
-			<param name="TheMethod" type="enum" class="CompositionMethod" pass="in"
-				description="Sets the composition method." />
-		</method>
-		<method name="GetMethod" description="Gets the method to used for composition.">
-			<param name="TheMethod" type="enum" class="CompositionMethod" pass="return"
-				description="Gets the composition method." />
-		</method>
-		<method name="SetSpace" description="Sets the space in which composition takes place.">
-			<param name="TheSpace" type="enum" class="CompositionSpace" pass="in"
-				description="Sets the composition space." />
-		</method>
-		<method name="GetSpace" description="Gets the space in which composition takes place.">
-			<param name="TheSpace" type="enum" class="CompositionSpace" pass="return"
-				description="Gets the composition space." />
-		</method>
-		<method name="GetFactor1"
-			description="returns the factor vector3d field 1 is multiplied with when composited">
-			<param name="Factor1" type="double" pass="return"
-				description="the factor vector3d field 1 is multiplied with when composited" />
-		</method>
-		<method name="SetFactor1"
-			description="sets the factor vector3d field 1 is multiplied with when composited">
-			<param name="Factor1" type="double" pass="in"
-				description="the factor vector3d field 1 is multiplied with when composited" />
-		</method>
-		<method name="GetFactor2"
-			description="returns the vector3d scalar field 2 is multiplied with when composited">
-			<param name="Factor2" type="double" pass="return"
-				description="the factor vector3d field 2 is multiplied with when composited" />
-		</method>
-		<method name="SetFactor2"
-			description="sets the factor vector3d field 2 is multiplied with when composited">
-			<param name="Factor2" type="double" pass="in"
-				description="the factor vector3d field 2 is multiplied with when composited" />
-		</method>
-		<method name="Vector3DFieldReference1"
-			description="Access to the Vector3DFieldReference for the first composited field">
-			<param name="TheVector3DFieldReference1" type="class" class="Vector3DFieldReference"
-				pass="return" description="Vector3DFieldReference" />
-		</method>
-		<method name="Vector3DFieldReference2"
-			description="Access to the Vector3DFieldReference for the second composited field">
-			<param name="TheVector3DFieldReference1" type="class" class="Vector3DFieldReference"
-				pass="return" description="Vector3DFieldReference" />
-		</method>
-		<method name="ScalarFieldReferenceMask"
-			description="Access to the ScalarFieldReference for masking. Only relevant if the Method is mask.">
-			<param name="TheScalarFieldReferenceMask" type="class" class="ScalarFieldReference"
-				pass="return" description="ScalarFieldReference" />
-		</method>
-	</class>
-
-	<class name="Vector3DFieldFunction" parent="Vector3DField">
-		<method name="SetFunction" description="Sets the function to be used for the scalar field.">
-			<param name="Function" type="class" class="ImplicitFunction" pass="in"
-				description="the function to be used for the scalar field" />
-		</method>
-		<method name="GetFunction"
-			description="Returns the function to be used for the scalar field.">
-			<param name="Function" type="class" class="ImplicitFunction" pass="return"
-				description="the function to be used for the scalar field" />
-		</method>
-		<method name="SetOutput"
-			description="Sets the name of the function output to be used for the scalar field. The output must be a scalar">
-			<param name="Name" type="string" pass="in"
-				description="the name of the scalar function output" />
-		</method>
-		<method name="GetOutput"
-			description="Returns the name of the function output used for the scalar field.">
-			<param name="Name" type="string" pass="return"
-				description="the name of the scalar function output" />
-		</method>
-	</class>
-
-	<class name="FieldReference">
-		<method name="GetFieldResourceID"
-			description="Returns the UniqueResourceID of the Field (Scalar- or Vector3DField).">
+	<class name="FunctionReference">
+		<method name="GetFunctionResourceID"
+			description="Returns the UniqueResourceID of the Function.">
 			<param name="UniqueResourceID" type="uint32" pass="return"
 				description="returns the UniqueResourceID." />
 		</method>
-		<method name="SetFieldResourceID" description="Sets the UniqueResourceID to refer to.">
+		<method name="SetFunctionResourceID" description="Sets the UniqueResourceID to refer to.">
 			<param name="UniqueResourceID" type="uint32" pass="in"
-				description="UniqueResourceID of the Field (Scalar- or Vector3DField)" />
-		</method>
-		<method name="GetTransform"
-			description="Returns the transformation matrix into the coordinate system of the referenced Field.">
-			<param name="Transform" type="struct" class="Transform" pass="return"
-				description="the transformation matrix" />
-		</method>
-		<method name="SetTransform"
-			description="Sets the transformation matrix into the coordinate system of the referenced Field.">
-			<param name="Transform" type="struct" class="Transform" pass="in"
-				description="new transformation matrix" />
+				description="UniqueResourceID of the function" />
 		</method>
 	</class>
 
-	<class name="ScalarFieldReference" parent="FieldReference">
-		<method name="SetScalarField"
-			description="Sets the ScalarField to use within this volume data item.">
-			<param name="TheScalarField" type="class" class="ScalarField" pass="in"
-				description="ScalarField used in this element" />
-		</method>
-	</class>
-
-	<class name="Vector3DFieldReference" parent="FieldReference">
-		<method name="SetVector3DField"
-			description="Sets the Vector3DField to use within this volume data item.">
-			<param name="TheVector3DField" type="class" class="Vector3DField" pass="in"
-				description="Vector3DField used in this element" />
-		</method>
-	</class>
-
-	<class name="VolumeDataBoundary" parent="ScalarFieldReference">
+	<class name="VolumeDataBoundary" parent="FunctionReference">
 		<method name="GetSolidThreshold"
 			description="Returns the solidthreshold for the levelset function encoded in this VolumeDataBoundary">
 			<param name="TheSolidThreshold" type="double" pass="return"
@@ -1524,10 +1116,10 @@
 		</method>
 	</class>
 
-	<class name="VolumeDataColor" parent="Vector3DFieldReference">
+	<class name="VolumeDataColor" parent="FunctionReference">
 	</class>
 
-	<class name="MaterialMapping" parent="ScalarFieldReference">
+	<class name="MaterialMapping" parent="FunctionReference">
 	</class>
 
 	<class name="VolumeDataComposite">
@@ -1566,10 +1158,20 @@
 		</method>
 	</class>
 
-	<class name="VolumeDataProperty" parent="FieldReference">
+	<class name="VolumeDataProperty" parent="FunctionReference">
 		<method name="GetName" description="Gets the qualified name of this property.">
 			<param name="PropertyName" type="string" pass="return"
 				description="The qualified name of this property." />
+		</method>
+		<method name="SetFunctionOutputName"
+			description="Sets the name of the function output used for the property.">
+			<param name="Name" type="string" pass="in"
+				description="the name of the function output" />
+		</method>
+		<method name="GetFunctionOutputName"
+			description="Gets the name of the function output used for the property.">
+			<param name="Name" type="string" pass="return"
+				description="the name of the function output" />
 		</method>
 		<method name="SetIsRequired"
 			description="Sets whether this property is required to process this 3MF document instance.">
@@ -1592,8 +1194,8 @@
 		</method>
 		<method name="CreateNewBoundary"
 			description="Creates a new VolumeDataBoundary for this VolumeData instance">
-			<param name="TheScalarField" type="class" class="ScalarField" pass="in"
-				description="ScalarField used in this element" />
+			<param name="TheFunction" type="class" class="Function" pass="in"
+				description="Function used in this element" />
 			<param name="TheBoundaryData" type="class" class="VolumeDataBoundary" pass="return"
 				description="The new VolumeDataBoundary of this VolumeData instance." />
 		</method>
@@ -1621,8 +1223,8 @@
 		</method>
 		<method name="CreateNewColor"
 			description="Creates a new VolumeDataColor for this VolumeData instance">
-			<param name="TheVector3DField" type="class" class="Vector3DField" pass="in"
-				description="Vector3DField used in this element" />
+			<param name="TheFunction" type="class" class="Function" pass="in"
+				description="Function used in this element" />
 			<param name="TheColorData" type="class" class="VolumeDataColor" pass="return"
 				description="The new VolumeDataColor of this VolumeData instance." />
 		</method>
@@ -1639,21 +1241,12 @@
 			<param name="TheVolumeDataProperty" type="class" class="VolumeDataProperty"
 				pass="return" description="the VolumeDataProperty at the given index." />
 		</method>
-		<method name="AddPropertyFromScalarField"
-			description="Adds a new VolumeDataProperty from a ScalarField">
+		<method name="AddPropertyFromFunction"
+			description="Adds a new VolumeDataProperty from a Function">
 			<param name="Name" type="string" pass="in"
 				description="the qualified name (namespace+name) of the Property" />
-			<param name="TheScalarField" type="class" class="ScalarField" pass="in"
-				description="ScalarField used in this element" />
-			<param name="TheVolumeDataProperty" type="class" class="VolumeDataProperty"
-				pass="return" description="the newly created VolumeDataProperty." />
-		</method>
-		<method name="AddPropertyFromVector3DField"
-			description="Adds a new VolumeDataProperty from a Vector3DField">
-			<param name="Name" type="string" pass="in"
-				description="the qualified name (namespace+name) of the Property" />
-			<param name="TheVector3DField" type="class" class="Vector3DField" pass="in"
-				description="Vector3DField used in this element" />
+			<param name="TheFunction" type="class" class="Function" pass="in"
+				description="Function used in this element" />
 			<param name="TheVolumeDataProperty" type="class" class="VolumeDataProperty"
 				pass="return" description="the newly created VolumeDataProperty." />
 		</method>
@@ -3195,17 +2788,7 @@
 			description="creates a resource iterator instance with all image3d resources.">
 			<param name="ResourceIterator" type="handle" class="Image3DIterator" pass="return"
 				description="returns the iterator instance." />
-		</method>
-		<method name="GetScalarFields"
-			description="creates a resource iterator instance with all ScalarField resources.">
-			<param name="ResourceIterator" type="handle" class="ScalarFieldIterator" pass="return"
-				description="returns the iterator instance." />
-		</method>
-		<method name="GetVector3DFields"
-			description="creates a resource iterator instance with all Vector3DField resources.">
-			<param name="ResourceIterator" type="handle" class="Vector3DFieldIterator" pass="return"
-				description="returns the iterator instance." />
-		</method>
+		</method>	
 		<method name="MergeToModel"
 			description="Merges all components and objects which are referenced by a build item into a mesh. The memory is duplicated and a new model is created.">
 			<param name="MergedModelInstance" type="handle" class="Model" pass="return"
@@ -3278,111 +2861,7 @@
 			<param name="ImageStackInstance" type="class" class="ImageStack" pass="return"
 				description="returns the image stack instance" />
 		</method>
-		<method name="AddScalarFieldFromImage3D"
-			description="creates a new ScalarFieldFromImage3D Resource">
-			<param name="Image3D" type="class" class="Image3D" pass="in"
-				description="image instance" />
-			<param name="TheScalarFieldFromImage3D" type="class" class="ScalarFieldFromImage3D"
-				pass="return" description="returns the new ScalarFieldFromImage3D instance" />
-		</method>
-		<method name="AddScalarFieldComposed"
-			description="creates a new ScalarFieldComposed Resource">
-			<param name="TheScalarFieldComposed" type="class" class="ScalarFieldComposed"
-				pass="return" description="returns the new ScalarFieldComposed instance" />
-		</method>
-		<method name="AddScalarFieldConstant"
-			description="creates a new ScalarFieldConstant Resource">
-			<param name="TheScalarFieldConstant" type="class" class="ScalarFieldConstant"
-				pass="return" description="returns the new ScalarFieldConstant instance" />
-		</method>
-		<method name="AddScalarFieldFunction"
-			description="creates a new ScalarFieldFunction Resource">
-			<param name="TheScalarFieldFunction" type="class" class="ScalarFieldFunction"
-				pass="return" description="returns the new ScalarFieldFunction instance" />
-		</method>
-		<method name="GetScalarFieldByID"
-			description="finds a ScalarField object by its UniqueResourceID">
-			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
-			<param name="ScalarFieldInstance" type="class" class="ScalarField" pass="return"
-				description="returns the scalar field instance" />
-		</method>
-		<method name="GetScalarFieldFromImage3DByID"
-			description="finds a ScalarFieldFromImage3D object by its UniqueResourceID">
-			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
-			<param name="ScalarFieldFromImage3DInstance" type="class" class="ScalarFieldFromImage3D"
-				pass="return" description="returns the ScalarFieldFromImage3D instance" />
-		</method>
-		<method name="GetScalarFieldComposedByID"
-			description="finds a ScalarFieldComposed object by its UniqueResourceID">
-			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
-			<param name="ScalarFieldComposedInstance" type="class" class="ScalarFieldComposed"
-				pass="return" description="returns the ScalarFieldComponsed instance" />
-		</method>
-		<method name="GetScalarFieldConstantByID"
-			description="finds a ScalarFieldConstant object by its UniqueResourceID">
-			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
-			<param name="ScalarFieldConstantInstance" type="class" class="ScalarFieldConstant"
-				pass="return" description="returns the ScalarFieldConstant instance" />
-		</method>
-		<method name="GetScalarFieldFunctionByID"
-			description="finds a ScalarFieldFunction object by its UniqueResourceID">
-			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
-			<param name="ScalarFieldFunctionInstance" type="class" class="ScalarFieldFunction"
-				pass="return" description="returns the ScalarFieldFunction instance" />
-		</method>
-		<method name="AddVector3DFieldFromImage3D"
-			description="creates a new Vector3DFieldFromImage3D Resource">
-			<param name="Image3D" type="class" class="Image3D" pass="in"
-				description="image instance" />
-			<param name="TheVector3DFieldFromImage3D" type="class" class="Vector3DFieldFromImage3D"
-				pass="return" description="returns the new Vector3DFieldFromImage3D instance" />
-		</method>
-		<method name="AddVector3DFieldComposed"
-			description="creates a new Vector3DFieldComposed Resource">
-			<param name="TheVector3DFieldComposed" type="class" class="Vector3DFieldComposed"
-				pass="return" description="returns the new Vector3DFieldComposed instance" />
-		</method>
-		<method name="AddVector3DFieldConstant"
-			description="creates a new Vector3DFieldConstant Resource">
-			<param name="TheVector3DFieldConstant" type="class" class="Vector3DFieldConstant"
-				pass="return" description="returns the new Vector3DFieldConstant instance" />
-		</method>
-		<method name="AddVector3DFieldFunction"
-			description="creates a new Vector3DFieldFunction Resource">
-			<param name="Function" type="class" class="Vector3DFieldFunction"
-				pass="return" description="returns the new Vector3DFieldFunction instance" />
-		</method>
-		<method name="GetVector3DFieldByID"
-			description="finds a Vector3DField object by its UniqueResourceID">
-			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
-			<param name="Vector3DFieldInstance" type="class" class="Vector3DField" pass="return"
-				description="returns the scalar field instance" />
-		</method>
-		<method name="GetVector3DFieldFromImage3DByID"
-			description="finds a Vector3DFieldFromImage3D object by its UniqueResourceID">
-			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
-			<param name="Vector3DFieldFromImage3DInstance" type="class"
-				class="Vector3DFieldFromImage3D" pass="return"
-				description="returns the Vector3DFieldFromImage3D instance" />
-		</method>
-		<method name="GetVector3DFieldComposedByID"
-			description="finds a Vector3DFieldComposed object by its UniqueResourceID">
-			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
-			<param name="Vector3DFieldComposedInstance" type="class" class="Vector3DFieldComposed"
-				pass="return" description="returns the Vector3DFieldComponsed instance" />
-		</method>
-		<method name="GetVector3DFieldConstantByID"
-			description="finds a Vector3DFieldConstant object by its UniqueResourceID">
-			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
-			<param name="Vector3DFieldConstantInstance" type="class" class="Vector3DFieldConstant"
-				pass="return" description="returns the Vector3DFieldConstant instance" />
-		</method>
-		<method name="GetVector3DFieldFunctionByID"
-			description="finds a Vector3DFieldFunction object by its UniqueResourceID">
-			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
-			<param name="Vector3DFieldFunctionInstance" type="class" class="Vector3DFieldFunction"
-				pass="return" description="returns the Vector3DFieldFunction instance" />
-		</method>
+	
 
 		<method name="AddBuildItem" description="adds a build item to the model.">
 			<param name="Object" type="handle" class="Object" pass="in"

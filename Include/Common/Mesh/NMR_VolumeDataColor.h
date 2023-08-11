@@ -35,18 +35,17 @@ NMR_VolumeDataColor.h defines the class CVolumeDataColor.
 
 #include "Common/NMR_Types.h"
 #include "Model/Classes/NMR_ModelTypes.h"
-#include "Common/NMR_FieldReference.h"
+#include "Common/NMR_FunctionReference.h"
 #include "Model/Classes/NMR_ModelResource.h"
-#include "Model/Classes/NMR_ModelVector3DField.h"
-#include "Model/Classes/NMR_ModelScalarField.h"
+#include "Model/Classes/NMR_ModelFunction.h"
 
 namespace NMR {
 
-	class CVolumeDataColor : public CVector3DFieldReference {
+	class CVolumeDataColor : public CFunctionReference {
 	private:
 
 	public:
-		CVolumeDataColor(PModelVector3DField pVector3DField);
+		CVolumeDataColor(PModelFunction pFunction);
 	};
 
 	typedef std::shared_ptr<CVolumeDataColor> PVolumeDataColor;

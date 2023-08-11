@@ -35,29 +35,30 @@ NMR_VolumeDataProperty.h defines the class CVolumeDataProperty.
 
 #include "Common/NMR_Types.h"
 #include "Model/Classes/NMR_ModelTypes.h"
-#include "Common/NMR_FieldReference.h"
+#include "Common/NMR_FunctionReference.h"
 
 namespace NMR {
-	class CModelScalarField;
-	typedef std::shared_ptr<CModelScalarField> PModelScalarField;
+	class CModelFunction;
+	typedef std::shared_ptr<CModelFunction> PModelFunction;
 
-	class CModelVector3DField;
-	typedef std::shared_ptr<CModelVector3DField> PModelVector3DField;
-
-	class CVolumeDataProperty : public CFieldReference {
+	class CVolumeDataProperty : public CFunctionReference {
 	private:
 		std::string m_sName;
 		bool m_bIsRequired;
+		std::string m_sFunctionOutputName;
 	public:
 		CVolumeDataProperty() = delete;
-		CVolumeDataProperty(PModelScalarField pScalarField, std::string sName);
-		CVolumeDataProperty(PModelVector3DField pVectorField, std::string sName);
+		explicit CVolumeDataProperty(PModelFunction pFunction);
+		CVolumeDataProperty(PModelFunction pFunction, std::string sName);
 
 		std::string getName();
 		void setName(std::string sPropertyName);
 
 		bool isRequired();
 		void setIsRequired(bool bIsRequired);
+
+		void setFunctionOutputName(std::string sFunctionOutputName);
+		std::string getFunctionOutputName() const;
 	};
 
 	typedef std::shared_ptr<CVolumeDataProperty> PVolumeDataProperty;

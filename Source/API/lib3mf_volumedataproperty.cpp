@@ -41,13 +41,13 @@ using namespace Lib3MF::Impl;
 **************************************************************************************************************************/
 
 CVolumeDataProperty::CVolumeDataProperty(NMR::PVolumeDataProperty pProperty)
-	: CFieldReference(pProperty)
+	: CFunctionReference(pProperty)
 {
 }
 
 NMR::PVolumeDataProperty CVolumeDataProperty::asVolumeDataProperty()
 {
-	NMR::PVolumeDataProperty pProperty = std::dynamic_pointer_cast<NMR::CVolumeDataProperty>(m_pFieldReference);
+	NMR::PVolumeDataProperty pProperty = std::dynamic_pointer_cast<NMR::CVolumeDataProperty>(m_pFunctionReference);
 	if (pProperty)
 		return pProperty;
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
@@ -68,3 +68,12 @@ bool CVolumeDataProperty::IsRequired()
 	return asVolumeDataProperty()->isRequired();
 }
 
+void CVolumeDataProperty::SetFunctionOutputName(const std::string & sOutputName)
+{
+	asVolumeDataProperty()->setFunctionOutputName(sOutputName);
+}
+
+std::string CVolumeDataProperty::GetFunctionOutputName()
+{
+	return asVolumeDataProperty()->getFunctionOutputName();
+}

@@ -32,8 +32,7 @@ NMR_ModelVolumeData.cpp implements the class CModelVolumeData.
 
 #include "Model/Classes/NMR_ModelVolumeData.h"
 
-#include "Model/Classes/NMR_ModelScalarField.h"
-#include "Model/Classes/NMR_ModelVector3DField.h"
+#include "Model/Classes/NMR_ModelFunction.h"
 
 namespace NMR {
 
@@ -64,11 +63,11 @@ namespace NMR {
 		m_pBoundary = pLevelset;
 	}
 
-	PVolumeDataBoundary CModelVolumeData::createBoundary(PModelScalarField pScalarField)
+	PVolumeDataBoundary CModelVolumeData::createBoundary(PModelFunction pFunction)
 	{
-		if (!pScalarField)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		m_pBoundary = std::make_shared<CVolumeDataBoundary>(pScalarField);
+		if(!pFunction) throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		
+		m_pBoundary = std::make_shared<CVolumeDataBoundary>(pFunction);
 		return m_pBoundary;
 	}
 
@@ -125,33 +124,24 @@ namespace NMR {
 		m_mapProperties.insert(std::make_pair(pProperty->getName(), pProperty));
 	}
 
-	PVolumeDataProperty CModelVolumeData::addProperty(std::string sName, PModelScalarField pScalarField)
+	PVolumeDataProperty CModelVolumeData::addProperty(
+		std::string sName, PModelFunction pfunction)
 	{
-		if (!pScalarField)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		if (hasProperty(sName)) {
-			throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY);
+		if(!pfunction) throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		if(hasProperty(sName))
+		{
+				throw CNMRException(
+					NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY);
 		}
 
-		PVolumeDataProperty pVolumeDataProperty = std::make_shared<CVolumeDataProperty>(pScalarField, sName);
+		PVolumeDataProperty pVolumeDataProperty =
+			std::make_shared<CVolumeDataProperty>(pfunction, sName);
 		m_mapProperties.insert(std::make_pair(pVolumeDataProperty->getName(), pVolumeDataProperty));
 		return pVolumeDataProperty;
-	}
+    }
 
-	PVolumeDataProperty CModelVolumeData::addProperty(std::string sName, PModelVector3DField pVector3DField)
-	{
-		if (!pVector3DField)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		if (hasProperty(sName)) {
-			throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY);
-		}
-
-		PVolumeDataProperty pVolumeDataProperty = std::make_shared<CVolumeDataProperty>(pVector3DField, sName);
-		m_mapProperties.insert(std::make_pair(pVolumeDataProperty->getName(), pVolumeDataProperty));
-		return pVolumeDataProperty;
-	}
-
-	void CModelVolumeData::removeProperty(std::string sName)
+    void CModelVolumeData::removeProperty(std::string sName)
 	{
 		m_mapProperties.erase(sName);
 	}
@@ -169,12 +159,13 @@ namespace NMR {
 		m_pColor = pColor;
 	}
 
-	PVolumeDataColor CModelVolumeData::createColor(PModelVector3DField pVector3DField)
-	{
-		if (!pVector3DField)
+    PVolumeDataColor CModelVolumeData::createColor(PModelFunction pfunction)
+    {
+    	if(!pfunction)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		m_pColor = std::make_shared<CVolumeDataColor>(pVector3DField);
-		return m_pColor;
+
+        m_pColor = std::make_shared<CVolumeDataColor>(pfunction);
+        return m_pColor;
 	}
 
 	PVolumeDataColor CModelVolumeData::getColor()

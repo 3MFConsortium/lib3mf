@@ -345,9 +345,7 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_VOLUMETRIC_COLOR                "color"
 #define XML_3MF_ELEMENT_VOLUMETRIC_PROPERTY             "property"
 
-#define XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID            "fieldid"
-#define XML_3MF_ATTRIBUTE_VOLUMEDATA_SCALARFIELDID      "scalarfieldid"
-#define XML_3MF_ATTRIBUTE_VOLUMEDATA_VECTOR3DFIELDID    "vector3dfieldid"
+#define XML_3MF_ATTRIBUTE_VOLUMEDATA_FUNCTIONID          "functionid"
 #define XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM          "transform"
 #define XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL            "channel"
 #define XML_3MF_ATTRIBUTE_VOLUMEDATA_SOLIDTHRESHOLD     "solidthreshold"
@@ -385,7 +383,7 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_MATRIX_REF "matrixref"
 #define XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_RESOURCE_REF "resourceref"
 
-#define XML_3MF_ELEMENT_FUNCTION_FROM_IMAGE3D "functionFromImage3D"
+#define XML_3MF_ELEMENT_FUNCTION_FROM_IMAGE3D "functionfromimage3d"
 #define XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_IMAGE3DID "image3dID"
 #define XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_OFFSET "offset"
 #define XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_SCALE "scale"

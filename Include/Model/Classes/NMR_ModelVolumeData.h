@@ -43,11 +43,8 @@ NMR_VolumeData.h defines the class CVolumeData.
 #include "Common/Mesh/NMR_VolumeDataComposite.h"
 
 namespace NMR {
-
-	class CModelScalarField;
-	typedef std::shared_ptr<CModelScalarField> PModelScalarField;
-	class CModelVector3DField;
-	typedef std::shared_ptr<CModelVector3DField> PModelVector3DField;
+	class CModelFunction;
+	typedef std::shared_ptr<CModelFunction> PModelFunction;
 
 	class CModelVolumeData {
 	private:
@@ -62,7 +59,7 @@ namespace NMR {
 
 		bool hasBoundary() const;
 		PVolumeDataBoundary getBoundary();
-		PVolumeDataBoundary createBoundary(PModelScalarField);
+		PVolumeDataBoundary createBoundary(PModelFunction pFunction);
 		void setBoundary(PVolumeDataBoundary pLevelset);
 		void removeBoundary();
 
@@ -71,13 +68,12 @@ namespace NMR {
 		PVolumeDataProperty getProperty(nfUint32 nIndex);
 		PVolumeDataProperty findProperty(std::string sName);
 		void addProperty(PVolumeDataProperty pProperty);
-		PVolumeDataProperty addProperty(std::string sName, PModelScalarField pScalarField);
-		PVolumeDataProperty addProperty(std::string sName, PModelVector3DField pVector3DField);
+		PVolumeDataProperty addProperty(std::string sName, PModelFunction pfunction);
 		void removeProperty(std::string sName);
 
 		bool hasColor() const;
 		PVolumeDataColor getColor();
-		PVolumeDataColor createColor(PModelVector3DField pVector3DField);
+		PVolumeDataColor createColor(PModelFunction pfunction);
 		void setColor(PVolumeDataColor pColor);
 		void removeColor();
 

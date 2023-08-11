@@ -74,14 +74,12 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
 		}
 		
-		auto pVector3DField = pModel->findVector3DField(pID->getUniqueID());
-		if (!pVector3DField.get()) {
+		auto pColorFunction = pModel->findFunction(pID->getUniqueID());
+		if (!pColorFunction.get()) {
 			throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
 		}
 
-		PVolumeDataColor pColor = std::make_shared<CVolumeDataColor>(pVector3DField);
-		if (m_bHasTransform)
-			pColor->setTransform(m_Transform);
+		PVolumeDataColor pColor = std::make_shared<CVolumeDataColor>(pColorFunction);
 		return pColor;
 	}
 
@@ -95,7 +93,7 @@ namespace NMR {
 			m_Transform = fnMATRIX3_fromString(pAttributeValue);
 		}
 
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_VECTOR3DFIELDID) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_FUNCTIONID) == 0) {
 			if (m_bHasFieldID)
 				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAFIELDID);
 			m_bHasFieldID = true;

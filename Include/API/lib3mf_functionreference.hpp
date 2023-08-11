@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2023 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,63 +24,69 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CScalarFieldConstant
+Abstract: This is the class declaration of CFunctionReference
 
 */
 
 
-#ifndef __LIB3MF_SCALARFIELDCONSTANT
-#define __LIB3MF_SCALARFIELDCONSTANT
+#ifndef __LIB3MF_FUNCTIONREFERENCE
+#define __LIB3MF_FUNCTIONREFERENCE
 
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_scalarfield.hpp"
+#include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelScalarFieldConstant.h"
+#include "Common/NMR_FunctionReference.h"
 
 namespace Lib3MF {
 namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CScalarFieldConstant 
+ Class declaration of CFunctionReference 
 **************************************************************************************************************************/
 
-class CScalarFieldConstant : public virtual IScalarFieldConstant, public virtual CScalarField {
+class CFunctionReference : public virtual IFunctionReference, public virtual CBase {
 private:
 
 	/**
 	* Put private members here.
 	*/
-	NMR::CModelScalarFieldConstant* scalarFieldConstant();
-
+	
 protected:
 
 	/**
 	* Put protected members here.
 	*/
-
+	NMR::PFunctionReference m_pFunctionReference;
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CScalarFieldConstant() = delete;
-	CScalarFieldConstant(NMR::PModelScalarFieldConstant pScalarFieldConstant);
+	CFunctionReference(NMR::PFunctionReference pFunctionReference);
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	Lib3MF_double GetValue() override;
+	/**
+	* IFunctionReference::GetFunctionResourceID - Returns the UniqueResourceID of the Function.
+	* @return returns the UniqueResourceID.
+	*/
+	Lib3MF_uint32 GetFunctionResourceID() override;
 
-	void SetValue(const Lib3MF_double dValue) override;
+	/**
+	* IFunctionReference::SetFunctionResourceID - Sets the UniqueResourceID to refer to.
+	* @param[in] nUniqueResourceID - UniqueResourceID of the function
+	*/
+	void SetFunctionResourceID(const Lib3MF_uint32 nUniqueResourceID) override;
 
 };
 
@@ -90,4 +96,4 @@ public:
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-#endif // __LIB3MF_SCALARFIELDCONSTANT
+#endif // __LIB3MF_FUNCTIONREFERENCE
