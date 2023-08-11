@@ -118,7 +118,7 @@ namespace Lib3MF
 		ASSERT_TRUE(buildItem->HasObjectTransform());
 		auto newTransformation = buildItem->GetObjectTransform();
 
-		CompareTransforms(transformation, newTransformation);
+		Lib3MF::helper::CompareTransforms(transformation, newTransformation);
 	}
 
 	TEST_F(BuildItems, TestItem)

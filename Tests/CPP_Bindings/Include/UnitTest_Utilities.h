@@ -90,12 +90,35 @@ namespace Lib3MF
                     PImplicitFunction const& function1,
                     PImplicitFunction const& function2);
 
-                void compareFunctionsFromImage3D(
-                    PFunctionFromImage3D const& function1,
-                    PFunctionFromImage3D const& function2);
+                void compareFunctionsFromImage3D(Lib3MF::PModel model1,
+                                         PFunctionFromImage3D const& function1,
+                                         Lib3MF::PModel model2,
+                                         PFunctionFromImage3D const& function2);
 
-                void compareFunctions(PFunction const& function1,
+                void compareFunctions(Lib3MF::PModel model1,
+                                      PFunction const& function1,
+                                      Lib3MF::PModel model2,
                                       PFunction const& function2);
+
+                void CompareColors(Lib3MF::sColor c1, Lib3MF::sColor c2);
+                void CompareTransforms(Lib3MF::sTransform t1,
+                                       Lib3MF::sTransform t2);
+
+                void CompareFunctionReferences(Lib3MF::PModel modelA,
+                                               Lib3MF::PFunctionReference A,
+                                               Lib3MF::PModel modelB,
+                                               Lib3MF::PFunctionReference B);
+
+                void CompareImage3Ds(Lib3MF::PModel modelA, Lib3MF::PImage3D i1,
+                                     Lib3MF::PModel modelB,
+                                     Lib3MF::PImage3D i2);
+                void CompareImageStacks(Lib3MF::PImageStack i1,
+                                        Lib3MF::PImageStack i2);
+
+                void CompareVolumeData(Lib3MF::PModel modelA,
+                                       Lib3MF::PVolumeData A,
+                                       Lib3MF::PModel modelB,
+                                       Lib3MF::PVolumeData B);
 
         }  // namespace helper
 }  // namespace Lib3MF
@@ -104,16 +127,6 @@ std::vector<Lib3MF_uint8> ReadFileIntoBuffer(std::string sFileName);
 void WriteBufferToFile(std::vector<Lib3MF_uint8> const & buffer, std::string sFileName);
 
 sLib3MFTransform getIdentityTransform();
-
-void CompareColors(Lib3MF::sColor c1, Lib3MF::sColor c2);
-void CompareTransforms(Lib3MF::sTransform t1, Lib3MF::sTransform t2);
-
-void CompareFunctionReferences(Lib3MF::PModel modelA, Lib3MF::PFunctionReference A, Lib3MF::PModel modelB, Lib3MF::PFunctionReference B);
-
-void CompareImage3Ds(Lib3MF::PModel modelA, Lib3MF::PImage3D i1, Lib3MF::PModel modelB, Lib3MF::PImage3D i2);
-void CompareImageStacks(Lib3MF::PImageStack i1, Lib3MF::PImageStack i2);
-
-void CompareVolumeData(Lib3MF::PModel modelA, Lib3MF::PVolumeData A, Lib3MF::PModel modelB, Lib3MF::PVolumeData B);
 
 template<typename T>
 struct PositionedVector

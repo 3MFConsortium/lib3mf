@@ -135,15 +135,14 @@ namespace Lib3MF
             EXPECT_FALSE(outputs2->MoveNext());
         }
 
-        void compareFunctionsFromImage3D(PFunctionFromImage3D const& function1,
+        void compareFunctionsFromImage3D(Lib3MF::PModel model1,
+                                         PFunctionFromImage3D const& function1,
+                                         Lib3MF::PModel model2,
                                          PFunctionFromImage3D const& function2)
         {
             EXPECT_EQ(function1->GetDisplayName(), function2->GetDisplayName());
             EXPECT_EQ(function1->GetModelResourceID(),
                       function2->GetModelResourceID());
-
-            EXPECT_EQ(function1->GetImage3D()->GetResourceID(),
-                      function2->GetImage3D()->GetResourceID());
 
             EXPECT_EQ(function1->GetFilter(), function2->GetFilter());
 
@@ -157,10 +156,12 @@ namespace Lib3MF
 
             EXPECT_EQ(function1->GetOffset(), function2->GetOffset());
             EXPECT_EQ(function1->GetScale(), function2->GetScale());
+
+            CompareImage3Ds(model1, function1->GetImage3D(), model2, function2->GetImage3D());
         }
 
-        void compareFunctions(PFunction const& function1,
-                              PFunction const& function2)
+        void compareFunctions(Lib3MF::PModel model1, PFunction const& function1,
+                              Lib3MF::PModel model2, PFunction const& function2)
         {
             PImplicitFunction implicitFunction1 =
                 std::dynamic_pointer_cast<CImplicitFunction>(function1);
@@ -180,12 +181,133 @@ namespace Lib3MF
                 PFunctionFromImage3D functionFromImage3D2 =
                     std::dynamic_pointer_cast<CFunctionFromImage3D>(function2);
 
-                compareFunctionsFromImage3D(functionFromImage3D1,
-                                            functionFromImage3D2);
+                compareFunctionsFromImage3D(model1, functionFromImage3D1,
+                                            model2, functionFromImage3D2);
             }
         }
-    }  // namespace Lib3MF
-} // namespace Lib3MF
+
+        void CompareColors(Lib3MF::sColor c1, Lib3MF::sColor c2)
+        {
+            EXPECT_EQ(c1.m_Alpha, c2.m_Alpha);
+            EXPECT_EQ(c1.m_Red, c2.m_Red);
+            EXPECT_EQ(c1.m_Green, c2.m_Green);
+            EXPECT_EQ(c1.m_Blue, c2.m_Blue);
+        }
+
+        void CompareTransforms(Lib3MF::sTransform t1, Lib3MF::sTransform t2)
+        {
+            for(int i = 0; i < 4; i++)
+                for(int j = 0; j < 3; j++)
+                    ASSERT_EQ(t1.m_Fields[i][j], t2.m_Fields[i][j]);
+        }
+
+        void CompareFunctionReferences(Lib3MF::PModel modelA,
+                                       Lib3MF::PFunctionReference A,
+                                       Lib3MF::PModel modelB,
+                                       Lib3MF::PFunctionReference B)
+        {
+            ASSERT_EQ(A == nullptr, B == nullptr);
+            if(A != nullptr && B != nullptr)
+            {
+                Lib3MF::PResource fieldResourceA =
+                    modelA->GetResourceByID(A->GetFunctionResourceID());
+                Lib3MF::PResource fieldResourceB =
+                    modelB->GetResourceByID(B->GetFunctionResourceID());
+
+                auto functionA = std::dynamic_pointer_cast<Lib3MF::CFunction>(
+                    fieldResourceA);
+                auto functionB = std::dynamic_pointer_cast<Lib3MF::CFunction>(
+                    fieldResourceB);
+                ASSERT_EQ(functionA == nullptr, functionB == nullptr);
+                if(functionA != nullptr && functionB != nullptr)
+                {
+                    Lib3MF::helper::compareFunctions(modelA, functionA, modelB, functionB);
+                }
+            }
+        }
+
+        void CompareImage3Ds(Lib3MF::PModel modelA, Lib3MF::PImage3D i1,
+                             Lib3MF::PModel modelB, Lib3MF::PImage3D i2)
+        {
+            ASSERT_EQ(i1->GetName(), i2->GetName());
+            ASSERT_EQ(i1->IsImageStack(), i2->IsImageStack());
+            if(i1->IsImageStack())
+            {
+                Lib3MF::PImageStack stack1 =
+                    modelA->GetImageStackByID(i1->GetUniqueResourceID());
+                Lib3MF::PImageStack stack2 =
+                    modelB->GetImageStackByID(i2->GetUniqueResourceID());
+
+                CompareImageStacks(stack1, stack2);
+            }
+        }
+
+        void CompareImageStacks(Lib3MF::PImageStack i1, Lib3MF::PImageStack i2)
+        {
+            ASSERT_EQ(i1->GetColumnCount(), i2->GetColumnCount());
+            ASSERT_EQ(i1->GetRowCount(), i2->GetRowCount());
+            ASSERT_EQ(i1->GetSheetCount(), i2->GetSheetCount());
+            for(Lib3MF_uint32 i = 0; i < i1->GetSheetCount(); i++)
+            {
+                Lib3MF::PAttachment attachment1 = i1->GetSheet(i);
+                Lib3MF::PAttachment attachment2 = i2->GetSheet(i);
+
+                ASSERT_EQ(attachment1->GetPath(), attachment2->GetPath());
+                ASSERT_EQ(attachment1->GetStreamSize(),
+                          attachment2->GetStreamSize());
+            }
+        }
+
+        void CompareVolumeData(Lib3MF::PModel modelA, Lib3MF::PVolumeData A,
+                               Lib3MF::PModel modelB, Lib3MF::PVolumeData B)
+        {
+            ASSERT_EQ(A->GetBoundary() == nullptr, B->GetBoundary() == nullptr);
+            if(A->GetBoundary())
+            {
+                CompareFunctionReferences(modelA, A->GetBoundary(), modelB,
+                                          B->GetBoundary());
+                ASSERT_EQ(A->GetBoundary()->GetSolidThreshold(),
+                          B->GetBoundary()->GetSolidThreshold());
+            }
+
+            ASSERT_EQ(A->GetColor() == nullptr, B->GetColor() == nullptr);
+            if(A->GetColor())
+            {
+                CompareFunctionReferences(modelA, A->GetColor(), modelB,
+                                          B->GetColor());
+            }
+
+            ASSERT_EQ(A->GetPropertyCount(), B->GetPropertyCount());
+            for(Lib3MF_uint32 i = 0; i < A->GetPropertyCount(); i++)
+            {
+                auto propertyA = A->GetProperty(i);
+                auto propertyB = B->GetProperty(i);
+                ASSERT_EQ(propertyA->GetName(), propertyB->GetName());
+                ASSERT_EQ(propertyA->IsRequired(), propertyB->IsRequired());
+                CompareFunctionReferences(modelA, propertyA, modelB, propertyB);
+            }
+            // TODO
+            return;
+            // ASSERT_EQ(A->GetComposite() == nullptr, B->GetComposite() ==
+            // nullptr); if (A->GetComposite() != nullptr)
+            //{
+            // auto compositeA = A->GetComposite();
+            // auto compositeB = B->GetComposite();
+            ////CompareBaseMaterialGroups(compositeA->GetBaseMaterialGroup(),
+            ///compositeB->GetBaseMaterialGroup());
+            // ASSERT_EQ(compositeA->GetMaterialMappingCount(),
+            // compositeB->GetMaterialMappingCount()); for (Lib3MF_uint32 i = 0;
+            // i < compositeA->GetMaterialMappingCount(); i++)
+            //{
+            //	auto materialMappingA = compositeA->GetMaterialMapping(i);
+            //	auto materialMappingB = compositeB->GetMaterialMapping(i);
+            //	CompareScalarFieldReferences(modelA, materialMappingA, modelB,
+            //materialMappingB);
+            // }
+            //}
+        }
+    }  // namespace helper
+}  // namespace Lib3MF
 
 void fnCreateBox(std::vector<Lib3MF::sPosition>& vctVertices,
                      std::vector<Lib3MF::sTriangle>& vctTriangles)
@@ -254,109 +376,7 @@ sLib3MFTransform getIdentityTransform()
 	return t;
 }
 
-void CompareColors(Lib3MF::sColor c1, Lib3MF::sColor c2)
-{
-	EXPECT_EQ(c1.m_Alpha, c2.m_Alpha);
-	EXPECT_EQ(c1.m_Red, c2.m_Red);
-	EXPECT_EQ(c1.m_Green, c2.m_Green);
-	EXPECT_EQ(c1.m_Blue, c2.m_Blue);
-}
 
-void CompareTransforms(Lib3MF::sTransform t1, Lib3MF::sTransform t2)
-{
-	for (int i = 0; i < 4; i++)
-		for (int j = 0; j < 3; j++)
-			ASSERT_EQ(t1.m_Fields[i][j], t2.m_Fields[i][j]);
-}
-
-void CompareFunctionReferences(Lib3MF::PModel modelA, Lib3MF::PFunctionReference A, Lib3MF::PModel modelB, Lib3MF::PFunctionReference B)
-{
-	ASSERT_EQ(A == nullptr, B == nullptr);
-	if (A != nullptr && B != nullptr) {
-	
-
-		Lib3MF::PResource fieldResourceA = modelA->GetResourceByID(A->GetFunctionResourceID());
-		Lib3MF::PResource fieldResourceB = modelB->GetResourceByID(B->GetFunctionResourceID());
-
-		auto functionA = std::dynamic_pointer_cast<Lib3MF::CFunction>(fieldResourceA);
-		auto functionB = std::dynamic_pointer_cast<Lib3MF::CFunction>(fieldResourceB);
-		ASSERT_EQ(functionA == nullptr, functionB == nullptr);
-		if (functionA != nullptr && functionB != nullptr) {
-			// CompareScalarFields(modelA, functionA, modelB, functionB);
-			Lib3MF::helper::compareFunctions(functionA, functionB);
-		}
-	}
-}
-
-void CompareImage3Ds(Lib3MF::PModel modelA, Lib3MF::PImage3D i1, Lib3MF::PModel modelB, Lib3MF::PImage3D i2)
-{
-	ASSERT_EQ(i1->GetName(), i2->GetName());
-	ASSERT_EQ(i1->IsImageStack(), i2->IsImageStack());
-	if (i1->IsImageStack())
-	{
-		Lib3MF::PImageStack stack1 = modelA->GetImageStackByID(i1->GetUniqueResourceID());
-		Lib3MF::PImageStack stack2 = modelB->GetImageStackByID(i2->GetUniqueResourceID());
-		
-		CompareImageStacks(stack1, stack2);
-	}
-}
-
-void CompareImageStacks(Lib3MF::PImageStack i1, Lib3MF::PImageStack i2)
-{
-	ASSERT_EQ(i1->GetColumnCount(), i2->GetColumnCount());
-	ASSERT_EQ(i1->GetRowCount(), i2->GetRowCount());
-	ASSERT_EQ(i1->GetSheetCount(), i2->GetSheetCount());
-	for (Lib3MF_uint32 i = 0; i < i1->GetSheetCount(); i++)
-	{
-		Lib3MF::PAttachment attachment1 = i1->GetSheet(i);
-		Lib3MF::PAttachment attachment2 = i2->GetSheet(i);
-
-		ASSERT_EQ(attachment1->GetPath(), attachment2->GetPath());
-		ASSERT_EQ(attachment1->GetStreamSize(), attachment2->GetStreamSize());
-	}
-}
-
-void CompareVolumeData(Lib3MF::PModel modelA, Lib3MF::PVolumeData A, Lib3MF::PModel modelB, Lib3MF::PVolumeData B)
-{
-	ASSERT_EQ(A->GetBoundary() == nullptr, B->GetBoundary() == nullptr);
-	if (A->GetBoundary())
-	{
-		CompareFunctionReferences(modelA, A->GetBoundary(), modelB, B->GetBoundary());
-		ASSERT_EQ(A->GetBoundary()->GetSolidThreshold(), B->GetBoundary()->GetSolidThreshold());
-	}
-
-	ASSERT_EQ(A->GetColor() == nullptr, B->GetColor() == nullptr);
-	if (A->GetColor())
-	{
-		CompareFunctionReferences(modelA, A->GetColor(), modelB, B->GetColor());
-	}
-
-	ASSERT_EQ(A->GetPropertyCount(), B->GetPropertyCount());
-	for (Lib3MF_uint32 i=0; i<A->GetPropertyCount(); i++)
-	{
-		auto propertyA = A->GetProperty(i);
-		auto propertyB = B->GetProperty(i);
-		ASSERT_EQ(propertyA->GetName(), propertyB->GetName());
-		ASSERT_EQ(propertyA->IsRequired(), propertyB->IsRequired());
-		CompareFunctionReferences(modelA, propertyA, modelB, propertyB);
-	}
-	// TODO
-	return;
-	//ASSERT_EQ(A->GetComposite() == nullptr, B->GetComposite() == nullptr);
-	//if (A->GetComposite() != nullptr)
-	//{
-		//auto compositeA = A->GetComposite();
-		//auto compositeB = B->GetComposite();
-		////CompareBaseMaterialGroups(compositeA->GetBaseMaterialGroup(), compositeB->GetBaseMaterialGroup());
-		//ASSERT_EQ(compositeA->GetMaterialMappingCount(), compositeB->GetMaterialMappingCount());
-		//for (Lib3MF_uint32 i = 0; i < compositeA->GetMaterialMappingCount(); i++)
-		//{
-		//	auto materialMappingA = compositeA->GetMaterialMapping(i);
-		//	auto materialMappingB = compositeB->GetMaterialMapping(i);
-		//	CompareScalarFieldReferences(modelA, materialMappingA, modelB, materialMappingB);
-		//}
-	//}
-}
 
 sLib3MFPosition fnCreateVertex(float x, float y, float z)
 {

@@ -42,7 +42,7 @@ using namespace Lib3MF::Impl;
 
 IImage3D * CFunctionFromImage3D::GetImage3D()
 {
-    auto id = functionfromimage3d()->getImage3DResourceID();
+    auto id = functionfromimage3d()->getImage3DUniqueResourceID();
     auto image = model()->findImage3D(id);
 
     
@@ -73,7 +73,7 @@ void CFunctionFromImage3D::SetImage3D(IImage3D * pImage3D)
     if (pImage3D == nullptr)
         throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 
-	functionfromimage3d()->setImage3DResourceID(pImage3D->GetUniqueResourceID());
+	functionfromimage3d()->setImage3DUniqueResourceID(pImage3D->GetUniqueResourceID());
 }
 
 void CFunctionFromImage3D::SetFilter(const Lib3MF::eTextureFilter eFilter)

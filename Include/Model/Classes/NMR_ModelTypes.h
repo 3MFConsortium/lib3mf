@@ -120,9 +120,9 @@ namespace NMR {
 #pragma pack()
 
 	typedef DWORD ModelPropertyID;
-	typedef DWORD ModelResourceID;
-	typedef DWORD UniqueResourceID;
-	typedef DWORD ModelResourceIndex;
+	typedef DWORD ModelResourceID;	// Resource ID unique within a model, the id that you actually see as id in the xml
+	typedef DWORD UniqueResourceID;	// Resource ID unique within a package, handled internally to allow access to resources across models
+	typedef DWORD ModelResourceIndex;	//TODO: Add explanation
 
 	enum eModelUnit {
 		MODELUNIT_MICROMETER = 0,

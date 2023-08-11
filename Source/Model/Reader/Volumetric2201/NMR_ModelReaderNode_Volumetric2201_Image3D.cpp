@@ -47,7 +47,7 @@ namespace NMR {
 	CModelReaderNode_Volumetric2201_Image3D::CModelReaderNode_Volumetric2201_Image3D(_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings),
 			m_pModel (pModel),
-			m_nID (0),
+			m_modelResourceId (0),
 			m_bHasName (false)
 	{
 		if (pModel == nullptr)
@@ -65,7 +65,7 @@ namespace NMR {
 		//if (!m_bHasName)
 		//	m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGIMAGE3DNAME), mrwMissingMandatoryValue);
 
-		if (m_nID == 0)
+		if (m_modelResourceId == 0)
 			throw CNMRException(NMR_ERROR_MISSINGMODELRESOURCEID);
 
 		// Parse Content
@@ -78,11 +78,11 @@ namespace NMR {
 	void CModelReaderNode_Volumetric2201_Image3D::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMAGE3D_ID) == 0) {
-			if (m_nID != 0)
+			if (m_modelResourceId != 0)
 				throw CNMRException(NMR_ERROR_DUPLICATERESOURCEID);
 
 			// Convert to integer and make a input and range check!
-			m_nID = fnStringToUint32(pAttributeValue);
+			m_modelResourceId = fnStringToUint32(pAttributeValue);
 		}
 		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMAGE3D_NAME) == 0) {
 			if (m_bHasName)
@@ -102,7 +102,7 @@ namespace NMR {
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_VOLUMETRICSPEC) == 0) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_IMAGESTACK) == 0)
 			{
-				PModelImageStack pImageStack = CModelImageStack::make(m_nID, m_pModel, 0, 0, 0);
+				PModelImageStack pImageStack = CModelImageStack::make(m_modelResourceId, m_pModel, 0, 0, 0);
 
 				PModelReaderNode_Volumetric2201_ImageStack pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_ImageStack>(m_pModel, pImageStack.get(), m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);

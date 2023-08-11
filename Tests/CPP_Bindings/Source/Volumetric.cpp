@@ -601,7 +601,7 @@ namespace Lib3MF
                   expectedResourceId);
 
         // Compare the functions
-        helper::compareFunctions(newFunction,
+        helper::compareFunctions(model, newFunction, ioModel,
                                  functionIterator->GetCurrentFunction());
     }
 
@@ -703,7 +703,7 @@ namespace Lib3MF
                   expectedResourceId);
 
         // Compare the functions
-        helper::compareFunctions(newFunction,
+        helper::compareFunctions(model, newFunction, ioModel,
                                  functionIterator->GetCurrentFunction());
     }
 
@@ -779,7 +779,7 @@ namespace Lib3MF
         EXPECT_TRUE(functionIterator->MoveNext());
 
         // Compare the functions
-        helper::compareFunctions(newFunction,
+        helper::compareFunctions(model, newFunction, ioModel,
                                  functionIterator->GetCurrentFunction());
     }
 
@@ -856,7 +856,7 @@ namespace Lib3MF
         EXPECT_TRUE(functionIterator->MoveNext());
 
         // Compare the functions
-        helper::compareFunctions(newFunction,
+        helper::compareFunctions(model,newFunction, ioModel,
                                  functionIterator->GetCurrentFunction());
     }
 
@@ -1028,10 +1028,10 @@ namespace Lib3MF
         EXPECT_TRUE(functionIterator->MoveNext());
 
         // Compare the functions
-        helper::compareFunctions(gyroidFunction,
+        helper::compareFunctions(model, gyroidFunction, ioModel,
                                  functionIterator->GetCurrentFunction());
         EXPECT_TRUE(functionIterator->MoveNext());
-        helper::compareFunctions(newFunction,
+        helper::compareFunctions(model, newFunction, ioModel,
                                  functionIterator->GetCurrentFunction());
     }
 
@@ -1063,8 +1063,8 @@ namespace Lib3MF
     {
         // Create model and load pyramid
         model = wrapper->CreateModel();
-        // auto reader = model->QueryReader("3mf");
-        // reader->ReadFromFile(InFolder + "Pyramid.3mf");
+        auto reader = model->QueryReader("3mf");
+        reader->ReadFromFile(InFolder + "Pyramid.3mf");
 
         // Create a new image stack
         auto pImage3D = SetupSheetsFromFile();
@@ -1148,17 +1148,11 @@ namespace Lib3MF
         auto functionFromFile = functionIterator->GetCurrentFunction();
         ASSERT_TRUE(functionFromFile);
 
-        EXPECT_EQ(funcFromImage3d->GetImage3D()->GetUniqueResourceID(),
-                  pImage3D->GetUniqueResourceID());
-
         PFunctionFromImage3D funcFromFileAsImage3D =
             std::dynamic_pointer_cast<CFunctionFromImage3D>(functionFromFile);
 
-        EXPECT_EQ(funcFromFileAsImage3D->GetImage3D()->GetUniqueResourceID(),
-                  pImage3D->GetUniqueResourceID());
-
         // Compare the functions
-        helper::compareFunctions(funcFromImage3d, functionFromFile);
+        helper::compareFunctions(model, funcFromImage3d, ioModel, functionFromFile);
     }
 
 }  // namespace Lib3MF

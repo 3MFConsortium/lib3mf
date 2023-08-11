@@ -65,7 +65,7 @@ namespace NMR
         m_pFunctionFromImage3D =
             std::make_shared<CModelFunctionFromImage3D>(m_nID, m_pModel);
         m_pFunctionFromImage3D->setDisplayName(m_displayName);
-        m_pFunctionFromImage3D->setImage3DResourceID(m_imageID);
+        m_pFunctionFromImage3D->setImage3DModelResourceID(m_imageModelResourceID);
         m_pFunctionFromImage3D->setTileStyleU(m_tileStyleU);
         m_pFunctionFromImage3D->setTileStyleV(m_tileStyleV);
         m_pFunctionFromImage3D->setTileStyleW(m_tileStyleW);
@@ -131,7 +131,7 @@ namespace NMR
         }
         else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_IMAGE3DID) == 0)
         {
-            m_imageID = fnStringToUint32(pAttributeValue);
+            m_imageModelResourceID = fnStringToUint32(pAttributeValue);
         }
         else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_DISPLAY_NAME) == 0)
         {

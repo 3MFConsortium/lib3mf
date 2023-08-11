@@ -43,7 +43,7 @@ namespace NMR {
 
 		CModel * m_pModel;
 
-		ModelResourceID m_nID;
+		ModelResourceID m_modelResourceId;
 
 		nfBool m_bHasName;
 		std::string m_sName;

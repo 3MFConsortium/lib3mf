@@ -44,7 +44,7 @@ namespace NMR
         CModel * m_pModel = nullptr;
 
         ModelResourceID m_nID = 0;
-        ModelResourceID m_imageID = 0;
+        ModelResourceID m_imageModelResourceID = 0;
 
         std::string m_displayName;
 

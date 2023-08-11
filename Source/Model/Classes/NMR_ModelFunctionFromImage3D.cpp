@@ -36,17 +36,29 @@ namespace NMR
     {
     }
 
-    void CModelFunctionFromImage3D::setImage3DResourceID(const UniqueResourceID sID)
+    void CModelFunctionFromImage3D::setImage3DUniqueResourceID(const UniqueResourceID sID)
     {
-        m_image3DResourceID = sID;
+        m_image3DUniqueResourceID = sID;
     }
 
-    UniqueResourceID CModelFunctionFromImage3D::getImage3DResourceID()
+    UniqueResourceID CModelFunctionFromImage3D::getImage3DUniqueResourceID()
     {
-        return m_image3DResourceID;
+        return m_image3DUniqueResourceID;
     }
 
-    void CModelFunctionFromImage3D::setTileStyleU(const eModelTextureTileStyle tileStyleU)
+    void CModelFunctionFromImage3D::setImage3DModelResourceID(
+        const ModelResourceID modelResoureId)
+    {
+        auto * model = getModel();
+        PModelResource pResource = model->findResource(model->currentPath(), modelResoureId);
+        if (pResource == nullptr)
+            throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+        m_image3DUniqueResourceID = pResource->getPackageResourceID()->getUniqueID();
+        
+    }
+
+    void CModelFunctionFromImage3D::setTileStyleU(
+        const eModelTextureTileStyle tileStyleU)
     {
         m_tileStyleU = tileStyleU;
     }

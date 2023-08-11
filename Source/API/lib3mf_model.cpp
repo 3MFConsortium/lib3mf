@@ -849,7 +849,7 @@ IFunctionFromImage3D* CModel::AddFunctionFromImage3D(IImage3D* pImage3DInstance)
 {
 	NMR::ModelResourceID NewResourceID = model().generateResourceID();
 	NMR::PModelFunctionFromImage3D pNewResource = std::make_shared<NMR::CModelFunctionFromImage3D>(NewResourceID, &model());
-    pNewResource->setImage3DResourceID(pImage3DInstance->GetResourceID());
+    pNewResource->setImage3DUniqueResourceID(pImage3DInstance->GetUniqueResourceID());
 	model().addResource(pNewResource);
     auto newFunc = new CFunctionFromImage3D(pNewResource);
 	return newFunc;
