@@ -1132,6 +1132,8 @@ namespace Lib3MF
         auto theColor = volumeData->CreateNewColor(implicitFunction.get());
 
         // Set transformation
+        auto transformation = helper::ComputeTransformFromMeshCoordinatesToUVW(theMesh);
+        theColor->SetTransform(transformation);
 
         // Write to file
         writer3MF = model->QueryWriter("3mf");

@@ -101,6 +101,7 @@ namespace Lib3MF
                                       PFunction const& function2);
 
                 void CompareColors(Lib3MF::sColor c1, Lib3MF::sColor c2);
+
                 void CompareTransforms(Lib3MF::sTransform t1,
                                        Lib3MF::sTransform t2);
 
@@ -119,6 +120,14 @@ namespace Lib3MF
                                        Lib3MF::PVolumeData A,
                                        Lib3MF::PModel modelB,
                                        Lib3MF::PVolumeData B);
+
+
+				/**
+				 * @brief Calcutes the transform from the mesh coordinates to the normalized UVW space
+				 * @param mesh Mesh to calculate the transform for
+				 * @return Transform from mesh coordinates to UVW space
+				*/
+				Lib3MF::sTransform ComputeTransformFromMeshCoordinatesToUVW(Lib3MF::PMeshObject mesh);
 
         }  // namespace helper
 }  // namespace Lib3MF

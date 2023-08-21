@@ -218,6 +218,9 @@ namespace Lib3MF
                     fieldResourceA);
                 auto functionB = std::dynamic_pointer_cast<Lib3MF::CFunction>(
                     fieldResourceB);
+
+                CompareTransforms(A->GetTransform(), B->GetTransform());
+                
                 ASSERT_EQ(functionA == nullptr, functionB == nullptr);
                 if(functionA != nullptr && functionB != nullptr)
                 {
@@ -305,6 +308,36 @@ namespace Lib3MF
             //materialMappingB);
             // }
             //}
+        }
+
+        Lib3MF::sTransform ComputeTransformFromMeshCoordinatesToUVW(
+            Lib3MF::PMeshObject mesh)
+        {
+            // 1. Get the bounding box of the mesh
+            Lib3MF::sBox box = mesh->GetOutbox();
+
+           
+            EXPECT_GT(box.m_MaxCoordinate[0] - box.m_MinCoordinate[0], 0.f);
+            EXPECT_GT(box.m_MaxCoordinate[1] - box.m_MinCoordinate[1], 0.f);
+            EXPECT_GT(box.m_MaxCoordinate[2] - box.m_MinCoordinate[2], 0.f);
+
+            // 2. Calculate the transform
+            Lib3MF::sTransform transform;
+
+            // scaling
+            transform.m_Fields[0][0] = 1.0f / (box.m_MaxCoordinate[0] -
+                                               box.m_MinCoordinate[0]);
+            transform.m_Fields[1][1] = 1.0f / (box.m_MaxCoordinate[1] -
+                                               box.m_MinCoordinate[1]);
+            transform.m_Fields[2][2] = 1.0f / (box.m_MaxCoordinate[2] -
+                                                  box.m_MinCoordinate[2]); 
+
+            // translation
+            transform.m_Fields[0][3] = -box.m_MinCoordinate[0];
+            transform.m_Fields[1][3] = -box.m_MinCoordinate[1];
+            transform.m_Fields[2][3] = -box.m_MinCoordinate[2];
+
+            return transform;
         }
     }  // namespace helper
 }  // namespace Lib3MF
