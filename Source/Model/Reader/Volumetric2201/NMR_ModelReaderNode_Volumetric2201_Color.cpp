@@ -80,6 +80,11 @@ namespace NMR {
 		}
 
 		PVolumeDataColor pColor = std::make_shared<CVolumeDataColor>(pColorFunction);
+
+		if (m_bHasTransform)
+		{
+			pColor->setTransform(m_Transform);
+		}
 		return pColor;
 	}
 

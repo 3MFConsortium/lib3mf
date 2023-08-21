@@ -6023,6 +6023,8 @@ void CLib3MFFunctionReference::Init()
 		// Prototype
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetFunctionResourceID", GetFunctionResourceID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetFunctionResourceID", SetFunctionResourceID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetTransform", GetTransform);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetTransform", SetTransform);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -6094,6 +6096,52 @@ void CLib3MFFunctionReference::SetFunctionResourceID(const FunctionCallbackInfo<
             throw std::runtime_error("Could not call Lib3MF method FunctionReference::SetFunctionResourceID.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_FunctionReference_SetFunctionResourceID(instanceHandle, nUniqueResourceID);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFFunctionReference::GetTransform(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFTransform sReturnTransform;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetTransform.");
+        if (wrapperTable->m_FunctionReference_GetTransform == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method FunctionReference::GetTransform.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_FunctionReference_GetTransform(instanceHandle, &sReturnTransform);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(convertLib3MFTransformToObject(isolate, sReturnTransform));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFFunctionReference::SetTransform(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsObject()) {
+            throw std::runtime_error("Expected struct parameter 0 (Transform)");
+        }
+        sLib3MFTransform sTransform = convertObjectToLib3MFTransform(isolate, args[0]);
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetTransform.");
+        if (wrapperTable->m_FunctionReference_SetTransform == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method FunctionReference::SetTransform.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_FunctionReference_SetTransform(instanceHandle, &sTransform);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {

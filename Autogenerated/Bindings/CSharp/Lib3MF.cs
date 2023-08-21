@@ -813,6 +813,12 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_setfunctionresourceid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 FunctionReference_SetFunctionResourceID (IntPtr Handle, UInt32 AUniqueResourceID);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_gettransform", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionReference_GetTransform (IntPtr Handle, out InternalTransform ATransform);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_settransform", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionReference_SetTransform (IntPtr Handle, InternalTransform ATransform);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataboundary_getsolidthreshold", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataBoundary_GetSolidThreshold (IntPtr Handle, out Double ATheSolidThreshold);
 
@@ -3633,6 +3639,21 @@ namespace Lib3MF {
 		{
 
 			CheckError(Internal.Lib3MFWrapper.FunctionReference_SetFunctionResourceID (Handle, AUniqueResourceID));
+		}
+
+		public sTransform GetTransform ()
+		{
+			Internal.InternalTransform intresultTransform;
+
+			CheckError(Internal.Lib3MFWrapper.FunctionReference_GetTransform (Handle, out intresultTransform));
+			return Internal.Lib3MFWrapper.convertInternalToStruct_Transform (intresultTransform);
+		}
+
+		public void SetTransform (sTransform ATransform)
+		{
+			Internal.InternalTransform intTransform = Internal.Lib3MFWrapper.convertStructToInternal_Transform (ATransform);
+
+			CheckError(Internal.Lib3MFWrapper.FunctionReference_SetTransform (Handle, intTransform));
 		}
 
 	}

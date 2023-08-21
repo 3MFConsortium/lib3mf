@@ -1643,6 +1643,18 @@ public:
 	*/
 	virtual void SetFunctionResourceID(const Lib3MF_uint32 nUniqueResourceID) = 0;
 
+	/**
+	* IFunctionReference::GetTransform - Returns the transformation matrix into the coordinate system of the referenced Function.
+	* @return the transformation matrix
+	*/
+	virtual Lib3MF::sTransform GetTransform() = 0;
+
+	/**
+	* IFunctionReference::SetTransform - Sets the transformation matrix into the coordinate system of the referenced Function.
+	* @param[in] Transform - new transformation matrix
+	*/
+	virtual void SetTransform(const Lib3MF::sTransform Transform) = 0;
+
 };
 
 typedef IBaseSharedPtr<IFunctionReference> PIFunctionReference;

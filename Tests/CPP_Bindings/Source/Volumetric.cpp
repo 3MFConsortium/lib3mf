@@ -1129,7 +1129,9 @@ namespace Lib3MF
 
         auto theMesh = GetMesh();
         auto volumeData = theMesh->VolumeData();
-        auto theBoundary = volumeData->CreateNewColor(implicitFunction.get());
+        auto theColor = volumeData->CreateNewColor(implicitFunction.get());
+
+        // Set transformation
 
         // Write to file
         writer3MF = model->QueryWriter("3mf");

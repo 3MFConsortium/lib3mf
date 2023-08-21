@@ -1101,6 +1101,13 @@
 			<param name="UniqueResourceID" type="uint32" pass="in"
 				description="UniqueResourceID of the function" />
 		</method>
+
+		<method name="GetTransform" description="Returns the transformation matrix into the coordinate system of the referenced Function.">
+			<param name="Transform" type="struct" class="Transform" pass="return" description="the transformation matrix"/>
+		</method>
+		<method name="SetTransform" description="Sets the transformation matrix into the coordinate system of the referenced Function.">
+			<param name="Transform" type="struct" class="Transform" pass="in" description="new transformation matrix"/>
+		</method>
 	</class>
 
 	<class name="VolumeDataBoundary" parent="FunctionReference">

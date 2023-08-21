@@ -33,6 +33,7 @@ Abstract: This is a stub class definition of CFunctionReference
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
+#include "lib3mf_utils.hpp"
 
 using namespace Lib3MF::Impl;
 
@@ -51,8 +52,21 @@ void CFunctionReference::SetFunctionResourceID(
     m_pFunctionReference->setFunctionResourceID(nUniqueResourceID);
 }
 
-Lib3MF::Impl::CFunctionReference::CFunctionReference(
+CFunctionReference::CFunctionReference(
     NMR::PFunctionReference pFunctionReference)
     : m_pFunctionReference(pFunctionReference)
 {
+}
+
+void CFunctionReference::SetTransform(
+    const Lib3MF::sTransform Transform)
+{
+     m_pFunctionReference->setTransform(TransformToMatrix(Transform));
+}
+
+
+Lib3MF::sTransform CFunctionReference::GetTransform()
+{
+    NMR::NMATRIX3 const matrix = m_pFunctionReference->getTransform();
+	return MatrixToTransform(matrix);
 }

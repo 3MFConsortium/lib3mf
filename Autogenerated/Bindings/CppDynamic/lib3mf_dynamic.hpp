@@ -1243,6 +1243,8 @@ public:
 	
 	inline Lib3MF_uint32 GetFunctionResourceID();
 	inline void SetFunctionResourceID(const Lib3MF_uint32 nUniqueResourceID);
+	inline sTransform GetTransform();
+	inline void SetTransform(const sTransform & Transform);
 };
 	
 /*************************************************************************************************************************
@@ -2651,6 +2653,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_BeamLattice_GetBeamSet = nullptr;
 		pWrapperTable->m_FunctionReference_GetFunctionResourceID = nullptr;
 		pWrapperTable->m_FunctionReference_SetFunctionResourceID = nullptr;
+		pWrapperTable->m_FunctionReference_GetTransform = nullptr;
+		pWrapperTable->m_FunctionReference_SetTransform = nullptr;
 		pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = nullptr;
 		pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold = nullptr;
 		pWrapperTable->m_VolumeDataComposite_GetBaseMaterialGroup = nullptr;
@@ -4249,6 +4253,24 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_FunctionReference_SetFunctionResourceID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_FunctionReference_GetTransform = (PLib3MFFunctionReference_GetTransformPtr) GetProcAddress(hLibrary, "lib3mf_functionreference_gettransform");
+		#else // _WIN32
+		pWrapperTable->m_FunctionReference_GetTransform = (PLib3MFFunctionReference_GetTransformPtr) dlsym(hLibrary, "lib3mf_functionreference_gettransform");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_FunctionReference_GetTransform == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_FunctionReference_SetTransform = (PLib3MFFunctionReference_SetTransformPtr) GetProcAddress(hLibrary, "lib3mf_functionreference_settransform");
+		#else // _WIN32
+		pWrapperTable->m_FunctionReference_SetTransform = (PLib3MFFunctionReference_SetTransformPtr) dlsym(hLibrary, "lib3mf_functionreference_settransform");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_FunctionReference_SetTransform == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -7822,6 +7844,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionReference_SetFunctionResourceID == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_functionreference_gettransform", (void**)&(pWrapperTable->m_FunctionReference_GetTransform));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionReference_GetTransform == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_functionreference_settransform", (void**)&(pWrapperTable->m_FunctionReference_SetTransform));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionReference_SetTransform == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_volumedataboundary_getsolidthreshold", (void**)&(pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold));
 		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -10889,6 +10919,27 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	void CFunctionReference::SetFunctionResourceID(const Lib3MF_uint32 nUniqueResourceID)
 	{
 		CheckError(m_pWrapper->m_WrapperTable.m_FunctionReference_SetFunctionResourceID(m_pHandle, nUniqueResourceID));
+	}
+	
+	/**
+	* CFunctionReference::GetTransform - Returns the transformation matrix into the coordinate system of the referenced Function.
+	* @return the transformation matrix
+	*/
+	sTransform CFunctionReference::GetTransform()
+	{
+		sTransform resultTransform;
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionReference_GetTransform(m_pHandle, &resultTransform));
+		
+		return resultTransform;
+	}
+	
+	/**
+	* CFunctionReference::SetTransform - Sets the transformation matrix into the coordinate system of the referenced Function.
+	* @param[in] Transform - new transformation matrix
+	*/
+	void CFunctionReference::SetTransform(const sTransform & Transform)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionReference_SetTransform(m_pHandle, &Transform));
 	}
 	
 	/**

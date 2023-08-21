@@ -1926,6 +1926,24 @@ type
 	*)
 	TLib3MFFunctionReference_SetFunctionResourceIDFunc = function(pFunctionReference: TLib3MFHandle; const nUniqueResourceID: Cardinal): TLib3MFResult; cdecl;
 	
+	(**
+	* Returns the transformation matrix into the coordinate system of the referenced Function.
+	*
+	* @param[in] pFunctionReference - FunctionReference instance.
+	* @param[out] pTransform - the transformation matrix
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFunctionReference_GetTransformFunc = function(pFunctionReference: TLib3MFHandle; pTransform: PLib3MFTransform): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the transformation matrix into the coordinate system of the referenced Function.
+	*
+	* @param[in] pFunctionReference - FunctionReference instance.
+	* @param[in] pTransform - new transformation matrix
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFunctionReference_SetTransformFunc = function(pFunctionReference: TLib3MFHandle; const pTransform: PLib3MFTransform): TLib3MFResult; cdecl;
+	
 
 (*************************************************************************************************************************
  Function type definitions for VolumeDataBoundary
@@ -5800,6 +5818,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		destructor Destroy; override;
 		function GetFunctionResourceID(): Cardinal;
 		procedure SetFunctionResourceID(const AUniqueResourceID: Cardinal);
+		function GetTransform(): TLib3MFTransform;
+		procedure SetTransform(const ATransform: TLib3MFTransform);
 	end;
 
 
@@ -6667,6 +6687,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFBeamLattice_GetBeamSetFunc: TLib3MFBeamLattice_GetBeamSetFunc;
 		FLib3MFFunctionReference_GetFunctionResourceIDFunc: TLib3MFFunctionReference_GetFunctionResourceIDFunc;
 		FLib3MFFunctionReference_SetFunctionResourceIDFunc: TLib3MFFunctionReference_SetFunctionResourceIDFunc;
+		FLib3MFFunctionReference_GetTransformFunc: TLib3MFFunctionReference_GetTransformFunc;
+		FLib3MFFunctionReference_SetTransformFunc: TLib3MFFunctionReference_SetTransformFunc;
 		FLib3MFVolumeDataBoundary_GetSolidThresholdFunc: TLib3MFVolumeDataBoundary_GetSolidThresholdFunc;
 		FLib3MFVolumeDataBoundary_SetSolidThresholdFunc: TLib3MFVolumeDataBoundary_SetSolidThresholdFunc;
 		FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc: TLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc;
@@ -7147,6 +7169,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFBeamLattice_GetBeamSetFunc: TLib3MFBeamLattice_GetBeamSetFunc read FLib3MFBeamLattice_GetBeamSetFunc;
 		property Lib3MFFunctionReference_GetFunctionResourceIDFunc: TLib3MFFunctionReference_GetFunctionResourceIDFunc read FLib3MFFunctionReference_GetFunctionResourceIDFunc;
 		property Lib3MFFunctionReference_SetFunctionResourceIDFunc: TLib3MFFunctionReference_SetFunctionResourceIDFunc read FLib3MFFunctionReference_SetFunctionResourceIDFunc;
+		property Lib3MFFunctionReference_GetTransformFunc: TLib3MFFunctionReference_GetTransformFunc read FLib3MFFunctionReference_GetTransformFunc;
+		property Lib3MFFunctionReference_SetTransformFunc: TLib3MFFunctionReference_SetTransformFunc read FLib3MFFunctionReference_SetTransformFunc;
 		property Lib3MFVolumeDataBoundary_GetSolidThresholdFunc: TLib3MFVolumeDataBoundary_GetSolidThresholdFunc read FLib3MFVolumeDataBoundary_GetSolidThresholdFunc;
 		property Lib3MFVolumeDataBoundary_SetSolidThresholdFunc: TLib3MFVolumeDataBoundary_SetSolidThresholdFunc read FLib3MFVolumeDataBoundary_SetSolidThresholdFunc;
 		property Lib3MFVolumeDataComposite_GetBaseMaterialGroupFunc: TLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc read FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc;
@@ -10125,6 +10149,16 @@ implementation
 	procedure TLib3MFFunctionReference.SetFunctionResourceID(const AUniqueResourceID: Cardinal);
 	begin
 		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionReference_SetFunctionResourceIDFunc(FHandle, AUniqueResourceID));
+	end;
+
+	function TLib3MFFunctionReference.GetTransform(): TLib3MFTransform;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionReference_GetTransformFunc(FHandle, @Result));
+	end;
+
+	procedure TLib3MFFunctionReference.SetTransform(const ATransform: TLib3MFTransform);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionReference_SetTransformFunc(FHandle, @ATransform));
 	end;
 
 (*************************************************************************************************************************
@@ -13842,6 +13876,8 @@ implementation
 		FLib3MFBeamLattice_GetBeamSetFunc := LoadFunction('lib3mf_beamlattice_getbeamset');
 		FLib3MFFunctionReference_GetFunctionResourceIDFunc := LoadFunction('lib3mf_functionreference_getfunctionresourceid');
 		FLib3MFFunctionReference_SetFunctionResourceIDFunc := LoadFunction('lib3mf_functionreference_setfunctionresourceid');
+		FLib3MFFunctionReference_GetTransformFunc := LoadFunction('lib3mf_functionreference_gettransform');
+		FLib3MFFunctionReference_SetTransformFunc := LoadFunction('lib3mf_functionreference_settransform');
 		FLib3MFVolumeDataBoundary_GetSolidThresholdFunc := LoadFunction('lib3mf_volumedataboundary_getsolidthreshold');
 		FLib3MFVolumeDataBoundary_SetSolidThresholdFunc := LoadFunction('lib3mf_volumedataboundary_setsolidthreshold');
 		FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc := LoadFunction('lib3mf_volumedatacomposite_getbasematerialgroup');
@@ -14591,6 +14627,12 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_functionreference_setfunctionresourceid'), @FLib3MFFunctionReference_SetFunctionResourceIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functionreference_gettransform'), @FLib3MFFunctionReference_GetTransformFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functionreference_settransform'), @FLib3MFFunctionReference_SetTransformFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataboundary_getsolidthreshold'), @FLib3MFVolumeDataBoundary_GetSolidThresholdFunc);

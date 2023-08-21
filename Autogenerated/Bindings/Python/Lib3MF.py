@@ -265,6 +265,8 @@ class FunctionTable:
 	lib3mf_beamlattice_getbeamset = None
 	lib3mf_functionreference_getfunctionresourceid = None
 	lib3mf_functionreference_setfunctionresourceid = None
+	lib3mf_functionreference_gettransform = None
+	lib3mf_functionreference_settransform = None
 	lib3mf_volumedataboundary_getsolidthreshold = None
 	lib3mf_volumedataboundary_setsolidthreshold = None
 	lib3mf_volumedatacomposite_getbasematerialgroup = None
@@ -1887,6 +1889,18 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
 			self.lib.lib3mf_functionreference_setfunctionresourceid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functionreference_gettransform")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(Transform))
+			self.lib.lib3mf_functionreference_gettransform = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functionreference_settransform")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(Transform))
+			self.lib.lib3mf_functionreference_settransform = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataboundary_getsolidthreshold")), methodAddress)
 			if err != 0:
@@ -4250,6 +4264,12 @@ class Wrapper:
 			
 			self.lib.lib3mf_functionreference_setfunctionresourceid.restype = ctypes.c_int32
 			self.lib.lib3mf_functionreference_setfunctionresourceid.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			
+			self.lib.lib3mf_functionreference_gettransform.restype = ctypes.c_int32
+			self.lib.lib3mf_functionreference_gettransform.argtypes = [ctypes.c_void_p, ctypes.POINTER(Transform)]
+			
+			self.lib.lib3mf_functionreference_settransform.restype = ctypes.c_int32
+			self.lib.lib3mf_functionreference_settransform.argtypes = [ctypes.c_void_p, ctypes.POINTER(Transform)]
 			
 			self.lib.lib3mf_volumedataboundary_getsolidthreshold.restype = ctypes.c_int32
 			self.lib.lib3mf_volumedataboundary_getsolidthreshold.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
@@ -6699,6 +6719,16 @@ class FunctionReference(Base):
 	def SetFunctionResourceID(self, UniqueResourceID):
 		nUniqueResourceID = ctypes.c_uint32(UniqueResourceID)
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functionreference_setfunctionresourceid(self._handle, nUniqueResourceID))
+		
+	
+	def GetTransform(self):
+		pTransform = Transform()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functionreference_gettransform(self._handle, pTransform))
+		
+		return pTransform
+	
+	def SetTransform(self, Transform):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functionreference_settransform(self._handle, Transform))
 		
 	
 

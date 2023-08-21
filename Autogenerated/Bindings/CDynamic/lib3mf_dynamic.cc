@@ -183,6 +183,8 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_BeamLattice_GetBeamSet = NULL;
 	pWrapperTable->m_FunctionReference_GetFunctionResourceID = NULL;
 	pWrapperTable->m_FunctionReference_SetFunctionResourceID = NULL;
+	pWrapperTable->m_FunctionReference_GetTransform = NULL;
+	pWrapperTable->m_FunctionReference_SetTransform = NULL;
 	pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = NULL;
 	pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold = NULL;
 	pWrapperTable->m_VolumeDataComposite_GetBaseMaterialGroup = NULL;
@@ -1785,6 +1787,24 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_FunctionReference_SetFunctionResourceID == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_FunctionReference_GetTransform = (PLib3MFFunctionReference_GetTransformPtr) GetProcAddress(hLibrary, "lib3mf_functionreference_gettransform");
+	#else // _WIN32
+	pWrapperTable->m_FunctionReference_GetTransform = (PLib3MFFunctionReference_GetTransformPtr) dlsym(hLibrary, "lib3mf_functionreference_gettransform");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_FunctionReference_GetTransform == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_FunctionReference_SetTransform = (PLib3MFFunctionReference_SetTransformPtr) GetProcAddress(hLibrary, "lib3mf_functionreference_settransform");
+	#else // _WIN32
+	pWrapperTable->m_FunctionReference_SetTransform = (PLib3MFFunctionReference_SetTransformPtr) dlsym(hLibrary, "lib3mf_functionreference_settransform");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_FunctionReference_SetTransform == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

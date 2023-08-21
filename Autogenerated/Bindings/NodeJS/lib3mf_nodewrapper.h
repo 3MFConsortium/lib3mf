@@ -602,6 +602,8 @@ private:
 	static v8::Persistent<v8::Function> constructor;
 	static void GetFunctionResourceID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetFunctionResourceID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetTransform(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetTransform(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFFunctionReference();

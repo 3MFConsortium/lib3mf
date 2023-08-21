@@ -1219,6 +1219,8 @@ public:
 	
 	inline Lib3MF_uint32 GetFunctionResourceID();
 	inline void SetFunctionResourceID(const Lib3MF_uint32 nUniqueResourceID);
+	inline sTransform GetTransform();
+	inline void SetTransform(const sTransform & Transform);
 };
 	
 /*************************************************************************************************************************
@@ -4209,6 +4211,27 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	void CFunctionReference::SetFunctionResourceID(const Lib3MF_uint32 nUniqueResourceID)
 	{
 		CheckError(lib3mf_functionreference_setfunctionresourceid(m_pHandle, nUniqueResourceID));
+	}
+	
+	/**
+	* CFunctionReference::GetTransform - Returns the transformation matrix into the coordinate system of the referenced Function.
+	* @return the transformation matrix
+	*/
+	sTransform CFunctionReference::GetTransform()
+	{
+		sTransform resultTransform;
+		CheckError(lib3mf_functionreference_gettransform(m_pHandle, &resultTransform));
+		
+		return resultTransform;
+	}
+	
+	/**
+	* CFunctionReference::SetTransform - Sets the transformation matrix into the coordinate system of the referenced Function.
+	* @param[in] Transform - new transformation matrix
+	*/
+	void CFunctionReference::SetTransform(const sTransform & Transform)
+	{
+		CheckError(lib3mf_functionreference_settransform(m_pHandle, &Transform));
 	}
 	
 	/**

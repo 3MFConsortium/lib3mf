@@ -1452,6 +1452,24 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionreference_getfunctionresourceid(Lib3
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionreference_setfunctionresourceid(Lib3MF_FunctionReference pFunctionReference, Lib3MF_uint32 nUniqueResourceID);
 
+/**
+* Returns the transformation matrix into the coordinate system of the referenced Function.
+*
+* @param[in] pFunctionReference - FunctionReference instance.
+* @param[out] pTransform - the transformation matrix
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionreference_gettransform(Lib3MF_FunctionReference pFunctionReference, sLib3MFTransform * pTransform);
+
+/**
+* Sets the transformation matrix into the coordinate system of the referenced Function.
+*
+* @param[in] pFunctionReference - FunctionReference instance.
+* @param[in] pTransform - new transformation matrix
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionreference_settransform(Lib3MF_FunctionReference pFunctionReference, const sLib3MFTransform * pTransform);
+
 /*************************************************************************************************************************
  Class definition for VolumeDataBoundary
 **************************************************************************************************************************/

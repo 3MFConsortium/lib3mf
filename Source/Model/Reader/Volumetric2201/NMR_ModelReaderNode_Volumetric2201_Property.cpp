@@ -94,6 +94,11 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
 		}
 		pProperty->setIsRequired(m_bRequired);
+
+        if (m_bHasTransform)
+		{
+			pProperty->setTransform(m_Transform);
+		}
 		return pProperty;
 	}
 
@@ -141,8 +146,4 @@ namespace NMR {
 		__NMRASSERT(pNameSpace);
 
 	}
-
-
-
-
 }

@@ -88,6 +88,18 @@ public:
 	*/
 	void SetFunctionResourceID(const Lib3MF_uint32 nUniqueResourceID) override;
 
+
+	/**
+	* IFunctionReference::GetTransform - Returns the transformation matrix into the coordinate system of the referenced Function.
+	* @return the transformation matrix
+	*/
+	Lib3MF::sTransform GetTransform() override;
+
+	/**
+	* IFunctionReference::SetTransform - Sets the transformation matrix into the coordinate system of the referenced Function.
+	* @param[in] Transform - new transformation matrix
+	*/
+	void SetTransform(const Lib3MF::sTransform Transform) override;
 };
 
 } // namespace Impl

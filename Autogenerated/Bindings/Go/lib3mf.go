@@ -1287,6 +1287,24 @@ Lib3MFResult CCall_lib3mf_functionreference_setfunctionresourceid(Lib3MFHandle l
 }
 
 
+Lib3MFResult CCall_lib3mf_functionreference_gettransform(Lib3MFHandle libraryHandle, Lib3MF_FunctionReference pFunctionReference, sLib3MFTransform * pTransform)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FunctionReference_GetTransform (pFunctionReference, pTransform);
+}
+
+
+Lib3MFResult CCall_lib3mf_functionreference_settransform(Lib3MFHandle libraryHandle, Lib3MF_FunctionReference pFunctionReference, const sLib3MFTransform * pTransform)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FunctionReference_SetTransform (pFunctionReference, pTransform);
+}
+
+
 Lib3MFResult CCall_lib3mf_volumedataboundary_getsolidthreshold(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataBoundary pVolumeDataBoundary, Lib3MF_double * pTheSolidThreshold)
 {
 	if (libraryHandle == 0) 
@@ -6591,6 +6609,25 @@ func (inst FunctionReference) GetFunctionResourceID() (uint32, error) {
 // SetFunctionResourceID sets the UniqueResourceID to refer to.
 func (inst FunctionReference) SetFunctionResourceID(uniqueResourceID uint32) error {
 	ret := C.CCall_lib3mf_functionreference_setfunctionresourceid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(uniqueResourceID))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetTransform returns the transformation matrix into the coordinate system of the referenced Function.
+func (inst FunctionReference) GetTransform() (Transform, error) {
+	var transform C.sLib3MFTransform
+	ret := C.CCall_lib3mf_functionreference_gettransform(inst.wrapperRef.LibraryHandle, inst.Ref, &transform)
+	if ret != 0 {
+		return Transform{}, makeError(uint32(ret))
+	}
+	return *(*Transform)(unsafe.Pointer(&transform)), nil
+}
+
+// SetTransform sets the transformation matrix into the coordinate system of the referenced Function.
+func (inst FunctionReference) SetTransform(transform Transform) error {
+	ret := C.CCall_lib3mf_functionreference_settransform(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.sLib3MFTransform)(unsafe.Pointer(&transform)))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}

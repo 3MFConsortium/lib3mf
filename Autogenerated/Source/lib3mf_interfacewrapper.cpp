@@ -5081,6 +5081,70 @@ Lib3MFResult lib3mf_functionreference_setfunctionresourceid(Lib3MF_FunctionRefer
 	}
 }
 
+Lib3MFResult lib3mf_functionreference_gettransform(Lib3MF_FunctionReference pFunctionReference, sLib3MFTransform * pTransform)
+{
+	IBase* pIBaseClass = (IBase *)pFunctionReference;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionReference, "FunctionReference", "GetTransform");
+		}
+		if (pTransform == nullptr)
+		throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IFunctionReference* pIFunctionReference = dynamic_cast<IFunctionReference*>(pIBaseClass);
+		if (!pIFunctionReference)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pTransform = pIFunctionReference->GetTransform();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_functionreference_settransform(Lib3MF_FunctionReference pFunctionReference, const sLib3MFTransform * pTransform)
+{
+	IBase* pIBaseClass = (IBase *)pFunctionReference;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionReference, "FunctionReference", "SetTransform");
+		}
+		IFunctionReference* pIFunctionReference = dynamic_cast<IFunctionReference*>(pIBaseClass);
+		if (!pIFunctionReference)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIFunctionReference->SetTransform(*pTransform);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 
 /*************************************************************************************************************************
  Class implementation for VolumeDataBoundary
@@ -17370,6 +17434,10 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_functionreference_getfunctionresourceid;
 	if (sProcName == "lib3mf_functionreference_setfunctionresourceid") 
 		*ppProcAddress = (void*) &lib3mf_functionreference_setfunctionresourceid;
+	if (sProcName == "lib3mf_functionreference_gettransform") 
+		*ppProcAddress = (void*) &lib3mf_functionreference_gettransform;
+	if (sProcName == "lib3mf_functionreference_settransform") 
+		*ppProcAddress = (void*) &lib3mf_functionreference_settransform;
 	if (sProcName == "lib3mf_volumedataboundary_getsolidthreshold") 
 		*ppProcAddress = (void*) &lib3mf_volumedataboundary_getsolidthreshold;
 	if (sProcName == "lib3mf_volumedataboundary_setsolidthreshold") 

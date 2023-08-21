@@ -1439,6 +1439,24 @@ typedef Lib3MFResult (*PLib3MFFunctionReference_GetFunctionResourceIDPtr) (Lib3M
 */
 typedef Lib3MFResult (*PLib3MFFunctionReference_SetFunctionResourceIDPtr) (Lib3MF_FunctionReference pFunctionReference, Lib3MF_uint32 nUniqueResourceID);
 
+/**
+* Returns the transformation matrix into the coordinate system of the referenced Function.
+*
+* @param[in] pFunctionReference - FunctionReference instance.
+* @param[out] pTransform - the transformation matrix
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFFunctionReference_GetTransformPtr) (Lib3MF_FunctionReference pFunctionReference, sLib3MFTransform * pTransform);
+
+/**
+* Sets the transformation matrix into the coordinate system of the referenced Function.
+*
+* @param[in] pFunctionReference - FunctionReference instance.
+* @param[in] pTransform - new transformation matrix
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFFunctionReference_SetTransformPtr) (Lib3MF_FunctionReference pFunctionReference, const sLib3MFTransform * pTransform);
+
 /*************************************************************************************************************************
  Class definition for VolumeDataBoundary
 **************************************************************************************************************************/
@@ -4995,6 +5013,8 @@ typedef struct {
 	PLib3MFBeamLattice_GetBeamSetPtr m_BeamLattice_GetBeamSet;
 	PLib3MFFunctionReference_GetFunctionResourceIDPtr m_FunctionReference_GetFunctionResourceID;
 	PLib3MFFunctionReference_SetFunctionResourceIDPtr m_FunctionReference_SetFunctionResourceID;
+	PLib3MFFunctionReference_GetTransformPtr m_FunctionReference_GetTransform;
+	PLib3MFFunctionReference_SetTransformPtr m_FunctionReference_SetTransform;
 	PLib3MFVolumeDataBoundary_GetSolidThresholdPtr m_VolumeDataBoundary_GetSolidThreshold;
 	PLib3MFVolumeDataBoundary_SetSolidThresholdPtr m_VolumeDataBoundary_SetSolidThreshold;
 	PLib3MFVolumeDataComposite_GetBaseMaterialGroupPtr m_VolumeDataComposite_GetBaseMaterialGroup;
