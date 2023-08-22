@@ -322,7 +322,8 @@ namespace Lib3MF
             EXPECT_GT(box.m_MaxCoordinate[2] - box.m_MinCoordinate[2], 0.f);
 
             // 2. Calculate the transform
-            Lib3MF::sTransform transform;
+            Lib3MF::sTransform transform =  getIdentityTransform();
+
 
             // scaling
             transform.m_Fields[0][0] = 1.0f / (box.m_MaxCoordinate[0] -
@@ -331,11 +332,6 @@ namespace Lib3MF
                                                box.m_MinCoordinate[1]);
             transform.m_Fields[2][2] = 1.0f / (box.m_MaxCoordinate[2] -
                                                   box.m_MinCoordinate[2]); 
-
-            // translation
-            transform.m_Fields[0][3] = -box.m_MinCoordinate[0];
-            transform.m_Fields[1][3] = -box.m_MinCoordinate[1];
-            transform.m_Fields[2][3] = -box.m_MinCoordinate[2];
 
             return transform;
         }
