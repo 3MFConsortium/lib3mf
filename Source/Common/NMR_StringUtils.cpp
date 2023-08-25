@@ -151,19 +151,23 @@ namespace NMR {
 	nfDouble fnStringToDouble(_In_z_ const nfChar * pszValue)
 	{
 		__NMRASSERT(pwszValue);
+
+		std::istringstream iss(pszValue);
+		iss.imbue(std::locale::classic());
+
 		nfDouble dResult = 0.0;
-
-		// Convert to double and make a input and range check!
-		nfChar * pEndPtr;
-
-		dResult = strtod(pszValue, &pEndPtr);
+		iss >> dResult;
 
 		// Check if any conversion happened
-		if ((pEndPtr == pszValue) || (!pEndPtr))
+		const bool fail = !iss;
+		if (iss.eof() && fail)
 			throw CNMRException(NMR_ERROR_EMPTYSTRINGTODOUBLECONVERSION);
 
-		if ((*pEndPtr != '\0') && (*pEndPtr != ' '))
-			throw CNMRException(NMR_ERROR_INVALIDSTRINGTODOUBLECONVERSION);
+		if (!iss.eof()) {
+			const char next = iss.get();
+			if (next != ' ')
+				throw CNMRException(NMR_ERROR_INVALIDSTRINGTODOUBLECONVERSION);
+		}
 
 		if ((dResult == HUGE_VAL) || (dResult == -HUGE_VAL))
 			throw CNMRException(NMR_ERROR_STRINGTODOUBLECONVERSIONOUTOFRANGE);
