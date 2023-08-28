@@ -48,8 +48,7 @@ namespace Lib3MF
                     << L"Could not create folder.";
             }
             model = wrapper->CreateModel();
-            auto reader = model->QueryReader("3mf");
-            reader->ReadFromFile(InFolder + "Pyramid.3mf");
+            loadPyramid();
             writer3MF = model->QueryWriter("3mf");
             writerSTL = model->QueryWriter("stl");
         }
@@ -58,6 +57,13 @@ namespace Lib3MF
             model.reset();
             writer3MF.reset();
             writerSTL.reset();
+        }
+
+        void loadPyramid()
+        {
+            model = wrapper->CreateModel();
+            auto reader = model->QueryReader("3mf");
+            reader->ReadFromFile(InFolder + "Pyramid.3mf");
         }
 
         PModel model;
@@ -691,12 +697,12 @@ namespace Lib3MF
                                  functionIterator->GetCurrentFunction());
     }
 
-    TEST_F(Volumetric, CreateImplicitWithFunctionFromImage3D)
+    TEST_F(Volumetric, CreateAndLoad_FunctionFromImage3dColor_SameContent)
     {
         // Create model and load pyramid
         model = wrapper->CreateModel();
         auto reader = model->QueryReader("3mf");
-        reader->ReadFromFile(InFolder + "Pyramid.3mf");
+        reader->ReadFromFile(InFolder + "Cube.3mf");
 
         // Create a new image stack
         auto pImage3D = SetupSheetsFromFile();
@@ -795,7 +801,7 @@ namespace Lib3MF
     {
         model = wrapper->CreateModel();
         auto reader = model->QueryReader("3mf");
-        reader->ReadFromFile(InFolder + "Pyramid.3mf");
+        reader->ReadFromFile(InFolder + "Cube.3mf");
 
         // Create a new image stack
         auto pImage3D = SetupSheetsFromFile();
@@ -853,7 +859,7 @@ namespace Lib3MF
     {
         model = wrapper->CreateModel();
         auto reader = model->QueryReader("3mf");
-        reader->ReadFromFile(InFolder + "Pyramid.3mf");
+        reader->ReadFromFile(InFolder + "Cube.3mf");
 
         // Create a new image stack
         auto pImage3D = SetupSheetsFromFile();
