@@ -39,12 +39,6 @@ namespace NMR
     void CModelFunctionFromImage3D::setImage3DUniqueResourceID(const UniqueResourceID sID)
     {
         m_image3DUniqueResourceID = sID;
-        auto * model = getModel();
-        PModelResource pResource = model->findResource(sID);
-        if (pResource == nullptr)
-            throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
-
-        m_image3DModelResourceID = pResource->getPackageResourceID()->getModelResourceID();
     }
 
     UniqueResourceID CModelFunctionFromImage3D::getImage3DUniqueResourceID()
@@ -60,14 +54,21 @@ namespace NMR
         if (pResource == nullptr)
             throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
         m_image3DUniqueResourceID = pResource->getPackageResourceID()->getUniqueID();
-
-        m_image3DModelResourceID = modelResoureId;
-        
     }
 
     ModelResourceID CModelFunctionFromImage3D::getImage3DModelResourceID()
     {
-        return m_image3DModelResourceID;
+        auto * model = getModel();
+        PModelResource pResource = model->findResource(m_image3DUniqueResourceID);
+        if (pResource == nullptr)
+            throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+        auto const modelResId = pResource->getPackageResourceID()->getModelResourceID();
+        if (modelResId != 2)    // for debugging only
+        {
+            return modelResId;    
+        }
+            
+        return modelResId;
     }
 
     void CModelFunctionFromImage3D::setTileStyleU(

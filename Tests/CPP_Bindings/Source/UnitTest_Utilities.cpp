@@ -229,19 +229,19 @@ namespace Lib3MF
             }
         }
 
-        void CompareImage3Ds(Lib3MF::PModel modelA, Lib3MF::PImage3D i1,
-                             Lib3MF::PModel modelB, Lib3MF::PImage3D i2)
+        void CompareImage3Ds(Lib3MF::PModel modelA, Lib3MF::PImage3D imgA,
+                             Lib3MF::PModel modelB, Lib3MF::PImage3D imbB)
         {
-            ASSERT_EQ(i1->GetName(), i2->GetName());
-            ASSERT_EQ(i1->IsImageStack(), i2->IsImageStack());
-            if(i1->IsImageStack())
+            ASSERT_EQ(imgA->GetName(), imbB->GetName());
+            ASSERT_EQ(imgA->IsImageStack(), imbB->IsImageStack());
+            if(imgA->IsImageStack())
             {
-                Lib3MF::PImageStack stack1 =
-                    modelA->GetImageStackByID(i1->GetUniqueResourceID());
-                Lib3MF::PImageStack stack2 =
-                    modelB->GetImageStackByID(i2->GetUniqueResourceID());
+                Lib3MF::PImageStack stackA =
+                    modelA->GetImageStackByID(imgA->GetUniqueResourceID());
+                Lib3MF::PImageStack stackB =
+                    modelB->GetImageStackByID(imbB->GetUniqueResourceID());
 
-                CompareImageStacks(stack1, stack2);
+                CompareImageStacks(stackA, stackB);
             }
         }
 
