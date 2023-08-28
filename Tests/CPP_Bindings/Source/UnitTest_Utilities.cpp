@@ -333,7 +333,7 @@ namespace Lib3MF
             transform.m_Fields[2][2] = 1.0f / (box.m_MaxCoordinate[2] -
                                                   box.m_MinCoordinate[2]); 
 
-                                                  // translation
+            // translation
             transform.m_Fields[3][0] = -box.m_MinCoordinate[0] * transform.m_Fields[0][0];
             transform.m_Fields[3][1] = -box.m_MinCoordinate[1] * transform.m_Fields[1][1];
             transform.m_Fields[3][2] = -box.m_MinCoordinate[2] * transform.m_Fields[2][2];
