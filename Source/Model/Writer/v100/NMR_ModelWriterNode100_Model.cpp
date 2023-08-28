@@ -809,7 +809,7 @@ namespace NMR {
 					funcFromImg3D->getDisplayName());
 				writeIntAttribute(
 					XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_IMAGE3DID,
-					funcFromImg3D->getImage3DUniqueResourceID());
+					funcFromImg3D->getImage3DModelResourceID());
 				writeDoubleAttribute(
 					XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_OFFSET,
 					funcFromImg3D->getOffset());

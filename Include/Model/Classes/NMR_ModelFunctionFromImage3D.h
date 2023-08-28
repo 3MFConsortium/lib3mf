@@ -45,6 +45,7 @@ namespace NMR {
 	class CModelFunctionFromImage3D : public CModelFunction{
 	private:
 		UniqueResourceID m_image3DUniqueResourceID{};
+		ModelResourceID m_image3DModelResourceID{};
 		
 		eModelTextureTileStyle m_tileStyleU = {};
 		eModelTextureTileStyle m_tileStyleV = {};
@@ -60,7 +61,9 @@ namespace NMR {
 
 		void setImage3DUniqueResourceID(const UniqueResourceID sID);
 		UniqueResourceID getImage3DUniqueResourceID();
+
 		void setImage3DModelResourceID(const ModelResourceID sID);
+		ModelResourceID getImage3DModelResourceID();
 
 		void setTileStyleU(const eModelTextureTileStyle tileStyleU);
 		eModelTextureTileStyle getTileStyleU();
