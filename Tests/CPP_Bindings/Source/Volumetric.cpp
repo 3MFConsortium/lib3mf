@@ -822,6 +822,7 @@ namespace Lib3MF
         // Add boundary
         auto boundary = volumeData->CreateNewBoundary(funcFromImage3d.get());
         boundary->SetTransform(helper::ComputeTransformFromMeshCoordinatesToUVW(theMesh));
+        boundary->SetSolidThreshold(0.25f);
         
         // Todo: Define output name
 
@@ -852,7 +853,8 @@ namespace Lib3MF
         auto boundaryFromFile = volumeData->GetBoundary();
         ASSERT_TRUE(boundaryFromFile);
         EXPECT_EQ(boundaryFromFile->GetFunctionResourceID(), funcImg3dId);
-        helper::CompareTransforms(boundary->GetTransform(), boundaryFromFile->GetTransform());   
+        helper::CompareTransforms(boundary->GetTransform(), boundaryFromFile->GetTransform());
+        EXPECT_EQ(boundary->GetSolidThreshold(), boundaryFromFile->GetSolidThreshold());
     }
 
     TEST_F(Volumetric, CreateAndLoad_FunctionFromImage3dAddProperty_SameContent)
