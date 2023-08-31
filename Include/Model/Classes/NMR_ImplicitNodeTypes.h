@@ -29,10 +29,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #pragma once
 
 #include <lib3mf_types.hpp>
-
-#include <string>
 #include <map>
+#include <string>
 #include <vector>
+#include <unordered_map>
 
 namespace NMR
 {
@@ -40,51 +40,63 @@ namespace NMR
     namespace implicit
     {
         using PortIdentifier = std::string;
-        using ExpectedPorts = std::vector<PortIdentifier>;
-        
+
+        using PortMap =
+            std::unordered_map<PortIdentifier, Lib3MF::eImplicitPortType>;
+        using In = PortMap;
+        using Out = PortMap;
+
+        struct InputOutputRule
+        {
+            In inputs;
+            Out outputs;
+        };
+
+        using AllowedInputOutputs = std::vector<InputOutputRule>;
+
         class NodeType
         {
-          public:
-            NodeType(std::string const & name,
-                     ExpectedPorts const & inputs,
-                     ExpectedPorts const & outputs);
-                     
+           public:
+            NodeType(std::string const& name,
+                     AllowedInputOutputs const& allowedInputOutputs);
+
             NodeType() = delete;
 
-            std::string const & getName() const;
-            ExpectedPorts const & getInputs() const;
-            ExpectedPorts const & getOutputs() const;
+            std::string const& getName() const;
+
+            AllowedInputOutputs const& getAllowedInputOutputs() const;
+
             Lib3MF::eImplicitNodeType getType() const;
 
-          private:
+           private:
             std::string m_name;
-            ExpectedPorts m_inputs;
-            ExpectedPorts m_outputs;
+            AllowedInputOutputs m_allowedInputOutputs;
         };
 
         using NodeTypesMap = std::map<Lib3MF::eImplicitNodeType, NodeType>;
-        
+
         class NodeTypes
         {
-          public:
+           public:
             NodeTypes();
-            NodeTypes(NodeTypes const & other) = delete;
-            NodeTypes(NodeTypes && other) = delete;
-            NodeTypes & operator=(NodeTypes const & other) = delete;
-            NodeTypes & operator=(NodeTypes && other) = delete;
+            NodeTypes(NodeTypes const& other) = delete;
+            NodeTypes(NodeTypes&& other) = delete;
+            NodeTypes& operator=(NodeTypes const& other) = delete;
+            NodeTypes& operator=(NodeTypes&& other) = delete;
 
-            NodeType const & getNodeType(Lib3MF::eImplicitNodeType type) const;
+            NodeType const& getNodeType(Lib3MF::eImplicitNodeType type) const;
 
             NodeTypesMap const& getTypes() const;
 
-            void addExpectedPortsToNode(NMR::CModelImplicitNode & node) const;
-            
-          private:
-            const NodeTypesMap m_nodeTypes;
+            void addExpectedPortsToNode(NMR::CModelImplicitNode& node) const;
+
+            void applyInputOutputRuleToNode(
+                NMR::CModelImplicitNode& node,
+                InputOutputRule const& rule) const;
+           private:
+            NodeTypesMap m_nodeTypes;
         };
 
-        
-
-        NodeTypes const & getNodeTypes();
-    }
-}
+        NodeTypes const& getNodeTypes();
+    }  // namespace implicit
+}  // namespace NMR
