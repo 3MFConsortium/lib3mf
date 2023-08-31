@@ -256,28 +256,45 @@ type
 		eImplicitNodeTypeConstVec,
 		eImplicitNodeTypeConstMat,
 		eImplicitNodeTypeComposeVector,
+		eImplicitNodeTypeDecomposeVector,
 		eImplicitNodeTypeComposeMatrix,
 		eImplicitNodeTypeComposeMatrixFromColumnVectors,
+		eImplicitNodeTypeComposeMatrixFromRowVectors,
 		eImplicitNodeTypeDot,
 		eImplicitNodeTypeCross,
 		eImplicitNodeTypeMatVecMultiplication,
 		eImplicitNodeTypeTranspose,
+		eImplicitNodeTypeInverse,
 		eImplicitNodeTypeSinus,
 		eImplicitNodeTypeCosinus,
 		eImplicitNodeTypeTan,
 		eImplicitNodeTypeArcSin,
 		eImplicitNodeTypeArcCos,
 		eImplicitNodeTypeArcTan,
+		eImplicitNodeTypeArcTan2,
 		eImplicitNodeTypeMin,
 		eImplicitNodeTypeMax,
 		eImplicitNodeTypeAbs,
 		eImplicitNodeTypeFmod,
 		eImplicitNodeTypePow,
 		eImplicitNodeTypeSqrt,
+		eImplicitNodeTypeExp,
+		eImplicitNodeTypeLog,
+		eImplicitNodeTypeLog2,
+		eImplicitNodeTypeLog10,
+		eImplicitNodeTypeSelect,
+		eImplicitNodeTypeClamp,
+		eImplicitNodeTypeSinh,
+		eImplicitNodeTypeCosh,
+		eImplicitNodeTypeTanh,
+		eImplicitNodeTypeRound,
+		eImplicitNodeTypeCeil,
+		eImplicitNodeTypeFloor,
+		eImplicitNodeTypeSign,
+		eImplicitNodeTypeFract,
 		eImplicitNodeTypeFunctionCall,
 		eImplicitNodeTypeMesh,
 		eImplicitNodeTypeLength,
-		eImplicitNodeTypeDecomposeVector,
 		eImplicitNodeTypeResource
 	);
 
@@ -8068,29 +8085,46 @@ implementation
 			eImplicitNodeTypeConstVec: Result := 6;
 			eImplicitNodeTypeConstMat: Result := 7;
 			eImplicitNodeTypeComposeVector: Result := 8;
-			eImplicitNodeTypeComposeMatrix: Result := 9;
-			eImplicitNodeTypeComposeMatrixFromColumnVectors: Result := 10;
-			eImplicitNodeTypeDot: Result := 11;
-			eImplicitNodeTypeCross: Result := 12;
-			eImplicitNodeTypeMatVecMultiplication: Result := 13;
-			eImplicitNodeTypeTranspose: Result := 14;
-			eImplicitNodeTypeSinus: Result := 15;
-			eImplicitNodeTypeCosinus: Result := 16;
-			eImplicitNodeTypeTan: Result := 17;
-			eImplicitNodeTypeArcSin: Result := 18;
-			eImplicitNodeTypeArcCos: Result := 19;
-			eImplicitNodeTypeArcTan: Result := 20;
-			eImplicitNodeTypeMin: Result := 21;
-			eImplicitNodeTypeMax: Result := 22;
-			eImplicitNodeTypeAbs: Result := 23;
-			eImplicitNodeTypeFmod: Result := 24;
-			eImplicitNodeTypePow: Result := 25;
-			eImplicitNodeTypeSqrt: Result := 26;
-			eImplicitNodeTypeFunctionCall: Result := 27;
-			eImplicitNodeTypeMesh: Result := 28;
-			eImplicitNodeTypeLength: Result := 29;
-			eImplicitNodeTypeDecomposeVector: Result := 30;
-			eImplicitNodeTypeResource: Result := 31;
+			eImplicitNodeTypeDecomposeVector: Result := 9;
+			eImplicitNodeTypeComposeMatrix: Result := 10;
+			eImplicitNodeTypeComposeMatrixFromColumnVectors: Result := 11;
+			eImplicitNodeTypeComposeMatrixFromRowVectors: Result := 12;
+			eImplicitNodeTypeDot: Result := 13;
+			eImplicitNodeTypeCross: Result := 14;
+			eImplicitNodeTypeMatVecMultiplication: Result := 15;
+			eImplicitNodeTypeTranspose: Result := 16;
+			eImplicitNodeTypeInverse: Result := 17;
+			eImplicitNodeTypeSinus: Result := 18;
+			eImplicitNodeTypeCosinus: Result := 19;
+			eImplicitNodeTypeTan: Result := 20;
+			eImplicitNodeTypeArcSin: Result := 21;
+			eImplicitNodeTypeArcCos: Result := 22;
+			eImplicitNodeTypeArcTan: Result := 23;
+			eImplicitNodeTypeArcTan2: Result := 24;
+			eImplicitNodeTypeMin: Result := 25;
+			eImplicitNodeTypeMax: Result := 26;
+			eImplicitNodeTypeAbs: Result := 27;
+			eImplicitNodeTypeFmod: Result := 28;
+			eImplicitNodeTypePow: Result := 29;
+			eImplicitNodeTypeSqrt: Result := 30;
+			eImplicitNodeTypeExp: Result := 31;
+			eImplicitNodeTypeLog: Result := 32;
+			eImplicitNodeTypeLog2: Result := 33;
+			eImplicitNodeTypeLog10: Result := 34;
+			eImplicitNodeTypeSelect: Result := 35;
+			eImplicitNodeTypeClamp: Result := 36;
+			eImplicitNodeTypeSinh: Result := 37;
+			eImplicitNodeTypeCosh: Result := 38;
+			eImplicitNodeTypeTanh: Result := 39;
+			eImplicitNodeTypeRound: Result := 40;
+			eImplicitNodeTypeCeil: Result := 41;
+			eImplicitNodeTypeFloor: Result := 42;
+			eImplicitNodeTypeSign: Result := 43;
+			eImplicitNodeTypeFract: Result := 44;
+			eImplicitNodeTypeFunctionCall: Result := 45;
+			eImplicitNodeTypeMesh: Result := 46;
+			eImplicitNodeTypeLength: Result := 47;
+			eImplicitNodeTypeResource: Result := 48;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
 		end;
@@ -8107,29 +8141,46 @@ implementation
 			6: Result := eImplicitNodeTypeConstVec;
 			7: Result := eImplicitNodeTypeConstMat;
 			8: Result := eImplicitNodeTypeComposeVector;
-			9: Result := eImplicitNodeTypeComposeMatrix;
-			10: Result := eImplicitNodeTypeComposeMatrixFromColumnVectors;
-			11: Result := eImplicitNodeTypeDot;
-			12: Result := eImplicitNodeTypeCross;
-			13: Result := eImplicitNodeTypeMatVecMultiplication;
-			14: Result := eImplicitNodeTypeTranspose;
-			15: Result := eImplicitNodeTypeSinus;
-			16: Result := eImplicitNodeTypeCosinus;
-			17: Result := eImplicitNodeTypeTan;
-			18: Result := eImplicitNodeTypeArcSin;
-			19: Result := eImplicitNodeTypeArcCos;
-			20: Result := eImplicitNodeTypeArcTan;
-			21: Result := eImplicitNodeTypeMin;
-			22: Result := eImplicitNodeTypeMax;
-			23: Result := eImplicitNodeTypeAbs;
-			24: Result := eImplicitNodeTypeFmod;
-			25: Result := eImplicitNodeTypePow;
-			26: Result := eImplicitNodeTypeSqrt;
-			27: Result := eImplicitNodeTypeFunctionCall;
-			28: Result := eImplicitNodeTypeMesh;
-			29: Result := eImplicitNodeTypeLength;
-			30: Result := eImplicitNodeTypeDecomposeVector;
-			31: Result := eImplicitNodeTypeResource;
+			9: Result := eImplicitNodeTypeDecomposeVector;
+			10: Result := eImplicitNodeTypeComposeMatrix;
+			11: Result := eImplicitNodeTypeComposeMatrixFromColumnVectors;
+			12: Result := eImplicitNodeTypeComposeMatrixFromRowVectors;
+			13: Result := eImplicitNodeTypeDot;
+			14: Result := eImplicitNodeTypeCross;
+			15: Result := eImplicitNodeTypeMatVecMultiplication;
+			16: Result := eImplicitNodeTypeTranspose;
+			17: Result := eImplicitNodeTypeInverse;
+			18: Result := eImplicitNodeTypeSinus;
+			19: Result := eImplicitNodeTypeCosinus;
+			20: Result := eImplicitNodeTypeTan;
+			21: Result := eImplicitNodeTypeArcSin;
+			22: Result := eImplicitNodeTypeArcCos;
+			23: Result := eImplicitNodeTypeArcTan;
+			24: Result := eImplicitNodeTypeArcTan2;
+			25: Result := eImplicitNodeTypeMin;
+			26: Result := eImplicitNodeTypeMax;
+			27: Result := eImplicitNodeTypeAbs;
+			28: Result := eImplicitNodeTypeFmod;
+			29: Result := eImplicitNodeTypePow;
+			30: Result := eImplicitNodeTypeSqrt;
+			31: Result := eImplicitNodeTypeExp;
+			32: Result := eImplicitNodeTypeLog;
+			33: Result := eImplicitNodeTypeLog2;
+			34: Result := eImplicitNodeTypeLog10;
+			35: Result := eImplicitNodeTypeSelect;
+			36: Result := eImplicitNodeTypeClamp;
+			37: Result := eImplicitNodeTypeSinh;
+			38: Result := eImplicitNodeTypeCosh;
+			39: Result := eImplicitNodeTypeTanh;
+			40: Result := eImplicitNodeTypeRound;
+			41: Result := eImplicitNodeTypeCeil;
+			42: Result := eImplicitNodeTypeFloor;
+			43: Result := eImplicitNodeTypeSign;
+			44: Result := eImplicitNodeTypeFract;
+			45: Result := eImplicitNodeTypeFunctionCall;
+			46: Result := eImplicitNodeTypeMesh;
+			47: Result := eImplicitNodeTypeLength;
+			48: Result := eImplicitNodeTypeResource;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;

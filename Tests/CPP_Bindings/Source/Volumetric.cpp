@@ -377,14 +377,14 @@ namespace Lib3MF
             newFunction->AddNode(Lib3MF::eImplicitNodeType::DecomposeVector,
                                  "decomposePos", "decompose pos", "group_a");
 
-        decomposePos->FindInput("vector")->SetType(
+        decomposePos->FindInput("A")->SetType(
             Lib3MF::eImplicitPortType::Vector);
-        newFunction->AddLinkByNames("inputs.pos", "decomposePos.vector");
+        newFunction->AddLinkByNames("inputs.pos", "decomposePos.A");
 
         auto composeYZX =
             newFunction->AddNode(Lib3MF::eImplicitNodeType::ComposeVector,
                                  "composeYZX", "compose yzx", "group_a");
-        composeYZX->FindOutput("vector")->SetType(
+        composeYZX->FindOutput("result")->SetType(
             Lib3MF::eImplicitPortType::Vector);
 
         newFunction->AddLinkByNames("decomposePos.z", "composeYZX.y");
@@ -405,7 +405,7 @@ namespace Lib3MF
         cosNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
         cosNode->FindOutput("result")->SetType(
             Lib3MF::eImplicitPortType::Vector);
-        newFunction->AddLinkByNames("composeYZX.vector", "cos.A");
+        newFunction->AddLinkByNames("composeYZX.result", "cos.A");
 
         auto dotNode = newFunction->AddNode(Lib3MF::eImplicitNodeType::Dot,
                                             "dot", "dot", "group_a");
@@ -536,14 +536,14 @@ namespace Lib3MF
                 Lib3MF::eImplicitNodeType::DecomposeVector, "decomposePos",
                 "decompose pos", "group_a");
 
-            decomposePos->FindInput("vector")->SetType(
+            decomposePos->FindInput("A")->SetType(
                 Lib3MF::eImplicitPortType::Vector);
-            gyroidFunction->AddLinkByNames("inputs.pos", "decomposePos.vector");
+            gyroidFunction->AddLinkByNames("inputs.pos", "decomposePos.A");
 
             auto composeYZX = gyroidFunction->AddNode(
                 Lib3MF::eImplicitNodeType::ComposeVector, "composeYZX",
                 "compose yzx", "group_a");
-            composeYZX->FindOutput("vector")->SetType(
+            composeYZX->FindOutput("result")->SetType(
                 Lib3MF::eImplicitPortType::Vector);
 
             gyroidFunction->AddLinkByNames("decomposePos.z", "composeYZX.y");
@@ -564,7 +564,7 @@ namespace Lib3MF
             cosNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
             cosNode->FindOutput("result")->SetType(
                 Lib3MF::eImplicitPortType::Vector);
-            gyroidFunction->AddLinkByNames("composeYZX.vector", "cos.A");
+            gyroidFunction->AddLinkByNames("composeYZX.result", "cos.A");
 
             auto dotNode = gyroidFunction->AddNode(
                 Lib3MF::eImplicitNodeType::Dot, "dot", "dot", "group_a");

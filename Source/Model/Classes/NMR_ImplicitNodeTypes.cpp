@@ -28,6 +28,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "Model/Classes/NMR_ImplicitNodeTypes.h"
 
+#include <iostream>
+
 #include "Common/NMR_Exception.h"
 #include "Model/Classes/NMR_ModelImplicitNode.h"
 
@@ -77,42 +79,312 @@ namespace NMR
                 InputOutputRule{In{{"A", eImplicitPortType::Matrix},
                                    {"B", eImplicitPortType::Scalar}},
                                 Out{{"result", eImplicitPortType::Matrix}}},
+                InputOutputRule{In{{"A", eImplicitPortType::Scalar}},
+                                Out{{"result", eImplicitPortType::Vector}}},
+                InputOutputRule{In{{"A", eImplicitPortType::Scalar}},
+                                Out{{"result", eImplicitPortType::Matrix}}},
             };
+
+            AllowedInputOutputs const oneParameterFunctionSameDimensions{
+                InputOutputRule{In{{"A", eImplicitPortType::Scalar}},
+                                Out{{"result", eImplicitPortType::Scalar}}},
+                InputOutputRule{In{{"A", eImplicitPortType::Vector}},
+                                Out{{"result", eImplicitPortType::Vector}}},
+                InputOutputRule{In{{"A", eImplicitPortType::Matrix}},
+                                Out{{"result", eImplicitPortType::Matrix}}}};
+
+            AllowedInputOutputs const twoParameterFunctionSameDimensions{
+                InputOutputRule{In{{"A", eImplicitPortType::Scalar},
+                                   {"B", eImplicitPortType::Scalar}},
+                                Out{{"result", eImplicitPortType::Scalar}}},
+                InputOutputRule{In{{"A", eImplicitPortType::Vector},
+                                   {"B", eImplicitPortType::Vector}},
+                                Out{{"result", eImplicitPortType::Vector}}},
+                InputOutputRule{In{{"A", eImplicitPortType::Matrix},
+                                   {"B", eImplicitPortType::Matrix}},
+                                Out{{"result", eImplicitPortType::Matrix}}}};
 
             m_nodeTypes = NodeTypesMap{
                 {eImplicitNodeType::Addition,
                  {"addition", commutativeScalarVecMat}},
                 {eImplicitNodeType::Subtraction,
                  {"subtraction", commutativeScalarVecMat}},
+                {eImplicitNodeType::Constant,
+                 {"constant",
+                  {InputOutputRule{
+                      In{}, Out{{"value", eImplicitPortType::Scalar}}}}}},
                 {eImplicitNodeType::Multiplication,
-                 {"multiplication",
+                 {
+                     "multiplication",
+                     {
+                         InputOutputRule{
+                             In{{"A", eImplicitPortType::Scalar},
+                                {"B", eImplicitPortType::Scalar}},
+                             Out{{"result", eImplicitPortType::Scalar}}},
+                         InputOutputRule{
+                             In{{"A", eImplicitPortType::Vector},
+                                {"B", eImplicitPortType::Vector}},
+                             Out{{"result", eImplicitPortType::Vector}}},
+                         InputOutputRule{
+                             In{{"A", eImplicitPortType::Scalar},
+                                {"B", eImplicitPortType::Vector}},
+                             Out{{"result", eImplicitPortType::Vector}}},
+                         InputOutputRule{
+                             In{{"A", eImplicitPortType::Scalar},
+                                {"B", eImplicitPortType::Matrix}},
+                             Out{{"result", eImplicitPortType::Matrix}}},
+                         InputOutputRule{
+                             In{{"A", eImplicitPortType::Vector},
+                                {"B", eImplicitPortType::Scalar}},
+                             Out{{"result", eImplicitPortType::Vector}}},
+                         InputOutputRule{
+                             In{{"A", eImplicitPortType::Matrix},
+                                {"B", eImplicitPortType::Scalar}},
+                             Out{{"result", eImplicitPortType::Matrix}}},
+                         InputOutputRule{
+                             In{{"A", eImplicitPortType::Scalar}},
+                             Out{{"result", eImplicitPortType::Vector}}},
+                         InputOutputRule{
+                             In{{"A", eImplicitPortType::Scalar}},
+                             Out{{"result", eImplicitPortType::Matrix}}},
+                     },
+                 }},
+                {eImplicitNodeType::Division,
+                 {
+                     "division",
+                     {
+                         InputOutputRule{
+                             In{{"A", eImplicitPortType::Scalar},
+                                {"B", eImplicitPortType::Scalar}},
+                             Out{{"result", eImplicitPortType::Scalar}}},
+                         InputOutputRule{
+                             In{{"A", eImplicitPortType::Vector},
+                                {"B", eImplicitPortType::Vector}},
+                             Out{{"result", eImplicitPortType::Vector}}},
+                         InputOutputRule{
+                             In{{"A", eImplicitPortType::Vector},
+                                {"B", eImplicitPortType::Scalar}},
+                             Out{{"result", eImplicitPortType::Vector}}},
+                         InputOutputRule{
+                             In{{"A", eImplicitPortType::Matrix},
+                                {"B", eImplicitPortType::Scalar}},
+                             Out{{"result", eImplicitPortType::Matrix}}},
+                     },
+                 }},
+                {eImplicitNodeType::ConstVec,
+                 {
+                     "constvec",
+                     {
+                         InputOutputRule{
+                             In{}, Out{{"vector", eImplicitPortType::Vector}}},
+                     },
+                 }},
+                {eImplicitNodeType::ConstMat,
+                 {
+                     "constmat",
+                     {
+                         InputOutputRule{
+                             In{}, Out{{"matrix", eImplicitPortType::Matrix}}},
+                     },
+                 }},
+                {eImplicitNodeType::ComposeVector,
+                 {
+                     "composevector",
+                     {
+                         InputOutputRule{
+                             In{{"x", eImplicitPortType::Scalar},
+                                {"y", eImplicitPortType::Scalar},
+                                {"z", eImplicitPortType::Scalar}},
+                             Out{{"result", eImplicitPortType::Vector}}},
+                     },
+                 }},
+                {eImplicitNodeType::DecomposeVector,
+                 {
+                     "decomposevector",
+                     {
+                         InputOutputRule{In{{"A", eImplicitPortType::Vector}},
+                                         Out{{"x", eImplicitPortType::Scalar},
+                                             {"y", eImplicitPortType::Scalar},
+                                             {"z", eImplicitPortType::Scalar}}},
+                     },
+                 }},
+                {eImplicitNodeType::ComposeMatrix,
+                 {"composematrix",  // 4x4
+                  {InputOutputRule{
+                      In{{"m00", eImplicitPortType::Scalar},
+                         {"m01", eImplicitPortType::Scalar},
+                         {"m02", eImplicitPortType::Scalar},
+                         {"m03", eImplicitPortType::Scalar},
+                         {"m10", eImplicitPortType::Scalar},
+                         {"m11", eImplicitPortType::Scalar},
+                         {"m12", eImplicitPortType::Scalar},
+                         {"m13", eImplicitPortType::Scalar},
+                         {"m20", eImplicitPortType::Scalar},
+                         {"m21", eImplicitPortType::Scalar},
+                         {"m22", eImplicitPortType::Scalar},
+                         {"m23", eImplicitPortType::Scalar},
+                         {"m30", eImplicitPortType::Scalar},
+                         {"m31", eImplicitPortType::Scalar},
+                         {"m32", eImplicitPortType::Scalar},
+                         {"m33", eImplicitPortType::Scalar}},
+                      Out{{"result", eImplicitPortType::Matrix}}}}}},
+                {eImplicitNodeType::ComposeMatrixFromColumnVectors,
+                 {"composematrixfromcolumnvectors",  // 4x4
+                  {InputOutputRule{
+                      In{{"A", eImplicitPortType::Vector},
+                         {"B", eImplicitPortType::Vector},
+                         {"C", eImplicitPortType::Vector},
+                         {"D", eImplicitPortType::Vector}},
+                      Out{{"result", eImplicitPortType::Matrix}}}}}},
+                {eImplicitNodeType::ComposeMatrixFromRowVectors,
+                 {
+                     "composematrixfromrowvectors",  // 4x4
+                     {InputOutputRule{
+                         In{{"A", eImplicitPortType::Vector},
+                            {"B", eImplicitPortType::Vector},
+                            {"C", eImplicitPortType::Vector},
+                            {"D", eImplicitPortType::Vector}},
+                         Out{{"result", eImplicitPortType::Matrix}}}},
+                 }},
+                {eImplicitNodeType::Dot,
+                 {"dot",
+                  {
+                      InputOutputRule{
+                          In{{"A", eImplicitPortType::Vector},
+                             {"B", eImplicitPortType::Vector}},
+                          Out{{"result", eImplicitPortType::Scalar}}},
+                  }}},
+                {eImplicitNodeType::Cross,
+                 {"cross",
+                  {
+                      InputOutputRule{
+                          In{{"A", eImplicitPortType::Vector},
+                             {"B", eImplicitPortType::Vector}},
+                          Out{{"result", eImplicitPortType::Vector}}},
+                  }}},
+                {eImplicitNodeType::MatVecMultiplication,
+                 {"matvecmultiplication",
+                  {
+                      InputOutputRule{
+                          In{{"A", eImplicitPortType::Matrix},
+                             {"B", eImplicitPortType::Vector}},
+                          Out{{"result", eImplicitPortType::Vector}}},
+                  }}},
+                {eImplicitNodeType::Transpose,
+                 {"transpose",
+                  {
+                      InputOutputRule{
+                          In{{"A", eImplicitPortType::Matrix}},
+                          Out{{"result", eImplicitPortType::Matrix}}},
+                  }}},
+                {eImplicitNodeType::Inverse,
+                 {"inverse",
+                  {
+                      InputOutputRule{
+                          In{{"A", eImplicitPortType::Matrix}},
+                          Out{{"result", eImplicitPortType::Matrix}}},
+                  }}},
+                {eImplicitNodeType::Sinus,
+                 {"sin", oneParameterFunctionSameDimensions}},
+                {eImplicitNodeType::Cosinus,
+                 {"cos", oneParameterFunctionSameDimensions}},
+                {eImplicitNodeType::Tan,
+                 {"tan", oneParameterFunctionSameDimensions}},
+                {eImplicitNodeType::ArcSin,
+                 {"asin", oneParameterFunctionSameDimensions}},
+                {eImplicitNodeType::ArcCos,
+                 {"acos", oneParameterFunctionSameDimensions}},
+                {eImplicitNodeType::ArcTan,
+                 {"atan", oneParameterFunctionSameDimensions}},
+                {eImplicitNodeType::ArcTan2,
+                 {"atan2", twoParameterFunctionSameDimensions}},
+                {eImplicitNodeType::Min,
+                 {"min", twoParameterFunctionSameDimensions}},
+                {eImplicitNodeType::Max,
+                 {"max", twoParameterFunctionSameDimensions}},
+                {eImplicitNodeType::Abs,
+                 {"abs", oneParameterFunctionSameDimensions}},
+                {eImplicitNodeType::Fmod,
+                 {"fmod", twoParameterFunctionSameDimensions}},
+                {eImplicitNodeType::Pow,
+                 {"pow", twoParameterFunctionSameDimensions}},
+                {eImplicitNodeType::Sqrt,
+                 {"sqrt", oneParameterFunctionSameDimensions}},
+                {eImplicitNodeType::Exp,
+                 {"exp", oneParameterFunctionSameDimensions}},
+                {eImplicitNodeType::Log,
+                 {"log", oneParameterFunctionSameDimensions}},
+                {eImplicitNodeType::Log2,
+                 {"log2", oneParameterFunctionSameDimensions}},
+                {eImplicitNodeType::Log10,
+                 {"log10", oneParameterFunctionSameDimensions}},
+                {eImplicitNodeType::Cosh,
+                 {"cosh", oneParameterFunctionSameDimensions}},
+                {eImplicitNodeType::Sinh,
+                 {"sinh", oneParameterFunctionSameDimensions}},
+                {eImplicitNodeType::Tanh,
+                 {"tanh", oneParameterFunctionSameDimensions}},
+                {eImplicitNodeType::Round,
+                 {"round", oneParameterFunctionSameDimensions}},
+                {eImplicitNodeType::Ceil,
+                 {"ceil", oneParameterFunctionSameDimensions}},
+                {eImplicitNodeType::Floor,
+                 {"floor", oneParameterFunctionSameDimensions}},
+                {eImplicitNodeType::Sign,
+                 {"sign", oneParameterFunctionSameDimensions}},
+                {eImplicitNodeType::Fract,
+                 {"fract", oneParameterFunctionSameDimensions}},
+                {eImplicitNodeType::Select,
+                 {"select",  // result = A < B ? C : D
                   {
                       InputOutputRule{
                           In{{"A", eImplicitPortType::Scalar},
-                             {"B", eImplicitPortType::Scalar}},
+                             {"B", eImplicitPortType::Scalar},
+                             {"C", eImplicitPortType::Scalar},
+                             {"D", eImplicitPortType::Scalar}},
                           Out{{"result", eImplicitPortType::Scalar}}},
                       InputOutputRule{
                           In{{"A", eImplicitPortType::Vector},
-                             {"B", eImplicitPortType::Vector}},
-                          Out{{"result", eImplicitPortType::Vector}}},
-                      InputOutputRule{
-                          In{{"A", eImplicitPortType::Scalar},
-                             {"B", eImplicitPortType::Vector}},
-                          Out{{"result", eImplicitPortType::Vector}}},
-                      InputOutputRule{
-                          In{{"A", eImplicitPortType::Scalar},
-                             {"B", eImplicitPortType::Matrix}},
-                          Out{{"result", eImplicitPortType::Matrix}}},
-                      InputOutputRule{
-                          In{{"A", eImplicitPortType::Vector},
-                             {"B", eImplicitPortType::Scalar}},
+                             {"B", eImplicitPortType::Vector},
+                             {"C", eImplicitPortType::Vector},
+                             {"D", eImplicitPortType::Vector}},
                           Out{{"result", eImplicitPortType::Vector}}},
                       InputOutputRule{
                           In{{"A", eImplicitPortType::Matrix},
-                             {"B", eImplicitPortType::Scalar}},
+                             {"B", eImplicitPortType::Matrix},
+                             {"C", eImplicitPortType::Matrix},
+                             {"D", eImplicitPortType::Matrix}},
                           Out{{"result", eImplicitPortType::Matrix}}},
+
                   }}},
-            };
+                {eImplicitNodeType::Length,
+                 {"length",
+                  {
+                      InputOutputRule{
+                          In{{"A", eImplicitPortType::Vector}},
+                          Out{{"result", eImplicitPortType::Scalar}}},
+                  }}},
+                {eImplicitNodeType::Resource,
+                 {"resource",
+                  {
+                      InputOutputRule{
+                          In{}, Out{{"value", eImplicitPortType::ResourceID}}},
+                  }}},
+                {eImplicitNodeType::Mesh,
+                 {"mesh",
+                  {
+                      InputOutputRule{
+                          In{{"pos", eImplicitPortType::Vector},
+                             {"mesh", eImplicitPortType::ResourceID}},
+                          Out{{"distance", eImplicitPortType::Scalar}}},
+                  }}},
+                {eImplicitNodeType::FunctionCall,
+                 {"functioncall",
+                  {InputOutputRule{
+                      In{{"functionID",
+                          eImplicitPortType::ResourceID}},  // not predefined
+                      Out{}                                 // not predefined
+                  }}}}};
         }
 
         NodeType const& NodeTypes::getNodeType(
@@ -121,6 +393,8 @@ namespace NMR
             auto it = m_nodeTypes.find(type);
             if(it == m_nodeTypes.end())
             {
+                std::cerr << "Unknown node type: " << static_cast<int>(type)
+                          << std::endl;
                 throw CNMRException(NMR_ERROR_UNKNOWN_NODETYPE_IMPLICITMODEL);
             }
             return it->second;
@@ -137,6 +411,9 @@ namespace NMR
 
             if(nodeType.getAllowedInputOutputs().empty())
             {
+                std::cerr << "InputOutput map for node type: "
+                          << static_cast<int>(node.getNodeType()) << " is empty"
+                          << std::endl;
                 throw CNMRException(NMR_ERROR_UNKNOWN_NODETYPE_IMPLICITMODEL);
             }
             applyInputOutputRuleToNode(
