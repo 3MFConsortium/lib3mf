@@ -414,6 +414,7 @@ class FunctionTable:
 	lib3mf_implicitnode_getmatrix = None
 	lib3mf_implicitnode_setresource = None
 	lib3mf_implicitnode_getresource = None
+	lib3mf_implicitnode_aretypesvalid = None
 	lib3mf_nodeiterator_getcurrent = None
 	lib3mf_function_getdisplayname = None
 	lib3mf_function_setdisplayname = None
@@ -2801,6 +2802,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_implicitnode_getresource = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitnode_aretypesvalid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_implicitnode_aretypesvalid = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_nodeiterator_getcurrent")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -4728,6 +4735,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_implicitnode_getresource.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitnode_getresource.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_implicitnode_aretypesvalid.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitnode_aretypesvalid.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
 			
 			self.lib.lib3mf_nodeiterator_getcurrent.restype = ctypes.c_int32
 			self.lib.lib3mf_nodeiterator_getcurrent.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -8046,6 +8056,12 @@ class ImplicitNode(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return ResourceObject
+	
+	def AreTypesValid(self):
+		pValid = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitnode_aretypesvalid(self._handle, pValid))
+		
+		return pValid.value
 	
 
 

@@ -63,7 +63,6 @@ namespace NMR
         ModelResourceID m_modelResourceID;
         
         CModelImplicitFunction * m_parent = nullptr;
-
       public:
         CModelImplicitNode(Lib3MF::eImplicitNodeType type,
                            ImplicitIdentifier const & identifier,
@@ -91,8 +90,8 @@ namespace NMR
         PPorts getInputs() const;
         PPorts getOutputs() const;
 
-        PModelImplicitPort findInput(const std::string & sIdentifier);
-        PModelImplicitPort findOutput(const std::string & sIdentifier);
+        PModelImplicitPort findInput(const std::string & sIdentifier) const;
+        PModelImplicitPort findOutput(const std::string & sIdentifier) const;
 
         void setConstant(double value);
         double getConstant() const;
@@ -108,6 +107,7 @@ namespace NMR
         ModelResourceID getModelResourceID() const;
         PModelResource getResource() const;
 
+        bool arePortsValid() const;
     };
 
     using PModelImplicitNode = std::shared_ptr<CModelImplicitNode>;

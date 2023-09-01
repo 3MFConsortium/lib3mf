@@ -2628,6 +2628,15 @@ Lib3MFResult CCall_lib3mf_implicitnode_getresource(Lib3MFHandle libraryHandle, L
 }
 
 
+Lib3MFResult CCall_lib3mf_implicitnode_aretypesvalid(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, bool * pValid)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitNode_AreTypesValid (pImplicitNode, pValid);
+}
+
+
 Lib3MFResult CCall_lib3mf_nodeiterator_getcurrent(Lib3MFHandle libraryHandle, Lib3MF_NodeIterator pNodeIterator, Lib3MF_ImplicitNode * pNode)
 {
 	if (libraryHandle == 0) 
@@ -8483,6 +8492,16 @@ func (inst ImplicitNode) GetResource() (Resource, error) {
 		return Resource{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewResource(resource), nil
+}
+
+// AreTypesValid checks if the types of the input and output ports are valid for the node type.
+func (inst ImplicitNode) AreTypesValid() (bool, error) {
+	var valid C.bool
+	ret := C.CCall_lib3mf_implicitnode_aretypesvalid(inst.wrapperRef.LibraryHandle, inst.Ref, &valid)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(valid), nil
 }
 
 

@@ -10673,6 +10673,40 @@ Lib3MFResult lib3mf_implicitnode_getresource(Lib3MF_ImplicitNode pImplicitNode, 
 	}
 }
 
+Lib3MFResult lib3mf_implicitnode_aretypesvalid(Lib3MF_ImplicitNode pImplicitNode, bool * pValid)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitNode, "ImplicitNode", "AreTypesValid");
+		}
+		if (pValid == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IImplicitNode* pIImplicitNode = dynamic_cast<IImplicitNode*>(pIBaseClass);
+		if (!pIImplicitNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pValid = pIImplicitNode->AreTypesValid();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("Valid", *pValid);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 
 /*************************************************************************************************************************
  Class implementation for NodeIterator
@@ -17732,6 +17766,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_implicitnode_setresource;
 	if (sProcName == "lib3mf_implicitnode_getresource") 
 		*ppProcAddress = (void*) &lib3mf_implicitnode_getresource;
+	if (sProcName == "lib3mf_implicitnode_aretypesvalid") 
+		*ppProcAddress = (void*) &lib3mf_implicitnode_aretypesvalid;
 	if (sProcName == "lib3mf_nodeiterator_getcurrent") 
 		*ppProcAddress = (void*) &lib3mf_nodeiterator_getcurrent;
 	if (sProcName == "lib3mf_function_getdisplayname") 

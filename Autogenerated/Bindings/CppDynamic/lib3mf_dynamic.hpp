@@ -1744,6 +1744,7 @@ public:
 	inline sMatrix4x4 GetMatrix();
 	inline void SetResource(classParam<CResource> pResource);
 	inline PResource GetResource();
+	inline bool AreTypesValid();
 };
 	
 /*************************************************************************************************************************
@@ -2802,6 +2803,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ImplicitNode_GetMatrix = nullptr;
 		pWrapperTable->m_ImplicitNode_SetResource = nullptr;
 		pWrapperTable->m_ImplicitNode_GetResource = nullptr;
+		pWrapperTable->m_ImplicitNode_AreTypesValid = nullptr;
 		pWrapperTable->m_NodeIterator_GetCurrent = nullptr;
 		pWrapperTable->m_Function_GetDisplayName = nullptr;
 		pWrapperTable->m_Function_SetDisplayName = nullptr;
@@ -5594,6 +5596,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_ImplicitNode_GetResource == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitNode_AreTypesValid = (PLib3MFImplicitNode_AreTypesValidPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_aretypesvalid");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitNode_AreTypesValid = (PLib3MFImplicitNode_AreTypesValidPtr) dlsym(hLibrary, "lib3mf_implicitnode_aretypesvalid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitNode_AreTypesValid == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -8438,6 +8449,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_implicitnode_getresource", (void**)&(pWrapperTable->m_ImplicitNode_GetResource));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_GetResource == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitnode_aretypesvalid", (void**)&(pWrapperTable->m_ImplicitNode_AreTypesValid));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitNode_AreTypesValid == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_nodeiterator_getcurrent", (void**)&(pWrapperTable->m_NodeIterator_GetCurrent));
@@ -12842,6 +12857,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CResource>(dynamic_cast<CResource*>(m_pWrapper->polymorphicFactory(hResource)));
+	}
+	
+	/**
+	* CImplicitNode::AreTypesValid - Checks if the types of the input and output ports are valid for the node type
+	* @return true, if the types are valid
+	*/
+	bool CImplicitNode::AreTypesValid()
+	{
+		bool resultValid = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_AreTypesValid(m_pHandle, &resultValid));
+		
+		return resultValid;
 	}
 	
 	/**

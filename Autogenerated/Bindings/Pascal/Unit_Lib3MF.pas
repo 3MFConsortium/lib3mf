@@ -3498,6 +3498,15 @@ type
 	*)
 	TLib3MFImplicitNode_GetResourceFunc = function(pImplicitNode: TLib3MFHandle; out pResource: TLib3MFHandle): TLib3MFResult; cdecl;
 	
+	(**
+	* Checks if the types of the input and output ports are valid for the node type
+	*
+	* @param[in] pImplicitNode - ImplicitNode instance.
+	* @param[out] pValid - true, if the types are valid
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitNode_AreTypesValidFunc = function(pImplicitNode: TLib3MFHandle; out pValid: Byte): TLib3MFResult; cdecl;
+	
 
 (*************************************************************************************************************************
  Function type definitions for NodeIterator
@@ -6226,6 +6235,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetMatrix(): TLib3MFMatrix4x4;
 		procedure SetResource(const AResource: TLib3MFResource);
 		function GetResource(): TLib3MFResource;
+		function AreTypesValid(): Boolean;
 	end;
 
 
@@ -6853,6 +6863,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFImplicitNode_GetMatrixFunc: TLib3MFImplicitNode_GetMatrixFunc;
 		FLib3MFImplicitNode_SetResourceFunc: TLib3MFImplicitNode_SetResourceFunc;
 		FLib3MFImplicitNode_GetResourceFunc: TLib3MFImplicitNode_GetResourceFunc;
+		FLib3MFImplicitNode_AreTypesValidFunc: TLib3MFImplicitNode_AreTypesValidFunc;
 		FLib3MFNodeIterator_GetCurrentFunc: TLib3MFNodeIterator_GetCurrentFunc;
 		FLib3MFFunction_GetDisplayNameFunc: TLib3MFFunction_GetDisplayNameFunc;
 		FLib3MFFunction_SetDisplayNameFunc: TLib3MFFunction_SetDisplayNameFunc;
@@ -7335,6 +7346,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFImplicitNode_GetMatrixFunc: TLib3MFImplicitNode_GetMatrixFunc read FLib3MFImplicitNode_GetMatrixFunc;
 		property Lib3MFImplicitNode_SetResourceFunc: TLib3MFImplicitNode_SetResourceFunc read FLib3MFImplicitNode_SetResourceFunc;
 		property Lib3MFImplicitNode_GetResourceFunc: TLib3MFImplicitNode_GetResourceFunc read FLib3MFImplicitNode_GetResourceFunc;
+		property Lib3MFImplicitNode_AreTypesValidFunc: TLib3MFImplicitNode_AreTypesValidFunc read FLib3MFImplicitNode_AreTypesValidFunc;
 		property Lib3MFNodeIterator_GetCurrentFunc: TLib3MFNodeIterator_GetCurrentFunc read FLib3MFNodeIterator_GetCurrentFunc;
 		property Lib3MFFunction_GetDisplayNameFunc: TLib3MFFunction_GetDisplayNameFunc read FLib3MFFunction_GetDisplayNameFunc;
 		property Lib3MFFunction_SetDisplayNameFunc: TLib3MFFunction_SetDisplayNameFunc read FLib3MFFunction_SetDisplayNameFunc;
@@ -11810,6 +11822,15 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFResource, TLib3MFResource>.Make(FWrapper, HResource);
 	end;
 
+	function TLib3MFImplicitNode.AreTypesValid(): Boolean;
+	var
+		ResultValid: Byte;
+	begin
+		ResultValid := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitNode_AreTypesValidFunc(FHandle, ResultValid));
+		Result := (ResultValid <> 0);
+	end;
+
 (*************************************************************************************************************************
  Class implementation for NodeIterator
 **************************************************************************************************************************)
@@ -14076,6 +14097,7 @@ implementation
 		FLib3MFImplicitNode_GetMatrixFunc := LoadFunction('lib3mf_implicitnode_getmatrix');
 		FLib3MFImplicitNode_SetResourceFunc := LoadFunction('lib3mf_implicitnode_setresource');
 		FLib3MFImplicitNode_GetResourceFunc := LoadFunction('lib3mf_implicitnode_getresource');
+		FLib3MFImplicitNode_AreTypesValidFunc := LoadFunction('lib3mf_implicitnode_aretypesvalid');
 		FLib3MFNodeIterator_GetCurrentFunc := LoadFunction('lib3mf_nodeiterator_getcurrent');
 		FLib3MFFunction_GetDisplayNameFunc := LoadFunction('lib3mf_function_getdisplayname');
 		FLib3MFFunction_SetDisplayNameFunc := LoadFunction('lib3mf_function_setdisplayname');
@@ -15125,6 +15147,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_getresource'), @FLib3MFImplicitNode_GetResourceFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_aretypesvalid'), @FLib3MFImplicitNode_AreTypesValidFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_nodeiterator_getcurrent'), @FLib3MFNodeIterator_GetCurrentFunc);

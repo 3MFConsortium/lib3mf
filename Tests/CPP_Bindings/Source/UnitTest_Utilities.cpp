@@ -89,6 +89,10 @@ namespace Lib3MF
 
                 auto node1 = nodeIterator1->GetCurrent();
                 auto node2 = nodeIterator2->GetCurrent();
+
+                EXPECT_TRUE(node1->AreTypesValid());
+                EXPECT_TRUE(node2->AreTypesValid());
+
                 EXPECT_EQ(node1->GetIdentifier(), node2->GetIdentifier());
                 EXPECT_EQ(node1->GetNodeType(), node2->GetNodeType());
                 EXPECT_EQ(node1->GetDisplayName(), node2->GetDisplayName());

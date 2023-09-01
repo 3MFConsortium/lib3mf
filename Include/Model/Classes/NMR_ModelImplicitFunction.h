@@ -84,6 +84,8 @@ namespace NMR
                      const ImplicitIdentifier & sTargetNodeIdentifier);
 
         void addLink(CModelImplicitPort const & pSourcePort, CModelImplicitPort & pTargetPort);
+
+        implicit::NodeTypes const & getNodeTypes() const;
     };
 
     using PModelImplicitFunction = std::shared_ptr<CModelImplicitFunction>;

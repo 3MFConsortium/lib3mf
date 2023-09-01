@@ -2972,6 +2972,15 @@ typedef Lib3MFResult (*PLib3MFImplicitNode_SetResourcePtr) (Lib3MF_ImplicitNode 
 */
 typedef Lib3MFResult (*PLib3MFImplicitNode_GetResourcePtr) (Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Resource * pResource);
 
+/**
+* Checks if the types of the input and output ports are valid for the node type
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[out] pValid - true, if the types are valid
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitNode_AreTypesValidPtr) (Lib3MF_ImplicitNode pImplicitNode, bool * pValid);
+
 /*************************************************************************************************************************
  Class definition for NodeIterator
 **************************************************************************************************************************/
@@ -5162,6 +5171,7 @@ typedef struct {
 	PLib3MFImplicitNode_GetMatrixPtr m_ImplicitNode_GetMatrix;
 	PLib3MFImplicitNode_SetResourcePtr m_ImplicitNode_SetResource;
 	PLib3MFImplicitNode_GetResourcePtr m_ImplicitNode_GetResource;
+	PLib3MFImplicitNode_AreTypesValidPtr m_ImplicitNode_AreTypesValid;
 	PLib3MFNodeIterator_GetCurrentPtr m_NodeIterator_GetCurrent;
 	PLib3MFFunction_GetDisplayNamePtr m_Function_GetDisplayName;
 	PLib3MFFunction_SetDisplayNamePtr m_Function_SetDisplayName;

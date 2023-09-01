@@ -1720,6 +1720,7 @@ public:
 	inline sMatrix4x4 GetMatrix();
 	inline void SetResource(classParam<CResource> pResource);
 	inline PResource GetResource();
+	inline bool AreTypesValid();
 };
 	
 /*************************************************************************************************************************
@@ -6134,6 +6135,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CResource>(dynamic_cast<CResource*>(m_pWrapper->polymorphicFactory(hResource)));
+	}
+	
+	/**
+	* CImplicitNode::AreTypesValid - Checks if the types of the input and output ports are valid for the node type
+	* @return true, if the types are valid
+	*/
+	bool CImplicitNode::AreTypesValid()
+	{
+		bool resultValid = 0;
+		CheckError(lib3mf_implicitnode_aretypesvalid(m_pHandle, &resultValid));
+		
+		return resultValid;
 	}
 	
 	/**

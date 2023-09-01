@@ -1277,6 +1277,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_getresource", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitNode_GetResource (IntPtr Handle, out IntPtr AResource);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_aretypesvalid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitNode_AreTypesValid (IntPtr Handle, out Byte AValid);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_nodeiterator_getcurrent", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 NodeIterator_GetCurrent (IntPtr Handle, out IntPtr ANode);
 
@@ -5155,6 +5158,14 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.ImplicitNode_GetResource (Handle, out newResource));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CResource>(newResource);
+		}
+
+		public bool AreTypesValid ()
+		{
+			Byte resultValid = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitNode_AreTypesValid (Handle, out resultValid));
+			return (resultValid != 0);
 		}
 
 	}

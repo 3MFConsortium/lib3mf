@@ -205,6 +205,13 @@ namespace Lib3MF
              * @return the resource
              */
             IResource *GetResource() override;
+
+            /**
+             * IImplicitNode::AreTypesValid - Checks if the types of the input
+             * and output ports are valid for the node type
+             * @return true, if the types are valid
+             */
+            bool AreTypesValid() override;
         };
 
     } // namespace Impl

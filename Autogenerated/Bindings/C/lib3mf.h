@@ -2985,6 +2985,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_setresource(Lib3MF_ImplicitNode
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getresource(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Resource * pResource);
 
+/**
+* Checks if the types of the input and output ports are valid for the node type
+*
+* @param[in] pImplicitNode - ImplicitNode instance.
+* @param[out] pValid - true, if the types are valid
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_aretypesvalid(Lib3MF_ImplicitNode pImplicitNode, bool * pValid);
+
 /*************************************************************************************************************************
  Class definition for NodeIterator
 **************************************************************************************************************************/

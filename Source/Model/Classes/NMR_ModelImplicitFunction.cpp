@@ -31,6 +31,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Common/NMR_Exception.h"
 #include "Model/Classes/NMR_ImplicitNodeTypes.h"
 #include "Model/Classes/NMR_ModelImplicitPort.h"
+#include "Model/Classes/NMR_ModelImplicitFunction.h"
 
 namespace NMR
 {
@@ -173,7 +174,12 @@ namespace NMR
                                                          pSourcePort.getIdentifier()));
     }
 
-    std::string extractNodeName(const ImplicitIdentifier & sIdentifier)
+    implicit::NodeTypes const& CModelImplicitFunction::getNodeTypes() const
+    {
+        return m_nodeTypes;
+    }
+    
+    std::string extractNodeName(const ImplicitIdentifier& sIdentifier)
     {
         auto pos = sIdentifier.find_last_of(".");
         if (pos == std::string::npos)

@@ -1125,6 +1125,7 @@ private:
 	static void GetMatrix(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetResource(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetResource(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AreTypesValid(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFImplicitNode();

@@ -31,8 +31,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <lib3mf_types.hpp>
 #include <map>
 #include <string>
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 namespace NMR
 {
@@ -90,11 +90,16 @@ namespace NMR
 
             void addExpectedPortsToNode(NMR::CModelImplicitNode& node) const;
 
-            void applyInputOutputRuleToNode(
-                NMR::CModelImplicitNode& node,
-                InputOutputRule const& rule) const;
+            void applyInputOutputRuleToNode(NMR::CModelImplicitNode& node,
+                                            InputOutputRule const& rule) const;
+
+            bool arePortsValidForNode(NMR::CModelImplicitNode const& node) const;
+
            private:
             NodeTypesMap m_nodeTypes;
+
+            bool arePortsValidForRule(NMR::CModelImplicitNode const& node,
+                                      InputOutputRule const& rule) const;
         };
 
         NodeTypes const& getNodeTypes();

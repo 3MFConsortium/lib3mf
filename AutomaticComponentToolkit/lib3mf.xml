@@ -1993,6 +1993,10 @@
 			<param name="Resource" type="class" class="Resource" pass="return"
 				description="the resource" />
 		</method>
+
+		<method name="AreTypesValid" description="Checks if the types of the input and output ports are valid for the node type">
+			<param name="Valid" type="bool" pass="return" description="true, if the types are valid" />
+		</method>
 	</class>
 
 	<class name="NodeIterator" parent="Iterator">

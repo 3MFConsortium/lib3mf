@@ -160,3 +160,8 @@ IResource * Lib3MF::Impl::CImplicitNode::GetResource()
 	return new CResource(m_pImplicitNode->getResource());
 }
 
+bool Lib3MF::Impl::CImplicitNode::AreTypesValid()
+{
+    return m_pImplicitNode->arePortsValid();
+}
+

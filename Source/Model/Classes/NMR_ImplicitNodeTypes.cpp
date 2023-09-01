@@ -57,7 +57,7 @@ namespace NMR
         using namespace Lib3MF;
         NodeTypes::NodeTypes()
         {
-            AllowedInputOutputs const commutativeScalarVecMat{
+            static AllowedInputOutputs const commutativeScalarVecMat{
                 InputOutputRule{In{{"A", eImplicitPortType::Scalar},
                                    {"B", eImplicitPortType::Scalar}},
                                 Out{{"result", eImplicitPortType::Scalar}}},
@@ -85,7 +85,7 @@ namespace NMR
                                 Out{{"result", eImplicitPortType::Matrix}}},
             };
 
-            AllowedInputOutputs const oneParameterFunctionSameDimensions{
+            static AllowedInputOutputs const oneParameterFunctionSameDimensions{
                 InputOutputRule{In{{"A", eImplicitPortType::Scalar}},
                                 Out{{"result", eImplicitPortType::Scalar}}},
                 InputOutputRule{In{{"A", eImplicitPortType::Vector}},
@@ -433,6 +433,52 @@ namespace NMR
                 auto outPort = node.addOutput(output.first, output.first);
                 outPort->setType(output.second);
             }
+        }
+
+        bool NodeTypes::arePortsValidForNode(
+            NMR::CModelImplicitNode const& node) const
+        {
+            auto const& nodeType = getNodeType(node.getNodeType());
+            for(auto const& rule : nodeType.getAllowedInputOutputs())
+            {
+                if(arePortsValidForRule(node, rule))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        bool NodeTypes::arePortsValidForRule(NMR::CModelImplicitNode const& node,
+                                             InputOutputRule const& rule) const
+        {
+            for(auto const& input : rule.inputs)
+            {
+                auto inPort = node.findInput(input.first);
+                if(inPort == nullptr)
+                {
+                    return false;
+                }
+                if(inPort->getType() != input.second)
+                {
+                    return false;
+                }
+            }
+
+            for(auto const& output : rule.outputs)
+            {
+                auto outPort = node.findOutput(output.first);
+                if(outPort == nullptr)
+                {
+                    return false;
+                }
+                if(outPort->getType() != output.second)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
     }  // namespace implicit

@@ -332,6 +332,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ImplicitNode_GetMatrix = NULL;
 	pWrapperTable->m_ImplicitNode_SetResource = NULL;
 	pWrapperTable->m_ImplicitNode_GetResource = NULL;
+	pWrapperTable->m_ImplicitNode_AreTypesValid = NULL;
 	pWrapperTable->m_NodeIterator_GetCurrent = NULL;
 	pWrapperTable->m_Function_GetDisplayName = NULL;
 	pWrapperTable->m_Function_SetDisplayName = NULL;
@@ -3128,6 +3129,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_ImplicitNode_GetResource == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitNode_AreTypesValid = (PLib3MFImplicitNode_AreTypesValidPtr) GetProcAddress(hLibrary, "lib3mf_implicitnode_aretypesvalid");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitNode_AreTypesValid = (PLib3MFImplicitNode_AreTypesValidPtr) dlsym(hLibrary, "lib3mf_implicitnode_aretypesvalid");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitNode_AreTypesValid == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

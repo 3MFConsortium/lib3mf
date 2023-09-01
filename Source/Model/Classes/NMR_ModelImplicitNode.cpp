@@ -27,43 +27,46 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --*/
 
 #include "Model/Classes/NMR_ModelImplicitNode.h"
-#include "Model/Classes/NMR_ImplicitNodeTypes.h"
-#include "Model/Classes/NMR_ModelImplicitFunction.h"
-#include "Common/NMR_Exception.h"
 
 #include <memory>
 
+#include "Common/NMR_Exception.h"
+#include "Model/Classes/NMR_ImplicitNodeTypes.h"
+#include "Model/Classes/NMR_ModelImplicitFunction.h"
+#include "Model/Classes/NMR_ModelImplicitNode.h"
+
 namespace NMR
 {
-   
+
     CModelImplicitNode::CModelImplicitNode(Lib3MF::eImplicitNodeType type,
-                                           ImplicitIdentifier const & identifier,
-                                           std::string const & displayname,
+                                           ImplicitIdentifier const& identifier,
+                                           std::string const& displayname,
                                            std::string const& tag,
-                                           CModelImplicitFunction * parent)
-        : m_type(type)
-        , m_identifier(identifier)
-        , m_displayname(displayname)
-        , m_tag(tag)
-        , m_parent(parent)
+                                           CModelImplicitFunction* parent)
+        : m_type(type),
+          m_identifier(identifier),
+          m_displayname(displayname),
+          m_tag(tag),
+          m_parent(parent)
     {
         m_outputs = std::make_shared<Ports>();
         m_inputs = std::make_shared<Ports>();
     }
 
-    CModelImplicitNode::CModelImplicitNode(Lib3MF::eImplicitNodeType type, CModelImplicitFunction * parent)
+    CModelImplicitNode::CModelImplicitNode(Lib3MF::eImplicitNodeType type,
+                                           CModelImplicitFunction* parent)
         : m_type(type), m_parent(parent)
     {
         m_outputs = std::make_shared<Ports>();
         m_inputs = std::make_shared<Ports>();
     }
 
-    ImplicitIdentifier const & CModelImplicitNode::getIdentifier() const
+    ImplicitIdentifier const& CModelImplicitNode::getIdentifier() const
     {
         return m_identifier;
     }
 
-    std::string const & CModelImplicitNode::getDisplayName() const
+    std::string const& CModelImplicitNode::getDisplayName() const
     {
         return m_displayname;
     }
@@ -98,19 +101,20 @@ namespace NMR
         return m_type;
     }
 
-    PModelImplicitPort CModelImplicitNode::addInput(const std::string & sIdentifier,
-                                                    const std::string & sDisplayName)
+    PModelImplicitPort CModelImplicitNode::addInput(
+        const std::string& sIdentifier, const std::string& sDisplayName)
     {
-
-        auto newPort = std::make_shared<CModelImplicitPort>(this, sIdentifier, sDisplayName);
+        auto newPort = std::make_shared<CModelImplicitPort>(this, sIdentifier,
+                                                            sDisplayName);
         m_inputs->push_back(newPort);
         return newPort;
     }
 
-    PModelImplicitPort CModelImplicitNode::addOutput(const std::string & sIdentifier,
-                                                     const std::string & sDisplayName)
+    PModelImplicitPort CModelImplicitNode::addOutput(
+        const std::string& sIdentifier, const std::string& sDisplayName)
     {
-        auto newPort = std::make_shared<CModelImplicitPort>(this, sIdentifier, sDisplayName);
+        auto newPort = std::make_shared<CModelImplicitPort>(this, sIdentifier,
+                                                            sDisplayName);
         m_outputs->push_back(newPort);
         return newPort;
     }
@@ -125,11 +129,12 @@ namespace NMR
         return m_outputs;
     }
 
-    PModelImplicitPort NMR::CModelImplicitNode::findInput(const std::string & sIdentifier)
+    PModelImplicitPort NMR::CModelImplicitNode::findInput(
+        const std::string& sIdentifier) const
     {
-        for (auto & port : *m_inputs)
+        for(auto& port : *m_inputs)
         {
-            if (port->getIdentifier() == sIdentifier)
+            if(port->getIdentifier() == sIdentifier)
             {
                 return port;
             }
@@ -137,11 +142,12 @@ namespace NMR
         return {};
     }
 
-    PModelImplicitPort CModelImplicitNode::findOutput(const std::string & sIdentifier)
+    PModelImplicitPort CModelImplicitNode::findOutput(
+        const std::string& sIdentifier) const
     {
-        for (auto & port : *m_outputs)
+        for(auto& port : *m_outputs)
         {
-            if (port->getIdentifier() == sIdentifier)
+            if(port->getIdentifier() == sIdentifier)
             {
                 return port;
             }
@@ -151,83 +157,86 @@ namespace NMR
 
     void NMR::CModelImplicitNode::setConstant(double value)
     {
-        if (m_type != Lib3MF::eImplicitNodeType::Constant)
+        if(m_type != Lib3MF::eImplicitNodeType::Constant)
             throw CNMRException(NMR_ERROR_INVALIDPARAM);
         m_constant = value;
     }
     double CModelImplicitNode::getConstant() const
     {
-        if (m_type != Lib3MF::eImplicitNodeType::Constant)
+        if(m_type != Lib3MF::eImplicitNodeType::Constant)
             throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
         return m_constant;
     }
 
-    void NMR::CModelImplicitNode::setVector(const Lib3MF::sVector & value)
+    void NMR::CModelImplicitNode::setVector(const Lib3MF::sVector& value)
     {
-        if (m_type != Lib3MF::eImplicitNodeType::ConstVec)
+        if(m_type != Lib3MF::eImplicitNodeType::ConstVec)
             throw CNMRException(NMR_ERROR_INVALIDPARAM);
         m_vector = std::unique_ptr<Lib3MF::sVector>(new Lib3MF::sVector(value));
     }
 
     Lib3MF::sVector CModelImplicitNode::getVector() const
     {
-        if (m_type != Lib3MF::eImplicitNodeType::ConstVec)
+        if(m_type != Lib3MF::eImplicitNodeType::ConstVec)
             throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-        if (!m_vector)
-            throw CNMRException(NMR_ERROR_INVALIDPARAM);
+        if(!m_vector) throw CNMRException(NMR_ERROR_INVALIDPARAM);
         return *m_vector;
     }
 
     void CModelImplicitNode::setMatrix(const Lib3MF::sMatrix4x4& value)
     {
-        if (m_type != Lib3MF::eImplicitNodeType::ConstMat)
+        if(m_type != Lib3MF::eImplicitNodeType::ConstMat)
             throw CNMRException(NMR_ERROR_INVALIDPARAM);
-        m_matrix = std::unique_ptr<Lib3MF::sMatrix4x4>(new Lib3MF::sMatrix4x4(value));
+        m_matrix =
+            std::unique_ptr<Lib3MF::sMatrix4x4>(new Lib3MF::sMatrix4x4(value));
     }
 
     Lib3MF::sMatrix4x4 CModelImplicitNode::getMatrix() const
     {
-        if (m_type != Lib3MF::eImplicitNodeType::ConstMat)
+        if(m_type != Lib3MF::eImplicitNodeType::ConstMat)
             throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-        if (!m_matrix)
-            throw CNMRException(NMR_ERROR_INVALIDPARAM);
+        if(!m_matrix) throw CNMRException(NMR_ERROR_INVALIDPARAM);
         return *m_matrix;
     }
 
     void CModelImplicitNode::setModelResourceID(UniqueResourceID resourceID)
     {
-        if (m_type != Lib3MF::eImplicitNodeType::Resource)
+        if(m_type != Lib3MF::eImplicitNodeType::Resource)
             throw CNMRException(NMR_ERROR_INVALIDPARAM);
         m_modelResourceID = resourceID;
     }
 
     UniqueResourceID CModelImplicitNode::getModelResourceID() const
     {
-        if (m_type != Lib3MF::eImplicitNodeType::Resource)
+        if(m_type != Lib3MF::eImplicitNodeType::Resource)
             throw CNMRException(NMR_ERROR_INVALIDPARAM);
-            
+
         return m_modelResourceID;
     }
 
     PModelResource NMR::CModelImplicitNode::getResource() const
     {
-        if (m_parent == nullptr)
+        if(m_parent == nullptr)
         {
             return nullptr;
         }
-    
+
         auto model = m_parent->getModel();
 
-        if (model == nullptr)
+        if(model == nullptr)
         {
             return nullptr;
         }
 
         return model->findResource(model->currentPath(), m_modelResourceID);
     }
-}
 
+    bool CModelImplicitNode::arePortsValid() const
+    {
+        return m_parent->getNodeTypes().arePortsValidForNode(*this);
+    }
 
+}  // namespace NMR
