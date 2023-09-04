@@ -416,6 +416,11 @@ namespace NMR {
 						writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FUNCTIONID, pID->getModelResourceID());
 						if (!pProperty->isRequired())
 							writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY_REQUIRED, "false");
+
+						if (!pProperty->getChannelName().empty())
+						{
+							writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pProperty->getChannelName());
+						}
 						writeEndElement();
 					}
 				}
@@ -432,6 +437,11 @@ namespace NMR {
 
 					if (!fnMATRIX3_isIdentity(pColor->getTransform())) {
 						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pColor->getTransform()));
+					}
+
+					if (!pColor->getChannelName().empty())
+					{
+						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pColor->getChannelName());
 					}
 					writeEndElement();
 				}

@@ -772,6 +772,7 @@ namespace Lib3MF
         // Set transformation
         auto transformation = helper::ComputeTransformFromMeshCoordinatesToUVW(theMesh);
         theColor->SetTransform(transformation);
+        theColor->SetChannelName("color");
     
         // Write to file
         writer3MF = model->QueryWriter("3mf");
