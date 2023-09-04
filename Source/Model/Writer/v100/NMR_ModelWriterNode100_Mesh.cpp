@@ -391,9 +391,9 @@ namespace NMR {
 						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pBoundary->getTransform()));
 					}
 
-					if (!pBoundary->getOutputName().empty())
+					if (!pBoundary->getChannelName().empty())
 					{
-						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pBoundary->getOutputName());
+						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pBoundary->getChannelName());
 					}
 					writeEndElement();
 				}

@@ -1926,7 +1926,7 @@ type
 **************************************************************************************************************************)
 
 	(**
-	* Returns the UniqueResourceID of the Function.
+	* Returns the UniqueResourceID of the Function. Only functions with a 'pos'-input are allowed.
 	*
 	* @param[in] pFunctionReference - FunctionReference instance.
 	* @param[out] pUniqueResourceID - returns the UniqueResourceID.
@@ -1962,24 +1962,24 @@ type
 	TLib3MFFunctionReference_SetTransformFunc = function(pFunctionReference: TLib3MFHandle; const pTransform: PLib3MFTransform): TLib3MFResult; cdecl;
 	
 	(**
-	* Returns the name of the function output to use.
+	* Returns the name of the function output channel to use.
 	*
 	* @param[in] pFunctionReference - FunctionReference instance.
-	* @param[in] nOutputNameBufferSize - size of the buffer (including trailing 0)
-	* @param[out] pOutputNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pOutputNameBuffer -  buffer of the name of the function output, may be NULL
+	* @param[in] nChannelNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pChannelNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pChannelNameBuffer -  buffer of the name of the function output channel, may be NULL
 	* @return error code or 0 (success)
 	*)
-	TLib3MFFunctionReference_GetOutputNameFunc = function(pFunctionReference: TLib3MFHandle; const nOutputNameBufferSize: Cardinal; out pOutputNameNeededChars: Cardinal; pOutputNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	TLib3MFFunctionReference_GetChannelNameFunc = function(pFunctionReference: TLib3MFHandle; const nChannelNameBufferSize: Cardinal; out pChannelNameNeededChars: Cardinal; pChannelNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
-	* Sets the name of the function output to use.
+	* Sets the name of the function output channel to use.
 	*
 	* @param[in] pFunctionReference - FunctionReference instance.
-	* @param[in] pOutputName - new name of the function output
+	* @param[in] pChannelName - new name of the function output channel
 	* @return error code or 0 (success)
 	*)
-	TLib3MFFunctionReference_SetOutputNameFunc = function(pFunctionReference: TLib3MFHandle; const pOutputName: PAnsiChar): TLib3MFResult; cdecl;
+	TLib3MFFunctionReference_SetChannelNameFunc = function(pFunctionReference: TLib3MFHandle; const pChannelName: PAnsiChar): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -5846,8 +5846,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure SetFunctionResourceID(const AUniqueResourceID: Cardinal);
 		function GetTransform(): TLib3MFTransform;
 		procedure SetTransform(const ATransform: TLib3MFTransform);
-		function GetOutputName(): String;
-		procedure SetOutputName(const AOutputName: String);
+		function GetChannelName(): String;
+		procedure SetChannelName(const AChannelName: String);
 	end;
 
 
@@ -6716,8 +6716,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFFunctionReference_SetFunctionResourceIDFunc: TLib3MFFunctionReference_SetFunctionResourceIDFunc;
 		FLib3MFFunctionReference_GetTransformFunc: TLib3MFFunctionReference_GetTransformFunc;
 		FLib3MFFunctionReference_SetTransformFunc: TLib3MFFunctionReference_SetTransformFunc;
-		FLib3MFFunctionReference_GetOutputNameFunc: TLib3MFFunctionReference_GetOutputNameFunc;
-		FLib3MFFunctionReference_SetOutputNameFunc: TLib3MFFunctionReference_SetOutputNameFunc;
+		FLib3MFFunctionReference_GetChannelNameFunc: TLib3MFFunctionReference_GetChannelNameFunc;
+		FLib3MFFunctionReference_SetChannelNameFunc: TLib3MFFunctionReference_SetChannelNameFunc;
 		FLib3MFVolumeDataBoundary_GetSolidThresholdFunc: TLib3MFVolumeDataBoundary_GetSolidThresholdFunc;
 		FLib3MFVolumeDataBoundary_SetSolidThresholdFunc: TLib3MFVolumeDataBoundary_SetSolidThresholdFunc;
 		FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc: TLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc;
@@ -7199,8 +7199,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFFunctionReference_SetFunctionResourceIDFunc: TLib3MFFunctionReference_SetFunctionResourceIDFunc read FLib3MFFunctionReference_SetFunctionResourceIDFunc;
 		property Lib3MFFunctionReference_GetTransformFunc: TLib3MFFunctionReference_GetTransformFunc read FLib3MFFunctionReference_GetTransformFunc;
 		property Lib3MFFunctionReference_SetTransformFunc: TLib3MFFunctionReference_SetTransformFunc read FLib3MFFunctionReference_SetTransformFunc;
-		property Lib3MFFunctionReference_GetOutputNameFunc: TLib3MFFunctionReference_GetOutputNameFunc read FLib3MFFunctionReference_GetOutputNameFunc;
-		property Lib3MFFunctionReference_SetOutputNameFunc: TLib3MFFunctionReference_SetOutputNameFunc read FLib3MFFunctionReference_SetOutputNameFunc;
+		property Lib3MFFunctionReference_GetChannelNameFunc: TLib3MFFunctionReference_GetChannelNameFunc read FLib3MFFunctionReference_GetChannelNameFunc;
+		property Lib3MFFunctionReference_SetChannelNameFunc: TLib3MFFunctionReference_SetChannelNameFunc read FLib3MFFunctionReference_SetChannelNameFunc;
 		property Lib3MFVolumeDataBoundary_GetSolidThresholdFunc: TLib3MFVolumeDataBoundary_GetSolidThresholdFunc read FLib3MFVolumeDataBoundary_GetSolidThresholdFunc;
 		property Lib3MFVolumeDataBoundary_SetSolidThresholdFunc: TLib3MFVolumeDataBoundary_SetSolidThresholdFunc read FLib3MFVolumeDataBoundary_SetSolidThresholdFunc;
 		property Lib3MFVolumeDataComposite_GetBaseMaterialGroupFunc: TLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc read FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc;
@@ -10224,23 +10224,23 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionReference_SetTransformFunc(FHandle, @ATransform));
 	end;
 
-	function TLib3MFFunctionReference.GetOutputName(): String;
+	function TLib3MFFunctionReference.GetChannelName(): String;
 	var
-		bytesNeededOutputName: Cardinal;
-		bytesWrittenOutputName: Cardinal;
-		bufferOutputName: array of Char;
+		bytesNeededChannelName: Cardinal;
+		bytesWrittenChannelName: Cardinal;
+		bufferChannelName: array of Char;
 	begin
-		bytesNeededOutputName:= 0;
-		bytesWrittenOutputName:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionReference_GetOutputNameFunc(FHandle, 0, bytesNeededOutputName, nil));
-		SetLength(bufferOutputName, bytesNeededOutputName);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionReference_GetOutputNameFunc(FHandle, bytesNeededOutputName, bytesWrittenOutputName, @bufferOutputName[0]));
-		Result := StrPas(@bufferOutputName[0]);
+		bytesNeededChannelName:= 0;
+		bytesWrittenChannelName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionReference_GetChannelNameFunc(FHandle, 0, bytesNeededChannelName, nil));
+		SetLength(bufferChannelName, bytesNeededChannelName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionReference_GetChannelNameFunc(FHandle, bytesNeededChannelName, bytesWrittenChannelName, @bufferChannelName[0]));
+		Result := StrPas(@bufferChannelName[0]);
 	end;
 
-	procedure TLib3MFFunctionReference.SetOutputName(const AOutputName: String);
+	procedure TLib3MFFunctionReference.SetChannelName(const AChannelName: String);
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionReference_SetOutputNameFunc(FHandle, PAnsiChar(AOutputName)));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionReference_SetChannelNameFunc(FHandle, PAnsiChar(AChannelName)));
 	end;
 
 (*************************************************************************************************************************
@@ -13950,8 +13950,8 @@ implementation
 		FLib3MFFunctionReference_SetFunctionResourceIDFunc := LoadFunction('lib3mf_functionreference_setfunctionresourceid');
 		FLib3MFFunctionReference_GetTransformFunc := LoadFunction('lib3mf_functionreference_gettransform');
 		FLib3MFFunctionReference_SetTransformFunc := LoadFunction('lib3mf_functionreference_settransform');
-		FLib3MFFunctionReference_GetOutputNameFunc := LoadFunction('lib3mf_functionreference_getoutputname');
-		FLib3MFFunctionReference_SetOutputNameFunc := LoadFunction('lib3mf_functionreference_setoutputname');
+		FLib3MFFunctionReference_GetChannelNameFunc := LoadFunction('lib3mf_functionreference_getchannelname');
+		FLib3MFFunctionReference_SetChannelNameFunc := LoadFunction('lib3mf_functionreference_setchannelname');
 		FLib3MFVolumeDataBoundary_GetSolidThresholdFunc := LoadFunction('lib3mf_volumedataboundary_getsolidthreshold');
 		FLib3MFVolumeDataBoundary_SetSolidThresholdFunc := LoadFunction('lib3mf_volumedataboundary_setsolidthreshold');
 		FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc := LoadFunction('lib3mf_volumedatacomposite_getbasematerialgroup');
@@ -14708,10 +14708,10 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_functionreference_settransform'), @FLib3MFFunctionReference_SetTransformFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_functionreference_getoutputname'), @FLib3MFFunctionReference_GetOutputNameFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functionreference_getchannelname'), @FLib3MFFunctionReference_GetChannelNameFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_functionreference_setoutputname'), @FLib3MFFunctionReference_SetOutputNameFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functionreference_setchannelname'), @FLib3MFFunctionReference_SetChannelNameFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataboundary_getsolidthreshold'), @FLib3MFVolumeDataBoundary_GetSolidThresholdFunc);

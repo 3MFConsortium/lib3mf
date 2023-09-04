@@ -5145,47 +5145,47 @@ Lib3MFResult lib3mf_functionreference_settransform(Lib3MF_FunctionReference pFun
 	}
 }
 
-Lib3MFResult lib3mf_functionreference_getoutputname(Lib3MF_FunctionReference pFunctionReference, const Lib3MF_uint32 nOutputNameBufferSize, Lib3MF_uint32* pOutputNameNeededChars, char * pOutputNameBuffer)
+Lib3MFResult lib3mf_functionreference_getchannelname(Lib3MF_FunctionReference pFunctionReference, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer)
 {
 	IBase* pIBaseClass = (IBase *)pFunctionReference;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionReference, "FunctionReference", "GetOutputName");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionReference, "FunctionReference", "GetChannelName");
 		}
-		if ( (!pOutputNameBuffer) && !(pOutputNameNeededChars) )
+		if ( (!pChannelNameBuffer) && !(pChannelNameNeededChars) )
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sOutputName("");
+		std::string sChannelName("");
 		IFunctionReference* pIFunctionReference = dynamic_cast<IFunctionReference*>(pIBaseClass);
 		if (!pIFunctionReference)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		bool isCacheCall = (pOutputNameBuffer == nullptr);
+		bool isCacheCall = (pChannelNameBuffer == nullptr);
 		if (isCacheCall) {
-			sOutputName = pIFunctionReference->GetOutputName();
+			sChannelName = pIFunctionReference->GetChannelName();
 
-			pIFunctionReference->_setCache (new ParameterCache_1<std::string> (sOutputName));
+			pIFunctionReference->_setCache (new ParameterCache_1<std::string> (sChannelName));
 		}
 		else {
 			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIFunctionReference->_getCache ());
 			if (cache == nullptr)
 				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-			cache->retrieveData (sOutputName);
+			cache->retrieveData (sChannelName);
 			pIFunctionReference->_setCache (nullptr);
 		}
 		
-		if (pOutputNameNeededChars)
-			*pOutputNameNeededChars = (Lib3MF_uint32) (sOutputName.size()+1);
-		if (pOutputNameBuffer) {
-			if (sOutputName.size() >= nOutputNameBufferSize)
+		if (pChannelNameNeededChars)
+			*pChannelNameNeededChars = (Lib3MF_uint32) (sChannelName.size()+1);
+		if (pChannelNameBuffer) {
+			if (sChannelName.size() >= nChannelNameBufferSize)
 				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
-			for (size_t iOutputName = 0; iOutputName < sOutputName.size(); iOutputName++)
-				pOutputNameBuffer[iOutputName] = sOutputName[iOutputName];
-			pOutputNameBuffer[sOutputName.size()] = 0;
+			for (size_t iChannelName = 0; iChannelName < sChannelName.size(); iChannelName++)
+				pChannelNameBuffer[iChannelName] = sChannelName[iChannelName];
+			pChannelNameBuffer[sChannelName.size()] = 0;
 		}
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addStringResult("OutputName", sOutputName.c_str());
+			pJournalEntry->addStringResult("ChannelName", sChannelName.c_str());
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -5201,24 +5201,24 @@ Lib3MFResult lib3mf_functionreference_getoutputname(Lib3MF_FunctionReference pFu
 	}
 }
 
-Lib3MFResult lib3mf_functionreference_setoutputname(Lib3MF_FunctionReference pFunctionReference, const char * pOutputName)
+Lib3MFResult lib3mf_functionreference_setchannelname(Lib3MF_FunctionReference pFunctionReference, const char * pChannelName)
 {
 	IBase* pIBaseClass = (IBase *)pFunctionReference;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionReference, "FunctionReference", "SetOutputName");
-			pJournalEntry->addStringParameter("OutputName", pOutputName);
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionReference, "FunctionReference", "SetChannelName");
+			pJournalEntry->addStringParameter("ChannelName", pChannelName);
 		}
-		if (pOutputName == nullptr)
+		if (pChannelName == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sOutputName(pOutputName);
+		std::string sChannelName(pChannelName);
 		IFunctionReference* pIFunctionReference = dynamic_cast<IFunctionReference*>(pIBaseClass);
 		if (!pIFunctionReference)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIFunctionReference->SetOutputName(sOutputName);
+		pIFunctionReference->SetChannelName(sChannelName);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -17472,10 +17472,10 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_functionreference_gettransform;
 	if (sProcName == "lib3mf_functionreference_settransform") 
 		*ppProcAddress = (void*) &lib3mf_functionreference_settransform;
-	if (sProcName == "lib3mf_functionreference_getoutputname") 
-		*ppProcAddress = (void*) &lib3mf_functionreference_getoutputname;
-	if (sProcName == "lib3mf_functionreference_setoutputname") 
-		*ppProcAddress = (void*) &lib3mf_functionreference_setoutputname;
+	if (sProcName == "lib3mf_functionreference_getchannelname") 
+		*ppProcAddress = (void*) &lib3mf_functionreference_getchannelname;
+	if (sProcName == "lib3mf_functionreference_setchannelname") 
+		*ppProcAddress = (void*) &lib3mf_functionreference_setchannelname;
 	if (sProcName == "lib3mf_volumedataboundary_getsolidthreshold") 
 		*ppProcAddress = (void*) &lib3mf_volumedataboundary_getsolidthreshold;
 	if (sProcName == "lib3mf_volumedataboundary_setsolidthreshold") 

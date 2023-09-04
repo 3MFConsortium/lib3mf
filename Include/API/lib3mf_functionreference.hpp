@@ -102,16 +102,16 @@ public:
 	void SetTransform(const Lib3MF::sTransform Transform) override;
 
 		/**
-	* IFunctionReference::GetOutputName - Returns the name of the function output to use.
+	* IFunctionReference::GetChannelName - Returns the name of the function output to use.
 	* @return the name of the function output
 	*/
-	std::string GetOutputName() override;
+	std::string GetChannelName() override;
 
 	/**
-	* IFunctionReference::SetOutputName - Sets the name of the function output to use.
-	* @param[in] sOutputName - new name of the function output
+	* IFunctionReference::SetChannelName - Sets the name of the function output to use.
+	* @param[in] sChannelName - new name of the function output
 	*/
-	void SetOutputName(const std::string & sOutputName) override;
+	void SetChannelName(const std::string & sChannelName) override;
 };
 
 } // namespace Impl

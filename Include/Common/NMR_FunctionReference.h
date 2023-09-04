@@ -57,8 +57,8 @@ namespace NMR {
 		virtual void setFunctionResourceID(UniqueResourceID functionID);
 		virtual UniqueResourceID getFunctionResourceID() const;
 
-		void setOutputName(std::string outputPortName);
-		std::string const& getOutputName() const;
+		void setChannelName(std::string outputPortName);
+		std::string const& getChannelName() const;
 
 		void setTransform(NMR::NMATRIX3 transform);
 		NMR::NMATRIX3 getTransform() const;

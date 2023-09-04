@@ -836,11 +836,11 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_settransform", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 FunctionReference_SetTransform (IntPtr Handle, InternalTransform ATransform);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_getoutputname", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 FunctionReference_GetOutputName (IntPtr Handle, UInt32 sizeOutputName, out UInt32 neededOutputName, IntPtr dataOutputName);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_getchannelname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionReference_GetChannelName (IntPtr Handle, UInt32 sizeChannelName, out UInt32 neededChannelName, IntPtr dataChannelName);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_setoutputname", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 FunctionReference_SetOutputName (IntPtr Handle, byte[] AOutputName);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_setchannelname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionReference_SetChannelName (IntPtr Handle, byte[] AChannelName);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataboundary_getsolidthreshold", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataBoundary_GetSolidThreshold (IntPtr Handle, out Double ATheSolidThreshold);
@@ -3676,25 +3676,25 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.FunctionReference_SetTransform (Handle, intTransform));
 		}
 
-		public String GetOutputName ()
+		public String GetChannelName ()
 		{
-			UInt32 sizeOutputName = 0;
-			UInt32 neededOutputName = 0;
-			CheckError(Internal.Lib3MFWrapper.FunctionReference_GetOutputName (Handle, sizeOutputName, out neededOutputName, IntPtr.Zero));
-			sizeOutputName = neededOutputName;
-			byte[] bytesOutputName = new byte[sizeOutputName];
-			GCHandle dataOutputName = GCHandle.Alloc(bytesOutputName, GCHandleType.Pinned);
+			UInt32 sizeChannelName = 0;
+			UInt32 neededChannelName = 0;
+			CheckError(Internal.Lib3MFWrapper.FunctionReference_GetChannelName (Handle, sizeChannelName, out neededChannelName, IntPtr.Zero));
+			sizeChannelName = neededChannelName;
+			byte[] bytesChannelName = new byte[sizeChannelName];
+			GCHandle dataChannelName = GCHandle.Alloc(bytesChannelName, GCHandleType.Pinned);
 
-			CheckError(Internal.Lib3MFWrapper.FunctionReference_GetOutputName (Handle, sizeOutputName, out neededOutputName, dataOutputName.AddrOfPinnedObject()));
-			dataOutputName.Free();
-			return Encoding.UTF8.GetString(bytesOutputName).TrimEnd(char.MinValue);
+			CheckError(Internal.Lib3MFWrapper.FunctionReference_GetChannelName (Handle, sizeChannelName, out neededChannelName, dataChannelName.AddrOfPinnedObject()));
+			dataChannelName.Free();
+			return Encoding.UTF8.GetString(bytesChannelName).TrimEnd(char.MinValue);
 		}
 
-		public void SetOutputName (String AOutputName)
+		public void SetChannelName (String AChannelName)
 		{
-			byte[] byteOutputName = Encoding.UTF8.GetBytes(AOutputName + char.MinValue);
+			byte[] byteChannelName = Encoding.UTF8.GetBytes(AChannelName + char.MinValue);
 
-			CheckError(Internal.Lib3MFWrapper.FunctionReference_SetOutputName (Handle, byteOutputName));
+			CheckError(Internal.Lib3MFWrapper.FunctionReference_SetChannelName (Handle, byteChannelName));
 		}
 
 	}

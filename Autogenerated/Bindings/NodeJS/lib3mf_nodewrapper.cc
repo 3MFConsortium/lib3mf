@@ -6025,8 +6025,8 @@ void CLib3MFFunctionReference::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetFunctionResourceID", SetFunctionResourceID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetTransform", GetTransform);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetTransform", SetTransform);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOutputName", GetOutputName);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "SetOutputName", SetOutputName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetChannelName", GetChannelName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetChannelName", SetChannelName);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -6152,26 +6152,26 @@ void CLib3MFFunctionReference::SetTransform(const FunctionCallbackInfo<Value>& a
 }
 
 
-void CLib3MFFunctionReference::GetOutputName(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFFunctionReference::GetChannelName(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		try {
-        unsigned int bytesNeededOutputName = 0;
-        unsigned int bytesWrittenOutputName = 0;
+        unsigned int bytesNeededChannelName = 0;
+        unsigned int bytesWrittenChannelName = 0;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetOutputName.");
-        if (wrapperTable->m_FunctionReference_GetOutputName == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method FunctionReference::GetOutputName.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetChannelName.");
+        if (wrapperTable->m_FunctionReference_GetChannelName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method FunctionReference::GetChannelName.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult initErrorCode = wrapperTable->m_FunctionReference_GetOutputName(instanceHandle, 0, &bytesNeededOutputName, nullptr);
+        Lib3MFResult initErrorCode = wrapperTable->m_FunctionReference_GetChannelName(instanceHandle, 0, &bytesNeededChannelName, nullptr);
         CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
-        std::vector<char> bufferOutputName;
-        bufferOutputName.resize(bytesNeededOutputName);
-        Lib3MFResult errorCode = wrapperTable->m_FunctionReference_GetOutputName(instanceHandle, bytesNeededOutputName, &bytesWrittenOutputName, &bufferOutputName[0]);
+        std::vector<char> bufferChannelName;
+        bufferChannelName.resize(bytesNeededChannelName);
+        Lib3MFResult errorCode = wrapperTable->m_FunctionReference_GetChannelName(instanceHandle, bytesNeededChannelName, &bytesWrittenChannelName, &bufferChannelName[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferOutputName[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferChannelName[0]));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -6179,23 +6179,23 @@ void CLib3MFFunctionReference::GetOutputName(const FunctionCallbackInfo<Value>& 
 }
 
 
-void CLib3MFFunctionReference::SetOutputName(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFFunctionReference::SetChannelName(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		try {
         if (!args[0]->IsString()) {
-            throw std::runtime_error("Expected string parameter 0 (OutputName)");
+            throw std::runtime_error("Expected string parameter 0 (ChannelName)");
         }
-        v8::String::Utf8Value sutf8OutputName(isolate, args[0]);
-        std::string sOutputName = *sutf8OutputName;
+        v8::String::Utf8Value sutf8ChannelName(isolate, args[0]);
+        std::string sChannelName = *sutf8ChannelName;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetOutputName.");
-        if (wrapperTable->m_FunctionReference_SetOutputName == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method FunctionReference::SetOutputName.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetChannelName.");
+        if (wrapperTable->m_FunctionReference_SetChannelName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method FunctionReference::SetChannelName.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_FunctionReference_SetOutputName(instanceHandle, sOutputName.c_str());
+        Lib3MFResult errorCode = wrapperTable->m_FunctionReference_SetChannelName(instanceHandle, sChannelName.c_str());
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {

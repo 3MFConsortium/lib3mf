@@ -604,8 +604,8 @@ private:
 	static void SetFunctionResourceID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetTransform(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetTransform(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetOutputName(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void SetOutputName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetChannelName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetChannelName(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFFunctionReference();

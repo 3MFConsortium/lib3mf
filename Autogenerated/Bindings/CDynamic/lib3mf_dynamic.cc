@@ -185,8 +185,8 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_FunctionReference_SetFunctionResourceID = NULL;
 	pWrapperTable->m_FunctionReference_GetTransform = NULL;
 	pWrapperTable->m_FunctionReference_SetTransform = NULL;
-	pWrapperTable->m_FunctionReference_GetOutputName = NULL;
-	pWrapperTable->m_FunctionReference_SetOutputName = NULL;
+	pWrapperTable->m_FunctionReference_GetChannelName = NULL;
+	pWrapperTable->m_FunctionReference_SetChannelName = NULL;
 	pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = NULL;
 	pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold = NULL;
 	pWrapperTable->m_VolumeDataComposite_GetBaseMaterialGroup = NULL;
@@ -1809,21 +1809,21 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_FunctionReference_GetOutputName = (PLib3MFFunctionReference_GetOutputNamePtr) GetProcAddress(hLibrary, "lib3mf_functionreference_getoutputname");
+	pWrapperTable->m_FunctionReference_GetChannelName = (PLib3MFFunctionReference_GetChannelNamePtr) GetProcAddress(hLibrary, "lib3mf_functionreference_getchannelname");
 	#else // _WIN32
-	pWrapperTable->m_FunctionReference_GetOutputName = (PLib3MFFunctionReference_GetOutputNamePtr) dlsym(hLibrary, "lib3mf_functionreference_getoutputname");
+	pWrapperTable->m_FunctionReference_GetChannelName = (PLib3MFFunctionReference_GetChannelNamePtr) dlsym(hLibrary, "lib3mf_functionreference_getchannelname");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_FunctionReference_GetOutputName == NULL)
+	if (pWrapperTable->m_FunctionReference_GetChannelName == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_FunctionReference_SetOutputName = (PLib3MFFunctionReference_SetOutputNamePtr) GetProcAddress(hLibrary, "lib3mf_functionreference_setoutputname");
+	pWrapperTable->m_FunctionReference_SetChannelName = (PLib3MFFunctionReference_SetChannelNamePtr) GetProcAddress(hLibrary, "lib3mf_functionreference_setchannelname");
 	#else // _WIN32
-	pWrapperTable->m_FunctionReference_SetOutputName = (PLib3MFFunctionReference_SetOutputNamePtr) dlsym(hLibrary, "lib3mf_functionreference_setoutputname");
+	pWrapperTable->m_FunctionReference_SetChannelName = (PLib3MFFunctionReference_SetChannelNamePtr) dlsym(hLibrary, "lib3mf_functionreference_setchannelname");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_FunctionReference_SetOutputName == NULL)
+	if (pWrapperTable->m_FunctionReference_SetChannelName == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

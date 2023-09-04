@@ -71,14 +71,14 @@ Lib3MF::sTransform CFunctionReference::GetTransform()
 	return MatrixToTransform(matrix);
 }
 
-//std::string GetOutputName()
-std::string CFunctionReference::GetOutputName()
+//std::string GetChannelName()
+std::string CFunctionReference::GetChannelName()
 {
-    return m_pFunctionReference->getOutputName();
+    return m_pFunctionReference->getChannelName();
 }
 
-void CFunctionReference::SetOutputName(
-    const std::string & sOutputName)
+void CFunctionReference::SetChannelName(
+    const std::string & sChannelName)
 {
-    m_pFunctionReference->setOutputName(sOutputName);
+    m_pFunctionReference->setChannelName(sChannelName);
 }

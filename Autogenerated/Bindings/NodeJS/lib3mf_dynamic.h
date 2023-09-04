@@ -1422,7 +1422,7 @@ typedef Lib3MFResult (*PLib3MFBeamLattice_GetBeamSetPtr) (Lib3MF_BeamLattice pBe
 **************************************************************************************************************************/
 
 /**
-* Returns the UniqueResourceID of the Function.
+* Returns the UniqueResourceID of the Function. Only functions with a 'pos'-input are allowed.
 *
 * @param[in] pFunctionReference - FunctionReference instance.
 * @param[out] pUniqueResourceID - returns the UniqueResourceID.
@@ -1458,24 +1458,24 @@ typedef Lib3MFResult (*PLib3MFFunctionReference_GetTransformPtr) (Lib3MF_Functio
 typedef Lib3MFResult (*PLib3MFFunctionReference_SetTransformPtr) (Lib3MF_FunctionReference pFunctionReference, const sLib3MFTransform * pTransform);
 
 /**
-* Returns the name of the function output to use.
+* Returns the name of the function output channel to use.
 *
 * @param[in] pFunctionReference - FunctionReference instance.
-* @param[in] nOutputNameBufferSize - size of the buffer (including trailing 0)
-* @param[out] pOutputNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-* @param[out] pOutputNameBuffer -  buffer of the name of the function output, may be NULL
+* @param[in] nChannelNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pChannelNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pChannelNameBuffer -  buffer of the name of the function output channel, may be NULL
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFFunctionReference_GetOutputNamePtr) (Lib3MF_FunctionReference pFunctionReference, const Lib3MF_uint32 nOutputNameBufferSize, Lib3MF_uint32* pOutputNameNeededChars, char * pOutputNameBuffer);
+typedef Lib3MFResult (*PLib3MFFunctionReference_GetChannelNamePtr) (Lib3MF_FunctionReference pFunctionReference, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer);
 
 /**
-* Sets the name of the function output to use.
+* Sets the name of the function output channel to use.
 *
 * @param[in] pFunctionReference - FunctionReference instance.
-* @param[in] pOutputName - new name of the function output
+* @param[in] pChannelName - new name of the function output channel
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFFunctionReference_SetOutputNamePtr) (Lib3MF_FunctionReference pFunctionReference, const char * pOutputName);
+typedef Lib3MFResult (*PLib3MFFunctionReference_SetChannelNamePtr) (Lib3MF_FunctionReference pFunctionReference, const char * pChannelName);
 
 /*************************************************************************************************************************
  Class definition for VolumeDataBoundary
@@ -5024,8 +5024,8 @@ typedef struct {
 	PLib3MFFunctionReference_SetFunctionResourceIDPtr m_FunctionReference_SetFunctionResourceID;
 	PLib3MFFunctionReference_GetTransformPtr m_FunctionReference_GetTransform;
 	PLib3MFFunctionReference_SetTransformPtr m_FunctionReference_SetTransform;
-	PLib3MFFunctionReference_GetOutputNamePtr m_FunctionReference_GetOutputName;
-	PLib3MFFunctionReference_SetOutputNamePtr m_FunctionReference_SetOutputName;
+	PLib3MFFunctionReference_GetChannelNamePtr m_FunctionReference_GetChannelName;
+	PLib3MFFunctionReference_SetChannelNamePtr m_FunctionReference_SetChannelName;
 	PLib3MFVolumeDataBoundary_GetSolidThresholdPtr m_VolumeDataBoundary_GetSolidThreshold;
 	PLib3MFVolumeDataBoundary_SetSolidThresholdPtr m_VolumeDataBoundary_SetSolidThreshold;
 	PLib3MFVolumeDataComposite_GetBaseMaterialGroupPtr m_VolumeDataComposite_GetBaseMaterialGroup;

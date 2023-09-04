@@ -1245,8 +1245,8 @@ public:
 	inline void SetFunctionResourceID(const Lib3MF_uint32 nUniqueResourceID);
 	inline sTransform GetTransform();
 	inline void SetTransform(const sTransform & Transform);
-	inline std::string GetOutputName();
-	inline void SetOutputName(const std::string & sOutputName);
+	inline std::string GetChannelName();
+	inline void SetChannelName(const std::string & sChannelName);
 };
 	
 /*************************************************************************************************************************
@@ -2656,8 +2656,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_FunctionReference_SetFunctionResourceID = nullptr;
 		pWrapperTable->m_FunctionReference_GetTransform = nullptr;
 		pWrapperTable->m_FunctionReference_SetTransform = nullptr;
-		pWrapperTable->m_FunctionReference_GetOutputName = nullptr;
-		pWrapperTable->m_FunctionReference_SetOutputName = nullptr;
+		pWrapperTable->m_FunctionReference_GetChannelName = nullptr;
+		pWrapperTable->m_FunctionReference_SetChannelName = nullptr;
 		pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = nullptr;
 		pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold = nullptr;
 		pWrapperTable->m_VolumeDataComposite_GetBaseMaterialGroup = nullptr;
@@ -4276,21 +4276,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_FunctionReference_GetOutputName = (PLib3MFFunctionReference_GetOutputNamePtr) GetProcAddress(hLibrary, "lib3mf_functionreference_getoutputname");
+		pWrapperTable->m_FunctionReference_GetChannelName = (PLib3MFFunctionReference_GetChannelNamePtr) GetProcAddress(hLibrary, "lib3mf_functionreference_getchannelname");
 		#else // _WIN32
-		pWrapperTable->m_FunctionReference_GetOutputName = (PLib3MFFunctionReference_GetOutputNamePtr) dlsym(hLibrary, "lib3mf_functionreference_getoutputname");
+		pWrapperTable->m_FunctionReference_GetChannelName = (PLib3MFFunctionReference_GetChannelNamePtr) dlsym(hLibrary, "lib3mf_functionreference_getchannelname");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_FunctionReference_GetOutputName == nullptr)
+		if (pWrapperTable->m_FunctionReference_GetChannelName == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_FunctionReference_SetOutputName = (PLib3MFFunctionReference_SetOutputNamePtr) GetProcAddress(hLibrary, "lib3mf_functionreference_setoutputname");
+		pWrapperTable->m_FunctionReference_SetChannelName = (PLib3MFFunctionReference_SetChannelNamePtr) GetProcAddress(hLibrary, "lib3mf_functionreference_setchannelname");
 		#else // _WIN32
-		pWrapperTable->m_FunctionReference_SetOutputName = (PLib3MFFunctionReference_SetOutputNamePtr) dlsym(hLibrary, "lib3mf_functionreference_setoutputname");
+		pWrapperTable->m_FunctionReference_SetChannelName = (PLib3MFFunctionReference_SetChannelNamePtr) dlsym(hLibrary, "lib3mf_functionreference_setchannelname");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_FunctionReference_SetOutputName == nullptr)
+		if (pWrapperTable->m_FunctionReference_SetChannelName == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -7863,12 +7863,12 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionReference_SetTransform == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_functionreference_getoutputname", (void**)&(pWrapperTable->m_FunctionReference_GetOutputName));
-		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionReference_GetOutputName == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_functionreference_getchannelname", (void**)&(pWrapperTable->m_FunctionReference_GetChannelName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionReference_GetChannelName == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_functionreference_setoutputname", (void**)&(pWrapperTable->m_FunctionReference_SetOutputName));
-		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionReference_SetOutputName == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_functionreference_setchannelname", (void**)&(pWrapperTable->m_FunctionReference_SetChannelName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionReference_SetChannelName == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_volumedataboundary_getsolidthreshold", (void**)&(pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold));
@@ -10916,7 +10916,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	 */
 	
 	/**
-	* CFunctionReference::GetFunctionResourceID - Returns the UniqueResourceID of the Function.
+	* CFunctionReference::GetFunctionResourceID - Returns the UniqueResourceID of the Function. Only functions with a 'pos'-input are allowed.
 	* @return returns the UniqueResourceID.
 	*/
 	Lib3MF_uint32 CFunctionReference::GetFunctionResourceID()
@@ -10958,27 +10958,27 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CFunctionReference::GetOutputName - Returns the name of the function output to use.
-	* @return the name of the function output
+	* CFunctionReference::GetChannelName - Returns the name of the function output channel to use.
+	* @return the name of the function output channel
 	*/
-	std::string CFunctionReference::GetOutputName()
+	std::string CFunctionReference::GetChannelName()
 	{
-		Lib3MF_uint32 bytesNeededOutputName = 0;
-		Lib3MF_uint32 bytesWrittenOutputName = 0;
-		CheckError(m_pWrapper->m_WrapperTable.m_FunctionReference_GetOutputName(m_pHandle, 0, &bytesNeededOutputName, nullptr));
-		std::vector<char> bufferOutputName(bytesNeededOutputName);
-		CheckError(m_pWrapper->m_WrapperTable.m_FunctionReference_GetOutputName(m_pHandle, bytesNeededOutputName, &bytesWrittenOutputName, &bufferOutputName[0]));
+		Lib3MF_uint32 bytesNeededChannelName = 0;
+		Lib3MF_uint32 bytesWrittenChannelName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionReference_GetChannelName(m_pHandle, 0, &bytesNeededChannelName, nullptr));
+		std::vector<char> bufferChannelName(bytesNeededChannelName);
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionReference_GetChannelName(m_pHandle, bytesNeededChannelName, &bytesWrittenChannelName, &bufferChannelName[0]));
 		
-		return std::string(&bufferOutputName[0]);
+		return std::string(&bufferChannelName[0]);
 	}
 	
 	/**
-	* CFunctionReference::SetOutputName - Sets the name of the function output to use.
-	* @param[in] sOutputName - new name of the function output
+	* CFunctionReference::SetChannelName - Sets the name of the function output channel to use.
+	* @param[in] sChannelName - new name of the function output channel
 	*/
-	void CFunctionReference::SetOutputName(const std::string & sOutputName)
+	void CFunctionReference::SetChannelName(const std::string & sChannelName)
 	{
-		CheckError(m_pWrapper->m_WrapperTable.m_FunctionReference_SetOutputName(m_pHandle, sOutputName.c_str()));
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionReference_SetChannelName(m_pHandle, sChannelName.c_str()));
 	}
 	
 	/**

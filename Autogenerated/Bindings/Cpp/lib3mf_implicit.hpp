@@ -1221,8 +1221,8 @@ public:
 	inline void SetFunctionResourceID(const Lib3MF_uint32 nUniqueResourceID);
 	inline sTransform GetTransform();
 	inline void SetTransform(const sTransform & Transform);
-	inline std::string GetOutputName();
-	inline void SetOutputName(const std::string & sOutputName);
+	inline std::string GetChannelName();
+	inline void SetChannelName(const std::string & sChannelName);
 };
 	
 /*************************************************************************************************************************
@@ -4194,7 +4194,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	 */
 	
 	/**
-	* CFunctionReference::GetFunctionResourceID - Returns the UniqueResourceID of the Function.
+	* CFunctionReference::GetFunctionResourceID - Returns the UniqueResourceID of the Function. Only functions with a 'pos'-input are allowed.
 	* @return returns the UniqueResourceID.
 	*/
 	Lib3MF_uint32 CFunctionReference::GetFunctionResourceID()
@@ -4236,27 +4236,27 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CFunctionReference::GetOutputName - Returns the name of the function output to use.
-	* @return the name of the function output
+	* CFunctionReference::GetChannelName - Returns the name of the function output channel to use.
+	* @return the name of the function output channel
 	*/
-	std::string CFunctionReference::GetOutputName()
+	std::string CFunctionReference::GetChannelName()
 	{
-		Lib3MF_uint32 bytesNeededOutputName = 0;
-		Lib3MF_uint32 bytesWrittenOutputName = 0;
-		CheckError(lib3mf_functionreference_getoutputname(m_pHandle, 0, &bytesNeededOutputName, nullptr));
-		std::vector<char> bufferOutputName(bytesNeededOutputName);
-		CheckError(lib3mf_functionreference_getoutputname(m_pHandle, bytesNeededOutputName, &bytesWrittenOutputName, &bufferOutputName[0]));
+		Lib3MF_uint32 bytesNeededChannelName = 0;
+		Lib3MF_uint32 bytesWrittenChannelName = 0;
+		CheckError(lib3mf_functionreference_getchannelname(m_pHandle, 0, &bytesNeededChannelName, nullptr));
+		std::vector<char> bufferChannelName(bytesNeededChannelName);
+		CheckError(lib3mf_functionreference_getchannelname(m_pHandle, bytesNeededChannelName, &bytesWrittenChannelName, &bufferChannelName[0]));
 		
-		return std::string(&bufferOutputName[0]);
+		return std::string(&bufferChannelName[0]);
 	}
 	
 	/**
-	* CFunctionReference::SetOutputName - Sets the name of the function output to use.
-	* @param[in] sOutputName - new name of the function output
+	* CFunctionReference::SetChannelName - Sets the name of the function output channel to use.
+	* @param[in] sChannelName - new name of the function output channel
 	*/
-	void CFunctionReference::SetOutputName(const std::string & sOutputName)
+	void CFunctionReference::SetChannelName(const std::string & sChannelName)
 	{
-		CheckError(lib3mf_functionreference_setoutputname(m_pHandle, sOutputName.c_str()));
+		CheckError(lib3mf_functionreference_setchannelname(m_pHandle, sChannelName.c_str()));
 	}
 	
 	/**

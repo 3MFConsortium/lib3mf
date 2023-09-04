@@ -1632,7 +1632,7 @@ public:
 	}
 
 	/**
-	* IFunctionReference::GetFunctionResourceID - Returns the UniqueResourceID of the Function.
+	* IFunctionReference::GetFunctionResourceID - Returns the UniqueResourceID of the Function. Only functions with a 'pos'-input are allowed.
 	* @return returns the UniqueResourceID.
 	*/
 	virtual Lib3MF_uint32 GetFunctionResourceID() = 0;
@@ -1656,16 +1656,16 @@ public:
 	virtual void SetTransform(const Lib3MF::sTransform Transform) = 0;
 
 	/**
-	* IFunctionReference::GetOutputName - Returns the name of the function output to use.
-	* @return the name of the function output
+	* IFunctionReference::GetChannelName - Returns the name of the function output channel to use.
+	* @return the name of the function output channel
 	*/
-	virtual std::string GetOutputName() = 0;
+	virtual std::string GetChannelName() = 0;
 
 	/**
-	* IFunctionReference::SetOutputName - Sets the name of the function output to use.
-	* @param[in] sOutputName - new name of the function output
+	* IFunctionReference::SetChannelName - Sets the name of the function output channel to use.
+	* @param[in] sChannelName - new name of the function output channel
 	*/
-	virtual void SetOutputName(const std::string & sOutputName) = 0;
+	virtual void SetChannelName(const std::string & sChannelName) = 0;
 
 };
 

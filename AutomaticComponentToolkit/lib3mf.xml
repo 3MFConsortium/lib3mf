@@ -1093,7 +1093,7 @@
 
 	<class name="FunctionReference">
 		<method name="GetFunctionResourceID"
-			description="Returns the UniqueResourceID of the Function.">
+			description="Returns the UniqueResourceID of the Function. Only functions with a 'pos'-input are allowed.">
 			<param name="UniqueResourceID" type="uint32" pass="return"
 				description="returns the UniqueResourceID." />
 		</method>
@@ -1109,11 +1109,11 @@
 			<param name="Transform" type="struct" class="Transform" pass="in" description="new transformation matrix"/>
 		</method>
 
-		<method name="GetOutputName" description="Returns the name of the function output to use.">
-			<param name="OutputName" type="string" pass="return" description="the name of the function output"/>
+		<method name="GetChannelName" description="Returns the name of the function output channel to use.">
+			<param name="ChannelName" type="string" pass="return" description="the name of the function output channel"/>
 		</method>
-		<method name="SetOutputName" description="Sets the name of the function output to use.">
-			<param name="OutputName" type="string" pass="in" description="new name of the function output"/>
+		<method name="SetChannelName" description="Sets the name of the function output channel to use.">
+			<param name="ChannelName" type="string" pass="in" description="new name of the function output channel"/>
 		</method>
 	</class>
 

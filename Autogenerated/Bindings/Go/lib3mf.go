@@ -1305,21 +1305,21 @@ Lib3MFResult CCall_lib3mf_functionreference_settransform(Lib3MFHandle libraryHan
 }
 
 
-Lib3MFResult CCall_lib3mf_functionreference_getoutputname(Lib3MFHandle libraryHandle, Lib3MF_FunctionReference pFunctionReference, const Lib3MF_uint32 nOutputNameBufferSize, Lib3MF_uint32* pOutputNameNeededChars, char * pOutputNameBuffer)
+Lib3MFResult CCall_lib3mf_functionreference_getchannelname(Lib3MFHandle libraryHandle, Lib3MF_FunctionReference pFunctionReference, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_FunctionReference_GetOutputName (pFunctionReference, nOutputNameBufferSize, pOutputNameNeededChars, pOutputNameBuffer);
+	return wrapperTable->m_FunctionReference_GetChannelName (pFunctionReference, nChannelNameBufferSize, pChannelNameNeededChars, pChannelNameBuffer);
 }
 
 
-Lib3MFResult CCall_lib3mf_functionreference_setoutputname(Lib3MFHandle libraryHandle, Lib3MF_FunctionReference pFunctionReference, const char * pOutputName)
+Lib3MFResult CCall_lib3mf_functionreference_setchannelname(Lib3MFHandle libraryHandle, Lib3MF_FunctionReference pFunctionReference, const char * pChannelName)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_FunctionReference_SetOutputName (pFunctionReference, pOutputName);
+	return wrapperTable->m_FunctionReference_SetChannelName (pFunctionReference, pChannelName);
 }
 
 
@@ -6622,7 +6622,7 @@ func (wrapper Wrapper) NewFunctionReference(r ref) FunctionReference {
 	return FunctionReference{wrapper.NewBase(r)}
 }
 
-// GetFunctionResourceID returns the UniqueResourceID of the Function.
+// GetFunctionResourceID returns the UniqueResourceID of the Function. Only functions with a 'pos'-input are allowed.
 func (inst FunctionReference) GetFunctionResourceID() (uint32, error) {
 	var uniqueResourceID C.uint32_t
 	ret := C.CCall_lib3mf_functionreference_getfunctionresourceid(inst.wrapperRef.LibraryHandle, inst.Ref, &uniqueResourceID)
@@ -6660,26 +6660,26 @@ func (inst FunctionReference) SetTransform(transform Transform) error {
 	return nil
 }
 
-// GetOutputName returns the name of the function output to use.
-func (inst FunctionReference) GetOutputName() (string, error) {
-	var neededforoutputName C.uint32_t
-	var filledinoutputName C.uint32_t
-	ret := C.CCall_lib3mf_functionreference_getoutputname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforoutputName, nil)
+// GetChannelName returns the name of the function output channel to use.
+func (inst FunctionReference) GetChannelName() (string, error) {
+	var neededforchannelName C.uint32_t
+	var filledinchannelName C.uint32_t
+	ret := C.CCall_lib3mf_functionreference_getchannelname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforchannelName, nil)
 	if ret != 0 {
 		return "", makeError(uint32(ret))
 	}
-	bufferSizeoutputName := neededforoutputName
-	bufferoutputName := make([]byte, bufferSizeoutputName)
-	ret = C.CCall_lib3mf_functionreference_getoutputname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizeoutputName, &filledinoutputName, (*C.char)(unsafe.Pointer(&bufferoutputName[0])))
+	bufferSizechannelName := neededforchannelName
+	bufferchannelName := make([]byte, bufferSizechannelName)
+	ret = C.CCall_lib3mf_functionreference_getchannelname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizechannelName, &filledinchannelName, (*C.char)(unsafe.Pointer(&bufferchannelName[0])))
 	if ret != 0 {
 		return "", makeError(uint32(ret))
 	}
-	return string(bufferoutputName[:(filledinoutputName-1)]), nil
+	return string(bufferchannelName[:(filledinchannelName-1)]), nil
 }
 
-// SetOutputName sets the name of the function output to use.
-func (inst FunctionReference) SetOutputName(outputName string) error {
-	ret := C.CCall_lib3mf_functionreference_setoutputname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(outputName)[0])))
+// SetChannelName sets the name of the function output channel to use.
+func (inst FunctionReference) SetChannelName(channelName string) error {
+	ret := C.CCall_lib3mf_functionreference_setchannelname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(channelName)[0])))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}

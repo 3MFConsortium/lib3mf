@@ -823,7 +823,7 @@ namespace Lib3MF
         auto boundary = volumeData->CreateNewBoundary(funcFromImage3d.get());
         boundary->SetTransform(helper::ComputeTransformFromMeshCoordinatesToUVW(theMesh));
         boundary->SetSolidThreshold(0.25f);
-        boundary->SetOutputName("r");
+        boundary->SetChannelName("r");
         
         // Todo: Define output name
 
@@ -883,8 +883,8 @@ namespace Lib3MF
         // Add property
         auto property = volumeData->AddPropertyFromFunction("Temp", funcFromImage3d.get());
         property->SetTransform(helper::ComputeTransformFromMeshCoordinatesToUVW(theMesh));
-        std::string const outputName = "g";
-        property->SetOutputName(outputName);
+        std::string const ChannelName = "g";
+        property->SetChannelName(ChannelName);
 
         // Write to file
         writer3MF = model->QueryWriter("3mf");
@@ -915,7 +915,7 @@ namespace Lib3MF
         ASSERT_TRUE(propertyFromFile);
         EXPECT_EQ(propertyFromFile->GetFunctionResourceID(), funcImg3dId);
         helper::CompareTransforms(property->GetTransform(), propertyFromFile->GetTransform());
-        EXPECT_EQ(property->GetOutputName(), outputName);
+        EXPECT_EQ(property->GetChannelName(), ChannelName);
         EXPECT_EQ(property->GetName(), propertyFromFile->GetName());
     }
 
