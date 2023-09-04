@@ -70,3 +70,15 @@ Lib3MF::sTransform CFunctionReference::GetTransform()
     NMR::NMATRIX3 const matrix = m_pFunctionReference->getTransform();
 	return MatrixToTransform(matrix);
 }
+
+//std::string GetOutputName()
+std::string CFunctionReference::GetOutputName()
+{
+    return m_pFunctionReference->getOutputName();
+}
+
+void CFunctionReference::SetOutputName(
+    const std::string & sOutputName)
+{
+    m_pFunctionReference->setOutputName(sOutputName);
+}

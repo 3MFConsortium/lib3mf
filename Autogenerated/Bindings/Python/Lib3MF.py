@@ -267,6 +267,8 @@ class FunctionTable:
 	lib3mf_functionreference_setfunctionresourceid = None
 	lib3mf_functionreference_gettransform = None
 	lib3mf_functionreference_settransform = None
+	lib3mf_functionreference_getoutputname = None
+	lib3mf_functionreference_setoutputname = None
 	lib3mf_volumedataboundary_getsolidthreshold = None
 	lib3mf_volumedataboundary_setsolidthreshold = None
 	lib3mf_volumedatacomposite_getbasematerialgroup = None
@@ -276,8 +278,6 @@ class FunctionTable:
 	lib3mf_volumedatacomposite_addmaterialmapping = None
 	lib3mf_volumedatacomposite_removematerialmapping = None
 	lib3mf_volumedataproperty_getname = None
-	lib3mf_volumedataproperty_setfunctionoutputname = None
-	lib3mf_volumedataproperty_getfunctionoutputname = None
 	lib3mf_volumedataproperty_setisrequired = None
 	lib3mf_volumedataproperty_isrequired = None
 	lib3mf_volumedata_getboundary = None
@@ -1920,6 +1920,18 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(Transform))
 			self.lib.lib3mf_functionreference_settransform = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functionreference_getoutputname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_functionreference_getoutputname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functionreference_setoutputname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
+			self.lib.lib3mf_functionreference_setoutputname = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataboundary_getsolidthreshold")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -1973,18 +1985,6 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
 			self.lib.lib3mf_volumedataproperty_getname = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataproperty_setfunctionoutputname")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
-			self.lib.lib3mf_volumedataproperty_setfunctionoutputname = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataproperty_getfunctionoutputname")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
-			self.lib.lib3mf_volumedataproperty_getfunctionoutputname = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataproperty_setisrequired")), methodAddress)
 			if err != 0:
@@ -4295,6 +4295,12 @@ class Wrapper:
 			self.lib.lib3mf_functionreference_settransform.restype = ctypes.c_int32
 			self.lib.lib3mf_functionreference_settransform.argtypes = [ctypes.c_void_p, ctypes.POINTER(Transform)]
 			
+			self.lib.lib3mf_functionreference_getoutputname.restype = ctypes.c_int32
+			self.lib.lib3mf_functionreference_getoutputname.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_functionreference_setoutputname.restype = ctypes.c_int32
+			self.lib.lib3mf_functionreference_setoutputname.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
 			self.lib.lib3mf_volumedataboundary_getsolidthreshold.restype = ctypes.c_int32
 			self.lib.lib3mf_volumedataboundary_getsolidthreshold.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
 			
@@ -4321,12 +4327,6 @@ class Wrapper:
 			
 			self.lib.lib3mf_volumedataproperty_getname.restype = ctypes.c_int32
 			self.lib.lib3mf_volumedataproperty_getname.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
-			
-			self.lib.lib3mf_volumedataproperty_setfunctionoutputname.restype = ctypes.c_int32
-			self.lib.lib3mf_volumedataproperty_setfunctionoutputname.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
-			
-			self.lib.lib3mf_volumedataproperty_getfunctionoutputname.restype = ctypes.c_int32
-			self.lib.lib3mf_volumedataproperty_getfunctionoutputname.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
 			self.lib.lib3mf_volumedataproperty_setisrequired.restype = ctypes.c_int32
 			self.lib.lib3mf_volumedataproperty_setisrequired.argtypes = [ctypes.c_void_p, ctypes.c_bool]
@@ -6758,6 +6758,22 @@ class FunctionReference(Base):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functionreference_settransform(self._handle, Transform))
 		
 	
+	def GetOutputName(self):
+		nOutputNameBufferSize = ctypes.c_uint64(0)
+		nOutputNameNeededChars = ctypes.c_uint64(0)
+		pOutputNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functionreference_getoutputname(self._handle, nOutputNameBufferSize, nOutputNameNeededChars, pOutputNameBuffer))
+		nOutputNameBufferSize = ctypes.c_uint64(nOutputNameNeededChars.value)
+		pOutputNameBuffer = (ctypes.c_char * (nOutputNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functionreference_getoutputname(self._handle, nOutputNameBufferSize, nOutputNameNeededChars, pOutputNameBuffer))
+		
+		return pOutputNameBuffer.value.decode()
+	
+	def SetOutputName(self, OutputName):
+		pOutputName = ctypes.c_char_p(str.encode(OutputName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functionreference_setoutputname(self._handle, pOutputName))
+		
+	
 
 
 ''' Class Implementation for VolumeDataBoundary
@@ -6865,22 +6881,6 @@ class VolumeDataProperty(FunctionReference):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataproperty_getname(self._handle, nPropertyNameBufferSize, nPropertyNameNeededChars, pPropertyNameBuffer))
 		
 		return pPropertyNameBuffer.value.decode()
-	
-	def SetFunctionOutputName(self, Name):
-		pName = ctypes.c_char_p(str.encode(Name))
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataproperty_setfunctionoutputname(self._handle, pName))
-		
-	
-	def GetFunctionOutputName(self):
-		nNameBufferSize = ctypes.c_uint64(0)
-		nNameNeededChars = ctypes.c_uint64(0)
-		pNameBuffer = ctypes.c_char_p(None)
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataproperty_getfunctionoutputname(self._handle, nNameBufferSize, nNameNeededChars, pNameBuffer))
-		nNameBufferSize = ctypes.c_uint64(nNameNeededChars.value)
-		pNameBuffer = (ctypes.c_char * (nNameNeededChars.value))()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataproperty_getfunctionoutputname(self._handle, nNameBufferSize, nNameNeededChars, pNameBuffer))
-		
-		return pNameBuffer.value.decode()
 	
 	def SetIsRequired(self, IsRequired):
 		bIsRequired = ctypes.c_bool(IsRequired)

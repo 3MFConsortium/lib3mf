@@ -1961,6 +1961,26 @@ type
 	*)
 	TLib3MFFunctionReference_SetTransformFunc = function(pFunctionReference: TLib3MFHandle; const pTransform: PLib3MFTransform): TLib3MFResult; cdecl;
 	
+	(**
+	* Returns the name of the function output to use.
+	*
+	* @param[in] pFunctionReference - FunctionReference instance.
+	* @param[in] nOutputNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pOutputNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pOutputNameBuffer -  buffer of the name of the function output, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFunctionReference_GetOutputNameFunc = function(pFunctionReference: TLib3MFHandle; const nOutputNameBufferSize: Cardinal; out pOutputNameNeededChars: Cardinal; pOutputNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the name of the function output to use.
+	*
+	* @param[in] pFunctionReference - FunctionReference instance.
+	* @param[in] pOutputName - new name of the function output
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFunctionReference_SetOutputNameFunc = function(pFunctionReference: TLib3MFHandle; const pOutputName: PAnsiChar): TLib3MFResult; cdecl;
+	
 
 (*************************************************************************************************************************
  Function type definitions for VolumeDataBoundary
@@ -2070,26 +2090,6 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFVolumeDataProperty_GetNameFunc = function(pVolumeDataProperty: TLib3MFHandle; const nPropertyNameBufferSize: Cardinal; out pPropertyNameNeededChars: Cardinal; pPropertyNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
-	
-	(**
-	* Sets the name of the function output used for the property.
-	*
-	* @param[in] pVolumeDataProperty - VolumeDataProperty instance.
-	* @param[in] pName - the name of the function output
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumeDataProperty_SetFunctionOutputNameFunc = function(pVolumeDataProperty: TLib3MFHandle; const pName: PAnsiChar): TLib3MFResult; cdecl;
-	
-	(**
-	* Gets the name of the function output used for the property.
-	*
-	* @param[in] pVolumeDataProperty - VolumeDataProperty instance.
-	* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
-	* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pNameBuffer -  buffer of the name of the function output, may be NULL
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumeDataProperty_GetFunctionOutputNameFunc = function(pVolumeDataProperty: TLib3MFHandle; const nNameBufferSize: Cardinal; out pNameNeededChars: Cardinal; pNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
 	* Sets whether this property is required to process this 3MF document instance.
@@ -5846,6 +5846,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure SetFunctionResourceID(const AUniqueResourceID: Cardinal);
 		function GetTransform(): TLib3MFTransform;
 		procedure SetTransform(const ATransform: TLib3MFTransform);
+		function GetOutputName(): String;
+		procedure SetOutputName(const AOutputName: String);
 	end;
 
 
@@ -5910,8 +5912,6 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
 		function GetName(): String;
-		procedure SetFunctionOutputName(const AName: String);
-		function GetFunctionOutputName(): String;
 		procedure SetIsRequired(const AIsRequired: Boolean);
 		function IsRequired(): Boolean;
 	end;
@@ -6716,6 +6716,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFFunctionReference_SetFunctionResourceIDFunc: TLib3MFFunctionReference_SetFunctionResourceIDFunc;
 		FLib3MFFunctionReference_GetTransformFunc: TLib3MFFunctionReference_GetTransformFunc;
 		FLib3MFFunctionReference_SetTransformFunc: TLib3MFFunctionReference_SetTransformFunc;
+		FLib3MFFunctionReference_GetOutputNameFunc: TLib3MFFunctionReference_GetOutputNameFunc;
+		FLib3MFFunctionReference_SetOutputNameFunc: TLib3MFFunctionReference_SetOutputNameFunc;
 		FLib3MFVolumeDataBoundary_GetSolidThresholdFunc: TLib3MFVolumeDataBoundary_GetSolidThresholdFunc;
 		FLib3MFVolumeDataBoundary_SetSolidThresholdFunc: TLib3MFVolumeDataBoundary_SetSolidThresholdFunc;
 		FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc: TLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc;
@@ -6725,8 +6727,6 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFVolumeDataComposite_AddMaterialMappingFunc: TLib3MFVolumeDataComposite_AddMaterialMappingFunc;
 		FLib3MFVolumeDataComposite_RemoveMaterialMappingFunc: TLib3MFVolumeDataComposite_RemoveMaterialMappingFunc;
 		FLib3MFVolumeDataProperty_GetNameFunc: TLib3MFVolumeDataProperty_GetNameFunc;
-		FLib3MFVolumeDataProperty_SetFunctionOutputNameFunc: TLib3MFVolumeDataProperty_SetFunctionOutputNameFunc;
-		FLib3MFVolumeDataProperty_GetFunctionOutputNameFunc: TLib3MFVolumeDataProperty_GetFunctionOutputNameFunc;
 		FLib3MFVolumeDataProperty_SetIsRequiredFunc: TLib3MFVolumeDataProperty_SetIsRequiredFunc;
 		FLib3MFVolumeDataProperty_IsRequiredFunc: TLib3MFVolumeDataProperty_IsRequiredFunc;
 		FLib3MFVolumeData_GetBoundaryFunc: TLib3MFVolumeData_GetBoundaryFunc;
@@ -7199,6 +7199,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFFunctionReference_SetFunctionResourceIDFunc: TLib3MFFunctionReference_SetFunctionResourceIDFunc read FLib3MFFunctionReference_SetFunctionResourceIDFunc;
 		property Lib3MFFunctionReference_GetTransformFunc: TLib3MFFunctionReference_GetTransformFunc read FLib3MFFunctionReference_GetTransformFunc;
 		property Lib3MFFunctionReference_SetTransformFunc: TLib3MFFunctionReference_SetTransformFunc read FLib3MFFunctionReference_SetTransformFunc;
+		property Lib3MFFunctionReference_GetOutputNameFunc: TLib3MFFunctionReference_GetOutputNameFunc read FLib3MFFunctionReference_GetOutputNameFunc;
+		property Lib3MFFunctionReference_SetOutputNameFunc: TLib3MFFunctionReference_SetOutputNameFunc read FLib3MFFunctionReference_SetOutputNameFunc;
 		property Lib3MFVolumeDataBoundary_GetSolidThresholdFunc: TLib3MFVolumeDataBoundary_GetSolidThresholdFunc read FLib3MFVolumeDataBoundary_GetSolidThresholdFunc;
 		property Lib3MFVolumeDataBoundary_SetSolidThresholdFunc: TLib3MFVolumeDataBoundary_SetSolidThresholdFunc read FLib3MFVolumeDataBoundary_SetSolidThresholdFunc;
 		property Lib3MFVolumeDataComposite_GetBaseMaterialGroupFunc: TLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc read FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc;
@@ -7208,8 +7210,6 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFVolumeDataComposite_AddMaterialMappingFunc: TLib3MFVolumeDataComposite_AddMaterialMappingFunc read FLib3MFVolumeDataComposite_AddMaterialMappingFunc;
 		property Lib3MFVolumeDataComposite_RemoveMaterialMappingFunc: TLib3MFVolumeDataComposite_RemoveMaterialMappingFunc read FLib3MFVolumeDataComposite_RemoveMaterialMappingFunc;
 		property Lib3MFVolumeDataProperty_GetNameFunc: TLib3MFVolumeDataProperty_GetNameFunc read FLib3MFVolumeDataProperty_GetNameFunc;
-		property Lib3MFVolumeDataProperty_SetFunctionOutputNameFunc: TLib3MFVolumeDataProperty_SetFunctionOutputNameFunc read FLib3MFVolumeDataProperty_SetFunctionOutputNameFunc;
-		property Lib3MFVolumeDataProperty_GetFunctionOutputNameFunc: TLib3MFVolumeDataProperty_GetFunctionOutputNameFunc read FLib3MFVolumeDataProperty_GetFunctionOutputNameFunc;
 		property Lib3MFVolumeDataProperty_SetIsRequiredFunc: TLib3MFVolumeDataProperty_SetIsRequiredFunc read FLib3MFVolumeDataProperty_SetIsRequiredFunc;
 		property Lib3MFVolumeDataProperty_IsRequiredFunc: TLib3MFVolumeDataProperty_IsRequiredFunc read FLib3MFVolumeDataProperty_IsRequiredFunc;
 		property Lib3MFVolumeData_GetBoundaryFunc: TLib3MFVolumeData_GetBoundaryFunc read FLib3MFVolumeData_GetBoundaryFunc;
@@ -10224,6 +10224,25 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionReference_SetTransformFunc(FHandle, @ATransform));
 	end;
 
+	function TLib3MFFunctionReference.GetOutputName(): String;
+	var
+		bytesNeededOutputName: Cardinal;
+		bytesWrittenOutputName: Cardinal;
+		bufferOutputName: array of Char;
+	begin
+		bytesNeededOutputName:= 0;
+		bytesWrittenOutputName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionReference_GetOutputNameFunc(FHandle, 0, bytesNeededOutputName, nil));
+		SetLength(bufferOutputName, bytesNeededOutputName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionReference_GetOutputNameFunc(FHandle, bytesNeededOutputName, bytesWrittenOutputName, @bufferOutputName[0]));
+		Result := StrPas(@bufferOutputName[0]);
+	end;
+
+	procedure TLib3MFFunctionReference.SetOutputName(const AOutputName: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionReference_SetOutputNameFunc(FHandle, PAnsiChar(AOutputName)));
+	end;
+
 (*************************************************************************************************************************
  Class implementation for VolumeDataBoundary
 **************************************************************************************************************************)
@@ -10370,25 +10389,6 @@ implementation
 		SetLength(bufferPropertyName, bytesNeededPropertyName);
 		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataProperty_GetNameFunc(FHandle, bytesNeededPropertyName, bytesWrittenPropertyName, @bufferPropertyName[0]));
 		Result := StrPas(@bufferPropertyName[0]);
-	end;
-
-	procedure TLib3MFVolumeDataProperty.SetFunctionOutputName(const AName: String);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataProperty_SetFunctionOutputNameFunc(FHandle, PAnsiChar(AName)));
-	end;
-
-	function TLib3MFVolumeDataProperty.GetFunctionOutputName(): String;
-	var
-		bytesNeededName: Cardinal;
-		bytesWrittenName: Cardinal;
-		bufferName: array of Char;
-	begin
-		bytesNeededName:= 0;
-		bytesWrittenName:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataProperty_GetFunctionOutputNameFunc(FHandle, 0, bytesNeededName, nil));
-		SetLength(bufferName, bytesNeededName);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataProperty_GetFunctionOutputNameFunc(FHandle, bytesNeededName, bytesWrittenName, @bufferName[0]));
-		Result := StrPas(@bufferName[0]);
 	end;
 
 	procedure TLib3MFVolumeDataProperty.SetIsRequired(const AIsRequired: Boolean);
@@ -13950,6 +13950,8 @@ implementation
 		FLib3MFFunctionReference_SetFunctionResourceIDFunc := LoadFunction('lib3mf_functionreference_setfunctionresourceid');
 		FLib3MFFunctionReference_GetTransformFunc := LoadFunction('lib3mf_functionreference_gettransform');
 		FLib3MFFunctionReference_SetTransformFunc := LoadFunction('lib3mf_functionreference_settransform');
+		FLib3MFFunctionReference_GetOutputNameFunc := LoadFunction('lib3mf_functionreference_getoutputname');
+		FLib3MFFunctionReference_SetOutputNameFunc := LoadFunction('lib3mf_functionreference_setoutputname');
 		FLib3MFVolumeDataBoundary_GetSolidThresholdFunc := LoadFunction('lib3mf_volumedataboundary_getsolidthreshold');
 		FLib3MFVolumeDataBoundary_SetSolidThresholdFunc := LoadFunction('lib3mf_volumedataboundary_setsolidthreshold');
 		FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc := LoadFunction('lib3mf_volumedatacomposite_getbasematerialgroup');
@@ -13959,8 +13961,6 @@ implementation
 		FLib3MFVolumeDataComposite_AddMaterialMappingFunc := LoadFunction('lib3mf_volumedatacomposite_addmaterialmapping');
 		FLib3MFVolumeDataComposite_RemoveMaterialMappingFunc := LoadFunction('lib3mf_volumedatacomposite_removematerialmapping');
 		FLib3MFVolumeDataProperty_GetNameFunc := LoadFunction('lib3mf_volumedataproperty_getname');
-		FLib3MFVolumeDataProperty_SetFunctionOutputNameFunc := LoadFunction('lib3mf_volumedataproperty_setfunctionoutputname');
-		FLib3MFVolumeDataProperty_GetFunctionOutputNameFunc := LoadFunction('lib3mf_volumedataproperty_getfunctionoutputname');
 		FLib3MFVolumeDataProperty_SetIsRequiredFunc := LoadFunction('lib3mf_volumedataproperty_setisrequired');
 		FLib3MFVolumeDataProperty_IsRequiredFunc := LoadFunction('lib3mf_volumedataproperty_isrequired');
 		FLib3MFVolumeData_GetBoundaryFunc := LoadFunction('lib3mf_volumedata_getboundary');
@@ -14708,6 +14708,12 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_functionreference_settransform'), @FLib3MFFunctionReference_SetTransformFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functionreference_getoutputname'), @FLib3MFFunctionReference_GetOutputNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functionreference_setoutputname'), @FLib3MFFunctionReference_SetOutputNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataboundary_getsolidthreshold'), @FLib3MFVolumeDataBoundary_GetSolidThresholdFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -14733,12 +14739,6 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataproperty_getname'), @FLib3MFVolumeDataProperty_GetNameFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataproperty_setfunctionoutputname'), @FLib3MFVolumeDataProperty_SetFunctionOutputNameFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataproperty_getfunctionoutputname'), @FLib3MFVolumeDataProperty_GetFunctionOutputNameFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataproperty_setisrequired'), @FLib3MFVolumeDataProperty_SetIsRequiredFunc);

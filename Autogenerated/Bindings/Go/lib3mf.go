@@ -1305,6 +1305,24 @@ Lib3MFResult CCall_lib3mf_functionreference_settransform(Lib3MFHandle libraryHan
 }
 
 
+Lib3MFResult CCall_lib3mf_functionreference_getoutputname(Lib3MFHandle libraryHandle, Lib3MF_FunctionReference pFunctionReference, const Lib3MF_uint32 nOutputNameBufferSize, Lib3MF_uint32* pOutputNameNeededChars, char * pOutputNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FunctionReference_GetOutputName (pFunctionReference, nOutputNameBufferSize, pOutputNameNeededChars, pOutputNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_functionreference_setoutputname(Lib3MFHandle libraryHandle, Lib3MF_FunctionReference pFunctionReference, const char * pOutputName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FunctionReference_SetOutputName (pFunctionReference, pOutputName);
+}
+
+
 Lib3MFResult CCall_lib3mf_volumedataboundary_getsolidthreshold(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataBoundary pVolumeDataBoundary, Lib3MF_double * pTheSolidThreshold)
 {
 	if (libraryHandle == 0) 
@@ -1383,24 +1401,6 @@ Lib3MFResult CCall_lib3mf_volumedataproperty_getname(Lib3MFHandle libraryHandle,
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_VolumeDataProperty_GetName (pVolumeDataProperty, nPropertyNameBufferSize, pPropertyNameNeededChars, pPropertyNameBuffer);
-}
-
-
-Lib3MFResult CCall_lib3mf_volumedataproperty_setfunctionoutputname(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataProperty pVolumeDataProperty, const char * pName)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_VolumeDataProperty_SetFunctionOutputName (pVolumeDataProperty, pName);
-}
-
-
-Lib3MFResult CCall_lib3mf_volumedataproperty_getfunctionoutputname(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataProperty pVolumeDataProperty, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_VolumeDataProperty_GetFunctionOutputName (pVolumeDataProperty, nNameBufferSize, pNameNeededChars, pNameBuffer);
 }
 
 
@@ -6660,6 +6660,32 @@ func (inst FunctionReference) SetTransform(transform Transform) error {
 	return nil
 }
 
+// GetOutputName returns the name of the function output to use.
+func (inst FunctionReference) GetOutputName() (string, error) {
+	var neededforoutputName C.uint32_t
+	var filledinoutputName C.uint32_t
+	ret := C.CCall_lib3mf_functionreference_getoutputname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforoutputName, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizeoutputName := neededforoutputName
+	bufferoutputName := make([]byte, bufferSizeoutputName)
+	ret = C.CCall_lib3mf_functionreference_getoutputname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizeoutputName, &filledinoutputName, (*C.char)(unsafe.Pointer(&bufferoutputName[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferoutputName[:(filledinoutputName-1)]), nil
+}
+
+// SetOutputName sets the name of the function output to use.
+func (inst FunctionReference) SetOutputName(outputName string) error {
+	ret := C.CCall_lib3mf_functionreference_setoutputname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(outputName)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
 
 // VolumeDataBoundary represents a Lib3MF class.
 type VolumeDataBoundary struct {
@@ -6802,32 +6828,6 @@ func (inst VolumeDataProperty) GetName() (string, error) {
 		return "", makeError(uint32(ret))
 	}
 	return string(bufferpropertyName[:(filledinpropertyName-1)]), nil
-}
-
-// SetFunctionOutputName sets the name of the function output used for the property.
-func (inst VolumeDataProperty) SetFunctionOutputName(name string) error {
-	ret := C.CCall_lib3mf_volumedataproperty_setfunctionoutputname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])))
-	if ret != 0 {
-		return makeError(uint32(ret))
-	}
-	return nil
-}
-
-// GetFunctionOutputName gets the name of the function output used for the property.
-func (inst VolumeDataProperty) GetFunctionOutputName() (string, error) {
-	var neededforname C.uint32_t
-	var filledinname C.uint32_t
-	ret := C.CCall_lib3mf_volumedataproperty_getfunctionoutputname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforname, nil)
-	if ret != 0 {
-		return "", makeError(uint32(ret))
-	}
-	bufferSizename := neededforname
-	buffername := make([]byte, bufferSizename)
-	ret = C.CCall_lib3mf_volumedataproperty_getfunctionoutputname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizename, &filledinname, (*C.char)(unsafe.Pointer(&buffername[0])))
-	if ret != 0 {
-		return "", makeError(uint32(ret))
-	}
-	return string(buffername[:(filledinname-1)]), nil
 }
 
 // SetIsRequired sets whether this property is required to process this 3MF document instance.

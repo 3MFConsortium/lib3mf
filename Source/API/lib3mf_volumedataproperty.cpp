@@ -67,13 +67,3 @@ bool CVolumeDataProperty::IsRequired()
 {
 	return asVolumeDataProperty()->isRequired();
 }
-
-void CVolumeDataProperty::SetFunctionOutputName(const std::string & sOutputName)
-{
-	asVolumeDataProperty()->setFunctionOutputName(sOutputName);
-}
-
-std::string CVolumeDataProperty::GetFunctionOutputName()
-{
-	return asVolumeDataProperty()->getFunctionOutputName();
-}

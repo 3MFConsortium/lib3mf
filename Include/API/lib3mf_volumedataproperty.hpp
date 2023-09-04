@@ -80,16 +80,9 @@ public:
 
 	std::string GetName() override;
 
-	void SetFunctionOutputName(const std::string & sName) override;
-
-	std::string GetFunctionOutputName() override;
-
 	void SetIsRequired(const bool bIsRequired) override;
 
 	bool IsRequired() override;
-
-	
-
 };
 
 } // namespace Impl

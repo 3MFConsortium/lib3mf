@@ -1655,6 +1655,18 @@ public:
 	*/
 	virtual void SetTransform(const Lib3MF::sTransform Transform) = 0;
 
+	/**
+	* IFunctionReference::GetOutputName - Returns the name of the function output to use.
+	* @return the name of the function output
+	*/
+	virtual std::string GetOutputName() = 0;
+
+	/**
+	* IFunctionReference::SetOutputName - Sets the name of the function output to use.
+	* @param[in] sOutputName - new name of the function output
+	*/
+	virtual void SetOutputName(const std::string & sOutputName) = 0;
+
 };
 
 typedef IBaseSharedPtr<IFunctionReference> PIFunctionReference;
@@ -1810,18 +1822,6 @@ public:
 	* @return The qualified name of this property.
 	*/
 	virtual std::string GetName() = 0;
-
-	/**
-	* IVolumeDataProperty::SetFunctionOutputName - Sets the name of the function output used for the property.
-	* @param[in] sName - the name of the function output
-	*/
-	virtual void SetFunctionOutputName(const std::string & sName) = 0;
-
-	/**
-	* IVolumeDataProperty::GetFunctionOutputName - Gets the name of the function output used for the property.
-	* @return the name of the function output
-	*/
-	virtual std::string GetFunctionOutputName() = 0;
 
 	/**
 	* IVolumeDataProperty::SetIsRequired - Sets whether this property is required to process this 3MF document instance.

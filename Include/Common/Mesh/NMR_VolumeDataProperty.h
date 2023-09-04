@@ -45,7 +45,6 @@ namespace NMR {
 	private:
 		std::string m_sName;
 		bool m_bIsRequired;
-		std::string m_sFunctionOutputName;
 	public:
 		CVolumeDataProperty() = delete;
 		explicit CVolumeDataProperty(PModelFunction pFunction);
@@ -56,9 +55,6 @@ namespace NMR {
 
 		bool isRequired();
 		void setIsRequired(bool bIsRequired);
-
-		void setFunctionOutputName(std::string sFunctionOutputName);
-		std::string getFunctionOutputName() const;
 	};
 
 	typedef std::shared_ptr<CVolumeDataProperty> PVolumeDataProperty;

@@ -1457,6 +1457,26 @@ typedef Lib3MFResult (*PLib3MFFunctionReference_GetTransformPtr) (Lib3MF_Functio
 */
 typedef Lib3MFResult (*PLib3MFFunctionReference_SetTransformPtr) (Lib3MF_FunctionReference pFunctionReference, const Lib3MF::sTransform * pTransform);
 
+/**
+* Returns the name of the function output to use.
+*
+* @param[in] pFunctionReference - FunctionReference instance.
+* @param[in] nOutputNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pOutputNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pOutputNameBuffer -  buffer of the name of the function output, may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFFunctionReference_GetOutputNamePtr) (Lib3MF_FunctionReference pFunctionReference, const Lib3MF_uint32 nOutputNameBufferSize, Lib3MF_uint32* pOutputNameNeededChars, char * pOutputNameBuffer);
+
+/**
+* Sets the name of the function output to use.
+*
+* @param[in] pFunctionReference - FunctionReference instance.
+* @param[in] pOutputName - new name of the function output
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFFunctionReference_SetOutputNamePtr) (Lib3MF_FunctionReference pFunctionReference, const char * pOutputName);
+
 /*************************************************************************************************************************
  Class definition for VolumeDataBoundary
 **************************************************************************************************************************/
@@ -1561,26 +1581,6 @@ typedef Lib3MFResult (*PLib3MFVolumeDataComposite_RemoveMaterialMappingPtr) (Lib
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFVolumeDataProperty_GetNamePtr) (Lib3MF_VolumeDataProperty pVolumeDataProperty, const Lib3MF_uint32 nPropertyNameBufferSize, Lib3MF_uint32* pPropertyNameNeededChars, char * pPropertyNameBuffer);
-
-/**
-* Sets the name of the function output used for the property.
-*
-* @param[in] pVolumeDataProperty - VolumeDataProperty instance.
-* @param[in] pName - the name of the function output
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFVolumeDataProperty_SetFunctionOutputNamePtr) (Lib3MF_VolumeDataProperty pVolumeDataProperty, const char * pName);
-
-/**
-* Gets the name of the function output used for the property.
-*
-* @param[in] pVolumeDataProperty - VolumeDataProperty instance.
-* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
-* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-* @param[out] pNameBuffer -  buffer of the name of the function output, may be NULL
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFVolumeDataProperty_GetFunctionOutputNamePtr) (Lib3MF_VolumeDataProperty pVolumeDataProperty, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer);
 
 /**
 * Sets whether this property is required to process this 3MF document instance.
@@ -5024,6 +5024,8 @@ typedef struct {
 	PLib3MFFunctionReference_SetFunctionResourceIDPtr m_FunctionReference_SetFunctionResourceID;
 	PLib3MFFunctionReference_GetTransformPtr m_FunctionReference_GetTransform;
 	PLib3MFFunctionReference_SetTransformPtr m_FunctionReference_SetTransform;
+	PLib3MFFunctionReference_GetOutputNamePtr m_FunctionReference_GetOutputName;
+	PLib3MFFunctionReference_SetOutputNamePtr m_FunctionReference_SetOutputName;
 	PLib3MFVolumeDataBoundary_GetSolidThresholdPtr m_VolumeDataBoundary_GetSolidThreshold;
 	PLib3MFVolumeDataBoundary_SetSolidThresholdPtr m_VolumeDataBoundary_SetSolidThreshold;
 	PLib3MFVolumeDataComposite_GetBaseMaterialGroupPtr m_VolumeDataComposite_GetBaseMaterialGroup;
@@ -5033,8 +5035,6 @@ typedef struct {
 	PLib3MFVolumeDataComposite_AddMaterialMappingPtr m_VolumeDataComposite_AddMaterialMapping;
 	PLib3MFVolumeDataComposite_RemoveMaterialMappingPtr m_VolumeDataComposite_RemoveMaterialMapping;
 	PLib3MFVolumeDataProperty_GetNamePtr m_VolumeDataProperty_GetName;
-	PLib3MFVolumeDataProperty_SetFunctionOutputNamePtr m_VolumeDataProperty_SetFunctionOutputName;
-	PLib3MFVolumeDataProperty_GetFunctionOutputNamePtr m_VolumeDataProperty_GetFunctionOutputName;
 	PLib3MFVolumeDataProperty_SetIsRequiredPtr m_VolumeDataProperty_SetIsRequired;
 	PLib3MFVolumeDataProperty_IsRequiredPtr m_VolumeDataProperty_IsRequired;
 	PLib3MFVolumeData_GetBoundaryPtr m_VolumeData_GetBoundary;

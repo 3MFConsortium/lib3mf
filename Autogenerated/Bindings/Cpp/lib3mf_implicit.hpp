@@ -1221,6 +1221,8 @@ public:
 	inline void SetFunctionResourceID(const Lib3MF_uint32 nUniqueResourceID);
 	inline sTransform GetTransform();
 	inline void SetTransform(const sTransform & Transform);
+	inline std::string GetOutputName();
+	inline void SetOutputName(const std::string & sOutputName);
 };
 	
 /*************************************************************************************************************************
@@ -1310,8 +1312,6 @@ public:
 	}
 	
 	inline std::string GetName();
-	inline void SetFunctionOutputName(const std::string & sName);
-	inline std::string GetFunctionOutputName();
 	inline void SetIsRequired(const bool bIsRequired);
 	inline bool IsRequired();
 };
@@ -4236,6 +4236,30 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CFunctionReference::GetOutputName - Returns the name of the function output to use.
+	* @return the name of the function output
+	*/
+	std::string CFunctionReference::GetOutputName()
+	{
+		Lib3MF_uint32 bytesNeededOutputName = 0;
+		Lib3MF_uint32 bytesWrittenOutputName = 0;
+		CheckError(lib3mf_functionreference_getoutputname(m_pHandle, 0, &bytesNeededOutputName, nullptr));
+		std::vector<char> bufferOutputName(bytesNeededOutputName);
+		CheckError(lib3mf_functionreference_getoutputname(m_pHandle, bytesNeededOutputName, &bytesWrittenOutputName, &bufferOutputName[0]));
+		
+		return std::string(&bufferOutputName[0]);
+	}
+	
+	/**
+	* CFunctionReference::SetOutputName - Sets the name of the function output to use.
+	* @param[in] sOutputName - new name of the function output
+	*/
+	void CFunctionReference::SetOutputName(const std::string & sOutputName)
+	{
+		CheckError(lib3mf_functionreference_setoutputname(m_pHandle, sOutputName.c_str()));
+	}
+	
+	/**
 	 * Method definitions for class CVolumeDataBoundary
 	 */
 	
@@ -4367,30 +4391,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		CheckError(lib3mf_volumedataproperty_getname(m_pHandle, bytesNeededPropertyName, &bytesWrittenPropertyName, &bufferPropertyName[0]));
 		
 		return std::string(&bufferPropertyName[0]);
-	}
-	
-	/**
-	* CVolumeDataProperty::SetFunctionOutputName - Sets the name of the function output used for the property.
-	* @param[in] sName - the name of the function output
-	*/
-	void CVolumeDataProperty::SetFunctionOutputName(const std::string & sName)
-	{
-		CheckError(lib3mf_volumedataproperty_setfunctionoutputname(m_pHandle, sName.c_str()));
-	}
-	
-	/**
-	* CVolumeDataProperty::GetFunctionOutputName - Gets the name of the function output used for the property.
-	* @return the name of the function output
-	*/
-	std::string CVolumeDataProperty::GetFunctionOutputName()
-	{
-		Lib3MF_uint32 bytesNeededName = 0;
-		Lib3MF_uint32 bytesWrittenName = 0;
-		CheckError(lib3mf_volumedataproperty_getfunctionoutputname(m_pHandle, 0, &bytesNeededName, nullptr));
-		std::vector<char> bufferName(bytesNeededName);
-		CheckError(lib3mf_volumedataproperty_getfunctionoutputname(m_pHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]));
-		
-		return std::string(&bufferName[0]);
 	}
 	
 	/**

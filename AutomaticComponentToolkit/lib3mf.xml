@@ -1108,6 +1108,13 @@
 		<method name="SetTransform" description="Sets the transformation matrix into the coordinate system of the referenced Function.">
 			<param name="Transform" type="struct" class="Transform" pass="in" description="new transformation matrix"/>
 		</method>
+
+		<method name="GetOutputName" description="Returns the name of the function output to use.">
+			<param name="OutputName" type="string" pass="return" description="the name of the function output"/>
+		</method>
+		<method name="SetOutputName" description="Sets the name of the function output to use.">
+			<param name="OutputName" type="string" pass="in" description="new name of the function output"/>
+		</method>
 	</class>
 
 	<class name="VolumeDataBoundary" parent="FunctionReference">
@@ -1169,16 +1176,6 @@
 		<method name="GetName" description="Gets the qualified name of this property.">
 			<param name="PropertyName" type="string" pass="return"
 				description="The qualified name of this property." />
-		</method>
-		<method name="SetFunctionOutputName"
-			description="Sets the name of the function output used for the property.">
-			<param name="Name" type="string" pass="in"
-				description="the name of the function output" />
-		</method>
-		<method name="GetFunctionOutputName"
-			description="Gets the name of the function output used for the property.">
-			<param name="Name" type="string" pass="return"
-				description="the name of the function output" />
 		</method>
 		<method name="SetIsRequired"
 			description="Sets whether this property is required to process this 3MF document instance.">

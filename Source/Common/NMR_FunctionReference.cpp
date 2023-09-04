@@ -60,12 +60,12 @@ namespace NMR
         return m_pFunctionResourceID;
     }
 
-    void NMR::CFunctionReference::setOutputPortName(std::string outputPortName)
+    void NMR::CFunctionReference::setOutputName(std::string outputPortName)
     {
-        m_outputPortName = outputPortName;
+        m_outputPortName = std::move(outputPortName);
     }
 
-    std::string NMR::CFunctionReference::getOutputPortName() const
+    std::string const& NMR::CFunctionReference::getOutputName() const
     {
         return m_outputPortName;
     }

@@ -772,7 +772,7 @@ namespace Lib3MF
         // Set transformation
         auto transformation = helper::ComputeTransformFromMeshCoordinatesToUVW(theMesh);
         theColor->SetTransform(transformation);
-
+    
         // Write to file
         writer3MF = model->QueryWriter("3mf");
         writer3MF->WriteToFile(Volumetric::OutFolder + "FunctionFromImage3D_Color.3mf");
@@ -823,6 +823,7 @@ namespace Lib3MF
         auto boundary = volumeData->CreateNewBoundary(funcFromImage3d.get());
         boundary->SetTransform(helper::ComputeTransformFromMeshCoordinatesToUVW(theMesh));
         boundary->SetSolidThreshold(0.25f);
+        boundary->SetOutputName("r");
         
         // Todo: Define output name
 
@@ -882,9 +883,8 @@ namespace Lib3MF
         // Add property
         auto property = volumeData->AddPropertyFromFunction("Temp", funcFromImage3d.get());
         property->SetTransform(helper::ComputeTransformFromMeshCoordinatesToUVW(theMesh));
-        property->SetFunctionOutputName("g");
-
-
+        std::string const outputName = "g";
+        property->SetOutputName(outputName);
 
         // Write to file
         writer3MF = model->QueryWriter("3mf");
@@ -907,7 +907,6 @@ namespace Lib3MF
             std::dynamic_pointer_cast<CFunctionFromImage3D>(functionFromFile);
 
         // Compare the functions
-
         helper::compareFunctions(model, funcFromImage3d, ioModel, functionFromFile);
 
         // Check the property
@@ -916,7 +915,8 @@ namespace Lib3MF
         ASSERT_TRUE(propertyFromFile);
         EXPECT_EQ(propertyFromFile->GetFunctionResourceID(), funcImg3dId);
         helper::CompareTransforms(property->GetTransform(), propertyFromFile->GetTransform());
-               
+        EXPECT_EQ(property->GetOutputName(), outputName);
+        EXPECT_EQ(property->GetName(), propertyFromFile->GetName());
     }
 
 }  // namespace Lib3MF

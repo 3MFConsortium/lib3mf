@@ -1470,6 +1470,26 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionreference_gettransform(Lib3MF_Functi
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionreference_settransform(Lib3MF_FunctionReference pFunctionReference, const Lib3MF::sTransform * pTransform);
 
+/**
+* Returns the name of the function output to use.
+*
+* @param[in] pFunctionReference - FunctionReference instance.
+* @param[in] nOutputNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pOutputNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pOutputNameBuffer -  buffer of the name of the function output, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionreference_getoutputname(Lib3MF_FunctionReference pFunctionReference, const Lib3MF_uint32 nOutputNameBufferSize, Lib3MF_uint32* pOutputNameNeededChars, char * pOutputNameBuffer);
+
+/**
+* Sets the name of the function output to use.
+*
+* @param[in] pFunctionReference - FunctionReference instance.
+* @param[in] pOutputName - new name of the function output
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionreference_setoutputname(Lib3MF_FunctionReference pFunctionReference, const char * pOutputName);
+
 /*************************************************************************************************************************
  Class definition for VolumeDataBoundary
 **************************************************************************************************************************/
@@ -1574,26 +1594,6 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedatacomposite_removematerialmapping(Li
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedataproperty_getname(Lib3MF_VolumeDataProperty pVolumeDataProperty, const Lib3MF_uint32 nPropertyNameBufferSize, Lib3MF_uint32* pPropertyNameNeededChars, char * pPropertyNameBuffer);
-
-/**
-* Sets the name of the function output used for the property.
-*
-* @param[in] pVolumeDataProperty - VolumeDataProperty instance.
-* @param[in] pName - the name of the function output
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedataproperty_setfunctionoutputname(Lib3MF_VolumeDataProperty pVolumeDataProperty, const char * pName);
-
-/**
-* Gets the name of the function output used for the property.
-*
-* @param[in] pVolumeDataProperty - VolumeDataProperty instance.
-* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
-* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-* @param[out] pNameBuffer -  buffer of the name of the function output, may be NULL
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedataproperty_getfunctionoutputname(Lib3MF_VolumeDataProperty pVolumeDataProperty, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer);
 
 /**
 * Sets whether this property is required to process this 3MF document instance.

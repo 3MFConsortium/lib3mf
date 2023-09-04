@@ -185,6 +185,8 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_FunctionReference_SetFunctionResourceID = NULL;
 	pWrapperTable->m_FunctionReference_GetTransform = NULL;
 	pWrapperTable->m_FunctionReference_SetTransform = NULL;
+	pWrapperTable->m_FunctionReference_GetOutputName = NULL;
+	pWrapperTable->m_FunctionReference_SetOutputName = NULL;
 	pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = NULL;
 	pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold = NULL;
 	pWrapperTable->m_VolumeDataComposite_GetBaseMaterialGroup = NULL;
@@ -194,8 +196,6 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_VolumeDataComposite_AddMaterialMapping = NULL;
 	pWrapperTable->m_VolumeDataComposite_RemoveMaterialMapping = NULL;
 	pWrapperTable->m_VolumeDataProperty_GetName = NULL;
-	pWrapperTable->m_VolumeDataProperty_SetFunctionOutputName = NULL;
-	pWrapperTable->m_VolumeDataProperty_GetFunctionOutputName = NULL;
 	pWrapperTable->m_VolumeDataProperty_SetIsRequired = NULL;
 	pWrapperTable->m_VolumeDataProperty_IsRequired = NULL;
 	pWrapperTable->m_VolumeData_GetBoundary = NULL;
@@ -1809,6 +1809,24 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_FunctionReference_GetOutputName = (PLib3MFFunctionReference_GetOutputNamePtr) GetProcAddress(hLibrary, "lib3mf_functionreference_getoutputname");
+	#else // _WIN32
+	pWrapperTable->m_FunctionReference_GetOutputName = (PLib3MFFunctionReference_GetOutputNamePtr) dlsym(hLibrary, "lib3mf_functionreference_getoutputname");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_FunctionReference_GetOutputName == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_FunctionReference_SetOutputName = (PLib3MFFunctionReference_SetOutputNamePtr) GetProcAddress(hLibrary, "lib3mf_functionreference_setoutputname");
+	#else // _WIN32
+	pWrapperTable->m_FunctionReference_SetOutputName = (PLib3MFFunctionReference_SetOutputNamePtr) dlsym(hLibrary, "lib3mf_functionreference_setoutputname");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_FunctionReference_SetOutputName == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = (PLib3MFVolumeDataBoundary_GetSolidThresholdPtr) GetProcAddress(hLibrary, "lib3mf_volumedataboundary_getsolidthreshold");
 	#else // _WIN32
 	pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = (PLib3MFVolumeDataBoundary_GetSolidThresholdPtr) dlsym(hLibrary, "lib3mf_volumedataboundary_getsolidthreshold");
@@ -1887,24 +1905,6 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_VolumeDataProperty_GetName == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
-	pWrapperTable->m_VolumeDataProperty_SetFunctionOutputName = (PLib3MFVolumeDataProperty_SetFunctionOutputNamePtr) GetProcAddress(hLibrary, "lib3mf_volumedataproperty_setfunctionoutputname");
-	#else // _WIN32
-	pWrapperTable->m_VolumeDataProperty_SetFunctionOutputName = (PLib3MFVolumeDataProperty_SetFunctionOutputNamePtr) dlsym(hLibrary, "lib3mf_volumedataproperty_setfunctionoutputname");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_VolumeDataProperty_SetFunctionOutputName == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
-	pWrapperTable->m_VolumeDataProperty_GetFunctionOutputName = (PLib3MFVolumeDataProperty_GetFunctionOutputNamePtr) GetProcAddress(hLibrary, "lib3mf_volumedataproperty_getfunctionoutputname");
-	#else // _WIN32
-	pWrapperTable->m_VolumeDataProperty_GetFunctionOutputName = (PLib3MFVolumeDataProperty_GetFunctionOutputNamePtr) dlsym(hLibrary, "lib3mf_volumedataproperty_getfunctionoutputname");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_VolumeDataProperty_GetFunctionOutputName == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

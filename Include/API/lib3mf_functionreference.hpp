@@ -100,6 +100,18 @@ public:
 	* @param[in] Transform - new transformation matrix
 	*/
 	void SetTransform(const Lib3MF::sTransform Transform) override;
+
+		/**
+	* IFunctionReference::GetOutputName - Returns the name of the function output to use.
+	* @return the name of the function output
+	*/
+	std::string GetOutputName() override;
+
+	/**
+	* IFunctionReference::SetOutputName - Sets the name of the function output to use.
+	* @param[in] sOutputName - new name of the function output
+	*/
+	void SetOutputName(const std::string & sOutputName) override;
 };
 
 } // namespace Impl

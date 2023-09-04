@@ -67,15 +67,4 @@ namespace NMR
     {
         m_bIsRequired = bIsRequired;
     }
-
-    void NMR::CVolumeDataProperty::setFunctionOutputName(
-        std::string sFunctionOutputName)
-    {
-        m_sFunctionOutputName = sFunctionOutputName;
-    }
-
-    std::string CVolumeDataProperty::getFunctionOutputName() const
-    {
-        return m_sFunctionOutputName;
-    }
 }  // namespace NMR

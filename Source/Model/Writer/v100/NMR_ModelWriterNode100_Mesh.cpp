@@ -390,6 +390,11 @@ namespace NMR {
 					if (!fnMATRIX3_isIdentity(pBoundary->getTransform())) {
 						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pBoundary->getTransform()));
 					}
+
+					if (!pBoundary->getOutputName().empty())
+					{
+						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pBoundary->getOutputName());
+					}
 					writeEndElement();
 				}
 

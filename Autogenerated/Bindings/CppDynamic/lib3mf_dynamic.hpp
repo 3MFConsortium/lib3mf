@@ -1245,6 +1245,8 @@ public:
 	inline void SetFunctionResourceID(const Lib3MF_uint32 nUniqueResourceID);
 	inline sTransform GetTransform();
 	inline void SetTransform(const sTransform & Transform);
+	inline std::string GetOutputName();
+	inline void SetOutputName(const std::string & sOutputName);
 };
 	
 /*************************************************************************************************************************
@@ -1334,8 +1336,6 @@ public:
 	}
 	
 	inline std::string GetName();
-	inline void SetFunctionOutputName(const std::string & sName);
-	inline std::string GetFunctionOutputName();
 	inline void SetIsRequired(const bool bIsRequired);
 	inline bool IsRequired();
 };
@@ -2656,6 +2656,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_FunctionReference_SetFunctionResourceID = nullptr;
 		pWrapperTable->m_FunctionReference_GetTransform = nullptr;
 		pWrapperTable->m_FunctionReference_SetTransform = nullptr;
+		pWrapperTable->m_FunctionReference_GetOutputName = nullptr;
+		pWrapperTable->m_FunctionReference_SetOutputName = nullptr;
 		pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = nullptr;
 		pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold = nullptr;
 		pWrapperTable->m_VolumeDataComposite_GetBaseMaterialGroup = nullptr;
@@ -2665,8 +2667,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_VolumeDataComposite_AddMaterialMapping = nullptr;
 		pWrapperTable->m_VolumeDataComposite_RemoveMaterialMapping = nullptr;
 		pWrapperTable->m_VolumeDataProperty_GetName = nullptr;
-		pWrapperTable->m_VolumeDataProperty_SetFunctionOutputName = nullptr;
-		pWrapperTable->m_VolumeDataProperty_GetFunctionOutputName = nullptr;
 		pWrapperTable->m_VolumeDataProperty_SetIsRequired = nullptr;
 		pWrapperTable->m_VolumeDataProperty_IsRequired = nullptr;
 		pWrapperTable->m_VolumeData_GetBoundary = nullptr;
@@ -4276,6 +4276,24 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_FunctionReference_GetOutputName = (PLib3MFFunctionReference_GetOutputNamePtr) GetProcAddress(hLibrary, "lib3mf_functionreference_getoutputname");
+		#else // _WIN32
+		pWrapperTable->m_FunctionReference_GetOutputName = (PLib3MFFunctionReference_GetOutputNamePtr) dlsym(hLibrary, "lib3mf_functionreference_getoutputname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_FunctionReference_GetOutputName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_FunctionReference_SetOutputName = (PLib3MFFunctionReference_SetOutputNamePtr) GetProcAddress(hLibrary, "lib3mf_functionreference_setoutputname");
+		#else // _WIN32
+		pWrapperTable->m_FunctionReference_SetOutputName = (PLib3MFFunctionReference_SetOutputNamePtr) dlsym(hLibrary, "lib3mf_functionreference_setoutputname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_FunctionReference_SetOutputName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = (PLib3MFVolumeDataBoundary_GetSolidThresholdPtr) GetProcAddress(hLibrary, "lib3mf_volumedataboundary_getsolidthreshold");
 		#else // _WIN32
 		pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = (PLib3MFVolumeDataBoundary_GetSolidThresholdPtr) dlsym(hLibrary, "lib3mf_volumedataboundary_getsolidthreshold");
@@ -4354,24 +4372,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_VolumeDataProperty_GetName == nullptr)
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		#ifdef _WIN32
-		pWrapperTable->m_VolumeDataProperty_SetFunctionOutputName = (PLib3MFVolumeDataProperty_SetFunctionOutputNamePtr) GetProcAddress(hLibrary, "lib3mf_volumedataproperty_setfunctionoutputname");
-		#else // _WIN32
-		pWrapperTable->m_VolumeDataProperty_SetFunctionOutputName = (PLib3MFVolumeDataProperty_SetFunctionOutputNamePtr) dlsym(hLibrary, "lib3mf_volumedataproperty_setfunctionoutputname");
-		dlerror();
-		#endif // _WIN32
-		if (pWrapperTable->m_VolumeDataProperty_SetFunctionOutputName == nullptr)
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		#ifdef _WIN32
-		pWrapperTable->m_VolumeDataProperty_GetFunctionOutputName = (PLib3MFVolumeDataProperty_GetFunctionOutputNamePtr) GetProcAddress(hLibrary, "lib3mf_volumedataproperty_getfunctionoutputname");
-		#else // _WIN32
-		pWrapperTable->m_VolumeDataProperty_GetFunctionOutputName = (PLib3MFVolumeDataProperty_GetFunctionOutputNamePtr) dlsym(hLibrary, "lib3mf_volumedataproperty_getfunctionoutputname");
-		dlerror();
-		#endif // _WIN32
-		if (pWrapperTable->m_VolumeDataProperty_GetFunctionOutputName == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -7863,6 +7863,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionReference_SetTransform == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_functionreference_getoutputname", (void**)&(pWrapperTable->m_FunctionReference_GetOutputName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionReference_GetOutputName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_functionreference_setoutputname", (void**)&(pWrapperTable->m_FunctionReference_SetOutputName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionReference_SetOutputName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_volumedataboundary_getsolidthreshold", (void**)&(pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold));
 		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -7897,14 +7905,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_volumedataproperty_getname", (void**)&(pWrapperTable->m_VolumeDataProperty_GetName));
 		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeDataProperty_GetName == nullptr) )
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		eLookupError = (*pLookup)("lib3mf_volumedataproperty_setfunctionoutputname", (void**)&(pWrapperTable->m_VolumeDataProperty_SetFunctionOutputName));
-		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeDataProperty_SetFunctionOutputName == nullptr) )
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		eLookupError = (*pLookup)("lib3mf_volumedataproperty_getfunctionoutputname", (void**)&(pWrapperTable->m_VolumeDataProperty_GetFunctionOutputName));
-		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeDataProperty_GetFunctionOutputName == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_volumedataproperty_setisrequired", (void**)&(pWrapperTable->m_VolumeDataProperty_SetIsRequired));
@@ -10958,6 +10958,30 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CFunctionReference::GetOutputName - Returns the name of the function output to use.
+	* @return the name of the function output
+	*/
+	std::string CFunctionReference::GetOutputName()
+	{
+		Lib3MF_uint32 bytesNeededOutputName = 0;
+		Lib3MF_uint32 bytesWrittenOutputName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionReference_GetOutputName(m_pHandle, 0, &bytesNeededOutputName, nullptr));
+		std::vector<char> bufferOutputName(bytesNeededOutputName);
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionReference_GetOutputName(m_pHandle, bytesNeededOutputName, &bytesWrittenOutputName, &bufferOutputName[0]));
+		
+		return std::string(&bufferOutputName[0]);
+	}
+	
+	/**
+	* CFunctionReference::SetOutputName - Sets the name of the function output to use.
+	* @param[in] sOutputName - new name of the function output
+	*/
+	void CFunctionReference::SetOutputName(const std::string & sOutputName)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionReference_SetOutputName(m_pHandle, sOutputName.c_str()));
+	}
+	
+	/**
 	 * Method definitions for class CVolumeDataBoundary
 	 */
 	
@@ -11089,30 +11113,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		CheckError(m_pWrapper->m_WrapperTable.m_VolumeDataProperty_GetName(m_pHandle, bytesNeededPropertyName, &bytesWrittenPropertyName, &bufferPropertyName[0]));
 		
 		return std::string(&bufferPropertyName[0]);
-	}
-	
-	/**
-	* CVolumeDataProperty::SetFunctionOutputName - Sets the name of the function output used for the property.
-	* @param[in] sName - the name of the function output
-	*/
-	void CVolumeDataProperty::SetFunctionOutputName(const std::string & sName)
-	{
-		CheckError(m_pWrapper->m_WrapperTable.m_VolumeDataProperty_SetFunctionOutputName(m_pHandle, sName.c_str()));
-	}
-	
-	/**
-	* CVolumeDataProperty::GetFunctionOutputName - Gets the name of the function output used for the property.
-	* @return the name of the function output
-	*/
-	std::string CVolumeDataProperty::GetFunctionOutputName()
-	{
-		Lib3MF_uint32 bytesNeededName = 0;
-		Lib3MF_uint32 bytesWrittenName = 0;
-		CheckError(m_pWrapper->m_WrapperTable.m_VolumeDataProperty_GetFunctionOutputName(m_pHandle, 0, &bytesNeededName, nullptr));
-		std::vector<char> bufferName(bytesNeededName);
-		CheckError(m_pWrapper->m_WrapperTable.m_VolumeDataProperty_GetFunctionOutputName(m_pHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]));
-		
-		return std::string(&bufferName[0]);
 	}
 	
 	/**

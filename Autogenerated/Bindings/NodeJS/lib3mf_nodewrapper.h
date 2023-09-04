@@ -604,6 +604,8 @@ private:
 	static void SetFunctionResourceID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetTransform(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetTransform(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetOutputName(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFFunctionReference();
@@ -698,8 +700,6 @@ private:
 	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static v8::Persistent<v8::Function> constructor;
 	static void GetName(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void SetFunctionOutputName(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetFunctionOutputName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetIsRequired(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void IsRequired(const v8::FunctionCallbackInfo<v8::Value>& args);
 

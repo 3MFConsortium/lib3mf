@@ -836,6 +836,12 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_settransform", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 FunctionReference_SetTransform (IntPtr Handle, InternalTransform ATransform);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_getoutputname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionReference_GetOutputName (IntPtr Handle, UInt32 sizeOutputName, out UInt32 neededOutputName, IntPtr dataOutputName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_setoutputname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionReference_SetOutputName (IntPtr Handle, byte[] AOutputName);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataboundary_getsolidthreshold", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataBoundary_GetSolidThreshold (IntPtr Handle, out Double ATheSolidThreshold);
 
@@ -862,12 +868,6 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataproperty_getname", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataProperty_GetName (IntPtr Handle, UInt32 sizePropertyName, out UInt32 neededPropertyName, IntPtr dataPropertyName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataproperty_setfunctionoutputname", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeDataProperty_SetFunctionOutputName (IntPtr Handle, byte[] AName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataproperty_getfunctionoutputname", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeDataProperty_GetFunctionOutputName (IntPtr Handle, UInt32 sizeName, out UInt32 neededName, IntPtr dataName);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataproperty_setisrequired", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataProperty_SetIsRequired (IntPtr Handle, Byte AIsRequired);
@@ -3676,6 +3676,27 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.FunctionReference_SetTransform (Handle, intTransform));
 		}
 
+		public String GetOutputName ()
+		{
+			UInt32 sizeOutputName = 0;
+			UInt32 neededOutputName = 0;
+			CheckError(Internal.Lib3MFWrapper.FunctionReference_GetOutputName (Handle, sizeOutputName, out neededOutputName, IntPtr.Zero));
+			sizeOutputName = neededOutputName;
+			byte[] bytesOutputName = new byte[sizeOutputName];
+			GCHandle dataOutputName = GCHandle.Alloc(bytesOutputName, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.FunctionReference_GetOutputName (Handle, sizeOutputName, out neededOutputName, dataOutputName.AddrOfPinnedObject()));
+			dataOutputName.Free();
+			return Encoding.UTF8.GetString(bytesOutputName).TrimEnd(char.MinValue);
+		}
+
+		public void SetOutputName (String AOutputName)
+		{
+			byte[] byteOutputName = Encoding.UTF8.GetBytes(AOutputName + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.FunctionReference_SetOutputName (Handle, byteOutputName));
+		}
+
 	}
 
 	public class CVolumeDataBoundary : CFunctionReference
@@ -3790,27 +3811,6 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.VolumeDataProperty_GetName (Handle, sizePropertyName, out neededPropertyName, dataPropertyName.AddrOfPinnedObject()));
 			dataPropertyName.Free();
 			return Encoding.UTF8.GetString(bytesPropertyName).TrimEnd(char.MinValue);
-		}
-
-		public void SetFunctionOutputName (String AName)
-		{
-			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
-
-			CheckError(Internal.Lib3MFWrapper.VolumeDataProperty_SetFunctionOutputName (Handle, byteName));
-		}
-
-		public String GetFunctionOutputName ()
-		{
-			UInt32 sizeName = 0;
-			UInt32 neededName = 0;
-			CheckError(Internal.Lib3MFWrapper.VolumeDataProperty_GetFunctionOutputName (Handle, sizeName, out neededName, IntPtr.Zero));
-			sizeName = neededName;
-			byte[] bytesName = new byte[sizeName];
-			GCHandle dataName = GCHandle.Alloc(bytesName, GCHandleType.Pinned);
-
-			CheckError(Internal.Lib3MFWrapper.VolumeDataProperty_GetFunctionOutputName (Handle, sizeName, out neededName, dataName.AddrOfPinnedObject()));
-			dataName.Free();
-			return Encoding.UTF8.GetString(bytesName).TrimEnd(char.MinValue);
 		}
 
 		public void SetIsRequired (bool AIsRequired)
