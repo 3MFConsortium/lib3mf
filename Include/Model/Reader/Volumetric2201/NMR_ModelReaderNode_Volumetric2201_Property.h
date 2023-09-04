@@ -40,15 +40,17 @@ namespace NMR {
 
 	class CModelReaderNode_Volumetric2201_Property : public CModelReaderNode {
 	private:
-		nfBool m_bHasFieldID;
-		nfBool m_bHasName;
-		nfBool m_bHasTransform;
-		nfBool m_bHasRequired;
+		nfBool m_bHasFieldID = false;
+		nfBool m_bHasName = false;
+		nfBool m_bHasTransform = false;
+		nfBool m_bHasRequired = false;
+		nfBool m_bHasChannel = false;
 
 		ModelResourceID m_nFieldID;
 		std::string m_sName;
 		NMATRIX3 m_Transform;
-		nfBool m_bRequired;
+		nfBool m_bRequired = true;
+		std::string m_sChannel;
 
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);

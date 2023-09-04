@@ -85,6 +85,11 @@ namespace NMR {
 		{
 			pColor->setTransform(m_Transform);
 		}
+
+		if (m_bHasChannel)
+		{
+			pColor->setChannelName(m_sChannel);
+		}
 		return pColor;
 	}
 
@@ -104,6 +109,14 @@ namespace NMR {
 			m_bHasFieldID = true;
 
 			m_nFieldID = fnStringToUint32(pAttributeValue);
+		}
+
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL) == 0) {
+			if (m_bHasChannel)
+				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATACHANNEL);
+
+			m_bHasChannel = true;
+			m_sChannel = pAttributeValue;
 		}
 	}
 	

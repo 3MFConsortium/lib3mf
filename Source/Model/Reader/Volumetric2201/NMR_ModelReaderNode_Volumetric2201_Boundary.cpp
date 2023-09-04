@@ -46,9 +46,7 @@ namespace NMR {
 	CModelReaderNode_Volumetric2201_Boundary::CModelReaderNode_Volumetric2201_Boundary(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
-		m_bHasFunctionID = false;
-		m_bHasSolidThreshold = false;
-		m_bHasTransform = false;
+
 	}
 
 	void CModelReaderNode_Volumetric2201_Boundary::parseXML(_In_ CXmlReader * pXMLReader)
@@ -87,6 +85,8 @@ namespace NMR {
 			pBoundary->setSolidThreshold(m_dSolidThreshold);
 		if (m_bHasTransform)
 			pBoundary->setTransform(m_Transform);
+		if (m_bHasChannel)
+			pBoundary->setChannelName(m_sChannel);
 		return pBoundary;
 	}
 	
@@ -113,6 +113,13 @@ namespace NMR {
 			if (std::isnan((float)m_dSolidThreshold))
 #endif
 				throw CNMRException(NMR_ERROR_INVALIDVOLUMEDATASOLIDTHRESHOLD);
+
+		} else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL) == 0) {
+			if (m_bHasChannel)
+				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATACHANNEL);
+
+			m_bHasChannel = true;
+			m_sChannel = pAttributeValue;
 		}
 
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_FUNCTIONID) == 0) {

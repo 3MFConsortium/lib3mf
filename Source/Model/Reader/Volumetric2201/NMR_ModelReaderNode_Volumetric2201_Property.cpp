@@ -45,11 +45,7 @@ namespace NMR {
 	CModelReaderNode_Volumetric2201_Property::CModelReaderNode_Volumetric2201_Property(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
-		m_bHasFieldID = false;
-		m_bHasName = false;
-		m_bHasTransform = false;
-		m_bHasRequired = false;
-		m_bRequired = true;
+
 	}
 
 	void CModelReaderNode_Volumetric2201_Property::parseXML(_In_ CXmlReader * pXMLReader)
@@ -99,6 +95,11 @@ namespace NMR {
 		{
 			pProperty->setTransform(m_Transform);
 		}
+
+		if (m_bHasChannel)
+		{
+			pProperty->setChannelName(m_sChannel);
+		}
 		return pProperty;
 	}
 
@@ -136,6 +137,14 @@ namespace NMR {
 			m_bHasRequired = true;
 
 			m_bRequired = !(std::string(pAttributeValue) == "false");
+		}
+
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL) == 0) {
+			if (m_bHasChannel)
+				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATACHANNEL);
+
+			m_bHasChannel = true;
+			m_sChannel = pAttributeValue;
 		}
 	}
 

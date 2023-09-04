@@ -43,9 +43,11 @@ namespace NMR {
 	private:
 		nfBool m_bHasFieldID = false;
 		nfBool m_bHasTransform = false;
+		nfBool m_bHasChannel = false;
 
 		ModelResourceID m_nFieldID;
 		NMATRIX3 m_Transform = fnMATRIX3_identity();
+		std::string m_sChannel;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:

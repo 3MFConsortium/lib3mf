@@ -824,8 +824,6 @@ namespace Lib3MF
         boundary->SetTransform(helper::ComputeTransformFromMeshCoordinatesToUVW(theMesh));
         boundary->SetSolidThreshold(0.25f);
         boundary->SetChannelName("r");
-        
-        // Todo: Define output name
 
         // Write to file
         writer3MF = model->QueryWriter("3mf");
