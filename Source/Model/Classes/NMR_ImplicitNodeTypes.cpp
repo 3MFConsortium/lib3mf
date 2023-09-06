@@ -78,11 +78,7 @@ namespace NMR
                                 Out{{"result", eImplicitPortType::Vector}}},
                 InputOutputRule{In{{"A", eImplicitPortType::Matrix},
                                    {"B", eImplicitPortType::Scalar}},
-                                Out{{"result", eImplicitPortType::Matrix}}},
-                InputOutputRule{In{{"A", eImplicitPortType::Scalar}},
-                                Out{{"result", eImplicitPortType::Vector}}},
-                InputOutputRule{In{{"A", eImplicitPortType::Scalar}},
-                                Out{{"result", eImplicitPortType::Matrix}}},
+                                Out{{"result", eImplicitPortType::Matrix}}}
             };
 
             static AllowedInputOutputs const oneParameterFunctionSameDimensions{
@@ -93,7 +89,7 @@ namespace NMR
                 InputOutputRule{In{{"A", eImplicitPortType::Matrix}},
                                 Out{{"result", eImplicitPortType::Matrix}}}};
 
-            AllowedInputOutputs const twoParameterFunctionSameDimensions{
+            static AllowedInputOutputs const twoParameterFunctionSameDimensions{
                 InputOutputRule{In{{"A", eImplicitPortType::Scalar},
                                    {"B", eImplicitPortType::Scalar}},
                                 Out{{"result", eImplicitPortType::Scalar}}},
@@ -357,6 +353,25 @@ namespace NMR
                           Out{{"result", eImplicitPortType::Matrix}}},
 
                   }}},
+                {eImplicitNodeType::Clamp, // result = min(max(A, min), max)
+                 {"clamp",
+                  {
+                      InputOutputRule{
+                          In{{"A", eImplicitPortType::Scalar},
+                             {"min", eImplicitPortType::Scalar},
+                             {"max", eImplicitPortType::Scalar}},
+                          Out{{"result", eImplicitPortType::Scalar}}},
+                      InputOutputRule{
+                          In{{"A", eImplicitPortType::Vector},
+                             {"min", eImplicitPortType::Vector},
+                             {"max", eImplicitPortType::Vector}},
+                          Out{{"result", eImplicitPortType::Vector}}},
+                      InputOutputRule{
+                          In{{"A", eImplicitPortType::Matrix},
+                             {"min", eImplicitPortType::Matrix},
+                             {"max", eImplicitPortType::Matrix}},
+                          Out{{"result", eImplicitPortType::Matrix}}},
+                  }}},
                 {eImplicitNodeType::Length,
                  {"length",
                   {
@@ -382,7 +397,7 @@ namespace NMR
                  {"functioncall",
                   {InputOutputRule{
                       In{{"functionID",
-                          eImplicitPortType::ResourceID}},  // not predefined
+                          eImplicitPortType::ResourceID}},  // not predefined besides the functionID
                       Out{}                                 // not predefined
                   }}}}};
         }
