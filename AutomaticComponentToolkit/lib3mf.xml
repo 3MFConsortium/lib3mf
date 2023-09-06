@@ -1935,14 +1935,14 @@
 		<method name="FindInput" description="Retrieves an input">
 			<param name="Identifier" type="string" pass="in"
 				description="the identifier of the input" />
-			<param name="Input" type="class" class="ImplicitPort" pass="return"
+			<param name="Input" type="optionalclass" class="ImplicitPort" pass="return"
 				description="the input port" />
 		</method>
 
 		<method name="FindOutput" description="Retrieves an output">
 			<param name="Identifier" type="string" pass="in"
 				description="the identifier of the output" />
-			<param name="Output" type="class" class="ImplicitPort" pass="return"
+			<param name="Output" type="optionalclass" class="ImplicitPort" pass="return"
 				description="the output port" />
 		</method>
 

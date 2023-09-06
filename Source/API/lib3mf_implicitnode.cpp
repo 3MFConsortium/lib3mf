@@ -107,11 +107,21 @@ IImplicitPortIterator * CImplicitNode::GetInputs()
 
 IImplicitPort * CImplicitNode::FindInput(const std::string & sIdentifier)
 {
+    auto pPort = m_pImplicitNode->findInput(sIdentifier);
+    if (!pPort)
+    {
+        return nullptr;
+    }
     return new CImplicitPort(m_pImplicitNode->findInput(sIdentifier));
 }
 
 IImplicitPort * CImplicitNode::FindOutput(const std::string & sIdentifier)
 {
+    auto pPort = m_pImplicitNode->findOutput(sIdentifier);
+    if (!pPort)
+    {
+        return nullptr;
+    }
     return new CImplicitPort(m_pImplicitNode->findOutput(sIdentifier));
 }
 

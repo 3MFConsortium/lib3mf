@@ -403,6 +403,10 @@ namespace Lib3MF
         auto cosNode = newFunction->AddNode(Lib3MF::eImplicitNodeType::Cosinus,
                                             "cos", "cos", "group_a");
         cosNode->FindInput("A")->SetType(Lib3MF::eImplicitPortType::Vector);
+
+        auto const nonExistingInput = cosNode->FindInput("FictionalInput");
+        EXPECT_TRUE(!nonExistingInput);
+
         cosNode->FindOutput("result")->SetType(
             Lib3MF::eImplicitPortType::Vector);
         newFunction->AddLinkByNames("composeYZX.result", "cos.A");

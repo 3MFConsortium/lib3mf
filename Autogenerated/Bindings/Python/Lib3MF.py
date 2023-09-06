@@ -7992,7 +7992,7 @@ class ImplicitNode(Base):
 		if InputHandle:
 			InputObject = self._wrapper._polymorphicFactory(InputHandle)
 		else:
-			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+			InputObject = None
 		
 		return InputObject
 	
@@ -8003,7 +8003,7 @@ class ImplicitNode(Base):
 		if OutputHandle:
 			OutputObject = self._wrapper._polymorphicFactory(OutputHandle)
 		else:
-			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+			OutputObject = None
 		
 		return OutputObject
 	

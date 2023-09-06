@@ -8399,23 +8399,33 @@ func (inst ImplicitNode) GetOutputs() (ImplicitPortIterator, error) {
 }
 
 // FindInput retrieves an input.
-func (inst ImplicitNode) FindInput(identifier string) (ImplicitPort, error) {
+func (inst ImplicitNode) FindInput(identifier string) (*ImplicitPort, error) {
 	var input ref
 	ret := C.CCall_lib3mf_implicitnode_findinput(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), &input)
 	if ret != 0 {
-		return ImplicitPort{}, makeError(uint32(ret))
+		return nil, makeError(uint32(ret))
 	}
-	return inst.wrapperRef.NewImplicitPort(input), nil
+	var _inputPtr *ImplicitPort
+	if input != nil {
+		_inputPtrVal := inst.wrapperRef.NewImplicitPort(input)
+		_inputPtr = &_inputPtrVal
+	}
+	return _inputPtr, nil
 }
 
 // FindOutput retrieves an output.
-func (inst ImplicitNode) FindOutput(identifier string) (ImplicitPort, error) {
+func (inst ImplicitNode) FindOutput(identifier string) (*ImplicitPort, error) {
 	var output ref
 	ret := C.CCall_lib3mf_implicitnode_findoutput(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), &output)
 	if ret != 0 {
-		return ImplicitPort{}, makeError(uint32(ret))
+		return nil, makeError(uint32(ret))
 	}
-	return inst.wrapperRef.NewImplicitPort(output), nil
+	var _outputPtr *ImplicitPort
+	if output != nil {
+		_outputPtrVal := inst.wrapperRef.NewImplicitPort(output)
+		_outputPtr = &_outputPtrVal
+	}
+	return _outputPtr, nil
 }
 
 // SetConstant sets the constant value of the node. Throws an error, if the node type not is of type Constant.

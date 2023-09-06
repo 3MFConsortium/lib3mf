@@ -12749,10 +12749,11 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		Lib3MFHandle hInput = nullptr;
 		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_FindInput(m_pHandle, sIdentifier.c_str(), &hInput));
 		
-		if (!hInput) {
-			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		if (hInput) {
+			return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hInput)));
+		} else {
+			return nullptr;
 		}
-		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hInput)));
 	}
 	
 	/**
@@ -12765,10 +12766,11 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		Lib3MFHandle hOutput = nullptr;
 		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitNode_FindOutput(m_pHandle, sIdentifier.c_str(), &hOutput));
 		
-		if (!hOutput) {
-			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		if (hOutput) {
+			return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hOutput)));
+		} else {
+			return nullptr;
 		}
-		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hOutput)));
 	}
 	
 	/**
