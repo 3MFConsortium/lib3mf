@@ -178,7 +178,27 @@ namespace NMR
     {
         return m_nodeTypes;
     }
-    
+
+    void CModelImplicitFunction::removeNode(
+        ImplicitIdentifier const& sIdentifier)
+    {
+        auto node = findNode(sIdentifier);
+        if(node == nullptr)
+        {
+            throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+        }
+        m_nodes->erase(std::remove_if(m_nodes->begin(), m_nodes->end(),
+                                      [node](PModelImplicitNode const& n)
+                                      { return n.get() == node; }),
+                       m_nodes->end());
+    }
+
+    void CModelImplicitFunction::clear() 
+    {
+        CModelFunction::clear();
+        m_nodes->clear();
+    }
+
     std::string extractNodeName(const ImplicitIdentifier& sIdentifier)
     {
         auto pos = sIdentifier.find_last_of(".");

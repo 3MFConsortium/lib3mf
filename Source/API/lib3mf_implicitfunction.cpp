@@ -81,7 +81,9 @@ INodeIterator * CImplicitFunction::GetNodes()
 
 void CImplicitFunction::RemoveNode(IImplicitNode* pNode)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	if (pNode == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	function()->removeNode(pNode->GetIdentifier());
 }
 
 void CImplicitFunction::AddLink(IImplicitPort* pSource, IImplicitPort* pTarget)

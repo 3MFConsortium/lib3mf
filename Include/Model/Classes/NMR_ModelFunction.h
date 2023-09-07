@@ -60,11 +60,13 @@ namespace NMR
             const std::string& sDisplayName,
             const Lib3MF::eImplicitPortType ePortType);
 
-        PPorts getInputs() const;
-        PPorts getOutputs() const;
+        PPorts const& getInputs() const;
+        PPorts const& getOutputs() const;
 
         PModelImplicitPort findInput(const std::string& sIdentifier);
         PModelImplicitPort findOutput(const std::string& sIdentifier);
+
+        virtual void clear();
     };
 
     using PModelFunction = std::shared_ptr<CModelFunction>;

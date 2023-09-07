@@ -70,12 +70,12 @@ namespace NMR
         return newPort;
     }
 
-    PPorts CModelFunction::getInputs() const
+    PPorts const& CModelFunction::getInputs() const
     {
         return m_inputs;
     }
 
-    PPorts CModelFunction::getOutputs() const
+    PPorts const& CModelFunction::getOutputs() const
     {
         return m_outputs;
     }
@@ -102,5 +102,11 @@ namespace NMR
             }
         }
         return {};
+    }
+
+    void CModelFunction::clear()
+    {
+        m_inputs->clear();
+        m_outputs->clear();
     }
 }
