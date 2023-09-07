@@ -2114,6 +2114,9 @@
 				description="name of the target port in the format nodename.portname" />
 		</method>
 
+		<method name="Clear" description="Clears the function">
+		</method>
+
 	</class>
 
 	<class name="FunctionFromImage3D" parent="Function">

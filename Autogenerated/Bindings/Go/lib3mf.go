@@ -2799,6 +2799,15 @@ Lib3MFResult CCall_lib3mf_implicitfunction_addlinkbynames(Lib3MFHandle libraryHa
 }
 
 
+Lib3MFResult CCall_lib3mf_implicitfunction_clear(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_Clear (pImplicitFunction);
+}
+
+
 Lib3MFResult CCall_lib3mf_functionfromimage3d_getimage3d(Lib3MFHandle libraryHandle, Lib3MF_FunctionFromImage3D pFunctionFromImage3D, Lib3MF_Image3D * pImage3D)
 {
 	if (libraryHandle == 0) 
@@ -8725,6 +8734,15 @@ func (inst ImplicitFunction) AddLink(source ImplicitPort, target ImplicitPort) e
 // AddLinkByNames add a link.
 func (inst ImplicitFunction) AddLinkByNames(source string, target string) error {
 	ret := C.CCall_lib3mf_implicitfunction_addlinkbynames(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(source)[0])), (*C.char)(unsafe.Pointer(&[]byte(target)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// Clear clears the function.
+func (inst ImplicitFunction) Clear() error {
+	ret := C.CCall_lib3mf_implicitfunction_clear(inst.wrapperRef.LibraryHandle, inst.Ref)
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}

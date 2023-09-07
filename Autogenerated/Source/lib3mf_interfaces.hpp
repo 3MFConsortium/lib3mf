@@ -3239,6 +3239,11 @@ public:
 	*/
 	virtual void AddLinkByNames(const std::string & sSource, const std::string & sTarget) = 0;
 
+	/**
+	* IImplicitFunction::Clear - Clears the function
+	*/
+	virtual void Clear() = 0;
+
 };
 
 typedef IBaseSharedPtr<IImplicitFunction> PIImplicitFunction;

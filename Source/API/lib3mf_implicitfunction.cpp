@@ -95,3 +95,8 @@ void CImplicitFunction::AddLinkByNames(const std::string & sSource, const std::s
 {
 	function()->addLink(sSource, sTarget);
 }
+
+void CImplicitFunction::Clear()
+{
+	function()->clear();
+}

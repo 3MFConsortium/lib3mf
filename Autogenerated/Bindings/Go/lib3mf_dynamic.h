@@ -3173,6 +3173,14 @@ typedef Lib3MFResult (*PLib3MFImplicitFunction_AddLinkPtr) (Lib3MF_ImplicitFunct
 */
 typedef Lib3MFResult (*PLib3MFImplicitFunction_AddLinkByNamesPtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pSource, const char * pTarget);
 
+/**
+* Clears the function
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitFunction_ClearPtr) (Lib3MF_ImplicitFunction pImplicitFunction);
+
 /*************************************************************************************************************************
  Class definition for FunctionFromImage3D
 **************************************************************************************************************************/
@@ -5190,6 +5198,7 @@ typedef struct {
 	PLib3MFImplicitFunction_RemoveNodePtr m_ImplicitFunction_RemoveNode;
 	PLib3MFImplicitFunction_AddLinkPtr m_ImplicitFunction_AddLink;
 	PLib3MFImplicitFunction_AddLinkByNamesPtr m_ImplicitFunction_AddLinkByNames;
+	PLib3MFImplicitFunction_ClearPtr m_ImplicitFunction_Clear;
 	PLib3MFFunctionFromImage3D_GetImage3DPtr m_FunctionFromImage3D_GetImage3D;
 	PLib3MFFunctionFromImage3D_SetImage3DPtr m_FunctionFromImage3D_SetImage3D;
 	PLib3MFFunctionFromImage3D_SetFilterPtr m_FunctionFromImage3D_SetFilter;

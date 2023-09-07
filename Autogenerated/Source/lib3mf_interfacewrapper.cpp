@@ -11457,6 +11457,37 @@ Lib3MFResult lib3mf_implicitfunction_addlinkbynames(Lib3MF_ImplicitFunction pImp
 	}
 }
 
+Lib3MFResult lib3mf_implicitfunction_clear(Lib3MF_ImplicitFunction pImplicitFunction)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "Clear");
+		}
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIImplicitFunction->Clear();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 
 /*************************************************************************************************************************
  Class implementation for FunctionFromImage3D
@@ -17804,6 +17835,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_implicitfunction_addlink;
 	if (sProcName == "lib3mf_implicitfunction_addlinkbynames") 
 		*ppProcAddress = (void*) &lib3mf_implicitfunction_addlinkbynames;
+	if (sProcName == "lib3mf_implicitfunction_clear") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_clear;
 	if (sProcName == "lib3mf_functionfromimage3d_getimage3d") 
 		*ppProcAddress = (void*) &lib3mf_functionfromimage3d_getimage3d;
 	if (sProcName == "lib3mf_functionfromimage3d_setimage3d") 

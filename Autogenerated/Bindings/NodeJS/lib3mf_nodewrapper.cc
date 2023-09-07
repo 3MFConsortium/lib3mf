@@ -11622,6 +11622,7 @@ void CLib3MFImplicitFunction::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveNode", RemoveNode);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddLink", AddLink);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddLinkByNames", AddLinkByNames);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "Clear", Clear);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -11858,6 +11859,26 @@ void CLib3MFImplicitFunction::AddLinkByNames(const FunctionCallbackInfo<Value>& 
             throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::AddLinkByNames.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddLinkByNames(instanceHandle, sSource.c_str(), sTarget.c_str());
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFImplicitFunction::Clear(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method Clear.");
+        if (wrapperTable->m_ImplicitFunction_Clear == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::Clear.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_Clear(instanceHandle);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {

@@ -3186,6 +3186,14 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addlink(Lib3MF_ImplicitFunc
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addlinkbynames(Lib3MF_ImplicitFunction pImplicitFunction, const char * pSource, const char * pTarget);
 
+/**
+* Clears the function
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_clear(Lib3MF_ImplicitFunction pImplicitFunction);
+
 /*************************************************************************************************************************
  Class definition for FunctionFromImage3D
 **************************************************************************************************************************/

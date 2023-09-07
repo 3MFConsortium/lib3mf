@@ -1787,6 +1787,7 @@ public:
 	inline void RemoveNode(classParam<CImplicitNode> pNode);
 	inline void AddLink(classParam<CImplicitPort> pSource, classParam<CImplicitPort> pTarget);
 	inline void AddLinkByNames(const std::string & sSource, const std::string & sTarget);
+	inline void Clear();
 };
 	
 /*************************************************************************************************************************
@@ -6408,6 +6409,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	void CImplicitFunction::AddLinkByNames(const std::string & sSource, const std::string & sTarget)
 	{
 		CheckError(lib3mf_implicitfunction_addlinkbynames(m_pHandle, sSource.c_str(), sTarget.c_str()));
+	}
+	
+	/**
+	* CImplicitFunction::Clear - Clears the function
+	*/
+	void CImplicitFunction::Clear()
+	{
+		CheckError(lib3mf_implicitfunction_clear(m_pHandle));
 	}
 	
 	/**

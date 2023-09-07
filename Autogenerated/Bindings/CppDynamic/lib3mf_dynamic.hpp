@@ -1811,6 +1811,7 @@ public:
 	inline void RemoveNode(classParam<CImplicitNode> pNode);
 	inline void AddLink(classParam<CImplicitPort> pSource, classParam<CImplicitPort> pTarget);
 	inline void AddLinkByNames(const std::string & sSource, const std::string & sTarget);
+	inline void Clear();
 };
 	
 /*************************************************************************************************************************
@@ -2822,6 +2823,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ImplicitFunction_RemoveNode = nullptr;
 		pWrapperTable->m_ImplicitFunction_AddLink = nullptr;
 		pWrapperTable->m_ImplicitFunction_AddLinkByNames = nullptr;
+		pWrapperTable->m_ImplicitFunction_Clear = nullptr;
 		pWrapperTable->m_FunctionFromImage3D_GetImage3D = nullptr;
 		pWrapperTable->m_FunctionFromImage3D_SetImage3D = nullptr;
 		pWrapperTable->m_FunctionFromImage3D_SetFilter = nullptr;
@@ -5770,6 +5772,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ImplicitFunction_Clear = (PLib3MFImplicitFunction_ClearPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_clear");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitFunction_Clear = (PLib3MFImplicitFunction_ClearPtr) dlsym(hLibrary, "lib3mf_implicitfunction_clear");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitFunction_Clear == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_FunctionFromImage3D_GetImage3D = (PLib3MFFunctionFromImage3D_GetImage3DPtr) GetProcAddress(hLibrary, "lib3mf_functionfromimage3d_getimage3d");
 		#else // _WIN32
 		pWrapperTable->m_FunctionFromImage3D_GetImage3D = (PLib3MFFunctionFromImage3D_GetImage3DPtr) dlsym(hLibrary, "lib3mf_functionfromimage3d_getimage3d");
@@ -8525,6 +8536,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_implicitfunction_addlinkbynames", (void**)&(pWrapperTable->m_ImplicitFunction_AddLinkByNames));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_AddLinkByNames == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitfunction_clear", (void**)&(pWrapperTable->m_ImplicitFunction_Clear));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_Clear == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_functionfromimage3d_getimage3d", (void**)&(pWrapperTable->m_FunctionFromImage3D_GetImage3D));
@@ -13130,6 +13145,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	void CImplicitFunction::AddLinkByNames(const std::string & sSource, const std::string & sTarget)
 	{
 		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddLinkByNames(m_pHandle, sSource.c_str(), sTarget.c_str()));
+	}
+	
+	/**
+	* CImplicitFunction::Clear - Clears the function
+	*/
+	void CImplicitFunction::Clear()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_Clear(m_pHandle));
 	}
 	
 	/**

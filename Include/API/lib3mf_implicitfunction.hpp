@@ -127,6 +127,11 @@ namespace Lib3MF
              * @param[in] sTarget - name of the target port in the format nodename.portname
              */
             void AddLinkByNames(const std::string & sSource, const std::string & sTarget) override;
+
+            /**
+             * IImplicitFunction::Clear - Clears the function
+             */
+            void Clear() override;
         };
 
     } // namespace Impl

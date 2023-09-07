@@ -1334,6 +1334,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addlinkbynames", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_AddLinkByNames (IntPtr Handle, byte[] ASource, byte[] ATarget);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_clear", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_Clear (IntPtr Handle);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionfromimage3d_getimage3d", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 FunctionFromImage3D_GetImage3D (IntPtr Handle, out IntPtr AImage3D);
 
@@ -5363,6 +5366,12 @@ namespace Lib3MF {
 			byte[] byteTarget = Encoding.UTF8.GetBytes(ATarget + char.MinValue);
 
 			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddLinkByNames (Handle, byteSource, byteTarget));
+		}
+
+		public void Clear ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_Clear (Handle));
 		}
 
 	}

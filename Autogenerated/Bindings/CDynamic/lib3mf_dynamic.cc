@@ -351,6 +351,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ImplicitFunction_RemoveNode = NULL;
 	pWrapperTable->m_ImplicitFunction_AddLink = NULL;
 	pWrapperTable->m_ImplicitFunction_AddLinkByNames = NULL;
+	pWrapperTable->m_ImplicitFunction_Clear = NULL;
 	pWrapperTable->m_FunctionFromImage3D_GetImage3D = NULL;
 	pWrapperTable->m_FunctionFromImage3D_SetImage3D = NULL;
 	pWrapperTable->m_FunctionFromImage3D_SetFilter = NULL;
@@ -3300,6 +3301,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_ImplicitFunction_AddLinkByNames == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitFunction_Clear = (PLib3MFImplicitFunction_ClearPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_clear");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitFunction_Clear = (PLib3MFImplicitFunction_ClearPtr) dlsym(hLibrary, "lib3mf_implicitfunction_clear");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitFunction_Clear == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
