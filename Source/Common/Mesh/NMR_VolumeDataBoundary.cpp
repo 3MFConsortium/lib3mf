@@ -50,4 +50,14 @@ namespace NMR {
 	{
 		m_dSolidThreshold = dSolidThreshold;
 	}
+
+	bool CVolumeDataBoundary::getMeshBBoxOnly()
+	{
+		return m_meshBBoxOnly;
+	}
+
+	void CVolumeDataBoundary::setMeshBBoxOnly(bool bMeshBBoxOnly)
+	{
+		m_meshBBoxOnly = bMeshBBoxOnly;
+	}
 }

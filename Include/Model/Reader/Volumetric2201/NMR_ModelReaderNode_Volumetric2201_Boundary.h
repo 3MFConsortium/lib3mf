@@ -45,6 +45,11 @@ namespace NMR {
 		nfBool m_bHasSolidThreshold = false;
 		nfBool m_bHasTransform = false;
 		nfBool m_bHasChannel = false;
+		nfBool m_bHasMeshBBoxOnly = false;
+		nfBool m_meshBBoxOnly = false;
+
+		double m_dMinFeatureSize = 0.0;
+		nfBool m_bHasMinFeatureSize = false;
 
 		ModelResourceID m_nFunctionID;
 		double m_dSolidThreshold;

@@ -52,6 +52,8 @@ namespace NMR {
 		nfBool m_bRequired = true;
 		std::string m_sChannel;
 
+		double m_dMinFeatureSize = 0.0;
+		nfBool m_bHasMinFeatureSize = false;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:

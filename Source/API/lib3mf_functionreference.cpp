@@ -82,3 +82,14 @@ void CFunctionReference::SetChannelName(
 {
     m_pFunctionReference->setChannelName(sChannelName);
 }
+
+void CFunctionReference::SetMinFeatureSize(
+    const Lib3MF_double dMinFeatureSize)
+{
+    m_pFunctionReference->setMinFeatureSize(dMinFeatureSize);
+}
+
+Lib3MF_double CFunctionReference::GetMinFeatureSize()
+{
+    return m_pFunctionReference->getMinFeatureSize();
+}

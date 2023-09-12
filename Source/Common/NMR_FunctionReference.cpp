@@ -86,4 +86,14 @@ namespace NMR
         return m_transform;
     }
 
+    void CFunctionReference::setMinFeatureSize(double minFeatureSize)
+    {
+        m_minFeatureSize = minFeatureSize;
+    }
+
+    double CFunctionReference::getMinFeatureSize() const
+    {
+        return m_minFeatureSize;
+    }
+
 }  // namespace NMR

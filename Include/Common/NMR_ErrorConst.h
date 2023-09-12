@@ -1419,6 +1419,12 @@ Model error codes (0x8XXX)
 // Port does not exist in node
 #define NMR_ERROR_IMPLICIT_PORT_DOES_NOT_EXIST 0x883E
 
+// Duplicate attribute meshbboxonly in volumedata boundary
+#define NMR_ERROR_DUPLICATE_VOLUMEDATA_MESHBBOXONLY 0x883F
+
+// Duplicate attribute minfeature size in volumedata element
+#define NMR_ERROR_DUPLICATE_VOLUMEDATA_MINFEATURESIZE 0x8840
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

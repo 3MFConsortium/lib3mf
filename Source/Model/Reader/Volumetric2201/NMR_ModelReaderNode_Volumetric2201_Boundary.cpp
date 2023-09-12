@@ -87,6 +87,11 @@ namespace NMR {
 			pBoundary->setTransform(m_Transform);
 		if (m_bHasChannel)
 			pBoundary->setChannelName(m_sChannel);
+		if (m_bHasMeshBBoxOnly)
+			pBoundary->setMeshBBoxOnly(m_meshBBoxOnly);
+		if (m_bHasMinFeatureSize)
+			pBoundary->setMinFeatureSize(m_dMinFeatureSize);
+
 		return pBoundary;
 	}
 	
@@ -120,6 +125,21 @@ namespace NMR {
 
 			m_bHasChannel = true;
 			m_sChannel = pAttributeValue;
+		}
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_BOUNDARY_MESHBBONLY) == 0) {
+			if (m_bHasMeshBBoxOnly)
+				throw CNMRException(NMR_ERROR_DUPLICATE_VOLUMEDATA_MESHBBOXONLY);
+
+			m_bHasMeshBBoxOnly = true;
+
+			m_meshBBoxOnly = !(std::string(pAttributeValue) == "false");
+		}
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_MINFEATURESIZE) == 0) {
+			if (m_bHasMinFeatureSize)
+				throw CNMRException(NMR_ERROR_DUPLICATE_VOLUMEDATA_MINFEATURESIZE);
+
+			m_bHasMinFeatureSize = true;
+			m_dMinFeatureSize = strtod(pAttributeValue, nullptr);
 		}
 
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_FUNCTIONID) == 0) {

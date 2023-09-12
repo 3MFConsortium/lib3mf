@@ -82,6 +82,18 @@ public:
 
 	void SetSolidThreshold(const Lib3MF_double dTheSolidThreshold) override;
 
+		/**
+	* IVolumeDataBoundary::SetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+	* @param[in] bMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+	*/
+	void SetMeshBBoxOnly(const bool bMeshBBoxOnly) override;
+
+	/**
+	* IVolumeDataBoundary::GetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+	* @return If set only the bounding box of the mesh is intersected with the boundary
+	*/
+	bool GetMeshBBoxOnly() override;
+
 };
 
 } // namespace Impl

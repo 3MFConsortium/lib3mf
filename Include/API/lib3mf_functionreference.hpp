@@ -112,6 +112,18 @@ public:
 	* @param[in] sChannelName - new name of the function output
 	*/
 	void SetChannelName(const std::string & sChannelName) override;
+
+		/**
+	* IFunctionReference::SetMinFeatureSize - Sets the minimal feature size as a hint for the function evaluator
+	* @param[in] dMinFeatureSize - minimal feature size
+	*/
+	void SetMinFeatureSize(const Lib3MF_double dMinFeatureSize) override;
+
+	/**
+	* IFunctionReference::GetMinFeatureSize - Returns the minimal feature size as a hint for the function evaluator
+	* @return minimal feature size
+	*/
+	Lib3MF_double GetMinFeatureSize() override;
 };
 
 } // namespace Impl

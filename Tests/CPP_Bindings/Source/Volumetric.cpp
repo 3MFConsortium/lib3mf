@@ -777,6 +777,7 @@ namespace Lib3MF
         auto transformation = helper::ComputeTransformFromMeshCoordinatesToUVW(theMesh);
         theColor->SetTransform(transformation);
         theColor->SetChannelName("color");
+        theColor->SetMinFeatureSize(0.1);
     
         // Write to file
         writer3MF = model->QueryWriter("3mf");
@@ -829,6 +830,7 @@ namespace Lib3MF
         boundary->SetTransform(helper::ComputeTransformFromMeshCoordinatesToUVW(theMesh));
         boundary->SetSolidThreshold(0.25f);
         boundary->SetChannelName("r");
+        boundary->SetMeshBBoxOnly(true);
 
         // Write to file
         writer3MF = model->QueryWriter("3mf");
@@ -859,6 +861,8 @@ namespace Lib3MF
         EXPECT_EQ(boundaryFromFile->GetFunctionResourceID(), funcImg3dId);
         helper::CompareTransforms(boundary->GetTransform(), boundaryFromFile->GetTransform());
         EXPECT_EQ(boundary->GetSolidThreshold(), boundaryFromFile->GetSolidThreshold());
+        EXPECT_EQ(boundary->GetChannelName(), boundaryFromFile->GetChannelName());
+        EXPECT_EQ(boundary->GetMeshBBoxOnly(), boundaryFromFile->GetMeshBBoxOnly());
     }
 
     TEST_F(Volumetric, CreateAndLoad_FunctionFromImage3dAddProperty_SameContent)

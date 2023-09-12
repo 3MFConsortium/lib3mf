@@ -67,3 +67,13 @@ void CVolumeDataBoundary::SetSolidThreshold(const Lib3MF_double dTheSolidThresho
 	asVolumeDataBoundary()->setSolidThreshold(dTheSolidThreshold);
 }
 
+void CVolumeDataBoundary::SetMeshBBoxOnly(const bool bMeshBBoxOnly)
+{
+	asVolumeDataBoundary()->setMeshBBoxOnly(bMeshBBoxOnly);
+}
+
+bool CVolumeDataBoundary::GetMeshBBoxOnly()
+{
+	return asVolumeDataBoundary()->getMeshBBoxOnly();
+}
+

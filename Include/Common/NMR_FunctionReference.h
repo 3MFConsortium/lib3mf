@@ -49,6 +49,8 @@ namespace NMR {
 
 		NMR::NMATRIX3 m_transform = NMR::fnMATRIX3_identity();
 		bool m_bHasTransform = false;
+
+		double m_minFeatureSize = 0.0;
 	public:
 		CFunctionReference() = delete;
 		explicit CFunctionReference(UniqueResourceID functionResourceId);
@@ -64,6 +66,9 @@ namespace NMR {
 		NMR::NMATRIX3 getTransform() const;
 
 		bool hasTransform() const;
+
+		void setMinFeatureSize(double minFeatureSize);
+		double getMinFeatureSize() const;
 	};
 
 	typedef std::shared_ptr <CFunctionReference> PFunctionReference;

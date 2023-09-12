@@ -395,6 +395,12 @@ namespace NMR {
 					{
 						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pBoundary->getChannelName());
 					}
+
+					writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_BOUNDARY_MESHBBONLY, pBoundary->getMeshBBoxOnly() ? "true" : "false");
+					if (pBoundary->getMinFeatureSize() != 0.0) {
+						writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_MINFEATURESIZE, float(pBoundary->getMinFeatureSize()));
+					}
+
 					writeEndElement();
 				}
 
@@ -421,6 +427,10 @@ namespace NMR {
 						{
 							writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pProperty->getChannelName());
 						}
+
+						if (pProperty->getMinFeatureSize() != 0.0) {
+							writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_MINFEATURESIZE, float(pProperty->getMinFeatureSize()));
+						}
 						writeEndElement();
 					}
 				}
@@ -442,6 +452,10 @@ namespace NMR {
 					if (!pColor->getChannelName().empty())
 					{
 						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pColor->getChannelName());
+					}
+
+					if (pColor->getMinFeatureSize() != 0.0) {
+						writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_MINFEATURESIZE, float(pColor->getMinFeatureSize()));
 					}
 					writeEndElement();
 				}

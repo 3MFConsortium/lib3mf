@@ -100,6 +100,11 @@ namespace NMR {
 		{
 			pProperty->setChannelName(m_sChannel);
 		}
+
+		if (m_bHasMinFeatureSize)
+		{
+			pProperty->setMinFeatureSize(m_dMinFeatureSize);
+		}
 		return pProperty;
 	}
 
@@ -145,6 +150,14 @@ namespace NMR {
 
 			m_bHasChannel = true;
 			m_sChannel = pAttributeValue;
+		}
+
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_MINFEATURESIZE) == 0) {
+			if (m_bHasMinFeatureSize)
+				throw CNMRException(NMR_ERROR_DUPLICATE_VOLUMEDATA_MINFEATURESIZE);
+
+			m_bHasMinFeatureSize = true;
+			m_dMinFeatureSize = strtod(pAttributeValue, nullptr);
 		}
 	}
 
