@@ -842,11 +842,23 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_setchannelname", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 FunctionReference_SetChannelName (IntPtr Handle, byte[] AChannelName);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_setminfeaturesize", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionReference_SetMinFeatureSize (IntPtr Handle, Double AMinFeatureSize);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_getminfeaturesize", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionReference_GetMinFeatureSize (IntPtr Handle, out Double AMinFeatureSize);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataboundary_getsolidthreshold", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataBoundary_GetSolidThreshold (IntPtr Handle, out Double ATheSolidThreshold);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataboundary_setsolidthreshold", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataBoundary_SetSolidThreshold (IntPtr Handle, Double ATheSolidThreshold);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataboundary_setmeshbboxonly", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 VolumeDataBoundary_SetMeshBBoxOnly (IntPtr Handle, Byte AMeshBBoxOnly);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataboundary_getmeshbboxonly", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 VolumeDataBoundary_GetMeshBBoxOnly (IntPtr Handle, out Byte AMeshBBoxOnly);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedatacomposite_getbasematerialgroup", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataComposite_GetBaseMaterialGroup (IntPtr Handle, out IntPtr ABaseMaterialGroupInstance);
@@ -3700,6 +3712,20 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.FunctionReference_SetChannelName (Handle, byteChannelName));
 		}
 
+		public void SetMinFeatureSize (Double AMinFeatureSize)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.FunctionReference_SetMinFeatureSize (Handle, AMinFeatureSize));
+		}
+
+		public Double GetMinFeatureSize ()
+		{
+			Double resultMinFeatureSize = 0;
+
+			CheckError(Internal.Lib3MFWrapper.FunctionReference_GetMinFeatureSize (Handle, out resultMinFeatureSize));
+			return resultMinFeatureSize;
+		}
+
 	}
 
 	public class CVolumeDataBoundary : CFunctionReference
@@ -3720,6 +3746,20 @@ namespace Lib3MF {
 		{
 
 			CheckError(Internal.Lib3MFWrapper.VolumeDataBoundary_SetSolidThreshold (Handle, ATheSolidThreshold));
+		}
+
+		public void SetMeshBBoxOnly (bool AMeshBBoxOnly)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.VolumeDataBoundary_SetMeshBBoxOnly (Handle, (Byte)( AMeshBBoxOnly ? 1 : 0 )));
+		}
+
+		public bool GetMeshBBoxOnly ()
+		{
+			Byte resultMeshBBoxOnly = 0;
+
+			CheckError(Internal.Lib3MFWrapper.VolumeDataBoundary_GetMeshBBoxOnly (Handle, out resultMeshBBoxOnly));
+			return (resultMeshBBoxOnly != 0);
 		}
 
 	}

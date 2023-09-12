@@ -1115,6 +1115,13 @@
 		<method name="SetChannelName" description="Sets the name of the function output channel to use.">
 			<param name="ChannelName" type="string" pass="in" description="new name of the function output channel"/>
 		</method>
+
+		<method name="SetMinFeatureSize" description="Sets the minimal feature size as a hint for the function evaluator">
+			<param name="MinFeatureSize" type="double" pass="in" description="minimal feature size"/>
+		</method>
+		<method name="GetMinFeatureSize" description="Returns the minimal feature size as a hint for the function evaluator">
+			<param name="MinFeatureSize" type="double" pass="return" description="minimal feature size"/>
+		</method>
 	</class>
 
 	<class name="VolumeDataBoundary" parent="FunctionReference">
@@ -1127,6 +1134,16 @@
 			description="Sets the solidthreshold for the levelset function encoded in this VolumeDataBoundary">
 			<param name="TheSolidThreshold" type="double" pass="in"
 				description="The solidthreshold for the levelset function encoded in this VolumeDataBoundary" />
+		</method>
+		<method name="SetMeshBBoxOnly"
+			description="If set only the bounding box of the mesh is intersected with the boundary">
+			<param name="MeshBBoxOnly" type="bool" pass="in"
+				description="If set only the bounding box of the mesh is intersected with the boundary" />
+		</method>
+		<method name="GetMeshBBoxOnly"
+			description="If set only the bounding box of the mesh is intersected with the boundary">
+			<param name="MeshBBoxOnly" type="bool" pass="return"
+				description="If set only the bounding box of the mesh is intersected with the boundary" />
 		</method>
 	</class>
 

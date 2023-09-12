@@ -5236,6 +5236,72 @@ Lib3MFResult lib3mf_functionreference_setchannelname(Lib3MF_FunctionReference pF
 	}
 }
 
+Lib3MFResult lib3mf_functionreference_setminfeaturesize(Lib3MF_FunctionReference pFunctionReference, Lib3MF_double dMinFeatureSize)
+{
+	IBase* pIBaseClass = (IBase *)pFunctionReference;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionReference, "FunctionReference", "SetMinFeatureSize");
+			pJournalEntry->addDoubleParameter("MinFeatureSize", dMinFeatureSize);
+		}
+		IFunctionReference* pIFunctionReference = dynamic_cast<IFunctionReference*>(pIBaseClass);
+		if (!pIFunctionReference)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIFunctionReference->SetMinFeatureSize(dMinFeatureSize);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_functionreference_getminfeaturesize(Lib3MF_FunctionReference pFunctionReference, Lib3MF_double * pMinFeatureSize)
+{
+	IBase* pIBaseClass = (IBase *)pFunctionReference;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionReference, "FunctionReference", "GetMinFeatureSize");
+		}
+		if (pMinFeatureSize == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IFunctionReference* pIFunctionReference = dynamic_cast<IFunctionReference*>(pIBaseClass);
+		if (!pIFunctionReference)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pMinFeatureSize = pIFunctionReference->GetMinFeatureSize();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addDoubleResult("MinFeatureSize", *pMinFeatureSize);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 
 /*************************************************************************************************************************
  Class implementation for VolumeDataBoundary
@@ -5291,6 +5357,72 @@ Lib3MFResult lib3mf_volumedataboundary_setsolidthreshold(Lib3MF_VolumeDataBounda
 		pIVolumeDataBoundary->SetSolidThreshold(dTheSolidThreshold);
 
 		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_volumedataboundary_setmeshbboxonly(Lib3MF_VolumeDataBoundary pVolumeDataBoundary, bool bMeshBBoxOnly)
+{
+	IBase* pIBaseClass = (IBase *)pVolumeDataBoundary;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataBoundary, "VolumeDataBoundary", "SetMeshBBoxOnly");
+			pJournalEntry->addBooleanParameter("MeshBBoxOnly", bMeshBBoxOnly);
+		}
+		IVolumeDataBoundary* pIVolumeDataBoundary = dynamic_cast<IVolumeDataBoundary*>(pIBaseClass);
+		if (!pIVolumeDataBoundary)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIVolumeDataBoundary->SetMeshBBoxOnly(bMeshBBoxOnly);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_volumedataboundary_getmeshbboxonly(Lib3MF_VolumeDataBoundary pVolumeDataBoundary, bool * pMeshBBoxOnly)
+{
+	IBase* pIBaseClass = (IBase *)pVolumeDataBoundary;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataBoundary, "VolumeDataBoundary", "GetMeshBBoxOnly");
+		}
+		if (pMeshBBoxOnly == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IVolumeDataBoundary* pIVolumeDataBoundary = dynamic_cast<IVolumeDataBoundary*>(pIBaseClass);
+		if (!pIVolumeDataBoundary)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pMeshBBoxOnly = pIVolumeDataBoundary->GetMeshBBoxOnly();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("MeshBBoxOnly", *pMeshBBoxOnly);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -17507,10 +17639,18 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_functionreference_getchannelname;
 	if (sProcName == "lib3mf_functionreference_setchannelname") 
 		*ppProcAddress = (void*) &lib3mf_functionreference_setchannelname;
+	if (sProcName == "lib3mf_functionreference_setminfeaturesize") 
+		*ppProcAddress = (void*) &lib3mf_functionreference_setminfeaturesize;
+	if (sProcName == "lib3mf_functionreference_getminfeaturesize") 
+		*ppProcAddress = (void*) &lib3mf_functionreference_getminfeaturesize;
 	if (sProcName == "lib3mf_volumedataboundary_getsolidthreshold") 
 		*ppProcAddress = (void*) &lib3mf_volumedataboundary_getsolidthreshold;
 	if (sProcName == "lib3mf_volumedataboundary_setsolidthreshold") 
 		*ppProcAddress = (void*) &lib3mf_volumedataboundary_setsolidthreshold;
+	if (sProcName == "lib3mf_volumedataboundary_setmeshbboxonly") 
+		*ppProcAddress = (void*) &lib3mf_volumedataboundary_setmeshbboxonly;
+	if (sProcName == "lib3mf_volumedataboundary_getmeshbboxonly") 
+		*ppProcAddress = (void*) &lib3mf_volumedataboundary_getmeshbboxonly;
 	if (sProcName == "lib3mf_volumedatacomposite_getbasematerialgroup") 
 		*ppProcAddress = (void*) &lib3mf_volumedatacomposite_getbasematerialgroup;
 	if (sProcName == "lib3mf_volumedatacomposite_setbasematerialgroup") 

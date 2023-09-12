@@ -1667,6 +1667,18 @@ public:
 	*/
 	virtual void SetChannelName(const std::string & sChannelName) = 0;
 
+	/**
+	* IFunctionReference::SetMinFeatureSize - Sets the minimal feature size as a hint for the function evaluator
+	* @param[in] dMinFeatureSize - minimal feature size
+	*/
+	virtual void SetMinFeatureSize(const Lib3MF_double dMinFeatureSize) = 0;
+
+	/**
+	* IFunctionReference::GetMinFeatureSize - Returns the minimal feature size as a hint for the function evaluator
+	* @return minimal feature size
+	*/
+	virtual Lib3MF_double GetMinFeatureSize() = 0;
+
 };
 
 typedef IBaseSharedPtr<IFunctionReference> PIFunctionReference;
@@ -1698,6 +1710,18 @@ public:
 	* @param[in] dTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataBoundary
 	*/
 	virtual void SetSolidThreshold(const Lib3MF_double dTheSolidThreshold) = 0;
+
+	/**
+	* IVolumeDataBoundary::SetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+	* @param[in] bMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+	*/
+	virtual void SetMeshBBoxOnly(const bool bMeshBBoxOnly) = 0;
+
+	/**
+	* IVolumeDataBoundary::GetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+	* @return If set only the bounding box of the mesh is intersected with the boundary
+	*/
+	virtual bool GetMeshBBoxOnly() = 0;
 
 };
 

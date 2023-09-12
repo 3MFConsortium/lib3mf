@@ -1477,6 +1477,24 @@ typedef Lib3MFResult (*PLib3MFFunctionReference_GetChannelNamePtr) (Lib3MF_Funct
 */
 typedef Lib3MFResult (*PLib3MFFunctionReference_SetChannelNamePtr) (Lib3MF_FunctionReference pFunctionReference, const char * pChannelName);
 
+/**
+* Sets the minimal feature size as a hint for the function evaluator
+*
+* @param[in] pFunctionReference - FunctionReference instance.
+* @param[in] dMinFeatureSize - minimal feature size
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFFunctionReference_SetMinFeatureSizePtr) (Lib3MF_FunctionReference pFunctionReference, Lib3MF_double dMinFeatureSize);
+
+/**
+* Returns the minimal feature size as a hint for the function evaluator
+*
+* @param[in] pFunctionReference - FunctionReference instance.
+* @param[out] pMinFeatureSize - minimal feature size
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFFunctionReference_GetMinFeatureSizePtr) (Lib3MF_FunctionReference pFunctionReference, Lib3MF_double * pMinFeatureSize);
+
 /*************************************************************************************************************************
  Class definition for VolumeDataBoundary
 **************************************************************************************************************************/
@@ -1498,6 +1516,24 @@ typedef Lib3MFResult (*PLib3MFVolumeDataBoundary_GetSolidThresholdPtr) (Lib3MF_V
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFVolumeDataBoundary_SetSolidThresholdPtr) (Lib3MF_VolumeDataBoundary pVolumeDataBoundary, Lib3MF_double dTheSolidThreshold);
+
+/**
+* If set only the bounding box of the mesh is intersected with the boundary
+*
+* @param[in] pVolumeDataBoundary - VolumeDataBoundary instance.
+* @param[in] bMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeDataBoundary_SetMeshBBoxOnlyPtr) (Lib3MF_VolumeDataBoundary pVolumeDataBoundary, bool bMeshBBoxOnly);
+
+/**
+* If set only the bounding box of the mesh is intersected with the boundary
+*
+* @param[in] pVolumeDataBoundary - VolumeDataBoundary instance.
+* @param[out] pMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeDataBoundary_GetMeshBBoxOnlyPtr) (Lib3MF_VolumeDataBoundary pVolumeDataBoundary, bool * pMeshBBoxOnly);
 
 /*************************************************************************************************************************
  Class definition for VolumeDataColor
@@ -5034,8 +5070,12 @@ typedef struct {
 	PLib3MFFunctionReference_SetTransformPtr m_FunctionReference_SetTransform;
 	PLib3MFFunctionReference_GetChannelNamePtr m_FunctionReference_GetChannelName;
 	PLib3MFFunctionReference_SetChannelNamePtr m_FunctionReference_SetChannelName;
+	PLib3MFFunctionReference_SetMinFeatureSizePtr m_FunctionReference_SetMinFeatureSize;
+	PLib3MFFunctionReference_GetMinFeatureSizePtr m_FunctionReference_GetMinFeatureSize;
 	PLib3MFVolumeDataBoundary_GetSolidThresholdPtr m_VolumeDataBoundary_GetSolidThreshold;
 	PLib3MFVolumeDataBoundary_SetSolidThresholdPtr m_VolumeDataBoundary_SetSolidThreshold;
+	PLib3MFVolumeDataBoundary_SetMeshBBoxOnlyPtr m_VolumeDataBoundary_SetMeshBBoxOnly;
+	PLib3MFVolumeDataBoundary_GetMeshBBoxOnlyPtr m_VolumeDataBoundary_GetMeshBBoxOnly;
 	PLib3MFVolumeDataComposite_GetBaseMaterialGroupPtr m_VolumeDataComposite_GetBaseMaterialGroup;
 	PLib3MFVolumeDataComposite_SetBaseMaterialGroupPtr m_VolumeDataComposite_SetBaseMaterialGroup;
 	PLib3MFVolumeDataComposite_GetMaterialMappingCountPtr m_VolumeDataComposite_GetMaterialMappingCount;

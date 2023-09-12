@@ -1490,6 +1490,24 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionreference_getchannelname(Lib3MF_Func
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionreference_setchannelname(Lib3MF_FunctionReference pFunctionReference, const char * pChannelName);
 
+/**
+* Sets the minimal feature size as a hint for the function evaluator
+*
+* @param[in] pFunctionReference - FunctionReference instance.
+* @param[in] dMinFeatureSize - minimal feature size
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionreference_setminfeaturesize(Lib3MF_FunctionReference pFunctionReference, Lib3MF_double dMinFeatureSize);
+
+/**
+* Returns the minimal feature size as a hint for the function evaluator
+*
+* @param[in] pFunctionReference - FunctionReference instance.
+* @param[out] pMinFeatureSize - minimal feature size
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionreference_getminfeaturesize(Lib3MF_FunctionReference pFunctionReference, Lib3MF_double * pMinFeatureSize);
+
 /*************************************************************************************************************************
  Class definition for VolumeDataBoundary
 **************************************************************************************************************************/
@@ -1511,6 +1529,24 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedataboundary_getsolidthreshold(Lib3MF_
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedataboundary_setsolidthreshold(Lib3MF_VolumeDataBoundary pVolumeDataBoundary, Lib3MF_double dTheSolidThreshold);
+
+/**
+* If set only the bounding box of the mesh is intersected with the boundary
+*
+* @param[in] pVolumeDataBoundary - VolumeDataBoundary instance.
+* @param[in] bMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedataboundary_setmeshbboxonly(Lib3MF_VolumeDataBoundary pVolumeDataBoundary, bool bMeshBBoxOnly);
+
+/**
+* If set only the bounding box of the mesh is intersected with the boundary
+*
+* @param[in] pVolumeDataBoundary - VolumeDataBoundary instance.
+* @param[out] pMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedataboundary_getmeshbboxonly(Lib3MF_VolumeDataBoundary pVolumeDataBoundary, bool * pMeshBBoxOnly);
 
 /*************************************************************************************************************************
  Class definition for VolumeDataColor

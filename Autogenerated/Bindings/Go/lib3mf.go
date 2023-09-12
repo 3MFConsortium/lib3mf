@@ -1323,6 +1323,24 @@ Lib3MFResult CCall_lib3mf_functionreference_setchannelname(Lib3MFHandle libraryH
 }
 
 
+Lib3MFResult CCall_lib3mf_functionreference_setminfeaturesize(Lib3MFHandle libraryHandle, Lib3MF_FunctionReference pFunctionReference, Lib3MF_double dMinFeatureSize)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FunctionReference_SetMinFeatureSize (pFunctionReference, dMinFeatureSize);
+}
+
+
+Lib3MFResult CCall_lib3mf_functionreference_getminfeaturesize(Lib3MFHandle libraryHandle, Lib3MF_FunctionReference pFunctionReference, Lib3MF_double * pMinFeatureSize)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FunctionReference_GetMinFeatureSize (pFunctionReference, pMinFeatureSize);
+}
+
+
 Lib3MFResult CCall_lib3mf_volumedataboundary_getsolidthreshold(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataBoundary pVolumeDataBoundary, Lib3MF_double * pTheSolidThreshold)
 {
 	if (libraryHandle == 0) 
@@ -1338,6 +1356,24 @@ Lib3MFResult CCall_lib3mf_volumedataboundary_setsolidthreshold(Lib3MFHandle libr
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_VolumeDataBoundary_SetSolidThreshold (pVolumeDataBoundary, dTheSolidThreshold);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedataboundary_setmeshbboxonly(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataBoundary pVolumeDataBoundary, bool bMeshBBoxOnly)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeDataBoundary_SetMeshBBoxOnly (pVolumeDataBoundary, bMeshBBoxOnly);
+}
+
+
+Lib3MFResult CCall_lib3mf_volumedataboundary_getmeshbboxonly(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataBoundary pVolumeDataBoundary, bool * pMeshBBoxOnly)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_VolumeDataBoundary_GetMeshBBoxOnly (pVolumeDataBoundary, pMeshBBoxOnly);
 }
 
 
@@ -6695,6 +6731,25 @@ func (inst FunctionReference) SetChannelName(channelName string) error {
 	return nil
 }
 
+// SetMinFeatureSize sets the minimal feature size as a hint for the function evaluator.
+func (inst FunctionReference) SetMinFeatureSize(minFeatureSize float64) error {
+	ret := C.CCall_lib3mf_functionreference_setminfeaturesize(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(minFeatureSize))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetMinFeatureSize returns the minimal feature size as a hint for the function evaluator.
+func (inst FunctionReference) GetMinFeatureSize() (float64, error) {
+	var minFeatureSize C.double
+	ret := C.CCall_lib3mf_functionreference_getminfeaturesize(inst.wrapperRef.LibraryHandle, inst.Ref, &minFeatureSize)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(minFeatureSize), nil
+}
+
 
 // VolumeDataBoundary represents a Lib3MF class.
 type VolumeDataBoundary struct {
@@ -6722,6 +6777,25 @@ func (inst VolumeDataBoundary) SetSolidThreshold(theSolidThreshold float64) erro
 		return makeError(uint32(ret))
 	}
 	return nil
+}
+
+// SetMeshBBoxOnly if set only the bounding box of the mesh is intersected with the boundary.
+func (inst VolumeDataBoundary) SetMeshBBoxOnly(meshBBoxOnly bool) error {
+	ret := C.CCall_lib3mf_volumedataboundary_setmeshbboxonly(inst.wrapperRef.LibraryHandle, inst.Ref, C.bool(meshBBoxOnly))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetMeshBBoxOnly if set only the bounding box of the mesh is intersected with the boundary.
+func (inst VolumeDataBoundary) GetMeshBBoxOnly() (bool, error) {
+	var meshBBoxOnly C.bool
+	ret := C.CCall_lib3mf_volumedataboundary_getmeshbboxonly(inst.wrapperRef.LibraryHandle, inst.Ref, &meshBBoxOnly)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(meshBBoxOnly), nil
 }
 
 

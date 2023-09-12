@@ -606,6 +606,8 @@ private:
 	static void SetTransform(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetChannelName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetChannelName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetMinFeatureSize(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetMinFeatureSize(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFFunctionReference();
@@ -625,6 +627,8 @@ private:
 	static v8::Persistent<v8::Function> constructor;
 	static void GetSolidThreshold(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetSolidThreshold(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetMeshBBoxOnly(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetMeshBBoxOnly(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFVolumeDataBoundary();

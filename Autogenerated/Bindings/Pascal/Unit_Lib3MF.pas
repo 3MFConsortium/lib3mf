@@ -1981,6 +1981,24 @@ type
 	*)
 	TLib3MFFunctionReference_SetChannelNameFunc = function(pFunctionReference: TLib3MFHandle; const pChannelName: PAnsiChar): TLib3MFResult; cdecl;
 	
+	(**
+	* Sets the minimal feature size as a hint for the function evaluator
+	*
+	* @param[in] pFunctionReference - FunctionReference instance.
+	* @param[in] dMinFeatureSize - minimal feature size
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFunctionReference_SetMinFeatureSizeFunc = function(pFunctionReference: TLib3MFHandle; const dMinFeatureSize: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the minimal feature size as a hint for the function evaluator
+	*
+	* @param[in] pFunctionReference - FunctionReference instance.
+	* @param[out] pMinFeatureSize - minimal feature size
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFunctionReference_GetMinFeatureSizeFunc = function(pFunctionReference: TLib3MFHandle; out pMinFeatureSize: Double): TLib3MFResult; cdecl;
+	
 
 (*************************************************************************************************************************
  Function type definitions for VolumeDataBoundary
@@ -2003,6 +2021,24 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFVolumeDataBoundary_SetSolidThresholdFunc = function(pVolumeDataBoundary: TLib3MFHandle; const dTheSolidThreshold: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* If set only the bounding box of the mesh is intersected with the boundary
+	*
+	* @param[in] pVolumeDataBoundary - VolumeDataBoundary instance.
+	* @param[in] bMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVolumeDataBoundary_SetMeshBBoxOnlyFunc = function(pVolumeDataBoundary: TLib3MFHandle; const bMeshBBoxOnly: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* If set only the bounding box of the mesh is intersected with the boundary
+	*
+	* @param[in] pVolumeDataBoundary - VolumeDataBoundary instance.
+	* @param[out] pMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVolumeDataBoundary_GetMeshBBoxOnlyFunc = function(pVolumeDataBoundary: TLib3MFHandle; out pMeshBBoxOnly: Byte): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -5856,6 +5892,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure SetTransform(const ATransform: TLib3MFTransform);
 		function GetChannelName(): String;
 		procedure SetChannelName(const AChannelName: String);
+		procedure SetMinFeatureSize(const AMinFeatureSize: Double);
+		function GetMinFeatureSize(): Double;
 	end;
 
 
@@ -5869,6 +5907,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		destructor Destroy; override;
 		function GetSolidThreshold(): Double;
 		procedure SetSolidThreshold(const ATheSolidThreshold: Double);
+		procedure SetMeshBBoxOnly(const AMeshBBoxOnly: Boolean);
+		function GetMeshBBoxOnly(): Boolean;
 	end;
 
 
@@ -6727,8 +6767,12 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFFunctionReference_SetTransformFunc: TLib3MFFunctionReference_SetTransformFunc;
 		FLib3MFFunctionReference_GetChannelNameFunc: TLib3MFFunctionReference_GetChannelNameFunc;
 		FLib3MFFunctionReference_SetChannelNameFunc: TLib3MFFunctionReference_SetChannelNameFunc;
+		FLib3MFFunctionReference_SetMinFeatureSizeFunc: TLib3MFFunctionReference_SetMinFeatureSizeFunc;
+		FLib3MFFunctionReference_GetMinFeatureSizeFunc: TLib3MFFunctionReference_GetMinFeatureSizeFunc;
 		FLib3MFVolumeDataBoundary_GetSolidThresholdFunc: TLib3MFVolumeDataBoundary_GetSolidThresholdFunc;
 		FLib3MFVolumeDataBoundary_SetSolidThresholdFunc: TLib3MFVolumeDataBoundary_SetSolidThresholdFunc;
+		FLib3MFVolumeDataBoundary_SetMeshBBoxOnlyFunc: TLib3MFVolumeDataBoundary_SetMeshBBoxOnlyFunc;
+		FLib3MFVolumeDataBoundary_GetMeshBBoxOnlyFunc: TLib3MFVolumeDataBoundary_GetMeshBBoxOnlyFunc;
 		FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc: TLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc;
 		FLib3MFVolumeDataComposite_SetBaseMaterialGroupFunc: TLib3MFVolumeDataComposite_SetBaseMaterialGroupFunc;
 		FLib3MFVolumeDataComposite_GetMaterialMappingCountFunc: TLib3MFVolumeDataComposite_GetMaterialMappingCountFunc;
@@ -7211,8 +7255,12 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFFunctionReference_SetTransformFunc: TLib3MFFunctionReference_SetTransformFunc read FLib3MFFunctionReference_SetTransformFunc;
 		property Lib3MFFunctionReference_GetChannelNameFunc: TLib3MFFunctionReference_GetChannelNameFunc read FLib3MFFunctionReference_GetChannelNameFunc;
 		property Lib3MFFunctionReference_SetChannelNameFunc: TLib3MFFunctionReference_SetChannelNameFunc read FLib3MFFunctionReference_SetChannelNameFunc;
+		property Lib3MFFunctionReference_SetMinFeatureSizeFunc: TLib3MFFunctionReference_SetMinFeatureSizeFunc read FLib3MFFunctionReference_SetMinFeatureSizeFunc;
+		property Lib3MFFunctionReference_GetMinFeatureSizeFunc: TLib3MFFunctionReference_GetMinFeatureSizeFunc read FLib3MFFunctionReference_GetMinFeatureSizeFunc;
 		property Lib3MFVolumeDataBoundary_GetSolidThresholdFunc: TLib3MFVolumeDataBoundary_GetSolidThresholdFunc read FLib3MFVolumeDataBoundary_GetSolidThresholdFunc;
 		property Lib3MFVolumeDataBoundary_SetSolidThresholdFunc: TLib3MFVolumeDataBoundary_SetSolidThresholdFunc read FLib3MFVolumeDataBoundary_SetSolidThresholdFunc;
+		property Lib3MFVolumeDataBoundary_SetMeshBBoxOnlyFunc: TLib3MFVolumeDataBoundary_SetMeshBBoxOnlyFunc read FLib3MFVolumeDataBoundary_SetMeshBBoxOnlyFunc;
+		property Lib3MFVolumeDataBoundary_GetMeshBBoxOnlyFunc: TLib3MFVolumeDataBoundary_GetMeshBBoxOnlyFunc read FLib3MFVolumeDataBoundary_GetMeshBBoxOnlyFunc;
 		property Lib3MFVolumeDataComposite_GetBaseMaterialGroupFunc: TLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc read FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc;
 		property Lib3MFVolumeDataComposite_SetBaseMaterialGroupFunc: TLib3MFVolumeDataComposite_SetBaseMaterialGroupFunc read FLib3MFVolumeDataComposite_SetBaseMaterialGroupFunc;
 		property Lib3MFVolumeDataComposite_GetMaterialMappingCountFunc: TLib3MFVolumeDataComposite_GetMaterialMappingCountFunc read FLib3MFVolumeDataComposite_GetMaterialMappingCountFunc;
@@ -10254,6 +10302,16 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionReference_SetChannelNameFunc(FHandle, PAnsiChar(AChannelName)));
 	end;
 
+	procedure TLib3MFFunctionReference.SetMinFeatureSize(const AMinFeatureSize: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionReference_SetMinFeatureSizeFunc(FHandle, AMinFeatureSize));
+	end;
+
+	function TLib3MFFunctionReference.GetMinFeatureSize(): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionReference_GetMinFeatureSizeFunc(FHandle, Result));
+	end;
+
 (*************************************************************************************************************************
  Class implementation for VolumeDataBoundary
 **************************************************************************************************************************)
@@ -10276,6 +10334,20 @@ implementation
 	procedure TLib3MFVolumeDataBoundary.SetSolidThreshold(const ATheSolidThreshold: Double);
 	begin
 		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataBoundary_SetSolidThresholdFunc(FHandle, ATheSolidThreshold));
+	end;
+
+	procedure TLib3MFVolumeDataBoundary.SetMeshBBoxOnly(const AMeshBBoxOnly: Boolean);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataBoundary_SetMeshBBoxOnlyFunc(FHandle, Ord(AMeshBBoxOnly)));
+	end;
+
+	function TLib3MFVolumeDataBoundary.GetMeshBBoxOnly(): Boolean;
+	var
+		ResultMeshBBoxOnly: Byte;
+	begin
+		ResultMeshBBoxOnly := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataBoundary_GetMeshBBoxOnlyFunc(FHandle, ResultMeshBBoxOnly));
+		Result := (ResultMeshBBoxOnly <> 0);
 	end;
 
 (*************************************************************************************************************************
@@ -13968,8 +14040,12 @@ implementation
 		FLib3MFFunctionReference_SetTransformFunc := LoadFunction('lib3mf_functionreference_settransform');
 		FLib3MFFunctionReference_GetChannelNameFunc := LoadFunction('lib3mf_functionreference_getchannelname');
 		FLib3MFFunctionReference_SetChannelNameFunc := LoadFunction('lib3mf_functionreference_setchannelname');
+		FLib3MFFunctionReference_SetMinFeatureSizeFunc := LoadFunction('lib3mf_functionreference_setminfeaturesize');
+		FLib3MFFunctionReference_GetMinFeatureSizeFunc := LoadFunction('lib3mf_functionreference_getminfeaturesize');
 		FLib3MFVolumeDataBoundary_GetSolidThresholdFunc := LoadFunction('lib3mf_volumedataboundary_getsolidthreshold');
 		FLib3MFVolumeDataBoundary_SetSolidThresholdFunc := LoadFunction('lib3mf_volumedataboundary_setsolidthreshold');
+		FLib3MFVolumeDataBoundary_SetMeshBBoxOnlyFunc := LoadFunction('lib3mf_volumedataboundary_setmeshbboxonly');
+		FLib3MFVolumeDataBoundary_GetMeshBBoxOnlyFunc := LoadFunction('lib3mf_volumedataboundary_getmeshbboxonly');
 		FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc := LoadFunction('lib3mf_volumedatacomposite_getbasematerialgroup');
 		FLib3MFVolumeDataComposite_SetBaseMaterialGroupFunc := LoadFunction('lib3mf_volumedatacomposite_setbasematerialgroup');
 		FLib3MFVolumeDataComposite_GetMaterialMappingCountFunc := LoadFunction('lib3mf_volumedatacomposite_getmaterialmappingcount');
@@ -14731,10 +14807,22 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_functionreference_setchannelname'), @FLib3MFFunctionReference_SetChannelNameFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functionreference_setminfeaturesize'), @FLib3MFFunctionReference_SetMinFeatureSizeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functionreference_getminfeaturesize'), @FLib3MFFunctionReference_GetMinFeatureSizeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataboundary_getsolidthreshold'), @FLib3MFVolumeDataBoundary_GetSolidThresholdFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataboundary_setsolidthreshold'), @FLib3MFVolumeDataBoundary_SetSolidThresholdFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataboundary_setmeshbboxonly'), @FLib3MFVolumeDataBoundary_SetMeshBBoxOnlyFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataboundary_getmeshbboxonly'), @FLib3MFVolumeDataBoundary_GetMeshBBoxOnlyFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedatacomposite_getbasematerialgroup'), @FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc);

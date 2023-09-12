@@ -1223,6 +1223,8 @@ public:
 	inline void SetTransform(const sTransform & Transform);
 	inline std::string GetChannelName();
 	inline void SetChannelName(const std::string & sChannelName);
+	inline void SetMinFeatureSize(const Lib3MF_double dMinFeatureSize);
+	inline Lib3MF_double GetMinFeatureSize();
 };
 	
 /*************************************************************************************************************************
@@ -1241,6 +1243,8 @@ public:
 	
 	inline Lib3MF_double GetSolidThreshold();
 	inline void SetSolidThreshold(const Lib3MF_double dTheSolidThreshold);
+	inline void SetMeshBBoxOnly(const bool bMeshBBoxOnly);
+	inline bool GetMeshBBoxOnly();
 };
 	
 /*************************************************************************************************************************
@@ -4261,6 +4265,27 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CFunctionReference::SetMinFeatureSize - Sets the minimal feature size as a hint for the function evaluator
+	* @param[in] dMinFeatureSize - minimal feature size
+	*/
+	void CFunctionReference::SetMinFeatureSize(const Lib3MF_double dMinFeatureSize)
+	{
+		CheckError(lib3mf_functionreference_setminfeaturesize(m_pHandle, dMinFeatureSize));
+	}
+	
+	/**
+	* CFunctionReference::GetMinFeatureSize - Returns the minimal feature size as a hint for the function evaluator
+	* @return minimal feature size
+	*/
+	Lib3MF_double CFunctionReference::GetMinFeatureSize()
+	{
+		Lib3MF_double resultMinFeatureSize = 0;
+		CheckError(lib3mf_functionreference_getminfeaturesize(m_pHandle, &resultMinFeatureSize));
+		
+		return resultMinFeatureSize;
+	}
+	
+	/**
 	 * Method definitions for class CVolumeDataBoundary
 	 */
 	
@@ -4283,6 +4308,27 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	void CVolumeDataBoundary::SetSolidThreshold(const Lib3MF_double dTheSolidThreshold)
 	{
 		CheckError(lib3mf_volumedataboundary_setsolidthreshold(m_pHandle, dTheSolidThreshold));
+	}
+	
+	/**
+	* CVolumeDataBoundary::SetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+	* @param[in] bMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+	*/
+	void CVolumeDataBoundary::SetMeshBBoxOnly(const bool bMeshBBoxOnly)
+	{
+		CheckError(lib3mf_volumedataboundary_setmeshbboxonly(m_pHandle, bMeshBBoxOnly));
+	}
+	
+	/**
+	* CVolumeDataBoundary::GetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+	* @return If set only the bounding box of the mesh is intersected with the boundary
+	*/
+	bool CVolumeDataBoundary::GetMeshBBoxOnly()
+	{
+		bool resultMeshBBoxOnly = 0;
+		CheckError(lib3mf_volumedataboundary_getmeshbboxonly(m_pHandle, &resultMeshBBoxOnly));
+		
+		return resultMeshBBoxOnly;
 	}
 	
 	/**

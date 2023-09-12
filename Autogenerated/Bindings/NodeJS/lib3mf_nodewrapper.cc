@@ -6027,6 +6027,8 @@ void CLib3MFFunctionReference::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetTransform", SetTransform);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetChannelName", GetChannelName);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetChannelName", SetChannelName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetMinFeatureSize", SetMinFeatureSize);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetMinFeatureSize", GetMinFeatureSize);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -6203,6 +6205,52 @@ void CLib3MFFunctionReference::SetChannelName(const FunctionCallbackInfo<Value>&
 		}
 }
 
+
+void CLib3MFFunctionReference::SetMinFeatureSize(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsNumber()) {
+            throw std::runtime_error("Expected double parameter 0 (MinFeatureSize)");
+        }
+        double dMinFeatureSize = (double) args[0]->NumberValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetMinFeatureSize.");
+        if (wrapperTable->m_FunctionReference_SetMinFeatureSize == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method FunctionReference::SetMinFeatureSize.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_FunctionReference_SetMinFeatureSize(instanceHandle, dMinFeatureSize);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFFunctionReference::GetMinFeatureSize(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        double dReturnMinFeatureSize = 0.0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetMinFeatureSize.");
+        if (wrapperTable->m_FunctionReference_GetMinFeatureSize == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method FunctionReference::GetMinFeatureSize.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_FunctionReference_GetMinFeatureSize(instanceHandle, &dReturnMinFeatureSize);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Number::New(isolate, dReturnMinFeatureSize));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
 /*************************************************************************************************************************
  Class CLib3MFVolumeDataBoundary Implementation
 **************************************************************************************************************************/
@@ -6228,6 +6276,8 @@ void CLib3MFVolumeDataBoundary::Init()
 		// Prototype
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSolidThreshold", GetSolidThreshold);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetSolidThreshold", SetSolidThreshold);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetMeshBBoxOnly", SetMeshBBoxOnly);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetMeshBBoxOnly", GetMeshBBoxOnly);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -6300,6 +6350,52 @@ void CLib3MFVolumeDataBoundary::SetSolidThreshold(const FunctionCallbackInfo<Val
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_VolumeDataBoundary_SetSolidThreshold(instanceHandle, dTheSolidThreshold);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFVolumeDataBoundary::SetMeshBBoxOnly(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsBoolean()) {
+            throw std::runtime_error("Expected bool parameter 0 (MeshBBoxOnly)");
+        }
+        bool bMeshBBoxOnly = args[0]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetMeshBBoxOnly.");
+        if (wrapperTable->m_VolumeDataBoundary_SetMeshBBoxOnly == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method VolumeDataBoundary::SetMeshBBoxOnly.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_VolumeDataBoundary_SetMeshBBoxOnly(instanceHandle, bMeshBBoxOnly);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFVolumeDataBoundary::GetMeshBBoxOnly(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        bool bReturnMeshBBoxOnly = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetMeshBBoxOnly.");
+        if (wrapperTable->m_VolumeDataBoundary_GetMeshBBoxOnly == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method VolumeDataBoundary::GetMeshBBoxOnly.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_VolumeDataBoundary_GetMeshBBoxOnly(instanceHandle, &bReturnMeshBBoxOnly);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnMeshBBoxOnly));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
