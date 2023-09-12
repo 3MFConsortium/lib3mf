@@ -68,6 +68,13 @@ namespace NMR
       public:
         CModelImplicitFunction(_In_ const ModelResourceID sID, _In_ CModel * pModel);
 
+
+        // Copy constructor
+        CModelImplicitFunction(const CModelImplicitFunction& other) = default;
+
+        // Copy assignment operator
+        CModelImplicitFunction& operator=(const CModelImplicitFunction& other) = default;
+
         ImplicitIdentifier const & getIdentifier() const;
         void setIdentifier(ImplicitIdentifier const & identifier);
 

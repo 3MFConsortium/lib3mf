@@ -43,8 +43,8 @@ namespace NMR {
 	typedef std::shared_ptr <CModel> PModel;
 
 	class CModelFunctionFromImage3D : public CModelFunction{
-	private:
-		UniqueResourceID m_image3DUniqueResourceID{};
+
+	UniqueResourceID m_image3DUniqueResourceID{};
 				
 		eModelTextureTileStyle m_tileStyleU = {};
 		eModelTextureTileStyle m_tileStyleV = {};
@@ -57,6 +57,9 @@ namespace NMR {
 	public:
 		CModelFunctionFromImage3D() = delete;
 		CModelFunctionFromImage3D(const ModelResourceID sID, CModel * pModel);
+
+		CModelFunctionFromImage3D(const CModelFunctionFromImage3D& other) = default;
+		CModelFunctionFromImage3D& operator=(const CModelFunctionFromImage3D& other) = default;
 
 		void setImage3DUniqueResourceID(const UniqueResourceID sID);
 		UniqueResourceID getImage3DUniqueResourceID();

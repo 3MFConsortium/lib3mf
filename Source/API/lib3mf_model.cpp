@@ -525,6 +525,7 @@ IModel * CModel::MergeToModel ()
 	newModel.mergeCompositeMaterials(&model(), oldToNewUniqueResourceIDs);
 	newModel.mergeMultiPropertyGroups(&model(), oldToNewUniqueResourceIDs);
 	newModel.mergeImage3Ds(&model(), oldToNewUniqueResourceIDs);
+	newModel.mergeFunctions(&model(), oldToNewUniqueResourceIDs);
 
 	newModel.mergeMetaData(&model());
 

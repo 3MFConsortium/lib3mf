@@ -310,6 +310,7 @@ namespace NMR {
 		PModelResource getFunctionResource(_In_ nfUint32 nIndex);
 		CModelImplicitFunction* getImplicitFunction(_In_ nfUint32 nIndex);
 		CModelFunctionFromImage3D* getFunctionFromImage3D(_In_ nfUint32 nIndex);
+		void mergeFunctions(_In_ CModel* pSourceModel, _In_ UniqueResourceIDMapping& oldToNewMapping);
 
 		
 		// Clear all build items and Resources

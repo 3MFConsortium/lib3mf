@@ -1033,6 +1033,39 @@ namespace NMR {
 		}
 	}
 
+	void CModel::mergeFunctions(CModel *pSourceModel,
+                                    UniqueResourceIDMapping &oldToNewMapping)
+    {
+		if (pSourceModel == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		nfUint32 nCount = pSourceModel->getFunctionCount();
+		nfUint32 nIndex;
+
+		for (nIndex = 0; nIndex < nCount; nIndex++)
+		{
+			CModelFunctionFromImage3D *pOldFunctionFromImage3D = pSourceModel->getFunctionFromImage3D(nIndex);
+			CModelImplicitFunction *pOldImplicitFunction = pSourceModel->getImplicitFunction(nIndex);
+
+			if (pOldFunctionFromImage3D)
+			{
+				PModelFunctionFromImage3D pNewFunctionFromImage3D = std::make_shared<CModelFunctionFromImage3D>(*pOldFunctionFromImage3D);
+				addResource(pNewFunctionFromImage3D);
+				oldToNewMapping[pOldFunctionFromImage3D->getPackageResourceID()->getUniqueID()] = pNewFunctionFromImage3D->getPackageResourceID()->getUniqueID();
+			}
+			else if (pOldImplicitFunction)
+			{
+				PModelImplicitFunction pNewImplicitFunction = std::make_shared<CModelImplicitFunction>(*pOldImplicitFunction);
+				addResource(pNewImplicitFunction);
+				oldToNewMapping[pOldImplicitFunction->getPackageResourceID()->getUniqueID()] = pNewImplicitFunction->getPackageResourceID()->getUniqueID();
+			}
+			else
+			{
+				throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+			}		 
+		  }
+	}
+
 	nfUint32 CModel::createHandle()
 	{
 		if (m_nHandleCounter >= NMR_MAXHANDLE)
@@ -1467,6 +1500,4 @@ namespace NMR {
 
 		return dynamic_cast<CModelFunctionFromImage3D*>(pResource.get());
 	}
-
-}
-
+}  // namespace NMR
