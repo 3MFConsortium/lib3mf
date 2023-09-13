@@ -1050,12 +1050,53 @@ namespace NMR {
 			if (pOldFunctionFromImage3D)
 			{
 				PModelFunctionFromImage3D pNewFunctionFromImage3D = std::make_shared<CModelFunctionFromImage3D>(*pOldFunctionFromImage3D);
+
+			     auto newIdIter = oldToNewMapping.find(pOldFunctionFromImage3D->getImage3DUniqueResourceID());
+				 if (newIdIter != oldToNewMapping.cend())
+				 {
+					 auto const newId = findPackageResourceID(newIdIter->second);
+					 if (!newId)
+					 {
+						 throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+					 }
+					 pNewFunctionFromImage3D->setImage3DUniqueResourceID(newId->getUniqueID());
+				 }
+				 else
+				 {
+					 throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+				 }
+
 				addResource(pNewFunctionFromImage3D);
 				oldToNewMapping[pOldFunctionFromImage3D->getPackageResourceID()->getUniqueID()] = pNewFunctionFromImage3D->getPackageResourceID()->getUniqueID();
 			}
 			else if (pOldImplicitFunction)
 			{
 				PModelImplicitFunction pNewImplicitFunction = std::make_shared<CModelImplicitFunction>(*pOldImplicitFunction);
+
+				for (auto & node : *pNewImplicitFunction->getNodes())
+				{
+					if (node->getNodeType() == Lib3MF::eImplicitNodeType::Resource)
+					{
+						auto const oldId = pSourceModel->findPackageResourceID(pSourceModel->currentPath(), node->getModelResourceID());
+						if (!oldId)
+						{
+							throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+						}
+
+						auto const newIdIter = oldToNewMapping.find(oldId->getUniqueID());
+						if (newIdIter == oldToNewMapping.cend())
+						{
+							throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+						}
+
+						auto const newId = findPackageResourceID(newIdIter->second);
+						if (!newId)
+						{
+							throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+						}
+						node->setModelResourceID(newId->getModelResourceID());
+					}
+				}
 				addResource(pNewImplicitFunction);
 				oldToNewMapping[pOldImplicitFunction->getPackageResourceID()->getUniqueID()] = pNewImplicitFunction->getPackageResourceID()->getUniqueID();
 			}

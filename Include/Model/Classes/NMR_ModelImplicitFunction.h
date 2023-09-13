@@ -97,6 +97,11 @@ namespace NMR
         void removeNode(const ImplicitIdentifier & sIdentifier);
 
         void clear() override;
+
+        /// @brief  Replaces a resource ID with another one (e.g. after a merge)
+        /// @param sOldID 
+        /// @param sNewID 
+        void replaceResourceID(const ModelResourceID sOldID, const ModelResourceID sNewID);
     };
 
     using PModelImplicitFunction = std::shared_ptr<CModelImplicitFunction>;

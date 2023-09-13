@@ -199,6 +199,19 @@ namespace NMR
         m_nodes->clear();
     }
 
+    void CModelImplicitFunction::replaceResourceID(const ModelResourceID sOldID,
+                                                  const ModelResourceID sNewID)
+    {
+        for (auto & node : *m_nodes)
+        {
+            if (node->getModelResourceID() == sOldID)
+            {
+                node->setModelResourceID(sNewID);
+            }
+        }
+    }
+
+
     std::string extractNodeName(const ImplicitIdentifier& sIdentifier)
     {
         auto pos = sIdentifier.find_last_of(".");
