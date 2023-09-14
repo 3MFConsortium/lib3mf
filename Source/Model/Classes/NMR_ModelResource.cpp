@@ -64,8 +64,13 @@ namespace NMR {
 
 	void CModelResource::setPackageResourceID(PPackageResourceID pID)
 	{
-		m_pModel->updateUniqueResourceID(m_pPackageResourceID->getUniqueID(), pID->getUniqueID());
 		m_pPackageResourceID = pID;
+		if (!m_pModel || !m_pPackageResourceID)
+		{
+			return;
+		}
+	
+		m_pModel->updateUniqueResourceID(m_pPackageResourceID->getUniqueID(), pID->getUniqueID());
 	}
 
 	_Ret_notnull_ CModel * CModelResource::getModel()
@@ -73,8 +78,12 @@ namespace NMR {
 		return m_pModel;
 	}
 
+    void CModelResource::setModel(CModel* pModel)
+	{
+		m_pModel = pModel;
+	}
 
-	void CModelResource::clearResourceIndexMap()
+    void CModelResource::clearResourceIndexMap()
 	{
 		m_ResourceIndexMap.clear();
 		m_bHasResourceIndexMap = false;

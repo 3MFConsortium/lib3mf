@@ -1050,7 +1050,13 @@ namespace NMR {
 			if (pOldFunctionFromImage3D)
 			{
 				PModelFunctionFromImage3D pNewFunctionFromImage3D = std::make_shared<CModelFunctionFromImage3D>(*pOldFunctionFromImage3D);
+				auto newPkgId = generatePackageResourceID(currentPath(), generateResourceID());
+				pNewFunctionFromImage3D->setModel(nullptr);	// Hack: Allows us to set the package resource ID without updating the model
+				pNewFunctionFromImage3D->setPackageResourceID(newPkgId);
+				pNewFunctionFromImage3D->setModel(this);
 
+
+				 // Update the referenced image3D resource ID
 			     auto newIdIter = oldToNewMapping.find(pOldFunctionFromImage3D->getImage3DUniqueResourceID());
 				 if (newIdIter != oldToNewMapping.cend())
 				 {
@@ -1072,9 +1078,12 @@ namespace NMR {
 			else if (pOldImplicitFunction)
 			{
 				PModelImplicitFunction pNewImplicitFunction = std::make_shared<CModelImplicitFunction>(*pOldImplicitFunction);
+			
 
 				auto newPkgId = generatePackageResourceID(currentPath(), generateResourceID());
+				pNewImplicitFunction->setModel(nullptr);	// Hack: Allows us to set the package resource ID without updating the model
 				pNewImplicitFunction->setPackageResourceID(newPkgId);
+				pNewImplicitFunction->setModel(this);
 
 				for (auto & node : *pNewImplicitFunction->getNodes())
 				{

@@ -69,6 +69,7 @@ namespace NMR {
 		nfBool hasResourceIndexMap();
 
 		_Ret_notnull_ CModel * getModel();
+		void setModel(CModel * pModel);
 	};
 
 	typedef std::shared_ptr <CModelResource> PModelResource;
