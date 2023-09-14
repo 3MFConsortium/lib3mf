@@ -1073,6 +1073,9 @@ namespace NMR {
 			{
 				PModelImplicitFunction pNewImplicitFunction = std::make_shared<CModelImplicitFunction>(*pOldImplicitFunction);
 
+				auto newPkgId = generatePackageResourceID(currentPath(), generateResourceID());
+				pNewImplicitFunction->setPackageResourceID(newPkgId);
+
 				for (auto & node : *pNewImplicitFunction->getNodes())
 				{
 					if (node->getNodeType() == Lib3MF::eImplicitNodeType::Resource)

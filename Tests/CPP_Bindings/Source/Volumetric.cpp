@@ -1016,5 +1016,30 @@ namespace Lib3MF
         EXPECT_EQ(targetFunction->GetUniqueResourceID(), gyroidFunctionId);
         helper::compareFunctions(sourceModel, gyroidFunction, targetModel, targetFunction);
     }
+
+    TEST_F(Volumetric, MergeModel_FunctionIntoModelContainingAFunction_ResourceIdsAreUpdated)
+    {
+        auto const targetModel = wrapper->CreateModel();
+        auto const sourceModel = wrapper->CreateModel();
+
+        auto const gyroidFunction = helper::createGyroidFunction(*sourceModel);
+        
+        auto const targetGyroidFunction = helper::createGyroidFunction(*targetModel);
+        
+        targetModel->MergeFromModel(sourceModel.get());
+
+        auto targetFunctionsIter = targetModel->GetFunctions();        
+        EXPECT_EQ(targetFunctionsIter->Count(), 2u);
+
+        EXPECT_TRUE(targetFunctionsIter->MoveNext());
+        auto const targetFunction = targetFunctionsIter->GetCurrentFunction();
+        ASSERT_TRUE(targetFunction);
+        EXPECT_EQ(targetFunction->GetModelResourceID(), 1u);
+        
+        EXPECT_TRUE(targetFunctionsIter->MoveNext());
+        auto const mergedFunction = targetFunctionsIter->GetCurrentFunction();
+        ASSERT_TRUE(mergedFunction);
+        EXPECT_EQ(mergedFunction->GetModelResourceID(), 2u);
+    }
     
 }  // namespace Lib3MF
