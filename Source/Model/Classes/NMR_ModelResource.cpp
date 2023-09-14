@@ -64,13 +64,12 @@ namespace NMR {
 
 	void CModelResource::setPackageResourceID(PPackageResourceID pID)
 	{
-		m_pPackageResourceID = pID;
-		if (!m_pModel || !m_pPackageResourceID)
+		if (m_pModel)
 		{
-			return;
+			m_pModel->updateUniqueResourceID(m_pPackageResourceID->getUniqueID(), pID->getUniqueID());
 		}
-	
-		m_pModel->updateUniqueResourceID(m_pPackageResourceID->getUniqueID(), pID->getUniqueID());
+		m_pPackageResourceID = pID;
+		
 	}
 
 	_Ret_notnull_ CModel * CModelResource::getModel()
