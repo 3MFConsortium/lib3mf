@@ -559,6 +559,7 @@ class FunctionTable:
 	lib3mf_model_getslicestacks = None
 	lib3mf_model_getimage3ds = None
 	lib3mf_model_mergetomodel = None
+	lib3mf_model_mergefrommodel = None
 	lib3mf_model_addmeshobject = None
 	lib3mf_model_addcomponentsobject = None
 	lib3mf_model_addslicestack = None
@@ -3677,6 +3678,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_mergetomodel = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_mergefrommodel")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
+			self.lib.lib3mf_model_mergefrommodel = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_addmeshobject")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -5205,6 +5212,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_model_mergetomodel.restype = ctypes.c_int32
 			self.lib.lib3mf_model_mergetomodel.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_mergefrommodel.restype = ctypes.c_int32
+			self.lib.lib3mf_model_mergefrommodel.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
 			
 			self.lib.lib3mf_model_addmeshobject.restype = ctypes.c_int32
 			self.lib.lib3mf_model_addmeshobject.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -9499,6 +9509,15 @@ class Model(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return MergedModelInstanceObject
+	
+	def MergeFromModel(self, ModelInstanceObject):
+		ModelInstanceHandle = None
+		if ModelInstanceObject:
+			ModelInstanceHandle = ModelInstanceObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_mergefrommodel(self._handle, ModelInstanceHandle))
+		
 	
 	def AddMeshObject(self):
 		MeshObjectInstanceHandle = ctypes.c_void_p()

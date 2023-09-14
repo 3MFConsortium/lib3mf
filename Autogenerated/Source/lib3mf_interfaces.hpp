@@ -4300,6 +4300,12 @@ public:
 	virtual IModel * MergeToModel() = 0;
 
 	/**
+	* IModel::MergeFromModel - Merges the given model into this model.
+	* @param[in] pModelInstance - model to be merged
+	*/
+	virtual void MergeFromModel(IModel* pModelInstance) = 0;
+
+	/**
 	* IModel::AddMeshObject - adds an empty mesh object to the model.
 	* @return  returns the mesh object instance
 	*/

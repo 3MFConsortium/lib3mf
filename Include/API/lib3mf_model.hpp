@@ -58,6 +58,8 @@ private:
 
 	NMR::PModel m_model;
 
+	void mergeModel(NMR::CModel & sourceModel, NMR::CModel & targetModel);
+
 protected:
 
 	/**
@@ -146,6 +148,8 @@ public:
 	ISliceStackIterator * GetSliceStacks() override;
 
 	IModel * MergeToModel() override;
+
+	void MergeFromModel(IModel* pModelInstance) override;
 
 	IMeshObject * AddMeshObject() override;
 

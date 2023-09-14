@@ -2129,6 +2129,7 @@ public:
 	inline PSliceStackIterator GetSliceStacks();
 	inline PImage3DIterator GetImage3Ds();
 	inline PModel MergeToModel();
+	inline void MergeFromModel(classParam<CModel> pModelInstance);
 	inline PMeshObject AddMeshObject();
 	inline PComponentsObject AddComponentsObject();
 	inline PSliceStack AddSliceStack(const Lib3MF_double dZBottom);
@@ -2953,6 +2954,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Model_GetSliceStacks = nullptr;
 		pWrapperTable->m_Model_GetImage3Ds = nullptr;
 		pWrapperTable->m_Model_MergeToModel = nullptr;
+		pWrapperTable->m_Model_MergeFromModel = nullptr;
 		pWrapperTable->m_Model_AddMeshObject = nullptr;
 		pWrapperTable->m_Model_AddComponentsObject = nullptr;
 		pWrapperTable->m_Model_AddSliceStack = nullptr;
@@ -6914,6 +6916,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_Model_MergeFromModel = (PLib3MFModel_MergeFromModelPtr) GetProcAddress(hLibrary, "lib3mf_model_mergefrommodel");
+		#else // _WIN32
+		pWrapperTable->m_Model_MergeFromModel = (PLib3MFModel_MergeFromModelPtr) dlsym(hLibrary, "lib3mf_model_mergefrommodel");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_MergeFromModel == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_Model_AddMeshObject = (PLib3MFModel_AddMeshObjectPtr) GetProcAddress(hLibrary, "lib3mf_model_addmeshobject");
 		#else // _WIN32
 		pWrapperTable->m_Model_AddMeshObject = (PLib3MFModel_AddMeshObjectPtr) dlsym(hLibrary, "lib3mf_model_addmeshobject");
@@ -9084,6 +9095,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_model_mergetomodel", (void**)&(pWrapperTable->m_Model_MergeToModel));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Model_MergeToModel == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_mergefrommodel", (void**)&(pWrapperTable->m_Model_MergeFromModel));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_MergeFromModel == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_model_addmeshobject", (void**)&(pWrapperTable->m_Model_AddMeshObject));
@@ -14935,6 +14950,16 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CModel>(dynamic_cast<CModel*>(m_pWrapper->polymorphicFactory(hMergedModelInstance)));
+	}
+	
+	/**
+	* CModel::MergeFromModel - Merges the given model into this model.
+	* @param[in] pModelInstance - model to be merged
+	*/
+	void CModel::MergeFromModel(classParam<CModel> pModelInstance)
+	{
+		Lib3MFHandle hModelInstance = pModelInstance.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_MergeFromModel(m_pHandle, hModelInstance));
 	}
 	
 	/**

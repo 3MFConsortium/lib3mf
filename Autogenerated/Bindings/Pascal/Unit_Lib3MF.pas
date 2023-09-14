@@ -4983,6 +4983,15 @@ type
 	TLib3MFModel_MergeToModelFunc = function(pModel: TLib3MFHandle; out pMergedModelInstance: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
+	* Merges the given model into this model.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] pModelInstance - model to be merged
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_MergeFromModelFunc = function(pModel: TLib3MFHandle; const pModelInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
 	* adds an empty mesh object to the model.
 	*
 	* @param[in] pModel - Model instance.
@@ -6589,6 +6598,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetSliceStacks(): TLib3MFSliceStackIterator;
 		function GetImage3Ds(): TLib3MFImage3DIterator;
 		function MergeToModel(): TLib3MFModel;
+		procedure MergeFromModel(const AModelInstance: TLib3MFModel);
 		function AddMeshObject(): TLib3MFMeshObject;
 		function AddComponentsObject(): TLib3MFComponentsObject;
 		function AddSliceStack(const AZBottom: Double): TLib3MFSliceStack;
@@ -7057,6 +7067,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_GetSliceStacksFunc: TLib3MFModel_GetSliceStacksFunc;
 		FLib3MFModel_GetImage3DsFunc: TLib3MFModel_GetImage3DsFunc;
 		FLib3MFModel_MergeToModelFunc: TLib3MFModel_MergeToModelFunc;
+		FLib3MFModel_MergeFromModelFunc: TLib3MFModel_MergeFromModelFunc;
 		FLib3MFModel_AddMeshObjectFunc: TLib3MFModel_AddMeshObjectFunc;
 		FLib3MFModel_AddComponentsObjectFunc: TLib3MFModel_AddComponentsObjectFunc;
 		FLib3MFModel_AddSliceStackFunc: TLib3MFModel_AddSliceStackFunc;
@@ -7545,6 +7556,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_GetSliceStacksFunc: TLib3MFModel_GetSliceStacksFunc read FLib3MFModel_GetSliceStacksFunc;
 		property Lib3MFModel_GetImage3DsFunc: TLib3MFModel_GetImage3DsFunc read FLib3MFModel_GetImage3DsFunc;
 		property Lib3MFModel_MergeToModelFunc: TLib3MFModel_MergeToModelFunc read FLib3MFModel_MergeToModelFunc;
+		property Lib3MFModel_MergeFromModelFunc: TLib3MFModel_MergeFromModelFunc read FLib3MFModel_MergeFromModelFunc;
 		property Lib3MFModel_AddMeshObjectFunc: TLib3MFModel_AddMeshObjectFunc read FLib3MFModel_AddMeshObjectFunc;
 		property Lib3MFModel_AddComponentsObjectFunc: TLib3MFModel_AddComponentsObjectFunc read FLib3MFModel_AddComponentsObjectFunc;
 		property Lib3MFModel_AddSliceStackFunc: TLib3MFModel_AddSliceStackFunc read FLib3MFModel_AddSliceStackFunc;
@@ -13554,6 +13566,17 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFModel, TLib3MFModel>.Make(FWrapper, HMergedModelInstance);
 	end;
 
+	procedure TLib3MFModel.MergeFromModel(const AModelInstance: TLib3MFModel);
+	var
+		AModelInstanceHandle: TLib3MFHandle;
+	begin
+		if Assigned(AModelInstance) then
+		AModelInstanceHandle := AModelInstance.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AModelInstance is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_MergeFromModelFunc(FHandle, AModelInstanceHandle));
+	end;
+
 	function TLib3MFModel.AddMeshObject(): TLib3MFMeshObject;
 	var
 		HMeshObjectInstance: TLib3MFHandle;
@@ -14330,6 +14353,7 @@ implementation
 		FLib3MFModel_GetSliceStacksFunc := LoadFunction('lib3mf_model_getslicestacks');
 		FLib3MFModel_GetImage3DsFunc := LoadFunction('lib3mf_model_getimage3ds');
 		FLib3MFModel_MergeToModelFunc := LoadFunction('lib3mf_model_mergetomodel');
+		FLib3MFModel_MergeFromModelFunc := LoadFunction('lib3mf_model_mergefrommodel');
 		FLib3MFModel_AddMeshObjectFunc := LoadFunction('lib3mf_model_addmeshobject');
 		FLib3MFModel_AddComponentsObjectFunc := LoadFunction('lib3mf_model_addcomponentsobject');
 		FLib3MFModel_AddSliceStackFunc := LoadFunction('lib3mf_model_addslicestack');
@@ -15675,6 +15699,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_mergetomodel'), @FLib3MFModel_MergeToModelFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_mergefrommodel'), @FLib3MFModel_MergeFromModelFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addmeshobject'), @FLib3MFModel_AddMeshObjectFunc);

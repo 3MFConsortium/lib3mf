@@ -14865,6 +14865,7 @@ void CLib3MFModel::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSliceStacks", GetSliceStacks);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetImage3Ds", GetImage3Ds);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "MergeToModel", MergeToModel);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "MergeFromModel", MergeFromModel);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddMeshObject", AddMeshObject);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddComponentsObject", AddComponentsObject);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddSliceStack", AddSliceStack);
@@ -15822,6 +15823,34 @@ void CLib3MFModel::MergeToModel(const FunctionCallbackInfo<Value>& args)
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjMergedModelInstance = CLib3MFModel::NewInstance(args.Holder(), hReturnMergedModelInstance);
         args.GetReturnValue().Set(instanceObjMergedModelInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::MergeFromModel(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsObject()) {
+            throw std::runtime_error("Expected class parameter 0 (ModelInstance)");
+        }
+        Local<Object> objModelInstance = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+        CLib3MFModel * instanceModelInstance = ObjectWrap::Unwrap<CLib3MFModel>(objModelInstance);
+        if (instanceModelInstance == nullptr)
+            throw std::runtime_error("Invalid Object parameter 0 (ModelInstance)");
+        Lib3MFHandle hModelInstance = instanceModelInstance->getHandle( objModelInstance );
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method MergeFromModel.");
+        if (wrapperTable->m_Model_MergeFromModel == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::MergeFromModel.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_MergeFromModel(instanceHandle, hModelInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

@@ -4442,6 +4442,15 @@ typedef Lib3MFResult (*PLib3MFModel_GetImage3DsPtr) (Lib3MF_Model pModel, Lib3MF
 typedef Lib3MFResult (*PLib3MFModel_MergeToModelPtr) (Lib3MF_Model pModel, Lib3MF_Model * pMergedModelInstance);
 
 /**
+* Merges the given model into this model.
+*
+* @param[in] pModel - Model instance.
+* @param[in] pModelInstance - model to be merged
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_MergeFromModelPtr) (Lib3MF_Model pModel, Lib3MF_Model pModelInstance);
+
+/**
 * adds an empty mesh object to the model.
 *
 * @param[in] pModel - Model instance.
@@ -5360,6 +5369,7 @@ typedef struct {
 	PLib3MFModel_GetSliceStacksPtr m_Model_GetSliceStacks;
 	PLib3MFModel_GetImage3DsPtr m_Model_GetImage3Ds;
 	PLib3MFModel_MergeToModelPtr m_Model_MergeToModel;
+	PLib3MFModel_MergeFromModelPtr m_Model_MergeFromModel;
 	PLib3MFModel_AddMeshObjectPtr m_Model_AddMeshObject;
 	PLib3MFModel_AddComponentsObjectPtr m_Model_AddComponentsObject;
 	PLib3MFModel_AddSliceStackPtr m_Model_AddSliceStack;

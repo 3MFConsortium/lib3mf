@@ -1712,6 +1712,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_mergetomodel", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_MergeToModel (IntPtr Handle, out IntPtr AMergedModelInstance);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_mergefrommodel", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_MergeFromModel (IntPtr Handle, IntPtr AModelInstance);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addmeshobject", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_AddMeshObject (IntPtr Handle, out IntPtr AMeshObjectInstance);
 
@@ -6619,6 +6622,15 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Model_MergeToModel (Handle, out newMergedModelInstance));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CModel>(newMergedModelInstance);
+		}
+
+		public void MergeFromModel (CModel AModelInstance)
+		{
+			IntPtr AModelInstanceHandle = IntPtr.Zero;
+			if (AModelInstance != null)
+				AModelInstanceHandle = AModelInstance.GetHandle();
+
+			CheckError(Internal.Lib3MFWrapper.Model_MergeFromModel (Handle, AModelInstanceHandle));
 		}
 
 		public CMeshObject AddMeshObject ()

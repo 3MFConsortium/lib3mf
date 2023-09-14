@@ -1525,6 +1525,7 @@ private:
 	static void GetSliceStacks(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetImage3Ds(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void MergeToModel(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void MergeFromModel(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddMeshObject(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddComponentsObject(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddSliceStack(const v8::FunctionCallbackInfo<v8::Value>& args);

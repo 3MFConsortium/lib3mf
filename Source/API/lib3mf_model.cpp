@@ -92,6 +92,22 @@ CModel::CModel()
 	m_model = std::make_shared<NMR::CModel>();
 }
 
+void CModel::mergeModel(NMR::CModel& sourceModel,
+                                      NMR::CModel& targetModel)
+{
+	NMR::UniqueResourceIDMapping oldToNewUniqueResourceIDs;
+	targetModel.mergeModelAttachments(&sourceModel);
+	targetModel.mergeTextures2D(&sourceModel, oldToNewUniqueResourceIDs);
+	targetModel.mergeBaseMaterials(&sourceModel, oldToNewUniqueResourceIDs);
+	targetModel.mergeColorGroups(&sourceModel, oldToNewUniqueResourceIDs);
+	targetModel.mergeTexture2DGroups(&sourceModel, oldToNewUniqueResourceIDs);
+	targetModel.mergeCompositeMaterials(&sourceModel, oldToNewUniqueResourceIDs);
+	targetModel.mergeMultiPropertyGroups(&sourceModel, oldToNewUniqueResourceIDs);
+	targetModel.mergeImage3Ds(&sourceModel, oldToNewUniqueResourceIDs);
+	targetModel.mergeFunctions(&sourceModel, oldToNewUniqueResourceIDs);
+	targetModel.mergeMetaData(&sourceModel);
+}
+
 NMR::CModel& CModel::model()
 {
 	return *m_model;
@@ -541,6 +557,15 @@ IModel * CModel::MergeToModel ()
 	newModel.addBuildItem(pBuildItem);
 
 	return pOutModel.release();
+}
+
+void CModel::MergeFromModel(IModel* pModelInstance)
+{
+	CModel* pLib3MFModel = dynamic_cast<CModel*> (pModelInstance);
+	if (!pLib3MFModel)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	mergeModel(pLib3MFModel->model(), model());
 }
 
 IMeshObject * CModel::AddMeshObject ()

@@ -3933,6 +3933,15 @@ Lib3MFResult CCall_lib3mf_model_mergetomodel(Lib3MFHandle libraryHandle, Lib3MF_
 }
 
 
+Lib3MFResult CCall_lib3mf_model_mergefrommodel(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Model pModelInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_MergeFromModel (pModel, pModelInstance);
+}
+
+
 Lib3MFResult CCall_lib3mf_model_addmeshobject(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_MeshObject * pMeshObjectInstance)
 {
 	if (libraryHandle == 0) 
@@ -10280,6 +10289,15 @@ func (inst Model) MergeToModel() (Model, error) {
 		return Model{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewModel(mergedModelInstance), nil
+}
+
+// MergeFromModel merges the given model into this model.
+func (inst Model) MergeFromModel(modelInstance Model) error {
+	ret := C.CCall_lib3mf_model_mergefrommodel(inst.wrapperRef.LibraryHandle, inst.Ref, modelInstance.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
 }
 
 // AddMeshObject adds an empty mesh object to the model.

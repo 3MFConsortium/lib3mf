@@ -4455,6 +4455,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getimage3ds(Lib3MF_Model pModel, Lib3M
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_mergetomodel(Lib3MF_Model pModel, Lib3MF_Model * pMergedModelInstance);
 
 /**
+* Merges the given model into this model.
+*
+* @param[in] pModel - Model instance.
+* @param[in] pModelInstance - model to be merged
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_mergefrommodel(Lib3MF_Model pModel, Lib3MF_Model pModelInstance);
+
+/**
 * adds an empty mesh object to the model.
 *
 * @param[in] pModel - Model instance.

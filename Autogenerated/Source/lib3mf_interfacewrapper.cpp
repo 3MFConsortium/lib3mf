@@ -16227,6 +16227,43 @@ Lib3MFResult lib3mf_model_mergetomodel(Lib3MF_Model pModel, Lib3MF_Model * pMerg
 	}
 }
 
+Lib3MFResult lib3mf_model_mergefrommodel(Lib3MF_Model pModel, Lib3MF_Model pModelInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "MergeFromModel");
+			pJournalEntry->addHandleParameter("ModelInstance", pModelInstance);
+		}
+		IBase* pIBaseClassModelInstance = (IBase *)pModelInstance;
+		IModel* pIModelInstance = dynamic_cast<IModel*>(pIBaseClassModelInstance);
+		if (!pIModelInstance)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIModel->MergeFromModel(pIModelInstance);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_model_addmeshobject(Lib3MF_Model pModel, Lib3MF_MeshObject * pMeshObjectInstance)
 {
 	IBase* pIBaseClass = (IBase *)pModel;
@@ -18219,6 +18256,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_model_getimage3ds;
 	if (sProcName == "lib3mf_model_mergetomodel") 
 		*ppProcAddress = (void*) &lib3mf_model_mergetomodel;
+	if (sProcName == "lib3mf_model_mergefrommodel") 
+		*ppProcAddress = (void*) &lib3mf_model_mergefrommodel;
 	if (sProcName == "lib3mf_model_addmeshobject") 
 		*ppProcAddress = (void*) &lib3mf_model_addmeshobject;
 	if (sProcName == "lib3mf_model_addcomponentsobject") 

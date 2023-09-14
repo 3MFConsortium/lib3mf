@@ -2105,6 +2105,7 @@ public:
 	inline PSliceStackIterator GetSliceStacks();
 	inline PImage3DIterator GetImage3Ds();
 	inline PModel MergeToModel();
+	inline void MergeFromModel(classParam<CModel> pModelInstance);
 	inline PMeshObject AddMeshObject();
 	inline PComponentsObject AddComponentsObject();
 	inline PSliceStack AddSliceStack(const Lib3MF_double dZBottom);
@@ -8143,6 +8144,16 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CModel>(dynamic_cast<CModel*>(m_pWrapper->polymorphicFactory(hMergedModelInstance)));
+	}
+	
+	/**
+	* CModel::MergeFromModel - Merges the given model into this model.
+	* @param[in] pModelInstance - model to be merged
+	*/
+	void CModel::MergeFromModel(classParam<CModel> pModelInstance)
+	{
+		Lib3MFHandle hModelInstance = pModelInstance.GetHandle();
+		CheckError(lib3mf_model_mergefrommodel(m_pHandle, hModelInstance));
 	}
 	
 	/**

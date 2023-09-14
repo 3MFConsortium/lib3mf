@@ -477,6 +477,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Model_GetSliceStacks = NULL;
 	pWrapperTable->m_Model_GetImage3Ds = NULL;
 	pWrapperTable->m_Model_MergeToModel = NULL;
+	pWrapperTable->m_Model_MergeFromModel = NULL;
 	pWrapperTable->m_Model_AddMeshObject = NULL;
 	pWrapperTable->m_Model_AddComponentsObject = NULL;
 	pWrapperTable->m_Model_AddSliceStack = NULL;
@@ -4439,6 +4440,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Model_MergeToModel == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_MergeFromModel = (PLib3MFModel_MergeFromModelPtr) GetProcAddress(hLibrary, "lib3mf_model_mergefrommodel");
+	#else // _WIN32
+	pWrapperTable->m_Model_MergeFromModel = (PLib3MFModel_MergeFromModelPtr) dlsym(hLibrary, "lib3mf_model_mergefrommodel");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_MergeFromModel == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

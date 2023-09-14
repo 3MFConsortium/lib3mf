@@ -2840,6 +2840,11 @@
 			<param name="MergedModelInstance" type="handle" class="Model" pass="return"
 				description="returns the merged model instance" />
 		</method>
+		<method name="MergeFromModel"
+			description="Merges the given model into this model.">
+			<param name="ModelInstance" type="handle" class="Model" pass="in"
+				description="model to be merged" />
+		</method>
 		<method name="AddMeshObject" description="adds an empty mesh object to the model.">
 			<param name="MeshObjectInstance" type="handle" class="MeshObject" pass="return"
 				description=" returns the mesh object instance" />
