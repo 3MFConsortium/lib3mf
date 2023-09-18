@@ -1040,6 +1040,21 @@ namespace Lib3MF
         auto const mergedFunction = targetFunctionsIter->GetCurrentFunction();
         ASSERT_TRUE(mergedFunction);
         EXPECT_EQ(mergedFunction->GetModelResourceID(), 2u);
+
+        //Save the target model to a file
+        writer3MF = targetModel->QueryWriter("3mf");
+        writer3MF->WriteToFile(Volumetric::OutFolder + "TwoFunctions.3mf");
     }
     
+    TEST_F(Volumetric, SortNodesTopologically_SimpleFunction_SortedNodes)
+    {
+        auto const function = helper::createGyroidFunction(*model);
+
+        function->SortNodesTopologically();
+
+        auto const nodes = function->GetNodes();
+
+        // ToDo: Check the order of the nodes
+
+    }
 }  // namespace Lib3MF

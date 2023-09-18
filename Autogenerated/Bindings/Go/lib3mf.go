@@ -2844,6 +2844,15 @@ Lib3MFResult CCall_lib3mf_implicitfunction_clear(Lib3MFHandle libraryHandle, Lib
 }
 
 
+Lib3MFResult CCall_lib3mf_implicitfunction_sortnodestopologically(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_SortNodesTopologically (pImplicitFunction);
+}
+
+
 Lib3MFResult CCall_lib3mf_functionfromimage3d_getimage3d(Lib3MFHandle libraryHandle, Lib3MF_FunctionFromImage3D pFunctionFromImage3D, Lib3MF_Image3D * pImage3D)
 {
 	if (libraryHandle == 0) 
@@ -8826,6 +8835,15 @@ func (inst ImplicitFunction) AddLinkByNames(source string, target string) error 
 // Clear clears the function.
 func (inst ImplicitFunction) Clear() error {
 	ret := C.CCall_lib3mf_implicitfunction_clear(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SortNodesTopologically sorts the nodes topologically.
+func (inst ImplicitFunction) SortNodesTopologically() error {
+	ret := C.CCall_lib3mf_implicitfunction_sortnodestopologically(inst.wrapperRef.LibraryHandle, inst.Ref)
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}

@@ -438,6 +438,7 @@ class FunctionTable:
 	lib3mf_implicitfunction_addlink = None
 	lib3mf_implicitfunction_addlinkbynames = None
 	lib3mf_implicitfunction_clear = None
+	lib3mf_implicitfunction_sortnodestopologically = None
 	lib3mf_functionfromimage3d_getimage3d = None
 	lib3mf_functionfromimage3d_setimage3d = None
 	lib3mf_functionfromimage3d_setfilter = None
@@ -2952,6 +2953,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
 			self.lib.lib3mf_implicitfunction_clear = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_sortnodestopologically")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_implicitfunction_sortnodestopologically = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functionfromimage3d_getimage3d")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -4849,6 +4856,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_implicitfunction_clear.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitfunction_clear.argtypes = [ctypes.c_void_p]
+			
+			self.lib.lib3mf_implicitfunction_sortnodestopologically.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitfunction_sortnodestopologically.argtypes = [ctypes.c_void_p]
 			
 			self.lib.lib3mf_functionfromimage3d_getimage3d.restype = ctypes.c_int32
 			self.lib.lib3mf_functionfromimage3d_getimage3d.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -8346,6 +8356,10 @@ class ImplicitFunction(Function):
 	
 	def Clear(self):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_clear(self._handle))
+		
+	
+	def SortNodesTopologically(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_sortnodestopologically(self._handle))
 		
 	
 

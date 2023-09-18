@@ -1792,6 +1792,7 @@ public:
 	inline void AddLink(classParam<CImplicitPort> pSource, classParam<CImplicitPort> pTarget);
 	inline void AddLinkByNames(const std::string & sSource, const std::string & sTarget);
 	inline void Clear();
+	inline void SortNodesTopologically();
 };
 	
 /*************************************************************************************************************************
@@ -6464,6 +6465,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	void CImplicitFunction::Clear()
 	{
 		CheckError(lib3mf_implicitfunction_clear(m_pHandle));
+	}
+	
+	/**
+	* CImplicitFunction::SortNodesTopologically - Sorts the nodes topologically
+	*/
+	void CImplicitFunction::SortNodesTopologically()
+	{
+		CheckError(lib3mf_implicitfunction_sortnodestopologically(m_pHandle));
 	}
 	
 	/**

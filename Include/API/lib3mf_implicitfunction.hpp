@@ -132,6 +132,12 @@ namespace Lib3MF
              * IImplicitFunction::Clear - Clears the function
              */
             void Clear() override;
+
+            /**
+             * IImplicitFunction::SortNodesTopologically - Sorts the nodes
+             * topologically
+             */
+            void SortNodesTopologically() override;
         };
 
     } // namespace Impl

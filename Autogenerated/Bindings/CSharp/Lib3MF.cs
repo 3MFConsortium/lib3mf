@@ -1349,6 +1349,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_clear", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_Clear (IntPtr Handle);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_sortnodestopologically", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_SortNodesTopologically (IntPtr Handle);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionfromimage3d_getimage3d", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 FunctionFromImage3D_GetImage3D (IntPtr Handle, out IntPtr AImage3D);
 
@@ -5415,6 +5418,12 @@ namespace Lib3MF {
 		{
 
 			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_Clear (Handle));
+		}
+
+		public void SortNodesTopologically ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_SortNodesTopologically (Handle));
 		}
 
 	}

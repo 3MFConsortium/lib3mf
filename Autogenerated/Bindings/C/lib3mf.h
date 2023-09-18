@@ -3230,6 +3230,14 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addlinkbynames(Lib3MF_Impli
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_clear(Lib3MF_ImplicitFunction pImplicitFunction);
 
+/**
+* Sorts the nodes topologically
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_sortnodestopologically(Lib3MF_ImplicitFunction pImplicitFunction);
+
 /*************************************************************************************************************************
  Class definition for FunctionFromImage3D
 **************************************************************************************************************************/

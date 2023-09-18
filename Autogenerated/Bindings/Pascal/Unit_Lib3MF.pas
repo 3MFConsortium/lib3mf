@@ -3746,6 +3746,14 @@ type
 	*)
 	TLib3MFImplicitFunction_ClearFunc = function(pImplicitFunction: TLib3MFHandle): TLib3MFResult; cdecl;
 	
+	(**
+	* Sorts the nodes topologically
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_SortNodesTopologicallyFunc = function(pImplicitFunction: TLib3MFHandle): TLib3MFResult; cdecl;
+	
 
 (*************************************************************************************************************************
  Function type definitions for FunctionFromImage3D
@@ -6345,6 +6353,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure AddLink(const ASource: TLib3MFImplicitPort; const ATarget: TLib3MFImplicitPort);
 		procedure AddLinkByNames(const ASource: String; const ATarget: String);
 		procedure Clear();
+		procedure SortNodesTopologically();
 	end;
 
 
@@ -6946,6 +6955,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFImplicitFunction_AddLinkFunc: TLib3MFImplicitFunction_AddLinkFunc;
 		FLib3MFImplicitFunction_AddLinkByNamesFunc: TLib3MFImplicitFunction_AddLinkByNamesFunc;
 		FLib3MFImplicitFunction_ClearFunc: TLib3MFImplicitFunction_ClearFunc;
+		FLib3MFImplicitFunction_SortNodesTopologicallyFunc: TLib3MFImplicitFunction_SortNodesTopologicallyFunc;
 		FLib3MFFunctionFromImage3D_GetImage3DFunc: TLib3MFFunctionFromImage3D_GetImage3DFunc;
 		FLib3MFFunctionFromImage3D_SetImage3DFunc: TLib3MFFunctionFromImage3D_SetImage3DFunc;
 		FLib3MFFunctionFromImage3D_SetFilterFunc: TLib3MFFunctionFromImage3D_SetFilterFunc;
@@ -7435,6 +7445,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFImplicitFunction_AddLinkFunc: TLib3MFImplicitFunction_AddLinkFunc read FLib3MFImplicitFunction_AddLinkFunc;
 		property Lib3MFImplicitFunction_AddLinkByNamesFunc: TLib3MFImplicitFunction_AddLinkByNamesFunc read FLib3MFImplicitFunction_AddLinkByNamesFunc;
 		property Lib3MFImplicitFunction_ClearFunc: TLib3MFImplicitFunction_ClearFunc read FLib3MFImplicitFunction_ClearFunc;
+		property Lib3MFImplicitFunction_SortNodesTopologicallyFunc: TLib3MFImplicitFunction_SortNodesTopologicallyFunc read FLib3MFImplicitFunction_SortNodesTopologicallyFunc;
 		property Lib3MFFunctionFromImage3D_GetImage3DFunc: TLib3MFFunctionFromImage3D_GetImage3DFunc read FLib3MFFunctionFromImage3D_GetImage3DFunc;
 		property Lib3MFFunctionFromImage3D_SetImage3DFunc: TLib3MFFunctionFromImage3D_SetImage3DFunc read FLib3MFFunctionFromImage3D_SetImage3DFunc;
 		property Lib3MFFunctionFromImage3D_SetFilterFunc: TLib3MFFunctionFromImage3D_SetFilterFunc read FLib3MFFunctionFromImage3D_SetFilterFunc;
@@ -12164,6 +12175,11 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_ClearFunc(FHandle));
 	end;
 
+	procedure TLib3MFImplicitFunction.SortNodesTopologically();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_SortNodesTopologicallyFunc(FHandle));
+	end;
+
 (*************************************************************************************************************************
  Class implementation for FunctionFromImage3D
 **************************************************************************************************************************)
@@ -14232,6 +14248,7 @@ implementation
 		FLib3MFImplicitFunction_AddLinkFunc := LoadFunction('lib3mf_implicitfunction_addlink');
 		FLib3MFImplicitFunction_AddLinkByNamesFunc := LoadFunction('lib3mf_implicitfunction_addlinkbynames');
 		FLib3MFImplicitFunction_ClearFunc := LoadFunction('lib3mf_implicitfunction_clear');
+		FLib3MFImplicitFunction_SortNodesTopologicallyFunc := LoadFunction('lib3mf_implicitfunction_sortnodestopologically');
 		FLib3MFFunctionFromImage3D_GetImage3DFunc := LoadFunction('lib3mf_functionfromimage3d_getimage3d');
 		FLib3MFFunctionFromImage3D_SetImage3DFunc := LoadFunction('lib3mf_functionfromimage3d_setimage3d');
 		FLib3MFFunctionFromImage3D_SetFilterFunc := LoadFunction('lib3mf_functionfromimage3d_setfilter');
@@ -15336,6 +15353,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_clear'), @FLib3MFImplicitFunction_ClearFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_sortnodestopologically'), @FLib3MFImplicitFunction_SortNodesTopologicallyFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_functionfromimage3d_getimage3d'), @FLib3MFFunctionFromImage3D_GetImage3DFunc);

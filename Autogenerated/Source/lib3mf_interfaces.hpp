@@ -3268,6 +3268,11 @@ public:
 	*/
 	virtual void Clear() = 0;
 
+	/**
+	* IImplicitFunction::SortNodesTopologically - Sorts the nodes topologically
+	*/
+	virtual void SortNodesTopologically() = 0;
+
 };
 
 typedef IBaseSharedPtr<IImplicitFunction> PIImplicitFunction;

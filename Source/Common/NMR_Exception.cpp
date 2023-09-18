@@ -500,7 +500,9 @@ namespace NMR {
 		case NMR_ERROR_IMPLICIT_FUNCTION_INVALID_TARGET_PORT : return "Invalid target port in implicit function";
 		case NMR_ERROR_IMPLICIT_FUNCTION_INVALID_PORT_TYPE : return "Invalid port type in implicit function";
 		case NMR_ERROR_IMPLICIT_PORT_DOES_NOT_EXIST : return "The port does not exist";
-
+		case NMR_ERROR_DUPLICATE_VOLUMEDATA_MESHBBOXONLY : return "Duplicate VolumeData MeshBBoxOnly";
+		case NMR_ERROR_DUPLICATE_VOLUMEDATA_MINFEATURESIZE : return "Duplicate VolumeData MinFeatureSize";
+		case NMR_ERROR_IMPLICIT_FUNCTION_CYCLIC_GRAPH : return "Cyclic graph in implicit function";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

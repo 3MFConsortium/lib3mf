@@ -2134,6 +2134,9 @@
 		<method name="Clear" description="Clears the function">
 		</method>
 
+		<method name="SortNodesTopologically" description="Sorts the nodes topologically">
+		</method>
+
 	</class>
 
 	<class name="FunctionFromImage3D" parent="Function">

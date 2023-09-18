@@ -1425,6 +1425,9 @@ Model error codes (0x8XXX)
 // Duplicate attribute minfeature size in volumedata element
 #define NMR_ERROR_DUPLICATE_VOLUMEDATA_MINFEATURESIZE 0x8840
 
+// Function graph is not a directed acyclic graph
+#define NMR_ERROR_IMPLICIT_FUNCTION_CYCLIC_GRAPH 0x8841
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

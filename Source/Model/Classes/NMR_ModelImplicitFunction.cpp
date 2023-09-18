@@ -33,6 +33,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Model/Classes/NMR_ModelImplicitPort.h"
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
 
+#include <algorithm>
+#include <queue>
+
 namespace NMR
 {
     const implicit::NodeTypes CModelImplicitFunction::m_nodeTypes;
@@ -50,7 +53,8 @@ namespace NMR
         return nullptr;
     }
 
-    CModelImplicitFunction::CModelImplicitFunction(const ModelResourceID sID, CModel * pModel)
+    CModelImplicitFunction::CModelImplicitFunction(const ModelResourceID sID,
+                                                   CModel* pModel)
         : CModelFunction(sID, pModel)
     {
         m_nodes = std::make_shared<ImplicitNodes>();
@@ -236,5 +240,79 @@ namespace NMR
                                                const ImplicitIdentifier & sPortIdentifier)
     {
         return sNodeIdentifier + "." + sPortIdentifier;
+    }
+
+    void CModelImplicitFunction::sortNodesTopologically() const
+    {
+        // Assign an id to each node
+        for (size_t i = 0; i < m_nodes->size(); ++i)
+        {
+            (*m_nodes)[i]->setGraphID(i);
+        }
+
+        std::unordered_map<GraphID, std::vector<GraphID>> graph;
+        std::unordered_map<GraphID, int> indegree;
+
+        // Build the graph and calculate the indegree of each node
+        for (auto const& node : *m_nodes)
+        {
+            auto const& id = node->getGraphID();
+            indegree[id] = 0;
+            for (auto const& port : *node->getInputs())
+            {
+                auto const& referenceName = port->getReference();
+                auto const& sourceNodeName = extractNodeName(referenceName);
+                CModelImplicitNode* sourceNode = findNode(sourceNodeName);
+                if (sourceNode == nullptr)
+                {
+                    throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_INVALID_SOURCE_NODE);
+                }
+                auto const& sourceId = sourceNode->getGraphID();
+                graph[sourceId].push_back(id);
+                ++indegree[id];
+            }
+        }
+
+        // Perform the topological sort
+        std::queue<GraphID> q;
+        for (auto const& entry : indegree)
+        {
+            auto const& id = entry.first;
+            auto const& degree = entry.second;
+            if (degree == 0)
+            {
+                q.push(id);
+            }
+        }
+
+        std::vector<GraphID> sortedNodes;
+        while (!q.empty())
+        {
+            auto const& id = q.front();
+            q.pop();
+            sortedNodes.push_back(id);
+            for (auto const& neighbor : graph[id])
+            {
+                --indegree[neighbor];
+                if (indegree[neighbor] == 0)
+                {
+                    q.push(neighbor);
+                }
+            }
+        }
+
+        // Check if there is a cycle in the graph
+        if (sortedNodes.size() != m_nodes->size())
+        {
+            throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_CYCLIC_GRAPH);
+        }
+
+        // Update the node order
+        std::vector<PModelImplicitNode> newNodes(m_nodes->size());
+        for (size_t i = 0; i < m_nodes->size(); ++i)
+        {
+            newNodes[i] = (*m_nodes)[sortedNodes[i]];
+        }
+        m_nodes->swap(newNodes);
     }
 }

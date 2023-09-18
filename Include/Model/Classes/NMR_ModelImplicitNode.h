@@ -43,6 +43,8 @@ namespace NMR
 {
     class CModelImplicitFunction;
 
+    using GraphID = unsigned int;
+    using TopologicalOrderIndex = unsigned int;
     class CModelImplicitNode
     {
       private:
@@ -63,6 +65,11 @@ namespace NMR
         ModelResourceID m_modelResourceID;
         
         CModelImplicitFunction * m_parent = nullptr;
+
+        // ID of the node in the graph, used for the topological sort
+        GraphID m_graphId = 0;
+        TopologicalOrderIndex m_topologicalOrderIndex = 0;
+
       public:
         CModelImplicitNode(Lib3MF::eImplicitNodeType type,
                            ImplicitIdentifier const & identifier,
@@ -108,6 +115,9 @@ namespace NMR
         PModelResource getResource() const;
 
         bool arePortsValid() const;
+
+        void setGraphID(GraphID id);
+        GraphID getGraphID() const;
     };
 
     using PModelImplicitNode = std::shared_ptr<CModelImplicitNode>;

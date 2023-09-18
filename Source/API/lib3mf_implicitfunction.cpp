@@ -100,3 +100,8 @@ void CImplicitFunction::Clear()
 {
 	function()->clear();
 }
+
+void CImplicitFunction::SortNodesTopologically()
+{
+	function()->sortNodesTopologically();
+}

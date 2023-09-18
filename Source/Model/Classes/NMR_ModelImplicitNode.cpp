@@ -238,5 +238,14 @@ namespace NMR
     {
         return m_parent->getNodeTypes().arePortsValidForNode(*this);
     }
+    
+    void CModelImplicitNode::setGraphID(GraphID id)
+    {
+        m_graphId = id;
+    }      
 
+    GraphID CModelImplicitNode::getGraphID() const
+    {
+        return m_graphId;
+    }
 }  // namespace NMR

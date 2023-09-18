@@ -356,6 +356,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ImplicitFunction_AddLink = NULL;
 	pWrapperTable->m_ImplicitFunction_AddLinkByNames = NULL;
 	pWrapperTable->m_ImplicitFunction_Clear = NULL;
+	pWrapperTable->m_ImplicitFunction_SortNodesTopologically = NULL;
 	pWrapperTable->m_FunctionFromImage3D_GetImage3D = NULL;
 	pWrapperTable->m_FunctionFromImage3D_SetImage3D = NULL;
 	pWrapperTable->m_FunctionFromImage3D_SetFilter = NULL;
@@ -3351,6 +3352,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_ImplicitFunction_Clear == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitFunction_SortNodesTopologically = (PLib3MFImplicitFunction_SortNodesTopologicallyPtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_sortnodestopologically");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitFunction_SortNodesTopologically = (PLib3MFImplicitFunction_SortNodesTopologicallyPtr) dlsym(hLibrary, "lib3mf_implicitfunction_sortnodestopologically");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitFunction_SortNodesTopologically == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

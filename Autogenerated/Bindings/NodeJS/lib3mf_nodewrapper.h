@@ -1200,6 +1200,7 @@ private:
 	static void AddLink(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddLinkByNames(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void Clear(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SortNodesTopologically(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFImplicitFunction();
