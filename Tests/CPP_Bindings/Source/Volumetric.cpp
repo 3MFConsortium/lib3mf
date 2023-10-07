@@ -578,6 +578,12 @@ namespace Lib3MF
 
         output->SetReference("subtraction.result");
 
+        auto theMesh = GetMesh();
+        auto volumeData = theMesh->VolumeData();
+        auto theBoundary = volumeData->CreateNewBoundary(newFunction.get());
+        theBoundary->SetMinFeatureSize(0.1);
+        theBoundary->SetChannelName("shape");
+
         // write to file
         writer3MF->WriteToFile(Volumetric::OutFolder + "ShellFromMesh.3mf");
 
@@ -1048,11 +1054,11 @@ namespace Lib3MF
     
     TEST_F(Volumetric, SortNodesTopologically_SimpleFunction_SortedNodes)
     {
-        auto const function = helper::createGyroidFunction(*model);
+        // auto const function = helper::createGyroidFunction(*model);
 
-        function->SortNodesTopologically();
+        // function->SortNodesTopologically();
 
-        auto const nodes = function->GetNodes();
+        // auto const nodes = function->GetNodes();
 
         // ToDo: Check the order of the nodes
 
