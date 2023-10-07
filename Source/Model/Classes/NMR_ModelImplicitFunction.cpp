@@ -247,7 +247,7 @@ namespace NMR
         // Assign an id to each node
         for (size_t i = 0; i < m_nodes->size(); ++i)
         {
-            (*m_nodes)[i]->setGraphID(i);
+            (*m_nodes)[i]->setGraphID(static_cast<NMR::GraphID>(i));
         }
 
         std::unordered_map<GraphID, std::vector<GraphID>> graph;
