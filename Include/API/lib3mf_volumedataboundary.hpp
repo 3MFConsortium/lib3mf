@@ -78,11 +78,7 @@ public:
 	* Public member functions to implement.
 	*/
 
-	Lib3MF_double GetSolidThreshold() override;
-
-	void SetSolidThreshold(const Lib3MF_double dTheSolidThreshold) override;
-
-		/**
+	/**
 	* IVolumeDataBoundary::SetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
 	* @param[in] bMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
 	*/

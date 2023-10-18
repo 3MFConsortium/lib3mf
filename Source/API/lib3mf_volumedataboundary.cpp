@@ -56,17 +56,6 @@ NMR::PVolumeDataBoundary CVolumeDataBoundary::asVolumeDataBoundary()
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 }
 
-
-Lib3MF_double CVolumeDataBoundary::GetSolidThreshold()
-{
-	return asVolumeDataBoundary()->getSolidThreshold();
-}
-
-void CVolumeDataBoundary::SetSolidThreshold(const Lib3MF_double dTheSolidThreshold)
-{
-	asVolumeDataBoundary()->setSolidThreshold(dTheSolidThreshold);
-}
-
 void CVolumeDataBoundary::SetMeshBBoxOnly(const bool bMeshBBoxOnly)
 {
 	asVolumeDataBoundary()->setMeshBBoxOnly(bMeshBBoxOnly);

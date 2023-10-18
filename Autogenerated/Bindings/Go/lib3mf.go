@@ -1341,24 +1341,6 @@ Lib3MFResult CCall_lib3mf_functionreference_getminfeaturesize(Lib3MFHandle libra
 }
 
 
-Lib3MFResult CCall_lib3mf_volumedataboundary_getsolidthreshold(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataBoundary pVolumeDataBoundary, Lib3MF_double * pTheSolidThreshold)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_VolumeDataBoundary_GetSolidThreshold (pVolumeDataBoundary, pTheSolidThreshold);
-}
-
-
-Lib3MFResult CCall_lib3mf_volumedataboundary_setsolidthreshold(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataBoundary pVolumeDataBoundary, Lib3MF_double dTheSolidThreshold)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_VolumeDataBoundary_SetSolidThreshold (pVolumeDataBoundary, dTheSolidThreshold);
-}
-
-
 Lib3MFResult CCall_lib3mf_volumedataboundary_setmeshbboxonly(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataBoundary pVolumeDataBoundary, bool bMeshBBoxOnly)
 {
 	if (libraryHandle == 0) 
@@ -6776,25 +6758,6 @@ type VolumeDataBoundary struct {
 
 func (wrapper Wrapper) NewVolumeDataBoundary(r ref) VolumeDataBoundary {
 	return VolumeDataBoundary{wrapper.NewFunctionReference(r)}
-}
-
-// GetSolidThreshold returns the solidthreshold for the levelset function encoded in this VolumeDataBoundary.
-func (inst VolumeDataBoundary) GetSolidThreshold() (float64, error) {
-	var theSolidThreshold C.double
-	ret := C.CCall_lib3mf_volumedataboundary_getsolidthreshold(inst.wrapperRef.LibraryHandle, inst.Ref, &theSolidThreshold)
-	if ret != 0 {
-		return 0, makeError(uint32(ret))
-	}
-	return float64(theSolidThreshold), nil
-}
-
-// SetSolidThreshold sets the solidthreshold for the levelset function encoded in this VolumeDataBoundary.
-func (inst VolumeDataBoundary) SetSolidThreshold(theSolidThreshold float64) error {
-	ret := C.CCall_lib3mf_volumedataboundary_setsolidthreshold(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(theSolidThreshold))
-	if ret != 0 {
-		return makeError(uint32(ret))
-	}
-	return nil
 }
 
 // SetMeshBBoxOnly if set only the bounding box of the mesh is intersected with the boundary.

@@ -44,16 +44,11 @@ namespace NMR {
 
 	class CVolumeDataBoundary : public CFunctionReference {
 	private:
-		nfDouble m_dSolidThreshold = 0.;
 
 		bool m_meshBBoxOnly = false;
 	public:
 		CVolumeDataBoundary() = delete;
 		CVolumeDataBoundary(PModelFunction pFunction);
-
-		nfDouble getSolidThreshold();
-		void setSolidThreshold(nfDouble dSolidThreshold);
-
 
 		bool getMeshBBoxOnly();
 		void setMeshBBoxOnly(bool bMeshBBoxOnly);

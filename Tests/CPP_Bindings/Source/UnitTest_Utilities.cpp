@@ -273,8 +273,6 @@ namespace Lib3MF
             {
                 CompareFunctionReferences(modelA, A->GetBoundary(), modelB,
                                           B->GetBoundary());
-                ASSERT_EQ(A->GetBoundary()->GetSolidThreshold(),
-                          B->GetBoundary()->GetSolidThreshold());
             }
 
             ASSERT_EQ(A->GetColor() == nullptr, B->GetColor() == nullptr);

@@ -1500,24 +1500,6 @@ typedef Lib3MFResult (*PLib3MFFunctionReference_GetMinFeatureSizePtr) (Lib3MF_Fu
 **************************************************************************************************************************/
 
 /**
-* Returns the solidthreshold for the levelset function encoded in this VolumeDataBoundary
-*
-* @param[in] pVolumeDataBoundary - VolumeDataBoundary instance.
-* @param[out] pTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataBoundary
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFVolumeDataBoundary_GetSolidThresholdPtr) (Lib3MF_VolumeDataBoundary pVolumeDataBoundary, Lib3MF_double * pTheSolidThreshold);
-
-/**
-* Sets the solidthreshold for the levelset function encoded in this VolumeDataBoundary
-*
-* @param[in] pVolumeDataBoundary - VolumeDataBoundary instance.
-* @param[in] dTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataBoundary
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFVolumeDataBoundary_SetSolidThresholdPtr) (Lib3MF_VolumeDataBoundary pVolumeDataBoundary, Lib3MF_double dTheSolidThreshold);
-
-/**
 * If set only the bounding box of the mesh is intersected with the boundary
 *
 * @param[in] pVolumeDataBoundary - VolumeDataBoundary instance.
@@ -5089,8 +5071,6 @@ typedef struct {
 	PLib3MFFunctionReference_SetChannelNamePtr m_FunctionReference_SetChannelName;
 	PLib3MFFunctionReference_SetMinFeatureSizePtr m_FunctionReference_SetMinFeatureSize;
 	PLib3MFFunctionReference_GetMinFeatureSizePtr m_FunctionReference_GetMinFeatureSize;
-	PLib3MFVolumeDataBoundary_GetSolidThresholdPtr m_VolumeDataBoundary_GetSolidThreshold;
-	PLib3MFVolumeDataBoundary_SetSolidThresholdPtr m_VolumeDataBoundary_SetSolidThreshold;
 	PLib3MFVolumeDataBoundary_SetMeshBBoxOnlyPtr m_VolumeDataBoundary_SetMeshBBoxOnly;
 	PLib3MFVolumeDataBoundary_GetMeshBBoxOnlyPtr m_VolumeDataBoundary_GetMeshBBoxOnly;
 	PLib3MFVolumeDataComposite_GetBaseMaterialGroupPtr m_VolumeDataComposite_GetBaseMaterialGroup;

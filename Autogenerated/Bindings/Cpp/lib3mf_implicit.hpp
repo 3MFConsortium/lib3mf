@@ -1241,8 +1241,6 @@ public:
 	{
 	}
 	
-	inline Lib3MF_double GetSolidThreshold();
-	inline void SetSolidThreshold(const Lib3MF_double dTheSolidThreshold);
 	inline void SetMeshBBoxOnly(const bool bMeshBBoxOnly);
 	inline bool GetMeshBBoxOnly();
 };
@@ -4290,27 +4288,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	 * Method definitions for class CVolumeDataBoundary
 	 */
-	
-	/**
-	* CVolumeDataBoundary::GetSolidThreshold - Returns the solidthreshold for the levelset function encoded in this VolumeDataBoundary
-	* @return The solidthreshold for the levelset function encoded in this VolumeDataBoundary
-	*/
-	Lib3MF_double CVolumeDataBoundary::GetSolidThreshold()
-	{
-		Lib3MF_double resultTheSolidThreshold = 0;
-		CheckError(lib3mf_volumedataboundary_getsolidthreshold(m_pHandle, &resultTheSolidThreshold));
-		
-		return resultTheSolidThreshold;
-	}
-	
-	/**
-	* CVolumeDataBoundary::SetSolidThreshold - Sets the solidthreshold for the levelset function encoded in this VolumeDataBoundary
-	* @param[in] dTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataBoundary
-	*/
-	void CVolumeDataBoundary::SetSolidThreshold(const Lib3MF_double dTheSolidThreshold)
-	{
-		CheckError(lib3mf_volumedataboundary_setsolidthreshold(m_pHandle, dTheSolidThreshold));
-	}
 	
 	/**
 	* CVolumeDataBoundary::SetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary

@@ -625,8 +625,6 @@ class CLib3MFVolumeDataBoundary : public CLib3MFBaseClass {
 private:
 	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static v8::Persistent<v8::Function> constructor;
-	static void GetSolidThreshold(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void SetSolidThreshold(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetMeshBBoxOnly(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetMeshBBoxOnly(const v8::FunctionCallbackInfo<v8::Value>& args);
 

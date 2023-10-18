@@ -271,8 +271,6 @@ class FunctionTable:
 	lib3mf_functionreference_setchannelname = None
 	lib3mf_functionreference_setminfeaturesize = None
 	lib3mf_functionreference_getminfeaturesize = None
-	lib3mf_volumedataboundary_getsolidthreshold = None
-	lib3mf_volumedataboundary_setsolidthreshold = None
 	lib3mf_volumedataboundary_setmeshbboxonly = None
 	lib3mf_volumedataboundary_getmeshbboxonly = None
 	lib3mf_volumedatacomposite_getbasematerialgroup = None
@@ -1950,18 +1948,6 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_double))
 			self.lib.lib3mf_functionreference_getminfeaturesize = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataboundary_getsolidthreshold")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_double))
-			self.lib.lib3mf_volumedataboundary_getsolidthreshold = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataboundary_setsolidthreshold")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_double)
-			self.lib.lib3mf_volumedataboundary_setsolidthreshold = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataboundary_setmeshbboxonly")), methodAddress)
 			if err != 0:
@@ -4355,12 +4341,6 @@ class Wrapper:
 			
 			self.lib.lib3mf_functionreference_getminfeaturesize.restype = ctypes.c_int32
 			self.lib.lib3mf_functionreference_getminfeaturesize.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
-			
-			self.lib.lib3mf_volumedataboundary_getsolidthreshold.restype = ctypes.c_int32
-			self.lib.lib3mf_volumedataboundary_getsolidthreshold.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
-			
-			self.lib.lib3mf_volumedataboundary_setsolidthreshold.restype = ctypes.c_int32
-			self.lib.lib3mf_volumedataboundary_setsolidthreshold.argtypes = [ctypes.c_void_p, ctypes.c_double]
 			
 			self.lib.lib3mf_volumedataboundary_setmeshbboxonly.restype = ctypes.c_int32
 			self.lib.lib3mf_volumedataboundary_setmeshbboxonly.argtypes = [ctypes.c_void_p, ctypes.c_bool]
@@ -6862,17 +6842,6 @@ class FunctionReference(Base):
 class VolumeDataBoundary(FunctionReference):
 	def __init__(self, handle, wrapper):
 		FunctionReference.__init__(self, handle, wrapper)
-	def GetSolidThreshold(self):
-		pTheSolidThreshold = ctypes.c_double()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataboundary_getsolidthreshold(self._handle, pTheSolidThreshold))
-		
-		return pTheSolidThreshold.value
-	
-	def SetSolidThreshold(self, TheSolidThreshold):
-		dTheSolidThreshold = ctypes.c_double(TheSolidThreshold)
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataboundary_setsolidthreshold(self._handle, dTheSolidThreshold))
-		
-	
 	def SetMeshBBoxOnly(self, MeshBBoxOnly):
 		bMeshBBoxOnly = ctypes.c_bool(MeshBBoxOnly)
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataboundary_setmeshbboxonly(self._handle, bMeshBBoxOnly))

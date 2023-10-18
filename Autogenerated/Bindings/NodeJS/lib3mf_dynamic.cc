@@ -189,8 +189,6 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_FunctionReference_SetChannelName = NULL;
 	pWrapperTable->m_FunctionReference_SetMinFeatureSize = NULL;
 	pWrapperTable->m_FunctionReference_GetMinFeatureSize = NULL;
-	pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = NULL;
-	pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold = NULL;
 	pWrapperTable->m_VolumeDataBoundary_SetMeshBBoxOnly = NULL;
 	pWrapperTable->m_VolumeDataBoundary_GetMeshBBoxOnly = NULL;
 	pWrapperTable->m_VolumeDataComposite_GetBaseMaterialGroup = NULL;
@@ -1849,24 +1847,6 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_FunctionReference_GetMinFeatureSize == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
-	pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = (PLib3MFVolumeDataBoundary_GetSolidThresholdPtr) GetProcAddress(hLibrary, "lib3mf_volumedataboundary_getsolidthreshold");
-	#else // _WIN32
-	pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = (PLib3MFVolumeDataBoundary_GetSolidThresholdPtr) dlsym(hLibrary, "lib3mf_volumedataboundary_getsolidthreshold");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
-	pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold = (PLib3MFVolumeDataBoundary_SetSolidThresholdPtr) GetProcAddress(hLibrary, "lib3mf_volumedataboundary_setsolidthreshold");
-	#else // _WIN32
-	pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold = (PLib3MFVolumeDataBoundary_SetSolidThresholdPtr) dlsym(hLibrary, "lib3mf_volumedataboundary_setsolidthreshold");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

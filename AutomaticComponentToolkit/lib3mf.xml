@@ -1125,16 +1125,6 @@
 	</class>
 
 	<class name="VolumeDataBoundary" parent="FunctionReference">
-		<method name="GetSolidThreshold"
-			description="Returns the solidthreshold for the levelset function encoded in this VolumeDataBoundary">
-			<param name="TheSolidThreshold" type="double" pass="return"
-				description="The solidthreshold for the levelset function encoded in this VolumeDataBoundary" />
-		</method>
-		<method name="SetSolidThreshold"
-			description="Sets the solidthreshold for the levelset function encoded in this VolumeDataBoundary">
-			<param name="TheSolidThreshold" type="double" pass="in"
-				description="The solidthreshold for the levelset function encoded in this VolumeDataBoundary" />
-		</method>
 		<method name="SetMeshBBoxOnly"
 			description="If set only the bounding box of the mesh is intersected with the boundary">
 			<param name="MeshBBoxOnly" type="bool" pass="in"

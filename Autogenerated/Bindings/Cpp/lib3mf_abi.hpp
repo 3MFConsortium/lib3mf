@@ -1513,24 +1513,6 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionreference_getminfeaturesize(Lib3MF_F
 **************************************************************************************************************************/
 
 /**
-* Returns the solidthreshold for the levelset function encoded in this VolumeDataBoundary
-*
-* @param[in] pVolumeDataBoundary - VolumeDataBoundary instance.
-* @param[out] pTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataBoundary
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedataboundary_getsolidthreshold(Lib3MF_VolumeDataBoundary pVolumeDataBoundary, Lib3MF_double * pTheSolidThreshold);
-
-/**
-* Sets the solidthreshold for the levelset function encoded in this VolumeDataBoundary
-*
-* @param[in] pVolumeDataBoundary - VolumeDataBoundary instance.
-* @param[in] dTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataBoundary
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedataboundary_setsolidthreshold(Lib3MF_VolumeDataBoundary pVolumeDataBoundary, Lib3MF_double dTheSolidThreshold);
-
-/**
 * If set only the bounding box of the mesh is intersected with the boundary
 *
 * @param[in] pVolumeDataBoundary - VolumeDataBoundary instance.

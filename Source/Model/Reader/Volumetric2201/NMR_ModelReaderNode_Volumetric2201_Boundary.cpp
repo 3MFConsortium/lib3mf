@@ -81,8 +81,6 @@ namespace NMR {
 		}
 
 		PVolumeDataBoundary pBoundary = std::make_shared<CVolumeDataBoundary>(pFunction);
-		if (m_bHasSolidThreshold)
-			pBoundary->setSolidThreshold(m_dSolidThreshold);
 		if (m_bHasTransform)
 			pBoundary->setTransform(m_Transform);
 		if (m_bHasChannel)
@@ -104,21 +102,6 @@ namespace NMR {
 			m_Transform = fnMATRIX3_fromString(pAttributeValue);
 
 			m_bHasTransform = true;
-		} else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_SOLIDTHRESHOLD) == 0) {
-			if (m_bHasSolidThreshold)
-				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATASOLIDTHRESHOLD);
-
-			m_bHasSolidThreshold = true;
-
-			m_dSolidThreshold = strtod(pAttributeValue, nullptr);
-
-#ifdef __MINGW32__
-			if (isNotANumber((float)m_dSolidThreshold))
-#else
-			if (std::isnan((float)m_dSolidThreshold))
-#endif
-				throw CNMRException(NMR_ERROR_INVALIDVOLUMEDATASOLIDTHRESHOLD);
-
 		} else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL) == 0) {
 			if (m_bHasChannel)
 				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATACHANNEL);

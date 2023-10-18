@@ -384,9 +384,6 @@ namespace NMR {
 						throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
 					writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FUNCTIONID, pID->getModelResourceID());
 
-					if (pBoundary->getSolidThreshold() != 0.0) {
-						writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_SOLIDTHRESHOLD, float(pBoundary->getSolidThreshold()));
-					}
 					if (!fnMATRIX3_isIdentity(pBoundary->getTransform())) {
 						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pBoundary->getTransform()));
 					}

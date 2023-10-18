@@ -885,7 +885,6 @@ namespace Lib3MF
         // Add boundary
         auto boundary = volumeData->CreateNewBoundary(funcFromImage3d.get());
         boundary->SetTransform(helper::ComputeTransformFromMeshCoordinatesToUVW(theMesh));
-        boundary->SetSolidThreshold(0.25f);
         boundary->SetChannelName("r");
         boundary->SetMeshBBoxOnly(true);
 
@@ -917,7 +916,6 @@ namespace Lib3MF
         ASSERT_TRUE(boundaryFromFile);
         EXPECT_EQ(boundaryFromFile->GetFunctionResourceID(), funcImg3dId);
         helper::CompareTransforms(boundary->GetTransform(), boundaryFromFile->GetTransform());
-        EXPECT_EQ(boundary->GetSolidThreshold(), boundaryFromFile->GetSolidThreshold());
         EXPECT_EQ(boundary->GetChannelName(), boundaryFromFile->GetChannelName());
         EXPECT_EQ(boundary->GetMeshBBoxOnly(), boundaryFromFile->GetMeshBBoxOnly());
     }

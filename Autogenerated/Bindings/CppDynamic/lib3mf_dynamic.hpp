@@ -1265,8 +1265,6 @@ public:
 	{
 	}
 	
-	inline Lib3MF_double GetSolidThreshold();
-	inline void SetSolidThreshold(const Lib3MF_double dTheSolidThreshold);
 	inline void SetMeshBBoxOnly(const bool bMeshBBoxOnly);
 	inline bool GetMeshBBoxOnly();
 };
@@ -2667,8 +2665,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_FunctionReference_SetChannelName = nullptr;
 		pWrapperTable->m_FunctionReference_SetMinFeatureSize = nullptr;
 		pWrapperTable->m_FunctionReference_GetMinFeatureSize = nullptr;
-		pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = nullptr;
-		pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold = nullptr;
 		pWrapperTable->m_VolumeDataBoundary_SetMeshBBoxOnly = nullptr;
 		pWrapperTable->m_VolumeDataBoundary_GetMeshBBoxOnly = nullptr;
 		pWrapperTable->m_VolumeDataComposite_GetBaseMaterialGroup = nullptr;
@@ -4323,24 +4319,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_FunctionReference_GetMinFeatureSize == nullptr)
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		#ifdef _WIN32
-		pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = (PLib3MFVolumeDataBoundary_GetSolidThresholdPtr) GetProcAddress(hLibrary, "lib3mf_volumedataboundary_getsolidthreshold");
-		#else // _WIN32
-		pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = (PLib3MFVolumeDataBoundary_GetSolidThresholdPtr) dlsym(hLibrary, "lib3mf_volumedataboundary_getsolidthreshold");
-		dlerror();
-		#endif // _WIN32
-		if (pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold == nullptr)
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		#ifdef _WIN32
-		pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold = (PLib3MFVolumeDataBoundary_SetSolidThresholdPtr) GetProcAddress(hLibrary, "lib3mf_volumedataboundary_setsolidthreshold");
-		#else // _WIN32
-		pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold = (PLib3MFVolumeDataBoundary_SetSolidThresholdPtr) dlsym(hLibrary, "lib3mf_volumedataboundary_setsolidthreshold");
-		dlerror();
-		#endif // _WIN32
-		if (pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -7956,14 +7934,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionReference_GetMinFeatureSize == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_volumedataboundary_getsolidthreshold", (void**)&(pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold));
-		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold == nullptr) )
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		eLookupError = (*pLookup)("lib3mf_volumedataboundary_setsolidthreshold", (void**)&(pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold));
-		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold == nullptr) )
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
 		eLookupError = (*pLookup)("lib3mf_volumedataboundary_setmeshbboxonly", (void**)&(pWrapperTable->m_VolumeDataBoundary_SetMeshBBoxOnly));
 		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeDataBoundary_SetMeshBBoxOnly == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -11110,27 +11080,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	 * Method definitions for class CVolumeDataBoundary
 	 */
-	
-	/**
-	* CVolumeDataBoundary::GetSolidThreshold - Returns the solidthreshold for the levelset function encoded in this VolumeDataBoundary
-	* @return The solidthreshold for the levelset function encoded in this VolumeDataBoundary
-	*/
-	Lib3MF_double CVolumeDataBoundary::GetSolidThreshold()
-	{
-		Lib3MF_double resultTheSolidThreshold = 0;
-		CheckError(m_pWrapper->m_WrapperTable.m_VolumeDataBoundary_GetSolidThreshold(m_pHandle, &resultTheSolidThreshold));
-		
-		return resultTheSolidThreshold;
-	}
-	
-	/**
-	* CVolumeDataBoundary::SetSolidThreshold - Sets the solidthreshold for the levelset function encoded in this VolumeDataBoundary
-	* @param[in] dTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataBoundary
-	*/
-	void CVolumeDataBoundary::SetSolidThreshold(const Lib3MF_double dTheSolidThreshold)
-	{
-		CheckError(m_pWrapper->m_WrapperTable.m_VolumeDataBoundary_SetSolidThreshold(m_pHandle, dTheSolidThreshold));
-	}
 	
 	/**
 	* CVolumeDataBoundary::SetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary

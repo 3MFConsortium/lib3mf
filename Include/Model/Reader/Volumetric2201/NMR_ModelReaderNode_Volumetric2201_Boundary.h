@@ -42,7 +42,6 @@ namespace NMR {
 	class CModelReaderNode_Volumetric2201_Boundary : public CModelReaderNode {
 	private:
 		nfBool m_bHasFunctionID = false;
-		nfBool m_bHasSolidThreshold = false;
 		nfBool m_bHasTransform = false;
 		nfBool m_bHasChannel = false;
 		nfBool m_bHasMeshBBoxOnly = false;
@@ -52,7 +51,6 @@ namespace NMR {
 		nfBool m_bHasMinFeatureSize = false;
 
 		ModelResourceID m_nFunctionID;
-		double m_dSolidThreshold;
 		NMATRIX3 m_Transform;
 
 		std::string m_sChannel;

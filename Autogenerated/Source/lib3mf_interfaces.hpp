@@ -1700,18 +1700,6 @@ public:
 	}
 
 	/**
-	* IVolumeDataBoundary::GetSolidThreshold - Returns the solidthreshold for the levelset function encoded in this VolumeDataBoundary
-	* @return The solidthreshold for the levelset function encoded in this VolumeDataBoundary
-	*/
-	virtual Lib3MF_double GetSolidThreshold() = 0;
-
-	/**
-	* IVolumeDataBoundary::SetSolidThreshold - Sets the solidthreshold for the levelset function encoded in this VolumeDataBoundary
-	* @param[in] dTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataBoundary
-	*/
-	virtual void SetSolidThreshold(const Lib3MF_double dTheSolidThreshold) = 0;
-
-	/**
 	* IVolumeDataBoundary::SetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
 	* @param[in] bMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
 	*/

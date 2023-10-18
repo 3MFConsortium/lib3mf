@@ -6274,8 +6274,6 @@ void CLib3MFVolumeDataBoundary::Init()
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
-		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSolidThreshold", GetSolidThreshold);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "SetSolidThreshold", SetSolidThreshold);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetMeshBBoxOnly", SetMeshBBoxOnly);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetMeshBBoxOnly", GetMeshBBoxOnly);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
@@ -6308,52 +6306,6 @@ Local<Object> CLib3MFVolumeDataBoundary::NewInstance(Local<Object> pParent, Lib3
 			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
 		}
 		return instance;
-}
-
-
-void CLib3MFVolumeDataBoundary::GetSolidThreshold(const FunctionCallbackInfo<Value>& args) 
-{
-		Isolate* isolate = args.GetIsolate();
-		HandleScope scope(isolate);
-		try {
-        double dReturnTheSolidThreshold = 0.0;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
-        if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSolidThreshold.");
-        if (wrapperTable->m_VolumeDataBoundary_GetSolidThreshold == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method VolumeDataBoundary::GetSolidThreshold.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_VolumeDataBoundary_GetSolidThreshold(instanceHandle, &dReturnTheSolidThreshold);
-        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(Number::New(isolate, dReturnTheSolidThreshold));
-
-		} catch (std::exception & E) {
-				RaiseError(isolate, E.what());
-		}
-}
-
-
-void CLib3MFVolumeDataBoundary::SetSolidThreshold(const FunctionCallbackInfo<Value>& args) 
-{
-		Isolate* isolate = args.GetIsolate();
-		HandleScope scope(isolate);
-		try {
-        if (!args[0]->IsNumber()) {
-            throw std::runtime_error("Expected double parameter 0 (TheSolidThreshold)");
-        }
-        double dTheSolidThreshold = (double) args[0]->NumberValue(isolate->GetCurrentContext()).ToChecked();
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
-        if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetSolidThreshold.");
-        if (wrapperTable->m_VolumeDataBoundary_SetSolidThreshold == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method VolumeDataBoundary::SetSolidThreshold.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_VolumeDataBoundary_SetSolidThreshold(instanceHandle, dTheSolidThreshold);
-        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-
-		} catch (std::exception & E) {
-				RaiseError(isolate, E.what());
-		}
 }
 
 

@@ -5306,72 +5306,6 @@ Lib3MFResult lib3mf_functionreference_getminfeaturesize(Lib3MF_FunctionReference
 /*************************************************************************************************************************
  Class implementation for VolumeDataBoundary
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_volumedataboundary_getsolidthreshold(Lib3MF_VolumeDataBoundary pVolumeDataBoundary, Lib3MF_double * pTheSolidThreshold)
-{
-	IBase* pIBaseClass = (IBase *)pVolumeDataBoundary;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataBoundary, "VolumeDataBoundary", "GetSolidThreshold");
-		}
-		if (pTheSolidThreshold == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IVolumeDataBoundary* pIVolumeDataBoundary = dynamic_cast<IVolumeDataBoundary*>(pIBaseClass);
-		if (!pIVolumeDataBoundary)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		*pTheSolidThreshold = pIVolumeDataBoundary->GetSolidThreshold();
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addDoubleResult("TheSolidThreshold", *pTheSolidThreshold);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumedataboundary_setsolidthreshold(Lib3MF_VolumeDataBoundary pVolumeDataBoundary, Lib3MF_double dTheSolidThreshold)
-{
-	IBase* pIBaseClass = (IBase *)pVolumeDataBoundary;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataBoundary, "VolumeDataBoundary", "SetSolidThreshold");
-			pJournalEntry->addDoubleParameter("TheSolidThreshold", dTheSolidThreshold);
-		}
-		IVolumeDataBoundary* pIVolumeDataBoundary = dynamic_cast<IVolumeDataBoundary*>(pIBaseClass);
-		if (!pIVolumeDataBoundary)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumeDataBoundary->SetSolidThreshold(dTheSolidThreshold);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
 Lib3MFResult lib3mf_volumedataboundary_setmeshbboxonly(Lib3MF_VolumeDataBoundary pVolumeDataBoundary, bool bMeshBBoxOnly)
 {
 	IBase* pIBaseClass = (IBase *)pVolumeDataBoundary;
@@ -17711,10 +17645,6 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_functionreference_setminfeaturesize;
 	if (sProcName == "lib3mf_functionreference_getminfeaturesize") 
 		*ppProcAddress = (void*) &lib3mf_functionreference_getminfeaturesize;
-	if (sProcName == "lib3mf_volumedataboundary_getsolidthreshold") 
-		*ppProcAddress = (void*) &lib3mf_volumedataboundary_getsolidthreshold;
-	if (sProcName == "lib3mf_volumedataboundary_setsolidthreshold") 
-		*ppProcAddress = (void*) &lib3mf_volumedataboundary_setsolidthreshold;
 	if (sProcName == "lib3mf_volumedataboundary_setmeshbboxonly") 
 		*ppProcAddress = (void*) &lib3mf_volumedataboundary_setmeshbboxonly;
 	if (sProcName == "lib3mf_volumedataboundary_getmeshbboxonly") 

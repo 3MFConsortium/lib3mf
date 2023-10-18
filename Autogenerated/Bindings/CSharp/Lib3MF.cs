@@ -848,12 +848,6 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_getminfeaturesize", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 FunctionReference_GetMinFeatureSize (IntPtr Handle, out Double AMinFeatureSize);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataboundary_getsolidthreshold", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeDataBoundary_GetSolidThreshold (IntPtr Handle, out Double ATheSolidThreshold);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataboundary_setsolidthreshold", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeDataBoundary_SetSolidThreshold (IntPtr Handle, Double ATheSolidThreshold);
-
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataboundary_setmeshbboxonly", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataBoundary_SetMeshBBoxOnly (IntPtr Handle, Byte AMeshBBoxOnly);
 
@@ -3738,20 +3732,6 @@ namespace Lib3MF {
 	{
 		public CVolumeDataBoundary (IntPtr NewHandle) : base (NewHandle)
 		{
-		}
-
-		public Double GetSolidThreshold ()
-		{
-			Double resultTheSolidThreshold = 0;
-
-			CheckError(Internal.Lib3MFWrapper.VolumeDataBoundary_GetSolidThreshold (Handle, out resultTheSolidThreshold));
-			return resultTheSolidThreshold;
-		}
-
-		public void SetSolidThreshold (Double ATheSolidThreshold)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.VolumeDataBoundary_SetSolidThreshold (Handle, ATheSolidThreshold));
 		}
 
 		public void SetMeshBBoxOnly (bool AMeshBBoxOnly)
