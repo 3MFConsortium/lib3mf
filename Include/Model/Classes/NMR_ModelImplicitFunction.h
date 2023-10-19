@@ -83,11 +83,12 @@ namespace NMR
         void setIdentifier(ImplicitIdentifier const& identifier);
 
         PModelImplicitNode addNode(const Lib3MF::eImplicitNodeType eNodeType,
+                                   const Lib3MF::eImplicitNodeConfiguration eConfiguration,
                                    const std::string& sIdentifier,
                                    const std::string& sDisplayName,
                                    const std::string& sTag);
 
-        PModelImplicitNode addNode(const Lib3MF::eImplicitNodeType eNodeType);
+        PModelImplicitNode addNode(const Lib3MF::eImplicitNodeType eNodeType, const Lib3MF::eImplicitNodeConfiguration eConfiguration);
 
         PImplicitNodes getNodes() const;
 

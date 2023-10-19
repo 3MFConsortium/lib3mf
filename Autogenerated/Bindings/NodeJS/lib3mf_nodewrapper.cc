@@ -11765,21 +11765,25 @@ void CLib3MFImplicitFunction::AddNode(const FunctionCallbackInfo<Value>& args)
         if (!args[0]->IsUint32()) {
             throw std::runtime_error("Expected enum parameter 0 (NodeType)");
         }
-        if (!args[1]->IsString()) {
-            throw std::runtime_error("Expected string parameter 1 (Identifier)");
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 1 (Configuration)");
         }
         if (!args[2]->IsString()) {
-            throw std::runtime_error("Expected string parameter 2 (DisplayName)");
+            throw std::runtime_error("Expected string parameter 2 (Identifier)");
         }
         if (!args[3]->IsString()) {
-            throw std::runtime_error("Expected string parameter 3 (Tag)");
+            throw std::runtime_error("Expected string parameter 3 (DisplayName)");
+        }
+        if (!args[4]->IsString()) {
+            throw std::runtime_error("Expected string parameter 4 (Tag)");
         }
         unsigned int eNodeType = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        v8::String::Utf8Value sutf8Identifier(isolate, args[1]);
+        unsigned int eConfiguration = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        v8::String::Utf8Value sutf8Identifier(isolate, args[2]);
         std::string sIdentifier = *sutf8Identifier;
-        v8::String::Utf8Value sutf8DisplayName(isolate, args[2]);
+        v8::String::Utf8Value sutf8DisplayName(isolate, args[3]);
         std::string sDisplayName = *sutf8DisplayName;
-        v8::String::Utf8Value sutf8Tag(isolate, args[3]);
+        v8::String::Utf8Value sutf8Tag(isolate, args[4]);
         std::string sTag = *sutf8Tag;
         Lib3MFHandle hReturnNode = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
@@ -11788,7 +11792,7 @@ void CLib3MFImplicitFunction::AddNode(const FunctionCallbackInfo<Value>& args)
         if (wrapperTable->m_ImplicitFunction_AddNode == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::AddNode.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddNode(instanceHandle, (eLib3MFImplicitNodeType) eNodeType, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddNode(instanceHandle, (eLib3MFImplicitNodeType) eNodeType, (eLib3MFImplicitNodeConfiguration) eConfiguration, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjNode = CLib3MFImplicitNode::NewInstance(args.Holder(), hReturnNode);
         args.GetReturnValue().Set(instanceObjNode);
@@ -16818,6 +16822,15 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitPortType_Vector"), Integer::New(isolate, 2));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitPortType_Matrix"), Integer::New(isolate, 3));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitPortType_ResourceID"), Integer::New(isolate, 4));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeConfiguration_Default"), Integer::New(isolate, 1));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeConfiguration_ScalarToScalar"), Integer::New(isolate, 2));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeConfiguration_VectorToVector"), Integer::New(isolate, 3));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeConfiguration_MatrixToMatrix"), Integer::New(isolate, 4));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeConfiguration_ScalarScalarToScalar"), Integer::New(isolate, 5));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeConfiguration_VectorVectorToVector"), Integer::New(isolate, 6));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeConfiguration_ScalarToVector"), Integer::New(isolate, 8));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeConfiguration_VectorToScalar"), Integer::New(isolate, 9));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeConfiguration_VectorVectorToScalar"), Integer::New(isolate, 10));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eEncryptionAlgorithm_AES256_GCM"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eWrappingAlgorithm_RSA_OAEP"), Integer::New(isolate, 0));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA1"), Integer::New(isolate, 160));

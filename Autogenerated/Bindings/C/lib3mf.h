@@ -3158,13 +3158,14 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_setidentifier(Lib3MF_Implic
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
 * @param[in] eNodeType - the type of the node
+* @param[in] eConfiguration - the configuration of the node
 * @param[in] pIdentifier - the identifier of the node
 * @param[in] pDisplayName - the display name of the node
 * @param[in] pTag - the tag of the node
 * @param[out] pNode - the added node
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addnode(Lib3MF_ImplicitFunction pImplicitFunction, eLib3MFImplicitNodeType eNodeType, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_ImplicitNode * pNode);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addnode(Lib3MF_ImplicitFunction pImplicitFunction, eLib3MFImplicitNodeType eNodeType, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_ImplicitNode * pNode);
 
 /**
 * Retrieves the nodes

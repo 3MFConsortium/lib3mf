@@ -124,7 +124,7 @@ namespace NMR
             // first is the node type, second is the node type info
             if (strcmp(pChildName, nodeType.second.getName().c_str()) == 0)
             {
-                auto implicitNode = m_pImplicitFunction->addNode(nodeType.first);
+                auto implicitNode = m_pImplicitFunction->addNode(nodeType.first, Lib3MF::eImplicitNodeConfiguration::Default);
                 auto node =
                   NMR::CModelReaderNode_Implicit_Node(m_pModel, implicitNode.get(), m_pWarnings);
                 node.parseXML(pXMLReader);

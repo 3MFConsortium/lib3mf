@@ -1808,7 +1808,7 @@ public:
 	
 	inline std::string GetIdentifier();
 	inline void SetIdentifier(const std::string & sIdentifier);
-	inline PImplicitNode AddNode(const eImplicitNodeType eNodeType, const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
+	inline PImplicitNode AddNode(const eImplicitNodeType eNodeType, const eImplicitNodeConfiguration eConfiguration, const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PNodeIterator GetNodes();
 	inline void RemoveNode(classParam<CImplicitNode> pNode);
 	inline void AddLink(classParam<CImplicitPort> pSource, classParam<CImplicitPort> pTarget);
@@ -13165,15 +13165,16 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	* CImplicitFunction::AddNode - Add a node
 	* @param[in] eNodeType - the type of the node
+	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sIdentifier - the identifier of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	PImplicitNode CImplicitFunction::AddNode(const eImplicitNodeType eNodeType, const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
+	PImplicitNode CImplicitFunction::AddNode(const eImplicitNodeType eNodeType, const eImplicitNodeConfiguration eConfiguration, const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
 		Lib3MFHandle hNode = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddNode(m_pHandle, eNodeType, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddNode(m_pHandle, eNodeType, eConfiguration, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);

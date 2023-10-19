@@ -217,6 +217,18 @@ namespace Lib3MF {
 		ResourceID = 4
 	};
 
+	public enum eImplicitNodeConfiguration {
+		Default = 1,
+		ScalarToScalar = 2,
+		VectorToVector = 3,
+		MatrixToMatrix = 4,
+		ScalarScalarToScalar = 5,
+		VectorVectorToVector = 6,
+		ScalarToVector = 8,
+		VectorToScalar = 9,
+		VectorVectorToScalar = 10
+	};
+
 	public enum eEncryptionAlgorithm {
 		AES256_GCM = 1
 	};
@@ -1326,7 +1338,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 ImplicitFunction_SetIdentifier (IntPtr Handle, byte[] AIdentifier);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addnode", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitFunction_AddNode (IntPtr Handle, Int32 ANodeType, byte[] AIdentifier, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+			public unsafe extern static Int32 ImplicitFunction_AddNode (IntPtr Handle, Int32 ANodeType, Int32 AConfiguration, byte[] AIdentifier, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_getnodes", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_GetNodes (IntPtr Handle, out IntPtr AIterator);
@@ -5345,15 +5357,16 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_SetIdentifier (Handle, byteIdentifier));
 		}
 
-		public CImplicitNode AddNode (eImplicitNodeType ANodeType, String AIdentifier, String ADisplayName, String ATag)
+		public CImplicitNode AddNode (eImplicitNodeType ANodeType, eImplicitNodeConfiguration AConfiguration, String AIdentifier, String ADisplayName, String ATag)
 		{
 			Int32 enumNodeType = (Int32) ANodeType;
+			Int32 enumConfiguration = (Int32) AConfiguration;
 			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
 			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
 			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
 			IntPtr newNode = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddNode (Handle, enumNodeType, byteIdentifier, byteDisplayName, byteTag, out newNode));
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddNode (Handle, enumNodeType, enumConfiguration, byteIdentifier, byteDisplayName, byteTag, out newNode));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitNode>(newNode);
 		}
 

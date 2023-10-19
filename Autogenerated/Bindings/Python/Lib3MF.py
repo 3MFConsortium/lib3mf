@@ -777,6 +777,18 @@ class ImplicitPortType(CTypesEnum):
 	Vector = 2
 	Matrix = 3
 	ResourceID = 4
+'''Definition of ImplicitNodeConfiguration
+'''
+class ImplicitNodeConfiguration(CTypesEnum):
+	Default = 1
+	ScalarToScalar = 2
+	VectorToVector = 3
+	MatrixToMatrix = 4
+	ScalarScalarToScalar = 5
+	VectorVectorToVector = 6
+	ScalarToVector = 8
+	VectorToScalar = 9
+	VectorVectorToScalar = 10
 '''Definition of EncryptionAlgorithm
 '''
 class EncryptionAlgorithm(CTypesEnum):
@@ -2906,7 +2918,7 @@ class Wrapper:
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_addnode")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ImplicitNodeType, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ImplicitNodeType, ImplicitNodeConfiguration, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_implicitfunction_addnode = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_getnodes")), methodAddress)
@@ -4820,7 +4832,7 @@ class Wrapper:
 			self.lib.lib3mf_implicitfunction_setidentifier.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
 			
 			self.lib.lib3mf_implicitfunction_addnode.restype = ctypes.c_int32
-			self.lib.lib3mf_implicitfunction_addnode.argtypes = [ctypes.c_void_p, ImplicitNodeType, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_implicitfunction_addnode.argtypes = [ctypes.c_void_p, ImplicitNodeType, ImplicitNodeConfiguration, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_implicitfunction_getnodes.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitfunction_getnodes.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -8271,12 +8283,12 @@ class ImplicitFunction(Function):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_setidentifier(self._handle, pIdentifier))
 		
 	
-	def AddNode(self, NodeType, Identifier, DisplayName, Tag):
+	def AddNode(self, NodeType, Configuration, Identifier, DisplayName, Tag):
 		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
 		pDisplayName = ctypes.c_char_p(str.encode(DisplayName))
 		pTag = ctypes.c_char_p(str.encode(Tag))
 		NodeHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_addnode(self._handle, NodeType, pIdentifier, pDisplayName, pTag, NodeHandle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_addnode(self._handle, NodeType, Configuration, pIdentifier, pDisplayName, pTag, NodeHandle))
 		if NodeHandle:
 			NodeObject = self._wrapper._polymorphicFactory(NodeHandle)
 		else:

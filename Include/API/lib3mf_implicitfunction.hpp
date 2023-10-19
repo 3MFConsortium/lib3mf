@@ -93,20 +93,23 @@ namespace Lib3MF
             /**
              * IImplicitFunction::AddNode - Add a node
              * @param[in] eNodeType - the type of the node
-             * @param[in] sIdentifier - the identifier of the input
-             * @param[in] sDisplayName - the display name of the input
+             * @param[in] eConfiguration - the configuration of the node
+             * @param[in] sIdentifier - the identifier of the node
+             * @param[in] sDisplayName - the display name of the node
+             * @param[in] sTag - the tag of the node
              * @return the added node
              */
-            IImplicitNode * AddNode(const Lib3MF::eImplicitNodeType eNodeType,
-                                    const std::string & sIdentifier,
-                                    const std::string& sDisplayName,
-                                    const std::string& sTag) override;
+            virtual IImplicitNode* AddNode(
+                const Lib3MF::eImplicitNodeType eNodeType,
+                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
+                const std::string& sIdentifier, const std::string& sDisplayName,
+                const std::string& sTag) override;
 
-            /**
-             * IImplicitFunction::GetNodes - Retrieves the nodes
-             * @return the accessor to the nodes
-             */
-            INodeIterator * GetNodes() override;
+                /**
+                 * IImplicitFunction::GetNodes - Retrieves the nodes
+                 * @return the accessor to the nodes
+                 */
+                INodeIterator* GetNodes() override;
 
             /**
              * IImplicitFunction::RemoveNode - Removes a node

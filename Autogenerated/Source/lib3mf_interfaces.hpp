@@ -3218,12 +3218,13 @@ public:
 	/**
 	* IImplicitFunction::AddNode - Add a node
 	* @param[in] eNodeType - the type of the node
+	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sIdentifier - the identifier of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	virtual IImplicitNode * AddNode(const Lib3MF::eImplicitNodeType eNodeType, const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
+	virtual IImplicitNode * AddNode(const Lib3MF::eImplicitNodeType eNodeType, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::GetNodes - Retrieves the nodes

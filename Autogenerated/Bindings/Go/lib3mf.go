@@ -2772,12 +2772,12 @@ Lib3MFResult CCall_lib3mf_implicitfunction_setidentifier(Lib3MFHandle libraryHan
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitfunction_addnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, eLib3MFImplicitNodeType eNodeType, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_ImplicitNode * pNode)
+Lib3MFResult CCall_lib3mf_implicitfunction_addnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, eLib3MFImplicitNodeType eNodeType, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_ImplicitNode * pNode)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitFunction_AddNode (pImplicitFunction, eNodeType, pIdentifier, pDisplayName, pTag, pNode);
+	return wrapperTable->m_ImplicitFunction_AddNode (pImplicitFunction, eNodeType, eConfiguration, pIdentifier, pDisplayName, pTag, pNode);
 }
 
 
@@ -4612,6 +4612,21 @@ const (
 	ImplicitPortType_Vector = 2
 	ImplicitPortType_Matrix = 3
 	ImplicitPortType_ResourceID = 4
+)
+
+// ImplicitNodeConfiguration represents a Lib3MF enum.
+type ImplicitNodeConfiguration int
+
+const (
+	ImplicitNodeConfiguration_Default = 1
+	ImplicitNodeConfiguration_ScalarToScalar = 2
+	ImplicitNodeConfiguration_VectorToVector = 3
+	ImplicitNodeConfiguration_MatrixToMatrix = 4
+	ImplicitNodeConfiguration_ScalarScalarToScalar = 5
+	ImplicitNodeConfiguration_VectorVectorToVector = 6
+	ImplicitNodeConfiguration_ScalarToVector = 8
+	ImplicitNodeConfiguration_VectorToScalar = 9
+	ImplicitNodeConfiguration_VectorVectorToScalar = 10
 )
 
 // EncryptionAlgorithm represents a Lib3MF enum.
@@ -8749,9 +8764,9 @@ func (inst ImplicitFunction) SetIdentifier(identifier string) error {
 }
 
 // AddNode add a node.
-func (inst ImplicitFunction) AddNode(nodeType ImplicitNodeType, identifier string, displayName string, tag string) (ImplicitNode, error) {
+func (inst ImplicitFunction) AddNode(nodeType ImplicitNodeType, configuration ImplicitNodeConfiguration, identifier string, displayName string, tag string) (ImplicitNode, error) {
 	var node ref
-	ret := C.CCall_lib3mf_implicitfunction_addnode(inst.wrapperRef.LibraryHandle, inst.Ref, C.eLib3MFImplicitNodeType(nodeType), (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	ret := C.CCall_lib3mf_implicitfunction_addnode(inst.wrapperRef.LibraryHandle, inst.Ref, C.eLib3MFImplicitNodeType(nodeType), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
 	if ret != 0 {
 		return ImplicitNode{}, makeError(uint32(ret))
 	}

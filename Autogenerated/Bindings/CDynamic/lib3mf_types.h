@@ -446,6 +446,21 @@ typedef enum eLib3MFImplicitPortType {
   eImplicitPortTypeResourceID = 4 /** Resource ID */
 } eLib3MFImplicitPortType;
 
+/**
+* enum eLib3MFImplicitNodeConfiguration - Defines the input and output types of a node
+*/
+typedef enum eLib3MFImplicitNodeConfiguration {
+  eImplicitNodeConfigurationDefault = 1, /** Default */
+  eImplicitNodeConfigurationScalarToScalar = 2, /** Scalar -> Scalar */
+  eImplicitNodeConfigurationVectorToVector = 3, /** Vector -> Vector */
+  eImplicitNodeConfigurationMatrixToMatrix = 4, /** Matrix -> Matrix */
+  eImplicitNodeConfigurationScalarScalarToScalar = 5, /** Scalar, Scalar -> Scalar */
+  eImplicitNodeConfigurationVectorVectorToVector = 6, /** Vector, Vector -> Vector */
+  eImplicitNodeConfigurationScalarToVector = 8, /** Scalar -> Vector */
+  eImplicitNodeConfigurationVectorToScalar = 9, /** Vector -> Scalar */
+  eImplicitNodeConfigurationVectorVectorToScalar = 10 /** Vector, Vector -> Scalar */
+} eLib3MFImplicitNodeConfiguration;
+
 typedef enum eLib3MFEncryptionAlgorithm {
   eEncryptionAlgorithmAES256_GCM = 1 /** http://www.w3.org/2009/xmlenc11#aes256-gcm */
 } eLib3MFEncryptionAlgorithm;
@@ -560,6 +575,11 @@ typedef union {
   eLib3MFImplicitPortType m_enum;
   int m_code;
 } structEnumLib3MFImplicitPortType;
+
+typedef union {
+  eLib3MFImplicitNodeConfiguration m_enum;
+  int m_code;
+} structEnumLib3MFImplicitNodeConfiguration;
 
 typedef union {
   eLib3MFEncryptionAlgorithm m_enum;

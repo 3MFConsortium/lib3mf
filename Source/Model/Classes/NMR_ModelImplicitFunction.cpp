@@ -71,6 +71,7 @@ namespace NMR
     }
 
     PModelImplicitNode CModelImplicitFunction::addNode(const Lib3MF::eImplicitNodeType eNodeType,
+                                                       const Lib3MF::eImplicitNodeConfiguration eConfiguration,
                                                        const std::string & sIdentifier,
                                                        const std::string & sDisplayName,
                                                        const std::string & sTag)
@@ -82,9 +83,9 @@ namespace NMR
         return node;
     }
 
-    PModelImplicitNode CModelImplicitFunction::addNode(const Lib3MF::eImplicitNodeType eNodeType)
+    PModelImplicitNode CModelImplicitFunction::addNode(const Lib3MF::eImplicitNodeType eNodeType, const Lib3MF::eImplicitNodeConfiguration eConfiguration)
     {
-        return addNode(eNodeType, "", "", "");
+        return addNode(eNodeType, eConfiguration, "", "", "");
     }
 
     PImplicitNodes NMR::CModelImplicitFunction::getNodes() const

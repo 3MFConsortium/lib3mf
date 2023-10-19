@@ -305,6 +305,18 @@ type
 		eImplicitPortTypeResourceID
 	);
 
+	TLib3MFImplicitNodeConfiguration = (
+		eImplicitNodeConfigurationDefault,
+		eImplicitNodeConfigurationScalarToScalar,
+		eImplicitNodeConfigurationVectorToVector,
+		eImplicitNodeConfigurationMatrixToMatrix,
+		eImplicitNodeConfigurationScalarScalarToScalar,
+		eImplicitNodeConfigurationVectorVectorToVector,
+		eImplicitNodeConfigurationScalarToVector,
+		eImplicitNodeConfigurationVectorToScalar,
+		eImplicitNodeConfigurationVectorVectorToScalar
+	);
+
 	TLib3MFEncryptionAlgorithm = (
 		eEncryptionAlgorithmAES256_GCM
 	);
@@ -3674,13 +3686,14 @@ type
 	*
 	* @param[in] pImplicitFunction - ImplicitFunction instance.
 	* @param[in] eNodeType - the type of the node
+	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] pIdentifier - the identifier of the node
 	* @param[in] pDisplayName - the display name of the node
 	* @param[in] pTag - the tag of the node
 	* @param[out] pNode - the added node
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitFunction_AddNodeFunc = function(pImplicitFunction: TLib3MFHandle; const eNodeType: Integer; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_AddNodeFunc = function(pImplicitFunction: TLib3MFHandle; const eNodeType: Integer; const eConfiguration: Integer; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves the nodes
@@ -6327,7 +6340,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		destructor Destroy; override;
 		function GetIdentifier(): String;
 		procedure SetIdentifier(const AIdentifier: String);
-		function AddNode(const ANodeType: TLib3MFImplicitNodeType; const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFImplicitNode;
+		function AddNode(const ANodeType: TLib3MFImplicitNodeType; const AConfiguration: TLib3MFImplicitNodeConfiguration; const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFImplicitNode;
 		function GetNodes(): TLib3MFNodeIterator;
 		procedure RemoveNode(const ANode: TLib3MFImplicitNode);
 		procedure AddLink(const ASource: TLib3MFImplicitPort; const ATarget: TLib3MFImplicitPort);
@@ -7657,6 +7670,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function convertConstToImplicitNodeType(const AValue: Integer): TLib3MFImplicitNodeType;
 	function convertImplicitPortTypeToConst(const AValue: TLib3MFImplicitPortType): Integer;
 	function convertConstToImplicitPortType(const AValue: Integer): TLib3MFImplicitPortType;
+	function convertImplicitNodeConfigurationToConst(const AValue: TLib3MFImplicitNodeConfiguration): Integer;
+	function convertConstToImplicitNodeConfiguration(const AValue: Integer): TLib3MFImplicitNodeConfiguration;
 	function convertEncryptionAlgorithmToConst(const AValue: TLib3MFEncryptionAlgorithm): Integer;
 	function convertConstToEncryptionAlgorithm(const AValue: Integer): TLib3MFEncryptionAlgorithm;
 	function convertWrappingAlgorithmToConst(const AValue: TLib3MFWrappingAlgorithm): Integer;
@@ -8276,6 +8291,41 @@ implementation
 			2: Result := eImplicitPortTypeVector;
 			3: Result := eImplicitPortTypeMatrix;
 			4: Result := eImplicitPortTypeResourceID;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
+		end;
+	end;
+	
+	
+	function convertImplicitNodeConfigurationToConst(const AValue: TLib3MFImplicitNodeConfiguration): Integer;
+	begin
+		case AValue of
+			eImplicitNodeConfigurationDefault: Result := 1;
+			eImplicitNodeConfigurationScalarToScalar: Result := 2;
+			eImplicitNodeConfigurationVectorToVector: Result := 3;
+			eImplicitNodeConfigurationMatrixToMatrix: Result := 4;
+			eImplicitNodeConfigurationScalarScalarToScalar: Result := 5;
+			eImplicitNodeConfigurationVectorVectorToVector: Result := 6;
+			eImplicitNodeConfigurationScalarToVector: Result := 8;
+			eImplicitNodeConfigurationVectorToScalar: Result := 9;
+			eImplicitNodeConfigurationVectorVectorToScalar: Result := 10;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
+		end;
+	end;
+	
+	function convertConstToImplicitNodeConfiguration(const AValue: Integer): TLib3MFImplicitNodeConfiguration;
+	begin
+		case AValue of
+			1: Result := eImplicitNodeConfigurationDefault;
+			2: Result := eImplicitNodeConfigurationScalarToScalar;
+			3: Result := eImplicitNodeConfigurationVectorToVector;
+			4: Result := eImplicitNodeConfigurationMatrixToMatrix;
+			5: Result := eImplicitNodeConfigurationScalarScalarToScalar;
+			6: Result := eImplicitNodeConfigurationVectorVectorToVector;
+			8: Result := eImplicitNodeConfigurationScalarToVector;
+			9: Result := eImplicitNodeConfigurationVectorToScalar;
+			10: Result := eImplicitNodeConfigurationVectorVectorToScalar;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;
@@ -12082,13 +12132,13 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_SetIdentifierFunc(FHandle, PAnsiChar(AIdentifier)));
 	end;
 
-	function TLib3MFImplicitFunction.AddNode(const ANodeType: TLib3MFImplicitNodeType; const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFImplicitNode;
+	function TLib3MFImplicitFunction.AddNode(const ANodeType: TLib3MFImplicitNodeType; const AConfiguration: TLib3MFImplicitNodeConfiguration; const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFImplicitNode;
 	var
 		HNode: TLib3MFHandle;
 	begin
 		Result := nil;
 		HNode := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddNodeFunc(FHandle, convertImplicitNodeTypeToConst(ANodeType), PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddNodeFunc(FHandle, convertImplicitNodeTypeToConst(ANodeType), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
 		if Assigned(HNode) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitNode, TLib3MFImplicitNode>.Make(FWrapper, HNode);
 	end;

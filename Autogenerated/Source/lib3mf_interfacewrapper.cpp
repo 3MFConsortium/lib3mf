@@ -11319,7 +11319,7 @@ Lib3MFResult lib3mf_implicitfunction_setidentifier(Lib3MF_ImplicitFunction pImpl
 	}
 }
 
-Lib3MFResult lib3mf_implicitfunction_addnode(Lib3MF_ImplicitFunction pImplicitFunction, eLib3MFImplicitNodeType eNodeType, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_ImplicitNode * pNode)
+Lib3MFResult lib3mf_implicitfunction_addnode(Lib3MF_ImplicitFunction pImplicitFunction, eLib3MFImplicitNodeType eNodeType, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_ImplicitNode * pNode)
 {
 	IBase* pIBaseClass = (IBase *)pImplicitFunction;
 
@@ -11328,6 +11328,7 @@ Lib3MFResult lib3mf_implicitfunction_addnode(Lib3MF_ImplicitFunction pImplicitFu
 		if (m_GlobalJournal.get() != nullptr)  {
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddNode");
 			pJournalEntry->addEnumParameter("NodeType", "ImplicitNodeType", (Lib3MF_int32)(eNodeType));
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
 			pJournalEntry->addStringParameter("Identifier", pIdentifier);
 			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
 			pJournalEntry->addStringParameter("Tag", pTag);
@@ -11348,7 +11349,7 @@ Lib3MFResult lib3mf_implicitfunction_addnode(Lib3MF_ImplicitFunction pImplicitFu
 		if (!pIImplicitFunction)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseNode = pIImplicitFunction->AddNode(eNodeType, sIdentifier, sDisplayName, sTag);
+		pBaseNode = pIImplicitFunction->AddNode(eNodeType, eConfiguration, sIdentifier, sDisplayName, sTag);
 
 		*pNode = (IBase*)(pBaseNode);
 		if (pJournalEntry.get() != nullptr) {

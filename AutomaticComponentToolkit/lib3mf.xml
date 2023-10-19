@@ -1823,7 +1823,19 @@
 		<option name="Scalar" description="Scalar" value="1" />
 		<option name="Vector" description="Vector" value="2" />
 		<option name="Matrix" description="4x4 Matrix" value="3" />
-    <option name="ResourceID" description="Resource ID" value="4" />
+    	<option name="ResourceID" description="Resource ID" value="4" />
+	</enum>
+
+	<enum name="ImplicitNodeConfiguration" description="Defines the input and output types of a node">
+		<option name="Default" description="Default" value="1" />
+		<option name="ScalarToScalar" description="Scalar -> Scalar" value="2" />
+		<option name="VectorToVector" description="Vector -> Vector" value="3" />
+		<option name="MatrixToMatrix" description="Matrix -> Matrix" value="4" />
+		<option name="ScalarScalarToScalar" description="Scalar, Scalar -> Scalar" value="5" />
+		<option name="VectorVectorToVector" description="Vector, Vector -> Vector" value="6" />
+		<option name="ScalarToVector" description="Scalar -> Vector" value="8" />
+		<option name="VectorToScalar" description="Vector -> Scalar" value="9" />
+		<option name="VectorVectorToScalar" description="Vector, Vector -> Scalar" value="10" />
 	</enum>
 
 
@@ -2087,6 +2099,8 @@
 		<method name="AddNode" description="Add a node">
 			<param name="NodeType" type="enum" class="ImplicitNodeType" pass="in"
 				description="the type of the node" />
+			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in"
+				description="the configuration of the node" />
 			<param name="Identifier" type="string" pass="in"
 				description="the identifier of the node" />
 			<param name="DisplayName" type="string" pass="in"

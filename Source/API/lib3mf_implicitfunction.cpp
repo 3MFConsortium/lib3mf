@@ -68,10 +68,15 @@ void CImplicitFunction::SetIdentifier(const std::string & sIdentifier)
 	function()->setIdentifier(sIdentifier);
 }
 
-IImplicitNode * CImplicitFunction::AddNode(const Lib3MF::eImplicitNodeType eNodeType, const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
+IImplicitNode* CImplicitFunction::AddNode(
+    const Lib3MF::eImplicitNodeType eNodeType,
+    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
+    const std::string& sIdentifier, const std::string& sDisplayName,
+    const std::string& sTag)
 {
-	auto newNode = function()->addNode(eNodeType, sIdentifier, sDisplayName, sTag);
-	return new CImplicitNode(newNode);
+        auto newNode =
+            function()->addNode(eNodeType, eConfiguration, sIdentifier, sDisplayName, sTag);
+        return new CImplicitNode(newNode);
 }
 
 INodeIterator * CImplicitFunction::GetNodes()

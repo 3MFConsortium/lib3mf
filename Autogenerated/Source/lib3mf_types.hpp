@@ -447,6 +447,21 @@ namespace Lib3MF {
     ResourceID = 4 /** Resource ID */
   };
   
+  /**
+  * enum class eImplicitNodeConfiguration - Defines the input and output types of a node
+  */
+  enum class eImplicitNodeConfiguration : Lib3MF_int32 {
+    Default = 1, /** Default */
+    ScalarToScalar = 2, /** Scalar -> Scalar */
+    VectorToVector = 3, /** Vector -> Vector */
+    MatrixToMatrix = 4, /** Matrix -> Matrix */
+    ScalarScalarToScalar = 5, /** Scalar, Scalar -> Scalar */
+    VectorVectorToVector = 6, /** Vector, Vector -> Vector */
+    ScalarToVector = 8, /** Scalar -> Vector */
+    VectorToScalar = 9, /** Vector -> Scalar */
+    VectorVectorToScalar = 10 /** Vector, Vector -> Scalar */
+  };
+  
   enum class eEncryptionAlgorithm : Lib3MF_int32 {
     AES256_GCM = 1 /** http://www.w3.org/2009/xmlenc11#aes256-gcm */
   };
@@ -646,6 +661,7 @@ typedef Lib3MF::eCompositionMethod eLib3MFCompositionMethod;
 typedef Lib3MF::eCompositionSpace eLib3MFCompositionSpace;
 typedef Lib3MF::eImplicitNodeType eLib3MFImplicitNodeType;
 typedef Lib3MF::eImplicitPortType eLib3MFImplicitPortType;
+typedef Lib3MF::eImplicitNodeConfiguration eLib3MFImplicitNodeConfiguration;
 typedef Lib3MF::eEncryptionAlgorithm eLib3MFEncryptionAlgorithm;
 typedef Lib3MF::eWrappingAlgorithm eLib3MFWrappingAlgorithm;
 typedef Lib3MF::eMgfAlgorithm eLib3MFMgfAlgorithm;
