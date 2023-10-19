@@ -78,7 +78,7 @@ namespace NMR
     {
         auto node = std::make_shared<CModelImplicitNode>(eNodeType, sIdentifier, sDisplayName, sTag, this);
 
-        m_nodeTypes.addExpectedPortsToNode(*node);
+        m_nodeTypes.addExpectedPortsToNode(*node, eConfiguration);
         m_nodes->push_back(node);
         return node;
     }

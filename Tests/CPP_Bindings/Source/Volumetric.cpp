@@ -47,7 +47,7 @@ namespace Lib3MF
                 "pos", "position", Lib3MF::eImplicitPortType::Vector);
 
             auto decomposePos = gyroidFunction->AddNode(
-                Lib3MF::eImplicitNodeType::DecomposeVector, Lib3MF::eImplicitNodeConfiguration::VectorVectorToVector, "decomposePos",
+                Lib3MF::eImplicitNodeType::DecomposeVector, Lib3MF::eImplicitNodeConfiguration::Default, "decomposePos",
                 "decompose pos", "group_a");
             gyroidFunction->AddLinkByNames("inputs.pos", "decomposePos.A");
 
@@ -220,7 +220,7 @@ namespace Lib3MF
         // Add an addition node
         auto node =
             newFunction->AddNode(Lib3MF::eImplicitNodeType::Addition,
-                                 Lib3MF::eImplicitNodeConfiguration::ScalarScalarToScalar,
+                                 Lib3MF::eImplicitNodeConfiguration::ScalarToScalar,
                                  "addition_1", "addition 1", "group_a");
 
         // Check if the node is added
@@ -277,15 +277,15 @@ namespace Lib3MF
         // Add some nodes
         auto addNode = newFunction->AddNode(
             Lib3MF::eImplicitNodeType::Addition,
-            Lib3MF::eImplicitNodeConfiguration::ScalarScalarToScalar,
+            Lib3MF::eImplicitNodeConfiguration::ScalarToScalar,
             "addition_1", "addition 1", "group_a");
         auto subNode = newFunction->AddNode(
             Lib3MF::eImplicitNodeType::Subtraction,
-            Lib3MF::eImplicitNodeConfiguration::ScalarScalarToScalar,
+            Lib3MF::eImplicitNodeConfiguration::ScalarToScalar,
             "substraction_1", "substraction 1", "group_a");
         auto mulNode = newFunction->AddNode(
             Lib3MF::eImplicitNodeType::Multiplication,
-            Lib3MF::eImplicitNodeConfiguration::ScalarScalarToScalar,
+            Lib3MF::eImplicitNodeConfiguration::ScalarToScalar,
             "multiplication_1", "multiplication 3", "group_a");
 
         // Add some links
@@ -365,7 +365,7 @@ namespace Lib3MF
 
         auto subNode = newFunction->AddNode(
             Lib3MF::eImplicitNodeType::Subtraction,
-            Lib3MF::eImplicitNodeConfiguration::VectorVectorToVector,
+            Lib3MF::eImplicitNodeConfiguration::VectorToVector,
             "translate_1", "Translation", "group_a");
 
         auto subInputA = subNode->FindInput("A");
@@ -386,7 +386,7 @@ namespace Lib3MF
         // Substract radius from distance
         auto subNode2 = newFunction->AddNode(
             Lib3MF::eImplicitNodeType::Subtraction,
-            Lib3MF::eImplicitNodeConfiguration::ScalarScalarToScalar,
+            Lib3MF::eImplicitNodeConfiguration::ScalarToScalar,
             "distance_2", "distance to sphere", "group_a");
 
         subNode2->FindInput("A")->SetReference("distance_1.result");
@@ -450,13 +450,13 @@ namespace Lib3MF
         // cos(composeYZX))
         auto sinNode = newFunction->AddNode(
             Lib3MF::eImplicitNodeType::Sinus,
-            Lib3MF::eImplicitNodeConfiguration::VectorVectorToVector, "sin",
+            Lib3MF::eImplicitNodeConfiguration::VectorToVector, "sin",
             "sin", "group_a");
         newFunction->AddLinkByNames("inputs.pos", "sin.A");
 
         auto cosNode = newFunction->AddNode(
             Lib3MF::eImplicitNodeType::Cosinus,
-            Lib3MF::eImplicitNodeConfiguration::VectorVectorToVector, "cos",
+            Lib3MF::eImplicitNodeConfiguration::VectorToVector, "cos",
             "cos", "group_a");
 
         auto const nonExistingInput = cosNode->FindInput("FictionalInput");
@@ -557,7 +557,7 @@ namespace Lib3MF
 
         auto subtractionNode = newFunction->AddNode(
             Lib3MF::eImplicitNodeType::Subtraction,
-            Lib3MF::eImplicitNodeConfiguration::ScalarScalarToScalar,
+            Lib3MF::eImplicitNodeConfiguration::ScalarToScalar,
             "subtraction", "subtraction", "group_shell");
 
         newFunction->AddLinkByNames("abs.result", "subtraction.A");
@@ -656,7 +656,7 @@ namespace Lib3MF
         // Add a subtraction node
         auto subtractionNode = newFunction->AddNode(
             Lib3MF::eImplicitNodeType::Subtraction,
-            Lib3MF::eImplicitNodeConfiguration::ScalarScalarToScalar,
+            Lib3MF::eImplicitNodeConfiguration::ScalarToScalar,
             "subtraction", "subtraction", "group_shell");
 
         newFunction->AddLinkByNames("abs.result", "subtraction.A");
@@ -699,7 +699,7 @@ namespace Lib3MF
         // Add a max node
         auto maxNode =
             newFunction->AddNode(Lib3MF::eImplicitNodeType::Max,
-            Lib3MF::eImplicitNodeConfiguration::ScalarScalarToScalar,
+            Lib3MF::eImplicitNodeConfiguration::ScalarToScalar,
              "max",
                                  "max - intersection", "group_shell");
 

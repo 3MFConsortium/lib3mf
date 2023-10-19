@@ -784,11 +784,6 @@ class ImplicitNodeConfiguration(CTypesEnum):
 	ScalarToScalar = 2
 	VectorToVector = 3
 	MatrixToMatrix = 4
-	ScalarScalarToScalar = 5
-	VectorVectorToVector = 6
-	ScalarToVector = 8
-	VectorToScalar = 9
-	VectorVectorToScalar = 10
 '''Definition of EncryptionAlgorithm
 '''
 class EncryptionAlgorithm(CTypesEnum):

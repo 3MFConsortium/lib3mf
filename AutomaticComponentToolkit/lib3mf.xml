@@ -1831,11 +1831,6 @@
 		<option name="ScalarToScalar" description="Scalar -> Scalar" value="2" />
 		<option name="VectorToVector" description="Vector -> Vector" value="3" />
 		<option name="MatrixToMatrix" description="Matrix -> Matrix" value="4" />
-		<option name="ScalarScalarToScalar" description="Scalar, Scalar -> Scalar" value="5" />
-		<option name="VectorVectorToVector" description="Vector, Vector -> Vector" value="6" />
-		<option name="ScalarToVector" description="Scalar -> Vector" value="8" />
-		<option name="VectorToScalar" description="Vector -> Scalar" value="9" />
-		<option name="VectorVectorToScalar" description="Vector, Vector -> Scalar" value="10" />
 	</enum>
 
 

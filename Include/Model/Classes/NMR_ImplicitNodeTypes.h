@@ -48,6 +48,7 @@ namespace NMR
 
         struct InputOutputRule
         {
+            Lib3MF::eImplicitNodeConfiguration configuration = Lib3MF::eImplicitNodeConfiguration::Default;
             In inputs;
             Out outputs;
         };
@@ -89,6 +90,7 @@ namespace NMR
             NodeTypesMap const& getTypes() const;
 
             void addExpectedPortsToNode(NMR::CModelImplicitNode& node) const;
+            void addExpectedPortsToNode(NMR::CModelImplicitNode& node, Lib3MF::eImplicitNodeConfiguration const configuration) const;
 
             void applyInputOutputRuleToNode(NMR::CModelImplicitNode& node,
                                             InputOutputRule const& rule) const;

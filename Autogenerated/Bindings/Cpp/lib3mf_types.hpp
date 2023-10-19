@@ -454,12 +454,7 @@ namespace Lib3MF {
     Default = 1, /** Default */
     ScalarToScalar = 2, /** Scalar -> Scalar */
     VectorToVector = 3, /** Vector -> Vector */
-    MatrixToMatrix = 4, /** Matrix -> Matrix */
-    ScalarScalarToScalar = 5, /** Scalar, Scalar -> Scalar */
-    VectorVectorToVector = 6, /** Vector, Vector -> Vector */
-    ScalarToVector = 8, /** Scalar -> Vector */
-    VectorToScalar = 9, /** Vector -> Scalar */
-    VectorVectorToScalar = 10 /** Vector, Vector -> Scalar */
+    MatrixToMatrix = 4 /** Matrix -> Matrix */
   };
   
   enum class eEncryptionAlgorithm : Lib3MF_int32 {

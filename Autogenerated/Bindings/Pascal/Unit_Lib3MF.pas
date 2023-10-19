@@ -309,12 +309,7 @@ type
 		eImplicitNodeConfigurationDefault,
 		eImplicitNodeConfigurationScalarToScalar,
 		eImplicitNodeConfigurationVectorToVector,
-		eImplicitNodeConfigurationMatrixToMatrix,
-		eImplicitNodeConfigurationScalarScalarToScalar,
-		eImplicitNodeConfigurationVectorVectorToVector,
-		eImplicitNodeConfigurationScalarToVector,
-		eImplicitNodeConfigurationVectorToScalar,
-		eImplicitNodeConfigurationVectorVectorToScalar
+		eImplicitNodeConfigurationMatrixToMatrix
 	);
 
 	TLib3MFEncryptionAlgorithm = (
@@ -8304,11 +8299,6 @@ implementation
 			eImplicitNodeConfigurationScalarToScalar: Result := 2;
 			eImplicitNodeConfigurationVectorToVector: Result := 3;
 			eImplicitNodeConfigurationMatrixToMatrix: Result := 4;
-			eImplicitNodeConfigurationScalarScalarToScalar: Result := 5;
-			eImplicitNodeConfigurationVectorVectorToVector: Result := 6;
-			eImplicitNodeConfigurationScalarToVector: Result := 8;
-			eImplicitNodeConfigurationVectorToScalar: Result := 9;
-			eImplicitNodeConfigurationVectorVectorToScalar: Result := 10;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
 		end;
@@ -8321,11 +8311,6 @@ implementation
 			2: Result := eImplicitNodeConfigurationScalarToScalar;
 			3: Result := eImplicitNodeConfigurationVectorToVector;
 			4: Result := eImplicitNodeConfigurationMatrixToMatrix;
-			5: Result := eImplicitNodeConfigurationScalarScalarToScalar;
-			6: Result := eImplicitNodeConfigurationVectorVectorToVector;
-			8: Result := eImplicitNodeConfigurationScalarToVector;
-			9: Result := eImplicitNodeConfigurationVectorToScalar;
-			10: Result := eImplicitNodeConfigurationVectorVectorToScalar;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;

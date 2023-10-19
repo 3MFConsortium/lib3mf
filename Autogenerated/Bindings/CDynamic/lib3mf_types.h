@@ -453,12 +453,7 @@ typedef enum eLib3MFImplicitNodeConfiguration {
   eImplicitNodeConfigurationDefault = 1, /** Default */
   eImplicitNodeConfigurationScalarToScalar = 2, /** Scalar -> Scalar */
   eImplicitNodeConfigurationVectorToVector = 3, /** Vector -> Vector */
-  eImplicitNodeConfigurationMatrixToMatrix = 4, /** Matrix -> Matrix */
-  eImplicitNodeConfigurationScalarScalarToScalar = 5, /** Scalar, Scalar -> Scalar */
-  eImplicitNodeConfigurationVectorVectorToVector = 6, /** Vector, Vector -> Vector */
-  eImplicitNodeConfigurationScalarToVector = 8, /** Scalar -> Vector */
-  eImplicitNodeConfigurationVectorToScalar = 9, /** Vector -> Scalar */
-  eImplicitNodeConfigurationVectorVectorToScalar = 10 /** Vector, Vector -> Scalar */
+  eImplicitNodeConfigurationMatrixToMatrix = 4 /** Matrix -> Matrix */
 } eLib3MFImplicitNodeConfiguration;
 
 typedef enum eLib3MFEncryptionAlgorithm {

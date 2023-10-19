@@ -4622,11 +4622,6 @@ const (
 	ImplicitNodeConfiguration_ScalarToScalar = 2
 	ImplicitNodeConfiguration_VectorToVector = 3
 	ImplicitNodeConfiguration_MatrixToMatrix = 4
-	ImplicitNodeConfiguration_ScalarScalarToScalar = 5
-	ImplicitNodeConfiguration_VectorVectorToVector = 6
-	ImplicitNodeConfiguration_ScalarToVector = 8
-	ImplicitNodeConfiguration_VectorToScalar = 9
-	ImplicitNodeConfiguration_VectorVectorToScalar = 10
 )
 
 // EncryptionAlgorithm represents a Lib3MF enum.
