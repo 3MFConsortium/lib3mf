@@ -82,7 +82,7 @@ namespace NMR {
 		__NMRASSERT(pAttributeValue);
 
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VERTEX_X) == 0) {
-			m_fX = strtof(pAttributeValue, nullptr);
+			m_fX = fnStringToFloat(pAttributeValue);
 #ifdef __MINGW32__
 			if (isNotANumber(m_fX))
 #else
@@ -95,7 +95,7 @@ namespace NMR {
 		}
 
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VERTEX_Y) == 0) {
-			m_fY = strtof(pAttributeValue, nullptr);
+			m_fY = fnStringToFloat(pAttributeValue);
 #ifdef __MINGW32__
 			if (isNotANumber(m_fY))
 #else
@@ -108,7 +108,7 @@ namespace NMR {
 		}
 
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VERTEX_Z) == 0) {
-			m_fZ = strtof(pAttributeValue, nullptr);
+			m_fZ = fnStringToFloat(pAttributeValue);
 #ifdef __MINGW32__
 			if (isNotANumber(m_fZ))
 #else
