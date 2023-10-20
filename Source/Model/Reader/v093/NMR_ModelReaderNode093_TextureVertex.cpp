@@ -86,7 +86,7 @@ namespace NMR {
 		__NMRASSERT(pAttributeValue);
 
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE_U) == 0) {
-			m_fU = fnStringToFloat(pAttributeValue);
+			m_fU = strtof(pAttributeValue, nullptr);
 #ifdef __MINGW32__
 			if (isNotANumber(m_fU))
 #else
@@ -99,7 +99,7 @@ namespace NMR {
 		}
 
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE_V) == 0) {
-			m_fV = fnStringToFloat(pAttributeValue);
+			m_fV = strtof(pAttributeValue, nullptr);
 #ifdef __MINGW32__
 			if (isNotANumber(m_fV))
 #else

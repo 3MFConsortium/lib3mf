@@ -82,7 +82,7 @@ namespace NMR {
 		__NMRASSERT(pAttributeValue);
 
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VERTEX_X) == 0) {
-			m_fX = fnStringToFloat(pAttributeValue);
+			m_fX = strtof(pAttributeValue, nullptr);
 			if (std::isnan (m_fX))
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
 			if (fabs (m_fX) > XML_3MF_MAXIMUMCOORDINATEVALUE)
@@ -90,7 +90,7 @@ namespace NMR {
 			m_bHasX = true;
 		}
 		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VERTEX_Y) == 0) {
-			m_fY = fnStringToFloat(pAttributeValue);
+			m_fY = strtof(pAttributeValue, nullptr);
 			if (std::isnan (m_fY))
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
 			if (fabs(m_fY) > XML_3MF_MAXIMUMCOORDINATEVALUE)
@@ -98,7 +98,7 @@ namespace NMR {
 			m_bHasY = true;
 		}
 		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VERTEX_Z) == 0) {
-			m_fZ = fnStringToFloat(pAttributeValue);
+			m_fZ = strtof(pAttributeValue, nullptr);
 			if (std::isnan (m_fZ))
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
 			if (fabs(m_fZ) > XML_3MF_MAXIMUMCOORDINATEVALUE)
