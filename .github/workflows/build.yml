@@ -90,7 +90,7 @@ jobs:
           name: lib3mf.lib
           path: build/Release/lib3mf.lib
   build-windows-debug:
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2
         with:
@@ -106,7 +106,7 @@ jobs:
           name: lib3mf.debug.dll
           path: build/Debug/lib3mf.dll
   build-windows-32bit:
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2
         with:
@@ -127,7 +127,7 @@ jobs:
           name: lib3mf_32bit.lib
           path: build_32bit/Release/lib3mf.lib
   build-mingw-w64:
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
       - run: choco install mingw -y
       - uses: actions/checkout@v2
@@ -189,7 +189,7 @@ jobs:
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
   deploy-windows:
-    runs-on: windows-latest
+    runs-on: windows-2019
     needs: [assemble-sdk]
     steps:
       - name: Download lib3mf_sdk artifact
