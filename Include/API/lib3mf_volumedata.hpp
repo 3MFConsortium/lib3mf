@@ -60,8 +60,8 @@ private:
 	/**
 	* Put private members here.
 	*/
-	NMR::PModelVolumeData m_pVolumeData;
 	NMR::PModelMeshObject m_pMeshObject; // questionable
+	NMR::PModelVolumeData m_pVolumeData;
 
 protected:
 

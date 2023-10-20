@@ -147,7 +147,7 @@ struct PositionedVector
 	static void writeCallback(Lib3MF_uint64 nByteData, Lib3MF_uint64 nNumBytes, Lib3MF_pvoid pUserData) {
 		PositionedVector<T>* buffer = reinterpret_cast<PositionedVector<T>*> ((void*)(pUserData));
 		T* pData = (T*)(nByteData);
-		for (int i = 0; i < nNumBytes; i++) {
+		for (Lib3MF_uint64 i = 0; i < nNumBytes; i++) {
 			if (buffer->pos == buffer->vec.size()) {
 				buffer->vec.push_back(*pData);
 			}
@@ -165,7 +165,7 @@ struct PositionedVector
 	static void readCallback(Lib3MF_uint64 nByteData, Lib3MF_uint64 nNumBytes, Lib3MF_pvoid pUserData) {
 		PositionedVector<T>* buffer = reinterpret_cast<PositionedVector<T>*> ((void*)(pUserData));
 		T* pData = (T*)(nByteData);
-		for (int i = 0; i < nNumBytes; i++) {
+		for (Lib3MF_uint64 i = 0u; i < nNumBytes; i++) {
 			if (buffer->pos < buffer->vec.size()) {
 				*pData = buffer->vec[(size_t)buffer->pos];
 			}

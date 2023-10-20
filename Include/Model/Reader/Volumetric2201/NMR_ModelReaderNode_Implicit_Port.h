@@ -52,8 +52,9 @@ namespace NMR
         std::string m_identifier;
         std::string m_displayName;
         std::string m_reference;
-        ImplicitPortInOut m_inOut;
         Lib3MF::eImplicitPortType m_portType;
+        ImplicitPortInOut m_inOut;
+       
 
       public:
         CModelReaderNode_Implicit_Port() = delete;

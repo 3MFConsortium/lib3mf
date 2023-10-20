@@ -56,8 +56,10 @@ NMR::CModelFunctionFromImage3D * Lib3MF::Impl::CFunctionFromImage3D::functionfro
 {
     auto pFunctionFromImage3D = std::dynamic_pointer_cast<NMR::CModelFunctionFromImage3D>(resource());
     
-    if(!pFunctionFromImage3D) 
+    if(!pFunctionFromImage3D)
+    { 
         throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+    }
 
     return pFunctionFromImage3D.get();
 }
@@ -71,8 +73,9 @@ Lib3MF::Impl::CFunctionFromImage3D::CFunctionFromImage3D(NMR::PModelResource pRe
 void CFunctionFromImage3D::SetImage3D(IImage3D * pImage3D)
 {
     if (pImage3D == nullptr)
+    {
         throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-
+    }
 	functionfromimage3d()->setImage3DUniqueResourceID(pImage3D->GetUniqueResourceID());
 }
 

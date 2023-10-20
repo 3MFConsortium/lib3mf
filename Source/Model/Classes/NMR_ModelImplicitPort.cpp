@@ -60,64 +60,47 @@ namespace NMR
 
     ImplicitIdentifier const& CModelImplicitPort::getIdentifier() const
     {
-        throwIfNotAnInstance();
         return m_identifier;
     }
 
     std::string const& CModelImplicitPort::getDisplayName() const
     {
-        throwIfNotAnInstance();
         return m_displayname;
     }
 
     void CModelImplicitPort::setIdentifier(std::string const& identifier)
     {
-        throwIfNotAnInstance();
         m_identifier = identifier;
     }
 
     void CModelImplicitPort::setDisplayName(std::string const& displayname)
     {
-        throwIfNotAnInstance();
         m_displayname = displayname;
     }
 
     Lib3MF::eImplicitPortType CModelImplicitPort::getType() const
     {
-        throwIfNotAnInstance();
         return m_type;
     }
 
     void CModelImplicitPort::setType(Lib3MF::eImplicitPortType type)
     {
-        throwIfNotAnInstance();
         m_type = type;
     }
 
     ImplicitIdentifier const& NMR::CModelImplicitPort::getReference() const
     {
-        throwIfNotAnInstance();
         return m_reference;
     }
 
     void NMR::CModelImplicitPort::setReference(
         ImplicitIdentifier const& reference)
     {
-        throwIfNotAnInstance();
         m_reference = reference;
     }
 
     CModelImplicitNode* NMR::CModelImplicitPort::getParent() const
     {
-        throwIfNotAnInstance();
         return m_parent;
-    }
-
-    void CModelImplicitPort::throwIfNotAnInstance() const
-    {
-        if(!this)
-        {
-            throw CNMRException(NMR_ERROR_IMPLICIT_PORT_DOES_NOT_EXIST);
-        }
     }
 }  // namespace NMR

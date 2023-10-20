@@ -48,11 +48,11 @@ namespace NMR
     class CModelImplicitNode
     {
       private:
+        Lib3MF::eImplicitNodeType m_type;
         ImplicitIdentifier m_identifier;
         std::string m_displayname;
         std::string m_tag;
-        Lib3MF::eImplicitNodeType m_type;
-
+        
         PPorts m_inputs;
         PPorts m_outputs;
 

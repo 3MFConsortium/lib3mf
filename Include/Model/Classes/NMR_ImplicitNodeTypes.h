@@ -48,6 +48,13 @@ namespace NMR
 
         struct InputOutputRule
         {
+            InputOutputRule(Lib3MF::eImplicitNodeConfiguration const& configuration,
+                            In const& inputs,
+                            Out const& outputs)
+                : configuration(configuration), inputs(inputs), outputs(outputs)
+            {
+            }
+
             Lib3MF::eImplicitNodeConfiguration configuration = Lib3MF::eImplicitNodeConfiguration::Default;
             In inputs;
             Out outputs;

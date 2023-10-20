@@ -755,7 +755,6 @@ namespace Lib3MF
         ASSERT_TRUE(funcFromImage3d);
         funcFromImage3d->SetDisplayName("function from image3d");
 
-        auto const funcImg3dId = funcFromImage3d->GetUniqueResourceID();
         funcFromImage3d->SetTileStyles(Lib3MF::eTextureTileStyle::Wrap,
                                        Lib3MF::eTextureTileStyle::Clamp,
                                        Lib3MF::eTextureTileStyle::Mirror);
@@ -992,8 +991,6 @@ namespace Lib3MF
         auto const sourceModel = wrapper->CreateModel();
 
         auto const gyroidFunction = helper::createGyroidFunction(*sourceModel);
-        auto const gyroidFunctionId = gyroidFunction->GetUniqueResourceID();
-        auto const expectNumberOfNodes = gyroidFunction->GetNodes()->Count();
 
         EXPECT_EQ(targetModel->GetFunctions()->Count(), 0u);
         EXPECT_EQ(sourceModel->GetFunctions()->Count(), 1u);
@@ -1006,7 +1003,6 @@ namespace Lib3MF
         EXPECT_TRUE(targetFunctionsIter->MoveNext());
         auto const targetFunction = targetFunctionsIter->GetCurrentFunction();
         ASSERT_TRUE(targetFunction);
-        // EXPECT_EQ(targetFunction->GetUniqueResourceID(), gyroidFunctionId);
         helper::compareFunctions(sourceModel, gyroidFunction, targetModel, targetFunction);
     }
 

@@ -97,7 +97,7 @@ namespace Lib3MF
 			buildItem2->SetUUID(uuidString);
 			ASSERT_TRUE(false) << "Duplicate UUIDs must fail";
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 	}

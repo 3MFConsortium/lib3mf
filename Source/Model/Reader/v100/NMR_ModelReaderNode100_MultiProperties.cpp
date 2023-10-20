@@ -143,7 +143,7 @@ namespace NMR {
 				eModelBlendMethod method = MODELBLENDMETHOD_MIX;
 				try {
 					method = CModelMultiPropertyGroupResource::stringToBlendMethod(blendMethodString);
-				} catch (CNMRException e) {
+				} catch (CNMRException& e) {
 					m_pWarnings->addException(e, mrwInvalidMandatoryValue);
 				}
 				m_pBlendMethods->push_back(method);

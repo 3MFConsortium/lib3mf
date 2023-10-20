@@ -44,14 +44,12 @@ namespace NMR
     class CModelImplicitPort
     {
       private:
+        CModelImplicitNode * m_parent = nullptr;
         ImplicitIdentifier m_identifier;
         std::string m_displayname;
         Lib3MF::eImplicitPortType m_type = Lib3MF::eImplicitPortType::Scalar;
         ImplicitIdentifier m_reference;
-        CModelImplicitNode * m_parent = nullptr;
-
-        void throwIfNotAnInstance() const;
-
+        
       public:
         CModelImplicitPort(CModelImplicitNode * parent,
                            ImplicitIdentifier const & identifier,

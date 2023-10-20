@@ -41,8 +41,8 @@ namespace NMR {
 	private:
 	protected:
 
-		CModelImageStack* m_pImageStack;
-		CModel* m_pModel;
+		CModel* m_pModel = nullptr;
+		CModelImageStack* m_pImageStack = nullptr;
 
 		nfUint32 m_nRowCount;
 		nfUint32 m_nColumnCount;
