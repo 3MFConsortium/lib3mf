@@ -155,8 +155,6 @@ namespace NMR {
 		nfDouble dResult = 0.0;
 
 		// Convert to double and make a input and range check!
-		nfChar * pEndPtr;
-
 		std::from_chars_result result = std::from_chars(pszValue, pszValue + strlen(pszValue), dResult);
 
 		// Check if any conversion happened

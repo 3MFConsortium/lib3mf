@@ -34,6 +34,7 @@ option(USE_INCLUDED_SSL "Use included libressl" ON)
 option(BUILD_FOR_CODECOVERAGE "Build for code coverage analysis" OFF)
 
 add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
+set (CMAKE_CXX_STANDARD 17)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
