@@ -56,13 +56,13 @@ namespace Lib3MF {
 			CAccessRight(NMR::PKeyStoreAccessRight ar);
 
 			// Inherited via IAccessRight
-			virtual IConsumer * GetConsumer() override;
+			IConsumer * GetConsumer() override;
 
-			virtual Lib3MF::eWrappingAlgorithm GetWrappingAlgorithm();
+			Lib3MF::eWrappingAlgorithm GetWrappingAlgorithm() override;
 
-			virtual Lib3MF::eMgfAlgorithm GetMgfAlgorithm();
+			Lib3MF::eMgfAlgorithm GetMgfAlgorithm() override;
 
-			virtual Lib3MF::eDigestMethod GetDigestMethod();
+			Lib3MF::eDigestMethod GetDigestMethod() override;
 
 			// Other access methods
 			NMR::PKeyStoreAccessRight accessRight() const;
