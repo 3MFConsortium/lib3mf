@@ -10472,273 +10472,6 @@ Lib3MFResult lib3mf_implicitnode_findoutput(Lib3MF_ImplicitNode pImplicitNode, c
 	}
 }
 
-Lib3MFResult lib3mf_implicitnode_setconstant(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_double dValue)
-{
-	IBase* pIBaseClass = (IBase *)pImplicitNode;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitNode, "ImplicitNode", "SetConstant");
-			pJournalEntry->addDoubleParameter("Value", dValue);
-		}
-		IImplicitNode* pIImplicitNode = dynamic_cast<IImplicitNode*>(pIBaseClass);
-		if (!pIImplicitNode)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIImplicitNode->SetConstant(dValue);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_implicitnode_getconstant(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_double * pValue)
-{
-	IBase* pIBaseClass = (IBase *)pImplicitNode;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitNode, "ImplicitNode", "GetConstant");
-		}
-		if (pValue == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IImplicitNode* pIImplicitNode = dynamic_cast<IImplicitNode*>(pIBaseClass);
-		if (!pIImplicitNode)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		*pValue = pIImplicitNode->GetConstant();
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addDoubleResult("Value", *pValue);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_implicitnode_setvector(Lib3MF_ImplicitNode pImplicitNode, const sLib3MFVector * pValue)
-{
-	IBase* pIBaseClass = (IBase *)pImplicitNode;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitNode, "ImplicitNode", "SetVector");
-		}
-		IImplicitNode* pIImplicitNode = dynamic_cast<IImplicitNode*>(pIBaseClass);
-		if (!pIImplicitNode)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIImplicitNode->SetVector(*pValue);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_implicitnode_getvector(Lib3MF_ImplicitNode pImplicitNode, sLib3MFVector * pValue)
-{
-	IBase* pIBaseClass = (IBase *)pImplicitNode;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitNode, "ImplicitNode", "GetVector");
-		}
-		if (pValue == nullptr)
-		throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IImplicitNode* pIImplicitNode = dynamic_cast<IImplicitNode*>(pIBaseClass);
-		if (!pIImplicitNode)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		*pValue = pIImplicitNode->GetVector();
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_implicitnode_setmatrix(Lib3MF_ImplicitNode pImplicitNode, const sLib3MFMatrix4x4 * pValue)
-{
-	IBase* pIBaseClass = (IBase *)pImplicitNode;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitNode, "ImplicitNode", "SetMatrix");
-		}
-		IImplicitNode* pIImplicitNode = dynamic_cast<IImplicitNode*>(pIBaseClass);
-		if (!pIImplicitNode)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIImplicitNode->SetMatrix(*pValue);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_implicitnode_getmatrix(Lib3MF_ImplicitNode pImplicitNode, sLib3MFMatrix4x4 * pValue)
-{
-	IBase* pIBaseClass = (IBase *)pImplicitNode;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitNode, "ImplicitNode", "GetMatrix");
-		}
-		if (pValue == nullptr)
-		throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IImplicitNode* pIImplicitNode = dynamic_cast<IImplicitNode*>(pIBaseClass);
-		if (!pIImplicitNode)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		*pValue = pIImplicitNode->GetMatrix();
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_implicitnode_setresource(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Resource pResource)
-{
-	IBase* pIBaseClass = (IBase *)pImplicitNode;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitNode, "ImplicitNode", "SetResource");
-			pJournalEntry->addHandleParameter("Resource", pResource);
-		}
-		IBase* pIBaseClassResource = (IBase *)pResource;
-		IResource* pIResource = dynamic_cast<IResource*>(pIBaseClassResource);
-		if (!pIResource)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
-		
-		IImplicitNode* pIImplicitNode = dynamic_cast<IImplicitNode*>(pIBaseClass);
-		if (!pIImplicitNode)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIImplicitNode->SetResource(pIResource);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_implicitnode_getresource(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Resource * pResource)
-{
-	IBase* pIBaseClass = (IBase *)pImplicitNode;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitNode, "ImplicitNode", "GetResource");
-		}
-		if (pResource == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseResource(nullptr);
-		IImplicitNode* pIImplicitNode = dynamic_cast<IImplicitNode*>(pIBaseClass);
-		if (!pIImplicitNode)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pBaseResource = pIImplicitNode->GetResource();
-
-		*pResource = (IBase*)(pBaseResource);
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("Resource", *pResource);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
 Lib3MFResult lib3mf_implicitnode_aretypesvalid(Lib3MF_ImplicitNode pImplicitNode, bool * pValid)
 {
 	IBase* pIBaseClass = (IBase *)pImplicitNode;
@@ -10758,6 +10491,1973 @@ Lib3MFResult lib3mf_implicitnode_aretypesvalid(Lib3MF_ImplicitNode pImplicitNode
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->addBooleanResult("Valid", *pValid);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for OneInputNode
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_oneinputnode_getinputa(Lib3MF_OneInputNode pOneInputNode, Lib3MF_ImplicitPort * pInput)
+{
+	IBase* pIBaseClass = (IBase *)pOneInputNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pOneInputNode, "OneInputNode", "GetInputA");
+		}
+		if (pInput == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseInput(nullptr);
+		IOneInputNode* pIOneInputNode = dynamic_cast<IOneInputNode*>(pIBaseClass);
+		if (!pIOneInputNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseInput = pIOneInputNode->GetInputA();
+
+		*pInput = (IBase*)(pBaseInput);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Input", *pInput);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_oneinputnode_getoutputresult(Lib3MF_OneInputNode pOneInputNode, Lib3MF_ImplicitPort * pResult)
+{
+	IBase* pIBaseClass = (IBase *)pOneInputNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pOneInputNode, "OneInputNode", "GetOutputResult");
+		}
+		if (pResult == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseResult(nullptr);
+		IOneInputNode* pIOneInputNode = dynamic_cast<IOneInputNode*>(pIBaseClass);
+		if (!pIOneInputNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseResult = pIOneInputNode->GetOutputResult();
+
+		*pResult = (IBase*)(pBaseResult);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Result", *pResult);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for SinNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for CosNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for TanNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for ArcSinNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for ArcCosNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for ArcTanNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for SinhNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for CoshNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for TanhNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for RoundNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for CeilNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for FloorNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for SignNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for FractNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for AbsNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for ExpNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for LogNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for Log2Node
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for Log10Node
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for LengthNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for TransposeNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for InverseNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for SqrtNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for ResourceIdNode
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_resourceidnode_setresource(Lib3MF_ResourceIdNode pResourceIdNode, Lib3MF_Resource pResource)
+{
+	IBase* pIBaseClass = (IBase *)pResourceIdNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pResourceIdNode, "ResourceIdNode", "SetResource");
+			pJournalEntry->addHandleParameter("Resource", pResource);
+		}
+		IBase* pIBaseClassResource = (IBase *)pResource;
+		IResource* pIResource = dynamic_cast<IResource*>(pIBaseClassResource);
+		if (!pIResource)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IResourceIdNode* pIResourceIdNode = dynamic_cast<IResourceIdNode*>(pIBaseClass);
+		if (!pIResourceIdNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIResourceIdNode->SetResource(pIResource);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_resourceidnode_getresource(Lib3MF_ResourceIdNode pResourceIdNode, Lib3MF_Resource * pResource)
+{
+	IBase* pIBaseClass = (IBase *)pResourceIdNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pResourceIdNode, "ResourceIdNode", "GetResource");
+		}
+		if (pResource == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseResource(nullptr);
+		IResourceIdNode* pIResourceIdNode = dynamic_cast<IResourceIdNode*>(pIBaseClass);
+		if (!pIResourceIdNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseResource = pIResourceIdNode->GetResource();
+
+		*pResource = (IBase*)(pBaseResource);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Resource", *pResource);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_resourceidnode_getoutputvalue(Lib3MF_ResourceIdNode pResourceIdNode, Lib3MF_ImplicitPort * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pResourceIdNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pResourceIdNode, "ResourceIdNode", "GetOutputValue");
+		}
+		if (pValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseValue(nullptr);
+		IResourceIdNode* pIResourceIdNode = dynamic_cast<IResourceIdNode*>(pIBaseClass);
+		if (!pIResourceIdNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseValue = pIResourceIdNode->GetOutputValue();
+
+		*pValue = (IBase*)(pBaseValue);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Value", *pValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for TwoInputNode
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_twoinputnode_getinputb(Lib3MF_TwoInputNode pTwoInputNode, Lib3MF_ImplicitPort * pB)
+{
+	IBase* pIBaseClass = (IBase *)pTwoInputNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pTwoInputNode, "TwoInputNode", "GetInputB");
+		}
+		if (pB == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseB(nullptr);
+		ITwoInputNode* pITwoInputNode = dynamic_cast<ITwoInputNode*>(pIBaseClass);
+		if (!pITwoInputNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseB = pITwoInputNode->GetInputB();
+
+		*pB = (IBase*)(pBaseB);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("B", *pB);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for AdditionNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for SubtractionNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for MultiplicationNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for DivisionNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for DotNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for CrossNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for ArcTan2Node
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for MatVecMultiplicationNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for MinNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for MaxNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for FmodNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for PowNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class implementation for SelectNode
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_selectnode_getinputb(Lib3MF_SelectNode pSelectNode, Lib3MF_ImplicitPort * pB)
+{
+	IBase* pIBaseClass = (IBase *)pSelectNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pSelectNode, "SelectNode", "GetInputB");
+		}
+		if (pB == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseB(nullptr);
+		ISelectNode* pISelectNode = dynamic_cast<ISelectNode*>(pIBaseClass);
+		if (!pISelectNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseB = pISelectNode->GetInputB();
+
+		*pB = (IBase*)(pBaseB);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("B", *pB);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_selectnode_getinputc(Lib3MF_SelectNode pSelectNode, Lib3MF_ImplicitPort * pC)
+{
+	IBase* pIBaseClass = (IBase *)pSelectNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pSelectNode, "SelectNode", "GetInputC");
+		}
+		if (pC == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseC(nullptr);
+		ISelectNode* pISelectNode = dynamic_cast<ISelectNode*>(pIBaseClass);
+		if (!pISelectNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseC = pISelectNode->GetInputC();
+
+		*pC = (IBase*)(pBaseC);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("C", *pC);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_selectnode_getinputd(Lib3MF_SelectNode pSelectNode, Lib3MF_ImplicitPort * pD)
+{
+	IBase* pIBaseClass = (IBase *)pSelectNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pSelectNode, "SelectNode", "GetInputD");
+		}
+		if (pD == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseD(nullptr);
+		ISelectNode* pISelectNode = dynamic_cast<ISelectNode*>(pIBaseClass);
+		if (!pISelectNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseD = pISelectNode->GetInputD();
+
+		*pD = (IBase*)(pBaseD);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("D", *pD);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for ClampNode
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_clampnode_getinputmin(Lib3MF_ClampNode pClampNode, Lib3MF_ImplicitPort * pMin)
+{
+	IBase* pIBaseClass = (IBase *)pClampNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pClampNode, "ClampNode", "GetInputMin");
+		}
+		if (pMin == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseMin(nullptr);
+		IClampNode* pIClampNode = dynamic_cast<IClampNode*>(pIBaseClass);
+		if (!pIClampNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseMin = pIClampNode->GetInputMin();
+
+		*pMin = (IBase*)(pBaseMin);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Min", *pMin);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_clampnode_getinputmax(Lib3MF_ClampNode pClampNode, Lib3MF_ImplicitPort * pMax)
+{
+	IBase* pIBaseClass = (IBase *)pClampNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pClampNode, "ClampNode", "GetInputMax");
+		}
+		if (pMax == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseMax(nullptr);
+		IClampNode* pIClampNode = dynamic_cast<IClampNode*>(pIBaseClass);
+		if (!pIClampNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseMax = pIClampNode->GetInputMax();
+
+		*pMax = (IBase*)(pBaseMax);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Max", *pMax);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for ComposeVectorNode
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_composevectornode_getinputx(Lib3MF_ComposeVectorNode pComposeVectorNode, Lib3MF_ImplicitPort * pX)
+{
+	IBase* pIBaseClass = (IBase *)pComposeVectorNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeVectorNode, "ComposeVectorNode", "GetInputX");
+		}
+		if (pX == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseX(nullptr);
+		IComposeVectorNode* pIComposeVectorNode = dynamic_cast<IComposeVectorNode*>(pIBaseClass);
+		if (!pIComposeVectorNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseX = pIComposeVectorNode->GetInputX();
+
+		*pX = (IBase*)(pBaseX);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("X", *pX);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composevectornode_getinputy(Lib3MF_ComposeVectorNode pComposeVectorNode, Lib3MF_ImplicitPort * pY)
+{
+	IBase* pIBaseClass = (IBase *)pComposeVectorNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeVectorNode, "ComposeVectorNode", "GetInputY");
+		}
+		if (pY == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseY(nullptr);
+		IComposeVectorNode* pIComposeVectorNode = dynamic_cast<IComposeVectorNode*>(pIBaseClass);
+		if (!pIComposeVectorNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseY = pIComposeVectorNode->GetInputY();
+
+		*pY = (IBase*)(pBaseY);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Y", *pY);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composevectornode_getinputz(Lib3MF_ComposeVectorNode pComposeVectorNode, Lib3MF_ImplicitPort * pZ)
+{
+	IBase* pIBaseClass = (IBase *)pComposeVectorNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeVectorNode, "ComposeVectorNode", "GetInputZ");
+		}
+		if (pZ == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseZ(nullptr);
+		IComposeVectorNode* pIComposeVectorNode = dynamic_cast<IComposeVectorNode*>(pIBaseClass);
+		if (!pIComposeVectorNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseZ = pIComposeVectorNode->GetInputZ();
+
+		*pZ = (IBase*)(pBaseZ);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Z", *pZ);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composevectornode_getoutputvector(Lib3MF_ComposeVectorNode pComposeVectorNode, Lib3MF_ImplicitPort * pVector)
+{
+	IBase* pIBaseClass = (IBase *)pComposeVectorNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeVectorNode, "ComposeVectorNode", "GetOutputVector");
+		}
+		if (pVector == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseVector(nullptr);
+		IComposeVectorNode* pIComposeVectorNode = dynamic_cast<IComposeVectorNode*>(pIBaseClass);
+		if (!pIComposeVectorNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseVector = pIComposeVectorNode->GetOutputVector();
+
+		*pVector = (IBase*)(pBaseVector);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Vector", *pVector);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for DecomposeVectorNode
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_decomposevectornode_getinputvector(Lib3MF_DecomposeVectorNode pDecomposeVectorNode, Lib3MF_ImplicitPort * pVector)
+{
+	IBase* pIBaseClass = (IBase *)pDecomposeVectorNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDecomposeVectorNode, "DecomposeVectorNode", "GetInputVector");
+		}
+		if (pVector == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseVector(nullptr);
+		IDecomposeVectorNode* pIDecomposeVectorNode = dynamic_cast<IDecomposeVectorNode*>(pIBaseClass);
+		if (!pIDecomposeVectorNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseVector = pIDecomposeVectorNode->GetInputVector();
+
+		*pVector = (IBase*)(pBaseVector);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Vector", *pVector);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_decomposevectornode_getoutputx(Lib3MF_DecomposeVectorNode pDecomposeVectorNode, Lib3MF_ImplicitPort * pX)
+{
+	IBase* pIBaseClass = (IBase *)pDecomposeVectorNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDecomposeVectorNode, "DecomposeVectorNode", "GetOutputX");
+		}
+		if (pX == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseX(nullptr);
+		IDecomposeVectorNode* pIDecomposeVectorNode = dynamic_cast<IDecomposeVectorNode*>(pIBaseClass);
+		if (!pIDecomposeVectorNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseX = pIDecomposeVectorNode->GetOutputX();
+
+		*pX = (IBase*)(pBaseX);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("X", *pX);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_decomposevectornode_getoutputy(Lib3MF_DecomposeVectorNode pDecomposeVectorNode, Lib3MF_ImplicitPort * pY)
+{
+	IBase* pIBaseClass = (IBase *)pDecomposeVectorNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDecomposeVectorNode, "DecomposeVectorNode", "GetOutputY");
+		}
+		if (pY == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseY(nullptr);
+		IDecomposeVectorNode* pIDecomposeVectorNode = dynamic_cast<IDecomposeVectorNode*>(pIBaseClass);
+		if (!pIDecomposeVectorNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseY = pIDecomposeVectorNode->GetOutputY();
+
+		*pY = (IBase*)(pBaseY);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Y", *pY);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_decomposevectornode_getoutputz(Lib3MF_DecomposeVectorNode pDecomposeVectorNode, Lib3MF_ImplicitPort * pZ)
+{
+	IBase* pIBaseClass = (IBase *)pDecomposeVectorNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDecomposeVectorNode, "DecomposeVectorNode", "GetOutputZ");
+		}
+		if (pZ == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseZ(nullptr);
+		IDecomposeVectorNode* pIDecomposeVectorNode = dynamic_cast<IDecomposeVectorNode*>(pIBaseClass);
+		if (!pIDecomposeVectorNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseZ = pIDecomposeVectorNode->GetOutputZ();
+
+		*pZ = (IBase*)(pBaseZ);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Z", *pZ);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for ComposeMatrixNode
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_composematrixnode_getinputm00(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM00)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixNode, "ComposeMatrixNode", "GetInputM00");
+		}
+		if (pM00 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseM00(nullptr);
+		IComposeMatrixNode* pIComposeMatrixNode = dynamic_cast<IComposeMatrixNode*>(pIBaseClass);
+		if (!pIComposeMatrixNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseM00 = pIComposeMatrixNode->GetInputM00();
+
+		*pM00 = (IBase*)(pBaseM00);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("M00", *pM00);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composematrixnode_getinputm01(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM01)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixNode, "ComposeMatrixNode", "GetInputM01");
+		}
+		if (pM01 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseM01(nullptr);
+		IComposeMatrixNode* pIComposeMatrixNode = dynamic_cast<IComposeMatrixNode*>(pIBaseClass);
+		if (!pIComposeMatrixNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseM01 = pIComposeMatrixNode->GetInputM01();
+
+		*pM01 = (IBase*)(pBaseM01);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("M01", *pM01);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composematrixnode_getinputm02(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM02)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixNode, "ComposeMatrixNode", "GetInputM02");
+		}
+		if (pM02 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseM02(nullptr);
+		IComposeMatrixNode* pIComposeMatrixNode = dynamic_cast<IComposeMatrixNode*>(pIBaseClass);
+		if (!pIComposeMatrixNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseM02 = pIComposeMatrixNode->GetInputM02();
+
+		*pM02 = (IBase*)(pBaseM02);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("M02", *pM02);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composematrixnode_getinputm03(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM03)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixNode, "ComposeMatrixNode", "GetInputM03");
+		}
+		if (pM03 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseM03(nullptr);
+		IComposeMatrixNode* pIComposeMatrixNode = dynamic_cast<IComposeMatrixNode*>(pIBaseClass);
+		if (!pIComposeMatrixNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseM03 = pIComposeMatrixNode->GetInputM03();
+
+		*pM03 = (IBase*)(pBaseM03);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("M03", *pM03);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composematrixnode_getinputm10(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM10)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixNode, "ComposeMatrixNode", "GetInputM10");
+		}
+		if (pM10 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseM10(nullptr);
+		IComposeMatrixNode* pIComposeMatrixNode = dynamic_cast<IComposeMatrixNode*>(pIBaseClass);
+		if (!pIComposeMatrixNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseM10 = pIComposeMatrixNode->GetInputM10();
+
+		*pM10 = (IBase*)(pBaseM10);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("M10", *pM10);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composematrixnode_getinputm11(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM11)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixNode, "ComposeMatrixNode", "GetInputM11");
+		}
+		if (pM11 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseM11(nullptr);
+		IComposeMatrixNode* pIComposeMatrixNode = dynamic_cast<IComposeMatrixNode*>(pIBaseClass);
+		if (!pIComposeMatrixNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseM11 = pIComposeMatrixNode->GetInputM11();
+
+		*pM11 = (IBase*)(pBaseM11);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("M11", *pM11);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composematrixnode_getinputm12(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM12)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixNode, "ComposeMatrixNode", "GetInputM12");
+		}
+		if (pM12 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseM12(nullptr);
+		IComposeMatrixNode* pIComposeMatrixNode = dynamic_cast<IComposeMatrixNode*>(pIBaseClass);
+		if (!pIComposeMatrixNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseM12 = pIComposeMatrixNode->GetInputM12();
+
+		*pM12 = (IBase*)(pBaseM12);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("M12", *pM12);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composematrixnode_getinputm13(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM13)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixNode, "ComposeMatrixNode", "GetInputM13");
+		}
+		if (pM13 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseM13(nullptr);
+		IComposeMatrixNode* pIComposeMatrixNode = dynamic_cast<IComposeMatrixNode*>(pIBaseClass);
+		if (!pIComposeMatrixNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseM13 = pIComposeMatrixNode->GetInputM13();
+
+		*pM13 = (IBase*)(pBaseM13);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("M13", *pM13);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composematrixnode_getinputm20(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM20)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixNode, "ComposeMatrixNode", "GetInputM20");
+		}
+		if (pM20 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseM20(nullptr);
+		IComposeMatrixNode* pIComposeMatrixNode = dynamic_cast<IComposeMatrixNode*>(pIBaseClass);
+		if (!pIComposeMatrixNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseM20 = pIComposeMatrixNode->GetInputM20();
+
+		*pM20 = (IBase*)(pBaseM20);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("M20", *pM20);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composematrixnode_getinputm21(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM21)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixNode, "ComposeMatrixNode", "GetInputM21");
+		}
+		if (pM21 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseM21(nullptr);
+		IComposeMatrixNode* pIComposeMatrixNode = dynamic_cast<IComposeMatrixNode*>(pIBaseClass);
+		if (!pIComposeMatrixNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseM21 = pIComposeMatrixNode->GetInputM21();
+
+		*pM21 = (IBase*)(pBaseM21);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("M21", *pM21);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composematrixnode_getinputm22(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM22)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixNode, "ComposeMatrixNode", "GetInputM22");
+		}
+		if (pM22 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseM22(nullptr);
+		IComposeMatrixNode* pIComposeMatrixNode = dynamic_cast<IComposeMatrixNode*>(pIBaseClass);
+		if (!pIComposeMatrixNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseM22 = pIComposeMatrixNode->GetInputM22();
+
+		*pM22 = (IBase*)(pBaseM22);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("M22", *pM22);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composematrixnode_getinputm23(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM23)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixNode, "ComposeMatrixNode", "GetInputM23");
+		}
+		if (pM23 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseM23(nullptr);
+		IComposeMatrixNode* pIComposeMatrixNode = dynamic_cast<IComposeMatrixNode*>(pIBaseClass);
+		if (!pIComposeMatrixNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseM23 = pIComposeMatrixNode->GetInputM23();
+
+		*pM23 = (IBase*)(pBaseM23);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("M23", *pM23);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composematrixnode_getinputm30(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM30)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixNode, "ComposeMatrixNode", "GetInputM30");
+		}
+		if (pM30 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseM30(nullptr);
+		IComposeMatrixNode* pIComposeMatrixNode = dynamic_cast<IComposeMatrixNode*>(pIBaseClass);
+		if (!pIComposeMatrixNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseM30 = pIComposeMatrixNode->GetInputM30();
+
+		*pM30 = (IBase*)(pBaseM30);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("M30", *pM30);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composematrixnode_getinputm31(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM31)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixNode, "ComposeMatrixNode", "GetInputM31");
+		}
+		if (pM31 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseM31(nullptr);
+		IComposeMatrixNode* pIComposeMatrixNode = dynamic_cast<IComposeMatrixNode*>(pIBaseClass);
+		if (!pIComposeMatrixNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseM31 = pIComposeMatrixNode->GetInputM31();
+
+		*pM31 = (IBase*)(pBaseM31);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("M31", *pM31);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composematrixnode_getinputm32(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM32)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixNode, "ComposeMatrixNode", "GetInputM32");
+		}
+		if (pM32 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseM32(nullptr);
+		IComposeMatrixNode* pIComposeMatrixNode = dynamic_cast<IComposeMatrixNode*>(pIBaseClass);
+		if (!pIComposeMatrixNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseM32 = pIComposeMatrixNode->GetInputM32();
+
+		*pM32 = (IBase*)(pBaseM32);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("M32", *pM32);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composematrixnode_getinputm33(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM33)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixNode, "ComposeMatrixNode", "GetInputM33");
+		}
+		if (pM33 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseM33(nullptr);
+		IComposeMatrixNode* pIComposeMatrixNode = dynamic_cast<IComposeMatrixNode*>(pIBaseClass);
+		if (!pIComposeMatrixNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseM33 = pIComposeMatrixNode->GetInputM33();
+
+		*pM33 = (IBase*)(pBaseM33);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("M33", *pM33);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composematrixnode_getoutputmatrix(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pMatrix)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixNode, "ComposeMatrixNode", "GetOutputMatrix");
+		}
+		if (pMatrix == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseMatrix(nullptr);
+		IComposeMatrixNode* pIComposeMatrixNode = dynamic_cast<IComposeMatrixNode*>(pIBaseClass);
+		if (!pIComposeMatrixNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseMatrix = pIComposeMatrixNode->GetOutputMatrix();
+
+		*pMatrix = (IBase*)(pBaseMatrix);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Matrix", *pMatrix);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for ComposeMatrixFromRowVectorsNode
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_composematrixfromrowvectorsnode_getinputrow0(Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow0)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixFromRowVectorsNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixFromRowVectorsNode, "ComposeMatrixFromRowVectorsNode", "GetInputRow0");
+		}
+		if (pRow0 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseRow0(nullptr);
+		IComposeMatrixFromRowVectorsNode* pIComposeMatrixFromRowVectorsNode = dynamic_cast<IComposeMatrixFromRowVectorsNode*>(pIBaseClass);
+		if (!pIComposeMatrixFromRowVectorsNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseRow0 = pIComposeMatrixFromRowVectorsNode->GetInputRow0();
+
+		*pRow0 = (IBase*)(pBaseRow0);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Row0", *pRow0);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composematrixfromrowvectorsnode_getinputrow1(Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow1)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixFromRowVectorsNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixFromRowVectorsNode, "ComposeMatrixFromRowVectorsNode", "GetInputRow1");
+		}
+		if (pRow1 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseRow1(nullptr);
+		IComposeMatrixFromRowVectorsNode* pIComposeMatrixFromRowVectorsNode = dynamic_cast<IComposeMatrixFromRowVectorsNode*>(pIBaseClass);
+		if (!pIComposeMatrixFromRowVectorsNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseRow1 = pIComposeMatrixFromRowVectorsNode->GetInputRow1();
+
+		*pRow1 = (IBase*)(pBaseRow1);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Row1", *pRow1);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composematrixfromrowvectorsnode_getinputrow2(Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow2)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixFromRowVectorsNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixFromRowVectorsNode, "ComposeMatrixFromRowVectorsNode", "GetInputRow2");
+		}
+		if (pRow2 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseRow2(nullptr);
+		IComposeMatrixFromRowVectorsNode* pIComposeMatrixFromRowVectorsNode = dynamic_cast<IComposeMatrixFromRowVectorsNode*>(pIBaseClass);
+		if (!pIComposeMatrixFromRowVectorsNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseRow2 = pIComposeMatrixFromRowVectorsNode->GetInputRow2();
+
+		*pRow2 = (IBase*)(pBaseRow2);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Row2", *pRow2);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composematrixfromrowvectorsnode_getinputrow3(Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow3)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixFromRowVectorsNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixFromRowVectorsNode, "ComposeMatrixFromRowVectorsNode", "GetInputRow3");
+		}
+		if (pRow3 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseRow3(nullptr);
+		IComposeMatrixFromRowVectorsNode* pIComposeMatrixFromRowVectorsNode = dynamic_cast<IComposeMatrixFromRowVectorsNode*>(pIBaseClass);
+		if (!pIComposeMatrixFromRowVectorsNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseRow3 = pIComposeMatrixFromRowVectorsNode->GetInputRow3();
+
+		*pRow3 = (IBase*)(pBaseRow3);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Row3", *pRow3);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_composematrixfromrowvectorsnode_getoutputmatrix(Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pMatrix)
+{
+	IBase* pIBaseClass = (IBase *)pComposeMatrixFromRowVectorsNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixFromRowVectorsNode, "ComposeMatrixFromRowVectorsNode", "GetOutputMatrix");
+		}
+		if (pMatrix == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseMatrix(nullptr);
+		IComposeMatrixFromRowVectorsNode* pIComposeMatrixFromRowVectorsNode = dynamic_cast<IComposeMatrixFromRowVectorsNode*>(pIBaseClass);
+		if (!pIComposeMatrixFromRowVectorsNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseMatrix = pIComposeMatrixFromRowVectorsNode->GetOutputMatrix();
+
+		*pMatrix = (IBase*)(pBaseMatrix);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Matrix", *pMatrix);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for ConstantNode
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_constantnode_setconstant(Lib3MF_ConstantNode pConstantNode, Lib3MF_double dValue)
+{
+	IBase* pIBaseClass = (IBase *)pConstantNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pConstantNode, "ConstantNode", "SetConstant");
+			pJournalEntry->addDoubleParameter("Value", dValue);
+		}
+		IConstantNode* pIConstantNode = dynamic_cast<IConstantNode*>(pIBaseClass);
+		if (!pIConstantNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIConstantNode->SetConstant(dValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_constantnode_getconstant(Lib3MF_ConstantNode pConstantNode, Lib3MF_double * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pConstantNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pConstantNode, "ConstantNode", "GetConstant");
+		}
+		if (pValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IConstantNode* pIConstantNode = dynamic_cast<IConstantNode*>(pIBaseClass);
+		if (!pIConstantNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pValue = pIConstantNode->GetConstant();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addDoubleResult("Value", *pValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_constantnode_getoutputvalue(Lib3MF_ConstantNode pConstantNode, Lib3MF_ImplicitPort * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pConstantNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pConstantNode, "ConstantNode", "GetOutputValue");
+		}
+		if (pValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseValue(nullptr);
+		IConstantNode* pIConstantNode = dynamic_cast<IConstantNode*>(pIBaseClass);
+		if (!pIConstantNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseValue = pIConstantNode->GetOutputValue();
+
+		*pValue = (IBase*)(pBaseValue);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Value", *pValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for ConstVecNode
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_constvecnode_setvector(Lib3MF_ConstVecNode pConstVecNode, const sLib3MFVector * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pConstVecNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pConstVecNode, "ConstVecNode", "SetVector");
+		}
+		IConstVecNode* pIConstVecNode = dynamic_cast<IConstVecNode*>(pIBaseClass);
+		if (!pIConstVecNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIConstVecNode->SetVector(*pValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_constvecnode_getvector(Lib3MF_ConstVecNode pConstVecNode, sLib3MFVector * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pConstVecNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pConstVecNode, "ConstVecNode", "GetVector");
+		}
+		if (pValue == nullptr)
+		throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IConstVecNode* pIConstVecNode = dynamic_cast<IConstVecNode*>(pIBaseClass);
+		if (!pIConstVecNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pValue = pIConstVecNode->GetVector();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_constvecnode_getoutputvector(Lib3MF_ConstVecNode pConstVecNode, Lib3MF_ImplicitPort * pVector)
+{
+	IBase* pIBaseClass = (IBase *)pConstVecNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pConstVecNode, "ConstVecNode", "GetOutputVector");
+		}
+		if (pVector == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseVector(nullptr);
+		IConstVecNode* pIConstVecNode = dynamic_cast<IConstVecNode*>(pIBaseClass);
+		if (!pIConstVecNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseVector = pIConstVecNode->GetOutputVector();
+
+		*pVector = (IBase*)(pBaseVector);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Vector", *pVector);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for ConstMatNode
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_constmatnode_setmatrix(Lib3MF_ConstMatNode pConstMatNode, const sLib3MFMatrix4x4 * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pConstMatNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pConstMatNode, "ConstMatNode", "SetMatrix");
+		}
+		IConstMatNode* pIConstMatNode = dynamic_cast<IConstMatNode*>(pIBaseClass);
+		if (!pIConstMatNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIConstMatNode->SetMatrix(*pValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_constmatnode_getmatrix(Lib3MF_ConstMatNode pConstMatNode, sLib3MFMatrix4x4 * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pConstMatNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pConstMatNode, "ConstMatNode", "GetMatrix");
+		}
+		if (pValue == nullptr)
+		throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IConstMatNode* pIConstMatNode = dynamic_cast<IConstMatNode*>(pIBaseClass);
+		if (!pIConstMatNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pValue = pIConstMatNode->GetMatrix();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_constmatnode_getoutputmatrix(Lib3MF_ConstMatNode pConstMatNode, Lib3MF_ImplicitPort * pMatrix)
+{
+	IBase* pIBaseClass = (IBase *)pConstMatNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pConstMatNode, "ConstMatNode", "GetOutputMatrix");
+		}
+		if (pMatrix == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseMatrix(nullptr);
+		IConstMatNode* pIConstMatNode = dynamic_cast<IConstMatNode*>(pIBaseClass);
+		if (!pIConstMatNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseMatrix = pIConstMatNode->GetOutputMatrix();
+
+		*pMatrix = (IBase*)(pBaseMatrix);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Matrix", *pMatrix);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -11350,6 +13050,2162 @@ Lib3MFResult lib3mf_implicitfunction_addnode(Lib3MF_ImplicitFunction pImplicitFu
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
 		pBaseNode = pIImplicitFunction->AddNode(eNodeType, eConfiguration, sIdentifier, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addsinnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_SinNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddSinNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddSinNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addcosnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_CosNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddCosNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddCosNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addtannode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_TanNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddTanNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddTanNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addarcsinnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ArcSinNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddArcSinNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddArcSinNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addarccosnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ArcCosNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddArcCosNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddArcCosNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addarctan2node(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ArcTan2Node * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddArcTan2Node");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddArcTan2Node(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addsinhnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_SinhNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddSinhNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddSinhNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addcoshnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_CoshNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddCoshNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddCoshNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addtanhnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_TanhNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddTanhNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddTanhNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addroundnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_RoundNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddRoundNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddRoundNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addceilnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_CeilNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddCeilNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddCeilNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addfloornode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_FloorNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddFloorNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddFloorNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addsignnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_SignNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddSignNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddSignNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addfractnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_FractNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddFractNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddFractNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addabsnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_AbsNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddAbsNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddAbsNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addexpnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ExpNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddExpNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddExpNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addlognode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_LogNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddLogNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddLogNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addlog2node(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_Log2Node * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddLog2Node");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddLog2Node(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addlog10node(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_Log10Node * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddLog10Node");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddLog10Node(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addlengthnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_LengthNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddLengthNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddLengthNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addtransposenode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_TransposeNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddTransposeNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddTransposeNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_inversenode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_InverseNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "InverseNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->InverseNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addsqrtnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_SqrtNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddSqrtNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddSqrtNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addresourceidnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ResourceIdNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddResourceIdNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddResourceIdNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addadditionnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_AdditionNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddAdditionNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddAdditionNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addsubtractionnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_SubtractionNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddSubtractionNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddSubtractionNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addmultiplicationnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_MultiplicationNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddMultiplicationNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddMultiplicationNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_adddivisionnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_DivisionNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddDivisionNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddDivisionNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_adddotnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_DotNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddDotNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddDotNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addcrossnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_CrossNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddCrossNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddCrossNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addmatvecmultiplicationnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_MatVecMultiplicationNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddMatVecMultiplicationNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddMatVecMultiplicationNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addminnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_MinNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddMinNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddMinNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addmaxnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_MaxNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddMaxNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddMaxNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addfmodnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_FmodNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddFmodNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddFmodNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addpownode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_PowNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddPowNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddPowNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addselectnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_SelectNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddSelectNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddSelectNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addclampnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ClampNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddClampNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddClampNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addcomposevectornode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ComposeVectorNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddComposeVectorNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddComposeVectorNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_adddecomposevectornode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_DecomposeVectorNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddDecomposeVectorNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddDecomposeVectorNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addcomposematrixnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ComposeMatrixNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddComposeMatrixNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddComposeMatrixNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addcomposematrixfromrowvectorsnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ComposeMatrixFromRowVectorsNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddComposeMatrixFromRowVectorsNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddComposeMatrixFromRowVectorsNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addconstantnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ConstantNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddConstantNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddConstantNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addconstvecnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ConstVecNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddConstVecNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddConstVecNode(sIdentifier, eConfiguration, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addconstmatnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ConstMatNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddConstMatNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addEnumParameter("Configuration", "ImplicitNodeConfiguration", (Lib3MF_int32)(eConfiguration));
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddConstMatNode(sIdentifier, eConfiguration, sDisplayName, sTag);
 
 		*pNode = (IBase*)(pBaseNode);
 		if (pJournalEntry.get() != nullptr) {
@@ -17920,24 +21776,108 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_implicitnode_findinput;
 	if (sProcName == "lib3mf_implicitnode_findoutput") 
 		*ppProcAddress = (void*) &lib3mf_implicitnode_findoutput;
-	if (sProcName == "lib3mf_implicitnode_setconstant") 
-		*ppProcAddress = (void*) &lib3mf_implicitnode_setconstant;
-	if (sProcName == "lib3mf_implicitnode_getconstant") 
-		*ppProcAddress = (void*) &lib3mf_implicitnode_getconstant;
-	if (sProcName == "lib3mf_implicitnode_setvector") 
-		*ppProcAddress = (void*) &lib3mf_implicitnode_setvector;
-	if (sProcName == "lib3mf_implicitnode_getvector") 
-		*ppProcAddress = (void*) &lib3mf_implicitnode_getvector;
-	if (sProcName == "lib3mf_implicitnode_setmatrix") 
-		*ppProcAddress = (void*) &lib3mf_implicitnode_setmatrix;
-	if (sProcName == "lib3mf_implicitnode_getmatrix") 
-		*ppProcAddress = (void*) &lib3mf_implicitnode_getmatrix;
-	if (sProcName == "lib3mf_implicitnode_setresource") 
-		*ppProcAddress = (void*) &lib3mf_implicitnode_setresource;
-	if (sProcName == "lib3mf_implicitnode_getresource") 
-		*ppProcAddress = (void*) &lib3mf_implicitnode_getresource;
 	if (sProcName == "lib3mf_implicitnode_aretypesvalid") 
 		*ppProcAddress = (void*) &lib3mf_implicitnode_aretypesvalid;
+	if (sProcName == "lib3mf_oneinputnode_getinputa") 
+		*ppProcAddress = (void*) &lib3mf_oneinputnode_getinputa;
+	if (sProcName == "lib3mf_oneinputnode_getoutputresult") 
+		*ppProcAddress = (void*) &lib3mf_oneinputnode_getoutputresult;
+	if (sProcName == "lib3mf_resourceidnode_setresource") 
+		*ppProcAddress = (void*) &lib3mf_resourceidnode_setresource;
+	if (sProcName == "lib3mf_resourceidnode_getresource") 
+		*ppProcAddress = (void*) &lib3mf_resourceidnode_getresource;
+	if (sProcName == "lib3mf_resourceidnode_getoutputvalue") 
+		*ppProcAddress = (void*) &lib3mf_resourceidnode_getoutputvalue;
+	if (sProcName == "lib3mf_twoinputnode_getinputb") 
+		*ppProcAddress = (void*) &lib3mf_twoinputnode_getinputb;
+	if (sProcName == "lib3mf_selectnode_getinputb") 
+		*ppProcAddress = (void*) &lib3mf_selectnode_getinputb;
+	if (sProcName == "lib3mf_selectnode_getinputc") 
+		*ppProcAddress = (void*) &lib3mf_selectnode_getinputc;
+	if (sProcName == "lib3mf_selectnode_getinputd") 
+		*ppProcAddress = (void*) &lib3mf_selectnode_getinputd;
+	if (sProcName == "lib3mf_clampnode_getinputmin") 
+		*ppProcAddress = (void*) &lib3mf_clampnode_getinputmin;
+	if (sProcName == "lib3mf_clampnode_getinputmax") 
+		*ppProcAddress = (void*) &lib3mf_clampnode_getinputmax;
+	if (sProcName == "lib3mf_composevectornode_getinputx") 
+		*ppProcAddress = (void*) &lib3mf_composevectornode_getinputx;
+	if (sProcName == "lib3mf_composevectornode_getinputy") 
+		*ppProcAddress = (void*) &lib3mf_composevectornode_getinputy;
+	if (sProcName == "lib3mf_composevectornode_getinputz") 
+		*ppProcAddress = (void*) &lib3mf_composevectornode_getinputz;
+	if (sProcName == "lib3mf_composevectornode_getoutputvector") 
+		*ppProcAddress = (void*) &lib3mf_composevectornode_getoutputvector;
+	if (sProcName == "lib3mf_decomposevectornode_getinputvector") 
+		*ppProcAddress = (void*) &lib3mf_decomposevectornode_getinputvector;
+	if (sProcName == "lib3mf_decomposevectornode_getoutputx") 
+		*ppProcAddress = (void*) &lib3mf_decomposevectornode_getoutputx;
+	if (sProcName == "lib3mf_decomposevectornode_getoutputy") 
+		*ppProcAddress = (void*) &lib3mf_decomposevectornode_getoutputy;
+	if (sProcName == "lib3mf_decomposevectornode_getoutputz") 
+		*ppProcAddress = (void*) &lib3mf_decomposevectornode_getoutputz;
+	if (sProcName == "lib3mf_composematrixnode_getinputm00") 
+		*ppProcAddress = (void*) &lib3mf_composematrixnode_getinputm00;
+	if (sProcName == "lib3mf_composematrixnode_getinputm01") 
+		*ppProcAddress = (void*) &lib3mf_composematrixnode_getinputm01;
+	if (sProcName == "lib3mf_composematrixnode_getinputm02") 
+		*ppProcAddress = (void*) &lib3mf_composematrixnode_getinputm02;
+	if (sProcName == "lib3mf_composematrixnode_getinputm03") 
+		*ppProcAddress = (void*) &lib3mf_composematrixnode_getinputm03;
+	if (sProcName == "lib3mf_composematrixnode_getinputm10") 
+		*ppProcAddress = (void*) &lib3mf_composematrixnode_getinputm10;
+	if (sProcName == "lib3mf_composematrixnode_getinputm11") 
+		*ppProcAddress = (void*) &lib3mf_composematrixnode_getinputm11;
+	if (sProcName == "lib3mf_composematrixnode_getinputm12") 
+		*ppProcAddress = (void*) &lib3mf_composematrixnode_getinputm12;
+	if (sProcName == "lib3mf_composematrixnode_getinputm13") 
+		*ppProcAddress = (void*) &lib3mf_composematrixnode_getinputm13;
+	if (sProcName == "lib3mf_composematrixnode_getinputm20") 
+		*ppProcAddress = (void*) &lib3mf_composematrixnode_getinputm20;
+	if (sProcName == "lib3mf_composematrixnode_getinputm21") 
+		*ppProcAddress = (void*) &lib3mf_composematrixnode_getinputm21;
+	if (sProcName == "lib3mf_composematrixnode_getinputm22") 
+		*ppProcAddress = (void*) &lib3mf_composematrixnode_getinputm22;
+	if (sProcName == "lib3mf_composematrixnode_getinputm23") 
+		*ppProcAddress = (void*) &lib3mf_composematrixnode_getinputm23;
+	if (sProcName == "lib3mf_composematrixnode_getinputm30") 
+		*ppProcAddress = (void*) &lib3mf_composematrixnode_getinputm30;
+	if (sProcName == "lib3mf_composematrixnode_getinputm31") 
+		*ppProcAddress = (void*) &lib3mf_composematrixnode_getinputm31;
+	if (sProcName == "lib3mf_composematrixnode_getinputm32") 
+		*ppProcAddress = (void*) &lib3mf_composematrixnode_getinputm32;
+	if (sProcName == "lib3mf_composematrixnode_getinputm33") 
+		*ppProcAddress = (void*) &lib3mf_composematrixnode_getinputm33;
+	if (sProcName == "lib3mf_composematrixnode_getoutputmatrix") 
+		*ppProcAddress = (void*) &lib3mf_composematrixnode_getoutputmatrix;
+	if (sProcName == "lib3mf_composematrixfromrowvectorsnode_getinputrow0") 
+		*ppProcAddress = (void*) &lib3mf_composematrixfromrowvectorsnode_getinputrow0;
+	if (sProcName == "lib3mf_composematrixfromrowvectorsnode_getinputrow1") 
+		*ppProcAddress = (void*) &lib3mf_composematrixfromrowvectorsnode_getinputrow1;
+	if (sProcName == "lib3mf_composematrixfromrowvectorsnode_getinputrow2") 
+		*ppProcAddress = (void*) &lib3mf_composematrixfromrowvectorsnode_getinputrow2;
+	if (sProcName == "lib3mf_composematrixfromrowvectorsnode_getinputrow3") 
+		*ppProcAddress = (void*) &lib3mf_composematrixfromrowvectorsnode_getinputrow3;
+	if (sProcName == "lib3mf_composematrixfromrowvectorsnode_getoutputmatrix") 
+		*ppProcAddress = (void*) &lib3mf_composematrixfromrowvectorsnode_getoutputmatrix;
+	if (sProcName == "lib3mf_constantnode_setconstant") 
+		*ppProcAddress = (void*) &lib3mf_constantnode_setconstant;
+	if (sProcName == "lib3mf_constantnode_getconstant") 
+		*ppProcAddress = (void*) &lib3mf_constantnode_getconstant;
+	if (sProcName == "lib3mf_constantnode_getoutputvalue") 
+		*ppProcAddress = (void*) &lib3mf_constantnode_getoutputvalue;
+	if (sProcName == "lib3mf_constvecnode_setvector") 
+		*ppProcAddress = (void*) &lib3mf_constvecnode_setvector;
+	if (sProcName == "lib3mf_constvecnode_getvector") 
+		*ppProcAddress = (void*) &lib3mf_constvecnode_getvector;
+	if (sProcName == "lib3mf_constvecnode_getoutputvector") 
+		*ppProcAddress = (void*) &lib3mf_constvecnode_getoutputvector;
+	if (sProcName == "lib3mf_constmatnode_setmatrix") 
+		*ppProcAddress = (void*) &lib3mf_constmatnode_setmatrix;
+	if (sProcName == "lib3mf_constmatnode_getmatrix") 
+		*ppProcAddress = (void*) &lib3mf_constmatnode_getmatrix;
+	if (sProcName == "lib3mf_constmatnode_getoutputmatrix") 
+		*ppProcAddress = (void*) &lib3mf_constmatnode_getoutputmatrix;
 	if (sProcName == "lib3mf_nodeiterator_getcurrent") 
 		*ppProcAddress = (void*) &lib3mf_nodeiterator_getcurrent;
 	if (sProcName == "lib3mf_function_getdisplayname") 
@@ -17966,6 +21906,94 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_implicitfunction_setidentifier;
 	if (sProcName == "lib3mf_implicitfunction_addnode") 
 		*ppProcAddress = (void*) &lib3mf_implicitfunction_addnode;
+	if (sProcName == "lib3mf_implicitfunction_addsinnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addsinnode;
+	if (sProcName == "lib3mf_implicitfunction_addcosnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addcosnode;
+	if (sProcName == "lib3mf_implicitfunction_addtannode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addtannode;
+	if (sProcName == "lib3mf_implicitfunction_addarcsinnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addarcsinnode;
+	if (sProcName == "lib3mf_implicitfunction_addarccosnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addarccosnode;
+	if (sProcName == "lib3mf_implicitfunction_addarctan2node") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addarctan2node;
+	if (sProcName == "lib3mf_implicitfunction_addsinhnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addsinhnode;
+	if (sProcName == "lib3mf_implicitfunction_addcoshnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addcoshnode;
+	if (sProcName == "lib3mf_implicitfunction_addtanhnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addtanhnode;
+	if (sProcName == "lib3mf_implicitfunction_addroundnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addroundnode;
+	if (sProcName == "lib3mf_implicitfunction_addceilnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addceilnode;
+	if (sProcName == "lib3mf_implicitfunction_addfloornode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addfloornode;
+	if (sProcName == "lib3mf_implicitfunction_addsignnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addsignnode;
+	if (sProcName == "lib3mf_implicitfunction_addfractnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addfractnode;
+	if (sProcName == "lib3mf_implicitfunction_addabsnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addabsnode;
+	if (sProcName == "lib3mf_implicitfunction_addexpnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addexpnode;
+	if (sProcName == "lib3mf_implicitfunction_addlognode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addlognode;
+	if (sProcName == "lib3mf_implicitfunction_addlog2node") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addlog2node;
+	if (sProcName == "lib3mf_implicitfunction_addlog10node") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addlog10node;
+	if (sProcName == "lib3mf_implicitfunction_addlengthnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addlengthnode;
+	if (sProcName == "lib3mf_implicitfunction_addtransposenode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addtransposenode;
+	if (sProcName == "lib3mf_implicitfunction_inversenode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_inversenode;
+	if (sProcName == "lib3mf_implicitfunction_addsqrtnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addsqrtnode;
+	if (sProcName == "lib3mf_implicitfunction_addresourceidnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addresourceidnode;
+	if (sProcName == "lib3mf_implicitfunction_addadditionnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addadditionnode;
+	if (sProcName == "lib3mf_implicitfunction_addsubtractionnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addsubtractionnode;
+	if (sProcName == "lib3mf_implicitfunction_addmultiplicationnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addmultiplicationnode;
+	if (sProcName == "lib3mf_implicitfunction_adddivisionnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_adddivisionnode;
+	if (sProcName == "lib3mf_implicitfunction_adddotnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_adddotnode;
+	if (sProcName == "lib3mf_implicitfunction_addcrossnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addcrossnode;
+	if (sProcName == "lib3mf_implicitfunction_addmatvecmultiplicationnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addmatvecmultiplicationnode;
+	if (sProcName == "lib3mf_implicitfunction_addminnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addminnode;
+	if (sProcName == "lib3mf_implicitfunction_addmaxnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addmaxnode;
+	if (sProcName == "lib3mf_implicitfunction_addfmodnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addfmodnode;
+	if (sProcName == "lib3mf_implicitfunction_addpownode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addpownode;
+	if (sProcName == "lib3mf_implicitfunction_addselectnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addselectnode;
+	if (sProcName == "lib3mf_implicitfunction_addclampnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addclampnode;
+	if (sProcName == "lib3mf_implicitfunction_addcomposevectornode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addcomposevectornode;
+	if (sProcName == "lib3mf_implicitfunction_adddecomposevectornode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_adddecomposevectornode;
+	if (sProcName == "lib3mf_implicitfunction_addcomposematrixnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addcomposematrixnode;
+	if (sProcName == "lib3mf_implicitfunction_addcomposematrixfromrowvectorsnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addcomposematrixfromrowvectorsnode;
+	if (sProcName == "lib3mf_implicitfunction_addconstantnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addconstantnode;
+	if (sProcName == "lib3mf_implicitfunction_addconstvecnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addconstvecnode;
+	if (sProcName == "lib3mf_implicitfunction_addconstmatnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addconstmatnode;
 	if (sProcName == "lib3mf_implicitfunction_getnodes") 
 		*ppProcAddress = (void*) &lib3mf_implicitfunction_getnodes;
 	if (sProcName == "lib3mf_implicitfunction_removenode") 

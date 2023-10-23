@@ -2932,78 +2932,6 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_findinput(Lib3MF_ImplicitNode p
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_findoutput(Lib3MF_ImplicitNode pImplicitNode, const char * pIdentifier, Lib3MF_ImplicitPort * pOutput);
 
 /**
-* Sets the constant value of the node. Throws an error, if the node type not is of type Constant
-*
-* @param[in] pImplicitNode - ImplicitNode instance.
-* @param[in] dValue - the value
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_setconstant(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_double dValue);
-
-/**
-* Retrieves the constant value of the node. Throws an error, if the node type is not of type Constant
-*
-* @param[in] pImplicitNode - ImplicitNode instance.
-* @param[out] pValue - the value
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getconstant(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_double * pValue);
-
-/**
-* Sets the vector value of the node. Throws an error, if the node type is not of type ConstVec
-*
-* @param[in] pImplicitNode - ImplicitNode instance.
-* @param[in] pValue - the value
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_setvector(Lib3MF_ImplicitNode pImplicitNode, const sLib3MFVector * pValue);
-
-/**
-* Retrieves the vector value of the node. Throws an error, if the node type is not of type ConstVec
-*
-* @param[in] pImplicitNode - ImplicitNode instance.
-* @param[out] pValue - the value
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getvector(Lib3MF_ImplicitNode pImplicitNode, sLib3MFVector * pValue);
-
-/**
-* Sets the matrix value of the node. Throws an error, if the node type is not of type ConstMat
-*
-* @param[in] pImplicitNode - ImplicitNode instance.
-* @param[in] pValue - the value
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_setmatrix(Lib3MF_ImplicitNode pImplicitNode, const sLib3MFMatrix4x4 * pValue);
-
-/**
-* Retrieves the matrix value of the node. Throws an error, if the node type is not of type ConstMat
-*
-* @param[in] pImplicitNode - ImplicitNode instance.
-* @param[out] pValue - the matrix
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getmatrix(Lib3MF_ImplicitNode pImplicitNode, sLib3MFMatrix4x4 * pValue);
-
-/**
-* Sets the Resource that the resourceid attribute of the node will point to. Throws an error, if the node type is not of type Resource
-*
-* @param[in] pImplicitNode - ImplicitNode instance.
-* @param[in] pResource - the resource
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_setresource(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Resource pResource);
-
-/**
-* Retrieves the resource of the node. Throws an error, if the node type is not of type Resource
-*
-* @param[in] pImplicitNode - ImplicitNode instance.
-* @param[out] pResource - the resource
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getresource(Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Resource * pResource);
-
-/**
 * Checks if the types of the input and output ports are valid for the node type
 *
 * @param[in] pImplicitNode - ImplicitNode instance.
@@ -3011,6 +2939,644 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_getresource(Lib3MF_ImplicitNode
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitnode_aretypesvalid(Lib3MF_ImplicitNode pImplicitNode, bool * pValid);
+
+/*************************************************************************************************************************
+ Class definition for OneInputNode
+**************************************************************************************************************************/
+
+/**
+* Retrieves the input
+*
+* @param[in] pOneInputNode - OneInputNode instance.
+* @param[out] pInput - the input
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_oneinputnode_getinputa(Lib3MF_OneInputNode pOneInputNode, Lib3MF_ImplicitPort * pInput);
+
+/**
+* Retrieves the output
+*
+* @param[in] pOneInputNode - OneInputNode instance.
+* @param[out] pResult - the output
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_oneinputnode_getoutputresult(Lib3MF_OneInputNode pOneInputNode, Lib3MF_ImplicitPort * pResult);
+
+/*************************************************************************************************************************
+ Class definition for SinNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for CosNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for TanNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for ArcSinNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for ArcCosNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for ArcTanNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for SinhNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for CoshNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for TanhNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for RoundNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for CeilNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for FloorNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for SignNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for FractNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for AbsNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for ExpNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for LogNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for Log2Node
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for Log10Node
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for LengthNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for TransposeNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for InverseNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for SqrtNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for ResourceIdNode
+**************************************************************************************************************************/
+
+/**
+* Sets the Resource that the resourceid attribute of the node will point to
+*
+* @param[in] pResourceIdNode - ResourceIdNode instance.
+* @param[in] pResource - the resource
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_resourceidnode_setresource(Lib3MF_ResourceIdNode pResourceIdNode, Lib3MF_Resource pResource);
+
+/**
+* Retrieves the resource of the node
+*
+* @param[in] pResourceIdNode - ResourceIdNode instance.
+* @param[out] pResource - the resource
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_resourceidnode_getresource(Lib3MF_ResourceIdNode pResourceIdNode, Lib3MF_Resource * pResource);
+
+/**
+* Retrieves the output
+*
+* @param[in] pResourceIdNode - ResourceIdNode instance.
+* @param[out] pValue - the output
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_resourceidnode_getoutputvalue(Lib3MF_ResourceIdNode pResourceIdNode, Lib3MF_ImplicitPort * pValue);
+
+/*************************************************************************************************************************
+ Class definition for TwoInputNode
+**************************************************************************************************************************/
+
+/**
+* Retrieves the second input
+*
+* @param[in] pTwoInputNode - TwoInputNode instance.
+* @param[out] pB - the second input
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_twoinputnode_getinputb(Lib3MF_TwoInputNode pTwoInputNode, Lib3MF_ImplicitPort * pB);
+
+/*************************************************************************************************************************
+ Class definition for AdditionNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for SubtractionNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for MultiplicationNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for DivisionNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for DotNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for CrossNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for ArcTan2Node
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for MatVecMultiplicationNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for MinNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for MaxNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for FmodNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for PowNode
+**************************************************************************************************************************/
+
+/*************************************************************************************************************************
+ Class definition for SelectNode
+**************************************************************************************************************************/
+
+/**
+* Retrieves the second input
+*
+* @param[in] pSelectNode - SelectNode instance.
+* @param[out] pB - the second input
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_selectnode_getinputb(Lib3MF_SelectNode pSelectNode, Lib3MF_ImplicitPort * pB);
+
+/**
+* Retrieves the third input
+*
+* @param[in] pSelectNode - SelectNode instance.
+* @param[out] pC - the third input
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_selectnode_getinputc(Lib3MF_SelectNode pSelectNode, Lib3MF_ImplicitPort * pC);
+
+/**
+* Retrieves the fourth input
+*
+* @param[in] pSelectNode - SelectNode instance.
+* @param[out] pD - the fourth input
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_selectnode_getinputd(Lib3MF_SelectNode pSelectNode, Lib3MF_ImplicitPort * pD);
+
+/*************************************************************************************************************************
+ Class definition for ClampNode
+**************************************************************************************************************************/
+
+/**
+* Retrieves the input for the lower limit
+*
+* @param[in] pClampNode - ClampNode instance.
+* @param[out] pMin - the input for the lower limit
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_clampnode_getinputmin(Lib3MF_ClampNode pClampNode, Lib3MF_ImplicitPort * pMin);
+
+/**
+* Retrieves the input for the upper limit
+*
+* @param[in] pClampNode - ClampNode instance.
+* @param[out] pMax - the input for the upper limit
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_clampnode_getinputmax(Lib3MF_ClampNode pClampNode, Lib3MF_ImplicitPort * pMax);
+
+/*************************************************************************************************************************
+ Class definition for ComposeVectorNode
+**************************************************************************************************************************/
+
+/**
+* Retrieves the input for the x component
+*
+* @param[in] pComposeVectorNode - ComposeVectorNode instance.
+* @param[out] pX - the input for the x component
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composevectornode_getinputx(Lib3MF_ComposeVectorNode pComposeVectorNode, Lib3MF_ImplicitPort * pX);
+
+/**
+* Retrieves the input for the y component
+*
+* @param[in] pComposeVectorNode - ComposeVectorNode instance.
+* @param[out] pY - the input for the y component
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composevectornode_getinputy(Lib3MF_ComposeVectorNode pComposeVectorNode, Lib3MF_ImplicitPort * pY);
+
+/**
+* Retrieves the input for the z component
+*
+* @param[in] pComposeVectorNode - ComposeVectorNode instance.
+* @param[out] pZ - the input for the z component
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composevectornode_getinputz(Lib3MF_ComposeVectorNode pComposeVectorNode, Lib3MF_ImplicitPort * pZ);
+
+/**
+* Retrieves the output
+*
+* @param[in] pComposeVectorNode - ComposeVectorNode instance.
+* @param[out] pVector - the output
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composevectornode_getoutputvector(Lib3MF_ComposeVectorNode pComposeVectorNode, Lib3MF_ImplicitPort * pVector);
+
+/*************************************************************************************************************************
+ Class definition for DecomposeVectorNode
+**************************************************************************************************************************/
+
+/**
+* Retrieves the input
+*
+* @param[in] pDecomposeVectorNode - DecomposeVectorNode instance.
+* @param[out] pVector - the input
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_decomposevectornode_getinputvector(Lib3MF_DecomposeVectorNode pDecomposeVectorNode, Lib3MF_ImplicitPort * pVector);
+
+/**
+* Retrieves the output for the x component
+*
+* @param[in] pDecomposeVectorNode - DecomposeVectorNode instance.
+* @param[out] pX - the output for the x component
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_decomposevectornode_getoutputx(Lib3MF_DecomposeVectorNode pDecomposeVectorNode, Lib3MF_ImplicitPort * pX);
+
+/**
+* Retrieves the output for the y component
+*
+* @param[in] pDecomposeVectorNode - DecomposeVectorNode instance.
+* @param[out] pY - the output for the y component
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_decomposevectornode_getoutputy(Lib3MF_DecomposeVectorNode pDecomposeVectorNode, Lib3MF_ImplicitPort * pY);
+
+/**
+* Retrieves the output for the z component
+*
+* @param[in] pDecomposeVectorNode - DecomposeVectorNode instance.
+* @param[out] pZ - the output for the z component
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_decomposevectornode_getoutputz(Lib3MF_DecomposeVectorNode pDecomposeVectorNode, Lib3MF_ImplicitPort * pZ);
+
+/*************************************************************************************************************************
+ Class definition for ComposeMatrixNode
+**************************************************************************************************************************/
+
+/**
+* Retrieves the input for the element 0 0
+*
+* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+* @param[out] pM00 - the input for the m00 element
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm00(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM00);
+
+/**
+* Retrieves the input for the element 0 1
+*
+* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+* @param[out] pM01 - the input for the m01 element
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm01(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM01);
+
+/**
+* Retrieves the input for the element 0 2
+*
+* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+* @param[out] pM02 - the input for the m02 element
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm02(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM02);
+
+/**
+* Retrieves the input for the element 0 3
+*
+* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+* @param[out] pM03 - the input for the m03 element
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm03(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM03);
+
+/**
+* Retrieves the input for the element 1 0
+*
+* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+* @param[out] pM10 - the input for the m10 element
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm10(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM10);
+
+/**
+* Retrieves the input for the element 1 1
+*
+* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+* @param[out] pM11 - the input for the m11 element
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm11(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM11);
+
+/**
+* Retrieves the input for the element 1 2
+*
+* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+* @param[out] pM12 - the input for the m12 element
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm12(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM12);
+
+/**
+* Retrieves the input for the element 1 3
+*
+* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+* @param[out] pM13 - the input for the m3 element
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm13(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM13);
+
+/**
+* Retrieves the input for the element 2 0
+*
+* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+* @param[out] pM20 - the input for the m2 element
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm20(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM20);
+
+/**
+* Retrieves the input for the element 2 1
+*
+* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+* @param[out] pM21 - 
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm21(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM21);
+
+/**
+* Retrieves the input for the element 2 2
+*
+* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+* @param[out] pM22 - the input for the m22 element
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm22(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM22);
+
+/**
+* Retrieves the input for the element 2 3
+*
+* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+* @param[out] pM23 - the input for the m23 element
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm23(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM23);
+
+/**
+* Retrieves the input for the element 3 0
+*
+* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+* @param[out] pM30 - the input for the m30 element
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm30(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM30);
+
+/**
+* Retrieves the input for the element 3 1
+*
+* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+* @param[out] pM31 - the input for the m31 element
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm31(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM31);
+
+/**
+* Retrieves the input for the element 3 2
+*
+* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+* @param[out] pM32 - the input for the m32 element
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm32(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM32);
+
+/**
+* Retrieves the input for the element 3 3
+*
+* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+* @param[out] pM33 - the input for the m33 element
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm33(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM33);
+
+/**
+* Retrieves the output
+*
+* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+* @param[out] pMatrix - the output
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getoutputmatrix(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pMatrix);
+
+/*************************************************************************************************************************
+ Class definition for ComposeMatrixFromRowVectorsNode
+**************************************************************************************************************************/
+
+/**
+* Retrieves the input for the first row
+*
+* @param[in] pComposeMatrixFromRowVectorsNode - ComposeMatrixFromRowVectorsNode instance.
+* @param[out] pRow0 - the input for the first row
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixfromrowvectorsnode_getinputrow0(Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow0);
+
+/**
+* Retrieves the input for the second row
+*
+* @param[in] pComposeMatrixFromRowVectorsNode - ComposeMatrixFromRowVectorsNode instance.
+* @param[out] pRow1 - the input for the second row
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixfromrowvectorsnode_getinputrow1(Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow1);
+
+/**
+* Retrieves the input for the third row
+*
+* @param[in] pComposeMatrixFromRowVectorsNode - ComposeMatrixFromRowVectorsNode instance.
+* @param[out] pRow2 - the input for the third row
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixfromrowvectorsnode_getinputrow2(Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow2);
+
+/**
+* Retrieves the input for the fourth row
+*
+* @param[in] pComposeMatrixFromRowVectorsNode - ComposeMatrixFromRowVectorsNode instance.
+* @param[out] pRow3 - the input for the fourth row
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixfromrowvectorsnode_getinputrow3(Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow3);
+
+/**
+* Retrieves the output
+*
+* @param[in] pComposeMatrixFromRowVectorsNode - ComposeMatrixFromRowVectorsNode instance.
+* @param[out] pMatrix - the output
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixfromrowvectorsnode_getoutputmatrix(Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pMatrix);
+
+/*************************************************************************************************************************
+ Class definition for ConstantNode
+**************************************************************************************************************************/
+
+/**
+* Sets the constant value of the node
+*
+* @param[in] pConstantNode - ConstantNode instance.
+* @param[in] dValue - the value
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_constantnode_setconstant(Lib3MF_ConstantNode pConstantNode, Lib3MF_double dValue);
+
+/**
+* Retrieves the constant value of the node
+*
+* @param[in] pConstantNode - ConstantNode instance.
+* @param[out] pValue - the value
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_constantnode_getconstant(Lib3MF_ConstantNode pConstantNode, Lib3MF_double * pValue);
+
+/**
+* Retrieves the output
+*
+* @param[in] pConstantNode - ConstantNode instance.
+* @param[out] pValue - the output
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_constantnode_getoutputvalue(Lib3MF_ConstantNode pConstantNode, Lib3MF_ImplicitPort * pValue);
+
+/*************************************************************************************************************************
+ Class definition for ConstVecNode
+**************************************************************************************************************************/
+
+/**
+* Sets the vector value of the node
+*
+* @param[in] pConstVecNode - ConstVecNode instance.
+* @param[in] pValue - the value
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_constvecnode_setvector(Lib3MF_ConstVecNode pConstVecNode, const sLib3MFVector * pValue);
+
+/**
+* Retrieves the vector value of the node
+*
+* @param[in] pConstVecNode - ConstVecNode instance.
+* @param[out] pValue - the value
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_constvecnode_getvector(Lib3MF_ConstVecNode pConstVecNode, sLib3MFVector * pValue);
+
+/**
+* Retrieves the output
+*
+* @param[in] pConstVecNode - ConstVecNode instance.
+* @param[out] pVector - the output
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_constvecnode_getoutputvector(Lib3MF_ConstVecNode pConstVecNode, Lib3MF_ImplicitPort * pVector);
+
+/*************************************************************************************************************************
+ Class definition for ConstMatNode
+**************************************************************************************************************************/
+
+/**
+* Sets the matrix value of the node
+*
+* @param[in] pConstMatNode - ConstMatNode instance.
+* @param[in] pValue - the value
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_constmatnode_setmatrix(Lib3MF_ConstMatNode pConstMatNode, const sLib3MFMatrix4x4 * pValue);
+
+/**
+* Retrieves the matrix value of the node
+*
+* @param[in] pConstMatNode - ConstMatNode instance.
+* @param[out] pValue - the matrix
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_constmatnode_getmatrix(Lib3MF_ConstMatNode pConstMatNode, sLib3MFMatrix4x4 * pValue);
+
+/**
+* Retrieves the output
+*
+* @param[in] pConstMatNode - ConstMatNode instance.
+* @param[out] pMatrix - the output
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_constmatnode_getoutputmatrix(Lib3MF_ConstMatNode pConstMatNode, Lib3MF_ImplicitPort * pMatrix);
 
 /*************************************************************************************************************************
  Class definition for NodeIterator
@@ -3166,6 +3732,578 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_setidentifier(Lib3MF_Implic
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addnode(Lib3MF_ImplicitFunction pImplicitFunction, eLib3MFImplicitNodeType eNodeType, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_ImplicitNode * pNode);
+
+/**
+* Add a SinNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addsinnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_SinNode * pNode);
+
+/**
+* Add a CosNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addcosnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_CosNode * pNode);
+
+/**
+* Add a TanNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addtannode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_TanNode * pNode);
+
+/**
+* Add a ArcSinNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addarcsinnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ArcSinNode * pNode);
+
+/**
+* Add a ArcCosNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addarccosnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ArcCosNode * pNode);
+
+/**
+* Add a ArcTan2Node
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addarctan2node(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ArcTan2Node * pNode);
+
+/**
+* Add a SinhNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addsinhnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_SinhNode * pNode);
+
+/**
+* Add a CoshNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addcoshnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_CoshNode * pNode);
+
+/**
+* Add a TanhNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addtanhnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_TanhNode * pNode);
+
+/**
+* Add a RoundNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addroundnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_RoundNode * pNode);
+
+/**
+* Add a CeilNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addceilnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_CeilNode * pNode);
+
+/**
+* Add a FloorNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addfloornode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_FloorNode * pNode);
+
+/**
+* Add a SignNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addsignnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_SignNode * pNode);
+
+/**
+* Add a FractNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addfractnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_FractNode * pNode);
+
+/**
+* Add a AbsNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addabsnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_AbsNode * pNode);
+
+/**
+* Add a ExpNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addexpnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ExpNode * pNode);
+
+/**
+* Add a LogNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addlognode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_LogNode * pNode);
+
+/**
+* Add a Log2Node
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addlog2node(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_Log2Node * pNode);
+
+/**
+* Add a Log10Node
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addlog10node(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_Log10Node * pNode);
+
+/**
+* Add a LengthNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addlengthnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_LengthNode * pNode);
+
+/**
+* Add a TransposeNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addtransposenode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_TransposeNode * pNode);
+
+/**
+* Add a InverseNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_inversenode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_InverseNode * pNode);
+
+/**
+* Add a SqrtNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addsqrtnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_SqrtNode * pNode);
+
+/**
+* Add a ResourceIdNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addresourceidnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ResourceIdNode * pNode);
+
+/**
+* Add an AdditionNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addadditionnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_AdditionNode * pNode);
+
+/**
+* Add a SubtractionNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addsubtractionnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_SubtractionNode * pNode);
+
+/**
+* Add a MultiplicationNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addmultiplicationnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_MultiplicationNode * pNode);
+
+/**
+* Add a DivisionNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_adddivisionnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_DivisionNode * pNode);
+
+/**
+* Add a DotNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_adddotnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_DotNode * pNode);
+
+/**
+* Add a CrossNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addcrossnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_CrossNode * pNode);
+
+/**
+* Add a MatVecMultiplicationNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addmatvecmultiplicationnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_MatVecMultiplicationNode * pNode);
+
+/**
+* Add a MinNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addminnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_MinNode * pNode);
+
+/**
+* Add a MaxNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addmaxnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_MaxNode * pNode);
+
+/**
+* Add a FmodNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addfmodnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_FmodNode * pNode);
+
+/**
+* Add a PowNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addpownode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_PowNode * pNode);
+
+/**
+* Add a SelectNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addselectnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_SelectNode * pNode);
+
+/**
+* Add a ClampNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addclampnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ClampNode * pNode);
+
+/**
+* Add a ComposeVectorNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addcomposevectornode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ComposeVectorNode * pNode);
+
+/**
+* Add a DecomposeVectorNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_adddecomposevectornode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_DecomposeVectorNode * pNode);
+
+/**
+* Add a ComposeMatrixNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addcomposematrixnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ComposeMatrixNode * pNode);
+
+/**
+* Add a ComposeMatrixFromRowVectorsNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addcomposematrixfromrowvectorsnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ComposeMatrixFromRowVectorsNode * pNode);
+
+/**
+* Add a ConstantNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addconstantnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ConstantNode * pNode);
+
+/**
+* Add a ConstVecNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addconstvecnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ConstVecNode * pNode);
+
+/**
+* Add a ConstMatNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addconstmatnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ConstMatNode * pNode);
 
 /**
 * Retrieves the nodes

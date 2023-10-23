@@ -511,6 +511,53 @@ type
 	TLib3MFIterator = class;
 	TLib3MFImplicitPortIterator = class;
 	TLib3MFImplicitNode = class;
+	TLib3MFOneInputNode = class;
+	TLib3MFSinNode = class;
+	TLib3MFCosNode = class;
+	TLib3MFTanNode = class;
+	TLib3MFArcSinNode = class;
+	TLib3MFArcCosNode = class;
+	TLib3MFArcTanNode = class;
+	TLib3MFSinhNode = class;
+	TLib3MFCoshNode = class;
+	TLib3MFTanhNode = class;
+	TLib3MFRoundNode = class;
+	TLib3MFCeilNode = class;
+	TLib3MFFloorNode = class;
+	TLib3MFSignNode = class;
+	TLib3MFFractNode = class;
+	TLib3MFAbsNode = class;
+	TLib3MFExpNode = class;
+	TLib3MFLogNode = class;
+	TLib3MFLog2Node = class;
+	TLib3MFLog10Node = class;
+	TLib3MFLengthNode = class;
+	TLib3MFTransposeNode = class;
+	TLib3MFInverseNode = class;
+	TLib3MFSqrtNode = class;
+	TLib3MFResourceIdNode = class;
+	TLib3MFTwoInputNode = class;
+	TLib3MFAdditionNode = class;
+	TLib3MFSubtractionNode = class;
+	TLib3MFMultiplicationNode = class;
+	TLib3MFDivisionNode = class;
+	TLib3MFDotNode = class;
+	TLib3MFCrossNode = class;
+	TLib3MFArcTan2Node = class;
+	TLib3MFMatVecMultiplicationNode = class;
+	TLib3MFMinNode = class;
+	TLib3MFMaxNode = class;
+	TLib3MFFmodNode = class;
+	TLib3MFPowNode = class;
+	TLib3MFSelectNode = class;
+	TLib3MFClampNode = class;
+	TLib3MFComposeVectorNode = class;
+	TLib3MFDecomposeVectorNode = class;
+	TLib3MFComposeMatrixNode = class;
+	TLib3MFComposeMatrixFromRowVectorsNode = class;
+	TLib3MFConstantNode = class;
+	TLib3MFConstVecNode = class;
+	TLib3MFConstMatNode = class;
 	TLib3MFNodeIterator = class;
 	TLib3MFFunction = class;
 	TLib3MFImplicitFunction = class;
@@ -3452,78 +3499,6 @@ type
 	TLib3MFImplicitNode_FindOutputFunc = function(pImplicitNode: TLib3MFHandle; const pIdentifier: PAnsiChar; out pOutput: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
-	* Sets the constant value of the node. Throws an error, if the node type not is of type Constant
-	*
-	* @param[in] pImplicitNode - ImplicitNode instance.
-	* @param[in] dValue - the value
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImplicitNode_SetConstantFunc = function(pImplicitNode: TLib3MFHandle; const dValue: Double): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the constant value of the node. Throws an error, if the node type is not of type Constant
-	*
-	* @param[in] pImplicitNode - ImplicitNode instance.
-	* @param[out] pValue - the value
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImplicitNode_GetConstantFunc = function(pImplicitNode: TLib3MFHandle; out pValue: Double): TLib3MFResult; cdecl;
-	
-	(**
-	* Sets the vector value of the node. Throws an error, if the node type is not of type ConstVec
-	*
-	* @param[in] pImplicitNode - ImplicitNode instance.
-	* @param[in] pValue - the value
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImplicitNode_SetVectorFunc = function(pImplicitNode: TLib3MFHandle; const pValue: PLib3MFVector): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the vector value of the node. Throws an error, if the node type is not of type ConstVec
-	*
-	* @param[in] pImplicitNode - ImplicitNode instance.
-	* @param[out] pValue - the value
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImplicitNode_GetVectorFunc = function(pImplicitNode: TLib3MFHandle; pValue: PLib3MFVector): TLib3MFResult; cdecl;
-	
-	(**
-	* Sets the matrix value of the node. Throws an error, if the node type is not of type ConstMat
-	*
-	* @param[in] pImplicitNode - ImplicitNode instance.
-	* @param[in] pValue - the value
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImplicitNode_SetMatrixFunc = function(pImplicitNode: TLib3MFHandle; const pValue: PLib3MFMatrix4x4): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the matrix value of the node. Throws an error, if the node type is not of type ConstMat
-	*
-	* @param[in] pImplicitNode - ImplicitNode instance.
-	* @param[out] pValue - the matrix
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImplicitNode_GetMatrixFunc = function(pImplicitNode: TLib3MFHandle; pValue: PLib3MFMatrix4x4): TLib3MFResult; cdecl;
-	
-	(**
-	* Sets the Resource that the resourceid attribute of the node will point to. Throws an error, if the node type is not of type Resource
-	*
-	* @param[in] pImplicitNode - ImplicitNode instance.
-	* @param[in] pResource - the resource
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImplicitNode_SetResourceFunc = function(pImplicitNode: TLib3MFHandle; const pResource: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the resource of the node. Throws an error, if the node type is not of type Resource
-	*
-	* @param[in] pImplicitNode - ImplicitNode instance.
-	* @param[out] pResource - the resource
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImplicitNode_GetResourceFunc = function(pImplicitNode: TLib3MFHandle; out pResource: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
 	* Checks if the types of the input and output ports are valid for the node type
 	*
 	* @param[in] pImplicitNode - ImplicitNode instance.
@@ -3531,6 +3506,691 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFImplicitNode_AreTypesValidFunc = function(pImplicitNode: TLib3MFHandle; out pValid: Byte): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for OneInputNode
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the input
+	*
+	* @param[in] pOneInputNode - OneInputNode instance.
+	* @param[out] pInput - the input
+	* @return error code or 0 (success)
+	*)
+	TLib3MFOneInputNode_GetInputAFunc = function(pOneInputNode: TLib3MFHandle; out pInput: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the output
+	*
+	* @param[in] pOneInputNode - OneInputNode instance.
+	* @param[out] pResult - the output
+	* @return error code or 0 (success)
+	*)
+	TLib3MFOneInputNode_GetOutputResultFunc = function(pOneInputNode: TLib3MFHandle; out pResult: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for SinNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for CosNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for TanNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for ArcSinNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for ArcCosNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for ArcTanNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for SinhNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for CoshNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for TanhNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for RoundNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for CeilNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for FloorNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for SignNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for FractNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for AbsNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for ExpNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for LogNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for Log2Node
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for Log10Node
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for LengthNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for TransposeNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for InverseNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for SqrtNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for ResourceIdNode
+**************************************************************************************************************************)
+
+	(**
+	* Sets the Resource that the resourceid attribute of the node will point to
+	*
+	* @param[in] pResourceIdNode - ResourceIdNode instance.
+	* @param[in] pResource - the resource
+	* @return error code or 0 (success)
+	*)
+	TLib3MFResourceIdNode_SetResourceFunc = function(pResourceIdNode: TLib3MFHandle; const pResource: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the resource of the node
+	*
+	* @param[in] pResourceIdNode - ResourceIdNode instance.
+	* @param[out] pResource - the resource
+	* @return error code or 0 (success)
+	*)
+	TLib3MFResourceIdNode_GetResourceFunc = function(pResourceIdNode: TLib3MFHandle; out pResource: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the output
+	*
+	* @param[in] pResourceIdNode - ResourceIdNode instance.
+	* @param[out] pValue - the output
+	* @return error code or 0 (success)
+	*)
+	TLib3MFResourceIdNode_GetOutputValueFunc = function(pResourceIdNode: TLib3MFHandle; out pValue: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for TwoInputNode
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the second input
+	*
+	* @param[in] pTwoInputNode - TwoInputNode instance.
+	* @param[out] pB - the second input
+	* @return error code or 0 (success)
+	*)
+	TLib3MFTwoInputNode_GetInputBFunc = function(pTwoInputNode: TLib3MFHandle; out pB: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for AdditionNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for SubtractionNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for MultiplicationNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for DivisionNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for DotNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for CrossNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for ArcTan2Node
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for MatVecMultiplicationNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for MinNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for MaxNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for FmodNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for PowNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for SelectNode
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the second input
+	*
+	* @param[in] pSelectNode - SelectNode instance.
+	* @param[out] pB - the second input
+	* @return error code or 0 (success)
+	*)
+	TLib3MFSelectNode_GetInputBFunc = function(pSelectNode: TLib3MFHandle; out pB: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the third input
+	*
+	* @param[in] pSelectNode - SelectNode instance.
+	* @param[out] pC - the third input
+	* @return error code or 0 (success)
+	*)
+	TLib3MFSelectNode_GetInputCFunc = function(pSelectNode: TLib3MFHandle; out pC: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the fourth input
+	*
+	* @param[in] pSelectNode - SelectNode instance.
+	* @param[out] pD - the fourth input
+	* @return error code or 0 (success)
+	*)
+	TLib3MFSelectNode_GetInputDFunc = function(pSelectNode: TLib3MFHandle; out pD: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for ClampNode
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the input for the lower limit
+	*
+	* @param[in] pClampNode - ClampNode instance.
+	* @param[out] pMin - the input for the lower limit
+	* @return error code or 0 (success)
+	*)
+	TLib3MFClampNode_GetInputMinFunc = function(pClampNode: TLib3MFHandle; out pMin: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the upper limit
+	*
+	* @param[in] pClampNode - ClampNode instance.
+	* @param[out] pMax - the input for the upper limit
+	* @return error code or 0 (success)
+	*)
+	TLib3MFClampNode_GetInputMaxFunc = function(pClampNode: TLib3MFHandle; out pMax: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for ComposeVectorNode
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the input for the x component
+	*
+	* @param[in] pComposeVectorNode - ComposeVectorNode instance.
+	* @param[out] pX - the input for the x component
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeVectorNode_GetInputXFunc = function(pComposeVectorNode: TLib3MFHandle; out pX: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the y component
+	*
+	* @param[in] pComposeVectorNode - ComposeVectorNode instance.
+	* @param[out] pY - the input for the y component
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeVectorNode_GetInputYFunc = function(pComposeVectorNode: TLib3MFHandle; out pY: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the z component
+	*
+	* @param[in] pComposeVectorNode - ComposeVectorNode instance.
+	* @param[out] pZ - the input for the z component
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeVectorNode_GetInputZFunc = function(pComposeVectorNode: TLib3MFHandle; out pZ: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the output
+	*
+	* @param[in] pComposeVectorNode - ComposeVectorNode instance.
+	* @param[out] pVector - the output
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeVectorNode_GetOutputVectorFunc = function(pComposeVectorNode: TLib3MFHandle; out pVector: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for DecomposeVectorNode
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the input
+	*
+	* @param[in] pDecomposeVectorNode - DecomposeVectorNode instance.
+	* @param[out] pVector - the input
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDecomposeVectorNode_GetInputVectorFunc = function(pDecomposeVectorNode: TLib3MFHandle; out pVector: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the output for the x component
+	*
+	* @param[in] pDecomposeVectorNode - DecomposeVectorNode instance.
+	* @param[out] pX - the output for the x component
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDecomposeVectorNode_GetOutputXFunc = function(pDecomposeVectorNode: TLib3MFHandle; out pX: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the output for the y component
+	*
+	* @param[in] pDecomposeVectorNode - DecomposeVectorNode instance.
+	* @param[out] pY - the output for the y component
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDecomposeVectorNode_GetOutputYFunc = function(pDecomposeVectorNode: TLib3MFHandle; out pY: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the output for the z component
+	*
+	* @param[in] pDecomposeVectorNode - DecomposeVectorNode instance.
+	* @param[out] pZ - the output for the z component
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDecomposeVectorNode_GetOutputZFunc = function(pDecomposeVectorNode: TLib3MFHandle; out pZ: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for ComposeMatrixNode
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the input for the element 0 0
+	*
+	* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+	* @param[out] pM00 - the input for the m00 element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixNode_GetInputM00Func = function(pComposeMatrixNode: TLib3MFHandle; out pM00: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the element 0 1
+	*
+	* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+	* @param[out] pM01 - the input for the m01 element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixNode_GetInputM01Func = function(pComposeMatrixNode: TLib3MFHandle; out pM01: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the element 0 2
+	*
+	* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+	* @param[out] pM02 - the input for the m02 element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixNode_GetInputM02Func = function(pComposeMatrixNode: TLib3MFHandle; out pM02: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the element 0 3
+	*
+	* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+	* @param[out] pM03 - the input for the m03 element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixNode_GetInputM03Func = function(pComposeMatrixNode: TLib3MFHandle; out pM03: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the element 1 0
+	*
+	* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+	* @param[out] pM10 - the input for the m10 element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixNode_GetInputM10Func = function(pComposeMatrixNode: TLib3MFHandle; out pM10: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the element 1 1
+	*
+	* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+	* @param[out] pM11 - the input for the m11 element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixNode_GetInputM11Func = function(pComposeMatrixNode: TLib3MFHandle; out pM11: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the element 1 2
+	*
+	* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+	* @param[out] pM12 - the input for the m12 element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixNode_GetInputM12Func = function(pComposeMatrixNode: TLib3MFHandle; out pM12: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the element 1 3
+	*
+	* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+	* @param[out] pM13 - the input for the m3 element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixNode_GetInputM13Func = function(pComposeMatrixNode: TLib3MFHandle; out pM13: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the element 2 0
+	*
+	* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+	* @param[out] pM20 - the input for the m2 element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixNode_GetInputM20Func = function(pComposeMatrixNode: TLib3MFHandle; out pM20: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the element 2 1
+	*
+	* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+	* @param[out] pM21 - 
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixNode_GetInputM21Func = function(pComposeMatrixNode: TLib3MFHandle; out pM21: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the element 2 2
+	*
+	* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+	* @param[out] pM22 - the input for the m22 element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixNode_GetInputM22Func = function(pComposeMatrixNode: TLib3MFHandle; out pM22: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the element 2 3
+	*
+	* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+	* @param[out] pM23 - the input for the m23 element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixNode_GetInputM23Func = function(pComposeMatrixNode: TLib3MFHandle; out pM23: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the element 3 0
+	*
+	* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+	* @param[out] pM30 - the input for the m30 element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixNode_GetInputM30Func = function(pComposeMatrixNode: TLib3MFHandle; out pM30: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the element 3 1
+	*
+	* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+	* @param[out] pM31 - the input for the m31 element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixNode_GetInputM31Func = function(pComposeMatrixNode: TLib3MFHandle; out pM31: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the element 3 2
+	*
+	* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+	* @param[out] pM32 - the input for the m32 element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixNode_GetInputM32Func = function(pComposeMatrixNode: TLib3MFHandle; out pM32: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the element 3 3
+	*
+	* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+	* @param[out] pM33 - the input for the m33 element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixNode_GetInputM33Func = function(pComposeMatrixNode: TLib3MFHandle; out pM33: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the output
+	*
+	* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
+	* @param[out] pMatrix - the output
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixNode_GetOutputMatrixFunc = function(pComposeMatrixNode: TLib3MFHandle; out pMatrix: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for ComposeMatrixFromRowVectorsNode
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the input for the first row
+	*
+	* @param[in] pComposeMatrixFromRowVectorsNode - ComposeMatrixFromRowVectorsNode instance.
+	* @param[out] pRow0 - the input for the first row
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Func = function(pComposeMatrixFromRowVectorsNode: TLib3MFHandle; out pRow0: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the second row
+	*
+	* @param[in] pComposeMatrixFromRowVectorsNode - ComposeMatrixFromRowVectorsNode instance.
+	* @param[out] pRow1 - the input for the second row
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Func = function(pComposeMatrixFromRowVectorsNode: TLib3MFHandle; out pRow1: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the third row
+	*
+	* @param[in] pComposeMatrixFromRowVectorsNode - ComposeMatrixFromRowVectorsNode instance.
+	* @param[out] pRow2 - the input for the third row
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Func = function(pComposeMatrixFromRowVectorsNode: TLib3MFHandle; out pRow2: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the fourth row
+	*
+	* @param[in] pComposeMatrixFromRowVectorsNode - ComposeMatrixFromRowVectorsNode instance.
+	* @param[out] pRow3 - the input for the fourth row
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Func = function(pComposeMatrixFromRowVectorsNode: TLib3MFHandle; out pRow3: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the output
+	*
+	* @param[in] pComposeMatrixFromRowVectorsNode - ComposeMatrixFromRowVectorsNode instance.
+	* @param[out] pMatrix - the output
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixFromRowVectorsNode_GetOutputMatrixFunc = function(pComposeMatrixFromRowVectorsNode: TLib3MFHandle; out pMatrix: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for ConstantNode
+**************************************************************************************************************************)
+
+	(**
+	* Sets the constant value of the node
+	*
+	* @param[in] pConstantNode - ConstantNode instance.
+	* @param[in] dValue - the value
+	* @return error code or 0 (success)
+	*)
+	TLib3MFConstantNode_SetConstantFunc = function(pConstantNode: TLib3MFHandle; const dValue: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the constant value of the node
+	*
+	* @param[in] pConstantNode - ConstantNode instance.
+	* @param[out] pValue - the value
+	* @return error code or 0 (success)
+	*)
+	TLib3MFConstantNode_GetConstantFunc = function(pConstantNode: TLib3MFHandle; out pValue: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the output
+	*
+	* @param[in] pConstantNode - ConstantNode instance.
+	* @param[out] pValue - the output
+	* @return error code or 0 (success)
+	*)
+	TLib3MFConstantNode_GetOutputValueFunc = function(pConstantNode: TLib3MFHandle; out pValue: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for ConstVecNode
+**************************************************************************************************************************)
+
+	(**
+	* Sets the vector value of the node
+	*
+	* @param[in] pConstVecNode - ConstVecNode instance.
+	* @param[in] pValue - the value
+	* @return error code or 0 (success)
+	*)
+	TLib3MFConstVecNode_SetVectorFunc = function(pConstVecNode: TLib3MFHandle; const pValue: PLib3MFVector): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the vector value of the node
+	*
+	* @param[in] pConstVecNode - ConstVecNode instance.
+	* @param[out] pValue - the value
+	* @return error code or 0 (success)
+	*)
+	TLib3MFConstVecNode_GetVectorFunc = function(pConstVecNode: TLib3MFHandle; pValue: PLib3MFVector): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the output
+	*
+	* @param[in] pConstVecNode - ConstVecNode instance.
+	* @param[out] pVector - the output
+	* @return error code or 0 (success)
+	*)
+	TLib3MFConstVecNode_GetOutputVectorFunc = function(pConstVecNode: TLib3MFHandle; out pVector: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for ConstMatNode
+**************************************************************************************************************************)
+
+	(**
+	* Sets the matrix value of the node
+	*
+	* @param[in] pConstMatNode - ConstMatNode instance.
+	* @param[in] pValue - the value
+	* @return error code or 0 (success)
+	*)
+	TLib3MFConstMatNode_SetMatrixFunc = function(pConstMatNode: TLib3MFHandle; const pValue: PLib3MFMatrix4x4): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the matrix value of the node
+	*
+	* @param[in] pConstMatNode - ConstMatNode instance.
+	* @param[out] pValue - the matrix
+	* @return error code or 0 (success)
+	*)
+	TLib3MFConstMatNode_GetMatrixFunc = function(pConstMatNode: TLib3MFHandle; pValue: PLib3MFMatrix4x4): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the output
+	*
+	* @param[in] pConstMatNode - ConstMatNode instance.
+	* @param[out] pMatrix - the output
+	* @return error code or 0 (success)
+	*)
+	TLib3MFConstMatNode_GetOutputMatrixFunc = function(pConstMatNode: TLib3MFHandle; out pMatrix: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -3689,6 +4349,578 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFImplicitFunction_AddNodeFunc = function(pImplicitFunction: TLib3MFHandle; const eNodeType: Integer; const eConfiguration: Integer; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a SinNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddSinNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a CosNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddCosNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a TanNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddTanNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a ArcSinNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddArcSinNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a ArcCosNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddArcCosNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a ArcTan2Node
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddArcTan2NodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a SinhNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddSinhNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a CoshNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddCoshNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a TanhNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddTanhNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a RoundNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddRoundNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a CeilNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddCeilNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a FloorNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddFloorNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a SignNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddSignNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a FractNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddFractNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a AbsNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddAbsNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a ExpNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddExpNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a LogNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddLogNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a Log2Node
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddLog2NodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a Log10Node
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddLog10NodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a LengthNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddLengthNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a TransposeNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddTransposeNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a InverseNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_InverseNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a SqrtNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddSqrtNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a ResourceIdNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddResourceIdNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add an AdditionNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddAdditionNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a SubtractionNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddSubtractionNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a MultiplicationNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddMultiplicationNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a DivisionNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddDivisionNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a DotNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddDotNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a CrossNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddCrossNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a MatVecMultiplicationNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddMatVecMultiplicationNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a MinNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddMinNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a MaxNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddMaxNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a FmodNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddFmodNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a PowNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddPowNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a SelectNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddSelectNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a ClampNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddClampNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a ComposeVectorNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddComposeVectorNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a DecomposeVectorNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddDecomposeVectorNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a ComposeMatrixNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddComposeMatrixNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a ComposeMatrixFromRowVectorsNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddComposeMatrixFromRowVectorsNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a ConstantNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddConstantNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a ConstVecNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddConstVecNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a ConstMatNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddConstMatNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves the nodes
@@ -6280,15 +7512,574 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetOutputs(): TLib3MFImplicitPortIterator;
 		function FindInput(const AIdentifier: String): TLib3MFImplicitPort;
 		function FindOutput(const AIdentifier: String): TLib3MFImplicitPort;
-		procedure SetConstant(const AValue: Double);
-		function GetConstant(): Double;
-		procedure SetVector(const AValue: TLib3MFVector);
-		function GetVector(): TLib3MFVector;
-		procedure SetMatrix(const AValue: TLib3MFMatrix4x4);
-		function GetMatrix(): TLib3MFMatrix4x4;
+		function AreTypesValid(): Boolean;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for OneInputNode
+**************************************************************************************************************************)
+
+	TLib3MFOneInputNode = class(TLib3MFImplicitNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetInputA(): TLib3MFImplicitPort;
+		function GetOutputResult(): TLib3MFImplicitPort;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for SinNode
+**************************************************************************************************************************)
+
+	TLib3MFSinNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for CosNode
+**************************************************************************************************************************)
+
+	TLib3MFCosNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for TanNode
+**************************************************************************************************************************)
+
+	TLib3MFTanNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ArcSinNode
+**************************************************************************************************************************)
+
+	TLib3MFArcSinNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ArcCosNode
+**************************************************************************************************************************)
+
+	TLib3MFArcCosNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ArcTanNode
+**************************************************************************************************************************)
+
+	TLib3MFArcTanNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for SinhNode
+**************************************************************************************************************************)
+
+	TLib3MFSinhNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for CoshNode
+**************************************************************************************************************************)
+
+	TLib3MFCoshNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for TanhNode
+**************************************************************************************************************************)
+
+	TLib3MFTanhNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for RoundNode
+**************************************************************************************************************************)
+
+	TLib3MFRoundNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for CeilNode
+**************************************************************************************************************************)
+
+	TLib3MFCeilNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for FloorNode
+**************************************************************************************************************************)
+
+	TLib3MFFloorNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for SignNode
+**************************************************************************************************************************)
+
+	TLib3MFSignNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for FractNode
+**************************************************************************************************************************)
+
+	TLib3MFFractNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for AbsNode
+**************************************************************************************************************************)
+
+	TLib3MFAbsNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ExpNode
+**************************************************************************************************************************)
+
+	TLib3MFExpNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for LogNode
+**************************************************************************************************************************)
+
+	TLib3MFLogNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for Log2Node
+**************************************************************************************************************************)
+
+	TLib3MFLog2Node = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for Log10Node
+**************************************************************************************************************************)
+
+	TLib3MFLog10Node = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for LengthNode
+**************************************************************************************************************************)
+
+	TLib3MFLengthNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for TransposeNode
+**************************************************************************************************************************)
+
+	TLib3MFTransposeNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for InverseNode
+**************************************************************************************************************************)
+
+	TLib3MFInverseNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for SqrtNode
+**************************************************************************************************************************)
+
+	TLib3MFSqrtNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ResourceIdNode
+**************************************************************************************************************************)
+
+	TLib3MFResourceIdNode = class(TLib3MFImplicitNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
 		procedure SetResource(const AResource: TLib3MFResource);
 		function GetResource(): TLib3MFResource;
-		function AreTypesValid(): Boolean;
+		function GetOutputValue(): TLib3MFImplicitPort;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for TwoInputNode
+**************************************************************************************************************************)
+
+	TLib3MFTwoInputNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetInputB(): TLib3MFImplicitPort;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for AdditionNode
+**************************************************************************************************************************)
+
+	TLib3MFAdditionNode = class(TLib3MFTwoInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for SubtractionNode
+**************************************************************************************************************************)
+
+	TLib3MFSubtractionNode = class(TLib3MFTwoInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for MultiplicationNode
+**************************************************************************************************************************)
+
+	TLib3MFMultiplicationNode = class(TLib3MFTwoInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for DivisionNode
+**************************************************************************************************************************)
+
+	TLib3MFDivisionNode = class(TLib3MFTwoInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for DotNode
+**************************************************************************************************************************)
+
+	TLib3MFDotNode = class(TLib3MFTwoInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for CrossNode
+**************************************************************************************************************************)
+
+	TLib3MFCrossNode = class(TLib3MFTwoInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ArcTan2Node
+**************************************************************************************************************************)
+
+	TLib3MFArcTan2Node = class(TLib3MFTwoInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for MatVecMultiplicationNode
+**************************************************************************************************************************)
+
+	TLib3MFMatVecMultiplicationNode = class(TLib3MFTwoInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for MinNode
+**************************************************************************************************************************)
+
+	TLib3MFMinNode = class(TLib3MFTwoInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for MaxNode
+**************************************************************************************************************************)
+
+	TLib3MFMaxNode = class(TLib3MFTwoInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for FmodNode
+**************************************************************************************************************************)
+
+	TLib3MFFmodNode = class(TLib3MFTwoInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for PowNode
+**************************************************************************************************************************)
+
+	TLib3MFPowNode = class(TLib3MFTwoInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for SelectNode
+**************************************************************************************************************************)
+
+	TLib3MFSelectNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetInputB(): TLib3MFImplicitPort;
+		function GetInputC(): TLib3MFImplicitPort;
+		function GetInputD(): TLib3MFImplicitPort;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ClampNode
+**************************************************************************************************************************)
+
+	TLib3MFClampNode = class(TLib3MFOneInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetInputMin(): TLib3MFImplicitPort;
+		function GetInputMax(): TLib3MFImplicitPort;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ComposeVectorNode
+**************************************************************************************************************************)
+
+	TLib3MFComposeVectorNode = class(TLib3MFImplicitNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetInputX(): TLib3MFImplicitPort;
+		function GetInputY(): TLib3MFImplicitPort;
+		function GetInputZ(): TLib3MFImplicitPort;
+		function GetOutputVector(): TLib3MFImplicitPort;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for DecomposeVectorNode
+**************************************************************************************************************************)
+
+	TLib3MFDecomposeVectorNode = class(TLib3MFImplicitNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetInputVector(): TLib3MFImplicitPort;
+		function GetOutputX(): TLib3MFImplicitPort;
+		function GetOutputY(): TLib3MFImplicitPort;
+		function GetOutputZ(): TLib3MFImplicitPort;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ComposeMatrixNode
+**************************************************************************************************************************)
+
+	TLib3MFComposeMatrixNode = class(TLib3MFImplicitNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetInputM00(): TLib3MFImplicitPort;
+		function GetInputM01(): TLib3MFImplicitPort;
+		function GetInputM02(): TLib3MFImplicitPort;
+		function GetInputM03(): TLib3MFImplicitPort;
+		function GetInputM10(): TLib3MFImplicitPort;
+		function GetInputM11(): TLib3MFImplicitPort;
+		function GetInputM12(): TLib3MFImplicitPort;
+		function GetInputM13(): TLib3MFImplicitPort;
+		function GetInputM20(): TLib3MFImplicitPort;
+		function GetInputM21(): TLib3MFImplicitPort;
+		function GetInputM22(): TLib3MFImplicitPort;
+		function GetInputM23(): TLib3MFImplicitPort;
+		function GetInputM30(): TLib3MFImplicitPort;
+		function GetInputM31(): TLib3MFImplicitPort;
+		function GetInputM32(): TLib3MFImplicitPort;
+		function GetInputM33(): TLib3MFImplicitPort;
+		function GetOutputMatrix(): TLib3MFImplicitPort;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ComposeMatrixFromRowVectorsNode
+**************************************************************************************************************************)
+
+	TLib3MFComposeMatrixFromRowVectorsNode = class(TLib3MFImplicitNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetInputRow0(): TLib3MFImplicitPort;
+		function GetInputRow1(): TLib3MFImplicitPort;
+		function GetInputRow2(): TLib3MFImplicitPort;
+		function GetInputRow3(): TLib3MFImplicitPort;
+		function GetOutputMatrix(): TLib3MFImplicitPort;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ConstantNode
+**************************************************************************************************************************)
+
+	TLib3MFConstantNode = class(TLib3MFImplicitNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		procedure SetConstant(const AValue: Double);
+		function GetConstant(): Double;
+		function GetOutputValue(): TLib3MFImplicitPort;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ConstVecNode
+**************************************************************************************************************************)
+
+	TLib3MFConstVecNode = class(TLib3MFImplicitNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		procedure SetVector(const AValue: TLib3MFVector);
+		function GetVector(): TLib3MFVector;
+		function GetOutputVector(): TLib3MFImplicitPort;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ConstMatNode
+**************************************************************************************************************************)
+
+	TLib3MFConstMatNode = class(TLib3MFImplicitNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		procedure SetMatrix(const AValue: TLib3MFMatrix4x4);
+		function GetMatrix(): TLib3MFMatrix4x4;
+		function GetOutputMatrix(): TLib3MFImplicitPort;
 	end;
 
 
@@ -6336,6 +8127,50 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetIdentifier(): String;
 		procedure SetIdentifier(const AIdentifier: String);
 		function AddNode(const ANodeType: TLib3MFImplicitNodeType; const AConfiguration: TLib3MFImplicitNodeConfiguration; const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFImplicitNode;
+		function AddSinNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFSinNode;
+		function AddCosNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFCosNode;
+		function AddTanNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFTanNode;
+		function AddArcSinNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFArcSinNode;
+		function AddArcCosNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFArcCosNode;
+		function AddArcTan2Node(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFArcTan2Node;
+		function AddSinhNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFSinhNode;
+		function AddCoshNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFCoshNode;
+		function AddTanhNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFTanhNode;
+		function AddRoundNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFRoundNode;
+		function AddCeilNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFCeilNode;
+		function AddFloorNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFFloorNode;
+		function AddSignNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFSignNode;
+		function AddFractNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFFractNode;
+		function AddAbsNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFAbsNode;
+		function AddExpNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFExpNode;
+		function AddLogNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFLogNode;
+		function AddLog2Node(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFLog2Node;
+		function AddLog10Node(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFLog10Node;
+		function AddLengthNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFLengthNode;
+		function AddTransposeNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFTransposeNode;
+		function InverseNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFInverseNode;
+		function AddSqrtNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFSqrtNode;
+		function AddResourceIdNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFResourceIdNode;
+		function AddAdditionNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFAdditionNode;
+		function AddSubtractionNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFSubtractionNode;
+		function AddMultiplicationNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFMultiplicationNode;
+		function AddDivisionNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFDivisionNode;
+		function AddDotNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFDotNode;
+		function AddCrossNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFCrossNode;
+		function AddMatVecMultiplicationNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFMatVecMultiplicationNode;
+		function AddMinNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFMinNode;
+		function AddMaxNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFMaxNode;
+		function AddFmodNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFFmodNode;
+		function AddPowNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFPowNode;
+		function AddSelectNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFSelectNode;
+		function AddClampNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFClampNode;
+		function AddComposeVectorNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFComposeVectorNode;
+		function AddDecomposeVectorNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFDecomposeVectorNode;
+		function AddComposeMatrixNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFComposeMatrixNode;
+		function AddComposeMatrixFromRowVectorsNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFComposeMatrixFromRowVectorsNode;
+		function AddConstantNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFConstantNode;
+		function AddConstVecNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFConstVecNode;
+		function AddConstMatNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFConstMatNode;
 		function GetNodes(): TLib3MFNodeIterator;
 		procedure RemoveNode(const ANode: TLib3MFImplicitNode);
 		procedure AddLink(const ASource: TLib3MFImplicitPort; const ATarget: TLib3MFImplicitPort);
@@ -6913,15 +8748,57 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFImplicitNode_GetOutputsFunc: TLib3MFImplicitNode_GetOutputsFunc;
 		FLib3MFImplicitNode_FindInputFunc: TLib3MFImplicitNode_FindInputFunc;
 		FLib3MFImplicitNode_FindOutputFunc: TLib3MFImplicitNode_FindOutputFunc;
-		FLib3MFImplicitNode_SetConstantFunc: TLib3MFImplicitNode_SetConstantFunc;
-		FLib3MFImplicitNode_GetConstantFunc: TLib3MFImplicitNode_GetConstantFunc;
-		FLib3MFImplicitNode_SetVectorFunc: TLib3MFImplicitNode_SetVectorFunc;
-		FLib3MFImplicitNode_GetVectorFunc: TLib3MFImplicitNode_GetVectorFunc;
-		FLib3MFImplicitNode_SetMatrixFunc: TLib3MFImplicitNode_SetMatrixFunc;
-		FLib3MFImplicitNode_GetMatrixFunc: TLib3MFImplicitNode_GetMatrixFunc;
-		FLib3MFImplicitNode_SetResourceFunc: TLib3MFImplicitNode_SetResourceFunc;
-		FLib3MFImplicitNode_GetResourceFunc: TLib3MFImplicitNode_GetResourceFunc;
 		FLib3MFImplicitNode_AreTypesValidFunc: TLib3MFImplicitNode_AreTypesValidFunc;
+		FLib3MFOneInputNode_GetInputAFunc: TLib3MFOneInputNode_GetInputAFunc;
+		FLib3MFOneInputNode_GetOutputResultFunc: TLib3MFOneInputNode_GetOutputResultFunc;
+		FLib3MFResourceIdNode_SetResourceFunc: TLib3MFResourceIdNode_SetResourceFunc;
+		FLib3MFResourceIdNode_GetResourceFunc: TLib3MFResourceIdNode_GetResourceFunc;
+		FLib3MFResourceIdNode_GetOutputValueFunc: TLib3MFResourceIdNode_GetOutputValueFunc;
+		FLib3MFTwoInputNode_GetInputBFunc: TLib3MFTwoInputNode_GetInputBFunc;
+		FLib3MFSelectNode_GetInputBFunc: TLib3MFSelectNode_GetInputBFunc;
+		FLib3MFSelectNode_GetInputCFunc: TLib3MFSelectNode_GetInputCFunc;
+		FLib3MFSelectNode_GetInputDFunc: TLib3MFSelectNode_GetInputDFunc;
+		FLib3MFClampNode_GetInputMinFunc: TLib3MFClampNode_GetInputMinFunc;
+		FLib3MFClampNode_GetInputMaxFunc: TLib3MFClampNode_GetInputMaxFunc;
+		FLib3MFComposeVectorNode_GetInputXFunc: TLib3MFComposeVectorNode_GetInputXFunc;
+		FLib3MFComposeVectorNode_GetInputYFunc: TLib3MFComposeVectorNode_GetInputYFunc;
+		FLib3MFComposeVectorNode_GetInputZFunc: TLib3MFComposeVectorNode_GetInputZFunc;
+		FLib3MFComposeVectorNode_GetOutputVectorFunc: TLib3MFComposeVectorNode_GetOutputVectorFunc;
+		FLib3MFDecomposeVectorNode_GetInputVectorFunc: TLib3MFDecomposeVectorNode_GetInputVectorFunc;
+		FLib3MFDecomposeVectorNode_GetOutputXFunc: TLib3MFDecomposeVectorNode_GetOutputXFunc;
+		FLib3MFDecomposeVectorNode_GetOutputYFunc: TLib3MFDecomposeVectorNode_GetOutputYFunc;
+		FLib3MFDecomposeVectorNode_GetOutputZFunc: TLib3MFDecomposeVectorNode_GetOutputZFunc;
+		FLib3MFComposeMatrixNode_GetInputM00Func: TLib3MFComposeMatrixNode_GetInputM00Func;
+		FLib3MFComposeMatrixNode_GetInputM01Func: TLib3MFComposeMatrixNode_GetInputM01Func;
+		FLib3MFComposeMatrixNode_GetInputM02Func: TLib3MFComposeMatrixNode_GetInputM02Func;
+		FLib3MFComposeMatrixNode_GetInputM03Func: TLib3MFComposeMatrixNode_GetInputM03Func;
+		FLib3MFComposeMatrixNode_GetInputM10Func: TLib3MFComposeMatrixNode_GetInputM10Func;
+		FLib3MFComposeMatrixNode_GetInputM11Func: TLib3MFComposeMatrixNode_GetInputM11Func;
+		FLib3MFComposeMatrixNode_GetInputM12Func: TLib3MFComposeMatrixNode_GetInputM12Func;
+		FLib3MFComposeMatrixNode_GetInputM13Func: TLib3MFComposeMatrixNode_GetInputM13Func;
+		FLib3MFComposeMatrixNode_GetInputM20Func: TLib3MFComposeMatrixNode_GetInputM20Func;
+		FLib3MFComposeMatrixNode_GetInputM21Func: TLib3MFComposeMatrixNode_GetInputM21Func;
+		FLib3MFComposeMatrixNode_GetInputM22Func: TLib3MFComposeMatrixNode_GetInputM22Func;
+		FLib3MFComposeMatrixNode_GetInputM23Func: TLib3MFComposeMatrixNode_GetInputM23Func;
+		FLib3MFComposeMatrixNode_GetInputM30Func: TLib3MFComposeMatrixNode_GetInputM30Func;
+		FLib3MFComposeMatrixNode_GetInputM31Func: TLib3MFComposeMatrixNode_GetInputM31Func;
+		FLib3MFComposeMatrixNode_GetInputM32Func: TLib3MFComposeMatrixNode_GetInputM32Func;
+		FLib3MFComposeMatrixNode_GetInputM33Func: TLib3MFComposeMatrixNode_GetInputM33Func;
+		FLib3MFComposeMatrixNode_GetOutputMatrixFunc: TLib3MFComposeMatrixNode_GetOutputMatrixFunc;
+		FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Func: TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Func;
+		FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Func: TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Func;
+		FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Func: TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Func;
+		FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Func: TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Func;
+		FLib3MFComposeMatrixFromRowVectorsNode_GetOutputMatrixFunc: TLib3MFComposeMatrixFromRowVectorsNode_GetOutputMatrixFunc;
+		FLib3MFConstantNode_SetConstantFunc: TLib3MFConstantNode_SetConstantFunc;
+		FLib3MFConstantNode_GetConstantFunc: TLib3MFConstantNode_GetConstantFunc;
+		FLib3MFConstantNode_GetOutputValueFunc: TLib3MFConstantNode_GetOutputValueFunc;
+		FLib3MFConstVecNode_SetVectorFunc: TLib3MFConstVecNode_SetVectorFunc;
+		FLib3MFConstVecNode_GetVectorFunc: TLib3MFConstVecNode_GetVectorFunc;
+		FLib3MFConstVecNode_GetOutputVectorFunc: TLib3MFConstVecNode_GetOutputVectorFunc;
+		FLib3MFConstMatNode_SetMatrixFunc: TLib3MFConstMatNode_SetMatrixFunc;
+		FLib3MFConstMatNode_GetMatrixFunc: TLib3MFConstMatNode_GetMatrixFunc;
+		FLib3MFConstMatNode_GetOutputMatrixFunc: TLib3MFConstMatNode_GetOutputMatrixFunc;
 		FLib3MFNodeIterator_GetCurrentFunc: TLib3MFNodeIterator_GetCurrentFunc;
 		FLib3MFFunction_GetDisplayNameFunc: TLib3MFFunction_GetDisplayNameFunc;
 		FLib3MFFunction_SetDisplayNameFunc: TLib3MFFunction_SetDisplayNameFunc;
@@ -6936,6 +8813,50 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFImplicitFunction_GetIdentifierFunc: TLib3MFImplicitFunction_GetIdentifierFunc;
 		FLib3MFImplicitFunction_SetIdentifierFunc: TLib3MFImplicitFunction_SetIdentifierFunc;
 		FLib3MFImplicitFunction_AddNodeFunc: TLib3MFImplicitFunction_AddNodeFunc;
+		FLib3MFImplicitFunction_AddSinNodeFunc: TLib3MFImplicitFunction_AddSinNodeFunc;
+		FLib3MFImplicitFunction_AddCosNodeFunc: TLib3MFImplicitFunction_AddCosNodeFunc;
+		FLib3MFImplicitFunction_AddTanNodeFunc: TLib3MFImplicitFunction_AddTanNodeFunc;
+		FLib3MFImplicitFunction_AddArcSinNodeFunc: TLib3MFImplicitFunction_AddArcSinNodeFunc;
+		FLib3MFImplicitFunction_AddArcCosNodeFunc: TLib3MFImplicitFunction_AddArcCosNodeFunc;
+		FLib3MFImplicitFunction_AddArcTan2NodeFunc: TLib3MFImplicitFunction_AddArcTan2NodeFunc;
+		FLib3MFImplicitFunction_AddSinhNodeFunc: TLib3MFImplicitFunction_AddSinhNodeFunc;
+		FLib3MFImplicitFunction_AddCoshNodeFunc: TLib3MFImplicitFunction_AddCoshNodeFunc;
+		FLib3MFImplicitFunction_AddTanhNodeFunc: TLib3MFImplicitFunction_AddTanhNodeFunc;
+		FLib3MFImplicitFunction_AddRoundNodeFunc: TLib3MFImplicitFunction_AddRoundNodeFunc;
+		FLib3MFImplicitFunction_AddCeilNodeFunc: TLib3MFImplicitFunction_AddCeilNodeFunc;
+		FLib3MFImplicitFunction_AddFloorNodeFunc: TLib3MFImplicitFunction_AddFloorNodeFunc;
+		FLib3MFImplicitFunction_AddSignNodeFunc: TLib3MFImplicitFunction_AddSignNodeFunc;
+		FLib3MFImplicitFunction_AddFractNodeFunc: TLib3MFImplicitFunction_AddFractNodeFunc;
+		FLib3MFImplicitFunction_AddAbsNodeFunc: TLib3MFImplicitFunction_AddAbsNodeFunc;
+		FLib3MFImplicitFunction_AddExpNodeFunc: TLib3MFImplicitFunction_AddExpNodeFunc;
+		FLib3MFImplicitFunction_AddLogNodeFunc: TLib3MFImplicitFunction_AddLogNodeFunc;
+		FLib3MFImplicitFunction_AddLog2NodeFunc: TLib3MFImplicitFunction_AddLog2NodeFunc;
+		FLib3MFImplicitFunction_AddLog10NodeFunc: TLib3MFImplicitFunction_AddLog10NodeFunc;
+		FLib3MFImplicitFunction_AddLengthNodeFunc: TLib3MFImplicitFunction_AddLengthNodeFunc;
+		FLib3MFImplicitFunction_AddTransposeNodeFunc: TLib3MFImplicitFunction_AddTransposeNodeFunc;
+		FLib3MFImplicitFunction_InverseNodeFunc: TLib3MFImplicitFunction_InverseNodeFunc;
+		FLib3MFImplicitFunction_AddSqrtNodeFunc: TLib3MFImplicitFunction_AddSqrtNodeFunc;
+		FLib3MFImplicitFunction_AddResourceIdNodeFunc: TLib3MFImplicitFunction_AddResourceIdNodeFunc;
+		FLib3MFImplicitFunction_AddAdditionNodeFunc: TLib3MFImplicitFunction_AddAdditionNodeFunc;
+		FLib3MFImplicitFunction_AddSubtractionNodeFunc: TLib3MFImplicitFunction_AddSubtractionNodeFunc;
+		FLib3MFImplicitFunction_AddMultiplicationNodeFunc: TLib3MFImplicitFunction_AddMultiplicationNodeFunc;
+		FLib3MFImplicitFunction_AddDivisionNodeFunc: TLib3MFImplicitFunction_AddDivisionNodeFunc;
+		FLib3MFImplicitFunction_AddDotNodeFunc: TLib3MFImplicitFunction_AddDotNodeFunc;
+		FLib3MFImplicitFunction_AddCrossNodeFunc: TLib3MFImplicitFunction_AddCrossNodeFunc;
+		FLib3MFImplicitFunction_AddMatVecMultiplicationNodeFunc: TLib3MFImplicitFunction_AddMatVecMultiplicationNodeFunc;
+		FLib3MFImplicitFunction_AddMinNodeFunc: TLib3MFImplicitFunction_AddMinNodeFunc;
+		FLib3MFImplicitFunction_AddMaxNodeFunc: TLib3MFImplicitFunction_AddMaxNodeFunc;
+		FLib3MFImplicitFunction_AddFmodNodeFunc: TLib3MFImplicitFunction_AddFmodNodeFunc;
+		FLib3MFImplicitFunction_AddPowNodeFunc: TLib3MFImplicitFunction_AddPowNodeFunc;
+		FLib3MFImplicitFunction_AddSelectNodeFunc: TLib3MFImplicitFunction_AddSelectNodeFunc;
+		FLib3MFImplicitFunction_AddClampNodeFunc: TLib3MFImplicitFunction_AddClampNodeFunc;
+		FLib3MFImplicitFunction_AddComposeVectorNodeFunc: TLib3MFImplicitFunction_AddComposeVectorNodeFunc;
+		FLib3MFImplicitFunction_AddDecomposeVectorNodeFunc: TLib3MFImplicitFunction_AddDecomposeVectorNodeFunc;
+		FLib3MFImplicitFunction_AddComposeMatrixNodeFunc: TLib3MFImplicitFunction_AddComposeMatrixNodeFunc;
+		FLib3MFImplicitFunction_AddComposeMatrixFromRowVectorsNodeFunc: TLib3MFImplicitFunction_AddComposeMatrixFromRowVectorsNodeFunc;
+		FLib3MFImplicitFunction_AddConstantNodeFunc: TLib3MFImplicitFunction_AddConstantNodeFunc;
+		FLib3MFImplicitFunction_AddConstVecNodeFunc: TLib3MFImplicitFunction_AddConstVecNodeFunc;
+		FLib3MFImplicitFunction_AddConstMatNodeFunc: TLib3MFImplicitFunction_AddConstMatNodeFunc;
 		FLib3MFImplicitFunction_GetNodesFunc: TLib3MFImplicitFunction_GetNodesFunc;
 		FLib3MFImplicitFunction_RemoveNodeFunc: TLib3MFImplicitFunction_RemoveNodeFunc;
 		FLib3MFImplicitFunction_AddLinkFunc: TLib3MFImplicitFunction_AddLinkFunc;
@@ -7401,15 +9322,57 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFImplicitNode_GetOutputsFunc: TLib3MFImplicitNode_GetOutputsFunc read FLib3MFImplicitNode_GetOutputsFunc;
 		property Lib3MFImplicitNode_FindInputFunc: TLib3MFImplicitNode_FindInputFunc read FLib3MFImplicitNode_FindInputFunc;
 		property Lib3MFImplicitNode_FindOutputFunc: TLib3MFImplicitNode_FindOutputFunc read FLib3MFImplicitNode_FindOutputFunc;
-		property Lib3MFImplicitNode_SetConstantFunc: TLib3MFImplicitNode_SetConstantFunc read FLib3MFImplicitNode_SetConstantFunc;
-		property Lib3MFImplicitNode_GetConstantFunc: TLib3MFImplicitNode_GetConstantFunc read FLib3MFImplicitNode_GetConstantFunc;
-		property Lib3MFImplicitNode_SetVectorFunc: TLib3MFImplicitNode_SetVectorFunc read FLib3MFImplicitNode_SetVectorFunc;
-		property Lib3MFImplicitNode_GetVectorFunc: TLib3MFImplicitNode_GetVectorFunc read FLib3MFImplicitNode_GetVectorFunc;
-		property Lib3MFImplicitNode_SetMatrixFunc: TLib3MFImplicitNode_SetMatrixFunc read FLib3MFImplicitNode_SetMatrixFunc;
-		property Lib3MFImplicitNode_GetMatrixFunc: TLib3MFImplicitNode_GetMatrixFunc read FLib3MFImplicitNode_GetMatrixFunc;
-		property Lib3MFImplicitNode_SetResourceFunc: TLib3MFImplicitNode_SetResourceFunc read FLib3MFImplicitNode_SetResourceFunc;
-		property Lib3MFImplicitNode_GetResourceFunc: TLib3MFImplicitNode_GetResourceFunc read FLib3MFImplicitNode_GetResourceFunc;
 		property Lib3MFImplicitNode_AreTypesValidFunc: TLib3MFImplicitNode_AreTypesValidFunc read FLib3MFImplicitNode_AreTypesValidFunc;
+		property Lib3MFOneInputNode_GetInputAFunc: TLib3MFOneInputNode_GetInputAFunc read FLib3MFOneInputNode_GetInputAFunc;
+		property Lib3MFOneInputNode_GetOutputResultFunc: TLib3MFOneInputNode_GetOutputResultFunc read FLib3MFOneInputNode_GetOutputResultFunc;
+		property Lib3MFResourceIdNode_SetResourceFunc: TLib3MFResourceIdNode_SetResourceFunc read FLib3MFResourceIdNode_SetResourceFunc;
+		property Lib3MFResourceIdNode_GetResourceFunc: TLib3MFResourceIdNode_GetResourceFunc read FLib3MFResourceIdNode_GetResourceFunc;
+		property Lib3MFResourceIdNode_GetOutputValueFunc: TLib3MFResourceIdNode_GetOutputValueFunc read FLib3MFResourceIdNode_GetOutputValueFunc;
+		property Lib3MFTwoInputNode_GetInputBFunc: TLib3MFTwoInputNode_GetInputBFunc read FLib3MFTwoInputNode_GetInputBFunc;
+		property Lib3MFSelectNode_GetInputBFunc: TLib3MFSelectNode_GetInputBFunc read FLib3MFSelectNode_GetInputBFunc;
+		property Lib3MFSelectNode_GetInputCFunc: TLib3MFSelectNode_GetInputCFunc read FLib3MFSelectNode_GetInputCFunc;
+		property Lib3MFSelectNode_GetInputDFunc: TLib3MFSelectNode_GetInputDFunc read FLib3MFSelectNode_GetInputDFunc;
+		property Lib3MFClampNode_GetInputMinFunc: TLib3MFClampNode_GetInputMinFunc read FLib3MFClampNode_GetInputMinFunc;
+		property Lib3MFClampNode_GetInputMaxFunc: TLib3MFClampNode_GetInputMaxFunc read FLib3MFClampNode_GetInputMaxFunc;
+		property Lib3MFComposeVectorNode_GetInputXFunc: TLib3MFComposeVectorNode_GetInputXFunc read FLib3MFComposeVectorNode_GetInputXFunc;
+		property Lib3MFComposeVectorNode_GetInputYFunc: TLib3MFComposeVectorNode_GetInputYFunc read FLib3MFComposeVectorNode_GetInputYFunc;
+		property Lib3MFComposeVectorNode_GetInputZFunc: TLib3MFComposeVectorNode_GetInputZFunc read FLib3MFComposeVectorNode_GetInputZFunc;
+		property Lib3MFComposeVectorNode_GetOutputVectorFunc: TLib3MFComposeVectorNode_GetOutputVectorFunc read FLib3MFComposeVectorNode_GetOutputVectorFunc;
+		property Lib3MFDecomposeVectorNode_GetInputVectorFunc: TLib3MFDecomposeVectorNode_GetInputVectorFunc read FLib3MFDecomposeVectorNode_GetInputVectorFunc;
+		property Lib3MFDecomposeVectorNode_GetOutputXFunc: TLib3MFDecomposeVectorNode_GetOutputXFunc read FLib3MFDecomposeVectorNode_GetOutputXFunc;
+		property Lib3MFDecomposeVectorNode_GetOutputYFunc: TLib3MFDecomposeVectorNode_GetOutputYFunc read FLib3MFDecomposeVectorNode_GetOutputYFunc;
+		property Lib3MFDecomposeVectorNode_GetOutputZFunc: TLib3MFDecomposeVectorNode_GetOutputZFunc read FLib3MFDecomposeVectorNode_GetOutputZFunc;
+		property Lib3MFComposeMatrixNode_GetInputM00Func: TLib3MFComposeMatrixNode_GetInputM00Func read FLib3MFComposeMatrixNode_GetInputM00Func;
+		property Lib3MFComposeMatrixNode_GetInputM01Func: TLib3MFComposeMatrixNode_GetInputM01Func read FLib3MFComposeMatrixNode_GetInputM01Func;
+		property Lib3MFComposeMatrixNode_GetInputM02Func: TLib3MFComposeMatrixNode_GetInputM02Func read FLib3MFComposeMatrixNode_GetInputM02Func;
+		property Lib3MFComposeMatrixNode_GetInputM03Func: TLib3MFComposeMatrixNode_GetInputM03Func read FLib3MFComposeMatrixNode_GetInputM03Func;
+		property Lib3MFComposeMatrixNode_GetInputM10Func: TLib3MFComposeMatrixNode_GetInputM10Func read FLib3MFComposeMatrixNode_GetInputM10Func;
+		property Lib3MFComposeMatrixNode_GetInputM11Func: TLib3MFComposeMatrixNode_GetInputM11Func read FLib3MFComposeMatrixNode_GetInputM11Func;
+		property Lib3MFComposeMatrixNode_GetInputM12Func: TLib3MFComposeMatrixNode_GetInputM12Func read FLib3MFComposeMatrixNode_GetInputM12Func;
+		property Lib3MFComposeMatrixNode_GetInputM13Func: TLib3MFComposeMatrixNode_GetInputM13Func read FLib3MFComposeMatrixNode_GetInputM13Func;
+		property Lib3MFComposeMatrixNode_GetInputM20Func: TLib3MFComposeMatrixNode_GetInputM20Func read FLib3MFComposeMatrixNode_GetInputM20Func;
+		property Lib3MFComposeMatrixNode_GetInputM21Func: TLib3MFComposeMatrixNode_GetInputM21Func read FLib3MFComposeMatrixNode_GetInputM21Func;
+		property Lib3MFComposeMatrixNode_GetInputM22Func: TLib3MFComposeMatrixNode_GetInputM22Func read FLib3MFComposeMatrixNode_GetInputM22Func;
+		property Lib3MFComposeMatrixNode_GetInputM23Func: TLib3MFComposeMatrixNode_GetInputM23Func read FLib3MFComposeMatrixNode_GetInputM23Func;
+		property Lib3MFComposeMatrixNode_GetInputM30Func: TLib3MFComposeMatrixNode_GetInputM30Func read FLib3MFComposeMatrixNode_GetInputM30Func;
+		property Lib3MFComposeMatrixNode_GetInputM31Func: TLib3MFComposeMatrixNode_GetInputM31Func read FLib3MFComposeMatrixNode_GetInputM31Func;
+		property Lib3MFComposeMatrixNode_GetInputM32Func: TLib3MFComposeMatrixNode_GetInputM32Func read FLib3MFComposeMatrixNode_GetInputM32Func;
+		property Lib3MFComposeMatrixNode_GetInputM33Func: TLib3MFComposeMatrixNode_GetInputM33Func read FLib3MFComposeMatrixNode_GetInputM33Func;
+		property Lib3MFComposeMatrixNode_GetOutputMatrixFunc: TLib3MFComposeMatrixNode_GetOutputMatrixFunc read FLib3MFComposeMatrixNode_GetOutputMatrixFunc;
+		property Lib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Func: TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Func read FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Func;
+		property Lib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Func: TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Func read FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Func;
+		property Lib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Func: TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Func read FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Func;
+		property Lib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Func: TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Func read FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Func;
+		property Lib3MFComposeMatrixFromRowVectorsNode_GetOutputMatrixFunc: TLib3MFComposeMatrixFromRowVectorsNode_GetOutputMatrixFunc read FLib3MFComposeMatrixFromRowVectorsNode_GetOutputMatrixFunc;
+		property Lib3MFConstantNode_SetConstantFunc: TLib3MFConstantNode_SetConstantFunc read FLib3MFConstantNode_SetConstantFunc;
+		property Lib3MFConstantNode_GetConstantFunc: TLib3MFConstantNode_GetConstantFunc read FLib3MFConstantNode_GetConstantFunc;
+		property Lib3MFConstantNode_GetOutputValueFunc: TLib3MFConstantNode_GetOutputValueFunc read FLib3MFConstantNode_GetOutputValueFunc;
+		property Lib3MFConstVecNode_SetVectorFunc: TLib3MFConstVecNode_SetVectorFunc read FLib3MFConstVecNode_SetVectorFunc;
+		property Lib3MFConstVecNode_GetVectorFunc: TLib3MFConstVecNode_GetVectorFunc read FLib3MFConstVecNode_GetVectorFunc;
+		property Lib3MFConstVecNode_GetOutputVectorFunc: TLib3MFConstVecNode_GetOutputVectorFunc read FLib3MFConstVecNode_GetOutputVectorFunc;
+		property Lib3MFConstMatNode_SetMatrixFunc: TLib3MFConstMatNode_SetMatrixFunc read FLib3MFConstMatNode_SetMatrixFunc;
+		property Lib3MFConstMatNode_GetMatrixFunc: TLib3MFConstMatNode_GetMatrixFunc read FLib3MFConstMatNode_GetMatrixFunc;
+		property Lib3MFConstMatNode_GetOutputMatrixFunc: TLib3MFConstMatNode_GetOutputMatrixFunc read FLib3MFConstMatNode_GetOutputMatrixFunc;
 		property Lib3MFNodeIterator_GetCurrentFunc: TLib3MFNodeIterator_GetCurrentFunc read FLib3MFNodeIterator_GetCurrentFunc;
 		property Lib3MFFunction_GetDisplayNameFunc: TLib3MFFunction_GetDisplayNameFunc read FLib3MFFunction_GetDisplayNameFunc;
 		property Lib3MFFunction_SetDisplayNameFunc: TLib3MFFunction_SetDisplayNameFunc read FLib3MFFunction_SetDisplayNameFunc;
@@ -7424,6 +9387,50 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFImplicitFunction_GetIdentifierFunc: TLib3MFImplicitFunction_GetIdentifierFunc read FLib3MFImplicitFunction_GetIdentifierFunc;
 		property Lib3MFImplicitFunction_SetIdentifierFunc: TLib3MFImplicitFunction_SetIdentifierFunc read FLib3MFImplicitFunction_SetIdentifierFunc;
 		property Lib3MFImplicitFunction_AddNodeFunc: TLib3MFImplicitFunction_AddNodeFunc read FLib3MFImplicitFunction_AddNodeFunc;
+		property Lib3MFImplicitFunction_AddSinNodeFunc: TLib3MFImplicitFunction_AddSinNodeFunc read FLib3MFImplicitFunction_AddSinNodeFunc;
+		property Lib3MFImplicitFunction_AddCosNodeFunc: TLib3MFImplicitFunction_AddCosNodeFunc read FLib3MFImplicitFunction_AddCosNodeFunc;
+		property Lib3MFImplicitFunction_AddTanNodeFunc: TLib3MFImplicitFunction_AddTanNodeFunc read FLib3MFImplicitFunction_AddTanNodeFunc;
+		property Lib3MFImplicitFunction_AddArcSinNodeFunc: TLib3MFImplicitFunction_AddArcSinNodeFunc read FLib3MFImplicitFunction_AddArcSinNodeFunc;
+		property Lib3MFImplicitFunction_AddArcCosNodeFunc: TLib3MFImplicitFunction_AddArcCosNodeFunc read FLib3MFImplicitFunction_AddArcCosNodeFunc;
+		property Lib3MFImplicitFunction_AddArcTan2NodeFunc: TLib3MFImplicitFunction_AddArcTan2NodeFunc read FLib3MFImplicitFunction_AddArcTan2NodeFunc;
+		property Lib3MFImplicitFunction_AddSinhNodeFunc: TLib3MFImplicitFunction_AddSinhNodeFunc read FLib3MFImplicitFunction_AddSinhNodeFunc;
+		property Lib3MFImplicitFunction_AddCoshNodeFunc: TLib3MFImplicitFunction_AddCoshNodeFunc read FLib3MFImplicitFunction_AddCoshNodeFunc;
+		property Lib3MFImplicitFunction_AddTanhNodeFunc: TLib3MFImplicitFunction_AddTanhNodeFunc read FLib3MFImplicitFunction_AddTanhNodeFunc;
+		property Lib3MFImplicitFunction_AddRoundNodeFunc: TLib3MFImplicitFunction_AddRoundNodeFunc read FLib3MFImplicitFunction_AddRoundNodeFunc;
+		property Lib3MFImplicitFunction_AddCeilNodeFunc: TLib3MFImplicitFunction_AddCeilNodeFunc read FLib3MFImplicitFunction_AddCeilNodeFunc;
+		property Lib3MFImplicitFunction_AddFloorNodeFunc: TLib3MFImplicitFunction_AddFloorNodeFunc read FLib3MFImplicitFunction_AddFloorNodeFunc;
+		property Lib3MFImplicitFunction_AddSignNodeFunc: TLib3MFImplicitFunction_AddSignNodeFunc read FLib3MFImplicitFunction_AddSignNodeFunc;
+		property Lib3MFImplicitFunction_AddFractNodeFunc: TLib3MFImplicitFunction_AddFractNodeFunc read FLib3MFImplicitFunction_AddFractNodeFunc;
+		property Lib3MFImplicitFunction_AddAbsNodeFunc: TLib3MFImplicitFunction_AddAbsNodeFunc read FLib3MFImplicitFunction_AddAbsNodeFunc;
+		property Lib3MFImplicitFunction_AddExpNodeFunc: TLib3MFImplicitFunction_AddExpNodeFunc read FLib3MFImplicitFunction_AddExpNodeFunc;
+		property Lib3MFImplicitFunction_AddLogNodeFunc: TLib3MFImplicitFunction_AddLogNodeFunc read FLib3MFImplicitFunction_AddLogNodeFunc;
+		property Lib3MFImplicitFunction_AddLog2NodeFunc: TLib3MFImplicitFunction_AddLog2NodeFunc read FLib3MFImplicitFunction_AddLog2NodeFunc;
+		property Lib3MFImplicitFunction_AddLog10NodeFunc: TLib3MFImplicitFunction_AddLog10NodeFunc read FLib3MFImplicitFunction_AddLog10NodeFunc;
+		property Lib3MFImplicitFunction_AddLengthNodeFunc: TLib3MFImplicitFunction_AddLengthNodeFunc read FLib3MFImplicitFunction_AddLengthNodeFunc;
+		property Lib3MFImplicitFunction_AddTransposeNodeFunc: TLib3MFImplicitFunction_AddTransposeNodeFunc read FLib3MFImplicitFunction_AddTransposeNodeFunc;
+		property Lib3MFImplicitFunction_InverseNodeFunc: TLib3MFImplicitFunction_InverseNodeFunc read FLib3MFImplicitFunction_InverseNodeFunc;
+		property Lib3MFImplicitFunction_AddSqrtNodeFunc: TLib3MFImplicitFunction_AddSqrtNodeFunc read FLib3MFImplicitFunction_AddSqrtNodeFunc;
+		property Lib3MFImplicitFunction_AddResourceIdNodeFunc: TLib3MFImplicitFunction_AddResourceIdNodeFunc read FLib3MFImplicitFunction_AddResourceIdNodeFunc;
+		property Lib3MFImplicitFunction_AddAdditionNodeFunc: TLib3MFImplicitFunction_AddAdditionNodeFunc read FLib3MFImplicitFunction_AddAdditionNodeFunc;
+		property Lib3MFImplicitFunction_AddSubtractionNodeFunc: TLib3MFImplicitFunction_AddSubtractionNodeFunc read FLib3MFImplicitFunction_AddSubtractionNodeFunc;
+		property Lib3MFImplicitFunction_AddMultiplicationNodeFunc: TLib3MFImplicitFunction_AddMultiplicationNodeFunc read FLib3MFImplicitFunction_AddMultiplicationNodeFunc;
+		property Lib3MFImplicitFunction_AddDivisionNodeFunc: TLib3MFImplicitFunction_AddDivisionNodeFunc read FLib3MFImplicitFunction_AddDivisionNodeFunc;
+		property Lib3MFImplicitFunction_AddDotNodeFunc: TLib3MFImplicitFunction_AddDotNodeFunc read FLib3MFImplicitFunction_AddDotNodeFunc;
+		property Lib3MFImplicitFunction_AddCrossNodeFunc: TLib3MFImplicitFunction_AddCrossNodeFunc read FLib3MFImplicitFunction_AddCrossNodeFunc;
+		property Lib3MFImplicitFunction_AddMatVecMultiplicationNodeFunc: TLib3MFImplicitFunction_AddMatVecMultiplicationNodeFunc read FLib3MFImplicitFunction_AddMatVecMultiplicationNodeFunc;
+		property Lib3MFImplicitFunction_AddMinNodeFunc: TLib3MFImplicitFunction_AddMinNodeFunc read FLib3MFImplicitFunction_AddMinNodeFunc;
+		property Lib3MFImplicitFunction_AddMaxNodeFunc: TLib3MFImplicitFunction_AddMaxNodeFunc read FLib3MFImplicitFunction_AddMaxNodeFunc;
+		property Lib3MFImplicitFunction_AddFmodNodeFunc: TLib3MFImplicitFunction_AddFmodNodeFunc read FLib3MFImplicitFunction_AddFmodNodeFunc;
+		property Lib3MFImplicitFunction_AddPowNodeFunc: TLib3MFImplicitFunction_AddPowNodeFunc read FLib3MFImplicitFunction_AddPowNodeFunc;
+		property Lib3MFImplicitFunction_AddSelectNodeFunc: TLib3MFImplicitFunction_AddSelectNodeFunc read FLib3MFImplicitFunction_AddSelectNodeFunc;
+		property Lib3MFImplicitFunction_AddClampNodeFunc: TLib3MFImplicitFunction_AddClampNodeFunc read FLib3MFImplicitFunction_AddClampNodeFunc;
+		property Lib3MFImplicitFunction_AddComposeVectorNodeFunc: TLib3MFImplicitFunction_AddComposeVectorNodeFunc read FLib3MFImplicitFunction_AddComposeVectorNodeFunc;
+		property Lib3MFImplicitFunction_AddDecomposeVectorNodeFunc: TLib3MFImplicitFunction_AddDecomposeVectorNodeFunc read FLib3MFImplicitFunction_AddDecomposeVectorNodeFunc;
+		property Lib3MFImplicitFunction_AddComposeMatrixNodeFunc: TLib3MFImplicitFunction_AddComposeMatrixNodeFunc read FLib3MFImplicitFunction_AddComposeMatrixNodeFunc;
+		property Lib3MFImplicitFunction_AddComposeMatrixFromRowVectorsNodeFunc: TLib3MFImplicitFunction_AddComposeMatrixFromRowVectorsNodeFunc read FLib3MFImplicitFunction_AddComposeMatrixFromRowVectorsNodeFunc;
+		property Lib3MFImplicitFunction_AddConstantNodeFunc: TLib3MFImplicitFunction_AddConstantNodeFunc read FLib3MFImplicitFunction_AddConstantNodeFunc;
+		property Lib3MFImplicitFunction_AddConstVecNodeFunc: TLib3MFImplicitFunction_AddConstVecNodeFunc read FLib3MFImplicitFunction_AddConstVecNodeFunc;
+		property Lib3MFImplicitFunction_AddConstMatNodeFunc: TLib3MFImplicitFunction_AddConstMatNodeFunc read FLib3MFImplicitFunction_AddConstMatNodeFunc;
 		property Lib3MFImplicitFunction_GetNodesFunc: TLib3MFImplicitFunction_GetNodesFunc read FLib3MFImplicitFunction_GetNodesFunc;
 		property Lib3MFImplicitFunction_RemoveNodeFunc: TLib3MFImplicitFunction_RemoveNodeFunc read FLib3MFImplicitFunction_RemoveNodeFunc;
 		property Lib3MFImplicitFunction_AddLinkFunc: TLib3MFImplicitFunction_AddLinkFunc read FLib3MFImplicitFunction_AddLinkFunc;
@@ -7727,6 +9734,53 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function TLib3MFPolymorphicFactoryMakeIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFIterator;
 	function TLib3MFPolymorphicFactoryMakeImplicitPortIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitPortIterator;
 	function TLib3MFPolymorphicFactoryMakeImplicitNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitNode;
+	function TLib3MFPolymorphicFactoryMakeOneInputNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFOneInputNode;
+	function TLib3MFPolymorphicFactoryMakeSinNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSinNode;
+	function TLib3MFPolymorphicFactoryMakeCosNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFCosNode;
+	function TLib3MFPolymorphicFactoryMakeTanNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFTanNode;
+	function TLib3MFPolymorphicFactoryMakeArcSinNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFArcSinNode;
+	function TLib3MFPolymorphicFactoryMakeArcCosNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFArcCosNode;
+	function TLib3MFPolymorphicFactoryMakeArcTanNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFArcTanNode;
+	function TLib3MFPolymorphicFactoryMakeSinhNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSinhNode;
+	function TLib3MFPolymorphicFactoryMakeCoshNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFCoshNode;
+	function TLib3MFPolymorphicFactoryMakeTanhNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFTanhNode;
+	function TLib3MFPolymorphicFactoryMakeRoundNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFRoundNode;
+	function TLib3MFPolymorphicFactoryMakeCeilNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFCeilNode;
+	function TLib3MFPolymorphicFactoryMakeFloorNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFFloorNode;
+	function TLib3MFPolymorphicFactoryMakeSignNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSignNode;
+	function TLib3MFPolymorphicFactoryMakeFractNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFFractNode;
+	function TLib3MFPolymorphicFactoryMakeAbsNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFAbsNode;
+	function TLib3MFPolymorphicFactoryMakeExpNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFExpNode;
+	function TLib3MFPolymorphicFactoryMakeLogNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFLogNode;
+	function TLib3MFPolymorphicFactoryMakeLog2Node(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFLog2Node;
+	function TLib3MFPolymorphicFactoryMakeLog10Node(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFLog10Node;
+	function TLib3MFPolymorphicFactoryMakeLengthNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFLengthNode;
+	function TLib3MFPolymorphicFactoryMakeTransposeNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFTransposeNode;
+	function TLib3MFPolymorphicFactoryMakeInverseNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFInverseNode;
+	function TLib3MFPolymorphicFactoryMakeSqrtNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSqrtNode;
+	function TLib3MFPolymorphicFactoryMakeResourceIdNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFResourceIdNode;
+	function TLib3MFPolymorphicFactoryMakeTwoInputNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFTwoInputNode;
+	function TLib3MFPolymorphicFactoryMakeAdditionNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFAdditionNode;
+	function TLib3MFPolymorphicFactoryMakeSubtractionNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSubtractionNode;
+	function TLib3MFPolymorphicFactoryMakeMultiplicationNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMultiplicationNode;
+	function TLib3MFPolymorphicFactoryMakeDivisionNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFDivisionNode;
+	function TLib3MFPolymorphicFactoryMakeDotNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFDotNode;
+	function TLib3MFPolymorphicFactoryMakeCrossNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFCrossNode;
+	function TLib3MFPolymorphicFactoryMakeArcTan2Node(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFArcTan2Node;
+	function TLib3MFPolymorphicFactoryMakeMatVecMultiplicationNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMatVecMultiplicationNode;
+	function TLib3MFPolymorphicFactoryMakeMinNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMinNode;
+	function TLib3MFPolymorphicFactoryMakeMaxNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMaxNode;
+	function TLib3MFPolymorphicFactoryMakeFmodNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFFmodNode;
+	function TLib3MFPolymorphicFactoryMakePowNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFPowNode;
+	function TLib3MFPolymorphicFactoryMakeSelectNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSelectNode;
+	function TLib3MFPolymorphicFactoryMakeClampNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFClampNode;
+	function TLib3MFPolymorphicFactoryMakeComposeVectorNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFComposeVectorNode;
+	function TLib3MFPolymorphicFactoryMakeDecomposeVectorNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFDecomposeVectorNode;
+	function TLib3MFPolymorphicFactoryMakeComposeMatrixNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFComposeMatrixNode;
+	function TLib3MFPolymorphicFactoryMakeComposeMatrixFromRowVectorsNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFComposeMatrixFromRowVectorsNode;
+	function TLib3MFPolymorphicFactoryMakeConstantNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFConstantNode;
+	function TLib3MFPolymorphicFactoryMakeConstVecNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFConstVecNode;
+	function TLib3MFPolymorphicFactoryMakeConstMatNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFConstMatNode;
 	function TLib3MFPolymorphicFactoryMakeNodeIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFNodeIterator;
 	function TLib3MFPolymorphicFactoryMakeFunction(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFFunction;
 	function TLib3MFPolymorphicFactoryMakeImplicitFunction(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitFunction;
@@ -8491,6 +10545,53 @@ implementation
 			QWord($52F06268CD098EFE): begin Obj := TLIB3MFIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Iterator"
 			QWord($C62268F2D7C7012C): begin Obj := TLIB3MFImplicitPortIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPortIterator"
 			QWord($E72592A7725AB29B): begin Obj := TLIB3MFImplicitNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitNode"
+			QWord($B19B9FDA94B0A5E7): begin Obj := TLIB3MFOneInputNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::OneInputNode"
+			QWord($D5AEA50A56306722): begin Obj := TLIB3MFSinNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::SinNode"
+			QWord($59BC328F6FB5C5FF): begin Obj := TLIB3MFCosNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::CosNode"
+			QWord($2614CC572AF350B7): begin Obj := TLIB3MFTanNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::TanNode"
+			QWord($E554C8A7E72AAF4D): begin Obj := TLIB3MFArcSinNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ArcSinNode"
+			QWord($943AF6AE0EFD2B8A): begin Obj := TLIB3MFArcCosNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ArcCosNode"
+			QWord($E47D547615816BAD): begin Obj := TLIB3MFArcTanNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ArcTanNode"
+			QWord($3C7756A456F2D089): begin Obj := TLIB3MFSinhNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::SinhNode"
+			QWord($4A993F91E1DE256D): begin Obj := TLIB3MFCoshNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::CoshNode"
+			QWord($CF077B19B0B78E9D): begin Obj := TLIB3MFTanhNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::TanhNode"
+			QWord($D9F5A53C657765AE): begin Obj := TLIB3MFRoundNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::RoundNode"
+			QWord($627E211653E11D93): begin Obj := TLIB3MFCeilNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::CeilNode"
+			QWord($392A0F4C041D249C): begin Obj := TLIB3MFFloorNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::FloorNode"
+			QWord($8A45165E6C9646D7): begin Obj := TLIB3MFSignNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::SignNode"
+			QWord($53E62FD67F4D9A65): begin Obj := TLIB3MFFractNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::FractNode"
+			QWord($6B641C7060040BE3): begin Obj := TLIB3MFAbsNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::AbsNode"
+			QWord($3390243A8E2410F3): begin Obj := TLIB3MFExpNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ExpNode"
+			QWord($0070021D73AA89FD): begin Obj := TLIB3MFLogNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::LogNode"
+			QWord($E8C0ABF7C5DC7068): begin Obj := TLIB3MFLog2Node.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Log2Node"
+			QWord($87740AD53454E0DF): begin Obj := TLIB3MFLog10Node.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Log10Node"
+			QWord($D85889E2739A74B1): begin Obj := TLIB3MFLengthNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::LengthNode"
+			QWord($A808B7599C158CE6): begin Obj := TLIB3MFTransposeNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::TransposeNode"
+			QWord($E8601F66A23A0540): begin Obj := TLIB3MFInverseNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::InverseNode"
+			QWord($9F831944A3DE31DA): begin Obj := TLIB3MFSqrtNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::SqrtNode"
+			QWord($CA86A77C71CD3FAE): begin Obj := TLIB3MFResourceIdNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ResourceIdNode"
+			QWord($7DE3951BA4C1064C): begin Obj := TLIB3MFTwoInputNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::TwoInputNode"
+			QWord($57A2236998DF5248): begin Obj := TLIB3MFAdditionNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::AdditionNode"
+			QWord($6079B12FFF345D02): begin Obj := TLIB3MFSubtractionNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::SubtractionNode"
+			QWord($A3C27CF54C2AA76C): begin Obj := TLIB3MFMultiplicationNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::MultiplicationNode"
+			QWord($B896B6413C08CF39): begin Obj := TLIB3MFDivisionNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::DivisionNode"
+			QWord($FE60932A66375FAD): begin Obj := TLIB3MFDotNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::DotNode"
+			QWord($106182D38CA5CFE3): begin Obj := TLIB3MFCrossNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::CrossNode"
+			QWord($B6153EF5DE7E5E11): begin Obj := TLIB3MFArcTan2Node.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ArcTan2Node"
+			QWord($7570C43B9721D0C0): begin Obj := TLIB3MFMatVecMultiplicationNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::MatVecMultiplicationNode"
+			QWord($846AFDE9A091E997): begin Obj := TLIB3MFMinNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::MinNode"
+			QWord($073F910381BF250D): begin Obj := TLIB3MFMaxNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::MaxNode"
+			QWord($1EF703D298223F2A): begin Obj := TLIB3MFFmodNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::FmodNode"
+			QWord($7700AA17CA1AC0F8): begin Obj := TLIB3MFPowNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::PowNode"
+			QWord($1127ED71E05A9BD4): begin Obj := TLIB3MFSelectNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::SelectNode"
+			QWord($77AF68C971B1485F): begin Obj := TLIB3MFClampNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ClampNode"
+			QWord($49C24B8840C01F7E): begin Obj := TLIB3MFComposeVectorNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeVectorNode"
+			QWord($CC4F8D561CCE35D4): begin Obj := TLIB3MFDecomposeVectorNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::DecomposeVectorNode"
+			QWord($9EF9EB54A53AA40D): begin Obj := TLIB3MFComposeMatrixNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixNode"
+			QWord($5F89513A9B5FC583): begin Obj := TLIB3MFComposeMatrixFromRowVectorsNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixFromRowVectorsNode"
+			QWord($3F8E5D082F966B1B): begin Obj := TLIB3MFConstantNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ConstantNode"
+			QWord($9C9363B3F708D556): begin Obj := TLIB3MFConstVecNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ConstVecNode"
+			QWord($F85C90EDCE6F90A4): begin Obj := TLIB3MFConstMatNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ConstMatNode"
 			QWord($FC006BC888CAB4D0): begin Obj := TLIB3MFNodeIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::NodeIterator"
 			QWord($9EFB2757CA1A5231): begin Obj := TLIB3MFFunction.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Function"
 			QWord($6CE54469EEA83BC1): begin Obj := TLIB3MFImplicitFunction.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitFunction"
@@ -8692,6 +10793,194 @@ implementation
 	function TLib3MFPolymorphicFactoryMakeImplicitNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitNode;
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFImplicitNode, TLIB3MFImplicitNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeOneInputNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFOneInputNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFOneInputNode, TLIB3MFOneInputNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeSinNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSinNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFSinNode, TLIB3MFSinNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeCosNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFCosNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFCosNode, TLIB3MFCosNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeTanNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFTanNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFTanNode, TLIB3MFTanNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeArcSinNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFArcSinNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFArcSinNode, TLIB3MFArcSinNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeArcCosNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFArcCosNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFArcCosNode, TLIB3MFArcCosNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeArcTanNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFArcTanNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFArcTanNode, TLIB3MFArcTanNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeSinhNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSinhNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFSinhNode, TLIB3MFSinhNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeCoshNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFCoshNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFCoshNode, TLIB3MFCoshNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeTanhNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFTanhNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFTanhNode, TLIB3MFTanhNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeRoundNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFRoundNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFRoundNode, TLIB3MFRoundNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeCeilNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFCeilNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFCeilNode, TLIB3MFCeilNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeFloorNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFFloorNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFFloorNode, TLIB3MFFloorNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeSignNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSignNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFSignNode, TLIB3MFSignNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeFractNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFFractNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFFractNode, TLIB3MFFractNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeAbsNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFAbsNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFAbsNode, TLIB3MFAbsNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeExpNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFExpNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFExpNode, TLIB3MFExpNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeLogNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFLogNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFLogNode, TLIB3MFLogNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeLog2Node(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFLog2Node;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFLog2Node, TLIB3MFLog2Node>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeLog10Node(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFLog10Node;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFLog10Node, TLIB3MFLog10Node>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeLengthNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFLengthNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFLengthNode, TLIB3MFLengthNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeTransposeNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFTransposeNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFTransposeNode, TLIB3MFTransposeNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeInverseNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFInverseNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFInverseNode, TLIB3MFInverseNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeSqrtNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSqrtNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFSqrtNode, TLIB3MFSqrtNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeResourceIdNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFResourceIdNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFResourceIdNode, TLIB3MFResourceIdNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeTwoInputNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFTwoInputNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFTwoInputNode, TLIB3MFTwoInputNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeAdditionNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFAdditionNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFAdditionNode, TLIB3MFAdditionNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeSubtractionNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSubtractionNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFSubtractionNode, TLIB3MFSubtractionNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeMultiplicationNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMultiplicationNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFMultiplicationNode, TLIB3MFMultiplicationNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeDivisionNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFDivisionNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFDivisionNode, TLIB3MFDivisionNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeDotNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFDotNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFDotNode, TLIB3MFDotNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeCrossNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFCrossNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFCrossNode, TLIB3MFCrossNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeArcTan2Node(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFArcTan2Node;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFArcTan2Node, TLIB3MFArcTan2Node>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeMatVecMultiplicationNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMatVecMultiplicationNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFMatVecMultiplicationNode, TLIB3MFMatVecMultiplicationNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeMinNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMinNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFMinNode, TLIB3MFMinNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeMaxNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMaxNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFMaxNode, TLIB3MFMaxNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeFmodNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFFmodNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFFmodNode, TLIB3MFFmodNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakePowNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFPowNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFPowNode, TLIB3MFPowNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeSelectNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSelectNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFSelectNode, TLIB3MFSelectNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeClampNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFClampNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFClampNode, TLIB3MFClampNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeComposeVectorNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFComposeVectorNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFComposeVectorNode, TLIB3MFComposeVectorNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeDecomposeVectorNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFDecomposeVectorNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFDecomposeVectorNode, TLIB3MFDecomposeVectorNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeComposeMatrixNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFComposeMatrixNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFComposeMatrixNode, TLIB3MFComposeMatrixNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeComposeMatrixFromRowVectorsNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFComposeMatrixFromRowVectorsNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFComposeMatrixFromRowVectorsNode, TLIB3MFComposeMatrixFromRowVectorsNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeConstantNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFConstantNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFConstantNode, TLIB3MFConstantNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeConstVecNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFConstVecNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFConstVecNode, TLIB3MFConstVecNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeConstMatNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFConstMatNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFConstMatNode, TLIB3MFConstMatNode>.Make(Wrapper, Handle);
 	end;
 	function TLib3MFPolymorphicFactoryMakeNodeIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFNodeIterator;
 	begin
@@ -11877,58 +14166,6 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HOutput);
 	end;
 
-	procedure TLib3MFImplicitNode.SetConstant(const AValue: Double);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitNode_SetConstantFunc(FHandle, AValue));
-	end;
-
-	function TLib3MFImplicitNode.GetConstant(): Double;
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitNode_GetConstantFunc(FHandle, Result));
-	end;
-
-	procedure TLib3MFImplicitNode.SetVector(const AValue: TLib3MFVector);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitNode_SetVectorFunc(FHandle, @AValue));
-	end;
-
-	function TLib3MFImplicitNode.GetVector(): TLib3MFVector;
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitNode_GetVectorFunc(FHandle, @Result));
-	end;
-
-	procedure TLib3MFImplicitNode.SetMatrix(const AValue: TLib3MFMatrix4x4);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitNode_SetMatrixFunc(FHandle, @AValue));
-	end;
-
-	function TLib3MFImplicitNode.GetMatrix(): TLib3MFMatrix4x4;
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitNode_GetMatrixFunc(FHandle, @Result));
-	end;
-
-	procedure TLib3MFImplicitNode.SetResource(const AResource: TLib3MFResource);
-	var
-		AResourceHandle: TLib3MFHandle;
-	begin
-		if Assigned(AResource) then
-		AResourceHandle := AResource.TheHandle
-		else
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AResource is a nil value.');
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitNode_SetResourceFunc(FHandle, AResourceHandle));
-	end;
-
-	function TLib3MFImplicitNode.GetResource(): TLib3MFResource;
-	var
-		HResource: TLib3MFHandle;
-	begin
-		Result := nil;
-		HResource := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitNode_GetResourceFunc(FHandle, HResource));
-		if Assigned(HResource) then
-			Result := TLib3MFPolymorphicFactory<TLib3MFResource, TLib3MFResource>.Make(FWrapper, HResource);
-	end;
-
 	function TLib3MFImplicitNode.AreTypesValid(): Boolean;
 	var
 		ResultValid: Byte;
@@ -11936,6 +14173,1178 @@ implementation
 		ResultValid := 0;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitNode_AreTypesValidFunc(FHandle, ResultValid));
 		Result := (ResultValid <> 0);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for OneInputNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFOneInputNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFOneInputNode.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFOneInputNode.GetInputA(): TLib3MFImplicitPort;
+	var
+		HInput: TLib3MFHandle;
+	begin
+		Result := nil;
+		HInput := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFOneInputNode_GetInputAFunc(FHandle, HInput));
+		if Assigned(HInput) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HInput);
+	end;
+
+	function TLib3MFOneInputNode.GetOutputResult(): TLib3MFImplicitPort;
+	var
+		HResult: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResult := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFOneInputNode_GetOutputResultFunc(FHandle, HResult));
+		if Assigned(HResult) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HResult);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for SinNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFSinNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFSinNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for CosNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFCosNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFCosNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for TanNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFTanNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFTanNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ArcSinNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFArcSinNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFArcSinNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ArcCosNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFArcCosNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFArcCosNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ArcTanNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFArcTanNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFArcTanNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for SinhNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFSinhNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFSinhNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for CoshNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFCoshNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFCoshNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for TanhNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFTanhNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFTanhNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for RoundNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFRoundNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFRoundNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for CeilNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFCeilNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFCeilNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for FloorNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFFloorNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFFloorNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for SignNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFSignNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFSignNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for FractNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFFractNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFFractNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for AbsNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFAbsNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFAbsNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ExpNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFExpNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFExpNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for LogNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFLogNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFLogNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for Log2Node
+**************************************************************************************************************************)
+
+	constructor TLib3MFLog2Node.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFLog2Node.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for Log10Node
+**************************************************************************************************************************)
+
+	constructor TLib3MFLog10Node.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFLog10Node.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for LengthNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFLengthNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFLengthNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for TransposeNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFTransposeNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFTransposeNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for InverseNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFInverseNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFInverseNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for SqrtNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFSqrtNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFSqrtNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ResourceIdNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFResourceIdNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFResourceIdNode.Destroy;
+	begin
+		inherited;
+	end;
+
+	procedure TLib3MFResourceIdNode.SetResource(const AResource: TLib3MFResource);
+	var
+		AResourceHandle: TLib3MFHandle;
+	begin
+		if Assigned(AResource) then
+		AResourceHandle := AResource.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AResource is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFResourceIdNode_SetResourceFunc(FHandle, AResourceHandle));
+	end;
+
+	function TLib3MFResourceIdNode.GetResource(): TLib3MFResource;
+	var
+		HResource: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResource := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFResourceIdNode_GetResourceFunc(FHandle, HResource));
+		if Assigned(HResource) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFResource, TLib3MFResource>.Make(FWrapper, HResource);
+	end;
+
+	function TLib3MFResourceIdNode.GetOutputValue(): TLib3MFImplicitPort;
+	var
+		HValue: TLib3MFHandle;
+	begin
+		Result := nil;
+		HValue := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFResourceIdNode_GetOutputValueFunc(FHandle, HValue));
+		if Assigned(HValue) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HValue);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for TwoInputNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFTwoInputNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFTwoInputNode.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFTwoInputNode.GetInputB(): TLib3MFImplicitPort;
+	var
+		HB: TLib3MFHandle;
+	begin
+		Result := nil;
+		HB := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFTwoInputNode_GetInputBFunc(FHandle, HB));
+		if Assigned(HB) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HB);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for AdditionNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFAdditionNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFAdditionNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for SubtractionNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFSubtractionNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFSubtractionNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for MultiplicationNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFMultiplicationNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFMultiplicationNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for DivisionNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFDivisionNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFDivisionNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for DotNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFDotNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFDotNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for CrossNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFCrossNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFCrossNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ArcTan2Node
+**************************************************************************************************************************)
+
+	constructor TLib3MFArcTan2Node.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFArcTan2Node.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for MatVecMultiplicationNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFMatVecMultiplicationNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFMatVecMultiplicationNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for MinNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFMinNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFMinNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for MaxNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFMaxNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFMaxNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for FmodNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFFmodNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFFmodNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for PowNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFPowNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFPowNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for SelectNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFSelectNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFSelectNode.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFSelectNode.GetInputB(): TLib3MFImplicitPort;
+	var
+		HB: TLib3MFHandle;
+	begin
+		Result := nil;
+		HB := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFSelectNode_GetInputBFunc(FHandle, HB));
+		if Assigned(HB) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HB);
+	end;
+
+	function TLib3MFSelectNode.GetInputC(): TLib3MFImplicitPort;
+	var
+		HC: TLib3MFHandle;
+	begin
+		Result := nil;
+		HC := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFSelectNode_GetInputCFunc(FHandle, HC));
+		if Assigned(HC) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HC);
+	end;
+
+	function TLib3MFSelectNode.GetInputD(): TLib3MFImplicitPort;
+	var
+		HD: TLib3MFHandle;
+	begin
+		Result := nil;
+		HD := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFSelectNode_GetInputDFunc(FHandle, HD));
+		if Assigned(HD) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HD);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ClampNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFClampNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFClampNode.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFClampNode.GetInputMin(): TLib3MFImplicitPort;
+	var
+		HMin: TLib3MFHandle;
+	begin
+		Result := nil;
+		HMin := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFClampNode_GetInputMinFunc(FHandle, HMin));
+		if Assigned(HMin) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HMin);
+	end;
+
+	function TLib3MFClampNode.GetInputMax(): TLib3MFImplicitPort;
+	var
+		HMax: TLib3MFHandle;
+	begin
+		Result := nil;
+		HMax := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFClampNode_GetInputMaxFunc(FHandle, HMax));
+		if Assigned(HMax) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HMax);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ComposeVectorNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFComposeVectorNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFComposeVectorNode.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFComposeVectorNode.GetInputX(): TLib3MFImplicitPort;
+	var
+		HX: TLib3MFHandle;
+	begin
+		Result := nil;
+		HX := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeVectorNode_GetInputXFunc(FHandle, HX));
+		if Assigned(HX) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HX);
+	end;
+
+	function TLib3MFComposeVectorNode.GetInputY(): TLib3MFImplicitPort;
+	var
+		HY: TLib3MFHandle;
+	begin
+		Result := nil;
+		HY := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeVectorNode_GetInputYFunc(FHandle, HY));
+		if Assigned(HY) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HY);
+	end;
+
+	function TLib3MFComposeVectorNode.GetInputZ(): TLib3MFImplicitPort;
+	var
+		HZ: TLib3MFHandle;
+	begin
+		Result := nil;
+		HZ := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeVectorNode_GetInputZFunc(FHandle, HZ));
+		if Assigned(HZ) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HZ);
+	end;
+
+	function TLib3MFComposeVectorNode.GetOutputVector(): TLib3MFImplicitPort;
+	var
+		HVector: TLib3MFHandle;
+	begin
+		Result := nil;
+		HVector := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeVectorNode_GetOutputVectorFunc(FHandle, HVector));
+		if Assigned(HVector) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HVector);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for DecomposeVectorNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFDecomposeVectorNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFDecomposeVectorNode.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFDecomposeVectorNode.GetInputVector(): TLib3MFImplicitPort;
+	var
+		HVector: TLib3MFHandle;
+	begin
+		Result := nil;
+		HVector := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDecomposeVectorNode_GetInputVectorFunc(FHandle, HVector));
+		if Assigned(HVector) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HVector);
+	end;
+
+	function TLib3MFDecomposeVectorNode.GetOutputX(): TLib3MFImplicitPort;
+	var
+		HX: TLib3MFHandle;
+	begin
+		Result := nil;
+		HX := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDecomposeVectorNode_GetOutputXFunc(FHandle, HX));
+		if Assigned(HX) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HX);
+	end;
+
+	function TLib3MFDecomposeVectorNode.GetOutputY(): TLib3MFImplicitPort;
+	var
+		HY: TLib3MFHandle;
+	begin
+		Result := nil;
+		HY := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDecomposeVectorNode_GetOutputYFunc(FHandle, HY));
+		if Assigned(HY) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HY);
+	end;
+
+	function TLib3MFDecomposeVectorNode.GetOutputZ(): TLib3MFImplicitPort;
+	var
+		HZ: TLib3MFHandle;
+	begin
+		Result := nil;
+		HZ := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDecomposeVectorNode_GetOutputZFunc(FHandle, HZ));
+		if Assigned(HZ) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HZ);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ComposeMatrixNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFComposeMatrixNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFComposeMatrixNode.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFComposeMatrixNode.GetInputM00(): TLib3MFImplicitPort;
+	var
+		HM00: TLib3MFHandle;
+	begin
+		Result := nil;
+		HM00 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixNode_GetInputM00Func(FHandle, HM00));
+		if Assigned(HM00) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HM00);
+	end;
+
+	function TLib3MFComposeMatrixNode.GetInputM01(): TLib3MFImplicitPort;
+	var
+		HM01: TLib3MFHandle;
+	begin
+		Result := nil;
+		HM01 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixNode_GetInputM01Func(FHandle, HM01));
+		if Assigned(HM01) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HM01);
+	end;
+
+	function TLib3MFComposeMatrixNode.GetInputM02(): TLib3MFImplicitPort;
+	var
+		HM02: TLib3MFHandle;
+	begin
+		Result := nil;
+		HM02 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixNode_GetInputM02Func(FHandle, HM02));
+		if Assigned(HM02) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HM02);
+	end;
+
+	function TLib3MFComposeMatrixNode.GetInputM03(): TLib3MFImplicitPort;
+	var
+		HM03: TLib3MFHandle;
+	begin
+		Result := nil;
+		HM03 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixNode_GetInputM03Func(FHandle, HM03));
+		if Assigned(HM03) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HM03);
+	end;
+
+	function TLib3MFComposeMatrixNode.GetInputM10(): TLib3MFImplicitPort;
+	var
+		HM10: TLib3MFHandle;
+	begin
+		Result := nil;
+		HM10 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixNode_GetInputM10Func(FHandle, HM10));
+		if Assigned(HM10) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HM10);
+	end;
+
+	function TLib3MFComposeMatrixNode.GetInputM11(): TLib3MFImplicitPort;
+	var
+		HM11: TLib3MFHandle;
+	begin
+		Result := nil;
+		HM11 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixNode_GetInputM11Func(FHandle, HM11));
+		if Assigned(HM11) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HM11);
+	end;
+
+	function TLib3MFComposeMatrixNode.GetInputM12(): TLib3MFImplicitPort;
+	var
+		HM12: TLib3MFHandle;
+	begin
+		Result := nil;
+		HM12 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixNode_GetInputM12Func(FHandle, HM12));
+		if Assigned(HM12) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HM12);
+	end;
+
+	function TLib3MFComposeMatrixNode.GetInputM13(): TLib3MFImplicitPort;
+	var
+		HM13: TLib3MFHandle;
+	begin
+		Result := nil;
+		HM13 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixNode_GetInputM13Func(FHandle, HM13));
+		if Assigned(HM13) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HM13);
+	end;
+
+	function TLib3MFComposeMatrixNode.GetInputM20(): TLib3MFImplicitPort;
+	var
+		HM20: TLib3MFHandle;
+	begin
+		Result := nil;
+		HM20 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixNode_GetInputM20Func(FHandle, HM20));
+		if Assigned(HM20) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HM20);
+	end;
+
+	function TLib3MFComposeMatrixNode.GetInputM21(): TLib3MFImplicitPort;
+	var
+		HM21: TLib3MFHandle;
+	begin
+		Result := nil;
+		HM21 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixNode_GetInputM21Func(FHandle, HM21));
+		if Assigned(HM21) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HM21);
+	end;
+
+	function TLib3MFComposeMatrixNode.GetInputM22(): TLib3MFImplicitPort;
+	var
+		HM22: TLib3MFHandle;
+	begin
+		Result := nil;
+		HM22 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixNode_GetInputM22Func(FHandle, HM22));
+		if Assigned(HM22) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HM22);
+	end;
+
+	function TLib3MFComposeMatrixNode.GetInputM23(): TLib3MFImplicitPort;
+	var
+		HM23: TLib3MFHandle;
+	begin
+		Result := nil;
+		HM23 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixNode_GetInputM23Func(FHandle, HM23));
+		if Assigned(HM23) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HM23);
+	end;
+
+	function TLib3MFComposeMatrixNode.GetInputM30(): TLib3MFImplicitPort;
+	var
+		HM30: TLib3MFHandle;
+	begin
+		Result := nil;
+		HM30 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixNode_GetInputM30Func(FHandle, HM30));
+		if Assigned(HM30) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HM30);
+	end;
+
+	function TLib3MFComposeMatrixNode.GetInputM31(): TLib3MFImplicitPort;
+	var
+		HM31: TLib3MFHandle;
+	begin
+		Result := nil;
+		HM31 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixNode_GetInputM31Func(FHandle, HM31));
+		if Assigned(HM31) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HM31);
+	end;
+
+	function TLib3MFComposeMatrixNode.GetInputM32(): TLib3MFImplicitPort;
+	var
+		HM32: TLib3MFHandle;
+	begin
+		Result := nil;
+		HM32 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixNode_GetInputM32Func(FHandle, HM32));
+		if Assigned(HM32) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HM32);
+	end;
+
+	function TLib3MFComposeMatrixNode.GetInputM33(): TLib3MFImplicitPort;
+	var
+		HM33: TLib3MFHandle;
+	begin
+		Result := nil;
+		HM33 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixNode_GetInputM33Func(FHandle, HM33));
+		if Assigned(HM33) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HM33);
+	end;
+
+	function TLib3MFComposeMatrixNode.GetOutputMatrix(): TLib3MFImplicitPort;
+	var
+		HMatrix: TLib3MFHandle;
+	begin
+		Result := nil;
+		HMatrix := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixNode_GetOutputMatrixFunc(FHandle, HMatrix));
+		if Assigned(HMatrix) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HMatrix);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ComposeMatrixFromRowVectorsNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFComposeMatrixFromRowVectorsNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFComposeMatrixFromRowVectorsNode.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFComposeMatrixFromRowVectorsNode.GetInputRow0(): TLib3MFImplicitPort;
+	var
+		HRow0: TLib3MFHandle;
+	begin
+		Result := nil;
+		HRow0 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Func(FHandle, HRow0));
+		if Assigned(HRow0) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HRow0);
+	end;
+
+	function TLib3MFComposeMatrixFromRowVectorsNode.GetInputRow1(): TLib3MFImplicitPort;
+	var
+		HRow1: TLib3MFHandle;
+	begin
+		Result := nil;
+		HRow1 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Func(FHandle, HRow1));
+		if Assigned(HRow1) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HRow1);
+	end;
+
+	function TLib3MFComposeMatrixFromRowVectorsNode.GetInputRow2(): TLib3MFImplicitPort;
+	var
+		HRow2: TLib3MFHandle;
+	begin
+		Result := nil;
+		HRow2 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Func(FHandle, HRow2));
+		if Assigned(HRow2) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HRow2);
+	end;
+
+	function TLib3MFComposeMatrixFromRowVectorsNode.GetInputRow3(): TLib3MFImplicitPort;
+	var
+		HRow3: TLib3MFHandle;
+	begin
+		Result := nil;
+		HRow3 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Func(FHandle, HRow3));
+		if Assigned(HRow3) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HRow3);
+	end;
+
+	function TLib3MFComposeMatrixFromRowVectorsNode.GetOutputMatrix(): TLib3MFImplicitPort;
+	var
+		HMatrix: TLib3MFHandle;
+	begin
+		Result := nil;
+		HMatrix := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixFromRowVectorsNode_GetOutputMatrixFunc(FHandle, HMatrix));
+		if Assigned(HMatrix) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HMatrix);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ConstantNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFConstantNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFConstantNode.Destroy;
+	begin
+		inherited;
+	end;
+
+	procedure TLib3MFConstantNode.SetConstant(const AValue: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFConstantNode_SetConstantFunc(FHandle, AValue));
+	end;
+
+	function TLib3MFConstantNode.GetConstant(): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFConstantNode_GetConstantFunc(FHandle, Result));
+	end;
+
+	function TLib3MFConstantNode.GetOutputValue(): TLib3MFImplicitPort;
+	var
+		HValue: TLib3MFHandle;
+	begin
+		Result := nil;
+		HValue := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFConstantNode_GetOutputValueFunc(FHandle, HValue));
+		if Assigned(HValue) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HValue);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ConstVecNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFConstVecNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFConstVecNode.Destroy;
+	begin
+		inherited;
+	end;
+
+	procedure TLib3MFConstVecNode.SetVector(const AValue: TLib3MFVector);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFConstVecNode_SetVectorFunc(FHandle, @AValue));
+	end;
+
+	function TLib3MFConstVecNode.GetVector(): TLib3MFVector;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFConstVecNode_GetVectorFunc(FHandle, @Result));
+	end;
+
+	function TLib3MFConstVecNode.GetOutputVector(): TLib3MFImplicitPort;
+	var
+		HVector: TLib3MFHandle;
+	begin
+		Result := nil;
+		HVector := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFConstVecNode_GetOutputVectorFunc(FHandle, HVector));
+		if Assigned(HVector) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HVector);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ConstMatNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFConstMatNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFConstMatNode.Destroy;
+	begin
+		inherited;
+	end;
+
+	procedure TLib3MFConstMatNode.SetMatrix(const AValue: TLib3MFMatrix4x4);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFConstMatNode_SetMatrixFunc(FHandle, @AValue));
+	end;
+
+	function TLib3MFConstMatNode.GetMatrix(): TLib3MFMatrix4x4;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFConstMatNode_GetMatrixFunc(FHandle, @Result));
+	end;
+
+	function TLib3MFConstMatNode.GetOutputMatrix(): TLib3MFImplicitPort;
+	var
+		HMatrix: TLib3MFHandle;
+	begin
+		Result := nil;
+		HMatrix := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFConstMatNode_GetOutputMatrixFunc(FHandle, HMatrix));
+		if Assigned(HMatrix) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HMatrix);
 	end;
 
 (*************************************************************************************************************************
@@ -12126,6 +15535,490 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddNodeFunc(FHandle, convertImplicitNodeTypeToConst(ANodeType), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
 		if Assigned(HNode) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitNode, TLib3MFImplicitNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddSinNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFSinNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddSinNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFSinNode, TLib3MFSinNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddCosNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFCosNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddCosNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCosNode, TLib3MFCosNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddTanNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFTanNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddTanNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFTanNode, TLib3MFTanNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddArcSinNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFArcSinNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddArcSinNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFArcSinNode, TLib3MFArcSinNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddArcCosNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFArcCosNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddArcCosNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFArcCosNode, TLib3MFArcCosNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddArcTan2Node(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFArcTan2Node;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddArcTan2NodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFArcTan2Node, TLib3MFArcTan2Node>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddSinhNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFSinhNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddSinhNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFSinhNode, TLib3MFSinhNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddCoshNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFCoshNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddCoshNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCoshNode, TLib3MFCoshNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddTanhNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFTanhNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddTanhNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFTanhNode, TLib3MFTanhNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddRoundNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFRoundNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddRoundNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFRoundNode, TLib3MFRoundNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddCeilNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFCeilNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddCeilNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCeilNode, TLib3MFCeilNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddFloorNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFFloorNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddFloorNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFFloorNode, TLib3MFFloorNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddSignNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFSignNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddSignNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFSignNode, TLib3MFSignNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddFractNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFFractNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddFractNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFFractNode, TLib3MFFractNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddAbsNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFAbsNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddAbsNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFAbsNode, TLib3MFAbsNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddExpNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFExpNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddExpNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFExpNode, TLib3MFExpNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddLogNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFLogNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddLogNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFLogNode, TLib3MFLogNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddLog2Node(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFLog2Node;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddLog2NodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFLog2Node, TLib3MFLog2Node>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddLog10Node(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFLog10Node;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddLog10NodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFLog10Node, TLib3MFLog10Node>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddLengthNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFLengthNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddLengthNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFLengthNode, TLib3MFLengthNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddTransposeNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFTransposeNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddTransposeNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFTransposeNode, TLib3MFTransposeNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.InverseNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFInverseNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_InverseNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFInverseNode, TLib3MFInverseNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddSqrtNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFSqrtNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddSqrtNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFSqrtNode, TLib3MFSqrtNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddResourceIdNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFResourceIdNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddResourceIdNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFResourceIdNode, TLib3MFResourceIdNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddAdditionNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFAdditionNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddAdditionNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFAdditionNode, TLib3MFAdditionNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddSubtractionNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFSubtractionNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddSubtractionNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFSubtractionNode, TLib3MFSubtractionNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddMultiplicationNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFMultiplicationNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddMultiplicationNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFMultiplicationNode, TLib3MFMultiplicationNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddDivisionNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFDivisionNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddDivisionNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFDivisionNode, TLib3MFDivisionNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddDotNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFDotNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddDotNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFDotNode, TLib3MFDotNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddCrossNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFCrossNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddCrossNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCrossNode, TLib3MFCrossNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddMatVecMultiplicationNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFMatVecMultiplicationNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddMatVecMultiplicationNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFMatVecMultiplicationNode, TLib3MFMatVecMultiplicationNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddMinNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFMinNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddMinNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFMinNode, TLib3MFMinNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddMaxNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFMaxNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddMaxNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFMaxNode, TLib3MFMaxNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddFmodNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFFmodNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddFmodNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFFmodNode, TLib3MFFmodNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddPowNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFPowNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddPowNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFPowNode, TLib3MFPowNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddSelectNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFSelectNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddSelectNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFSelectNode, TLib3MFSelectNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddClampNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFClampNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddClampNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFClampNode, TLib3MFClampNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddComposeVectorNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFComposeVectorNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddComposeVectorNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFComposeVectorNode, TLib3MFComposeVectorNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddDecomposeVectorNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFDecomposeVectorNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddDecomposeVectorNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFDecomposeVectorNode, TLib3MFDecomposeVectorNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddComposeMatrixNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFComposeMatrixNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddComposeMatrixNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFComposeMatrixNode, TLib3MFComposeMatrixNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddComposeMatrixFromRowVectorsNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFComposeMatrixFromRowVectorsNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddComposeMatrixFromRowVectorsNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFComposeMatrixFromRowVectorsNode, TLib3MFComposeMatrixFromRowVectorsNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddConstantNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFConstantNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddConstantNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFConstantNode, TLib3MFConstantNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddConstVecNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFConstVecNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddConstVecNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFConstVecNode, TLib3MFConstVecNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddConstMatNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFConstMatNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddConstMatNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFConstMatNode, TLib3MFConstMatNode>.Make(FWrapper, HNode);
 	end;
 
 	function TLib3MFImplicitFunction.GetNodes(): TLib3MFNodeIterator;
@@ -14219,15 +18112,57 @@ implementation
 		FLib3MFImplicitNode_GetOutputsFunc := LoadFunction('lib3mf_implicitnode_getoutputs');
 		FLib3MFImplicitNode_FindInputFunc := LoadFunction('lib3mf_implicitnode_findinput');
 		FLib3MFImplicitNode_FindOutputFunc := LoadFunction('lib3mf_implicitnode_findoutput');
-		FLib3MFImplicitNode_SetConstantFunc := LoadFunction('lib3mf_implicitnode_setconstant');
-		FLib3MFImplicitNode_GetConstantFunc := LoadFunction('lib3mf_implicitnode_getconstant');
-		FLib3MFImplicitNode_SetVectorFunc := LoadFunction('lib3mf_implicitnode_setvector');
-		FLib3MFImplicitNode_GetVectorFunc := LoadFunction('lib3mf_implicitnode_getvector');
-		FLib3MFImplicitNode_SetMatrixFunc := LoadFunction('lib3mf_implicitnode_setmatrix');
-		FLib3MFImplicitNode_GetMatrixFunc := LoadFunction('lib3mf_implicitnode_getmatrix');
-		FLib3MFImplicitNode_SetResourceFunc := LoadFunction('lib3mf_implicitnode_setresource');
-		FLib3MFImplicitNode_GetResourceFunc := LoadFunction('lib3mf_implicitnode_getresource');
 		FLib3MFImplicitNode_AreTypesValidFunc := LoadFunction('lib3mf_implicitnode_aretypesvalid');
+		FLib3MFOneInputNode_GetInputAFunc := LoadFunction('lib3mf_oneinputnode_getinputa');
+		FLib3MFOneInputNode_GetOutputResultFunc := LoadFunction('lib3mf_oneinputnode_getoutputresult');
+		FLib3MFResourceIdNode_SetResourceFunc := LoadFunction('lib3mf_resourceidnode_setresource');
+		FLib3MFResourceIdNode_GetResourceFunc := LoadFunction('lib3mf_resourceidnode_getresource');
+		FLib3MFResourceIdNode_GetOutputValueFunc := LoadFunction('lib3mf_resourceidnode_getoutputvalue');
+		FLib3MFTwoInputNode_GetInputBFunc := LoadFunction('lib3mf_twoinputnode_getinputb');
+		FLib3MFSelectNode_GetInputBFunc := LoadFunction('lib3mf_selectnode_getinputb');
+		FLib3MFSelectNode_GetInputCFunc := LoadFunction('lib3mf_selectnode_getinputc');
+		FLib3MFSelectNode_GetInputDFunc := LoadFunction('lib3mf_selectnode_getinputd');
+		FLib3MFClampNode_GetInputMinFunc := LoadFunction('lib3mf_clampnode_getinputmin');
+		FLib3MFClampNode_GetInputMaxFunc := LoadFunction('lib3mf_clampnode_getinputmax');
+		FLib3MFComposeVectorNode_GetInputXFunc := LoadFunction('lib3mf_composevectornode_getinputx');
+		FLib3MFComposeVectorNode_GetInputYFunc := LoadFunction('lib3mf_composevectornode_getinputy');
+		FLib3MFComposeVectorNode_GetInputZFunc := LoadFunction('lib3mf_composevectornode_getinputz');
+		FLib3MFComposeVectorNode_GetOutputVectorFunc := LoadFunction('lib3mf_composevectornode_getoutputvector');
+		FLib3MFDecomposeVectorNode_GetInputVectorFunc := LoadFunction('lib3mf_decomposevectornode_getinputvector');
+		FLib3MFDecomposeVectorNode_GetOutputXFunc := LoadFunction('lib3mf_decomposevectornode_getoutputx');
+		FLib3MFDecomposeVectorNode_GetOutputYFunc := LoadFunction('lib3mf_decomposevectornode_getoutputy');
+		FLib3MFDecomposeVectorNode_GetOutputZFunc := LoadFunction('lib3mf_decomposevectornode_getoutputz');
+		FLib3MFComposeMatrixNode_GetInputM00Func := LoadFunction('lib3mf_composematrixnode_getinputm00');
+		FLib3MFComposeMatrixNode_GetInputM01Func := LoadFunction('lib3mf_composematrixnode_getinputm01');
+		FLib3MFComposeMatrixNode_GetInputM02Func := LoadFunction('lib3mf_composematrixnode_getinputm02');
+		FLib3MFComposeMatrixNode_GetInputM03Func := LoadFunction('lib3mf_composematrixnode_getinputm03');
+		FLib3MFComposeMatrixNode_GetInputM10Func := LoadFunction('lib3mf_composematrixnode_getinputm10');
+		FLib3MFComposeMatrixNode_GetInputM11Func := LoadFunction('lib3mf_composematrixnode_getinputm11');
+		FLib3MFComposeMatrixNode_GetInputM12Func := LoadFunction('lib3mf_composematrixnode_getinputm12');
+		FLib3MFComposeMatrixNode_GetInputM13Func := LoadFunction('lib3mf_composematrixnode_getinputm13');
+		FLib3MFComposeMatrixNode_GetInputM20Func := LoadFunction('lib3mf_composematrixnode_getinputm20');
+		FLib3MFComposeMatrixNode_GetInputM21Func := LoadFunction('lib3mf_composematrixnode_getinputm21');
+		FLib3MFComposeMatrixNode_GetInputM22Func := LoadFunction('lib3mf_composematrixnode_getinputm22');
+		FLib3MFComposeMatrixNode_GetInputM23Func := LoadFunction('lib3mf_composematrixnode_getinputm23');
+		FLib3MFComposeMatrixNode_GetInputM30Func := LoadFunction('lib3mf_composematrixnode_getinputm30');
+		FLib3MFComposeMatrixNode_GetInputM31Func := LoadFunction('lib3mf_composematrixnode_getinputm31');
+		FLib3MFComposeMatrixNode_GetInputM32Func := LoadFunction('lib3mf_composematrixnode_getinputm32');
+		FLib3MFComposeMatrixNode_GetInputM33Func := LoadFunction('lib3mf_composematrixnode_getinputm33');
+		FLib3MFComposeMatrixNode_GetOutputMatrixFunc := LoadFunction('lib3mf_composematrixnode_getoutputmatrix');
+		FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Func := LoadFunction('lib3mf_composematrixfromrowvectorsnode_getinputrow0');
+		FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Func := LoadFunction('lib3mf_composematrixfromrowvectorsnode_getinputrow1');
+		FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Func := LoadFunction('lib3mf_composematrixfromrowvectorsnode_getinputrow2');
+		FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Func := LoadFunction('lib3mf_composematrixfromrowvectorsnode_getinputrow3');
+		FLib3MFComposeMatrixFromRowVectorsNode_GetOutputMatrixFunc := LoadFunction('lib3mf_composematrixfromrowvectorsnode_getoutputmatrix');
+		FLib3MFConstantNode_SetConstantFunc := LoadFunction('lib3mf_constantnode_setconstant');
+		FLib3MFConstantNode_GetConstantFunc := LoadFunction('lib3mf_constantnode_getconstant');
+		FLib3MFConstantNode_GetOutputValueFunc := LoadFunction('lib3mf_constantnode_getoutputvalue');
+		FLib3MFConstVecNode_SetVectorFunc := LoadFunction('lib3mf_constvecnode_setvector');
+		FLib3MFConstVecNode_GetVectorFunc := LoadFunction('lib3mf_constvecnode_getvector');
+		FLib3MFConstVecNode_GetOutputVectorFunc := LoadFunction('lib3mf_constvecnode_getoutputvector');
+		FLib3MFConstMatNode_SetMatrixFunc := LoadFunction('lib3mf_constmatnode_setmatrix');
+		FLib3MFConstMatNode_GetMatrixFunc := LoadFunction('lib3mf_constmatnode_getmatrix');
+		FLib3MFConstMatNode_GetOutputMatrixFunc := LoadFunction('lib3mf_constmatnode_getoutputmatrix');
 		FLib3MFNodeIterator_GetCurrentFunc := LoadFunction('lib3mf_nodeiterator_getcurrent');
 		FLib3MFFunction_GetDisplayNameFunc := LoadFunction('lib3mf_function_getdisplayname');
 		FLib3MFFunction_SetDisplayNameFunc := LoadFunction('lib3mf_function_setdisplayname');
@@ -14242,6 +18177,50 @@ implementation
 		FLib3MFImplicitFunction_GetIdentifierFunc := LoadFunction('lib3mf_implicitfunction_getidentifier');
 		FLib3MFImplicitFunction_SetIdentifierFunc := LoadFunction('lib3mf_implicitfunction_setidentifier');
 		FLib3MFImplicitFunction_AddNodeFunc := LoadFunction('lib3mf_implicitfunction_addnode');
+		FLib3MFImplicitFunction_AddSinNodeFunc := LoadFunction('lib3mf_implicitfunction_addsinnode');
+		FLib3MFImplicitFunction_AddCosNodeFunc := LoadFunction('lib3mf_implicitfunction_addcosnode');
+		FLib3MFImplicitFunction_AddTanNodeFunc := LoadFunction('lib3mf_implicitfunction_addtannode');
+		FLib3MFImplicitFunction_AddArcSinNodeFunc := LoadFunction('lib3mf_implicitfunction_addarcsinnode');
+		FLib3MFImplicitFunction_AddArcCosNodeFunc := LoadFunction('lib3mf_implicitfunction_addarccosnode');
+		FLib3MFImplicitFunction_AddArcTan2NodeFunc := LoadFunction('lib3mf_implicitfunction_addarctan2node');
+		FLib3MFImplicitFunction_AddSinhNodeFunc := LoadFunction('lib3mf_implicitfunction_addsinhnode');
+		FLib3MFImplicitFunction_AddCoshNodeFunc := LoadFunction('lib3mf_implicitfunction_addcoshnode');
+		FLib3MFImplicitFunction_AddTanhNodeFunc := LoadFunction('lib3mf_implicitfunction_addtanhnode');
+		FLib3MFImplicitFunction_AddRoundNodeFunc := LoadFunction('lib3mf_implicitfunction_addroundnode');
+		FLib3MFImplicitFunction_AddCeilNodeFunc := LoadFunction('lib3mf_implicitfunction_addceilnode');
+		FLib3MFImplicitFunction_AddFloorNodeFunc := LoadFunction('lib3mf_implicitfunction_addfloornode');
+		FLib3MFImplicitFunction_AddSignNodeFunc := LoadFunction('lib3mf_implicitfunction_addsignnode');
+		FLib3MFImplicitFunction_AddFractNodeFunc := LoadFunction('lib3mf_implicitfunction_addfractnode');
+		FLib3MFImplicitFunction_AddAbsNodeFunc := LoadFunction('lib3mf_implicitfunction_addabsnode');
+		FLib3MFImplicitFunction_AddExpNodeFunc := LoadFunction('lib3mf_implicitfunction_addexpnode');
+		FLib3MFImplicitFunction_AddLogNodeFunc := LoadFunction('lib3mf_implicitfunction_addlognode');
+		FLib3MFImplicitFunction_AddLog2NodeFunc := LoadFunction('lib3mf_implicitfunction_addlog2node');
+		FLib3MFImplicitFunction_AddLog10NodeFunc := LoadFunction('lib3mf_implicitfunction_addlog10node');
+		FLib3MFImplicitFunction_AddLengthNodeFunc := LoadFunction('lib3mf_implicitfunction_addlengthnode');
+		FLib3MFImplicitFunction_AddTransposeNodeFunc := LoadFunction('lib3mf_implicitfunction_addtransposenode');
+		FLib3MFImplicitFunction_InverseNodeFunc := LoadFunction('lib3mf_implicitfunction_inversenode');
+		FLib3MFImplicitFunction_AddSqrtNodeFunc := LoadFunction('lib3mf_implicitfunction_addsqrtnode');
+		FLib3MFImplicitFunction_AddResourceIdNodeFunc := LoadFunction('lib3mf_implicitfunction_addresourceidnode');
+		FLib3MFImplicitFunction_AddAdditionNodeFunc := LoadFunction('lib3mf_implicitfunction_addadditionnode');
+		FLib3MFImplicitFunction_AddSubtractionNodeFunc := LoadFunction('lib3mf_implicitfunction_addsubtractionnode');
+		FLib3MFImplicitFunction_AddMultiplicationNodeFunc := LoadFunction('lib3mf_implicitfunction_addmultiplicationnode');
+		FLib3MFImplicitFunction_AddDivisionNodeFunc := LoadFunction('lib3mf_implicitfunction_adddivisionnode');
+		FLib3MFImplicitFunction_AddDotNodeFunc := LoadFunction('lib3mf_implicitfunction_adddotnode');
+		FLib3MFImplicitFunction_AddCrossNodeFunc := LoadFunction('lib3mf_implicitfunction_addcrossnode');
+		FLib3MFImplicitFunction_AddMatVecMultiplicationNodeFunc := LoadFunction('lib3mf_implicitfunction_addmatvecmultiplicationnode');
+		FLib3MFImplicitFunction_AddMinNodeFunc := LoadFunction('lib3mf_implicitfunction_addminnode');
+		FLib3MFImplicitFunction_AddMaxNodeFunc := LoadFunction('lib3mf_implicitfunction_addmaxnode');
+		FLib3MFImplicitFunction_AddFmodNodeFunc := LoadFunction('lib3mf_implicitfunction_addfmodnode');
+		FLib3MFImplicitFunction_AddPowNodeFunc := LoadFunction('lib3mf_implicitfunction_addpownode');
+		FLib3MFImplicitFunction_AddSelectNodeFunc := LoadFunction('lib3mf_implicitfunction_addselectnode');
+		FLib3MFImplicitFunction_AddClampNodeFunc := LoadFunction('lib3mf_implicitfunction_addclampnode');
+		FLib3MFImplicitFunction_AddComposeVectorNodeFunc := LoadFunction('lib3mf_implicitfunction_addcomposevectornode');
+		FLib3MFImplicitFunction_AddDecomposeVectorNodeFunc := LoadFunction('lib3mf_implicitfunction_adddecomposevectornode');
+		FLib3MFImplicitFunction_AddComposeMatrixNodeFunc := LoadFunction('lib3mf_implicitfunction_addcomposematrixnode');
+		FLib3MFImplicitFunction_AddComposeMatrixFromRowVectorsNodeFunc := LoadFunction('lib3mf_implicitfunction_addcomposematrixfromrowvectorsnode');
+		FLib3MFImplicitFunction_AddConstantNodeFunc := LoadFunction('lib3mf_implicitfunction_addconstantnode');
+		FLib3MFImplicitFunction_AddConstVecNodeFunc := LoadFunction('lib3mf_implicitfunction_addconstvecnode');
+		FLib3MFImplicitFunction_AddConstMatNodeFunc := LoadFunction('lib3mf_implicitfunction_addconstmatnode');
 		FLib3MFImplicitFunction_GetNodesFunc := LoadFunction('lib3mf_implicitfunction_getnodes');
 		FLib3MFImplicitFunction_RemoveNodeFunc := LoadFunction('lib3mf_implicitfunction_removenode');
 		FLib3MFImplicitFunction_AddLinkFunc := LoadFunction('lib3mf_implicitfunction_addlink');
@@ -15264,31 +19243,157 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_findoutput'), @FLib3MFImplicitNode_FindOutputFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_setconstant'), @FLib3MFImplicitNode_SetConstantFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_getconstant'), @FLib3MFImplicitNode_GetConstantFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_setvector'), @FLib3MFImplicitNode_SetVectorFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_getvector'), @FLib3MFImplicitNode_GetVectorFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_setmatrix'), @FLib3MFImplicitNode_SetMatrixFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_getmatrix'), @FLib3MFImplicitNode_GetMatrixFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_setresource'), @FLib3MFImplicitNode_SetResourceFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_getresource'), @FLib3MFImplicitNode_GetResourceFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitnode_aretypesvalid'), @FLib3MFImplicitNode_AreTypesValidFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_oneinputnode_getinputa'), @FLib3MFOneInputNode_GetInputAFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_oneinputnode_getoutputresult'), @FLib3MFOneInputNode_GetOutputResultFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_resourceidnode_setresource'), @FLib3MFResourceIdNode_SetResourceFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_resourceidnode_getresource'), @FLib3MFResourceIdNode_GetResourceFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_resourceidnode_getoutputvalue'), @FLib3MFResourceIdNode_GetOutputValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_twoinputnode_getinputb'), @FLib3MFTwoInputNode_GetInputBFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_selectnode_getinputb'), @FLib3MFSelectNode_GetInputBFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_selectnode_getinputc'), @FLib3MFSelectNode_GetInputCFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_selectnode_getinputd'), @FLib3MFSelectNode_GetInputDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_clampnode_getinputmin'), @FLib3MFClampNode_GetInputMinFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_clampnode_getinputmax'), @FLib3MFClampNode_GetInputMaxFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composevectornode_getinputx'), @FLib3MFComposeVectorNode_GetInputXFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composevectornode_getinputy'), @FLib3MFComposeVectorNode_GetInputYFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composevectornode_getinputz'), @FLib3MFComposeVectorNode_GetInputZFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composevectornode_getoutputvector'), @FLib3MFComposeVectorNode_GetOutputVectorFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_decomposevectornode_getinputvector'), @FLib3MFDecomposeVectorNode_GetInputVectorFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_decomposevectornode_getoutputx'), @FLib3MFDecomposeVectorNode_GetOutputXFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_decomposevectornode_getoutputy'), @FLib3MFDecomposeVectorNode_GetOutputYFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_decomposevectornode_getoutputz'), @FLib3MFDecomposeVectorNode_GetOutputZFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixnode_getinputm00'), @FLib3MFComposeMatrixNode_GetInputM00Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixnode_getinputm01'), @FLib3MFComposeMatrixNode_GetInputM01Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixnode_getinputm02'), @FLib3MFComposeMatrixNode_GetInputM02Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixnode_getinputm03'), @FLib3MFComposeMatrixNode_GetInputM03Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixnode_getinputm10'), @FLib3MFComposeMatrixNode_GetInputM10Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixnode_getinputm11'), @FLib3MFComposeMatrixNode_GetInputM11Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixnode_getinputm12'), @FLib3MFComposeMatrixNode_GetInputM12Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixnode_getinputm13'), @FLib3MFComposeMatrixNode_GetInputM13Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixnode_getinputm20'), @FLib3MFComposeMatrixNode_GetInputM20Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixnode_getinputm21'), @FLib3MFComposeMatrixNode_GetInputM21Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixnode_getinputm22'), @FLib3MFComposeMatrixNode_GetInputM22Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixnode_getinputm23'), @FLib3MFComposeMatrixNode_GetInputM23Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixnode_getinputm30'), @FLib3MFComposeMatrixNode_GetInputM30Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixnode_getinputm31'), @FLib3MFComposeMatrixNode_GetInputM31Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixnode_getinputm32'), @FLib3MFComposeMatrixNode_GetInputM32Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixnode_getinputm33'), @FLib3MFComposeMatrixNode_GetInputM33Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixnode_getoutputmatrix'), @FLib3MFComposeMatrixNode_GetOutputMatrixFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixfromrowvectorsnode_getinputrow0'), @FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixfromrowvectorsnode_getinputrow1'), @FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixfromrowvectorsnode_getinputrow2'), @FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixfromrowvectorsnode_getinputrow3'), @FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixfromrowvectorsnode_getoutputmatrix'), @FLib3MFComposeMatrixFromRowVectorsNode_GetOutputMatrixFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_constantnode_setconstant'), @FLib3MFConstantNode_SetConstantFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_constantnode_getconstant'), @FLib3MFConstantNode_GetConstantFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_constantnode_getoutputvalue'), @FLib3MFConstantNode_GetOutputValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_constvecnode_setvector'), @FLib3MFConstVecNode_SetVectorFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_constvecnode_getvector'), @FLib3MFConstVecNode_GetVectorFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_constvecnode_getoutputvector'), @FLib3MFConstVecNode_GetOutputVectorFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_constmatnode_setmatrix'), @FLib3MFConstMatNode_SetMatrixFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_constmatnode_getmatrix'), @FLib3MFConstMatNode_GetMatrixFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_constmatnode_getoutputmatrix'), @FLib3MFConstMatNode_GetOutputMatrixFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_nodeiterator_getcurrent'), @FLib3MFNodeIterator_GetCurrentFunc);
@@ -15331,6 +19436,138 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addnode'), @FLib3MFImplicitFunction_AddNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addsinnode'), @FLib3MFImplicitFunction_AddSinNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addcosnode'), @FLib3MFImplicitFunction_AddCosNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addtannode'), @FLib3MFImplicitFunction_AddTanNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addarcsinnode'), @FLib3MFImplicitFunction_AddArcSinNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addarccosnode'), @FLib3MFImplicitFunction_AddArcCosNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addarctan2node'), @FLib3MFImplicitFunction_AddArcTan2NodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addsinhnode'), @FLib3MFImplicitFunction_AddSinhNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addcoshnode'), @FLib3MFImplicitFunction_AddCoshNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addtanhnode'), @FLib3MFImplicitFunction_AddTanhNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addroundnode'), @FLib3MFImplicitFunction_AddRoundNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addceilnode'), @FLib3MFImplicitFunction_AddCeilNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addfloornode'), @FLib3MFImplicitFunction_AddFloorNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addsignnode'), @FLib3MFImplicitFunction_AddSignNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addfractnode'), @FLib3MFImplicitFunction_AddFractNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addabsnode'), @FLib3MFImplicitFunction_AddAbsNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addexpnode'), @FLib3MFImplicitFunction_AddExpNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addlognode'), @FLib3MFImplicitFunction_AddLogNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addlog2node'), @FLib3MFImplicitFunction_AddLog2NodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addlog10node'), @FLib3MFImplicitFunction_AddLog10NodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addlengthnode'), @FLib3MFImplicitFunction_AddLengthNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addtransposenode'), @FLib3MFImplicitFunction_AddTransposeNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_inversenode'), @FLib3MFImplicitFunction_InverseNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addsqrtnode'), @FLib3MFImplicitFunction_AddSqrtNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addresourceidnode'), @FLib3MFImplicitFunction_AddResourceIdNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addadditionnode'), @FLib3MFImplicitFunction_AddAdditionNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addsubtractionnode'), @FLib3MFImplicitFunction_AddSubtractionNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addmultiplicationnode'), @FLib3MFImplicitFunction_AddMultiplicationNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_adddivisionnode'), @FLib3MFImplicitFunction_AddDivisionNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_adddotnode'), @FLib3MFImplicitFunction_AddDotNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addcrossnode'), @FLib3MFImplicitFunction_AddCrossNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addmatvecmultiplicationnode'), @FLib3MFImplicitFunction_AddMatVecMultiplicationNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addminnode'), @FLib3MFImplicitFunction_AddMinNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addmaxnode'), @FLib3MFImplicitFunction_AddMaxNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addfmodnode'), @FLib3MFImplicitFunction_AddFmodNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addpownode'), @FLib3MFImplicitFunction_AddPowNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addselectnode'), @FLib3MFImplicitFunction_AddSelectNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addclampnode'), @FLib3MFImplicitFunction_AddClampNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addcomposevectornode'), @FLib3MFImplicitFunction_AddComposeVectorNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_adddecomposevectornode'), @FLib3MFImplicitFunction_AddDecomposeVectorNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addcomposematrixnode'), @FLib3MFImplicitFunction_AddComposeMatrixNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addcomposematrixfromrowvectorsnode'), @FLib3MFImplicitFunction_AddComposeMatrixFromRowVectorsNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addconstantnode'), @FLib3MFImplicitFunction_AddConstantNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addconstvecnode'), @FLib3MFImplicitFunction_AddConstVecNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addconstmatnode'), @FLib3MFImplicitFunction_AddConstMatNodeFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_getnodes'), @FLib3MFImplicitFunction_GetNodesFunc);

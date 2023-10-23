@@ -97,6 +97,53 @@ class IImplicitPort;
 class IIterator;
 class IImplicitPortIterator;
 class IImplicitNode;
+class IOneInputNode;
+class ISinNode;
+class ICosNode;
+class ITanNode;
+class IArcSinNode;
+class IArcCosNode;
+class IArcTanNode;
+class ISinhNode;
+class ICoshNode;
+class ITanhNode;
+class IRoundNode;
+class ICeilNode;
+class IFloorNode;
+class ISignNode;
+class IFractNode;
+class IAbsNode;
+class IExpNode;
+class ILogNode;
+class ILog2Node;
+class ILog10Node;
+class ILengthNode;
+class ITransposeNode;
+class IInverseNode;
+class ISqrtNode;
+class IResourceIdNode;
+class ITwoInputNode;
+class IAdditionNode;
+class ISubtractionNode;
+class IMultiplicationNode;
+class IDivisionNode;
+class IDotNode;
+class ICrossNode;
+class IArcTan2Node;
+class IMatVecMultiplicationNode;
+class IMinNode;
+class IMaxNode;
+class IFmodNode;
+class IPowNode;
+class ISelectNode;
+class IClampNode;
+class IComposeVectorNode;
+class IDecomposeVectorNode;
+class IComposeMatrixNode;
+class IComposeMatrixFromRowVectorsNode;
+class IConstantNode;
+class IConstVecNode;
+class IConstMatNode;
 class INodeIterator;
 class IFunction;
 class IImplicitFunction;
@@ -3016,54 +3063,6 @@ public:
 	virtual IImplicitPort * FindOutput(const std::string & sIdentifier) = 0;
 
 	/**
-	* IImplicitNode::SetConstant - Sets the constant value of the node. Throws an error, if the node type not is of type Constant
-	* @param[in] dValue - the value
-	*/
-	virtual void SetConstant(const Lib3MF_double dValue) = 0;
-
-	/**
-	* IImplicitNode::GetConstant - Retrieves the constant value of the node. Throws an error, if the node type is not of type Constant
-	* @return the value
-	*/
-	virtual Lib3MF_double GetConstant() = 0;
-
-	/**
-	* IImplicitNode::SetVector - Sets the vector value of the node. Throws an error, if the node type is not of type ConstVec
-	* @param[in] Value - the value
-	*/
-	virtual void SetVector(const Lib3MF::sVector Value) = 0;
-
-	/**
-	* IImplicitNode::GetVector - Retrieves the vector value of the node. Throws an error, if the node type is not of type ConstVec
-	* @return the value
-	*/
-	virtual Lib3MF::sVector GetVector() = 0;
-
-	/**
-	* IImplicitNode::SetMatrix - Sets the matrix value of the node. Throws an error, if the node type is not of type ConstMat
-	* @param[in] Value - the value
-	*/
-	virtual void SetMatrix(const Lib3MF::sMatrix4x4 Value) = 0;
-
-	/**
-	* IImplicitNode::GetMatrix - Retrieves the matrix value of the node. Throws an error, if the node type is not of type ConstMat
-	* @return the matrix
-	*/
-	virtual Lib3MF::sMatrix4x4 GetMatrix() = 0;
-
-	/**
-	* IImplicitNode::SetResource - Sets the Resource that the resourceid attribute of the node will point to. Throws an error, if the node type is not of type Resource
-	* @param[in] pResource - the resource
-	*/
-	virtual void SetResource(IResource* pResource) = 0;
-
-	/**
-	* IImplicitNode::GetResource - Retrieves the resource of the node. Throws an error, if the node type is not of type Resource
-	* @return the resource
-	*/
-	virtual IResource * GetResource() = 0;
-
-	/**
 	* IImplicitNode::AreTypesValid - Checks if the types of the input and output ports are valid for the node type
 	* @return true, if the types are valid
 	*/
@@ -3072,6 +3071,1246 @@ public:
 };
 
 typedef IBaseSharedPtr<IImplicitNode> PIImplicitNode;
+
+
+/*************************************************************************************************************************
+ Class interface for OneInputNode 
+**************************************************************************************************************************/
+
+class IOneInputNode : public virtual IImplicitNode {
+public:
+	/**
+	* IOneInputNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xB19B9FDA94B0A5E7UL; // First 64 bits of SHA1 of a string: "Lib3MF::OneInputNode"
+	}
+
+	/**
+	* IOneInputNode::GetInputA - Retrieves the input
+	* @return the input
+	*/
+	virtual IImplicitPort * GetInputA() = 0;
+
+	/**
+	* IOneInputNode::GetOutputResult - Retrieves the output
+	* @return the output
+	*/
+	virtual IImplicitPort * GetOutputResult() = 0;
+
+};
+
+typedef IBaseSharedPtr<IOneInputNode> PIOneInputNode;
+
+
+/*************************************************************************************************************************
+ Class interface for SinNode 
+**************************************************************************************************************************/
+
+class ISinNode : public virtual IOneInputNode {
+public:
+	/**
+	* ISinNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xD5AEA50A56306722UL; // First 64 bits of SHA1 of a string: "Lib3MF::SinNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<ISinNode> PISinNode;
+
+
+/*************************************************************************************************************************
+ Class interface for CosNode 
+**************************************************************************************************************************/
+
+class ICosNode : public virtual IOneInputNode {
+public:
+	/**
+	* ICosNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x59BC328F6FB5C5FFUL; // First 64 bits of SHA1 of a string: "Lib3MF::CosNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<ICosNode> PICosNode;
+
+
+/*************************************************************************************************************************
+ Class interface for TanNode 
+**************************************************************************************************************************/
+
+class ITanNode : public virtual IOneInputNode {
+public:
+	/**
+	* ITanNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x2614CC572AF350B7UL; // First 64 bits of SHA1 of a string: "Lib3MF::TanNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<ITanNode> PITanNode;
+
+
+/*************************************************************************************************************************
+ Class interface for ArcSinNode 
+**************************************************************************************************************************/
+
+class IArcSinNode : public virtual IOneInputNode {
+public:
+	/**
+	* IArcSinNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xE554C8A7E72AAF4DUL; // First 64 bits of SHA1 of a string: "Lib3MF::ArcSinNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<IArcSinNode> PIArcSinNode;
+
+
+/*************************************************************************************************************************
+ Class interface for ArcCosNode 
+**************************************************************************************************************************/
+
+class IArcCosNode : public virtual IOneInputNode {
+public:
+	/**
+	* IArcCosNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x943AF6AE0EFD2B8AUL; // First 64 bits of SHA1 of a string: "Lib3MF::ArcCosNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<IArcCosNode> PIArcCosNode;
+
+
+/*************************************************************************************************************************
+ Class interface for ArcTanNode 
+**************************************************************************************************************************/
+
+class IArcTanNode : public virtual IOneInputNode {
+public:
+	/**
+	* IArcTanNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xE47D547615816BADUL; // First 64 bits of SHA1 of a string: "Lib3MF::ArcTanNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<IArcTanNode> PIArcTanNode;
+
+
+/*************************************************************************************************************************
+ Class interface for SinhNode 
+**************************************************************************************************************************/
+
+class ISinhNode : public virtual IOneInputNode {
+public:
+	/**
+	* ISinhNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x3C7756A456F2D089UL; // First 64 bits of SHA1 of a string: "Lib3MF::SinhNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<ISinhNode> PISinhNode;
+
+
+/*************************************************************************************************************************
+ Class interface for CoshNode 
+**************************************************************************************************************************/
+
+class ICoshNode : public virtual IOneInputNode {
+public:
+	/**
+	* ICoshNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x4A993F91E1DE256DUL; // First 64 bits of SHA1 of a string: "Lib3MF::CoshNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<ICoshNode> PICoshNode;
+
+
+/*************************************************************************************************************************
+ Class interface for TanhNode 
+**************************************************************************************************************************/
+
+class ITanhNode : public virtual IOneInputNode {
+public:
+	/**
+	* ITanhNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xCF077B19B0B78E9DUL; // First 64 bits of SHA1 of a string: "Lib3MF::TanhNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<ITanhNode> PITanhNode;
+
+
+/*************************************************************************************************************************
+ Class interface for RoundNode 
+**************************************************************************************************************************/
+
+class IRoundNode : public virtual IOneInputNode {
+public:
+	/**
+	* IRoundNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xD9F5A53C657765AEUL; // First 64 bits of SHA1 of a string: "Lib3MF::RoundNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<IRoundNode> PIRoundNode;
+
+
+/*************************************************************************************************************************
+ Class interface for CeilNode 
+**************************************************************************************************************************/
+
+class ICeilNode : public virtual IOneInputNode {
+public:
+	/**
+	* ICeilNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x627E211653E11D93UL; // First 64 bits of SHA1 of a string: "Lib3MF::CeilNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<ICeilNode> PICeilNode;
+
+
+/*************************************************************************************************************************
+ Class interface for FloorNode 
+**************************************************************************************************************************/
+
+class IFloorNode : public virtual IOneInputNode {
+public:
+	/**
+	* IFloorNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x392A0F4C041D249CUL; // First 64 bits of SHA1 of a string: "Lib3MF::FloorNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<IFloorNode> PIFloorNode;
+
+
+/*************************************************************************************************************************
+ Class interface for SignNode 
+**************************************************************************************************************************/
+
+class ISignNode : public virtual IOneInputNode {
+public:
+	/**
+	* ISignNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x8A45165E6C9646D7UL; // First 64 bits of SHA1 of a string: "Lib3MF::SignNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<ISignNode> PISignNode;
+
+
+/*************************************************************************************************************************
+ Class interface for FractNode 
+**************************************************************************************************************************/
+
+class IFractNode : public virtual IOneInputNode {
+public:
+	/**
+	* IFractNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x53E62FD67F4D9A65UL; // First 64 bits of SHA1 of a string: "Lib3MF::FractNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<IFractNode> PIFractNode;
+
+
+/*************************************************************************************************************************
+ Class interface for AbsNode 
+**************************************************************************************************************************/
+
+class IAbsNode : public virtual IOneInputNode {
+public:
+	/**
+	* IAbsNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x6B641C7060040BE3UL; // First 64 bits of SHA1 of a string: "Lib3MF::AbsNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<IAbsNode> PIAbsNode;
+
+
+/*************************************************************************************************************************
+ Class interface for ExpNode 
+**************************************************************************************************************************/
+
+class IExpNode : public virtual IOneInputNode {
+public:
+	/**
+	* IExpNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x3390243A8E2410F3UL; // First 64 bits of SHA1 of a string: "Lib3MF::ExpNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<IExpNode> PIExpNode;
+
+
+/*************************************************************************************************************************
+ Class interface for LogNode 
+**************************************************************************************************************************/
+
+class ILogNode : public virtual IOneInputNode {
+public:
+	/**
+	* ILogNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x70021D73AA89FDUL; // First 64 bits of SHA1 of a string: "Lib3MF::LogNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<ILogNode> PILogNode;
+
+
+/*************************************************************************************************************************
+ Class interface for Log2Node 
+**************************************************************************************************************************/
+
+class ILog2Node : public virtual IOneInputNode {
+public:
+	/**
+	* ILog2Node::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xE8C0ABF7C5DC7068UL; // First 64 bits of SHA1 of a string: "Lib3MF::Log2Node"
+	}
+
+};
+
+typedef IBaseSharedPtr<ILog2Node> PILog2Node;
+
+
+/*************************************************************************************************************************
+ Class interface for Log10Node 
+**************************************************************************************************************************/
+
+class ILog10Node : public virtual IOneInputNode {
+public:
+	/**
+	* ILog10Node::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x87740AD53454E0DFUL; // First 64 bits of SHA1 of a string: "Lib3MF::Log10Node"
+	}
+
+};
+
+typedef IBaseSharedPtr<ILog10Node> PILog10Node;
+
+
+/*************************************************************************************************************************
+ Class interface for LengthNode 
+**************************************************************************************************************************/
+
+class ILengthNode : public virtual IOneInputNode {
+public:
+	/**
+	* ILengthNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xD85889E2739A74B1UL; // First 64 bits of SHA1 of a string: "Lib3MF::LengthNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<ILengthNode> PILengthNode;
+
+
+/*************************************************************************************************************************
+ Class interface for TransposeNode 
+**************************************************************************************************************************/
+
+class ITransposeNode : public virtual IOneInputNode {
+public:
+	/**
+	* ITransposeNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xA808B7599C158CE6UL; // First 64 bits of SHA1 of a string: "Lib3MF::TransposeNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<ITransposeNode> PITransposeNode;
+
+
+/*************************************************************************************************************************
+ Class interface for InverseNode 
+**************************************************************************************************************************/
+
+class IInverseNode : public virtual IOneInputNode {
+public:
+	/**
+	* IInverseNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xE8601F66A23A0540UL; // First 64 bits of SHA1 of a string: "Lib3MF::InverseNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<IInverseNode> PIInverseNode;
+
+
+/*************************************************************************************************************************
+ Class interface for SqrtNode 
+**************************************************************************************************************************/
+
+class ISqrtNode : public virtual IOneInputNode {
+public:
+	/**
+	* ISqrtNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x9F831944A3DE31DAUL; // First 64 bits of SHA1 of a string: "Lib3MF::SqrtNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<ISqrtNode> PISqrtNode;
+
+
+/*************************************************************************************************************************
+ Class interface for ResourceIdNode 
+**************************************************************************************************************************/
+
+class IResourceIdNode : public virtual IImplicitNode {
+public:
+	/**
+	* IResourceIdNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xCA86A77C71CD3FAEUL; // First 64 bits of SHA1 of a string: "Lib3MF::ResourceIdNode"
+	}
+
+	/**
+	* IResourceIdNode::SetResource - Sets the Resource that the resourceid attribute of the node will point to
+	* @param[in] pResource - the resource
+	*/
+	virtual void SetResource(IResource* pResource) = 0;
+
+	/**
+	* IResourceIdNode::GetResource - Retrieves the resource of the node
+	* @return the resource
+	*/
+	virtual IResource * GetResource() = 0;
+
+	/**
+	* IResourceIdNode::GetOutputValue - Retrieves the output
+	* @return the output
+	*/
+	virtual IImplicitPort * GetOutputValue() = 0;
+
+};
+
+typedef IBaseSharedPtr<IResourceIdNode> PIResourceIdNode;
+
+
+/*************************************************************************************************************************
+ Class interface for TwoInputNode 
+**************************************************************************************************************************/
+
+class ITwoInputNode : public virtual IOneInputNode {
+public:
+	/**
+	* ITwoInputNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x7DE3951BA4C1064CUL; // First 64 bits of SHA1 of a string: "Lib3MF::TwoInputNode"
+	}
+
+	/**
+	* ITwoInputNode::GetInputB - Retrieves the second input
+	* @return the second input
+	*/
+	virtual IImplicitPort * GetInputB() = 0;
+
+};
+
+typedef IBaseSharedPtr<ITwoInputNode> PITwoInputNode;
+
+
+/*************************************************************************************************************************
+ Class interface for AdditionNode 
+**************************************************************************************************************************/
+
+class IAdditionNode : public virtual ITwoInputNode {
+public:
+	/**
+	* IAdditionNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x57A2236998DF5248UL; // First 64 bits of SHA1 of a string: "Lib3MF::AdditionNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<IAdditionNode> PIAdditionNode;
+
+
+/*************************************************************************************************************************
+ Class interface for SubtractionNode 
+**************************************************************************************************************************/
+
+class ISubtractionNode : public virtual ITwoInputNode {
+public:
+	/**
+	* ISubtractionNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x6079B12FFF345D02UL; // First 64 bits of SHA1 of a string: "Lib3MF::SubtractionNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<ISubtractionNode> PISubtractionNode;
+
+
+/*************************************************************************************************************************
+ Class interface for MultiplicationNode 
+**************************************************************************************************************************/
+
+class IMultiplicationNode : public virtual ITwoInputNode {
+public:
+	/**
+	* IMultiplicationNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xA3C27CF54C2AA76CUL; // First 64 bits of SHA1 of a string: "Lib3MF::MultiplicationNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<IMultiplicationNode> PIMultiplicationNode;
+
+
+/*************************************************************************************************************************
+ Class interface for DivisionNode 
+**************************************************************************************************************************/
+
+class IDivisionNode : public virtual ITwoInputNode {
+public:
+	/**
+	* IDivisionNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xB896B6413C08CF39UL; // First 64 bits of SHA1 of a string: "Lib3MF::DivisionNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<IDivisionNode> PIDivisionNode;
+
+
+/*************************************************************************************************************************
+ Class interface for DotNode 
+**************************************************************************************************************************/
+
+class IDotNode : public virtual ITwoInputNode {
+public:
+	/**
+	* IDotNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xFE60932A66375FADUL; // First 64 bits of SHA1 of a string: "Lib3MF::DotNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<IDotNode> PIDotNode;
+
+
+/*************************************************************************************************************************
+ Class interface for CrossNode 
+**************************************************************************************************************************/
+
+class ICrossNode : public virtual ITwoInputNode {
+public:
+	/**
+	* ICrossNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x106182D38CA5CFE3UL; // First 64 bits of SHA1 of a string: "Lib3MF::CrossNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<ICrossNode> PICrossNode;
+
+
+/*************************************************************************************************************************
+ Class interface for ArcTan2Node 
+**************************************************************************************************************************/
+
+class IArcTan2Node : public virtual ITwoInputNode {
+public:
+	/**
+	* IArcTan2Node::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xB6153EF5DE7E5E11UL; // First 64 bits of SHA1 of a string: "Lib3MF::ArcTan2Node"
+	}
+
+};
+
+typedef IBaseSharedPtr<IArcTan2Node> PIArcTan2Node;
+
+
+/*************************************************************************************************************************
+ Class interface for MatVecMultiplicationNode 
+**************************************************************************************************************************/
+
+class IMatVecMultiplicationNode : public virtual ITwoInputNode {
+public:
+	/**
+	* IMatVecMultiplicationNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x7570C43B9721D0C0UL; // First 64 bits of SHA1 of a string: "Lib3MF::MatVecMultiplicationNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<IMatVecMultiplicationNode> PIMatVecMultiplicationNode;
+
+
+/*************************************************************************************************************************
+ Class interface for MinNode 
+**************************************************************************************************************************/
+
+class IMinNode : public virtual ITwoInputNode {
+public:
+	/**
+	* IMinNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x846AFDE9A091E997UL; // First 64 bits of SHA1 of a string: "Lib3MF::MinNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<IMinNode> PIMinNode;
+
+
+/*************************************************************************************************************************
+ Class interface for MaxNode 
+**************************************************************************************************************************/
+
+class IMaxNode : public virtual ITwoInputNode {
+public:
+	/**
+	* IMaxNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x73F910381BF250DUL; // First 64 bits of SHA1 of a string: "Lib3MF::MaxNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<IMaxNode> PIMaxNode;
+
+
+/*************************************************************************************************************************
+ Class interface for FmodNode 
+**************************************************************************************************************************/
+
+class IFmodNode : public virtual ITwoInputNode {
+public:
+	/**
+	* IFmodNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x1EF703D298223F2AUL; // First 64 bits of SHA1 of a string: "Lib3MF::FmodNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<IFmodNode> PIFmodNode;
+
+
+/*************************************************************************************************************************
+ Class interface for PowNode 
+**************************************************************************************************************************/
+
+class IPowNode : public virtual ITwoInputNode {
+public:
+	/**
+	* IPowNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x7700AA17CA1AC0F8UL; // First 64 bits of SHA1 of a string: "Lib3MF::PowNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<IPowNode> PIPowNode;
+
+
+/*************************************************************************************************************************
+ Class interface for SelectNode 
+**************************************************************************************************************************/
+
+class ISelectNode : public virtual IOneInputNode {
+public:
+	/**
+	* ISelectNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x1127ED71E05A9BD4UL; // First 64 bits of SHA1 of a string: "Lib3MF::SelectNode"
+	}
+
+	/**
+	* ISelectNode::GetInputB - Retrieves the second input
+	* @return the second input
+	*/
+	virtual IImplicitPort * GetInputB() = 0;
+
+	/**
+	* ISelectNode::GetInputC - Retrieves the third input
+	* @return the third input
+	*/
+	virtual IImplicitPort * GetInputC() = 0;
+
+	/**
+	* ISelectNode::GetInputD - Retrieves the fourth input
+	* @return the fourth input
+	*/
+	virtual IImplicitPort * GetInputD() = 0;
+
+};
+
+typedef IBaseSharedPtr<ISelectNode> PISelectNode;
+
+
+/*************************************************************************************************************************
+ Class interface for ClampNode 
+**************************************************************************************************************************/
+
+class IClampNode : public virtual IOneInputNode {
+public:
+	/**
+	* IClampNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x77AF68C971B1485FUL; // First 64 bits of SHA1 of a string: "Lib3MF::ClampNode"
+	}
+
+	/**
+	* IClampNode::GetInputMin - Retrieves the input for the lower limit
+	* @return the input for the lower limit
+	*/
+	virtual IImplicitPort * GetInputMin() = 0;
+
+	/**
+	* IClampNode::GetInputMax - Retrieves the input for the upper limit
+	* @return the input for the upper limit
+	*/
+	virtual IImplicitPort * GetInputMax() = 0;
+
+};
+
+typedef IBaseSharedPtr<IClampNode> PIClampNode;
+
+
+/*************************************************************************************************************************
+ Class interface for ComposeVectorNode 
+**************************************************************************************************************************/
+
+class IComposeVectorNode : public virtual IImplicitNode {
+public:
+	/**
+	* IComposeVectorNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x49C24B8840C01F7EUL; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeVectorNode"
+	}
+
+	/**
+	* IComposeVectorNode::GetInputX - Retrieves the input for the x component
+	* @return the input for the x component
+	*/
+	virtual IImplicitPort * GetInputX() = 0;
+
+	/**
+	* IComposeVectorNode::GetInputY - Retrieves the input for the y component
+	* @return the input for the y component
+	*/
+	virtual IImplicitPort * GetInputY() = 0;
+
+	/**
+	* IComposeVectorNode::GetInputZ - Retrieves the input for the z component
+	* @return the input for the z component
+	*/
+	virtual IImplicitPort * GetInputZ() = 0;
+
+	/**
+	* IComposeVectorNode::GetOutputVector - Retrieves the output
+	* @return the output
+	*/
+	virtual IImplicitPort * GetOutputVector() = 0;
+
+};
+
+typedef IBaseSharedPtr<IComposeVectorNode> PIComposeVectorNode;
+
+
+/*************************************************************************************************************************
+ Class interface for DecomposeVectorNode 
+**************************************************************************************************************************/
+
+class IDecomposeVectorNode : public virtual IImplicitNode {
+public:
+	/**
+	* IDecomposeVectorNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xCC4F8D561CCE35D4UL; // First 64 bits of SHA1 of a string: "Lib3MF::DecomposeVectorNode"
+	}
+
+	/**
+	* IDecomposeVectorNode::GetInputVector - Retrieves the input
+	* @return the input
+	*/
+	virtual IImplicitPort * GetInputVector() = 0;
+
+	/**
+	* IDecomposeVectorNode::GetOutputX - Retrieves the output for the x component
+	* @return the output for the x component
+	*/
+	virtual IImplicitPort * GetOutputX() = 0;
+
+	/**
+	* IDecomposeVectorNode::GetOutputY - Retrieves the output for the y component
+	* @return the output for the y component
+	*/
+	virtual IImplicitPort * GetOutputY() = 0;
+
+	/**
+	* IDecomposeVectorNode::GetOutputZ - Retrieves the output for the z component
+	* @return the output for the z component
+	*/
+	virtual IImplicitPort * GetOutputZ() = 0;
+
+};
+
+typedef IBaseSharedPtr<IDecomposeVectorNode> PIDecomposeVectorNode;
+
+
+/*************************************************************************************************************************
+ Class interface for ComposeMatrixNode 
+**************************************************************************************************************************/
+
+class IComposeMatrixNode : public virtual IImplicitNode {
+public:
+	/**
+	* IComposeMatrixNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x9EF9EB54A53AA40DUL; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixNode"
+	}
+
+	/**
+	* IComposeMatrixNode::GetInputM00 - Retrieves the input for the element 0 0
+	* @return the input for the m00 element
+	*/
+	virtual IImplicitPort * GetInputM00() = 0;
+
+	/**
+	* IComposeMatrixNode::GetInputM01 - Retrieves the input for the element 0 1
+	* @return the input for the m01 element
+	*/
+	virtual IImplicitPort * GetInputM01() = 0;
+
+	/**
+	* IComposeMatrixNode::GetInputM02 - Retrieves the input for the element 0 2
+	* @return the input for the m02 element
+	*/
+	virtual IImplicitPort * GetInputM02() = 0;
+
+	/**
+	* IComposeMatrixNode::GetInputM03 - Retrieves the input for the element 0 3
+	* @return the input for the m03 element
+	*/
+	virtual IImplicitPort * GetInputM03() = 0;
+
+	/**
+	* IComposeMatrixNode::GetInputM10 - Retrieves the input for the element 1 0
+	* @return the input for the m10 element
+	*/
+	virtual IImplicitPort * GetInputM10() = 0;
+
+	/**
+	* IComposeMatrixNode::GetInputM11 - Retrieves the input for the element 1 1
+	* @return the input for the m11 element
+	*/
+	virtual IImplicitPort * GetInputM11() = 0;
+
+	/**
+	* IComposeMatrixNode::GetInputM12 - Retrieves the input for the element 1 2
+	* @return the input for the m12 element
+	*/
+	virtual IImplicitPort * GetInputM12() = 0;
+
+	/**
+	* IComposeMatrixNode::GetInputM13 - Retrieves the input for the element 1 3
+	* @return the input for the m3 element
+	*/
+	virtual IImplicitPort * GetInputM13() = 0;
+
+	/**
+	* IComposeMatrixNode::GetInputM20 - Retrieves the input for the element 2 0
+	* @return the input for the m2 element
+	*/
+	virtual IImplicitPort * GetInputM20() = 0;
+
+	/**
+	* IComposeMatrixNode::GetInputM21 - Retrieves the input for the element 2 1
+	* @return 
+	*/
+	virtual IImplicitPort * GetInputM21() = 0;
+
+	/**
+	* IComposeMatrixNode::GetInputM22 - Retrieves the input for the element 2 2
+	* @return the input for the m22 element
+	*/
+	virtual IImplicitPort * GetInputM22() = 0;
+
+	/**
+	* IComposeMatrixNode::GetInputM23 - Retrieves the input for the element 2 3
+	* @return the input for the m23 element
+	*/
+	virtual IImplicitPort * GetInputM23() = 0;
+
+	/**
+	* IComposeMatrixNode::GetInputM30 - Retrieves the input for the element 3 0
+	* @return the input for the m30 element
+	*/
+	virtual IImplicitPort * GetInputM30() = 0;
+
+	/**
+	* IComposeMatrixNode::GetInputM31 - Retrieves the input for the element 3 1
+	* @return the input for the m31 element
+	*/
+	virtual IImplicitPort * GetInputM31() = 0;
+
+	/**
+	* IComposeMatrixNode::GetInputM32 - Retrieves the input for the element 3 2
+	* @return the input for the m32 element
+	*/
+	virtual IImplicitPort * GetInputM32() = 0;
+
+	/**
+	* IComposeMatrixNode::GetInputM33 - Retrieves the input for the element 3 3
+	* @return the input for the m33 element
+	*/
+	virtual IImplicitPort * GetInputM33() = 0;
+
+	/**
+	* IComposeMatrixNode::GetOutputMatrix - Retrieves the output
+	* @return the output
+	*/
+	virtual IImplicitPort * GetOutputMatrix() = 0;
+
+};
+
+typedef IBaseSharedPtr<IComposeMatrixNode> PIComposeMatrixNode;
+
+
+/*************************************************************************************************************************
+ Class interface for ComposeMatrixFromRowVectorsNode 
+**************************************************************************************************************************/
+
+class IComposeMatrixFromRowVectorsNode : public virtual IImplicitNode {
+public:
+	/**
+	* IComposeMatrixFromRowVectorsNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x5F89513A9B5FC583UL; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixFromRowVectorsNode"
+	}
+
+	/**
+	* IComposeMatrixFromRowVectorsNode::GetInputRow0 - Retrieves the input for the first row
+	* @return the input for the first row
+	*/
+	virtual IImplicitPort * GetInputRow0() = 0;
+
+	/**
+	* IComposeMatrixFromRowVectorsNode::GetInputRow1 - Retrieves the input for the second row
+	* @return the input for the second row
+	*/
+	virtual IImplicitPort * GetInputRow1() = 0;
+
+	/**
+	* IComposeMatrixFromRowVectorsNode::GetInputRow2 - Retrieves the input for the third row
+	* @return the input for the third row
+	*/
+	virtual IImplicitPort * GetInputRow2() = 0;
+
+	/**
+	* IComposeMatrixFromRowVectorsNode::GetInputRow3 - Retrieves the input for the fourth row
+	* @return the input for the fourth row
+	*/
+	virtual IImplicitPort * GetInputRow3() = 0;
+
+	/**
+	* IComposeMatrixFromRowVectorsNode::GetOutputMatrix - Retrieves the output
+	* @return the output
+	*/
+	virtual IImplicitPort * GetOutputMatrix() = 0;
+
+};
+
+typedef IBaseSharedPtr<IComposeMatrixFromRowVectorsNode> PIComposeMatrixFromRowVectorsNode;
+
+
+/*************************************************************************************************************************
+ Class interface for ConstantNode 
+**************************************************************************************************************************/
+
+class IConstantNode : public virtual IImplicitNode {
+public:
+	/**
+	* IConstantNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x3F8E5D082F966B1BUL; // First 64 bits of SHA1 of a string: "Lib3MF::ConstantNode"
+	}
+
+	/**
+	* IConstantNode::SetConstant - Sets the constant value of the node
+	* @param[in] dValue - the value
+	*/
+	virtual void SetConstant(const Lib3MF_double dValue) = 0;
+
+	/**
+	* IConstantNode::GetConstant - Retrieves the constant value of the node
+	* @return the value
+	*/
+	virtual Lib3MF_double GetConstant() = 0;
+
+	/**
+	* IConstantNode::GetOutputValue - Retrieves the output
+	* @return the output
+	*/
+	virtual IImplicitPort * GetOutputValue() = 0;
+
+};
+
+typedef IBaseSharedPtr<IConstantNode> PIConstantNode;
+
+
+/*************************************************************************************************************************
+ Class interface for ConstVecNode 
+**************************************************************************************************************************/
+
+class IConstVecNode : public virtual IImplicitNode {
+public:
+	/**
+	* IConstVecNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x9C9363B3F708D556UL; // First 64 bits of SHA1 of a string: "Lib3MF::ConstVecNode"
+	}
+
+	/**
+	* IConstVecNode::SetVector - Sets the vector value of the node
+	* @param[in] Value - the value
+	*/
+	virtual void SetVector(const Lib3MF::sVector Value) = 0;
+
+	/**
+	* IConstVecNode::GetVector - Retrieves the vector value of the node
+	* @return the value
+	*/
+	virtual Lib3MF::sVector GetVector() = 0;
+
+	/**
+	* IConstVecNode::GetOutputVector - Retrieves the output
+	* @return the output
+	*/
+	virtual IImplicitPort * GetOutputVector() = 0;
+
+};
+
+typedef IBaseSharedPtr<IConstVecNode> PIConstVecNode;
+
+
+/*************************************************************************************************************************
+ Class interface for ConstMatNode 
+**************************************************************************************************************************/
+
+class IConstMatNode : public virtual IImplicitNode {
+public:
+	/**
+	* IConstMatNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xF85C90EDCE6F90A4UL; // First 64 bits of SHA1 of a string: "Lib3MF::ConstMatNode"
+	}
+
+	/**
+	* IConstMatNode::SetMatrix - Sets the matrix value of the node
+	* @param[in] Value - the value
+	*/
+	virtual void SetMatrix(const Lib3MF::sMatrix4x4 Value) = 0;
+
+	/**
+	* IConstMatNode::GetMatrix - Retrieves the matrix value of the node
+	* @return the matrix
+	*/
+	virtual Lib3MF::sMatrix4x4 GetMatrix() = 0;
+
+	/**
+	* IConstMatNode::GetOutputMatrix - Retrieves the output
+	* @return the output
+	*/
+	virtual IImplicitPort * GetOutputMatrix() = 0;
+
+};
+
+typedef IBaseSharedPtr<IConstMatNode> PIConstMatNode;
 
 
 /*************************************************************************************************************************
@@ -3225,6 +4464,446 @@ public:
 	* @return the added node
 	*/
 	virtual IImplicitNode * AddNode(const Lib3MF::eImplicitNodeType eNodeType, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddSinNode - Add a SinNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual ISinNode * AddSinNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddCosNode - Add a CosNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual ICosNode * AddCosNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddTanNode - Add a TanNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual ITanNode * AddTanNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddArcSinNode - Add a ArcSinNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IArcSinNode * AddArcSinNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddArcCosNode - Add a ArcCosNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IArcCosNode * AddArcCosNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddArcTan2Node - Add a ArcTan2Node
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IArcTan2Node * AddArcTan2Node(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddSinhNode - Add a SinhNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual ISinhNode * AddSinhNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddCoshNode - Add a CoshNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual ICoshNode * AddCoshNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddTanhNode - Add a TanhNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual ITanhNode * AddTanhNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddRoundNode - Add a RoundNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IRoundNode * AddRoundNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddCeilNode - Add a CeilNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual ICeilNode * AddCeilNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddFloorNode - Add a FloorNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IFloorNode * AddFloorNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddSignNode - Add a SignNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual ISignNode * AddSignNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddFractNode - Add a FractNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IFractNode * AddFractNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddAbsNode - Add a AbsNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IAbsNode * AddAbsNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddExpNode - Add a ExpNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IExpNode * AddExpNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddLogNode - Add a LogNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual ILogNode * AddLogNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddLog2Node - Add a Log2Node
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual ILog2Node * AddLog2Node(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddLog10Node - Add a Log10Node
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual ILog10Node * AddLog10Node(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddLengthNode - Add a LengthNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual ILengthNode * AddLengthNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddTransposeNode - Add a TransposeNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual ITransposeNode * AddTransposeNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::InverseNode - Add a InverseNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IInverseNode * InverseNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddSqrtNode - Add a SqrtNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual ISqrtNode * AddSqrtNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddResourceIdNode - Add a ResourceIdNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IResourceIdNode * AddResourceIdNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddAdditionNode - Add an AdditionNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IAdditionNode * AddAdditionNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddSubtractionNode - Add a SubtractionNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual ISubtractionNode * AddSubtractionNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddMultiplicationNode - Add a MultiplicationNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IMultiplicationNode * AddMultiplicationNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddDivisionNode - Add a DivisionNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IDivisionNode * AddDivisionNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddDotNode - Add a DotNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IDotNode * AddDotNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddCrossNode - Add a CrossNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual ICrossNode * AddCrossNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddMatVecMultiplicationNode - Add a MatVecMultiplicationNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IMatVecMultiplicationNode * AddMatVecMultiplicationNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddMinNode - Add a MinNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IMinNode * AddMinNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddMaxNode - Add a MaxNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IMaxNode * AddMaxNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddFmodNode - Add a FmodNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IFmodNode * AddFmodNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddPowNode - Add a PowNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IPowNode * AddPowNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddSelectNode - Add a SelectNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual ISelectNode * AddSelectNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddClampNode - Add a ClampNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IClampNode * AddClampNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddComposeVectorNode - Add a ComposeVectorNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IComposeVectorNode * AddComposeVectorNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddDecomposeVectorNode - Add a DecomposeVectorNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IDecomposeVectorNode * AddDecomposeVectorNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddComposeMatrixNode - Add a ComposeMatrixNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IComposeMatrixNode * AddComposeMatrixNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddComposeMatrixFromRowVectorsNode - Add a ComposeMatrixFromRowVectorsNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IComposeMatrixFromRowVectorsNode * AddComposeMatrixFromRowVectorsNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddConstantNode - Add a ConstantNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IConstantNode * AddConstantNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddConstVecNode - Add a ConstVecNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IConstVecNode * AddConstVecNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddConstMatNode - Add a ConstMatNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IConstMatNode * AddConstMatNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::GetNodes - Retrieves the nodes

@@ -2126,7 +2126,7 @@
 	<class name="FmodNode" parent="TwoInputNode" description="Calculates the modulo of two values">
 	</class>
 
-	<class name="PowNode" parent="TwoInputNode" description="Calculates the power A^B">
+	<class name="PowNode" parent="TwoInputNode" description="Calculates the power A by B">
 	</class>
 
 	<class name="SelectNode" parent="OneInputNode" description="If A is less B returns C, else D">
@@ -2198,68 +2198,68 @@
 
 	<class name="ComposeMatrixNode" parent="ImplicitNode"
 		description="Composes a 4x4 matrix from 16 scalar values">
-		<method name="GetInputM00" description="Retrieves the input for the element [0,0]">
-			<param name="m00" type="class" class="ImplicitPort" pass="return"
+		<method name="GetInputM00" description="Retrieves the input for the element 0 0">
+			<param name="M00" type="class" class="ImplicitPort" pass="return"
 				description="the input for the m00 element" />
 		</method>
-		<method name="GetInputM01" description="Retrieves the input for the element [0,1]">
-			<param name="m01" type="class" class="ImplicitPort" pass="return"
+		<method name="GetInputM01" description="Retrieves the input for the element 0 1">
+			<param name="M01" type="class" class="ImplicitPort" pass="return"
 				description="the input for the m01 element" />
 		</method>
-		<method name="GetInputM02" description="Retrieves the input for the element [0,2]">
-			<param name="m02" type="class" class="ImplicitPort" pass="return"
+		<method name="GetInputM02" description="Retrieves the input for the element 0 2">
+			<param name="M02" type="class" class="ImplicitPort" pass="return"
 				description="the input for the m02 element" />
 		</method>
-		<method name="GetInputM03" description="Retrieves the input for the element [0,3]">
-			<param name="m03" type="class" class="ImplicitPort" pass="return"
+		<method name="GetInputM03" description="Retrieves the input for the element 0 3">
+			<param name="M03" type="class" class="ImplicitPort" pass="return"
 				description="the input for the m03 element" />
 		</method>
-		<method name="GetInputM10" description="Retrieves the input for the element [1,0]">
-			<param name="m10" type="class" class="ImplicitPort" pass="return"
+		<method name="GetInputM10" description="Retrieves the input for the element 1 0">
+			<param name="M10" type="class" class="ImplicitPort" pass="return"
 				description="the input for the m10 element" />
 		</method>
-		<method name="GetInputM11" description="Retrieves the input for the element [1,1]">
-			<param name="m11" type="class" class="ImplicitPort" pass="return"
+		<method name="GetInputM11" description="Retrieves the input for the element 1 1">
+			<param name="M11" type="class" class="ImplicitPort" pass="return"
 				description="the input for the m11 element" />
 		</method>
-		<method name="GetInputM12" description="Retrieves the input for the element [1,2]">
-			<param name="m12" type="class" class="ImplicitPort" pass="return"
+		<method name="GetInputM12" description="Retrieves the input for the element 1 2">
+			<param name="M12" type="class" class="ImplicitPort" pass="return"
 				description="the input for the m12 element" />
 		</method>
-		<method name="GetInputM13" description="Retrieves the input for the element [1,3]">
-			<param name="m13" type="class" class="ImplicitPort" pass="return"
+		<method name="GetInputM13" description="Retrieves the input for the element 1 3">
+			<param name="M13" type="class" class="ImplicitPort" pass="return"
 				description="the input for the m3 element" />
 		</method>
-		<method name="GetInputM20" description="Retrieves the input for the element [2,0]">
-			<param name="m20" type="class" class="ImplicitPort" pass="return"
+		<method name="GetInputM20" description="Retrieves the input for the element 2 0">
+			<param name="M20" type="class" class="ImplicitPort" pass="return"
 				description="the input for the m2 element" />
 		</method>
-		<method name="GetInputM21" description="Retrieves the input for the element [2,1]">
-			<param name="m21" type="class" class="ImplicitPort" pass="return"
+		<method name="GetInputM21" description="Retrieves the input for the element 2 1">
+			<param name="M21" type="class" class="ImplicitPort" pass="return"
 				decription="the input fr the m21 eement" />
 		</method>
-		<method name="GetInputM22" description="Retrieves the input for the element [2,2]">
-			<param name="m22" type="class" class="ImplicitPort" pass="return"
+		<method name="GetInputM22" description="Retrieves the input for the element 2 2">
+			<param name="M22" type="class" class="ImplicitPort" pass="return"
 				description="the input for the m22 element" />
 		</method>
-		<method name="GetInputM23" description="Retrieves the input for the element [2,3]">
-			<param name="m23" type="class" class="ImplicitPort" pass="return"
+		<method name="GetInputM23" description="Retrieves the input for the element 2 3">
+			<param name="M23" type="class" class="ImplicitPort" pass="return"
 				description="the input for the m23 element" />
 		</method>
-		<method name="GetInputM30" description="Retrieves the input for the element [3,0]">
-			<param name="m30" type="class" class="ImplicitPort" pass="return"
+		<method name="GetInputM30" description="Retrieves the input for the element 3 0">
+			<param name="M30" type="class" class="ImplicitPort" pass="return"
 				description="the input for the m30 element" />
 		</method>
-		<method name="GetInputM31" description="Retrieves the input for the element [3,1]">
-			<param name="m31" type="class" class="ImplicitPort" pass="return"
+		<method name="GetInputM31" description="Retrieves the input for the element 3 1">
+			<param name="M31" type="class" class="ImplicitPort" pass="return"
 				description="the input for the m31 element" />
 		</method>
-		<method name="GetInputM32" description="Retrieves the input for the element [3,2]">
-			<param name="m32" type="class" class="ImplicitPort" pass="return"
+		<method name="GetInputM32" description="Retrieves the input for the element 3 2">
+			<param name="M32" type="class" class="ImplicitPort" pass="return"
 				description="the input for the m32 element" />
 		</method>
-		<method name="GetInputM33" description="Retrieves the input for the element [3,3]">
-			<param name="m33" type="class" class="ImplicitPort" pass="return"
+		<method name="GetInputM33" description="Retrieves the input for the element 3 3">
+			<param name="M33" type="class" class="ImplicitPort" pass="return"
 				description="the input for the m33 element" />
 		</method>
 		<method name="GetOutputMatrix" description="Retrieves the output">
@@ -2494,19 +2494,6 @@
 			<param name="Tag" type="string" pass="in"
 				description="the tag of the node" />
 			<param name="Node" type="class" class="ArcCosNode" pass="return"
-				description="the added node" />
-		</method>
-
-		<method name="AddArcTanNode" description="Add a ArcTanNode">
-			<param name="Identifier" type="string" pass="in"
-				description="the identifier of the node" />
-			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in"
-				description="the configuration of the node" />
-			<param name="DisplayName" type="string" pass="in"
-				description="the display name of the node" />
-			<param name="Tag" type="string" pass="in"
-				description="the tag of the node" />
-			<param name="Node" type="class" class="ArcTanNode" pass="return"
 				description="the added node" />
 		</method>
 
@@ -2832,19 +2819,6 @@
 			<param name="Tag" pass="in" type="string"
 				description="the tag of the node" />
 			<param name="Node" pass="return" type="class" class="CrossNode"
-				description="the added node" />
-		</method>
-
-		<method name="AddArcTan2Node" description="Add an ArcTan2Node">
-			<param name="Identifier" pass="in" type="string"
-				description="the identifier of the node" />
-			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
-				description="the configuration of the node" />
-			<param name="DisplayName" pass="in" type="string"
-				description="the display name of the node" />
-			<param name="Tag" pass="in" type="string"
-				description="the tag of the node" />
-			<param name="Node" pass="return" type="class" class="ArcTan2Node"
 				description="the added node" />
 		</method>
 

@@ -1119,19 +1119,860 @@ private:
 	static void GetOutputs(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void FindInput(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void FindOutput(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void SetConstant(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetConstant(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void SetVector(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetVector(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void SetMatrix(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetMatrix(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void SetResource(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetResource(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AreTypesValid(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFImplicitNode();
 	~CLib3MFImplicitNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFOneInputNode 
+**************************************************************************************************************************/
+class CLib3MFOneInputNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetInputA(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputResult(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFOneInputNode();
+	~CLib3MFOneInputNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFSinNode 
+**************************************************************************************************************************/
+class CLib3MFSinNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFSinNode();
+	~CLib3MFSinNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFCosNode 
+**************************************************************************************************************************/
+class CLib3MFCosNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFCosNode();
+	~CLib3MFCosNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFTanNode 
+**************************************************************************************************************************/
+class CLib3MFTanNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFTanNode();
+	~CLib3MFTanNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFArcSinNode 
+**************************************************************************************************************************/
+class CLib3MFArcSinNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFArcSinNode();
+	~CLib3MFArcSinNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFArcCosNode 
+**************************************************************************************************************************/
+class CLib3MFArcCosNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFArcCosNode();
+	~CLib3MFArcCosNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFArcTanNode 
+**************************************************************************************************************************/
+class CLib3MFArcTanNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFArcTanNode();
+	~CLib3MFArcTanNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFSinhNode 
+**************************************************************************************************************************/
+class CLib3MFSinhNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFSinhNode();
+	~CLib3MFSinhNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFCoshNode 
+**************************************************************************************************************************/
+class CLib3MFCoshNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFCoshNode();
+	~CLib3MFCoshNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFTanhNode 
+**************************************************************************************************************************/
+class CLib3MFTanhNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFTanhNode();
+	~CLib3MFTanhNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFRoundNode 
+**************************************************************************************************************************/
+class CLib3MFRoundNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFRoundNode();
+	~CLib3MFRoundNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFCeilNode 
+**************************************************************************************************************************/
+class CLib3MFCeilNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFCeilNode();
+	~CLib3MFCeilNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFFloorNode 
+**************************************************************************************************************************/
+class CLib3MFFloorNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFFloorNode();
+	~CLib3MFFloorNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFSignNode 
+**************************************************************************************************************************/
+class CLib3MFSignNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFSignNode();
+	~CLib3MFSignNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFFractNode 
+**************************************************************************************************************************/
+class CLib3MFFractNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFFractNode();
+	~CLib3MFFractNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFAbsNode 
+**************************************************************************************************************************/
+class CLib3MFAbsNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFAbsNode();
+	~CLib3MFAbsNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFExpNode 
+**************************************************************************************************************************/
+class CLib3MFExpNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFExpNode();
+	~CLib3MFExpNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFLogNode 
+**************************************************************************************************************************/
+class CLib3MFLogNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFLogNode();
+	~CLib3MFLogNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFLog2Node 
+**************************************************************************************************************************/
+class CLib3MFLog2Node : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFLog2Node();
+	~CLib3MFLog2Node();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFLog10Node 
+**************************************************************************************************************************/
+class CLib3MFLog10Node : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFLog10Node();
+	~CLib3MFLog10Node();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFLengthNode 
+**************************************************************************************************************************/
+class CLib3MFLengthNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFLengthNode();
+	~CLib3MFLengthNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFTransposeNode 
+**************************************************************************************************************************/
+class CLib3MFTransposeNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFTransposeNode();
+	~CLib3MFTransposeNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFInverseNode 
+**************************************************************************************************************************/
+class CLib3MFInverseNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFInverseNode();
+	~CLib3MFInverseNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFSqrtNode 
+**************************************************************************************************************************/
+class CLib3MFSqrtNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFSqrtNode();
+	~CLib3MFSqrtNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFResourceIdNode 
+**************************************************************************************************************************/
+class CLib3MFResourceIdNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void SetResource(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetResource(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputValue(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFResourceIdNode();
+	~CLib3MFResourceIdNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFTwoInputNode 
+**************************************************************************************************************************/
+class CLib3MFTwoInputNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetInputB(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFTwoInputNode();
+	~CLib3MFTwoInputNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFAdditionNode 
+**************************************************************************************************************************/
+class CLib3MFAdditionNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFAdditionNode();
+	~CLib3MFAdditionNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFSubtractionNode 
+**************************************************************************************************************************/
+class CLib3MFSubtractionNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFSubtractionNode();
+	~CLib3MFSubtractionNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFMultiplicationNode 
+**************************************************************************************************************************/
+class CLib3MFMultiplicationNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFMultiplicationNode();
+	~CLib3MFMultiplicationNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFDivisionNode 
+**************************************************************************************************************************/
+class CLib3MFDivisionNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFDivisionNode();
+	~CLib3MFDivisionNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFDotNode 
+**************************************************************************************************************************/
+class CLib3MFDotNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFDotNode();
+	~CLib3MFDotNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFCrossNode 
+**************************************************************************************************************************/
+class CLib3MFCrossNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFCrossNode();
+	~CLib3MFCrossNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFArcTan2Node 
+**************************************************************************************************************************/
+class CLib3MFArcTan2Node : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFArcTan2Node();
+	~CLib3MFArcTan2Node();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFMatVecMultiplicationNode 
+**************************************************************************************************************************/
+class CLib3MFMatVecMultiplicationNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFMatVecMultiplicationNode();
+	~CLib3MFMatVecMultiplicationNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFMinNode 
+**************************************************************************************************************************/
+class CLib3MFMinNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFMinNode();
+	~CLib3MFMinNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFMaxNode 
+**************************************************************************************************************************/
+class CLib3MFMaxNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFMaxNode();
+	~CLib3MFMaxNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFFmodNode 
+**************************************************************************************************************************/
+class CLib3MFFmodNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFFmodNode();
+	~CLib3MFFmodNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFPowNode 
+**************************************************************************************************************************/
+class CLib3MFPowNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFPowNode();
+	~CLib3MFPowNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFSelectNode 
+**************************************************************************************************************************/
+class CLib3MFSelectNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetInputB(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputC(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputD(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFSelectNode();
+	~CLib3MFSelectNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFClampNode 
+**************************************************************************************************************************/
+class CLib3MFClampNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetInputMin(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputMax(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFClampNode();
+	~CLib3MFClampNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFComposeVectorNode 
+**************************************************************************************************************************/
+class CLib3MFComposeVectorNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetInputX(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputY(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputZ(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputVector(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFComposeVectorNode();
+	~CLib3MFComposeVectorNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFDecomposeVectorNode 
+**************************************************************************************************************************/
+class CLib3MFDecomposeVectorNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetInputVector(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputX(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputY(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputZ(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFDecomposeVectorNode();
+	~CLib3MFDecomposeVectorNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFComposeMatrixNode 
+**************************************************************************************************************************/
+class CLib3MFComposeMatrixNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetInputM00(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputM01(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputM02(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputM03(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputM10(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputM11(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputM12(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputM13(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputM20(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputM21(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputM22(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputM23(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputM30(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputM31(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputM32(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputM33(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputMatrix(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFComposeMatrixNode();
+	~CLib3MFComposeMatrixNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFComposeMatrixFromRowVectorsNode 
+**************************************************************************************************************************/
+class CLib3MFComposeMatrixFromRowVectorsNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetInputRow0(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputRow1(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputRow2(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputRow3(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputMatrix(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFComposeMatrixFromRowVectorsNode();
+	~CLib3MFComposeMatrixFromRowVectorsNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFConstantNode 
+**************************************************************************************************************************/
+class CLib3MFConstantNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void SetConstant(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetConstant(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputValue(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFConstantNode();
+	~CLib3MFConstantNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFConstVecNode 
+**************************************************************************************************************************/
+class CLib3MFConstVecNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void SetVector(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetVector(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputVector(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFConstVecNode();
+	~CLib3MFConstVecNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFConstMatNode 
+**************************************************************************************************************************/
+class CLib3MFConstMatNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void SetMatrix(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetMatrix(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputMatrix(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFConstMatNode();
+	~CLib3MFConstMatNode();
 	
 	static void Init();
 	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
@@ -1193,6 +2034,50 @@ private:
 	static void GetIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddSinNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddCosNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddTanNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddArcSinNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddArcCosNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddArcTan2Node(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddSinhNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddCoshNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddTanhNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddRoundNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddCeilNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddFloorNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddSignNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddFractNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddAbsNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddExpNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddLogNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddLog2Node(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddLog10Node(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddLengthNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddTransposeNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void InverseNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddSqrtNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddResourceIdNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddAdditionNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddSubtractionNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddMultiplicationNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddDivisionNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddDotNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddCrossNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddMatVecMultiplicationNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddMinNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddMaxNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddFmodNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddPowNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddSelectNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddClampNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddComposeVectorNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddDecomposeVectorNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddComposeMatrixNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddComposeMatrixFromRowVectorsNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddConstantNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddConstVecNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddConstMatNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetNodes(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void RemoveNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddLink(const v8::FunctionCallbackInfo<v8::Value>& args);

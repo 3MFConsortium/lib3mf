@@ -1266,32 +1266,158 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_findoutput", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitNode_FindOutput (IntPtr Handle, byte[] AIdentifier, out IntPtr AOutput);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_setconstant", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitNode_SetConstant (IntPtr Handle, Double AValue);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_getconstant", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitNode_GetConstant (IntPtr Handle, out Double AValue);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_setvector", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitNode_SetVector (IntPtr Handle, InternalVector AValue);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_getvector", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitNode_GetVector (IntPtr Handle, out InternalVector AValue);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_setmatrix", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitNode_SetMatrix (IntPtr Handle, InternalMatrix4x4 AValue);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_getmatrix", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitNode_GetMatrix (IntPtr Handle, out InternalMatrix4x4 AValue);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_setresource", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitNode_SetResource (IntPtr Handle, IntPtr AResource);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_getresource", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitNode_GetResource (IntPtr Handle, out IntPtr AResource);
-
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitnode_aretypesvalid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitNode_AreTypesValid (IntPtr Handle, out Byte AValid);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_oneinputnode_getinputa", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 OneInputNode_GetInputA (IntPtr Handle, out IntPtr AInput);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_oneinputnode_getoutputresult", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 OneInputNode_GetOutputResult (IntPtr Handle, out IntPtr AResult);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_resourceidnode_setresource", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ResourceIdNode_SetResource (IntPtr Handle, IntPtr AResource);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_resourceidnode_getresource", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ResourceIdNode_GetResource (IntPtr Handle, out IntPtr AResource);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_resourceidnode_getoutputvalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ResourceIdNode_GetOutputValue (IntPtr Handle, out IntPtr AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_twoinputnode_getinputb", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 TwoInputNode_GetInputB (IntPtr Handle, out IntPtr AB);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_selectnode_getinputb", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 SelectNode_GetInputB (IntPtr Handle, out IntPtr AB);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_selectnode_getinputc", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 SelectNode_GetInputC (IntPtr Handle, out IntPtr AC);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_selectnode_getinputd", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 SelectNode_GetInputD (IntPtr Handle, out IntPtr AD);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_clampnode_getinputmin", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ClampNode_GetInputMin (IntPtr Handle, out IntPtr AMin);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_clampnode_getinputmax", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ClampNode_GetInputMax (IntPtr Handle, out IntPtr AMax);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composevectornode_getinputx", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeVectorNode_GetInputX (IntPtr Handle, out IntPtr AX);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composevectornode_getinputy", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeVectorNode_GetInputY (IntPtr Handle, out IntPtr AY);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composevectornode_getinputz", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeVectorNode_GetInputZ (IntPtr Handle, out IntPtr AZ);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composevectornode_getoutputvector", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeVectorNode_GetOutputVector (IntPtr Handle, out IntPtr AVector);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_decomposevectornode_getinputvector", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 DecomposeVectorNode_GetInputVector (IntPtr Handle, out IntPtr AVector);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_decomposevectornode_getoutputx", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 DecomposeVectorNode_GetOutputX (IntPtr Handle, out IntPtr AX);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_decomposevectornode_getoutputy", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 DecomposeVectorNode_GetOutputY (IntPtr Handle, out IntPtr AY);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_decomposevectornode_getoutputz", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 DecomposeVectorNode_GetOutputZ (IntPtr Handle, out IntPtr AZ);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixnode_getinputm00", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixNode_GetInputM00 (IntPtr Handle, out IntPtr AM00);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixnode_getinputm01", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixNode_GetInputM01 (IntPtr Handle, out IntPtr AM01);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixnode_getinputm02", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixNode_GetInputM02 (IntPtr Handle, out IntPtr AM02);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixnode_getinputm03", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixNode_GetInputM03 (IntPtr Handle, out IntPtr AM03);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixnode_getinputm10", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixNode_GetInputM10 (IntPtr Handle, out IntPtr AM10);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixnode_getinputm11", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixNode_GetInputM11 (IntPtr Handle, out IntPtr AM11);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixnode_getinputm12", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixNode_GetInputM12 (IntPtr Handle, out IntPtr AM12);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixnode_getinputm13", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixNode_GetInputM13 (IntPtr Handle, out IntPtr AM13);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixnode_getinputm20", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixNode_GetInputM20 (IntPtr Handle, out IntPtr AM20);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixnode_getinputm21", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixNode_GetInputM21 (IntPtr Handle, out IntPtr AM21);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixnode_getinputm22", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixNode_GetInputM22 (IntPtr Handle, out IntPtr AM22);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixnode_getinputm23", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixNode_GetInputM23 (IntPtr Handle, out IntPtr AM23);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixnode_getinputm30", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixNode_GetInputM30 (IntPtr Handle, out IntPtr AM30);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixnode_getinputm31", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixNode_GetInputM31 (IntPtr Handle, out IntPtr AM31);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixnode_getinputm32", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixNode_GetInputM32 (IntPtr Handle, out IntPtr AM32);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixnode_getinputm33", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixNode_GetInputM33 (IntPtr Handle, out IntPtr AM33);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixnode_getoutputmatrix", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixNode_GetOutputMatrix (IntPtr Handle, out IntPtr AMatrix);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixfromrowvectorsnode_getinputrow0", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixFromRowVectorsNode_GetInputRow0 (IntPtr Handle, out IntPtr ARow0);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixfromrowvectorsnode_getinputrow1", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixFromRowVectorsNode_GetInputRow1 (IntPtr Handle, out IntPtr ARow1);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixfromrowvectorsnode_getinputrow2", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixFromRowVectorsNode_GetInputRow2 (IntPtr Handle, out IntPtr ARow2);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixfromrowvectorsnode_getinputrow3", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixFromRowVectorsNode_GetInputRow3 (IntPtr Handle, out IntPtr ARow3);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixfromrowvectorsnode_getoutputmatrix", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixFromRowVectorsNode_GetOutputMatrix (IntPtr Handle, out IntPtr AMatrix);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_constantnode_setconstant", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ConstantNode_SetConstant (IntPtr Handle, Double AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_constantnode_getconstant", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ConstantNode_GetConstant (IntPtr Handle, out Double AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_constantnode_getoutputvalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ConstantNode_GetOutputValue (IntPtr Handle, out IntPtr AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_constvecnode_setvector", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ConstVecNode_SetVector (IntPtr Handle, InternalVector AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_constvecnode_getvector", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ConstVecNode_GetVector (IntPtr Handle, out InternalVector AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_constvecnode_getoutputvector", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ConstVecNode_GetOutputVector (IntPtr Handle, out IntPtr AVector);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_constmatnode_setmatrix", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ConstMatNode_SetMatrix (IntPtr Handle, InternalMatrix4x4 AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_constmatnode_getmatrix", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ConstMatNode_GetMatrix (IntPtr Handle, out InternalMatrix4x4 AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_constmatnode_getoutputmatrix", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ConstMatNode_GetOutputMatrix (IntPtr Handle, out IntPtr AMatrix);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_nodeiterator_getcurrent", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 NodeIterator_GetCurrent (IntPtr Handle, out IntPtr ANode);
@@ -1334,6 +1460,138 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addnode", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_AddNode (IntPtr Handle, Int32 ANodeType, Int32 AConfiguration, byte[] AIdentifier, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addsinnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddSinNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addcosnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddCosNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addtannode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddTanNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addarcsinnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddArcSinNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addarccosnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddArcCosNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addarctan2node", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddArcTan2Node (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addsinhnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddSinhNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addcoshnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddCoshNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addtanhnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddTanhNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addroundnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddRoundNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addceilnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddCeilNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addfloornode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddFloorNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addsignnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddSignNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addfractnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddFractNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addabsnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddAbsNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addexpnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddExpNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addlognode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddLogNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addlog2node", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddLog2Node (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addlog10node", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddLog10Node (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addlengthnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddLengthNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addtransposenode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddTransposeNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_inversenode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_InverseNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addsqrtnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddSqrtNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addresourceidnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddResourceIdNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addadditionnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddAdditionNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addsubtractionnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddSubtractionNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addmultiplicationnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddMultiplicationNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_adddivisionnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddDivisionNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_adddotnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddDotNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addcrossnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddCrossNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addmatvecmultiplicationnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddMatVecMultiplicationNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addminnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddMinNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addmaxnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddMaxNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addfmodnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddFmodNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addpownode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddPowNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addselectnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddSelectNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addclampnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddClampNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addcomposevectornode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddComposeVectorNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_adddecomposevectornode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddDecomposeVectorNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addcomposematrixnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddComposeMatrixNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addcomposematrixfromrowvectorsnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddComposeMatrixFromRowVectorsNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addconstantnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddConstantNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addconstvecnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddConstVecNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addconstmatnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddConstMatNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_getnodes", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_GetNodes (IntPtr Handle, out IntPtr AIterator);
@@ -2267,6 +2525,53 @@ namespace Lib3MF {
 					case 0x52F06268CD098EFE: Object = new CIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Iterator"
 					case 0xC62268F2D7C7012C: Object = new CImplicitPortIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPortIterator"
 					case 0xE72592A7725AB29B: Object = new CImplicitNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitNode"
+					case 0xB19B9FDA94B0A5E7: Object = new COneInputNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::OneInputNode"
+					case 0xD5AEA50A56306722: Object = new CSinNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::SinNode"
+					case 0x59BC328F6FB5C5FF: Object = new CCosNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::CosNode"
+					case 0x2614CC572AF350B7: Object = new CTanNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::TanNode"
+					case 0xE554C8A7E72AAF4D: Object = new CArcSinNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ArcSinNode"
+					case 0x943AF6AE0EFD2B8A: Object = new CArcCosNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ArcCosNode"
+					case 0xE47D547615816BAD: Object = new CArcTanNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ArcTanNode"
+					case 0x3C7756A456F2D089: Object = new CSinhNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::SinhNode"
+					case 0x4A993F91E1DE256D: Object = new CCoshNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::CoshNode"
+					case 0xCF077B19B0B78E9D: Object = new CTanhNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::TanhNode"
+					case 0xD9F5A53C657765AE: Object = new CRoundNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::RoundNode"
+					case 0x627E211653E11D93: Object = new CCeilNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::CeilNode"
+					case 0x392A0F4C041D249C: Object = new CFloorNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::FloorNode"
+					case 0x8A45165E6C9646D7: Object = new CSignNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::SignNode"
+					case 0x53E62FD67F4D9A65: Object = new CFractNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::FractNode"
+					case 0x6B641C7060040BE3: Object = new CAbsNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::AbsNode"
+					case 0x3390243A8E2410F3: Object = new CExpNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ExpNode"
+					case 0x0070021D73AA89FD: Object = new CLogNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::LogNode"
+					case 0xE8C0ABF7C5DC7068: Object = new CLog2Node(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Log2Node"
+					case 0x87740AD53454E0DF: Object = new CLog10Node(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Log10Node"
+					case 0xD85889E2739A74B1: Object = new CLengthNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::LengthNode"
+					case 0xA808B7599C158CE6: Object = new CTransposeNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::TransposeNode"
+					case 0xE8601F66A23A0540: Object = new CInverseNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::InverseNode"
+					case 0x9F831944A3DE31DA: Object = new CSqrtNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::SqrtNode"
+					case 0xCA86A77C71CD3FAE: Object = new CResourceIdNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ResourceIdNode"
+					case 0x7DE3951BA4C1064C: Object = new CTwoInputNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::TwoInputNode"
+					case 0x57A2236998DF5248: Object = new CAdditionNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::AdditionNode"
+					case 0x6079B12FFF345D02: Object = new CSubtractionNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::SubtractionNode"
+					case 0xA3C27CF54C2AA76C: Object = new CMultiplicationNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MultiplicationNode"
+					case 0xB896B6413C08CF39: Object = new CDivisionNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::DivisionNode"
+					case 0xFE60932A66375FAD: Object = new CDotNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::DotNode"
+					case 0x106182D38CA5CFE3: Object = new CCrossNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::CrossNode"
+					case 0xB6153EF5DE7E5E11: Object = new CArcTan2Node(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ArcTan2Node"
+					case 0x7570C43B9721D0C0: Object = new CMatVecMultiplicationNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MatVecMultiplicationNode"
+					case 0x846AFDE9A091E997: Object = new CMinNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MinNode"
+					case 0x073F910381BF250D: Object = new CMaxNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MaxNode"
+					case 0x1EF703D298223F2A: Object = new CFmodNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::FmodNode"
+					case 0x7700AA17CA1AC0F8: Object = new CPowNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::PowNode"
+					case 0x1127ED71E05A9BD4: Object = new CSelectNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::SelectNode"
+					case 0x77AF68C971B1485F: Object = new CClampNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ClampNode"
+					case 0x49C24B8840C01F7E: Object = new CComposeVectorNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeVectorNode"
+					case 0xCC4F8D561CCE35D4: Object = new CDecomposeVectorNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::DecomposeVectorNode"
+					case 0x9EF9EB54A53AA40D: Object = new CComposeMatrixNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixNode"
+					case 0x5F89513A9B5FC583: Object = new CComposeMatrixFromRowVectorsNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixFromRowVectorsNode"
+					case 0x3F8E5D082F966B1B: Object = new CConstantNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ConstantNode"
+					case 0x9C9363B3F708D556: Object = new CConstVecNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ConstVecNode"
+					case 0xF85C90EDCE6F90A4: Object = new CConstMatNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ConstMatNode"
 					case 0xFC006BC888CAB4D0: Object = new CNodeIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::NodeIterator"
 					case 0x9EFB2757CA1A5231: Object = new CFunction(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Function"
 					case 0x6CE54469EEA83BC1: Object = new CImplicitFunction(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitFunction"
@@ -5135,48 +5440,228 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newOutput);
 		}
 
-		public void SetConstant (Double AValue)
+		public bool AreTypesValid ()
 		{
+			Byte resultValid = 0;
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitNode_SetConstant (Handle, AValue));
+			CheckError(Internal.Lib3MFWrapper.ImplicitNode_AreTypesValid (Handle, out resultValid));
+			return (resultValid != 0);
 		}
 
-		public Double GetConstant ()
-		{
-			Double resultValue = 0;
+	}
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitNode_GetConstant (Handle, out resultValue));
-			return resultValue;
+	public class COneInputNode : CImplicitNode
+	{
+		public COneInputNode (IntPtr NewHandle) : base (NewHandle)
+		{
 		}
 
-		public void SetVector (sVector AValue)
+		public CImplicitPort GetInputA ()
 		{
-			Internal.InternalVector intValue = Internal.Lib3MFWrapper.convertStructToInternal_Vector (AValue);
+			IntPtr newInput = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitNode_SetVector (Handle, intValue));
+			CheckError(Internal.Lib3MFWrapper.OneInputNode_GetInputA (Handle, out newInput));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newInput);
 		}
 
-		public sVector GetVector ()
+		public CImplicitPort GetOutputResult ()
 		{
-			Internal.InternalVector intresultValue;
+			IntPtr newResult = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitNode_GetVector (Handle, out intresultValue));
-			return Internal.Lib3MFWrapper.convertInternalToStruct_Vector (intresultValue);
+			CheckError(Internal.Lib3MFWrapper.OneInputNode_GetOutputResult (Handle, out newResult));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newResult);
 		}
 
-		public void SetMatrix (sMatrix4x4 AValue)
-		{
-			Internal.InternalMatrix4x4 intValue = Internal.Lib3MFWrapper.convertStructToInternal_Matrix4x4 (AValue);
+	}
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitNode_SetMatrix (Handle, intValue));
+	public class CSinNode : COneInputNode
+	{
+		public CSinNode (IntPtr NewHandle) : base (NewHandle)
+		{
 		}
 
-		public sMatrix4x4 GetMatrix ()
-		{
-			Internal.InternalMatrix4x4 intresultValue;
+	}
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitNode_GetMatrix (Handle, out intresultValue));
-			return Internal.Lib3MFWrapper.convertInternalToStruct_Matrix4x4 (intresultValue);
+	public class CCosNode : COneInputNode
+	{
+		public CCosNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CTanNode : COneInputNode
+	{
+		public CTanNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CArcSinNode : COneInputNode
+	{
+		public CArcSinNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CArcCosNode : COneInputNode
+	{
+		public CArcCosNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CArcTanNode : COneInputNode
+	{
+		public CArcTanNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CSinhNode : COneInputNode
+	{
+		public CSinhNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CCoshNode : COneInputNode
+	{
+		public CCoshNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CTanhNode : COneInputNode
+	{
+		public CTanhNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CRoundNode : COneInputNode
+	{
+		public CRoundNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CCeilNode : COneInputNode
+	{
+		public CCeilNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CFloorNode : COneInputNode
+	{
+		public CFloorNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CSignNode : COneInputNode
+	{
+		public CSignNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CFractNode : COneInputNode
+	{
+		public CFractNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CAbsNode : COneInputNode
+	{
+		public CAbsNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CExpNode : COneInputNode
+	{
+		public CExpNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CLogNode : COneInputNode
+	{
+		public CLogNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CLog2Node : COneInputNode
+	{
+		public CLog2Node (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CLog10Node : COneInputNode
+	{
+		public CLog10Node (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CLengthNode : COneInputNode
+	{
+		public CLengthNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CTransposeNode : COneInputNode
+	{
+		public CTransposeNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CInverseNode : COneInputNode
+	{
+		public CInverseNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CSqrtNode : COneInputNode
+	{
+		public CSqrtNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CResourceIdNode : CImplicitNode
+	{
+		public CResourceIdNode (IntPtr NewHandle) : base (NewHandle)
+		{
 		}
 
 		public void SetResource (CResource AResource)
@@ -5185,23 +5670,555 @@ namespace Lib3MF {
 			if (AResource != null)
 				AResourceHandle = AResource.GetHandle();
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitNode_SetResource (Handle, AResourceHandle));
+			CheckError(Internal.Lib3MFWrapper.ResourceIdNode_SetResource (Handle, AResourceHandle));
 		}
 
 		public CResource GetResource ()
 		{
 			IntPtr newResource = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitNode_GetResource (Handle, out newResource));
+			CheckError(Internal.Lib3MFWrapper.ResourceIdNode_GetResource (Handle, out newResource));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CResource>(newResource);
 		}
 
-		public bool AreTypesValid ()
+		public CImplicitPort GetOutputValue ()
 		{
-			Byte resultValid = 0;
+			IntPtr newValue = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitNode_AreTypesValid (Handle, out resultValid));
-			return (resultValid != 0);
+			CheckError(Internal.Lib3MFWrapper.ResourceIdNode_GetOutputValue (Handle, out newValue));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newValue);
+		}
+
+	}
+
+	public class CTwoInputNode : COneInputNode
+	{
+		public CTwoInputNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CImplicitPort GetInputB ()
+		{
+			IntPtr newB = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.TwoInputNode_GetInputB (Handle, out newB));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newB);
+		}
+
+	}
+
+	public class CAdditionNode : CTwoInputNode
+	{
+		public CAdditionNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CSubtractionNode : CTwoInputNode
+	{
+		public CSubtractionNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CMultiplicationNode : CTwoInputNode
+	{
+		public CMultiplicationNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CDivisionNode : CTwoInputNode
+	{
+		public CDivisionNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CDotNode : CTwoInputNode
+	{
+		public CDotNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CCrossNode : CTwoInputNode
+	{
+		public CCrossNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CArcTan2Node : CTwoInputNode
+	{
+		public CArcTan2Node (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CMatVecMultiplicationNode : CTwoInputNode
+	{
+		public CMatVecMultiplicationNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CMinNode : CTwoInputNode
+	{
+		public CMinNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CMaxNode : CTwoInputNode
+	{
+		public CMaxNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CFmodNode : CTwoInputNode
+	{
+		public CFmodNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CPowNode : CTwoInputNode
+	{
+		public CPowNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CSelectNode : COneInputNode
+	{
+		public CSelectNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CImplicitPort GetInputB ()
+		{
+			IntPtr newB = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.SelectNode_GetInputB (Handle, out newB));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newB);
+		}
+
+		public CImplicitPort GetInputC ()
+		{
+			IntPtr newC = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.SelectNode_GetInputC (Handle, out newC));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newC);
+		}
+
+		public CImplicitPort GetInputD ()
+		{
+			IntPtr newD = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.SelectNode_GetInputD (Handle, out newD));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newD);
+		}
+
+	}
+
+	public class CClampNode : COneInputNode
+	{
+		public CClampNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CImplicitPort GetInputMin ()
+		{
+			IntPtr newMin = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ClampNode_GetInputMin (Handle, out newMin));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newMin);
+		}
+
+		public CImplicitPort GetInputMax ()
+		{
+			IntPtr newMax = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ClampNode_GetInputMax (Handle, out newMax));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newMax);
+		}
+
+	}
+
+	public class CComposeVectorNode : CImplicitNode
+	{
+		public CComposeVectorNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CImplicitPort GetInputX ()
+		{
+			IntPtr newX = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeVectorNode_GetInputX (Handle, out newX));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newX);
+		}
+
+		public CImplicitPort GetInputY ()
+		{
+			IntPtr newY = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeVectorNode_GetInputY (Handle, out newY));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newY);
+		}
+
+		public CImplicitPort GetInputZ ()
+		{
+			IntPtr newZ = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeVectorNode_GetInputZ (Handle, out newZ));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newZ);
+		}
+
+		public CImplicitPort GetOutputVector ()
+		{
+			IntPtr newVector = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeVectorNode_GetOutputVector (Handle, out newVector));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newVector);
+		}
+
+	}
+
+	public class CDecomposeVectorNode : CImplicitNode
+	{
+		public CDecomposeVectorNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CImplicitPort GetInputVector ()
+		{
+			IntPtr newVector = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.DecomposeVectorNode_GetInputVector (Handle, out newVector));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newVector);
+		}
+
+		public CImplicitPort GetOutputX ()
+		{
+			IntPtr newX = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.DecomposeVectorNode_GetOutputX (Handle, out newX));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newX);
+		}
+
+		public CImplicitPort GetOutputY ()
+		{
+			IntPtr newY = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.DecomposeVectorNode_GetOutputY (Handle, out newY));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newY);
+		}
+
+		public CImplicitPort GetOutputZ ()
+		{
+			IntPtr newZ = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.DecomposeVectorNode_GetOutputZ (Handle, out newZ));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newZ);
+		}
+
+	}
+
+	public class CComposeMatrixNode : CImplicitNode
+	{
+		public CComposeMatrixNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CImplicitPort GetInputM00 ()
+		{
+			IntPtr newM00 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixNode_GetInputM00 (Handle, out newM00));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newM00);
+		}
+
+		public CImplicitPort GetInputM01 ()
+		{
+			IntPtr newM01 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixNode_GetInputM01 (Handle, out newM01));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newM01);
+		}
+
+		public CImplicitPort GetInputM02 ()
+		{
+			IntPtr newM02 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixNode_GetInputM02 (Handle, out newM02));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newM02);
+		}
+
+		public CImplicitPort GetInputM03 ()
+		{
+			IntPtr newM03 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixNode_GetInputM03 (Handle, out newM03));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newM03);
+		}
+
+		public CImplicitPort GetInputM10 ()
+		{
+			IntPtr newM10 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixNode_GetInputM10 (Handle, out newM10));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newM10);
+		}
+
+		public CImplicitPort GetInputM11 ()
+		{
+			IntPtr newM11 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixNode_GetInputM11 (Handle, out newM11));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newM11);
+		}
+
+		public CImplicitPort GetInputM12 ()
+		{
+			IntPtr newM12 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixNode_GetInputM12 (Handle, out newM12));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newM12);
+		}
+
+		public CImplicitPort GetInputM13 ()
+		{
+			IntPtr newM13 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixNode_GetInputM13 (Handle, out newM13));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newM13);
+		}
+
+		public CImplicitPort GetInputM20 ()
+		{
+			IntPtr newM20 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixNode_GetInputM20 (Handle, out newM20));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newM20);
+		}
+
+		public CImplicitPort GetInputM21 ()
+		{
+			IntPtr newM21 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixNode_GetInputM21 (Handle, out newM21));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newM21);
+		}
+
+		public CImplicitPort GetInputM22 ()
+		{
+			IntPtr newM22 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixNode_GetInputM22 (Handle, out newM22));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newM22);
+		}
+
+		public CImplicitPort GetInputM23 ()
+		{
+			IntPtr newM23 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixNode_GetInputM23 (Handle, out newM23));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newM23);
+		}
+
+		public CImplicitPort GetInputM30 ()
+		{
+			IntPtr newM30 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixNode_GetInputM30 (Handle, out newM30));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newM30);
+		}
+
+		public CImplicitPort GetInputM31 ()
+		{
+			IntPtr newM31 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixNode_GetInputM31 (Handle, out newM31));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newM31);
+		}
+
+		public CImplicitPort GetInputM32 ()
+		{
+			IntPtr newM32 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixNode_GetInputM32 (Handle, out newM32));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newM32);
+		}
+
+		public CImplicitPort GetInputM33 ()
+		{
+			IntPtr newM33 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixNode_GetInputM33 (Handle, out newM33));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newM33);
+		}
+
+		public CImplicitPort GetOutputMatrix ()
+		{
+			IntPtr newMatrix = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixNode_GetOutputMatrix (Handle, out newMatrix));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newMatrix);
+		}
+
+	}
+
+	public class CComposeMatrixFromRowVectorsNode : CImplicitNode
+	{
+		public CComposeMatrixFromRowVectorsNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CImplicitPort GetInputRow0 ()
+		{
+			IntPtr newRow0 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixFromRowVectorsNode_GetInputRow0 (Handle, out newRow0));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newRow0);
+		}
+
+		public CImplicitPort GetInputRow1 ()
+		{
+			IntPtr newRow1 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixFromRowVectorsNode_GetInputRow1 (Handle, out newRow1));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newRow1);
+		}
+
+		public CImplicitPort GetInputRow2 ()
+		{
+			IntPtr newRow2 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixFromRowVectorsNode_GetInputRow2 (Handle, out newRow2));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newRow2);
+		}
+
+		public CImplicitPort GetInputRow3 ()
+		{
+			IntPtr newRow3 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixFromRowVectorsNode_GetInputRow3 (Handle, out newRow3));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newRow3);
+		}
+
+		public CImplicitPort GetOutputMatrix ()
+		{
+			IntPtr newMatrix = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixFromRowVectorsNode_GetOutputMatrix (Handle, out newMatrix));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newMatrix);
+		}
+
+	}
+
+	public class CConstantNode : CImplicitNode
+	{
+		public CConstantNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public void SetConstant (Double AValue)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ConstantNode_SetConstant (Handle, AValue));
+		}
+
+		public Double GetConstant ()
+		{
+			Double resultValue = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ConstantNode_GetConstant (Handle, out resultValue));
+			return resultValue;
+		}
+
+		public CImplicitPort GetOutputValue ()
+		{
+			IntPtr newValue = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ConstantNode_GetOutputValue (Handle, out newValue));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newValue);
+		}
+
+	}
+
+	public class CConstVecNode : CImplicitNode
+	{
+		public CConstVecNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public void SetVector (sVector AValue)
+		{
+			Internal.InternalVector intValue = Internal.Lib3MFWrapper.convertStructToInternal_Vector (AValue);
+
+			CheckError(Internal.Lib3MFWrapper.ConstVecNode_SetVector (Handle, intValue));
+		}
+
+		public sVector GetVector ()
+		{
+			Internal.InternalVector intresultValue;
+
+			CheckError(Internal.Lib3MFWrapper.ConstVecNode_GetVector (Handle, out intresultValue));
+			return Internal.Lib3MFWrapper.convertInternalToStruct_Vector (intresultValue);
+		}
+
+		public CImplicitPort GetOutputVector ()
+		{
+			IntPtr newVector = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ConstVecNode_GetOutputVector (Handle, out newVector));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newVector);
+		}
+
+	}
+
+	public class CConstMatNode : CImplicitNode
+	{
+		public CConstMatNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public void SetMatrix (sMatrix4x4 AValue)
+		{
+			Internal.InternalMatrix4x4 intValue = Internal.Lib3MFWrapper.convertStructToInternal_Matrix4x4 (AValue);
+
+			CheckError(Internal.Lib3MFWrapper.ConstMatNode_SetMatrix (Handle, intValue));
+		}
+
+		public sMatrix4x4 GetMatrix ()
+		{
+			Internal.InternalMatrix4x4 intresultValue;
+
+			CheckError(Internal.Lib3MFWrapper.ConstMatNode_GetMatrix (Handle, out intresultValue));
+			return Internal.Lib3MFWrapper.convertInternalToStruct_Matrix4x4 (intresultValue);
+		}
+
+		public CImplicitPort GetOutputMatrix ()
+		{
+			IntPtr newMatrix = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ConstMatNode_GetOutputMatrix (Handle, out newMatrix));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newMatrix);
 		}
 
 	}
@@ -5363,6 +6380,534 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddNode (Handle, enumNodeType, enumConfiguration, byteIdentifier, byteDisplayName, byteTag, out newNode));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitNode>(newNode);
+		}
+
+		public CSinNode AddSinNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddSinNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CSinNode>(newNode);
+		}
+
+		public CCosNode AddCosNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddCosNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CCosNode>(newNode);
+		}
+
+		public CTanNode AddTanNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddTanNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CTanNode>(newNode);
+		}
+
+		public CArcSinNode AddArcSinNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddArcSinNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CArcSinNode>(newNode);
+		}
+
+		public CArcCosNode AddArcCosNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddArcCosNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CArcCosNode>(newNode);
+		}
+
+		public CArcTan2Node AddArcTan2Node (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddArcTan2Node (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CArcTan2Node>(newNode);
+		}
+
+		public CSinhNode AddSinhNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddSinhNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CSinhNode>(newNode);
+		}
+
+		public CCoshNode AddCoshNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddCoshNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CCoshNode>(newNode);
+		}
+
+		public CTanhNode AddTanhNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddTanhNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CTanhNode>(newNode);
+		}
+
+		public CRoundNode AddRoundNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddRoundNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CRoundNode>(newNode);
+		}
+
+		public CCeilNode AddCeilNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddCeilNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CCeilNode>(newNode);
+		}
+
+		public CFloorNode AddFloorNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddFloorNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CFloorNode>(newNode);
+		}
+
+		public CSignNode AddSignNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddSignNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CSignNode>(newNode);
+		}
+
+		public CFractNode AddFractNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddFractNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CFractNode>(newNode);
+		}
+
+		public CAbsNode AddAbsNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddAbsNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CAbsNode>(newNode);
+		}
+
+		public CExpNode AddExpNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddExpNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CExpNode>(newNode);
+		}
+
+		public CLogNode AddLogNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddLogNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CLogNode>(newNode);
+		}
+
+		public CLog2Node AddLog2Node (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddLog2Node (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CLog2Node>(newNode);
+		}
+
+		public CLog10Node AddLog10Node (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddLog10Node (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CLog10Node>(newNode);
+		}
+
+		public CLengthNode AddLengthNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddLengthNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CLengthNode>(newNode);
+		}
+
+		public CTransposeNode AddTransposeNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddTransposeNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CTransposeNode>(newNode);
+		}
+
+		public CInverseNode InverseNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_InverseNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CInverseNode>(newNode);
+		}
+
+		public CSqrtNode AddSqrtNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddSqrtNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CSqrtNode>(newNode);
+		}
+
+		public CResourceIdNode AddResourceIdNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddResourceIdNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CResourceIdNode>(newNode);
+		}
+
+		public CAdditionNode AddAdditionNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddAdditionNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CAdditionNode>(newNode);
+		}
+
+		public CSubtractionNode AddSubtractionNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddSubtractionNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CSubtractionNode>(newNode);
+		}
+
+		public CMultiplicationNode AddMultiplicationNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddMultiplicationNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CMultiplicationNode>(newNode);
+		}
+
+		public CDivisionNode AddDivisionNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddDivisionNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CDivisionNode>(newNode);
+		}
+
+		public CDotNode AddDotNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddDotNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CDotNode>(newNode);
+		}
+
+		public CCrossNode AddCrossNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddCrossNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CCrossNode>(newNode);
+		}
+
+		public CMatVecMultiplicationNode AddMatVecMultiplicationNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddMatVecMultiplicationNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CMatVecMultiplicationNode>(newNode);
+		}
+
+		public CMinNode AddMinNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddMinNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CMinNode>(newNode);
+		}
+
+		public CMaxNode AddMaxNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddMaxNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CMaxNode>(newNode);
+		}
+
+		public CFmodNode AddFmodNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddFmodNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CFmodNode>(newNode);
+		}
+
+		public CPowNode AddPowNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddPowNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CPowNode>(newNode);
+		}
+
+		public CSelectNode AddSelectNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddSelectNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CSelectNode>(newNode);
+		}
+
+		public CClampNode AddClampNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddClampNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CClampNode>(newNode);
+		}
+
+		public CComposeVectorNode AddComposeVectorNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddComposeVectorNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CComposeVectorNode>(newNode);
+		}
+
+		public CDecomposeVectorNode AddDecomposeVectorNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddDecomposeVectorNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CDecomposeVectorNode>(newNode);
+		}
+
+		public CComposeMatrixNode AddComposeMatrixNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddComposeMatrixNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CComposeMatrixNode>(newNode);
+		}
+
+		public CComposeMatrixFromRowVectorsNode AddComposeMatrixFromRowVectorsNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddComposeMatrixFromRowVectorsNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CComposeMatrixFromRowVectorsNode>(newNode);
+		}
+
+		public CConstantNode AddConstantNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddConstantNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CConstantNode>(newNode);
+		}
+
+		public CConstVecNode AddConstVecNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddConstVecNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CConstVecNode>(newNode);
+		}
+
+		public CConstMatNode AddConstMatNode (String AIdentifier, eImplicitNodeConfiguration AConfiguration, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Int32 enumConfiguration = (Int32) AConfiguration;
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddConstMatNode (Handle, byteIdentifier, enumConfiguration, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CConstMatNode>(newNode);
 		}
 
 		public CNodeIterator GetNodes ()

@@ -2574,84 +2574,462 @@ Lib3MFResult CCall_lib3mf_implicitnode_findoutput(Lib3MFHandle libraryHandle, Li
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitnode_setconstant(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, Lib3MF_double dValue)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitNode_SetConstant (pImplicitNode, dValue);
-}
-
-
-Lib3MFResult CCall_lib3mf_implicitnode_getconstant(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, Lib3MF_double * pValue)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitNode_GetConstant (pImplicitNode, pValue);
-}
-
-
-Lib3MFResult CCall_lib3mf_implicitnode_setvector(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, const sLib3MFVector * pValue)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitNode_SetVector (pImplicitNode, pValue);
-}
-
-
-Lib3MFResult CCall_lib3mf_implicitnode_getvector(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, sLib3MFVector * pValue)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitNode_GetVector (pImplicitNode, pValue);
-}
-
-
-Lib3MFResult CCall_lib3mf_implicitnode_setmatrix(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, const sLib3MFMatrix4x4 * pValue)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitNode_SetMatrix (pImplicitNode, pValue);
-}
-
-
-Lib3MFResult CCall_lib3mf_implicitnode_getmatrix(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, sLib3MFMatrix4x4 * pValue)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitNode_GetMatrix (pImplicitNode, pValue);
-}
-
-
-Lib3MFResult CCall_lib3mf_implicitnode_setresource(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Resource pResource)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitNode_SetResource (pImplicitNode, pResource);
-}
-
-
-Lib3MFResult CCall_lib3mf_implicitnode_getresource(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, Lib3MF_Resource * pResource)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitNode_GetResource (pImplicitNode, pResource);
-}
-
-
 Lib3MFResult CCall_lib3mf_implicitnode_aretypesvalid(Lib3MFHandle libraryHandle, Lib3MF_ImplicitNode pImplicitNode, bool * pValid)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_ImplicitNode_AreTypesValid (pImplicitNode, pValid);
+}
+
+
+Lib3MFResult CCall_lib3mf_oneinputnode_getinputa(Lib3MFHandle libraryHandle, Lib3MF_OneInputNode pOneInputNode, Lib3MF_ImplicitPort * pInput)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_OneInputNode_GetInputA (pOneInputNode, pInput);
+}
+
+
+Lib3MFResult CCall_lib3mf_oneinputnode_getoutputresult(Lib3MFHandle libraryHandle, Lib3MF_OneInputNode pOneInputNode, Lib3MF_ImplicitPort * pResult)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_OneInputNode_GetOutputResult (pOneInputNode, pResult);
+}
+
+
+Lib3MFResult CCall_lib3mf_resourceidnode_setresource(Lib3MFHandle libraryHandle, Lib3MF_ResourceIdNode pResourceIdNode, Lib3MF_Resource pResource)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ResourceIdNode_SetResource (pResourceIdNode, pResource);
+}
+
+
+Lib3MFResult CCall_lib3mf_resourceidnode_getresource(Lib3MFHandle libraryHandle, Lib3MF_ResourceIdNode pResourceIdNode, Lib3MF_Resource * pResource)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ResourceIdNode_GetResource (pResourceIdNode, pResource);
+}
+
+
+Lib3MFResult CCall_lib3mf_resourceidnode_getoutputvalue(Lib3MFHandle libraryHandle, Lib3MF_ResourceIdNode pResourceIdNode, Lib3MF_ImplicitPort * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ResourceIdNode_GetOutputValue (pResourceIdNode, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_twoinputnode_getinputb(Lib3MFHandle libraryHandle, Lib3MF_TwoInputNode pTwoInputNode, Lib3MF_ImplicitPort * pB)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_TwoInputNode_GetInputB (pTwoInputNode, pB);
+}
+
+
+Lib3MFResult CCall_lib3mf_selectnode_getinputb(Lib3MFHandle libraryHandle, Lib3MF_SelectNode pSelectNode, Lib3MF_ImplicitPort * pB)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_SelectNode_GetInputB (pSelectNode, pB);
+}
+
+
+Lib3MFResult CCall_lib3mf_selectnode_getinputc(Lib3MFHandle libraryHandle, Lib3MF_SelectNode pSelectNode, Lib3MF_ImplicitPort * pC)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_SelectNode_GetInputC (pSelectNode, pC);
+}
+
+
+Lib3MFResult CCall_lib3mf_selectnode_getinputd(Lib3MFHandle libraryHandle, Lib3MF_SelectNode pSelectNode, Lib3MF_ImplicitPort * pD)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_SelectNode_GetInputD (pSelectNode, pD);
+}
+
+
+Lib3MFResult CCall_lib3mf_clampnode_getinputmin(Lib3MFHandle libraryHandle, Lib3MF_ClampNode pClampNode, Lib3MF_ImplicitPort * pMin)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ClampNode_GetInputMin (pClampNode, pMin);
+}
+
+
+Lib3MFResult CCall_lib3mf_clampnode_getinputmax(Lib3MFHandle libraryHandle, Lib3MF_ClampNode pClampNode, Lib3MF_ImplicitPort * pMax)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ClampNode_GetInputMax (pClampNode, pMax);
+}
+
+
+Lib3MFResult CCall_lib3mf_composevectornode_getinputx(Lib3MFHandle libraryHandle, Lib3MF_ComposeVectorNode pComposeVectorNode, Lib3MF_ImplicitPort * pX)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeVectorNode_GetInputX (pComposeVectorNode, pX);
+}
+
+
+Lib3MFResult CCall_lib3mf_composevectornode_getinputy(Lib3MFHandle libraryHandle, Lib3MF_ComposeVectorNode pComposeVectorNode, Lib3MF_ImplicitPort * pY)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeVectorNode_GetInputY (pComposeVectorNode, pY);
+}
+
+
+Lib3MFResult CCall_lib3mf_composevectornode_getinputz(Lib3MFHandle libraryHandle, Lib3MF_ComposeVectorNode pComposeVectorNode, Lib3MF_ImplicitPort * pZ)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeVectorNode_GetInputZ (pComposeVectorNode, pZ);
+}
+
+
+Lib3MFResult CCall_lib3mf_composevectornode_getoutputvector(Lib3MFHandle libraryHandle, Lib3MF_ComposeVectorNode pComposeVectorNode, Lib3MF_ImplicitPort * pVector)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeVectorNode_GetOutputVector (pComposeVectorNode, pVector);
+}
+
+
+Lib3MFResult CCall_lib3mf_decomposevectornode_getinputvector(Lib3MFHandle libraryHandle, Lib3MF_DecomposeVectorNode pDecomposeVectorNode, Lib3MF_ImplicitPort * pVector)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_DecomposeVectorNode_GetInputVector (pDecomposeVectorNode, pVector);
+}
+
+
+Lib3MFResult CCall_lib3mf_decomposevectornode_getoutputx(Lib3MFHandle libraryHandle, Lib3MF_DecomposeVectorNode pDecomposeVectorNode, Lib3MF_ImplicitPort * pX)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_DecomposeVectorNode_GetOutputX (pDecomposeVectorNode, pX);
+}
+
+
+Lib3MFResult CCall_lib3mf_decomposevectornode_getoutputy(Lib3MFHandle libraryHandle, Lib3MF_DecomposeVectorNode pDecomposeVectorNode, Lib3MF_ImplicitPort * pY)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_DecomposeVectorNode_GetOutputY (pDecomposeVectorNode, pY);
+}
+
+
+Lib3MFResult CCall_lib3mf_decomposevectornode_getoutputz(Lib3MFHandle libraryHandle, Lib3MF_DecomposeVectorNode pDecomposeVectorNode, Lib3MF_ImplicitPort * pZ)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_DecomposeVectorNode_GetOutputZ (pDecomposeVectorNode, pZ);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixnode_getinputm00(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM00)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixNode_GetInputM00 (pComposeMatrixNode, pM00);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixnode_getinputm01(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM01)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixNode_GetInputM01 (pComposeMatrixNode, pM01);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixnode_getinputm02(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM02)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixNode_GetInputM02 (pComposeMatrixNode, pM02);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixnode_getinputm03(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM03)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixNode_GetInputM03 (pComposeMatrixNode, pM03);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixnode_getinputm10(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM10)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixNode_GetInputM10 (pComposeMatrixNode, pM10);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixnode_getinputm11(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM11)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixNode_GetInputM11 (pComposeMatrixNode, pM11);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixnode_getinputm12(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM12)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixNode_GetInputM12 (pComposeMatrixNode, pM12);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixnode_getinputm13(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM13)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixNode_GetInputM13 (pComposeMatrixNode, pM13);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixnode_getinputm20(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM20)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixNode_GetInputM20 (pComposeMatrixNode, pM20);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixnode_getinputm21(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM21)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixNode_GetInputM21 (pComposeMatrixNode, pM21);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixnode_getinputm22(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM22)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixNode_GetInputM22 (pComposeMatrixNode, pM22);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixnode_getinputm23(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM23)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixNode_GetInputM23 (pComposeMatrixNode, pM23);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixnode_getinputm30(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM30)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixNode_GetInputM30 (pComposeMatrixNode, pM30);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixnode_getinputm31(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM31)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixNode_GetInputM31 (pComposeMatrixNode, pM31);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixnode_getinputm32(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM32)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixNode_GetInputM32 (pComposeMatrixNode, pM32);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixnode_getinputm33(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM33)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixNode_GetInputM33 (pComposeMatrixNode, pM33);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixnode_getoutputmatrix(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pMatrix)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixNode_GetOutputMatrix (pComposeMatrixNode, pMatrix);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixfromrowvectorsnode_getinputrow0(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow0)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow0 (pComposeMatrixFromRowVectorsNode, pRow0);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixfromrowvectorsnode_getinputrow1(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow1)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow1 (pComposeMatrixFromRowVectorsNode, pRow1);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixfromrowvectorsnode_getinputrow2(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow2)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow2 (pComposeMatrixFromRowVectorsNode, pRow2);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixfromrowvectorsnode_getinputrow3(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow3)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow3 (pComposeMatrixFromRowVectorsNode, pRow3);
+}
+
+
+Lib3MFResult CCall_lib3mf_composematrixfromrowvectorsnode_getoutputmatrix(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pMatrix)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetOutputMatrix (pComposeMatrixFromRowVectorsNode, pMatrix);
+}
+
+
+Lib3MFResult CCall_lib3mf_constantnode_setconstant(Lib3MFHandle libraryHandle, Lib3MF_ConstantNode pConstantNode, Lib3MF_double dValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ConstantNode_SetConstant (pConstantNode, dValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_constantnode_getconstant(Lib3MFHandle libraryHandle, Lib3MF_ConstantNode pConstantNode, Lib3MF_double * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ConstantNode_GetConstant (pConstantNode, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_constantnode_getoutputvalue(Lib3MFHandle libraryHandle, Lib3MF_ConstantNode pConstantNode, Lib3MF_ImplicitPort * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ConstantNode_GetOutputValue (pConstantNode, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_constvecnode_setvector(Lib3MFHandle libraryHandle, Lib3MF_ConstVecNode pConstVecNode, const sLib3MFVector * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ConstVecNode_SetVector (pConstVecNode, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_constvecnode_getvector(Lib3MFHandle libraryHandle, Lib3MF_ConstVecNode pConstVecNode, sLib3MFVector * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ConstVecNode_GetVector (pConstVecNode, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_constvecnode_getoutputvector(Lib3MFHandle libraryHandle, Lib3MF_ConstVecNode pConstVecNode, Lib3MF_ImplicitPort * pVector)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ConstVecNode_GetOutputVector (pConstVecNode, pVector);
+}
+
+
+Lib3MFResult CCall_lib3mf_constmatnode_setmatrix(Lib3MFHandle libraryHandle, Lib3MF_ConstMatNode pConstMatNode, const sLib3MFMatrix4x4 * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ConstMatNode_SetMatrix (pConstMatNode, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_constmatnode_getmatrix(Lib3MFHandle libraryHandle, Lib3MF_ConstMatNode pConstMatNode, sLib3MFMatrix4x4 * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ConstMatNode_GetMatrix (pConstMatNode, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_constmatnode_getoutputmatrix(Lib3MFHandle libraryHandle, Lib3MF_ConstMatNode pConstMatNode, Lib3MF_ImplicitPort * pMatrix)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ConstMatNode_GetOutputMatrix (pConstMatNode, pMatrix);
 }
 
 
@@ -2778,6 +3156,402 @@ Lib3MFResult CCall_lib3mf_implicitfunction_addnode(Lib3MFHandle libraryHandle, L
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_ImplicitFunction_AddNode (pImplicitFunction, eNodeType, eConfiguration, pIdentifier, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addsinnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_SinNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddSinNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addcosnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_CosNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddCosNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addtannode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_TanNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddTanNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addarcsinnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ArcSinNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddArcSinNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addarccosnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ArcCosNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddArcCosNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addarctan2node(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ArcTan2Node * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddArcTan2Node (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addsinhnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_SinhNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddSinhNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addcoshnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_CoshNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddCoshNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addtanhnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_TanhNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddTanhNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addroundnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_RoundNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddRoundNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addceilnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_CeilNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddCeilNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addfloornode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_FloorNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddFloorNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addsignnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_SignNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddSignNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addfractnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_FractNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddFractNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addabsnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_AbsNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddAbsNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addexpnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ExpNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddExpNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addlognode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_LogNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddLogNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addlog2node(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_Log2Node * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddLog2Node (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addlog10node(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_Log10Node * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddLog10Node (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addlengthnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_LengthNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddLengthNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addtransposenode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_TransposeNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddTransposeNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_inversenode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_InverseNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_InverseNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addsqrtnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_SqrtNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddSqrtNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addresourceidnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ResourceIdNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddResourceIdNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addadditionnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_AdditionNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddAdditionNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addsubtractionnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_SubtractionNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddSubtractionNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addmultiplicationnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_MultiplicationNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddMultiplicationNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_adddivisionnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_DivisionNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddDivisionNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_adddotnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_DotNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddDotNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addcrossnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_CrossNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddCrossNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addmatvecmultiplicationnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_MatVecMultiplicationNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddMatVecMultiplicationNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addminnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_MinNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddMinNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addmaxnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_MaxNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddMaxNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addfmodnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_FmodNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddFmodNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addpownode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_PowNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddPowNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addselectnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_SelectNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddSelectNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addclampnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ClampNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddClampNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addcomposevectornode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ComposeVectorNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddComposeVectorNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_adddecomposevectornode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_DecomposeVectorNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddDecomposeVectorNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addcomposematrixnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ComposeMatrixNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddComposeMatrixNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addcomposematrixfromrowvectorsnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ComposeMatrixFromRowVectorsNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddComposeMatrixFromRowVectorsNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addconstantnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ConstantNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddConstantNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addconstvecnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ConstVecNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddConstVecNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addconstmatnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, eLib3MFImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ConstMatNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddConstMatNode (pImplicitFunction, pIdentifier, eConfiguration, pDisplayName, pTag, pNode);
 }
 
 
@@ -8502,82 +9276,6 @@ func (inst ImplicitNode) FindOutput(identifier string) (*ImplicitPort, error) {
 	return _outputPtr, nil
 }
 
-// SetConstant sets the constant value of the node. Throws an error, if the node type not is of type Constant.
-func (inst ImplicitNode) SetConstant(value float64) error {
-	ret := C.CCall_lib3mf_implicitnode_setconstant(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(value))
-	if ret != 0 {
-		return makeError(uint32(ret))
-	}
-	return nil
-}
-
-// GetConstant retrieves the constant value of the node. Throws an error, if the node type is not of type Constant.
-func (inst ImplicitNode) GetConstant() (float64, error) {
-	var value C.double
-	ret := C.CCall_lib3mf_implicitnode_getconstant(inst.wrapperRef.LibraryHandle, inst.Ref, &value)
-	if ret != 0 {
-		return 0, makeError(uint32(ret))
-	}
-	return float64(value), nil
-}
-
-// SetVector sets the vector value of the node. Throws an error, if the node type is not of type ConstVec.
-func (inst ImplicitNode) SetVector(value Vector) error {
-	ret := C.CCall_lib3mf_implicitnode_setvector(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.sLib3MFVector)(unsafe.Pointer(&value)))
-	if ret != 0 {
-		return makeError(uint32(ret))
-	}
-	return nil
-}
-
-// GetVector retrieves the vector value of the node. Throws an error, if the node type is not of type ConstVec.
-func (inst ImplicitNode) GetVector() (Vector, error) {
-	var value C.sLib3MFVector
-	ret := C.CCall_lib3mf_implicitnode_getvector(inst.wrapperRef.LibraryHandle, inst.Ref, &value)
-	if ret != 0 {
-		return Vector{}, makeError(uint32(ret))
-	}
-	return *(*Vector)(unsafe.Pointer(&value)), nil
-}
-
-// SetMatrix sets the matrix value of the node. Throws an error, if the node type is not of type ConstMat.
-func (inst ImplicitNode) SetMatrix(value Matrix4x4) error {
-	ret := C.CCall_lib3mf_implicitnode_setmatrix(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.sLib3MFMatrix4x4)(unsafe.Pointer(&value)))
-	if ret != 0 {
-		return makeError(uint32(ret))
-	}
-	return nil
-}
-
-// GetMatrix retrieves the matrix value of the node. Throws an error, if the node type is not of type ConstMat.
-func (inst ImplicitNode) GetMatrix() (Matrix4x4, error) {
-	var value C.sLib3MFMatrix4x4
-	ret := C.CCall_lib3mf_implicitnode_getmatrix(inst.wrapperRef.LibraryHandle, inst.Ref, &value)
-	if ret != 0 {
-		return Matrix4x4{}, makeError(uint32(ret))
-	}
-	return *(*Matrix4x4)(unsafe.Pointer(&value)), nil
-}
-
-// SetResource sets the Resource that the resourceid attribute of the node will point to. Throws an error, if the node type is not of type Resource.
-func (inst ImplicitNode) SetResource(resource Resource) error {
-	ret := C.CCall_lib3mf_implicitnode_setresource(inst.wrapperRef.LibraryHandle, inst.Ref, resource.Ref)
-	if ret != 0 {
-		return makeError(uint32(ret))
-	}
-	return nil
-}
-
-// GetResource retrieves the resource of the node. Throws an error, if the node type is not of type Resource.
-func (inst ImplicitNode) GetResource() (Resource, error) {
-	var resource ref
-	ret := C.CCall_lib3mf_implicitnode_getresource(inst.wrapperRef.LibraryHandle, inst.Ref, &resource)
-	if ret != 0 {
-		return Resource{}, makeError(uint32(ret))
-	}
-	return inst.wrapperRef.NewResource(resource), nil
-}
-
 // AreTypesValid checks if the types of the input and output ports are valid for the node type.
 func (inst ImplicitNode) AreTypesValid() (bool, error) {
 	var valid C.bool
@@ -8586,6 +9284,972 @@ func (inst ImplicitNode) AreTypesValid() (bool, error) {
 		return false, makeError(uint32(ret))
 	}
 	return bool(valid), nil
+}
+
+
+// OneInputNode represents a Lib3MF class.
+type OneInputNode struct {
+	ImplicitNode
+}
+
+func (wrapper Wrapper) NewOneInputNode(r ref) OneInputNode {
+	return OneInputNode{wrapper.NewImplicitNode(r)}
+}
+
+// GetInputA retrieves the input.
+func (inst OneInputNode) GetInputA() (ImplicitPort, error) {
+	var input ref
+	ret := C.CCall_lib3mf_oneinputnode_getinputa(inst.wrapperRef.LibraryHandle, inst.Ref, &input)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(input), nil
+}
+
+// GetOutputResult retrieves the output.
+func (inst OneInputNode) GetOutputResult() (ImplicitPort, error) {
+	var result ref
+	ret := C.CCall_lib3mf_oneinputnode_getoutputresult(inst.wrapperRef.LibraryHandle, inst.Ref, &result)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(result), nil
+}
+
+
+// SinNode represents a Lib3MF class.
+type SinNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewSinNode(r ref) SinNode {
+	return SinNode{wrapper.NewOneInputNode(r)}
+}
+
+
+// CosNode represents a Lib3MF class.
+type CosNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewCosNode(r ref) CosNode {
+	return CosNode{wrapper.NewOneInputNode(r)}
+}
+
+
+// TanNode represents a Lib3MF class.
+type TanNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewTanNode(r ref) TanNode {
+	return TanNode{wrapper.NewOneInputNode(r)}
+}
+
+
+// ArcSinNode represents a Lib3MF class.
+type ArcSinNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewArcSinNode(r ref) ArcSinNode {
+	return ArcSinNode{wrapper.NewOneInputNode(r)}
+}
+
+
+// ArcCosNode represents a Lib3MF class.
+type ArcCosNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewArcCosNode(r ref) ArcCosNode {
+	return ArcCosNode{wrapper.NewOneInputNode(r)}
+}
+
+
+// ArcTanNode represents a Lib3MF class.
+type ArcTanNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewArcTanNode(r ref) ArcTanNode {
+	return ArcTanNode{wrapper.NewOneInputNode(r)}
+}
+
+
+// SinhNode represents a Lib3MF class.
+type SinhNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewSinhNode(r ref) SinhNode {
+	return SinhNode{wrapper.NewOneInputNode(r)}
+}
+
+
+// CoshNode represents a Lib3MF class.
+type CoshNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewCoshNode(r ref) CoshNode {
+	return CoshNode{wrapper.NewOneInputNode(r)}
+}
+
+
+// TanhNode represents a Lib3MF class.
+type TanhNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewTanhNode(r ref) TanhNode {
+	return TanhNode{wrapper.NewOneInputNode(r)}
+}
+
+
+// RoundNode represents a Lib3MF class.
+type RoundNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewRoundNode(r ref) RoundNode {
+	return RoundNode{wrapper.NewOneInputNode(r)}
+}
+
+
+// CeilNode represents a Lib3MF class.
+type CeilNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewCeilNode(r ref) CeilNode {
+	return CeilNode{wrapper.NewOneInputNode(r)}
+}
+
+
+// FloorNode represents a Lib3MF class.
+type FloorNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewFloorNode(r ref) FloorNode {
+	return FloorNode{wrapper.NewOneInputNode(r)}
+}
+
+
+// SignNode represents a Lib3MF class.
+type SignNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewSignNode(r ref) SignNode {
+	return SignNode{wrapper.NewOneInputNode(r)}
+}
+
+
+// FractNode represents a Lib3MF class.
+type FractNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewFractNode(r ref) FractNode {
+	return FractNode{wrapper.NewOneInputNode(r)}
+}
+
+
+// AbsNode represents a Lib3MF class.
+type AbsNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewAbsNode(r ref) AbsNode {
+	return AbsNode{wrapper.NewOneInputNode(r)}
+}
+
+
+// ExpNode represents a Lib3MF class.
+type ExpNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewExpNode(r ref) ExpNode {
+	return ExpNode{wrapper.NewOneInputNode(r)}
+}
+
+
+// LogNode represents a Lib3MF class.
+type LogNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewLogNode(r ref) LogNode {
+	return LogNode{wrapper.NewOneInputNode(r)}
+}
+
+
+// Log2Node represents a Lib3MF class.
+type Log2Node struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewLog2Node(r ref) Log2Node {
+	return Log2Node{wrapper.NewOneInputNode(r)}
+}
+
+
+// Log10Node represents a Lib3MF class.
+type Log10Node struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewLog10Node(r ref) Log10Node {
+	return Log10Node{wrapper.NewOneInputNode(r)}
+}
+
+
+// LengthNode represents a Lib3MF class.
+type LengthNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewLengthNode(r ref) LengthNode {
+	return LengthNode{wrapper.NewOneInputNode(r)}
+}
+
+
+// TransposeNode represents a Lib3MF class.
+type TransposeNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewTransposeNode(r ref) TransposeNode {
+	return TransposeNode{wrapper.NewOneInputNode(r)}
+}
+
+
+// InverseNode represents a Lib3MF class.
+type InverseNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewInverseNode(r ref) InverseNode {
+	return InverseNode{wrapper.NewOneInputNode(r)}
+}
+
+
+// SqrtNode represents a Lib3MF class.
+type SqrtNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewSqrtNode(r ref) SqrtNode {
+	return SqrtNode{wrapper.NewOneInputNode(r)}
+}
+
+
+// ResourceIdNode represents a Lib3MF class.
+type ResourceIdNode struct {
+	ImplicitNode
+}
+
+func (wrapper Wrapper) NewResourceIdNode(r ref) ResourceIdNode {
+	return ResourceIdNode{wrapper.NewImplicitNode(r)}
+}
+
+// SetResource sets the Resource that the resourceid attribute of the node will point to.
+func (inst ResourceIdNode) SetResource(resource Resource) error {
+	ret := C.CCall_lib3mf_resourceidnode_setresource(inst.wrapperRef.LibraryHandle, inst.Ref, resource.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetResource retrieves the resource of the node.
+func (inst ResourceIdNode) GetResource() (Resource, error) {
+	var resource ref
+	ret := C.CCall_lib3mf_resourceidnode_getresource(inst.wrapperRef.LibraryHandle, inst.Ref, &resource)
+	if ret != 0 {
+		return Resource{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewResource(resource), nil
+}
+
+// GetOutputValue retrieves the output.
+func (inst ResourceIdNode) GetOutputValue() (ImplicitPort, error) {
+	var value ref
+	ret := C.CCall_lib3mf_resourceidnode_getoutputvalue(inst.wrapperRef.LibraryHandle, inst.Ref, &value)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(value), nil
+}
+
+
+// TwoInputNode represents a Lib3MF class.
+type TwoInputNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewTwoInputNode(r ref) TwoInputNode {
+	return TwoInputNode{wrapper.NewOneInputNode(r)}
+}
+
+// GetInputB retrieves the second input.
+func (inst TwoInputNode) GetInputB() (ImplicitPort, error) {
+	var b ref
+	ret := C.CCall_lib3mf_twoinputnode_getinputb(inst.wrapperRef.LibraryHandle, inst.Ref, &b)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(b), nil
+}
+
+
+// AdditionNode represents a Lib3MF class.
+type AdditionNode struct {
+	TwoInputNode
+}
+
+func (wrapper Wrapper) NewAdditionNode(r ref) AdditionNode {
+	return AdditionNode{wrapper.NewTwoInputNode(r)}
+}
+
+
+// SubtractionNode represents a Lib3MF class.
+type SubtractionNode struct {
+	TwoInputNode
+}
+
+func (wrapper Wrapper) NewSubtractionNode(r ref) SubtractionNode {
+	return SubtractionNode{wrapper.NewTwoInputNode(r)}
+}
+
+
+// MultiplicationNode represents a Lib3MF class.
+type MultiplicationNode struct {
+	TwoInputNode
+}
+
+func (wrapper Wrapper) NewMultiplicationNode(r ref) MultiplicationNode {
+	return MultiplicationNode{wrapper.NewTwoInputNode(r)}
+}
+
+
+// DivisionNode represents a Lib3MF class.
+type DivisionNode struct {
+	TwoInputNode
+}
+
+func (wrapper Wrapper) NewDivisionNode(r ref) DivisionNode {
+	return DivisionNode{wrapper.NewTwoInputNode(r)}
+}
+
+
+// DotNode represents a Lib3MF class.
+type DotNode struct {
+	TwoInputNode
+}
+
+func (wrapper Wrapper) NewDotNode(r ref) DotNode {
+	return DotNode{wrapper.NewTwoInputNode(r)}
+}
+
+
+// CrossNode represents a Lib3MF class.
+type CrossNode struct {
+	TwoInputNode
+}
+
+func (wrapper Wrapper) NewCrossNode(r ref) CrossNode {
+	return CrossNode{wrapper.NewTwoInputNode(r)}
+}
+
+
+// ArcTan2Node represents a Lib3MF class.
+type ArcTan2Node struct {
+	TwoInputNode
+}
+
+func (wrapper Wrapper) NewArcTan2Node(r ref) ArcTan2Node {
+	return ArcTan2Node{wrapper.NewTwoInputNode(r)}
+}
+
+
+// MatVecMultiplicationNode represents a Lib3MF class.
+type MatVecMultiplicationNode struct {
+	TwoInputNode
+}
+
+func (wrapper Wrapper) NewMatVecMultiplicationNode(r ref) MatVecMultiplicationNode {
+	return MatVecMultiplicationNode{wrapper.NewTwoInputNode(r)}
+}
+
+
+// MinNode represents a Lib3MF class.
+type MinNode struct {
+	TwoInputNode
+}
+
+func (wrapper Wrapper) NewMinNode(r ref) MinNode {
+	return MinNode{wrapper.NewTwoInputNode(r)}
+}
+
+
+// MaxNode represents a Lib3MF class.
+type MaxNode struct {
+	TwoInputNode
+}
+
+func (wrapper Wrapper) NewMaxNode(r ref) MaxNode {
+	return MaxNode{wrapper.NewTwoInputNode(r)}
+}
+
+
+// FmodNode represents a Lib3MF class.
+type FmodNode struct {
+	TwoInputNode
+}
+
+func (wrapper Wrapper) NewFmodNode(r ref) FmodNode {
+	return FmodNode{wrapper.NewTwoInputNode(r)}
+}
+
+
+// PowNode represents a Lib3MF class.
+type PowNode struct {
+	TwoInputNode
+}
+
+func (wrapper Wrapper) NewPowNode(r ref) PowNode {
+	return PowNode{wrapper.NewTwoInputNode(r)}
+}
+
+
+// SelectNode represents a Lib3MF class.
+type SelectNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewSelectNode(r ref) SelectNode {
+	return SelectNode{wrapper.NewOneInputNode(r)}
+}
+
+// GetInputB retrieves the second input.
+func (inst SelectNode) GetInputB() (ImplicitPort, error) {
+	var b ref
+	ret := C.CCall_lib3mf_selectnode_getinputb(inst.wrapperRef.LibraryHandle, inst.Ref, &b)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(b), nil
+}
+
+// GetInputC retrieves the third input.
+func (inst SelectNode) GetInputC() (ImplicitPort, error) {
+	var c ref
+	ret := C.CCall_lib3mf_selectnode_getinputc(inst.wrapperRef.LibraryHandle, inst.Ref, &c)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(c), nil
+}
+
+// GetInputD retrieves the fourth input.
+func (inst SelectNode) GetInputD() (ImplicitPort, error) {
+	var d ref
+	ret := C.CCall_lib3mf_selectnode_getinputd(inst.wrapperRef.LibraryHandle, inst.Ref, &d)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(d), nil
+}
+
+
+// ClampNode represents a Lib3MF class.
+type ClampNode struct {
+	OneInputNode
+}
+
+func (wrapper Wrapper) NewClampNode(r ref) ClampNode {
+	return ClampNode{wrapper.NewOneInputNode(r)}
+}
+
+// GetInputMin retrieves the input for the lower limit.
+func (inst ClampNode) GetInputMin() (ImplicitPort, error) {
+	var min ref
+	ret := C.CCall_lib3mf_clampnode_getinputmin(inst.wrapperRef.LibraryHandle, inst.Ref, &min)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(min), nil
+}
+
+// GetInputMax retrieves the input for the upper limit.
+func (inst ClampNode) GetInputMax() (ImplicitPort, error) {
+	var max ref
+	ret := C.CCall_lib3mf_clampnode_getinputmax(inst.wrapperRef.LibraryHandle, inst.Ref, &max)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(max), nil
+}
+
+
+// ComposeVectorNode represents a Lib3MF class.
+type ComposeVectorNode struct {
+	ImplicitNode
+}
+
+func (wrapper Wrapper) NewComposeVectorNode(r ref) ComposeVectorNode {
+	return ComposeVectorNode{wrapper.NewImplicitNode(r)}
+}
+
+// GetInputX retrieves the input for the x component.
+func (inst ComposeVectorNode) GetInputX() (ImplicitPort, error) {
+	var x ref
+	ret := C.CCall_lib3mf_composevectornode_getinputx(inst.wrapperRef.LibraryHandle, inst.Ref, &x)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(x), nil
+}
+
+// GetInputY retrieves the input for the y component.
+func (inst ComposeVectorNode) GetInputY() (ImplicitPort, error) {
+	var y ref
+	ret := C.CCall_lib3mf_composevectornode_getinputy(inst.wrapperRef.LibraryHandle, inst.Ref, &y)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(y), nil
+}
+
+// GetInputZ retrieves the input for the z component.
+func (inst ComposeVectorNode) GetInputZ() (ImplicitPort, error) {
+	var z ref
+	ret := C.CCall_lib3mf_composevectornode_getinputz(inst.wrapperRef.LibraryHandle, inst.Ref, &z)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(z), nil
+}
+
+// GetOutputVector retrieves the output.
+func (inst ComposeVectorNode) GetOutputVector() (ImplicitPort, error) {
+	var vector ref
+	ret := C.CCall_lib3mf_composevectornode_getoutputvector(inst.wrapperRef.LibraryHandle, inst.Ref, &vector)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(vector), nil
+}
+
+
+// DecomposeVectorNode represents a Lib3MF class.
+type DecomposeVectorNode struct {
+	ImplicitNode
+}
+
+func (wrapper Wrapper) NewDecomposeVectorNode(r ref) DecomposeVectorNode {
+	return DecomposeVectorNode{wrapper.NewImplicitNode(r)}
+}
+
+// GetInputVector retrieves the input.
+func (inst DecomposeVectorNode) GetInputVector() (ImplicitPort, error) {
+	var vector ref
+	ret := C.CCall_lib3mf_decomposevectornode_getinputvector(inst.wrapperRef.LibraryHandle, inst.Ref, &vector)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(vector), nil
+}
+
+// GetOutputX retrieves the output for the x component.
+func (inst DecomposeVectorNode) GetOutputX() (ImplicitPort, error) {
+	var x ref
+	ret := C.CCall_lib3mf_decomposevectornode_getoutputx(inst.wrapperRef.LibraryHandle, inst.Ref, &x)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(x), nil
+}
+
+// GetOutputY retrieves the output for the y component.
+func (inst DecomposeVectorNode) GetOutputY() (ImplicitPort, error) {
+	var y ref
+	ret := C.CCall_lib3mf_decomposevectornode_getoutputy(inst.wrapperRef.LibraryHandle, inst.Ref, &y)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(y), nil
+}
+
+// GetOutputZ retrieves the output for the z component.
+func (inst DecomposeVectorNode) GetOutputZ() (ImplicitPort, error) {
+	var z ref
+	ret := C.CCall_lib3mf_decomposevectornode_getoutputz(inst.wrapperRef.LibraryHandle, inst.Ref, &z)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(z), nil
+}
+
+
+// ComposeMatrixNode represents a Lib3MF class.
+type ComposeMatrixNode struct {
+	ImplicitNode
+}
+
+func (wrapper Wrapper) NewComposeMatrixNode(r ref) ComposeMatrixNode {
+	return ComposeMatrixNode{wrapper.NewImplicitNode(r)}
+}
+
+// GetInputM00 retrieves the input for the element 0 0.
+func (inst ComposeMatrixNode) GetInputM00() (ImplicitPort, error) {
+	var m00 ref
+	ret := C.CCall_lib3mf_composematrixnode_getinputm00(inst.wrapperRef.LibraryHandle, inst.Ref, &m00)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(m00), nil
+}
+
+// GetInputM01 retrieves the input for the element 0 1.
+func (inst ComposeMatrixNode) GetInputM01() (ImplicitPort, error) {
+	var m01 ref
+	ret := C.CCall_lib3mf_composematrixnode_getinputm01(inst.wrapperRef.LibraryHandle, inst.Ref, &m01)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(m01), nil
+}
+
+// GetInputM02 retrieves the input for the element 0 2.
+func (inst ComposeMatrixNode) GetInputM02() (ImplicitPort, error) {
+	var m02 ref
+	ret := C.CCall_lib3mf_composematrixnode_getinputm02(inst.wrapperRef.LibraryHandle, inst.Ref, &m02)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(m02), nil
+}
+
+// GetInputM03 retrieves the input for the element 0 3.
+func (inst ComposeMatrixNode) GetInputM03() (ImplicitPort, error) {
+	var m03 ref
+	ret := C.CCall_lib3mf_composematrixnode_getinputm03(inst.wrapperRef.LibraryHandle, inst.Ref, &m03)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(m03), nil
+}
+
+// GetInputM10 retrieves the input for the element 1 0.
+func (inst ComposeMatrixNode) GetInputM10() (ImplicitPort, error) {
+	var m10 ref
+	ret := C.CCall_lib3mf_composematrixnode_getinputm10(inst.wrapperRef.LibraryHandle, inst.Ref, &m10)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(m10), nil
+}
+
+// GetInputM11 retrieves the input for the element 1 1.
+func (inst ComposeMatrixNode) GetInputM11() (ImplicitPort, error) {
+	var m11 ref
+	ret := C.CCall_lib3mf_composematrixnode_getinputm11(inst.wrapperRef.LibraryHandle, inst.Ref, &m11)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(m11), nil
+}
+
+// GetInputM12 retrieves the input for the element 1 2.
+func (inst ComposeMatrixNode) GetInputM12() (ImplicitPort, error) {
+	var m12 ref
+	ret := C.CCall_lib3mf_composematrixnode_getinputm12(inst.wrapperRef.LibraryHandle, inst.Ref, &m12)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(m12), nil
+}
+
+// GetInputM13 retrieves the input for the element 1 3.
+func (inst ComposeMatrixNode) GetInputM13() (ImplicitPort, error) {
+	var m13 ref
+	ret := C.CCall_lib3mf_composematrixnode_getinputm13(inst.wrapperRef.LibraryHandle, inst.Ref, &m13)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(m13), nil
+}
+
+// GetInputM20 retrieves the input for the element 2 0.
+func (inst ComposeMatrixNode) GetInputM20() (ImplicitPort, error) {
+	var m20 ref
+	ret := C.CCall_lib3mf_composematrixnode_getinputm20(inst.wrapperRef.LibraryHandle, inst.Ref, &m20)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(m20), nil
+}
+
+// GetInputM21 retrieves the input for the element 2 1.
+func (inst ComposeMatrixNode) GetInputM21() (ImplicitPort, error) {
+	var m21 ref
+	ret := C.CCall_lib3mf_composematrixnode_getinputm21(inst.wrapperRef.LibraryHandle, inst.Ref, &m21)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(m21), nil
+}
+
+// GetInputM22 retrieves the input for the element 2 2.
+func (inst ComposeMatrixNode) GetInputM22() (ImplicitPort, error) {
+	var m22 ref
+	ret := C.CCall_lib3mf_composematrixnode_getinputm22(inst.wrapperRef.LibraryHandle, inst.Ref, &m22)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(m22), nil
+}
+
+// GetInputM23 retrieves the input for the element 2 3.
+func (inst ComposeMatrixNode) GetInputM23() (ImplicitPort, error) {
+	var m23 ref
+	ret := C.CCall_lib3mf_composematrixnode_getinputm23(inst.wrapperRef.LibraryHandle, inst.Ref, &m23)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(m23), nil
+}
+
+// GetInputM30 retrieves the input for the element 3 0.
+func (inst ComposeMatrixNode) GetInputM30() (ImplicitPort, error) {
+	var m30 ref
+	ret := C.CCall_lib3mf_composematrixnode_getinputm30(inst.wrapperRef.LibraryHandle, inst.Ref, &m30)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(m30), nil
+}
+
+// GetInputM31 retrieves the input for the element 3 1.
+func (inst ComposeMatrixNode) GetInputM31() (ImplicitPort, error) {
+	var m31 ref
+	ret := C.CCall_lib3mf_composematrixnode_getinputm31(inst.wrapperRef.LibraryHandle, inst.Ref, &m31)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(m31), nil
+}
+
+// GetInputM32 retrieves the input for the element 3 2.
+func (inst ComposeMatrixNode) GetInputM32() (ImplicitPort, error) {
+	var m32 ref
+	ret := C.CCall_lib3mf_composematrixnode_getinputm32(inst.wrapperRef.LibraryHandle, inst.Ref, &m32)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(m32), nil
+}
+
+// GetInputM33 retrieves the input for the element 3 3.
+func (inst ComposeMatrixNode) GetInputM33() (ImplicitPort, error) {
+	var m33 ref
+	ret := C.CCall_lib3mf_composematrixnode_getinputm33(inst.wrapperRef.LibraryHandle, inst.Ref, &m33)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(m33), nil
+}
+
+// GetOutputMatrix retrieves the output.
+func (inst ComposeMatrixNode) GetOutputMatrix() (ImplicitPort, error) {
+	var matrix ref
+	ret := C.CCall_lib3mf_composematrixnode_getoutputmatrix(inst.wrapperRef.LibraryHandle, inst.Ref, &matrix)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(matrix), nil
+}
+
+
+// ComposeMatrixFromRowVectorsNode represents a Lib3MF class.
+type ComposeMatrixFromRowVectorsNode struct {
+	ImplicitNode
+}
+
+func (wrapper Wrapper) NewComposeMatrixFromRowVectorsNode(r ref) ComposeMatrixFromRowVectorsNode {
+	return ComposeMatrixFromRowVectorsNode{wrapper.NewImplicitNode(r)}
+}
+
+// GetInputRow0 retrieves the input for the first row.
+func (inst ComposeMatrixFromRowVectorsNode) GetInputRow0() (ImplicitPort, error) {
+	var row0 ref
+	ret := C.CCall_lib3mf_composematrixfromrowvectorsnode_getinputrow0(inst.wrapperRef.LibraryHandle, inst.Ref, &row0)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(row0), nil
+}
+
+// GetInputRow1 retrieves the input for the second row.
+func (inst ComposeMatrixFromRowVectorsNode) GetInputRow1() (ImplicitPort, error) {
+	var row1 ref
+	ret := C.CCall_lib3mf_composematrixfromrowvectorsnode_getinputrow1(inst.wrapperRef.LibraryHandle, inst.Ref, &row1)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(row1), nil
+}
+
+// GetInputRow2 retrieves the input for the third row.
+func (inst ComposeMatrixFromRowVectorsNode) GetInputRow2() (ImplicitPort, error) {
+	var row2 ref
+	ret := C.CCall_lib3mf_composematrixfromrowvectorsnode_getinputrow2(inst.wrapperRef.LibraryHandle, inst.Ref, &row2)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(row2), nil
+}
+
+// GetInputRow3 retrieves the input for the fourth row.
+func (inst ComposeMatrixFromRowVectorsNode) GetInputRow3() (ImplicitPort, error) {
+	var row3 ref
+	ret := C.CCall_lib3mf_composematrixfromrowvectorsnode_getinputrow3(inst.wrapperRef.LibraryHandle, inst.Ref, &row3)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(row3), nil
+}
+
+// GetOutputMatrix retrieves the output.
+func (inst ComposeMatrixFromRowVectorsNode) GetOutputMatrix() (ImplicitPort, error) {
+	var matrix ref
+	ret := C.CCall_lib3mf_composematrixfromrowvectorsnode_getoutputmatrix(inst.wrapperRef.LibraryHandle, inst.Ref, &matrix)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(matrix), nil
+}
+
+
+// ConstantNode represents a Lib3MF class.
+type ConstantNode struct {
+	ImplicitNode
+}
+
+func (wrapper Wrapper) NewConstantNode(r ref) ConstantNode {
+	return ConstantNode{wrapper.NewImplicitNode(r)}
+}
+
+// SetConstant sets the constant value of the node.
+func (inst ConstantNode) SetConstant(value float64) error {
+	ret := C.CCall_lib3mf_constantnode_setconstant(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetConstant retrieves the constant value of the node.
+func (inst ConstantNode) GetConstant() (float64, error) {
+	var value C.double
+	ret := C.CCall_lib3mf_constantnode_getconstant(inst.wrapperRef.LibraryHandle, inst.Ref, &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(value), nil
+}
+
+// GetOutputValue retrieves the output.
+func (inst ConstantNode) GetOutputValue() (ImplicitPort, error) {
+	var value ref
+	ret := C.CCall_lib3mf_constantnode_getoutputvalue(inst.wrapperRef.LibraryHandle, inst.Ref, &value)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(value), nil
+}
+
+
+// ConstVecNode represents a Lib3MF class.
+type ConstVecNode struct {
+	ImplicitNode
+}
+
+func (wrapper Wrapper) NewConstVecNode(r ref) ConstVecNode {
+	return ConstVecNode{wrapper.NewImplicitNode(r)}
+}
+
+// SetVector sets the vector value of the node.
+func (inst ConstVecNode) SetVector(value Vector) error {
+	ret := C.CCall_lib3mf_constvecnode_setvector(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.sLib3MFVector)(unsafe.Pointer(&value)))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetVector retrieves the vector value of the node.
+func (inst ConstVecNode) GetVector() (Vector, error) {
+	var value C.sLib3MFVector
+	ret := C.CCall_lib3mf_constvecnode_getvector(inst.wrapperRef.LibraryHandle, inst.Ref, &value)
+	if ret != 0 {
+		return Vector{}, makeError(uint32(ret))
+	}
+	return *(*Vector)(unsafe.Pointer(&value)), nil
+}
+
+// GetOutputVector retrieves the output.
+func (inst ConstVecNode) GetOutputVector() (ImplicitPort, error) {
+	var vector ref
+	ret := C.CCall_lib3mf_constvecnode_getoutputvector(inst.wrapperRef.LibraryHandle, inst.Ref, &vector)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(vector), nil
+}
+
+
+// ConstMatNode represents a Lib3MF class.
+type ConstMatNode struct {
+	ImplicitNode
+}
+
+func (wrapper Wrapper) NewConstMatNode(r ref) ConstMatNode {
+	return ConstMatNode{wrapper.NewImplicitNode(r)}
+}
+
+// SetMatrix sets the matrix value of the node.
+func (inst ConstMatNode) SetMatrix(value Matrix4x4) error {
+	ret := C.CCall_lib3mf_constmatnode_setmatrix(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.sLib3MFMatrix4x4)(unsafe.Pointer(&value)))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetMatrix retrieves the matrix value of the node.
+func (inst ConstMatNode) GetMatrix() (Matrix4x4, error) {
+	var value C.sLib3MFMatrix4x4
+	ret := C.CCall_lib3mf_constmatnode_getmatrix(inst.wrapperRef.LibraryHandle, inst.Ref, &value)
+	if ret != 0 {
+		return Matrix4x4{}, makeError(uint32(ret))
+	}
+	return *(*Matrix4x4)(unsafe.Pointer(&value)), nil
+}
+
+// GetOutputMatrix retrieves the output.
+func (inst ConstMatNode) GetOutputMatrix() (ImplicitPort, error) {
+	var matrix ref
+	ret := C.CCall_lib3mf_constmatnode_getoutputmatrix(inst.wrapperRef.LibraryHandle, inst.Ref, &matrix)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(matrix), nil
 }
 
 
@@ -8766,6 +10430,446 @@ func (inst ImplicitFunction) AddNode(nodeType ImplicitNodeType, configuration Im
 		return ImplicitNode{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewImplicitNode(node), nil
+}
+
+// AddSinNode add a SinNode.
+func (inst ImplicitFunction) AddSinNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (SinNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addsinnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return SinNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewSinNode(node), nil
+}
+
+// AddCosNode add a CosNode.
+func (inst ImplicitFunction) AddCosNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (CosNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addcosnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return CosNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCosNode(node), nil
+}
+
+// AddTanNode add a TanNode.
+func (inst ImplicitFunction) AddTanNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (TanNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addtannode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return TanNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewTanNode(node), nil
+}
+
+// AddArcSinNode add a ArcSinNode.
+func (inst ImplicitFunction) AddArcSinNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (ArcSinNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addarcsinnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return ArcSinNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewArcSinNode(node), nil
+}
+
+// AddArcCosNode add a ArcCosNode.
+func (inst ImplicitFunction) AddArcCosNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (ArcCosNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addarccosnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return ArcCosNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewArcCosNode(node), nil
+}
+
+// AddArcTan2Node add a ArcTan2Node.
+func (inst ImplicitFunction) AddArcTan2Node(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (ArcTan2Node, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addarctan2node(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return ArcTan2Node{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewArcTan2Node(node), nil
+}
+
+// AddSinhNode add a SinhNode.
+func (inst ImplicitFunction) AddSinhNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (SinhNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addsinhnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return SinhNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewSinhNode(node), nil
+}
+
+// AddCoshNode add a CoshNode.
+func (inst ImplicitFunction) AddCoshNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (CoshNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addcoshnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return CoshNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCoshNode(node), nil
+}
+
+// AddTanhNode add a TanhNode.
+func (inst ImplicitFunction) AddTanhNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (TanhNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addtanhnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return TanhNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewTanhNode(node), nil
+}
+
+// AddRoundNode add a RoundNode.
+func (inst ImplicitFunction) AddRoundNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (RoundNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addroundnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return RoundNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewRoundNode(node), nil
+}
+
+// AddCeilNode add a CeilNode.
+func (inst ImplicitFunction) AddCeilNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (CeilNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addceilnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return CeilNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCeilNode(node), nil
+}
+
+// AddFloorNode add a FloorNode.
+func (inst ImplicitFunction) AddFloorNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (FloorNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addfloornode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return FloorNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewFloorNode(node), nil
+}
+
+// AddSignNode add a SignNode.
+func (inst ImplicitFunction) AddSignNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (SignNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addsignnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return SignNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewSignNode(node), nil
+}
+
+// AddFractNode add a FractNode.
+func (inst ImplicitFunction) AddFractNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (FractNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addfractnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return FractNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewFractNode(node), nil
+}
+
+// AddAbsNode add a AbsNode.
+func (inst ImplicitFunction) AddAbsNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (AbsNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addabsnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return AbsNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewAbsNode(node), nil
+}
+
+// AddExpNode add a ExpNode.
+func (inst ImplicitFunction) AddExpNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (ExpNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addexpnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return ExpNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewExpNode(node), nil
+}
+
+// AddLogNode add a LogNode.
+func (inst ImplicitFunction) AddLogNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (LogNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addlognode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return LogNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewLogNode(node), nil
+}
+
+// AddLog2Node add a Log2Node.
+func (inst ImplicitFunction) AddLog2Node(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (Log2Node, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addlog2node(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return Log2Node{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewLog2Node(node), nil
+}
+
+// AddLog10Node add a Log10Node.
+func (inst ImplicitFunction) AddLog10Node(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (Log10Node, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addlog10node(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return Log10Node{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewLog10Node(node), nil
+}
+
+// AddLengthNode add a LengthNode.
+func (inst ImplicitFunction) AddLengthNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (LengthNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addlengthnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return LengthNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewLengthNode(node), nil
+}
+
+// AddTransposeNode add a TransposeNode.
+func (inst ImplicitFunction) AddTransposeNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (TransposeNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addtransposenode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return TransposeNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewTransposeNode(node), nil
+}
+
+// InverseNode add a InverseNode.
+func (inst ImplicitFunction) InverseNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (InverseNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_inversenode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return InverseNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewInverseNode(node), nil
+}
+
+// AddSqrtNode add a SqrtNode.
+func (inst ImplicitFunction) AddSqrtNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (SqrtNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addsqrtnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return SqrtNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewSqrtNode(node), nil
+}
+
+// AddResourceIdNode add a ResourceIdNode.
+func (inst ImplicitFunction) AddResourceIdNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (ResourceIdNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addresourceidnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return ResourceIdNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewResourceIdNode(node), nil
+}
+
+// AddAdditionNode add an AdditionNode.
+func (inst ImplicitFunction) AddAdditionNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (AdditionNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addadditionnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return AdditionNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewAdditionNode(node), nil
+}
+
+// AddSubtractionNode add a SubtractionNode.
+func (inst ImplicitFunction) AddSubtractionNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (SubtractionNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addsubtractionnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return SubtractionNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewSubtractionNode(node), nil
+}
+
+// AddMultiplicationNode add a MultiplicationNode.
+func (inst ImplicitFunction) AddMultiplicationNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (MultiplicationNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addmultiplicationnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return MultiplicationNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewMultiplicationNode(node), nil
+}
+
+// AddDivisionNode add a DivisionNode.
+func (inst ImplicitFunction) AddDivisionNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (DivisionNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_adddivisionnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return DivisionNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewDivisionNode(node), nil
+}
+
+// AddDotNode add a DotNode.
+func (inst ImplicitFunction) AddDotNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (DotNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_adddotnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return DotNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewDotNode(node), nil
+}
+
+// AddCrossNode add a CrossNode.
+func (inst ImplicitFunction) AddCrossNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (CrossNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addcrossnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return CrossNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCrossNode(node), nil
+}
+
+// AddMatVecMultiplicationNode add a MatVecMultiplicationNode.
+func (inst ImplicitFunction) AddMatVecMultiplicationNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (MatVecMultiplicationNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addmatvecmultiplicationnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return MatVecMultiplicationNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewMatVecMultiplicationNode(node), nil
+}
+
+// AddMinNode add a MinNode.
+func (inst ImplicitFunction) AddMinNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (MinNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addminnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return MinNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewMinNode(node), nil
+}
+
+// AddMaxNode add a MaxNode.
+func (inst ImplicitFunction) AddMaxNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (MaxNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addmaxnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return MaxNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewMaxNode(node), nil
+}
+
+// AddFmodNode add a FmodNode.
+func (inst ImplicitFunction) AddFmodNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (FmodNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addfmodnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return FmodNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewFmodNode(node), nil
+}
+
+// AddPowNode add a PowNode.
+func (inst ImplicitFunction) AddPowNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (PowNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addpownode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return PowNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewPowNode(node), nil
+}
+
+// AddSelectNode add a SelectNode.
+func (inst ImplicitFunction) AddSelectNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (SelectNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addselectnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return SelectNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewSelectNode(node), nil
+}
+
+// AddClampNode add a ClampNode.
+func (inst ImplicitFunction) AddClampNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (ClampNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addclampnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return ClampNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewClampNode(node), nil
+}
+
+// AddComposeVectorNode add a ComposeVectorNode.
+func (inst ImplicitFunction) AddComposeVectorNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (ComposeVectorNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addcomposevectornode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return ComposeVectorNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewComposeVectorNode(node), nil
+}
+
+// AddDecomposeVectorNode add a DecomposeVectorNode.
+func (inst ImplicitFunction) AddDecomposeVectorNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (DecomposeVectorNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_adddecomposevectornode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return DecomposeVectorNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewDecomposeVectorNode(node), nil
+}
+
+// AddComposeMatrixNode add a ComposeMatrixNode.
+func (inst ImplicitFunction) AddComposeMatrixNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (ComposeMatrixNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addcomposematrixnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return ComposeMatrixNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewComposeMatrixNode(node), nil
+}
+
+// AddComposeMatrixFromRowVectorsNode add a ComposeMatrixFromRowVectorsNode.
+func (inst ImplicitFunction) AddComposeMatrixFromRowVectorsNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (ComposeMatrixFromRowVectorsNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addcomposematrixfromrowvectorsnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return ComposeMatrixFromRowVectorsNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewComposeMatrixFromRowVectorsNode(node), nil
+}
+
+// AddConstantNode add a ConstantNode.
+func (inst ImplicitFunction) AddConstantNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (ConstantNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addconstantnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return ConstantNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewConstantNode(node), nil
+}
+
+// AddConstVecNode add a ConstVecNode.
+func (inst ImplicitFunction) AddConstVecNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (ConstVecNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addconstvecnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return ConstVecNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewConstVecNode(node), nil
+}
+
+// AddConstMatNode add a ConstMatNode.
+func (inst ImplicitFunction) AddConstMatNode(identifier string, configuration ImplicitNodeConfiguration, displayName string, tag string) (ConstMatNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addconstmatnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), C.eLib3MFImplicitNodeConfiguration(configuration), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return ConstMatNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewConstMatNode(node), nil
 }
 
 // GetNodes retrieves the nodes.
