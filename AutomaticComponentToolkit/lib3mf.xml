@@ -1102,25 +1102,36 @@
 				description="UniqueResourceID of the function" />
 		</method>
 
-		<method name="GetTransform" description="Returns the transformation matrix into the coordinate system of the referenced Function.">
-			<param name="Transform" type="struct" class="Transform" pass="return" description="the transformation matrix"/>
+		<method name="GetTransform"
+			description="Returns the transformation matrix into the coordinate system of the referenced Function.">
+			<param name="Transform" type="struct" class="Transform" pass="return"
+				description="the transformation matrix" />
 		</method>
-		<method name="SetTransform" description="Sets the transformation matrix into the coordinate system of the referenced Function.">
-			<param name="Transform" type="struct" class="Transform" pass="in" description="new transformation matrix"/>
-		</method>
-
-		<method name="GetChannelName" description="Returns the name of the function output channel to use.">
-			<param name="ChannelName" type="string" pass="return" description="the name of the function output channel"/>
-		</method>
-		<method name="SetChannelName" description="Sets the name of the function output channel to use.">
-			<param name="ChannelName" type="string" pass="in" description="new name of the function output channel"/>
+		<method name="SetTransform"
+			description="Sets the transformation matrix into the coordinate system of the referenced Function.">
+			<param name="Transform" type="struct" class="Transform" pass="in"
+				description="new transformation matrix" />
 		</method>
 
-		<method name="SetMinFeatureSize" description="Sets the minimal feature size as a hint for the function evaluator">
-			<param name="MinFeatureSize" type="double" pass="in" description="minimal feature size"/>
+		<method name="GetChannelName"
+			description="Returns the name of the function output channel to use.">
+			<param name="ChannelName" type="string" pass="return"
+				description="the name of the function output channel" />
 		</method>
-		<method name="GetMinFeatureSize" description="Returns the minimal feature size as a hint for the function evaluator">
-			<param name="MinFeatureSize" type="double" pass="return" description="minimal feature size"/>
+		<method name="SetChannelName"
+			description="Sets the name of the function output channel to use.">
+			<param name="ChannelName" type="string" pass="in"
+				description="new name of the function output channel" />
+		</method>
+
+		<method name="SetMinFeatureSize"
+			description="Sets the minimal feature size as a hint for the function evaluator">
+			<param name="MinFeatureSize" type="double" pass="in" description="minimal feature size" />
+		</method>
+		<method name="GetMinFeatureSize"
+			description="Returns the minimal feature size as a hint for the function evaluator">
+			<param name="MinFeatureSize" type="double" pass="return"
+				description="minimal feature size" />
 		</method>
 	</class>
 
@@ -1770,7 +1781,7 @@
 		<option name="ConstMat" description="A constant matrix value" value="7" />
 		<option name="ComposeVector" description="Creates a vector from three scalar values"
 			value="8" />
-			<option name="DecomposeVector" description="Decomposes a vector into three scalar values"
+		<option name="DecomposeVector" description="Decomposes a vector into three scalar values"
 			value="9" />
 		<option name="ComposeMatrix" description="Creates a matrix from nine scalar values"
 			value="10" />
@@ -1810,9 +1821,10 @@
 		<option name="Tanh" description="Calculates the hyperbolic tangent" value="39" />
 		<option name="Round" description="Rounds a scalar value to the nearest integer" value="40" />
 		<option name="Ceil" description="Rounds a scalar value up to the nearest integer" value="41" />
-		<option name="Floor" description="Rounds a scalar value down to the nearest integer" value="42" />
+		<option name="Floor" description="Rounds a scalar value down to the nearest integer"
+			value="42" />
 		<option name="Sign" description="Returns the sign" value="43" />
-		<option name="Fract" description="Returns the fractional part" value="44" />		
+		<option name="Fract" description="Returns the fractional part" value="44" />
 		<option name="FunctionCall" description="Calls a function" value="45" />
 		<option name="Mesh" description="Calculates the signed distance to a mesh" value="46" />
 		<option name="Length" description="Calculates the length of a vector" value="47" />
@@ -1823,10 +1835,11 @@
 		<option name="Scalar" description="Scalar" value="1" />
 		<option name="Vector" description="Vector" value="2" />
 		<option name="Matrix" description="4x4 Matrix" value="3" />
-    	<option name="ResourceID" description="Resource ID" value="4" />
+		<option name="ResourceID" description="Resource ID" value="4" />
 	</enum>
 
-	<enum name="ImplicitNodeConfiguration" description="Defines the input and output types of a node">
+	<enum name="ImplicitNodeConfiguration"
+		description="Defines the input and output types of a node">
 		<option name="Default" description="Default" value="1" />
 		<option name="ScalarToScalar" description="Scalar -> Scalar" value="2" />
 		<option name="VectorToVector" description="Vector -> Vector" value="3" />
@@ -1892,7 +1905,7 @@
 	</struct>
 
 	<struct name="Matrix4x4">
-		<member name="Field" type="double" columns="4" rows="4"/>
+		<member name="Field" type="double" columns="4" rows="4" />
 	</struct>
 
 	<class name="ImplicitNode">
@@ -1960,7 +1973,8 @@
 				description="the output port" />
 		</method>
 
-		<method name="AreTypesValid" description="Checks if the types of the input and output ports are valid for the node type">
+		<method name="AreTypesValid"
+			description="Checks if the types of the input and output ports are valid for the node type">
 			<param name="Valid" type="bool" pass="return" description="true, if the types are valid" />
 		</method>
 	</class>
@@ -2003,13 +2017,16 @@
 	<class name="TanhNode" parent="OneInputNode" description="Calculates the hyperbolic tangent">
 	</class>
 
-	<class name="RoundNode" parent="OneInputNode" description="Rounds a scalar value to the nearest integer">
+	<class name="RoundNode" parent="OneInputNode"
+		description="Rounds a scalar value to the nearest integer">
 	</class>
 
-	<class name="CeilNode" parent="OneInputNode" description="Rounds a scalar value up to the nearest integer">
+	<class name="CeilNode" parent="OneInputNode"
+		description="Rounds a scalar value up to the nearest integer">
 	</class>
 
-	<class name="FloorNode" parent="OneInputNode" description="Rounds a scalar value down to the nearest integer">
+	<class name="FloorNode" parent="OneInputNode"
+		description="Rounds a scalar value down to the nearest integer">
 	</class>
 
 	<class name="SignNode" parent="OneInputNode" description="Returns the sign">
@@ -2046,7 +2063,8 @@
 	</class>
 
 	<class name="ResourceIdNode" parent="ImplicitNode" description="Resource ID">
-		<method name="SetResource" description="Sets the Resource that the resourceid attribute of the node will point to">
+		<method name="SetResource"
+			description="Sets the Resource that the resourceid attribute of the node will point to">
 			<param name="Resource" type="class" class="Resource" pass="in"
 				description="the resource" />
 		</method>
@@ -2059,7 +2077,7 @@
 				description="the output" />
 		</method>
 	</class>
-	
+
 	<class name="TwoInputNode" parent="OneInputNode" description="Node ">
 		<method name="GetInputB" description="Retrieves the second input">
 			<param name="B" type="class" class="ImplicitPort" pass="return"
@@ -2067,30 +2085,38 @@
 		</method>
 	</class>
 
-	<class name="AdditionNode" parent="TwoInputNode" description="Adds two values (scalar or vector)">
+	<class name="AdditionNode" parent="TwoInputNode"
+		description="Adds two values (scalar or vector)">
 	</class>
 
-	<class name="SubtractionNode" parent="TwoInputNode" description="Subtracts two values (scalar or vector)">
+	<class name="SubtractionNode" parent="TwoInputNode"
+		description="Subtracts two values (scalar or vector)">
 	</class>
 
-	<class name="MultiplicationNode" parent="TwoInputNode" description="Multiplies two values (scalar or vector)">
+	<class name="MultiplicationNode" parent="TwoInputNode"
+		description="Multiplies two values (scalar or vector)">
 	</class>
 
-	<class name="DivisionNode" parent="TwoInputNode" description="Divides two values (scalar or vector)">
+	<class name="DivisionNode" parent="TwoInputNode"
+		description="Divides two values (scalar or vector)">
 	</class>
 
-	<class name="DotNode" parent="TwoInputNode" description="Calculates the dot product of two vector values">
+	<class name="DotNode" parent="TwoInputNode"
+		description="Calculates the dot product of two vector values">
 	</class>
 
-	<class name="CrossNode" parent="TwoInputNode" description="Calculates the cross product of two vector values">
+	<class name="CrossNode" parent="TwoInputNode"
+		description="Calculates the cross product of two vector values">
 	</class>
 
-	<class name="ArcTan2Node" parent="TwoInputNode" description="Calculates the arctangent with two arguments">
+	<class name="ArcTan2Node" parent="TwoInputNode"
+		description="Calculates the arctangent with two arguments">
 	</class>
 
-	<class name="MatVecMultiplicationNode" parent="TwoInputNode" description="Multiplies a matrix with a vector">
+	<class name="MatVecMultiplicationNode" parent="TwoInputNode"
+		description="Multiplies a matrix with a vector">
 	</class>
-	
+
 	<class name="MinNode" parent="TwoInputNode" description="Calculates the minimum of two values">
 	</class>
 
@@ -2117,8 +2143,9 @@
 				description="the fourth input" />
 		</method>
 	</class>
-	
-	<class name="ClampNode" parent="OneInputNode" description="Clamps the input value to min and max">
+
+	<class name="ClampNode" parent="OneInputNode"
+		description="Clamps the input value to min and max">
 		<method name="GetInputMin" description="Retrieves the input for the lower limit">
 			<param name="Min" type="class" class="ImplicitPort" pass="return"
 				description="the input for the lower limit" />
@@ -2129,7 +2156,8 @@
 		</method>
 	</class>
 
-	<class name="ComposeVectorNode" parent="ImplicitNode" description="Creates a vector from three scalar values">
+	<class name="ComposeVectorNode" parent="ImplicitNode"
+		description="Creates a vector from three scalar values">
 		<method name="GetInputX" description="Retrieves the input for the x component">
 			<param name="X" type="class" class="ImplicitPort" pass="return"
 				description="the input for the x component" />
@@ -2148,7 +2176,8 @@
 		</method>
 	</class>
 
-	<class name="DecomposeVectorNode" parent="ImplicitNode" description="Decomposes a vector into three scalar values">
+	<class name="DecomposeVectorNode" parent="ImplicitNode"
+		description="Decomposes a vector into three scalar values">
 		<method name="GetInputVector" description="Retrieves the input">
 			<param name="Vector" type="class" class="ImplicitPort" pass="return"
 				description="the input" />
@@ -2167,7 +2196,8 @@
 		</method>
 	</class>
 
-	<class name="ComposeMatrixNode" parent="ImplicitNode" description="Composes a 4x4 matrix from 16 scalar values">
+	<class name="ComposeMatrixNode" parent="ImplicitNode"
+		description="Composes a 4x4 matrix from 16 scalar values">
 		<method name="GetInputM00" description="Retrieves the input for the element [0,0]">
 			<param name="m00" type="class" class="ImplicitPort" pass="return"
 				description="the input for the m00 element" />
@@ -2238,7 +2268,8 @@
 		</method>
 	</class>
 
-	<class name="ComposeMatrixFromRowVectorsNode" parent="ImplicitNode" description="Composes a 4x4 matrix from four row vectors">
+	<class name="ComposeMatrixFromRowVectorsNode" parent="ImplicitNode"
+		description="Composes a 4x4 matrix from four row vectors">
 		<method name="GetInputRow0" description="Retrieves the input for the first row">
 			<param name="Row0" type="class" class="ImplicitPort" pass="return"
 				description="the input for the first row" />
@@ -2303,8 +2334,7 @@
 				description="the output" />
 		</method>
 	</class>
-	
-	
+
 
 	<class name="NodeIterator" parent="Iterator">
 		<method name="GetCurrent" description="Returns the current element">
@@ -2378,7 +2408,7 @@
 				description="the output port" />
 		</method>
 	</class>
-	
+
 	<class name="ImplicitFunction" parent="Function">
 		<method name="GetIdentifier" description="Retrieves the identifier of the function">
 			<param name="Identifier" type="string" pass="return" description="the identifier" />
@@ -2386,7 +2416,7 @@
 		<method name="SetIdentifier" description="Sets the identifier of the function">
 			<param name="Identifier" type="string" pass="in" description="the identifier" />
 		</method>
-		
+
 		<method name="AddNode" description="Add a node">
 			<param name="NodeType" type="enum" class="ImplicitNodeType" pass="in"
 				description="the type of the node" />
@@ -2496,226 +2526,510 @@
 		<method name="AddSinhNode" description="Add a SinhNode">
 			<param name="Identifier" type="string" pass="in"
 				description="the identifier of the node" />
-			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in" 
+			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in"
 				description="the configuration of the node" />
-			<param name="DisplayName" type="string" pass="in" 
+			<param name="DisplayName" type="string" pass="in"
 				description="the display name of the node" />
-			<param name="Tag" type="string" pass="in" 
+			<param name="Tag" type="string" pass="in"
 				description="the tag of the node" />
-			<param name="Node" type="class" class="SinhNode" pass="return" 
+			<param name="Node" type="class" class="SinhNode" pass="return"
 				description="the added node" />
 		</method>
 
 		<method name="AddCoshNode" description="Add a CoshNode">
-			<param name="Identifier" type="string" pass="in" 
+			<param name="Identifier" type="string" pass="in"
 				description="the identifier of the node" />
-			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in" 
+			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in"
 				description="the configuration of the node" />
-			<param name="DisplayName" type="string" pass="in" 
+			<param name="DisplayName" type="string" pass="in"
 				description="the display name of the node" />
-			<param name="Tag" type="string" pass="in" 
+			<param name="Tag" type="string" pass="in"
 				description="the tag of the node" />
-			<param name="Node" type="class" class="CoshNode" pass="return" 
+			<param name="Node" type="class" class="CoshNode" pass="return"
 				description="the added node" />
 		</method>
 
 		<method name="AddTanhNode" description="Add a TanhNode">
-			<param name="Identifier" type="string" pass="in" 
+			<param name="Identifier" type="string" pass="in"
 				description="the identifier of the node" />
-			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in" 
+			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in"
 				description="the configuration of the node" />
-			<param name="DisplayName" type="string" pass="in" 
+			<param name="DisplayName" type="string" pass="in"
 				description="the display name of the node" />
-			<param name="Tag" type="string" pass="in" 
+			<param name="Tag" type="string" pass="in"
 				description="the tag of the node" />
-			<param name="Node" type="class" class="TanhNode" pass="return" 
+			<param name="Node" type="class" class="TanhNode" pass="return"
 				description="the added node" />
 		</method>
 
 		<method name="AddRoundNode" description="Add a RoundNode">
-			<param name="Identifier" type="string" pass="in" 
+			<param name="Identifier" type="string" pass="in"
 				description="the identifier of the node" />
-			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in" 
+			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in"
 				description="the configuration of the node" />
-			<param name="DisplayName" type="string" pass="in" 
+			<param name="DisplayName" type="string" pass="in"
 				description="the display name of the node" />
-			<param name="Tag" type="string" pass="in" 
+			<param name="Tag" type="string" pass="in"
 				description="the tag of the node" />
-			<param name="Node" type="class" class="RoundNode" pass="return" 
+			<param name="Node" type="class" class="RoundNode" pass="return"
 				description="the added node" />
 		</method>
 
 		<method name="AddCeilNode" description="Add a CeilNode">
-			<param name="Identifier" type="string" pass="in" 
+			<param name="Identifier" type="string" pass="in"
 				description="the identifier of the node" />
-			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in" 
+			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in"
 				description="the configuration of the node" />
-			<param name="DisplayName" type="string" pass="in" 
+			<param name="DisplayName" type="string" pass="in"
 				description="the display name of the node" />
-			<param name="Tag" type="string" pass="in" 
+			<param name="Tag" type="string" pass="in"
 				description="the tag of the node" />
-			<param name="Node" type="class" class="CeilNode" pass="return" 
+			<param name="Node" type="class" class="CeilNode" pass="return"
 				description="the added node" />
 		</method>
 
 		<method name="AddFloorNode" description="Add a FloorNode">
-			<param name="Identifier" type="string" pass="in" 
+			<param name="Identifier" type="string" pass="in"
 				description="the identifier of the node" />
-			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in" 
+			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in"
 				description="the configuration of the node" />
-			<param name="DisplayName" type="string" pass="in" 
+			<param name="DisplayName" type="string" pass="in"
 				description="the display name of the node" />
-			<param name="Tag" type="string" pass="in" 
+			<param name="Tag" type="string" pass="in"
 				description="the tag of the node" />
-			<param name="Node" type="class" class="FloorNode" pass="return" 
+			<param name="Node" type="class" class="FloorNode" pass="return"
 				description="the added node" />
 		</method>
 
 		<method name="AddSignNode" description="Add a SignNode">
-			<param name="Identifier" type="string" pass="in" 
+			<param name="Identifier" type="string" pass="in"
 				description="the identifier of the node" />
-			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in" 
+			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in"
 				description="the configuration of the node" />
-			<param name="DisplayName" type="string" pass="in" 
+			<param name="DisplayName" type="string" pass="in"
 				description="the display name of the node" />
-			<param name="Tag" type="string" pass="in" 
+			<param name="Tag" type="string" pass="in"
 				description="the tag of the node" />
-			<param name="Node" type="class" class="SignNode" pass="return" 
+			<param name="Node" type="class" class="SignNode" pass="return"
 				description="the added node" />
 		</method>
 
 		<method name="AddFractNode" description="Add a FractNode">
-			<param name="Identifier" type="string" pass="in" 
+			<param name="Identifier" type="string" pass="in"
 				description="the identifier of the node" />
-			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in" 
+			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in"
 				description="the configuration of the node" />
-			<param name="DisplayName" type="string" pass="in" 
+			<param name="DisplayName" type="string" pass="in"
 				description="the display name of the node" />
-			<param name="Tag" type="string" pass="in" 
+			<param name="Tag" type="string" pass="in"
 				description="the tag of the node" />
-			<param name="Node" type="class" class="FractNode" pass="return" 
+			<param name="Node" type="class" class="FractNode" pass="return"
 				description="the added node" />
 		</method>
 
 		<method name="AddAbsNode" description="Add a AbsNode">
-			<param name="Identifier" type="string" pass="in" 
+			<param name="Identifier" type="string" pass="in"
 				description="the identifier of the node" />
-			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in" 
+			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in"
 				description="the configuration of the node" />
-			<param name="DisplayName" type="string" pass="in" 
+			<param name="DisplayName" type="string" pass="in"
 				description="the display name of the node" />
-			<param name="Tag" type="string" pass="in" 
+			<param name="Tag" type="string" pass="in"
 				description="the tag of the node" />
-			<param name="Node" type="class" class="AbsNode" pass="return" 
+			<param name="Node" type="class" class="AbsNode" pass="return"
 				description="the added node" />
 		</method>
 
 		<method name="AddExpNode" description="Add a ExpNode">
-			<param name="Identifier" type="string" pass="in" 
+			<param name="Identifier" type="string" pass="in"
 				description="the identifier of the node" />
-			<param name="Configuration" type="enum" pass="in" class="ImplicitNodeConfiguration" 
+			<param name="Configuration" type="enum" pass="in" class="ImplicitNodeConfiguration"
 				description="the configuration of the node" />
-			<param name="DisplayName" type="string" pass="in" 
+			<param name="DisplayName" type="string" pass="in"
 				description="the display name of the node" />
 			<param name="Tag" type="string" pass="in"
-			    description="the tag of the node" />
-			<param name="Node" type="class" class="ExpNode" pass="return" 
+				description="the tag of the node" />
+			<param name="Node" type="class" class="ExpNode" pass="return"
 				description="the added node" />
 		</method>
 
 		<method name="AddLogNode" description="Add a LogNode">
-			<param name="Identifier" type="string" pass="in" 
+			<param name="Identifier" type="string" pass="in"
 				description="the identifier of the node" />
-			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration" 
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
 				description="the configuration of the node" />
-			<param name="DisplayName" pass="in" type="string" 
+			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
-			<param name="Tag" pass="in" type="string" 
+			<param name="Tag" pass="in" type="string"
 				description="the tag of the node" />
-			<param name="Node" pass="return" type="class" class="LogNode" 
+			<param name="Node" pass="return" type="class" class="LogNode"
 				description="the added node" />
 		</method>
 
 		<method name="AddLog2Node" description="Add a Log2Node">
-			<param name="Identifier" pass="in" type="string" 
+			<param name="Identifier" pass="in" type="string"
 				description="the identifier of the node" />
-			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration" 
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
 				description="the configuration of the node" />
-			<param name="DisplayName" pass="in" type="string" 
+			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
-			<param name="Tag" pass="in" type="string" 
+			<param name="Tag" pass="in" type="string"
 				description="the tag of the node" />
-			<param name="Node" pass="return" type="class" class="Log2Node" 
+			<param name="Node" pass="return" type="class" class="Log2Node"
 				description="the added node" />
 		</method>
 
 		<method name="AddLog10Node" description="Add a Log10Node">
-			<param name="Identifier" pass="in" type="string" 
+			<param name="Identifier" pass="in" type="string"
 				description="the identifier of the node" />
-			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration" 
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
 				description="the configuration of the node" />
-			<param name="DisplayName" pass="in" type="string" 
+			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
-			<param name="Tag" pass="in" type="string" 
+			<param name="Tag" pass="in" type="string"
 				description="the tag of the node" />
-			<param name="Node" pass="return" type="class" class="Log10Node" 
+			<param name="Node" pass="return" type="class" class="Log10Node"
 				description="the added node" />
 		</method>
 
 		<method name="AddLengthNode" description="Add a LengthNode">
-			<param name="Identifier" pass="in" type="string" 
+			<param name="Identifier" pass="in" type="string"
 				description="the identifier of the node" />
-			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration" 
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
 				description="the configuration of the node" />
-			<param name="DisplayName" pass="in" type="string" 
+			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
-			<param name="Tag" pass="in" type="string" 
+			<param name="Tag" pass="in" type="string"
 				description="the tag of the node" />
-			<param name="Node" pass="return" type="class" class="LengthNode" 
+			<param name="Node" pass="return" type="class" class="LengthNode"
 				description="the added node" />
 		</method>
 
 		<method name="AddTransposeNode" description="Add a TransposeNode">
-			<param name="Identifier" pass="in" type="string" 
+			<param name="Identifier" pass="in" type="string"
 				description="the identifier of the node" />
-			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration" 
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
 				description="the configuration of the node" />
-			<param name="DisplayName" pass="in" type="string" 
+			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
-			<param name="Tag" pass="in" type="string" 
+			<param name="Tag" pass="in" type="string"
 				description="the tag of the node" />
-			<param name="Node" pass="return" type="class" class="TransposeNode" 
+			<param name="Node" pass="return" type="class" class="TransposeNode"
 				description="the added node" />
 		</method>
 
 		<method name="InverseNode" description="Add a InverseNode">
-			<param name="Identifier" pass="in" type="string" 
+			<param name="Identifier" pass="in" type="string"
 				description="the identifier of the node" />
-			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration" 
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
 				description="the configuration of the node" />
-			<param name="DisplayName" pass="in" type="string" 
+			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
-			<param name="Tag" pass="in" type="string" 
+			<param name="Tag" pass="in" type="string"
 				description="the tag of the node" />
-			<param name="Node" pass="return" type="class" class="InverseNode" 
+			<param name="Node" pass="return" type="class" class="InverseNode"
 				description="the added node" />
 		</method>
 
 		<method name="AddSqrtNode" description="Add a SqrtNode">
-			<param name="Identifier" pass="in" type="string" 
+			<param name="Identifier" pass="in" type="string"
 				description="the identifier of the node" />
-			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration" 
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
 				description="the configuration of the node" />
-			<param name="DisplayName" pass="in" type="string" 
+			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
-			<param name="Tag" pass="in" type="string" 
+			<param name="Tag" pass="in" type="string"
 				description="the tag of the node" />
-			<param name="Node" pass="return" type="class" class="SqrtNode" 
+			<param name="Node" pass="return" type="class" class="SqrtNode"
 				description="the added node" />
 		</method>
 
-		
+		<method name="AddResourceIdNode" description="Add a ResourceIdNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="ResourceIdNode"
+				description="the added node" />
+		</method>
 
+		<method name="AddAdditionNode" description="Add an AdditionNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="AdditionNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddSubtractionNode" description="Add a SubtractionNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="SubtractionNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddMultiplicationNode" description="Add a MultiplicationNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="MultiplicationNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddDivisionNode" description="Add a DivisionNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="DivisionNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddDotNode" description="Add a DotNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="DotNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddCrossNode" description="Add a CrossNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="CrossNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddArcTan2Node" description="Add an ArcTan2Node">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="ArcTan2Node"
+				description="the added node" />
+		</method>
+
+		<method name="AddMatVecMultiplicationNode" description="Add a MatVecMultiplicationNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="MatVecMultiplicationNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddMinNode" description="Add a MinNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="MinNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddMaxNode" description="Add a MaxNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="MaxNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddFmodNode" description="Add a FmodNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="FmodNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddPowNode" description="Add a PowNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="PowNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddSelectNode" description="Add a SelectNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="SelectNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddClampNode" description="Add a ClampNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="ClampNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddComposeVectorNode" description="Add a ComposeVectorNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="ComposeVectorNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddDecomposeVectorNode" description="Add a DecomposeVectorNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="DecomposeVectorNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddComposeMatrixNode" description="Add a ComposeMatrixNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="ComposeMatrixNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddComposeMatrixFromRowVectorsNode"
+			description="Add a ComposeMatrixFromRowVectorsNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="ComposeMatrixFromRowVectorsNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddConstantNode" description="Add a ConstantNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="ConstantNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddConstVecNode" description="Add a ConstVecNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="ConstVecNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddConstMatNode" description="Add a ConstMatNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
+				description="the configuration of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="ConstMatNode"
+				description="the added node" />
+		</method>
 
 
 		<method name="GetNodes" description="Retrieves the nodes">
@@ -3448,7 +3762,7 @@
 			description="creates a resource iterator instance with all image3d resources.">
 			<param name="ResourceIterator" type="handle" class="Image3DIterator" pass="return"
 				description="returns the iterator instance." />
-		</method>	
+		</method>
 		<method name="MergeToModel"
 			description="Merges all components and objects which are referenced by a build item into a mesh. The memory is duplicated and a new model is created.">
 			<param name="MergedModelInstance" type="handle" class="Model" pass="return"
@@ -3526,7 +3840,7 @@
 			<param name="ImageStackInstance" type="class" class="ImageStack" pass="return"
 				description="returns the image stack instance" />
 		</method>
-	
+
 
 		<method name="AddBuildItem" description="adds a build item to the model.">
 			<param name="Object" type="handle" class="Object" pass="in"
