@@ -60,12 +60,12 @@ private:
 	*/
 
 protected:
-
 	/**
 	* Put protected members here.
 	*/
 
 public:
+	CArcCosNode(NMR::PModelImplicitNode pImplicitNode);
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.

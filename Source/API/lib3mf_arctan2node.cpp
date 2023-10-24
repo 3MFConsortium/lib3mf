@@ -32,6 +32,7 @@ Abstract: This is a stub class definition of CArcTan2Node
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
+#include "lib3mf_twoinputnode.hpp"
 
 
 using namespace Lib3MF::Impl;
@@ -40,3 +41,7 @@ using namespace Lib3MF::Impl;
  Class definition of CArcTan2Node 
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CArcTan2Node::CArcTan2Node(NMR::PModelImplicitNode pImplicitNode)
+: CTwoInputNode{ std::move(pImplicitNode) }
+{
+}

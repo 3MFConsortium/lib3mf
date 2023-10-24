@@ -40,3 +40,6 @@ using namespace Lib3MF::Impl;
  Class definition of CMinNode 
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CMinNode::CMinNode(NMR::PModelImplicitNode pImplicitNode) 
+: CTwoInputNode(std::move(pImplicitNode))
+{}

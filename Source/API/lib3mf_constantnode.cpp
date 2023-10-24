@@ -40,18 +40,24 @@ using namespace Lib3MF::Impl;
  Class definition of CConstantNode 
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CConstantNode::CConstantNode(
+    NMR::PModelImplicitNode pImplicitNode)
+	: CImplicitNode(std::move(pImplicitNode))
+{
+}
+
 void CConstantNode::SetConstant(const Lib3MF_double dValue)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_pImplicitNode->setConstant(dValue);
 }
 
 Lib3MF_double CConstantNode::GetConstant()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_pImplicitNode->getConstant();
 }
 
 IImplicitPort * CConstantNode::GetOutputValue()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindOutput("Value");
 }
 

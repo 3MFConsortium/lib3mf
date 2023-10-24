@@ -40,28 +40,34 @@ using namespace Lib3MF::Impl;
  Class definition of CComposeMatrixFromRowVectorsNode 
 **************************************************************************************************************************/
 
-IImplicitPort * CComposeMatrixFromRowVectorsNode::GetInputRow0()
+Lib3MF::Impl::CComposeMatrixFromRowVectorsNode::
+    CComposeMatrixFromRowVectorsNode(NMR::PModelImplicitNode pImplicitNode)
+	: CImplicitNode(std::move(pImplicitNode))
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+IImplicitPort* CComposeMatrixFromRowVectorsNode::GetInputRow0()
+{
+	return FindInput("A");
 }
 
 IImplicitPort * CComposeMatrixFromRowVectorsNode::GetInputRow1()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("B");
 }
 
 IImplicitPort * CComposeMatrixFromRowVectorsNode::GetInputRow2()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("C");
 }
 
 IImplicitPort * CComposeMatrixFromRowVectorsNode::GetInputRow3()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("D");
 }
 
 IImplicitPort * CComposeMatrixFromRowVectorsNode::GetOutputMatrix()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindOutput("matrix");
 }
 

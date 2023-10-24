@@ -40,3 +40,8 @@ using namespace Lib3MF::Impl;
  Class definition of CAdditionNode 
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CAdditionNode::CAdditionNode(
+    NMR::PModelImplicitNode pImplicitNode) 
+    : CTwoInputNode(std::move(pImplicitNode))
+{
+}

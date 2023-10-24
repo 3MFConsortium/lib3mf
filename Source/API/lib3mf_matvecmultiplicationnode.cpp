@@ -29,14 +29,19 @@ Abstract: This is a stub class definition of CMatVecMultiplicationNode
 */
 
 #include "lib3mf_matvecmultiplicationnode.hpp"
+
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
 
-
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CMatVecMultiplicationNode 
+ Class definition of CMatVecMultiplicationNode
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CMatVecMultiplicationNode::CMatVecMultiplicationNode(
+    NMR::PModelImplicitNode pImplicitNode)
+    : CTwoInputNode(std::move(pImplicitNode))
+{
+}

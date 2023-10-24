@@ -55,15 +55,17 @@ namespace Lib3MF
         class CImplicitNode : public virtual IImplicitNode, public virtual CBase
         {
           private:
-            NMR::PModelImplicitNode m_pImplicitNode;
+            
 
           protected:
             /**
              * Put protected members here.
              */
+            NMR::PModelImplicitNode m_pImplicitNode;
 
           public:
-            // Ctor
+            
+            CImplicitNode() = default;
             CImplicitNode(NMR::PModelImplicitNode pImplicitNode);
 
             /**
@@ -151,60 +153,6 @@ namespace Lib3MF
              * @return the output port
              */
             IImplicitPort * FindOutput(const std::string & sIdentifier) override;
-
-            /**
-             * IImplicitNode::SetConstant - Sets the constant value of the node. Throws an error, if
-             * the node type not is Constant
-             * @param[in] dValue - the value
-             */
-            void SetConstant(const Lib3MF_double dValue) override;
-
-            /**
-             * IImplicitNode::GetConstant - Retrieves the constant value of the node. Throws an
-             * error, if the node type is not Constant
-             * @return the value
-             */
-            Lib3MF_double GetConstant() override;
-
-            /**
-             * IImplicitNode::SetVector - Sets the vector value of the node. Throws an error, if the
-             * node type is not of type ConstVec
-             * @param[in] Value - the value
-             */
-            void SetVector(const Lib3MF::sVector Value) override;
-
-            /**
-             * IImplicitNode::GetVector - Retrieves the vector value of the node. Throws an error,
-             * if the node type is not of type ConstVec
-             * @return the value
-             */
-            Lib3MF::sVector GetVector() override;
-
-            /**
-             * IImplicitNode::SetMatrix - Sets the matrix value of the node. Throws an error, if the
-             * node type is not of type ConstMat
-             * @param[in] Value - the value
-             */
-            void SetMatrix(const Lib3MF::sMatrix4x4 Value) override;
-
-            /**
-             * IImplicitNode::GetMatrix - Retrieves the matrix value of the node. Throws an error,
-             * if the node type is not of type ConstMat
-             * @return the value
-             */
-            Lib3MF::sMatrix4x4 GetMatrix() override;
-
-            /**
-             * IImplicitNode::SetResource - Sets the Resource that the resourceid attribute of the node will point to. Throws an error, if the node type is not of type Resource
-             * @param[in] pResource - the resource
-             */
-            void SetResource(IResource *pResource) override;
-
-            /**
-             * IImplicitNode::GetResource - Retrieves the resource of the node. Throws an error, if the node type is not of type Resource
-             * @return the resource
-             */
-            IResource *GetResource() override;
 
             /**
              * IImplicitNode::AreTypesValid - Checks if the types of the input

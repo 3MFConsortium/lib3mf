@@ -42,6 +42,10 @@ using namespace Lib3MF::Impl;
 
 IImplicitPort * CTwoInputNode::GetInputB()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("B");
 }
 
+Lib3MF::Impl::CTwoInputNode::CTwoInputNode(
+    NMR::PModelImplicitNode pImplicitNode) : COneInputNode(std::move(pImplicitNode))
+{
+}

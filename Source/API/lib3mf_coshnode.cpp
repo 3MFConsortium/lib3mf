@@ -29,14 +29,18 @@ Abstract: This is a stub class definition of CCoshNode
 */
 
 #include "lib3mf_coshnode.hpp"
+
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
 
-
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CCoshNode 
+ Class definition of CCoshNode
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CCoshNode::CCoshNode(NMR::PModelImplicitNode pImplicitNode)
+    : COneInputNode(std::move(pImplicitNode))
+{
+}

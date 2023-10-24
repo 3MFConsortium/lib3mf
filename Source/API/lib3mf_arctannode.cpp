@@ -40,3 +40,6 @@ using namespace Lib3MF::Impl;
  Class definition of CArcTanNode 
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CArcTanNode::CArcTanNode(NMR::PModelImplicitNode pImplicitNode)
+: COneInputNode{ std::move(pImplicitNode) }
+{}

@@ -29,14 +29,18 @@ Abstract: This is a stub class definition of CRoundNode
 */
 
 #include "lib3mf_roundnode.hpp"
+
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
 
-
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CRoundNode 
+ Class definition of CRoundNode
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CRoundNode::CRoundNode(NMR::PModelImplicitNode pImplicitNode)
+    : COneInputNode(std::move(pImplicitNode))
+{
+}

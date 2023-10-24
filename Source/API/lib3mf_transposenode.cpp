@@ -40,3 +40,8 @@ using namespace Lib3MF::Impl;
  Class definition of CTransposeNode 
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CTransposeNode::CTransposeNode(
+    NMR::PModelImplicitNode pImplicitNode)
+    : COneInputNode(std::move(pImplicitNode))
+{
+}

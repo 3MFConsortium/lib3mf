@@ -4457,13 +4457,13 @@ public:
 	/**
 	* IImplicitFunction::AddNode - Add a node
 	* @param[in] eNodeType - the type of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	virtual IImplicitNode * AddNode(const Lib3MF::eImplicitNodeType eNodeType, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
+	virtual IImplicitNode * AddNode(const Lib3MF::eImplicitNodeType eNodeType, const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::AddSinNode - Add a SinNode
@@ -4658,12 +4658,11 @@ public:
 	/**
 	* IImplicitFunction::AddLengthNode - Add a LengthNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	virtual ILengthNode * AddLengthNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+	virtual ILengthNode * AddLengthNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::AddTransposeNode - Add a TransposeNode
@@ -4678,12 +4677,11 @@ public:
 	/**
 	* IImplicitFunction::InverseNode - Add a InverseNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	virtual IInverseNode * InverseNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+	virtual IInverseNode * InverseNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::AddSqrtNode - Add a SqrtNode
@@ -4698,12 +4696,11 @@ public:
 	/**
 	* IImplicitFunction::AddResourceIdNode - Add a ResourceIdNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	virtual IResourceIdNode * AddResourceIdNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+	virtual IResourceIdNode * AddResourceIdNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::AddAdditionNode - Add an AdditionNode
@@ -4748,32 +4745,29 @@ public:
 	/**
 	* IImplicitFunction::AddDotNode - Add a DotNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	virtual IDotNode * AddDotNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+	virtual IDotNode * AddDotNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::AddCrossNode - Add a CrossNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	virtual ICrossNode * AddCrossNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+	virtual ICrossNode * AddCrossNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::AddMatVecMultiplicationNode - Add a MatVecMultiplicationNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	virtual IMatVecMultiplicationNode * AddMatVecMultiplicationNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+	virtual IMatVecMultiplicationNode * AddMatVecMultiplicationNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::AddMinNode - Add a MinNode
@@ -4838,72 +4832,65 @@ public:
 	/**
 	* IImplicitFunction::AddComposeVectorNode - Add a ComposeVectorNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	virtual IComposeVectorNode * AddComposeVectorNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+	virtual IComposeVectorNode * AddComposeVectorNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::AddDecomposeVectorNode - Add a DecomposeVectorNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	virtual IDecomposeVectorNode * AddDecomposeVectorNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+	virtual IDecomposeVectorNode * AddDecomposeVectorNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::AddComposeMatrixNode - Add a ComposeMatrixNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	virtual IComposeMatrixNode * AddComposeMatrixNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+	virtual IComposeMatrixNode * AddComposeMatrixNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::AddComposeMatrixFromRowVectorsNode - Add a ComposeMatrixFromRowVectorsNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	virtual IComposeMatrixFromRowVectorsNode * AddComposeMatrixFromRowVectorsNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+	virtual IComposeMatrixFromRowVectorsNode * AddComposeMatrixFromRowVectorsNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::AddConstantNode - Add a ConstantNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	virtual IConstantNode * AddConstantNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+	virtual IConstantNode * AddConstantNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::AddConstVecNode - Add a ConstVecNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	virtual IConstVecNode * AddConstVecNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+	virtual IConstVecNode * AddConstVecNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::AddConstMatNode - Add a ConstMatNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	virtual IConstMatNode * AddConstMatNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
+	virtual IConstMatNode * AddConstMatNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::GetNodes - Retrieves the nodes

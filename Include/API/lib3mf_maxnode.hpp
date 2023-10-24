@@ -28,7 +28,6 @@ Abstract: This is the class declaration of CMaxNode
 
 */
 
-
 #ifndef __LIB3MF_MAXNODE
 #define __LIB3MF_MAXNODE
 
@@ -43,45 +42,43 @@ Abstract: This is the class declaration of CMaxNode
 
 // Include custom headers here.
 
+namespace Lib3MF
+{
+    namespace Impl
+    {
 
-namespace Lib3MF {
-namespace Impl {
+        /*************************************************************************************************************************
+         Class declaration of CMaxNode
+        **************************************************************************************************************************/
 
+        class CMaxNode : public virtual IMaxNode, public virtual CTwoInputNode
+        {
+           private:
+            /**
+             * Put private members here.
+             */
 
-/*************************************************************************************************************************
- Class declaration of CMaxNode 
-**************************************************************************************************************************/
+           protected:
+            /**
+             * Put protected members here.
+             */
 
-class CMaxNode : public virtual IMaxNode, public virtual CTwoInputNode {
-private:
+           public:
+            CMaxNode(NMR::PModelImplicitNode pImplicitNode);
+            /**
+             * Put additional public members here. They will not be visible in
+             * the external API.
+             */
 
-	/**
-	* Put private members here.
-	*/
+            /**
+             * Public member functions to implement.
+             */
+        };
 
-protected:
-
-	/**
-	* Put protected members here.
-	*/
-
-public:
-
-	/**
-	* Put additional public members here. They will not be visible in the external API.
-	*/
-
-
-	/**
-	* Public member functions to implement.
-	*/
-
-};
-
-} // namespace Impl
-} // namespace Lib3MF
+    }  // namespace Impl
+}  // namespace Lib3MF
 
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-#endif // __LIB3MF_MAXNODE
+#endif  // __LIB3MF_MAXNODE

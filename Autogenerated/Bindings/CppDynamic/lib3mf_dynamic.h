@@ -3711,14 +3711,14 @@ typedef Lib3MFResult (*PLib3MFImplicitFunction_SetIdentifierPtr) (Lib3MF_Implici
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
 * @param[in] eNodeType - the type of the node
-* @param[in] eConfiguration - the configuration of the node
 * @param[in] pIdentifier - the identifier of the node
+* @param[in] eConfiguration - the configuration of the node
 * @param[in] pDisplayName - the display name of the node
 * @param[in] pTag - the tag of the node
 * @param[out] pNode - the added node
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitFunction_AddNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF::eImplicitNodeType eNodeType, Lib3MF::eImplicitNodeConfiguration eConfiguration, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_ImplicitNode * pNode);
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, Lib3MF::eImplicitNodeType eNodeType, const char * pIdentifier, Lib3MF::eImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ImplicitNode * pNode);
 
 /**
 * Add a SinNode
@@ -3972,13 +3972,12 @@ typedef Lib3MFResult (*PLib3MFImplicitFunction_AddLog10NodePtr) (Lib3MF_Implicit
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
 * @param[in] pIdentifier - the identifier of the node
-* @param[in] eConfiguration - the configuration of the node
 * @param[in] pDisplayName - the display name of the node
 * @param[in] pTag - the tag of the node
 * @param[out] pNode - the added node
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitFunction_AddLengthNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, Lib3MF::eImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_LengthNode * pNode);
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddLengthNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_LengthNode * pNode);
 
 /**
 * Add a TransposeNode
@@ -3998,13 +3997,12 @@ typedef Lib3MFResult (*PLib3MFImplicitFunction_AddTransposeNodePtr) (Lib3MF_Impl
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
 * @param[in] pIdentifier - the identifier of the node
-* @param[in] eConfiguration - the configuration of the node
 * @param[in] pDisplayName - the display name of the node
 * @param[in] pTag - the tag of the node
 * @param[out] pNode - the added node
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitFunction_InverseNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, Lib3MF::eImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_InverseNode * pNode);
+typedef Lib3MFResult (*PLib3MFImplicitFunction_InverseNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_InverseNode * pNode);
 
 /**
 * Add a SqrtNode
@@ -4024,13 +4022,12 @@ typedef Lib3MFResult (*PLib3MFImplicitFunction_AddSqrtNodePtr) (Lib3MF_ImplicitF
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
 * @param[in] pIdentifier - the identifier of the node
-* @param[in] eConfiguration - the configuration of the node
 * @param[in] pDisplayName - the display name of the node
 * @param[in] pTag - the tag of the node
 * @param[out] pNode - the added node
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitFunction_AddResourceIdNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, Lib3MF::eImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ResourceIdNode * pNode);
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddResourceIdNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_ResourceIdNode * pNode);
 
 /**
 * Add an AdditionNode
@@ -4089,39 +4086,36 @@ typedef Lib3MFResult (*PLib3MFImplicitFunction_AddDivisionNodePtr) (Lib3MF_Impli
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
 * @param[in] pIdentifier - the identifier of the node
-* @param[in] eConfiguration - the configuration of the node
 * @param[in] pDisplayName - the display name of the node
 * @param[in] pTag - the tag of the node
 * @param[out] pNode - the added node
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitFunction_AddDotNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, Lib3MF::eImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_DotNode * pNode);
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddDotNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_DotNode * pNode);
 
 /**
 * Add a CrossNode
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
 * @param[in] pIdentifier - the identifier of the node
-* @param[in] eConfiguration - the configuration of the node
 * @param[in] pDisplayName - the display name of the node
 * @param[in] pTag - the tag of the node
 * @param[out] pNode - the added node
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitFunction_AddCrossNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, Lib3MF::eImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_CrossNode * pNode);
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddCrossNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_CrossNode * pNode);
 
 /**
 * Add a MatVecMultiplicationNode
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
 * @param[in] pIdentifier - the identifier of the node
-* @param[in] eConfiguration - the configuration of the node
 * @param[in] pDisplayName - the display name of the node
 * @param[in] pTag - the tag of the node
 * @param[out] pNode - the added node
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitFunction_AddMatVecMultiplicationNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, Lib3MF::eImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_MatVecMultiplicationNode * pNode);
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddMatVecMultiplicationNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_MatVecMultiplicationNode * pNode);
 
 /**
 * Add a MinNode
@@ -4206,91 +4200,84 @@ typedef Lib3MFResult (*PLib3MFImplicitFunction_AddClampNodePtr) (Lib3MF_Implicit
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
 * @param[in] pIdentifier - the identifier of the node
-* @param[in] eConfiguration - the configuration of the node
 * @param[in] pDisplayName - the display name of the node
 * @param[in] pTag - the tag of the node
 * @param[out] pNode - the added node
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitFunction_AddComposeVectorNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, Lib3MF::eImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ComposeVectorNode * pNode);
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddComposeVectorNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_ComposeVectorNode * pNode);
 
 /**
 * Add a DecomposeVectorNode
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
 * @param[in] pIdentifier - the identifier of the node
-* @param[in] eConfiguration - the configuration of the node
 * @param[in] pDisplayName - the display name of the node
 * @param[in] pTag - the tag of the node
 * @param[out] pNode - the added node
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitFunction_AddDecomposeVectorNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, Lib3MF::eImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_DecomposeVectorNode * pNode);
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddDecomposeVectorNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_DecomposeVectorNode * pNode);
 
 /**
 * Add a ComposeMatrixNode
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
 * @param[in] pIdentifier - the identifier of the node
-* @param[in] eConfiguration - the configuration of the node
 * @param[in] pDisplayName - the display name of the node
 * @param[in] pTag - the tag of the node
 * @param[out] pNode - the added node
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitFunction_AddComposeMatrixNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, Lib3MF::eImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ComposeMatrixNode * pNode);
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddComposeMatrixNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_ComposeMatrixNode * pNode);
 
 /**
 * Add a ComposeMatrixFromRowVectorsNode
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
 * @param[in] pIdentifier - the identifier of the node
-* @param[in] eConfiguration - the configuration of the node
 * @param[in] pDisplayName - the display name of the node
 * @param[in] pTag - the tag of the node
 * @param[out] pNode - the added node
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitFunction_AddComposeMatrixFromRowVectorsNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, Lib3MF::eImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ComposeMatrixFromRowVectorsNode * pNode);
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddComposeMatrixFromRowVectorsNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_ComposeMatrixFromRowVectorsNode * pNode);
 
 /**
 * Add a ConstantNode
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
 * @param[in] pIdentifier - the identifier of the node
-* @param[in] eConfiguration - the configuration of the node
 * @param[in] pDisplayName - the display name of the node
 * @param[in] pTag - the tag of the node
 * @param[out] pNode - the added node
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitFunction_AddConstantNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, Lib3MF::eImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ConstantNode * pNode);
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddConstantNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_ConstantNode * pNode);
 
 /**
 * Add a ConstVecNode
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
 * @param[in] pIdentifier - the identifier of the node
-* @param[in] eConfiguration - the configuration of the node
 * @param[in] pDisplayName - the display name of the node
 * @param[in] pTag - the tag of the node
 * @param[out] pNode - the added node
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitFunction_AddConstVecNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, Lib3MF::eImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ConstVecNode * pNode);
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddConstVecNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_ConstVecNode * pNode);
 
 /**
 * Add a ConstMatNode
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
 * @param[in] pIdentifier - the identifier of the node
-* @param[in] eConfiguration - the configuration of the node
 * @param[in] pDisplayName - the display name of the node
 * @param[in] pTag - the tag of the node
 * @param[out] pNode - the added node
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitFunction_AddConstMatNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, Lib3MF::eImplicitNodeConfiguration eConfiguration, const char * pDisplayName, const char * pTag, Lib3MF_ConstMatNode * pNode);
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddConstMatNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_ConstMatNode * pNode);
 
 /**
 * Retrieves the nodes

@@ -29,14 +29,18 @@ Abstract: This is a stub class definition of CArcCosNode
 */
 
 #include "lib3mf_arccosnode.hpp"
+
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
 
-
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CArcCosNode 
+ Class definition of CArcCosNode
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CArcCosNode::CArcCosNode(NMR::PModelImplicitNode pImplicitNode)
+    : COneInputNode{std::move(pImplicitNode)}
+{
+}

@@ -42,21 +42,26 @@ using namespace Lib3MF::Impl;
 
 IImplicitPort * CDecomposeVectorNode::GetInputVector()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("vector");
 }
 
 IImplicitPort * CDecomposeVectorNode::GetOutputX()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindOutput("x");
 }
 
 IImplicitPort * CDecomposeVectorNode::GetOutputY()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindOutput("y");
 }
 
 IImplicitPort * CDecomposeVectorNode::GetOutputZ()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindOutput("z");
 }
 
+Lib3MF::Impl::CDecomposeVectorNode::CDecomposeVectorNode(
+    NMR::PModelImplicitNode pImplicitNode)
+	: CImplicitNode(std::move(pImplicitNode))
+{
+}

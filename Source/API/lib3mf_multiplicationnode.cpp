@@ -40,3 +40,8 @@ using namespace Lib3MF::Impl;
  Class definition of CMultiplicationNode 
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CMultiplicationNode::CMultiplicationNode(
+    NMR::PModelImplicitNode pImplicitNode)
+    : CTwoInputNode(std::move(pImplicitNode))
+{
+}

@@ -29,14 +29,18 @@ Abstract: This is a stub class definition of CTanNode
 */
 
 #include "lib3mf_tannode.hpp"
+
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
 
-
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CTanNode 
+ Class definition of CTanNode
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CTanNode::CTanNode(NMR::PModelImplicitNode pImplicitNode)
+    : COneInputNode{std::move(pImplicitNode)}
+{
+}

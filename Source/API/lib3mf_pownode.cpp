@@ -29,14 +29,18 @@ Abstract: This is a stub class definition of CPowNode
 */
 
 #include "lib3mf_pownode.hpp"
+
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
 
-
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CPowNode 
+ Class definition of CPowNode
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CPowNode::CPowNode(NMR::PModelImplicitNode pImplicitNode)
+    : CTwoInputNode(std::move(pImplicitNode))
+{
+}

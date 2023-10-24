@@ -42,11 +42,15 @@ using namespace Lib3MF::Impl;
 
 IImplicitPort * COneInputNode::GetInputA()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("A");
 }
 
 IImplicitPort * COneInputNode::GetOutputResult()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindOutput("Result");
 }
 
+Lib3MF::Impl::COneInputNode::COneInputNode(
+    NMR::PModelImplicitNode pImplicitNode) : CImplicitNode(std::move(pImplicitNode))
+{
+}

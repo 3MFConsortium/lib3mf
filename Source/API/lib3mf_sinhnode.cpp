@@ -29,14 +29,18 @@ Abstract: This is a stub class definition of CSinhNode
 */
 
 #include "lib3mf_sinhnode.hpp"
+
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
 
-
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CSinhNode 
+ Class definition of CSinhNode
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CSinhNode::CSinhNode(NMR::PModelImplicitNode pImplicitNode)
+    : COneInputNode{std::move(pImplicitNode)}
+{
+}

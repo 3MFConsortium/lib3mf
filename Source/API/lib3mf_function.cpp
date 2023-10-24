@@ -81,7 +81,14 @@ IImplicitPortIterator* CFunction::GetInputs()
 
 void CFunction::RemoveInput(IImplicitPort* pInput)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto inputs = function()->getInputs();
+	auto it = std::find_if(inputs->begin(), inputs->end(), [pInput](const NMR::PModelImplicitPort& port) {
+		return port->getIdentifier() == pInput->GetIdentifier();
+	});
+	if (it != inputs->end())
+		inputs->erase(it);
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 }
 
 IImplicitPort* CFunction::AddOutput(const std::string& sIdentifier,
@@ -98,7 +105,14 @@ IImplicitPortIterator* CFunction::GetOutputs()
 
 void CFunction::RemoveOutput(IImplicitPort* pOutput)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto outputs = function()->getOutputs();
+	auto it = std::find_if(outputs->begin(), outputs->end(), [pOutput](const NMR::PModelImplicitPort& port) {
+		return port->getIdentifier() == pOutput->GetIdentifier();
+	});
+	if (it != outputs->end())
+		outputs->erase(it);
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 }
 
 IImplicitPort* CFunction::FindInput(const std::string& sIdentifier)

@@ -29,14 +29,18 @@ Abstract: This is a stub class definition of CFmodNode
 */
 
 #include "lib3mf_fmodnode.hpp"
+
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
 
-
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CFmodNode 
+ Class definition of CFmodNode
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CFmodNode::CFmodNode(NMR::PModelImplicitNode pImplicitNode)
+    : CTwoInputNode(std::move(pImplicitNode))
+{
+}

@@ -2837,7 +2837,7 @@ public:
 	
 	inline std::string GetIdentifier();
 	inline void SetIdentifier(const std::string & sIdentifier);
-	inline PImplicitNode AddNode(const eImplicitNodeType eNodeType, const eImplicitNodeConfiguration eConfiguration, const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
+	inline PImplicitNode AddNode(const eImplicitNodeType eNodeType, const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
 	inline PSinNode AddSinNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
 	inline PCosNode AddCosNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
 	inline PTanNode AddTanNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
@@ -2857,31 +2857,31 @@ public:
 	inline PLogNode AddLogNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
 	inline PLog2Node AddLog2Node(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
 	inline PLog10Node AddLog10Node(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
-	inline PLengthNode AddLengthNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
+	inline PLengthNode AddLengthNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PTransposeNode AddTransposeNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
-	inline PInverseNode InverseNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
+	inline PInverseNode InverseNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PSqrtNode AddSqrtNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
-	inline PResourceIdNode AddResourceIdNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
+	inline PResourceIdNode AddResourceIdNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PAdditionNode AddAdditionNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
 	inline PSubtractionNode AddSubtractionNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
 	inline PMultiplicationNode AddMultiplicationNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
 	inline PDivisionNode AddDivisionNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
-	inline PDotNode AddDotNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
-	inline PCrossNode AddCrossNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
-	inline PMatVecMultiplicationNode AddMatVecMultiplicationNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
+	inline PDotNode AddDotNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
+	inline PCrossNode AddCrossNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
+	inline PMatVecMultiplicationNode AddMatVecMultiplicationNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PMinNode AddMinNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
 	inline PMaxNode AddMaxNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
 	inline PFmodNode AddFmodNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
 	inline PPowNode AddPowNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
 	inline PSelectNode AddSelectNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
 	inline PClampNode AddClampNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
-	inline PComposeVectorNode AddComposeVectorNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
-	inline PDecomposeVectorNode AddDecomposeVectorNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
-	inline PComposeMatrixNode AddComposeMatrixNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
-	inline PComposeMatrixFromRowVectorsNode AddComposeMatrixFromRowVectorsNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
-	inline PConstantNode AddConstantNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
-	inline PConstVecNode AddConstVecNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
-	inline PConstMatNode AddConstMatNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
+	inline PComposeVectorNode AddComposeVectorNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
+	inline PDecomposeVectorNode AddDecomposeVectorNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
+	inline PComposeMatrixNode AddComposeMatrixNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
+	inline PComposeMatrixFromRowVectorsNode AddComposeMatrixFromRowVectorsNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
+	inline PConstantNode AddConstantNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
+	inline PConstVecNode AddConstVecNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
+	inline PConstMatNode AddConstMatNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PNodeIterator GetNodes();
 	inline void RemoveNode(classParam<CImplicitNode> pNode);
 	inline void AddLink(classParam<CImplicitPort> pSource, classParam<CImplicitPort> pTarget);
@@ -16307,16 +16307,16 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	* CImplicitFunction::AddNode - Add a node
 	* @param[in] eNodeType - the type of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	PImplicitNode CImplicitFunction::AddNode(const eImplicitNodeType eNodeType, const eImplicitNodeConfiguration eConfiguration, const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
+	PImplicitNode CImplicitFunction::AddNode(const eImplicitNodeType eNodeType, const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
 		Lib3MFHandle hNode = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddNode(m_pHandle, eNodeType, eConfiguration, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddNode(m_pHandle, eNodeType, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -16688,15 +16688,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	* CImplicitFunction::AddLengthNode - Add a LengthNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	PLengthNode CImplicitFunction::AddLengthNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
+	PLengthNode CImplicitFunction::AddLengthNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
 		Lib3MFHandle hNode = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddLengthNode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddLengthNode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -16726,15 +16725,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	* CImplicitFunction::InverseNode - Add a InverseNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	PInverseNode CImplicitFunction::InverseNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
+	PInverseNode CImplicitFunction::InverseNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
 		Lib3MFHandle hNode = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_InverseNode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_InverseNode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -16764,15 +16762,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	* CImplicitFunction::AddResourceIdNode - Add a ResourceIdNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	PResourceIdNode CImplicitFunction::AddResourceIdNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
+	PResourceIdNode CImplicitFunction::AddResourceIdNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
 		Lib3MFHandle hNode = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddResourceIdNode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddResourceIdNode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -16859,15 +16856,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	* CImplicitFunction::AddDotNode - Add a DotNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	PDotNode CImplicitFunction::AddDotNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
+	PDotNode CImplicitFunction::AddDotNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
 		Lib3MFHandle hNode = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddDotNode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddDotNode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -16878,15 +16874,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	* CImplicitFunction::AddCrossNode - Add a CrossNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	PCrossNode CImplicitFunction::AddCrossNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
+	PCrossNode CImplicitFunction::AddCrossNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
 		Lib3MFHandle hNode = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddCrossNode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddCrossNode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -16897,15 +16892,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	* CImplicitFunction::AddMatVecMultiplicationNode - Add a MatVecMultiplicationNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	PMatVecMultiplicationNode CImplicitFunction::AddMatVecMultiplicationNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
+	PMatVecMultiplicationNode CImplicitFunction::AddMatVecMultiplicationNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
 		Lib3MFHandle hNode = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddMatVecMultiplicationNode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddMatVecMultiplicationNode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -17030,15 +17024,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	* CImplicitFunction::AddComposeVectorNode - Add a ComposeVectorNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	PComposeVectorNode CImplicitFunction::AddComposeVectorNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
+	PComposeVectorNode CImplicitFunction::AddComposeVectorNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
 		Lib3MFHandle hNode = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddComposeVectorNode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddComposeVectorNode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -17049,15 +17042,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	* CImplicitFunction::AddDecomposeVectorNode - Add a DecomposeVectorNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	PDecomposeVectorNode CImplicitFunction::AddDecomposeVectorNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
+	PDecomposeVectorNode CImplicitFunction::AddDecomposeVectorNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
 		Lib3MFHandle hNode = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddDecomposeVectorNode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddDecomposeVectorNode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -17068,15 +17060,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	* CImplicitFunction::AddComposeMatrixNode - Add a ComposeMatrixNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	PComposeMatrixNode CImplicitFunction::AddComposeMatrixNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
+	PComposeMatrixNode CImplicitFunction::AddComposeMatrixNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
 		Lib3MFHandle hNode = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddComposeMatrixNode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddComposeMatrixNode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -17087,15 +17078,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	* CImplicitFunction::AddComposeMatrixFromRowVectorsNode - Add a ComposeMatrixFromRowVectorsNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	PComposeMatrixFromRowVectorsNode CImplicitFunction::AddComposeMatrixFromRowVectorsNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
+	PComposeMatrixFromRowVectorsNode CImplicitFunction::AddComposeMatrixFromRowVectorsNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
 		Lib3MFHandle hNode = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddComposeMatrixFromRowVectorsNode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddComposeMatrixFromRowVectorsNode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -17106,15 +17096,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	* CImplicitFunction::AddConstantNode - Add a ConstantNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	PConstantNode CImplicitFunction::AddConstantNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
+	PConstantNode CImplicitFunction::AddConstantNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
 		Lib3MFHandle hNode = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddConstantNode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddConstantNode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -17125,15 +17114,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	* CImplicitFunction::AddConstVecNode - Add a ConstVecNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	PConstVecNode CImplicitFunction::AddConstVecNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
+	PConstVecNode CImplicitFunction::AddConstVecNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
 		Lib3MFHandle hNode = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddConstVecNode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddConstVecNode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -17144,15 +17132,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	* CImplicitFunction::AddConstMatNode - Add a ConstMatNode
 	* @param[in] sIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	PConstMatNode CImplicitFunction::AddConstMatNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
+	PConstMatNode CImplicitFunction::AddConstMatNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
 		Lib3MFHandle hNode = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddConstMatNode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddConstMatNode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);

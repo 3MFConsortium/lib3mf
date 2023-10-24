@@ -40,3 +40,6 @@ using namespace Lib3MF::Impl;
  Class definition of CLogNode 
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CLogNode::CLogNode(NMR::PModelImplicitNode pImplicitNode)
+: COneInputNode(std::move(pImplicitNode))
+{}

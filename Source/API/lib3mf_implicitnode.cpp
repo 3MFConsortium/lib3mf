@@ -125,51 +125,6 @@ IImplicitPort * CImplicitNode::FindOutput(const std::string & sIdentifier)
     return new CImplicitPort(m_pImplicitNode->findOutput(sIdentifier));
 }
 
-void CImplicitNode::SetConstant(const Lib3MF_double dConstant)
-{
-    m_pImplicitNode->setConstant(dConstant);
-}
-
-Lib3MF_double CImplicitNode::GetConstant()
-{
-    return m_pImplicitNode->getConstant();
-}
-
-void CImplicitNode::SetVector(const Lib3MF::sVector Value)
-{
-    m_pImplicitNode->setVector(Value);
-}
-
-Lib3MF::sVector CImplicitNode::GetVector()
-{
-    return m_pImplicitNode->getVector();
-}
-
-void CImplicitNode::SetMatrix(const Lib3MF::sMatrix4x4 Value)
-{
-    m_pImplicitNode->setMatrix(Value);
-}
-
-Lib3MF::sMatrix4x4 CImplicitNode::GetMatrix()
-{
-    return m_pImplicitNode->getMatrix();
-}
-
-void Lib3MF::Impl::CImplicitNode::SetResource(IResource * pResource)
-{
-    if (pResource == nullptr)
-    {
-        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-    }
-    m_pImplicitNode->setModelResourceID(pResource->GetModelResourceID());
-}
-
-
-IResource * Lib3MF::Impl::CImplicitNode::GetResource()
-{
-	return new CResource(m_pImplicitNode->getResource());
-}
-
 bool Lib3MF::Impl::CImplicitNode::AreTypesValid()
 {
     return m_pImplicitNode->arePortsValid();

@@ -40,3 +40,6 @@ using namespace Lib3MF::Impl;
  Class definition of CSignNode 
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CSignNode::CSignNode(NMR::PModelImplicitNode pImplicitNode)
+: COneInputNode(std::move(pImplicitNode))
+ {}

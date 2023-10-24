@@ -30,6 +30,7 @@ Abstract: This is a stub class definition of CResourceIdNode
 
 #include "lib3mf_resourceidnode.hpp"
 #include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_resource.hpp"
 
 // Include custom headers here.
 
@@ -40,18 +41,23 @@ using namespace Lib3MF::Impl;
  Class definition of CResourceIdNode 
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CResourceIdNode::CResourceIdNode(
+    NMR::PModelImplicitNode pImplicitNode) : CImplicitNode(std::move(pImplicitNode))
+{
+}
+
 void CResourceIdNode::SetResource(IResource* pResource)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_pImplicitNode->setModelResourceID(pResource->GetModelResourceID());
 }
 
 IResource * CResourceIdNode::GetResource()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return new CResource(m_pImplicitNode->getResource());
 }
 
 IImplicitPort * CResourceIdNode::GetOutputValue()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindOutput("value");
 }
 

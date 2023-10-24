@@ -40,3 +40,8 @@ using namespace Lib3MF::Impl;
  Class definition of CDivisionNode 
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CDivisionNode::CDivisionNode(
+    NMR::PModelImplicitNode pImplicitNode)
+    : CTwoInputNode(std::move(pImplicitNode))
+{
+}

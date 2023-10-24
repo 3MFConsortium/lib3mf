@@ -42,86 +42,91 @@ using namespace Lib3MF::Impl;
 
 IImplicitPort * CComposeMatrixNode::GetInputM00()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("m00");
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM01()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("m01");
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM02()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("m02");
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM03()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("m03");
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM10()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("m10");
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM11()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("m11");
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM12()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("m12");
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM13()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("m13");
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM20()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("m20");
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM21()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("m21");
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM22()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("m22");
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM23()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("m23");
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM30()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("m30");
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM31()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("m31");
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM32()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("m32");
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM33()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindInput("m33");
 }
 
 IImplicitPort * CComposeMatrixNode::GetOutputMatrix()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindOutput("matrix");
 }
 
+Lib3MF::Impl::CComposeMatrixNode::CComposeMatrixNode(
+    NMR::PModelImplicitNode pImplicitNode) 
+	: CImplicitNode(pImplicitNode)
+{
+}

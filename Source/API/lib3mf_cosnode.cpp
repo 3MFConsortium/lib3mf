@@ -40,3 +40,6 @@ using namespace Lib3MF::Impl;
  Class definition of CCosNode 
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CCosNode::CCosNode(NMR::PModelImplicitNode pImplicitNode)
+    : COneInputNode{std::move(pImplicitNode)}
+{}

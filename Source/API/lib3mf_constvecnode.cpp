@@ -40,18 +40,24 @@ using namespace Lib3MF::Impl;
  Class definition of CConstVecNode 
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CConstVecNode::CConstVecNode(
+    NMR::PModelImplicitNode pImplicitNode)
+	: CImplicitNode(std::move(pImplicitNode))
+{
+}
+
 void CConstVecNode::SetVector(const Lib3MF::sVector Value)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_pImplicitNode->setVector(Value);
 }
 
 Lib3MF::sVector CConstVecNode::GetVector()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_pImplicitNode->getVector();
 }
 
 IImplicitPort * CConstVecNode::GetOutputVector()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return FindOutput("vector");
 }
 

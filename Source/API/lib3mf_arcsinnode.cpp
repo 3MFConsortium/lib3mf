@@ -29,14 +29,18 @@ Abstract: This is a stub class definition of CArcSinNode
 */
 
 #include "lib3mf_arcsinnode.hpp"
+
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
 
-
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CArcSinNode 
+ Class definition of CArcSinNode
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CArcSinNode::CArcSinNode(NMR::PModelImplicitNode pImplicitNode)
+    : COneInputNode{std::move(pImplicitNode)}
+{
+}

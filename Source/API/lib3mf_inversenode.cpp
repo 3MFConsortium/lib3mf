@@ -40,3 +40,7 @@ using namespace Lib3MF::Impl;
  Class definition of CInverseNode 
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CInverseNode::CInverseNode(NMR::PModelImplicitNode pImplicitNode)
+: COneInputNode(std::move(pImplicitNode))
+{
+}

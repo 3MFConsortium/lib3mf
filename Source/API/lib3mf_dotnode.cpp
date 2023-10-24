@@ -40,3 +40,6 @@ using namespace Lib3MF::Impl;
  Class definition of CDotNode 
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CDotNode::CDotNode(NMR::PModelImplicitNode pImplicitNode)
+: CTwoInputNode(std::move(pImplicitNode))
+ {}

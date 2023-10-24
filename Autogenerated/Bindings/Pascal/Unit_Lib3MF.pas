@@ -4341,14 +4341,14 @@ type
 	*
 	* @param[in] pImplicitFunction - ImplicitFunction instance.
 	* @param[in] eNodeType - the type of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] pDisplayName - the display name of the node
 	* @param[in] pTag - the tag of the node
 	* @param[out] pNode - the added node
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitFunction_AddNodeFunc = function(pImplicitFunction: TLib3MFHandle; const eNodeType: Integer; const eConfiguration: Integer; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_AddNodeFunc = function(pImplicitFunction: TLib3MFHandle; const eNodeType: Integer; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Add a SinNode
@@ -4602,13 +4602,12 @@ type
 	*
 	* @param[in] pImplicitFunction - ImplicitFunction instance.
 	* @param[in] pIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] pDisplayName - the display name of the node
 	* @param[in] pTag - the tag of the node
 	* @param[out] pNode - the added node
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitFunction_AddLengthNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_AddLengthNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Add a TransposeNode
@@ -4628,13 +4627,12 @@ type
 	*
 	* @param[in] pImplicitFunction - ImplicitFunction instance.
 	* @param[in] pIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] pDisplayName - the display name of the node
 	* @param[in] pTag - the tag of the node
 	* @param[out] pNode - the added node
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitFunction_InverseNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_InverseNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Add a SqrtNode
@@ -4654,13 +4652,12 @@ type
 	*
 	* @param[in] pImplicitFunction - ImplicitFunction instance.
 	* @param[in] pIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] pDisplayName - the display name of the node
 	* @param[in] pTag - the tag of the node
 	* @param[out] pNode - the added node
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitFunction_AddResourceIdNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_AddResourceIdNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Add an AdditionNode
@@ -4719,39 +4716,36 @@ type
 	*
 	* @param[in] pImplicitFunction - ImplicitFunction instance.
 	* @param[in] pIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] pDisplayName - the display name of the node
 	* @param[in] pTag - the tag of the node
 	* @param[out] pNode - the added node
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitFunction_AddDotNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_AddDotNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Add a CrossNode
 	*
 	* @param[in] pImplicitFunction - ImplicitFunction instance.
 	* @param[in] pIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] pDisplayName - the display name of the node
 	* @param[in] pTag - the tag of the node
 	* @param[out] pNode - the added node
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitFunction_AddCrossNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_AddCrossNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Add a MatVecMultiplicationNode
 	*
 	* @param[in] pImplicitFunction - ImplicitFunction instance.
 	* @param[in] pIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] pDisplayName - the display name of the node
 	* @param[in] pTag - the tag of the node
 	* @param[out] pNode - the added node
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitFunction_AddMatVecMultiplicationNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_AddMatVecMultiplicationNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Add a MinNode
@@ -4836,91 +4830,84 @@ type
 	*
 	* @param[in] pImplicitFunction - ImplicitFunction instance.
 	* @param[in] pIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] pDisplayName - the display name of the node
 	* @param[in] pTag - the tag of the node
 	* @param[out] pNode - the added node
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitFunction_AddComposeVectorNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_AddComposeVectorNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Add a DecomposeVectorNode
 	*
 	* @param[in] pImplicitFunction - ImplicitFunction instance.
 	* @param[in] pIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] pDisplayName - the display name of the node
 	* @param[in] pTag - the tag of the node
 	* @param[out] pNode - the added node
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitFunction_AddDecomposeVectorNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_AddDecomposeVectorNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Add a ComposeMatrixNode
 	*
 	* @param[in] pImplicitFunction - ImplicitFunction instance.
 	* @param[in] pIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] pDisplayName - the display name of the node
 	* @param[in] pTag - the tag of the node
 	* @param[out] pNode - the added node
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitFunction_AddComposeMatrixNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_AddComposeMatrixNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Add a ComposeMatrixFromRowVectorsNode
 	*
 	* @param[in] pImplicitFunction - ImplicitFunction instance.
 	* @param[in] pIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] pDisplayName - the display name of the node
 	* @param[in] pTag - the tag of the node
 	* @param[out] pNode - the added node
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitFunction_AddComposeMatrixFromRowVectorsNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_AddComposeMatrixFromRowVectorsNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Add a ConstantNode
 	*
 	* @param[in] pImplicitFunction - ImplicitFunction instance.
 	* @param[in] pIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] pDisplayName - the display name of the node
 	* @param[in] pTag - the tag of the node
 	* @param[out] pNode - the added node
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitFunction_AddConstantNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_AddConstantNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Add a ConstVecNode
 	*
 	* @param[in] pImplicitFunction - ImplicitFunction instance.
 	* @param[in] pIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] pDisplayName - the display name of the node
 	* @param[in] pTag - the tag of the node
 	* @param[out] pNode - the added node
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitFunction_AddConstVecNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_AddConstVecNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Add a ConstMatNode
 	*
 	* @param[in] pImplicitFunction - ImplicitFunction instance.
 	* @param[in] pIdentifier - the identifier of the node
-	* @param[in] eConfiguration - the configuration of the node
 	* @param[in] pDisplayName - the display name of the node
 	* @param[in] pTag - the tag of the node
 	* @param[out] pNode - the added node
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitFunction_AddConstMatNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const eConfiguration: Integer; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_AddConstMatNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves the nodes
@@ -8126,7 +8113,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		destructor Destroy; override;
 		function GetIdentifier(): String;
 		procedure SetIdentifier(const AIdentifier: String);
-		function AddNode(const ANodeType: TLib3MFImplicitNodeType; const AConfiguration: TLib3MFImplicitNodeConfiguration; const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFImplicitNode;
+		function AddNode(const ANodeType: TLib3MFImplicitNodeType; const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFImplicitNode;
 		function AddSinNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFSinNode;
 		function AddCosNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFCosNode;
 		function AddTanNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFTanNode;
@@ -8146,31 +8133,31 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function AddLogNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFLogNode;
 		function AddLog2Node(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFLog2Node;
 		function AddLog10Node(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFLog10Node;
-		function AddLengthNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFLengthNode;
+		function AddLengthNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFLengthNode;
 		function AddTransposeNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFTransposeNode;
-		function InverseNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFInverseNode;
+		function InverseNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFInverseNode;
 		function AddSqrtNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFSqrtNode;
-		function AddResourceIdNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFResourceIdNode;
+		function AddResourceIdNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFResourceIdNode;
 		function AddAdditionNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFAdditionNode;
 		function AddSubtractionNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFSubtractionNode;
 		function AddMultiplicationNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFMultiplicationNode;
 		function AddDivisionNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFDivisionNode;
-		function AddDotNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFDotNode;
-		function AddCrossNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFCrossNode;
-		function AddMatVecMultiplicationNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFMatVecMultiplicationNode;
+		function AddDotNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFDotNode;
+		function AddCrossNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFCrossNode;
+		function AddMatVecMultiplicationNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFMatVecMultiplicationNode;
 		function AddMinNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFMinNode;
 		function AddMaxNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFMaxNode;
 		function AddFmodNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFFmodNode;
 		function AddPowNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFPowNode;
 		function AddSelectNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFSelectNode;
 		function AddClampNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFClampNode;
-		function AddComposeVectorNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFComposeVectorNode;
-		function AddDecomposeVectorNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFDecomposeVectorNode;
-		function AddComposeMatrixNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFComposeMatrixNode;
-		function AddComposeMatrixFromRowVectorsNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFComposeMatrixFromRowVectorsNode;
-		function AddConstantNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFConstantNode;
-		function AddConstVecNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFConstVecNode;
-		function AddConstMatNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFConstMatNode;
+		function AddComposeVectorNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFComposeVectorNode;
+		function AddDecomposeVectorNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFDecomposeVectorNode;
+		function AddComposeMatrixNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFComposeMatrixNode;
+		function AddComposeMatrixFromRowVectorsNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFComposeMatrixFromRowVectorsNode;
+		function AddConstantNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFConstantNode;
+		function AddConstVecNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFConstVecNode;
+		function AddConstMatNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFConstMatNode;
 		function GetNodes(): TLib3MFNodeIterator;
 		procedure RemoveNode(const ANode: TLib3MFImplicitNode);
 		procedure AddLink(const ASource: TLib3MFImplicitPort; const ATarget: TLib3MFImplicitPort);
@@ -15526,13 +15513,13 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_SetIdentifierFunc(FHandle, PAnsiChar(AIdentifier)));
 	end;
 
-	function TLib3MFImplicitFunction.AddNode(const ANodeType: TLib3MFImplicitNodeType; const AConfiguration: TLib3MFImplicitNodeConfiguration; const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFImplicitNode;
+	function TLib3MFImplicitFunction.AddNode(const ANodeType: TLib3MFImplicitNodeType; const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFImplicitNode;
 	var
 		HNode: TLib3MFHandle;
 	begin
 		Result := nil;
 		HNode := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddNodeFunc(FHandle, convertImplicitNodeTypeToConst(ANodeType), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddNodeFunc(FHandle, convertImplicitNodeTypeToConst(ANodeType), PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
 		if Assigned(HNode) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitNode, TLib3MFImplicitNode>.Make(FWrapper, HNode);
 	end;
@@ -15746,13 +15733,13 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFLog10Node, TLib3MFLog10Node>.Make(FWrapper, HNode);
 	end;
 
-	function TLib3MFImplicitFunction.AddLengthNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFLengthNode;
+	function TLib3MFImplicitFunction.AddLengthNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFLengthNode;
 	var
 		HNode: TLib3MFHandle;
 	begin
 		Result := nil;
 		HNode := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddLengthNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddLengthNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
 		if Assigned(HNode) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFLengthNode, TLib3MFLengthNode>.Make(FWrapper, HNode);
 	end;
@@ -15768,13 +15755,13 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFTransposeNode, TLib3MFTransposeNode>.Make(FWrapper, HNode);
 	end;
 
-	function TLib3MFImplicitFunction.InverseNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFInverseNode;
+	function TLib3MFImplicitFunction.InverseNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFInverseNode;
 	var
 		HNode: TLib3MFHandle;
 	begin
 		Result := nil;
 		HNode := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_InverseNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_InverseNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
 		if Assigned(HNode) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFInverseNode, TLib3MFInverseNode>.Make(FWrapper, HNode);
 	end;
@@ -15790,13 +15777,13 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFSqrtNode, TLib3MFSqrtNode>.Make(FWrapper, HNode);
 	end;
 
-	function TLib3MFImplicitFunction.AddResourceIdNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFResourceIdNode;
+	function TLib3MFImplicitFunction.AddResourceIdNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFResourceIdNode;
 	var
 		HNode: TLib3MFHandle;
 	begin
 		Result := nil;
 		HNode := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddResourceIdNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddResourceIdNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
 		if Assigned(HNode) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFResourceIdNode, TLib3MFResourceIdNode>.Make(FWrapper, HNode);
 	end;
@@ -15845,35 +15832,35 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFDivisionNode, TLib3MFDivisionNode>.Make(FWrapper, HNode);
 	end;
 
-	function TLib3MFImplicitFunction.AddDotNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFDotNode;
+	function TLib3MFImplicitFunction.AddDotNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFDotNode;
 	var
 		HNode: TLib3MFHandle;
 	begin
 		Result := nil;
 		HNode := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddDotNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddDotNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
 		if Assigned(HNode) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFDotNode, TLib3MFDotNode>.Make(FWrapper, HNode);
 	end;
 
-	function TLib3MFImplicitFunction.AddCrossNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFCrossNode;
+	function TLib3MFImplicitFunction.AddCrossNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFCrossNode;
 	var
 		HNode: TLib3MFHandle;
 	begin
 		Result := nil;
 		HNode := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddCrossNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddCrossNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
 		if Assigned(HNode) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFCrossNode, TLib3MFCrossNode>.Make(FWrapper, HNode);
 	end;
 
-	function TLib3MFImplicitFunction.AddMatVecMultiplicationNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFMatVecMultiplicationNode;
+	function TLib3MFImplicitFunction.AddMatVecMultiplicationNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFMatVecMultiplicationNode;
 	var
 		HNode: TLib3MFHandle;
 	begin
 		Result := nil;
 		HNode := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddMatVecMultiplicationNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddMatVecMultiplicationNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
 		if Assigned(HNode) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFMatVecMultiplicationNode, TLib3MFMatVecMultiplicationNode>.Make(FWrapper, HNode);
 	end;
@@ -15944,79 +15931,79 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFClampNode, TLib3MFClampNode>.Make(FWrapper, HNode);
 	end;
 
-	function TLib3MFImplicitFunction.AddComposeVectorNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFComposeVectorNode;
+	function TLib3MFImplicitFunction.AddComposeVectorNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFComposeVectorNode;
 	var
 		HNode: TLib3MFHandle;
 	begin
 		Result := nil;
 		HNode := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddComposeVectorNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddComposeVectorNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
 		if Assigned(HNode) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFComposeVectorNode, TLib3MFComposeVectorNode>.Make(FWrapper, HNode);
 	end;
 
-	function TLib3MFImplicitFunction.AddDecomposeVectorNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFDecomposeVectorNode;
+	function TLib3MFImplicitFunction.AddDecomposeVectorNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFDecomposeVectorNode;
 	var
 		HNode: TLib3MFHandle;
 	begin
 		Result := nil;
 		HNode := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddDecomposeVectorNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddDecomposeVectorNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
 		if Assigned(HNode) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFDecomposeVectorNode, TLib3MFDecomposeVectorNode>.Make(FWrapper, HNode);
 	end;
 
-	function TLib3MFImplicitFunction.AddComposeMatrixNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFComposeMatrixNode;
+	function TLib3MFImplicitFunction.AddComposeMatrixNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFComposeMatrixNode;
 	var
 		HNode: TLib3MFHandle;
 	begin
 		Result := nil;
 		HNode := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddComposeMatrixNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddComposeMatrixNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
 		if Assigned(HNode) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFComposeMatrixNode, TLib3MFComposeMatrixNode>.Make(FWrapper, HNode);
 	end;
 
-	function TLib3MFImplicitFunction.AddComposeMatrixFromRowVectorsNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFComposeMatrixFromRowVectorsNode;
+	function TLib3MFImplicitFunction.AddComposeMatrixFromRowVectorsNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFComposeMatrixFromRowVectorsNode;
 	var
 		HNode: TLib3MFHandle;
 	begin
 		Result := nil;
 		HNode := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddComposeMatrixFromRowVectorsNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddComposeMatrixFromRowVectorsNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
 		if Assigned(HNode) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFComposeMatrixFromRowVectorsNode, TLib3MFComposeMatrixFromRowVectorsNode>.Make(FWrapper, HNode);
 	end;
 
-	function TLib3MFImplicitFunction.AddConstantNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFConstantNode;
+	function TLib3MFImplicitFunction.AddConstantNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFConstantNode;
 	var
 		HNode: TLib3MFHandle;
 	begin
 		Result := nil;
 		HNode := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddConstantNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddConstantNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
 		if Assigned(HNode) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFConstantNode, TLib3MFConstantNode>.Make(FWrapper, HNode);
 	end;
 
-	function TLib3MFImplicitFunction.AddConstVecNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFConstVecNode;
+	function TLib3MFImplicitFunction.AddConstVecNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFConstVecNode;
 	var
 		HNode: TLib3MFHandle;
 	begin
 		Result := nil;
 		HNode := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddConstVecNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddConstVecNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
 		if Assigned(HNode) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFConstVecNode, TLib3MFConstVecNode>.Make(FWrapper, HNode);
 	end;
 
-	function TLib3MFImplicitFunction.AddConstMatNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFConstMatNode;
+	function TLib3MFImplicitFunction.AddConstMatNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFConstMatNode;
 	var
 		HNode: TLib3MFHandle;
 	begin
 		Result := nil;
 		HNode := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddConstMatNodeFunc(FHandle, PAnsiChar(AIdentifier), convertImplicitNodeConfigurationToConst(AConfiguration), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddConstMatNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
 		if Assigned(HNode) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFConstMatNode, TLib3MFConstMatNode>.Make(FWrapper, HNode);
 	end;

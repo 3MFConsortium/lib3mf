@@ -2420,10 +2420,10 @@
 		<method name="AddNode" description="Add a node">
 			<param name="NodeType" type="enum" class="ImplicitNodeType" pass="in"
 				description="the type of the node" />
-			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in"
-				description="the configuration of the node" />
 			<param name="Identifier" type="string" pass="in"
 				description="the identifier of the node" />
+			<param name="Configuration" type="enum" class="ImplicitNodeConfiguration" pass="in"
+				description="the configuration of the node" />
 			<param name="DisplayName" type="string" pass="in"
 				description="the display name of the node" />
 			<param name="Tag" type="string" pass="in"
@@ -2681,9 +2681,7 @@
 
 		<method name="AddLengthNode" description="Add a LengthNode">
 			<param name="Identifier" pass="in" type="string"
-				description="the identifier of the node" />
-			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
-				description="the configuration of the node" />
+				description="the identifier of the node" />		
 			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
 			<param name="Tag" pass="in" type="string"
@@ -2708,8 +2706,6 @@
 		<method name="InverseNode" description="Add a InverseNode">
 			<param name="Identifier" pass="in" type="string"
 				description="the identifier of the node" />
-			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
-				description="the configuration of the node" />
 			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
 			<param name="Tag" pass="in" type="string"
@@ -2734,8 +2730,6 @@
 		<method name="AddResourceIdNode" description="Add a ResourceIdNode">
 			<param name="Identifier" pass="in" type="string"
 				description="the identifier of the node" />
-			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
-				description="the configuration of the node" />
 			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
 			<param name="Tag" pass="in" type="string"
@@ -2799,8 +2793,6 @@
 		<method name="AddDotNode" description="Add a DotNode">
 			<param name="Identifier" pass="in" type="string"
 				description="the identifier of the node" />
-			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
-				description="the configuration of the node" />
 			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
 			<param name="Tag" pass="in" type="string"
@@ -2812,8 +2804,6 @@
 		<method name="AddCrossNode" description="Add a CrossNode">
 			<param name="Identifier" pass="in" type="string"
 				description="the identifier of the node" />
-			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
-				description="the configuration of the node" />
 			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
 			<param name="Tag" pass="in" type="string"
@@ -2825,8 +2815,6 @@
 		<method name="AddMatVecMultiplicationNode" description="Add a MatVecMultiplicationNode">
 			<param name="Identifier" pass="in" type="string"
 				description="the identifier of the node" />
-			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
-				description="the configuration of the node" />
 			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
 			<param name="Tag" pass="in" type="string"
@@ -2916,8 +2904,6 @@
 		<method name="AddComposeVectorNode" description="Add a ComposeVectorNode">
 			<param name="Identifier" pass="in" type="string"
 				description="the identifier of the node" />
-			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
-				description="the configuration of the node" />
 			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
 			<param name="Tag" pass="in" type="string"
@@ -2929,8 +2915,6 @@
 		<method name="AddDecomposeVectorNode" description="Add a DecomposeVectorNode">
 			<param name="Identifier" pass="in" type="string"
 				description="the identifier of the node" />
-			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
-				description="the configuration of the node" />
 			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
 			<param name="Tag" pass="in" type="string"
@@ -2942,8 +2926,6 @@
 		<method name="AddComposeMatrixNode" description="Add a ComposeMatrixNode">
 			<param name="Identifier" pass="in" type="string"
 				description="the identifier of the node" />
-			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
-				description="the configuration of the node" />
 			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
 			<param name="Tag" pass="in" type="string"
@@ -2956,8 +2938,6 @@
 			description="Add a ComposeMatrixFromRowVectorsNode">
 			<param name="Identifier" pass="in" type="string"
 				description="the identifier of the node" />
-			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
-				description="the configuration of the node" />
 			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
 			<param name="Tag" pass="in" type="string"
@@ -2969,8 +2949,6 @@
 		<method name="AddConstantNode" description="Add a ConstantNode">
 			<param name="Identifier" pass="in" type="string"
 				description="the identifier of the node" />
-			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
-				description="the configuration of the node" />
 			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
 			<param name="Tag" pass="in" type="string"
@@ -2982,8 +2960,6 @@
 		<method name="AddConstVecNode" description="Add a ConstVecNode">
 			<param name="Identifier" pass="in" type="string"
 				description="the identifier of the node" />
-			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
-				description="the configuration of the node" />
 			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
 			<param name="Tag" pass="in" type="string"
@@ -2995,8 +2971,6 @@
 		<method name="AddConstMatNode" description="Add a ConstMatNode">
 			<param name="Identifier" pass="in" type="string"
 				description="the identifier of the node" />
-			<param name="Configuration" pass="in" type="enum" class="ImplicitNodeConfiguration"
-				description="the configuration of the node" />
 			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
 			<param name="Tag" pass="in" type="string"

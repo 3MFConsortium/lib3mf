@@ -15449,11 +15449,11 @@ void CLib3MFImplicitFunction::AddNode(const FunctionCallbackInfo<Value>& args)
         if (!args[0]->IsUint32()) {
             throw std::runtime_error("Expected enum parameter 0 (NodeType)");
         }
-        if (!args[1]->IsUint32()) {
-            throw std::runtime_error("Expected enum parameter 1 (Configuration)");
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (Identifier)");
         }
-        if (!args[2]->IsString()) {
-            throw std::runtime_error("Expected string parameter 2 (Identifier)");
+        if (!args[2]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 2 (Configuration)");
         }
         if (!args[3]->IsString()) {
             throw std::runtime_error("Expected string parameter 3 (DisplayName)");
@@ -15462,9 +15462,9 @@ void CLib3MFImplicitFunction::AddNode(const FunctionCallbackInfo<Value>& args)
             throw std::runtime_error("Expected string parameter 4 (Tag)");
         }
         unsigned int eNodeType = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        unsigned int eConfiguration = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        v8::String::Utf8Value sutf8Identifier(isolate, args[2]);
+        v8::String::Utf8Value sutf8Identifier(isolate, args[1]);
         std::string sIdentifier = *sutf8Identifier;
+        unsigned int eConfiguration = (unsigned int) args[2]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         v8::String::Utf8Value sutf8DisplayName(isolate, args[3]);
         std::string sDisplayName = *sutf8DisplayName;
         v8::String::Utf8Value sutf8Tag(isolate, args[4]);
@@ -15476,7 +15476,7 @@ void CLib3MFImplicitFunction::AddNode(const FunctionCallbackInfo<Value>& args)
         if (wrapperTable->m_ImplicitFunction_AddNode == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::AddNode.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddNode(instanceHandle, (eLib3MFImplicitNodeType) eNodeType, (eLib3MFImplicitNodeConfiguration) eConfiguration, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddNode(instanceHandle, (eLib3MFImplicitNodeType) eNodeType, sIdentifier.c_str(), (eLib3MFImplicitNodeConfiguration) eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjNode = CLib3MFImplicitNode::NewInstance(args.Holder(), hReturnNode);
         args.GetReturnValue().Set(instanceObjNode);
@@ -16293,21 +16293,17 @@ void CLib3MFImplicitFunction::AddLengthNode(const FunctionCallbackInfo<Value>& a
         if (!args[0]->IsString()) {
             throw std::runtime_error("Expected string parameter 0 (Identifier)");
         }
-        if (!args[1]->IsUint32()) {
-            throw std::runtime_error("Expected enum parameter 1 (Configuration)");
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (DisplayName)");
         }
         if (!args[2]->IsString()) {
-            throw std::runtime_error("Expected string parameter 2 (DisplayName)");
-        }
-        if (!args[3]->IsString()) {
-            throw std::runtime_error("Expected string parameter 3 (Tag)");
+            throw std::runtime_error("Expected string parameter 2 (Tag)");
         }
         v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
         std::string sIdentifier = *sutf8Identifier;
-        unsigned int eConfiguration = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        v8::String::Utf8Value sutf8DisplayName(isolate, args[2]);
+        v8::String::Utf8Value sutf8DisplayName(isolate, args[1]);
         std::string sDisplayName = *sutf8DisplayName;
-        v8::String::Utf8Value sutf8Tag(isolate, args[3]);
+        v8::String::Utf8Value sutf8Tag(isolate, args[2]);
         std::string sTag = *sutf8Tag;
         Lib3MFHandle hReturnNode = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
@@ -16316,7 +16312,7 @@ void CLib3MFImplicitFunction::AddLengthNode(const FunctionCallbackInfo<Value>& a
         if (wrapperTable->m_ImplicitFunction_AddLengthNode == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::AddLengthNode.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddLengthNode(instanceHandle, sIdentifier.c_str(), (eLib3MFImplicitNodeConfiguration) eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddLengthNode(instanceHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjNode = CLib3MFLengthNode::NewInstance(args.Holder(), hReturnNode);
         args.GetReturnValue().Set(instanceObjNode);
@@ -16377,21 +16373,17 @@ void CLib3MFImplicitFunction::InverseNode(const FunctionCallbackInfo<Value>& arg
         if (!args[0]->IsString()) {
             throw std::runtime_error("Expected string parameter 0 (Identifier)");
         }
-        if (!args[1]->IsUint32()) {
-            throw std::runtime_error("Expected enum parameter 1 (Configuration)");
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (DisplayName)");
         }
         if (!args[2]->IsString()) {
-            throw std::runtime_error("Expected string parameter 2 (DisplayName)");
-        }
-        if (!args[3]->IsString()) {
-            throw std::runtime_error("Expected string parameter 3 (Tag)");
+            throw std::runtime_error("Expected string parameter 2 (Tag)");
         }
         v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
         std::string sIdentifier = *sutf8Identifier;
-        unsigned int eConfiguration = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        v8::String::Utf8Value sutf8DisplayName(isolate, args[2]);
+        v8::String::Utf8Value sutf8DisplayName(isolate, args[1]);
         std::string sDisplayName = *sutf8DisplayName;
-        v8::String::Utf8Value sutf8Tag(isolate, args[3]);
+        v8::String::Utf8Value sutf8Tag(isolate, args[2]);
         std::string sTag = *sutf8Tag;
         Lib3MFHandle hReturnNode = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
@@ -16400,7 +16392,7 @@ void CLib3MFImplicitFunction::InverseNode(const FunctionCallbackInfo<Value>& arg
         if (wrapperTable->m_ImplicitFunction_InverseNode == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::InverseNode.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_InverseNode(instanceHandle, sIdentifier.c_str(), (eLib3MFImplicitNodeConfiguration) eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_InverseNode(instanceHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjNode = CLib3MFInverseNode::NewInstance(args.Holder(), hReturnNode);
         args.GetReturnValue().Set(instanceObjNode);
@@ -16461,21 +16453,17 @@ void CLib3MFImplicitFunction::AddResourceIdNode(const FunctionCallbackInfo<Value
         if (!args[0]->IsString()) {
             throw std::runtime_error("Expected string parameter 0 (Identifier)");
         }
-        if (!args[1]->IsUint32()) {
-            throw std::runtime_error("Expected enum parameter 1 (Configuration)");
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (DisplayName)");
         }
         if (!args[2]->IsString()) {
-            throw std::runtime_error("Expected string parameter 2 (DisplayName)");
-        }
-        if (!args[3]->IsString()) {
-            throw std::runtime_error("Expected string parameter 3 (Tag)");
+            throw std::runtime_error("Expected string parameter 2 (Tag)");
         }
         v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
         std::string sIdentifier = *sutf8Identifier;
-        unsigned int eConfiguration = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        v8::String::Utf8Value sutf8DisplayName(isolate, args[2]);
+        v8::String::Utf8Value sutf8DisplayName(isolate, args[1]);
         std::string sDisplayName = *sutf8DisplayName;
-        v8::String::Utf8Value sutf8Tag(isolate, args[3]);
+        v8::String::Utf8Value sutf8Tag(isolate, args[2]);
         std::string sTag = *sutf8Tag;
         Lib3MFHandle hReturnNode = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
@@ -16484,7 +16472,7 @@ void CLib3MFImplicitFunction::AddResourceIdNode(const FunctionCallbackInfo<Value
         if (wrapperTable->m_ImplicitFunction_AddResourceIdNode == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::AddResourceIdNode.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddResourceIdNode(instanceHandle, sIdentifier.c_str(), (eLib3MFImplicitNodeConfiguration) eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddResourceIdNode(instanceHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjNode = CLib3MFResourceIdNode::NewInstance(args.Holder(), hReturnNode);
         args.GetReturnValue().Set(instanceObjNode);
@@ -16671,21 +16659,17 @@ void CLib3MFImplicitFunction::AddDotNode(const FunctionCallbackInfo<Value>& args
         if (!args[0]->IsString()) {
             throw std::runtime_error("Expected string parameter 0 (Identifier)");
         }
-        if (!args[1]->IsUint32()) {
-            throw std::runtime_error("Expected enum parameter 1 (Configuration)");
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (DisplayName)");
         }
         if (!args[2]->IsString()) {
-            throw std::runtime_error("Expected string parameter 2 (DisplayName)");
-        }
-        if (!args[3]->IsString()) {
-            throw std::runtime_error("Expected string parameter 3 (Tag)");
+            throw std::runtime_error("Expected string parameter 2 (Tag)");
         }
         v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
         std::string sIdentifier = *sutf8Identifier;
-        unsigned int eConfiguration = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        v8::String::Utf8Value sutf8DisplayName(isolate, args[2]);
+        v8::String::Utf8Value sutf8DisplayName(isolate, args[1]);
         std::string sDisplayName = *sutf8DisplayName;
-        v8::String::Utf8Value sutf8Tag(isolate, args[3]);
+        v8::String::Utf8Value sutf8Tag(isolate, args[2]);
         std::string sTag = *sutf8Tag;
         Lib3MFHandle hReturnNode = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
@@ -16694,7 +16678,7 @@ void CLib3MFImplicitFunction::AddDotNode(const FunctionCallbackInfo<Value>& args
         if (wrapperTable->m_ImplicitFunction_AddDotNode == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::AddDotNode.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddDotNode(instanceHandle, sIdentifier.c_str(), (eLib3MFImplicitNodeConfiguration) eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddDotNode(instanceHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjNode = CLib3MFDotNode::NewInstance(args.Holder(), hReturnNode);
         args.GetReturnValue().Set(instanceObjNode);
@@ -16713,21 +16697,17 @@ void CLib3MFImplicitFunction::AddCrossNode(const FunctionCallbackInfo<Value>& ar
         if (!args[0]->IsString()) {
             throw std::runtime_error("Expected string parameter 0 (Identifier)");
         }
-        if (!args[1]->IsUint32()) {
-            throw std::runtime_error("Expected enum parameter 1 (Configuration)");
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (DisplayName)");
         }
         if (!args[2]->IsString()) {
-            throw std::runtime_error("Expected string parameter 2 (DisplayName)");
-        }
-        if (!args[3]->IsString()) {
-            throw std::runtime_error("Expected string parameter 3 (Tag)");
+            throw std::runtime_error("Expected string parameter 2 (Tag)");
         }
         v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
         std::string sIdentifier = *sutf8Identifier;
-        unsigned int eConfiguration = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        v8::String::Utf8Value sutf8DisplayName(isolate, args[2]);
+        v8::String::Utf8Value sutf8DisplayName(isolate, args[1]);
         std::string sDisplayName = *sutf8DisplayName;
-        v8::String::Utf8Value sutf8Tag(isolate, args[3]);
+        v8::String::Utf8Value sutf8Tag(isolate, args[2]);
         std::string sTag = *sutf8Tag;
         Lib3MFHandle hReturnNode = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
@@ -16736,7 +16716,7 @@ void CLib3MFImplicitFunction::AddCrossNode(const FunctionCallbackInfo<Value>& ar
         if (wrapperTable->m_ImplicitFunction_AddCrossNode == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::AddCrossNode.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddCrossNode(instanceHandle, sIdentifier.c_str(), (eLib3MFImplicitNodeConfiguration) eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddCrossNode(instanceHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjNode = CLib3MFCrossNode::NewInstance(args.Holder(), hReturnNode);
         args.GetReturnValue().Set(instanceObjNode);
@@ -16755,21 +16735,17 @@ void CLib3MFImplicitFunction::AddMatVecMultiplicationNode(const FunctionCallback
         if (!args[0]->IsString()) {
             throw std::runtime_error("Expected string parameter 0 (Identifier)");
         }
-        if (!args[1]->IsUint32()) {
-            throw std::runtime_error("Expected enum parameter 1 (Configuration)");
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (DisplayName)");
         }
         if (!args[2]->IsString()) {
-            throw std::runtime_error("Expected string parameter 2 (DisplayName)");
-        }
-        if (!args[3]->IsString()) {
-            throw std::runtime_error("Expected string parameter 3 (Tag)");
+            throw std::runtime_error("Expected string parameter 2 (Tag)");
         }
         v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
         std::string sIdentifier = *sutf8Identifier;
-        unsigned int eConfiguration = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        v8::String::Utf8Value sutf8DisplayName(isolate, args[2]);
+        v8::String::Utf8Value sutf8DisplayName(isolate, args[1]);
         std::string sDisplayName = *sutf8DisplayName;
-        v8::String::Utf8Value sutf8Tag(isolate, args[3]);
+        v8::String::Utf8Value sutf8Tag(isolate, args[2]);
         std::string sTag = *sutf8Tag;
         Lib3MFHandle hReturnNode = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
@@ -16778,7 +16754,7 @@ void CLib3MFImplicitFunction::AddMatVecMultiplicationNode(const FunctionCallback
         if (wrapperTable->m_ImplicitFunction_AddMatVecMultiplicationNode == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::AddMatVecMultiplicationNode.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddMatVecMultiplicationNode(instanceHandle, sIdentifier.c_str(), (eLib3MFImplicitNodeConfiguration) eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddMatVecMultiplicationNode(instanceHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjNode = CLib3MFMatVecMultiplicationNode::NewInstance(args.Holder(), hReturnNode);
         args.GetReturnValue().Set(instanceObjNode);
@@ -17049,21 +17025,17 @@ void CLib3MFImplicitFunction::AddComposeVectorNode(const FunctionCallbackInfo<Va
         if (!args[0]->IsString()) {
             throw std::runtime_error("Expected string parameter 0 (Identifier)");
         }
-        if (!args[1]->IsUint32()) {
-            throw std::runtime_error("Expected enum parameter 1 (Configuration)");
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (DisplayName)");
         }
         if (!args[2]->IsString()) {
-            throw std::runtime_error("Expected string parameter 2 (DisplayName)");
-        }
-        if (!args[3]->IsString()) {
-            throw std::runtime_error("Expected string parameter 3 (Tag)");
+            throw std::runtime_error("Expected string parameter 2 (Tag)");
         }
         v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
         std::string sIdentifier = *sutf8Identifier;
-        unsigned int eConfiguration = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        v8::String::Utf8Value sutf8DisplayName(isolate, args[2]);
+        v8::String::Utf8Value sutf8DisplayName(isolate, args[1]);
         std::string sDisplayName = *sutf8DisplayName;
-        v8::String::Utf8Value sutf8Tag(isolate, args[3]);
+        v8::String::Utf8Value sutf8Tag(isolate, args[2]);
         std::string sTag = *sutf8Tag;
         Lib3MFHandle hReturnNode = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
@@ -17072,7 +17044,7 @@ void CLib3MFImplicitFunction::AddComposeVectorNode(const FunctionCallbackInfo<Va
         if (wrapperTable->m_ImplicitFunction_AddComposeVectorNode == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::AddComposeVectorNode.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddComposeVectorNode(instanceHandle, sIdentifier.c_str(), (eLib3MFImplicitNodeConfiguration) eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddComposeVectorNode(instanceHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjNode = CLib3MFComposeVectorNode::NewInstance(args.Holder(), hReturnNode);
         args.GetReturnValue().Set(instanceObjNode);
@@ -17091,21 +17063,17 @@ void CLib3MFImplicitFunction::AddDecomposeVectorNode(const FunctionCallbackInfo<
         if (!args[0]->IsString()) {
             throw std::runtime_error("Expected string parameter 0 (Identifier)");
         }
-        if (!args[1]->IsUint32()) {
-            throw std::runtime_error("Expected enum parameter 1 (Configuration)");
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (DisplayName)");
         }
         if (!args[2]->IsString()) {
-            throw std::runtime_error("Expected string parameter 2 (DisplayName)");
-        }
-        if (!args[3]->IsString()) {
-            throw std::runtime_error("Expected string parameter 3 (Tag)");
+            throw std::runtime_error("Expected string parameter 2 (Tag)");
         }
         v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
         std::string sIdentifier = *sutf8Identifier;
-        unsigned int eConfiguration = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        v8::String::Utf8Value sutf8DisplayName(isolate, args[2]);
+        v8::String::Utf8Value sutf8DisplayName(isolate, args[1]);
         std::string sDisplayName = *sutf8DisplayName;
-        v8::String::Utf8Value sutf8Tag(isolate, args[3]);
+        v8::String::Utf8Value sutf8Tag(isolate, args[2]);
         std::string sTag = *sutf8Tag;
         Lib3MFHandle hReturnNode = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
@@ -17114,7 +17082,7 @@ void CLib3MFImplicitFunction::AddDecomposeVectorNode(const FunctionCallbackInfo<
         if (wrapperTable->m_ImplicitFunction_AddDecomposeVectorNode == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::AddDecomposeVectorNode.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddDecomposeVectorNode(instanceHandle, sIdentifier.c_str(), (eLib3MFImplicitNodeConfiguration) eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddDecomposeVectorNode(instanceHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjNode = CLib3MFDecomposeVectorNode::NewInstance(args.Holder(), hReturnNode);
         args.GetReturnValue().Set(instanceObjNode);
@@ -17133,21 +17101,17 @@ void CLib3MFImplicitFunction::AddComposeMatrixNode(const FunctionCallbackInfo<Va
         if (!args[0]->IsString()) {
             throw std::runtime_error("Expected string parameter 0 (Identifier)");
         }
-        if (!args[1]->IsUint32()) {
-            throw std::runtime_error("Expected enum parameter 1 (Configuration)");
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (DisplayName)");
         }
         if (!args[2]->IsString()) {
-            throw std::runtime_error("Expected string parameter 2 (DisplayName)");
-        }
-        if (!args[3]->IsString()) {
-            throw std::runtime_error("Expected string parameter 3 (Tag)");
+            throw std::runtime_error("Expected string parameter 2 (Tag)");
         }
         v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
         std::string sIdentifier = *sutf8Identifier;
-        unsigned int eConfiguration = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        v8::String::Utf8Value sutf8DisplayName(isolate, args[2]);
+        v8::String::Utf8Value sutf8DisplayName(isolate, args[1]);
         std::string sDisplayName = *sutf8DisplayName;
-        v8::String::Utf8Value sutf8Tag(isolate, args[3]);
+        v8::String::Utf8Value sutf8Tag(isolate, args[2]);
         std::string sTag = *sutf8Tag;
         Lib3MFHandle hReturnNode = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
@@ -17156,7 +17120,7 @@ void CLib3MFImplicitFunction::AddComposeMatrixNode(const FunctionCallbackInfo<Va
         if (wrapperTable->m_ImplicitFunction_AddComposeMatrixNode == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::AddComposeMatrixNode.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddComposeMatrixNode(instanceHandle, sIdentifier.c_str(), (eLib3MFImplicitNodeConfiguration) eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddComposeMatrixNode(instanceHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjNode = CLib3MFComposeMatrixNode::NewInstance(args.Holder(), hReturnNode);
         args.GetReturnValue().Set(instanceObjNode);
@@ -17175,21 +17139,17 @@ void CLib3MFImplicitFunction::AddComposeMatrixFromRowVectorsNode(const FunctionC
         if (!args[0]->IsString()) {
             throw std::runtime_error("Expected string parameter 0 (Identifier)");
         }
-        if (!args[1]->IsUint32()) {
-            throw std::runtime_error("Expected enum parameter 1 (Configuration)");
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (DisplayName)");
         }
         if (!args[2]->IsString()) {
-            throw std::runtime_error("Expected string parameter 2 (DisplayName)");
-        }
-        if (!args[3]->IsString()) {
-            throw std::runtime_error("Expected string parameter 3 (Tag)");
+            throw std::runtime_error("Expected string parameter 2 (Tag)");
         }
         v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
         std::string sIdentifier = *sutf8Identifier;
-        unsigned int eConfiguration = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        v8::String::Utf8Value sutf8DisplayName(isolate, args[2]);
+        v8::String::Utf8Value sutf8DisplayName(isolate, args[1]);
         std::string sDisplayName = *sutf8DisplayName;
-        v8::String::Utf8Value sutf8Tag(isolate, args[3]);
+        v8::String::Utf8Value sutf8Tag(isolate, args[2]);
         std::string sTag = *sutf8Tag;
         Lib3MFHandle hReturnNode = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
@@ -17198,7 +17158,7 @@ void CLib3MFImplicitFunction::AddComposeMatrixFromRowVectorsNode(const FunctionC
         if (wrapperTable->m_ImplicitFunction_AddComposeMatrixFromRowVectorsNode == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::AddComposeMatrixFromRowVectorsNode.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddComposeMatrixFromRowVectorsNode(instanceHandle, sIdentifier.c_str(), (eLib3MFImplicitNodeConfiguration) eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddComposeMatrixFromRowVectorsNode(instanceHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjNode = CLib3MFComposeMatrixFromRowVectorsNode::NewInstance(args.Holder(), hReturnNode);
         args.GetReturnValue().Set(instanceObjNode);
@@ -17217,21 +17177,17 @@ void CLib3MFImplicitFunction::AddConstantNode(const FunctionCallbackInfo<Value>&
         if (!args[0]->IsString()) {
             throw std::runtime_error("Expected string parameter 0 (Identifier)");
         }
-        if (!args[1]->IsUint32()) {
-            throw std::runtime_error("Expected enum parameter 1 (Configuration)");
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (DisplayName)");
         }
         if (!args[2]->IsString()) {
-            throw std::runtime_error("Expected string parameter 2 (DisplayName)");
-        }
-        if (!args[3]->IsString()) {
-            throw std::runtime_error("Expected string parameter 3 (Tag)");
+            throw std::runtime_error("Expected string parameter 2 (Tag)");
         }
         v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
         std::string sIdentifier = *sutf8Identifier;
-        unsigned int eConfiguration = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        v8::String::Utf8Value sutf8DisplayName(isolate, args[2]);
+        v8::String::Utf8Value sutf8DisplayName(isolate, args[1]);
         std::string sDisplayName = *sutf8DisplayName;
-        v8::String::Utf8Value sutf8Tag(isolate, args[3]);
+        v8::String::Utf8Value sutf8Tag(isolate, args[2]);
         std::string sTag = *sutf8Tag;
         Lib3MFHandle hReturnNode = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
@@ -17240,7 +17196,7 @@ void CLib3MFImplicitFunction::AddConstantNode(const FunctionCallbackInfo<Value>&
         if (wrapperTable->m_ImplicitFunction_AddConstantNode == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::AddConstantNode.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddConstantNode(instanceHandle, sIdentifier.c_str(), (eLib3MFImplicitNodeConfiguration) eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddConstantNode(instanceHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjNode = CLib3MFConstantNode::NewInstance(args.Holder(), hReturnNode);
         args.GetReturnValue().Set(instanceObjNode);
@@ -17259,21 +17215,17 @@ void CLib3MFImplicitFunction::AddConstVecNode(const FunctionCallbackInfo<Value>&
         if (!args[0]->IsString()) {
             throw std::runtime_error("Expected string parameter 0 (Identifier)");
         }
-        if (!args[1]->IsUint32()) {
-            throw std::runtime_error("Expected enum parameter 1 (Configuration)");
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (DisplayName)");
         }
         if (!args[2]->IsString()) {
-            throw std::runtime_error("Expected string parameter 2 (DisplayName)");
-        }
-        if (!args[3]->IsString()) {
-            throw std::runtime_error("Expected string parameter 3 (Tag)");
+            throw std::runtime_error("Expected string parameter 2 (Tag)");
         }
         v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
         std::string sIdentifier = *sutf8Identifier;
-        unsigned int eConfiguration = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        v8::String::Utf8Value sutf8DisplayName(isolate, args[2]);
+        v8::String::Utf8Value sutf8DisplayName(isolate, args[1]);
         std::string sDisplayName = *sutf8DisplayName;
-        v8::String::Utf8Value sutf8Tag(isolate, args[3]);
+        v8::String::Utf8Value sutf8Tag(isolate, args[2]);
         std::string sTag = *sutf8Tag;
         Lib3MFHandle hReturnNode = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
@@ -17282,7 +17234,7 @@ void CLib3MFImplicitFunction::AddConstVecNode(const FunctionCallbackInfo<Value>&
         if (wrapperTable->m_ImplicitFunction_AddConstVecNode == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::AddConstVecNode.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddConstVecNode(instanceHandle, sIdentifier.c_str(), (eLib3MFImplicitNodeConfiguration) eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddConstVecNode(instanceHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjNode = CLib3MFConstVecNode::NewInstance(args.Holder(), hReturnNode);
         args.GetReturnValue().Set(instanceObjNode);
@@ -17301,21 +17253,17 @@ void CLib3MFImplicitFunction::AddConstMatNode(const FunctionCallbackInfo<Value>&
         if (!args[0]->IsString()) {
             throw std::runtime_error("Expected string parameter 0 (Identifier)");
         }
-        if (!args[1]->IsUint32()) {
-            throw std::runtime_error("Expected enum parameter 1 (Configuration)");
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (DisplayName)");
         }
         if (!args[2]->IsString()) {
-            throw std::runtime_error("Expected string parameter 2 (DisplayName)");
-        }
-        if (!args[3]->IsString()) {
-            throw std::runtime_error("Expected string parameter 3 (Tag)");
+            throw std::runtime_error("Expected string parameter 2 (Tag)");
         }
         v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
         std::string sIdentifier = *sutf8Identifier;
-        unsigned int eConfiguration = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        v8::String::Utf8Value sutf8DisplayName(isolate, args[2]);
+        v8::String::Utf8Value sutf8DisplayName(isolate, args[1]);
         std::string sDisplayName = *sutf8DisplayName;
-        v8::String::Utf8Value sutf8Tag(isolate, args[3]);
+        v8::String::Utf8Value sutf8Tag(isolate, args[2]);
         std::string sTag = *sutf8Tag;
         Lib3MFHandle hReturnNode = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
@@ -17324,7 +17272,7 @@ void CLib3MFImplicitFunction::AddConstMatNode(const FunctionCallbackInfo<Value>&
         if (wrapperTable->m_ImplicitFunction_AddConstMatNode == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::AddConstMatNode.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddConstMatNode(instanceHandle, sIdentifier.c_str(), (eLib3MFImplicitNodeConfiguration) eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddConstMatNode(instanceHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjNode = CLib3MFConstMatNode::NewInstance(args.Holder(), hReturnNode);
         args.GetReturnValue().Set(instanceObjNode);

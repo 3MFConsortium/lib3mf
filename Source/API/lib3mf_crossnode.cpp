@@ -40,3 +40,6 @@ using namespace Lib3MF::Impl;
  Class definition of CCrossNode 
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CCrossNode::CCrossNode(NMR::PModelImplicitNode pImplicitNode)
+ : CTwoInputNode(std::move(pImplicitNode))
+ {}
