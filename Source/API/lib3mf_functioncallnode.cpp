@@ -24,65 +24,29 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CCrossNode
+Abstract: This is a stub class definition of CFunctionCallNode
 
 */
 
-
-#ifndef __LIB3MF_CROSSNODE
-#define __LIB3MF_CROSSNODE
-
-#include "lib3mf_interfaces.hpp"
-
-// Parent classes
-#include "lib3mf_twoinputnode.hpp"
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4250)
-#endif
+#include "lib3mf_functioncallnode.hpp"
+#include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
 
 
-namespace Lib3MF {
-namespace Impl {
-
+using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class declaration of CCrossNode 
+ Class definition of CFunctionCallNode 
 **************************************************************************************************************************/
 
-class CCrossNode : public virtual ICrossNode, public virtual CTwoInputNode {
-private:
+CFunctionCallNode::CFunctionCallNode(
+    NMR::PModelImplicitNode pImplicitNode)
+    : CImplicitNode(pImplicitNode)
+{
+}
 
-	/**
-	* Put private members here.
-	*/
-
-protected:
-
-	/**
-	* Put protected members here.
-	*/
-
-public:
-	CCrossNode() = delete;
-	CCrossNode(NMR::PModelImplicitNode pImplicitNode);
-	/**
-	* Put additional public members here. They will not be visible in the external API.
-	*/
-
-
-	/**
-	* Public member functions to implement.
-	*/
-
-};
-
-} // namespace Impl
-} // namespace Lib3MF
-
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-#endif // __LIB3MF_CROSSNODE
+IImplicitPort * CFunctionCallNode::GetInputFunctionID()
+{
+    return FindInput("functionid");
+}

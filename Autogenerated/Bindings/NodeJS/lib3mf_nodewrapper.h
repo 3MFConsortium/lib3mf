@@ -1980,6 +1980,44 @@ public:
 };
 
 /*************************************************************************************************************************
+ Class CLib3MFMeshNode 
+**************************************************************************************************************************/
+class CLib3MFMeshNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetInputMesh(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputPos(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputDistance(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFMeshNode();
+	~CLib3MFMeshNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFFunctionCallNode 
+**************************************************************************************************************************/
+class CLib3MFFunctionCallNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetInputFunctionID(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFFunctionCallNode();
+	~CLib3MFFunctionCallNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
  Class CLib3MFNodeIterator 
 **************************************************************************************************************************/
 class CLib3MFNodeIterator : public CLib3MFBaseClass {
@@ -2078,6 +2116,8 @@ private:
 	static void AddConstantNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddConstVecNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddConstMatNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddMeshNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddFunctionCallNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetNodes(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void RemoveNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddLink(const v8::FunctionCallbackInfo<v8::Value>& args);

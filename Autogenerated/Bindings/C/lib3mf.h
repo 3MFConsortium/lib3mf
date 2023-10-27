@@ -3579,6 +3579,50 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_constmatnode_getmatrix(Lib3MF_ConstMatNode p
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_constmatnode_getoutputmatrix(Lib3MF_ConstMatNode pConstMatNode, Lib3MF_ImplicitPort * pMatrix);
 
 /*************************************************************************************************************************
+ Class definition for MeshNode
+**************************************************************************************************************************/
+
+/**
+* Retrieves the input for the model resource id of the mesh
+*
+* @param[in] pMeshNode - MeshNode instance.
+* @param[out] pMesh - the input port for the model resource id of the mesh
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_meshnode_getinputmesh(Lib3MF_MeshNode pMeshNode, Lib3MF_ImplicitPort * pMesh);
+
+/**
+* Retrieves the input for the position
+*
+* @param[in] pMeshNode - MeshNode instance.
+* @param[out] pPos - the input port for the position
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_meshnode_getinputpos(Lib3MF_MeshNode pMeshNode, Lib3MF_ImplicitPort * pPos);
+
+/**
+* Retrieves the output
+*
+* @param[in] pMeshNode - MeshNode instance.
+* @param[out] pDistance - the output port for the signed distance to the mesh
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_meshnode_getoutputdistance(Lib3MF_MeshNode pMeshNode, Lib3MF_ImplicitPort * pDistance);
+
+/*************************************************************************************************************************
+ Class definition for FunctionCallNode
+**************************************************************************************************************************/
+
+/**
+* Retrieves the input for the function id
+*
+* @param[in] pFunctionCallNode - FunctionCallNode instance.
+* @param[out] pFunction - the input port for the function
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functioncallnode_getinputfunctionid(Lib3MF_FunctionCallNode pFunctionCallNode, Lib3MF_ImplicitPort * pFunction);
+
+/*************************************************************************************************************************
  Class definition for NodeIterator
 **************************************************************************************************************************/
 
@@ -4291,6 +4335,30 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addconstvecnode(Lib3MF_Impl
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addconstmatnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_ConstMatNode * pNode);
+
+/**
+* Add a MeshNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addmeshnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_MeshNode * pNode);
+
+/**
+* Add a FunctionCallNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addfunctioncallnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_FunctionCallNode * pNode);
 
 /**
 * Retrieves the nodes

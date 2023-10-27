@@ -144,6 +144,8 @@ class IComposeMatrixFromRowVectorsNode;
 class IConstantNode;
 class IConstVecNode;
 class IConstMatNode;
+class IMeshNode;
+class IFunctionCallNode;
 class INodeIterator;
 class IFunction;
 class IImplicitFunction;
@@ -4314,6 +4316,70 @@ typedef IBaseSharedPtr<IConstMatNode> PIConstMatNode;
 
 
 /*************************************************************************************************************************
+ Class interface for MeshNode 
+**************************************************************************************************************************/
+
+class IMeshNode : public virtual IImplicitNode {
+public:
+	/**
+	* IMeshNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x53601FD432E3DEF4UL; // First 64 bits of SHA1 of a string: "Lib3MF::MeshNode"
+	}
+
+	/**
+	* IMeshNode::GetInputMesh - Retrieves the input for the model resource id of the mesh
+	* @return the input port for the model resource id of the mesh
+	*/
+	virtual IImplicitPort * GetInputMesh() = 0;
+
+	/**
+	* IMeshNode::GetInputPos - Retrieves the input for the position
+	* @return the input port for the position
+	*/
+	virtual IImplicitPort * GetInputPos() = 0;
+
+	/**
+	* IMeshNode::GetOutputDistance - Retrieves the output
+	* @return the output port for the signed distance to the mesh
+	*/
+	virtual IImplicitPort * GetOutputDistance() = 0;
+
+};
+
+typedef IBaseSharedPtr<IMeshNode> PIMeshNode;
+
+
+/*************************************************************************************************************************
+ Class interface for FunctionCallNode 
+**************************************************************************************************************************/
+
+class IFunctionCallNode : public virtual IImplicitNode {
+public:
+	/**
+	* IFunctionCallNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x765C17C952F24E3UL; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionCallNode"
+	}
+
+	/**
+	* IFunctionCallNode::GetInputFunctionID - Retrieves the input for the function id
+	* @return the input port for the function
+	*/
+	virtual IImplicitPort * GetInputFunctionID() = 0;
+
+};
+
+typedef IBaseSharedPtr<IFunctionCallNode> PIFunctionCallNode;
+
+
+/*************************************************************************************************************************
  Class interface for NodeIterator 
 **************************************************************************************************************************/
 
@@ -4891,6 +4957,24 @@ public:
 	* @return the added node
 	*/
 	virtual IConstMatNode * AddConstMatNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddMeshNode - Add a MeshNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IMeshNode * AddMeshNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddFunctionCallNode - Add a FunctionCallNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IFunctionCallNode * AddFunctionCallNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::GetNodes - Retrieves the nodes

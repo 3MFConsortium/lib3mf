@@ -692,6 +692,28 @@ namespace Lib3MF
                                            const std::string& sTag) override;
 
             /**
+             * IImplicitFunction::AddMeshNode - Add a MeshNode
+             * @param[in] sIdentifier - the identifier of the node
+             * @param[in] sDisplayName - the display name of the node
+             * @param[in] sTag - the tag of the node
+             * @return the added node
+             */
+            IMeshNode* AddMeshNode(const std::string& sIdentifier,
+                                   const std::string& sDisplayName,
+                                   const std::string& sTag) override;
+
+            /**
+             * IImplicitFunction::AddFunctionCallNode - Add a FunctionCallNode
+             * @param[in] sIdentifier - the identifier of the node
+             * @param[in] sDisplayName - the display name of the node
+             * @param[in] sTag - the tag of the node
+             * @return the added node
+             */
+            IFunctionCallNode* AddFunctionCallNode(
+                const std::string& sIdentifier, const std::string& sDisplayName,
+                const std::string& sTag) override;
+
+            /**
              * IImplicitFunction::GetNodes - Retrieves the nodes
              * @return the accessor to the nodes
              */

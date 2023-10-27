@@ -24,18 +24,18 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CCrossNode
+Abstract: This is the class declaration of CMeshNode
 
 */
 
 
-#ifndef __LIB3MF_CROSSNODE
-#define __LIB3MF_CROSSNODE
+#ifndef __LIB3MF_MESHNODE
+#define __LIB3MF_MESHNODE
 
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_twoinputnode.hpp"
+#include "lib3mf_implicitnode.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
@@ -49,10 +49,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CCrossNode 
+ Class declaration of CMeshNode 
 **************************************************************************************************************************/
 
-class CCrossNode : public virtual ICrossNode, public virtual CTwoInputNode {
+class CMeshNode : public virtual IMeshNode, public virtual CImplicitNode {
 private:
 
 	/**
@@ -66,8 +66,7 @@ protected:
 	*/
 
 public:
-	CCrossNode() = delete;
-	CCrossNode(NMR::PModelImplicitNode pImplicitNode);
+	CMeshNode(NMR::PModelImplicitNode pImplicitNode);
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
@@ -77,6 +76,24 @@ public:
 	* Public member functions to implement.
 	*/
 
+	/**
+	* IMeshNode::GetInputMesh - Retrieves the input for the model resource id of the mesh
+	* @return the input port for the model resource id of the mesh
+	*/
+	IImplicitPort * GetInputMesh() override;
+
+	/**
+	* IMeshNode::GetInputPos - Retrieves the input for the position
+	* @return the input port for the position
+	*/
+	IImplicitPort * GetInputPos() override;
+
+	/**
+	* IMeshNode::GetOutputDistance - Retrieves the output
+	* @return the output port for the signed distance to the mesh
+	*/
+	IImplicitPort * GetOutputDistance() override;
+
 };
 
 } // namespace Impl
@@ -85,4 +102,4 @@ public:
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-#endif // __LIB3MF_CROSSNODE
+#endif // __LIB3MF_MESHNODE

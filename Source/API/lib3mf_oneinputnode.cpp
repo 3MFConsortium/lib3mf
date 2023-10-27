@@ -50,7 +50,7 @@ IImplicitPort * COneInputNode::GetOutputResult()
 	return FindOutput("Result");
 }
 
-Lib3MF::Impl::COneInputNode::COneInputNode(
+COneInputNode::COneInputNode(
     NMR::PModelImplicitNode pImplicitNode) : CImplicitNode(std::move(pImplicitNode))
 {
 }

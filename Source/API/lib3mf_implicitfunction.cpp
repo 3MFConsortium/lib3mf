@@ -53,6 +53,7 @@ Abstract: This is a stub class definition of CImplicitFunction
 #include "lib3mf_floornode.hpp"
 #include "lib3mf_fmodnode.hpp"
 #include "lib3mf_fractnode.hpp"
+#include "lib3mf_functioncallnode.hpp"
 #include "lib3mf_implicitnode.hpp"
 #include "lib3mf_implicitport.hpp"
 #include "lib3mf_interfaceexception.hpp"
@@ -63,6 +64,7 @@ Abstract: This is a stub class definition of CImplicitFunction
 #include "lib3mf_lognode.hpp"
 #include "lib3mf_matvecmultiplicationnode.hpp"
 #include "lib3mf_maxnode.hpp"
+#include "lib3mf_meshnode.hpp"
 #include "lib3mf_minnode.hpp"
 #include "lib3mf_multiplicationnode.hpp"
 #include "lib3mf_pownode.hpp"
@@ -88,7 +90,7 @@ using namespace Lib3MF::Impl;
  Class definition of CImplicitFunction
 **************************************************************************************************************************/
 
-NMR::CModelImplicitFunction* Lib3MF::Impl::CImplicitFunction::function()
+NMR::CModelImplicitFunction* CImplicitFunction::function()
 {
     NMR::CModelImplicitFunction* pFunction =
         dynamic_cast<NMR::CModelImplicitFunction*>(resource().get());
@@ -98,8 +100,7 @@ NMR::CModelImplicitFunction* Lib3MF::Impl::CImplicitFunction::function()
     return pFunction;
 }
 
-Lib3MF::Impl::CImplicitFunction::CImplicitFunction(
-    NMR::PModelResource pResource)
+CImplicitFunction::CImplicitFunction(NMR::PModelResource pResource)
     : CResource(pResource), CFunction(pResource)
 {
 }
@@ -157,7 +158,7 @@ ITanNode* CImplicitFunction::AddTanNode(
     return new CTanNode(newNode);
 }
 
-IArcSinNode* Lib3MF::Impl::CImplicitFunction::AddArcSinNode(
+IArcSinNode* CImplicitFunction::AddArcSinNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -168,7 +169,7 @@ IArcSinNode* Lib3MF::Impl::CImplicitFunction::AddArcSinNode(
     return new CArcSinNode(newNode);
 }
 
-IArcCosNode* Lib3MF::Impl::CImplicitFunction::AddArcCosNode(
+IArcCosNode* CImplicitFunction::AddArcCosNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -179,7 +180,7 @@ IArcCosNode* Lib3MF::Impl::CImplicitFunction::AddArcCosNode(
     return new CArcCosNode(newNode);
 }
 
-IArcTan2Node* Lib3MF::Impl::CImplicitFunction::AddArcTan2Node(
+IArcTan2Node* CImplicitFunction::AddArcTan2Node(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -190,7 +191,7 @@ IArcTan2Node* Lib3MF::Impl::CImplicitFunction::AddArcTan2Node(
     return new CArcTan2Node(newNode);
 }
 
-ISinhNode* Lib3MF::Impl::CImplicitFunction::AddSinhNode(
+ISinhNode* CImplicitFunction::AddSinhNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -201,7 +202,7 @@ ISinhNode* Lib3MF::Impl::CImplicitFunction::AddSinhNode(
     return new CSinhNode(newNode);
 }
 
-ICoshNode* Lib3MF::Impl::CImplicitFunction::AddCoshNode(
+ICoshNode* CImplicitFunction::AddCoshNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -212,7 +213,7 @@ ICoshNode* Lib3MF::Impl::CImplicitFunction::AddCoshNode(
     return new CCoshNode(newNode);
 }
 
-ITanhNode* Lib3MF::Impl::CImplicitFunction::AddTanhNode(
+ITanhNode* CImplicitFunction::AddTanhNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -223,7 +224,7 @@ ITanhNode* Lib3MF::Impl::CImplicitFunction::AddTanhNode(
     return new CTanhNode(newNode);
 }
 
-IRoundNode* Lib3MF::Impl::CImplicitFunction::AddRoundNode(
+IRoundNode* CImplicitFunction::AddRoundNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -234,7 +235,7 @@ IRoundNode* Lib3MF::Impl::CImplicitFunction::AddRoundNode(
     return new CRoundNode(newNode);
 }
 
-ICeilNode* Lib3MF::Impl::CImplicitFunction::AddCeilNode(
+ICeilNode* CImplicitFunction::AddCeilNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -245,7 +246,7 @@ ICeilNode* Lib3MF::Impl::CImplicitFunction::AddCeilNode(
     return new CCeilNode(newNode);
 }
 
-IFloorNode* Lib3MF::Impl::CImplicitFunction::AddFloorNode(
+IFloorNode* CImplicitFunction::AddFloorNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -256,7 +257,7 @@ IFloorNode* Lib3MF::Impl::CImplicitFunction::AddFloorNode(
     return new CFloorNode(newNode);
 }
 
-ISignNode* Lib3MF::Impl::CImplicitFunction::AddSignNode(
+ISignNode* CImplicitFunction::AddSignNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -267,7 +268,7 @@ ISignNode* Lib3MF::Impl::CImplicitFunction::AddSignNode(
     return new CSignNode(newNode);
 }
 
-IFractNode* Lib3MF::Impl::CImplicitFunction::AddFractNode(
+IFractNode* CImplicitFunction::AddFractNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -278,7 +279,7 @@ IFractNode* Lib3MF::Impl::CImplicitFunction::AddFractNode(
     return new CFractNode(newNode);
 }
 
-IAbsNode* Lib3MF::Impl::CImplicitFunction::AddAbsNode(
+IAbsNode* CImplicitFunction::AddAbsNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -289,7 +290,7 @@ IAbsNode* Lib3MF::Impl::CImplicitFunction::AddAbsNode(
     return new CAbsNode(newNode);
 }
 
-IExpNode* Lib3MF::Impl::CImplicitFunction::AddExpNode(
+IExpNode* CImplicitFunction::AddExpNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -300,7 +301,7 @@ IExpNode* Lib3MF::Impl::CImplicitFunction::AddExpNode(
     return new CExpNode(newNode);
 }
 
-ILogNode* Lib3MF::Impl::CImplicitFunction::AddLogNode(
+ILogNode* CImplicitFunction::AddLogNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -311,7 +312,7 @@ ILogNode* Lib3MF::Impl::CImplicitFunction::AddLogNode(
     return new CLogNode(newNode);
 }
 
-ILog2Node* Lib3MF::Impl::CImplicitFunction::AddLog2Node(
+ILog2Node* CImplicitFunction::AddLog2Node(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -322,7 +323,7 @@ ILog2Node* Lib3MF::Impl::CImplicitFunction::AddLog2Node(
     return new CLog2Node(newNode);
 }
 
-ILog10Node* Lib3MF::Impl::CImplicitFunction::AddLog10Node(
+ILog10Node* CImplicitFunction::AddLog10Node(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -333,9 +334,9 @@ ILog10Node* Lib3MF::Impl::CImplicitFunction::AddLog10Node(
     return new CLog10Node(newNode);
 }
 
-ILengthNode* Lib3MF::Impl::CImplicitFunction::AddLengthNode(
-    const std::string& sIdentifier, const std::string& sDisplayName,
-    const std::string& sTag)
+ILengthNode* CImplicitFunction::AddLengthNode(const std::string& sIdentifier,
+                                              const std::string& sDisplayName,
+                                              const std::string& sTag)
 {
     auto newNode =
         function()->addNode(Lib3MF::eImplicitNodeType::Length,
@@ -344,7 +345,7 @@ ILengthNode* Lib3MF::Impl::CImplicitFunction::AddLengthNode(
     return new CLengthNode(newNode);
 }
 
-ITransposeNode* Lib3MF::Impl::CImplicitFunction::AddTransposeNode(
+ITransposeNode* CImplicitFunction::AddTransposeNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -355,9 +356,9 @@ ITransposeNode* Lib3MF::Impl::CImplicitFunction::AddTransposeNode(
     return new CTransposeNode(newNode);
 }
 
-IInverseNode* Lib3MF::Impl::CImplicitFunction::InverseNode(
-    const std::string& sIdentifier, const std::string& sDisplayName,
-    const std::string& sTag)
+IInverseNode* CImplicitFunction::InverseNode(const std::string& sIdentifier,
+                                             const std::string& sDisplayName,
+                                             const std::string& sTag)
 {
     auto newNode =
         function()->addNode(Lib3MF::eImplicitNodeType::Inverse,
@@ -366,7 +367,7 @@ IInverseNode* Lib3MF::Impl::CImplicitFunction::InverseNode(
     return new CInverseNode(newNode);
 }
 
-ISqrtNode* Lib3MF::Impl::CImplicitFunction::AddSqrtNode(
+ISqrtNode* CImplicitFunction::AddSqrtNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -377,7 +378,7 @@ ISqrtNode* Lib3MF::Impl::CImplicitFunction::AddSqrtNode(
     return new CSqrtNode(newNode);
 }
 
-IResourceIdNode* Lib3MF::Impl::CImplicitFunction::AddResourceIdNode(
+IResourceIdNode* CImplicitFunction::AddResourceIdNode(
     const std::string& sIdentifier, const std::string& sDisplayName,
     const std::string& sTag)
 {
@@ -388,7 +389,7 @@ IResourceIdNode* Lib3MF::Impl::CImplicitFunction::AddResourceIdNode(
     return new CResourceIdNode(newNode);
 }
 
-IAdditionNode* Lib3MF::Impl::CImplicitFunction::AddAdditionNode(
+IAdditionNode* CImplicitFunction::AddAdditionNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -399,7 +400,7 @@ IAdditionNode* Lib3MF::Impl::CImplicitFunction::AddAdditionNode(
     return new CAdditionNode(newNode);
 }
 
-ISubtractionNode* Lib3MF::Impl::CImplicitFunction::AddSubtractionNode(
+ISubtractionNode* CImplicitFunction::AddSubtractionNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -410,7 +411,7 @@ ISubtractionNode* Lib3MF::Impl::CImplicitFunction::AddSubtractionNode(
     return new CSubtractionNode(newNode);
 }
 
-IMultiplicationNode* Lib3MF::Impl::CImplicitFunction::AddMultiplicationNode(
+IMultiplicationNode* CImplicitFunction::AddMultiplicationNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -421,7 +422,7 @@ IMultiplicationNode* Lib3MF::Impl::CImplicitFunction::AddMultiplicationNode(
     return new CMultiplicationNode(newNode);
 }
 
-IDivisionNode* Lib3MF::Impl::CImplicitFunction::AddDivisionNode(
+IDivisionNode* CImplicitFunction::AddDivisionNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -432,9 +433,9 @@ IDivisionNode* Lib3MF::Impl::CImplicitFunction::AddDivisionNode(
     return new CDivisionNode(newNode);
 }
 
-IDotNode* Lib3MF::Impl::CImplicitFunction::AddDotNode(
-    const std::string& sIdentifier, const std::string& sDisplayName,
-    const std::string& sTag)
+IDotNode* CImplicitFunction::AddDotNode(const std::string& sIdentifier,
+                                        const std::string& sDisplayName,
+                                        const std::string& sTag)
 {
     auto newNode =
         function()->addNode(Lib3MF::eImplicitNodeType::Dot,
@@ -443,9 +444,9 @@ IDotNode* Lib3MF::Impl::CImplicitFunction::AddDotNode(
     return new CDotNode(newNode);
 }
 
-ICrossNode* Lib3MF::Impl::CImplicitFunction::AddCrossNode(
-    const std::string& sIdentifier, const std::string& sDisplayName,
-    const std::string& sTag)
+ICrossNode* CImplicitFunction::AddCrossNode(const std::string& sIdentifier,
+                                            const std::string& sDisplayName,
+                                            const std::string& sTag)
 {
     auto newNode =
         function()->addNode(Lib3MF::eImplicitNodeType::Cross,
@@ -454,8 +455,7 @@ ICrossNode* Lib3MF::Impl::CImplicitFunction::AddCrossNode(
     return new CCrossNode(newNode);
 }
 
-IMatVecMultiplicationNode*
-Lib3MF::Impl::CImplicitFunction::AddMatVecMultiplicationNode(
+IMatVecMultiplicationNode* CImplicitFunction::AddMatVecMultiplicationNode(
     const std::string& sIdentifier, const std::string& sDisplayName,
     const std::string& sTag)
 {
@@ -466,7 +466,7 @@ Lib3MF::Impl::CImplicitFunction::AddMatVecMultiplicationNode(
     return new CMatVecMultiplicationNode(newNode);
 }
 
-IMinNode* Lib3MF::Impl::CImplicitFunction::AddMinNode(
+IMinNode* CImplicitFunction::AddMinNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -477,7 +477,7 @@ IMinNode* Lib3MF::Impl::CImplicitFunction::AddMinNode(
     return new CMinNode(newNode);
 }
 
-IMaxNode* Lib3MF::Impl::CImplicitFunction::AddMaxNode(
+IMaxNode* CImplicitFunction::AddMaxNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -488,7 +488,7 @@ IMaxNode* Lib3MF::Impl::CImplicitFunction::AddMaxNode(
     return new CMaxNode(newNode);
 }
 
-IFmodNode* Lib3MF::Impl::CImplicitFunction::AddFmodNode(
+IFmodNode* CImplicitFunction::AddFmodNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -499,7 +499,7 @@ IFmodNode* Lib3MF::Impl::CImplicitFunction::AddFmodNode(
     return new CFmodNode(newNode);
 }
 
-IPowNode* Lib3MF::Impl::CImplicitFunction::AddPowNode(
+IPowNode* CImplicitFunction::AddPowNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -510,7 +510,7 @@ IPowNode* Lib3MF::Impl::CImplicitFunction::AddPowNode(
     return new CPowNode(newNode);
 }
 
-ISelectNode* Lib3MF::Impl::CImplicitFunction::AddSelectNode(
+ISelectNode* CImplicitFunction::AddSelectNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -521,7 +521,7 @@ ISelectNode* Lib3MF::Impl::CImplicitFunction::AddSelectNode(
     return new CSelectNode(newNode);
 }
 
-IClampNode* Lib3MF::Impl::CImplicitFunction::AddClampNode(
+IClampNode* CImplicitFunction::AddClampNode(
     const std::string& sIdentifier,
     const Lib3MF::eImplicitNodeConfiguration eConfiguration,
     const std::string& sDisplayName, const std::string& sTag)
@@ -532,7 +532,7 @@ IClampNode* Lib3MF::Impl::CImplicitFunction::AddClampNode(
     return new CClampNode(newNode);
 }
 
-IComposeVectorNode* Lib3MF::Impl::CImplicitFunction::AddComposeVectorNode(
+IComposeVectorNode* CImplicitFunction::AddComposeVectorNode(
     const std::string& sIdentifier, const std::string& sDisplayName,
     const std::string& sTag)
 {
@@ -543,7 +543,7 @@ IComposeVectorNode* Lib3MF::Impl::CImplicitFunction::AddComposeVectorNode(
     return new CComposeVectorNode(newNode);
 }
 
-IDecomposeVectorNode* Lib3MF::Impl::CImplicitFunction::AddDecomposeVectorNode(
+IDecomposeVectorNode* CImplicitFunction::AddDecomposeVectorNode(
     const std::string& sIdentifier, const std::string& sDisplayName,
     const std::string& sTag)
 {
@@ -554,7 +554,7 @@ IDecomposeVectorNode* Lib3MF::Impl::CImplicitFunction::AddDecomposeVectorNode(
     return new CDecomposeVectorNode(newNode);
 }
 
-IComposeMatrixNode* Lib3MF::Impl::CImplicitFunction::AddComposeMatrixNode(
+IComposeMatrixNode* CImplicitFunction::AddComposeMatrixNode(
     const std::string& sIdentifier, const std::string& sDisplayName,
     const std::string& sTag)
 {
@@ -566,7 +566,7 @@ IComposeMatrixNode* Lib3MF::Impl::CImplicitFunction::AddComposeMatrixNode(
 }
 
 IComposeMatrixFromRowVectorsNode*
-Lib3MF::Impl::CImplicitFunction::AddComposeMatrixFromRowVectorsNode(
+CImplicitFunction::AddComposeMatrixFromRowVectorsNode(
     const std::string& sIdentifier, const std::string& sDisplayName,
     const std::string& sTag)
 {
@@ -577,7 +577,7 @@ Lib3MF::Impl::CImplicitFunction::AddComposeMatrixFromRowVectorsNode(
     return new CComposeMatrixFromRowVectorsNode(newNode);
 }
 
-IConstantNode* Lib3MF::Impl::CImplicitFunction::AddConstantNode(
+IConstantNode* CImplicitFunction::AddConstantNode(
     const std::string& sIdentifier, const std::string& sDisplayName,
     const std::string& sTag)
 {
@@ -588,7 +588,7 @@ IConstantNode* Lib3MF::Impl::CImplicitFunction::AddConstantNode(
     return new CConstantNode(newNode);
 }
 
-IConstVecNode* Lib3MF::Impl::CImplicitFunction::AddConstVecNode(
+IConstVecNode* CImplicitFunction::AddConstVecNode(
     const std::string& sIdentifier, const std::string& sDisplayName,
     const std::string& sTag)
 {
@@ -599,7 +599,7 @@ IConstVecNode* Lib3MF::Impl::CImplicitFunction::AddConstVecNode(
     return new CConstVecNode(newNode);
 }
 
-IConstMatNode* Lib3MF::Impl::CImplicitFunction::AddConstMatNode(
+IConstMatNode* CImplicitFunction::AddConstMatNode(
     const std::string& sIdentifier, const std::string& sDisplayName,
     const std::string& sTag)
 {
@@ -608,6 +608,28 @@ IConstMatNode* Lib3MF::Impl::CImplicitFunction::AddConstMatNode(
                             Lib3MF::eImplicitNodeConfiguration::Default,
                             sIdentifier, sDisplayName, sTag);
     return new CConstMatNode(newNode);
+}
+
+IMeshNode* CImplicitFunction::AddMeshNode(const std::string& sIdentifier,
+                                          const std::string& sDisplayName,
+                                          const std::string& sTag)
+{
+    auto newNode =
+        function()->addNode(Lib3MF::eImplicitNodeType::Mesh,
+                            Lib3MF::eImplicitNodeConfiguration::Default,
+                            sIdentifier, sDisplayName, sTag);
+    return new CMeshNode(newNode);
+}
+
+IFunctionCallNode* CImplicitFunction::AddFunctionCallNode(
+    const std::string& sIdentifier, const std::string& sDisplayName,
+    const std::string& sTag)
+{
+    auto newNode =
+        function()->addNode(Lib3MF::eImplicitNodeType::FunctionCall,
+                            Lib3MF::eImplicitNodeConfiguration::Default,
+                            sIdentifier, sDisplayName, sTag);
+    return new CFunctionCallNode(newNode);
 }
 
 INodeIterator* CImplicitFunction::GetNodes()

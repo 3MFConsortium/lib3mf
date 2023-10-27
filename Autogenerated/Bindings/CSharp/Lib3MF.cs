@@ -1419,6 +1419,18 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_constmatnode_getoutputmatrix", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ConstMatNode_GetOutputMatrix (IntPtr Handle, out IntPtr AMatrix);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshnode_getinputmesh", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 MeshNode_GetInputMesh (IntPtr Handle, out IntPtr AMesh);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshnode_getinputpos", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 MeshNode_GetInputPos (IntPtr Handle, out IntPtr APos);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshnode_getoutputdistance", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 MeshNode_GetOutputDistance (IntPtr Handle, out IntPtr ADistance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functioncallnode_getinputfunctionid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionCallNode_GetInputFunctionID (IntPtr Handle, out IntPtr AFunction);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_nodeiterator_getcurrent", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 NodeIterator_GetCurrent (IntPtr Handle, out IntPtr ANode);
 
@@ -1592,6 +1604,12 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addconstmatnode", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_AddConstMatNode (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addmeshnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddMeshNode (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addfunctioncallnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddFunctionCallNode (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_getnodes", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_GetNodes (IntPtr Handle, out IntPtr AIterator);
@@ -2572,6 +2590,8 @@ namespace Lib3MF {
 					case 0x3F8E5D082F966B1B: Object = new CConstantNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ConstantNode"
 					case 0x9C9363B3F708D556: Object = new CConstVecNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ConstVecNode"
 					case 0xF85C90EDCE6F90A4: Object = new CConstMatNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ConstMatNode"
+					case 0x53601FD432E3DEF4: Object = new CMeshNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshNode"
+					case 0x0765C17C952F24E3: Object = new CFunctionCallNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionCallNode"
 					case 0xFC006BC888CAB4D0: Object = new CNodeIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::NodeIterator"
 					case 0x9EFB2757CA1A5231: Object = new CFunction(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Function"
 					case 0x6CE54469EEA83BC1: Object = new CImplicitFunction(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitFunction"
@@ -6223,6 +6243,54 @@ namespace Lib3MF {
 
 	}
 
+	public class CMeshNode : CImplicitNode
+	{
+		public CMeshNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CImplicitPort GetInputMesh ()
+		{
+			IntPtr newMesh = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.MeshNode_GetInputMesh (Handle, out newMesh));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newMesh);
+		}
+
+		public CImplicitPort GetInputPos ()
+		{
+			IntPtr newPos = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.MeshNode_GetInputPos (Handle, out newPos));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newPos);
+		}
+
+		public CImplicitPort GetOutputDistance ()
+		{
+			IntPtr newDistance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.MeshNode_GetOutputDistance (Handle, out newDistance));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newDistance);
+		}
+
+	}
+
+	public class CFunctionCallNode : CImplicitNode
+	{
+		public CFunctionCallNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CImplicitPort GetInputFunctionID ()
+		{
+			IntPtr newFunction = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.FunctionCallNode_GetInputFunctionID (Handle, out newFunction));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newFunction);
+		}
+
+	}
+
 	public class CNodeIterator : CIterator
 	{
 		public CNodeIterator (IntPtr NewHandle) : base (NewHandle)
@@ -6895,6 +6963,28 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddConstMatNode (Handle, byteIdentifier, byteDisplayName, byteTag, out newNode));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CConstMatNode>(newNode);
+		}
+
+		public CMeshNode AddMeshNode (String AIdentifier, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddMeshNode (Handle, byteIdentifier, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CMeshNode>(newNode);
+		}
+
+		public CFunctionCallNode AddFunctionCallNode (String AIdentifier, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddFunctionCallNode (Handle, byteIdentifier, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CFunctionCallNode>(newNode);
 		}
 
 		public CNodeIterator GetNodes ()

@@ -141,6 +141,8 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFConstantNode::Init();
 	CLib3MFConstVecNode::Init();
 	CLib3MFConstMatNode::Init();
+	CLib3MFMeshNode::Init();
+	CLib3MFFunctionCallNode::Init();
 	CLib3MFNodeIterator::Init();
 	CLib3MFFunction::Init();
 	CLib3MFImplicitFunction::Init();

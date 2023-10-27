@@ -3033,6 +3033,42 @@ Lib3MFResult CCall_lib3mf_constmatnode_getoutputmatrix(Lib3MFHandle libraryHandl
 }
 
 
+Lib3MFResult CCall_lib3mf_meshnode_getinputmesh(Lib3MFHandle libraryHandle, Lib3MF_MeshNode pMeshNode, Lib3MF_ImplicitPort * pMesh)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_MeshNode_GetInputMesh (pMeshNode, pMesh);
+}
+
+
+Lib3MFResult CCall_lib3mf_meshnode_getinputpos(Lib3MFHandle libraryHandle, Lib3MF_MeshNode pMeshNode, Lib3MF_ImplicitPort * pPos)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_MeshNode_GetInputPos (pMeshNode, pPos);
+}
+
+
+Lib3MFResult CCall_lib3mf_meshnode_getoutputdistance(Lib3MFHandle libraryHandle, Lib3MF_MeshNode pMeshNode, Lib3MF_ImplicitPort * pDistance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_MeshNode_GetOutputDistance (pMeshNode, pDistance);
+}
+
+
+Lib3MFResult CCall_lib3mf_functioncallnode_getinputfunctionid(Lib3MFHandle libraryHandle, Lib3MF_FunctionCallNode pFunctionCallNode, Lib3MF_ImplicitPort * pFunction)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FunctionCallNode_GetInputFunctionID (pFunctionCallNode, pFunction);
+}
+
+
 Lib3MFResult CCall_lib3mf_nodeiterator_getcurrent(Lib3MFHandle libraryHandle, Lib3MF_NodeIterator pNodeIterator, Lib3MF_ImplicitNode * pNode)
 {
 	if (libraryHandle == 0) 
@@ -3552,6 +3588,24 @@ Lib3MFResult CCall_lib3mf_implicitfunction_addconstmatnode(Lib3MFHandle libraryH
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_ImplicitFunction_AddConstMatNode (pImplicitFunction, pIdentifier, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addmeshnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_MeshNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddMeshNode (pImplicitFunction, pIdentifier, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addfunctioncallnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_FunctionCallNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddFunctionCallNode (pImplicitFunction, pIdentifier, pDisplayName, pTag, pNode);
 }
 
 
@@ -10253,6 +10307,66 @@ func (inst ConstMatNode) GetOutputMatrix() (ImplicitPort, error) {
 }
 
 
+// MeshNode represents a Lib3MF class.
+type MeshNode struct {
+	ImplicitNode
+}
+
+func (wrapper Wrapper) NewMeshNode(r ref) MeshNode {
+	return MeshNode{wrapper.NewImplicitNode(r)}
+}
+
+// GetInputMesh retrieves the input for the model resource id of the mesh.
+func (inst MeshNode) GetInputMesh() (ImplicitPort, error) {
+	var mesh ref
+	ret := C.CCall_lib3mf_meshnode_getinputmesh(inst.wrapperRef.LibraryHandle, inst.Ref, &mesh)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(mesh), nil
+}
+
+// GetInputPos retrieves the input for the position.
+func (inst MeshNode) GetInputPos() (ImplicitPort, error) {
+	var pos ref
+	ret := C.CCall_lib3mf_meshnode_getinputpos(inst.wrapperRef.LibraryHandle, inst.Ref, &pos)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(pos), nil
+}
+
+// GetOutputDistance retrieves the output.
+func (inst MeshNode) GetOutputDistance() (ImplicitPort, error) {
+	var distance ref
+	ret := C.CCall_lib3mf_meshnode_getoutputdistance(inst.wrapperRef.LibraryHandle, inst.Ref, &distance)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(distance), nil
+}
+
+
+// FunctionCallNode represents a Lib3MF class.
+type FunctionCallNode struct {
+	ImplicitNode
+}
+
+func (wrapper Wrapper) NewFunctionCallNode(r ref) FunctionCallNode {
+	return FunctionCallNode{wrapper.NewImplicitNode(r)}
+}
+
+// GetInputFunctionID retrieves the input for the function id.
+func (inst FunctionCallNode) GetInputFunctionID() (ImplicitPort, error) {
+	var function ref
+	ret := C.CCall_lib3mf_functioncallnode_getinputfunctionid(inst.wrapperRef.LibraryHandle, inst.Ref, &function)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(function), nil
+}
+
+
 // NodeIterator represents a Lib3MF class.
 type NodeIterator struct {
 	Iterator
@@ -10870,6 +10984,26 @@ func (inst ImplicitFunction) AddConstMatNode(identifier string, displayName stri
 		return ConstMatNode{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewConstMatNode(node), nil
+}
+
+// AddMeshNode add a MeshNode.
+func (inst ImplicitFunction) AddMeshNode(identifier string, displayName string, tag string) (MeshNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addmeshnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return MeshNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewMeshNode(node), nil
+}
+
+// AddFunctionCallNode add a FunctionCallNode.
+func (inst ImplicitFunction) AddFunctionCallNode(identifier string, displayName string, tag string) (FunctionCallNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addfunctioncallnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return FunctionCallNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewFunctionCallNode(node), nil
 }
 
 // GetNodes retrieves the nodes.

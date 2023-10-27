@@ -2335,6 +2335,29 @@
 		</method>
 	</class>
 
+	<class name="MeshNode" parent="ImplicitNode" description="Mesh">
+		<method name="GetInputMesh" description="Retrieves the input for the model resource id of the mesh">
+			<param name="Mesh" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the model resource id of the mesh" />
+		</method>
+
+		<method name="GetInputPos" description="Retrieves the input for the position">
+			<param name="Pos" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the position" />
+		</method>
+
+		<method name="GetOutputDistance" description="Retrieves the output">
+			<param name="Distance" type="class" class="ImplicitPort" pass="return"
+				description="the output port for the signed distance to the mesh" />
+		</method>
+	</class>
+
+	<class name="FunctionCallNode" parent="ImplicitNode" description="Function call">
+		<method name="GetInputFunctionID" description="Retrieves the input for the function id">
+			<param name="Function" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the function" />
+		</method>
+	</class>
 
 	<class name="NodeIterator" parent="Iterator">
 		<method name="GetCurrent" description="Returns the current element">
@@ -2979,6 +3002,27 @@
 				description="the added node" />
 		</method>
 
+		<method name="AddMeshNode" description="Add a MeshNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="MeshNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddFunctionCallNode" description="Add a FunctionCallNode">
+			<param name="Identifier" pass="in" type="string"
+			description="the identifier of the node" />
+		<param name="DisplayName" pass="in" type="string"
+			description="the display name of the node" />
+		<param name="Tag" pass="in" type="string"
+			description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="FunctionCallNode"
+				description="the added node" />
+		</method>
 
 		<method name="GetNodes" description="Retrieves the nodes">
 			<param name="Iterator" type="class" class="NodeIterator" pass="return"

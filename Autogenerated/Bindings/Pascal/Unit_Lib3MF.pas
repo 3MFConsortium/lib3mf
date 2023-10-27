@@ -558,6 +558,8 @@ type
 	TLib3MFConstantNode = class;
 	TLib3MFConstVecNode = class;
 	TLib3MFConstMatNode = class;
+	TLib3MFMeshNode = class;
+	TLib3MFFunctionCallNode = class;
 	TLib3MFNodeIterator = class;
 	TLib3MFFunction = class;
 	TLib3MFImplicitFunction = class;
@@ -4194,6 +4196,52 @@ type
 	
 
 (*************************************************************************************************************************
+ Function type definitions for MeshNode
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the input for the model resource id of the mesh
+	*
+	* @param[in] pMeshNode - MeshNode instance.
+	* @param[out] pMesh - the input port for the model resource id of the mesh
+	* @return error code or 0 (success)
+	*)
+	TLib3MFMeshNode_GetInputMeshFunc = function(pMeshNode: TLib3MFHandle; out pMesh: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the position
+	*
+	* @param[in] pMeshNode - MeshNode instance.
+	* @param[out] pPos - the input port for the position
+	* @return error code or 0 (success)
+	*)
+	TLib3MFMeshNode_GetInputPosFunc = function(pMeshNode: TLib3MFHandle; out pPos: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the output
+	*
+	* @param[in] pMeshNode - MeshNode instance.
+	* @param[out] pDistance - the output port for the signed distance to the mesh
+	* @return error code or 0 (success)
+	*)
+	TLib3MFMeshNode_GetOutputDistanceFunc = function(pMeshNode: TLib3MFHandle; out pDistance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for FunctionCallNode
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the input for the function id
+	*
+	* @param[in] pFunctionCallNode - FunctionCallNode instance.
+	* @param[out] pFunction - the input port for the function
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFunctionCallNode_GetInputFunctionIDFunc = function(pFunctionCallNode: TLib3MFHandle; out pFunction: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
  Function type definitions for NodeIterator
 **************************************************************************************************************************)
 
@@ -4908,6 +4956,30 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFImplicitFunction_AddConstMatNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a MeshNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddMeshNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a FunctionCallNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddFunctionCallNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves the nodes
@@ -8071,6 +8143,32 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 
 (*************************************************************************************************************************
+ Class definition for MeshNode
+**************************************************************************************************************************)
+
+	TLib3MFMeshNode = class(TLib3MFImplicitNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetInputMesh(): TLib3MFImplicitPort;
+		function GetInputPos(): TLib3MFImplicitPort;
+		function GetOutputDistance(): TLib3MFImplicitPort;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for FunctionCallNode
+**************************************************************************************************************************)
+
+	TLib3MFFunctionCallNode = class(TLib3MFImplicitNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetInputFunctionID(): TLib3MFImplicitPort;
+	end;
+
+
+(*************************************************************************************************************************
  Class definition for NodeIterator
 **************************************************************************************************************************)
 
@@ -8158,6 +8256,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function AddConstantNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFConstantNode;
 		function AddConstVecNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFConstVecNode;
 		function AddConstMatNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFConstMatNode;
+		function AddMeshNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFMeshNode;
+		function AddFunctionCallNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFFunctionCallNode;
 		function GetNodes(): TLib3MFNodeIterator;
 		procedure RemoveNode(const ANode: TLib3MFImplicitNode);
 		procedure AddLink(const ASource: TLib3MFImplicitPort; const ATarget: TLib3MFImplicitPort);
@@ -8786,6 +8886,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFConstMatNode_SetMatrixFunc: TLib3MFConstMatNode_SetMatrixFunc;
 		FLib3MFConstMatNode_GetMatrixFunc: TLib3MFConstMatNode_GetMatrixFunc;
 		FLib3MFConstMatNode_GetOutputMatrixFunc: TLib3MFConstMatNode_GetOutputMatrixFunc;
+		FLib3MFMeshNode_GetInputMeshFunc: TLib3MFMeshNode_GetInputMeshFunc;
+		FLib3MFMeshNode_GetInputPosFunc: TLib3MFMeshNode_GetInputPosFunc;
+		FLib3MFMeshNode_GetOutputDistanceFunc: TLib3MFMeshNode_GetOutputDistanceFunc;
+		FLib3MFFunctionCallNode_GetInputFunctionIDFunc: TLib3MFFunctionCallNode_GetInputFunctionIDFunc;
 		FLib3MFNodeIterator_GetCurrentFunc: TLib3MFNodeIterator_GetCurrentFunc;
 		FLib3MFFunction_GetDisplayNameFunc: TLib3MFFunction_GetDisplayNameFunc;
 		FLib3MFFunction_SetDisplayNameFunc: TLib3MFFunction_SetDisplayNameFunc;
@@ -8844,6 +8948,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFImplicitFunction_AddConstantNodeFunc: TLib3MFImplicitFunction_AddConstantNodeFunc;
 		FLib3MFImplicitFunction_AddConstVecNodeFunc: TLib3MFImplicitFunction_AddConstVecNodeFunc;
 		FLib3MFImplicitFunction_AddConstMatNodeFunc: TLib3MFImplicitFunction_AddConstMatNodeFunc;
+		FLib3MFImplicitFunction_AddMeshNodeFunc: TLib3MFImplicitFunction_AddMeshNodeFunc;
+		FLib3MFImplicitFunction_AddFunctionCallNodeFunc: TLib3MFImplicitFunction_AddFunctionCallNodeFunc;
 		FLib3MFImplicitFunction_GetNodesFunc: TLib3MFImplicitFunction_GetNodesFunc;
 		FLib3MFImplicitFunction_RemoveNodeFunc: TLib3MFImplicitFunction_RemoveNodeFunc;
 		FLib3MFImplicitFunction_AddLinkFunc: TLib3MFImplicitFunction_AddLinkFunc;
@@ -9360,6 +9466,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFConstMatNode_SetMatrixFunc: TLib3MFConstMatNode_SetMatrixFunc read FLib3MFConstMatNode_SetMatrixFunc;
 		property Lib3MFConstMatNode_GetMatrixFunc: TLib3MFConstMatNode_GetMatrixFunc read FLib3MFConstMatNode_GetMatrixFunc;
 		property Lib3MFConstMatNode_GetOutputMatrixFunc: TLib3MFConstMatNode_GetOutputMatrixFunc read FLib3MFConstMatNode_GetOutputMatrixFunc;
+		property Lib3MFMeshNode_GetInputMeshFunc: TLib3MFMeshNode_GetInputMeshFunc read FLib3MFMeshNode_GetInputMeshFunc;
+		property Lib3MFMeshNode_GetInputPosFunc: TLib3MFMeshNode_GetInputPosFunc read FLib3MFMeshNode_GetInputPosFunc;
+		property Lib3MFMeshNode_GetOutputDistanceFunc: TLib3MFMeshNode_GetOutputDistanceFunc read FLib3MFMeshNode_GetOutputDistanceFunc;
+		property Lib3MFFunctionCallNode_GetInputFunctionIDFunc: TLib3MFFunctionCallNode_GetInputFunctionIDFunc read FLib3MFFunctionCallNode_GetInputFunctionIDFunc;
 		property Lib3MFNodeIterator_GetCurrentFunc: TLib3MFNodeIterator_GetCurrentFunc read FLib3MFNodeIterator_GetCurrentFunc;
 		property Lib3MFFunction_GetDisplayNameFunc: TLib3MFFunction_GetDisplayNameFunc read FLib3MFFunction_GetDisplayNameFunc;
 		property Lib3MFFunction_SetDisplayNameFunc: TLib3MFFunction_SetDisplayNameFunc read FLib3MFFunction_SetDisplayNameFunc;
@@ -9418,6 +9528,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFImplicitFunction_AddConstantNodeFunc: TLib3MFImplicitFunction_AddConstantNodeFunc read FLib3MFImplicitFunction_AddConstantNodeFunc;
 		property Lib3MFImplicitFunction_AddConstVecNodeFunc: TLib3MFImplicitFunction_AddConstVecNodeFunc read FLib3MFImplicitFunction_AddConstVecNodeFunc;
 		property Lib3MFImplicitFunction_AddConstMatNodeFunc: TLib3MFImplicitFunction_AddConstMatNodeFunc read FLib3MFImplicitFunction_AddConstMatNodeFunc;
+		property Lib3MFImplicitFunction_AddMeshNodeFunc: TLib3MFImplicitFunction_AddMeshNodeFunc read FLib3MFImplicitFunction_AddMeshNodeFunc;
+		property Lib3MFImplicitFunction_AddFunctionCallNodeFunc: TLib3MFImplicitFunction_AddFunctionCallNodeFunc read FLib3MFImplicitFunction_AddFunctionCallNodeFunc;
 		property Lib3MFImplicitFunction_GetNodesFunc: TLib3MFImplicitFunction_GetNodesFunc read FLib3MFImplicitFunction_GetNodesFunc;
 		property Lib3MFImplicitFunction_RemoveNodeFunc: TLib3MFImplicitFunction_RemoveNodeFunc read FLib3MFImplicitFunction_RemoveNodeFunc;
 		property Lib3MFImplicitFunction_AddLinkFunc: TLib3MFImplicitFunction_AddLinkFunc read FLib3MFImplicitFunction_AddLinkFunc;
@@ -9768,6 +9880,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function TLib3MFPolymorphicFactoryMakeConstantNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFConstantNode;
 	function TLib3MFPolymorphicFactoryMakeConstVecNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFConstVecNode;
 	function TLib3MFPolymorphicFactoryMakeConstMatNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFConstMatNode;
+	function TLib3MFPolymorphicFactoryMakeMeshNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMeshNode;
+	function TLib3MFPolymorphicFactoryMakeFunctionCallNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFFunctionCallNode;
 	function TLib3MFPolymorphicFactoryMakeNodeIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFNodeIterator;
 	function TLib3MFPolymorphicFactoryMakeFunction(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFFunction;
 	function TLib3MFPolymorphicFactoryMakeImplicitFunction(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitFunction;
@@ -10579,6 +10693,8 @@ implementation
 			QWord($3F8E5D082F966B1B): begin Obj := TLIB3MFConstantNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ConstantNode"
 			QWord($9C9363B3F708D556): begin Obj := TLIB3MFConstVecNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ConstVecNode"
 			QWord($F85C90EDCE6F90A4): begin Obj := TLIB3MFConstMatNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ConstMatNode"
+			QWord($53601FD432E3DEF4): begin Obj := TLIB3MFMeshNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::MeshNode"
+			QWord($0765C17C952F24E3): begin Obj := TLIB3MFFunctionCallNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionCallNode"
 			QWord($FC006BC888CAB4D0): begin Obj := TLIB3MFNodeIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::NodeIterator"
 			QWord($9EFB2757CA1A5231): begin Obj := TLIB3MFFunction.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Function"
 			QWord($6CE54469EEA83BC1): begin Obj := TLIB3MFImplicitFunction.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitFunction"
@@ -10968,6 +11084,14 @@ implementation
 	function TLib3MFPolymorphicFactoryMakeConstMatNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFConstMatNode;
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFConstMatNode, TLIB3MFConstMatNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeMeshNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMeshNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFMeshNode, TLIB3MFMeshNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeFunctionCallNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFFunctionCallNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFFunctionCallNode, TLIB3MFFunctionCallNode>.Make(Wrapper, Handle);
 	end;
 	function TLib3MFPolymorphicFactoryMakeNodeIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFNodeIterator;
 	begin
@@ -15335,6 +15459,78 @@ implementation
 	end;
 
 (*************************************************************************************************************************
+ Class implementation for MeshNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFMeshNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFMeshNode.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFMeshNode.GetInputMesh(): TLib3MFImplicitPort;
+	var
+		HMesh: TLib3MFHandle;
+	begin
+		Result := nil;
+		HMesh := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFMeshNode_GetInputMeshFunc(FHandle, HMesh));
+		if Assigned(HMesh) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HMesh);
+	end;
+
+	function TLib3MFMeshNode.GetInputPos(): TLib3MFImplicitPort;
+	var
+		HPos: TLib3MFHandle;
+	begin
+		Result := nil;
+		HPos := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFMeshNode_GetInputPosFunc(FHandle, HPos));
+		if Assigned(HPos) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HPos);
+	end;
+
+	function TLib3MFMeshNode.GetOutputDistance(): TLib3MFImplicitPort;
+	var
+		HDistance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HDistance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFMeshNode_GetOutputDistanceFunc(FHandle, HDistance));
+		if Assigned(HDistance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HDistance);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for FunctionCallNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFFunctionCallNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFFunctionCallNode.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFFunctionCallNode.GetInputFunctionID(): TLib3MFImplicitPort;
+	var
+		HFunction: TLib3MFHandle;
+	begin
+		Result := nil;
+		HFunction := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionCallNode_GetInputFunctionIDFunc(FHandle, HFunction));
+		if Assigned(HFunction) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HFunction);
+	end;
+
+(*************************************************************************************************************************
  Class implementation for NodeIterator
 **************************************************************************************************************************)
 
@@ -16006,6 +16202,28 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddConstMatNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
 		if Assigned(HNode) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFConstMatNode, TLib3MFConstMatNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddMeshNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFMeshNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddMeshNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFMeshNode, TLib3MFMeshNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddFunctionCallNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFFunctionCallNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddFunctionCallNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFFunctionCallNode, TLib3MFFunctionCallNode>.Make(FWrapper, HNode);
 	end;
 
 	function TLib3MFImplicitFunction.GetNodes(): TLib3MFNodeIterator;
@@ -18150,6 +18368,10 @@ implementation
 		FLib3MFConstMatNode_SetMatrixFunc := LoadFunction('lib3mf_constmatnode_setmatrix');
 		FLib3MFConstMatNode_GetMatrixFunc := LoadFunction('lib3mf_constmatnode_getmatrix');
 		FLib3MFConstMatNode_GetOutputMatrixFunc := LoadFunction('lib3mf_constmatnode_getoutputmatrix');
+		FLib3MFMeshNode_GetInputMeshFunc := LoadFunction('lib3mf_meshnode_getinputmesh');
+		FLib3MFMeshNode_GetInputPosFunc := LoadFunction('lib3mf_meshnode_getinputpos');
+		FLib3MFMeshNode_GetOutputDistanceFunc := LoadFunction('lib3mf_meshnode_getoutputdistance');
+		FLib3MFFunctionCallNode_GetInputFunctionIDFunc := LoadFunction('lib3mf_functioncallnode_getinputfunctionid');
 		FLib3MFNodeIterator_GetCurrentFunc := LoadFunction('lib3mf_nodeiterator_getcurrent');
 		FLib3MFFunction_GetDisplayNameFunc := LoadFunction('lib3mf_function_getdisplayname');
 		FLib3MFFunction_SetDisplayNameFunc := LoadFunction('lib3mf_function_setdisplayname');
@@ -18208,6 +18430,8 @@ implementation
 		FLib3MFImplicitFunction_AddConstantNodeFunc := LoadFunction('lib3mf_implicitfunction_addconstantnode');
 		FLib3MFImplicitFunction_AddConstVecNodeFunc := LoadFunction('lib3mf_implicitfunction_addconstvecnode');
 		FLib3MFImplicitFunction_AddConstMatNodeFunc := LoadFunction('lib3mf_implicitfunction_addconstmatnode');
+		FLib3MFImplicitFunction_AddMeshNodeFunc := LoadFunction('lib3mf_implicitfunction_addmeshnode');
+		FLib3MFImplicitFunction_AddFunctionCallNodeFunc := LoadFunction('lib3mf_implicitfunction_addfunctioncallnode');
 		FLib3MFImplicitFunction_GetNodesFunc := LoadFunction('lib3mf_implicitfunction_getnodes');
 		FLib3MFImplicitFunction_RemoveNodeFunc := LoadFunction('lib3mf_implicitfunction_removenode');
 		FLib3MFImplicitFunction_AddLinkFunc := LoadFunction('lib3mf_implicitfunction_addlink');
@@ -19383,6 +19607,18 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_constmatnode_getoutputmatrix'), @FLib3MFConstMatNode_GetOutputMatrixFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_meshnode_getinputmesh'), @FLib3MFMeshNode_GetInputMeshFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_meshnode_getinputpos'), @FLib3MFMeshNode_GetInputPosFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_meshnode_getoutputdistance'), @FLib3MFMeshNode_GetOutputDistanceFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functioncallnode_getinputfunctionid'), @FLib3MFFunctionCallNode_GetInputFunctionIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_nodeiterator_getcurrent'), @FLib3MFNodeIterator_GetCurrentFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -19555,6 +19791,12 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addconstmatnode'), @FLib3MFImplicitFunction_AddConstMatNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addmeshnode'), @FLib3MFImplicitFunction_AddMeshNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addfunctioncallnode'), @FLib3MFImplicitFunction_AddFunctionCallNodeFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_getnodes'), @FLib3MFImplicitFunction_GetNodesFunc);

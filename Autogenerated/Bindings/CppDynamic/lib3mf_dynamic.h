@@ -3566,6 +3566,50 @@ typedef Lib3MFResult (*PLib3MFConstMatNode_GetMatrixPtr) (Lib3MF_ConstMatNode pC
 typedef Lib3MFResult (*PLib3MFConstMatNode_GetOutputMatrixPtr) (Lib3MF_ConstMatNode pConstMatNode, Lib3MF_ImplicitPort * pMatrix);
 
 /*************************************************************************************************************************
+ Class definition for MeshNode
+**************************************************************************************************************************/
+
+/**
+* Retrieves the input for the model resource id of the mesh
+*
+* @param[in] pMeshNode - MeshNode instance.
+* @param[out] pMesh - the input port for the model resource id of the mesh
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFMeshNode_GetInputMeshPtr) (Lib3MF_MeshNode pMeshNode, Lib3MF_ImplicitPort * pMesh);
+
+/**
+* Retrieves the input for the position
+*
+* @param[in] pMeshNode - MeshNode instance.
+* @param[out] pPos - the input port for the position
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFMeshNode_GetInputPosPtr) (Lib3MF_MeshNode pMeshNode, Lib3MF_ImplicitPort * pPos);
+
+/**
+* Retrieves the output
+*
+* @param[in] pMeshNode - MeshNode instance.
+* @param[out] pDistance - the output port for the signed distance to the mesh
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFMeshNode_GetOutputDistancePtr) (Lib3MF_MeshNode pMeshNode, Lib3MF_ImplicitPort * pDistance);
+
+/*************************************************************************************************************************
+ Class definition for FunctionCallNode
+**************************************************************************************************************************/
+
+/**
+* Retrieves the input for the function id
+*
+* @param[in] pFunctionCallNode - FunctionCallNode instance.
+* @param[out] pFunction - the input port for the function
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFFunctionCallNode_GetInputFunctionIDPtr) (Lib3MF_FunctionCallNode pFunctionCallNode, Lib3MF_ImplicitPort * pFunction);
+
+/*************************************************************************************************************************
  Class definition for NodeIterator
 **************************************************************************************************************************/
 
@@ -4278,6 +4322,30 @@ typedef Lib3MFResult (*PLib3MFImplicitFunction_AddConstVecNodePtr) (Lib3MF_Impli
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFImplicitFunction_AddConstMatNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_ConstMatNode * pNode);
+
+/**
+* Add a MeshNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddMeshNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_MeshNode * pNode);
+
+/**
+* Add a FunctionCallNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddFunctionCallNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_FunctionCallNode * pNode);
 
 /**
 * Retrieves the nodes
@@ -6385,6 +6453,10 @@ typedef struct {
 	PLib3MFConstMatNode_SetMatrixPtr m_ConstMatNode_SetMatrix;
 	PLib3MFConstMatNode_GetMatrixPtr m_ConstMatNode_GetMatrix;
 	PLib3MFConstMatNode_GetOutputMatrixPtr m_ConstMatNode_GetOutputMatrix;
+	PLib3MFMeshNode_GetInputMeshPtr m_MeshNode_GetInputMesh;
+	PLib3MFMeshNode_GetInputPosPtr m_MeshNode_GetInputPos;
+	PLib3MFMeshNode_GetOutputDistancePtr m_MeshNode_GetOutputDistance;
+	PLib3MFFunctionCallNode_GetInputFunctionIDPtr m_FunctionCallNode_GetInputFunctionID;
 	PLib3MFNodeIterator_GetCurrentPtr m_NodeIterator_GetCurrent;
 	PLib3MFFunction_GetDisplayNamePtr m_Function_GetDisplayName;
 	PLib3MFFunction_SetDisplayNamePtr m_Function_SetDisplayName;
@@ -6443,6 +6515,8 @@ typedef struct {
 	PLib3MFImplicitFunction_AddConstantNodePtr m_ImplicitFunction_AddConstantNode;
 	PLib3MFImplicitFunction_AddConstVecNodePtr m_ImplicitFunction_AddConstVecNode;
 	PLib3MFImplicitFunction_AddConstMatNodePtr m_ImplicitFunction_AddConstMatNode;
+	PLib3MFImplicitFunction_AddMeshNodePtr m_ImplicitFunction_AddMeshNode;
+	PLib3MFImplicitFunction_AddFunctionCallNodePtr m_ImplicitFunction_AddFunctionCallNode;
 	PLib3MFImplicitFunction_GetNodesPtr m_ImplicitFunction_GetNodes;
 	PLib3MFImplicitFunction_RemoveNodePtr m_ImplicitFunction_RemoveNode;
 	PLib3MFImplicitFunction_AddLinkPtr m_ImplicitFunction_AddLink;

@@ -288,6 +288,8 @@ typedef Lib3MFHandle Lib3MF_ComposeMatrixFromRowVectorsNode;
 typedef Lib3MFHandle Lib3MF_ConstantNode;
 typedef Lib3MFHandle Lib3MF_ConstVecNode;
 typedef Lib3MFHandle Lib3MF_ConstMatNode;
+typedef Lib3MFHandle Lib3MF_MeshNode;
+typedef Lib3MFHandle Lib3MF_FunctionCallNode;
 typedef Lib3MFHandle Lib3MF_NodeIterator;
 typedef Lib3MFHandle Lib3MF_Function;
 typedef Lib3MFHandle Lib3MF_ImplicitFunction;

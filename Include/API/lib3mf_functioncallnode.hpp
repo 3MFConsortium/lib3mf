@@ -24,18 +24,18 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CCrossNode
+Abstract: This is the class declaration of CFunctionCallNode
 
 */
 
 
-#ifndef __LIB3MF_CROSSNODE
-#define __LIB3MF_CROSSNODE
+#ifndef __LIB3MF_FUNCTIONCALLNODE
+#define __LIB3MF_FUNCTIONCALLNODE
 
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_twoinputnode.hpp"
+#include "lib3mf_implicitnode.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
@@ -49,10 +49,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CCrossNode 
+ Class declaration of CFunctionCallNode 
 **************************************************************************************************************************/
 
-class CCrossNode : public virtual ICrossNode, public virtual CTwoInputNode {
+class CFunctionCallNode : public virtual IFunctionCallNode, public virtual CImplicitNode {
 private:
 
 	/**
@@ -66,8 +66,7 @@ protected:
 	*/
 
 public:
-	CCrossNode() = delete;
-	CCrossNode(NMR::PModelImplicitNode pImplicitNode);
+	CFunctionCallNode(NMR::PModelImplicitNode pImplicitNode);
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
@@ -77,6 +76,11 @@ public:
 	* Public member functions to implement.
 	*/
 
+	/**
+	* IFunctionCallNode::GetInputFunctionId - Retrieves the input for the function id
+	* @return the input port for the function
+	*/
+	IImplicitPort * GetInputFunctionID() override;
 };
 
 } // namespace Impl
@@ -85,4 +89,4 @@ public:
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-#endif // __LIB3MF_CROSSNODE
+#endif // __LIB3MF_FUNCTIONCALLNODE

@@ -99,7 +99,11 @@ namespace Lib3MF
 
                 if(node1->GetNodeType() == Lib3MF::eImplicitNodeType::Constant)
                 {
-                    EXPECT_EQ(node1->GetConstant(), node2->GetConstant());
+                    auto constantNode1 = std::dynamic_pointer_cast<CConstantNode>(node1);
+                    auto constantNode2 = std::dynamic_pointer_cast<CConstantNode>(node2);
+                    ASSERT_NE(constantNode1, nullptr);
+                    ASSERT_NE(constantNode2, nullptr);
+                    EXPECT_EQ(constantNode1->GetConstant(), constantNode2->GetConstant());
                 }
 
                 comparePorts(node1->GetInputs(), node2->GetInputs(), false);

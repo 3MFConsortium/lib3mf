@@ -12475,6 +12475,158 @@ Lib3MFResult lib3mf_constmatnode_getoutputmatrix(Lib3MF_ConstMatNode pConstMatNo
 
 
 /*************************************************************************************************************************
+ Class implementation for MeshNode
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_meshnode_getinputmesh(Lib3MF_MeshNode pMeshNode, Lib3MF_ImplicitPort * pMesh)
+{
+	IBase* pIBaseClass = (IBase *)pMeshNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMeshNode, "MeshNode", "GetInputMesh");
+		}
+		if (pMesh == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseMesh(nullptr);
+		IMeshNode* pIMeshNode = dynamic_cast<IMeshNode*>(pIBaseClass);
+		if (!pIMeshNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseMesh = pIMeshNode->GetInputMesh();
+
+		*pMesh = (IBase*)(pBaseMesh);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Mesh", *pMesh);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_meshnode_getinputpos(Lib3MF_MeshNode pMeshNode, Lib3MF_ImplicitPort * pPos)
+{
+	IBase* pIBaseClass = (IBase *)pMeshNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMeshNode, "MeshNode", "GetInputPos");
+		}
+		if (pPos == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBasePos(nullptr);
+		IMeshNode* pIMeshNode = dynamic_cast<IMeshNode*>(pIBaseClass);
+		if (!pIMeshNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBasePos = pIMeshNode->GetInputPos();
+
+		*pPos = (IBase*)(pBasePos);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Pos", *pPos);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_meshnode_getoutputdistance(Lib3MF_MeshNode pMeshNode, Lib3MF_ImplicitPort * pDistance)
+{
+	IBase* pIBaseClass = (IBase *)pMeshNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMeshNode, "MeshNode", "GetOutputDistance");
+		}
+		if (pDistance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseDistance(nullptr);
+		IMeshNode* pIMeshNode = dynamic_cast<IMeshNode*>(pIBaseClass);
+		if (!pIMeshNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseDistance = pIMeshNode->GetOutputDistance();
+
+		*pDistance = (IBase*)(pBaseDistance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Distance", *pDistance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for FunctionCallNode
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_functioncallnode_getinputfunctionid(Lib3MF_FunctionCallNode pFunctionCallNode, Lib3MF_ImplicitPort * pFunction)
+{
+	IBase* pIBaseClass = (IBase *)pFunctionCallNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionCallNode, "FunctionCallNode", "GetInputFunctionID");
+		}
+		if (pFunction == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseFunction(nullptr);
+		IFunctionCallNode* pIFunctionCallNode = dynamic_cast<IFunctionCallNode*>(pIBaseClass);
+		if (!pIFunctionCallNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseFunction = pIFunctionCallNode->GetInputFunctionID();
+
+		*pFunction = (IBase*)(pBaseFunction);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Function", *pFunction);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
  Class implementation for NodeIterator
 **************************************************************************************************************************/
 Lib3MFResult lib3mf_nodeiterator_getcurrent(Lib3MF_NodeIterator pNodeIterator, Lib3MF_ImplicitNode * pNode)
@@ -15193,6 +15345,102 @@ Lib3MFResult lib3mf_implicitfunction_addconstmatnode(Lib3MF_ImplicitFunction pIm
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
 		pBaseNode = pIImplicitFunction->AddConstMatNode(sIdentifier, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addmeshnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_MeshNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddMeshNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddMeshNode(sIdentifier, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addfunctioncallnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_FunctionCallNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddFunctionCallNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddFunctionCallNode(sIdentifier, sDisplayName, sTag);
 
 		*pNode = (IBase*)(pBaseNode);
 		if (pJournalEntry.get() != nullptr) {
@@ -21865,6 +22113,14 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_constmatnode_getmatrix;
 	if (sProcName == "lib3mf_constmatnode_getoutputmatrix") 
 		*ppProcAddress = (void*) &lib3mf_constmatnode_getoutputmatrix;
+	if (sProcName == "lib3mf_meshnode_getinputmesh") 
+		*ppProcAddress = (void*) &lib3mf_meshnode_getinputmesh;
+	if (sProcName == "lib3mf_meshnode_getinputpos") 
+		*ppProcAddress = (void*) &lib3mf_meshnode_getinputpos;
+	if (sProcName == "lib3mf_meshnode_getoutputdistance") 
+		*ppProcAddress = (void*) &lib3mf_meshnode_getoutputdistance;
+	if (sProcName == "lib3mf_functioncallnode_getinputfunctionid") 
+		*ppProcAddress = (void*) &lib3mf_functioncallnode_getinputfunctionid;
 	if (sProcName == "lib3mf_nodeiterator_getcurrent") 
 		*ppProcAddress = (void*) &lib3mf_nodeiterator_getcurrent;
 	if (sProcName == "lib3mf_function_getdisplayname") 
@@ -21981,6 +22237,10 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_implicitfunction_addconstvecnode;
 	if (sProcName == "lib3mf_implicitfunction_addconstmatnode") 
 		*ppProcAddress = (void*) &lib3mf_implicitfunction_addconstmatnode;
+	if (sProcName == "lib3mf_implicitfunction_addmeshnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addmeshnode;
+	if (sProcName == "lib3mf_implicitfunction_addfunctioncallnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addfunctioncallnode;
 	if (sProcName == "lib3mf_implicitfunction_getnodes") 
 		*ppProcAddress = (void*) &lib3mf_implicitfunction_getnodes;
 	if (sProcName == "lib3mf_implicitfunction_removenode") 

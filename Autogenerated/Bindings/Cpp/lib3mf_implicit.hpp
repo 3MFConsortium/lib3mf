@@ -150,6 +150,8 @@ class CComposeMatrixFromRowVectorsNode;
 class CConstantNode;
 class CConstVecNode;
 class CConstMatNode;
+class CMeshNode;
+class CFunctionCallNode;
 class CNodeIterator;
 class CFunction;
 class CImplicitFunction;
@@ -263,6 +265,8 @@ typedef CComposeMatrixFromRowVectorsNode CLib3MFComposeMatrixFromRowVectorsNode;
 typedef CConstantNode CLib3MFConstantNode;
 typedef CConstVecNode CLib3MFConstVecNode;
 typedef CConstMatNode CLib3MFConstMatNode;
+typedef CMeshNode CLib3MFMeshNode;
+typedef CFunctionCallNode CLib3MFFunctionCallNode;
 typedef CNodeIterator CLib3MFNodeIterator;
 typedef CFunction CLib3MFFunction;
 typedef CImplicitFunction CLib3MFImplicitFunction;
@@ -376,6 +380,8 @@ typedef std::shared_ptr<CComposeMatrixFromRowVectorsNode> PComposeMatrixFromRowV
 typedef std::shared_ptr<CConstantNode> PConstantNode;
 typedef std::shared_ptr<CConstVecNode> PConstVecNode;
 typedef std::shared_ptr<CConstMatNode> PConstMatNode;
+typedef std::shared_ptr<CMeshNode> PMeshNode;
+typedef std::shared_ptr<CFunctionCallNode> PFunctionCallNode;
 typedef std::shared_ptr<CNodeIterator> PNodeIterator;
 typedef std::shared_ptr<CFunction> PFunction;
 typedef std::shared_ptr<CImplicitFunction> PImplicitFunction;
@@ -489,6 +495,8 @@ typedef PComposeMatrixFromRowVectorsNode PLib3MFComposeMatrixFromRowVectorsNode;
 typedef PConstantNode PLib3MFConstantNode;
 typedef PConstVecNode PLib3MFConstVecNode;
 typedef PConstMatNode PLib3MFConstMatNode;
+typedef PMeshNode PLib3MFMeshNode;
+typedef PFunctionCallNode PLib3MFFunctionCallNode;
 typedef PNodeIterator PLib3MFNodeIterator;
 typedef PFunction PLib3MFFunction;
 typedef PImplicitFunction PLib3MFImplicitFunction;
@@ -878,6 +886,8 @@ private:
 	friend class CConstantNode;
 	friend class CConstVecNode;
 	friend class CConstMatNode;
+	friend class CMeshNode;
+	friend class CFunctionCallNode;
 	friend class CNodeIterator;
 	friend class CFunction;
 	friend class CImplicitFunction;
@@ -2755,6 +2765,42 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CMeshNode 
+**************************************************************************************************************************/
+class CMeshNode : public CImplicitNode {
+public:
+	
+	/**
+	* CMeshNode::CMeshNode - Constructor for MeshNode class.
+	*/
+	CMeshNode(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CImplicitNode(pWrapper, pHandle)
+	{
+	}
+	
+	inline PImplicitPort GetInputMesh();
+	inline PImplicitPort GetInputPos();
+	inline PImplicitPort GetOutputDistance();
+};
+	
+/*************************************************************************************************************************
+ Class CFunctionCallNode 
+**************************************************************************************************************************/
+class CFunctionCallNode : public CImplicitNode {
+public:
+	
+	/**
+	* CFunctionCallNode::CFunctionCallNode - Constructor for FunctionCallNode class.
+	*/
+	CFunctionCallNode(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CImplicitNode(pWrapper, pHandle)
+	{
+	}
+	
+	inline PImplicitPort GetInputFunctionID();
+};
+	
+/*************************************************************************************************************************
  Class CNodeIterator 
 **************************************************************************************************************************/
 class CNodeIterator : public CIterator {
@@ -2858,6 +2904,8 @@ public:
 	inline PConstantNode AddConstantNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PConstVecNode AddConstVecNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PConstMatNode AddConstMatNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
+	inline PMeshNode AddMeshNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
+	inline PFunctionCallNode AddFunctionCallNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PNodeIterator GetNodes();
 	inline void RemoveNode(classParam<CImplicitNode> pNode);
 	inline void AddLink(classParam<CImplicitPort> pSource, classParam<CImplicitPort> pTarget);
@@ -3319,6 +3367,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0x3F8E5D082F966B1BUL: return new CConstantNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ConstantNode"
 		case 0x9C9363B3F708D556UL: return new CConstVecNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ConstVecNode"
 		case 0xF85C90EDCE6F90A4UL: return new CConstMatNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ConstMatNode"
+		case 0x53601FD432E3DEF4UL: return new CMeshNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshNode"
+		case 0x0765C17C952F24E3UL: return new CFunctionCallNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionCallNode"
 		case 0xFC006BC888CAB4D0UL: return new CNodeIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::NodeIterator"
 		case 0x9EFB2757CA1A5231UL: return new CFunction(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Function"
 		case 0x6CE54469EEA83BC1UL: return new CImplicitFunction(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitFunction"
@@ -8116,6 +8166,74 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	 * Method definitions for class CMeshNode
+	 */
+	
+	/**
+	* CMeshNode::GetInputMesh - Retrieves the input for the model resource id of the mesh
+	* @return the input port for the model resource id of the mesh
+	*/
+	PImplicitPort CMeshNode::GetInputMesh()
+	{
+		Lib3MFHandle hMesh = nullptr;
+		CheckError(lib3mf_meshnode_getinputmesh(m_pHandle, &hMesh));
+		
+		if (!hMesh) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hMesh)));
+	}
+	
+	/**
+	* CMeshNode::GetInputPos - Retrieves the input for the position
+	* @return the input port for the position
+	*/
+	PImplicitPort CMeshNode::GetInputPos()
+	{
+		Lib3MFHandle hPos = nullptr;
+		CheckError(lib3mf_meshnode_getinputpos(m_pHandle, &hPos));
+		
+		if (!hPos) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hPos)));
+	}
+	
+	/**
+	* CMeshNode::GetOutputDistance - Retrieves the output
+	* @return the output port for the signed distance to the mesh
+	*/
+	PImplicitPort CMeshNode::GetOutputDistance()
+	{
+		Lib3MFHandle hDistance = nullptr;
+		CheckError(lib3mf_meshnode_getoutputdistance(m_pHandle, &hDistance));
+		
+		if (!hDistance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hDistance)));
+	}
+	
+	/**
+	 * Method definitions for class CFunctionCallNode
+	 */
+	
+	/**
+	* CFunctionCallNode::GetInputFunctionID - Retrieves the input for the function id
+	* @return the input port for the function
+	*/
+	PImplicitPort CFunctionCallNode::GetInputFunctionID()
+	{
+		Lib3MFHandle hFunction = nullptr;
+		CheckError(lib3mf_functioncallnode_getinputfunctionid(m_pHandle, &hFunction));
+		
+		if (!hFunction) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hFunction)));
+	}
+	
+	/**
 	 * Method definitions for class CNodeIterator
 	 */
 	
@@ -9149,6 +9267,42 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CConstMatNode>(dynamic_cast<CConstMatNode*>(m_pWrapper->polymorphicFactory(hNode)));
+	}
+	
+	/**
+	* CImplicitFunction::AddMeshNode - Add a MeshNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	PMeshNode CImplicitFunction::AddMeshNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
+	{
+		Lib3MFHandle hNode = nullptr;
+		CheckError(lib3mf_implicitfunction_addmeshnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
+		
+		if (!hNode) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CMeshNode>(dynamic_cast<CMeshNode*>(m_pWrapper->polymorphicFactory(hNode)));
+	}
+	
+	/**
+	* CImplicitFunction::AddFunctionCallNode - Add a FunctionCallNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	PFunctionCallNode CImplicitFunction::AddFunctionCallNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
+	{
+		Lib3MFHandle hNode = nullptr;
+		CheckError(lib3mf_implicitfunction_addfunctioncallnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
+		
+		if (!hNode) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CFunctionCallNode>(dynamic_cast<CFunctionCallNode*>(m_pWrapper->polymorphicFactory(hNode)));
 	}
 	
 	/**
