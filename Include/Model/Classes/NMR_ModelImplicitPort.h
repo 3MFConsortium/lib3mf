@@ -33,13 +33,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <string>
 
+#include "Model/Classes/NMR_ModelImplicitPortNames.h"
+
 namespace NMR
 {
 
     using ImplicitIdentifier = std::string;
     class CModelImplicitNode;
-
-   
 
     class CModelImplicitPort
     {

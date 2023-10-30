@@ -296,14 +296,22 @@ namespace Lib3MF
             "multiplication 1", "group_a");
 
         // Add some links
+        auto source = addNode->GetOutputResult();
+        auto target = subNode->GetInputA();
+        // newFunction->AddLink(source, target);
         newFunction->AddLink(addNode->GetOutputResult(), subNode->GetInputA());
+
         // Alternative way to add links
         mulNode->FindInput("A")->SetReference("addition_1.result");
 
         auto output =
             newFunction->AddOutput("shape", "signed distance to the surface",
                                    Lib3MF::eImplicitPortType::Vector);
-        newFunction->AddLink(subNode->GetOutputResult(), output);
+
+        auto subNodeResult = subNode->GetOutputResult();
+        newFunction->AddLink(subNodeResult, output);
+        
+        // newFunction->AddLink(subNode->GetOutputResult(), output);
 
         auto theMesh = GetMesh();
         auto volumeData = theMesh->VolumeData();

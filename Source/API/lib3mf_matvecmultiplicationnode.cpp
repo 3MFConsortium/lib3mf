@@ -42,6 +42,7 @@ using namespace Lib3MF::Impl;
 
 Lib3MF::Impl::CMatVecMultiplicationNode::CMatVecMultiplicationNode(
     NMR::PModelImplicitNode pImplicitNode)
-    : CTwoInputNode(std::move(pImplicitNode))
+    : CTwoInputNode{pImplicitNode}
 {
+    CImplicitNode::m_pImplicitNode = pImplicitNode;
 }

@@ -62,6 +62,7 @@ IImplicitPort * CDecomposeVectorNode::GetOutputZ()
 
 Lib3MF::Impl::CDecomposeVectorNode::CDecomposeVectorNode(
     NMR::PModelImplicitNode pImplicitNode)
-	: CImplicitNode(std::move(pImplicitNode))
+	: CImplicitNode{pImplicitNode}
 {
+	CImplicitNode::m_pImplicitNode = pImplicitNode;
 }

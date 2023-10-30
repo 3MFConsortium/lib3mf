@@ -45,7 +45,10 @@ IImplicitPort * CTwoInputNode::GetInputB()
 	return FindInput("B");
 }
 
+
 Lib3MF::Impl::CTwoInputNode::CTwoInputNode(
-    NMR::PModelImplicitNode pImplicitNode) : COneInputNode(std::move(pImplicitNode))
+    NMR::PModelImplicitNode pImplicitNode)
+    : COneInputNode{pImplicitNode}
 {
+    CImplicitNode::m_pImplicitNode = pImplicitNode;
 }

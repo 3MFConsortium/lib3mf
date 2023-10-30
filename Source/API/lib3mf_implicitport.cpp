@@ -84,3 +84,8 @@ void CImplicitPort::SetReference(const std::string & sReference)
 {
     m_pImplicitPort->setReference(sReference);
 }
+
+NMR::PModelImplicitPort Lib3MF::Impl::CImplicitPort::getPort()
+{
+    return m_pImplicitPort;
+}

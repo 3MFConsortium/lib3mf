@@ -42,8 +42,9 @@ using namespace Lib3MF::Impl;
 
 Lib3MF::Impl::CConstVecNode::CConstVecNode(
     NMR::PModelImplicitNode pImplicitNode)
-	: CImplicitNode(std::move(pImplicitNode))
+	: CImplicitNode{pImplicitNode}
 {
+	CImplicitNode::m_pImplicitNode = pImplicitNode;
 }
 
 void CConstVecNode::SetVector(const Lib3MF::sVector Value)
@@ -58,6 +59,6 @@ Lib3MF::sVector CConstVecNode::GetVector()
 
 IImplicitPort * CConstVecNode::GetOutputVector()
 {
-	return FindOutput("vector");
+	return FindOutputOrThrow(NMR::OutputNames::vector);
 }
 

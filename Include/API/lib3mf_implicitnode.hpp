@@ -63,10 +63,12 @@ namespace Lib3MF
              */
             NMR::PModelImplicitNode m_pImplicitNode;
 
+            IImplicitPort * FindInputOrThrow(const std::string & sIdentifier);
+            IImplicitPort * FindOutputOrThrow(const std::string & sIdentifier);
           public:
             
             CImplicitNode() = default;
-            CImplicitNode(NMR::PModelImplicitNode pImplicitNode);
+            explicit CImplicitNode(NMR::PModelImplicitNode pImplicitNode);
 
             /**
              * Public member functions to implement.

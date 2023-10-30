@@ -58,6 +58,6 @@ IResource * CResourceIdNode::GetResource()
 
 IImplicitPort * CResourceIdNode::GetOutputValue()
 {
-	return FindOutput("value");
+	return FindOutputOrThrow(NMR::OutputNames::value);
 }
 

@@ -56,5 +56,7 @@ IImplicitPort * CSelectNode::GetInputD()
 }
 
 Lib3MF::Impl::CSelectNode::CSelectNode(NMR::PModelImplicitNode pImplicitNode)
-: COneInputNode(std::move(pImplicitNode))
- {}
+: COneInputNode{pImplicitNode}
+ {
+	CImplicitNode::m_pImplicitNode = pImplicitNode;
+ }

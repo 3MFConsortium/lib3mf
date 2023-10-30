@@ -41,5 +41,7 @@ using namespace Lib3MF::Impl;
 **************************************************************************************************************************/
 
 Lib3MF::Impl::CLogNode::CLogNode(NMR::PModelImplicitNode pImplicitNode)
-: COneInputNode(std::move(pImplicitNode))
-{}
+: COneInputNode{pImplicitNode}
+{
+    CImplicitNode::m_pImplicitNode = pImplicitNode;
+}

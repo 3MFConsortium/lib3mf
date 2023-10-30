@@ -124,6 +124,8 @@ namespace Lib3MF
              * @param[in] sReference - the reference
              */
             void SetReference(const std::string & sReference) override;
+
+            NMR::PModelImplicitPort getPort();
         };
 
     } // namespace Impl

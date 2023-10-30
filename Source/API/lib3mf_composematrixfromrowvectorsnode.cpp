@@ -42,32 +42,33 @@ using namespace Lib3MF::Impl;
 
 Lib3MF::Impl::CComposeMatrixFromRowVectorsNode::
     CComposeMatrixFromRowVectorsNode(NMR::PModelImplicitNode pImplicitNode)
-	: CImplicitNode(std::move(pImplicitNode))
+	: CImplicitNode{pImplicitNode}
 {
+	CImplicitNode::m_pImplicitNode = pImplicitNode;
 }
 
 IImplicitPort* CComposeMatrixFromRowVectorsNode::GetInputRow0()
 {
-	return FindInput("A");
+	return FindInputOrThrow(NMR::InputNames::A);
 }
 
 IImplicitPort * CComposeMatrixFromRowVectorsNode::GetInputRow1()
 {
-	return FindInput("B");
+	return FindInputOrThrow(NMR::InputNames::B);
 }
 
 IImplicitPort * CComposeMatrixFromRowVectorsNode::GetInputRow2()
 {
-	return FindInput("C");
+	return FindInputOrThrow(NMR::InputNames::C);
 }
 
 IImplicitPort * CComposeMatrixFromRowVectorsNode::GetInputRow3()
 {
-	return FindInput("D");
+	return FindInputOrThrow(NMR::InputNames::D);
 }
 
 IImplicitPort * CComposeMatrixFromRowVectorsNode::GetOutputMatrix()
 {
-	return FindOutput("matrix");
+	return FindOutputOrThrow(NMR::OutputNames::matrix);
 }
 

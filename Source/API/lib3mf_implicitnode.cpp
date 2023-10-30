@@ -45,6 +45,10 @@ using namespace Lib3MF::Impl;
 
 std::string CImplicitNode::GetIdentifier()
 {
+    if (!m_pImplicitNode)
+    {
+        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+    }
     return m_pImplicitNode->getIdentifier();
 }
 
@@ -73,8 +77,30 @@ void CImplicitNode::SetTag(const std::string& sTag)
     m_pImplicitNode->setTag(sTag);
 }
 
+IImplicitPort* Lib3MF::Impl::CImplicitNode::FindInputOrThrow(
+    const std::string& sIdentifier)
+{
+    auto pPort = FindInput(sIdentifier);
+    if (!pPort)
+    {
+        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+    }
+    return pPort;
+}
+
+IImplicitPort* Lib3MF::Impl::CImplicitNode::FindOutputOrThrow(
+    const std::string& sIdentifier)
+{
+    auto pPort = FindOutput(sIdentifier);
+    if (!pPort)
+    {
+        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+    }
+    return pPort;
+}
+
 CImplicitNode::CImplicitNode(NMR::PModelImplicitNode pImplicitNode)
-    : m_pImplicitNode(std::move(pImplicitNode))
+    : m_pImplicitNode{pImplicitNode}
 {
 }
 
@@ -112,7 +138,7 @@ IImplicitPort * CImplicitNode::FindInput(const std::string & sIdentifier)
     {
         return nullptr;
     }
-    return new CImplicitPort(m_pImplicitNode->findInput(sIdentifier));
+    return new CImplicitPort(pPort);
 }
 
 IImplicitPort * CImplicitNode::FindOutput(const std::string & sIdentifier)
@@ -122,7 +148,7 @@ IImplicitPort * CImplicitNode::FindOutput(const std::string & sIdentifier)
     {
         return nullptr;
     }
-    return new CImplicitPort(m_pImplicitNode->findOutput(sIdentifier));
+    return new CImplicitPort(pPort);
 }
 
 bool Lib3MF::Impl::CImplicitNode::AreTypesValid()

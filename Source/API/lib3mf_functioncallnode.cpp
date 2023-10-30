@@ -42,8 +42,9 @@ using namespace Lib3MF::Impl;
 
 CFunctionCallNode::CFunctionCallNode(
     NMR::PModelImplicitNode pImplicitNode)
-    : CImplicitNode(pImplicitNode)
+    : CImplicitNode{pImplicitNode}
 {
+    CImplicitNode::m_pImplicitNode = pImplicitNode;
 }
 
 IImplicitPort * CFunctionCallNode::GetInputFunctionID()

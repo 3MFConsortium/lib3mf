@@ -42,15 +42,16 @@ using namespace Lib3MF::Impl;
 
 IImplicitPort* CClampNode::GetInputMin()
 {
-    return FindInput("min");
+    return FindInputOrThrow(NMR::InputNames::min);
 }
 
 IImplicitPort* CClampNode::GetInputMax()
 {
-    return FindInput("max");
+    return FindInputOrThrow(NMR::InputNames::max);
 }
 
 Lib3MF::Impl::CClampNode::CClampNode(NMR::PModelImplicitNode pImplicitNode)
-    : COneInputNode(std::move(pImplicitNode))
+    : COneInputNode{pImplicitNode}
 {
+    CImplicitNode::m_pImplicitNode = pImplicitNode;
 }

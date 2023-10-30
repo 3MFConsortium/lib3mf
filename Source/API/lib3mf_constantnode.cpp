@@ -42,8 +42,9 @@ using namespace Lib3MF::Impl;
 
 Lib3MF::Impl::CConstantNode::CConstantNode(
     NMR::PModelImplicitNode pImplicitNode)
-	: CImplicitNode(std::move(pImplicitNode))
+	: CImplicitNode{pImplicitNode}
 {
+	CImplicitNode::m_pImplicitNode = pImplicitNode;
 }
 
 void CConstantNode::SetConstant(const Lib3MF_double dValue)
@@ -58,6 +59,6 @@ Lib3MF_double CConstantNode::GetConstant()
 
 IImplicitPort * CConstantNode::GetOutputValue()
 {
-	return FindOutput("Value");
+	return FindOutputOrThrow(NMR::OutputNames::value);
 }
 

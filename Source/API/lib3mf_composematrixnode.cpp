@@ -42,91 +42,92 @@ using namespace Lib3MF::Impl;
 
 IImplicitPort * CComposeMatrixNode::GetInputM00()
 {
-	return FindInput("m00");
+	return FindInputOrThrow(NMR::InputNames::m00);
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM01()
 {
-	return FindInput("m01");
+	return FindInputOrThrow(NMR::InputNames::m01);
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM02()
 {
-	return FindInput("m02");
+	return FindInputOrThrow(NMR::InputNames::m02);
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM03()
 {
-	return FindInput("m03");
+	return FindInputOrThrow(NMR::InputNames::m03);
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM10()
 {
-	return FindInput("m10");
+	return FindInputOrThrow(NMR::InputNames::m10);
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM11()
 {
-	return FindInput("m11");
+	return FindInputOrThrow(NMR::InputNames::m11);
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM12()
 {
-	return FindInput("m12");
+	return FindInputOrThrow(NMR::InputNames::m12);
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM13()
 {
-	return FindInput("m13");
+	return FindInputOrThrow(NMR::InputNames::m13);
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM20()
 {
-	return FindInput("m20");
+	return FindInputOrThrow(NMR::InputNames::m20);
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM21()
 {
-	return FindInput("m21");
+	return FindInputOrThrow(NMR::InputNames::m21);
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM22()
 {
-	return FindInput("m22");
+	return FindInputOrThrow(NMR::InputNames::m22);
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM23()
 {
-	return FindInput("m23");
+	return FindInputOrThrow(NMR::InputNames::m23);
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM30()
 {
-	return FindInput("m30");
+	return FindInputOrThrow(NMR::InputNames::m30);
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM31()
 {
-	return FindInput("m31");
+	return FindInputOrThrow(NMR::InputNames::m31);
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM32()
 {
-	return FindInput("m32");
+	return FindInputOrThrow(NMR::InputNames::m32);
 }
 
 IImplicitPort * CComposeMatrixNode::GetInputM33()
 {
-	return FindInput("m33");
+	return FindInputOrThrow(NMR::InputNames::m33);
 }
 
 IImplicitPort * CComposeMatrixNode::GetOutputMatrix()
 {
-	return FindOutput("matrix");
+	return FindInputOrThrow(NMR::OutputNames::matrix);
 }
 
 Lib3MF::Impl::CComposeMatrixNode::CComposeMatrixNode(
     NMR::PModelImplicitNode pImplicitNode) 
-	: CImplicitNode(pImplicitNode)
+	: CImplicitNode{pImplicitNode}
 {
+	CImplicitNode::m_pImplicitNode = pImplicitNode;
 }

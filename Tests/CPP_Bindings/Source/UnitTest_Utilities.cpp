@@ -99,8 +99,8 @@ namespace Lib3MF
 
                 if(node1->GetNodeType() == Lib3MF::eImplicitNodeType::Constant)
                 {
-                    auto constantNode1 = std::dynamic_pointer_cast<CConstantNode>(node1);
-                    auto constantNode2 = std::dynamic_pointer_cast<CConstantNode>(node2);
+                    auto constantNode1 = dynamic_cast<CConstantNode*>(node1.get());
+                    auto constantNode2 = dynamic_cast<CConstantNode*>(node2.get());
                     ASSERT_NE(constantNode1, nullptr);
                     ASSERT_NE(constantNode2, nullptr);
                     EXPECT_EQ(constantNode1->GetConstant(), constantNode2->GetConstant());

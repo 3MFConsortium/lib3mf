@@ -41,23 +41,24 @@ using namespace Lib3MF::Impl;
 **************************************************************************************************************************/
 
 CMeshNode::CMeshNode(NMR::PModelImplicitNode pImplicitNode)
-    : CImplicitNode(pImplicitNode)
+    : CImplicitNode{pImplicitNode}
 {
+	CImplicitNode::m_pImplicitNode = pImplicitNode;
 }
 
 IImplicitPort * CMeshNode::GetInputMesh()
 {
-	return FindInput("mesh");
+	return FindInputOrThrow(NMR::InputNames::mesh);
 }
 
 IImplicitPort * CMeshNode::GetInputPos()
 {
-	return FindInput("pos");
+	return FindInputOrThrow(NMR::InputNames::pos);
 }
 
 
 IImplicitPort * CMeshNode::GetOutputDistance()
 {
-	return FindOutput("distance");
+	return FindOutputOrThrow(NMR::OutputNames::distance);
 }
 

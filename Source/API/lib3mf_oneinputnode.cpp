@@ -42,15 +42,16 @@ using namespace Lib3MF::Impl;
 
 IImplicitPort * COneInputNode::GetInputA()
 {
-	return FindInput("A");
+	return FindInputOrThrow(NMR::InputNames::A);
 }
 
 IImplicitPort * COneInputNode::GetOutputResult()
 {
-	return FindOutput("Result");
+	return FindOutputOrThrow(NMR::OutputNames::result);
 }
 
 COneInputNode::COneInputNode(
-    NMR::PModelImplicitNode pImplicitNode) : CImplicitNode(std::move(pImplicitNode))
+    NMR::PModelImplicitNode pImplicitNode) : CImplicitNode{pImplicitNode}
 {
+	CImplicitNode::m_pImplicitNode = pImplicitNode;
 }

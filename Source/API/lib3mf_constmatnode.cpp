@@ -42,8 +42,9 @@ using namespace Lib3MF::Impl;
 
 CConstMatNode::CConstMatNode(
     NMR::PModelImplicitNode pImplicitNode)
-: CImplicitNode(std::move(pImplicitNode))
+: CImplicitNode{pImplicitNode}
 {
+	CImplicitNode::m_pImplicitNode = pImplicitNode;
 }
 
 void CConstMatNode::SetMatrix(const Lib3MF::sMatrix4x4 Value)
@@ -58,6 +59,6 @@ Lib3MF::sMatrix4x4 CConstMatNode::GetMatrix()
 
 IImplicitPort * CConstMatNode::GetOutputMatrix()
 {
-	return FindOutput("Matrix");
+	return FindOutputOrThrow(NMR::OutputNames::matrix);
 }
 
