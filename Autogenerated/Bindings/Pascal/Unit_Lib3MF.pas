@@ -555,6 +555,7 @@ type
 	TLib3MFDecomposeVectorNode = class;
 	TLib3MFComposeMatrixNode = class;
 	TLib3MFComposeMatrixFromRowVectorsNode = class;
+	TLib3MFComposeMatrixFromColumnVectors = class;
 	TLib3MFConstantNode = class;
 	TLib3MFConstVecNode = class;
 	TLib3MFConstMatNode = class;
@@ -4060,7 +4061,7 @@ type
 	* @param[out] pRow0 - the input for the first row
 	* @return error code or 0 (success)
 	*)
-	TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Func = function(pComposeMatrixFromRowVectorsNode: TLib3MFHandle; out pRow0: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFComposeMatrixFromRowVectorsNode_GetInputAFunc = function(pComposeMatrixFromRowVectorsNode: TLib3MFHandle; out pRow0: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves the input for the second row
@@ -4069,7 +4070,7 @@ type
 	* @param[out] pRow1 - the input for the second row
 	* @return error code or 0 (success)
 	*)
-	TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Func = function(pComposeMatrixFromRowVectorsNode: TLib3MFHandle; out pRow1: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFComposeMatrixFromRowVectorsNode_GetInputBFunc = function(pComposeMatrixFromRowVectorsNode: TLib3MFHandle; out pRow1: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves the input for the third row
@@ -4078,7 +4079,7 @@ type
 	* @param[out] pRow2 - the input for the third row
 	* @return error code or 0 (success)
 	*)
-	TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Func = function(pComposeMatrixFromRowVectorsNode: TLib3MFHandle; out pRow2: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFComposeMatrixFromRowVectorsNode_GetInputCFunc = function(pComposeMatrixFromRowVectorsNode: TLib3MFHandle; out pRow2: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves the input for the fourth row
@@ -4087,7 +4088,7 @@ type
 	* @param[out] pRow3 - the input for the fourth row
 	* @return error code or 0 (success)
 	*)
-	TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Func = function(pComposeMatrixFromRowVectorsNode: TLib3MFHandle; out pRow3: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFComposeMatrixFromRowVectorsNode_GetInputDFunc = function(pComposeMatrixFromRowVectorsNode: TLib3MFHandle; out pRow3: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves the output
@@ -4097,6 +4098,56 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFComposeMatrixFromRowVectorsNode_GetOutputResultFunc = function(pComposeMatrixFromRowVectorsNode: TLib3MFHandle; out pResult: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for ComposeMatrixFromColumnVectors
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the input for the first column
+	*
+	* @param[in] pComposeMatrixFromColumnVectors - ComposeMatrixFromColumnVectors instance.
+	* @param[out] pColumn0 - the input for the first column
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixFromColumnVectors_GetInputAFunc = function(pComposeMatrixFromColumnVectors: TLib3MFHandle; out pColumn0: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the second column
+	*
+	* @param[in] pComposeMatrixFromColumnVectors - ComposeMatrixFromColumnVectors instance.
+	* @param[out] pColumn1 - the input for the second column
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixFromColumnVectors_GetInputBFunc = function(pComposeMatrixFromColumnVectors: TLib3MFHandle; out pColumn1: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the third column
+	*
+	* @param[in] pComposeMatrixFromColumnVectors - ComposeMatrixFromColumnVectors instance.
+	* @param[out] pColumn2 - the input for the third column
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixFromColumnVectors_GetInputCFunc = function(pComposeMatrixFromColumnVectors: TLib3MFHandle; out pColumn2: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the fourth column
+	*
+	* @param[in] pComposeMatrixFromColumnVectors - ComposeMatrixFromColumnVectors instance.
+	* @param[out] pColumn3 - the input for the fourth column
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixFromColumnVectors_GetInputDFunc = function(pComposeMatrixFromColumnVectors: TLib3MFHandle; out pColumn3: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the output
+	*
+	* @param[in] pComposeMatrixFromColumnVectors - ComposeMatrixFromColumnVectors instance.
+	* @param[out] pResult - the output
+	* @return error code or 0 (success)
+	*)
+	TLib3MFComposeMatrixFromColumnVectors_GetOutputResultFunc = function(pComposeMatrixFromColumnVectors: TLib3MFHandle; out pResult: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -8092,10 +8143,26 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
-		function GetInputRow0(): TLib3MFImplicitPort;
-		function GetInputRow1(): TLib3MFImplicitPort;
-		function GetInputRow2(): TLib3MFImplicitPort;
-		function GetInputRow3(): TLib3MFImplicitPort;
+		function GetInputA(): TLib3MFImplicitPort;
+		function GetInputB(): TLib3MFImplicitPort;
+		function GetInputC(): TLib3MFImplicitPort;
+		function GetInputD(): TLib3MFImplicitPort;
+		function GetOutputResult(): TLib3MFImplicitPort;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ComposeMatrixFromColumnVectors
+**************************************************************************************************************************)
+
+	TLib3MFComposeMatrixFromColumnVectors = class(TLib3MFImplicitNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetInputA(): TLib3MFImplicitPort;
+		function GetInputB(): TLib3MFImplicitPort;
+		function GetInputC(): TLib3MFImplicitPort;
+		function GetInputD(): TLib3MFImplicitPort;
 		function GetOutputResult(): TLib3MFImplicitPort;
 	end;
 
@@ -8872,11 +8939,16 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFComposeMatrixNode_GetInputM32Func: TLib3MFComposeMatrixNode_GetInputM32Func;
 		FLib3MFComposeMatrixNode_GetInputM33Func: TLib3MFComposeMatrixNode_GetInputM33Func;
 		FLib3MFComposeMatrixNode_GetOutputResultFunc: TLib3MFComposeMatrixNode_GetOutputResultFunc;
-		FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Func: TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Func;
-		FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Func: TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Func;
-		FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Func: TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Func;
-		FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Func: TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Func;
+		FLib3MFComposeMatrixFromRowVectorsNode_GetInputAFunc: TLib3MFComposeMatrixFromRowVectorsNode_GetInputAFunc;
+		FLib3MFComposeMatrixFromRowVectorsNode_GetInputBFunc: TLib3MFComposeMatrixFromRowVectorsNode_GetInputBFunc;
+		FLib3MFComposeMatrixFromRowVectorsNode_GetInputCFunc: TLib3MFComposeMatrixFromRowVectorsNode_GetInputCFunc;
+		FLib3MFComposeMatrixFromRowVectorsNode_GetInputDFunc: TLib3MFComposeMatrixFromRowVectorsNode_GetInputDFunc;
 		FLib3MFComposeMatrixFromRowVectorsNode_GetOutputResultFunc: TLib3MFComposeMatrixFromRowVectorsNode_GetOutputResultFunc;
+		FLib3MFComposeMatrixFromColumnVectors_GetInputAFunc: TLib3MFComposeMatrixFromColumnVectors_GetInputAFunc;
+		FLib3MFComposeMatrixFromColumnVectors_GetInputBFunc: TLib3MFComposeMatrixFromColumnVectors_GetInputBFunc;
+		FLib3MFComposeMatrixFromColumnVectors_GetInputCFunc: TLib3MFComposeMatrixFromColumnVectors_GetInputCFunc;
+		FLib3MFComposeMatrixFromColumnVectors_GetInputDFunc: TLib3MFComposeMatrixFromColumnVectors_GetInputDFunc;
+		FLib3MFComposeMatrixFromColumnVectors_GetOutputResultFunc: TLib3MFComposeMatrixFromColumnVectors_GetOutputResultFunc;
 		FLib3MFConstantNode_SetConstantFunc: TLib3MFConstantNode_SetConstantFunc;
 		FLib3MFConstantNode_GetConstantFunc: TLib3MFConstantNode_GetConstantFunc;
 		FLib3MFConstantNode_GetOutputValueFunc: TLib3MFConstantNode_GetOutputValueFunc;
@@ -9452,11 +9524,16 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFComposeMatrixNode_GetInputM32Func: TLib3MFComposeMatrixNode_GetInputM32Func read FLib3MFComposeMatrixNode_GetInputM32Func;
 		property Lib3MFComposeMatrixNode_GetInputM33Func: TLib3MFComposeMatrixNode_GetInputM33Func read FLib3MFComposeMatrixNode_GetInputM33Func;
 		property Lib3MFComposeMatrixNode_GetOutputResultFunc: TLib3MFComposeMatrixNode_GetOutputResultFunc read FLib3MFComposeMatrixNode_GetOutputResultFunc;
-		property Lib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Func: TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Func read FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Func;
-		property Lib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Func: TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Func read FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Func;
-		property Lib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Func: TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Func read FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Func;
-		property Lib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Func: TLib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Func read FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Func;
+		property Lib3MFComposeMatrixFromRowVectorsNode_GetInputAFunc: TLib3MFComposeMatrixFromRowVectorsNode_GetInputAFunc read FLib3MFComposeMatrixFromRowVectorsNode_GetInputAFunc;
+		property Lib3MFComposeMatrixFromRowVectorsNode_GetInputBFunc: TLib3MFComposeMatrixFromRowVectorsNode_GetInputBFunc read FLib3MFComposeMatrixFromRowVectorsNode_GetInputBFunc;
+		property Lib3MFComposeMatrixFromRowVectorsNode_GetInputCFunc: TLib3MFComposeMatrixFromRowVectorsNode_GetInputCFunc read FLib3MFComposeMatrixFromRowVectorsNode_GetInputCFunc;
+		property Lib3MFComposeMatrixFromRowVectorsNode_GetInputDFunc: TLib3MFComposeMatrixFromRowVectorsNode_GetInputDFunc read FLib3MFComposeMatrixFromRowVectorsNode_GetInputDFunc;
 		property Lib3MFComposeMatrixFromRowVectorsNode_GetOutputResultFunc: TLib3MFComposeMatrixFromRowVectorsNode_GetOutputResultFunc read FLib3MFComposeMatrixFromRowVectorsNode_GetOutputResultFunc;
+		property Lib3MFComposeMatrixFromColumnVectors_GetInputAFunc: TLib3MFComposeMatrixFromColumnVectors_GetInputAFunc read FLib3MFComposeMatrixFromColumnVectors_GetInputAFunc;
+		property Lib3MFComposeMatrixFromColumnVectors_GetInputBFunc: TLib3MFComposeMatrixFromColumnVectors_GetInputBFunc read FLib3MFComposeMatrixFromColumnVectors_GetInputBFunc;
+		property Lib3MFComposeMatrixFromColumnVectors_GetInputCFunc: TLib3MFComposeMatrixFromColumnVectors_GetInputCFunc read FLib3MFComposeMatrixFromColumnVectors_GetInputCFunc;
+		property Lib3MFComposeMatrixFromColumnVectors_GetInputDFunc: TLib3MFComposeMatrixFromColumnVectors_GetInputDFunc read FLib3MFComposeMatrixFromColumnVectors_GetInputDFunc;
+		property Lib3MFComposeMatrixFromColumnVectors_GetOutputResultFunc: TLib3MFComposeMatrixFromColumnVectors_GetOutputResultFunc read FLib3MFComposeMatrixFromColumnVectors_GetOutputResultFunc;
 		property Lib3MFConstantNode_SetConstantFunc: TLib3MFConstantNode_SetConstantFunc read FLib3MFConstantNode_SetConstantFunc;
 		property Lib3MFConstantNode_GetConstantFunc: TLib3MFConstantNode_GetConstantFunc read FLib3MFConstantNode_GetConstantFunc;
 		property Lib3MFConstantNode_GetOutputValueFunc: TLib3MFConstantNode_GetOutputValueFunc read FLib3MFConstantNode_GetOutputValueFunc;
@@ -9877,6 +9954,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function TLib3MFPolymorphicFactoryMakeDecomposeVectorNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFDecomposeVectorNode;
 	function TLib3MFPolymorphicFactoryMakeComposeMatrixNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFComposeMatrixNode;
 	function TLib3MFPolymorphicFactoryMakeComposeMatrixFromRowVectorsNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFComposeMatrixFromRowVectorsNode;
+	function TLib3MFPolymorphicFactoryMakeComposeMatrixFromColumnVectors(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFComposeMatrixFromColumnVectors;
 	function TLib3MFPolymorphicFactoryMakeConstantNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFConstantNode;
 	function TLib3MFPolymorphicFactoryMakeConstVecNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFConstVecNode;
 	function TLib3MFPolymorphicFactoryMakeConstMatNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFConstMatNode;
@@ -10690,6 +10768,7 @@ implementation
 			QWord($CC4F8D561CCE35D4): begin Obj := TLIB3MFDecomposeVectorNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::DecomposeVectorNode"
 			QWord($9EF9EB54A53AA40D): begin Obj := TLIB3MFComposeMatrixNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixNode"
 			QWord($5F89513A9B5FC583): begin Obj := TLIB3MFComposeMatrixFromRowVectorsNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixFromRowVectorsNode"
+			QWord($1A740A1E16230053): begin Obj := TLIB3MFComposeMatrixFromColumnVectors.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixFromColumnVectors"
 			QWord($3F8E5D082F966B1B): begin Obj := TLIB3MFConstantNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ConstantNode"
 			QWord($9C9363B3F708D556): begin Obj := TLIB3MFConstVecNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ConstVecNode"
 			QWord($F85C90EDCE6F90A4): begin Obj := TLIB3MFConstMatNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ConstMatNode"
@@ -11072,6 +11151,10 @@ implementation
 	function TLib3MFPolymorphicFactoryMakeComposeMatrixFromRowVectorsNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFComposeMatrixFromRowVectorsNode;
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFComposeMatrixFromRowVectorsNode, TLIB3MFComposeMatrixFromRowVectorsNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeComposeMatrixFromColumnVectors(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFComposeMatrixFromColumnVectors;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFComposeMatrixFromColumnVectors, TLIB3MFComposeMatrixFromColumnVectors>.Make(Wrapper, Handle);
 	end;
 	function TLib3MFPolymorphicFactoryMakeConstantNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFConstantNode;
 	begin
@@ -15298,46 +15381,46 @@ implementation
 		inherited;
 	end;
 
-	function TLib3MFComposeMatrixFromRowVectorsNode.GetInputRow0(): TLib3MFImplicitPort;
+	function TLib3MFComposeMatrixFromRowVectorsNode.GetInputA(): TLib3MFImplicitPort;
 	var
 		HRow0: TLib3MFHandle;
 	begin
 		Result := nil;
 		HRow0 := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Func(FHandle, HRow0));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixFromRowVectorsNode_GetInputAFunc(FHandle, HRow0));
 		if Assigned(HRow0) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HRow0);
 	end;
 
-	function TLib3MFComposeMatrixFromRowVectorsNode.GetInputRow1(): TLib3MFImplicitPort;
+	function TLib3MFComposeMatrixFromRowVectorsNode.GetInputB(): TLib3MFImplicitPort;
 	var
 		HRow1: TLib3MFHandle;
 	begin
 		Result := nil;
 		HRow1 := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Func(FHandle, HRow1));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixFromRowVectorsNode_GetInputBFunc(FHandle, HRow1));
 		if Assigned(HRow1) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HRow1);
 	end;
 
-	function TLib3MFComposeMatrixFromRowVectorsNode.GetInputRow2(): TLib3MFImplicitPort;
+	function TLib3MFComposeMatrixFromRowVectorsNode.GetInputC(): TLib3MFImplicitPort;
 	var
 		HRow2: TLib3MFHandle;
 	begin
 		Result := nil;
 		HRow2 := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Func(FHandle, HRow2));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixFromRowVectorsNode_GetInputCFunc(FHandle, HRow2));
 		if Assigned(HRow2) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HRow2);
 	end;
 
-	function TLib3MFComposeMatrixFromRowVectorsNode.GetInputRow3(): TLib3MFImplicitPort;
+	function TLib3MFComposeMatrixFromRowVectorsNode.GetInputD(): TLib3MFImplicitPort;
 	var
 		HRow3: TLib3MFHandle;
 	begin
 		Result := nil;
 		HRow3 := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Func(FHandle, HRow3));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixFromRowVectorsNode_GetInputDFunc(FHandle, HRow3));
 		if Assigned(HRow3) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HRow3);
 	end;
@@ -15349,6 +15432,75 @@ implementation
 		Result := nil;
 		HResult := nil;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixFromRowVectorsNode_GetOutputResultFunc(FHandle, HResult));
+		if Assigned(HResult) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HResult);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ComposeMatrixFromColumnVectors
+**************************************************************************************************************************)
+
+	constructor TLib3MFComposeMatrixFromColumnVectors.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFComposeMatrixFromColumnVectors.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFComposeMatrixFromColumnVectors.GetInputA(): TLib3MFImplicitPort;
+	var
+		HColumn0: TLib3MFHandle;
+	begin
+		Result := nil;
+		HColumn0 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixFromColumnVectors_GetInputAFunc(FHandle, HColumn0));
+		if Assigned(HColumn0) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HColumn0);
+	end;
+
+	function TLib3MFComposeMatrixFromColumnVectors.GetInputB(): TLib3MFImplicitPort;
+	var
+		HColumn1: TLib3MFHandle;
+	begin
+		Result := nil;
+		HColumn1 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixFromColumnVectors_GetInputBFunc(FHandle, HColumn1));
+		if Assigned(HColumn1) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HColumn1);
+	end;
+
+	function TLib3MFComposeMatrixFromColumnVectors.GetInputC(): TLib3MFImplicitPort;
+	var
+		HColumn2: TLib3MFHandle;
+	begin
+		Result := nil;
+		HColumn2 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixFromColumnVectors_GetInputCFunc(FHandle, HColumn2));
+		if Assigned(HColumn2) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HColumn2);
+	end;
+
+	function TLib3MFComposeMatrixFromColumnVectors.GetInputD(): TLib3MFImplicitPort;
+	var
+		HColumn3: TLib3MFHandle;
+	begin
+		Result := nil;
+		HColumn3 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixFromColumnVectors_GetInputDFunc(FHandle, HColumn3));
+		if Assigned(HColumn3) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HColumn3);
+	end;
+
+	function TLib3MFComposeMatrixFromColumnVectors.GetOutputResult(): TLib3MFImplicitPort;
+	var
+		HResult: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResult := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFComposeMatrixFromColumnVectors_GetOutputResultFunc(FHandle, HResult));
 		if Assigned(HResult) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HResult);
 	end;
@@ -18354,11 +18506,16 @@ implementation
 		FLib3MFComposeMatrixNode_GetInputM32Func := LoadFunction('lib3mf_composematrixnode_getinputm32');
 		FLib3MFComposeMatrixNode_GetInputM33Func := LoadFunction('lib3mf_composematrixnode_getinputm33');
 		FLib3MFComposeMatrixNode_GetOutputResultFunc := LoadFunction('lib3mf_composematrixnode_getoutputresult');
-		FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Func := LoadFunction('lib3mf_composematrixfromrowvectorsnode_getinputrow0');
-		FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Func := LoadFunction('lib3mf_composematrixfromrowvectorsnode_getinputrow1');
-		FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Func := LoadFunction('lib3mf_composematrixfromrowvectorsnode_getinputrow2');
-		FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Func := LoadFunction('lib3mf_composematrixfromrowvectorsnode_getinputrow3');
+		FLib3MFComposeMatrixFromRowVectorsNode_GetInputAFunc := LoadFunction('lib3mf_composematrixfromrowvectorsnode_getinputa');
+		FLib3MFComposeMatrixFromRowVectorsNode_GetInputBFunc := LoadFunction('lib3mf_composematrixfromrowvectorsnode_getinputb');
+		FLib3MFComposeMatrixFromRowVectorsNode_GetInputCFunc := LoadFunction('lib3mf_composematrixfromrowvectorsnode_getinputc');
+		FLib3MFComposeMatrixFromRowVectorsNode_GetInputDFunc := LoadFunction('lib3mf_composematrixfromrowvectorsnode_getinputd');
 		FLib3MFComposeMatrixFromRowVectorsNode_GetOutputResultFunc := LoadFunction('lib3mf_composematrixfromrowvectorsnode_getoutputresult');
+		FLib3MFComposeMatrixFromColumnVectors_GetInputAFunc := LoadFunction('lib3mf_composematrixfromcolumnvectors_getinputa');
+		FLib3MFComposeMatrixFromColumnVectors_GetInputBFunc := LoadFunction('lib3mf_composematrixfromcolumnvectors_getinputb');
+		FLib3MFComposeMatrixFromColumnVectors_GetInputCFunc := LoadFunction('lib3mf_composematrixfromcolumnvectors_getinputc');
+		FLib3MFComposeMatrixFromColumnVectors_GetInputDFunc := LoadFunction('lib3mf_composematrixfromcolumnvectors_getinputd');
+		FLib3MFComposeMatrixFromColumnVectors_GetOutputResultFunc := LoadFunction('lib3mf_composematrixfromcolumnvectors_getoutputresult');
 		FLib3MFConstantNode_SetConstantFunc := LoadFunction('lib3mf_constantnode_setconstant');
 		FLib3MFConstantNode_GetConstantFunc := LoadFunction('lib3mf_constantnode_getconstant');
 		FLib3MFConstantNode_GetOutputValueFunc := LoadFunction('lib3mf_constantnode_getoutputvalue');
@@ -19565,19 +19722,34 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixnode_getoutputresult'), @FLib3MFComposeMatrixNode_GetOutputResultFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixfromrowvectorsnode_getinputrow0'), @FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Func);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixfromrowvectorsnode_getinputa'), @FLib3MFComposeMatrixFromRowVectorsNode_GetInputAFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixfromrowvectorsnode_getinputrow1'), @FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Func);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixfromrowvectorsnode_getinputb'), @FLib3MFComposeMatrixFromRowVectorsNode_GetInputBFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixfromrowvectorsnode_getinputrow2'), @FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Func);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixfromrowvectorsnode_getinputc'), @FLib3MFComposeMatrixFromRowVectorsNode_GetInputCFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixfromrowvectorsnode_getinputrow3'), @FLib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Func);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixfromrowvectorsnode_getinputd'), @FLib3MFComposeMatrixFromRowVectorsNode_GetInputDFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixfromrowvectorsnode_getoutputresult'), @FLib3MFComposeMatrixFromRowVectorsNode_GetOutputResultFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixfromcolumnvectors_getinputa'), @FLib3MFComposeMatrixFromColumnVectors_GetInputAFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixfromcolumnvectors_getinputb'), @FLib3MFComposeMatrixFromColumnVectors_GetInputBFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixfromcolumnvectors_getinputc'), @FLib3MFComposeMatrixFromColumnVectors_GetInputCFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixfromcolumnvectors_getinputd'), @FLib3MFComposeMatrixFromColumnVectors_GetInputDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_composematrixfromcolumnvectors_getoutputresult'), @FLib3MFComposeMatrixFromColumnVectors_GetOutputResultFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_constantnode_setconstant'), @FLib3MFConstantNode_SetConstantFunc);

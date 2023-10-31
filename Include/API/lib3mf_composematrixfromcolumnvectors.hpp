@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CComposeMatrixFromRowVectorsNode
+Abstract: This is the class declaration of CComposeMatrixFromColumnVectors
 
 */
 
 
-#ifndef __LIB3MF_COMPOSEMATRIXFROMROWVECTORSNODE
-#define __LIB3MF_COMPOSEMATRIXFROMROWVECTORSNODE
+#ifndef __LIB3MF_COMPOSEMATRIXFROMCOLUMNVECTORS
+#define __LIB3MF_COMPOSEMATRIXFROMCOLUMNVECTORS
 
 #include "lib3mf_interfaces.hpp"
 
@@ -49,10 +49,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CComposeMatrixFromRowVectorsNode 
+ Class declaration of CComposeMatrixFromColumnVectors 
 **************************************************************************************************************************/
 
-class CComposeMatrixFromRowVectorsNode : public virtual IComposeMatrixFromRowVectorsNode, public virtual CImplicitNode {
+class CComposeMatrixFromColumnVectors : public virtual IComposeMatrixFromColumnVectors, public virtual CImplicitNode {
 private:
 
 	/**
@@ -66,7 +66,7 @@ protected:
 	*/
 
 public:
-	CComposeMatrixFromRowVectorsNode(NMR::PModelImplicitNode pImplicitNode);
+	CComposeMatrixFromColumnVectors(NMR::PModelImplicitNode pImplicitNode);
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
@@ -77,31 +77,31 @@ public:
 	*/
 
 	/**
-	* IComposeMatrixFromRowVectorsNode::GetInputRow0 - Retrieves the input for the first row
-	* @return the input for the first row
+	* IComposeMatrixFromColumnVectors::GetInputA - Retrieves the input for the first column
+	* @return the input for the first column
 	*/
 	IImplicitPort * GetInputA() override;
 
 	/**
-	* IComposeMatrixFromRowVectorsNode::GetInputRow1 - Retrieves the input for the second row
-	* @return the input for the second row
+	* IComposeMatrixFromColumnVectors::GetInputB - Retrieves the input for the second column
+	* @return the input for the second column
 	*/
 	IImplicitPort * GetInputB() override;
 
 	/**
-	* IComposeMatrixFromRowVectorsNode::GetInputRow2 - Retrieves the input for the third row
-	* @return the input for the third row
+	* IComposeMatrixFromColumnVectors::GetInputC - Retrieves the input for the third column
+	* @return the input for the third column
 	*/
 	IImplicitPort * GetInputC() override;
 
 	/**
-	* IComposeMatrixFromRowVectorsNode::GetInputRow3 - Retrieves the input for the fourth row
-	* @return the input for the fourth row
+	* IComposeMatrixFromColumnVectors::GetInputD - Retrieves the input for the fourth column
+	* @return the input for the fourth column
 	*/
 	IImplicitPort * GetInputD() override;
 
 	/**
-	* IComposeMatrixFromRowVectorsNode::GetOutputMatrix - Retrieves the output
+	* IComposeMatrixFromColumnVectors::GetOutputResult - Retrieves the output
 	* @return the output
 	*/
 	IImplicitPort * GetOutputResult() override;
@@ -114,4 +114,4 @@ public:
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-#endif // __LIB3MF_COMPOSEMATRIXFROMROWVECTORSNODE
+#endif // __LIB3MF_COMPOSEMATRIXFROMCOLUMNVECTORS

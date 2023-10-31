@@ -286,6 +286,7 @@ typedef Lib3MFHandle Lib3MF_ComposeVectorNode;
 typedef Lib3MFHandle Lib3MF_DecomposeVectorNode;
 typedef Lib3MFHandle Lib3MF_ComposeMatrixNode;
 typedef Lib3MFHandle Lib3MF_ComposeMatrixFromRowVectorsNode;
+typedef Lib3MFHandle Lib3MF_ComposeMatrixFromColumnVectors;
 typedef Lib3MFHandle Lib3MF_ConstantNode;
 typedef Lib3MFHandle Lib3MF_ConstVecNode;
 typedef Lib3MFHandle Lib3MF_ConstMatNode;

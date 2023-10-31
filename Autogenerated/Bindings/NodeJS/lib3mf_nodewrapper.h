@@ -1904,15 +1904,37 @@ class CLib3MFComposeMatrixFromRowVectorsNode : public CLib3MFBaseClass {
 private:
 	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static v8::Persistent<v8::Function> constructor;
-	static void GetInputRow0(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetInputRow1(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetInputRow2(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetInputRow3(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputA(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputB(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputC(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputD(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetOutputResult(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFComposeMatrixFromRowVectorsNode();
 	~CLib3MFComposeMatrixFromRowVectorsNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFComposeMatrixFromColumnVectors 
+**************************************************************************************************************************/
+class CLib3MFComposeMatrixFromColumnVectors : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetInputA(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputB(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputC(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputD(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputResult(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFComposeMatrixFromColumnVectors();
+	~CLib3MFComposeMatrixFromColumnVectors();
 	
 	static void Init();
 	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);

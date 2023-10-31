@@ -147,6 +147,7 @@ class CComposeVectorNode;
 class CDecomposeVectorNode;
 class CComposeMatrixNode;
 class CComposeMatrixFromRowVectorsNode;
+class CComposeMatrixFromColumnVectors;
 class CConstantNode;
 class CConstVecNode;
 class CConstMatNode;
@@ -262,6 +263,7 @@ typedef CComposeVectorNode CLib3MFComposeVectorNode;
 typedef CDecomposeVectorNode CLib3MFDecomposeVectorNode;
 typedef CComposeMatrixNode CLib3MFComposeMatrixNode;
 typedef CComposeMatrixFromRowVectorsNode CLib3MFComposeMatrixFromRowVectorsNode;
+typedef CComposeMatrixFromColumnVectors CLib3MFComposeMatrixFromColumnVectors;
 typedef CConstantNode CLib3MFConstantNode;
 typedef CConstVecNode CLib3MFConstVecNode;
 typedef CConstMatNode CLib3MFConstMatNode;
@@ -377,6 +379,7 @@ typedef std::shared_ptr<CComposeVectorNode> PComposeVectorNode;
 typedef std::shared_ptr<CDecomposeVectorNode> PDecomposeVectorNode;
 typedef std::shared_ptr<CComposeMatrixNode> PComposeMatrixNode;
 typedef std::shared_ptr<CComposeMatrixFromRowVectorsNode> PComposeMatrixFromRowVectorsNode;
+typedef std::shared_ptr<CComposeMatrixFromColumnVectors> PComposeMatrixFromColumnVectors;
 typedef std::shared_ptr<CConstantNode> PConstantNode;
 typedef std::shared_ptr<CConstVecNode> PConstVecNode;
 typedef std::shared_ptr<CConstMatNode> PConstMatNode;
@@ -492,6 +495,7 @@ typedef PComposeVectorNode PLib3MFComposeVectorNode;
 typedef PDecomposeVectorNode PLib3MFDecomposeVectorNode;
 typedef PComposeMatrixNode PLib3MFComposeMatrixNode;
 typedef PComposeMatrixFromRowVectorsNode PLib3MFComposeMatrixFromRowVectorsNode;
+typedef PComposeMatrixFromColumnVectors PLib3MFComposeMatrixFromColumnVectors;
 typedef PConstantNode PLib3MFConstantNode;
 typedef PConstVecNode PLib3MFConstVecNode;
 typedef PConstMatNode PLib3MFConstMatNode;
@@ -907,6 +911,7 @@ private:
 	friend class CDecomposeVectorNode;
 	friend class CComposeMatrixNode;
 	friend class CComposeMatrixFromRowVectorsNode;
+	friend class CComposeMatrixFromColumnVectors;
 	friend class CConstantNode;
 	friend class CConstVecNode;
 	friend class CConstMatNode;
@@ -2724,10 +2729,31 @@ public:
 	{
 	}
 	
-	inline PImplicitPort GetInputRow0();
-	inline PImplicitPort GetInputRow1();
-	inline PImplicitPort GetInputRow2();
-	inline PImplicitPort GetInputRow3();
+	inline PImplicitPort GetInputA();
+	inline PImplicitPort GetInputB();
+	inline PImplicitPort GetInputC();
+	inline PImplicitPort GetInputD();
+	inline PImplicitPort GetOutputResult();
+};
+	
+/*************************************************************************************************************************
+ Class CComposeMatrixFromColumnVectors 
+**************************************************************************************************************************/
+class CComposeMatrixFromColumnVectors : public CImplicitNode {
+public:
+	
+	/**
+	* CComposeMatrixFromColumnVectors::CComposeMatrixFromColumnVectors - Constructor for ComposeMatrixFromColumnVectors class.
+	*/
+	CComposeMatrixFromColumnVectors(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CImplicitNode(pWrapper, pHandle)
+	{
+	}
+	
+	inline PImplicitPort GetInputA();
+	inline PImplicitPort GetInputB();
+	inline PImplicitPort GetInputC();
+	inline PImplicitPort GetInputD();
 	inline PImplicitPort GetOutputResult();
 };
 	
@@ -3388,6 +3414,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0xCC4F8D561CCE35D4UL: return new CDecomposeVectorNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::DecomposeVectorNode"
 		case 0x9EF9EB54A53AA40DUL: return new CComposeMatrixNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixNode"
 		case 0x5F89513A9B5FC583UL: return new CComposeMatrixFromRowVectorsNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixFromRowVectorsNode"
+		case 0x1A740A1E16230053UL: return new CComposeMatrixFromColumnVectors(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixFromColumnVectors"
 		case 0x3F8E5D082F966B1BUL: return new CConstantNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ConstantNode"
 		case 0x9C9363B3F708D556UL: return new CConstVecNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ConstVecNode"
 		case 0xF85C90EDCE6F90A4UL: return new CConstMatNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ConstMatNode"
@@ -4009,11 +4036,16 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ComposeMatrixNode_GetInputM32 = nullptr;
 		pWrapperTable->m_ComposeMatrixNode_GetInputM33 = nullptr;
 		pWrapperTable->m_ComposeMatrixNode_GetOutputResult = nullptr;
-		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow0 = nullptr;
-		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow1 = nullptr;
-		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow2 = nullptr;
-		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow3 = nullptr;
+		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputA = nullptr;
+		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputB = nullptr;
+		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputC = nullptr;
+		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputD = nullptr;
 		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetOutputResult = nullptr;
+		pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputA = nullptr;
+		pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputB = nullptr;
+		pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputC = nullptr;
+		pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputD = nullptr;
+		pWrapperTable->m_ComposeMatrixFromColumnVectors_GetOutputResult = nullptr;
 		pWrapperTable->m_ConstantNode_SetConstant = nullptr;
 		pWrapperTable->m_ConstantNode_GetConstant = nullptr;
 		pWrapperTable->m_ConstantNode_GetOutputValue = nullptr;
@@ -7150,39 +7182,39 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow0 = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Ptr) GetProcAddress(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputrow0");
+		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputA = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputAPtr) GetProcAddress(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputa");
 		#else // _WIN32
-		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow0 = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Ptr) dlsym(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputrow0");
+		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputA = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputAPtr) dlsym(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputa");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow0 == nullptr)
+		if (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputA == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow1 = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Ptr) GetProcAddress(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputrow1");
+		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputB = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputBPtr) GetProcAddress(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputb");
 		#else // _WIN32
-		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow1 = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Ptr) dlsym(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputrow1");
+		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputB = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputBPtr) dlsym(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputb");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow1 == nullptr)
+		if (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputB == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow2 = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Ptr) GetProcAddress(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputrow2");
+		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputC = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputCPtr) GetProcAddress(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputc");
 		#else // _WIN32
-		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow2 = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Ptr) dlsym(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputrow2");
+		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputC = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputCPtr) dlsym(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputc");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow2 == nullptr)
+		if (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputC == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow3 = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Ptr) GetProcAddress(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputrow3");
+		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputD = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputDPtr) GetProcAddress(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputd");
 		#else // _WIN32
-		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow3 = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Ptr) dlsym(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputrow3");
+		pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputD = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputDPtr) dlsym(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputd");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow3 == nullptr)
+		if (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputD == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -7192,6 +7224,51 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetOutputResult == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputA = (PLib3MFComposeMatrixFromColumnVectors_GetInputAPtr) GetProcAddress(hLibrary, "lib3mf_composematrixfromcolumnvectors_getinputa");
+		#else // _WIN32
+		pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputA = (PLib3MFComposeMatrixFromColumnVectors_GetInputAPtr) dlsym(hLibrary, "lib3mf_composematrixfromcolumnvectors_getinputa");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputA == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputB = (PLib3MFComposeMatrixFromColumnVectors_GetInputBPtr) GetProcAddress(hLibrary, "lib3mf_composematrixfromcolumnvectors_getinputb");
+		#else // _WIN32
+		pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputB = (PLib3MFComposeMatrixFromColumnVectors_GetInputBPtr) dlsym(hLibrary, "lib3mf_composematrixfromcolumnvectors_getinputb");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputB == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputC = (PLib3MFComposeMatrixFromColumnVectors_GetInputCPtr) GetProcAddress(hLibrary, "lib3mf_composematrixfromcolumnvectors_getinputc");
+		#else // _WIN32
+		pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputC = (PLib3MFComposeMatrixFromColumnVectors_GetInputCPtr) dlsym(hLibrary, "lib3mf_composematrixfromcolumnvectors_getinputc");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputC == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputD = (PLib3MFComposeMatrixFromColumnVectors_GetInputDPtr) GetProcAddress(hLibrary, "lib3mf_composematrixfromcolumnvectors_getinputd");
+		#else // _WIN32
+		pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputD = (PLib3MFComposeMatrixFromColumnVectors_GetInputDPtr) dlsym(hLibrary, "lib3mf_composematrixfromcolumnvectors_getinputd");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputD == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ComposeMatrixFromColumnVectors_GetOutputResult = (PLib3MFComposeMatrixFromColumnVectors_GetOutputResultPtr) GetProcAddress(hLibrary, "lib3mf_composematrixfromcolumnvectors_getoutputresult");
+		#else // _WIN32
+		pWrapperTable->m_ComposeMatrixFromColumnVectors_GetOutputResult = (PLib3MFComposeMatrixFromColumnVectors_GetOutputResultPtr) dlsym(hLibrary, "lib3mf_composematrixfromcolumnvectors_getoutputresult");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ComposeMatrixFromColumnVectors_GetOutputResult == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -10720,24 +10797,44 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ComposeMatrixNode_GetOutputResult == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_composematrixfromrowvectorsnode_getinputrow0", (void**)&(pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow0));
-		if ( (eLookupError != 0) || (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow0 == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_composematrixfromrowvectorsnode_getinputa", (void**)&(pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputA));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputA == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_composematrixfromrowvectorsnode_getinputrow1", (void**)&(pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow1));
-		if ( (eLookupError != 0) || (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow1 == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_composematrixfromrowvectorsnode_getinputb", (void**)&(pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputB));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputB == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_composematrixfromrowvectorsnode_getinputrow2", (void**)&(pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow2));
-		if ( (eLookupError != 0) || (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow2 == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_composematrixfromrowvectorsnode_getinputc", (void**)&(pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputC));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputC == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_composematrixfromrowvectorsnode_getinputrow3", (void**)&(pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow3));
-		if ( (eLookupError != 0) || (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow3 == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_composematrixfromrowvectorsnode_getinputd", (void**)&(pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputD));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputD == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_composematrixfromrowvectorsnode_getoutputresult", (void**)&(pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetOutputResult));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetOutputResult == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_composematrixfromcolumnvectors_getinputa", (void**)&(pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputA));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputA == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_composematrixfromcolumnvectors_getinputb", (void**)&(pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputB));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputB == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_composematrixfromcolumnvectors_getinputc", (void**)&(pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputC));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputC == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_composematrixfromcolumnvectors_getinputd", (void**)&(pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputD));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputD == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_composematrixfromcolumnvectors_getoutputresult", (void**)&(pWrapperTable->m_ComposeMatrixFromColumnVectors_GetOutputResult));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ComposeMatrixFromColumnVectors_GetOutputResult == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_constantnode_setconstant", (void**)&(pWrapperTable->m_ConstantNode_SetConstant));
@@ -16051,13 +16148,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	 */
 	
 	/**
-	* CComposeMatrixFromRowVectorsNode::GetInputRow0 - Retrieves the input for the first row
+	* CComposeMatrixFromRowVectorsNode::GetInputA - Retrieves the input for the first row
 	* @return the input for the first row
 	*/
-	PImplicitPort CComposeMatrixFromRowVectorsNode::GetInputRow0()
+	PImplicitPort CComposeMatrixFromRowVectorsNode::GetInputA()
 	{
 		Lib3MFHandle hRow0 = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ComposeMatrixFromRowVectorsNode_GetInputRow0(m_pHandle, &hRow0));
+		CheckError(m_pWrapper->m_WrapperTable.m_ComposeMatrixFromRowVectorsNode_GetInputA(m_pHandle, &hRow0));
 		
 		if (!hRow0) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -16066,13 +16163,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CComposeMatrixFromRowVectorsNode::GetInputRow1 - Retrieves the input for the second row
+	* CComposeMatrixFromRowVectorsNode::GetInputB - Retrieves the input for the second row
 	* @return the input for the second row
 	*/
-	PImplicitPort CComposeMatrixFromRowVectorsNode::GetInputRow1()
+	PImplicitPort CComposeMatrixFromRowVectorsNode::GetInputB()
 	{
 		Lib3MFHandle hRow1 = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ComposeMatrixFromRowVectorsNode_GetInputRow1(m_pHandle, &hRow1));
+		CheckError(m_pWrapper->m_WrapperTable.m_ComposeMatrixFromRowVectorsNode_GetInputB(m_pHandle, &hRow1));
 		
 		if (!hRow1) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -16081,13 +16178,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CComposeMatrixFromRowVectorsNode::GetInputRow2 - Retrieves the input for the third row
+	* CComposeMatrixFromRowVectorsNode::GetInputC - Retrieves the input for the third row
 	* @return the input for the third row
 	*/
-	PImplicitPort CComposeMatrixFromRowVectorsNode::GetInputRow2()
+	PImplicitPort CComposeMatrixFromRowVectorsNode::GetInputC()
 	{
 		Lib3MFHandle hRow2 = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ComposeMatrixFromRowVectorsNode_GetInputRow2(m_pHandle, &hRow2));
+		CheckError(m_pWrapper->m_WrapperTable.m_ComposeMatrixFromRowVectorsNode_GetInputC(m_pHandle, &hRow2));
 		
 		if (!hRow2) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -16096,13 +16193,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CComposeMatrixFromRowVectorsNode::GetInputRow3 - Retrieves the input for the fourth row
+	* CComposeMatrixFromRowVectorsNode::GetInputD - Retrieves the input for the fourth row
 	* @return the input for the fourth row
 	*/
-	PImplicitPort CComposeMatrixFromRowVectorsNode::GetInputRow3()
+	PImplicitPort CComposeMatrixFromRowVectorsNode::GetInputD()
 	{
 		Lib3MFHandle hRow3 = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ComposeMatrixFromRowVectorsNode_GetInputRow3(m_pHandle, &hRow3));
+		CheckError(m_pWrapper->m_WrapperTable.m_ComposeMatrixFromRowVectorsNode_GetInputD(m_pHandle, &hRow3));
 		
 		if (!hRow3) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -16118,6 +16215,85 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	{
 		Lib3MFHandle hResult = nullptr;
 		CheckError(m_pWrapper->m_WrapperTable.m_ComposeMatrixFromRowVectorsNode_GetOutputResult(m_pHandle, &hResult));
+		
+		if (!hResult) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hResult)));
+	}
+	
+	/**
+	 * Method definitions for class CComposeMatrixFromColumnVectors
+	 */
+	
+	/**
+	* CComposeMatrixFromColumnVectors::GetInputA - Retrieves the input for the first column
+	* @return the input for the first column
+	*/
+	PImplicitPort CComposeMatrixFromColumnVectors::GetInputA()
+	{
+		Lib3MFHandle hColumn0 = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ComposeMatrixFromColumnVectors_GetInputA(m_pHandle, &hColumn0));
+		
+		if (!hColumn0) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hColumn0)));
+	}
+	
+	/**
+	* CComposeMatrixFromColumnVectors::GetInputB - Retrieves the input for the second column
+	* @return the input for the second column
+	*/
+	PImplicitPort CComposeMatrixFromColumnVectors::GetInputB()
+	{
+		Lib3MFHandle hColumn1 = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ComposeMatrixFromColumnVectors_GetInputB(m_pHandle, &hColumn1));
+		
+		if (!hColumn1) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hColumn1)));
+	}
+	
+	/**
+	* CComposeMatrixFromColumnVectors::GetInputC - Retrieves the input for the third column
+	* @return the input for the third column
+	*/
+	PImplicitPort CComposeMatrixFromColumnVectors::GetInputC()
+	{
+		Lib3MFHandle hColumn2 = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ComposeMatrixFromColumnVectors_GetInputC(m_pHandle, &hColumn2));
+		
+		if (!hColumn2) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hColumn2)));
+	}
+	
+	/**
+	* CComposeMatrixFromColumnVectors::GetInputD - Retrieves the input for the fourth column
+	* @return the input for the fourth column
+	*/
+	PImplicitPort CComposeMatrixFromColumnVectors::GetInputD()
+	{
+		Lib3MFHandle hColumn3 = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ComposeMatrixFromColumnVectors_GetInputD(m_pHandle, &hColumn3));
+		
+		if (!hColumn3) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hColumn3)));
+	}
+	
+	/**
+	* CComposeMatrixFromColumnVectors::GetOutputResult - Retrieves the output
+	* @return the output
+	*/
+	PImplicitPort CComposeMatrixFromColumnVectors::GetOutputResult()
+	{
+		Lib3MFHandle hResult = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ComposeMatrixFromColumnVectors_GetOutputResult(m_pHandle, &hResult));
 		
 		if (!hResult) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);

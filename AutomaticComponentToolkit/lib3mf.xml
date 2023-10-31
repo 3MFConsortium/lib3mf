@@ -2269,22 +2269,47 @@
 	</class>
 
 	<class name="ComposeMatrixFromRowVectorsNode" parent="ImplicitNode"
-		description="Composes a 4x4 matrix from four row vectors">
-		<method name="GetInputRow0" description="Retrieves the input for the first row">
+		description="Composes a 4x4 matrix from four row vectors A,B,C,D">
+		<method name="GetInputA" description="Retrieves the input for the first row">
 			<param name="Row0" type="class" class="ImplicitPort" pass="return"
 				description="the input for the first row" />
 		</method>
-		<method name="GetInputRow1" description="Retrieves the input for the second row">
+		<method name="GetInputB" description="Retrieves the input for the second row">
 			<param name="Row1" type="class" class="ImplicitPort" pass="return"
 				description="the input for the second row" />
 		</method>
-		<method name="GetInputRow2" description="Retrieves the input for the third row">
+		<method name="GetInputC" description="Retrieves the input for the third row">
 			<param name="Row2" type="class" class="ImplicitPort" pass="return"
 				description="the input for the third row" />
 		</method>
-		<method name="GetInputRow3" description="Retrieves the input for the fourth row">
+		<method name="GetInputD" description="Retrieves the input for the fourth row">
 			<param name="Row3" type="class" class="ImplicitPort" pass="return"
 				description="the input for the fourth row" />
+		</method>
+		<method name="GetOutputResult" description="Retrieves the output">
+			<param name="Result" type="class" class="ImplicitPort" pass="return"
+				description="the output" />
+		</method>
+	</class>
+
+	
+	<class name="ComposeMatrixFromColumnVectors" parent="ImplicitNode"
+		description="Composes a 4x4 matrix from four column vectors A,B,C,D">
+		<method name="GetInputA" description="Retrieves the input for the first column">
+			<param name="Column0" type="class" class="ImplicitPort" pass="return"
+				description="the input for the first column" />
+		</method>
+		<method name="GetInputB" description="Retrieves the input for the second column">
+			<param name="Column1" type="class" class="ImplicitPort" pass="return"
+				description="the input for the second column" />
+		</method>
+		<method name="GetInputC" description="Retrieves the input for the third column">
+			<param name="Column2" type="class" class="ImplicitPort" pass="return"
+				description="the input for the third column" />
+		</method>
+		<method name="GetInputD" description="Retrieves the input for the fourth column">
+			<param name="Column3" type="class" class="ImplicitPort" pass="return"
+				description="the input for the fourth column" />
 		</method>
 		<method name="GetOutputResult" description="Retrieves the output">
 			<param name="Result" type="class" class="ImplicitPort" pass="return"

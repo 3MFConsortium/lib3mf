@@ -131,6 +131,7 @@ Persistent<Function> CLib3MFComposeVectorNode::constructor;
 Persistent<Function> CLib3MFDecomposeVectorNode::constructor;
 Persistent<Function> CLib3MFComposeMatrixNode::constructor;
 Persistent<Function> CLib3MFComposeMatrixFromRowVectorsNode::constructor;
+Persistent<Function> CLib3MFComposeMatrixFromColumnVectors::constructor;
 Persistent<Function> CLib3MFConstantNode::constructor;
 Persistent<Function> CLib3MFConstVecNode::constructor;
 Persistent<Function> CLib3MFConstMatNode::constructor;
@@ -14321,10 +14322,10 @@ void CLib3MFComposeMatrixFromRowVectorsNode::Init()
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
-		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputRow0", GetInputRow0);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputRow1", GetInputRow1);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputRow2", GetInputRow2);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputRow3", GetInputRow3);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputA", GetInputA);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputB", GetInputB);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputC", GetInputC);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputD", GetInputD);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOutputResult", GetOutputResult);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
@@ -14359,7 +14360,7 @@ Local<Object> CLib3MFComposeMatrixFromRowVectorsNode::NewInstance(Local<Object> 
 }
 
 
-void CLib3MFComposeMatrixFromRowVectorsNode::GetInputRow0(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFComposeMatrixFromRowVectorsNode::GetInputA(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
@@ -14367,11 +14368,11 @@ void CLib3MFComposeMatrixFromRowVectorsNode::GetInputRow0(const FunctionCallback
         Lib3MFHandle hReturnRow0 = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputRow0.");
-        if (wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow0 == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method ComposeMatrixFromRowVectorsNode::GetInputRow0.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputA.");
+        if (wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputA == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ComposeMatrixFromRowVectorsNode::GetInputA.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow0(instanceHandle, &hReturnRow0);
+        Lib3MFResult errorCode = wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputA(instanceHandle, &hReturnRow0);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjRow0 = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnRow0);
         args.GetReturnValue().Set(instanceObjRow0);
@@ -14382,7 +14383,7 @@ void CLib3MFComposeMatrixFromRowVectorsNode::GetInputRow0(const FunctionCallback
 }
 
 
-void CLib3MFComposeMatrixFromRowVectorsNode::GetInputRow1(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFComposeMatrixFromRowVectorsNode::GetInputB(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
@@ -14390,11 +14391,11 @@ void CLib3MFComposeMatrixFromRowVectorsNode::GetInputRow1(const FunctionCallback
         Lib3MFHandle hReturnRow1 = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputRow1.");
-        if (wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow1 == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method ComposeMatrixFromRowVectorsNode::GetInputRow1.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputB.");
+        if (wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputB == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ComposeMatrixFromRowVectorsNode::GetInputB.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow1(instanceHandle, &hReturnRow1);
+        Lib3MFResult errorCode = wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputB(instanceHandle, &hReturnRow1);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjRow1 = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnRow1);
         args.GetReturnValue().Set(instanceObjRow1);
@@ -14405,7 +14406,7 @@ void CLib3MFComposeMatrixFromRowVectorsNode::GetInputRow1(const FunctionCallback
 }
 
 
-void CLib3MFComposeMatrixFromRowVectorsNode::GetInputRow2(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFComposeMatrixFromRowVectorsNode::GetInputC(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
@@ -14413,11 +14414,11 @@ void CLib3MFComposeMatrixFromRowVectorsNode::GetInputRow2(const FunctionCallback
         Lib3MFHandle hReturnRow2 = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputRow2.");
-        if (wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow2 == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method ComposeMatrixFromRowVectorsNode::GetInputRow2.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputC.");
+        if (wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputC == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ComposeMatrixFromRowVectorsNode::GetInputC.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow2(instanceHandle, &hReturnRow2);
+        Lib3MFResult errorCode = wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputC(instanceHandle, &hReturnRow2);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjRow2 = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnRow2);
         args.GetReturnValue().Set(instanceObjRow2);
@@ -14428,7 +14429,7 @@ void CLib3MFComposeMatrixFromRowVectorsNode::GetInputRow2(const FunctionCallback
 }
 
 
-void CLib3MFComposeMatrixFromRowVectorsNode::GetInputRow3(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFComposeMatrixFromRowVectorsNode::GetInputD(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
@@ -14436,11 +14437,11 @@ void CLib3MFComposeMatrixFromRowVectorsNode::GetInputRow3(const FunctionCallback
         Lib3MFHandle hReturnRow3 = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputRow3.");
-        if (wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow3 == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method ComposeMatrixFromRowVectorsNode::GetInputRow3.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputD.");
+        if (wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputD == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ComposeMatrixFromRowVectorsNode::GetInputD.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputRow3(instanceHandle, &hReturnRow3);
+        Lib3MFResult errorCode = wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputD(instanceHandle, &hReturnRow3);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjRow3 = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnRow3);
         args.GetReturnValue().Set(instanceObjRow3);
@@ -14464,6 +14465,181 @@ void CLib3MFComposeMatrixFromRowVectorsNode::GetOutputResult(const FunctionCallb
             throw std::runtime_error("Could not call Lib3MF method ComposeMatrixFromRowVectorsNode::GetOutputResult.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetOutputResult(instanceHandle, &hReturnResult);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjResult = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnResult);
+        args.GetReturnValue().Set(instanceObjResult);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
+ Class CLib3MFComposeMatrixFromColumnVectors Implementation
+**************************************************************************************************************************/
+
+CLib3MFComposeMatrixFromColumnVectors::CLib3MFComposeMatrixFromColumnVectors()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFComposeMatrixFromColumnVectors::~CLib3MFComposeMatrixFromColumnVectors()
+{
+}
+
+void CLib3MFComposeMatrixFromColumnVectors::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFComposeMatrixFromColumnVectors"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputA", GetInputA);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputB", GetInputB);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputC", GetInputC);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputD", GetInputD);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOutputResult", GetOutputResult);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFComposeMatrixFromColumnVectors::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFComposeMatrixFromColumnVectors * composematrixfromcolumnvectorsInstance = new CLib3MFComposeMatrixFromColumnVectors();
+				composematrixfromcolumnvectorsInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFComposeMatrixFromColumnVectors: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFComposeMatrixFromColumnVectors::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFComposeMatrixFromColumnVectors::GetInputA(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnColumn0 = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputA.");
+        if (wrapperTable->m_ComposeMatrixFromColumnVectors_GetInputA == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ComposeMatrixFromColumnVectors::GetInputA.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ComposeMatrixFromColumnVectors_GetInputA(instanceHandle, &hReturnColumn0);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjColumn0 = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnColumn0);
+        args.GetReturnValue().Set(instanceObjColumn0);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFComposeMatrixFromColumnVectors::GetInputB(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnColumn1 = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputB.");
+        if (wrapperTable->m_ComposeMatrixFromColumnVectors_GetInputB == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ComposeMatrixFromColumnVectors::GetInputB.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ComposeMatrixFromColumnVectors_GetInputB(instanceHandle, &hReturnColumn1);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjColumn1 = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnColumn1);
+        args.GetReturnValue().Set(instanceObjColumn1);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFComposeMatrixFromColumnVectors::GetInputC(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnColumn2 = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputC.");
+        if (wrapperTable->m_ComposeMatrixFromColumnVectors_GetInputC == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ComposeMatrixFromColumnVectors::GetInputC.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ComposeMatrixFromColumnVectors_GetInputC(instanceHandle, &hReturnColumn2);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjColumn2 = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnColumn2);
+        args.GetReturnValue().Set(instanceObjColumn2);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFComposeMatrixFromColumnVectors::GetInputD(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnColumn3 = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputD.");
+        if (wrapperTable->m_ComposeMatrixFromColumnVectors_GetInputD == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ComposeMatrixFromColumnVectors::GetInputD.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ComposeMatrixFromColumnVectors_GetInputD(instanceHandle, &hReturnColumn3);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjColumn3 = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnColumn3);
+        args.GetReturnValue().Set(instanceObjColumn3);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFComposeMatrixFromColumnVectors::GetOutputResult(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnResult = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetOutputResult.");
+        if (wrapperTable->m_ComposeMatrixFromColumnVectors_GetOutputResult == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ComposeMatrixFromColumnVectors::GetOutputResult.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ComposeMatrixFromColumnVectors_GetOutputResult(instanceHandle, &hReturnResult);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjResult = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnResult);
         args.GetReturnValue().Set(instanceObjResult);

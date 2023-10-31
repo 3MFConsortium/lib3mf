@@ -445,11 +445,16 @@ class FunctionTable:
 	lib3mf_composematrixnode_getinputm32 = None
 	lib3mf_composematrixnode_getinputm33 = None
 	lib3mf_composematrixnode_getoutputresult = None
-	lib3mf_composematrixfromrowvectorsnode_getinputrow0 = None
-	lib3mf_composematrixfromrowvectorsnode_getinputrow1 = None
-	lib3mf_composematrixfromrowvectorsnode_getinputrow2 = None
-	lib3mf_composematrixfromrowvectorsnode_getinputrow3 = None
+	lib3mf_composematrixfromrowvectorsnode_getinputa = None
+	lib3mf_composematrixfromrowvectorsnode_getinputb = None
+	lib3mf_composematrixfromrowvectorsnode_getinputc = None
+	lib3mf_composematrixfromrowvectorsnode_getinputd = None
 	lib3mf_composematrixfromrowvectorsnode_getoutputresult = None
+	lib3mf_composematrixfromcolumnvectors_getinputa = None
+	lib3mf_composematrixfromcolumnvectors_getinputb = None
+	lib3mf_composematrixfromcolumnvectors_getinputc = None
+	lib3mf_composematrixfromcolumnvectors_getinputd = None
+	lib3mf_composematrixfromcolumnvectors_getoutputresult = None
 	lib3mf_constantnode_setconstant = None
 	lib3mf_constantnode_getconstant = None
 	lib3mf_constantnode_getoutputvalue = None
@@ -3092,35 +3097,65 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_composematrixnode_getoutputresult = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromrowvectorsnode_getinputrow0")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromrowvectorsnode_getinputa")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputrow0 = methodType(int(methodAddress.value))
+			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputa = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromrowvectorsnode_getinputrow1")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromrowvectorsnode_getinputb")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputrow1 = methodType(int(methodAddress.value))
+			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputb = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromrowvectorsnode_getinputrow2")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromrowvectorsnode_getinputc")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputrow2 = methodType(int(methodAddress.value))
+			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputc = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromrowvectorsnode_getinputrow3")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromrowvectorsnode_getinputd")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputrow3 = methodType(int(methodAddress.value))
+			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputd = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromrowvectorsnode_getoutputresult")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_composematrixfromrowvectorsnode_getoutputresult = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromcolumnvectors_getinputa")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_composematrixfromcolumnvectors_getinputa = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromcolumnvectors_getinputb")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_composematrixfromcolumnvectors_getinputb = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromcolumnvectors_getinputc")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_composematrixfromcolumnvectors_getinputc = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromcolumnvectors_getinputd")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_composematrixfromcolumnvectors_getinputd = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromcolumnvectors_getoutputresult")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_composematrixfromcolumnvectors_getoutputresult = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_constantnode_setconstant")), methodAddress)
 			if err != 0:
@@ -5515,20 +5550,35 @@ class Wrapper:
 			self.lib.lib3mf_composematrixnode_getoutputresult.restype = ctypes.c_int32
 			self.lib.lib3mf_composematrixnode_getoutputresult.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputrow0.restype = ctypes.c_int32
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputrow0.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputa.restype = ctypes.c_int32
+			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputa.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputrow1.restype = ctypes.c_int32
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputrow1.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputb.restype = ctypes.c_int32
+			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputb.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputrow2.restype = ctypes.c_int32
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputrow2.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputc.restype = ctypes.c_int32
+			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputc.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputrow3.restype = ctypes.c_int32
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputrow3.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputd.restype = ctypes.c_int32
+			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputd.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_composematrixfromrowvectorsnode_getoutputresult.restype = ctypes.c_int32
 			self.lib.lib3mf_composematrixfromrowvectorsnode_getoutputresult.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_composematrixfromcolumnvectors_getinputa.restype = ctypes.c_int32
+			self.lib.lib3mf_composematrixfromcolumnvectors_getinputa.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_composematrixfromcolumnvectors_getinputb.restype = ctypes.c_int32
+			self.lib.lib3mf_composematrixfromcolumnvectors_getinputb.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_composematrixfromcolumnvectors_getinputc.restype = ctypes.c_int32
+			self.lib.lib3mf_composematrixfromcolumnvectors_getinputc.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_composematrixfromcolumnvectors_getinputd.restype = ctypes.c_int32
+			self.lib.lib3mf_composematrixfromcolumnvectors_getinputd.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_composematrixfromcolumnvectors_getoutputresult.restype = ctypes.c_int32
+			self.lib.lib3mf_composematrixfromcolumnvectors_getoutputresult.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_constantnode_setconstant.restype = ctypes.c_int32
 			self.lib.lib3mf_constantnode_setconstant.argtypes = [ctypes.c_void_p, ctypes.c_double]
@@ -6609,6 +6659,8 @@ class Wrapper:
 				return ComposeMatrixNode(handle, wrapper)
 			def getObjectById_5F89513A9B5FC583(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixFromRowVectorsNode"
 				return ComposeMatrixFromRowVectorsNode(handle, wrapper)
+			def getObjectById_1A740A1E16230053(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixFromColumnVectors"
+				return ComposeMatrixFromColumnVectors(handle, wrapper)
 			def getObjectById_3F8E5D082F966B1B(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ConstantNode"
 				return ConstantNode(handle, wrapper)
 			def getObjectById_9C9363B3F708D556(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ConstVecNode"
@@ -9766,9 +9818,9 @@ class ComposeMatrixNode(ImplicitNode):
 class ComposeMatrixFromRowVectorsNode(ImplicitNode):
 	def __init__(self, handle, wrapper):
 		ImplicitNode.__init__(self, handle, wrapper)
-	def GetInputRow0(self):
+	def GetInputA(self):
 		Row0Handle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromrowvectorsnode_getinputrow0(self._handle, Row0Handle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromrowvectorsnode_getinputa(self._handle, Row0Handle))
 		if Row0Handle:
 			Row0Object = self._wrapper._polymorphicFactory(Row0Handle)
 		else:
@@ -9776,9 +9828,9 @@ class ComposeMatrixFromRowVectorsNode(ImplicitNode):
 		
 		return Row0Object
 	
-	def GetInputRow1(self):
+	def GetInputB(self):
 		Row1Handle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromrowvectorsnode_getinputrow1(self._handle, Row1Handle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromrowvectorsnode_getinputb(self._handle, Row1Handle))
 		if Row1Handle:
 			Row1Object = self._wrapper._polymorphicFactory(Row1Handle)
 		else:
@@ -9786,9 +9838,9 @@ class ComposeMatrixFromRowVectorsNode(ImplicitNode):
 		
 		return Row1Object
 	
-	def GetInputRow2(self):
+	def GetInputC(self):
 		Row2Handle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromrowvectorsnode_getinputrow2(self._handle, Row2Handle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromrowvectorsnode_getinputc(self._handle, Row2Handle))
 		if Row2Handle:
 			Row2Object = self._wrapper._polymorphicFactory(Row2Handle)
 		else:
@@ -9796,9 +9848,9 @@ class ComposeMatrixFromRowVectorsNode(ImplicitNode):
 		
 		return Row2Object
 	
-	def GetInputRow3(self):
+	def GetInputD(self):
 		Row3Handle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromrowvectorsnode_getinputrow3(self._handle, Row3Handle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromrowvectorsnode_getinputd(self._handle, Row3Handle))
 		if Row3Handle:
 			Row3Object = self._wrapper._polymorphicFactory(Row3Handle)
 		else:
@@ -9809,6 +9861,63 @@ class ComposeMatrixFromRowVectorsNode(ImplicitNode):
 	def GetOutputResult(self):
 		ResultHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromrowvectorsnode_getoutputresult(self._handle, ResultHandle))
+		if ResultHandle:
+			ResultObject = self._wrapper._polymorphicFactory(ResultHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ResultObject
+	
+
+
+''' Class Implementation for ComposeMatrixFromColumnVectors
+'''
+class ComposeMatrixFromColumnVectors(ImplicitNode):
+	def __init__(self, handle, wrapper):
+		ImplicitNode.__init__(self, handle, wrapper)
+	def GetInputA(self):
+		Column0Handle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromcolumnvectors_getinputa(self._handle, Column0Handle))
+		if Column0Handle:
+			Column0Object = self._wrapper._polymorphicFactory(Column0Handle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return Column0Object
+	
+	def GetInputB(self):
+		Column1Handle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromcolumnvectors_getinputb(self._handle, Column1Handle))
+		if Column1Handle:
+			Column1Object = self._wrapper._polymorphicFactory(Column1Handle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return Column1Object
+	
+	def GetInputC(self):
+		Column2Handle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromcolumnvectors_getinputc(self._handle, Column2Handle))
+		if Column2Handle:
+			Column2Object = self._wrapper._polymorphicFactory(Column2Handle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return Column2Object
+	
+	def GetInputD(self):
+		Column3Handle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromcolumnvectors_getinputd(self._handle, Column3Handle))
+		if Column3Handle:
+			Column3Object = self._wrapper._polymorphicFactory(Column3Handle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return Column3Object
+	
+	def GetOutputResult(self):
+		ResultHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromcolumnvectors_getoutputresult(self._handle, ResultHandle))
 		if ResultHandle:
 			ResultObject = self._wrapper._polymorphicFactory(ResultHandle)
 		else:

@@ -61,6 +61,7 @@ namespace Lib3MF
              */
             NMR::PImplicitNodes m_pNodes;
 
+            IImplicitNode * implicitNodeFromModelImplicitNode(NMR::PModelImplicitNode pNode);
           protected:
             /**
              * Put protected members here.

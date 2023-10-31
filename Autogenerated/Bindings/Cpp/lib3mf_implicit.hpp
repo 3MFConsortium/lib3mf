@@ -147,6 +147,7 @@ class CComposeVectorNode;
 class CDecomposeVectorNode;
 class CComposeMatrixNode;
 class CComposeMatrixFromRowVectorsNode;
+class CComposeMatrixFromColumnVectors;
 class CConstantNode;
 class CConstVecNode;
 class CConstMatNode;
@@ -262,6 +263,7 @@ typedef CComposeVectorNode CLib3MFComposeVectorNode;
 typedef CDecomposeVectorNode CLib3MFDecomposeVectorNode;
 typedef CComposeMatrixNode CLib3MFComposeMatrixNode;
 typedef CComposeMatrixFromRowVectorsNode CLib3MFComposeMatrixFromRowVectorsNode;
+typedef CComposeMatrixFromColumnVectors CLib3MFComposeMatrixFromColumnVectors;
 typedef CConstantNode CLib3MFConstantNode;
 typedef CConstVecNode CLib3MFConstVecNode;
 typedef CConstMatNode CLib3MFConstMatNode;
@@ -377,6 +379,7 @@ typedef std::shared_ptr<CComposeVectorNode> PComposeVectorNode;
 typedef std::shared_ptr<CDecomposeVectorNode> PDecomposeVectorNode;
 typedef std::shared_ptr<CComposeMatrixNode> PComposeMatrixNode;
 typedef std::shared_ptr<CComposeMatrixFromRowVectorsNode> PComposeMatrixFromRowVectorsNode;
+typedef std::shared_ptr<CComposeMatrixFromColumnVectors> PComposeMatrixFromColumnVectors;
 typedef std::shared_ptr<CConstantNode> PConstantNode;
 typedef std::shared_ptr<CConstVecNode> PConstVecNode;
 typedef std::shared_ptr<CConstMatNode> PConstMatNode;
@@ -492,6 +495,7 @@ typedef PComposeVectorNode PLib3MFComposeVectorNode;
 typedef PDecomposeVectorNode PLib3MFDecomposeVectorNode;
 typedef PComposeMatrixNode PLib3MFComposeMatrixNode;
 typedef PComposeMatrixFromRowVectorsNode PLib3MFComposeMatrixFromRowVectorsNode;
+typedef PComposeMatrixFromColumnVectors PLib3MFComposeMatrixFromColumnVectors;
 typedef PConstantNode PLib3MFConstantNode;
 typedef PConstVecNode PLib3MFConstVecNode;
 typedef PConstMatNode PLib3MFConstMatNode;
@@ -883,6 +887,7 @@ private:
 	friend class CDecomposeVectorNode;
 	friend class CComposeMatrixNode;
 	friend class CComposeMatrixFromRowVectorsNode;
+	friend class CComposeMatrixFromColumnVectors;
 	friend class CConstantNode;
 	friend class CConstVecNode;
 	friend class CConstMatNode;
@@ -2700,10 +2705,31 @@ public:
 	{
 	}
 	
-	inline PImplicitPort GetInputRow0();
-	inline PImplicitPort GetInputRow1();
-	inline PImplicitPort GetInputRow2();
-	inline PImplicitPort GetInputRow3();
+	inline PImplicitPort GetInputA();
+	inline PImplicitPort GetInputB();
+	inline PImplicitPort GetInputC();
+	inline PImplicitPort GetInputD();
+	inline PImplicitPort GetOutputResult();
+};
+	
+/*************************************************************************************************************************
+ Class CComposeMatrixFromColumnVectors 
+**************************************************************************************************************************/
+class CComposeMatrixFromColumnVectors : public CImplicitNode {
+public:
+	
+	/**
+	* CComposeMatrixFromColumnVectors::CComposeMatrixFromColumnVectors - Constructor for ComposeMatrixFromColumnVectors class.
+	*/
+	CComposeMatrixFromColumnVectors(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CImplicitNode(pWrapper, pHandle)
+	{
+	}
+	
+	inline PImplicitPort GetInputA();
+	inline PImplicitPort GetInputB();
+	inline PImplicitPort GetInputC();
+	inline PImplicitPort GetInputD();
 	inline PImplicitPort GetOutputResult();
 };
 	
@@ -3364,6 +3390,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0xCC4F8D561CCE35D4UL: return new CDecomposeVectorNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::DecomposeVectorNode"
 		case 0x9EF9EB54A53AA40DUL: return new CComposeMatrixNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixNode"
 		case 0x5F89513A9B5FC583UL: return new CComposeMatrixFromRowVectorsNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixFromRowVectorsNode"
+		case 0x1A740A1E16230053UL: return new CComposeMatrixFromColumnVectors(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixFromColumnVectors"
 		case 0x3F8E5D082F966B1BUL: return new CConstantNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ConstantNode"
 		case 0x9C9363B3F708D556UL: return new CConstVecNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ConstVecNode"
 		case 0xF85C90EDCE6F90A4UL: return new CConstMatNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ConstMatNode"
@@ -7971,13 +7998,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	 */
 	
 	/**
-	* CComposeMatrixFromRowVectorsNode::GetInputRow0 - Retrieves the input for the first row
+	* CComposeMatrixFromRowVectorsNode::GetInputA - Retrieves the input for the first row
 	* @return the input for the first row
 	*/
-	PImplicitPort CComposeMatrixFromRowVectorsNode::GetInputRow0()
+	PImplicitPort CComposeMatrixFromRowVectorsNode::GetInputA()
 	{
 		Lib3MFHandle hRow0 = nullptr;
-		CheckError(lib3mf_composematrixfromrowvectorsnode_getinputrow0(m_pHandle, &hRow0));
+		CheckError(lib3mf_composematrixfromrowvectorsnode_getinputa(m_pHandle, &hRow0));
 		
 		if (!hRow0) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -7986,13 +8013,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CComposeMatrixFromRowVectorsNode::GetInputRow1 - Retrieves the input for the second row
+	* CComposeMatrixFromRowVectorsNode::GetInputB - Retrieves the input for the second row
 	* @return the input for the second row
 	*/
-	PImplicitPort CComposeMatrixFromRowVectorsNode::GetInputRow1()
+	PImplicitPort CComposeMatrixFromRowVectorsNode::GetInputB()
 	{
 		Lib3MFHandle hRow1 = nullptr;
-		CheckError(lib3mf_composematrixfromrowvectorsnode_getinputrow1(m_pHandle, &hRow1));
+		CheckError(lib3mf_composematrixfromrowvectorsnode_getinputb(m_pHandle, &hRow1));
 		
 		if (!hRow1) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -8001,13 +8028,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CComposeMatrixFromRowVectorsNode::GetInputRow2 - Retrieves the input for the third row
+	* CComposeMatrixFromRowVectorsNode::GetInputC - Retrieves the input for the third row
 	* @return the input for the third row
 	*/
-	PImplicitPort CComposeMatrixFromRowVectorsNode::GetInputRow2()
+	PImplicitPort CComposeMatrixFromRowVectorsNode::GetInputC()
 	{
 		Lib3MFHandle hRow2 = nullptr;
-		CheckError(lib3mf_composematrixfromrowvectorsnode_getinputrow2(m_pHandle, &hRow2));
+		CheckError(lib3mf_composematrixfromrowvectorsnode_getinputc(m_pHandle, &hRow2));
 		
 		if (!hRow2) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -8016,13 +8043,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CComposeMatrixFromRowVectorsNode::GetInputRow3 - Retrieves the input for the fourth row
+	* CComposeMatrixFromRowVectorsNode::GetInputD - Retrieves the input for the fourth row
 	* @return the input for the fourth row
 	*/
-	PImplicitPort CComposeMatrixFromRowVectorsNode::GetInputRow3()
+	PImplicitPort CComposeMatrixFromRowVectorsNode::GetInputD()
 	{
 		Lib3MFHandle hRow3 = nullptr;
-		CheckError(lib3mf_composematrixfromrowvectorsnode_getinputrow3(m_pHandle, &hRow3));
+		CheckError(lib3mf_composematrixfromrowvectorsnode_getinputd(m_pHandle, &hRow3));
 		
 		if (!hRow3) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -8038,6 +8065,85 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	{
 		Lib3MFHandle hResult = nullptr;
 		CheckError(lib3mf_composematrixfromrowvectorsnode_getoutputresult(m_pHandle, &hResult));
+		
+		if (!hResult) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hResult)));
+	}
+	
+	/**
+	 * Method definitions for class CComposeMatrixFromColumnVectors
+	 */
+	
+	/**
+	* CComposeMatrixFromColumnVectors::GetInputA - Retrieves the input for the first column
+	* @return the input for the first column
+	*/
+	PImplicitPort CComposeMatrixFromColumnVectors::GetInputA()
+	{
+		Lib3MFHandle hColumn0 = nullptr;
+		CheckError(lib3mf_composematrixfromcolumnvectors_getinputa(m_pHandle, &hColumn0));
+		
+		if (!hColumn0) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hColumn0)));
+	}
+	
+	/**
+	* CComposeMatrixFromColumnVectors::GetInputB - Retrieves the input for the second column
+	* @return the input for the second column
+	*/
+	PImplicitPort CComposeMatrixFromColumnVectors::GetInputB()
+	{
+		Lib3MFHandle hColumn1 = nullptr;
+		CheckError(lib3mf_composematrixfromcolumnvectors_getinputb(m_pHandle, &hColumn1));
+		
+		if (!hColumn1) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hColumn1)));
+	}
+	
+	/**
+	* CComposeMatrixFromColumnVectors::GetInputC - Retrieves the input for the third column
+	* @return the input for the third column
+	*/
+	PImplicitPort CComposeMatrixFromColumnVectors::GetInputC()
+	{
+		Lib3MFHandle hColumn2 = nullptr;
+		CheckError(lib3mf_composematrixfromcolumnvectors_getinputc(m_pHandle, &hColumn2));
+		
+		if (!hColumn2) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hColumn2)));
+	}
+	
+	/**
+	* CComposeMatrixFromColumnVectors::GetInputD - Retrieves the input for the fourth column
+	* @return the input for the fourth column
+	*/
+	PImplicitPort CComposeMatrixFromColumnVectors::GetInputD()
+	{
+		Lib3MFHandle hColumn3 = nullptr;
+		CheckError(lib3mf_composematrixfromcolumnvectors_getinputd(m_pHandle, &hColumn3));
+		
+		if (!hColumn3) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hColumn3)));
+	}
+	
+	/**
+	* CComposeMatrixFromColumnVectors::GetOutputResult - Retrieves the output
+	* @return the output
+	*/
+	PImplicitPort CComposeMatrixFromColumnVectors::GetOutputResult()
+	{
+		Lib3MFHandle hResult = nullptr;
+		CheckError(lib3mf_composematrixfromcolumnvectors_getoutputresult(m_pHandle, &hResult));
 		
 		if (!hResult) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);

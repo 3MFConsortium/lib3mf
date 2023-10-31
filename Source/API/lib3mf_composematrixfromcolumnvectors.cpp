@@ -24,11 +24,11 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CComposeMatrixFromRowVectorsNode
+Abstract: This is a stub class definition of CComposeMatrixFromColumnVectors
 
 */
 
-#include "lib3mf_composematrixfromrowvectorsnode.hpp"
+#include "lib3mf_composematrixfromcolumnvectors.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
@@ -37,37 +37,36 @@ Abstract: This is a stub class definition of CComposeMatrixFromRowVectorsNode
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CComposeMatrixFromRowVectorsNode 
+ Class definition of CComposeMatrixFromColumnVectors 
 **************************************************************************************************************************/
 
-CComposeMatrixFromRowVectorsNode::
-    CComposeMatrixFromRowVectorsNode(NMR::PModelImplicitNode pImplicitNode)
+CComposeMatrixFromColumnVectors::CComposeMatrixFromColumnVectors(NMR::PModelImplicitNode pImplicitNode)
 	: CImplicitNode{pImplicitNode}
 {
 	CImplicitNode::m_pImplicitNode = pImplicitNode;
 }
 
-IImplicitPort* CComposeMatrixFromRowVectorsNode::GetInputA()
+IImplicitPort * CComposeMatrixFromColumnVectors::GetInputA()
 {
 	return FindInputOrThrow(NMR::InputNames::A);
 }
 
-IImplicitPort * CComposeMatrixFromRowVectorsNode::GetInputB()
+IImplicitPort * CComposeMatrixFromColumnVectors::GetInputB()
 {
 	return FindInputOrThrow(NMR::InputNames::B);
 }
 
-IImplicitPort * CComposeMatrixFromRowVectorsNode::GetInputC()
+IImplicitPort * CComposeMatrixFromColumnVectors::GetInputC()
 {
 	return FindInputOrThrow(NMR::InputNames::C);
 }
 
-IImplicitPort * CComposeMatrixFromRowVectorsNode::GetInputD()
+IImplicitPort * CComposeMatrixFromColumnVectors::GetInputD()
 {
 	return FindInputOrThrow(NMR::InputNames::D);
 }
 
-IImplicitPort * CComposeMatrixFromRowVectorsNode::GetOutputResult()
+IImplicitPort * CComposeMatrixFromColumnVectors::GetOutputResult()
 {
 	return FindOutputOrThrow(NMR::OutputNames::result);
 }

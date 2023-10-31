@@ -141,6 +141,7 @@ class IComposeVectorNode;
 class IDecomposeVectorNode;
 class IComposeMatrixNode;
 class IComposeMatrixFromRowVectorsNode;
+class IComposeMatrixFromColumnVectors;
 class IConstantNode;
 class IConstVecNode;
 class IConstMatNode;
@@ -4167,28 +4168,28 @@ public:
 	}
 
 	/**
-	* IComposeMatrixFromRowVectorsNode::GetInputRow0 - Retrieves the input for the first row
+	* IComposeMatrixFromRowVectorsNode::GetInputA - Retrieves the input for the first row
 	* @return the input for the first row
 	*/
-	virtual IImplicitPort * GetInputRow0() = 0;
+	virtual IImplicitPort * GetInputA() = 0;
 
 	/**
-	* IComposeMatrixFromRowVectorsNode::GetInputRow1 - Retrieves the input for the second row
+	* IComposeMatrixFromRowVectorsNode::GetInputB - Retrieves the input for the second row
 	* @return the input for the second row
 	*/
-	virtual IImplicitPort * GetInputRow1() = 0;
+	virtual IImplicitPort * GetInputB() = 0;
 
 	/**
-	* IComposeMatrixFromRowVectorsNode::GetInputRow2 - Retrieves the input for the third row
+	* IComposeMatrixFromRowVectorsNode::GetInputC - Retrieves the input for the third row
 	* @return the input for the third row
 	*/
-	virtual IImplicitPort * GetInputRow2() = 0;
+	virtual IImplicitPort * GetInputC() = 0;
 
 	/**
-	* IComposeMatrixFromRowVectorsNode::GetInputRow3 - Retrieves the input for the fourth row
+	* IComposeMatrixFromRowVectorsNode::GetInputD - Retrieves the input for the fourth row
 	* @return the input for the fourth row
 	*/
-	virtual IImplicitPort * GetInputRow3() = 0;
+	virtual IImplicitPort * GetInputD() = 0;
 
 	/**
 	* IComposeMatrixFromRowVectorsNode::GetOutputResult - Retrieves the output
@@ -4199,6 +4200,56 @@ public:
 };
 
 typedef IBaseSharedPtr<IComposeMatrixFromRowVectorsNode> PIComposeMatrixFromRowVectorsNode;
+
+
+/*************************************************************************************************************************
+ Class interface for ComposeMatrixFromColumnVectors 
+**************************************************************************************************************************/
+
+class IComposeMatrixFromColumnVectors : public virtual IImplicitNode {
+public:
+	/**
+	* IComposeMatrixFromColumnVectors::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x1A740A1E16230053UL; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixFromColumnVectors"
+	}
+
+	/**
+	* IComposeMatrixFromColumnVectors::GetInputA - Retrieves the input for the first column
+	* @return the input for the first column
+	*/
+	virtual IImplicitPort * GetInputA() = 0;
+
+	/**
+	* IComposeMatrixFromColumnVectors::GetInputB - Retrieves the input for the second column
+	* @return the input for the second column
+	*/
+	virtual IImplicitPort * GetInputB() = 0;
+
+	/**
+	* IComposeMatrixFromColumnVectors::GetInputC - Retrieves the input for the third column
+	* @return the input for the third column
+	*/
+	virtual IImplicitPort * GetInputC() = 0;
+
+	/**
+	* IComposeMatrixFromColumnVectors::GetInputD - Retrieves the input for the fourth column
+	* @return the input for the fourth column
+	*/
+	virtual IImplicitPort * GetInputD() = 0;
+
+	/**
+	* IComposeMatrixFromColumnVectors::GetOutputResult - Retrieves the output
+	* @return the output
+	*/
+	virtual IImplicitPort * GetOutputResult() = 0;
+
+};
+
+typedef IBaseSharedPtr<IComposeMatrixFromColumnVectors> PIComposeMatrixFromColumnVectors;
 
 
 /*************************************************************************************************************************

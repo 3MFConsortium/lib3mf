@@ -3434,7 +3434,7 @@ typedef Lib3MFResult (*PLib3MFComposeMatrixNode_GetOutputResultPtr) (Lib3MF_Comp
 * @param[out] pRow0 - the input for the first row
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Ptr) (Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow0);
+typedef Lib3MFResult (*PLib3MFComposeMatrixFromRowVectorsNode_GetInputAPtr) (Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow0);
 
 /**
 * Retrieves the input for the second row
@@ -3443,7 +3443,7 @@ typedef Lib3MFResult (*PLib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Ptr) (
 * @param[out] pRow1 - the input for the second row
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Ptr) (Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow1);
+typedef Lib3MFResult (*PLib3MFComposeMatrixFromRowVectorsNode_GetInputBPtr) (Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow1);
 
 /**
 * Retrieves the input for the third row
@@ -3452,7 +3452,7 @@ typedef Lib3MFResult (*PLib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Ptr) (
 * @param[out] pRow2 - the input for the third row
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Ptr) (Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow2);
+typedef Lib3MFResult (*PLib3MFComposeMatrixFromRowVectorsNode_GetInputCPtr) (Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow2);
 
 /**
 * Retrieves the input for the fourth row
@@ -3461,7 +3461,7 @@ typedef Lib3MFResult (*PLib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Ptr) (
 * @param[out] pRow3 - the input for the fourth row
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Ptr) (Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow3);
+typedef Lib3MFResult (*PLib3MFComposeMatrixFromRowVectorsNode_GetInputDPtr) (Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow3);
 
 /**
 * Retrieves the output
@@ -3471,6 +3471,55 @@ typedef Lib3MFResult (*PLib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Ptr) (
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFComposeMatrixFromRowVectorsNode_GetOutputResultPtr) (Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pResult);
+
+/*************************************************************************************************************************
+ Class definition for ComposeMatrixFromColumnVectors
+**************************************************************************************************************************/
+
+/**
+* Retrieves the input for the first column
+*
+* @param[in] pComposeMatrixFromColumnVectors - ComposeMatrixFromColumnVectors instance.
+* @param[out] pColumn0 - the input for the first column
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFComposeMatrixFromColumnVectors_GetInputAPtr) (Lib3MF_ComposeMatrixFromColumnVectors pComposeMatrixFromColumnVectors, Lib3MF_ImplicitPort * pColumn0);
+
+/**
+* Retrieves the input for the second column
+*
+* @param[in] pComposeMatrixFromColumnVectors - ComposeMatrixFromColumnVectors instance.
+* @param[out] pColumn1 - the input for the second column
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFComposeMatrixFromColumnVectors_GetInputBPtr) (Lib3MF_ComposeMatrixFromColumnVectors pComposeMatrixFromColumnVectors, Lib3MF_ImplicitPort * pColumn1);
+
+/**
+* Retrieves the input for the third column
+*
+* @param[in] pComposeMatrixFromColumnVectors - ComposeMatrixFromColumnVectors instance.
+* @param[out] pColumn2 - the input for the third column
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFComposeMatrixFromColumnVectors_GetInputCPtr) (Lib3MF_ComposeMatrixFromColumnVectors pComposeMatrixFromColumnVectors, Lib3MF_ImplicitPort * pColumn2);
+
+/**
+* Retrieves the input for the fourth column
+*
+* @param[in] pComposeMatrixFromColumnVectors - ComposeMatrixFromColumnVectors instance.
+* @param[out] pColumn3 - the input for the fourth column
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFComposeMatrixFromColumnVectors_GetInputDPtr) (Lib3MF_ComposeMatrixFromColumnVectors pComposeMatrixFromColumnVectors, Lib3MF_ImplicitPort * pColumn3);
+
+/**
+* Retrieves the output
+*
+* @param[in] pComposeMatrixFromColumnVectors - ComposeMatrixFromColumnVectors instance.
+* @param[out] pResult - the output
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFComposeMatrixFromColumnVectors_GetOutputResultPtr) (Lib3MF_ComposeMatrixFromColumnVectors pComposeMatrixFromColumnVectors, Lib3MF_ImplicitPort * pResult);
 
 /*************************************************************************************************************************
  Class definition for ConstantNode
@@ -6439,11 +6488,16 @@ typedef struct {
 	PLib3MFComposeMatrixNode_GetInputM32Ptr m_ComposeMatrixNode_GetInputM32;
 	PLib3MFComposeMatrixNode_GetInputM33Ptr m_ComposeMatrixNode_GetInputM33;
 	PLib3MFComposeMatrixNode_GetOutputResultPtr m_ComposeMatrixNode_GetOutputResult;
-	PLib3MFComposeMatrixFromRowVectorsNode_GetInputRow0Ptr m_ComposeMatrixFromRowVectorsNode_GetInputRow0;
-	PLib3MFComposeMatrixFromRowVectorsNode_GetInputRow1Ptr m_ComposeMatrixFromRowVectorsNode_GetInputRow1;
-	PLib3MFComposeMatrixFromRowVectorsNode_GetInputRow2Ptr m_ComposeMatrixFromRowVectorsNode_GetInputRow2;
-	PLib3MFComposeMatrixFromRowVectorsNode_GetInputRow3Ptr m_ComposeMatrixFromRowVectorsNode_GetInputRow3;
+	PLib3MFComposeMatrixFromRowVectorsNode_GetInputAPtr m_ComposeMatrixFromRowVectorsNode_GetInputA;
+	PLib3MFComposeMatrixFromRowVectorsNode_GetInputBPtr m_ComposeMatrixFromRowVectorsNode_GetInputB;
+	PLib3MFComposeMatrixFromRowVectorsNode_GetInputCPtr m_ComposeMatrixFromRowVectorsNode_GetInputC;
+	PLib3MFComposeMatrixFromRowVectorsNode_GetInputDPtr m_ComposeMatrixFromRowVectorsNode_GetInputD;
 	PLib3MFComposeMatrixFromRowVectorsNode_GetOutputResultPtr m_ComposeMatrixFromRowVectorsNode_GetOutputResult;
+	PLib3MFComposeMatrixFromColumnVectors_GetInputAPtr m_ComposeMatrixFromColumnVectors_GetInputA;
+	PLib3MFComposeMatrixFromColumnVectors_GetInputBPtr m_ComposeMatrixFromColumnVectors_GetInputB;
+	PLib3MFComposeMatrixFromColumnVectors_GetInputCPtr m_ComposeMatrixFromColumnVectors_GetInputC;
+	PLib3MFComposeMatrixFromColumnVectors_GetInputDPtr m_ComposeMatrixFromColumnVectors_GetInputD;
+	PLib3MFComposeMatrixFromColumnVectors_GetOutputResultPtr m_ComposeMatrixFromColumnVectors_GetOutputResult;
 	PLib3MFConstantNode_SetConstantPtr m_ConstantNode_SetConstant;
 	PLib3MFConstantNode_GetConstantPtr m_ConstantNode_GetConstant;
 	PLib3MFConstantNode_GetOutputValuePtr m_ConstantNode_GetOutputValue;
