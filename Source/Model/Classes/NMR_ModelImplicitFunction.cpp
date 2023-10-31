@@ -175,6 +175,11 @@ namespace NMR
     void CModelImplicitFunction::addLink(CModelImplicitPort const & pSourcePort,
                                          CModelImplicitPort & pTargetPort)
     {
+        if (pSourcePort.getParent() == nullptr) // That is the case for a function input
+        {
+            pTargetPort.setReference(pSourcePort.getIdentifier());
+            return;
+        }
         pTargetPort.setReference(makeReferenceIdentifier(pSourcePort.getParent()->getIdentifier(),
                                                          pSourcePort.getIdentifier()));
     }

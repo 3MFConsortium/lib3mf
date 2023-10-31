@@ -1831,7 +1831,7 @@ private:
 	static void GetInputX(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetInputY(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetInputZ(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetOutputVector(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputResult(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFComposeVectorNode();
@@ -1886,7 +1886,7 @@ private:
 	static void GetInputM31(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetInputM32(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetInputM33(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetOutputMatrix(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputResult(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFComposeMatrixNode();
@@ -1908,7 +1908,7 @@ private:
 	static void GetInputRow1(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetInputRow2(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetInputRow3(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetOutputMatrix(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputResult(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFComposeMatrixFromRowVectorsNode();

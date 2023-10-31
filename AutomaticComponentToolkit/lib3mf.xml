@@ -2170,8 +2170,8 @@
 			<param name="Z" type="class" class="ImplicitPort" pass="return"
 				description="the input for the z component" />
 		</method>
-		<method name="GetOutputVector" description="Retrieves the output">
-			<param name="Vector" type="class" class="ImplicitPort" pass="return"
+		<method name="GetOutputResult" description="Retrieves the output">
+			<param name="Result" type="class" class="ImplicitPort" pass="return"
 				description="the output" />
 		</method>
 	</class>
@@ -2262,8 +2262,8 @@
 			<param name="M33" type="class" class="ImplicitPort" pass="return"
 				description="the input for the m33 element" />
 		</method>
-		<method name="GetOutputMatrix" description="Retrieves the output">
-			<param name="Matrix" type="class" class="ImplicitPort" pass="return"
+		<method name="GetOutputResult" description="Retrieves the output">
+			<param name="Result" type="class" class="ImplicitPort" pass="return"
 				description="the output" />
 		</method>
 	</class>
@@ -2286,8 +2286,8 @@
 			<param name="Row3" type="class" class="ImplicitPort" pass="return"
 				description="the input for the fourth row" />
 		</method>
-		<method name="GetOutputMatrix" description="Retrieves the output">
-			<param name="Matrix" type="class" class="ImplicitPort" pass="return"
+		<method name="GetOutputResult" description="Retrieves the output">
+			<param name="Result" type="class" class="ImplicitPort" pass="return"
 				description="the output" />
 		</method>
 	</class>

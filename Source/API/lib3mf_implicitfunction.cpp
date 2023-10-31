@@ -648,12 +648,16 @@ void CImplicitFunction::RemoveNode(IImplicitNode* pNode)
 void CImplicitFunction::AddLink(IImplicitPort* pSource, IImplicitPort* pTarget)
 {
     if (pSource == nullptr || pTarget == nullptr)
+    {
         throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+    }
     CImplicitPort* pSourcePort = dynamic_cast<CImplicitPort*>(pSource);
     CImplicitPort* pTargetPort = dynamic_cast<CImplicitPort*>(pTarget);
     
     if (pSourcePort == nullptr || pTargetPort == nullptr)
+    {
         throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+    }
 
     function()->addLink(*pSourcePort->getPort(), *pTargetPort->getPort());
 }

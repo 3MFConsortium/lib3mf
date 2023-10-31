@@ -42,17 +42,17 @@ using namespace Lib3MF::Impl;
 
 IImplicitPort * CSelectNode::GetInputB()
 {
-	return FindInput("B");
+	return FindInputOrThrow(NMR::InputNames::B);
 }
 
 IImplicitPort * CSelectNode::GetInputC()
 {
-	return FindInput("C");
+	return FindInputOrThrow(NMR::InputNames::C);
 }
 
 IImplicitPort * CSelectNode::GetInputD()
 {
-	return FindInput("D");
+	return FindInputOrThrow(NMR::InputNames::D);
 }
 
 Lib3MF::Impl::CSelectNode::CSelectNode(NMR::PModelImplicitNode pImplicitNode)

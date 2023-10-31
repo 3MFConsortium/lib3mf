@@ -64,6 +64,7 @@ namespace NMR
         static auto constexpr color = "color";
         static auto constexpr min = "min";
         static auto constexpr max = "max";
+        static auto constexpr functionID = "functionID";
     };
 
     struct OutputNames

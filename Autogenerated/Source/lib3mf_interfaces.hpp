@@ -3975,10 +3975,10 @@ public:
 	virtual IImplicitPort * GetInputZ() = 0;
 
 	/**
-	* IComposeVectorNode::GetOutputVector - Retrieves the output
+	* IComposeVectorNode::GetOutputResult - Retrieves the output
 	* @return the output
 	*/
-	virtual IImplicitPort * GetOutputVector() = 0;
+	virtual IImplicitPort * GetOutputResult() = 0;
 
 };
 
@@ -4141,10 +4141,10 @@ public:
 	virtual IImplicitPort * GetInputM33() = 0;
 
 	/**
-	* IComposeMatrixNode::GetOutputMatrix - Retrieves the output
+	* IComposeMatrixNode::GetOutputResult - Retrieves the output
 	* @return the output
 	*/
-	virtual IImplicitPort * GetOutputMatrix() = 0;
+	virtual IImplicitPort * GetOutputResult() = 0;
 
 };
 
@@ -4191,10 +4191,10 @@ public:
 	virtual IImplicitPort * GetInputRow3() = 0;
 
 	/**
-	* IComposeMatrixFromRowVectorsNode::GetOutputMatrix - Retrieves the output
+	* IComposeMatrixFromRowVectorsNode::GetOutputResult - Retrieves the output
 	* @return the output
 	*/
-	virtual IImplicitPort * GetOutputMatrix() = 0;
+	virtual IImplicitPort * GetOutputResult() = 0;
 
 };
 

@@ -3234,10 +3234,10 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_composevectornode_getinputz(Lib3MF_ComposeVe
 * Retrieves the output
 *
 * @param[in] pComposeVectorNode - ComposeVectorNode instance.
-* @param[out] pVector - the output
+* @param[out] pResult - the output
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_composevectornode_getoutputvector(Lib3MF_ComposeVectorNode pComposeVectorNode, Lib3MF_ImplicitPort * pVector);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composevectornode_getoutputresult(Lib3MF_ComposeVectorNode pComposeVectorNode, Lib3MF_ImplicitPort * pResult);
 
 /*************************************************************************************************************************
  Class definition for DecomposeVectorNode
@@ -3431,10 +3431,10 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm33(Lib3MF_Compose
 * Retrieves the output
 *
 * @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
-* @param[out] pMatrix - the output
+* @param[out] pResult - the output
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getoutputmatrix(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pMatrix);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getoutputresult(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pResult);
 
 /*************************************************************************************************************************
  Class definition for ComposeMatrixFromRowVectorsNode
@@ -3480,10 +3480,10 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixfromrowvectorsnode_getinputrow3
 * Retrieves the output
 *
 * @param[in] pComposeMatrixFromRowVectorsNode - ComposeMatrixFromRowVectorsNode instance.
-* @param[out] pMatrix - the output
+* @param[out] pResult - the output
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixfromrowvectorsnode_getoutputmatrix(Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pMatrix);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixfromrowvectorsnode_getoutputresult(Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pResult);
 
 /*************************************************************************************************************************
  Class definition for ConstantNode

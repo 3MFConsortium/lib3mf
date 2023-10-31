@@ -2630,7 +2630,7 @@ public:
 	inline PImplicitPort GetInputX();
 	inline PImplicitPort GetInputY();
 	inline PImplicitPort GetInputZ();
-	inline PImplicitPort GetOutputVector();
+	inline PImplicitPort GetOutputResult();
 };
 	
 /*************************************************************************************************************************
@@ -2683,7 +2683,7 @@ public:
 	inline PImplicitPort GetInputM31();
 	inline PImplicitPort GetInputM32();
 	inline PImplicitPort GetInputM33();
-	inline PImplicitPort GetOutputMatrix();
+	inline PImplicitPort GetOutputResult();
 };
 	
 /*************************************************************************************************************************
@@ -2704,7 +2704,7 @@ public:
 	inline PImplicitPort GetInputRow1();
 	inline PImplicitPort GetInputRow2();
 	inline PImplicitPort GetInputRow3();
-	inline PImplicitPort GetOutputMatrix();
+	inline PImplicitPort GetOutputResult();
 };
 	
 /*************************************************************************************************************************
@@ -7629,18 +7629,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CComposeVectorNode::GetOutputVector - Retrieves the output
+	* CComposeVectorNode::GetOutputResult - Retrieves the output
 	* @return the output
 	*/
-	PImplicitPort CComposeVectorNode::GetOutputVector()
+	PImplicitPort CComposeVectorNode::GetOutputResult()
 	{
-		Lib3MFHandle hVector = nullptr;
-		CheckError(lib3mf_composevectornode_getoutputvector(m_pHandle, &hVector));
+		Lib3MFHandle hResult = nullptr;
+		CheckError(lib3mf_composevectornode_getoutputresult(m_pHandle, &hResult));
 		
-		if (!hVector) {
+		if (!hResult) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hVector)));
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hResult)));
 	}
 	
 	/**
@@ -7952,18 +7952,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CComposeMatrixNode::GetOutputMatrix - Retrieves the output
+	* CComposeMatrixNode::GetOutputResult - Retrieves the output
 	* @return the output
 	*/
-	PImplicitPort CComposeMatrixNode::GetOutputMatrix()
+	PImplicitPort CComposeMatrixNode::GetOutputResult()
 	{
-		Lib3MFHandle hMatrix = nullptr;
-		CheckError(lib3mf_composematrixnode_getoutputmatrix(m_pHandle, &hMatrix));
+		Lib3MFHandle hResult = nullptr;
+		CheckError(lib3mf_composematrixnode_getoutputresult(m_pHandle, &hResult));
 		
-		if (!hMatrix) {
+		if (!hResult) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hMatrix)));
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hResult)));
 	}
 	
 	/**
@@ -8031,18 +8031,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CComposeMatrixFromRowVectorsNode::GetOutputMatrix - Retrieves the output
+	* CComposeMatrixFromRowVectorsNode::GetOutputResult - Retrieves the output
 	* @return the output
 	*/
-	PImplicitPort CComposeMatrixFromRowVectorsNode::GetOutputMatrix()
+	PImplicitPort CComposeMatrixFromRowVectorsNode::GetOutputResult()
 	{
-		Lib3MFHandle hMatrix = nullptr;
-		CheckError(lib3mf_composematrixfromrowvectorsnode_getoutputmatrix(m_pHandle, &hMatrix));
+		Lib3MFHandle hResult = nullptr;
+		CheckError(lib3mf_composematrixfromrowvectorsnode_getoutputresult(m_pHandle, &hResult));
 		
-		if (!hMatrix) {
+		if (!hResult) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hMatrix)));
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hResult)));
 	}
 	
 	/**

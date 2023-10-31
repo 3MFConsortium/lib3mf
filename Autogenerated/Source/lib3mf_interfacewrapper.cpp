@@ -11175,27 +11175,27 @@ Lib3MFResult lib3mf_composevectornode_getinputz(Lib3MF_ComposeVectorNode pCompos
 	}
 }
 
-Lib3MFResult lib3mf_composevectornode_getoutputvector(Lib3MF_ComposeVectorNode pComposeVectorNode, Lib3MF_ImplicitPort * pVector)
+Lib3MFResult lib3mf_composevectornode_getoutputresult(Lib3MF_ComposeVectorNode pComposeVectorNode, Lib3MF_ImplicitPort * pResult)
 {
 	IBase* pIBaseClass = (IBase *)pComposeVectorNode;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeVectorNode, "ComposeVectorNode", "GetOutputVector");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeVectorNode, "ComposeVectorNode", "GetOutputResult");
 		}
-		if (pVector == nullptr)
+		if (pResult == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseVector(nullptr);
+		IBase* pBaseResult(nullptr);
 		IComposeVectorNode* pIComposeVectorNode = dynamic_cast<IComposeVectorNode*>(pIBaseClass);
 		if (!pIComposeVectorNode)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseVector = pIComposeVectorNode->GetOutputVector();
+		pBaseResult = pIComposeVectorNode->GetOutputResult();
 
-		*pVector = (IBase*)(pBaseVector);
+		*pResult = (IBase*)(pBaseResult);
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("Vector", *pVector);
+			pJournalEntry->addHandleResult("Result", *pResult);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -11939,27 +11939,27 @@ Lib3MFResult lib3mf_composematrixnode_getinputm33(Lib3MF_ComposeMatrixNode pComp
 	}
 }
 
-Lib3MFResult lib3mf_composematrixnode_getoutputmatrix(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pMatrix)
+Lib3MFResult lib3mf_composematrixnode_getoutputresult(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pResult)
 {
 	IBase* pIBaseClass = (IBase *)pComposeMatrixNode;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixNode, "ComposeMatrixNode", "GetOutputMatrix");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixNode, "ComposeMatrixNode", "GetOutputResult");
 		}
-		if (pMatrix == nullptr)
+		if (pResult == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseMatrix(nullptr);
+		IBase* pBaseResult(nullptr);
 		IComposeMatrixNode* pIComposeMatrixNode = dynamic_cast<IComposeMatrixNode*>(pIBaseClass);
 		if (!pIComposeMatrixNode)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseMatrix = pIComposeMatrixNode->GetOutputMatrix();
+		pBaseResult = pIComposeMatrixNode->GetOutputResult();
 
-		*pMatrix = (IBase*)(pBaseMatrix);
+		*pResult = (IBase*)(pBaseResult);
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("Matrix", *pMatrix);
+			pJournalEntry->addHandleResult("Result", *pResult);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -12123,27 +12123,27 @@ Lib3MFResult lib3mf_composematrixfromrowvectorsnode_getinputrow3(Lib3MF_ComposeM
 	}
 }
 
-Lib3MFResult lib3mf_composematrixfromrowvectorsnode_getoutputmatrix(Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pMatrix)
+Lib3MFResult lib3mf_composematrixfromrowvectorsnode_getoutputresult(Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pResult)
 {
 	IBase* pIBaseClass = (IBase *)pComposeMatrixFromRowVectorsNode;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixFromRowVectorsNode, "ComposeMatrixFromRowVectorsNode", "GetOutputMatrix");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pComposeMatrixFromRowVectorsNode, "ComposeMatrixFromRowVectorsNode", "GetOutputResult");
 		}
-		if (pMatrix == nullptr)
+		if (pResult == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseMatrix(nullptr);
+		IBase* pBaseResult(nullptr);
 		IComposeMatrixFromRowVectorsNode* pIComposeMatrixFromRowVectorsNode = dynamic_cast<IComposeMatrixFromRowVectorsNode*>(pIBaseClass);
 		if (!pIComposeMatrixFromRowVectorsNode)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseMatrix = pIComposeMatrixFromRowVectorsNode->GetOutputMatrix();
+		pBaseResult = pIComposeMatrixFromRowVectorsNode->GetOutputResult();
 
-		*pMatrix = (IBase*)(pBaseMatrix);
+		*pResult = (IBase*)(pBaseResult);
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("Matrix", *pMatrix);
+			pJournalEntry->addHandleResult("Result", *pResult);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -22041,8 +22041,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_composevectornode_getinputy;
 	if (sProcName == "lib3mf_composevectornode_getinputz") 
 		*ppProcAddress = (void*) &lib3mf_composevectornode_getinputz;
-	if (sProcName == "lib3mf_composevectornode_getoutputvector") 
-		*ppProcAddress = (void*) &lib3mf_composevectornode_getoutputvector;
+	if (sProcName == "lib3mf_composevectornode_getoutputresult") 
+		*ppProcAddress = (void*) &lib3mf_composevectornode_getoutputresult;
 	if (sProcName == "lib3mf_decomposevectornode_getinputvector") 
 		*ppProcAddress = (void*) &lib3mf_decomposevectornode_getinputvector;
 	if (sProcName == "lib3mf_decomposevectornode_getoutputx") 
@@ -22083,8 +22083,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_composematrixnode_getinputm32;
 	if (sProcName == "lib3mf_composematrixnode_getinputm33") 
 		*ppProcAddress = (void*) &lib3mf_composematrixnode_getinputm33;
-	if (sProcName == "lib3mf_composematrixnode_getoutputmatrix") 
-		*ppProcAddress = (void*) &lib3mf_composematrixnode_getoutputmatrix;
+	if (sProcName == "lib3mf_composematrixnode_getoutputresult") 
+		*ppProcAddress = (void*) &lib3mf_composematrixnode_getoutputresult;
 	if (sProcName == "lib3mf_composematrixfromrowvectorsnode_getinputrow0") 
 		*ppProcAddress = (void*) &lib3mf_composematrixfromrowvectorsnode_getinputrow0;
 	if (sProcName == "lib3mf_composematrixfromrowvectorsnode_getinputrow1") 
@@ -22093,8 +22093,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_composematrixfromrowvectorsnode_getinputrow2;
 	if (sProcName == "lib3mf_composematrixfromrowvectorsnode_getinputrow3") 
 		*ppProcAddress = (void*) &lib3mf_composematrixfromrowvectorsnode_getinputrow3;
-	if (sProcName == "lib3mf_composematrixfromrowvectorsnode_getoutputmatrix") 
-		*ppProcAddress = (void*) &lib3mf_composematrixfromrowvectorsnode_getoutputmatrix;
+	if (sProcName == "lib3mf_composematrixfromrowvectorsnode_getoutputresult") 
+		*ppProcAddress = (void*) &lib3mf_composematrixfromrowvectorsnode_getoutputresult;
 	if (sProcName == "lib3mf_constantnode_setconstant") 
 		*ppProcAddress = (void*) &lib3mf_constantnode_setconstant;
 	if (sProcName == "lib3mf_constantnode_getconstant") 

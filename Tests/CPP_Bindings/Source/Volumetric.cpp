@@ -54,41 +54,53 @@ namespace Lib3MF
             auto composeYZX = gyroidFunction->AddComposeVectorNode(
                 "composeYZX", "compose yzx", "group_a");
 
-            gyroidFunction->AddLink(decomposePos->GetOutputZ(),
-                                    composeYZX->GetInputY());
-            gyroidFunction->AddLink(decomposePos->GetOutputY(),
-                                    composeYZX->GetInputX());
-            gyroidFunction->AddLink(decomposePos->GetOutputX(),
-                                    composeYZX->GetInputZ());
+            auto composeYZXInputX = composeYZX->GetInputX();
+            auto decomposePosOutputZ = decomposePos->GetOutputZ();
+            gyroidFunction->AddLink(decomposePosOutputZ, composeYZXInputX);
 
-            // Add the necessay nodes and links for the gyroid
+            auto composeYZXInputY = composeYZX->GetInputY();
+            auto decomposePosOutputY = decomposePos->GetOutputY();
+            gyroidFunction->AddLink(decomposePosOutputY, composeYZXInputY);
+
+            auto composeYZXInputZ = composeYZX->GetInputZ();
+            auto decomposePosOutputX = decomposePos->GetOutputX();
+            gyroidFunction->AddLink(decomposePosOutputX, composeYZXInputZ);
+
+            // Add the nodes and links for the gyroid
             // (dot(sin(pos), cos(composeYZX))
             auto sinNode = gyroidFunction->AddSinNode(
                 "sin", Lib3MF::eImplicitNodeConfiguration::VectorToVector,
                 "sinus", "group_a");
 
-            gyroidFunction->AddLink(gyroidFunction->FindInput("pos"),
-                                    sinNode->GetInputA());
-
+            auto posArg = gyroidFunction->FindInput("pos");
+            auto sinInputA = sinNode->GetInputA();
+            gyroidFunction->AddLink(posArg, sinInputA);
+            
             auto cosNode = gyroidFunction->AddCosNode(
                 "cos", Lib3MF::eImplicitNodeConfiguration::VectorToVector,
                 "cosinus", "group_a");
-            gyroidFunction->AddLink(composeYZX->GetOutputVector(),
-                                    cosNode->GetInputA());
+            
+            auto cosInputA = cosNode->GetInputA();
+            auto composeYZXOutput = composeYZX->GetOutputResult();
+            gyroidFunction->AddLink(composeYZXOutput, cosInputA);
 
             auto dotNode =
                 gyroidFunction->AddDotNode("dot", "dot product", "group_a");
 
-            gyroidFunction->AddLink(sinNode->GetOutputResult(),
-                                    dotNode->GetInputA());
-            gyroidFunction->AddLink(cosNode->GetOutputResult(),
-                                    dotNode->GetInputB());
+            auto sinOutput = sinNode->GetOutputResult();
+            auto dotInputA = dotNode->GetInputA();
+            gyroidFunction->AddLink(sinOutput, dotInputA);
+
+            auto cosOutput = cosNode->GetOutputResult();
+            auto dotInputB = dotNode->GetInputB();
+            gyroidFunction->AddLink(cosOutput, dotInputB);
 
             auto output = gyroidFunction->AddOutput(
                 "shape", "signed distance to the surface",
                 Lib3MF::eImplicitPortType::Scalar);
 
-            gyroidFunction->AddLink(dotNode->GetOutputResult(), output);
+            auto dotOutput = dotNode->GetOutputResult();
+            gyroidFunction->AddLink(dotOutput, output);
 
             return gyroidFunction;
         }
@@ -296,10 +308,7 @@ namespace Lib3MF
             "multiplication 1", "group_a");
 
         // Add some links
-        auto source = addNode->GetOutputResult();
-        auto target = subNode->GetInputA();
-        // newFunction->AddLink(source, target);
-        newFunction->AddLink(addNode->GetOutputResult(), subNode->GetInputA());
+        newFunction->AddLink(addNode->GetOutputResult().get(), subNode->GetInputA().get());
 
         // Alternative way to add links
         mulNode->FindInput("A")->SetReference("addition_1.result");
@@ -307,11 +316,8 @@ namespace Lib3MF
         auto output =
             newFunction->AddOutput("shape", "signed distance to the surface",
                                    Lib3MF::eImplicitPortType::Vector);
-
-        auto subNodeResult = subNode->GetOutputResult();
-        newFunction->AddLink(subNodeResult, output);
         
-        // newFunction->AddLink(subNode->GetOutputResult(), output);
+        newFunction->AddLink(subNode->GetOutputResult().get(), output.get());
 
         auto theMesh = GetMesh();
         auto volumeData = theMesh->VolumeData();
@@ -375,24 +381,29 @@ namespace Lib3MF
             "translate_1", Lib3MF::eImplicitNodeConfiguration::VectorToVector,
             "Translation", "group_a");
 
-        newFunction->AddLink(newFunction->FindInput("pos"),
-                             subNode->GetInputA());
-        newFunction->AddLink(constVecNode->GetOutputVector(),
-                             subNode->GetInputB());
+
+        auto posInput = newFunction->FindInput("pos");
+        auto subInputA = subNode->GetInputA();
+        newFunction->AddLink(posInput, subInputA);
+
+        auto subInputB = subNode->GetInputB();
+        auto constVecOutput = constVecNode->GetOutputVector();
+        newFunction->AddLink(constVecOutput, subInputB);
 
         auto distanceToSpehereNode = newFunction->AddLengthNode(
             "distance_1", "distance to sphere", "group_a");
 
-        newFunction->AddLink(subNode->GetOutputResult(),
-                             distanceToSpehereNode->GetInputA());
+        newFunction->AddLink(subNode->GetOutputResult().get(),
+                             distanceToSpehereNode->GetInputA().get());
 
         // Substract radius from distance
         auto subNode2 = newFunction->AddSubtractionNode(
             "distance_2", Lib3MF::eImplicitNodeConfiguration::ScalarToScalar,
             "distance to sphere", "group_a");
 
-        newFunction->AddLink(distanceToSpehereNode->GetOutputResult(),
-                             subNode2->GetInputA());
+        auto distanceToSphereOutput = distanceToSpehereNode->GetOutputResult();
+        auto subNode2InputA = subNode2->GetInputA();
+        newFunction->AddLink(distanceToSphereOutput, subNode2InputA);
 
         auto output =
             newFunction->AddOutput("shape", "signed distance to the surface",
@@ -565,17 +576,22 @@ namespace Lib3MF
         // Create a mesh node
         auto meshNode = newFunction->AddMeshNode("mesh", "mesh", "group_shell");
 
-        newFunction->AddLink(newFunction->FindInput("pos"),
-                             meshNode->GetInputPos());
+        auto posInput = newFunction->FindInput("pos");
+        auto meshNodeInputPos = meshNode->GetInputPos();
+        newFunction->AddLink(posInput, meshNodeInputPos);
 
-        newFunction->AddLink(resourceNode->GetOutputValue(), meshNode->GetInputMesh());
+        auto resourceNodeOutputValue = resourceNode->GetOutputValue();
+        auto meshNodeInputMesh = meshNode->GetInputMesh();
+        newFunction->AddLink(resourceNodeOutputValue, meshNodeInputMesh);
 
         // Add an absolute value node
         auto absNode = newFunction->AddAbsNode(
             "abs", Lib3MF::eImplicitNodeConfiguration::ScalarToScalar, "abs",
             "group_shell");
         
-        newFunction->AddLink(meshNode->GetOutputDistance(), absNode->GetInputA());
+        auto meshNodeOutputDistance = meshNode->GetOutputDistance();
+        auto absNodeInputA = absNode->GetInputA();
+        newFunction->AddLink(meshNodeOutputDistance, absNodeInputA);
 
         // Add a constant scalar node
         auto constScalarNode = newFunction->AddConstantNode(
@@ -588,8 +604,13 @@ namespace Lib3MF
             "subtraction", Lib3MF::eImplicitNodeConfiguration::ScalarToScalar,
             "subtraction", "group_shell");
 
-        newFunction->AddLink(absNode->GetOutputResult(), subtractionNode->GetInputA());
-        newFunction->AddLink(constScalarNode->GetOutputValue(), subtractionNode->GetInputB());
+        auto absNodeOutputResult = absNode->GetOutputResult();
+        auto subtractionNodeInputA = subtractionNode->GetInputA();
+        newFunction->AddLink(absNodeOutputResult, subtractionNodeInputA);
+
+        auto constScalarNodeOutputValue = constScalarNode->GetOutputValue();
+        auto subtractionNodeOutputResult = subtractionNode->GetOutputResult();
+        newFunction->AddLink(constScalarNodeOutputValue, subtractionNodeOutputResult);
 
         // Add an output to the new function
         auto output =
@@ -615,21 +636,24 @@ namespace Lib3MF
         newFunction->AddLinkByNames("gyroidID.value", "gyroid.functionID");
 
         // Add inputs and outputs for the gyroid function
-        gyroidNode->AddInput("pos", "position")
-            ->SetType(Lib3MF::eImplicitPortType::Vector);
+        auto gyroidPosInput = gyroidNode->AddInput("pos", "position");
+        gyroidPosInput->SetType(Lib3MF::eImplicitPortType::Vector);
 
-        gyroidNode->AddOutput("shape", "signed distance to the surface")
-            ->SetType(Lib3MF::eImplicitPortType::Scalar);
+        auto gyroidShapeOutput = gyroidNode->AddOutput("shape", "signed distance to the surface");
+        gyroidShapeOutput->SetType(Lib3MF::eImplicitPortType::Scalar);
 
-        newFunction->AddLinkByNames("inputs.pos", "gyroid.pos");
+        newFunction->AddLink(posInput, gyroidPosInput);       
 
         // Add a max node
         auto maxNode = newFunction->AddMaxNode(
             "max", Lib3MF::eImplicitNodeConfiguration::ScalarToScalar,
             "max - intersection", "group_shell");
 
-        newFunction->AddLink(gyroidNode->FindOutput("shape"), maxNode->GetInputA());
-        newFunction->AddLink(subtractionNode->GetOutputResult(), maxNode->GetInputB());
+        auto maxNodeInputA = maxNode->GetInputA();
+        newFunction->AddLink(gyroidShapeOutput, maxNodeInputA);
+
+        auto maxNodeInputB = maxNode->GetInputB();
+        newFunction->AddLink(subtractionNodeOutputResult, maxNodeInputB);
 
         // Set the output reference
         output->SetReference("max.result");
@@ -712,17 +736,15 @@ namespace Lib3MF
 
         functionIdNode->SetResource(funcFromImage3d.get());
 
-        auto functionInput = functionCallNode->FindInput("functionID");
+        auto functionInput = functionCallNode->GetInputFunctionID();
         ASSERT_TRUE(functionInput);
 
         EXPECT_EQ(functionInput->GetType(),
                   Lib3MF::eImplicitPortType::ResourceID);
 
-        // implicitFunction->AddLinkByNames("functionID.value",
-        //                                  "functionCall.functionID");
-
-        implicitFunction->AddLink(functionIdNode->GetOutputValue(),
-                                  functionCallNode->GetInputFunctionID());
+        auto functionIdNodeOutputValue = functionIdNode->GetOutputValue();
+        auto functionCallNodeInputFunctionID = functionCallNode->GetInputFunctionID();
+        implicitFunction->AddLink(functionIdNodeOutputValue, functionCallNodeInputFunctionID);
         // Currently you have to add the inputs and outputs of the called
         // function manually. We should automate this.
 

@@ -177,7 +177,7 @@ public:
 	* IComposeMatrixNode::GetOutputMatrix - Retrieves the output
 	* @return the output
 	*/
-	IImplicitPort * GetOutputMatrix() override;
+	IImplicitPort * GetOutputResult() override;
 
 };
 

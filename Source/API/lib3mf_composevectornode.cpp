@@ -55,9 +55,9 @@ IImplicitPort * CComposeVectorNode::GetInputZ()
 	return FindInputOrThrow(NMR::InputNames::z);
 }
 
-IImplicitPort * CComposeVectorNode::GetOutputVector()
+IImplicitPort * CComposeVectorNode::GetOutputResult()
 {
-	return FindOutputOrThrow(NMR::OutputNames::vector);
+	return FindOutputOrThrow(NMR::OutputNames::result);
 }
 
 Lib3MF::Impl::CComposeVectorNode::CComposeVectorNode(

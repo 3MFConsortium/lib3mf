@@ -98,7 +98,7 @@ public:
 	* IComposeVectorNode::GetOutputVector - Retrieves the output
 	* @return the output
 	*/
-	IImplicitPort * GetOutputVector() override;
+	IImplicitPort * GetOutputResult() override;
 
 };
 

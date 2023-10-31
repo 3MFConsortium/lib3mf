@@ -49,5 +49,5 @@ CFunctionCallNode::CFunctionCallNode(
 
 IImplicitPort * CFunctionCallNode::GetInputFunctionID()
 {
-    return FindInput("functionid");
+    return FindInputOrThrow(NMR::InputNames::functionID);
 }

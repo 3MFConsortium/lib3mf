@@ -2709,12 +2709,12 @@ Lib3MFResult CCall_lib3mf_composevectornode_getinputz(Lib3MFHandle libraryHandle
 }
 
 
-Lib3MFResult CCall_lib3mf_composevectornode_getoutputvector(Lib3MFHandle libraryHandle, Lib3MF_ComposeVectorNode pComposeVectorNode, Lib3MF_ImplicitPort * pVector)
+Lib3MFResult CCall_lib3mf_composevectornode_getoutputresult(Lib3MFHandle libraryHandle, Lib3MF_ComposeVectorNode pComposeVectorNode, Lib3MF_ImplicitPort * pResult)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ComposeVectorNode_GetOutputVector (pComposeVectorNode, pVector);
+	return wrapperTable->m_ComposeVectorNode_GetOutputResult (pComposeVectorNode, pResult);
 }
 
 
@@ -2898,12 +2898,12 @@ Lib3MFResult CCall_lib3mf_composematrixnode_getinputm33(Lib3MFHandle libraryHand
 }
 
 
-Lib3MFResult CCall_lib3mf_composematrixnode_getoutputmatrix(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pMatrix)
+Lib3MFResult CCall_lib3mf_composematrixnode_getoutputresult(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pResult)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ComposeMatrixNode_GetOutputMatrix (pComposeMatrixNode, pMatrix);
+	return wrapperTable->m_ComposeMatrixNode_GetOutputResult (pComposeMatrixNode, pResult);
 }
 
 
@@ -2943,12 +2943,12 @@ Lib3MFResult CCall_lib3mf_composematrixfromrowvectorsnode_getinputrow3(Lib3MFHan
 }
 
 
-Lib3MFResult CCall_lib3mf_composematrixfromrowvectorsnode_getoutputmatrix(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pMatrix)
+Lib3MFResult CCall_lib3mf_composematrixfromrowvectorsnode_getoutputresult(Lib3MFHandle libraryHandle, Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pResult)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetOutputMatrix (pComposeMatrixFromRowVectorsNode, pMatrix);
+	return wrapperTable->m_ComposeMatrixFromRowVectorsNode_GetOutputResult (pComposeMatrixFromRowVectorsNode, pResult);
 }
 
 
@@ -9889,14 +9889,14 @@ func (inst ComposeVectorNode) GetInputZ() (ImplicitPort, error) {
 	return inst.wrapperRef.NewImplicitPort(z), nil
 }
 
-// GetOutputVector retrieves the output.
-func (inst ComposeVectorNode) GetOutputVector() (ImplicitPort, error) {
-	var vector ref
-	ret := C.CCall_lib3mf_composevectornode_getoutputvector(inst.wrapperRef.LibraryHandle, inst.Ref, &vector)
+// GetOutputResult retrieves the output.
+func (inst ComposeVectorNode) GetOutputResult() (ImplicitPort, error) {
+	var result ref
+	ret := C.CCall_lib3mf_composevectornode_getoutputresult(inst.wrapperRef.LibraryHandle, inst.Ref, &result)
 	if ret != 0 {
 		return ImplicitPort{}, makeError(uint32(ret))
 	}
-	return inst.wrapperRef.NewImplicitPort(vector), nil
+	return inst.wrapperRef.NewImplicitPort(result), nil
 }
 
 
@@ -10119,14 +10119,14 @@ func (inst ComposeMatrixNode) GetInputM33() (ImplicitPort, error) {
 	return inst.wrapperRef.NewImplicitPort(m33), nil
 }
 
-// GetOutputMatrix retrieves the output.
-func (inst ComposeMatrixNode) GetOutputMatrix() (ImplicitPort, error) {
-	var matrix ref
-	ret := C.CCall_lib3mf_composematrixnode_getoutputmatrix(inst.wrapperRef.LibraryHandle, inst.Ref, &matrix)
+// GetOutputResult retrieves the output.
+func (inst ComposeMatrixNode) GetOutputResult() (ImplicitPort, error) {
+	var result ref
+	ret := C.CCall_lib3mf_composematrixnode_getoutputresult(inst.wrapperRef.LibraryHandle, inst.Ref, &result)
 	if ret != 0 {
 		return ImplicitPort{}, makeError(uint32(ret))
 	}
-	return inst.wrapperRef.NewImplicitPort(matrix), nil
+	return inst.wrapperRef.NewImplicitPort(result), nil
 }
 
 
@@ -10179,14 +10179,14 @@ func (inst ComposeMatrixFromRowVectorsNode) GetInputRow3() (ImplicitPort, error)
 	return inst.wrapperRef.NewImplicitPort(row3), nil
 }
 
-// GetOutputMatrix retrieves the output.
-func (inst ComposeMatrixFromRowVectorsNode) GetOutputMatrix() (ImplicitPort, error) {
-	var matrix ref
-	ret := C.CCall_lib3mf_composematrixfromrowvectorsnode_getoutputmatrix(inst.wrapperRef.LibraryHandle, inst.Ref, &matrix)
+// GetOutputResult retrieves the output.
+func (inst ComposeMatrixFromRowVectorsNode) GetOutputResult() (ImplicitPort, error) {
+	var result ref
+	ret := C.CCall_lib3mf_composematrixfromrowvectorsnode_getoutputresult(inst.wrapperRef.LibraryHandle, inst.Ref, &result)
 	if ret != 0 {
 		return ImplicitPort{}, makeError(uint32(ret))
 	}
-	return inst.wrapperRef.NewImplicitPort(matrix), nil
+	return inst.wrapperRef.NewImplicitPort(result), nil
 }
 
 

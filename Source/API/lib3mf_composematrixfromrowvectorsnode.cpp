@@ -67,8 +67,8 @@ IImplicitPort * CComposeMatrixFromRowVectorsNode::GetInputRow3()
 	return FindInputOrThrow(NMR::InputNames::D);
 }
 
-IImplicitPort * CComposeMatrixFromRowVectorsNode::GetOutputMatrix()
+IImplicitPort * CComposeMatrixFromRowVectorsNode::GetOutputResult()
 {
-	return FindOutputOrThrow(NMR::OutputNames::matrix);
+	return FindOutputOrThrow(NMR::OutputNames::result);
 }
 

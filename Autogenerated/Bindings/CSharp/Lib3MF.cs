@@ -1311,8 +1311,8 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composevectornode_getinputz", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ComposeVectorNode_GetInputZ (IntPtr Handle, out IntPtr AZ);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composevectornode_getoutputvector", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ComposeVectorNode_GetOutputVector (IntPtr Handle, out IntPtr AVector);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composevectornode_getoutputresult", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeVectorNode_GetOutputResult (IntPtr Handle, out IntPtr AResult);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_decomposevectornode_getinputvector", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 DecomposeVectorNode_GetInputVector (IntPtr Handle, out IntPtr AVector);
@@ -1374,8 +1374,8 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixnode_getinputm33", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ComposeMatrixNode_GetInputM33 (IntPtr Handle, out IntPtr AM33);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixnode_getoutputmatrix", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ComposeMatrixNode_GetOutputMatrix (IntPtr Handle, out IntPtr AMatrix);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixnode_getoutputresult", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixNode_GetOutputResult (IntPtr Handle, out IntPtr AResult);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixfromrowvectorsnode_getinputrow0", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ComposeMatrixFromRowVectorsNode_GetInputRow0 (IntPtr Handle, out IntPtr ARow0);
@@ -1389,8 +1389,8 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixfromrowvectorsnode_getinputrow3", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ComposeMatrixFromRowVectorsNode_GetInputRow3 (IntPtr Handle, out IntPtr ARow3);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixfromrowvectorsnode_getoutputmatrix", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ComposeMatrixFromRowVectorsNode_GetOutputMatrix (IntPtr Handle, out IntPtr AMatrix);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composematrixfromrowvectorsnode_getoutputresult", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ComposeMatrixFromRowVectorsNode_GetOutputResult (IntPtr Handle, out IntPtr AResult);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_constantnode_setconstant", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ConstantNode_SetConstant (IntPtr Handle, Double AValue);
@@ -5909,12 +5909,12 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newZ);
 		}
 
-		public CImplicitPort GetOutputVector ()
+		public CImplicitPort GetOutputResult ()
 		{
-			IntPtr newVector = IntPtr.Zero;
+			IntPtr newResult = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ComposeVectorNode_GetOutputVector (Handle, out newVector));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newVector);
+			CheckError(Internal.Lib3MFWrapper.ComposeVectorNode_GetOutputResult (Handle, out newResult));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newResult);
 		}
 
 	}
@@ -6093,12 +6093,12 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newM33);
 		}
 
-		public CImplicitPort GetOutputMatrix ()
+		public CImplicitPort GetOutputResult ()
 		{
-			IntPtr newMatrix = IntPtr.Zero;
+			IntPtr newResult = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ComposeMatrixNode_GetOutputMatrix (Handle, out newMatrix));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newMatrix);
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixNode_GetOutputResult (Handle, out newResult));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newResult);
 		}
 
 	}
@@ -6141,12 +6141,12 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newRow3);
 		}
 
-		public CImplicitPort GetOutputMatrix ()
+		public CImplicitPort GetOutputResult ()
 		{
-			IntPtr newMatrix = IntPtr.Zero;
+			IntPtr newResult = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ComposeMatrixFromRowVectorsNode_GetOutputMatrix (Handle, out newMatrix));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newMatrix);
+			CheckError(Internal.Lib3MFWrapper.ComposeMatrixFromRowVectorsNode_GetOutputResult (Handle, out newResult));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newResult);
 		}
 
 	}
