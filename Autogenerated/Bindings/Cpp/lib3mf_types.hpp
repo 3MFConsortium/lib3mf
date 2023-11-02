@@ -135,7 +135,11 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND 3002 /** A consumer has not been found */
 #define LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND 3003 /** A resource data has not been found */
 #define LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED 3004 /** A Key or Conentent encryption callback has not been registered */
-#define LIB3MF_ERROR_INVALIDKEYSIZE 3005 /** The key siue is invalid */
+#define LIB3MF_ERROR_INVALIDKEYSIZE 3005 /** The key size is invalid */
+#define LIB3MF_ERROR_INCOMPATIBLEPORTTYPES 4000 /** Link could not be added, the port types are incompatible */
+#define LIB3MF_ERROR_GRAPHISCYCLIC 4001 /** The functin graph is cyclic. Only dircected graphs are valid and can be topological sorted. */
+#define LIB3MF_ERROR_INPUTNOTSET 4002 /** The input of a node is not set. */
+#define LIB3MF_ERROR_INVALIDNODECONFIGURATION 4003 /** The selected node configuration is not supported */
 
 /*************************************************************************************************************************
  Error strings for Lib3MF
@@ -186,7 +190,11 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
     case LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND: return "A consumer has not been found";
     case LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: return "A resource data has not been found";
     case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: return "A Key or Conentent encryption callback has not been registered";
-    case LIB3MF_ERROR_INVALIDKEYSIZE: return "The key siue is invalid";
+    case LIB3MF_ERROR_INVALIDKEYSIZE: return "The key size is invalid";
+    case LIB3MF_ERROR_INCOMPATIBLEPORTTYPES: return "Link could not be added, the port types are incompatible";
+    case LIB3MF_ERROR_GRAPHISCYCLIC: return "The functin graph is cyclic. Only dircected graphs are valid and can be topological sorted.";
+    case LIB3MF_ERROR_INPUTNOTSET: return "The input of a node is not set.";
+    case LIB3MF_ERROR_INVALIDNODECONFIGURATION: return "The selected node configuration is not supported";
     default: return "unknown error";
   }
 }

@@ -28,10 +28,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "Model/Classes/NMR_ImplicitNodeTypes.h"
 
-#include <iostream>
-
 #include "Common/NMR_Exception.h"
 #include "Model/Classes/NMR_ModelImplicitNode.h"
+#include "lib3mf_interfaceexception.hpp"
 
 namespace NMR
 {
@@ -73,7 +72,6 @@ namespace NMR
                     In{{"A", eImplicitPortType::Matrix},
                        {"B", eImplicitPortType::Matrix}},
                     Out{{"result", eImplicitPortType::Matrix}}}};
-    
 
             static AllowedInputOutputs const oneParameterFunctionSameDimensions{
                 InputOutputRule{
@@ -97,23 +95,19 @@ namespace NMR
                 {eImplicitNodeType::Constant,
                  {"constant",
                   {InputOutputRule{
-                    Lib3MF::eImplicitNodeConfiguration::Default,
-                    In{}, Out{{"value", eImplicitPortType::Scalar}}}}}},
+                      Lib3MF::eImplicitNodeConfiguration::Default, In{},
+                      Out{{"value", eImplicitPortType::Scalar}}}}}},
                 {eImplicitNodeType::Multiplication,
-                 {
-                     "multiplication", twoParameterSameDimensions
-                 }},
+                 {"multiplication", twoParameterSameDimensions}},
                 {eImplicitNodeType::Division,
-                 {
-                     "division", twoParameterSameDimensions
-                 }},
+                 {"division", twoParameterSameDimensions}},
                 {eImplicitNodeType::ConstVec,
                  {
                      "constvec",
                      {
                          InputOutputRule{
-                            Lib3MF::eImplicitNodeConfiguration::Default,
-                            In{}, Out{{"vector", eImplicitPortType::Vector}}},
+                             Lib3MF::eImplicitNodeConfiguration::Default, In{},
+                             Out{{"vector", eImplicitPortType::Vector}}},
                      },
                  }},
                 {eImplicitNodeType::ConstMat,
@@ -121,8 +115,8 @@ namespace NMR
                      "constmat",
                      {
                          InputOutputRule{
-                            Lib3MF::eImplicitNodeConfiguration::Default,
-                            In{}, Out{{"matrix", eImplicitPortType::Matrix}}},
+                             Lib3MF::eImplicitNodeConfiguration::Default, In{},
+                             Out{{"matrix", eImplicitPortType::Matrix}}},
                      },
                  }},
                 {eImplicitNodeType::ComposeVector,
@@ -130,11 +124,11 @@ namespace NMR
                      "composevector",
                      {
                          InputOutputRule{
-                            Lib3MF::eImplicitNodeConfiguration::Default,
-                            In{{"x", eImplicitPortType::Scalar},
-                               {"y", eImplicitPortType::Scalar},
-                               {"z", eImplicitPortType::Scalar}},
-                            Out{{"result", eImplicitPortType::Vector}}},
+                             Lib3MF::eImplicitNodeConfiguration::Default,
+                             In{{"x", eImplicitPortType::Scalar},
+                                {"y", eImplicitPortType::Scalar},
+                                {"z", eImplicitPortType::Scalar}},
+                             Out{{"result", eImplicitPortType::Vector}}},
                      },
                  }},
                 {eImplicitNodeType::DecomposeVector,
@@ -142,11 +136,11 @@ namespace NMR
                      "decomposevector",
                      {
                          InputOutputRule{
-                                        Lib3MF::eImplicitNodeConfiguration::Default,
-                                        In{{"A", eImplicitPortType::Vector}},
-                                        Out{{"x", eImplicitPortType::Scalar},
-                                             {"y", eImplicitPortType::Scalar},
-                                             {"z", eImplicitPortType::Scalar}}},
+                             Lib3MF::eImplicitNodeConfiguration::Default,
+                             In{{"A", eImplicitPortType::Vector}},
+                             Out{{"x", eImplicitPortType::Scalar},
+                                 {"y", eImplicitPortType::Scalar},
+                                 {"z", eImplicitPortType::Scalar}}},
                      },
                  }},
                 {eImplicitNodeType::ComposeMatrix,
@@ -193,45 +187,45 @@ namespace NMR
                 {eImplicitNodeType::Dot,
                  {"dot",
                   {
-                      InputOutputRule{                    
-                        Lib3MF::eImplicitNodeConfiguration::Default,
-                        In{{"A", eImplicitPortType::Vector},
-                           {"B", eImplicitPortType::Vector}},
-                        Out{{"result", eImplicitPortType::Scalar}}},
+                      InputOutputRule{
+                          Lib3MF::eImplicitNodeConfiguration::Default,
+                          In{{"A", eImplicitPortType::Vector},
+                             {"B", eImplicitPortType::Vector}},
+                          Out{{"result", eImplicitPortType::Scalar}}},
                   }}},
                 {eImplicitNodeType::Cross,
                  {"cross",
                   {
                       InputOutputRule{
-                        Lib3MF::eImplicitNodeConfiguration::Default,
-                        In{{"A", eImplicitPortType::Vector},
-                           {"B", eImplicitPortType::Vector}},
-                        Out{{"result", eImplicitPortType::Vector}}},
+                          Lib3MF::eImplicitNodeConfiguration::Default,
+                          In{{"A", eImplicitPortType::Vector},
+                             {"B", eImplicitPortType::Vector}},
+                          Out{{"result", eImplicitPortType::Vector}}},
                   }}},
                 {eImplicitNodeType::MatVecMultiplication,
                  {"matvecmultiplication",
                   {
                       InputOutputRule{
-                        Lib3MF::eImplicitNodeConfiguration::Default,
-                        In{{"A", eImplicitPortType::Matrix},
-                           {"B", eImplicitPortType::Vector}},
-                        Out{{"result", eImplicitPortType::Vector}}},
+                          Lib3MF::eImplicitNodeConfiguration::Default,
+                          In{{"A", eImplicitPortType::Matrix},
+                             {"B", eImplicitPortType::Vector}},
+                          Out{{"result", eImplicitPortType::Vector}}},
                   }}},
                 {eImplicitNodeType::Transpose,
                  {"transpose",
                   {
                       InputOutputRule{
-                        Lib3MF::eImplicitNodeConfiguration::Default,
-                        In{{"A", eImplicitPortType::Matrix}},
-                        Out{{"result", eImplicitPortType::Matrix}}},
+                          Lib3MF::eImplicitNodeConfiguration::Default,
+                          In{{"A", eImplicitPortType::Matrix}},
+                          Out{{"result", eImplicitPortType::Matrix}}},
                   }}},
                 {eImplicitNodeType::Inverse,
                  {"inverse",
                   {
                       InputOutputRule{
-                        Lib3MF::eImplicitNodeConfiguration::Default,
-                        In{{"A", eImplicitPortType::Matrix}},
-                        Out{{"result", eImplicitPortType::Matrix}}},
+                          Lib3MF::eImplicitNodeConfiguration::Default,
+                          In{{"A", eImplicitPortType::Matrix}},
+                          Out{{"result", eImplicitPortType::Matrix}}},
                   }}},
                 {eImplicitNodeType::Sinus,
                  {"sin", oneParameterFunctionSameDimensions}},
@@ -247,16 +241,12 @@ namespace NMR
                  {"atan", oneParameterFunctionSameDimensions}},
                 {eImplicitNodeType::ArcTan2,
                  {"atan2", twoParameterSameDimensions}},
-                {eImplicitNodeType::Min,
-                 {"min", twoParameterSameDimensions}},
-                {eImplicitNodeType::Max,
-                 {"max", twoParameterSameDimensions}},
+                {eImplicitNodeType::Min, {"min", twoParameterSameDimensions}},
+                {eImplicitNodeType::Max, {"max", twoParameterSameDimensions}},
                 {eImplicitNodeType::Abs,
                  {"abs", oneParameterFunctionSameDimensions}},
-                {eImplicitNodeType::Fmod,
-                 {"fmod", twoParameterSameDimensions}},
-                {eImplicitNodeType::Pow,
-                 {"pow", twoParameterSameDimensions}},
+                {eImplicitNodeType::Fmod, {"fmod", twoParameterSameDimensions}},
+                {eImplicitNodeType::Pow, {"pow", twoParameterSameDimensions}},
                 {eImplicitNodeType::Sqrt,
                  {"sqrt", oneParameterFunctionSameDimensions}},
                 {eImplicitNodeType::Exp,
@@ -287,21 +277,21 @@ namespace NMR
                  {"select",  // result = A < B ? C : D
                   {
                       InputOutputRule{
-                        Lib3MF::eImplicitNodeConfiguration::ScalarToScalar,
+                          Lib3MF::eImplicitNodeConfiguration::ScalarToScalar,
                           In{{"A", eImplicitPortType::Scalar},
                              {"B", eImplicitPortType::Scalar},
                              {"C", eImplicitPortType::Scalar},
                              {"D", eImplicitPortType::Scalar}},
                           Out{{"result", eImplicitPortType::Scalar}}},
                       InputOutputRule{
-                        Lib3MF::eImplicitNodeConfiguration::VectorToVector,
+                          Lib3MF::eImplicitNodeConfiguration::VectorToVector,
                           In{{"A", eImplicitPortType::Vector},
                              {"B", eImplicitPortType::Vector},
                              {"C", eImplicitPortType::Vector},
                              {"D", eImplicitPortType::Vector}},
                           Out{{"result", eImplicitPortType::Vector}}},
                       InputOutputRule{
-                        Lib3MF::eImplicitNodeConfiguration::MatrixToMatrix,
+                          Lib3MF::eImplicitNodeConfiguration::MatrixToMatrix,
                           In{{"A", eImplicitPortType::Matrix},
                              {"B", eImplicitPortType::Matrix},
                              {"C", eImplicitPortType::Matrix},
@@ -309,23 +299,23 @@ namespace NMR
                           Out{{"result", eImplicitPortType::Matrix}}},
 
                   }}},
-                {eImplicitNodeType::Clamp, // result = min(max(A, min), max)
+                {eImplicitNodeType::Clamp,  // result = min(max(A, min), max)
                  {"clamp",
                   {
                       InputOutputRule{
-                        Lib3MF::eImplicitNodeConfiguration::ScalarToScalar,
+                          Lib3MF::eImplicitNodeConfiguration::ScalarToScalar,
                           In{{"A", eImplicitPortType::Scalar},
                              {"min", eImplicitPortType::Scalar},
                              {"max", eImplicitPortType::Scalar}},
                           Out{{"result", eImplicitPortType::Scalar}}},
                       InputOutputRule{
-                        Lib3MF::eImplicitNodeConfiguration::VectorToVector,
+                          Lib3MF::eImplicitNodeConfiguration::VectorToVector,
                           In{{"A", eImplicitPortType::Vector},
                              {"min", eImplicitPortType::Vector},
                              {"max", eImplicitPortType::Vector}},
                           Out{{"result", eImplicitPortType::Vector}}},
                       InputOutputRule{
-                        Lib3MF::eImplicitNodeConfiguration::MatrixToMatrix,
+                          Lib3MF::eImplicitNodeConfiguration::MatrixToMatrix,
                           In{{"A", eImplicitPortType::Matrix},
                              {"min", eImplicitPortType::Matrix},
                              {"max", eImplicitPortType::Matrix}},
@@ -335,7 +325,7 @@ namespace NMR
                  {"length",
                   {
                       InputOutputRule{
-                        Lib3MF::eImplicitNodeConfiguration::Default,
+                          Lib3MF::eImplicitNodeConfiguration::Default,
                           In{{"A", eImplicitPortType::Vector}},
                           Out{{"result", eImplicitPortType::Scalar}}},
                   }}},
@@ -343,14 +333,14 @@ namespace NMR
                  {"resource",
                   {
                       InputOutputRule{
-                        Lib3MF::eImplicitNodeConfiguration::Default,
-                          In{}, Out{{"value", eImplicitPortType::ResourceID}}},
+                          Lib3MF::eImplicitNodeConfiguration::Default, In{},
+                          Out{{"value", eImplicitPortType::ResourceID}}},
                   }}},
                 {eImplicitNodeType::Mesh,
                  {"mesh",
                   {
                       InputOutputRule{
-                        Lib3MF::eImplicitNodeConfiguration::Default,
+                          Lib3MF::eImplicitNodeConfiguration::Default,
                           In{{"pos", eImplicitPortType::Vector},
                              {"mesh", eImplicitPortType::ResourceID}},
                           Out{{"distance", eImplicitPortType::Scalar}}},
@@ -358,9 +348,11 @@ namespace NMR
                 {eImplicitNodeType::FunctionCall,
                  {"functioncall",
                   {InputOutputRule{
-                    Lib3MF::eImplicitNodeConfiguration::Default,
+                      Lib3MF::eImplicitNodeConfiguration::Default,
                       In{{"functionID",
-                          eImplicitPortType::ResourceID}},  // not predefined besides the functionID
+                          eImplicitPortType::ResourceID}},  // not predefined
+                                                            // besides the
+                                                            // functionID
                       Out{}                                 // not predefined
                   }}}}};
         }
@@ -371,9 +363,10 @@ namespace NMR
             auto it = m_nodeTypes.find(type);
             if(it == m_nodeTypes.end())
             {
-                std::cerr << "Unknown node type: " << static_cast<int>(type)
-                          << std::endl;
-                throw CNMRException(NMR_ERROR_UNKNOWN_NODETYPE_IMPLICITMODEL);
+                throw ELib3MFInterfaceException(
+                    LIB3MF_ERROR_INVALIDNODECONFIGURATION,
+                    "Unknown node type " +
+                        std::to_string(static_cast<int>(type)));
             }
             return it->second;
         }
@@ -389,10 +382,10 @@ namespace NMR
 
             if(nodeType.getAllowedInputOutputs().empty())
             {
-                std::cerr << "InputOutput map for node type: "
-                          << static_cast<int>(node.getNodeType()) << " is empty"
-                          << std::endl;
-                throw CNMRException(NMR_ERROR_UNKNOWN_NODETYPE_IMPLICITMODEL);
+                throw ELib3MFInterfaceException(
+                    LIB3MF_ERROR_INVALIDNODECONFIGURATION,
+                    "No known configuration for node type " +
+                        std::to_string(static_cast<int>(node.getNodeType())));
             }
             applyInputOutputRuleToNode(
                 node, nodeType.getAllowedInputOutputs().front());
@@ -402,7 +395,7 @@ namespace NMR
             NMR::CModelImplicitNode& node,
             Lib3MF::eImplicitNodeConfiguration const configuration) const
         {
-            if (configuration == Lib3MF::eImplicitNodeConfiguration::Default)
+            if(configuration == Lib3MF::eImplicitNodeConfiguration::Default)
             {
                 addExpectedPortsToNode(node);
                 return;
@@ -411,34 +404,37 @@ namespace NMR
             auto const& nodeType = getNodeType(node.getNodeType());
             if(nodeType.getAllowedInputOutputs().empty())
             {
-                std::cerr << "InputOutput map for node type: "
-                          << static_cast<int>(node.getNodeType()) << " is empty"
-                          << std::endl;
-                throw CNMRException(NMR_ERROR_UNKNOWN_NODETYPE_IMPLICITMODEL);
+                throw ELib3MFInterfaceException(
+                    LIB3MF_ERROR_INVALIDNODECONFIGURATION,
+                    "No known configuration for node type " +
+                        std::to_string(static_cast<int>(node.getNodeType())));
             }
 
-            if ((nodeType.getAllowedInputOutputs().size() == 1u) && configuration != Lib3MF::eImplicitNodeConfiguration::Default)
+            if((nodeType.getAllowedInputOutputs().size() == 1u) &&
+               configuration != Lib3MF::eImplicitNodeConfiguration::Default)
             {
-                std::cerr << "Node type: "
-                          << static_cast<int>(node.getNodeType()) << " only supports the default configuration"
-                          << std::endl;
-                throw CNMRException(NMR_ERROR_UNKNOWN_NODETYPE_IMPLICITMODEL);
+                throw ELib3MFInterfaceException(
+                    LIB3MF_ERROR_INVALIDNODECONFIGURATION,
+                    "Node type: " +
+                        std::to_string(static_cast<int>(node.getNodeType())) +
+                        " only supports the default configuration");
             }
 
-            for (auto const& rule : nodeType.getAllowedInputOutputs())
+            for(auto const& rule : nodeType.getAllowedInputOutputs())
             {
-                if (rule.configuration == configuration)
+                if(rule.configuration == configuration)
                 {
                     applyInputOutputRuleToNode(node, rule);
                     return;
                 }
             }
 
-            std::cerr << "No rule for configuration: "
-                      << static_cast<int>(configuration) << " for node type: "
-                      << static_cast<int>(node.getNodeType()) << std::endl;
-
-            throw CNMRException(NMR_ERROR_UNKNOWN_NODETYPE_IMPLICITMODEL);
+            throw ELib3MFInterfaceException(
+                LIB3MF_ERROR_INVALIDNODECONFIGURATION,
+                "Node type: " +
+                    std::to_string(static_cast<int>(node.getNodeType())) +
+                    " does not support configuration: " +
+                    std::to_string(static_cast<int>(configuration)));
         }
 
         void NodeTypes::applyInputOutputRuleToNode(
@@ -470,8 +466,9 @@ namespace NMR
             return false;
         }
 
-        bool NodeTypes::arePortsValidForRule(NMR::CModelImplicitNode const& node,
-                                             InputOutputRule const& rule) const
+        bool NodeTypes::arePortsValidForRule(
+            NMR::CModelImplicitNode const& node,
+            InputOutputRule const& rule) const
         {
             for(auto const& input : rule.inputs)
             {

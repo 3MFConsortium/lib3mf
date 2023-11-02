@@ -5663,6 +5663,10 @@ const LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND = 3002;
 const LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND = 3003;
 const LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED = 3004;
 const LIB3MF_ERROR_INVALIDKEYSIZE = 3005;
+const LIB3MF_ERROR_INCOMPATIBLEPORTTYPES = 4000;
+const LIB3MF_ERROR_GRAPHISCYCLIC = 4001;
+const LIB3MF_ERROR_INPUTNOTSET = 4002;
+const LIB3MF_ERROR_INVALIDNODECONFIGURATION = 4003;
 
 // WrappedError is an error that wraps a Lib3MF error.
 type WrappedError struct {
@@ -5761,7 +5765,15 @@ func errorMessage(errorcode uint32) string {
 	case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED:
 		return "A Key or Conentent encryption callback has not been registered";
 	case LIB3MF_ERROR_INVALIDKEYSIZE:
-		return "The key siue is invalid";
+		return "The key size is invalid";
+	case LIB3MF_ERROR_INCOMPATIBLEPORTTYPES:
+		return "Link could not be added, the port types are incompatible";
+	case LIB3MF_ERROR_GRAPHISCYCLIC:
+		return "The functin graph is cyclic. Only dircected graphs are valid and can be topological sorted.";
+	case LIB3MF_ERROR_INPUTNOTSET:
+		return "The input of a node is not set.";
+	case LIB3MF_ERROR_INVALIDNODECONFIGURATION:
+		return "The selected node configuration is not supported";
 	default:
 		return "unknown";
 	}

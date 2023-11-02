@@ -315,7 +315,7 @@ namespace Lib3MF
 
         auto output =
             newFunction->AddOutput("shape", "signed distance to the surface",
-                                   Lib3MF::eImplicitPortType::Vector);
+                                   Lib3MF::eImplicitPortType::Scalar);
         
         newFunction->AddLink(subNode->GetOutputResult().get(), output.get());
 
@@ -1011,14 +1011,75 @@ namespace Lib3MF
         writer3MF->WriteToFile(Volumetric::OutFolder + "TwoFunctions.3mf");
     }
 
-    TEST_F(Volumetric, SortNodesTopologically_SimpleFunction_SortedNodes)
+    TEST_F(Volumetric, AddLink_InvalidTypes_ThrowsException)
     {
-        // auto const function = helper::createGyroidFunction(*model);
+        auto const function = model->AddImplicitFunction();
 
-        // function->SortNodesTopologically();
+        auto const constVector = function->AddConstVecNode(
+            "constVector", "constVector", "group_constVector");
 
-        // auto const nodes = function->GetNodes();
+        auto const scalarAdd = function->AddAdditionNode(
+            "scalarAdd", Lib3MF::eImplicitNodeConfiguration::ScalarToScalar,
+            "scalarAdd", "group_scalarAdd");
 
-        // ToDo: Check the order of the nodes
+        auto const inputA = scalarAdd->GetInputA();
+        auto const vectorOutput = constVector->GetOutputVector();
+        EXPECT_THROW(function->AddLink(inputA, vectorOutput),
+                     ELib3MFException);
+    }
+
+    /**
+     * @brief Test case for sorting nodes topologically. The function creates a cyclic graph with three nodes and sets up circular 
+     * dependencies between them. The test expects the function to throw an exception when trying to sort the nodes topologically.
+     *
+     * Graph structure:
+     *
+     *          +--------+
+     *          |        |
+     *          v        |
+     *      +-------+    |
+     *      | add1  |    |
+     *      +-------+    |
+     *          ^        |
+     *          |        |
+     *    +-----------+  |
+     *    | constVec1 |  |
+     *    +-----------+  |
+     *          |        |
+     *          v        |
+     *      +-------+    |
+     *      | add2  |    |
+     *      +-------+    |
+     *          ^        |
+     *          |        |
+     *          +--------+
+     *
+     */
+    TEST_F(Volumetric, SortNodesTopologically_CyclicGraph_Throws)
+    {
+        auto const function = model->AddImplicitFunction();
+        
+        function->AddInput("pos", "position", Lib3MF::eImplicitPortType::Vector);
+        // Add nodes with circular dependencies
+        auto const constVec1 = function->AddConstVecNode("constVec1", "constVec1", "group1");
+        auto const add1 = function->AddAdditionNode("add1", Lib3MF::eImplicitNodeConfiguration::VectorToVector, "add1", "group1");
+        auto const add2 = function->AddAdditionNode("add2", Lib3MF::eImplicitNodeConfiguration::VectorToVector, "add2", "group1");
+
+        // Set up circular dependencies
+        auto const vectorOutput = constVec1->GetOutputVector();
+        auto const inputAdd1A = add1->GetInputA();
+        auto const inputAdd1B = add1->GetInputB();
+
+        auto const inputAdd2A = add2->GetInputA();
+        auto const inputAdd2B = add2->GetInputB();
+
+        auto const outputAdd1 = add1->GetOutputResult();
+        auto const outputAdd2 = add2->GetOutputResult();
+        function->AddLink(vectorOutput, inputAdd1A);
+        function->AddLink(outputAdd2, inputAdd1B);
+        function->AddLink(outputAdd1, inputAdd1A);
+        function->AddLink(vectorOutput, inputAdd2A);
+        function->AddLink(outputAdd1, inputAdd2B);
+        EXPECT_THROW(function->SortNodesTopologically(), ELib3MFException);
     }
 }  // namespace Lib3MF

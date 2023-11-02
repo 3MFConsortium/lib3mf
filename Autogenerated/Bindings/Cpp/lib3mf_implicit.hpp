@@ -638,6 +638,10 @@ public:
 			case LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: return "KEYSTORERESOURCEDATANOTFOUND";
 			case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: return "SECURECONTEXTNOTREGISTERED";
 			case LIB3MF_ERROR_INVALIDKEYSIZE: return "INVALIDKEYSIZE";
+			case LIB3MF_ERROR_INCOMPATIBLEPORTTYPES: return "INCOMPATIBLEPORTTYPES";
+			case LIB3MF_ERROR_GRAPHISCYCLIC: return "GRAPHISCYCLIC";
+			case LIB3MF_ERROR_INPUTNOTSET: return "INPUTNOTSET";
+			case LIB3MF_ERROR_INVALIDNODECONFIGURATION: return "INVALIDNODECONFIGURATION";
 		}
 		return "UNKNOWN";
 	}
@@ -688,7 +692,11 @@ public:
 			case LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND: return "A consumer has not been found";
 			case LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: return "A resource data has not been found";
 			case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: return "A Key or Conentent encryption callback has not been registered";
-			case LIB3MF_ERROR_INVALIDKEYSIZE: return "The key siue is invalid";
+			case LIB3MF_ERROR_INVALIDKEYSIZE: return "The key size is invalid";
+			case LIB3MF_ERROR_INCOMPATIBLEPORTTYPES: return "Link could not be added, the port types are incompatible";
+			case LIB3MF_ERROR_GRAPHISCYCLIC: return "The functin graph is cyclic. Only dircected graphs are valid and can be topological sorted.";
+			case LIB3MF_ERROR_INPUTNOTSET: return "The input of a node is not set.";
+			case LIB3MF_ERROR_INVALIDNODECONFIGURATION: return "The selected node configuration is not supported";
 		}
 		return "unknown error";
 	}

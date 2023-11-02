@@ -120,6 +120,10 @@ const
 	LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND = 3003;
 	LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED = 3004;
 	LIB3MF_ERROR_INVALIDKEYSIZE = 3005;
+	LIB3MF_ERROR_INCOMPATIBLEPORTTYPES = 4000;
+	LIB3MF_ERROR_GRAPHISCYCLIC = 4001;
+	LIB3MF_ERROR_INPUTNOTSET = 4002;
+	LIB3MF_ERROR_INVALIDNODECONFIGURATION = 4003;
 
 (*************************************************************************************************************************
  Declaration of enums
@@ -11289,7 +11293,11 @@ implementation
 			LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND: ADescription := 'A consumer has not been found';
 			LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: ADescription := 'A resource data has not been found';
 			LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: ADescription := 'A Key or Conentent encryption callback has not been registered';
-			LIB3MF_ERROR_INVALIDKEYSIZE: ADescription := 'The key siue is invalid';
+			LIB3MF_ERROR_INVALIDKEYSIZE: ADescription := 'The key size is invalid';
+			LIB3MF_ERROR_INCOMPATIBLEPORTTYPES: ADescription := 'Link could not be added, the port types are incompatible';
+			LIB3MF_ERROR_GRAPHISCYCLIC: ADescription := 'The functin graph is cyclic. Only dircected graphs are valid and can be topological sorted.';
+			LIB3MF_ERROR_INPUTNOTSET: ADescription := 'The input of a node is not set.';
+			LIB3MF_ERROR_INVALIDNODECONFIGURATION: ADescription := 'The selected node configuration is not supported';
 			else
 				ADescription := 'unknown';
 		end;

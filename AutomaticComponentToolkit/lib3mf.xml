@@ -109,8 +109,13 @@
 			description="A resource data has not been found" />
 		<error name="SECURECONTEXTNOTREGISTERED" code="3004"
 			description="A Key or Conentent encryption callback has not been registered" />
-		<error name="INVALIDKEYSIZE" code="3005" description="The key siue is invalid" />
+		<error name="INVALIDKEYSIZE" code="3005" description="The key size is invalid" />
 
+		<error name="INCOMPATIBLEPORTTYPES" code="4000"
+			description="Link could not be added, the port types are incompatible"/>
+		<error name="GRAPHISCYCLIC" code="4001" description="The functin graph is cyclic. Only dircected graphs are valid and can be topological sorted."/>
+		<error name="INPUTNOTSET" code="4002" description="The input of a node is not set."/>
+		<error name="INVALIDNODECONFIGURATION" code="4003" description="The selected node configuration is not supported"/>
 	</errors>
 
 	<enum name="PropertyType">

@@ -29,9 +29,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
 
 #include "Common/NMR_Exception.h"
+#include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_types.hpp"
 #include "Model/Classes/NMR_ImplicitNodeTypes.h"
-#include "Model/Classes/NMR_ModelImplicitPort.h"
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
+#include "Model/Classes/NMR_ModelImplicitPort.h"
 
 #include <algorithm>
 #include <queue>
@@ -111,14 +113,17 @@ namespace NMR
             auto const sourceNode = findNode(sourceNodeName);
             if(sourceNode == nullptr)
             {
-                throw CNMRException(
-                    NMR_ERROR_IMPLICIT_FUNCTION_INVALID_SOURCE_NODE);
+                throw ELib3MFInterfaceException(
+                    LIB3MF_ERROR_INVALIDPARAM,
+                    "Source node " + sourceNodeName + " does not exist.");
             }
             auto const sourcePortName = extractPortName(sSourceNodeIdentifier);
             if(sourcePortName.empty())
             {
-                throw CNMRException(
-                    NMR_ERROR_IMPLICIT_FUNCTION_INVALID_SOURCE_PORT);
+                throw ELib3MFInterfaceException(
+                    LIB3MF_ERROR_INVALIDPARAM,
+                    "Source port " + sourcePortName + " of node " +
+                        sourceNodeName + " does not exist.");
             }
             sourcePort = sourceNode->findOutput(sourcePortName);
         }
@@ -140,14 +145,17 @@ namespace NMR
             auto const targetNode = findNode(targetNodeName);
             if(targetNode == nullptr)
             {
-                throw CNMRException(
-                    NMR_ERROR_IMPLICIT_FUNCTION_INVALID_TARGET_NODE);
+                throw ELib3MFInterfaceException(
+                    LIB3MF_ERROR_INVALIDPARAM,
+                    "Target node " + targetNodeName + " does not exist.");
             }
 
             if(targetPortName.empty())
             {
-                throw CNMRException(
-                    NMR_ERROR_IMPLICIT_FUNCTION_INVALID_TARGET_PORT);
+                throw ELib3MFInterfaceException(
+                    LIB3MF_ERROR_INVALIDPARAM,
+                    "Target port " + targetPortName + " of node " +
+                        targetNodeName + " does not exist.");
             }
 
             targetPort = targetNode->findInput(targetPortName);
@@ -155,13 +163,37 @@ namespace NMR
 
         if(!targetPort)
         {
-            throw CNMRException(
-                NMR_ERROR_IMPLICIT_FUNCTION_INVALID_TARGET_PORT);
+            throw ELib3MFInterfaceException(
+                LIB3MF_ERROR_INVALIDPARAM,
+                "Target port " + targetPortName + " of node " +
+                    targetNodeName + " does not exist.");
         }
 
         if(sourcePort->getType() != targetPort->getType())
         {
-            throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_INVALID_PORT_TYPE);
+            std::string sourceNodeIdentifier = "function inputs";
+            std::string targetNodeIdentifier = "function outputs";
+
+            if(sourcePort->getParent())
+            {
+                sourceNodeIdentifier = sourcePort->getParent()->getIdentifier();
+            }
+
+            if(targetPort->getParent())
+            {
+                targetNodeIdentifier = targetPort->getParent()->getIdentifier();
+            }
+
+            throw ELib3MFInterfaceException(
+                LIB3MF_ERROR_INCOMPATIBLEPORTTYPES,
+                "Output " + sourcePort->getIdentifier() + " of node " +
+                    sourceNodeIdentifier + " has type " +
+                    std::to_string(static_cast<int>(sourcePort->getType())) +
+                    " while target input " + targetPort->getIdentifier() +
+                    " of node " + targetNodeIdentifier + " has type " +
+                    std::to_string(static_cast<int>(targetPort->getType())) +
+                    ".");
+            
         }
 
         targetPort->setReference(sSourceNodeIdentifier);
@@ -175,13 +207,41 @@ namespace NMR
     void CModelImplicitFunction::addLink(CModelImplicitPort const & pSourcePort,
                                          CModelImplicitPort & pTargetPort)
     {
-        if (pSourcePort.getParent() == nullptr) // That is the case for a function input
+        if(pSourcePort.getType() != pTargetPort.getType())
+        {
+            std::string sourceNodeIdentifier = "function inputs";
+            std::string targetNodeIdentifier = "function outputs";
+
+            if(pSourcePort.getParent())
+            {
+                sourceNodeIdentifier = pSourcePort.getParent()->getIdentifier();
+            }
+
+            if(pTargetPort.getParent())
+            {
+                targetNodeIdentifier = pTargetPort.getParent()->getIdentifier();
+            }
+
+            throw ELib3MFInterfaceException(
+                LIB3MF_ERROR_INCOMPATIBLEPORTTYPES,
+                "Output " + pSourcePort.getIdentifier() + " of node " +
+                    sourceNodeIdentifier + " has type " +
+                    std::to_string(static_cast<int>(pSourcePort.getType())) +
+                    " while target input " + pTargetPort.getIdentifier() +
+                    " of node " + targetNodeIdentifier + " has type " +
+                    std::to_string(static_cast<int>(pTargetPort.getType())) +
+                    ".");
+        }
+        if(pSourcePort.getParent() ==
+           nullptr)  // That is the case for a function input
         {
             pTargetPort.setReference(pSourcePort.getIdentifier());
+
             return;
         }
-        pTargetPort.setReference(makeReferenceIdentifier(pSourcePort.getParent()->getIdentifier(),
-                                                         pSourcePort.getIdentifier()));
+        pTargetPort.setReference(
+            makeReferenceIdentifier(pSourcePort.getParent()->getIdentifier(),
+                                    pSourcePort.getIdentifier()));
     }
 
     implicit::NodeTypes const& CModelImplicitFunction::getNodeTypes() const
@@ -267,11 +327,23 @@ namespace NMR
             for (auto const& port : *node->getInputs())
             {
                 auto const& referenceName = port->getReference();
+                if (referenceName.empty())
+                {
+                    throw ELib3MFInterfaceException(
+                        LIB3MF_ERROR_INPUTNOTSET,
+                        "Input " + port->getIdentifier() + " of node " +
+                            node->getIdentifier() + " is not set.");
+                }
                 auto const& sourceNodeName = extractNodeName(referenceName);
                 CModelImplicitNode* sourceNode = findNode(sourceNodeName);
                 if (sourceNode == nullptr)
                 {
-                    throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_INVALID_SOURCE_NODE);
+                    throw ELib3MFInterfaceException(
+                        LIB3MF_ERROR_INVALIDPARAM,
+                        "Input " + port->getIdentifier() + " of node " +
+                            node->getIdentifier() +
+                            " references a non-existing node " +
+                            sourceNodeName + ".");
                 }
                 auto const& sourceId = sourceNode->getGraphID();
                 graph[sourceId].push_back(id);
@@ -310,7 +382,7 @@ namespace NMR
         // Check if there is a cycle in the graph
         if (sortedNodes.size() != m_nodes->size())
         {
-            throw CNMRException(NMR_ERROR_IMPLICIT_FUNCTION_CYCLIC_GRAPH);
+            throw ELib3MFInterfaceException(LIB3MF_ERROR_GRAPHISCYCLIC, "The graph of the implicit function " + getIdentifier() + " is cyclic.");
         }
 
         // Update the node order
