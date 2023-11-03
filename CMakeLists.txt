@@ -144,6 +144,9 @@ else()
 endif()
 
 
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/submodules/fast_float/include)
+
+
 set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" IMPORT_PREFIX "" )
 # This makes sure symbols are exported
 target_compile_options(${PROJECT_NAME} PRIVATE "-D__LIB3MF_EXPORTS")
