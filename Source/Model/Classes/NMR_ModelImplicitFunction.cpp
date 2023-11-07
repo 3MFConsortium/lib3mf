@@ -38,6 +38,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <algorithm>
 #include <queue>
 
+
 namespace NMR
 {
     const implicit::NodeTypes CModelImplicitFunction::m_nodeTypes;
@@ -305,6 +306,10 @@ namespace NMR
     ImplicitIdentifier makeReferenceIdentifier(const ImplicitIdentifier & sNodeIdentifier,
                                                const ImplicitIdentifier & sPortIdentifier)
     {
+        if (sNodeIdentifier.empty())
+        {
+            return "inputs." + sPortIdentifier;
+        }
         return sNodeIdentifier + "." + sPortIdentifier;
     }
 
@@ -335,6 +340,10 @@ namespace NMR
                             node->getIdentifier() + " is not set.");
                 }
                 auto const& sourceNodeName = extractNodeName(referenceName);
+                if (sourceNodeName == "inputs")
+                {
+                    continue;
+                }
                 CModelImplicitNode* sourceNode = findNode(sourceNodeName);
                 if (sourceNode == nullptr)
                 {
@@ -393,4 +402,27 @@ namespace NMR
         }
         m_nodes->swap(newNodes);
     }
+
+    PModelImplicitPort
+    NMR::CModelImplicitFunction::findPort(const ImplicitIdentifier & sIdentifier) const
+    {
+        auto const nodeName = extractNodeName(sIdentifier);
+        auto const portName = extractPortName(sIdentifier);
+        if (nodeName == "inputs")
+        {
+            return findInput(portName);
+        }
+        auto const node = findNode(nodeName);
+        if (node == nullptr)
+        {
+            return {};
+        }
+        if (portName.empty())
+        {
+            return {};
+        }
+        return node->findOutput(portName);
+    }
 }
+
+

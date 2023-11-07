@@ -63,8 +63,8 @@ namespace NMR
         PPorts const& getInputs() const;
         PPorts const& getOutputs() const;
 
-        PModelImplicitPort findInput(const std::string& sIdentifier);
-        PModelImplicitPort findOutput(const std::string& sIdentifier);
+        PModelImplicitPort findInput(const std::string& sIdentifier) const;
+        PModelImplicitPort findOutput(const std::string& sIdentifier) const;
 
         virtual void clear();
     };

@@ -40,6 +40,7 @@ namespace NMR
 
     using ImplicitIdentifier = std::string;
     class CModelImplicitNode;
+    class CModelImplicitPort;
 
     class CModelImplicitPort
     {
@@ -49,6 +50,7 @@ namespace NMR
         std::string m_displayname;
         Lib3MF::eImplicitPortType m_type = Lib3MF::eImplicitPortType::Scalar;
         ImplicitIdentifier m_reference;
+        std::shared_ptr<class CModelImplicitPort> m_referencedPort;
         
       public:
         CModelImplicitPort(CModelImplicitNode * parent,
@@ -75,6 +77,8 @@ namespace NMR
         void setReference(ImplicitIdentifier const & reference);
 
         CModelImplicitNode * getParent() const;
+
+        std::shared_ptr<CModelImplicitPort> getReferencedPort() const;
     };
 
     using PModelImplicitPort = std::shared_ptr<CModelImplicitPort>;

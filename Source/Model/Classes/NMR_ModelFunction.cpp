@@ -80,7 +80,7 @@ namespace NMR
         return m_outputs;
     }
 
-    PModelImplicitPort CModelFunction::findInput(const std::string & sIdentifier)
+    PModelImplicitPort CModelFunction::findInput(const std::string & sIdentifier) const
     {
         for (auto & port : *m_inputs)
         {
@@ -92,7 +92,7 @@ namespace NMR
         return {};
     }
 
-    PModelImplicitPort CModelFunction::findOutput(const std::string & sIdentifier)
+    PModelImplicitPort CModelFunction::findOutput(const std::string & sIdentifier) const
     {
         for (auto & port : *m_outputs)
         {

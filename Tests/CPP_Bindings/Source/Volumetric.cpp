@@ -105,6 +105,67 @@ namespace Lib3MF
             return gyroidFunction;
         }
 
+
+        PImplicitNode findNodeByName(PImplicitFunction const& function, std::string const& name)
+        {
+            auto nodes = function->GetNodes();
+            while(nodes->MoveNext())
+            {
+                if(nodes->GetCurrent()->GetIdentifier() == name)
+                {
+                    return nodes->GetCurrent();
+                }
+            }
+            return PImplicitNode();
+        }
+
+        // inputnames have the format "node.input"
+        std::string extractNodeName(std::string const& inputName)
+        {
+            auto pos = inputName.find(".");
+            if(pos == std::string::npos)
+            {
+                return inputName;
+            }
+            return inputName.substr(0, pos);
+        }
+
+        bool isTopologiallySorted(PImplicitFunction const & function)
+        {
+            std::vector<std::string> nodeNames;
+
+            {
+                auto nodes = function->GetNodes();
+                while (nodes->MoveNext())
+                {
+                    nodeNames.push_back(nodes->GetCurrent()->GetIdentifier());
+                }
+            }
+
+            auto nodes2 = function->GetNodes();
+            while (nodes2->MoveNext())
+            {
+                auto node = nodes2->GetCurrent();
+                auto inputs = node->GetInputs();
+                while (inputs->MoveNext())
+                {
+                    auto input = inputs->GetCurrent();
+                    auto inputName = input->GetReference();
+                    auto dependencyNodeName = extractNodeName(inputName);
+                    if (dependencyNodeName=="inputs")
+                    {
+                        continue;
+                    }
+                    auto iter = std::find(nodeNames.begin(), nodeNames.end(), dependencyNodeName);
+                    if(iter == nodeNames.end())
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
     }  // namespace helper
 
     class Volumetric : public ::testing::Test
@@ -1081,5 +1142,26 @@ namespace Lib3MF
         function->AddLink(vectorOutput, inputAdd2A);
         function->AddLink(outputAdd1, inputAdd2B);
         EXPECT_THROW(function->SortNodesTopologically(), ELib3MFException);
+    }
+
+    TEST_F(Volumetric, Volumetric_SortNodesTopologically_ValidGraph_ResultIsTopologialSorted)
+    {
+        auto const function = helper::createGyroidFunction(*model);
+
+        auto const nodes = function->GetNodes();
+        auto const nodeCount = nodes->Count();
+        ASSERT_EQ(nodeCount, 5u);
+
+        function->SortNodesTopologically();
+
+        auto const sortedNodes = function->GetNodes();
+
+        auto const sortedNodeCount = sortedNodes->Count();
+
+        ASSERT_EQ(sortedNodeCount, nodeCount);
+
+        // Check that the nodes are sorted topologically
+        EXPECT_TRUE(helper::isTopologiallySorted(function));
+
     }
 }  // namespace Lib3MF

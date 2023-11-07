@@ -27,53 +27,58 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --*/
 
 #include "Model/Classes/NMR_ModelImplicitPort.h"
-
+#include "Model/Classes/NMR_ModelImplicitNode.h"
+#include "Model/Classes/NMR_ModelImplicitFunction.h"
 #include "Common/NMR_Exception.h"
 
 namespace NMR
 {
-    CModelImplicitPort::CModelImplicitPort(CModelImplicitNode* parent,
+    CModelImplicitPort::CModelImplicitPort(CModelImplicitNode * parent,
 
-                                           ImplicitIdentifier const& identifier,
-                                           std::string const& displayname)
-        : m_parent(parent), m_identifier(identifier), m_displayname(displayname)
+                                           ImplicitIdentifier const & identifier,
+                                           std::string const & displayname)
+        : m_parent(parent)
+        , m_identifier(identifier)
+        , m_displayname(displayname)
     {
     }
 
-    CModelImplicitPort::CModelImplicitPort(ImplicitIdentifier const& identifier,
-                                           std::string const& displayname,
+    CModelImplicitPort::CModelImplicitPort(ImplicitIdentifier const & identifier,
+                                           std::string const & displayname,
                                            Lib3MF::eImplicitPortType type)
-        : m_identifier(identifier), m_displayname(displayname), m_type(type)
+        : m_identifier(identifier)
+        , m_displayname(displayname)
+        , m_type(type)
     {
     }
 
-    CModelImplicitPort::CModelImplicitPort(ImplicitIdentifier const& identifier,
-                                           std::string const& displayname,
+    CModelImplicitPort::CModelImplicitPort(ImplicitIdentifier const & identifier,
+                                           std::string const & displayname,
                                            Lib3MF::eImplicitPortType type,
-                                           ImplicitIdentifier const& reference)
-        : m_identifier(identifier),
-          m_displayname(displayname),
-          m_type(type),
-          m_reference(reference)
+                                           ImplicitIdentifier const & reference)
+        : m_identifier(identifier)
+        , m_displayname(displayname)
+        , m_type(type)
+        , m_reference(reference)
     {
     }
 
-    ImplicitIdentifier const& CModelImplicitPort::getIdentifier() const
+    ImplicitIdentifier const & CModelImplicitPort::getIdentifier() const
     {
         return m_identifier;
     }
 
-    std::string const& CModelImplicitPort::getDisplayName() const
+    std::string const & CModelImplicitPort::getDisplayName() const
     {
         return m_displayname;
     }
 
-    void CModelImplicitPort::setIdentifier(std::string const& identifier)
+    void CModelImplicitPort::setIdentifier(std::string const & identifier)
     {
         m_identifier = identifier;
     }
 
-    void CModelImplicitPort::setDisplayName(std::string const& displayname)
+    void CModelImplicitPort::setDisplayName(std::string const & displayname)
     {
         m_displayname = displayname;
     }
@@ -88,19 +93,44 @@ namespace NMR
         m_type = type;
     }
 
-    ImplicitIdentifier const& NMR::CModelImplicitPort::getReference() const
+    ImplicitIdentifier const & CModelImplicitPort::getReference() const
     {
         return m_reference;
     }
 
-    void NMR::CModelImplicitPort::setReference(
-        ImplicitIdentifier const& reference)
+    void CModelImplicitPort::setReference(ImplicitIdentifier const & reference)
     {
+        if (reference == m_reference)
+        {
+            return;
+        }
+
+        m_referencedPort.reset();
+
         m_reference = reference;
+        
+        if (!m_parent)
+        {
+            return;
+        }
+
+        auto * function = m_parent->getParent();
+        if (!function)
+        {
+            return;
+        }
+
+        m_referencedPort = function->findPort(m_reference);
     }
 
-    CModelImplicitNode* NMR::CModelImplicitPort::getParent() const
+    CModelImplicitNode * CModelImplicitPort::getParent() const
     {
         return m_parent;
     }
-}  // namespace NMR
+
+    std::shared_ptr<CModelImplicitPort> CModelImplicitPort::getReferencedPort() const
+    {
+        return m_referencedPort;
+    }
+
+} // namespace NMR

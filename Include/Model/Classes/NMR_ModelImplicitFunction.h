@@ -125,6 +125,8 @@ namespace NMR
          *
          */
         void sortNodesTopologically() const;
+
+        PModelImplicitPort findPort(const ImplicitIdentifier& sIdentifier) const;
     };
 
     using PModelImplicitFunction = std::shared_ptr<CModelImplicitFunction>;
