@@ -342,7 +342,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ComposeVectorNode_GetInputY = NULL;
 	pWrapperTable->m_ComposeVectorNode_GetInputZ = NULL;
 	pWrapperTable->m_ComposeVectorNode_GetOutputResult = NULL;
-	pWrapperTable->m_DecomposeVectorNode_GetInputVector = NULL;
+	pWrapperTable->m_DecomposeVectorNode_GetInputA = NULL;
 	pWrapperTable->m_DecomposeVectorNode_GetOutputX = NULL;
 	pWrapperTable->m_DecomposeVectorNode_GetOutputY = NULL;
 	pWrapperTable->m_DecomposeVectorNode_GetOutputZ = NULL;
@@ -3324,12 +3324,12 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_DecomposeVectorNode_GetInputVector = (PLib3MFDecomposeVectorNode_GetInputVectorPtr) GetProcAddress(hLibrary, "lib3mf_decomposevectornode_getinputvector");
+	pWrapperTable->m_DecomposeVectorNode_GetInputA = (PLib3MFDecomposeVectorNode_GetInputAPtr) GetProcAddress(hLibrary, "lib3mf_decomposevectornode_getinputa");
 	#else // _WIN32
-	pWrapperTable->m_DecomposeVectorNode_GetInputVector = (PLib3MFDecomposeVectorNode_GetInputVectorPtr) dlsym(hLibrary, "lib3mf_decomposevectornode_getinputvector");
+	pWrapperTable->m_DecomposeVectorNode_GetInputA = (PLib3MFDecomposeVectorNode_GetInputAPtr) dlsym(hLibrary, "lib3mf_decomposevectornode_getinputa");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_DecomposeVectorNode_GetInputVector == NULL)
+	if (pWrapperTable->m_DecomposeVectorNode_GetInputA == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

@@ -659,7 +659,7 @@ void CImplicitFunction::AddLink(IImplicitPort* pSource, IImplicitPort* pTarget)
         throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
     }
 
-    function()->addLink(*pSourcePort->getPort(), *pTargetPort->getPort());
+    function()->addLink(pSourcePort->getPort(), pTargetPort->getPort());
 }
 
 void CImplicitFunction::AddLinkByNames(const std::string& sSource,

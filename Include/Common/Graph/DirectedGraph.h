@@ -1,10 +1,10 @@
-/*++
+﻿/*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2023 3MF Consortium
 
 All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification,
+Redistribution and use in source and binary forms, with or without modification,276529
 are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this
@@ -24,45 +24,35 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CDecomposeVectorNode
+--*/
 
-*/
+#pragma once
+#include "IDirectedGraph.h"
 
-#include "lib3mf_decomposevectornode.hpp"
-#include "lib3mf_interfaceexception.hpp"
-
-// Include custom headers here.
-
-
-using namespace Lib3MF::Impl;
-
-/*************************************************************************************************************************
- Class definition of CDecomposeVectorNode 
-**************************************************************************************************************************/
-
-IImplicitPort * CDecomposeVectorNode::GetInputA()
+namespace NMR::common::graph
 {
-	return FindInput("A");
-}
+    class DirectedGraph : public IDirectedGraph
+    {
+      public:
+        explicit DirectedGraph(std::size_t size);
 
-IImplicitPort * CDecomposeVectorNode::GetOutputX()
-{
-	return FindOutput("x");
-}
+        void addDependency(Identifier id, Identifier idOfDependency) override;
 
-IImplicitPort * CDecomposeVectorNode::GetOutputY()
-{
-	return FindOutput("y");
-}
+        void removeDependency(Identifier id, Identifier idOfDependency) override;
+        [[nodiscard]] bool isDirectlyDependingOn(Identifier id,
+                                                 Identifier dependencyInQuestion) const override;
 
-IImplicitPort * CDecomposeVectorNode::GetOutputZ()
-{
-	return FindOutput("z");
-}
+        [[nodiscard]] std::size_t getSize() const override;
 
-Lib3MF::Impl::CDecomposeVectorNode::CDecomposeVectorNode(
-    NMR::PModelImplicitNode pImplicitNode)
-	: CImplicitNode{pImplicitNode}
-{
-	CImplicitNode::m_pImplicitNode = pImplicitNode;
+        void removeVertex(Identifier id) override;
+
+        [[nodiscard]] DependencySet const & getVertices() const override;
+        void addVertex(Identifier id) override;
+
+      private:
+        std::size_t m_size;
+        std::vector<bool> m_graphData;
+
+        DependencySet m_vertices;
+    };
 }

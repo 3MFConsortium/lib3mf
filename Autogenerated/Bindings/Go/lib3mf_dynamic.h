@@ -3234,10 +3234,10 @@ typedef Lib3MFResult (*PLib3MFComposeVectorNode_GetOutputResultPtr) (Lib3MF_Comp
 * Retrieves the input
 *
 * @param[in] pDecomposeVectorNode - DecomposeVectorNode instance.
-* @param[out] pVector - the input
+* @param[out] pA - the input port for the vector to decompose
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFDecomposeVectorNode_GetInputVectorPtr) (Lib3MF_DecomposeVectorNode pDecomposeVectorNode, Lib3MF_ImplicitPort * pVector);
+typedef Lib3MFResult (*PLib3MFDecomposeVectorNode_GetInputAPtr) (Lib3MF_DecomposeVectorNode pDecomposeVectorNode, Lib3MF_ImplicitPort * pA);
 
 /**
 * Retrieves the output for the x component
@@ -6467,7 +6467,7 @@ typedef struct {
 	PLib3MFComposeVectorNode_GetInputYPtr m_ComposeVectorNode_GetInputY;
 	PLib3MFComposeVectorNode_GetInputZPtr m_ComposeVectorNode_GetInputZ;
 	PLib3MFComposeVectorNode_GetOutputResultPtr m_ComposeVectorNode_GetOutputResult;
-	PLib3MFDecomposeVectorNode_GetInputVectorPtr m_DecomposeVectorNode_GetInputVector;
+	PLib3MFDecomposeVectorNode_GetInputAPtr m_DecomposeVectorNode_GetInputA;
 	PLib3MFDecomposeVectorNode_GetOutputXPtr m_DecomposeVectorNode_GetOutputX;
 	PLib3MFDecomposeVectorNode_GetOutputYPtr m_DecomposeVectorNode_GetOutputY;
 	PLib3MFDecomposeVectorNode_GetOutputZPtr m_DecomposeVectorNode_GetOutputZ;

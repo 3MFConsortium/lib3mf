@@ -30,11 +30,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Model/Classes/NMR_ModelImplicitNode.h"
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
 #include "Common/NMR_Exception.h"
+#include "lib3mf_interfaceexception.hpp"
 
 namespace NMR
 {
     CModelImplicitPort::CModelImplicitPort(CModelImplicitNode * parent,
-
                                            ImplicitIdentifier const & identifier,
                                            std::string const & displayname)
         : m_parent(parent)
@@ -49,17 +49,6 @@ namespace NMR
         : m_identifier(identifier)
         , m_displayname(displayname)
         , m_type(type)
-    {
-    }
-
-    CModelImplicitPort::CModelImplicitPort(ImplicitIdentifier const & identifier,
-                                           std::string const & displayname,
-                                           Lib3MF::eImplicitPortType type,
-                                           ImplicitIdentifier const & reference)
-        : m_identifier(identifier)
-        , m_displayname(displayname)
-        , m_type(type)
-        , m_reference(reference)
     {
     }
 
@@ -93,22 +82,69 @@ namespace NMR
         m_type = type;
     }
 
-    ImplicitIdentifier const & CModelImplicitPort::getReference() const
+    ImplicitIdentifier CModelImplicitPort::getReference() const
     {
-        return m_reference;
+        if (!m_referencedPort)
+        {
+            updateReference();
+        }
+        if (!m_referencedPort)
+        {
+            return m_reference;
+        }
+
+        auto sourceParentNode = m_referencedPort->getParent();
+
+        if (!sourceParentNode)  // Function input ports don't have a node as parent
+        {
+            return "inputs." + m_referencedPort->getIdentifier();
+        }
+        
+        return makeReferenceIdentifier(sourceParentNode->getIdentifier(), m_referencedPort->getIdentifier());
     }
 
     void CModelImplicitPort::setReference(ImplicitIdentifier const & reference)
     {
-        if (reference == m_reference)
-        {
-            return;
-        }
-
         m_referencedPort.reset();
-
         m_reference = reference;
-        
+        updateReference();
+    }
+
+    CModelImplicitNode * CModelImplicitPort::getParent() const
+    {
+        return m_parent;
+    }
+
+    std::shared_ptr<CModelImplicitPort> CModelImplicitPort::getReferencedPort() const
+    {
+        if (!m_referencedPort)
+        {
+            updateReference();
+        }
+        if (!m_referencedPort)
+        { 
+            std::string nodeName;
+            if (m_parent)
+            {
+                nodeName = m_parent->getIdentifier();
+            }
+            else
+            {
+                nodeName = "inputs";
+            }
+            throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM, "Referenced port of port " + nodeName + "." + m_identifier + " is not set.");
+        }
+        return m_referencedPort;
+    }
+
+    void CModelImplicitPort::setReferencedPort(
+      std::shared_ptr<CModelImplicitPort> const & referencedPort)
+    {
+        m_referencedPort = referencedPort;
+    }
+
+    void CModelImplicitPort::updateReference() const
+    {
         if (!m_parent)
         {
             return;
@@ -122,15 +158,4 @@ namespace NMR
 
         m_referencedPort = function->findPort(m_reference);
     }
-
-    CModelImplicitNode * CModelImplicitPort::getParent() const
-    {
-        return m_parent;
-    }
-
-    std::shared_ptr<CModelImplicitPort> CModelImplicitPort::getReferencedPort() const
-    {
-        return m_referencedPort;
-    }
-
-} // namespace NMR
+} //namespace NMR

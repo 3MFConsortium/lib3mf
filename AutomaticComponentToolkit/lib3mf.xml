@@ -2183,9 +2183,9 @@
 
 	<class name="DecomposeVectorNode" parent="ImplicitNode"
 		description="Decomposes a vector into three scalar values">
-		<method name="GetInputVector" description="Retrieves the input">
-			<param name="Vector" type="class" class="ImplicitPort" pass="return"
-				description="the input" />
+		<method name="GetInputA" description="Retrieves the input">
+			<param name="A" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the vector to decompose" />
 		</method>
 		<method name="GetOutputX" description="Retrieves the output for the x component">
 			<param name="X" type="class" class="ImplicitPort" pass="return"

@@ -95,8 +95,7 @@ namespace NMR
         void addLink(const ImplicitIdentifier& sSourceNodeIdentifier,
                      const ImplicitIdentifier& sTargetNodeIdentifier);
 
-        void addLink(CModelImplicitPort const& pSourcePort,
-                     CModelImplicitPort& pTargetPort);
+        void addLink(PModelImplicitPort pSourcePort, PModelImplicitPort pTargetPort);
 
         implicit::NodeTypes const& getNodeTypes() const;
 
@@ -124,7 +123,7 @@ namespace NMR
          * children.
          *
          */
-        void sortNodesTopologically() const;
+        void sortNodesTopologically();
 
         PModelImplicitPort findPort(const ImplicitIdentifier& sIdentifier) const;
     };

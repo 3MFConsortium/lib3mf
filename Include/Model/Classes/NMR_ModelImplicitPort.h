@@ -35,12 +35,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "Model/Classes/NMR_ModelImplicitPortNames.h"
 
+
 namespace NMR
 {
 
     using ImplicitIdentifier = std::string;
     class CModelImplicitNode;
     class CModelImplicitPort;
+    class CModelImplicitFunction;
 
     class CModelImplicitPort
     {
@@ -49,21 +51,20 @@ namespace NMR
         ImplicitIdentifier m_identifier;
         std::string m_displayname;
         Lib3MF::eImplicitPortType m_type = Lib3MF::eImplicitPortType::Scalar;
-        ImplicitIdentifier m_reference;
-        std::shared_ptr<class CModelImplicitPort> m_referencedPort;
-        
+
+        mutable std::shared_ptr<class CModelImplicitPort> m_referencedPort;
+        ImplicitIdentifier m_reference; // m_reference might seem redundant, but it can be set if the dependency does not exist yet
+
+        void updateReference() const;
+
       public:
         CModelImplicitPort(CModelImplicitNode * parent,
                            ImplicitIdentifier const & identifier,
                            std::string const & displayname);
+
         CModelImplicitPort(ImplicitIdentifier const & identifier,
                            std::string const & displayname,
                            Lib3MF::eImplicitPortType type);
-        CModelImplicitPort(ImplicitIdentifier const & identifier,
-                           std::string const & displayname,
-                           Lib3MF::eImplicitPortType type,
-                           ImplicitIdentifier const & reference);
-        CModelImplicitPort() = delete;
 
         ImplicitIdentifier const & getIdentifier() const;
         std::string const & getDisplayName() const;
@@ -73,12 +74,13 @@ namespace NMR
         Lib3MF::eImplicitPortType getType() const;
         void setType(Lib3MF::eImplicitPortType type);
 
-        ImplicitIdentifier const & getReference() const;
+        ImplicitIdentifier getReference() const;
         void setReference(ImplicitIdentifier const & reference);
 
         CModelImplicitNode * getParent() const;
 
         std::shared_ptr<CModelImplicitPort> getReferencedPort() const;
+        void setReferencedPort(std::shared_ptr<CModelImplicitPort> const & referencedPort);
     };
 
     using PModelImplicitPort = std::shared_ptr<CModelImplicitPort>;

@@ -49,7 +49,9 @@ namespace Lib3MF
             auto decomposePos = gyroidFunction->AddDecomposeVectorNode(
                 "decomposePos", "decompose pos", "group_a");
 
-            gyroidFunction->AddLinkByNames("inputs.pos", "decomposePos.A");
+            auto inputPos = gyroidFunction->FindInput("pos");
+            auto decomposePosInput = decomposePos->GetInputA();
+            gyroidFunction->AddLink(inputPos, decomposePosInput);
 
             auto composeYZX = gyroidFunction->AddComposeVectorNode(
                 "composeYZX", "compose yzx", "group_a");
@@ -369,7 +371,9 @@ namespace Lib3MF
             "multiplication 1", "group_a");
 
         // Add some links
-        newFunction->AddLink(addNode->GetOutputResult().get(), subNode->GetInputA().get());
+        auto outputResult = addNode->GetOutputResult();
+        auto inputA = subNode->GetInputA();
+        newFunction->AddLink(outputResult, inputA);
 
         // Alternative way to add links
         mulNode->FindInput("A")->SetReference("addition_1.result");
@@ -378,7 +382,8 @@ namespace Lib3MF
             newFunction->AddOutput("shape", "signed distance to the surface",
                                    Lib3MF::eImplicitPortType::Scalar);
         
-        newFunction->AddLink(subNode->GetOutputResult().get(), output.get());
+        auto subNodeOutputResult = subNode->GetOutputResult();
+        newFunction->AddLink(subNodeOutputResult, output);
 
         auto theMesh = GetMesh();
         auto volumeData = theMesh->VolumeData();
@@ -1162,6 +1167,5 @@ namespace Lib3MF
 
         // Check that the nodes are sorted topologically
         EXPECT_TRUE(helper::isTopologiallySorted(function));
-
     }
 }  // namespace Lib3MF

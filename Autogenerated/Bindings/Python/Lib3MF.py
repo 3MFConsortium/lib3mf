@@ -428,7 +428,7 @@ class FunctionTable:
 	lib3mf_composevectornode_getinputy = None
 	lib3mf_composevectornode_getinputz = None
 	lib3mf_composevectornode_getoutputresult = None
-	lib3mf_decomposevectornode_getinputvector = None
+	lib3mf_decomposevectornode_getinputa = None
 	lib3mf_decomposevectornode_getoutputx = None
 	lib3mf_decomposevectornode_getoutputy = None
 	lib3mf_decomposevectornode_getoutputz = None
@@ -2975,11 +2975,11 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_composevectornode_getoutputresult = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_decomposevectornode_getinputvector")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_decomposevectornode_getinputa")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_decomposevectornode_getinputvector = methodType(int(methodAddress.value))
+			self.lib.lib3mf_decomposevectornode_getinputa = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_decomposevectornode_getoutputx")), methodAddress)
 			if err != 0:
@@ -5491,8 +5491,8 @@ class Wrapper:
 			self.lib.lib3mf_composevectornode_getoutputresult.restype = ctypes.c_int32
 			self.lib.lib3mf_composevectornode_getoutputresult.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_decomposevectornode_getinputvector.restype = ctypes.c_int32
-			self.lib.lib3mf_decomposevectornode_getinputvector.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_decomposevectornode_getinputa.restype = ctypes.c_int32
+			self.lib.lib3mf_decomposevectornode_getinputa.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_decomposevectornode_getoutputx.restype = ctypes.c_int32
 			self.lib.lib3mf_decomposevectornode_getoutputx.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -9598,15 +9598,15 @@ class ComposeVectorNode(ImplicitNode):
 class DecomposeVectorNode(ImplicitNode):
 	def __init__(self, handle, wrapper):
 		ImplicitNode.__init__(self, handle, wrapper)
-	def GetInputVector(self):
-		VectorHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_decomposevectornode_getinputvector(self._handle, VectorHandle))
-		if VectorHandle:
-			VectorObject = self._wrapper._polymorphicFactory(VectorHandle)
+	def GetInputA(self):
+		AHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_decomposevectornode_getinputa(self._handle, AHandle))
+		if AHandle:
+			AObject = self._wrapper._polymorphicFactory(AHandle)
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
-		return VectorObject
+		return AObject
 	
 	def GetOutputX(self):
 		XHandle = ctypes.c_void_p()

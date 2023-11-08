@@ -3863,10 +3863,10 @@ type
 	* Retrieves the input
 	*
 	* @param[in] pDecomposeVectorNode - DecomposeVectorNode instance.
-	* @param[out] pVector - the input
+	* @param[out] pA - the input port for the vector to decompose
 	* @return error code or 0 (success)
 	*)
-	TLib3MFDecomposeVectorNode_GetInputVectorFunc = function(pDecomposeVectorNode: TLib3MFHandle; out pVector: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFDecomposeVectorNode_GetInputAFunc = function(pDecomposeVectorNode: TLib3MFHandle; out pA: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves the output for the x component
@@ -8104,7 +8104,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
-		function GetInputVector(): TLib3MFImplicitPort;
+		function GetInputA(): TLib3MFImplicitPort;
 		function GetOutputX(): TLib3MFImplicitPort;
 		function GetOutputY(): TLib3MFImplicitPort;
 		function GetOutputZ(): TLib3MFImplicitPort;
@@ -8922,7 +8922,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFComposeVectorNode_GetInputYFunc: TLib3MFComposeVectorNode_GetInputYFunc;
 		FLib3MFComposeVectorNode_GetInputZFunc: TLib3MFComposeVectorNode_GetInputZFunc;
 		FLib3MFComposeVectorNode_GetOutputResultFunc: TLib3MFComposeVectorNode_GetOutputResultFunc;
-		FLib3MFDecomposeVectorNode_GetInputVectorFunc: TLib3MFDecomposeVectorNode_GetInputVectorFunc;
+		FLib3MFDecomposeVectorNode_GetInputAFunc: TLib3MFDecomposeVectorNode_GetInputAFunc;
 		FLib3MFDecomposeVectorNode_GetOutputXFunc: TLib3MFDecomposeVectorNode_GetOutputXFunc;
 		FLib3MFDecomposeVectorNode_GetOutputYFunc: TLib3MFDecomposeVectorNode_GetOutputYFunc;
 		FLib3MFDecomposeVectorNode_GetOutputZFunc: TLib3MFDecomposeVectorNode_GetOutputZFunc;
@@ -9507,7 +9507,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFComposeVectorNode_GetInputYFunc: TLib3MFComposeVectorNode_GetInputYFunc read FLib3MFComposeVectorNode_GetInputYFunc;
 		property Lib3MFComposeVectorNode_GetInputZFunc: TLib3MFComposeVectorNode_GetInputZFunc read FLib3MFComposeVectorNode_GetInputZFunc;
 		property Lib3MFComposeVectorNode_GetOutputResultFunc: TLib3MFComposeVectorNode_GetOutputResultFunc read FLib3MFComposeVectorNode_GetOutputResultFunc;
-		property Lib3MFDecomposeVectorNode_GetInputVectorFunc: TLib3MFDecomposeVectorNode_GetInputVectorFunc read FLib3MFDecomposeVectorNode_GetInputVectorFunc;
+		property Lib3MFDecomposeVectorNode_GetInputAFunc: TLib3MFDecomposeVectorNode_GetInputAFunc read FLib3MFDecomposeVectorNode_GetInputAFunc;
 		property Lib3MFDecomposeVectorNode_GetOutputXFunc: TLib3MFDecomposeVectorNode_GetOutputXFunc read FLib3MFDecomposeVectorNode_GetOutputXFunc;
 		property Lib3MFDecomposeVectorNode_GetOutputYFunc: TLib3MFDecomposeVectorNode_GetOutputYFunc read FLib3MFDecomposeVectorNode_GetOutputYFunc;
 		property Lib3MFDecomposeVectorNode_GetOutputZFunc: TLib3MFDecomposeVectorNode_GetOutputZFunc read FLib3MFDecomposeVectorNode_GetOutputZFunc;
@@ -15130,15 +15130,15 @@ implementation
 		inherited;
 	end;
 
-	function TLib3MFDecomposeVectorNode.GetInputVector(): TLib3MFImplicitPort;
+	function TLib3MFDecomposeVectorNode.GetInputA(): TLib3MFImplicitPort;
 	var
-		HVector: TLib3MFHandle;
+		HA: TLib3MFHandle;
 	begin
 		Result := nil;
-		HVector := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFDecomposeVectorNode_GetInputVectorFunc(FHandle, HVector));
-		if Assigned(HVector) then
-			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HVector);
+		HA := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDecomposeVectorNode_GetInputAFunc(FHandle, HA));
+		if Assigned(HA) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HA);
 	end;
 
 	function TLib3MFDecomposeVectorNode.GetOutputX(): TLib3MFImplicitPort;
@@ -18493,7 +18493,7 @@ implementation
 		FLib3MFComposeVectorNode_GetInputYFunc := LoadFunction('lib3mf_composevectornode_getinputy');
 		FLib3MFComposeVectorNode_GetInputZFunc := LoadFunction('lib3mf_composevectornode_getinputz');
 		FLib3MFComposeVectorNode_GetOutputResultFunc := LoadFunction('lib3mf_composevectornode_getoutputresult');
-		FLib3MFDecomposeVectorNode_GetInputVectorFunc := LoadFunction('lib3mf_decomposevectornode_getinputvector');
+		FLib3MFDecomposeVectorNode_GetInputAFunc := LoadFunction('lib3mf_decomposevectornode_getinputa');
 		FLib3MFDecomposeVectorNode_GetOutputXFunc := LoadFunction('lib3mf_decomposevectornode_getoutputx');
 		FLib3MFDecomposeVectorNode_GetOutputYFunc := LoadFunction('lib3mf_decomposevectornode_getoutputy');
 		FLib3MFDecomposeVectorNode_GetOutputZFunc := LoadFunction('lib3mf_decomposevectornode_getoutputz');
@@ -19667,7 +19667,7 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_composevectornode_getoutputresult'), @FLib3MFComposeVectorNode_GetOutputResultFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_decomposevectornode_getinputvector'), @FLib3MFDecomposeVectorNode_GetInputVectorFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_decomposevectornode_getinputa'), @FLib3MFDecomposeVectorNode_GetInputAFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_decomposevectornode_getoutputx'), @FLib3MFDecomposeVectorNode_GetOutputXFunc);

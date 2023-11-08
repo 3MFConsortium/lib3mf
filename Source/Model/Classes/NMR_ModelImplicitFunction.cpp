@@ -34,10 +34,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Model/Classes/NMR_ImplicitNodeTypes.h"
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
 #include "Model/Classes/NMR_ModelImplicitPort.h"
+#include "Common/Graph/GraphAlgorithms.h"
+#include "Common/Graph/DirectedGraph.h"
 
 #include <algorithm>
 #include <queue>
-
 
 namespace NMR
 {
@@ -196,53 +197,52 @@ namespace NMR
                     ".");
             
         }
-
-        targetPort->setReference(sSourceNodeIdentifier);
-        if(sourcePort)
-        {
-            sourcePort->setReference(
-                sTargetNodeIdentifier);  // won't be visible in the xml
-        }
+        
+        targetPort->setReferencedPort(sourcePort);
     }
 
-    void CModelImplicitFunction::addLink(CModelImplicitPort const & pSourcePort,
-                                         CModelImplicitPort & pTargetPort)
+    void CModelImplicitFunction::addLink(PModelImplicitPort pSourcePort,
+                                         PModelImplicitPort pTargetPort)
     {
-        if(pSourcePort.getType() != pTargetPort.getType())
+        if (!pSourcePort)
+        {
+            throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM,
+                                            "Source port is nullptr.");
+        }
+
+        if (!pTargetPort)
+        {
+            throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM,
+                                            "Target port is nullptr.");
+        }
+        
+        if(pSourcePort->getType() != pTargetPort->getType())
         {
             std::string sourceNodeIdentifier = "function inputs";
             std::string targetNodeIdentifier = "function outputs";
 
-            if(pSourcePort.getParent())
+            if(pSourcePort->getParent())
             {
-                sourceNodeIdentifier = pSourcePort.getParent()->getIdentifier();
+                sourceNodeIdentifier = pSourcePort->getParent()->getIdentifier();
             }
 
-            if(pTargetPort.getParent())
+            if(pTargetPort->getParent())
             {
-                targetNodeIdentifier = pTargetPort.getParent()->getIdentifier();
+                targetNodeIdentifier = pTargetPort->getParent()->getIdentifier();
             }
 
             throw ELib3MFInterfaceException(
                 LIB3MF_ERROR_INCOMPATIBLEPORTTYPES,
-                "Output " + pSourcePort.getIdentifier() + " of node " +
+                "Output " + pSourcePort->getIdentifier() + " of node " +
                     sourceNodeIdentifier + " has type " +
-                    std::to_string(static_cast<int>(pSourcePort.getType())) +
-                    " while target input " + pTargetPort.getIdentifier() +
+                    std::to_string(static_cast<int>(pSourcePort->getType())) +
+                    " while target input " + pTargetPort->getIdentifier() +
                     " of node " + targetNodeIdentifier + " has type " +
-                    std::to_string(static_cast<int>(pTargetPort.getType())) +
+                    std::to_string(static_cast<int>(pTargetPort->getType())) +
                     ".");
         }
-        if(pSourcePort.getParent() ==
-           nullptr)  // That is the case for a function input
-        {
-            pTargetPort.setReference(pSourcePort.getIdentifier());
-
-            return;
-        }
-        pTargetPort.setReference(
-            makeReferenceIdentifier(pSourcePort.getParent()->getIdentifier(),
-                                    pSourcePort.getIdentifier()));
+        
+        pTargetPort->setReferencedPort(pSourcePort);
     }
 
     implicit::NodeTypes const& CModelImplicitFunction::getNodeTypes() const
@@ -313,94 +313,111 @@ namespace NMR
         return sNodeIdentifier + "." + sPortIdentifier;
     }
 
-    void CModelImplicitFunction::sortNodesTopologically() const
+    NMR::common::graph::DirectedGraph directedGraphFromNodes(const PImplicitNodes & nodes)
     {
-        // Assign an id to each node
-        for (size_t i = 0; i < m_nodes->size(); ++i)
+        if (!nodes)
         {
-            (*m_nodes)[i]->setGraphID(static_cast<NMR::GraphID>(i));
+            throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM,
+                                            "Nodes must not be nullptr.");
         }
 
-        std::unordered_map<GraphID, std::vector<GraphID>> graph;
-        std::unordered_map<GraphID, int> indegree;
+        using namespace NMR::common;
+        graph::DirectedGraph graph(nodes->size()+1);
 
-        // Build the graph and calculate the indegree of each node
-        for (auto const& node : *m_nodes)
+        std::unordered_map<ImplicitIdentifier, graph::Identifier> identifierToIndex;
+        graph::Identifier InputsIndex = 0;
+
+        graph::Identifier index = 1;
+        for (auto const& node : *nodes)
         {
-            auto const& id = node->getGraphID();
-            indegree[id] = 0;
-            for (auto const& port : *node->getInputs())
+            if (!node)
             {
-                auto const& referenceName = port->getReference();
-                if (referenceName.empty())
+                throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM,
+                                                "Node must not be nullptr.");
+            }
+
+            auto const& identifier = node->getIdentifier();
+            identifierToIndex[identifier] = index;
+            ++index;
+        }
+
+        for (auto const& node : *nodes)
+        {
+            auto const& inputs = node->getInputs();
+
+            if (!inputs)
+            {
+                throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM,
+                                                "Inputs must not be nullptr.");
+            }
+
+            for (auto const& input : *inputs)
+            {
+                auto const& sourcePort = input->getReferencedPort();
+                if (sourcePort)
                 {
-                    throw ELib3MFInterfaceException(
-                        LIB3MF_ERROR_INPUTNOTSET,
-                        "Input " + port->getIdentifier() + " of node " +
-                            node->getIdentifier() + " is not set.");
+                    auto const& sourceNode = sourcePort->getParent();
+                    if (sourceNode)
+                    {
+                        auto const& sourceNodeIdentifier = sourceNode->getIdentifier();
+                        auto const& sourcePortIdentifier = sourcePort->getIdentifier();
+                        graph::Identifier const sourceIndex = identifierToIndex[sourceNodeIdentifier];
+                        graph::Identifier const targetIndex = identifierToIndex[node->getIdentifier()];
+                        if (sourceIndex >= graph.getSize())
+                        {
+                            throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM,
+                                                            "Source index " + std::to_string(sourceIndex) + " is out of range.");
+                        }
+
+                        if (targetIndex >= graph.getSize())
+                        {
+                            throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM,
+                                                            "Target index " + std::to_string(targetIndex) + " is out of range.");
+                        }
+                        graph.addDependency(sourceIndex, targetIndex);
+                    }
+                    else
+                    {
+                        graph.addDependency(InputsIndex, identifierToIndex[node->getIdentifier()]);
+                    }
                 }
-                auto const& sourceNodeName = extractNodeName(referenceName);
-                if (sourceNodeName == "inputs")
-                {
-                    continue;
-                }
-                CModelImplicitNode* sourceNode = findNode(sourceNodeName);
-                if (sourceNode == nullptr)
-                {
-                    throw ELib3MFInterfaceException(
-                        LIB3MF_ERROR_INVALIDPARAM,
-                        "Input " + port->getIdentifier() + " of node " +
-                            node->getIdentifier() +
-                            " references a non-existing node " +
-                            sourceNodeName + ".");
-                }
-                auto const& sourceId = sourceNode->getGraphID();
-                graph[sourceId].push_back(id);
-                ++indegree[id];
+
             }
         }
+        return graph;
+    }
 
-        // Perform the topological sort
-        std::queue<GraphID> q;
-        for (auto const& entry : indegree)
+    void CModelImplicitFunction::sortNodesTopologically()
+    {
+        using namespace NMR::common;
+        auto graph = directedGraphFromNodes(m_nodes);
+        auto const sortedIndices = NMR::common::graph::topologicalSort(graph);
+        if (sortedIndices.empty())
         {
-            auto const& id = entry.first;
-            auto const& degree = entry.second;
-            if (degree == 0)
+            throw ELib3MFInterfaceException(LIB3MF_ERROR_GRAPHISCYCLIC);
+        }
+       
+        PImplicitNodes sortedNodes = std::make_shared<ImplicitNodes>();
+        sortedNodes->reserve(sortedIndices.size());
+
+        for (auto const & index : sortedIndices)
+        {
+            if (index == 0)
             {
-                q.push(id);
+                continue;
             }
-        }
-
-        std::vector<GraphID> sortedNodes;
-        while (!q.empty())
-        {
-            auto const& id = q.front();
-            q.pop();
-            sortedNodes.push_back(id);
-            for (auto const& neighbor : graph[id])
+            
+            auto nodeIndex = index - 1;
+            
+            if (nodeIndex >= m_nodes->size())
             {
-                --indegree[neighbor];
-                if (indegree[neighbor] == 0)
-                {
-                    q.push(neighbor);
-                }
+                throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM,
+                                                "Invalid node index " + std::to_string(nodeIndex) + ". Node index must be between 0 and " + std::to_string(m_nodes->size()) + ".");
             }
-        }
 
-        // Check if there is a cycle in the graph
-        if (sortedNodes.size() != m_nodes->size())
-        {
-            throw ELib3MFInterfaceException(LIB3MF_ERROR_GRAPHISCYCLIC, "The graph of the implicit function " + getIdentifier() + " is cyclic.");
+            sortedNodes->push_back(m_nodes->at(nodeIndex));
         }
-
-        // Update the node order
-        std::vector<PModelImplicitNode> newNodes(m_nodes->size());
-        for (size_t i = 0; i < m_nodes->size(); ++i)
-        {
-            newNodes[i] = (*m_nodes)[sortedNodes[i]];
-        }
-        m_nodes->swap(newNodes);
+        std::swap(m_nodes, sortedNodes);
     }
 
     PModelImplicitPort

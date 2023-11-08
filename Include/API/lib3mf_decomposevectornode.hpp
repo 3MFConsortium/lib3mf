@@ -80,7 +80,7 @@ public:
 	* IDecomposeVectorNode::GetInputVector - Retrieves the input
 	* @return the input
 	*/
-	IImplicitPort * GetInputVector() override;
+	IImplicitPort * GetInputA() override;
 
 	/**
 	* IDecomposeVectorNode::GetOutputX - Retrieves the output for the x component

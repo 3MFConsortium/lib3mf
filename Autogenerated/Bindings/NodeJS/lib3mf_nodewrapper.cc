@@ -13708,7 +13708,7 @@ void CLib3MFDecomposeVectorNode::Init()
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
-		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputVector", GetInputVector);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputA", GetInputA);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOutputX", GetOutputX);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOutputY", GetOutputY);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOutputZ", GetOutputZ);
@@ -13745,22 +13745,22 @@ Local<Object> CLib3MFDecomposeVectorNode::NewInstance(Local<Object> pParent, Lib
 }
 
 
-void CLib3MFDecomposeVectorNode::GetInputVector(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFDecomposeVectorNode::GetInputA(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		try {
-        Lib3MFHandle hReturnVector = nullptr;
+        Lib3MFHandle hReturnA = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputVector.");
-        if (wrapperTable->m_DecomposeVectorNode_GetInputVector == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method DecomposeVectorNode::GetInputVector.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputA.");
+        if (wrapperTable->m_DecomposeVectorNode_GetInputA == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method DecomposeVectorNode::GetInputA.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_DecomposeVectorNode_GetInputVector(instanceHandle, &hReturnVector);
+        Lib3MFResult errorCode = wrapperTable->m_DecomposeVectorNode_GetInputA(instanceHandle, &hReturnA);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjVector = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnVector);
-        args.GetReturnValue().Set(instanceObjVector);
+        Local<Object> instanceObjA = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnA);
+        args.GetReturnValue().Set(instanceObjA);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

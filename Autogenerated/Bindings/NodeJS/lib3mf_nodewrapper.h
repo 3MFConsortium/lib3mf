@@ -1849,7 +1849,7 @@ class CLib3MFDecomposeVectorNode : public CLib3MFBaseClass {
 private:
 	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static v8::Persistent<v8::Function> constructor;
-	static void GetInputVector(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputA(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetOutputX(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetOutputY(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetOutputZ(const v8::FunctionCallbackInfo<v8::Value>& args);

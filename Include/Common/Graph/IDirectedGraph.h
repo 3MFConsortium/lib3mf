@@ -1,10 +1,10 @@
-/*++
+﻿/*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2023 3MF Consortium
 
 All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification,
+Redistribution and use in source and binary forms, with or without modification,276529
 are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this
@@ -24,45 +24,33 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CDecomposeVectorNode
+--*/
 
-*/
+#pragma once
 
-#include "lib3mf_decomposevectornode.hpp"
-#include "lib3mf_interfaceexception.hpp"
+#include <set>
+#include <vector>
 
-// Include custom headers here.
-
-
-using namespace Lib3MF::Impl;
-
-/*************************************************************************************************************************
- Class definition of CDecomposeVectorNode 
-**************************************************************************************************************************/
-
-IImplicitPort * CDecomposeVectorNode::GetInputA()
+namespace NMR::common::graph
 {
-	return FindInput("A");
-}
+    using Identifier = int;
+    using DependencySet = std::set<Identifier>;
+    using VertexList = std::vector<Identifier>;
 
-IImplicitPort * CDecomposeVectorNode::GetOutputX()
-{
-	return FindOutput("x");
-}
+    class IDirectedGraph
+    {
+      public:
+        explicit IDirectedGraph(std::size_t const /*unused*/){};
+        virtual ~IDirectedGraph() = default;
+        virtual void addDependency(Identifier id, Identifier idOfDependency) = 0;
+        virtual void removeDependency(Identifier id, Identifier idOfDependency) = 0;
+        [[nodiscard]] virtual bool isDirectlyDependingOn(Identifier id,
+                                                         Identifier dependencyInQuestion) const = 0;
 
-IImplicitPort * CDecomposeVectorNode::GetOutputY()
-{
-	return FindOutput("y");
-}
+        [[nodiscard]] virtual std::size_t getSize() const = 0;
+        virtual void removeVertex(Identifier id) = 0;
+        virtual void addVertex(Identifier id) = 0;
 
-IImplicitPort * CDecomposeVectorNode::GetOutputZ()
-{
-	return FindOutput("z");
-}
-
-Lib3MF::Impl::CDecomposeVectorNode::CDecomposeVectorNode(
-    NMR::PModelImplicitNode pImplicitNode)
-	: CImplicitNode{pImplicitNode}
-{
-	CImplicitNode::m_pImplicitNode = pImplicitNode;
-}
+        [[nodiscard]] virtual DependencySet const & getVertices() const = 0;
+    };
+} // namespace gladius::nodes::graph

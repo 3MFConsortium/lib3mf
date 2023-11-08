@@ -2684,7 +2684,7 @@ public:
 	{
 	}
 	
-	inline PImplicitPort GetInputVector();
+	inline PImplicitPort GetInputA();
 	inline PImplicitPort GetOutputX();
 	inline PImplicitPort GetOutputY();
 	inline PImplicitPort GetOutputZ();
@@ -4023,7 +4023,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ComposeVectorNode_GetInputY = nullptr;
 		pWrapperTable->m_ComposeVectorNode_GetInputZ = nullptr;
 		pWrapperTable->m_ComposeVectorNode_GetOutputResult = nullptr;
-		pWrapperTable->m_DecomposeVectorNode_GetInputVector = nullptr;
+		pWrapperTable->m_DecomposeVectorNode_GetInputA = nullptr;
 		pWrapperTable->m_DecomposeVectorNode_GetOutputX = nullptr;
 		pWrapperTable->m_DecomposeVectorNode_GetOutputY = nullptr;
 		pWrapperTable->m_DecomposeVectorNode_GetOutputZ = nullptr;
@@ -7001,12 +7001,12 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_DecomposeVectorNode_GetInputVector = (PLib3MFDecomposeVectorNode_GetInputVectorPtr) GetProcAddress(hLibrary, "lib3mf_decomposevectornode_getinputvector");
+		pWrapperTable->m_DecomposeVectorNode_GetInputA = (PLib3MFDecomposeVectorNode_GetInputAPtr) GetProcAddress(hLibrary, "lib3mf_decomposevectornode_getinputa");
 		#else // _WIN32
-		pWrapperTable->m_DecomposeVectorNode_GetInputVector = (PLib3MFDecomposeVectorNode_GetInputVectorPtr) dlsym(hLibrary, "lib3mf_decomposevectornode_getinputvector");
+		pWrapperTable->m_DecomposeVectorNode_GetInputA = (PLib3MFDecomposeVectorNode_GetInputAPtr) dlsym(hLibrary, "lib3mf_decomposevectornode_getinputa");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_DecomposeVectorNode_GetInputVector == nullptr)
+		if (pWrapperTable->m_DecomposeVectorNode_GetInputA == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -10721,8 +10721,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ComposeVectorNode_GetOutputResult == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_decomposevectornode_getinputvector", (void**)&(pWrapperTable->m_DecomposeVectorNode_GetInputVector));
-		if ( (eLookupError != 0) || (pWrapperTable->m_DecomposeVectorNode_GetInputVector == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_decomposevectornode_getinputa", (void**)&(pWrapperTable->m_DecomposeVectorNode_GetInputA));
+		if ( (eLookupError != 0) || (pWrapperTable->m_DecomposeVectorNode_GetInputA == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_decomposevectornode_getoutputx", (void**)&(pWrapperTable->m_DecomposeVectorNode_GetOutputX));
@@ -15833,18 +15833,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	 */
 	
 	/**
-	* CDecomposeVectorNode::GetInputVector - Retrieves the input
-	* @return the input
+	* CDecomposeVectorNode::GetInputA - Retrieves the input
+	* @return the input port for the vector to decompose
 	*/
-	PImplicitPort CDecomposeVectorNode::GetInputVector()
+	PImplicitPort CDecomposeVectorNode::GetInputA()
 	{
-		Lib3MFHandle hVector = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_DecomposeVectorNode_GetInputVector(m_pHandle, &hVector));
+		Lib3MFHandle hA = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_DecomposeVectorNode_GetInputA(m_pHandle, &hA));
 		
-		if (!hVector) {
+		if (!hA) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hVector)));
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hA)));
 	}
 	
 	/**

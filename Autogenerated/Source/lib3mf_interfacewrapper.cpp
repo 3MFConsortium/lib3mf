@@ -11215,27 +11215,27 @@ Lib3MFResult lib3mf_composevectornode_getoutputresult(Lib3MF_ComposeVectorNode p
 /*************************************************************************************************************************
  Class implementation for DecomposeVectorNode
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_decomposevectornode_getinputvector(Lib3MF_DecomposeVectorNode pDecomposeVectorNode, Lib3MF_ImplicitPort * pVector)
+Lib3MFResult lib3mf_decomposevectornode_getinputa(Lib3MF_DecomposeVectorNode pDecomposeVectorNode, Lib3MF_ImplicitPort * pA)
 {
 	IBase* pIBaseClass = (IBase *)pDecomposeVectorNode;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pDecomposeVectorNode, "DecomposeVectorNode", "GetInputVector");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDecomposeVectorNode, "DecomposeVectorNode", "GetInputA");
 		}
-		if (pVector == nullptr)
+		if (pA == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseVector(nullptr);
+		IBase* pBaseA(nullptr);
 		IDecomposeVectorNode* pIDecomposeVectorNode = dynamic_cast<IDecomposeVectorNode*>(pIBaseClass);
 		if (!pIDecomposeVectorNode)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseVector = pIDecomposeVectorNode->GetInputVector();
+		pBaseA = pIDecomposeVectorNode->GetInputA();
 
-		*pVector = (IBase*)(pBaseVector);
+		*pA = (IBase*)(pBaseA);
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("Vector", *pVector);
+			pJournalEntry->addHandleResult("A", *pA);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -22227,8 +22227,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_composevectornode_getinputz;
 	if (sProcName == "lib3mf_composevectornode_getoutputresult") 
 		*ppProcAddress = (void*) &lib3mf_composevectornode_getoutputresult;
-	if (sProcName == "lib3mf_decomposevectornode_getinputvector") 
-		*ppProcAddress = (void*) &lib3mf_decomposevectornode_getinputvector;
+	if (sProcName == "lib3mf_decomposevectornode_getinputa") 
+		*ppProcAddress = (void*) &lib3mf_decomposevectornode_getinputa;
 	if (sProcName == "lib3mf_decomposevectornode_getoutputx") 
 		*ppProcAddress = (void*) &lib3mf_decomposevectornode_getoutputx;
 	if (sProcName == "lib3mf_decomposevectornode_getoutputy") 

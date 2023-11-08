@@ -3247,10 +3247,10 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_composevectornode_getoutputresult(Lib3MF_Com
 * Retrieves the input
 *
 * @param[in] pDecomposeVectorNode - DecomposeVectorNode instance.
-* @param[out] pVector - the input
+* @param[out] pA - the input port for the vector to decompose
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_decomposevectornode_getinputvector(Lib3MF_DecomposeVectorNode pDecomposeVectorNode, Lib3MF_ImplicitPort * pVector);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_decomposevectornode_getinputa(Lib3MF_DecomposeVectorNode pDecomposeVectorNode, Lib3MF_ImplicitPort * pA);
 
 /**
 * Retrieves the output for the x component

@@ -2718,12 +2718,12 @@ Lib3MFResult CCall_lib3mf_composevectornode_getoutputresult(Lib3MFHandle library
 }
 
 
-Lib3MFResult CCall_lib3mf_decomposevectornode_getinputvector(Lib3MFHandle libraryHandle, Lib3MF_DecomposeVectorNode pDecomposeVectorNode, Lib3MF_ImplicitPort * pVector)
+Lib3MFResult CCall_lib3mf_decomposevectornode_getinputa(Lib3MFHandle libraryHandle, Lib3MF_DecomposeVectorNode pDecomposeVectorNode, Lib3MF_ImplicitPort * pA)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_DecomposeVectorNode_GetInputVector (pDecomposeVectorNode, pVector);
+	return wrapperTable->m_DecomposeVectorNode_GetInputA (pDecomposeVectorNode, pA);
 }
 
 
@@ -9966,14 +9966,14 @@ func (wrapper Wrapper) NewDecomposeVectorNode(r ref) DecomposeVectorNode {
 	return DecomposeVectorNode{wrapper.NewImplicitNode(r)}
 }
 
-// GetInputVector retrieves the input.
-func (inst DecomposeVectorNode) GetInputVector() (ImplicitPort, error) {
-	var vector ref
-	ret := C.CCall_lib3mf_decomposevectornode_getinputvector(inst.wrapperRef.LibraryHandle, inst.Ref, &vector)
+// GetInputA retrieves the input.
+func (inst DecomposeVectorNode) GetInputA() (ImplicitPort, error) {
+	var a ref
+	ret := C.CCall_lib3mf_decomposevectornode_getinputa(inst.wrapperRef.LibraryHandle, inst.Ref, &a)
 	if ret != 0 {
 		return ImplicitPort{}, makeError(uint32(ret))
 	}
-	return inst.wrapperRef.NewImplicitPort(vector), nil
+	return inst.wrapperRef.NewImplicitPort(a), nil
 }
 
 // GetOutputX retrieves the output for the x component.

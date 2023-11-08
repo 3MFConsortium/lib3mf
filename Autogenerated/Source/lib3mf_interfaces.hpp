@@ -4002,10 +4002,10 @@ public:
 	}
 
 	/**
-	* IDecomposeVectorNode::GetInputVector - Retrieves the input
-	* @return the input
+	* IDecomposeVectorNode::GetInputA - Retrieves the input
+	* @return the input port for the vector to decompose
 	*/
-	virtual IImplicitPort * GetInputVector() = 0;
+	virtual IImplicitPort * GetInputA() = 0;
 
 	/**
 	* IDecomposeVectorNode::GetOutputX - Retrieves the output for the x component

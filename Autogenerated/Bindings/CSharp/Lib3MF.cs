@@ -1314,8 +1314,8 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composevectornode_getoutputresult", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ComposeVectorNode_GetOutputResult (IntPtr Handle, out IntPtr AResult);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_decomposevectornode_getinputvector", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 DecomposeVectorNode_GetInputVector (IntPtr Handle, out IntPtr AVector);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_decomposevectornode_getinputa", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 DecomposeVectorNode_GetInputA (IntPtr Handle, out IntPtr AA);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_decomposevectornode_getoutputx", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 DecomposeVectorNode_GetOutputX (IntPtr Handle, out IntPtr AX);
@@ -5941,12 +5941,12 @@ namespace Lib3MF {
 		{
 		}
 
-		public CImplicitPort GetInputVector ()
+		public CImplicitPort GetInputA ()
 		{
-			IntPtr newVector = IntPtr.Zero;
+			IntPtr newA = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.DecomposeVectorNode_GetInputVector (Handle, out newVector));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newVector);
+			CheckError(Internal.Lib3MFWrapper.DecomposeVectorNode_GetInputA (Handle, out newA));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newA);
 		}
 
 		public CImplicitPort GetOutputX ()

@@ -2660,7 +2660,7 @@ public:
 	{
 	}
 	
-	inline PImplicitPort GetInputVector();
+	inline PImplicitPort GetInputA();
 	inline PImplicitPort GetOutputX();
 	inline PImplicitPort GetOutputY();
 	inline PImplicitPort GetOutputZ();
@@ -7683,18 +7683,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	 */
 	
 	/**
-	* CDecomposeVectorNode::GetInputVector - Retrieves the input
-	* @return the input
+	* CDecomposeVectorNode::GetInputA - Retrieves the input
+	* @return the input port for the vector to decompose
 	*/
-	PImplicitPort CDecomposeVectorNode::GetInputVector()
+	PImplicitPort CDecomposeVectorNode::GetInputA()
 	{
-		Lib3MFHandle hVector = nullptr;
-		CheckError(lib3mf_decomposevectornode_getinputvector(m_pHandle, &hVector));
+		Lib3MFHandle hA = nullptr;
+		CheckError(lib3mf_decomposevectornode_getinputa(m_pHandle, &hA));
 		
-		if (!hVector) {
+		if (!hA) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hVector)));
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hA)));
 	}
 	
 	/**
