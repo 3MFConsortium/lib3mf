@@ -33,7 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace NMR::common::graph
 {
-    using Identifier = int;
+    using Identifier = std::size_t;
     using DependencySet = std::set<Identifier>;
     using VertexList = std::vector<Identifier>;
 
