@@ -43,7 +43,7 @@ namespace NMR::common::graph
             visited[node] = true;
             recStack[node] = true;
 
-            for (auto dep = 0; dep < static_cast<Identifier>(graph.getSize()); ++dep)
+            for (Identifier dep = 0u; dep < static_cast<Identifier>(graph.getSize()); ++dep)
             {
                 if (graph.isDirectlyDependingOn(node, dep))
                 {
@@ -67,7 +67,7 @@ namespace NMR::common::graph
         std::vector<bool> visited(graph.getSize(), false);
         std::vector<bool> recStack(graph.getSize(), false);
 
-        for (auto id = 0; id < static_cast<Identifier>(graph.getSize()); ++id)
+        for (Identifier id = 0u; id < static_cast<Identifier>(graph.getSize()); ++id)
         {
             if (isCyclicUtil(graph, id, visited, recStack))
             {
@@ -94,7 +94,7 @@ namespace NMR::common::graph
         std::vector<bool> visited(graph.getSize(), false);
         VertexList topologicalOrder;
 
-        for (auto id = 0; id < static_cast<Identifier>(graph.getSize()); ++id)
+        for (Identifier id = 0u; id < static_cast<Identifier>(graph.getSize()); ++id)
         {
             if (!visited[id])
             {
@@ -114,7 +114,7 @@ namespace NMR::common::graph
                     visited[nodeId] = true;
                     nodesToVisit.push({NodeType::PARENT, nodeId});
 
-                    for (auto dep = 0; dep < static_cast<Identifier>(graph.getSize()); ++dep)
+                    for (Identifier dep = 0u; dep < static_cast<Identifier>(graph.getSize()); ++dep)
                     {
                         if (!visited[dep])
                         {
