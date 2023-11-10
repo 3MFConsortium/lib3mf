@@ -144,14 +144,16 @@ class CPowNode;
 class CSelectNode;
 class CClampNode;
 class CComposeVectorNode;
+class CVectorFromScalarNode;
 class CDecomposeVectorNode;
 class CComposeMatrixNode;
-class CComposeMatrixFromRowVectorsNode;
-class CComposeMatrixFromColumnVectors;
+class CMatrixFromRowsNode;
+class CMatrixFromColumnsNode;
 class CConstantNode;
 class CConstVecNode;
 class CConstMatNode;
 class CMeshNode;
+class CUnsignedMeshNode;
 class CFunctionCallNode;
 class CNodeIterator;
 class CFunction;
@@ -260,14 +262,16 @@ typedef CPowNode CLib3MFPowNode;
 typedef CSelectNode CLib3MFSelectNode;
 typedef CClampNode CLib3MFClampNode;
 typedef CComposeVectorNode CLib3MFComposeVectorNode;
+typedef CVectorFromScalarNode CLib3MFVectorFromScalarNode;
 typedef CDecomposeVectorNode CLib3MFDecomposeVectorNode;
 typedef CComposeMatrixNode CLib3MFComposeMatrixNode;
-typedef CComposeMatrixFromRowVectorsNode CLib3MFComposeMatrixFromRowVectorsNode;
-typedef CComposeMatrixFromColumnVectors CLib3MFComposeMatrixFromColumnVectors;
+typedef CMatrixFromRowsNode CLib3MFMatrixFromRowsNode;
+typedef CMatrixFromColumnsNode CLib3MFMatrixFromColumnsNode;
 typedef CConstantNode CLib3MFConstantNode;
 typedef CConstVecNode CLib3MFConstVecNode;
 typedef CConstMatNode CLib3MFConstMatNode;
 typedef CMeshNode CLib3MFMeshNode;
+typedef CUnsignedMeshNode CLib3MFUnsignedMeshNode;
 typedef CFunctionCallNode CLib3MFFunctionCallNode;
 typedef CNodeIterator CLib3MFNodeIterator;
 typedef CFunction CLib3MFFunction;
@@ -376,14 +380,16 @@ typedef std::shared_ptr<CPowNode> PPowNode;
 typedef std::shared_ptr<CSelectNode> PSelectNode;
 typedef std::shared_ptr<CClampNode> PClampNode;
 typedef std::shared_ptr<CComposeVectorNode> PComposeVectorNode;
+typedef std::shared_ptr<CVectorFromScalarNode> PVectorFromScalarNode;
 typedef std::shared_ptr<CDecomposeVectorNode> PDecomposeVectorNode;
 typedef std::shared_ptr<CComposeMatrixNode> PComposeMatrixNode;
-typedef std::shared_ptr<CComposeMatrixFromRowVectorsNode> PComposeMatrixFromRowVectorsNode;
-typedef std::shared_ptr<CComposeMatrixFromColumnVectors> PComposeMatrixFromColumnVectors;
+typedef std::shared_ptr<CMatrixFromRowsNode> PMatrixFromRowsNode;
+typedef std::shared_ptr<CMatrixFromColumnsNode> PMatrixFromColumnsNode;
 typedef std::shared_ptr<CConstantNode> PConstantNode;
 typedef std::shared_ptr<CConstVecNode> PConstVecNode;
 typedef std::shared_ptr<CConstMatNode> PConstMatNode;
 typedef std::shared_ptr<CMeshNode> PMeshNode;
+typedef std::shared_ptr<CUnsignedMeshNode> PUnsignedMeshNode;
 typedef std::shared_ptr<CFunctionCallNode> PFunctionCallNode;
 typedef std::shared_ptr<CNodeIterator> PNodeIterator;
 typedef std::shared_ptr<CFunction> PFunction;
@@ -492,14 +498,16 @@ typedef PPowNode PLib3MFPowNode;
 typedef PSelectNode PLib3MFSelectNode;
 typedef PClampNode PLib3MFClampNode;
 typedef PComposeVectorNode PLib3MFComposeVectorNode;
+typedef PVectorFromScalarNode PLib3MFVectorFromScalarNode;
 typedef PDecomposeVectorNode PLib3MFDecomposeVectorNode;
 typedef PComposeMatrixNode PLib3MFComposeMatrixNode;
-typedef PComposeMatrixFromRowVectorsNode PLib3MFComposeMatrixFromRowVectorsNode;
-typedef PComposeMatrixFromColumnVectors PLib3MFComposeMatrixFromColumnVectors;
+typedef PMatrixFromRowsNode PLib3MFMatrixFromRowsNode;
+typedef PMatrixFromColumnsNode PLib3MFMatrixFromColumnsNode;
 typedef PConstantNode PLib3MFConstantNode;
 typedef PConstVecNode PLib3MFConstVecNode;
 typedef PConstMatNode PLib3MFConstMatNode;
 typedef PMeshNode PLib3MFMeshNode;
+typedef PUnsignedMeshNode PLib3MFUnsignedMeshNode;
 typedef PFunctionCallNode PLib3MFFunctionCallNode;
 typedef PNodeIterator PLib3MFNodeIterator;
 typedef PFunction PLib3MFFunction;
@@ -892,14 +900,16 @@ private:
 	friend class CSelectNode;
 	friend class CClampNode;
 	friend class CComposeVectorNode;
+	friend class CVectorFromScalarNode;
 	friend class CDecomposeVectorNode;
 	friend class CComposeMatrixNode;
-	friend class CComposeMatrixFromRowVectorsNode;
-	friend class CComposeMatrixFromColumnVectors;
+	friend class CMatrixFromRowsNode;
+	friend class CMatrixFromColumnsNode;
 	friend class CConstantNode;
 	friend class CConstVecNode;
 	friend class CConstMatNode;
 	friend class CMeshNode;
+	friend class CUnsignedMeshNode;
 	friend class CFunctionCallNode;
 	friend class CNodeIterator;
 	friend class CFunction;
@@ -2647,6 +2657,24 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CVectorFromScalarNode 
+**************************************************************************************************************************/
+class CVectorFromScalarNode : public CImplicitNode {
+public:
+	
+	/**
+	* CVectorFromScalarNode::CVectorFromScalarNode - Constructor for VectorFromScalarNode class.
+	*/
+	CVectorFromScalarNode(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CImplicitNode(pWrapper, pHandle)
+	{
+	}
+	
+	inline PImplicitPort GetInputA();
+	inline PImplicitPort GetOutputResult();
+};
+	
+/*************************************************************************************************************************
  Class CDecomposeVectorNode 
 **************************************************************************************************************************/
 class CDecomposeVectorNode : public CImplicitNode {
@@ -2700,15 +2728,15 @@ public:
 };
 	
 /*************************************************************************************************************************
- Class CComposeMatrixFromRowVectorsNode 
+ Class CMatrixFromRowsNode 
 **************************************************************************************************************************/
-class CComposeMatrixFromRowVectorsNode : public CImplicitNode {
+class CMatrixFromRowsNode : public CImplicitNode {
 public:
 	
 	/**
-	* CComposeMatrixFromRowVectorsNode::CComposeMatrixFromRowVectorsNode - Constructor for ComposeMatrixFromRowVectorsNode class.
+	* CMatrixFromRowsNode::CMatrixFromRowsNode - Constructor for MatrixFromRowsNode class.
 	*/
-	CComposeMatrixFromRowVectorsNode(CWrapper* pWrapper, Lib3MFHandle pHandle)
+	CMatrixFromRowsNode(CWrapper* pWrapper, Lib3MFHandle pHandle)
 		: CImplicitNode(pWrapper, pHandle)
 	{
 	}
@@ -2721,15 +2749,15 @@ public:
 };
 	
 /*************************************************************************************************************************
- Class CComposeMatrixFromColumnVectors 
+ Class CMatrixFromColumnsNode 
 **************************************************************************************************************************/
-class CComposeMatrixFromColumnVectors : public CImplicitNode {
+class CMatrixFromColumnsNode : public CImplicitNode {
 public:
 	
 	/**
-	* CComposeMatrixFromColumnVectors::CComposeMatrixFromColumnVectors - Constructor for ComposeMatrixFromColumnVectors class.
+	* CMatrixFromColumnsNode::CMatrixFromColumnsNode - Constructor for MatrixFromColumnsNode class.
 	*/
-	CComposeMatrixFromColumnVectors(CWrapper* pWrapper, Lib3MFHandle pHandle)
+	CMatrixFromColumnsNode(CWrapper* pWrapper, Lib3MFHandle pHandle)
 		: CImplicitNode(pWrapper, pHandle)
 	{
 	}
@@ -2808,6 +2836,25 @@ public:
 	* CMeshNode::CMeshNode - Constructor for MeshNode class.
 	*/
 	CMeshNode(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CImplicitNode(pWrapper, pHandle)
+	{
+	}
+	
+	inline PImplicitPort GetInputMesh();
+	inline PImplicitPort GetInputPos();
+	inline PImplicitPort GetOutputDistance();
+};
+	
+/*************************************************************************************************************************
+ Class CUnsignedMeshNode 
+**************************************************************************************************************************/
+class CUnsignedMeshNode : public CImplicitNode {
+public:
+	
+	/**
+	* CUnsignedMeshNode::CUnsignedMeshNode - Constructor for UnsignedMeshNode class.
+	*/
+	CUnsignedMeshNode(CWrapper* pWrapper, Lib3MFHandle pHandle)
 		: CImplicitNode(pWrapper, pHandle)
 	{
 	}
@@ -2932,13 +2979,16 @@ public:
 	inline PSelectNode AddSelectNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
 	inline PClampNode AddClampNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
 	inline PComposeVectorNode AddComposeVectorNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
+	inline PVectorFromScalarNode AddVectorFromScalarNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PDecomposeVectorNode AddDecomposeVectorNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PComposeMatrixNode AddComposeMatrixNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
-	inline PComposeMatrixFromRowVectorsNode AddComposeMatrixFromRowVectorsNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
+	inline PMatrixFromRowsNode AddMatrixFromRowsNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
+	inline PMatrixFromColumnsNode AddMatrixFromColumnsNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PConstantNode AddConstantNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PConstVecNode AddConstVecNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PConstMatNode AddConstMatNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PMeshNode AddMeshNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
+	inline PUnsignedMeshNode AddUnsignedMeshNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PFunctionCallNode AddFunctionCallNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PNodeIterator GetNodes();
 	inline void RemoveNode(classParam<CImplicitNode> pNode);
@@ -3395,14 +3445,16 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0x1127ED71E05A9BD4UL: return new CSelectNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::SelectNode"
 		case 0x77AF68C971B1485FUL: return new CClampNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ClampNode"
 		case 0x49C24B8840C01F7EUL: return new CComposeVectorNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeVectorNode"
+		case 0x2E417B93351375E2UL: return new CVectorFromScalarNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::VectorFromScalarNode"
 		case 0xCC4F8D561CCE35D4UL: return new CDecomposeVectorNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::DecomposeVectorNode"
 		case 0x9EF9EB54A53AA40DUL: return new CComposeMatrixNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixNode"
-		case 0x5F89513A9B5FC583UL: return new CComposeMatrixFromRowVectorsNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixFromRowVectorsNode"
-		case 0x1A740A1E16230053UL: return new CComposeMatrixFromColumnVectors(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixFromColumnVectors"
+		case 0xD6DFD0A7EB64AC33UL: return new CMatrixFromRowsNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MatrixFromRowsNode"
+		case 0x0DCBEAFCF83F3AACUL: return new CMatrixFromColumnsNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MatrixFromColumnsNode"
 		case 0x3F8E5D082F966B1BUL: return new CConstantNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ConstantNode"
 		case 0x9C9363B3F708D556UL: return new CConstVecNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ConstVecNode"
 		case 0xF85C90EDCE6F90A4UL: return new CConstMatNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ConstMatNode"
 		case 0x53601FD432E3DEF4UL: return new CMeshNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshNode"
+		case 0x29985A628251A9CDUL: return new CUnsignedMeshNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::UnsignedMeshNode"
 		case 0x0765C17C952F24E3UL: return new CFunctionCallNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionCallNode"
 		case 0xFC006BC888CAB4D0UL: return new CNodeIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::NodeIterator"
 		case 0x9EFB2757CA1A5231UL: return new CFunction(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Function"
@@ -7679,6 +7731,40 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	 * Method definitions for class CVectorFromScalarNode
+	 */
+	
+	/**
+	* CVectorFromScalarNode::GetInputA - Retrieves the input
+	* @return the input for the x component
+	*/
+	PImplicitPort CVectorFromScalarNode::GetInputA()
+	{
+		Lib3MFHandle hA = nullptr;
+		CheckError(lib3mf_vectorfromscalarnode_getinputa(m_pHandle, &hA));
+		
+		if (!hA) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hA)));
+	}
+	
+	/**
+	* CVectorFromScalarNode::GetOutputResult - Retrieves the output
+	* @return the output
+	*/
+	PImplicitPort CVectorFromScalarNode::GetOutputResult()
+	{
+		Lib3MFHandle hResult = nullptr;
+		CheckError(lib3mf_vectorfromscalarnode_getoutputresult(m_pHandle, &hResult));
+		
+		if (!hResult) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hResult)));
+	}
+	
+	/**
 	 * Method definitions for class CDecomposeVectorNode
 	 */
 	
@@ -8002,17 +8088,17 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	 * Method definitions for class CComposeMatrixFromRowVectorsNode
+	 * Method definitions for class CMatrixFromRowsNode
 	 */
 	
 	/**
-	* CComposeMatrixFromRowVectorsNode::GetInputA - Retrieves the input for the first row
+	* CMatrixFromRowsNode::GetInputA - Retrieves the input for the first row
 	* @return the input for the first row
 	*/
-	PImplicitPort CComposeMatrixFromRowVectorsNode::GetInputA()
+	PImplicitPort CMatrixFromRowsNode::GetInputA()
 	{
 		Lib3MFHandle hRow0 = nullptr;
-		CheckError(lib3mf_composematrixfromrowvectorsnode_getinputa(m_pHandle, &hRow0));
+		CheckError(lib3mf_matrixfromrowsnode_getinputa(m_pHandle, &hRow0));
 		
 		if (!hRow0) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -8021,13 +8107,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CComposeMatrixFromRowVectorsNode::GetInputB - Retrieves the input for the second row
+	* CMatrixFromRowsNode::GetInputB - Retrieves the input for the second row
 	* @return the input for the second row
 	*/
-	PImplicitPort CComposeMatrixFromRowVectorsNode::GetInputB()
+	PImplicitPort CMatrixFromRowsNode::GetInputB()
 	{
 		Lib3MFHandle hRow1 = nullptr;
-		CheckError(lib3mf_composematrixfromrowvectorsnode_getinputb(m_pHandle, &hRow1));
+		CheckError(lib3mf_matrixfromrowsnode_getinputb(m_pHandle, &hRow1));
 		
 		if (!hRow1) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -8036,13 +8122,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CComposeMatrixFromRowVectorsNode::GetInputC - Retrieves the input for the third row
+	* CMatrixFromRowsNode::GetInputC - Retrieves the input for the third row
 	* @return the input for the third row
 	*/
-	PImplicitPort CComposeMatrixFromRowVectorsNode::GetInputC()
+	PImplicitPort CMatrixFromRowsNode::GetInputC()
 	{
 		Lib3MFHandle hRow2 = nullptr;
-		CheckError(lib3mf_composematrixfromrowvectorsnode_getinputc(m_pHandle, &hRow2));
+		CheckError(lib3mf_matrixfromrowsnode_getinputc(m_pHandle, &hRow2));
 		
 		if (!hRow2) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -8051,13 +8137,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CComposeMatrixFromRowVectorsNode::GetInputD - Retrieves the input for the fourth row
+	* CMatrixFromRowsNode::GetInputD - Retrieves the input for the fourth row
 	* @return the input for the fourth row
 	*/
-	PImplicitPort CComposeMatrixFromRowVectorsNode::GetInputD()
+	PImplicitPort CMatrixFromRowsNode::GetInputD()
 	{
 		Lib3MFHandle hRow3 = nullptr;
-		CheckError(lib3mf_composematrixfromrowvectorsnode_getinputd(m_pHandle, &hRow3));
+		CheckError(lib3mf_matrixfromrowsnode_getinputd(m_pHandle, &hRow3));
 		
 		if (!hRow3) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -8066,13 +8152,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CComposeMatrixFromRowVectorsNode::GetOutputResult - Retrieves the output
+	* CMatrixFromRowsNode::GetOutputResult - Retrieves the output
 	* @return the output
 	*/
-	PImplicitPort CComposeMatrixFromRowVectorsNode::GetOutputResult()
+	PImplicitPort CMatrixFromRowsNode::GetOutputResult()
 	{
 		Lib3MFHandle hResult = nullptr;
-		CheckError(lib3mf_composematrixfromrowvectorsnode_getoutputresult(m_pHandle, &hResult));
+		CheckError(lib3mf_matrixfromrowsnode_getoutputresult(m_pHandle, &hResult));
 		
 		if (!hResult) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -8081,17 +8167,17 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	 * Method definitions for class CComposeMatrixFromColumnVectors
+	 * Method definitions for class CMatrixFromColumnsNode
 	 */
 	
 	/**
-	* CComposeMatrixFromColumnVectors::GetInputA - Retrieves the input for the first column
+	* CMatrixFromColumnsNode::GetInputA - Retrieves the input for the first column
 	* @return the input for the first column
 	*/
-	PImplicitPort CComposeMatrixFromColumnVectors::GetInputA()
+	PImplicitPort CMatrixFromColumnsNode::GetInputA()
 	{
 		Lib3MFHandle hColumn0 = nullptr;
-		CheckError(lib3mf_composematrixfromcolumnvectors_getinputa(m_pHandle, &hColumn0));
+		CheckError(lib3mf_matrixfromcolumnsnode_getinputa(m_pHandle, &hColumn0));
 		
 		if (!hColumn0) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -8100,13 +8186,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CComposeMatrixFromColumnVectors::GetInputB - Retrieves the input for the second column
+	* CMatrixFromColumnsNode::GetInputB - Retrieves the input for the second column
 	* @return the input for the second column
 	*/
-	PImplicitPort CComposeMatrixFromColumnVectors::GetInputB()
+	PImplicitPort CMatrixFromColumnsNode::GetInputB()
 	{
 		Lib3MFHandle hColumn1 = nullptr;
-		CheckError(lib3mf_composematrixfromcolumnvectors_getinputb(m_pHandle, &hColumn1));
+		CheckError(lib3mf_matrixfromcolumnsnode_getinputb(m_pHandle, &hColumn1));
 		
 		if (!hColumn1) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -8115,13 +8201,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CComposeMatrixFromColumnVectors::GetInputC - Retrieves the input for the third column
+	* CMatrixFromColumnsNode::GetInputC - Retrieves the input for the third column
 	* @return the input for the third column
 	*/
-	PImplicitPort CComposeMatrixFromColumnVectors::GetInputC()
+	PImplicitPort CMatrixFromColumnsNode::GetInputC()
 	{
 		Lib3MFHandle hColumn2 = nullptr;
-		CheckError(lib3mf_composematrixfromcolumnvectors_getinputc(m_pHandle, &hColumn2));
+		CheckError(lib3mf_matrixfromcolumnsnode_getinputc(m_pHandle, &hColumn2));
 		
 		if (!hColumn2) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -8130,13 +8216,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CComposeMatrixFromColumnVectors::GetInputD - Retrieves the input for the fourth column
+	* CMatrixFromColumnsNode::GetInputD - Retrieves the input for the fourth column
 	* @return the input for the fourth column
 	*/
-	PImplicitPort CComposeMatrixFromColumnVectors::GetInputD()
+	PImplicitPort CMatrixFromColumnsNode::GetInputD()
 	{
 		Lib3MFHandle hColumn3 = nullptr;
-		CheckError(lib3mf_composematrixfromcolumnvectors_getinputd(m_pHandle, &hColumn3));
+		CheckError(lib3mf_matrixfromcolumnsnode_getinputd(m_pHandle, &hColumn3));
 		
 		if (!hColumn3) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -8145,13 +8231,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CComposeMatrixFromColumnVectors::GetOutputResult - Retrieves the output
+	* CMatrixFromColumnsNode::GetOutputResult - Retrieves the output
 	* @return the output
 	*/
-	PImplicitPort CComposeMatrixFromColumnVectors::GetOutputResult()
+	PImplicitPort CMatrixFromColumnsNode::GetOutputResult()
 	{
 		Lib3MFHandle hResult = nullptr;
-		CheckError(lib3mf_composematrixfromcolumnvectors_getoutputresult(m_pHandle, &hResult));
+		CheckError(lib3mf_matrixfromcolumnsnode_getoutputresult(m_pHandle, &hResult));
 		
 		if (!hResult) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -8321,6 +8407,55 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	{
 		Lib3MFHandle hDistance = nullptr;
 		CheckError(lib3mf_meshnode_getoutputdistance(m_pHandle, &hDistance));
+		
+		if (!hDistance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hDistance)));
+	}
+	
+	/**
+	 * Method definitions for class CUnsignedMeshNode
+	 */
+	
+	/**
+	* CUnsignedMeshNode::GetInputMesh - Retrieves the input for the model resource id of the mesh
+	* @return the input port for the model resource id of the mesh
+	*/
+	PImplicitPort CUnsignedMeshNode::GetInputMesh()
+	{
+		Lib3MFHandle hMesh = nullptr;
+		CheckError(lib3mf_unsignedmeshnode_getinputmesh(m_pHandle, &hMesh));
+		
+		if (!hMesh) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hMesh)));
+	}
+	
+	/**
+	* CUnsignedMeshNode::GetInputPos - Retrieves the input for the position
+	* @return the input port for the position
+	*/
+	PImplicitPort CUnsignedMeshNode::GetInputPos()
+	{
+		Lib3MFHandle hPos = nullptr;
+		CheckError(lib3mf_unsignedmeshnode_getinputpos(m_pHandle, &hPos));
+		
+		if (!hPos) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hPos)));
+	}
+	
+	/**
+	* CUnsignedMeshNode::GetOutputDistance - Retrieves the output
+	* @return the output port for the unsigned distance to the mesh
+	*/
+	PImplicitPort CUnsignedMeshNode::GetOutputDistance()
+	{
+		Lib3MFHandle hDistance = nullptr;
+		CheckError(lib3mf_unsignedmeshnode_getoutputdistance(m_pHandle, &hDistance));
 		
 		if (!hDistance) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -9276,6 +9411,24 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CImplicitFunction::AddVectorFromScalarNode - Add a VectorFromScalar
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	PVectorFromScalarNode CImplicitFunction::AddVectorFromScalarNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
+	{
+		Lib3MFHandle hNode = nullptr;
+		CheckError(lib3mf_implicitfunction_addvectorfromscalarnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
+		
+		if (!hNode) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVectorFromScalarNode>(dynamic_cast<CVectorFromScalarNode*>(m_pWrapper->polymorphicFactory(hNode)));
+	}
+	
+	/**
 	* CImplicitFunction::AddDecomposeVectorNode - Add a DecomposeVectorNode
 	* @param[in] sIdentifier - the identifier of the node
 	* @param[in] sDisplayName - the display name of the node
@@ -9312,21 +9465,39 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CImplicitFunction::AddComposeMatrixFromRowVectorsNode - Add a ComposeMatrixFromRowVectorsNode
+	* CImplicitFunction::AddMatrixFromRowsNode - Add a MatrixFromRowsNode
 	* @param[in] sIdentifier - the identifier of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	PComposeMatrixFromRowVectorsNode CImplicitFunction::AddComposeMatrixFromRowVectorsNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
+	PMatrixFromRowsNode CImplicitFunction::AddMatrixFromRowsNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
 		Lib3MFHandle hNode = nullptr;
-		CheckError(lib3mf_implicitfunction_addcomposematrixfromrowvectorsnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
+		CheckError(lib3mf_implicitfunction_addmatrixfromrowsnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::shared_ptr<CComposeMatrixFromRowVectorsNode>(dynamic_cast<CComposeMatrixFromRowVectorsNode*>(m_pWrapper->polymorphicFactory(hNode)));
+		return std::shared_ptr<CMatrixFromRowsNode>(dynamic_cast<CMatrixFromRowsNode*>(m_pWrapper->polymorphicFactory(hNode)));
+	}
+	
+	/**
+	* CImplicitFunction::AddMatrixFromColumnsNode - Add a MatrixFromColumnsNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	PMatrixFromColumnsNode CImplicitFunction::AddMatrixFromColumnsNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
+	{
+		Lib3MFHandle hNode = nullptr;
+		CheckError(lib3mf_implicitfunction_addmatrixfromcolumnsnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
+		
+		if (!hNode) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CMatrixFromColumnsNode>(dynamic_cast<CMatrixFromColumnsNode*>(m_pWrapper->polymorphicFactory(hNode)));
 	}
 	
 	/**
@@ -9399,6 +9570,24 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CMeshNode>(dynamic_cast<CMeshNode*>(m_pWrapper->polymorphicFactory(hNode)));
+	}
+	
+	/**
+	* CImplicitFunction::AddUnsignedMeshNode - Add a UnsignedMeshNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	PUnsignedMeshNode CImplicitFunction::AddUnsignedMeshNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
+	{
+		Lib3MFHandle hNode = nullptr;
+		CheckError(lib3mf_implicitfunction_addunsignedmeshnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
+		
+		if (!hNode) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CUnsignedMeshNode>(dynamic_cast<CUnsignedMeshNode*>(m_pWrapper->polymorphicFactory(hNode)));
 	}
 	
 	/**

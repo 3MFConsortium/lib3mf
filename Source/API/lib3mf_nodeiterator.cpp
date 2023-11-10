@@ -32,54 +32,56 @@ Abstract: This is a stub class definition of CNodeIterator
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_additionnode.hpp"
-#include "lib3mf_subtractionnode.hpp"
-#include "lib3mf_multiplicationnode.hpp"
-#include "lib3mf_divisionnode.hpp"
-#include "lib3mf_constantnode.hpp"
-#include "lib3mf_constvecnode.hpp"
-#include "lib3mf_constmatnode.hpp"
-#include "lib3mf_composevectornode.hpp"
-#include "lib3mf_decomposevectornode.hpp"
-#include "lib3mf_composematrixnode.hpp"
-#include "lib3mf_composematrixfromcolumnvectors.hpp"
-#include "lib3mf_composematrixfromrowvectorsnode.hpp"
-#include "lib3mf_dotnode.hpp"
-#include "lib3mf_crossnode.hpp"
-#include "lib3mf_matvecmultiplicationnode.hpp"
-#include "lib3mf_transposenode.hpp"
-#include "lib3mf_inversenode.hpp"
-#include "lib3mf_sinnode.hpp"
-#include "lib3mf_cosnode.hpp"
-#include "lib3mf_tannode.hpp"
-#include "lib3mf_arcsinnode.hpp"
-#include "lib3mf_arccosnode.hpp"
-#include "lib3mf_arctannode.hpp"
-#include "lib3mf_arctan2node.hpp"
-#include "lib3mf_minnode.hpp"
-#include "lib3mf_maxnode.hpp"
 #include "lib3mf_absnode.hpp"
-#include "lib3mf_fmodnode.hpp"
-#include "lib3mf_pownode.hpp"
-#include "lib3mf_sqrtnode.hpp"
-#include "lib3mf_expnode.hpp"
-#include "lib3mf_lognode.hpp"
-#include "lib3mf_log2node.hpp"
-#include "lib3mf_log10node.hpp"
-#include "lib3mf_selectnode.hpp"
-#include "lib3mf_clampnode.hpp"
-#include "lib3mf_sinhnode.hpp"
-#include "lib3mf_coshnode.hpp"
-#include "lib3mf_tanhnode.hpp"
-#include "lib3mf_roundnode.hpp"
+#include "lib3mf_additionnode.hpp"
+#include "lib3mf_arccosnode.hpp"
+#include "lib3mf_arcsinnode.hpp"
+#include "lib3mf_arctan2node.hpp"
+#include "lib3mf_arctannode.hpp"
 #include "lib3mf_ceilnode.hpp"
+#include "lib3mf_clampnode.hpp"
+#include "lib3mf_composematrixnode.hpp"
+#include "lib3mf_composevectornode.hpp"
+#include "lib3mf_constantnode.hpp"
+#include "lib3mf_constmatnode.hpp"
+#include "lib3mf_constvecnode.hpp"
+#include "lib3mf_coshnode.hpp"
+#include "lib3mf_cosnode.hpp"
+#include "lib3mf_crossnode.hpp"
+#include "lib3mf_decomposevectornode.hpp"
+#include "lib3mf_divisionnode.hpp"
+#include "lib3mf_dotnode.hpp"
+#include "lib3mf_expnode.hpp"
 #include "lib3mf_floornode.hpp"
-#include "lib3mf_signnode.hpp"
+#include "lib3mf_fmodnode.hpp"
 #include "lib3mf_fractnode.hpp"
 #include "lib3mf_functioncallnode.hpp"
-#include "lib3mf_meshnode.hpp"
+#include "lib3mf_inversenode.hpp"
 #include "lib3mf_lengthnode.hpp"
+#include "lib3mf_log10node.hpp"
+#include "lib3mf_log2node.hpp"
+#include "lib3mf_lognode.hpp"
+#include "lib3mf_matrixfromcolumnsnode.hpp"
+#include "lib3mf_matrixfromrowsnode.hpp"
+#include "lib3mf_matvecmultiplicationnode.hpp"
+#include "lib3mf_maxnode.hpp"
+#include "lib3mf_meshnode.hpp"
+#include "lib3mf_minnode.hpp"
+#include "lib3mf_multiplicationnode.hpp"
+#include "lib3mf_pownode.hpp"
 #include "lib3mf_resourceidnode.hpp"
+#include "lib3mf_roundnode.hpp"
+#include "lib3mf_selectnode.hpp"
+#include "lib3mf_signnode.hpp"
+#include "lib3mf_sinhnode.hpp"
+#include "lib3mf_sinnode.hpp"
+#include "lib3mf_sqrtnode.hpp"
+#include "lib3mf_subtractionnode.hpp"
+#include "lib3mf_tanhnode.hpp"
+#include "lib3mf_tannode.hpp"
+#include "lib3mf_transposenode.hpp"
+#include "lib3mf_unsignedmeshnode.hpp"
+#include "lib3mf_vectorfromscalarnode.hpp"
 
 
 using namespace Lib3MF::Impl;
@@ -174,14 +176,16 @@ IImplicitNode* Lib3MF::Impl::CNodeIterator::implicitNodeFromModelImplicitNode(
         return new CConstMatNode(pNode);
     case eImplicitNodeType::ComposeVector:
         return new CComposeVectorNode(pNode);
+    case eImplicitNodeType::VectorFromScalar:
+        return new CVectorFromScalarNode(pNode);
     case eImplicitNodeType::DecomposeVector:
         return new CDecomposeVectorNode(pNode);
     case eImplicitNodeType::ComposeMatrix:
         return new CComposeMatrixNode(pNode);
-    case eImplicitNodeType::ComposeMatrixFromColumnVectors:
-        return new CComposeMatrixFromColumnVectors(pNode);
-    case eImplicitNodeType::ComposeMatrixFromRowVectors:
-        return new CComposeMatrixFromRowVectorsNode(pNode);
+    case eImplicitNodeType::MatrixFromColumns:
+        return new CMatrixFromColumnsNode(pNode);
+    case eImplicitNodeType::MatrixFromRows:
+        return new CMatrixFromRowsNode(pNode);
     case eImplicitNodeType::Dot:
         return new CDotNode(pNode);
     case eImplicitNodeType::Cross:
@@ -250,6 +254,8 @@ IImplicitNode* Lib3MF::Impl::CNodeIterator::implicitNodeFromModelImplicitNode(
         return new CFunctionCallNode(pNode);
     case eImplicitNodeType::Mesh:
         return new CMeshNode(pNode);
+    case eImplicitNodeType::UnsignedMesh:
+        return new CUnsignedMeshNode(pNode);
     case eImplicitNodeType::Length:
         return new CLengthNode(pNode);
     case eImplicitNodeType::Resource:

@@ -135,14 +135,16 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFSelectNode::Init();
 	CLib3MFClampNode::Init();
 	CLib3MFComposeVectorNode::Init();
+	CLib3MFVectorFromScalarNode::Init();
 	CLib3MFDecomposeVectorNode::Init();
 	CLib3MFComposeMatrixNode::Init();
-	CLib3MFComposeMatrixFromRowVectorsNode::Init();
-	CLib3MFComposeMatrixFromColumnVectors::Init();
+	CLib3MFMatrixFromRowsNode::Init();
+	CLib3MFMatrixFromColumnsNode::Init();
 	CLib3MFConstantNode::Init();
 	CLib3MFConstVecNode::Init();
 	CLib3MFConstMatNode::Init();
 	CLib3MFMeshNode::Init();
+	CLib3MFUnsignedMeshNode::Init();
 	CLib3MFFunctionCallNode::Init();
 	CLib3MFNodeIterator::Init();
 	CLib3MFFunction::Init();

@@ -290,14 +290,16 @@ typedef Lib3MFHandle Lib3MF_PowNode;
 typedef Lib3MFHandle Lib3MF_SelectNode;
 typedef Lib3MFHandle Lib3MF_ClampNode;
 typedef Lib3MFHandle Lib3MF_ComposeVectorNode;
+typedef Lib3MFHandle Lib3MF_VectorFromScalarNode;
 typedef Lib3MFHandle Lib3MF_DecomposeVectorNode;
 typedef Lib3MFHandle Lib3MF_ComposeMatrixNode;
-typedef Lib3MFHandle Lib3MF_ComposeMatrixFromRowVectorsNode;
-typedef Lib3MFHandle Lib3MF_ComposeMatrixFromColumnVectors;
+typedef Lib3MFHandle Lib3MF_MatrixFromRowsNode;
+typedef Lib3MFHandle Lib3MF_MatrixFromColumnsNode;
 typedef Lib3MFHandle Lib3MF_ConstantNode;
 typedef Lib3MFHandle Lib3MF_ConstVecNode;
 typedef Lib3MFHandle Lib3MF_ConstMatNode;
 typedef Lib3MFHandle Lib3MF_MeshNode;
+typedef Lib3MFHandle Lib3MF_UnsignedMeshNode;
 typedef Lib3MFHandle Lib3MF_FunctionCallNode;
 typedef Lib3MFHandle Lib3MF_NodeIterator;
 typedef Lib3MFHandle Lib3MF_Function;
@@ -455,8 +457,8 @@ namespace Lib3MF {
     ComposeVector = 8, /** Creates a vector from three scalar values */
     DecomposeVector = 9, /** Decomposes a vector into three scalar values */
     ComposeMatrix = 10, /** Creates a matrix from nine scalar values */
-    ComposeMatrixFromColumnVectors = 11, /** Creates a matrix from three column vector values */
-    ComposeMatrixFromRowVectors = 12, /** Creates a matrix from three row vector values */
+    MatrixFromColumns = 11, /** Creates a matrix from three column vector values */
+    MatrixFromRows = 12, /** Creates a matrix from three row vector values */
     Dot = 13, /** Calculates the dot product of two vector values */
     Cross = 14, /** Calculates the cross product of two vector values */
     MatVecMultiplication = 15, /** Multiplies a matrix with a vector */
@@ -492,7 +494,9 @@ namespace Lib3MF {
     FunctionCall = 45, /** Calls a function */
     Mesh = 46, /** Calculates the signed distance to a mesh */
     Length = 47, /** Calculates the length of a vector */
-    Resource = 48 /** Selects a resource (function, mesh etc.) */
+    Resource = 48, /** Selects a resource (function, mesh etc.) */
+    VectorFromScalar = 49, /** Creates a vector from one scalar values */
+    UnsignedMesh = 50 /** Calculates the unsigned distance to a mesh */
   };
   
   /**

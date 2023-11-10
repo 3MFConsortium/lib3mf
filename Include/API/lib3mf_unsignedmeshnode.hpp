@@ -24,50 +24,82 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CComposeMatrixFromColumnVectors
+Abstract: This is the class declaration of CUnsignedMeshNode
 
 */
 
-#include "lib3mf_composematrixfromcolumnvectors.hpp"
-#include "lib3mf_interfaceexception.hpp"
+
+#ifndef __LIB3MF_UNSIGNEDMESHNODE
+#define __LIB3MF_UNSIGNEDMESHNODE
+
+#include "lib3mf_interfaces.hpp"
+
+// Parent classes
+#include "lib3mf_implicitnode.hpp"
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 // Include custom headers here.
 
 
-using namespace Lib3MF::Impl;
+namespace Lib3MF {
+namespace Impl {
+
 
 /*************************************************************************************************************************
- Class definition of CComposeMatrixFromColumnVectors 
+ Class declaration of CUnsignedMeshNode 
 **************************************************************************************************************************/
 
-CComposeMatrixFromColumnVectors::CComposeMatrixFromColumnVectors(NMR::PModelImplicitNode pImplicitNode)
-	: CImplicitNode{pImplicitNode}
-{
-	CImplicitNode::m_pImplicitNode = pImplicitNode;
-}
+class CUnsignedMeshNode : public virtual IUnsignedMeshNode, public virtual CImplicitNode {
+private:
 
-IImplicitPort * CComposeMatrixFromColumnVectors::GetInputA()
-{
-	return FindInputOrThrow(NMR::InputNames::A);
-}
+	/**
+	* Put private members here.
+	*/
 
-IImplicitPort * CComposeMatrixFromColumnVectors::GetInputB()
-{
-	return FindInputOrThrow(NMR::InputNames::B);
-}
+protected:
 
-IImplicitPort * CComposeMatrixFromColumnVectors::GetInputC()
-{
-	return FindInputOrThrow(NMR::InputNames::C);
-}
+	/**
+	* Put protected members here.
+	*/
 
-IImplicitPort * CComposeMatrixFromColumnVectors::GetInputD()
-{
-	return FindInputOrThrow(NMR::InputNames::D);
-}
+public:
+	CUnsignedMeshNode(NMR::PModelImplicitNode pImplicitNode);
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
 
-IImplicitPort * CComposeMatrixFromColumnVectors::GetOutputResult()
-{
-	return FindOutputOrThrow(NMR::OutputNames::result);
-}
 
+	/**
+	* Public member functions to implement.
+	*/
+
+	/**
+	* IUnsignedMeshNode::GetInputMesh - Retrieves the input for the model resource id of the mesh
+	* @return the input port for the model resource id of the mesh
+	*/
+	IImplicitPort * GetInputMesh() override;
+
+	/**
+	* IUnsignedMeshNode::GetInputPos - Retrieves the input for the position
+	* @return the input port for the position
+	*/
+	IImplicitPort * GetInputPos() override;
+
+	/**
+	* IUnsignedMeshNode::GetOutputDistance - Retrieves the output
+	* @return the output port for the unsigned distance to the mesh
+	*/
+	IImplicitPort * GetOutputDistance() override;
+
+};
+
+} // namespace Impl
+} // namespace Lib3MF
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#endif // __LIB3MF_UNSIGNEDMESHNODE

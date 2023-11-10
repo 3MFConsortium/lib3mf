@@ -342,6 +342,8 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ComposeVectorNode_GetInputY = NULL;
 	pWrapperTable->m_ComposeVectorNode_GetInputZ = NULL;
 	pWrapperTable->m_ComposeVectorNode_GetOutputResult = NULL;
+	pWrapperTable->m_VectorFromScalarNode_GetInputA = NULL;
+	pWrapperTable->m_VectorFromScalarNode_GetOutputResult = NULL;
 	pWrapperTable->m_DecomposeVectorNode_GetInputA = NULL;
 	pWrapperTable->m_DecomposeVectorNode_GetOutputX = NULL;
 	pWrapperTable->m_DecomposeVectorNode_GetOutputY = NULL;
@@ -363,16 +365,16 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ComposeMatrixNode_GetInputM32 = NULL;
 	pWrapperTable->m_ComposeMatrixNode_GetInputM33 = NULL;
 	pWrapperTable->m_ComposeMatrixNode_GetOutputResult = NULL;
-	pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputA = NULL;
-	pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputB = NULL;
-	pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputC = NULL;
-	pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputD = NULL;
-	pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetOutputResult = NULL;
-	pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputA = NULL;
-	pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputB = NULL;
-	pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputC = NULL;
-	pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputD = NULL;
-	pWrapperTable->m_ComposeMatrixFromColumnVectors_GetOutputResult = NULL;
+	pWrapperTable->m_MatrixFromRowsNode_GetInputA = NULL;
+	pWrapperTable->m_MatrixFromRowsNode_GetInputB = NULL;
+	pWrapperTable->m_MatrixFromRowsNode_GetInputC = NULL;
+	pWrapperTable->m_MatrixFromRowsNode_GetInputD = NULL;
+	pWrapperTable->m_MatrixFromRowsNode_GetOutputResult = NULL;
+	pWrapperTable->m_MatrixFromColumnsNode_GetInputA = NULL;
+	pWrapperTable->m_MatrixFromColumnsNode_GetInputB = NULL;
+	pWrapperTable->m_MatrixFromColumnsNode_GetInputC = NULL;
+	pWrapperTable->m_MatrixFromColumnsNode_GetInputD = NULL;
+	pWrapperTable->m_MatrixFromColumnsNode_GetOutputResult = NULL;
 	pWrapperTable->m_ConstantNode_SetConstant = NULL;
 	pWrapperTable->m_ConstantNode_GetConstant = NULL;
 	pWrapperTable->m_ConstantNode_GetOutputValue = NULL;
@@ -385,6 +387,9 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_MeshNode_GetInputMesh = NULL;
 	pWrapperTable->m_MeshNode_GetInputPos = NULL;
 	pWrapperTable->m_MeshNode_GetOutputDistance = NULL;
+	pWrapperTable->m_UnsignedMeshNode_GetInputMesh = NULL;
+	pWrapperTable->m_UnsignedMeshNode_GetInputPos = NULL;
+	pWrapperTable->m_UnsignedMeshNode_GetOutputDistance = NULL;
 	pWrapperTable->m_FunctionCallNode_GetInputFunctionID = NULL;
 	pWrapperTable->m_NodeIterator_GetCurrent = NULL;
 	pWrapperTable->m_Function_GetDisplayName = NULL;
@@ -438,13 +443,16 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ImplicitFunction_AddSelectNode = NULL;
 	pWrapperTable->m_ImplicitFunction_AddClampNode = NULL;
 	pWrapperTable->m_ImplicitFunction_AddComposeVectorNode = NULL;
+	pWrapperTable->m_ImplicitFunction_AddVectorFromScalarNode = NULL;
 	pWrapperTable->m_ImplicitFunction_AddDecomposeVectorNode = NULL;
 	pWrapperTable->m_ImplicitFunction_AddComposeMatrixNode = NULL;
-	pWrapperTable->m_ImplicitFunction_AddComposeMatrixFromRowVectorsNode = NULL;
+	pWrapperTable->m_ImplicitFunction_AddMatrixFromRowsNode = NULL;
+	pWrapperTable->m_ImplicitFunction_AddMatrixFromColumnsNode = NULL;
 	pWrapperTable->m_ImplicitFunction_AddConstantNode = NULL;
 	pWrapperTable->m_ImplicitFunction_AddConstVecNode = NULL;
 	pWrapperTable->m_ImplicitFunction_AddConstMatNode = NULL;
 	pWrapperTable->m_ImplicitFunction_AddMeshNode = NULL;
+	pWrapperTable->m_ImplicitFunction_AddUnsignedMeshNode = NULL;
 	pWrapperTable->m_ImplicitFunction_AddFunctionCallNode = NULL;
 	pWrapperTable->m_ImplicitFunction_GetNodes = NULL;
 	pWrapperTable->m_ImplicitFunction_RemoveNode = NULL;
@@ -3324,6 +3332,24 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_VectorFromScalarNode_GetInputA = (PLib3MFVectorFromScalarNode_GetInputAPtr) GetProcAddress(hLibrary, "lib3mf_vectorfromscalarnode_getinputa");
+	#else // _WIN32
+	pWrapperTable->m_VectorFromScalarNode_GetInputA = (PLib3MFVectorFromScalarNode_GetInputAPtr) dlsym(hLibrary, "lib3mf_vectorfromscalarnode_getinputa");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_VectorFromScalarNode_GetInputA == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_VectorFromScalarNode_GetOutputResult = (PLib3MFVectorFromScalarNode_GetOutputResultPtr) GetProcAddress(hLibrary, "lib3mf_vectorfromscalarnode_getoutputresult");
+	#else // _WIN32
+	pWrapperTable->m_VectorFromScalarNode_GetOutputResult = (PLib3MFVectorFromScalarNode_GetOutputResultPtr) dlsym(hLibrary, "lib3mf_vectorfromscalarnode_getoutputresult");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_VectorFromScalarNode_GetOutputResult == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_DecomposeVectorNode_GetInputA = (PLib3MFDecomposeVectorNode_GetInputAPtr) GetProcAddress(hLibrary, "lib3mf_decomposevectornode_getinputa");
 	#else // _WIN32
 	pWrapperTable->m_DecomposeVectorNode_GetInputA = (PLib3MFDecomposeVectorNode_GetInputAPtr) dlsym(hLibrary, "lib3mf_decomposevectornode_getinputa");
@@ -3513,93 +3539,93 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputA = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputAPtr) GetProcAddress(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputa");
+	pWrapperTable->m_MatrixFromRowsNode_GetInputA = (PLib3MFMatrixFromRowsNode_GetInputAPtr) GetProcAddress(hLibrary, "lib3mf_matrixfromrowsnode_getinputa");
 	#else // _WIN32
-	pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputA = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputAPtr) dlsym(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputa");
+	pWrapperTable->m_MatrixFromRowsNode_GetInputA = (PLib3MFMatrixFromRowsNode_GetInputAPtr) dlsym(hLibrary, "lib3mf_matrixfromrowsnode_getinputa");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputA == NULL)
+	if (pWrapperTable->m_MatrixFromRowsNode_GetInputA == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputB = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputBPtr) GetProcAddress(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputb");
+	pWrapperTable->m_MatrixFromRowsNode_GetInputB = (PLib3MFMatrixFromRowsNode_GetInputBPtr) GetProcAddress(hLibrary, "lib3mf_matrixfromrowsnode_getinputb");
 	#else // _WIN32
-	pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputB = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputBPtr) dlsym(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputb");
+	pWrapperTable->m_MatrixFromRowsNode_GetInputB = (PLib3MFMatrixFromRowsNode_GetInputBPtr) dlsym(hLibrary, "lib3mf_matrixfromrowsnode_getinputb");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputB == NULL)
+	if (pWrapperTable->m_MatrixFromRowsNode_GetInputB == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputC = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputCPtr) GetProcAddress(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputc");
+	pWrapperTable->m_MatrixFromRowsNode_GetInputC = (PLib3MFMatrixFromRowsNode_GetInputCPtr) GetProcAddress(hLibrary, "lib3mf_matrixfromrowsnode_getinputc");
 	#else // _WIN32
-	pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputC = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputCPtr) dlsym(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputc");
+	pWrapperTable->m_MatrixFromRowsNode_GetInputC = (PLib3MFMatrixFromRowsNode_GetInputCPtr) dlsym(hLibrary, "lib3mf_matrixfromrowsnode_getinputc");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputC == NULL)
+	if (pWrapperTable->m_MatrixFromRowsNode_GetInputC == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputD = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputDPtr) GetProcAddress(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputd");
+	pWrapperTable->m_MatrixFromRowsNode_GetInputD = (PLib3MFMatrixFromRowsNode_GetInputDPtr) GetProcAddress(hLibrary, "lib3mf_matrixfromrowsnode_getinputd");
 	#else // _WIN32
-	pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputD = (PLib3MFComposeMatrixFromRowVectorsNode_GetInputDPtr) dlsym(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getinputd");
+	pWrapperTable->m_MatrixFromRowsNode_GetInputD = (PLib3MFMatrixFromRowsNode_GetInputDPtr) dlsym(hLibrary, "lib3mf_matrixfromrowsnode_getinputd");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetInputD == NULL)
+	if (pWrapperTable->m_MatrixFromRowsNode_GetInputD == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetOutputResult = (PLib3MFComposeMatrixFromRowVectorsNode_GetOutputResultPtr) GetProcAddress(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getoutputresult");
+	pWrapperTable->m_MatrixFromRowsNode_GetOutputResult = (PLib3MFMatrixFromRowsNode_GetOutputResultPtr) GetProcAddress(hLibrary, "lib3mf_matrixfromrowsnode_getoutputresult");
 	#else // _WIN32
-	pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetOutputResult = (PLib3MFComposeMatrixFromRowVectorsNode_GetOutputResultPtr) dlsym(hLibrary, "lib3mf_composematrixfromrowvectorsnode_getoutputresult");
+	pWrapperTable->m_MatrixFromRowsNode_GetOutputResult = (PLib3MFMatrixFromRowsNode_GetOutputResultPtr) dlsym(hLibrary, "lib3mf_matrixfromrowsnode_getoutputresult");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ComposeMatrixFromRowVectorsNode_GetOutputResult == NULL)
+	if (pWrapperTable->m_MatrixFromRowsNode_GetOutputResult == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputA = (PLib3MFComposeMatrixFromColumnVectors_GetInputAPtr) GetProcAddress(hLibrary, "lib3mf_composematrixfromcolumnvectors_getinputa");
+	pWrapperTable->m_MatrixFromColumnsNode_GetInputA = (PLib3MFMatrixFromColumnsNode_GetInputAPtr) GetProcAddress(hLibrary, "lib3mf_matrixfromcolumnsnode_getinputa");
 	#else // _WIN32
-	pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputA = (PLib3MFComposeMatrixFromColumnVectors_GetInputAPtr) dlsym(hLibrary, "lib3mf_composematrixfromcolumnvectors_getinputa");
+	pWrapperTable->m_MatrixFromColumnsNode_GetInputA = (PLib3MFMatrixFromColumnsNode_GetInputAPtr) dlsym(hLibrary, "lib3mf_matrixfromcolumnsnode_getinputa");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputA == NULL)
+	if (pWrapperTable->m_MatrixFromColumnsNode_GetInputA == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputB = (PLib3MFComposeMatrixFromColumnVectors_GetInputBPtr) GetProcAddress(hLibrary, "lib3mf_composematrixfromcolumnvectors_getinputb");
+	pWrapperTable->m_MatrixFromColumnsNode_GetInputB = (PLib3MFMatrixFromColumnsNode_GetInputBPtr) GetProcAddress(hLibrary, "lib3mf_matrixfromcolumnsnode_getinputb");
 	#else // _WIN32
-	pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputB = (PLib3MFComposeMatrixFromColumnVectors_GetInputBPtr) dlsym(hLibrary, "lib3mf_composematrixfromcolumnvectors_getinputb");
+	pWrapperTable->m_MatrixFromColumnsNode_GetInputB = (PLib3MFMatrixFromColumnsNode_GetInputBPtr) dlsym(hLibrary, "lib3mf_matrixfromcolumnsnode_getinputb");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputB == NULL)
+	if (pWrapperTable->m_MatrixFromColumnsNode_GetInputB == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputC = (PLib3MFComposeMatrixFromColumnVectors_GetInputCPtr) GetProcAddress(hLibrary, "lib3mf_composematrixfromcolumnvectors_getinputc");
+	pWrapperTable->m_MatrixFromColumnsNode_GetInputC = (PLib3MFMatrixFromColumnsNode_GetInputCPtr) GetProcAddress(hLibrary, "lib3mf_matrixfromcolumnsnode_getinputc");
 	#else // _WIN32
-	pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputC = (PLib3MFComposeMatrixFromColumnVectors_GetInputCPtr) dlsym(hLibrary, "lib3mf_composematrixfromcolumnvectors_getinputc");
+	pWrapperTable->m_MatrixFromColumnsNode_GetInputC = (PLib3MFMatrixFromColumnsNode_GetInputCPtr) dlsym(hLibrary, "lib3mf_matrixfromcolumnsnode_getinputc");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputC == NULL)
+	if (pWrapperTable->m_MatrixFromColumnsNode_GetInputC == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputD = (PLib3MFComposeMatrixFromColumnVectors_GetInputDPtr) GetProcAddress(hLibrary, "lib3mf_composematrixfromcolumnvectors_getinputd");
+	pWrapperTable->m_MatrixFromColumnsNode_GetInputD = (PLib3MFMatrixFromColumnsNode_GetInputDPtr) GetProcAddress(hLibrary, "lib3mf_matrixfromcolumnsnode_getinputd");
 	#else // _WIN32
-	pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputD = (PLib3MFComposeMatrixFromColumnVectors_GetInputDPtr) dlsym(hLibrary, "lib3mf_composematrixfromcolumnvectors_getinputd");
+	pWrapperTable->m_MatrixFromColumnsNode_GetInputD = (PLib3MFMatrixFromColumnsNode_GetInputDPtr) dlsym(hLibrary, "lib3mf_matrixfromcolumnsnode_getinputd");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ComposeMatrixFromColumnVectors_GetInputD == NULL)
+	if (pWrapperTable->m_MatrixFromColumnsNode_GetInputD == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ComposeMatrixFromColumnVectors_GetOutputResult = (PLib3MFComposeMatrixFromColumnVectors_GetOutputResultPtr) GetProcAddress(hLibrary, "lib3mf_composematrixfromcolumnvectors_getoutputresult");
+	pWrapperTable->m_MatrixFromColumnsNode_GetOutputResult = (PLib3MFMatrixFromColumnsNode_GetOutputResultPtr) GetProcAddress(hLibrary, "lib3mf_matrixfromcolumnsnode_getoutputresult");
 	#else // _WIN32
-	pWrapperTable->m_ComposeMatrixFromColumnVectors_GetOutputResult = (PLib3MFComposeMatrixFromColumnVectors_GetOutputResultPtr) dlsym(hLibrary, "lib3mf_composematrixfromcolumnvectors_getoutputresult");
+	pWrapperTable->m_MatrixFromColumnsNode_GetOutputResult = (PLib3MFMatrixFromColumnsNode_GetOutputResultPtr) dlsym(hLibrary, "lib3mf_matrixfromcolumnsnode_getoutputresult");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ComposeMatrixFromColumnVectors_GetOutputResult == NULL)
+	if (pWrapperTable->m_MatrixFromColumnsNode_GetOutputResult == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -3708,6 +3734,33 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_MeshNode_GetOutputDistance == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_UnsignedMeshNode_GetInputMesh = (PLib3MFUnsignedMeshNode_GetInputMeshPtr) GetProcAddress(hLibrary, "lib3mf_unsignedmeshnode_getinputmesh");
+	#else // _WIN32
+	pWrapperTable->m_UnsignedMeshNode_GetInputMesh = (PLib3MFUnsignedMeshNode_GetInputMeshPtr) dlsym(hLibrary, "lib3mf_unsignedmeshnode_getinputmesh");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_UnsignedMeshNode_GetInputMesh == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_UnsignedMeshNode_GetInputPos = (PLib3MFUnsignedMeshNode_GetInputPosPtr) GetProcAddress(hLibrary, "lib3mf_unsignedmeshnode_getinputpos");
+	#else // _WIN32
+	pWrapperTable->m_UnsignedMeshNode_GetInputPos = (PLib3MFUnsignedMeshNode_GetInputPosPtr) dlsym(hLibrary, "lib3mf_unsignedmeshnode_getinputpos");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_UnsignedMeshNode_GetInputPos == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_UnsignedMeshNode_GetOutputDistance = (PLib3MFUnsignedMeshNode_GetOutputDistancePtr) GetProcAddress(hLibrary, "lib3mf_unsignedmeshnode_getoutputdistance");
+	#else // _WIN32
+	pWrapperTable->m_UnsignedMeshNode_GetOutputDistance = (PLib3MFUnsignedMeshNode_GetOutputDistancePtr) dlsym(hLibrary, "lib3mf_unsignedmeshnode_getoutputdistance");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_UnsignedMeshNode_GetOutputDistance == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -4188,6 +4241,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_ImplicitFunction_AddVectorFromScalarNode = (PLib3MFImplicitFunction_AddVectorFromScalarNodePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addvectorfromscalarnode");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitFunction_AddVectorFromScalarNode = (PLib3MFImplicitFunction_AddVectorFromScalarNodePtr) dlsym(hLibrary, "lib3mf_implicitfunction_addvectorfromscalarnode");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitFunction_AddVectorFromScalarNode == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_ImplicitFunction_AddDecomposeVectorNode = (PLib3MFImplicitFunction_AddDecomposeVectorNodePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_adddecomposevectornode");
 	#else // _WIN32
 	pWrapperTable->m_ImplicitFunction_AddDecomposeVectorNode = (PLib3MFImplicitFunction_AddDecomposeVectorNodePtr) dlsym(hLibrary, "lib3mf_implicitfunction_adddecomposevectornode");
@@ -4206,12 +4268,21 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ImplicitFunction_AddComposeMatrixFromRowVectorsNode = (PLib3MFImplicitFunction_AddComposeMatrixFromRowVectorsNodePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addcomposematrixfromrowvectorsnode");
+	pWrapperTable->m_ImplicitFunction_AddMatrixFromRowsNode = (PLib3MFImplicitFunction_AddMatrixFromRowsNodePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addmatrixfromrowsnode");
 	#else // _WIN32
-	pWrapperTable->m_ImplicitFunction_AddComposeMatrixFromRowVectorsNode = (PLib3MFImplicitFunction_AddComposeMatrixFromRowVectorsNodePtr) dlsym(hLibrary, "lib3mf_implicitfunction_addcomposematrixfromrowvectorsnode");
+	pWrapperTable->m_ImplicitFunction_AddMatrixFromRowsNode = (PLib3MFImplicitFunction_AddMatrixFromRowsNodePtr) dlsym(hLibrary, "lib3mf_implicitfunction_addmatrixfromrowsnode");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ImplicitFunction_AddComposeMatrixFromRowVectorsNode == NULL)
+	if (pWrapperTable->m_ImplicitFunction_AddMatrixFromRowsNode == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitFunction_AddMatrixFromColumnsNode = (PLib3MFImplicitFunction_AddMatrixFromColumnsNodePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addmatrixfromcolumnsnode");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitFunction_AddMatrixFromColumnsNode = (PLib3MFImplicitFunction_AddMatrixFromColumnsNodePtr) dlsym(hLibrary, "lib3mf_implicitfunction_addmatrixfromcolumnsnode");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitFunction_AddMatrixFromColumnsNode == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -4248,6 +4319,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_ImplicitFunction_AddMeshNode == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitFunction_AddUnsignedMeshNode = (PLib3MFImplicitFunction_AddUnsignedMeshNodePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addunsignedmeshnode");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitFunction_AddUnsignedMeshNode = (PLib3MFImplicitFunction_AddUnsignedMeshNodePtr) dlsym(hLibrary, "lib3mf_implicitfunction_addunsignedmeshnode");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitFunction_AddUnsignedMeshNode == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

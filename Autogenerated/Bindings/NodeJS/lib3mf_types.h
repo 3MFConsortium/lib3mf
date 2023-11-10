@@ -291,14 +291,16 @@ typedef Lib3MFHandle Lib3MF_PowNode;
 typedef Lib3MFHandle Lib3MF_SelectNode;
 typedef Lib3MFHandle Lib3MF_ClampNode;
 typedef Lib3MFHandle Lib3MF_ComposeVectorNode;
+typedef Lib3MFHandle Lib3MF_VectorFromScalarNode;
 typedef Lib3MFHandle Lib3MF_DecomposeVectorNode;
 typedef Lib3MFHandle Lib3MF_ComposeMatrixNode;
-typedef Lib3MFHandle Lib3MF_ComposeMatrixFromRowVectorsNode;
-typedef Lib3MFHandle Lib3MF_ComposeMatrixFromColumnVectors;
+typedef Lib3MFHandle Lib3MF_MatrixFromRowsNode;
+typedef Lib3MFHandle Lib3MF_MatrixFromColumnsNode;
 typedef Lib3MFHandle Lib3MF_ConstantNode;
 typedef Lib3MFHandle Lib3MF_ConstVecNode;
 typedef Lib3MFHandle Lib3MF_ConstMatNode;
 typedef Lib3MFHandle Lib3MF_MeshNode;
+typedef Lib3MFHandle Lib3MF_UnsignedMeshNode;
 typedef Lib3MFHandle Lib3MF_FunctionCallNode;
 typedef Lib3MFHandle Lib3MF_NodeIterator;
 typedef Lib3MFHandle Lib3MF_Function;
@@ -454,8 +456,8 @@ typedef enum eLib3MFImplicitNodeType {
   eImplicitNodeTypeComposeVector = 8, /** Creates a vector from three scalar values */
   eImplicitNodeTypeDecomposeVector = 9, /** Decomposes a vector into three scalar values */
   eImplicitNodeTypeComposeMatrix = 10, /** Creates a matrix from nine scalar values */
-  eImplicitNodeTypeComposeMatrixFromColumnVectors = 11, /** Creates a matrix from three column vector values */
-  eImplicitNodeTypeComposeMatrixFromRowVectors = 12, /** Creates a matrix from three row vector values */
+  eImplicitNodeTypeMatrixFromColumns = 11, /** Creates a matrix from three column vector values */
+  eImplicitNodeTypeMatrixFromRows = 12, /** Creates a matrix from three row vector values */
   eImplicitNodeTypeDot = 13, /** Calculates the dot product of two vector values */
   eImplicitNodeTypeCross = 14, /** Calculates the cross product of two vector values */
   eImplicitNodeTypeMatVecMultiplication = 15, /** Multiplies a matrix with a vector */
@@ -491,7 +493,9 @@ typedef enum eLib3MFImplicitNodeType {
   eImplicitNodeTypeFunctionCall = 45, /** Calls a function */
   eImplicitNodeTypeMesh = 46, /** Calculates the signed distance to a mesh */
   eImplicitNodeTypeLength = 47, /** Calculates the length of a vector */
-  eImplicitNodeTypeResource = 48 /** Selects a resource (function, mesh etc.) */
+  eImplicitNodeTypeResource = 48, /** Selects a resource (function, mesh etc.) */
+  eImplicitNodeTypeVectorFromScalar = 49, /** Creates a vector from one scalar values */
+  eImplicitNodeTypeUnsignedMesh = 50 /** Calculates the unsigned distance to a mesh */
 } eLib3MFImplicitNodeType;
 
 /**

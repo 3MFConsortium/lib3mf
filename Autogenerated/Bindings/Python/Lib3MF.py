@@ -428,6 +428,8 @@ class FunctionTable:
 	lib3mf_composevectornode_getinputy = None
 	lib3mf_composevectornode_getinputz = None
 	lib3mf_composevectornode_getoutputresult = None
+	lib3mf_vectorfromscalarnode_getinputa = None
+	lib3mf_vectorfromscalarnode_getoutputresult = None
 	lib3mf_decomposevectornode_getinputa = None
 	lib3mf_decomposevectornode_getoutputx = None
 	lib3mf_decomposevectornode_getoutputy = None
@@ -449,16 +451,16 @@ class FunctionTable:
 	lib3mf_composematrixnode_getinputm32 = None
 	lib3mf_composematrixnode_getinputm33 = None
 	lib3mf_composematrixnode_getoutputresult = None
-	lib3mf_composematrixfromrowvectorsnode_getinputa = None
-	lib3mf_composematrixfromrowvectorsnode_getinputb = None
-	lib3mf_composematrixfromrowvectorsnode_getinputc = None
-	lib3mf_composematrixfromrowvectorsnode_getinputd = None
-	lib3mf_composematrixfromrowvectorsnode_getoutputresult = None
-	lib3mf_composematrixfromcolumnvectors_getinputa = None
-	lib3mf_composematrixfromcolumnvectors_getinputb = None
-	lib3mf_composematrixfromcolumnvectors_getinputc = None
-	lib3mf_composematrixfromcolumnvectors_getinputd = None
-	lib3mf_composematrixfromcolumnvectors_getoutputresult = None
+	lib3mf_matrixfromrowsnode_getinputa = None
+	lib3mf_matrixfromrowsnode_getinputb = None
+	lib3mf_matrixfromrowsnode_getinputc = None
+	lib3mf_matrixfromrowsnode_getinputd = None
+	lib3mf_matrixfromrowsnode_getoutputresult = None
+	lib3mf_matrixfromcolumnsnode_getinputa = None
+	lib3mf_matrixfromcolumnsnode_getinputb = None
+	lib3mf_matrixfromcolumnsnode_getinputc = None
+	lib3mf_matrixfromcolumnsnode_getinputd = None
+	lib3mf_matrixfromcolumnsnode_getoutputresult = None
 	lib3mf_constantnode_setconstant = None
 	lib3mf_constantnode_getconstant = None
 	lib3mf_constantnode_getoutputvalue = None
@@ -471,6 +473,9 @@ class FunctionTable:
 	lib3mf_meshnode_getinputmesh = None
 	lib3mf_meshnode_getinputpos = None
 	lib3mf_meshnode_getoutputdistance = None
+	lib3mf_unsignedmeshnode_getinputmesh = None
+	lib3mf_unsignedmeshnode_getinputpos = None
+	lib3mf_unsignedmeshnode_getoutputdistance = None
 	lib3mf_functioncallnode_getinputfunctionid = None
 	lib3mf_nodeiterator_getcurrent = None
 	lib3mf_function_getdisplayname = None
@@ -524,13 +529,16 @@ class FunctionTable:
 	lib3mf_implicitfunction_addselectnode = None
 	lib3mf_implicitfunction_addclampnode = None
 	lib3mf_implicitfunction_addcomposevectornode = None
+	lib3mf_implicitfunction_addvectorfromscalarnode = None
 	lib3mf_implicitfunction_adddecomposevectornode = None
 	lib3mf_implicitfunction_addcomposematrixnode = None
-	lib3mf_implicitfunction_addcomposematrixfromrowvectorsnode = None
+	lib3mf_implicitfunction_addmatrixfromrowsnode = None
+	lib3mf_implicitfunction_addmatrixfromcolumnsnode = None
 	lib3mf_implicitfunction_addconstantnode = None
 	lib3mf_implicitfunction_addconstvecnode = None
 	lib3mf_implicitfunction_addconstmatnode = None
 	lib3mf_implicitfunction_addmeshnode = None
+	lib3mf_implicitfunction_addunsignedmeshnode = None
 	lib3mf_implicitfunction_addfunctioncallnode = None
 	lib3mf_implicitfunction_getnodes = None
 	lib3mf_implicitfunction_removenode = None
@@ -833,8 +841,8 @@ class ImplicitNodeType(CTypesEnum):
 	ComposeVector = 8
 	DecomposeVector = 9
 	ComposeMatrix = 10
-	ComposeMatrixFromColumnVectors = 11
-	ComposeMatrixFromRowVectors = 12
+	MatrixFromColumns = 11
+	MatrixFromRows = 12
 	Dot = 13
 	Cross = 14
 	MatVecMultiplication = 15
@@ -871,6 +879,8 @@ class ImplicitNodeType(CTypesEnum):
 	Mesh = 46
 	Length = 47
 	Resource = 48
+	VectorFromScalar = 49
+	UnsignedMesh = 50
 '''Definition of ImplicitPortType
 '''
 class ImplicitPortType(CTypesEnum):
@@ -2975,6 +2985,18 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_composevectornode_getoutputresult = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_vectorfromscalarnode_getinputa")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_vectorfromscalarnode_getinputa = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_vectorfromscalarnode_getoutputresult")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_vectorfromscalarnode_getoutputresult = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_decomposevectornode_getinputa")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -3101,65 +3123,65 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_composematrixnode_getoutputresult = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromrowvectorsnode_getinputa")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_matrixfromrowsnode_getinputa")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputa = methodType(int(methodAddress.value))
+			self.lib.lib3mf_matrixfromrowsnode_getinputa = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromrowvectorsnode_getinputb")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_matrixfromrowsnode_getinputb")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputb = methodType(int(methodAddress.value))
+			self.lib.lib3mf_matrixfromrowsnode_getinputb = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromrowvectorsnode_getinputc")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_matrixfromrowsnode_getinputc")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputc = methodType(int(methodAddress.value))
+			self.lib.lib3mf_matrixfromrowsnode_getinputc = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromrowvectorsnode_getinputd")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_matrixfromrowsnode_getinputd")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputd = methodType(int(methodAddress.value))
+			self.lib.lib3mf_matrixfromrowsnode_getinputd = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromrowvectorsnode_getoutputresult")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_matrixfromrowsnode_getoutputresult")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getoutputresult = methodType(int(methodAddress.value))
+			self.lib.lib3mf_matrixfromrowsnode_getoutputresult = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromcolumnvectors_getinputa")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_matrixfromcolumnsnode_getinputa")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_composematrixfromcolumnvectors_getinputa = methodType(int(methodAddress.value))
+			self.lib.lib3mf_matrixfromcolumnsnode_getinputa = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromcolumnvectors_getinputb")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_matrixfromcolumnsnode_getinputb")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_composematrixfromcolumnvectors_getinputb = methodType(int(methodAddress.value))
+			self.lib.lib3mf_matrixfromcolumnsnode_getinputb = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromcolumnvectors_getinputc")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_matrixfromcolumnsnode_getinputc")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_composematrixfromcolumnvectors_getinputc = methodType(int(methodAddress.value))
+			self.lib.lib3mf_matrixfromcolumnsnode_getinputc = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromcolumnvectors_getinputd")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_matrixfromcolumnsnode_getinputd")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_composematrixfromcolumnvectors_getinputd = methodType(int(methodAddress.value))
+			self.lib.lib3mf_matrixfromcolumnsnode_getinputd = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_composematrixfromcolumnvectors_getoutputresult")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_matrixfromcolumnsnode_getoutputresult")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_composematrixfromcolumnvectors_getoutputresult = methodType(int(methodAddress.value))
+			self.lib.lib3mf_matrixfromcolumnsnode_getoutputresult = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_constantnode_setconstant")), methodAddress)
 			if err != 0:
@@ -3232,6 +3254,24 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_meshnode_getoutputdistance = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_unsignedmeshnode_getinputmesh")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_unsignedmeshnode_getinputmesh = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_unsignedmeshnode_getinputpos")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_unsignedmeshnode_getinputpos = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_unsignedmeshnode_getoutputdistance")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_unsignedmeshnode_getoutputdistance = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functioncallnode_getinputfunctionid")), methodAddress)
 			if err != 0:
@@ -3551,6 +3591,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_implicitfunction_addcomposevectornode = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_addvectorfromscalarnode")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_implicitfunction_addvectorfromscalarnode = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_adddecomposevectornode")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -3563,11 +3609,17 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_implicitfunction_addcomposematrixnode = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_addcomposematrixfromrowvectorsnode")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_addmatrixfromrowsnode")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_implicitfunction_addcomposematrixfromrowvectorsnode = methodType(int(methodAddress.value))
+			self.lib.lib3mf_implicitfunction_addmatrixfromrowsnode = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_addmatrixfromcolumnsnode")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_implicitfunction_addmatrixfromcolumnsnode = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_addconstantnode")), methodAddress)
 			if err != 0:
@@ -3592,6 +3644,12 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_implicitfunction_addmeshnode = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_addunsignedmeshnode")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_implicitfunction_addunsignedmeshnode = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_addfunctioncallnode")), methodAddress)
 			if err != 0:
@@ -5491,6 +5549,12 @@ class Wrapper:
 			self.lib.lib3mf_composevectornode_getoutputresult.restype = ctypes.c_int32
 			self.lib.lib3mf_composevectornode_getoutputresult.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
+			self.lib.lib3mf_vectorfromscalarnode_getinputa.restype = ctypes.c_int32
+			self.lib.lib3mf_vectorfromscalarnode_getinputa.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_vectorfromscalarnode_getoutputresult.restype = ctypes.c_int32
+			self.lib.lib3mf_vectorfromscalarnode_getoutputresult.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
 			self.lib.lib3mf_decomposevectornode_getinputa.restype = ctypes.c_int32
 			self.lib.lib3mf_decomposevectornode_getinputa.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
@@ -5554,35 +5618,35 @@ class Wrapper:
 			self.lib.lib3mf_composematrixnode_getoutputresult.restype = ctypes.c_int32
 			self.lib.lib3mf_composematrixnode_getoutputresult.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputa.restype = ctypes.c_int32
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputa.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_matrixfromrowsnode_getinputa.restype = ctypes.c_int32
+			self.lib.lib3mf_matrixfromrowsnode_getinputa.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputb.restype = ctypes.c_int32
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputb.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_matrixfromrowsnode_getinputb.restype = ctypes.c_int32
+			self.lib.lib3mf_matrixfromrowsnode_getinputb.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputc.restype = ctypes.c_int32
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputc.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_matrixfromrowsnode_getinputc.restype = ctypes.c_int32
+			self.lib.lib3mf_matrixfromrowsnode_getinputc.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputd.restype = ctypes.c_int32
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getinputd.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_matrixfromrowsnode_getinputd.restype = ctypes.c_int32
+			self.lib.lib3mf_matrixfromrowsnode_getinputd.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getoutputresult.restype = ctypes.c_int32
-			self.lib.lib3mf_composematrixfromrowvectorsnode_getoutputresult.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_matrixfromrowsnode_getoutputresult.restype = ctypes.c_int32
+			self.lib.lib3mf_matrixfromrowsnode_getoutputresult.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_composematrixfromcolumnvectors_getinputa.restype = ctypes.c_int32
-			self.lib.lib3mf_composematrixfromcolumnvectors_getinputa.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_matrixfromcolumnsnode_getinputa.restype = ctypes.c_int32
+			self.lib.lib3mf_matrixfromcolumnsnode_getinputa.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_composematrixfromcolumnvectors_getinputb.restype = ctypes.c_int32
-			self.lib.lib3mf_composematrixfromcolumnvectors_getinputb.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_matrixfromcolumnsnode_getinputb.restype = ctypes.c_int32
+			self.lib.lib3mf_matrixfromcolumnsnode_getinputb.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_composematrixfromcolumnvectors_getinputc.restype = ctypes.c_int32
-			self.lib.lib3mf_composematrixfromcolumnvectors_getinputc.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_matrixfromcolumnsnode_getinputc.restype = ctypes.c_int32
+			self.lib.lib3mf_matrixfromcolumnsnode_getinputc.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_composematrixfromcolumnvectors_getinputd.restype = ctypes.c_int32
-			self.lib.lib3mf_composematrixfromcolumnvectors_getinputd.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_matrixfromcolumnsnode_getinputd.restype = ctypes.c_int32
+			self.lib.lib3mf_matrixfromcolumnsnode_getinputd.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_composematrixfromcolumnvectors_getoutputresult.restype = ctypes.c_int32
-			self.lib.lib3mf_composematrixfromcolumnvectors_getoutputresult.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_matrixfromcolumnsnode_getoutputresult.restype = ctypes.c_int32
+			self.lib.lib3mf_matrixfromcolumnsnode_getoutputresult.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_constantnode_setconstant.restype = ctypes.c_int32
 			self.lib.lib3mf_constantnode_setconstant.argtypes = [ctypes.c_void_p, ctypes.c_double]
@@ -5619,6 +5683,15 @@ class Wrapper:
 			
 			self.lib.lib3mf_meshnode_getoutputdistance.restype = ctypes.c_int32
 			self.lib.lib3mf_meshnode_getoutputdistance.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_unsignedmeshnode_getinputmesh.restype = ctypes.c_int32
+			self.lib.lib3mf_unsignedmeshnode_getinputmesh.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_unsignedmeshnode_getinputpos.restype = ctypes.c_int32
+			self.lib.lib3mf_unsignedmeshnode_getinputpos.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_unsignedmeshnode_getoutputdistance.restype = ctypes.c_int32
+			self.lib.lib3mf_unsignedmeshnode_getoutputdistance.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_functioncallnode_getinputfunctionid.restype = ctypes.c_int32
 			self.lib.lib3mf_functioncallnode_getinputfunctionid.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -5779,14 +5852,20 @@ class Wrapper:
 			self.lib.lib3mf_implicitfunction_addcomposevectornode.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitfunction_addcomposevectornode.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
 			
+			self.lib.lib3mf_implicitfunction_addvectorfromscalarnode.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitfunction_addvectorfromscalarnode.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
 			self.lib.lib3mf_implicitfunction_adddecomposevectornode.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitfunction_adddecomposevectornode.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_implicitfunction_addcomposematrixnode.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitfunction_addcomposematrixnode.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_implicitfunction_addcomposematrixfromrowvectorsnode.restype = ctypes.c_int32
-			self.lib.lib3mf_implicitfunction_addcomposematrixfromrowvectorsnode.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_implicitfunction_addmatrixfromrowsnode.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitfunction_addmatrixfromrowsnode.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_implicitfunction_addmatrixfromcolumnsnode.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitfunction_addmatrixfromcolumnsnode.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_implicitfunction_addconstantnode.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitfunction_addconstantnode.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -5799,6 +5878,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_implicitfunction_addmeshnode.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitfunction_addmeshnode.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_implicitfunction_addunsignedmeshnode.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitfunction_addunsignedmeshnode.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_implicitfunction_addfunctioncallnode.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitfunction_addfunctioncallnode.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -6657,14 +6739,16 @@ class Wrapper:
 				return ClampNode(handle, wrapper)
 			def getObjectById_49C24B8840C01F7E(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ComposeVectorNode"
 				return ComposeVectorNode(handle, wrapper)
+			def getObjectById_2E417B93351375E2(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::VectorFromScalarNode"
+				return VectorFromScalarNode(handle, wrapper)
 			def getObjectById_CC4F8D561CCE35D4(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::DecomposeVectorNode"
 				return DecomposeVectorNode(handle, wrapper)
 			def getObjectById_9EF9EB54A53AA40D(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixNode"
 				return ComposeMatrixNode(handle, wrapper)
-			def getObjectById_5F89513A9B5FC583(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixFromRowVectorsNode"
-				return ComposeMatrixFromRowVectorsNode(handle, wrapper)
-			def getObjectById_1A740A1E16230053(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixFromColumnVectors"
-				return ComposeMatrixFromColumnVectors(handle, wrapper)
+			def getObjectById_D6DFD0A7EB64AC33(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::MatrixFromRowsNode"
+				return MatrixFromRowsNode(handle, wrapper)
+			def getObjectById_0DCBEAFCF83F3AAC(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::MatrixFromColumnsNode"
+				return MatrixFromColumnsNode(handle, wrapper)
 			def getObjectById_3F8E5D082F966B1B(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ConstantNode"
 				return ConstantNode(handle, wrapper)
 			def getObjectById_9C9363B3F708D556(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ConstVecNode"
@@ -6673,6 +6757,8 @@ class Wrapper:
 				return ConstMatNode(handle, wrapper)
 			def getObjectById_53601FD432E3DEF4(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::MeshNode"
 				return MeshNode(handle, wrapper)
+			def getObjectById_29985A628251A9CD(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::UnsignedMeshNode"
+				return UnsignedMeshNode(handle, wrapper)
 			def getObjectById_0765C17C952F24E3(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::FunctionCallNode"
 				return FunctionCallNode(handle, wrapper)
 			def getObjectById_FC006BC888CAB4D0(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::NodeIterator"
@@ -9593,6 +9679,33 @@ class ComposeVectorNode(ImplicitNode):
 	
 
 
+''' Class Implementation for VectorFromScalarNode
+'''
+class VectorFromScalarNode(ImplicitNode):
+	def __init__(self, handle, wrapper):
+		ImplicitNode.__init__(self, handle, wrapper)
+	def GetInputA(self):
+		AHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_vectorfromscalarnode_getinputa(self._handle, AHandle))
+		if AHandle:
+			AObject = self._wrapper._polymorphicFactory(AHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return AObject
+	
+	def GetOutputResult(self):
+		ResultHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_vectorfromscalarnode_getoutputresult(self._handle, ResultHandle))
+		if ResultHandle:
+			ResultObject = self._wrapper._polymorphicFactory(ResultHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ResultObject
+	
+
+
 ''' Class Implementation for DecomposeVectorNode
 '''
 class DecomposeVectorNode(ImplicitNode):
@@ -9817,14 +9930,14 @@ class ComposeMatrixNode(ImplicitNode):
 	
 
 
-''' Class Implementation for ComposeMatrixFromRowVectorsNode
+''' Class Implementation for MatrixFromRowsNode
 '''
-class ComposeMatrixFromRowVectorsNode(ImplicitNode):
+class MatrixFromRowsNode(ImplicitNode):
 	def __init__(self, handle, wrapper):
 		ImplicitNode.__init__(self, handle, wrapper)
 	def GetInputA(self):
 		Row0Handle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromrowvectorsnode_getinputa(self._handle, Row0Handle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_matrixfromrowsnode_getinputa(self._handle, Row0Handle))
 		if Row0Handle:
 			Row0Object = self._wrapper._polymorphicFactory(Row0Handle)
 		else:
@@ -9834,7 +9947,7 @@ class ComposeMatrixFromRowVectorsNode(ImplicitNode):
 	
 	def GetInputB(self):
 		Row1Handle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromrowvectorsnode_getinputb(self._handle, Row1Handle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_matrixfromrowsnode_getinputb(self._handle, Row1Handle))
 		if Row1Handle:
 			Row1Object = self._wrapper._polymorphicFactory(Row1Handle)
 		else:
@@ -9844,7 +9957,7 @@ class ComposeMatrixFromRowVectorsNode(ImplicitNode):
 	
 	def GetInputC(self):
 		Row2Handle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromrowvectorsnode_getinputc(self._handle, Row2Handle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_matrixfromrowsnode_getinputc(self._handle, Row2Handle))
 		if Row2Handle:
 			Row2Object = self._wrapper._polymorphicFactory(Row2Handle)
 		else:
@@ -9854,7 +9967,7 @@ class ComposeMatrixFromRowVectorsNode(ImplicitNode):
 	
 	def GetInputD(self):
 		Row3Handle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromrowvectorsnode_getinputd(self._handle, Row3Handle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_matrixfromrowsnode_getinputd(self._handle, Row3Handle))
 		if Row3Handle:
 			Row3Object = self._wrapper._polymorphicFactory(Row3Handle)
 		else:
@@ -9864,7 +9977,7 @@ class ComposeMatrixFromRowVectorsNode(ImplicitNode):
 	
 	def GetOutputResult(self):
 		ResultHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromrowvectorsnode_getoutputresult(self._handle, ResultHandle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_matrixfromrowsnode_getoutputresult(self._handle, ResultHandle))
 		if ResultHandle:
 			ResultObject = self._wrapper._polymorphicFactory(ResultHandle)
 		else:
@@ -9874,14 +9987,14 @@ class ComposeMatrixFromRowVectorsNode(ImplicitNode):
 	
 
 
-''' Class Implementation for ComposeMatrixFromColumnVectors
+''' Class Implementation for MatrixFromColumnsNode
 '''
-class ComposeMatrixFromColumnVectors(ImplicitNode):
+class MatrixFromColumnsNode(ImplicitNode):
 	def __init__(self, handle, wrapper):
 		ImplicitNode.__init__(self, handle, wrapper)
 	def GetInputA(self):
 		Column0Handle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromcolumnvectors_getinputa(self._handle, Column0Handle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_matrixfromcolumnsnode_getinputa(self._handle, Column0Handle))
 		if Column0Handle:
 			Column0Object = self._wrapper._polymorphicFactory(Column0Handle)
 		else:
@@ -9891,7 +10004,7 @@ class ComposeMatrixFromColumnVectors(ImplicitNode):
 	
 	def GetInputB(self):
 		Column1Handle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromcolumnvectors_getinputb(self._handle, Column1Handle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_matrixfromcolumnsnode_getinputb(self._handle, Column1Handle))
 		if Column1Handle:
 			Column1Object = self._wrapper._polymorphicFactory(Column1Handle)
 		else:
@@ -9901,7 +10014,7 @@ class ComposeMatrixFromColumnVectors(ImplicitNode):
 	
 	def GetInputC(self):
 		Column2Handle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromcolumnvectors_getinputc(self._handle, Column2Handle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_matrixfromcolumnsnode_getinputc(self._handle, Column2Handle))
 		if Column2Handle:
 			Column2Object = self._wrapper._polymorphicFactory(Column2Handle)
 		else:
@@ -9911,7 +10024,7 @@ class ComposeMatrixFromColumnVectors(ImplicitNode):
 	
 	def GetInputD(self):
 		Column3Handle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromcolumnvectors_getinputd(self._handle, Column3Handle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_matrixfromcolumnsnode_getinputd(self._handle, Column3Handle))
 		if Column3Handle:
 			Column3Object = self._wrapper._polymorphicFactory(Column3Handle)
 		else:
@@ -9921,7 +10034,7 @@ class ComposeMatrixFromColumnVectors(ImplicitNode):
 	
 	def GetOutputResult(self):
 		ResultHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_composematrixfromcolumnvectors_getoutputresult(self._handle, ResultHandle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_matrixfromcolumnsnode_getoutputresult(self._handle, ResultHandle))
 		if ResultHandle:
 			ResultObject = self._wrapper._polymorphicFactory(ResultHandle)
 		else:
@@ -10041,6 +10154,43 @@ class MeshNode(ImplicitNode):
 	def GetOutputDistance(self):
 		DistanceHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_meshnode_getoutputdistance(self._handle, DistanceHandle))
+		if DistanceHandle:
+			DistanceObject = self._wrapper._polymorphicFactory(DistanceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return DistanceObject
+	
+
+
+''' Class Implementation for UnsignedMeshNode
+'''
+class UnsignedMeshNode(ImplicitNode):
+	def __init__(self, handle, wrapper):
+		ImplicitNode.__init__(self, handle, wrapper)
+	def GetInputMesh(self):
+		MeshHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_unsignedmeshnode_getinputmesh(self._handle, MeshHandle))
+		if MeshHandle:
+			MeshObject = self._wrapper._polymorphicFactory(MeshHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return MeshObject
+	
+	def GetInputPos(self):
+		PosHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_unsignedmeshnode_getinputpos(self._handle, PosHandle))
+		if PosHandle:
+			PosObject = self._wrapper._polymorphicFactory(PosHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return PosObject
+	
+	def GetOutputDistance(self):
+		DistanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_unsignedmeshnode_getoutputdistance(self._handle, DistanceHandle))
 		if DistanceHandle:
 			DistanceObject = self._wrapper._polymorphicFactory(DistanceHandle)
 		else:
@@ -10719,6 +10869,19 @@ class ImplicitFunction(Function):
 		
 		return NodeObject
 	
+	def AddVectorFromScalarNode(self, Identifier, DisplayName, Tag):
+		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
+		pDisplayName = ctypes.c_char_p(str.encode(DisplayName))
+		pTag = ctypes.c_char_p(str.encode(Tag))
+		NodeHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_addvectorfromscalarnode(self._handle, pIdentifier, pDisplayName, pTag, NodeHandle))
+		if NodeHandle:
+			NodeObject = self._wrapper._polymorphicFactory(NodeHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return NodeObject
+	
 	def AddDecomposeVectorNode(self, Identifier, DisplayName, Tag):
 		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
 		pDisplayName = ctypes.c_char_p(str.encode(DisplayName))
@@ -10745,12 +10908,25 @@ class ImplicitFunction(Function):
 		
 		return NodeObject
 	
-	def AddComposeMatrixFromRowVectorsNode(self, Identifier, DisplayName, Tag):
+	def AddMatrixFromRowsNode(self, Identifier, DisplayName, Tag):
 		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
 		pDisplayName = ctypes.c_char_p(str.encode(DisplayName))
 		pTag = ctypes.c_char_p(str.encode(Tag))
 		NodeHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_addcomposematrixfromrowvectorsnode(self._handle, pIdentifier, pDisplayName, pTag, NodeHandle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_addmatrixfromrowsnode(self._handle, pIdentifier, pDisplayName, pTag, NodeHandle))
+		if NodeHandle:
+			NodeObject = self._wrapper._polymorphicFactory(NodeHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return NodeObject
+	
+	def AddMatrixFromColumnsNode(self, Identifier, DisplayName, Tag):
+		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
+		pDisplayName = ctypes.c_char_p(str.encode(DisplayName))
+		pTag = ctypes.c_char_p(str.encode(Tag))
+		NodeHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_addmatrixfromcolumnsnode(self._handle, pIdentifier, pDisplayName, pTag, NodeHandle))
 		if NodeHandle:
 			NodeObject = self._wrapper._polymorphicFactory(NodeHandle)
 		else:
@@ -10803,6 +10979,19 @@ class ImplicitFunction(Function):
 		pTag = ctypes.c_char_p(str.encode(Tag))
 		NodeHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_addmeshnode(self._handle, pIdentifier, pDisplayName, pTag, NodeHandle))
+		if NodeHandle:
+			NodeObject = self._wrapper._polymorphicFactory(NodeHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return NodeObject
+	
+	def AddUnsignedMeshNode(self, Identifier, DisplayName, Tag):
+		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
+		pDisplayName = ctypes.c_char_p(str.encode(DisplayName))
+		pTag = ctypes.c_char_p(str.encode(Tag))
+		NodeHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_addunsignedmeshnode(self._handle, pIdentifier, pDisplayName, pTag, NodeHandle))
 		if NodeHandle:
 			NodeObject = self._wrapper._polymorphicFactory(NodeHandle)
 		else:

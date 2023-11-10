@@ -623,6 +623,17 @@ namespace Lib3MF
                 const std::string& sTag) override;
 
             /**
+             * IImplicitFunction::AddVectorFromScalarNode - Add a VectorFromScalar
+             * @param[in] sIdentifier - the identifier of the node
+             * @param[in] sDisplayName - the display name of the node
+             * @param[in] sTag - the tag of the node
+             * @return the added node
+             */
+            IVectorFromScalarNode * AddVectorFromScalarNode(const std::string & sIdentifier,
+                                                            const std::string & sDisplayName,
+                                                            const std::string & sTag) override;
+
+            /**
              * IImplicitFunction::AddDecomposeVectorNode - Add a
              * DecomposeVectorNode
              * @param[in] sIdentifier - the identifier of the node
@@ -646,17 +657,26 @@ namespace Lib3MF
                 const std::string& sTag) override;
 
             /**
-             * IImplicitFunction::AddComposeMatrixFromRowVectorsNode - Add a
-             * ComposeMatrixFromRowVectorsNode
+             * IImplicitFunction::AddMatrixFromRowsNode - Add a MatrixFromRowsNode
              * @param[in] sIdentifier - the identifier of the node
              * @param[in] sDisplayName - the display name of the node
              * @param[in] sTag - the tag of the node
              * @return the added node
              */
-            IComposeMatrixFromRowVectorsNode*
-            AddComposeMatrixFromRowVectorsNode(
-                const std::string& sIdentifier, const std::string& sDisplayName,
-                const std::string& sTag) override;
+            IMatrixFromRowsNode * AddMatrixFromRowsNode(const std::string & sIdentifier,
+                                                        const std::string & sDisplayName,
+                                                        const std::string & sTag) override;
+
+            /**
+             * IImplicitFunction::AddMatrixFromColumnsNode - Add a MatrixFromColumnsNode
+             * @param[in] sIdentifier - the identifier of the node
+             * @param[in] sDisplayName - the display name of the node
+             * @param[in] sTag - the tag of the node
+             * @return the added node
+             */
+            IMatrixFromColumnsNode * AddMatrixFromColumnsNode(const std::string & sIdentifier,
+                                                              const std::string & sDisplayName,
+                                                              const std::string & sTag) override;
 
             /**
              * IImplicitFunction::AddConstantNode - Add a ConstantNode
@@ -701,6 +721,17 @@ namespace Lib3MF
             IMeshNode* AddMeshNode(const std::string& sIdentifier,
                                    const std::string& sDisplayName,
                                    const std::string& sTag) override;
+
+            /**
+             * IImplicitFunction::AddUnsignedMeshNode - Add a UnsignedMeshNode
+             * @param[in] sIdentifier - the identifier of the node
+             * @param[in] sDisplayName - the display name of the node
+             * @param[in] sTag - the tag of the node
+             * @return the added node
+             */
+            IUnsignedMeshNode * AddUnsignedMeshNode(const std::string & sIdentifier,
+                                                    const std::string & sDisplayName,
+                                                    const std::string & sTag) override;
 
             /**
              * IImplicitFunction::AddFunctionCallNode - Add a FunctionCallNode

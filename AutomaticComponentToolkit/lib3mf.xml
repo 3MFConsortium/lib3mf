@@ -1790,9 +1790,9 @@
 			value="9" />
 		<option name="ComposeMatrix" description="Creates a matrix from nine scalar values"
 			value="10" />
-		<option name="ComposeMatrixFromColumnVectors"
+		<option name="MatrixFromColumns"
 			description="Creates a matrix from three column vector values" value="11" />
-		<option name="ComposeMatrixFromRowVectors"
+		<option name="MatrixFromRows"
 			description="Creates a matrix from three row vector values" value="12" />
 		<option name="Dot" description="Calculates the dot product of two vector values"
 			value="13" />
@@ -1834,6 +1834,9 @@
 		<option name="Mesh" description="Calculates the signed distance to a mesh" value="46" />
 		<option name="Length" description="Calculates the length of a vector" value="47" />
 		<option name="Resource" description="Selects a resource (function, mesh etc.)" value="48" />
+		<option name="VectorFromScalar" description="Creates a vector from one scalar values"
+			value="49" />
+		<option name="UnsignedMesh" description="Calculates the unsigned distance to a mesh" value="50" />
 	</enum>
 
 	<enum name="ImplicitPortType" description="The type of the port">
@@ -2181,6 +2184,18 @@
 		</method>
 	</class>
 
+	<class name="VectorFromScalarNode" parent="ImplicitNode"
+		description="Creates a vector from one scalar values">
+		<method name="GetInputA" description="Retrieves the input">
+			<param name="A" type="class" class="ImplicitPort" pass="return"
+				description="the input for the x component" />
+		</method>
+		<method name="GetOutputResult" description="Retrieves the output">
+			<param name="Result" type="class" class="ImplicitPort" pass="return"
+				description="the output" />
+		</method>
+	</class>
+
 	<class name="DecomposeVectorNode" parent="ImplicitNode"
 		description="Decomposes a vector into three scalar values">
 		<method name="GetInputA" description="Retrieves the input">
@@ -2273,7 +2288,7 @@
 		</method>
 	</class>
 
-	<class name="ComposeMatrixFromRowVectorsNode" parent="ImplicitNode"
+	<class name="MatrixFromRowsNode" parent="ImplicitNode"
 		description="Composes a 4x4 matrix from four row vectors A,B,C,D">
 		<method name="GetInputA" description="Retrieves the input for the first row">
 			<param name="Row0" type="class" class="ImplicitPort" pass="return"
@@ -2298,7 +2313,7 @@
 	</class>
 
 	
-	<class name="ComposeMatrixFromColumnVectors" parent="ImplicitNode"
+	<class name="MatrixFromColumnsNode" parent="ImplicitNode"
 		description="Composes a 4x4 matrix from four column vectors A,B,C,D">
 		<method name="GetInputA" description="Retrieves the input for the first column">
 			<param name="Column0" type="class" class="ImplicitPort" pass="return"
@@ -2365,7 +2380,7 @@
 		</method>
 	</class>
 
-	<class name="MeshNode" parent="ImplicitNode" description="Mesh">
+	<class name="MeshNode" parent="ImplicitNode" description="Signed distance to mesh">
 		<method name="GetInputMesh" description="Retrieves the input for the model resource id of the mesh">
 			<param name="Mesh" type="class" class="ImplicitPort" pass="return"
 				description="the input port for the model resource id of the mesh" />
@@ -2379,6 +2394,23 @@
 		<method name="GetOutputDistance" description="Retrieves the output">
 			<param name="Distance" type="class" class="ImplicitPort" pass="return"
 				description="the output port for the signed distance to the mesh" />
+		</method>
+	</class>
+
+	<class name="UnsignedMeshNode" parent="ImplicitNode" description="Unsigned distance to mesh">
+		<method name="GetInputMesh" description="Retrieves the input for the model resource id of the mesh">
+			<param name="Mesh" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the model resource id of the mesh" />
+		</method>
+
+		<method name="GetInputPos" description="Retrieves the input for the position">
+			<param name="Pos" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the position" />
+		</method>
+
+		<method name="GetOutputDistance" description="Retrieves the output">
+			<param name="Distance" type="class" class="ImplicitPort" pass="return"
+				description="the output port for the unsigned distance to the mesh" />
 		</method>
 	</class>
 
@@ -2965,6 +2997,17 @@
 				description="the added node" />
 		</method>
 
+		<method name="AddVectorFromScalarNode" description="Add a VectorFromScalar">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="VectorFromScalarNode"
+				description="the added node" />
+		</method>
+
 		<method name="AddDecomposeVectorNode" description="Add a DecomposeVectorNode">
 			<param name="Identifier" pass="in" type="string"
 				description="the identifier of the node" />
@@ -2987,15 +3030,27 @@
 				description="the added node" />
 		</method>
 
-		<method name="AddComposeMatrixFromRowVectorsNode"
-			description="Add a ComposeMatrixFromRowVectorsNode">
+		<method name="AddMatrixFromRowsNode"
+			description="Add a MatrixFromRowsNode">
 			<param name="Identifier" pass="in" type="string"
 				description="the identifier of the node" />
 			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
 			<param name="Tag" pass="in" type="string"
 				description="the tag of the node" />
-			<param name="Node" pass="return" type="class" class="ComposeMatrixFromRowVectorsNode"
+			<param name="Node" pass="return" type="class" class="MatrixFromRowsNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddMatrixFromColumnsNode"
+			description="Add a MatrixFromColumnsNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="MatrixFromColumnsNode"
 				description="the added node" />
 		</method>
 
@@ -3040,6 +3095,17 @@
 			<param name="Tag" pass="in" type="string"
 				description="the tag of the node" />
 			<param name="Node" pass="return" type="class" class="MeshNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddUnsignedMeshNode" description="Add a UnsignedMeshNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="UnsignedMeshNode"
 				description="the added node" />
 		</method>
 

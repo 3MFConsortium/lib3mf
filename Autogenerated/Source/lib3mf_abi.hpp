@@ -3240,6 +3240,28 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_composevectornode_getinputz(Lib3MF_ComposeVe
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_composevectornode_getoutputresult(Lib3MF_ComposeVectorNode pComposeVectorNode, Lib3MF_ImplicitPort * pResult);
 
 /*************************************************************************************************************************
+ Class definition for VectorFromScalarNode
+**************************************************************************************************************************/
+
+/**
+* Retrieves the input
+*
+* @param[in] pVectorFromScalarNode - VectorFromScalarNode instance.
+* @param[out] pA - the input for the x component
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_vectorfromscalarnode_getinputa(Lib3MF_VectorFromScalarNode pVectorFromScalarNode, Lib3MF_ImplicitPort * pA);
+
+/**
+* Retrieves the output
+*
+* @param[in] pVectorFromScalarNode - VectorFromScalarNode instance.
+* @param[out] pResult - the output
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_vectorfromscalarnode_getoutputresult(Lib3MF_VectorFromScalarNode pVectorFromScalarNode, Lib3MF_ImplicitPort * pResult);
+
+/*************************************************************************************************************************
  Class definition for DecomposeVectorNode
 **************************************************************************************************************************/
 
@@ -3437,102 +3459,102 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm33(Lib3MF_Compose
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getoutputresult(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pResult);
 
 /*************************************************************************************************************************
- Class definition for ComposeMatrixFromRowVectorsNode
+ Class definition for MatrixFromRowsNode
 **************************************************************************************************************************/
 
 /**
 * Retrieves the input for the first row
 *
-* @param[in] pComposeMatrixFromRowVectorsNode - ComposeMatrixFromRowVectorsNode instance.
+* @param[in] pMatrixFromRowsNode - MatrixFromRowsNode instance.
 * @param[out] pRow0 - the input for the first row
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixfromrowvectorsnode_getinputa(Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow0);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_matrixfromrowsnode_getinputa(Lib3MF_MatrixFromRowsNode pMatrixFromRowsNode, Lib3MF_ImplicitPort * pRow0);
 
 /**
 * Retrieves the input for the second row
 *
-* @param[in] pComposeMatrixFromRowVectorsNode - ComposeMatrixFromRowVectorsNode instance.
+* @param[in] pMatrixFromRowsNode - MatrixFromRowsNode instance.
 * @param[out] pRow1 - the input for the second row
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixfromrowvectorsnode_getinputb(Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow1);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_matrixfromrowsnode_getinputb(Lib3MF_MatrixFromRowsNode pMatrixFromRowsNode, Lib3MF_ImplicitPort * pRow1);
 
 /**
 * Retrieves the input for the third row
 *
-* @param[in] pComposeMatrixFromRowVectorsNode - ComposeMatrixFromRowVectorsNode instance.
+* @param[in] pMatrixFromRowsNode - MatrixFromRowsNode instance.
 * @param[out] pRow2 - the input for the third row
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixfromrowvectorsnode_getinputc(Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow2);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_matrixfromrowsnode_getinputc(Lib3MF_MatrixFromRowsNode pMatrixFromRowsNode, Lib3MF_ImplicitPort * pRow2);
 
 /**
 * Retrieves the input for the fourth row
 *
-* @param[in] pComposeMatrixFromRowVectorsNode - ComposeMatrixFromRowVectorsNode instance.
+* @param[in] pMatrixFromRowsNode - MatrixFromRowsNode instance.
 * @param[out] pRow3 - the input for the fourth row
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixfromrowvectorsnode_getinputd(Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pRow3);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_matrixfromrowsnode_getinputd(Lib3MF_MatrixFromRowsNode pMatrixFromRowsNode, Lib3MF_ImplicitPort * pRow3);
 
 /**
 * Retrieves the output
 *
-* @param[in] pComposeMatrixFromRowVectorsNode - ComposeMatrixFromRowVectorsNode instance.
+* @param[in] pMatrixFromRowsNode - MatrixFromRowsNode instance.
 * @param[out] pResult - the output
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixfromrowvectorsnode_getoutputresult(Lib3MF_ComposeMatrixFromRowVectorsNode pComposeMatrixFromRowVectorsNode, Lib3MF_ImplicitPort * pResult);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_matrixfromrowsnode_getoutputresult(Lib3MF_MatrixFromRowsNode pMatrixFromRowsNode, Lib3MF_ImplicitPort * pResult);
 
 /*************************************************************************************************************************
- Class definition for ComposeMatrixFromColumnVectors
+ Class definition for MatrixFromColumnsNode
 **************************************************************************************************************************/
 
 /**
 * Retrieves the input for the first column
 *
-* @param[in] pComposeMatrixFromColumnVectors - ComposeMatrixFromColumnVectors instance.
+* @param[in] pMatrixFromColumnsNode - MatrixFromColumnsNode instance.
 * @param[out] pColumn0 - the input for the first column
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixfromcolumnvectors_getinputa(Lib3MF_ComposeMatrixFromColumnVectors pComposeMatrixFromColumnVectors, Lib3MF_ImplicitPort * pColumn0);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_matrixfromcolumnsnode_getinputa(Lib3MF_MatrixFromColumnsNode pMatrixFromColumnsNode, Lib3MF_ImplicitPort * pColumn0);
 
 /**
 * Retrieves the input for the second column
 *
-* @param[in] pComposeMatrixFromColumnVectors - ComposeMatrixFromColumnVectors instance.
+* @param[in] pMatrixFromColumnsNode - MatrixFromColumnsNode instance.
 * @param[out] pColumn1 - the input for the second column
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixfromcolumnvectors_getinputb(Lib3MF_ComposeMatrixFromColumnVectors pComposeMatrixFromColumnVectors, Lib3MF_ImplicitPort * pColumn1);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_matrixfromcolumnsnode_getinputb(Lib3MF_MatrixFromColumnsNode pMatrixFromColumnsNode, Lib3MF_ImplicitPort * pColumn1);
 
 /**
 * Retrieves the input for the third column
 *
-* @param[in] pComposeMatrixFromColumnVectors - ComposeMatrixFromColumnVectors instance.
+* @param[in] pMatrixFromColumnsNode - MatrixFromColumnsNode instance.
 * @param[out] pColumn2 - the input for the third column
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixfromcolumnvectors_getinputc(Lib3MF_ComposeMatrixFromColumnVectors pComposeMatrixFromColumnVectors, Lib3MF_ImplicitPort * pColumn2);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_matrixfromcolumnsnode_getinputc(Lib3MF_MatrixFromColumnsNode pMatrixFromColumnsNode, Lib3MF_ImplicitPort * pColumn2);
 
 /**
 * Retrieves the input for the fourth column
 *
-* @param[in] pComposeMatrixFromColumnVectors - ComposeMatrixFromColumnVectors instance.
+* @param[in] pMatrixFromColumnsNode - MatrixFromColumnsNode instance.
 * @param[out] pColumn3 - the input for the fourth column
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixfromcolumnvectors_getinputd(Lib3MF_ComposeMatrixFromColumnVectors pComposeMatrixFromColumnVectors, Lib3MF_ImplicitPort * pColumn3);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_matrixfromcolumnsnode_getinputd(Lib3MF_MatrixFromColumnsNode pMatrixFromColumnsNode, Lib3MF_ImplicitPort * pColumn3);
 
 /**
 * Retrieves the output
 *
-* @param[in] pComposeMatrixFromColumnVectors - ComposeMatrixFromColumnVectors instance.
+* @param[in] pMatrixFromColumnsNode - MatrixFromColumnsNode instance.
 * @param[out] pResult - the output
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixfromcolumnvectors_getoutputresult(Lib3MF_ComposeMatrixFromColumnVectors pComposeMatrixFromColumnVectors, Lib3MF_ImplicitPort * pResult);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_matrixfromcolumnsnode_getoutputresult(Lib3MF_MatrixFromColumnsNode pMatrixFromColumnsNode, Lib3MF_ImplicitPort * pResult);
 
 /*************************************************************************************************************************
  Class definition for ConstantNode
@@ -3657,6 +3679,37 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_meshnode_getinputpos(Lib3MF_MeshNode pMeshNo
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_meshnode_getoutputdistance(Lib3MF_MeshNode pMeshNode, Lib3MF_ImplicitPort * pDistance);
+
+/*************************************************************************************************************************
+ Class definition for UnsignedMeshNode
+**************************************************************************************************************************/
+
+/**
+* Retrieves the input for the model resource id of the mesh
+*
+* @param[in] pUnsignedMeshNode - UnsignedMeshNode instance.
+* @param[out] pMesh - the input port for the model resource id of the mesh
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_unsignedmeshnode_getinputmesh(Lib3MF_UnsignedMeshNode pUnsignedMeshNode, Lib3MF_ImplicitPort * pMesh);
+
+/**
+* Retrieves the input for the position
+*
+* @param[in] pUnsignedMeshNode - UnsignedMeshNode instance.
+* @param[out] pPos - the input port for the position
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_unsignedmeshnode_getinputpos(Lib3MF_UnsignedMeshNode pUnsignedMeshNode, Lib3MF_ImplicitPort * pPos);
+
+/**
+* Retrieves the output
+*
+* @param[in] pUnsignedMeshNode - UnsignedMeshNode instance.
+* @param[out] pDistance - the output port for the unsigned distance to the mesh
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_unsignedmeshnode_getoutputdistance(Lib3MF_UnsignedMeshNode pUnsignedMeshNode, Lib3MF_ImplicitPort * pDistance);
 
 /*************************************************************************************************************************
  Class definition for FunctionCallNode
@@ -4314,6 +4367,18 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addclampnode(Lib3MF_Implici
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addcomposevectornode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_ComposeVectorNode * pNode);
 
 /**
+* Add a VectorFromScalar
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addvectorfromscalarnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_VectorFromScalarNode * pNode);
+
+/**
 * Add a DecomposeVectorNode
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
@@ -4338,7 +4403,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_adddecomposevectornode(Lib3
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addcomposematrixnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_ComposeMatrixNode * pNode);
 
 /**
-* Add a ComposeMatrixFromRowVectorsNode
+* Add a MatrixFromRowsNode
 *
 * @param[in] pImplicitFunction - ImplicitFunction instance.
 * @param[in] pIdentifier - the identifier of the node
@@ -4347,7 +4412,19 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addcomposematrixnode(Lib3MF
 * @param[out] pNode - the added node
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addcomposematrixfromrowvectorsnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_ComposeMatrixFromRowVectorsNode * pNode);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addmatrixfromrowsnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_MatrixFromRowsNode * pNode);
+
+/**
+* Add a MatrixFromColumnsNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addmatrixfromcolumnsnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_MatrixFromColumnsNode * pNode);
 
 /**
 * Add a ConstantNode
@@ -4396,6 +4473,18 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addconstmatnode(Lib3MF_Impl
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addmeshnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_MeshNode * pNode);
+
+/**
+* Add a UnsignedMeshNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addunsignedmeshnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_UnsignedMeshNode * pNode);
 
 /**
 * Add a FunctionCallNode

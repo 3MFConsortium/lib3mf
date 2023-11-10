@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CComposeMatrixFromColumnVectors
+Abstract: This is the class declaration of CVectorFromScalarNode
 
 */
 
 
-#ifndef __LIB3MF_COMPOSEMATRIXFROMCOLUMNVECTORS
-#define __LIB3MF_COMPOSEMATRIXFROMCOLUMNVECTORS
+#ifndef __LIB3MF_VECTORFROMSCALARNODE
+#define __LIB3MF_VECTORFROMSCALARNODE
 
 #include "lib3mf_interfaces.hpp"
 
@@ -49,10 +49,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CComposeMatrixFromColumnVectors 
+ Class declaration of CVectorFromScalarNode 
 **************************************************************************************************************************/
 
-class CComposeMatrixFromColumnVectors : public virtual IComposeMatrixFromColumnVectors, public virtual CImplicitNode {
+class CVectorFromScalarNode : public virtual IVectorFromScalarNode, public virtual CImplicitNode {
 private:
 
 	/**
@@ -66,7 +66,8 @@ protected:
 	*/
 
 public:
-	CComposeMatrixFromColumnVectors(NMR::PModelImplicitNode pImplicitNode);
+	CVectorFromScalarNode(NMR::PModelImplicitNode pImplicitNode);
+
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
@@ -77,31 +78,13 @@ public:
 	*/
 
 	/**
-	* IComposeMatrixFromColumnVectors::GetInputA - Retrieves the input for the first column
-	* @return the input for the first column
+	* IVectorFromScalarNode::GetInputA - Retrieves the input
+	* @return the input for the x component
 	*/
 	IImplicitPort * GetInputA() override;
 
 	/**
-	* IComposeMatrixFromColumnVectors::GetInputB - Retrieves the input for the second column
-	* @return the input for the second column
-	*/
-	IImplicitPort * GetInputB() override;
-
-	/**
-	* IComposeMatrixFromColumnVectors::GetInputC - Retrieves the input for the third column
-	* @return the input for the third column
-	*/
-	IImplicitPort * GetInputC() override;
-
-	/**
-	* IComposeMatrixFromColumnVectors::GetInputD - Retrieves the input for the fourth column
-	* @return the input for the fourth column
-	*/
-	IImplicitPort * GetInputD() override;
-
-	/**
-	* IComposeMatrixFromColumnVectors::GetOutputResult - Retrieves the output
+	* IVectorFromScalarNode::GetOutputResult - Retrieves the output
 	* @return the output
 	*/
 	IImplicitPort * GetOutputResult() override;
@@ -114,4 +97,4 @@ public:
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-#endif // __LIB3MF_COMPOSEMATRIXFROMCOLUMNVECTORS
+#endif // __LIB3MF_VECTORFROMSCALARNODE

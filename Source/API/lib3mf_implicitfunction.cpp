@@ -37,7 +37,6 @@ Abstract: This is a stub class definition of CImplicitFunction
 #include "lib3mf_arctan2node.hpp"
 #include "lib3mf_ceilnode.hpp"
 #include "lib3mf_clampnode.hpp"
-#include "lib3mf_composematrixfromrowvectorsnode.hpp"
 #include "lib3mf_composematrixnode.hpp"
 #include "lib3mf_composevectornode.hpp"
 #include "lib3mf_constantnode.hpp"
@@ -62,6 +61,8 @@ Abstract: This is a stub class definition of CImplicitFunction
 #include "lib3mf_log10node.hpp"
 #include "lib3mf_log2node.hpp"
 #include "lib3mf_lognode.hpp"
+#include "lib3mf_matrixfromcolumnsnode.hpp"
+#include "lib3mf_matrixfromrowsnode.hpp"
 #include "lib3mf_matvecmultiplicationnode.hpp"
 #include "lib3mf_maxnode.hpp"
 #include "lib3mf_meshnode.hpp"
@@ -79,6 +80,8 @@ Abstract: This is a stub class definition of CImplicitFunction
 #include "lib3mf_tanhnode.hpp"
 #include "lib3mf_tannode.hpp"
 #include "lib3mf_transposenode.hpp"
+#include "lib3mf_unsignedmeshnode.hpp"
+#include "lib3mf_vectorfromscalarnode.hpp"
 
 // Include custom headers here.
 #include "lib3mf_implicitportiterator.hpp"
@@ -544,6 +547,18 @@ IComposeVectorNode* CImplicitFunction::AddComposeVectorNode(
     return new CComposeVectorNode(newNode);
 }
 
+IVectorFromScalarNode * CImplicitFunction::AddVectorFromScalarNode(const std::string & sIdentifier,
+                                                                   const std::string & sDisplayName,
+                                                                   const std::string & sTag)
+{
+    auto newNode = function()->addNode(Lib3MF::eImplicitNodeType::VectorFromScalar,
+                                       Lib3MF::eImplicitNodeConfiguration::Default,
+                                       sIdentifier,
+                                       sDisplayName,
+                                       sTag);
+    return new CVectorFromScalarNode(newNode);
+}
+
 IDecomposeVectorNode* CImplicitFunction::AddDecomposeVectorNode(
     const std::string& sIdentifier, const std::string& sDisplayName,
     const std::string& sTag)
@@ -566,16 +581,28 @@ IComposeMatrixNode* CImplicitFunction::AddComposeMatrixNode(
     return new CComposeMatrixNode(newNode);
 }
 
-IComposeMatrixFromRowVectorsNode*
-CImplicitFunction::AddComposeMatrixFromRowVectorsNode(
-    const std::string& sIdentifier, const std::string& sDisplayName,
-    const std::string& sTag)
+IMatrixFromRowsNode * CImplicitFunction::AddMatrixFromRowsNode(const std::string & sIdentifier,
+                                                        const std::string & sDisplayName,
+                                                        const std::string & sTag)
 {
-    auto newNode = function()->addNode(
-        Lib3MF::eImplicitNodeType::ComposeMatrixFromRowVectors,
-        Lib3MF::eImplicitNodeConfiguration::Default, sIdentifier, sDisplayName,
-        sTag);
-    return new CComposeMatrixFromRowVectorsNode(newNode);
+    auto newNode = function()->addNode(Lib3MF::eImplicitNodeType::MatrixFromRows,
+                                       Lib3MF::eImplicitNodeConfiguration::Default,
+                                       sIdentifier,
+                                       sDisplayName,
+                                       sTag);
+    return new CMatrixFromRowsNode(newNode);
+}
+
+IMatrixFromColumnsNode * CImplicitFunction::AddMatrixFromColumnsNode(const std::string & sIdentifier,
+                                                                      const std::string & sDisplayName,
+                                                                      const std::string & sTag)
+{
+    auto newNode = function()->addNode(Lib3MF::eImplicitNodeType::MatrixFromColumns,
+                                       Lib3MF::eImplicitNodeConfiguration::Default,
+                                       sIdentifier,
+                                       sDisplayName,
+                                       sTag);
+    return new CMatrixFromColumnsNode(newNode);
 }
 
 IConstantNode* CImplicitFunction::AddConstantNode(
@@ -620,6 +647,18 @@ IMeshNode* CImplicitFunction::AddMeshNode(const std::string& sIdentifier,
                             Lib3MF::eImplicitNodeConfiguration::Default,
                             sIdentifier, sDisplayName, sTag);
     return new CMeshNode(newNode);
+}
+
+IUnsignedMeshNode * CImplicitFunction::AddUnsignedMeshNode(const std::string & sIdentifier,
+                                                    const std::string & sDisplayName,
+                                                    const std::string & sTag)
+{
+    auto newNode = function()->addNode(Lib3MF::eImplicitNodeType::UnsignedMesh,
+                                       Lib3MF::eImplicitNodeConfiguration::Default,
+                                       sIdentifier,
+                                       sDisplayName,
+                                       sTag);
+    return new CUnsignedMeshNode(newNode);
 }
 
 IFunctionCallNode* CImplicitFunction::AddFunctionCallNode(
@@ -677,3 +716,4 @@ void CImplicitFunction::SortNodesTopologically()
 {
     function()->sortNodesTopologically();
 }
+

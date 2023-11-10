@@ -138,14 +138,16 @@ class IPowNode;
 class ISelectNode;
 class IClampNode;
 class IComposeVectorNode;
+class IVectorFromScalarNode;
 class IDecomposeVectorNode;
 class IComposeMatrixNode;
-class IComposeMatrixFromRowVectorsNode;
-class IComposeMatrixFromColumnVectors;
+class IMatrixFromRowsNode;
+class IMatrixFromColumnsNode;
 class IConstantNode;
 class IConstVecNode;
 class IConstMatNode;
 class IMeshNode;
+class IUnsignedMeshNode;
 class IFunctionCallNode;
 class INodeIterator;
 class IFunction;
@@ -3987,6 +3989,38 @@ typedef IBaseSharedPtr<IComposeVectorNode> PIComposeVectorNode;
 
 
 /*************************************************************************************************************************
+ Class interface for VectorFromScalarNode 
+**************************************************************************************************************************/
+
+class IVectorFromScalarNode : public virtual IImplicitNode {
+public:
+	/**
+	* IVectorFromScalarNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x2E417B93351375E2UL; // First 64 bits of SHA1 of a string: "Lib3MF::VectorFromScalarNode"
+	}
+
+	/**
+	* IVectorFromScalarNode::GetInputA - Retrieves the input
+	* @return the input for the x component
+	*/
+	virtual IImplicitPort * GetInputA() = 0;
+
+	/**
+	* IVectorFromScalarNode::GetOutputResult - Retrieves the output
+	* @return the output
+	*/
+	virtual IImplicitPort * GetOutputResult() = 0;
+
+};
+
+typedef IBaseSharedPtr<IVectorFromScalarNode> PIVectorFromScalarNode;
+
+
+/*************************************************************************************************************************
  Class interface for DecomposeVectorNode 
 **************************************************************************************************************************/
 
@@ -4153,103 +4187,103 @@ typedef IBaseSharedPtr<IComposeMatrixNode> PIComposeMatrixNode;
 
 
 /*************************************************************************************************************************
- Class interface for ComposeMatrixFromRowVectorsNode 
+ Class interface for MatrixFromRowsNode 
 **************************************************************************************************************************/
 
-class IComposeMatrixFromRowVectorsNode : public virtual IImplicitNode {
+class IMatrixFromRowsNode : public virtual IImplicitNode {
 public:
 	/**
-	* IComposeMatrixFromRowVectorsNode::ClassTypeId - Get Class Type Id
+	* IMatrixFromRowsNode::ClassTypeId - Get Class Type Id
 	* @return Class type as a 64 bits integer
 	*/
 	Lib3MF_uint64 ClassTypeId() override
 	{
-		return 0x5F89513A9B5FC583UL; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixFromRowVectorsNode"
+		return 0xD6DFD0A7EB64AC33UL; // First 64 bits of SHA1 of a string: "Lib3MF::MatrixFromRowsNode"
 	}
 
 	/**
-	* IComposeMatrixFromRowVectorsNode::GetInputA - Retrieves the input for the first row
+	* IMatrixFromRowsNode::GetInputA - Retrieves the input for the first row
 	* @return the input for the first row
 	*/
 	virtual IImplicitPort * GetInputA() = 0;
 
 	/**
-	* IComposeMatrixFromRowVectorsNode::GetInputB - Retrieves the input for the second row
+	* IMatrixFromRowsNode::GetInputB - Retrieves the input for the second row
 	* @return the input for the second row
 	*/
 	virtual IImplicitPort * GetInputB() = 0;
 
 	/**
-	* IComposeMatrixFromRowVectorsNode::GetInputC - Retrieves the input for the third row
+	* IMatrixFromRowsNode::GetInputC - Retrieves the input for the third row
 	* @return the input for the third row
 	*/
 	virtual IImplicitPort * GetInputC() = 0;
 
 	/**
-	* IComposeMatrixFromRowVectorsNode::GetInputD - Retrieves the input for the fourth row
+	* IMatrixFromRowsNode::GetInputD - Retrieves the input for the fourth row
 	* @return the input for the fourth row
 	*/
 	virtual IImplicitPort * GetInputD() = 0;
 
 	/**
-	* IComposeMatrixFromRowVectorsNode::GetOutputResult - Retrieves the output
+	* IMatrixFromRowsNode::GetOutputResult - Retrieves the output
 	* @return the output
 	*/
 	virtual IImplicitPort * GetOutputResult() = 0;
 
 };
 
-typedef IBaseSharedPtr<IComposeMatrixFromRowVectorsNode> PIComposeMatrixFromRowVectorsNode;
+typedef IBaseSharedPtr<IMatrixFromRowsNode> PIMatrixFromRowsNode;
 
 
 /*************************************************************************************************************************
- Class interface for ComposeMatrixFromColumnVectors 
+ Class interface for MatrixFromColumnsNode 
 **************************************************************************************************************************/
 
-class IComposeMatrixFromColumnVectors : public virtual IImplicitNode {
+class IMatrixFromColumnsNode : public virtual IImplicitNode {
 public:
 	/**
-	* IComposeMatrixFromColumnVectors::ClassTypeId - Get Class Type Id
+	* IMatrixFromColumnsNode::ClassTypeId - Get Class Type Id
 	* @return Class type as a 64 bits integer
 	*/
 	Lib3MF_uint64 ClassTypeId() override
 	{
-		return 0x1A740A1E16230053UL; // First 64 bits of SHA1 of a string: "Lib3MF::ComposeMatrixFromColumnVectors"
+		return 0xDCBEAFCF83F3AACUL; // First 64 bits of SHA1 of a string: "Lib3MF::MatrixFromColumnsNode"
 	}
 
 	/**
-	* IComposeMatrixFromColumnVectors::GetInputA - Retrieves the input for the first column
+	* IMatrixFromColumnsNode::GetInputA - Retrieves the input for the first column
 	* @return the input for the first column
 	*/
 	virtual IImplicitPort * GetInputA() = 0;
 
 	/**
-	* IComposeMatrixFromColumnVectors::GetInputB - Retrieves the input for the second column
+	* IMatrixFromColumnsNode::GetInputB - Retrieves the input for the second column
 	* @return the input for the second column
 	*/
 	virtual IImplicitPort * GetInputB() = 0;
 
 	/**
-	* IComposeMatrixFromColumnVectors::GetInputC - Retrieves the input for the third column
+	* IMatrixFromColumnsNode::GetInputC - Retrieves the input for the third column
 	* @return the input for the third column
 	*/
 	virtual IImplicitPort * GetInputC() = 0;
 
 	/**
-	* IComposeMatrixFromColumnVectors::GetInputD - Retrieves the input for the fourth column
+	* IMatrixFromColumnsNode::GetInputD - Retrieves the input for the fourth column
 	* @return the input for the fourth column
 	*/
 	virtual IImplicitPort * GetInputD() = 0;
 
 	/**
-	* IComposeMatrixFromColumnVectors::GetOutputResult - Retrieves the output
+	* IMatrixFromColumnsNode::GetOutputResult - Retrieves the output
 	* @return the output
 	*/
 	virtual IImplicitPort * GetOutputResult() = 0;
 
 };
 
-typedef IBaseSharedPtr<IComposeMatrixFromColumnVectors> PIComposeMatrixFromColumnVectors;
+typedef IBaseSharedPtr<IMatrixFromColumnsNode> PIMatrixFromColumnsNode;
 
 
 /*************************************************************************************************************************
@@ -4402,6 +4436,44 @@ public:
 };
 
 typedef IBaseSharedPtr<IMeshNode> PIMeshNode;
+
+
+/*************************************************************************************************************************
+ Class interface for UnsignedMeshNode 
+**************************************************************************************************************************/
+
+class IUnsignedMeshNode : public virtual IImplicitNode {
+public:
+	/**
+	* IUnsignedMeshNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x29985A628251A9CDUL; // First 64 bits of SHA1 of a string: "Lib3MF::UnsignedMeshNode"
+	}
+
+	/**
+	* IUnsignedMeshNode::GetInputMesh - Retrieves the input for the model resource id of the mesh
+	* @return the input port for the model resource id of the mesh
+	*/
+	virtual IImplicitPort * GetInputMesh() = 0;
+
+	/**
+	* IUnsignedMeshNode::GetInputPos - Retrieves the input for the position
+	* @return the input port for the position
+	*/
+	virtual IImplicitPort * GetInputPos() = 0;
+
+	/**
+	* IUnsignedMeshNode::GetOutputDistance - Retrieves the output
+	* @return the output port for the unsigned distance to the mesh
+	*/
+	virtual IImplicitPort * GetOutputDistance() = 0;
+
+};
+
+typedef IBaseSharedPtr<IUnsignedMeshNode> PIUnsignedMeshNode;
 
 
 /*************************************************************************************************************************
@@ -4956,6 +5028,15 @@ public:
 	virtual IComposeVectorNode * AddComposeVectorNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
+	* IImplicitFunction::AddVectorFromScalarNode - Add a VectorFromScalar
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IVectorFromScalarNode * AddVectorFromScalarNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
 	* IImplicitFunction::AddDecomposeVectorNode - Add a DecomposeVectorNode
 	* @param[in] sIdentifier - the identifier of the node
 	* @param[in] sDisplayName - the display name of the node
@@ -4974,13 +5055,22 @@ public:
 	virtual IComposeMatrixNode * AddComposeMatrixNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
-	* IImplicitFunction::AddComposeMatrixFromRowVectorsNode - Add a ComposeMatrixFromRowVectorsNode
+	* IImplicitFunction::AddMatrixFromRowsNode - Add a MatrixFromRowsNode
 	* @param[in] sIdentifier - the identifier of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	virtual IComposeMatrixFromRowVectorsNode * AddComposeMatrixFromRowVectorsNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
+	virtual IMatrixFromRowsNode * AddMatrixFromRowsNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddMatrixFromColumnsNode - Add a MatrixFromColumnsNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IMatrixFromColumnsNode * AddMatrixFromColumnsNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::AddConstantNode - Add a ConstantNode
@@ -5017,6 +5107,15 @@ public:
 	* @return the added node
 	*/
 	virtual IMeshNode * AddMeshNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddUnsignedMeshNode - Add a UnsignedMeshNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IUnsignedMeshNode * AddUnsignedMeshNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::AddFunctionCallNode - Add a FunctionCallNode

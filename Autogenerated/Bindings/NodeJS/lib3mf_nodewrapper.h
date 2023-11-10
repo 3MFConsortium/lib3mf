@@ -1843,6 +1843,25 @@ public:
 };
 
 /*************************************************************************************************************************
+ Class CLib3MFVectorFromScalarNode 
+**************************************************************************************************************************/
+class CLib3MFVectorFromScalarNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetInputA(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputResult(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFVectorFromScalarNode();
+	~CLib3MFVectorFromScalarNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
  Class CLib3MFDecomposeVectorNode 
 **************************************************************************************************************************/
 class CLib3MFDecomposeVectorNode : public CLib3MFBaseClass {
@@ -1898,9 +1917,9 @@ public:
 };
 
 /*************************************************************************************************************************
- Class CLib3MFComposeMatrixFromRowVectorsNode 
+ Class CLib3MFMatrixFromRowsNode 
 **************************************************************************************************************************/
-class CLib3MFComposeMatrixFromRowVectorsNode : public CLib3MFBaseClass {
+class CLib3MFMatrixFromRowsNode : public CLib3MFBaseClass {
 private:
 	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static v8::Persistent<v8::Function> constructor;
@@ -1911,8 +1930,8 @@ private:
 	static void GetOutputResult(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
-	CLib3MFComposeMatrixFromRowVectorsNode();
-	~CLib3MFComposeMatrixFromRowVectorsNode();
+	CLib3MFMatrixFromRowsNode();
+	~CLib3MFMatrixFromRowsNode();
 	
 	static void Init();
 	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
@@ -1920,9 +1939,9 @@ public:
 };
 
 /*************************************************************************************************************************
- Class CLib3MFComposeMatrixFromColumnVectors 
+ Class CLib3MFMatrixFromColumnsNode 
 **************************************************************************************************************************/
-class CLib3MFComposeMatrixFromColumnVectors : public CLib3MFBaseClass {
+class CLib3MFMatrixFromColumnsNode : public CLib3MFBaseClass {
 private:
 	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static v8::Persistent<v8::Function> constructor;
@@ -1933,8 +1952,8 @@ private:
 	static void GetOutputResult(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
-	CLib3MFComposeMatrixFromColumnVectors();
-	~CLib3MFComposeMatrixFromColumnVectors();
+	CLib3MFMatrixFromColumnsNode();
+	~CLib3MFMatrixFromColumnsNode();
 	
 	static void Init();
 	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
@@ -2015,6 +2034,26 @@ private:
 public:
 	CLib3MFMeshNode();
 	~CLib3MFMeshNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFUnsignedMeshNode 
+**************************************************************************************************************************/
+class CLib3MFUnsignedMeshNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetInputMesh(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputPos(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputDistance(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFUnsignedMeshNode();
+	~CLib3MFUnsignedMeshNode();
 	
 	static void Init();
 	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
@@ -2132,13 +2171,16 @@ private:
 	static void AddSelectNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddClampNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddComposeVectorNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddVectorFromScalarNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddDecomposeVectorNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddComposeMatrixNode(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void AddComposeMatrixFromRowVectorsNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddMatrixFromRowsNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddMatrixFromColumnsNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddConstantNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddConstVecNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddConstMatNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddMeshNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddUnsignedMeshNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddFunctionCallNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetNodes(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void RemoveNode(const v8::FunctionCallbackInfo<v8::Value>& args);

@@ -24,11 +24,11 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CComposeMatrixFromRowVectorsNode
+Abstract: This is a stub class definition of CVectorFromScalarNode
 
 */
 
-#include "lib3mf_composematrixfromrowvectorsnode.hpp"
+#include "lib3mf_vectorfromscalarnode.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
@@ -37,38 +37,23 @@ Abstract: This is a stub class definition of CComposeMatrixFromRowVectorsNode
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CComposeMatrixFromRowVectorsNode 
+ Class definition of CVectorFromScalarNode 
 **************************************************************************************************************************/
 
-CComposeMatrixFromRowVectorsNode::
-    CComposeMatrixFromRowVectorsNode(NMR::PModelImplicitNode pImplicitNode)
+CVectorFromScalarNode::
+	CVectorFromScalarNode(NMR::PModelImplicitNode pImplicitNode)
 	: CImplicitNode{pImplicitNode}
 {
 	CImplicitNode::m_pImplicitNode = pImplicitNode;
 }
 
-IImplicitPort* CComposeMatrixFromRowVectorsNode::GetInputA()
+IImplicitPort * CVectorFromScalarNode::GetInputA()
 {
-	return FindInputOrThrow(NMR::InputNames::A);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IImplicitPort * CComposeMatrixFromRowVectorsNode::GetInputB()
+IImplicitPort * CVectorFromScalarNode::GetOutputResult()
 {
-	return FindInputOrThrow(NMR::InputNames::B);
-}
-
-IImplicitPort * CComposeMatrixFromRowVectorsNode::GetInputC()
-{
-	return FindInputOrThrow(NMR::InputNames::C);
-}
-
-IImplicitPort * CComposeMatrixFromRowVectorsNode::GetInputD()
-{
-	return FindInputOrThrow(NMR::InputNames::D);
-}
-
-IImplicitPort * CComposeMatrixFromRowVectorsNode::GetOutputResult()
-{
-	return FindOutputOrThrow(NMR::OutputNames::result);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
