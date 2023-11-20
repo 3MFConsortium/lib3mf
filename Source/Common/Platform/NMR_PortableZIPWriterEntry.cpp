@@ -34,7 +34,7 @@ NMR_PortableZIPWriterEntry.cpp implements a portable and fast writer of ZIP file
 #include "Common/Platform/NMR_ExportStream_ZIP.h"
 #include "Common/NMR_Exception.h" 
 #include "Common/NMR_StringUtils.h" 
-#include "Libraries/zlib/zlib.h"
+#include <zlib.h>
 
 namespace NMR {
 
