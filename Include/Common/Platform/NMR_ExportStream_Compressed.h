@@ -36,7 +36,7 @@ NMR_ExportStream_Compressed.h defines a stream to write compressed files
 #include "Common/NMR_Types.h"
 #include "Common/Platform/NMR_ExportStream.h"
 #include "Common/Platform/NMR_PortableZIPWriter.h"
-#include "Libraries/zlib/zlib.h"
+#include <zlib.h>
 
 #define EXPORTSTREAM_WRITE_BUFFER_CHUNKSIZE 1024
 

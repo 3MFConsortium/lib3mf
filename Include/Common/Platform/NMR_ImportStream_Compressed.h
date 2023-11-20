@@ -35,7 +35,7 @@ This is a stream class for importing from a compressed object.
 #define __NMR_IMPORTSTREAM_COMPRESSED
 
 #include "Common/Platform/NMR_ImportStream.h"
-#include "Libraries/zlib/zlib.h"
+#include <zlib.h>
 
 #define IMPORTSTREAM_READ_BUFFER_CHUNKSIZE 1024
 #define IMPORTSTREAM_COMPRESSED_CHUNKSIZE 1024
