@@ -21,8 +21,10 @@ project(lib3mf
 set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
 set(CMAKE_INSTALL_INCLUDEDIR include/lib3mf CACHE PATH "directory for installing header files")
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
 
-option(USE_INCLUDED_ZLIB "Use included zlib" ON)
 option(USE_INCLUDED_LIBZIP "Use included libzip" ON)
 option(USE_INCLUDED_GTEST "Used included gtest" ON)
 option(USE_INCLUDED_SSL "Use included libressl" ON)
@@ -135,13 +137,12 @@ else()
     pkg_check_modules(LIBZIP REQUIRED libzip)
     target_link_libraries(${PROJECT_NAME} ${LIBZIP_LIBRARIES})
 endif()
-if (USE_INCLUDED_ZLIB)
-    target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include/Libraries/zlib)
-else()
-    find_package(PkgConfig REQUIRED)
-    pkg_check_modules(ZLIB REQUIRED zlib)
-    target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES})
-endif()
+
+#Include zlib
+include(externals/zlib.cmake)
+target_include_directories(${PROJECT_NAME} PRIVATE ${ZLIB_INCLUDE_DIRS})
+target_link_libraries( ${PROJECT_NAME} PRIVATE ${ZLIB_LIBRARIES} )
+add_dependencies(${PROJECT_NAME} zlibsource)
 
 
 set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" IMPORT_PREFIX "" )
