@@ -32,6 +32,13 @@ option(BUILD_FOR_CODECOVERAGE "Build for code coverage analysis" OFF)
 option(STRIP_BINARIES "Strip binaries (on non-apple)" ON)
 option(USE_PLATFORM_UUID "Use UUID geneator that is provided by the OS (always ON for Windows)" OFF)
 
+# Set this option to work offiline mode so that cmake externalprojects wont update its source.  
+option(BUILD_OFFLINE "Build offline" OFF)
+if (${BUILD_OFFLINE})
+    set_property(DIRECTORY ${myrootproject_SOURCE_DIR}
+                 PROPERTY EP_UPDATE_DISCONNECTED 1)
+endif()
+
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
   add_definitions(-DBUILD_DLL)
