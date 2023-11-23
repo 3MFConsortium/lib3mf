@@ -21,23 +21,14 @@ project(lib3mf
 set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
 set(CMAKE_INSTALL_INCLUDEDIR include/lib3mf CACHE PATH "directory for installing header files")
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release)
-endif()
 
+option(USE_INCLUDED_ZLIB "Use included zlib" ON)
 option(USE_INCLUDED_LIBZIP "Use included libzip" ON)
 option(USE_INCLUDED_GTEST "Used included gtest" ON)
 option(USE_INCLUDED_SSL "Use included libressl" ON)
 option(BUILD_FOR_CODECOVERAGE "Build for code coverage analysis" OFF)
 option(STRIP_BINARIES "Strip binaries (on non-apple)" ON)
 option(USE_PLATFORM_UUID "Use UUID geneator that is provided by the OS (always ON for Windows)" OFF)
-
-# Set this option to work offiline mode so that cmake externalprojects wont update its source.  
-option(BUILD_OFFLINE "Build offline" OFF)
-if (${BUILD_OFFLINE})
-    set_property(DIRECTORY ${myrootproject_SOURCE_DIR}
-                 PROPERTY EP_UPDATE_DISCONNECTED 1)
-endif()
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
@@ -145,12 +136,21 @@ else()
     target_link_libraries(${PROJECT_NAME} ${LIBZIP_LIBRARIES})
 endif()
 
-#Include zlib
-include(externals/zlib.cmake)
-target_include_directories(${PROJECT_NAME} PRIVATE ${ZLIB_INCLUDE_DIRS})
-target_link_libraries( ${PROJECT_NAME} PRIVATE ${ZLIB_LIBRARIES} )
-add_dependencies(${PROJECT_NAME} zlibsource)
+if(USE_INCLUDED_ZLIB)
+    add_subdirectory(submodules/zlib)
+    # These variables required for find_package to find zlib. 
+    set(ZLIB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/submodules/zlib" "${CMAKE_CURRENT_BINARY_DIR}/submodules/zlib")
+    set(ZLIB_LIBRARY zlibstatic)
+endif()
 
+set(ZLIB_USE_STATIC_LIBS "ON")
+find_package(ZLIB REQUIRED)
+if(ZLIB_FOUND)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${ZLIB_INCLUDE_DIRS})
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${ZLIB_LIBRARIES})
+endif()
+
+#add_subdirectory(submodules/libzip)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/submodules/fast_float/include)
 
