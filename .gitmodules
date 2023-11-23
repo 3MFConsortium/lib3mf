@@ -7,3 +7,6 @@
 [submodule "submodules/AutomaticComponentToolkit"]
 	path = submodules/AutomaticComponentToolkit
 	url = https://github.com/Autodesk/AutomaticComponentToolkit.git
+[submodule "submodules/zlib"]
+	path = submodules/zlib
+	url = https://github.com/madler/zlib.git
