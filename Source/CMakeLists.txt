@@ -8,7 +8,11 @@ if (USE_INCLUDED_LIBZIP)
   endif()
 endif()
 
-file (GLOB CPPBASE64_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/cpp-base64/*.cpp")
+if (USE_INCLUDED_ZLIB)
+  file(GLOB ZLIB_FILES ./Source/Libraries/zlib/*.c)
+endif()
+
+file (GLOB CPPBASE64_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Libraries/cpp-base64/Source/*.cpp")
 
 # sources
 set(SRCS_PLATFORM
