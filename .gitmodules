@@ -10,3 +10,15 @@
 [submodule "submodules/zlib"]
 	path = submodules/zlib
 	url = https://github.com/madler/zlib.git
+[submodule "submodules/libzip"]
+	path = submodules/libzip
+	url = https://github.com/nih-at/libzip.git
+[submodule "submodules/cpp-base64"]
+	path = submodules/cpp-base64
+	url = https://github.com/ReneNyffenegger/cpp-base64.git
+[submodule "submodules/googletest"]
+	path = submodules/googletest
+	url = https://github.com/google/googletest.git
+[submodule "submodules/libressl"]
+	path = submodules/libressl
+	url = https://github.com/libressl/portable.git

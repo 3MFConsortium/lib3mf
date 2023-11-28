@@ -43,7 +43,7 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 
-#include "Libraries/cpp-base64/base64.h"
+#include "base64.h"
 
 namespace NMR {
 	namespace ParserUtils {
@@ -107,22 +107,30 @@ namespace NMR {
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
+		try{
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_SECURECONTENTSPEC) == 0) {
 			if (strcmp(pChildName, XML_3MF_SECURE_CONTENT_IV) == 0) {
 				PModelReaderNode_StringValue pXMLNode = std::make_shared<CModelReaderNode_StringValue>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
-				m_iv = base64_decode(pXMLNode->getValue());
+				std::string result = base64_decode(pXMLNode->getValue());
+				m_iv = std::vector<nfByte>(result.begin(), result.end());
 			} else if (strcmp(pChildName, XML_3MF_SECURE_CONTENT_TAG) == 0) {
 				PModelReaderNode_StringValue pXMLNode = std::make_shared<CModelReaderNode_StringValue>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
-				m_tag = base64_decode(pXMLNode->getValue());
+				std::string result = base64_decode(pXMLNode->getValue());
+				m_tag = std::vector<nfByte>(result.begin(), result.end());
 			} else if (strcmp(pChildName, XML_3MF_SECURE_CONTENT_AAD) == 0) {
 				PModelReaderNode_StringValue pXMLNode = std::make_shared<CModelReaderNode_StringValue>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
-				m_aad = base64_decode(pXMLNode->getValue());
+				std::string result = base64_decode(pXMLNode->getValue());
+				m_aad = std::vector<nfByte>(result.begin(), result.end());
 			} else {
 				m_pWarnings->addWarning(NMR_ERROR_NAMESPACE_INVALID_ELEMENT, mrwInvalidOptionalValue);
 			}
 		}
+		}
+		catch (...) {
+			// base64_decode throws an exception if the input is not valid base64
+        }
 	}
 }
