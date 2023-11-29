@@ -129,16 +129,10 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/I
 target_include_directories(${PROJECT_NAME} PRIVATE ${LIBS_INCLUDE})
 
 if (USE_INCLUDED_LIBZIP)
-    target_compile_options(${PROJECT_NAME} PRIVATE "-DZIP_STATIC")
-    target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include/Libraries/libzip)
-
-    if (UNIX OR MINGW)
-        target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_FSEEKO")
-        target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_FTELLO")
-        target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_STRCASECMP")
-        target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_UNISTD_H")
+    target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/libzip/Include)
+    if(WIN32)
+      target_link_libraries(${PROJECT_NAME} PRIVATE advapi32)
     endif()
-
 else()
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(LIBZIP REQUIRED libzip)
