@@ -129,8 +129,13 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/I
 target_include_directories(${PROJECT_NAME} PRIVATE ${LIBS_INCLUDE})
 
 if (USE_INCLUDED_LIBZIP)
+    target_compile_options(${PROJECT_NAME} PRIVATE "-DZIP_STATIC")
     target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/libzip/Include)
     if(WIN32)
+      if(MSVC)
+        target_compile_definitions(${PROJECT_NAME} PRIVATE _CRT_SECURE_NO_WARNINGS)
+        target_compile_definitions(${PROJECT_NAME} PRIVATE _CRT_NONSTDC_NO_DEPRECATE)
+      endif()
       target_link_libraries(${PROJECT_NAME} PRIVATE advapi32)
     endif()
 else()

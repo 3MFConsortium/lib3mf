@@ -103,3 +103,33 @@ cd "${lib_path_dest}Source"
 cmake -DPROJECT_SOURCE_DIR=${lib_path_src} -P ${lib_path_src}cmake/GenerateZipErrorStrings.cmake
 cd "$base_path"
 echo "$tag" > "$lib_path_dest${lib_name}_$tag.txt"
+
+
+# updating the googletest library
+lib_name="googletest"
+lib_path_src="$base_path$lib_name/googletest/"
+
+cd "$lib_name"
+tag=$(git describe --contains HEAD)
+cd "$base_path"
+
+# Delete the destination library folder when updating
+lib_path_dest="../Libraries/$lib_name/"
+rm -rf "$lib_path_dest"
+mkdir -p "$lib_path_dest"
+
+mkdir "$lib_path_dest/Include"
+mkdir "$lib_path_dest/Source"
+mkdir "$lib_path_dest/Include/src"
+
+cp -r "${lib_path_src}include/gtest/" "${lib_path_dest}Include/" 
+
+find "${lib_path_src}src/" -name "*.h" \
+  -exec cp {} "${lib_path_dest}Include/src" \;
+
+find "${lib_path_src}src/" -name "*.cc" \
+  ! -name "*all*" \
+  ! -name "*main*" \
+  -exec cp {} "${lib_path_dest}Source" \;
+
+echo "$tag" > "$lib_path_dest${lib_name}_$tag.txt"
