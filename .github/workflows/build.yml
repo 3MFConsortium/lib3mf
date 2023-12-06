@@ -139,7 +139,7 @@ jobs:
       - run: ctest -V
         working-directory: ./build
   assemble-sdk:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: [build-windows-release, build-linux, build-macos]
     steps:
       - run: sudo apt install -y zip unzip
