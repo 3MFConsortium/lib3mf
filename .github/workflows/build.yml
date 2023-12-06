@@ -25,7 +25,7 @@ jobs:
           name: bindings.zip
           path: build/bindings.zip
   build-macos:
-    runs-on: macos-10.15
+    runs-on: macos-11
     steps:
       - uses: actions/checkout@v2
         with:
@@ -42,7 +42,7 @@ jobs:
           path: build/lib3mf.dylib
 
   codecoverage-macos:
-    runs-on: macos-10.15
+    runs-on: macos-11
     steps:
       - uses: actions/checkout@v2
         with:
@@ -139,7 +139,7 @@ jobs:
       - run: ctest -V
         working-directory: ./build
   assemble-sdk:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     needs: [build-windows-release, build-linux, build-macos]
     steps:
       - run: sudo apt install -y zip unzip
