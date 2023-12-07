@@ -2,7 +2,7 @@ on: [push, pull_request]
 name: Build
 jobs:
   build-linux:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - run: sudo apt install -y valgrind uuid-dev
       - uses: actions/checkout@v2
@@ -161,7 +161,7 @@ jobs:
           name: lib3mf_sdk.zip
           path: build/lib3mf_sdk.zip
   deploy-linux:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     needs: [assemble-sdk]
     steps:
       - run: sudo apt install -y zip unzip
@@ -213,7 +213,7 @@ jobs:
           cmake --build . --config Release
           ./Release/Example_ExtractInfo.exe ../../Files/Helix.3mf
   deploy-macos:
-    runs-on: macos-10.15
+    runs-on: macos-11
     needs: [assemble-sdk]
     steps:
       - name: Download lib3mf_sdk artifact
