@@ -42,6 +42,7 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 
 #include "Model/Reader/NMR_ModelReaderNode_StringValue.h"
 #include "base64.h"
+#include <iterator>
 
 namespace NMR {
 
@@ -73,7 +74,7 @@ namespace NMR {
 			pNode->parseXML(pXMLReader);
 			try {
 				std::string result = base64_decode(pNode->getValue());
-				m_sCipherValue = std::vector<nfByte>(result.begin(), result.end());
+				std::copy(result.begin(), result.end(), std::back_inserter(m_sCipherValue));
 			}
 			catch (...) {
 				// base64_decode throws an exception if the input is not valid base64

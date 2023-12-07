@@ -44,6 +44,7 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 #include "Common/NMR_StringUtils.h"
 
 #include "base64.h"
+#include <iterator>
 
 namespace NMR {
 	namespace ParserUtils {
@@ -113,17 +114,17 @@ namespace NMR {
 				PModelReaderNode_StringValue pXMLNode = std::make_shared<CModelReaderNode_StringValue>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 				std::string result = base64_decode(pXMLNode->getValue());
-				m_iv = std::vector<nfByte>(result.begin(), result.end());
+				std::copy(result.begin(), result.end(), std::back_inserter(m_iv));
 			} else if (strcmp(pChildName, XML_3MF_SECURE_CONTENT_TAG) == 0) {
 				PModelReaderNode_StringValue pXMLNode = std::make_shared<CModelReaderNode_StringValue>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 				std::string result = base64_decode(pXMLNode->getValue());
-				m_tag = std::vector<nfByte>(result.begin(), result.end());
+				std::copy(result.begin(), result.end(), std::back_inserter(m_tag));
 			} else if (strcmp(pChildName, XML_3MF_SECURE_CONTENT_AAD) == 0) {
 				PModelReaderNode_StringValue pXMLNode = std::make_shared<CModelReaderNode_StringValue>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 				std::string result = base64_decode(pXMLNode->getValue());
-				m_aad = std::vector<nfByte>(result.begin(), result.end());
+				std::copy(result.begin(), result.end(), std::back_inserter(m_aad));
 			} else {
 				m_pWarnings->addWarning(NMR_ERROR_NAMESPACE_INVALID_ELEMENT, mrwInvalidOptionalValue);
 			}
