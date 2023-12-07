@@ -73,7 +73,8 @@ namespace NMR {
 			pNode->parseXML(pXMLReader);
 			try {
 				std::string result = base64_decode(pNode->getValue());
-				m_sCipherValue = std::vector<nfByte>(result.begin(), result.end());
+				if(!result.empty())
+					m_sCipherValue = std::vector<nfByte>(result.begin(), result.end());
 			}
 			catch (...) {
 				// base64_decode throws an exception if the input is not valid base64
