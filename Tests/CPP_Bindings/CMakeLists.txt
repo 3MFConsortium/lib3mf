@@ -44,11 +44,6 @@ add_executable(${TESTNAME} ${SRCS_UNITTEST} ${GTEST_SRC_FILES})
 
 set(STARTUPPROJECT ${TESTNAME})
 
-if (WIN32)
-	target_compile_options(${TESTNAME} PUBLIC "$<$<CONFIG:DEBUG>:/Od;/Ob0;/sdl;/W3;/WX;/FC;/MDd;/wd4996>")
-	target_compile_options(${TESTNAME} PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/MD;/wd4996>")
-endif()
-
 target_include_directories(${TESTNAME} PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/Include
 	${CMAKE_SOURCE_DIR}/Libraries/googletest/Include
