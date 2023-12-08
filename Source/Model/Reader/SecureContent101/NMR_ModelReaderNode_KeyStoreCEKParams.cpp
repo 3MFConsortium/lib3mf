@@ -113,18 +113,21 @@ namespace NMR {
 				PModelReaderNode_StringValue pXMLNode = std::make_shared<CModelReaderNode_StringValue>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 				std::string result = base64_decode(pXMLNode->getValue());
+				m_iv.reserve(result.size());
 				if(!result.empty())
 					m_iv.insert(m_iv.begin(), result.begin(), result.end());
 			} else if (strcmp(pChildName, XML_3MF_SECURE_CONTENT_TAG) == 0) {
 				PModelReaderNode_StringValue pXMLNode = std::make_shared<CModelReaderNode_StringValue>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 				std::string result = base64_decode(pXMLNode->getValue());
+				m_tag.reserve(result.size());
 				if (!result.empty())
                     m_tag.insert(m_tag.begin(), result.begin(), result.end());
 			} else if (strcmp(pChildName, XML_3MF_SECURE_CONTENT_AAD) == 0) {
 				PModelReaderNode_StringValue pXMLNode = std::make_shared<CModelReaderNode_StringValue>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 				std::string result = base64_decode(pXMLNode->getValue());
+				m_aad.reserve(result.size());
 				if (!result.empty())
 					m_aad.insert(m_aad.begin(), result.begin(), result.end());
 			} else {

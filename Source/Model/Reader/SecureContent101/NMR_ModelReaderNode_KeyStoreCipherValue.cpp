@@ -73,6 +73,7 @@ namespace NMR {
 			pNode->parseXML(pXMLReader);
 			try {
 				std::string result = base64_decode(pNode->getValue());
+				m_sCipherValue.reserve(result.size());
 				if(!result.empty())
 					m_sCipherValue.insert(m_sCipherValue.begin(), result.begin(), result.end());
 			}
