@@ -9,8 +9,8 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - run: sh cmake/GenerateMake.sh "-DCMAKE_BUILD_TYPE=Debug"
-      - run: cmake --build . --config Debug --target lib3mf_memcheck
+      - run: sh cmake/GenerateMake.sh
+      - run: cmake --build . --target lib3mf_memcheck
         working-directory: ./build
       - run: ctest -V
         working-directory: ./build
