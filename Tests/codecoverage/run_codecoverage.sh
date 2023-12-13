@@ -3,7 +3,7 @@ lcov --capture --initial --directory --ignore-errors gcov,inconsistent . --outpu
 
 ./Test_CPP_Bindings
 
-lcov --directory . --capture --ignore-errors gcov,inconsistent --output-file Test_CPP_Bindings_run.info
+lcov --directory . --capture --ignore-errors --output-file Test_CPP_Bindings_run.info
 lcov --add-tracefile Test_CPP_Bindings_base.info --add-tracefile Test_CPP_Bindings_run.info --output-file Test_CPP_Bindings.info
 
 TARGETDIR=`dirname \`pwd\``
