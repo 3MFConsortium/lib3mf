@@ -1,2 +1,12 @@
 fixes:
   - "Users/runner/work::" # move path
+
+ignore:
+  - "Libraries"       
+  - "submodules"
+  - "Documentation"
+  - "cmake"
+  - "CI"
+  - "**/*.py"         
+  - "**/*.sh"  
+  - "**/*.bat"       
