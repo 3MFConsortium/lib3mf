@@ -45,7 +45,7 @@ jobs:
   codecoverage-macos:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: true
       - name: Install Prerequisites
@@ -62,7 +62,7 @@ jobs:
           name: codecoverage.zip
           path: build/codecoverage.zip
       - name: Upload code coverage to codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./build/Test_CPP_Bindings_filtered.info
