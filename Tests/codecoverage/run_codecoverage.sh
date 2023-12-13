@@ -1,9 +1,9 @@
 cd build
-lcov --capture --initial --directory --ignore-errors . --output-file Test_CPP_Bindings_base.info
+lcov --capture --initial --directory . --ignore-erros source --output-file Test_CPP_Bindings_base.info --no-external
 
 ./Test_CPP_Bindings
 
-lcov --directory . --capture --ignore-errors --output-file Test_CPP_Bindings_run.info
+lcov --directory . --capture --ignore-errors source --output-file Test_CPP_Bindings_run.info --no-external
 lcov --add-tracefile Test_CPP_Bindings_base.info --add-tracefile Test_CPP_Bindings_run.info --output-file Test_CPP_Bindings.info
 
 TARGETDIR=`dirname \`pwd\``
