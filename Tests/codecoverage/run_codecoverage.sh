@@ -1,5 +1,5 @@
 cd build
-lcov --capture --initial --directory --ignore-errors gcov,inconsistent . --output-file Test_CPP_Bindings_base.info
+lcov --capture --initial --directory --ignore-errors . --output-file Test_CPP_Bindings_base.info
 
 ./Test_CPP_Bindings
 
