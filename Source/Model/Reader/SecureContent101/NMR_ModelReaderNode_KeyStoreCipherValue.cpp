@@ -42,6 +42,7 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 
 #include "Model/Reader/NMR_ModelReaderNode_StringValue.h"
 #include "base64.h"
+#include <iostream>
 
 namespace NMR {
 
