@@ -154,17 +154,14 @@ namespace NMR {
 		nfDouble dResult = 0.0;
 
 		// Convert to double and make a input and range check!
-		nfChar * pEndPtr;
-
-		dResult = strtod(pszValue, &pEndPtr);
+		auto answer = fast_float::from_chars(pszValue, pszValue + strlen(pszValue), dResult);
 
 		// Check if any conversion happened
-		if ((pEndPtr == pszValue) || (!pEndPtr))
+		if (answer.ec != std::errc())
+		{
 			throw CNMRException(NMR_ERROR_EMPTYSTRINGTODOUBLECONVERSION);
-
-		if ((*pEndPtr != '\0') && (*pEndPtr != ' '))
-			throw CNMRException(NMR_ERROR_INVALIDSTRINGTODOUBLECONVERSION);
-
+		}
+		
 		if ((dResult == HUGE_VAL) || (dResult == -HUGE_VAL))
 			throw CNMRException(NMR_ERROR_STRINGTODOUBLECONVERSIONOUTOFRANGE);
 
