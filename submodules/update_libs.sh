@@ -25,7 +25,27 @@ mkdir "$lib_path_dest/Source"
 cp ${lib_path_src}base*.h "${lib_path_dest}Include"
 cp ${lib_path_src}base*.cpp "${lib_path_dest}Source"
 
-echo "$tag" > "$lib_path_dest${lib_name}_$tag.txt"
+echo "\"$tag\"" > "$lib_path_dest${lib_name}_$tag.txt"
+
+
+
+# Updating the fast_float library
+lib_name="fast_float"
+lib_path_src="$base_path$lib_name/"
+
+cd "$lib_name"
+tag=$(git describe --contains HEAD)
+cd "$base_path"
+
+# Delete the destination library folder when updating
+lib_path_dest="../Libraries/$lib_name/"
+rm -rf "$lib_path_dest"
+mkdir -p "$lib_path_dest"
+
+mkdir "$lib_path_dest/Include"
+cp ${lib_path_src}include/$lib_name/*.h "${lib_path_dest}Include"
+
+echo "\"$tag\"" > "$lib_path_dest${lib_name}_$tag.txt"
 
 
 # Updating the zlib library
@@ -46,7 +66,7 @@ mkdir "$lib_path_dest/Source"
 cp ${lib_path_src}*.h "${lib_path_dest}Include"
 cp ${lib_path_src}*.c "${lib_path_dest}Source"
 
-echo "$tag" > "$lib_path_dest${lib_name}_$tag.txt"
+echo "\"$tag\"" > "$lib_path_dest${lib_name}_$tag.txt"
 
 
 # Updating the libzip library
@@ -93,7 +113,7 @@ find "${lib_path_src}lib" \( -name "*unix*.c" -o -name "*stdio_named*.c" \) \
 cd "${lib_path_dest}Source"
 cmake -DPROJECT_SOURCE_DIR=${lib_path_src} -P ${lib_path_src}cmake/GenerateZipErrorStrings.cmake
 cd "$base_path"
-echo "$tag" > "$lib_path_dest${lib_name}_$tag.txt"
+echo "\"$tag\"" > "$lib_path_dest${lib_name}_$tag.txt"
 
 # updating the googletest library
 lib_name="googletest"
@@ -122,4 +142,4 @@ find "${lib_path_src}src/" -name "*.cc" \
   ! -name "*main*" \
   -exec cp {} "${lib_path_dest}Source" \;
 
-echo "$tag" > "$lib_path_dest${lib_name}_$tag.txt"
+echo "\"$tag\"" > "$lib_path_dest${lib_name}_$tag.txt"
