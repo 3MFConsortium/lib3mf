@@ -136,7 +136,7 @@ for %%A in ("googletest" "") do (
         mkdir "!lib_path_dest!Include"
         mkdir "!lib_path_dest!Source"
         REM when copying files for libzip exclude external lib files aes, crypto, xz, zstd, bzip2 
-        robocopy *.h !lib_path_src!include\gtest\ "!lib_path_dest!Include\gtest" /E /XD *custom*
+        robocopy *.h !lib_path_src!include\gtest\ "!lib_path_dest!Include\gtest" /E
         robocopy *.h !lib_path_src!src\ "!lib_path_dest!Include\src"
         robocopy *.cc !lib_path_src!src\ "!lib_path_dest!Source" /XF *main* *all*
 

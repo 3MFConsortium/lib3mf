@@ -143,12 +143,13 @@ if [[ "$1" == "googletest" || "$update_all_libs" == true ]]; then
   mkdir "$lib_path_dest/Include"
   mkdir "$lib_path_dest/Include/gtest"
   mkdir "$lib_path_dest/Include/gtest/internal"
+  mkdir "$lib_path_dest/Include/gtest/internal/custom"
   mkdir "$lib_path_dest/Source"
   mkdir "$lib_path_dest/Include/src"
 
   cp ${lib_path_src}include/gtest/*.h "${lib_path_dest}Include/gtest" 
-
   cp ${lib_path_src}include/gtest/internal/*.h "${lib_path_dest}Include/gtest/internal" 
+  cp ${lib_path_src}include/gtest/internal/custom/*.h "${lib_path_dest}Include/gtest/internal/custom" 
 
   find "${lib_path_src}src/" -name "*.h" \
     -exec cp {} "${lib_path_dest}Include/src" \;
