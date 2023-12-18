@@ -44,5 +44,6 @@ lib3mf is released under the [BSD license](LICENSE). The library contains code o
 1. libzip 1.7.3.1, https://libzip.org/license/
 2. zlib 1.2.11, http://www.zlib.net/zlib_license.html
 3. cpp-base64 1.01.00, https://github.com/ReneNyffenegger/cpp-base64/blob/master/LICENSE
+4. fast-float v6.0.0, https://github.com/fastfloat/fast_float/tree/v6.0.0?tab=License-3-ov-file
 
 In addition, the automated tests of lib3mf make use of LibReSSL 3.0.2, [License](Tests/libressl/COPYING).
