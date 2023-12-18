@@ -16,3 +16,6 @@
 [submodule "submodules/cpp-base64"]
 	path = submodules/cpp-base64
 	url = https://github.com/ReneNyffenegger/cpp-base64.git
+[submodule "submodules/libzip"]
+	path = submodules/libzip
+	url = https://github.com/nih-at/libzip.git
