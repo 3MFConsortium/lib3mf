@@ -2,8 +2,9 @@ on: [push, pull_request]
 name: Build
 jobs:
   build-linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
+      - run: sudo apt update
       - run: sudo apt install -y valgrind uuid-dev
       - uses: actions/checkout@v2
         with:
@@ -44,7 +45,7 @@ jobs:
   codecoverage-macos:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: true
       - name: Install Prerequisites
@@ -139,7 +140,7 @@ jobs:
       - run: ctest -V
         working-directory: ./build
   assemble-sdk:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: [build-windows-release, build-linux, build-macos]
     steps:
       - run: sudo apt install -y zip unzip
@@ -161,7 +162,7 @@ jobs:
           name: lib3mf_sdk.zip
           path: build/lib3mf_sdk.zip
   deploy-linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: [assemble-sdk]
     steps:
       - run: sudo apt install -y zip unzip
