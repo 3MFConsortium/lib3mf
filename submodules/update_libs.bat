@@ -117,3 +117,28 @@ for %%A in ("libzip" "") do (
         echo "!tag!" >"!lib_path_dest!!lib_name!_!tag!.txt"
     )
 )
+
+for %%A in ("googletest" "") do ( 
+    if "%update_lib%"==%%A (
+        REM updating the googletest library
+        set lib_name=googletest
+        set lib_path_src=!base_path!!lib_name!\googletest\
+        cd !lib_name!
+        set "tag="
+        for /f %%i in ('git describe --contains HEAD') do set "tag=%%i"
+
+        cd !base_path!
+        REM delete the destination library folder when updating
+        RD /S /Q "..\Libraries\!lib_name!"
+        set lib_path_dest=..\Libraries\!lib_name!\
+        mkdir !lib_path_dest!
+
+        mkdir "!lib_path_dest!Include"
+        mkdir "!lib_path_dest!Source"
+        robocopy *.h !lib_path_src!include\gtest\ "!lib_path_dest!Include\gtest" /E
+        robocopy *.h !lib_path_src!src\ "!lib_path_dest!Include\src"
+        robocopy *.cc !lib_path_src!src\ "!lib_path_dest!Source" /XF *main* *all*
+
+        echo "!tag!" >"!lib_path_dest!!lib_name!_!tag!.txt"
+    )
+)
