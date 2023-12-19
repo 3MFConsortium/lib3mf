@@ -126,3 +126,39 @@ if [[ "$1" == "libzip" || "$update_all_libs" == true ]]; then
   cd "$base_path"
   echo "\"$tag\"" > "$lib_path_dest${lib_name}_$tag.txt"
 fi
+
+if [[ "$1" == "googletest" || "$update_all_libs" == true ]]; then
+  # updating the googletest library
+  lib_name="googletest"
+  lib_path_src="$base_path$lib_name/googletest/"
+
+  cd "$lib_name"
+  tag=$(git describe --contains HEAD)
+  cd "$base_path"
+
+  # Delete the destination library folder when updating
+  lib_path_dest="../Libraries/$lib_name/"
+  rm -rf "$lib_path_dest"
+  mkdir -p "$lib_path_dest"
+
+  mkdir "$lib_path_dest/Include"
+  mkdir "$lib_path_dest/Include/gtest"
+  mkdir "$lib_path_dest/Include/gtest/internal"
+  mkdir "$lib_path_dest/Include/gtest/internal/custom"
+  mkdir "$lib_path_dest/Source"
+  mkdir "$lib_path_dest/Include/src"
+
+  cp ${lib_path_src}include/gtest/*.h "${lib_path_dest}Include/gtest" 
+  cp ${lib_path_src}include/gtest/internal/*.h "${lib_path_dest}Include/gtest/internal" 
+  cp ${lib_path_src}include/gtest/internal/custom/*.h "${lib_path_dest}Include/gtest/internal/custom" 
+
+  find "${lib_path_src}src/" -name "*.h" \
+    -exec cp {} "${lib_path_dest}Include/src" \;
+
+  find "${lib_path_src}src/" -name "*.cc" \
+    ! -name "*all*" \
+    ! -name "*main*" \
+    -exec cp {} "${lib_path_dest}Source" \;
+
+  echo "\"$tag\"" > "$lib_path_dest${lib_name}_$tag.txt"
+fi
