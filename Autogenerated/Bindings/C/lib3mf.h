@@ -1508,6 +1508,24 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionreference_setminfeaturesize(Lib3MF_F
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionreference_getminfeaturesize(Lib3MF_FunctionReference pFunctionReference, Lib3MF_double * pMinFeatureSize);
 
+/**
+* Sets the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+*
+* @param[in] pFunctionReference - FunctionReference instance.
+* @param[in] dFallBackValue - fallback value
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionreference_setfallbackvalue(Lib3MF_FunctionReference pFunctionReference, Lib3MF_double dFallBackValue);
+
+/**
+* Returns the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+*
+* @param[in] pFunctionReference - FunctionReference instance.
+* @param[out] pFallBackValue - fallback value
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functionreference_getfallbackvalue(Lib3MF_FunctionReference pFunctionReference, Lib3MF_double * pFallBackValue);
+
 /*************************************************************************************************************************
  Class definition for VolumeDataBoundary
 **************************************************************************************************************************/

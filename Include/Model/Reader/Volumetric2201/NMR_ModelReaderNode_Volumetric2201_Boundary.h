@@ -50,6 +50,9 @@ namespace NMR {
 		double m_dMinFeatureSize = 0.0;
 		nfBool m_bHasMinFeatureSize = false;
 
+		double m_dFallBackValue = 0.0;
+		nfBool m_bHasFallBackValue = false;
+
 		ModelResourceID m_nFunctionID;
 		NMATRIX3 m_Transform;
 

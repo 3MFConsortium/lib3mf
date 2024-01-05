@@ -1493,6 +1493,8 @@ public:
 	inline void SetChannelName(const std::string & sChannelName);
 	inline void SetMinFeatureSize(const Lib3MF_double dMinFeatureSize);
 	inline Lib3MF_double GetMinFeatureSize();
+	inline void SetFallBackValue(const Lib3MF_double dFallBackValue);
+	inline Lib3MF_double GetFallBackValue();
 };
 	
 /*************************************************************************************************************************
@@ -5540,6 +5542,27 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		CheckError(lib3mf_functionreference_getminfeaturesize(m_pHandle, &resultMinFeatureSize));
 		
 		return resultMinFeatureSize;
+	}
+	
+	/**
+	* CFunctionReference::SetFallBackValue - Sets the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+	* @param[in] dFallBackValue - fallback value
+	*/
+	void CFunctionReference::SetFallBackValue(const Lib3MF_double dFallBackValue)
+	{
+		CheckError(lib3mf_functionreference_setfallbackvalue(m_pHandle, dFallBackValue));
+	}
+	
+	/**
+	* CFunctionReference::GetFallBackValue - Returns the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+	* @return fallback value
+	*/
+	Lib3MF_double CFunctionReference::GetFallBackValue()
+	{
+		Lib3MF_double resultFallBackValue = 0;
+		CheckError(lib3mf_functionreference_getfallbackvalue(m_pHandle, &resultFallBackValue));
+		
+		return resultFallBackValue;
 	}
 	
 	/**

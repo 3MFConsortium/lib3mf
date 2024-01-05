@@ -96,4 +96,13 @@ namespace NMR
         return m_minFeatureSize;
     }
 
+    void CFunctionReference::setFallBackValue(double fallBackValue) 
+    {
+        m_fallBackValue = fallBackValue;
+    }
+
+    double CFunctionReference::getFallBackValue() const
+    {
+        return m_fallBackValue;
+    }
 }  // namespace NMR

@@ -6081,6 +6081,8 @@ void CLib3MFFunctionReference::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetChannelName", SetChannelName);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetMinFeatureSize", SetMinFeatureSize);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetMinFeatureSize", GetMinFeatureSize);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetFallBackValue", SetFallBackValue);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetFallBackValue", GetFallBackValue);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -6297,6 +6299,52 @@ void CLib3MFFunctionReference::GetMinFeatureSize(const FunctionCallbackInfo<Valu
         Lib3MFResult errorCode = wrapperTable->m_FunctionReference_GetMinFeatureSize(instanceHandle, &dReturnMinFeatureSize);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         args.GetReturnValue().Set(Number::New(isolate, dReturnMinFeatureSize));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFFunctionReference::SetFallBackValue(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsNumber()) {
+            throw std::runtime_error("Expected double parameter 0 (FallBackValue)");
+        }
+        double dFallBackValue = (double) args[0]->NumberValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetFallBackValue.");
+        if (wrapperTable->m_FunctionReference_SetFallBackValue == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method FunctionReference::SetFallBackValue.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_FunctionReference_SetFallBackValue(instanceHandle, dFallBackValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFFunctionReference::GetFallBackValue(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        double dReturnFallBackValue = 0.0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetFallBackValue.");
+        if (wrapperTable->m_FunctionReference_GetFallBackValue == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method FunctionReference::GetFallBackValue.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_FunctionReference_GetFallBackValue(instanceHandle, &dReturnFallBackValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Number::New(isolate, dReturnFallBackValue));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

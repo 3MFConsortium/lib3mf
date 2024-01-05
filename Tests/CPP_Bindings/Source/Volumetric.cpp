@@ -479,6 +479,7 @@ namespace Lib3MF
         auto theMesh = GetMesh();
         auto volumeData = theMesh->VolumeData();
         auto theBoundary = volumeData->CreateNewBoundary(newFunction.get());
+        theBoundary->SetFallBackValue(-1.2345);
 
         // Write to file
         writer3MF->WriteToFile(Volumetric::OutFolder + "ImplicitSphere.3mf");
@@ -496,6 +497,17 @@ namespace Lib3MF
         EXPECT_TRUE(functionIterator->MoveNext());
         EXPECT_EQ(functionIterator->GetCurrentFunction()->GetModelResourceID(),
                   expectedResourceId);
+
+        // Get the first Mesh of ioModel
+        auto meshesFromWrittenFile = ioModel->GetMeshObjects();
+        meshesFromWrittenFile->MoveNext();
+        auto meshFromWrittenFile = meshesFromWrittenFile->GetCurrentMeshObject();
+
+        // Check the fallback value
+        auto volumeDataFromWrittenFile = meshFromWrittenFile->VolumeData();
+        auto boundaryFromWrittenFile = volumeDataFromWrittenFile->GetBoundary();
+        EXPECT_EQ(boundaryFromWrittenFile->GetFallBackValue(), -1.2345);
+
 
         // Compare the functions
         helper::compareFunctions(model, newFunction, ioModel,

@@ -857,6 +857,12 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_getminfeaturesize", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 FunctionReference_GetMinFeatureSize (IntPtr Handle, out Double AMinFeatureSize);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_setfallbackvalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionReference_SetFallBackValue (IntPtr Handle, Double AFallBackValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_getfallbackvalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionReference_GetFallBackValue (IntPtr Handle, out Double AFallBackValue);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataboundary_setmeshbboxonly", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataBoundary_SetMeshBBoxOnly (IntPtr Handle, Byte AMeshBBoxOnly);
 
@@ -4100,6 +4106,20 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.FunctionReference_GetMinFeatureSize (Handle, out resultMinFeatureSize));
 			return resultMinFeatureSize;
+		}
+
+		public void SetFallBackValue (Double AFallBackValue)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.FunctionReference_SetFallBackValue (Handle, AFallBackValue));
+		}
+
+		public Double GetFallBackValue ()
+		{
+			Double resultFallBackValue = 0;
+
+			CheckError(Internal.Lib3MFWrapper.FunctionReference_GetFallBackValue (Handle, out resultFallBackValue));
+			return resultFallBackValue;
 		}
 
 	}

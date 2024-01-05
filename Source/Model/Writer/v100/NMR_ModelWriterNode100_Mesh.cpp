@@ -398,6 +398,10 @@ namespace NMR {
 						writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_MINFEATURESIZE, float(pBoundary->getMinFeatureSize()));
 					}
 
+					if (pBoundary->getFallBackValue() != 0.0) {
+						writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FALLBACKVALUE, float(pBoundary->getFallBackValue()));
+					}
+
 					writeEndElement();
 				}
 
@@ -428,6 +432,11 @@ namespace NMR {
 						if (pProperty->getMinFeatureSize() != 0.0) {
 							writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_MINFEATURESIZE, float(pProperty->getMinFeatureSize()));
 						}
+
+						if (pProperty->getFallBackValue() != 0.0) {
+							writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FALLBACKVALUE, float(pProperty->getFallBackValue()));
+						}
+
 						writeEndElement();
 					}
 				}
@@ -454,6 +463,11 @@ namespace NMR {
 					if (pColor->getMinFeatureSize() != 0.0) {
 						writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_MINFEATURESIZE, float(pColor->getMinFeatureSize()));
 					}
+
+					if (pColor->getFallBackValue() != 0.0) {
+						writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FALLBACKVALUE, float(pColor->getFallBackValue()));
+					}
+					
 					writeEndElement();
 				}
 

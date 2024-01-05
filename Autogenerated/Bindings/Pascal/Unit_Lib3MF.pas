@@ -2064,6 +2064,24 @@ type
 	*)
 	TLib3MFFunctionReference_GetMinFeatureSizeFunc = function(pFunctionReference: TLib3MFHandle; out pMinFeatureSize: Double): TLib3MFResult; cdecl;
 	
+	(**
+	* Sets the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+	*
+	* @param[in] pFunctionReference - FunctionReference instance.
+	* @param[in] dFallBackValue - fallback value
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFunctionReference_SetFallBackValueFunc = function(pFunctionReference: TLib3MFHandle; const dFallBackValue: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+	*
+	* @param[in] pFunctionReference - FunctionReference instance.
+	* @param[out] pFallBackValue - fallback value
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFunctionReference_GetFallBackValueFunc = function(pFunctionReference: TLib3MFHandle; out pFallBackValue: Double): TLib3MFResult; cdecl;
+	
 
 (*************************************************************************************************************************
  Function type definitions for VolumeDataBoundary
@@ -7342,6 +7360,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure SetChannelName(const AChannelName: String);
 		procedure SetMinFeatureSize(const AMinFeatureSize: Double);
 		function GetMinFeatureSize(): Double;
+		procedure SetFallBackValue(const AFallBackValue: Double);
+		function GetFallBackValue(): Double;
 	end;
 
 
@@ -8894,6 +8914,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFFunctionReference_SetChannelNameFunc: TLib3MFFunctionReference_SetChannelNameFunc;
 		FLib3MFFunctionReference_SetMinFeatureSizeFunc: TLib3MFFunctionReference_SetMinFeatureSizeFunc;
 		FLib3MFFunctionReference_GetMinFeatureSizeFunc: TLib3MFFunctionReference_GetMinFeatureSizeFunc;
+		FLib3MFFunctionReference_SetFallBackValueFunc: TLib3MFFunctionReference_SetFallBackValueFunc;
+		FLib3MFFunctionReference_GetFallBackValueFunc: TLib3MFFunctionReference_GetFallBackValueFunc;
 		FLib3MFVolumeDataBoundary_SetMeshBBoxOnlyFunc: TLib3MFVolumeDataBoundary_SetMeshBBoxOnlyFunc;
 		FLib3MFVolumeDataBoundary_GetMeshBBoxOnlyFunc: TLib3MFVolumeDataBoundary_GetMeshBBoxOnlyFunc;
 		FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc: TLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc;
@@ -9487,6 +9509,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFFunctionReference_SetChannelNameFunc: TLib3MFFunctionReference_SetChannelNameFunc read FLib3MFFunctionReference_SetChannelNameFunc;
 		property Lib3MFFunctionReference_SetMinFeatureSizeFunc: TLib3MFFunctionReference_SetMinFeatureSizeFunc read FLib3MFFunctionReference_SetMinFeatureSizeFunc;
 		property Lib3MFFunctionReference_GetMinFeatureSizeFunc: TLib3MFFunctionReference_GetMinFeatureSizeFunc read FLib3MFFunctionReference_GetMinFeatureSizeFunc;
+		property Lib3MFFunctionReference_SetFallBackValueFunc: TLib3MFFunctionReference_SetFallBackValueFunc read FLib3MFFunctionReference_SetFallBackValueFunc;
+		property Lib3MFFunctionReference_GetFallBackValueFunc: TLib3MFFunctionReference_GetFallBackValueFunc read FLib3MFFunctionReference_GetFallBackValueFunc;
 		property Lib3MFVolumeDataBoundary_SetMeshBBoxOnlyFunc: TLib3MFVolumeDataBoundary_SetMeshBBoxOnlyFunc read FLib3MFVolumeDataBoundary_SetMeshBBoxOnlyFunc;
 		property Lib3MFVolumeDataBoundary_GetMeshBBoxOnlyFunc: TLib3MFVolumeDataBoundary_GetMeshBBoxOnlyFunc read FLib3MFVolumeDataBoundary_GetMeshBBoxOnlyFunc;
 		property Lib3MFVolumeDataComposite_GetBaseMaterialGroupFunc: TLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc read FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc;
@@ -12992,6 +13016,16 @@ implementation
 	function TLib3MFFunctionReference.GetMinFeatureSize(): Double;
 	begin
 		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionReference_GetMinFeatureSizeFunc(FHandle, Result));
+	end;
+
+	procedure TLib3MFFunctionReference.SetFallBackValue(const AFallBackValue: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionReference_SetFallBackValueFunc(FHandle, AFallBackValue));
+	end;
+
+	function TLib3MFFunctionReference.GetFallBackValue(): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionReference_GetFallBackValueFunc(FHandle, Result));
 	end;
 
 (*************************************************************************************************************************
@@ -18613,6 +18647,8 @@ implementation
 		FLib3MFFunctionReference_SetChannelNameFunc := LoadFunction('lib3mf_functionreference_setchannelname');
 		FLib3MFFunctionReference_SetMinFeatureSizeFunc := LoadFunction('lib3mf_functionreference_setminfeaturesize');
 		FLib3MFFunctionReference_GetMinFeatureSizeFunc := LoadFunction('lib3mf_functionreference_getminfeaturesize');
+		FLib3MFFunctionReference_SetFallBackValueFunc := LoadFunction('lib3mf_functionreference_setfallbackvalue');
+		FLib3MFFunctionReference_GetFallBackValueFunc := LoadFunction('lib3mf_functionreference_getfallbackvalue');
 		FLib3MFVolumeDataBoundary_SetMeshBBoxOnlyFunc := LoadFunction('lib3mf_volumedataboundary_setmeshbboxonly');
 		FLib3MFVolumeDataBoundary_GetMeshBBoxOnlyFunc := LoadFunction('lib3mf_volumedataboundary_getmeshbboxonly');
 		FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc := LoadFunction('lib3mf_volumedatacomposite_getbasematerialgroup');
@@ -19487,6 +19523,12 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_functionreference_getminfeaturesize'), @FLib3MFFunctionReference_GetMinFeatureSizeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functionreference_setfallbackvalue'), @FLib3MFFunctionReference_SetFallBackValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functionreference_getfallbackvalue'), @FLib3MFFunctionReference_GetFallBackValueFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataboundary_setmeshbboxonly'), @FLib3MFVolumeDataBoundary_SetMeshBBoxOnlyFunc);

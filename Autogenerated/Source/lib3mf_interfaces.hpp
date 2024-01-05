@@ -1731,6 +1731,18 @@ public:
 	*/
 	virtual Lib3MF_double GetMinFeatureSize() = 0;
 
+	/**
+	* IFunctionReference::SetFallBackValue - Sets the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+	* @param[in] dFallBackValue - fallback value
+	*/
+	virtual void SetFallBackValue(const Lib3MF_double dFallBackValue) = 0;
+
+	/**
+	* IFunctionReference::GetFallBackValue - Returns the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+	* @return fallback value
+	*/
+	virtual Lib3MF_double GetFallBackValue() = 0;
+
 };
 
 typedef IBaseSharedPtr<IFunctionReference> PIFunctionReference;

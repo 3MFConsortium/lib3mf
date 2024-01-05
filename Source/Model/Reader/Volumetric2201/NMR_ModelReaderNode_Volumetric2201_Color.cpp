@@ -95,6 +95,11 @@ namespace NMR {
 		{
 			pColor->setMinFeatureSize(m_dMinFeatureSize);
 		}
+
+		if (m_bHasFallBackValue)
+		{
+			pColor->setFallBackValue(m_dFallBackValue);
+		}
 		return pColor;
 	}
 
@@ -129,7 +134,15 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_DUPLICATE_VOLUMEDATA_MINFEATURESIZE);
 
 			m_bHasMinFeatureSize = true;
-			m_dMinFeatureSize = strtod(pAttributeValue, nullptr);
+			m_dMinFeatureSize = fnStringToDouble(pAttributeValue);
+		}
+
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_FALLBACKVALUE) == 0) {
+			if (m_bHasFallBackValue)
+				throw CNMRException(NMR_ERROR_DUPLICATE_VOLUMEDATA_FALLBACKVALUE);
+
+			m_bHasFallBackValue = true;
+			m_dFallBackValue = fnStringToDouble(pAttributeValue);
 		}
 	}
 	

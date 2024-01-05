@@ -1428,6 +1428,9 @@ Model error codes (0x8XXX)
 // Function graph is not a directed acyclic graph
 #define NMR_ERROR_IMPLICIT_FUNCTION_CYCLIC_GRAPH 0x8841
 
+// Duplicate attribute fallbackvalue in volumedata element
+#define NMR_ERROR_DUPLICATE_VOLUMEDATA_FALLBACKVALUE 0x8842
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

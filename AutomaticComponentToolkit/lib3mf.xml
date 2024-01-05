@@ -112,10 +112,12 @@
 		<error name="INVALIDKEYSIZE" code="3005" description="The key size is invalid" />
 
 		<error name="INCOMPATIBLEPORTTYPES" code="4000"
-			description="Link could not be added, the port types are incompatible"/>
-		<error name="GRAPHISCYCLIC" code="4001" description="The functin graph is cyclic. Only dircected graphs are valid and can be topological sorted."/>
-		<error name="INPUTNOTSET" code="4002" description="The input of a node is not set."/>
-		<error name="INVALIDNODECONFIGURATION" code="4003" description="The selected node configuration is not supported"/>
+			description="Link could not be added, the port types are incompatible" />
+		<error name="GRAPHISCYCLIC" code="4001"
+			description="The functin graph is cyclic. Only dircected graphs are valid and can be topological sorted." />
+		<error name="INPUTNOTSET" code="4002" description="The input of a node is not set." />
+		<error name="INVALIDNODECONFIGURATION" code="4003"
+			description="The selected node configuration is not supported" />
 	</errors>
 
 	<enum name="PropertyType">
@@ -1138,6 +1140,16 @@
 			<param name="MinFeatureSize" type="double" pass="return"
 				description="minimal feature size" />
 		</method>
+
+		<method name="SetFallBackValue"
+			description="Sets the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).">
+			<param name="FallBackValue" type="double" pass="in" description="fallback value" />
+		</method>
+
+		<method name="GetFallBackValue"
+			description="Returns the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).">
+			<param name="FallBackValue" type="double" pass="return" description="fallback value" />
+		</method>
 	</class>
 
 	<class name="VolumeDataBoundary" parent="FunctionReference">
@@ -1836,7 +1848,8 @@
 		<option name="Resource" description="Selects a resource (function, mesh etc.)" value="48" />
 		<option name="VectorFromScalar" description="Creates a vector from one scalar values"
 			value="49" />
-		<option name="UnsignedMesh" description="Calculates the unsigned distance to a mesh" value="50" />
+		<option name="UnsignedMesh" description="Calculates the unsigned distance to a mesh"
+			value="50" />
 	</enum>
 
 	<enum name="ImplicitPortType" description="The type of the port">
@@ -2312,7 +2325,7 @@
 		</method>
 	</class>
 
-	
+
 	<class name="MatrixFromColumnsNode" parent="ImplicitNode"
 		description="Composes a 4x4 matrix from four column vectors A,B,C,D">
 		<method name="GetInputA" description="Retrieves the input for the first column">
@@ -2381,7 +2394,8 @@
 	</class>
 
 	<class name="MeshNode" parent="ImplicitNode" description="Signed distance to mesh">
-		<method name="GetInputMesh" description="Retrieves the input for the model resource id of the mesh">
+		<method name="GetInputMesh"
+			description="Retrieves the input for the model resource id of the mesh">
 			<param name="Mesh" type="class" class="ImplicitPort" pass="return"
 				description="the input port for the model resource id of the mesh" />
 		</method>
@@ -2398,7 +2412,8 @@
 	</class>
 
 	<class name="UnsignedMeshNode" parent="ImplicitNode" description="Unsigned distance to mesh">
-		<method name="GetInputMesh" description="Retrieves the input for the model resource id of the mesh">
+		<method name="GetInputMesh"
+			description="Retrieves the input for the model resource id of the mesh">
 			<param name="Mesh" type="class" class="ImplicitPort" pass="return"
 				description="the input port for the model resource id of the mesh" />
 		</method>
@@ -2766,7 +2781,7 @@
 
 		<method name="AddLengthNode" description="Add a LengthNode">
 			<param name="Identifier" pass="in" type="string"
-				description="the identifier of the node" />		
+				description="the identifier of the node" />
 			<param name="DisplayName" pass="in" type="string"
 				description="the display name of the node" />
 			<param name="Tag" pass="in" type="string"
@@ -3111,11 +3126,11 @@
 
 		<method name="AddFunctionCallNode" description="Add a FunctionCallNode">
 			<param name="Identifier" pass="in" type="string"
-			description="the identifier of the node" />
-		<param name="DisplayName" pass="in" type="string"
-			description="the display name of the node" />
-		<param name="Tag" pass="in" type="string"
-			description="the tag of the node" />
+				description="the identifier of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
 			<param name="Node" pass="return" type="class" class="FunctionCallNode"
 				description="the added node" />
 		</method>

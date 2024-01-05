@@ -275,6 +275,8 @@ class FunctionTable:
 	lib3mf_functionreference_setchannelname = None
 	lib3mf_functionreference_setminfeaturesize = None
 	lib3mf_functionreference_getminfeaturesize = None
+	lib3mf_functionreference_setfallbackvalue = None
+	lib3mf_functionreference_getfallbackvalue = None
 	lib3mf_volumedataboundary_setmeshbboxonly = None
 	lib3mf_volumedataboundary_getmeshbboxonly = None
 	lib3mf_volumedatacomposite_getbasematerialgroup = None
@@ -2066,6 +2068,18 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_double))
 			self.lib.lib3mf_functionreference_getminfeaturesize = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functionreference_setfallbackvalue")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_double)
+			self.lib.lib3mf_functionreference_setfallbackvalue = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functionreference_getfallbackvalue")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_functionreference_getfallbackvalue = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataboundary_setmeshbboxonly")), methodAddress)
 			if err != 0:
@@ -5090,6 +5104,12 @@ class Wrapper:
 			self.lib.lib3mf_functionreference_getminfeaturesize.restype = ctypes.c_int32
 			self.lib.lib3mf_functionreference_getminfeaturesize.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
 			
+			self.lib.lib3mf_functionreference_setfallbackvalue.restype = ctypes.c_int32
+			self.lib.lib3mf_functionreference_setfallbackvalue.argtypes = [ctypes.c_void_p, ctypes.c_double]
+			
+			self.lib.lib3mf_functionreference_getfallbackvalue.restype = ctypes.c_int32
+			self.lib.lib3mf_functionreference_getfallbackvalue.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
+			
 			self.lib.lib3mf_volumedataboundary_setmeshbboxonly.restype = ctypes.c_int32
 			self.lib.lib3mf_volumedataboundary_setmeshbboxonly.argtypes = [ctypes.c_void_p, ctypes.c_bool]
 			
@@ -8001,6 +8021,17 @@ class FunctionReference(Base):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functionreference_getminfeaturesize(self._handle, pMinFeatureSize))
 		
 		return pMinFeatureSize.value
+	
+	def SetFallBackValue(self, FallBackValue):
+		dFallBackValue = ctypes.c_double(FallBackValue)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functionreference_setfallbackvalue(self._handle, dFallBackValue))
+		
+	
+	def GetFallBackValue(self):
+		pFallBackValue = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functionreference_getfallbackvalue(self._handle, pFallBackValue))
+		
+		return pFallBackValue.value
 	
 
 

@@ -54,6 +54,9 @@ namespace NMR {
 
 		double m_dMinFeatureSize = 0.0;
 		nfBool m_bHasMinFeatureSize = false;
+
+		double m_dFallBackValue = 0.0;
+		nfBool m_bHasFallBackValue = false;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:

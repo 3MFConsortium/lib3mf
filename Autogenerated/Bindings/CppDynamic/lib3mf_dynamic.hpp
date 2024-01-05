@@ -1517,6 +1517,8 @@ public:
 	inline void SetChannelName(const std::string & sChannelName);
 	inline void SetMinFeatureSize(const Lib3MF_double dMinFeatureSize);
 	inline Lib3MF_double GetMinFeatureSize();
+	inline void SetFallBackValue(const Lib3MF_double dFallBackValue);
+	inline Lib3MF_double GetFallBackValue();
 };
 	
 /*************************************************************************************************************************
@@ -3922,6 +3924,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_FunctionReference_SetChannelName = nullptr;
 		pWrapperTable->m_FunctionReference_SetMinFeatureSize = nullptr;
 		pWrapperTable->m_FunctionReference_GetMinFeatureSize = nullptr;
+		pWrapperTable->m_FunctionReference_SetFallBackValue = nullptr;
+		pWrapperTable->m_FunctionReference_GetFallBackValue = nullptr;
 		pWrapperTable->m_VolumeDataBoundary_SetMeshBBoxOnly = nullptr;
 		pWrapperTable->m_VolumeDataBoundary_GetMeshBBoxOnly = nullptr;
 		pWrapperTable->m_VolumeDataComposite_GetBaseMaterialGroup = nullptr;
@@ -5681,6 +5685,24 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_FunctionReference_GetMinFeatureSize == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_FunctionReference_SetFallBackValue = (PLib3MFFunctionReference_SetFallBackValuePtr) GetProcAddress(hLibrary, "lib3mf_functionreference_setfallbackvalue");
+		#else // _WIN32
+		pWrapperTable->m_FunctionReference_SetFallBackValue = (PLib3MFFunctionReference_SetFallBackValuePtr) dlsym(hLibrary, "lib3mf_functionreference_setfallbackvalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_FunctionReference_SetFallBackValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_FunctionReference_GetFallBackValue = (PLib3MFFunctionReference_GetFallBackValuePtr) GetProcAddress(hLibrary, "lib3mf_functionreference_getfallbackvalue");
+		#else // _WIN32
+		pWrapperTable->m_FunctionReference_GetFallBackValue = (PLib3MFFunctionReference_GetFallBackValuePtr) dlsym(hLibrary, "lib3mf_functionreference_getfallbackvalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_FunctionReference_GetFallBackValue == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -10241,6 +10263,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionReference_GetMinFeatureSize == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_functionreference_setfallbackvalue", (void**)&(pWrapperTable->m_FunctionReference_SetFallBackValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionReference_SetFallBackValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_functionreference_getfallbackvalue", (void**)&(pWrapperTable->m_FunctionReference_GetFallBackValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionReference_GetFallBackValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_volumedataboundary_setmeshbboxonly", (void**)&(pWrapperTable->m_VolumeDataBoundary_SetMeshBBoxOnly));
 		if ( (eLookupError != 0) || (pWrapperTable->m_VolumeDataBoundary_SetMeshBBoxOnly == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -13802,6 +13832,27 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		CheckError(m_pWrapper->m_WrapperTable.m_FunctionReference_GetMinFeatureSize(m_pHandle, &resultMinFeatureSize));
 		
 		return resultMinFeatureSize;
+	}
+	
+	/**
+	* CFunctionReference::SetFallBackValue - Sets the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+	* @param[in] dFallBackValue - fallback value
+	*/
+	void CFunctionReference::SetFallBackValue(const Lib3MF_double dFallBackValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionReference_SetFallBackValue(m_pHandle, dFallBackValue));
+	}
+	
+	/**
+	* CFunctionReference::GetFallBackValue - Returns the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+	* @return fallback value
+	*/
+	Lib3MF_double CFunctionReference::GetFallBackValue()
+	{
+		Lib3MF_double resultFallBackValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionReference_GetFallBackValue(m_pHandle, &resultFallBackValue));
+		
+		return resultFallBackValue;
 	}
 	
 	/**

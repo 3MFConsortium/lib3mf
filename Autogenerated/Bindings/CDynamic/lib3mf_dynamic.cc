@@ -189,6 +189,8 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_FunctionReference_SetChannelName = NULL;
 	pWrapperTable->m_FunctionReference_SetMinFeatureSize = NULL;
 	pWrapperTable->m_FunctionReference_GetMinFeatureSize = NULL;
+	pWrapperTable->m_FunctionReference_SetFallBackValue = NULL;
+	pWrapperTable->m_FunctionReference_GetFallBackValue = NULL;
 	pWrapperTable->m_VolumeDataBoundary_SetMeshBBoxOnly = NULL;
 	pWrapperTable->m_VolumeDataBoundary_GetMeshBBoxOnly = NULL;
 	pWrapperTable->m_VolumeDataComposite_GetBaseMaterialGroup = NULL;
@@ -1952,6 +1954,24 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_FunctionReference_GetMinFeatureSize == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_FunctionReference_SetFallBackValue = (PLib3MFFunctionReference_SetFallBackValuePtr) GetProcAddress(hLibrary, "lib3mf_functionreference_setfallbackvalue");
+	#else // _WIN32
+	pWrapperTable->m_FunctionReference_SetFallBackValue = (PLib3MFFunctionReference_SetFallBackValuePtr) dlsym(hLibrary, "lib3mf_functionreference_setfallbackvalue");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_FunctionReference_SetFallBackValue == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_FunctionReference_GetFallBackValue = (PLib3MFFunctionReference_GetFallBackValuePtr) GetProcAddress(hLibrary, "lib3mf_functionreference_getfallbackvalue");
+	#else // _WIN32
+	pWrapperTable->m_FunctionReference_GetFallBackValue = (PLib3MFFunctionReference_GetFallBackValuePtr) dlsym(hLibrary, "lib3mf_functionreference_getfallbackvalue");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_FunctionReference_GetFallBackValue == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

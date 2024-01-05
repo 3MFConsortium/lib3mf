@@ -1341,6 +1341,24 @@ Lib3MFResult CCall_lib3mf_functionreference_getminfeaturesize(Lib3MFHandle libra
 }
 
 
+Lib3MFResult CCall_lib3mf_functionreference_setfallbackvalue(Lib3MFHandle libraryHandle, Lib3MF_FunctionReference pFunctionReference, Lib3MF_double dFallBackValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FunctionReference_SetFallBackValue (pFunctionReference, dFallBackValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_functionreference_getfallbackvalue(Lib3MFHandle libraryHandle, Lib3MF_FunctionReference pFunctionReference, Lib3MF_double * pFallBackValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FunctionReference_GetFallBackValue (pFunctionReference, pFallBackValue);
+}
+
+
 Lib3MFResult CCall_lib3mf_volumedataboundary_setmeshbboxonly(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataBoundary pVolumeDataBoundary, bool bMeshBBoxOnly)
 {
 	if (libraryHandle == 0) 
@@ -7717,6 +7735,25 @@ func (inst FunctionReference) GetMinFeatureSize() (float64, error) {
 		return 0, makeError(uint32(ret))
 	}
 	return float64(minFeatureSize), nil
+}
+
+// SetFallBackValue sets the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+func (inst FunctionReference) SetFallBackValue(fallBackValue float64) error {
+	ret := C.CCall_lib3mf_functionreference_setfallbackvalue(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(fallBackValue))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetFallBackValue returns the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+func (inst FunctionReference) GetFallBackValue() (float64, error) {
+	var fallBackValue C.double
+	ret := C.CCall_lib3mf_functionreference_getfallbackvalue(inst.wrapperRef.LibraryHandle, inst.Ref, &fallBackValue)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(fallBackValue), nil
 }
 
 

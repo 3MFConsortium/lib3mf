@@ -5302,6 +5302,72 @@ Lib3MFResult lib3mf_functionreference_getminfeaturesize(Lib3MF_FunctionReference
 	}
 }
 
+Lib3MFResult lib3mf_functionreference_setfallbackvalue(Lib3MF_FunctionReference pFunctionReference, Lib3MF_double dFallBackValue)
+{
+	IBase* pIBaseClass = (IBase *)pFunctionReference;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionReference, "FunctionReference", "SetFallBackValue");
+			pJournalEntry->addDoubleParameter("FallBackValue", dFallBackValue);
+		}
+		IFunctionReference* pIFunctionReference = dynamic_cast<IFunctionReference*>(pIBaseClass);
+		if (!pIFunctionReference)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIFunctionReference->SetFallBackValue(dFallBackValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_functionreference_getfallbackvalue(Lib3MF_FunctionReference pFunctionReference, Lib3MF_double * pFallBackValue)
+{
+	IBase* pIBaseClass = (IBase *)pFunctionReference;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionReference, "FunctionReference", "GetFallBackValue");
+		}
+		if (pFallBackValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IFunctionReference* pIFunctionReference = dynamic_cast<IFunctionReference*>(pIBaseClass);
+		if (!pIFunctionReference)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pFallBackValue = pIFunctionReference->GetFallBackValue();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addDoubleResult("FallBackValue", *pFallBackValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 
 /*************************************************************************************************************************
  Class implementation for VolumeDataBoundary
@@ -22253,6 +22319,10 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_functionreference_setminfeaturesize;
 	if (sProcName == "lib3mf_functionreference_getminfeaturesize") 
 		*ppProcAddress = (void*) &lib3mf_functionreference_getminfeaturesize;
+	if (sProcName == "lib3mf_functionreference_setfallbackvalue") 
+		*ppProcAddress = (void*) &lib3mf_functionreference_setfallbackvalue;
+	if (sProcName == "lib3mf_functionreference_getfallbackvalue") 
+		*ppProcAddress = (void*) &lib3mf_functionreference_getfallbackvalue;
 	if (sProcName == "lib3mf_volumedataboundary_setmeshbboxonly") 
 		*ppProcAddress = (void*) &lib3mf_volumedataboundary_setmeshbboxonly;
 	if (sProcName == "lib3mf_volumedataboundary_getmeshbboxonly") 

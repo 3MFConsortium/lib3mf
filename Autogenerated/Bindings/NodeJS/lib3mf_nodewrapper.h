@@ -608,6 +608,8 @@ private:
 	static void SetChannelName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetMinFeatureSize(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetMinFeatureSize(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetFallBackValue(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetFallBackValue(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFFunctionReference();

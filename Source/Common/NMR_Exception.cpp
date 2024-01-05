@@ -503,6 +503,7 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATE_VOLUMEDATA_MESHBBOXONLY : return "Duplicate VolumeData MeshBBoxOnly";
 		case NMR_ERROR_DUPLICATE_VOLUMEDATA_MINFEATURESIZE : return "Duplicate VolumeData MinFeatureSize";
 		case NMR_ERROR_IMPLICIT_FUNCTION_CYCLIC_GRAPH : return "Cyclic graph in implicit function";
+		case NMR_ERROR_DUPLICATE_VOLUMEDATA_FALLBACKVALUE : return "Duplicate VolumeData FallbackValue";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

@@ -51,6 +51,8 @@ namespace NMR {
 		bool m_bHasTransform = false;
 
 		double m_minFeatureSize = 0.0;
+
+		double m_fallBackValue = 0.0;
 	public:
 		CFunctionReference() = delete;
 		explicit CFunctionReference(UniqueResourceID functionResourceId);
@@ -69,6 +71,9 @@ namespace NMR {
 
 		void setMinFeatureSize(double minFeatureSize);
 		double getMinFeatureSize() const;
+
+		void setFallBackValue(double fallBackValue);
+		double getFallBackValue() const;
 	};
 
 	typedef std::shared_ptr <CFunctionReference> PFunctionReference;

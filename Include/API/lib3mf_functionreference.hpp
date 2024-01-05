@@ -124,6 +124,20 @@ public:
 	* @return minimal feature size
 	*/
 	Lib3MF_double GetMinFeatureSize() override;
+
+	/**
+	 * IFunctionReference::SetFallBackValue - Sets the fallback value to use
+	 * if the function evaluation fails (e.g. evaluates to NaN or Inf).
+	 * @param[in] dFallBackValue - fallback value
+	 */
+	void SetFallBackValue(const Lib3MF_double dFallBackValue) override;
+
+	/**
+	 * IFunctionReference::GetFallBackValue - Returns the fallback value to
+	 * use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+	 * @return fallback value
+	 */
+	Lib3MF_double GetFallBackValue();
 };
 
 } // namespace Impl

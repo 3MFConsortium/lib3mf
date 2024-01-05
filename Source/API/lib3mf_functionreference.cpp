@@ -93,3 +93,14 @@ Lib3MF_double CFunctionReference::GetMinFeatureSize()
 {
     return m_pFunctionReference->getMinFeatureSize();
 }
+
+void CFunctionReference::SetFallBackValue(
+    const Lib3MF_double dFallBackValue)
+{
+    m_pFunctionReference->setFallBackValue(dFallBackValue);
+}
+
+Lib3MF_double CFunctionReference::GetFallBackValue()
+{
+    return m_pFunctionReference->getFallBackValue();
+}

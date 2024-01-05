@@ -1495,6 +1495,24 @@ typedef Lib3MFResult (*PLib3MFFunctionReference_SetMinFeatureSizePtr) (Lib3MF_Fu
 */
 typedef Lib3MFResult (*PLib3MFFunctionReference_GetMinFeatureSizePtr) (Lib3MF_FunctionReference pFunctionReference, Lib3MF_double * pMinFeatureSize);
 
+/**
+* Sets the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+*
+* @param[in] pFunctionReference - FunctionReference instance.
+* @param[in] dFallBackValue - fallback value
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFFunctionReference_SetFallBackValuePtr) (Lib3MF_FunctionReference pFunctionReference, Lib3MF_double dFallBackValue);
+
+/**
+* Returns the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+*
+* @param[in] pFunctionReference - FunctionReference instance.
+* @param[out] pFallBackValue - fallback value
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFFunctionReference_GetFallBackValuePtr) (Lib3MF_FunctionReference pFunctionReference, Lib3MF_double * pFallBackValue);
+
 /*************************************************************************************************************************
  Class definition for VolumeDataBoundary
 **************************************************************************************************************************/
@@ -6403,6 +6421,8 @@ typedef struct {
 	PLib3MFFunctionReference_SetChannelNamePtr m_FunctionReference_SetChannelName;
 	PLib3MFFunctionReference_SetMinFeatureSizePtr m_FunctionReference_SetMinFeatureSize;
 	PLib3MFFunctionReference_GetMinFeatureSizePtr m_FunctionReference_GetMinFeatureSize;
+	PLib3MFFunctionReference_SetFallBackValuePtr m_FunctionReference_SetFallBackValue;
+	PLib3MFFunctionReference_GetFallBackValuePtr m_FunctionReference_GetFallBackValue;
 	PLib3MFVolumeDataBoundary_SetMeshBBoxOnlyPtr m_VolumeDataBoundary_SetMeshBBoxOnly;
 	PLib3MFVolumeDataBoundary_GetMeshBBoxOnlyPtr m_VolumeDataBoundary_GetMeshBBoxOnly;
 	PLib3MFVolumeDataComposite_GetBaseMaterialGroupPtr m_VolumeDataComposite_GetBaseMaterialGroup;
