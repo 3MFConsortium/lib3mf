@@ -131,6 +131,7 @@ namespace NMR {
 		}
 		catch (...) {
 			// base64_decode throws an exception if the input is not valid base64
+			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDENCODING), mrwInvalidOptionalValue);
         }
 	}
 }

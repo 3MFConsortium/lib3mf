@@ -24,7 +24,6 @@ set(CMAKE_INSTALL_INCLUDEDIR include/lib3mf CACHE PATH "directory for installing
 
 option(USE_INCLUDED_ZLIB "Use included zlib" ON)
 option(USE_INCLUDED_LIBZIP "Use included libzip" ON)
-option(USE_INCLUDED_GTEST "Used included gtest" ON)
 option(USE_INCLUDED_SSL "Use included libressl" ON)
 option(BUILD_FOR_CODECOVERAGE "Build for code coverage analysis" OFF)
 option(STRIP_BINARIES "Strip binaries (on non-apple)" ON)
