@@ -7,17 +7,12 @@ ENV GCCTOOLSET=gcc-toolset-12
 RUN \
     microdnf update -y && \
     microdnf -y install --nodocs \
-    git \
-    git-lfs \
     wget \
     which \
     libuuid-devel \
     glibc-langpack-en \
-    python39-pip \
     tar \
     gzip \
-    zip \
-    unzip \
     ${GCCTOOLSET} \
     && microdnf clean all
 
@@ -36,18 +31,10 @@ RUN ln -s /opt/cmake-$CMAKE_VERSION-linux-x86_64/bin/cmake /usr/bin/cmake3
 RUN ln -s /opt/cmake-$CMAKE_VERSION-linux-x86_64/bin/cpack /usr/bin/cpack3
 RUN ln -s /opt/cmake-$CMAKE_VERSION-linux-x86_64/bin/ctest /usr/bin/ctest3
 
-# Add Python site to PATH
-ENV PATH /root/.local/bin:${PATH}
-
-
 
 RUN ldd --version
 RUN cmake --version
 RUN cmake3 --version
-RUN git --version
-RUN git lfs version
-RUN python3 --version
-RUN pip3 --version
 RUN gcc --version
 
 
