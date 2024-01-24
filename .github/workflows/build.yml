@@ -52,12 +52,13 @@ jobs:
         with: 
           image: lib3mf_ubi8:latest
           path: /out.tar.gz
+          destination: dist
       -
         name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: lib3mf.tar.gz
-          path: ${{ github.workspace }}/out.tar.gz        
+          name: lib3mf_ubi8_gcc12.tar.gz
+          path: dist        
 
   build-macos:
     runs-on: macos-latest
