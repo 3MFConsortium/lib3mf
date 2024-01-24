@@ -41,7 +41,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./Dockerfile
+          file: ./CI/Dockerfile
           platforms: linux/amd64
           tags: lib3mf_ubi8:latest       
           load: true   
@@ -51,14 +51,14 @@ jobs:
         id: extract
         with: 
           image: lib3mf_ubi8:latest
-          path: /out.zip
+          path: /lib3mf-repo/build/lib3mf.so.2
           destination: dist
       -
         name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: lib3mf_ubi8_gcc12.zip
-          path: dist/out.zip        
+          name: lib3mf.so
+          path: dist/lib3mf.so.2        
 
   build-macos:
     runs-on: macos-latest
@@ -175,7 +175,7 @@ jobs:
         working-directory: ./build
   assemble-sdk:
     runs-on: ubuntu-20.04
-    needs: [build-windows-release, build-linux, build-macos]
+    needs: [build-windows-release, build-macos, build-linux-ubi8-gcc12]
     steps:
       - run: sudo apt install -y zip unzip
       - run: mkdir build

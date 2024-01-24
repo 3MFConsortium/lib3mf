@@ -1,13 +1,61 @@
-# Copy this to root folder of lib3mf then build and run this image. 
-FROM ubuntu:20.04
+FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install build-essential uuid-dev wget
+LABEL maintainer="pradeep.gangatharan@autodesk.com"
 
-RUN wget -qO- "https://cmake.org/files/v3.28/cmake-3.28.1-linux-x86_64.tar.gz" | tar --strip-components=1 -xz -C /usr/local
+ENV GCCTOOLSET=gcc-toolset-12
+
+RUN \
+    microdnf update -y && \
+    microdnf -y install --nodocs \
+    git \
+    git-lfs \
+    wget \
+    which \
+    libuuid-devel \
+    glibc-langpack-en \
+    python39-pip \
+    tar \
+    gzip \
+    zip \
+    unzip \
+    ${GCCTOOLSET} \
+    && microdnf clean all
+
+ENV LD_LIBRARY_PATH=/opt/rh/${GCCTOOLSET}/root/usr/lib64:/opt/rh/${GCCTOOLSET}/root/usr/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+ENV PKG_CONFIG_PATH=/opt/rh/${GCCTOOLSET}/root/usr/lib64/pkgconfig${PKG_CONFIG_PATH:+:${PKG_CONFIG_PATH}}
+ENV PATH=/opt/rh/${GCCTOOLSET}/root/usr/bin${PATH:+:${PATH}}
+
+# CMake
+ARG CMAKE_VERSION=3.28.1
+ADD "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz" /usr/tmp/
+RUN tar xzf /usr/tmp/cmake-$CMAKE_VERSION-linux-x86_64.tar.gz -C /opt && rm /usr/tmp/cmake-$CMAKE_VERSION-linux-x86_64.tar.gz
+ENV PATH /opt/cmake-$CMAKE_VERSION-linux-x86_64/bin:${PATH}
+
+
+RUN ln -s /opt/cmake-$CMAKE_VERSION-linux-x86_64/bin/cmake /usr/bin/cmake3
+RUN ln -s /opt/cmake-$CMAKE_VERSION-linux-x86_64/bin/cpack /usr/bin/cpack3
+RUN ln -s /opt/cmake-$CMAKE_VERSION-linux-x86_64/bin/ctest /usr/bin/ctest3
+
+# Add Python site to PATH
+ENV PATH /root/.local/bin:${PATH}
+
+
+
+RUN ldd --version
+RUN cmake --version
+RUN cmake3 --version
+RUN git --version
+RUN git lfs version
+RUN python3 --version
+RUN pip3 --version
+RUN gcc --version
+
 
 ADD . lib3mf-repo
 
 WORKDIR "/lib3mf-repo"
+
+RUN chmod +x cmake/GenerateMake.sh
 
 RUN cmake/GenerateMake.sh
 
@@ -16,3 +64,9 @@ WORKDIR "/lib3mf-repo/build"
 RUN cmake --build . 
 
 RUN ctest -V .
+
+WORKDIR "/../../"
+
+
+
+
