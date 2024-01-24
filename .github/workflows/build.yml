@@ -47,8 +47,11 @@ jobs:
         id: extract
         with: 
           image: lib3mf_ubi8:latest
-          path: lib3mf-repo/build/lib3mf.so.2
+          path: out.zip
           destination: dist
+          
+      - run: unzip out.zip
+        working-directory: ./dist
       -
         name: Upload Artifact
         uses: actions/upload-artifact@v2
