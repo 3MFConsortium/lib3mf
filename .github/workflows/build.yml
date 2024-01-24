@@ -51,14 +51,14 @@ jobs:
         id: extract
         with: 
           image: lib3mf_ubi8:latest
-          path: /out.tar.gz
+          path: /out.zip
           destination: dist
       -
         name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: lib3mf_ubi8_gcc12.tar.gz
-          path: dist        
+          name: lib3mf_ubi8_gcc12.zip
+          path: dist/out.zip        
 
   build-macos:
     runs-on: macos-latest
