@@ -77,11 +77,11 @@ namespace Lib3MF
             auto posArg = gyroidFunction->FindInput("pos");
             auto sinInputA = sinNode->GetInputA();
             gyroidFunction->AddLink(posArg, sinInputA);
-            
+
             auto cosNode = gyroidFunction->AddCosNode(
                 "cos", Lib3MF::eImplicitNodeConfiguration::VectorToVector,
                 "cosinus", "group_a");
-            
+
             auto cosInputA = cosNode->GetInputA();
             auto composeYZXOutput = composeYZX->GetOutputResult();
             gyroidFunction->AddLink(composeYZXOutput, cosInputA);
@@ -107,8 +107,8 @@ namespace Lib3MF
             return gyroidFunction;
         }
 
-
-        PImplicitNode findNodeByName(PImplicitFunction const& function, std::string const& name)
+        PImplicitNode findNodeByName(PImplicitFunction const& function,
+                                     std::string const& name)
         {
             auto nodes = function->GetNodes();
             while(nodes->MoveNext())
@@ -132,33 +132,34 @@ namespace Lib3MF
             return inputName.substr(0, pos);
         }
 
-        bool isTopologiallySorted(PImplicitFunction const & function)
+        bool isTopologiallySorted(PImplicitFunction const& function)
         {
             std::vector<std::string> nodeNames;
 
             {
                 auto nodes = function->GetNodes();
-                while (nodes->MoveNext())
+                while(nodes->MoveNext())
                 {
                     nodeNames.push_back(nodes->GetCurrent()->GetIdentifier());
                 }
             }
 
             auto nodes2 = function->GetNodes();
-            while (nodes2->MoveNext())
+            while(nodes2->MoveNext())
             {
                 auto node = nodes2->GetCurrent();
                 auto inputs = node->GetInputs();
-                while (inputs->MoveNext())
+                while(inputs->MoveNext())
                 {
                     auto input = inputs->GetCurrent();
                     auto inputName = input->GetReference();
                     auto dependencyNodeName = extractNodeName(inputName);
-                    if (dependencyNodeName=="inputs")
+                    if(dependencyNodeName == "inputs")
                     {
                         continue;
                     }
-                    auto iter = std::find(nodeNames.begin(), nodeNames.end(), dependencyNodeName);
+                    auto iter = std::find(nodeNames.begin(), nodeNames.end(),
+                                          dependencyNodeName);
                     if(iter == nodeNames.end())
                     {
                         return false;
@@ -381,7 +382,7 @@ namespace Lib3MF
         auto output =
             newFunction->AddOutput("shape", "signed distance to the surface",
                                    Lib3MF::eImplicitPortType::Scalar);
-        
+
         auto subNodeOutputResult = subNode->GetOutputResult();
         newFunction->AddLink(subNodeOutputResult, output);
 
@@ -424,29 +425,19 @@ namespace Lib3MF
             "pos", "position", Lib3MF::eImplicitPortType::Vector);
 
         // Add some nodes
-        auto constMatrixNode = newFunction->AddConstMatNode(
-            "matrix_1", "unused example matrix", "group_a");
-
-        // clang-format off
-        constMatrixNode->SetMatrix(
-          {1.23456, 2.34567, 3.45678, 4.56789,
-           5.67890, 6.78901, 7.89012, 8.90123, 
-           9.01234, 10.12345, 11.23456, 12.34567, 
-           13.45678, 14.56789, 15.67890, 16.78901});
-        // clang-format on
+       
 
         auto constNode = newFunction->AddConstantNode(
             "radius", "radius of the spehere", "group_a");
-        constNode->SetConstant(1.23456);
+        constNode->SetConstant(20.0);
 
         auto constVecNode = newFunction->AddConstVecNode(
             "vector_1", "translation vector", "group_a");
-        constVecNode->SetVector({1.23456, 2.34567, 3.45678});
+        constVecNode->SetVector({60.23456, 72.34567, 23.45678});
 
         auto subNode = newFunction->AddSubtractionNode(
             "translate_1", Lib3MF::eImplicitNodeConfiguration::VectorToVector,
             "Translation", "group_a");
-
 
         auto posInput = newFunction->FindInput("pos");
         auto subInputA = subNode->GetInputA();
@@ -470,6 +461,11 @@ namespace Lib3MF
         auto distanceToSphereOutput = distanceToSpehereNode->GetOutputResult();
         auto subNode2InputA = subNode2->GetInputA();
         newFunction->AddLink(distanceToSphereOutput, subNode2InputA);
+
+       
+        auto radiusOutput = constNode->GetOutputValue();
+        auto subNode2InputB = subNode2->GetInputB();
+        newFunction->AddLink(radiusOutput, subNode2InputB);
 
         auto output =
             newFunction->AddOutput("shape", "signed distance to the surface",
@@ -501,13 +497,13 @@ namespace Lib3MF
         // Get the first Mesh of ioModel
         auto meshesFromWrittenFile = ioModel->GetMeshObjects();
         meshesFromWrittenFile->MoveNext();
-        auto meshFromWrittenFile = meshesFromWrittenFile->GetCurrentMeshObject();
+        auto meshFromWrittenFile =
+            meshesFromWrittenFile->GetCurrentMeshObject();
 
         // Check the fallback value
         auto volumeDataFromWrittenFile = meshFromWrittenFile->VolumeData();
         auto boundaryFromWrittenFile = volumeDataFromWrittenFile->GetBoundary();
         EXPECT_EQ(boundaryFromWrittenFile->GetFallBackValue(), -1.2345);
-
 
         // Compare the functions
         helper::compareFunctions(model, newFunction, ioModel,
@@ -573,6 +569,7 @@ namespace Lib3MF
         auto meshNode = newFunction->AddMeshNode("mesh", "mesh", "group_shell");
 
         newFunction->AddLinkByNames("meshResource.value", "mesh.mesh");
+        newFunction->AddLinkByNames("inputs.pos", "mesh.pos");
 
         auto absNode = newFunction->AddAbsNode(
             "abs", Lib3MF::eImplicitNodeConfiguration::ScalarToScalar, "abs",
@@ -643,7 +640,8 @@ namespace Lib3MF
             "pos", "position", Lib3MF::eImplicitPortType::Vector);
 
         // Add a resource node to the new function
-        auto resourceNode = newFunction->AddResourceIdNode( "meshResource", "mesh resource", "group_shell");
+        auto resourceNode = newFunction->AddResourceIdNode(
+            "meshResource", "mesh resource", "group_shell");
 
         // Get the mesh
         auto mesh = GetMesh();
@@ -666,7 +664,7 @@ namespace Lib3MF
         auto absNode = newFunction->AddAbsNode(
             "abs", Lib3MF::eImplicitNodeConfiguration::ScalarToScalar, "abs",
             "group_shell");
-        
+
         auto meshNodeOutputDistance = meshNode->GetOutputDistance();
         auto absNodeInputA = absNode->GetInputA();
         newFunction->AddLink(meshNodeOutputDistance, absNodeInputA);
@@ -688,7 +686,8 @@ namespace Lib3MF
 
         auto constScalarNodeOutputValue = constScalarNode->GetOutputValue();
         auto subtractionNodeOutputResult = subtractionNode->GetOutputResult();
-        newFunction->AddLink(constScalarNodeOutputValue, subtractionNodeOutputResult);
+        newFunction->AddLink(constScalarNodeOutputValue,
+                             subtractionNodeOutputResult);
 
         // Add an output to the new function
         auto output =
@@ -697,11 +696,10 @@ namespace Lib3MF
 
         // Add a function call node for the gyroid function
 
-        auto gyroidNode = newFunction->AddFunctionCallNode(
-            "gyroid", "gyroid", "group_gyroid");
+        auto gyroidNode = newFunction->AddFunctionCallNode("gyroid", "gyroid",
+                                                           "group_gyroid");
 
         // Add a resource node for the gyroid function
-
 
         auto funcitionIdNode = newFunction->AddResourceIdNode(
             "gyroidID", "function resource", "group_gyroid");
@@ -717,10 +715,11 @@ namespace Lib3MF
         auto gyroidPosInput = gyroidNode->AddInput("pos", "position");
         gyroidPosInput->SetType(Lib3MF::eImplicitPortType::Vector);
 
-        auto gyroidShapeOutput = gyroidNode->AddOutput("shape", "signed distance to the surface");
+        auto gyroidShapeOutput =
+            gyroidNode->AddOutput("shape", "signed distance to the surface");
         gyroidShapeOutput->SetType(Lib3MF::eImplicitPortType::Scalar);
 
-        newFunction->AddLink(posInput, gyroidPosInput);       
+        newFunction->AddLink(posInput, gyroidPosInput);
 
         // Add a max node
         auto maxNode = newFunction->AddMaxNode(
@@ -736,6 +735,13 @@ namespace Lib3MF
         // Set the output reference
         output->SetReference("max.result");
 
+        // Add a boundary to the volume data
+        auto theMesh = GetMesh();
+        auto volumeData = theMesh->VolumeData();
+        auto theBoundary = volumeData->CreateNewBoundary(newFunction.get());
+        theBoundary->SetMinFeatureSize(0.1);
+        theBoundary->SetChannelName("shape");
+        
         // Write the model to a file
         writer3MF->WriteToFile(Volumetric::OutFolder +
                                "ShellWithGyroidSubfunction.3mf");
@@ -808,7 +814,7 @@ namespace Lib3MF
         // Call a node to call the function from image3d
         auto functionCallNode = implicitFunction->AddFunctionCallNode(
             "functionCall", "functionCall", "group_functionCall");
-        
+
         auto functionIdNode = implicitFunction->AddResourceIdNode(
             "functionID", "function resource", "group_functionCall");
 
@@ -821,8 +827,10 @@ namespace Lib3MF
                   Lib3MF::eImplicitPortType::ResourceID);
 
         auto functionIdNodeOutputValue = functionIdNode->GetOutputValue();
-        auto functionCallNodeInputFunctionID = functionCallNode->GetInputFunctionID();
-        implicitFunction->AddLink(functionIdNodeOutputValue, functionCallNodeInputFunctionID);
+        auto functionCallNodeInputFunctionID =
+            functionCallNode->GetInputFunctionID();
+        implicitFunction->AddLink(functionIdNodeOutputValue,
+                                  functionCallNodeInputFunctionID);
         // Currently you have to add the inputs and outputs of the called
         // function manually. We should automate this.
 
@@ -908,7 +916,7 @@ namespace Lib3MF
         auto boundary = volumeData->CreateNewBoundary(funcFromImage3d.get());
         boundary->SetTransform(
             helper::ComputeTransformFromMeshCoordinatesToUVW(theMesh));
-        boundary->SetChannelName("r");
+        boundary->SetChannelName("red");
         boundary->SetMeshBBoxOnly(true);
 
         // Write to file
@@ -1102,13 +1110,14 @@ namespace Lib3MF
 
         auto const inputA = scalarAdd->GetInputA();
         auto const vectorOutput = constVector->GetOutputVector();
-        EXPECT_THROW(function->AddLink(inputA, vectorOutput),
-                     ELib3MFException);
+        EXPECT_THROW(function->AddLink(inputA, vectorOutput), ELib3MFException);
     }
 
     /**
-     * @brief Test case for sorting nodes topologically. The function creates a cyclic graph with three nodes and sets up circular 
-     * dependencies between them. The test expects the function to throw an exception when trying to sort the nodes topologically.
+     * @brief Test case for sorting nodes topologically. The function creates a
+     * cyclic graph with three nodes and sets up circular dependencies between
+     * them. The test expects the function to throw an exception when trying to
+     * sort the nodes topologically.
      *
      * Graph structure:
      *
@@ -1136,12 +1145,18 @@ namespace Lib3MF
     TEST_F(Volumetric, SortNodesTopologically_CyclicGraph_Throws)
     {
         auto const function = model->AddImplicitFunction();
-        
-        function->AddInput("pos", "position", Lib3MF::eImplicitPortType::Vector);
+
+        function->AddInput("pos", "position",
+                           Lib3MF::eImplicitPortType::Vector);
         // Add nodes with circular dependencies
-        auto const constVec1 = function->AddConstVecNode("constVec1", "constVec1", "group1");
-        auto const add1 = function->AddAdditionNode("add1", Lib3MF::eImplicitNodeConfiguration::VectorToVector, "add1", "group1");
-        auto const add2 = function->AddAdditionNode("add2", Lib3MF::eImplicitNodeConfiguration::VectorToVector, "add2", "group1");
+        auto const constVec1 =
+            function->AddConstVecNode("constVec1", "constVec1", "group1");
+        auto const add1 = function->AddAdditionNode(
+            "add1", Lib3MF::eImplicitNodeConfiguration::VectorToVector, "add1",
+            "group1");
+        auto const add2 = function->AddAdditionNode(
+            "add2", Lib3MF::eImplicitNodeConfiguration::VectorToVector, "add2",
+            "group1");
 
         // Set up circular dependencies
         auto const vectorOutput = constVec1->GetOutputVector();
@@ -1161,7 +1176,9 @@ namespace Lib3MF
         EXPECT_THROW(function->SortNodesTopologically(), ELib3MFException);
     }
 
-    TEST_F(Volumetric, Volumetric_SortNodesTopologically_ValidGraph_ResultIsTopologialSorted)
+    TEST_F(
+        Volumetric,
+        Volumetric_SortNodesTopologically_ValidGraph_ResultIsTopologialSorted)
     {
         auto const function = helper::createGyroidFunction(*model);
 
