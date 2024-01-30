@@ -149,4 +149,10 @@ namespace Lib3MF
 		auto reader = model->QueryReader("3mf");
 		ASSERT_SPECIFIC_THROW(reader->ReadFromFile(sTestFilesPath + "/Reader/" + "GEN-M-ADA-ITEM-TRANSFORM-0.3mf"), ELib3MFException);
 	}
+
+
+	TEST_F(Reader, IntegrationTestError) {
+		auto reader = model->QueryReader("3mf");
+		ASSERT_SPECIFIC_THROW(reader->ReadFromFile(sTestFilesPath + "/Reader/" + "N_XXX_0422_01.3mf"), ELib3MFException);
+	}
 }
