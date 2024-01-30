@@ -151,8 +151,19 @@ namespace Lib3MF
 	}
 
 
-	TEST_F(Reader, IntegrationTestError) {
+	TEST_F(Reader, ReadVerticesCommaSeparatedValue) {
+		// This file N_XXX_0422_01.3mf contains vertices with comma-separated values.
+		// The 3MFReader should throw an error at NMR_StringUtils::fnStringToDouble when reading this file because 
+		// comma-separated values are not allowed in 3MF files.
 		auto reader = model->QueryReader("3mf");
 		ASSERT_SPECIFIC_THROW(reader->ReadFromFile(sTestFilesPath + "/Reader/" + "N_XXX_0422_01.3mf"), ELib3MFException);
+	}
+
+	TEST_F(Reader, ReadVerticesWithLeadingPLUSSign) {
+		// This file P_XXM_0519_01.3mf contains vertices with leading + sign e.g +1E+2.
+		// The 3MFReader allows leading = sign at NMR_StringUtils::fnStringToDouble when reading this file.
+		auto reader = model->QueryReader("3mf");
+		reader->ReadFromFile(sTestFilesPath + "/Reader/" + "P_XXM_0519_01.3mf");
+		CheckReaderWarnings(Reader::reader3MF, 0);
 	}
 }
