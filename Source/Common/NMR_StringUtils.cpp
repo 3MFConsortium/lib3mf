@@ -161,7 +161,13 @@ namespace NMR {
 		{
 			throw CNMRException(NMR_ERROR_EMPTYSTRINGTODOUBLECONVERSION);
 		}
-		
+		else if (answer.ptr) // Invalidate comma as decimal separator
+		{
+			if (answer.ptr[0] == ',')
+			{
+				throw CNMRException(NMR_ERROR_INVALIDSTRINGTODOUBLECONVERSION);
+			}
+		}
 		if ((dResult == HUGE_VAL) || (dResult == -HUGE_VAL))
 			throw CNMRException(NMR_ERROR_STRINGTODOUBLECONVERSIONOUTOFRANGE);
 
