@@ -2034,7 +2034,7 @@ typedef Lib3MFResult (*PLib3MFAttachment_SetRelationShipTypePtr) (Lib3MF_Attachm
 typedef Lib3MFResult (*PLib3MFAttachment_WriteToFilePtr) (Lib3MF_Attachment pAttachment, const char * pFileName);
 
 /**
-* Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF packege, or via the WriteToFile or WriteToBuffer-methods.
+* Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
 *
 * @param[in] pAttachment - Attachment instance.
 * @param[in] pFileName - file to read from.
@@ -2043,7 +2043,7 @@ typedef Lib3MFResult (*PLib3MFAttachment_WriteToFilePtr) (Lib3MF_Attachment pAtt
 typedef Lib3MFResult (*PLib3MFAttachment_ReadFromFilePtr) (Lib3MF_Attachment pAttachment, const char * pFileName);
 
 /**
-* Reads a model and from the data provided by a callback function
+* Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
 *
 * @param[in] pAttachment - Attachment instance.
 * @param[in] pTheReadCallback - Callback to call for reading a data chunk
@@ -2075,7 +2075,7 @@ typedef Lib3MFResult (*PLib3MFAttachment_GetStreamSizePtr) (Lib3MF_Attachment pA
 typedef Lib3MFResult (*PLib3MFAttachment_WriteToBufferPtr) (Lib3MF_Attachment pAttachment, const Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer);
 
 /**
-* Reads an attachment from a memory buffer
+* Reads an attachment from a memory buffer. This buffer is immediatly read (in contrast to the ReadFromCallback and ReadFromFile-methods).
 *
 * @param[in] pAttachment - Attachment instance.
 * @param[in] nBufferBufferSize - Number of elements in buffer
