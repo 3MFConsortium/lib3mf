@@ -166,6 +166,16 @@ namespace NMR {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_IMPLICITSPEC) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_IMPLICIT_FUNCTION) == 0)
+			{
+				PModelReaderNode_ImplicitFunction pXMLNode = std::make_shared<CModelReaderNode_ImplicitFunction>(m_pModel, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+		}
+
 	}
 
 

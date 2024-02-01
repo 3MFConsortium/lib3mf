@@ -76,6 +76,7 @@ namespace NMR {
 		m_bWriteBaseMaterials = true;
 		m_bWriteObjects = true;
 		m_bWriteVolumetricExtension = true;
+		m_bWriteImplicitExtension = true;
 
 		m_bWriteCustomNamespaces = true;
 
@@ -169,6 +170,10 @@ namespace NMR {
 
 		if (m_bWriteVolumetricExtension) {
 			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC, XML_3MF_NAMESPACE_VOLUMETRICSPEC);
+		}
+
+		if (m_bWriteImplicitExtension) {
+			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_IMPLICIT, XML_3MF_NAMESPACE_IMPLICITSPEC);
 		}
 
 		if (m_bWriteCustomNamespaces) {
@@ -886,8 +891,9 @@ namespace NMR {
 			if (m_bWriteVolumetricExtension) {
 				writeImage3Ds();
 				writeFunctionsFromImage3D();
+			}
+			if (m_bWriteImplicitExtension) {
 				writeImplicitFunctions();
-
 			}
 			if (m_bWriteObjects)
 				writeObjects();

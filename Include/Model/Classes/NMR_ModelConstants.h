@@ -85,6 +85,7 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACE_DIGITALSIGNATURESPEC "http://www.w3.org/2000/09/xmldsig#"
 #define XML_3MF_NAMESPACE_CIPHERVALUESPEC "http://www.w3.org/2001/04/xmlenc#"
 #define XML_3MF_NAMESPACE_VOLUMETRICSPEC "http://schemas.microsoft.com/3dmanufacturing/volumetric/2022/01"
+#define XML_3MF_NAMESPACE_IMPLICITSPEC "http://schemas.microsoft.com/3dmanufacturing/implicit/2024/02"
 
 #define XML_3MF_NAMESPACEPREFIX_MATERIAL "m"
 #define XML_3MF_NAMESPACEPREFIX_PRODUCTION "p"
@@ -92,6 +93,7 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACEPREFIX_SLICE "s"
 #define XML_3MF_NAMESPACEPREFIX_SECURECONTENT "sc"
 #define XML_3MF_NAMESPACEPREFIX_VOLUMETRIC "v"
+#define XML_3MF_NAMESPACEPREFIX_IMPLICIT "i"
 
 #define XML_3MF_ATTRIBUTE_XMLNS                     "xmlns"
 #define XML_3MF_ATTRIBUTE_PREFIX_XML                "xml"
@@ -356,6 +358,8 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY_REQUIRED  "required"
 
 #define XML_3MF_ATTRIBUTE_VOLUMEDATA_BOUNDARY_MESHBBONLY  "meshbboxonly"
+
+#define XML_3MF_VOLUMEDATACHANNEL_BOUNDARY_DEFAULT "shape"
 
 // Voumeteric/Implicit
 #define XML_3MF_ELEMENT_IMPLICIT_FUNCTION "function"

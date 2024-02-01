@@ -392,6 +392,10 @@ namespace NMR {
 					{
 						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pBoundary->getChannelName());
 					}
+					else
+					{
+						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, XML_3MF_VOLUMEDATACHANNEL_BOUNDARY_DEFAULT);
+					}
 
 					writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_BOUNDARY_MESHBBONLY, pBoundary->getMeshBBoxOnly() ? "true" : "false");
 					if (pBoundary->getMinFeatureSize() != 0.0) {

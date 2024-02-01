@@ -62,8 +62,9 @@ namespace NMR {
 		nfBool m_bIsRootModel;
 		nfBool m_bWriteCustomNamespaces;
 		nfBool m_bWriteVolumetricExtension;
+        nfBool m_bWriteImplicitExtension;        
 
-		void writeModelMetaData();
+        void writeModelMetaData();
 		void writeMetaData(_In_ PModelMetaData pMetaData);
 		void writeMetaDataGroup(_In_ PModelMetaDataGroup pMetaDataGroup);
 

@@ -60,7 +60,7 @@ namespace NMR
             }
             
             writeStartElementWithPrefix(XML_3MF_ELEMENT_IMPLICIT_FUNCTION,
-                                        XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+                                        XML_3MF_NAMESPACEPREFIX_IMPLICIT);
             {
                 writeIntAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_ID,
                                   pFunction->getPackageResourceID()->getModelResourceID());
@@ -107,7 +107,8 @@ namespace NMR
     {
         
         auto name = m_nodeTypes.getNodeType(node.getNodeType()).getName();
-        writeStartElement(name.c_str());
+        writeStartElementWithPrefix(name.c_str(),
+                                        XML_3MF_NAMESPACEPREFIX_IMPLICIT);
         {
             writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_ID, node.getIdentifier());
             writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_DISPLAY_NAME,
@@ -145,14 +146,16 @@ namespace NMR
             auto inputs = node.getInputs();
             if (!inputs->empty())
             {
-                writeStartElement(XML_3MF_ELEMENT_IMPLICIT_NODE_INPUT);
+                writeStartElementWithPrefix(XML_3MF_ELEMENT_IMPLICIT_NODE_INPUT,
+                                        XML_3MF_NAMESPACEPREFIX_IMPLICIT);
                 {
                     writeImplicitInputs(*inputs);
                 }
                 writeFullEndElement();
             }
 
-            writeStartElement(XML_3MF_ELEMENT_IMPLICIT_NODE_OUTPUT);
+            writeStartElementWithPrefix(XML_3MF_ELEMENT_IMPLICIT_NODE_OUTPUT,
+                                        XML_3MF_NAMESPACEPREFIX_IMPLICIT);
             {
                 auto outputs = node.getOutputs();
                 writeImplicitOutputs(*outputs);
@@ -183,7 +186,8 @@ namespace NMR
     {
         for (auto & port : ports)
         {
-            writeStartElement(portTypeToRefName(port->getType()));
+            writeStartElementWithPrefix(portTypeToRefName(port->getType()),
+                                        XML_3MF_NAMESPACEPREFIX_IMPLICIT);
             {
                 writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_PORT_ID, port->getIdentifier());
                 writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_PORT_DISPLAY_NAME,
@@ -214,11 +218,13 @@ namespace NMR
 
     void CModelWriterNode_Implicit::writeImplicitFunctionInputs(NMR::Ports & ports)
     {
-        writeStartElement(XML_3MF_ELEMENT_IMPLICIT_FUNCTION_INPUT);
+        writeStartElementWithPrefix(XML_3MF_ELEMENT_IMPLICIT_FUNCTION_INPUT,
+                                        XML_3MF_NAMESPACEPREFIX_IMPLICIT);
 
         for (auto & port : ports)
         {
-            writeStartElement(portTypeToName(port->getType()));
+            writeStartElementWithPrefix(portTypeToName(port->getType()),
+                                        XML_3MF_NAMESPACEPREFIX_IMPLICIT);
             {
                 writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_PORT_ID, port->getIdentifier());
                 writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_PORT_DISPLAY_NAME,
@@ -231,11 +237,13 @@ namespace NMR
 
     void CModelWriterNode_Implicit::writeImplicitFunctionOutputs(NMR::Ports & ports)
     {
-        writeStartElement(XML_3MF_ELEMENT_IMPLICIT_FUNCTION_OUTPUT);
+        writeStartElementWithPrefix(XML_3MF_ELEMENT_IMPLICIT_FUNCTION_OUTPUT,
+                                        XML_3MF_NAMESPACEPREFIX_IMPLICIT);
 
         for (auto & port : ports)
         {
-            writeStartElement(portTypeToRefName(port->getType()));
+            writeStartElementWithPrefix(portTypeToRefName(port->getType()),
+                                        XML_3MF_NAMESPACEPREFIX_IMPLICIT);
             {
                 writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_PORT_ID, port->getIdentifier());
                 writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_PORT_DISPLAY_NAME,
@@ -252,7 +260,8 @@ namespace NMR
     {
         for (auto & port : ports)
         {
-            writeStartElement(portTypeToName(port->getType()));
+            writeStartElementWithPrefix(portTypeToName(port->getType()),
+                                        XML_3MF_NAMESPACEPREFIX_IMPLICIT);
             {
                 writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_PORT_ID, port->getIdentifier());
                 writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_PORT_DISPLAY_NAME,
