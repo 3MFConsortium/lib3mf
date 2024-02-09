@@ -5,3 +5,5 @@ Include/Model/COM/NMR_COMVersion.h
 debug
 .DS_Store
 .vscode
+.idea
+cmake-build-*
