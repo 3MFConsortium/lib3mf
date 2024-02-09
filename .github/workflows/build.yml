@@ -87,7 +87,7 @@ jobs:
         working-directory: ./build
       - name: Extract File Name
         run: |
-          ZIP_FILE=$(ls dist/lib3mf-*.zip)
+          ZIP_FILE=$(ls build/lib3mf-*.zip)
           echo "ARTIFACT_NAME=$(basename ${ZIP_FILE})" >> $GITHUB_ENV
         shell: bash
       - name: Archive Mac binary
@@ -142,7 +142,7 @@ jobs:
         working-directory: ./build
       - name: Extract File Name
         run: |
-          $zipFile = Get-ChildItem dist\lib3mf-*.zip -Name
+          $zipFile = Get-ChildItem build\lib3mf-*.zip -Name
           echo "ARTIFACT_NAME=$zipFile" | Out-File -FilePath $env:GITHUB_ENV -Append
         shell: pwsh
       - name: Archive Windows Release binary
