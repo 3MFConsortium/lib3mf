@@ -52,12 +52,25 @@ jobs:
           
       - run: unzip out.zip
         working-directory: ./dist
+
+      - name: Extract File Name
+        run: |
+          ZIP_FILE=$(ls dist/lib3mf-*.zip)
+          echo "ARTIFACT_NAME=$(basename ${ZIP_FILE})" >> $GITHUB_ENV
+        shell: bash
+
       -
         name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
           name: lib3mf.so
           path: dist/lib3mf.so.2   
+      -
+        name: Upload Artifact (CPacked Archive)
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: dist/${{ env.ARTIFACT_NAME }}
 
   build-macos:
     runs-on: macos-latest
@@ -72,11 +85,21 @@ jobs:
         working-directory: ./build
       - run: cpack -G ZIP -C Release
         working-directory: ./build
+      - name: Extract File Name
+        run: |
+          ZIP_FILE=$(ls dist/lib3mf-*.zip)
+          echo "ARTIFACT_NAME=$(basename ${ZIP_FILE})" >> $GITHUB_ENV
+        shell: bash
       - name: Archive Mac binary
         uses: actions/upload-artifact@v2
         with:
           name: lib3mf.dylib
           path: build/lib3mf.dylib
+      - name: Upload Artifact (CPacked Archive)
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: build/${{ env.ARTIFACT_NAME }}
 #  codecoverage-macos:
 #    runs-on: macos-latest
 #    steps:
@@ -117,6 +140,11 @@ jobs:
         working-directory: ./build
       - run: cpack -G ZIP -C Release
         working-directory: ./build
+      - name: Extract File Name
+        run: |
+          $zipFile = Get-ChildItem dist\lib3mf-*.zip -Name
+          echo "ARTIFACT_NAME=$zipFile" | Out-File -FilePath $env:GITHUB_ENV -Append
+        shell: pwsh
       - name: Archive Windows Release binary
         uses: actions/upload-artifact@v2
         with:
@@ -127,6 +155,11 @@ jobs:
         with:
           name: lib3mf.lib
           path: build/Release/lib3mf.lib
+      - name: Upload Artifact (CPacked Archive)
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: build/${{ env.ARTIFACT_NAME }}
 #  build-windows-debug:
 #    runs-on: windows-2019
 #    steps:
