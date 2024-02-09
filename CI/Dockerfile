@@ -62,8 +62,9 @@ RUN mkdir -p out
 
 RUN cp ./lib3mf-repo/build/lib3mf.so.2 ./out/
 
-RUN cd out && zip -r ../out.zip .
+RUN cp ./lib3mf-repo/build/lib3mf-*-Linux.zip ./out/
 
+RUN cd out && zip -r ../out.zip .
 
 
 
