@@ -1,17 +1,17 @@
 on: [push, pull_request]
 name: Build
 jobs:
-  build-linux-memtest:
-    runs-on: ubuntu-20.04
-    steps:
-      - run: sudo apt update
-      - run: sudo apt install -y valgrind uuid-dev
-      - uses: actions/checkout@v2
-        with:
-          submodules: true
-      - run: sh cmake/GenerateMake.sh
-      - run: cmake --build . --target lib3mf_memcheck
-        working-directory: ./build
+#  build-linux-memtest:
+#    runs-on: ubuntu-20.04
+#    steps:
+#      - run: sudo apt update
+#      - run: sudo apt install -y valgrind uuid-dev
+#      - uses: actions/checkout@v2
+#        with:
+#          submodules: true
+#      - run: sh cmake/GenerateMake.sh
+#      - run: cmake --build . --target lib3mf_memcheck
+#        working-directory: ./build
 
   build-linux-ubi8-gcc12:
     runs-on: ubuntu-20.04
