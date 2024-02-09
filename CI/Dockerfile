@@ -53,6 +53,9 @@ RUN cmake --build .
 
 RUN ctest -V .
 
+# Add this line to generate a ZIP package with cpack
+RUN cpack -G ZIP -C Release
+
 WORKDIR "/../../"
 
 RUN mkdir -p out

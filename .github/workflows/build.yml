@@ -70,6 +70,8 @@ jobs:
         working-directory: ./build
       - run: ctest -V
         working-directory: ./build
+      - run: cpack -G ZIP -C Release
+        working-directory: ./build
       - name: Archive Mac binary
         uses: actions/upload-artifact@v2
         with:
@@ -112,6 +114,8 @@ jobs:
       - run: cmake --build . --config Release
         working-directory: ./build
       - run: ctest -V
+        working-directory: ./build
+      - run: cpack -G ZIP -C Release
         working-directory: ./build
       - name: Archive Windows Release binary
         uses: actions/upload-artifact@v2
