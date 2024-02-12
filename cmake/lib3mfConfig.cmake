@@ -15,10 +15,11 @@ endforeach()
 # Configure paths based on the selected variant
 set(lib3mf_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../include/Bindings/${lib3mf_selected_variant}")
 set(lib3mf_LIBRARY_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../lib")
+set(lib3mf_BINARY_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../bin")
 
 # Adjust library file name based on platform
 if(WIN32)
-    set(lib3mf_LIBRARY "${lib3mf_LIBRARY_DIR}/lib3mf.dll")
+    set(lib3mf_LIBRARY "${lib3mf_BINARY_DIR}/lib3mf.dll")
     set(lib3mf_LIBRARY_IMPORT "${lib3mf_LIBRARY_DIR}/lib3mf.lib") # For importing symbols
 elseif(APPLE)
     set(lib3mf_LIBRARY "${lib3mf_LIBRARY_DIR}/lib3mf.dylib")
