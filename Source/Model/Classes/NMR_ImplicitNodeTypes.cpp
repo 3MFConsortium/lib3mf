@@ -329,6 +329,14 @@ namespace NMR
                           In{{"A", eImplicitPortType::Vector}},
                           Out{{"result", eImplicitPortType::Scalar}}},
                   }}},
+                  {eImplicitNodeType::VectorFromScalar,
+                 {"vectorfromscalar",
+                  {
+                      InputOutputRule{
+                          Lib3MF::eImplicitNodeConfiguration::Default,
+                          In{{"A", eImplicitPortType::Scalar}},
+                          Out{{"result", eImplicitPortType::Vector}}},
+                  }}},
                 {eImplicitNodeType::Resource,
                  {"resource",
                   {
@@ -337,6 +345,15 @@ namespace NMR
                           Out{{"value", eImplicitPortType::ResourceID}}},
                   }}},
                 {eImplicitNodeType::Mesh,
+                 {"mesh",
+                  {
+                      InputOutputRule{
+                          Lib3MF::eImplicitNodeConfiguration::Default,
+                          In{{"pos", eImplicitPortType::Vector},
+                             {"mesh", eImplicitPortType::ResourceID}},
+                          Out{{"distance", eImplicitPortType::Scalar}}},
+                  }}},
+                {eImplicitNodeType::UnsignedMesh,
                  {"mesh",
                   {
                       InputOutputRule{
