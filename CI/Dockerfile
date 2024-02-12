@@ -14,6 +14,7 @@ RUN \
     tar \
     gzip \
     zip \
+    rpm-build \
     ${GCCTOOLSET} \
     && microdnf clean all
 
