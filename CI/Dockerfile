@@ -56,6 +56,12 @@ RUN ctest -V .
 # Add this line to generate a ZIP package with cpack
 RUN cpack -G ZIP -C Release
 
+# Generate a debian package
+RUN cpack -G DEB -C Release
+
+# Generate a RPM package
+RUN cpack -G RPM -C Release
+
 WORKDIR "/../../"
 
 RUN mkdir -p out
@@ -63,6 +69,10 @@ RUN mkdir -p out
 RUN cp ./lib3mf-repo/build/lib3mf.so.2 ./out/
 
 RUN cp ./lib3mf-repo/build/lib3mf-*-Linux.zip ./out/
+
+RUN cp ./lib3mf-repo/build/lib3mf-*-Linux.deb ./out/
+
+RUN cp ./lib3mf-repo/build/lib3mf-*-Linux.rpm ./out/
 
 RUN cd out && zip -r ../out.zip .
 

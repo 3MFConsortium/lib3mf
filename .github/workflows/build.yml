@@ -53,24 +53,46 @@ jobs:
       - run: unzip out.zip
         working-directory: ./dist
 
-      - name: Extract File Name
-        run: |
-          ZIP_FILE=$(ls dist/lib3mf-*.zip)
-          echo "ARTIFACT_NAME=$(basename ${ZIP_FILE})" >> $GITHUB_ENV
-        shell: bash
-
-      -
-        name: Upload Artifact
+      - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
           name: lib3mf.so
-          path: dist/lib3mf.so.2   
-      -
-        name: Upload Artifact (CPacked Archive)
+          path: dist/lib3mf.so.2
+
+
+      - name: Extract File Name (CPacked Archive)
+        run: |
+          ZIP_FILE=$(ls dist/lib3mf-*.zip)
+          echo "ARTIFACT_NAME_ZIP=$(basename ${ZIP_FILE})" >> $GITHUB_ENV
+        shell: bash
+      - name: Upload Artifact (CPacked Archive)
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.ARTIFACT_NAME }}
-          path: dist/${{ env.ARTIFACT_NAME }}
+          name: ${{ env.ARTIFACT_NAME_ZIP }}
+          path: dist/${{ env.ARTIFACT_NAME_ZIP }}
+
+      - name: Extract File Name (Debian)
+        run: |
+          DEB_FILE=$(ls dist/lib3mf-*.deb)
+          echo "ARTIFACT_NAME_DEB=$(basename ${DEB_FILE})" >> $GITHUB_ENV
+        shell: bash
+      - name: Upload Artifact (Debian Archive)
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.ARTIFACT_NAME_DEB }}
+          path: dist/${{ env.ARTIFACT_NAME_DEB }}
+
+      - name: Extract File Name (RPM)
+        run: |
+          RPM_FILE=$(ls dist/lib3mf-*.rpm)
+          echo "ARTIFACT_NAME_RPM=$(basename ${RPM_FILE})" >> $GITHUB_ENV
+        shell: bash
+      - name: Upload Artifact (RPM Archive)
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.ARTIFACT_NAME_RPM }}
+          path: dist/${{ env.ARTIFACT_NAME_RPM }}
+
 
   build-macos:
     runs-on: macos-latest
