@@ -4087,5 +4087,1088 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable);
 Lib3MFResult ReleaseLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable);
 Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, const char * pLibraryFileName);
 
+Lib3MFHandle loadLib3MFLibrary(const char* pFileName);
+
+void unloadLib3MFLibrary(Lib3MFHandle nLibraryHandle);
+
+Lib3MFResult CCall_lib3mf_base_classtypeid(Lib3MFHandle libraryHandle, Lib3MF_Base pBase, Lib3MF_uint64* pClassTypeId);
+
+Lib3MFResult CCall_lib3mf_writer_writetofile(Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter, const char* pFilename);
+
+Lib3MFResult CCall_lib3mf_writer_getstreamsize(
+    Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter, Lib3MF_uint64* pStreamSize);
+
+Lib3MFResult CCall_lib3mf_writer_writetobuffer(Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter,
+    const Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8* pBufferBuffer);
+
+Lib3MFResult CCall_lib3mf_writer_writetocallback(Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter,
+    Lib3MFWriteCallback pTheWriteCallback, Lib3MFSeekCallback pTheSeekCallback, Lib3MF_pvoid pUserData);
+
+Lib3MFResult CCall_lib3mf_writer_setprogresscallback(Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter,
+    Lib3MFProgressCallback pProgressCallback, Lib3MF_pvoid pUserData);
+
+Lib3MFResult CCall_lib3mf_writer_getdecimalprecision(
+    Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter, Lib3MF_uint32* pDecimalPrecision);
+
+Lib3MFResult CCall_lib3mf_writer_setdecimalprecision(
+    Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter, Lib3MF_uint32 nDecimalPrecision);
+
+Lib3MFResult CCall_lib3mf_writer_setstrictmodeactive(
+    Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter, bool bStrictModeActive);
+
+Lib3MFResult CCall_lib3mf_writer_getstrictmodeactive(
+    Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter, bool* pStrictModeActive);
+
+Lib3MFResult CCall_lib3mf_writer_getwarning(Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter, Lib3MF_uint32 nIndex,
+    Lib3MF_uint32* pErrorCode, const Lib3MF_uint32 nWarningBufferSize, Lib3MF_uint32* pWarningNeededChars,
+    char* pWarningBuffer);
+
+Lib3MFResult CCall_lib3mf_writer_getwarningcount(
+    Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter, Lib3MF_uint32* pCount);
+
+Lib3MFResult CCall_lib3mf_writer_addkeywrappingcallback(Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter,
+    const char* pConsumerID, Lib3MFKeyWrappingCallback pTheCallback, Lib3MF_pvoid pUserData);
+
+Lib3MFResult CCall_lib3mf_writer_setcontentencryptioncallback(Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter,
+    Lib3MFContentEncryptionCallback pTheCallback, Lib3MF_pvoid pUserData);
+
+Lib3MFResult CCall_lib3mf_reader_readfromfile(Lib3MFHandle libraryHandle, Lib3MF_Reader pReader, const char* pFilename);
+
+Lib3MFResult CCall_lib3mf_reader_readfrombuffer(Lib3MFHandle libraryHandle, Lib3MF_Reader pReader,
+    Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8* pBufferBuffer);
+
+Lib3MFResult CCall_lib3mf_reader_readfromcallback(Lib3MFHandle libraryHandle, Lib3MF_Reader pReader,
+    Lib3MFReadCallback pTheReadCallback, Lib3MF_uint64 nStreamSize, Lib3MFSeekCallback pTheSeekCallback,
+    Lib3MF_pvoid pUserData);
+
+Lib3MFResult CCall_lib3mf_reader_setprogresscallback(Lib3MFHandle libraryHandle, Lib3MF_Reader pReader,
+    Lib3MFProgressCallback pProgressCallback, Lib3MF_pvoid pUserData);
+
+Lib3MFResult CCall_lib3mf_reader_addrelationtoread(
+    Lib3MFHandle libraryHandle, Lib3MF_Reader pReader, const char* pRelationShipType);
+
+Lib3MFResult CCall_lib3mf_reader_removerelationtoread(
+    Lib3MFHandle libraryHandle, Lib3MF_Reader pReader, const char* pRelationShipType);
+
+Lib3MFResult CCall_lib3mf_reader_setstrictmodeactive(
+    Lib3MFHandle libraryHandle, Lib3MF_Reader pReader, bool bStrictModeActive);
+
+Lib3MFResult CCall_lib3mf_reader_getstrictmodeactive(
+    Lib3MFHandle libraryHandle, Lib3MF_Reader pReader, bool* pStrictModeActive);
+
+Lib3MFResult CCall_lib3mf_reader_getwarning(Lib3MFHandle libraryHandle, Lib3MF_Reader pReader, Lib3MF_uint32 nIndex,
+    Lib3MF_uint32* pErrorCode, const Lib3MF_uint32 nWarningBufferSize, Lib3MF_uint32* pWarningNeededChars,
+    char* pWarningBuffer);
+
+Lib3MFResult CCall_lib3mf_reader_getwarningcount(
+    Lib3MFHandle libraryHandle, Lib3MF_Reader pReader, Lib3MF_uint32* pCount);
+
+Lib3MFResult CCall_lib3mf_reader_addkeywrappingcallback(Lib3MFHandle libraryHandle, Lib3MF_Reader pReader,
+    const char* pConsumerID, Lib3MFKeyWrappingCallback pTheCallback, Lib3MF_pvoid pUserData);
+
+Lib3MFResult CCall_lib3mf_reader_setcontentencryptioncallback(Lib3MFHandle libraryHandle, Lib3MF_Reader pReader,
+    Lib3MFContentEncryptionCallback pTheCallback, Lib3MF_pvoid pUserData);
+
+Lib3MFResult CCall_lib3mf_packagepart_getpath(Lib3MFHandle libraryHandle, Lib3MF_PackagePart pPackagePart,
+    const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char* pPathBuffer);
+
+Lib3MFResult CCall_lib3mf_packagepart_setpath(
+    Lib3MFHandle libraryHandle, Lib3MF_PackagePart pPackagePart, const char* pPath);
+
+Lib3MFResult CCall_lib3mf_resource_getresourceid(
+    Lib3MFHandle libraryHandle, Lib3MF_Resource pResource, Lib3MF_uint32* pUniqueResourceID);
+
+Lib3MFResult CCall_lib3mf_resource_getuniqueresourceid(
+    Lib3MFHandle libraryHandle, Lib3MF_Resource pResource, Lib3MF_uint32* pUniqueResourceID);
+
+Lib3MFResult CCall_lib3mf_resource_packagepart(
+    Lib3MFHandle libraryHandle, Lib3MF_Resource pResource, Lib3MF_PackagePart* pPackagePart);
+
+Lib3MFResult CCall_lib3mf_resource_setpackagepart(
+    Lib3MFHandle libraryHandle, Lib3MF_Resource pResource, Lib3MF_PackagePart pPackagePart);
+
+Lib3MFResult CCall_lib3mf_resource_getmodelresourceid(
+    Lib3MFHandle libraryHandle, Lib3MF_Resource pResource, Lib3MF_uint32* pModelResourceId);
+
+Lib3MFResult CCall_lib3mf_resourceiterator_movenext(
+    Lib3MFHandle libraryHandle, Lib3MF_ResourceIterator pResourceIterator, bool* pHasNext);
+
+Lib3MFResult CCall_lib3mf_resourceiterator_moveprevious(
+    Lib3MFHandle libraryHandle, Lib3MF_ResourceIterator pResourceIterator, bool* pHasPrevious);
+
+Lib3MFResult CCall_lib3mf_resourceiterator_getcurrent(
+    Lib3MFHandle libraryHandle, Lib3MF_ResourceIterator pResourceIterator, Lib3MF_Resource* pResource);
+
+Lib3MFResult CCall_lib3mf_resourceiterator_clone(Lib3MFHandle libraryHandle, Lib3MF_ResourceIterator pResourceIterator,
+    Lib3MF_ResourceIterator* pOutResourceIterator);
+
+Lib3MFResult CCall_lib3mf_resourceiterator_count(
+    Lib3MFHandle libraryHandle, Lib3MF_ResourceIterator pResourceIterator, Lib3MF_uint64* pCount);
+
+Lib3MFResult CCall_lib3mf_slicestackiterator_getcurrentslicestack(
+    Lib3MFHandle libraryHandle, Lib3MF_SliceStackIterator pSliceStackIterator, Lib3MF_SliceStack* pResource);
+
+Lib3MFResult CCall_lib3mf_objectiterator_getcurrentobject(
+    Lib3MFHandle libraryHandle, Lib3MF_ObjectIterator pObjectIterator, Lib3MF_Object* pResource);
+
+Lib3MFResult CCall_lib3mf_meshobjectiterator_getcurrentmeshobject(
+    Lib3MFHandle libraryHandle, Lib3MF_MeshObjectIterator pMeshObjectIterator, Lib3MF_MeshObject* pResource);
+
+Lib3MFResult CCall_lib3mf_componentsobjectiterator_getcurrentcomponentsobject(Lib3MFHandle libraryHandle,
+    Lib3MF_ComponentsObjectIterator pComponentsObjectIterator, Lib3MF_ComponentsObject* pResource);
+
+Lib3MFResult CCall_lib3mf_texture2diterator_getcurrenttexture2d(
+    Lib3MFHandle libraryHandle, Lib3MF_Texture2DIterator pTexture2DIterator, Lib3MF_Texture2D* pResource);
+
+Lib3MFResult CCall_lib3mf_basematerialgroupiterator_getcurrentbasematerialgroup(Lib3MFHandle libraryHandle,
+    Lib3MF_BaseMaterialGroupIterator pBaseMaterialGroupIterator, Lib3MF_BaseMaterialGroup* pResource);
+
+Lib3MFResult CCall_lib3mf_colorgroupiterator_getcurrentcolorgroup(
+    Lib3MFHandle libraryHandle, Lib3MF_ColorGroupIterator pColorGroupIterator, Lib3MF_ColorGroup* pResource);
+
+Lib3MFResult CCall_lib3mf_texture2dgroupiterator_getcurrenttexture2dgroup(Lib3MFHandle libraryHandle,
+    Lib3MF_Texture2DGroupIterator pTexture2DGroupIterator, Lib3MF_Texture2DGroup* pResource);
+
+Lib3MFResult CCall_lib3mf_compositematerialsiterator_getcurrentcompositematerials(Lib3MFHandle libraryHandle,
+    Lib3MF_CompositeMaterialsIterator pCompositeMaterialsIterator, Lib3MF_CompositeMaterials* pResource);
+
+Lib3MFResult CCall_lib3mf_multipropertygroupiterator_getcurrentmultipropertygroup(Lib3MFHandle libraryHandle,
+    Lib3MF_MultiPropertyGroupIterator pMultiPropertyGroupIterator, Lib3MF_MultiPropertyGroup* pResource);
+
+Lib3MFResult CCall_lib3mf_metadata_getnamespace(Lib3MFHandle libraryHandle, Lib3MF_MetaData pMetaData,
+    const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char* pNameSpaceBuffer);
+
+Lib3MFResult CCall_lib3mf_metadata_setnamespace(
+    Lib3MFHandle libraryHandle, Lib3MF_MetaData pMetaData, const char* pNameSpace);
+
+Lib3MFResult CCall_lib3mf_metadata_getname(Lib3MFHandle libraryHandle, Lib3MF_MetaData pMetaData,
+    const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char* pNameBuffer);
+
+Lib3MFResult CCall_lib3mf_metadata_setname(Lib3MFHandle libraryHandle, Lib3MF_MetaData pMetaData, const char* pName);
+
+Lib3MFResult CCall_lib3mf_metadata_getkey(Lib3MFHandle libraryHandle, Lib3MF_MetaData pMetaData,
+    const Lib3MF_uint32 nKeyBufferSize, Lib3MF_uint32* pKeyNeededChars, char* pKeyBuffer);
+
+Lib3MFResult CCall_lib3mf_metadata_getmustpreserve(
+    Lib3MFHandle libraryHandle, Lib3MF_MetaData pMetaData, bool* pMustPreserve);
+
+Lib3MFResult CCall_lib3mf_metadata_setmustpreserve(
+    Lib3MFHandle libraryHandle, Lib3MF_MetaData pMetaData, bool bMustPreserve);
+
+Lib3MFResult CCall_lib3mf_metadata_gettype(Lib3MFHandle libraryHandle, Lib3MF_MetaData pMetaData,
+    const Lib3MF_uint32 nTypeBufferSize, Lib3MF_uint32* pTypeNeededChars, char* pTypeBuffer);
+
+Lib3MFResult CCall_lib3mf_metadata_settype(Lib3MFHandle libraryHandle, Lib3MF_MetaData pMetaData, const char* pType);
+
+Lib3MFResult CCall_lib3mf_metadata_getvalue(Lib3MFHandle libraryHandle, Lib3MF_MetaData pMetaData,
+    const Lib3MF_uint32 nValueBufferSize, Lib3MF_uint32* pValueNeededChars, char* pValueBuffer);
+
+Lib3MFResult CCall_lib3mf_metadata_setvalue(Lib3MFHandle libraryHandle, Lib3MF_MetaData pMetaData, const char* pValue);
+
+Lib3MFResult CCall_lib3mf_metadatagroup_getmetadatacount(
+    Lib3MFHandle libraryHandle, Lib3MF_MetaDataGroup pMetaDataGroup, Lib3MF_uint32* pCount);
+
+Lib3MFResult CCall_lib3mf_metadatagroup_getmetadata(
+    Lib3MFHandle libraryHandle, Lib3MF_MetaDataGroup pMetaDataGroup, Lib3MF_uint32 nIndex, Lib3MF_MetaData* pMetaData);
+
+Lib3MFResult CCall_lib3mf_metadatagroup_getmetadatabykey(Lib3MFHandle libraryHandle,
+    Lib3MF_MetaDataGroup pMetaDataGroup, const char* pNameSpace, const char* pName, Lib3MF_MetaData* pMetaData);
+
+Lib3MFResult CCall_lib3mf_metadatagroup_removemetadatabyindex(
+    Lib3MFHandle libraryHandle, Lib3MF_MetaDataGroup pMetaDataGroup, Lib3MF_uint32 nIndex);
+
+Lib3MFResult CCall_lib3mf_metadatagroup_removemetadata(
+    Lib3MFHandle libraryHandle, Lib3MF_MetaDataGroup pMetaDataGroup, Lib3MF_MetaData pTheMetaData);
+
+Lib3MFResult CCall_lib3mf_metadatagroup_addmetadata(Lib3MFHandle libraryHandle, Lib3MF_MetaDataGroup pMetaDataGroup,
+    const char* pNameSpace, const char* pName, const char* pValue, const char* pType, bool bMustPreserve,
+    Lib3MF_MetaData* pMetaData);
+
+Lib3MFResult CCall_lib3mf_object_gettype(
+    Lib3MFHandle libraryHandle, Lib3MF_Object pObject, eLib3MFObjectType* pObjectType);
+
+Lib3MFResult CCall_lib3mf_object_settype(
+    Lib3MFHandle libraryHandle, Lib3MF_Object pObject, eLib3MFObjectType eObjectType);
+
+Lib3MFResult CCall_lib3mf_object_getname(Lib3MFHandle libraryHandle, Lib3MF_Object pObject,
+    const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char* pNameBuffer);
+
+Lib3MFResult CCall_lib3mf_object_setname(Lib3MFHandle libraryHandle, Lib3MF_Object pObject, const char* pName);
+
+Lib3MFResult CCall_lib3mf_object_getpartnumber(Lib3MFHandle libraryHandle, Lib3MF_Object pObject,
+    const Lib3MF_uint32 nPartNumberBufferSize, Lib3MF_uint32* pPartNumberNeededChars, char* pPartNumberBuffer);
+
+Lib3MFResult CCall_lib3mf_object_setpartnumber(
+    Lib3MFHandle libraryHandle, Lib3MF_Object pObject, const char* pPartNumber);
+
+Lib3MFResult CCall_lib3mf_object_ismeshobject(Lib3MFHandle libraryHandle, Lib3MF_Object pObject, bool* pIsMeshObject);
+
+Lib3MFResult CCall_lib3mf_object_iscomponentsobject(
+    Lib3MFHandle libraryHandle, Lib3MF_Object pObject, bool* pIsComponentsObject);
+
+Lib3MFResult CCall_lib3mf_object_isvalid(Lib3MFHandle libraryHandle, Lib3MF_Object pObject, bool* pIsValid);
+
+Lib3MFResult CCall_lib3mf_object_setattachmentasthumbnail(
+    Lib3MFHandle libraryHandle, Lib3MF_Object pObject, Lib3MF_Attachment pAttachment);
+
+Lib3MFResult CCall_lib3mf_object_getthumbnailattachment(
+    Lib3MFHandle libraryHandle, Lib3MF_Object pObject, Lib3MF_Attachment* pAttachment);
+
+Lib3MFResult CCall_lib3mf_object_clearthumbnailattachment(Lib3MFHandle libraryHandle, Lib3MF_Object pObject);
+
+Lib3MFResult CCall_lib3mf_object_getoutbox(Lib3MFHandle libraryHandle, Lib3MF_Object pObject, sLib3MFBox* pOutbox);
+
+Lib3MFResult CCall_lib3mf_object_getuuid(Lib3MFHandle libraryHandle, Lib3MF_Object pObject, bool* pHasUUID,
+    const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char* pUUIDBuffer);
+
+Lib3MFResult CCall_lib3mf_object_setuuid(Lib3MFHandle libraryHandle, Lib3MF_Object pObject, const char* pUUID);
+
+Lib3MFResult CCall_lib3mf_object_getmetadatagroup(
+    Lib3MFHandle libraryHandle, Lib3MF_Object pObject, Lib3MF_MetaDataGroup* pMetaDataGroup);
+
+Lib3MFResult CCall_lib3mf_object_setslicesmeshresolution(
+    Lib3MFHandle libraryHandle, Lib3MF_Object pObject, eLib3MFSlicesMeshResolution eMeshResolution);
+
+Lib3MFResult CCall_lib3mf_object_getslicesmeshresolution(
+    Lib3MFHandle libraryHandle, Lib3MF_Object pObject, eLib3MFSlicesMeshResolution* pMeshResolution);
+
+Lib3MFResult CCall_lib3mf_object_hasslices(
+    Lib3MFHandle libraryHandle, Lib3MF_Object pObject, bool bRecursive, bool* pHasSlices);
+
+Lib3MFResult CCall_lib3mf_object_clearslicestack(Lib3MFHandle libraryHandle, Lib3MF_Object pObject);
+
+Lib3MFResult CCall_lib3mf_object_getslicestack(
+    Lib3MFHandle libraryHandle, Lib3MF_Object pObject, Lib3MF_SliceStack* pSliceStackInstance);
+
+Lib3MFResult CCall_lib3mf_object_assignslicestack(
+    Lib3MFHandle libraryHandle, Lib3MF_Object pObject, Lib3MF_SliceStack pSliceStackInstance);
+
+Lib3MFResult CCall_lib3mf_meshobject_getvertexcount(
+    Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject, Lib3MF_uint32* pVertexCount);
+
+Lib3MFResult CCall_lib3mf_meshobject_gettrianglecount(
+    Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject, Lib3MF_uint32* pVertexCount);
+
+Lib3MFResult CCall_lib3mf_meshobject_getvertex(
+    Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject, Lib3MF_uint32 nIndex, sLib3MFPosition* pCoordinates);
+
+Lib3MFResult CCall_lib3mf_meshobject_setvertex(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject,
+    Lib3MF_uint32 nIndex, const sLib3MFPosition* pCoordinates);
+
+Lib3MFResult CCall_lib3mf_meshobject_addvertex(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject,
+    const sLib3MFPosition* pCoordinates, Lib3MF_uint32* pNewIndex);
+
+Lib3MFResult CCall_lib3mf_meshobject_getvertices(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject,
+    const Lib3MF_uint64 nVerticesBufferSize, Lib3MF_uint64* pVerticesNeededCount, sLib3MFPosition* pVerticesBuffer);
+
+Lib3MFResult CCall_lib3mf_meshobject_gettriangle(
+    Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject, Lib3MF_uint32 nIndex, sLib3MFTriangle* pIndices);
+
+Lib3MFResult CCall_lib3mf_meshobject_settriangle(
+    Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject, Lib3MF_uint32 nIndex, const sLib3MFTriangle* pIndices);
+
+Lib3MFResult CCall_lib3mf_meshobject_addtriangle(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject,
+    const sLib3MFTriangle* pIndices, Lib3MF_uint32* pNewIndex);
+
+Lib3MFResult CCall_lib3mf_meshobject_gettriangleindices(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject,
+    const Lib3MF_uint64 nIndicesBufferSize, Lib3MF_uint64* pIndicesNeededCount, sLib3MFTriangle* pIndicesBuffer);
+
+Lib3MFResult CCall_lib3mf_meshobject_setobjectlevelproperty(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject,
+    Lib3MF_uint32 nUniqueResourceID, Lib3MF_uint32 nPropertyID);
+
+Lib3MFResult CCall_lib3mf_meshobject_getobjectlevelproperty(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject,
+    Lib3MF_uint32* pUniqueResourceID, Lib3MF_uint32* pPropertyID, bool* pHasObjectLevelProperty);
+
+Lib3MFResult CCall_lib3mf_meshobject_settriangleproperties(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject,
+    Lib3MF_uint32 nIndex, const sLib3MFTriangleProperties* pProperties);
+
+Lib3MFResult CCall_lib3mf_meshobject_gettriangleproperties(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject,
+    Lib3MF_uint32 nIndex, sLib3MFTriangleProperties* pProperty);
+
+Lib3MFResult CCall_lib3mf_meshobject_setalltriangleproperties(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject,
+    Lib3MF_uint64 nPropertiesArrayBufferSize, const sLib3MFTriangleProperties* pPropertiesArrayBuffer);
+
+Lib3MFResult CCall_lib3mf_meshobject_getalltriangleproperties(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject,
+    const Lib3MF_uint64 nPropertiesArrayBufferSize, Lib3MF_uint64* pPropertiesArrayNeededCount,
+    sLib3MFTriangleProperties* pPropertiesArrayBuffer);
+
+Lib3MFResult CCall_lib3mf_meshobject_clearallproperties(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject);
+
+Lib3MFResult CCall_lib3mf_meshobject_setgeometry(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject,
+    Lib3MF_uint64 nVerticesBufferSize, const sLib3MFPosition* pVerticesBuffer, Lib3MF_uint64 nIndicesBufferSize,
+    const sLib3MFTriangle* pIndicesBuffer);
+
+Lib3MFResult CCall_lib3mf_meshobject_ismanifoldandoriented(
+    Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject, bool* pIsManifoldAndOriented);
+
+Lib3MFResult CCall_lib3mf_meshobject_beamlattice(
+    Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject, Lib3MF_BeamLattice* pTheBeamLattice);
+
+Lib3MFResult CCall_lib3mf_beamlattice_getminlength(
+    Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice, Lib3MF_double* pMinLength);
+
+Lib3MFResult CCall_lib3mf_beamlattice_setminlength(
+    Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice, Lib3MF_double dMinLength);
+
+Lib3MFResult CCall_lib3mf_beamlattice_getclipping(Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice,
+    eLib3MFBeamLatticeClipMode* pClipMode, Lib3MF_uint32* pUniqueResourceID);
+
+Lib3MFResult CCall_lib3mf_beamlattice_setclipping(Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice,
+    eLib3MFBeamLatticeClipMode eClipMode, Lib3MF_uint32 nUniqueResourceID);
+
+Lib3MFResult CCall_lib3mf_beamlattice_getrepresentation(Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice,
+    bool* pHasRepresentation, Lib3MF_uint32* pUniqueResourceID);
+
+Lib3MFResult CCall_lib3mf_beamlattice_setrepresentation(
+    Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice, Lib3MF_uint32 nUniqueResourceID);
+
+Lib3MFResult CCall_lib3mf_beamlattice_getballoptions(Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice,
+    eLib3MFBeamLatticeBallMode* pBallMode, Lib3MF_double* pBallRadius);
+
+Lib3MFResult CCall_lib3mf_beamlattice_setballoptions(Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice,
+    eLib3MFBeamLatticeBallMode eBallMode, Lib3MF_double dBallRadius);
+
+Lib3MFResult CCall_lib3mf_beamlattice_getbeamcount(
+    Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice, Lib3MF_uint32* pCount);
+
+Lib3MFResult CCall_lib3mf_beamlattice_getbeam(
+    Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice, Lib3MF_uint32 nIndex, sLib3MFBeam* pBeamInfo);
+
+Lib3MFResult CCall_lib3mf_beamlattice_addbeam(
+    Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice, const sLib3MFBeam* pBeamInfo, Lib3MF_uint32* pIndex);
+
+Lib3MFResult CCall_lib3mf_beamlattice_setbeam(
+    Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice, Lib3MF_uint32 nIndex, const sLib3MFBeam* pBeamInfo);
+
+Lib3MFResult CCall_lib3mf_beamlattice_setbeams(Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice,
+    Lib3MF_uint64 nBeamInfoBufferSize, const sLib3MFBeam* pBeamInfoBuffer);
+
+Lib3MFResult CCall_lib3mf_beamlattice_getbeams(Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice,
+    const Lib3MF_uint64 nBeamInfoBufferSize, Lib3MF_uint64* pBeamInfoNeededCount, sLib3MFBeam* pBeamInfoBuffer);
+
+Lib3MFResult CCall_lib3mf_beamlattice_getballcount(
+    Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice, Lib3MF_uint32* pCount);
+
+Lib3MFResult CCall_lib3mf_beamlattice_getball(
+    Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice, Lib3MF_uint32 nIndex, sLib3MFBall* pBallInfo);
+
+Lib3MFResult CCall_lib3mf_beamlattice_addball(
+    Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice, const sLib3MFBall* pBallInfo, Lib3MF_uint32* pIndex);
+
+Lib3MFResult CCall_lib3mf_beamlattice_setball(
+    Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice, Lib3MF_uint32 nIndex, const sLib3MFBall* pBallInfo);
+
+Lib3MFResult CCall_lib3mf_beamlattice_setballs(Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice,
+    Lib3MF_uint64 nBallInfoBufferSize, const sLib3MFBall* pBallInfoBuffer);
+
+Lib3MFResult CCall_lib3mf_beamlattice_getballs(Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice,
+    const Lib3MF_uint64 nBallInfoBufferSize, Lib3MF_uint64* pBallInfoNeededCount, sLib3MFBall* pBallInfoBuffer);
+
+Lib3MFResult CCall_lib3mf_beamlattice_getbeamsetcount(
+    Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice, Lib3MF_uint32* pCount);
+
+Lib3MFResult CCall_lib3mf_beamlattice_addbeamset(
+    Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice, Lib3MF_BeamSet* pBeamSet);
+
+Lib3MFResult CCall_lib3mf_beamlattice_getbeamset(
+    Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice, Lib3MF_uint32 nIndex, Lib3MF_BeamSet* pBeamSet);
+
+Lib3MFResult CCall_lib3mf_component_getobjectresource(
+    Lib3MFHandle libraryHandle, Lib3MF_Component pComponent, Lib3MF_Object* pObjectResource);
+
+Lib3MFResult CCall_lib3mf_component_getobjectresourceid(
+    Lib3MFHandle libraryHandle, Lib3MF_Component pComponent, Lib3MF_uint32* pUniqueResourceID);
+
+Lib3MFResult CCall_lib3mf_component_getuuid(Lib3MFHandle libraryHandle, Lib3MF_Component pComponent, bool* pHasUUID,
+    const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char* pUUIDBuffer);
+
+Lib3MFResult CCall_lib3mf_component_setuuid(Lib3MFHandle libraryHandle, Lib3MF_Component pComponent, const char* pUUID);
+
+Lib3MFResult CCall_lib3mf_component_hastransform(
+    Lib3MFHandle libraryHandle, Lib3MF_Component pComponent, bool* pHasTransform);
+
+Lib3MFResult CCall_lib3mf_component_gettransform(
+    Lib3MFHandle libraryHandle, Lib3MF_Component pComponent, sLib3MFTransform* pTransform);
+
+Lib3MFResult CCall_lib3mf_component_settransform(
+    Lib3MFHandle libraryHandle, Lib3MF_Component pComponent, const sLib3MFTransform* pTransform);
+
+Lib3MFResult CCall_lib3mf_componentsobject_addcomponent(Lib3MFHandle libraryHandle,
+    Lib3MF_ComponentsObject pComponentsObject, Lib3MF_Object pObjectResource, const sLib3MFTransform* pTransform,
+    Lib3MF_Component* pComponentInstance);
+
+Lib3MFResult CCall_lib3mf_componentsobject_getcomponent(Lib3MFHandle libraryHandle,
+    Lib3MF_ComponentsObject pComponentsObject, Lib3MF_uint32 nIndex, Lib3MF_Component* pComponentInstance);
+
+Lib3MFResult CCall_lib3mf_componentsobject_getcomponentcount(
+    Lib3MFHandle libraryHandle, Lib3MF_ComponentsObject pComponentsObject, Lib3MF_uint32* pCount);
+
+Lib3MFResult CCall_lib3mf_beamset_setname(Lib3MFHandle libraryHandle, Lib3MF_BeamSet pBeamSet, const char* pName);
+
+Lib3MFResult CCall_lib3mf_beamset_getname(Lib3MFHandle libraryHandle, Lib3MF_BeamSet pBeamSet,
+    const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char* pNameBuffer);
+
+Lib3MFResult CCall_lib3mf_beamset_setidentifier(
+    Lib3MFHandle libraryHandle, Lib3MF_BeamSet pBeamSet, const char* pIdentifier);
+
+Lib3MFResult CCall_lib3mf_beamset_getidentifier(Lib3MFHandle libraryHandle, Lib3MF_BeamSet pBeamSet,
+    const Lib3MF_uint32 nIdentifierBufferSize, Lib3MF_uint32* pIdentifierNeededChars, char* pIdentifierBuffer);
+
+Lib3MFResult CCall_lib3mf_beamset_getreferencecount(
+    Lib3MFHandle libraryHandle, Lib3MF_BeamSet pBeamSet, Lib3MF_uint32* pCount);
+
+Lib3MFResult CCall_lib3mf_beamset_setreferences(Lib3MFHandle libraryHandle, Lib3MF_BeamSet pBeamSet,
+    Lib3MF_uint64 nReferencesBufferSize, const Lib3MF_uint32* pReferencesBuffer);
+
+Lib3MFResult CCall_lib3mf_beamset_getreferences(Lib3MFHandle libraryHandle, Lib3MF_BeamSet pBeamSet,
+    const Lib3MF_uint64 nReferencesBufferSize, Lib3MF_uint64* pReferencesNeededCount, Lib3MF_uint32* pReferencesBuffer);
+
+Lib3MFResult CCall_lib3mf_beamset_getballreferencecount(
+    Lib3MFHandle libraryHandle, Lib3MF_BeamSet pBeamSet, Lib3MF_uint32* pCount);
+
+Lib3MFResult CCall_lib3mf_beamset_setballreferences(Lib3MFHandle libraryHandle, Lib3MF_BeamSet pBeamSet,
+    Lib3MF_uint64 nBallReferencesBufferSize, const Lib3MF_uint32* pBallReferencesBuffer);
+
+Lib3MFResult CCall_lib3mf_beamset_getballreferences(Lib3MFHandle libraryHandle, Lib3MF_BeamSet pBeamSet,
+    const Lib3MF_uint64 nBallReferencesBufferSize, Lib3MF_uint64* pBallReferencesNeededCount,
+    Lib3MF_uint32* pBallReferencesBuffer);
+
+Lib3MFResult CCall_lib3mf_basematerialgroup_getcount(
+    Lib3MFHandle libraryHandle, Lib3MF_BaseMaterialGroup pBaseMaterialGroup, Lib3MF_uint32* pCount);
+
+Lib3MFResult CCall_lib3mf_basematerialgroup_getallpropertyids(Lib3MFHandle libraryHandle,
+    Lib3MF_BaseMaterialGroup pBaseMaterialGroup, const Lib3MF_uint64 nPropertyIDsBufferSize,
+    Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32* pPropertyIDsBuffer);
+
+Lib3MFResult CCall_lib3mf_basematerialgroup_addmaterial(Lib3MFHandle libraryHandle,
+    Lib3MF_BaseMaterialGroup pBaseMaterialGroup, const char* pName, const sLib3MFColor* pDisplayColor,
+    Lib3MF_uint32* pPropertyID);
+
+Lib3MFResult CCall_lib3mf_basematerialgroup_removematerial(
+    Lib3MFHandle libraryHandle, Lib3MF_BaseMaterialGroup pBaseMaterialGroup, Lib3MF_uint32 nPropertyID);
+
+Lib3MFResult CCall_lib3mf_basematerialgroup_getname(Lib3MFHandle libraryHandle,
+    Lib3MF_BaseMaterialGroup pBaseMaterialGroup, Lib3MF_uint32 nPropertyID, const Lib3MF_uint32 nNameBufferSize,
+    Lib3MF_uint32* pNameNeededChars, char* pNameBuffer);
+
+Lib3MFResult CCall_lib3mf_basematerialgroup_setname(Lib3MFHandle libraryHandle,
+    Lib3MF_BaseMaterialGroup pBaseMaterialGroup, Lib3MF_uint32 nPropertyID, const char* pName);
+
+Lib3MFResult CCall_lib3mf_basematerialgroup_setdisplaycolor(Lib3MFHandle libraryHandle,
+    Lib3MF_BaseMaterialGroup pBaseMaterialGroup, Lib3MF_uint32 nPropertyID, const sLib3MFColor* pTheColor);
+
+Lib3MFResult CCall_lib3mf_basematerialgroup_getdisplaycolor(Lib3MFHandle libraryHandle,
+    Lib3MF_BaseMaterialGroup pBaseMaterialGroup, Lib3MF_uint32 nPropertyID, sLib3MFColor* pTheColor);
+
+Lib3MFResult CCall_lib3mf_colorgroup_getcount(
+    Lib3MFHandle libraryHandle, Lib3MF_ColorGroup pColorGroup, Lib3MF_uint32* pCount);
+
+Lib3MFResult CCall_lib3mf_colorgroup_getallpropertyids(Lib3MFHandle libraryHandle, Lib3MF_ColorGroup pColorGroup,
+    const Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount,
+    Lib3MF_uint32* pPropertyIDsBuffer);
+
+Lib3MFResult CCall_lib3mf_colorgroup_addcolor(Lib3MFHandle libraryHandle, Lib3MF_ColorGroup pColorGroup,
+    const sLib3MFColor* pTheColor, Lib3MF_uint32* pPropertyID);
+
+Lib3MFResult CCall_lib3mf_colorgroup_removecolor(
+    Lib3MFHandle libraryHandle, Lib3MF_ColorGroup pColorGroup, Lib3MF_uint32 nPropertyID);
+
+Lib3MFResult CCall_lib3mf_colorgroup_setcolor(Lib3MFHandle libraryHandle, Lib3MF_ColorGroup pColorGroup,
+    Lib3MF_uint32 nPropertyID, const sLib3MFColor* pTheColor);
+
+Lib3MFResult CCall_lib3mf_colorgroup_getcolor(
+    Lib3MFHandle libraryHandle, Lib3MF_ColorGroup pColorGroup, Lib3MF_uint32 nPropertyID, sLib3MFColor* pTheColor);
+
+Lib3MFResult CCall_lib3mf_texture2dgroup_getcount(
+    Lib3MFHandle libraryHandle, Lib3MF_Texture2DGroup pTexture2DGroup, Lib3MF_uint32* pCount);
+
+Lib3MFResult CCall_lib3mf_texture2dgroup_getallpropertyids(Lib3MFHandle libraryHandle,
+    Lib3MF_Texture2DGroup pTexture2DGroup, const Lib3MF_uint64 nPropertyIDsBufferSize,
+    Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32* pPropertyIDsBuffer);
+
+Lib3MFResult CCall_lib3mf_texture2dgroup_addtex2coord(Lib3MFHandle libraryHandle, Lib3MF_Texture2DGroup pTexture2DGroup,
+    const sLib3MFTex2Coord* pUVCoordinate, Lib3MF_uint32* pPropertyID);
+
+Lib3MFResult CCall_lib3mf_texture2dgroup_gettex2coord(Lib3MFHandle libraryHandle, Lib3MF_Texture2DGroup pTexture2DGroup,
+    Lib3MF_uint32 nPropertyID, sLib3MFTex2Coord* pUVCoordinate);
+
+Lib3MFResult CCall_lib3mf_texture2dgroup_removetex2coord(
+    Lib3MFHandle libraryHandle, Lib3MF_Texture2DGroup pTexture2DGroup, Lib3MF_uint32 nPropertyID);
+
+Lib3MFResult CCall_lib3mf_texture2dgroup_gettexture2d(
+    Lib3MFHandle libraryHandle, Lib3MF_Texture2DGroup pTexture2DGroup, Lib3MF_Texture2D* pTexture2DInstance);
+
+Lib3MFResult CCall_lib3mf_compositematerials_getcount(
+    Lib3MFHandle libraryHandle, Lib3MF_CompositeMaterials pCompositeMaterials, Lib3MF_uint32* pCount);
+
+Lib3MFResult CCall_lib3mf_compositematerials_getallpropertyids(Lib3MFHandle libraryHandle,
+    Lib3MF_CompositeMaterials pCompositeMaterials, const Lib3MF_uint64 nPropertyIDsBufferSize,
+    Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32* pPropertyIDsBuffer);
+
+Lib3MFResult CCall_lib3mf_compositematerials_getbasematerialgroup(Lib3MFHandle libraryHandle,
+    Lib3MF_CompositeMaterials pCompositeMaterials, Lib3MF_BaseMaterialGroup* pBaseMaterialGroupInstance);
+
+Lib3MFResult CCall_lib3mf_compositematerials_addcomposite(Lib3MFHandle libraryHandle,
+    Lib3MF_CompositeMaterials pCompositeMaterials, Lib3MF_uint64 nCompositeBufferSize,
+    const sLib3MFCompositeConstituent* pCompositeBuffer, Lib3MF_uint32* pPropertyID);
+
+Lib3MFResult CCall_lib3mf_compositematerials_removecomposite(
+    Lib3MFHandle libraryHandle, Lib3MF_CompositeMaterials pCompositeMaterials, Lib3MF_uint32 nPropertyID);
+
+Lib3MFResult CCall_lib3mf_compositematerials_getcomposite(Lib3MFHandle libraryHandle,
+    Lib3MF_CompositeMaterials pCompositeMaterials, Lib3MF_uint32 nPropertyID, const Lib3MF_uint64 nCompositeBufferSize,
+    Lib3MF_uint64* pCompositeNeededCount, sLib3MFCompositeConstituent* pCompositeBuffer);
+
+Lib3MFResult CCall_lib3mf_multipropertygroup_getcount(
+    Lib3MFHandle libraryHandle, Lib3MF_MultiPropertyGroup pMultiPropertyGroup, Lib3MF_uint32* pCount);
+
+Lib3MFResult CCall_lib3mf_multipropertygroup_getallpropertyids(Lib3MFHandle libraryHandle,
+    Lib3MF_MultiPropertyGroup pMultiPropertyGroup, const Lib3MF_uint64 nPropertyIDsBufferSize,
+    Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32* pPropertyIDsBuffer);
+
+Lib3MFResult CCall_lib3mf_multipropertygroup_addmultiproperty(Lib3MFHandle libraryHandle,
+    Lib3MF_MultiPropertyGroup pMultiPropertyGroup, Lib3MF_uint64 nPropertyIDsBufferSize,
+    const Lib3MF_uint32* pPropertyIDsBuffer, Lib3MF_uint32* pPropertyID);
+
+Lib3MFResult CCall_lib3mf_multipropertygroup_setmultiproperty(Lib3MFHandle libraryHandle,
+    Lib3MF_MultiPropertyGroup pMultiPropertyGroup, Lib3MF_uint32 nPropertyID, Lib3MF_uint64 nPropertyIDsBufferSize,
+    const Lib3MF_uint32* pPropertyIDsBuffer);
+
+Lib3MFResult CCall_lib3mf_multipropertygroup_getmultiproperty(Lib3MFHandle libraryHandle,
+    Lib3MF_MultiPropertyGroup pMultiPropertyGroup, Lib3MF_uint32 nPropertyID,
+    const Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount,
+    Lib3MF_uint32* pPropertyIDsBuffer);
+
+Lib3MFResult CCall_lib3mf_multipropertygroup_removemultiproperty(
+    Lib3MFHandle libraryHandle, Lib3MF_MultiPropertyGroup pMultiPropertyGroup, Lib3MF_uint32 nPropertyID);
+
+Lib3MFResult CCall_lib3mf_multipropertygroup_getlayercount(
+    Lib3MFHandle libraryHandle, Lib3MF_MultiPropertyGroup pMultiPropertyGroup, Lib3MF_uint32* pCount);
+
+Lib3MFResult CCall_lib3mf_multipropertygroup_addlayer(Lib3MFHandle libraryHandle,
+    Lib3MF_MultiPropertyGroup pMultiPropertyGroup, const sLib3MFMultiPropertyLayer* pTheLayer,
+    Lib3MF_uint32* pLayerIndex);
+
+Lib3MFResult CCall_lib3mf_multipropertygroup_getlayer(Lib3MFHandle libraryHandle,
+    Lib3MF_MultiPropertyGroup pMultiPropertyGroup, Lib3MF_uint32 nLayerIndex, sLib3MFMultiPropertyLayer* pTheLayer);
+
+Lib3MFResult CCall_lib3mf_multipropertygroup_removelayer(
+    Lib3MFHandle libraryHandle, Lib3MF_MultiPropertyGroup pMultiPropertyGroup, Lib3MF_uint32 nLayerIndex);
+
+Lib3MFResult CCall_lib3mf_attachment_getpath(Lib3MFHandle libraryHandle, Lib3MF_Attachment pAttachment,
+    const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char* pPathBuffer);
+
+Lib3MFResult CCall_lib3mf_attachment_setpath(
+    Lib3MFHandle libraryHandle, Lib3MF_Attachment pAttachment, const char* pPath);
+
+Lib3MFResult CCall_lib3mf_attachment_packagepart(
+    Lib3MFHandle libraryHandle, Lib3MF_Attachment pAttachment, Lib3MF_PackagePart* pPackagePart);
+
+Lib3MFResult CCall_lib3mf_attachment_getrelationshiptype(Lib3MFHandle libraryHandle, Lib3MF_Attachment pAttachment,
+    const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char* pPathBuffer);
+
+Lib3MFResult CCall_lib3mf_attachment_setrelationshiptype(
+    Lib3MFHandle libraryHandle, Lib3MF_Attachment pAttachment, const char* pPath);
+
+Lib3MFResult CCall_lib3mf_attachment_writetofile(
+    Lib3MFHandle libraryHandle, Lib3MF_Attachment pAttachment, const char* pFileName);
+
+Lib3MFResult CCall_lib3mf_attachment_readfromfile(
+    Lib3MFHandle libraryHandle, Lib3MF_Attachment pAttachment, const char* pFileName);
+
+Lib3MFResult CCall_lib3mf_attachment_readfromcallback(Lib3MFHandle libraryHandle, Lib3MF_Attachment pAttachment,
+    Lib3MFReadCallback pTheReadCallback, Lib3MF_uint64 nStreamSize, Lib3MFSeekCallback pTheSeekCallback,
+    Lib3MF_pvoid pUserData);
+
+Lib3MFResult CCall_lib3mf_attachment_getstreamsize(
+    Lib3MFHandle libraryHandle, Lib3MF_Attachment pAttachment, Lib3MF_uint64* pStreamSize);
+
+Lib3MFResult CCall_lib3mf_attachment_writetobuffer(Lib3MFHandle libraryHandle, Lib3MF_Attachment pAttachment,
+    const Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8* pBufferBuffer);
+
+Lib3MFResult CCall_lib3mf_attachment_readfrombuffer(Lib3MFHandle libraryHandle, Lib3MF_Attachment pAttachment,
+    Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8* pBufferBuffer);
+
+Lib3MFResult CCall_lib3mf_texture2d_getattachment(
+    Lib3MFHandle libraryHandle, Lib3MF_Texture2D pTexture2D, Lib3MF_Attachment* pAttachment);
+
+Lib3MFResult CCall_lib3mf_texture2d_setattachment(
+    Lib3MFHandle libraryHandle, Lib3MF_Texture2D pTexture2D, Lib3MF_Attachment pAttachment);
+
+Lib3MFResult CCall_lib3mf_texture2d_getcontenttype(
+    Lib3MFHandle libraryHandle, Lib3MF_Texture2D pTexture2D, eLib3MFTextureType* pContentType);
+
+Lib3MFResult CCall_lib3mf_texture2d_setcontenttype(
+    Lib3MFHandle libraryHandle, Lib3MF_Texture2D pTexture2D, eLib3MFTextureType eContentType);
+
+Lib3MFResult CCall_lib3mf_texture2d_gettilestyleuv(Lib3MFHandle libraryHandle, Lib3MF_Texture2D pTexture2D,
+    eLib3MFTextureTileStyle* pTileStyleU, eLib3MFTextureTileStyle* pTileStyleV);
+
+Lib3MFResult CCall_lib3mf_texture2d_settilestyleuv(Lib3MFHandle libraryHandle, Lib3MF_Texture2D pTexture2D,
+    eLib3MFTextureTileStyle eTileStyleU, eLib3MFTextureTileStyle eTileStyleV);
+
+Lib3MFResult CCall_lib3mf_texture2d_getfilter(
+    Lib3MFHandle libraryHandle, Lib3MF_Texture2D pTexture2D, eLib3MFTextureFilter* pFilter);
+
+Lib3MFResult CCall_lib3mf_texture2d_setfilter(
+    Lib3MFHandle libraryHandle, Lib3MF_Texture2D pTexture2D, eLib3MFTextureFilter eFilter);
+
+Lib3MFResult CCall_lib3mf_builditem_getobjectresource(
+    Lib3MFHandle libraryHandle, Lib3MF_BuildItem pBuildItem, Lib3MF_Object* pObjectResource);
+
+Lib3MFResult CCall_lib3mf_builditem_getuuid(Lib3MFHandle libraryHandle, Lib3MF_BuildItem pBuildItem, bool* pHasUUID,
+    const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char* pUUIDBuffer);
+
+Lib3MFResult CCall_lib3mf_builditem_setuuid(Lib3MFHandle libraryHandle, Lib3MF_BuildItem pBuildItem, const char* pUUID);
+
+Lib3MFResult CCall_lib3mf_builditem_getobjectresourceid(
+    Lib3MFHandle libraryHandle, Lib3MF_BuildItem pBuildItem, Lib3MF_uint32* pUniqueResourceID);
+
+Lib3MFResult CCall_lib3mf_builditem_hasobjecttransform(
+    Lib3MFHandle libraryHandle, Lib3MF_BuildItem pBuildItem, bool* pHasTransform);
+
+Lib3MFResult CCall_lib3mf_builditem_getobjecttransform(
+    Lib3MFHandle libraryHandle, Lib3MF_BuildItem pBuildItem, sLib3MFTransform* pTransform);
+
+Lib3MFResult CCall_lib3mf_builditem_setobjecttransform(
+    Lib3MFHandle libraryHandle, Lib3MF_BuildItem pBuildItem, const sLib3MFTransform* pTransform);
+
+Lib3MFResult CCall_lib3mf_builditem_getpartnumber(Lib3MFHandle libraryHandle, Lib3MF_BuildItem pBuildItem,
+    const Lib3MF_uint32 nPartNumberBufferSize, Lib3MF_uint32* pPartNumberNeededChars, char* pPartNumberBuffer);
+
+Lib3MFResult CCall_lib3mf_builditem_setpartnumber(
+    Lib3MFHandle libraryHandle, Lib3MF_BuildItem pBuildItem, const char* pSetPartnumber);
+
+Lib3MFResult CCall_lib3mf_builditem_getmetadatagroup(
+    Lib3MFHandle libraryHandle, Lib3MF_BuildItem pBuildItem, Lib3MF_MetaDataGroup* pMetaDataGroup);
+
+Lib3MFResult CCall_lib3mf_builditem_getoutbox(
+    Lib3MFHandle libraryHandle, Lib3MF_BuildItem pBuildItem, sLib3MFBox* pOutbox);
+
+Lib3MFResult CCall_lib3mf_builditemiterator_movenext(
+    Lib3MFHandle libraryHandle, Lib3MF_BuildItemIterator pBuildItemIterator, bool* pHasNext);
+
+Lib3MFResult CCall_lib3mf_builditemiterator_moveprevious(
+    Lib3MFHandle libraryHandle, Lib3MF_BuildItemIterator pBuildItemIterator, bool* pHasPrevious);
+
+Lib3MFResult CCall_lib3mf_builditemiterator_getcurrent(
+    Lib3MFHandle libraryHandle, Lib3MF_BuildItemIterator pBuildItemIterator, Lib3MF_BuildItem* pBuildItem);
+
+Lib3MFResult CCall_lib3mf_builditemiterator_clone(Lib3MFHandle libraryHandle,
+    Lib3MF_BuildItemIterator pBuildItemIterator, Lib3MF_BuildItemIterator* pOutBuildItemIterator);
+
+Lib3MFResult CCall_lib3mf_builditemiterator_count(
+    Lib3MFHandle libraryHandle, Lib3MF_BuildItemIterator pBuildItemIterator, Lib3MF_uint64* pCount);
+
+Lib3MFResult CCall_lib3mf_slice_setvertices(Lib3MFHandle libraryHandle, Lib3MF_Slice pSlice,
+    Lib3MF_uint64 nVerticesBufferSize, const sLib3MFPosition2D* pVerticesBuffer);
+
+Lib3MFResult CCall_lib3mf_slice_getvertices(Lib3MFHandle libraryHandle, Lib3MF_Slice pSlice,
+    const Lib3MF_uint64 nVerticesBufferSize, Lib3MF_uint64* pVerticesNeededCount, sLib3MFPosition2D* pVerticesBuffer);
+
+Lib3MFResult CCall_lib3mf_slice_getvertexcount(Lib3MFHandle libraryHandle, Lib3MF_Slice pSlice, Lib3MF_uint64* pCount);
+
+Lib3MFResult CCall_lib3mf_slice_addpolygon(Lib3MFHandle libraryHandle, Lib3MF_Slice pSlice,
+    Lib3MF_uint64 nIndicesBufferSize, const Lib3MF_uint32* pIndicesBuffer, Lib3MF_uint64* pIndex);
+
+Lib3MFResult CCall_lib3mf_slice_getpolygoncount(Lib3MFHandle libraryHandle, Lib3MF_Slice pSlice, Lib3MF_uint64* pCount);
+
+Lib3MFResult CCall_lib3mf_slice_setpolygonindices(Lib3MFHandle libraryHandle, Lib3MF_Slice pSlice, Lib3MF_uint64 nIndex,
+    Lib3MF_uint64 nIndicesBufferSize, const Lib3MF_uint32* pIndicesBuffer);
+
+Lib3MFResult CCall_lib3mf_slice_getpolygonindices(Lib3MFHandle libraryHandle, Lib3MF_Slice pSlice, Lib3MF_uint64 nIndex,
+    const Lib3MF_uint64 nIndicesBufferSize, Lib3MF_uint64* pIndicesNeededCount, Lib3MF_uint32* pIndicesBuffer);
+
+Lib3MFResult CCall_lib3mf_slice_getpolygonindexcount(
+    Lib3MFHandle libraryHandle, Lib3MF_Slice pSlice, Lib3MF_uint64 nIndex, Lib3MF_uint64* pCount);
+
+Lib3MFResult CCall_lib3mf_slice_getztop(Lib3MFHandle libraryHandle, Lib3MF_Slice pSlice, Lib3MF_double* pZTop);
+
+Lib3MFResult CCall_lib3mf_slicestack_getbottomz(
+    Lib3MFHandle libraryHandle, Lib3MF_SliceStack pSliceStack, Lib3MF_double* pZBottom);
+
+Lib3MFResult CCall_lib3mf_slicestack_getslicecount(
+    Lib3MFHandle libraryHandle, Lib3MF_SliceStack pSliceStack, Lib3MF_uint64* pCount);
+
+Lib3MFResult CCall_lib3mf_slicestack_getslice(
+    Lib3MFHandle libraryHandle, Lib3MF_SliceStack pSliceStack, Lib3MF_uint64 nSliceIndex, Lib3MF_Slice* pTheSlice);
+
+Lib3MFResult CCall_lib3mf_slicestack_addslice(
+    Lib3MFHandle libraryHandle, Lib3MF_SliceStack pSliceStack, Lib3MF_double dZTop, Lib3MF_Slice* pTheSlice);
+
+Lib3MFResult CCall_lib3mf_slicestack_getslicerefcount(
+    Lib3MFHandle libraryHandle, Lib3MF_SliceStack pSliceStack, Lib3MF_uint64* pCount);
+
+Lib3MFResult CCall_lib3mf_slicestack_addslicestackreference(
+    Lib3MFHandle libraryHandle, Lib3MF_SliceStack pSliceStack, Lib3MF_SliceStack pTheSliceStack);
+
+Lib3MFResult CCall_lib3mf_slicestack_getslicestackreference(Lib3MFHandle libraryHandle, Lib3MF_SliceStack pSliceStack,
+    Lib3MF_uint64 nSliceRefIndex, Lib3MF_SliceStack* pTheSliceStack);
+
+Lib3MFResult CCall_lib3mf_slicestack_collapseslicereferences(Lib3MFHandle libraryHandle, Lib3MF_SliceStack pSliceStack);
+
+Lib3MFResult CCall_lib3mf_slicestack_setownpath(
+    Lib3MFHandle libraryHandle, Lib3MF_SliceStack pSliceStack, const char* pPath);
+
+Lib3MFResult CCall_lib3mf_slicestack_getownpath(Lib3MFHandle libraryHandle, Lib3MF_SliceStack pSliceStack,
+    const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char* pPathBuffer);
+
+Lib3MFResult CCall_lib3mf_consumer_getconsumerid(Lib3MFHandle libraryHandle, Lib3MF_Consumer pConsumer,
+    const Lib3MF_uint32 nConsumerIDBufferSize, Lib3MF_uint32* pConsumerIDNeededChars, char* pConsumerIDBuffer);
+
+Lib3MFResult CCall_lib3mf_consumer_getkeyid(Lib3MFHandle libraryHandle, Lib3MF_Consumer pConsumer,
+    const Lib3MF_uint32 nKeyIDBufferSize, Lib3MF_uint32* pKeyIDNeededChars, char* pKeyIDBuffer);
+
+Lib3MFResult CCall_lib3mf_consumer_getkeyvalue(Lib3MFHandle libraryHandle, Lib3MF_Consumer pConsumer,
+    const Lib3MF_uint32 nKeyValueBufferSize, Lib3MF_uint32* pKeyValueNeededChars, char* pKeyValueBuffer);
+
+Lib3MFResult CCall_lib3mf_accessright_getconsumer(
+    Lib3MFHandle libraryHandle, Lib3MF_AccessRight pAccessRight, Lib3MF_Consumer* pConsumer);
+
+Lib3MFResult CCall_lib3mf_accessright_getwrappingalgorithm(
+    Lib3MFHandle libraryHandle, Lib3MF_AccessRight pAccessRight, eLib3MFWrappingAlgorithm* pAlgorithm);
+
+Lib3MFResult CCall_lib3mf_accessright_getmgfalgorithm(
+    Lib3MFHandle libraryHandle, Lib3MF_AccessRight pAccessRight, eLib3MFMgfAlgorithm* pAlgorithm);
+
+Lib3MFResult CCall_lib3mf_accessright_getdigestmethod(
+    Lib3MFHandle libraryHandle, Lib3MF_AccessRight pAccessRight, eLib3MFDigestMethod* pAlgorithm);
+
+Lib3MFResult CCall_lib3mf_contentencryptionparams_getencryptionalgorithm(Lib3MFHandle libraryHandle,
+    Lib3MF_ContentEncryptionParams pContentEncryptionParams, eLib3MFEncryptionAlgorithm* pAlgorithm);
+
+Lib3MFResult CCall_lib3mf_contentencryptionparams_getkey(Lib3MFHandle libraryHandle,
+    Lib3MF_ContentEncryptionParams pContentEncryptionParams, const Lib3MF_uint64 nByteDataBufferSize,
+    Lib3MF_uint64* pByteDataNeededCount, Lib3MF_uint8* pByteDataBuffer);
+
+Lib3MFResult CCall_lib3mf_contentencryptionparams_getinitializationvector(Lib3MFHandle libraryHandle,
+    Lib3MF_ContentEncryptionParams pContentEncryptionParams, const Lib3MF_uint64 nByteDataBufferSize,
+    Lib3MF_uint64* pByteDataNeededCount, Lib3MF_uint8* pByteDataBuffer);
+
+Lib3MFResult CCall_lib3mf_contentencryptionparams_getauthenticationtag(Lib3MFHandle libraryHandle,
+    Lib3MF_ContentEncryptionParams pContentEncryptionParams, const Lib3MF_uint64 nByteDataBufferSize,
+    Lib3MF_uint64* pByteDataNeededCount, Lib3MF_uint8* pByteDataBuffer);
+
+Lib3MFResult CCall_lib3mf_contentencryptionparams_setauthenticationtag(Lib3MFHandle libraryHandle,
+    Lib3MF_ContentEncryptionParams pContentEncryptionParams, Lib3MF_uint64 nByteDataBufferSize,
+    const Lib3MF_uint8* pByteDataBuffer);
+
+Lib3MFResult CCall_lib3mf_contentencryptionparams_getadditionalauthenticationdata(Lib3MFHandle libraryHandle,
+    Lib3MF_ContentEncryptionParams pContentEncryptionParams, const Lib3MF_uint64 nByteDataBufferSize,
+    Lib3MF_uint64* pByteDataNeededCount, Lib3MF_uint8* pByteDataBuffer);
+
+Lib3MFResult CCall_lib3mf_contentencryptionparams_getdescriptor(
+    Lib3MFHandle libraryHandle, Lib3MF_ContentEncryptionParams pContentEncryptionParams, Lib3MF_uint64* pDescriptor);
+
+Lib3MFResult CCall_lib3mf_contentencryptionparams_getkeyuuid(Lib3MFHandle libraryHandle,
+    Lib3MF_ContentEncryptionParams pContentEncryptionParams, const Lib3MF_uint32 nUUIDBufferSize,
+    Lib3MF_uint32* pUUIDNeededChars, char* pUUIDBuffer);
+
+Lib3MFResult CCall_lib3mf_resourcedata_getpath(
+    Lib3MFHandle libraryHandle, Lib3MF_ResourceData pResourceData, Lib3MF_PackagePart* pPath);
+
+Lib3MFResult CCall_lib3mf_resourcedata_getencryptionalgorithm(
+    Lib3MFHandle libraryHandle, Lib3MF_ResourceData pResourceData, eLib3MFEncryptionAlgorithm* pEncryptionAlgorithm);
+
+Lib3MFResult CCall_lib3mf_resourcedata_getcompression(
+    Lib3MFHandle libraryHandle, Lib3MF_ResourceData pResourceData, eLib3MFCompression* pCompression);
+
+Lib3MFResult CCall_lib3mf_resourcedata_getadditionalauthenticationdata(Lib3MFHandle libraryHandle,
+    Lib3MF_ResourceData pResourceData, const Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64* pByteDataNeededCount,
+    Lib3MF_uint8* pByteDataBuffer);
+
+Lib3MFResult CCall_lib3mf_resourcedatagroup_getkeyuuid(Lib3MFHandle libraryHandle,
+    Lib3MF_ResourceDataGroup pResourceDataGroup, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars,
+    char* pUUIDBuffer);
+
+Lib3MFResult CCall_lib3mf_resourcedatagroup_addaccessright(Lib3MFHandle libraryHandle,
+    Lib3MF_ResourceDataGroup pResourceDataGroup, Lib3MF_Consumer pConsumer, eLib3MFWrappingAlgorithm eWrappingAlgorithm,
+    eLib3MFMgfAlgorithm eMgfAlgorithm, eLib3MFDigestMethod eDigestMethod, Lib3MF_AccessRight* pTheAccessRight);
+
+Lib3MFResult CCall_lib3mf_resourcedatagroup_findaccessrightbyconsumer(Lib3MFHandle libraryHandle,
+    Lib3MF_ResourceDataGroup pResourceDataGroup, Lib3MF_Consumer pConsumer, Lib3MF_AccessRight* pTheAccessRight);
+
+Lib3MFResult CCall_lib3mf_resourcedatagroup_removeaccessright(
+    Lib3MFHandle libraryHandle, Lib3MF_ResourceDataGroup pResourceDataGroup, Lib3MF_Consumer pConsumer);
+
+Lib3MFResult CCall_lib3mf_keystore_addconsumer(Lib3MFHandle libraryHandle, Lib3MF_KeyStore pKeyStore,
+    const char* pConsumerID, const char* pKeyID, const char* pKeyValue, Lib3MF_Consumer* pConsumer);
+
+Lib3MFResult CCall_lib3mf_keystore_getconsumercount(
+    Lib3MFHandle libraryHandle, Lib3MF_KeyStore pKeyStore, Lib3MF_uint64* pCount);
+
+Lib3MFResult CCall_lib3mf_keystore_getconsumer(
+    Lib3MFHandle libraryHandle, Lib3MF_KeyStore pKeyStore, Lib3MF_uint64 nConsumerIndex, Lib3MF_Consumer* pConsumer);
+
+Lib3MFResult CCall_lib3mf_keystore_removeconsumer(
+    Lib3MFHandle libraryHandle, Lib3MF_KeyStore pKeyStore, Lib3MF_Consumer pConsumer);
+
+Lib3MFResult CCall_lib3mf_keystore_findconsumer(
+    Lib3MFHandle libraryHandle, Lib3MF_KeyStore pKeyStore, const char* pConsumerID, Lib3MF_Consumer* pConsumer);
+
+Lib3MFResult CCall_lib3mf_keystore_getresourcedatagroupcount(
+    Lib3MFHandle libraryHandle, Lib3MF_KeyStore pKeyStore, Lib3MF_uint64* pCount);
+
+Lib3MFResult CCall_lib3mf_keystore_addresourcedatagroup(
+    Lib3MFHandle libraryHandle, Lib3MF_KeyStore pKeyStore, Lib3MF_ResourceDataGroup* pResourceDataGroup);
+
+Lib3MFResult CCall_lib3mf_keystore_getresourcedatagroup(Lib3MFHandle libraryHandle, Lib3MF_KeyStore pKeyStore,
+    Lib3MF_uint64 nResourceDataIndex, Lib3MF_ResourceDataGroup* pResourceDataGroup);
+
+Lib3MFResult CCall_lib3mf_keystore_removeresourcedatagroup(
+    Lib3MFHandle libraryHandle, Lib3MF_KeyStore pKeyStore, Lib3MF_ResourceDataGroup pResourceDataGroup);
+
+Lib3MFResult CCall_lib3mf_keystore_findresourcedatagroup(Lib3MFHandle libraryHandle, Lib3MF_KeyStore pKeyStore,
+    Lib3MF_PackagePart pPartPath, Lib3MF_ResourceDataGroup* pResourceDataGroup);
+
+Lib3MFResult CCall_lib3mf_keystore_addresourcedata(Lib3MFHandle libraryHandle, Lib3MF_KeyStore pKeyStore,
+    Lib3MF_ResourceDataGroup pResourceDataGroup, Lib3MF_PackagePart pPartPath, eLib3MFEncryptionAlgorithm eAlgorithm,
+    eLib3MFCompression eCompression, Lib3MF_uint64 nAdditionalAuthenticationDataBufferSize,
+    const Lib3MF_uint8* pAdditionalAuthenticationDataBuffer, Lib3MF_ResourceData* pResourceData);
+
+Lib3MFResult CCall_lib3mf_keystore_removeresourcedata(
+    Lib3MFHandle libraryHandle, Lib3MF_KeyStore pKeyStore, Lib3MF_ResourceData pResourceData);
+
+Lib3MFResult CCall_lib3mf_keystore_findresourcedata(Lib3MFHandle libraryHandle, Lib3MF_KeyStore pKeyStore,
+    Lib3MF_PackagePart pResourcePath, Lib3MF_ResourceData* pResourceData);
+
+Lib3MFResult CCall_lib3mf_keystore_getresourcedatacount(
+    Lib3MFHandle libraryHandle, Lib3MF_KeyStore pKeyStore, Lib3MF_uint64* pCount);
+
+Lib3MFResult CCall_lib3mf_keystore_getresourcedata(Lib3MFHandle libraryHandle, Lib3MF_KeyStore pKeyStore,
+    Lib3MF_uint64 nResourceDataIndex, Lib3MF_ResourceData* pResourceData);
+
+Lib3MFResult CCall_lib3mf_keystore_getuuid(Lib3MFHandle libraryHandle, Lib3MF_KeyStore pKeyStore, bool* pHasUUID,
+    const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char* pUUIDBuffer);
+
+Lib3MFResult CCall_lib3mf_keystore_setuuid(Lib3MFHandle libraryHandle, Lib3MF_KeyStore pKeyStore, const char* pUUID);
+
+Lib3MFResult CCall_lib3mf_model_rootmodelpart(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_PackagePart* pRootModelPart);
+
+Lib3MFResult CCall_lib3mf_model_findorcreatepackagepart(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, const char* pAbsolutePath, Lib3MF_PackagePart* pModelPart);
+
+Lib3MFResult CCall_lib3mf_model_setunit(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, eLib3MFModelUnit eUnit);
+
+Lib3MFResult CCall_lib3mf_model_getunit(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, eLib3MFModelUnit* pUnit);
+
+Lib3MFResult CCall_lib3mf_model_getlanguage(Lib3MFHandle libraryHandle, Lib3MF_Model pModel,
+    const Lib3MF_uint32 nLanguageBufferSize, Lib3MF_uint32* pLanguageNeededChars, char* pLanguageBuffer);
+
+Lib3MFResult CCall_lib3mf_model_setlanguage(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, const char* pLanguage);
+
+Lib3MFResult CCall_lib3mf_model_querywriter(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, const char* pWriterClass, Lib3MF_Writer* pWriterInstance);
+
+Lib3MFResult CCall_lib3mf_model_queryreader(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, const char* pReaderClass, Lib3MF_Reader* pReaderInstance);
+
+Lib3MFResult CCall_lib3mf_model_getresourcebyid(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Resource* pResource);
+
+Lib3MFResult CCall_lib3mf_model_gettexture2dbyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel,
+    Lib3MF_uint32 nUniqueResourceID, Lib3MF_Texture2D* pTextureInstance);
+
+Lib3MFResult CCall_lib3mf_model_getpropertytypebyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel,
+    Lib3MF_uint32 nUniqueResourceID, eLib3MFPropertyType* pThePropertyType);
+
+Lib3MFResult CCall_lib3mf_model_getbasematerialgroupbyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel,
+    Lib3MF_uint32 nUniqueResourceID, Lib3MF_BaseMaterialGroup* pBaseMaterialGroupInstance);
+
+Lib3MFResult CCall_lib3mf_model_gettexture2dgroupbyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel,
+    Lib3MF_uint32 nUniqueResourceID, Lib3MF_Texture2DGroup* pTexture2DGroupInstance);
+
+Lib3MFResult CCall_lib3mf_model_getcompositematerialsbyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel,
+    Lib3MF_uint32 nUniqueResourceID, Lib3MF_CompositeMaterials* pCompositeMaterialsInstance);
+
+Lib3MFResult CCall_lib3mf_model_getmultipropertygroupbyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel,
+    Lib3MF_uint32 nUniqueResourceID, Lib3MF_MultiPropertyGroup* pMultiPropertyGroupInstance);
+
+Lib3MFResult CCall_lib3mf_model_getmeshobjectbyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel,
+    Lib3MF_uint32 nUniqueResourceID, Lib3MF_MeshObject* pMeshObjectInstance);
+
+Lib3MFResult CCall_lib3mf_model_getcomponentsobjectbyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel,
+    Lib3MF_uint32 nUniqueResourceID, Lib3MF_ComponentsObject* pComponentsObjectInstance);
+
+Lib3MFResult CCall_lib3mf_model_getcolorgroupbyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel,
+    Lib3MF_uint32 nUniqueResourceID, Lib3MF_ColorGroup* pColorGroupInstance);
+
+Lib3MFResult CCall_lib3mf_model_getslicestackbyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel,
+    Lib3MF_uint32 nUniqueResourceID, Lib3MF_SliceStack* pSliceStacInstance);
+
+Lib3MFResult CCall_lib3mf_model_getbuilduuid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, bool* pHasUUID,
+    const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char* pUUIDBuffer);
+
+Lib3MFResult CCall_lib3mf_model_setbuilduuid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, const char* pUUID);
+
+Lib3MFResult CCall_lib3mf_model_getbuilditems(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_BuildItemIterator* pBuildItemIterator);
+
+Lib3MFResult CCall_lib3mf_model_getoutbox(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, sLib3MFBox* pOutbox);
+
+Lib3MFResult CCall_lib3mf_model_getresources(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_ResourceIterator* pResourceIterator);
+
+Lib3MFResult CCall_lib3mf_model_getobjects(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_ObjectIterator* pResourceIterator);
+
+Lib3MFResult CCall_lib3mf_model_getmeshobjects(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_MeshObjectIterator* pResourceIterator);
+
+Lib3MFResult CCall_lib3mf_model_getcomponentsobjects(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_ComponentsObjectIterator* pResourceIterator);
+
+Lib3MFResult CCall_lib3mf_model_gettexture2ds(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Texture2DIterator* pResourceIterator);
+
+Lib3MFResult CCall_lib3mf_model_getbasematerialgroups(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_BaseMaterialGroupIterator* pResourceIterator);
+
+Lib3MFResult CCall_lib3mf_model_getcolorgroups(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_ColorGroupIterator* pResourceIterator);
+
+Lib3MFResult CCall_lib3mf_model_gettexture2dgroups(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Texture2DGroupIterator* pResourceIterator);
+
+Lib3MFResult CCall_lib3mf_model_getcompositematerials(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_CompositeMaterialsIterator* pResourceIterator);
+
+Lib3MFResult CCall_lib3mf_model_getmultipropertygroups(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_MultiPropertyGroupIterator* pResourceIterator);
+
+Lib3MFResult CCall_lib3mf_model_getslicestacks(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_SliceStackIterator* pResourceIterator);
+
+Lib3MFResult CCall_lib3mf_model_mergetomodel(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Model* pMergedModelInstance);
+
+Lib3MFResult CCall_lib3mf_model_addmeshobject(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_MeshObject* pMeshObjectInstance);
+
+Lib3MFResult CCall_lib3mf_model_addcomponentsobject(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_ComponentsObject* pComponentsObjectInstance);
+
+Lib3MFResult CCall_lib3mf_model_addslicestack(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_double dZBottom, Lib3MF_SliceStack* pSliceStackInstance);
+
+Lib3MFResult CCall_lib3mf_model_addtexture2dfromattachment(Lib3MFHandle libraryHandle, Lib3MF_Model pModel,
+    Lib3MF_Attachment pTextureAttachment, Lib3MF_Texture2D* pTexture2DInstance);
+
+Lib3MFResult CCall_lib3mf_model_addbasematerialgroup(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_BaseMaterialGroup* pBaseMaterialGroupInstance);
+
+Lib3MFResult CCall_lib3mf_model_addcolorgroup(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_ColorGroup* pColorGroupInstance);
+
+Lib3MFResult CCall_lib3mf_model_addtexture2dgroup(Lib3MFHandle libraryHandle, Lib3MF_Model pModel,
+    Lib3MF_Texture2D pTexture2DInstance, Lib3MF_Texture2DGroup* pTexture2DGroupInstance);
+
+Lib3MFResult CCall_lib3mf_model_addcompositematerials(Lib3MFHandle libraryHandle, Lib3MF_Model pModel,
+    Lib3MF_BaseMaterialGroup pBaseMaterialGroupInstance, Lib3MF_CompositeMaterials* pCompositeMaterialsInstance);
+
+Lib3MFResult CCall_lib3mf_model_addmultipropertygroup(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_MultiPropertyGroup* pMultiPropertyGroupInstance);
+
+Lib3MFResult CCall_lib3mf_model_addbuilditem(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Object pObject,
+    const sLib3MFTransform* pTransform, Lib3MF_BuildItem* pBuildItemInstance);
+
+Lib3MFResult CCall_lib3mf_model_removebuilditem(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_BuildItem pBuildItemInstance);
+
+Lib3MFResult CCall_lib3mf_model_getmetadatagroup(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_MetaDataGroup* pTheMetaDataGroup);
+
+Lib3MFResult CCall_lib3mf_model_addattachment(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, const char* pURI,
+    const char* pRelationShipType, Lib3MF_Attachment* pAttachmentInstance);
+
+Lib3MFResult CCall_lib3mf_model_removeattachment(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Attachment pAttachmentInstance);
+
+Lib3MFResult CCall_lib3mf_model_getattachment(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_uint32 nIndex, Lib3MF_Attachment* pAttachmentInstance);
+
+Lib3MFResult CCall_lib3mf_model_findattachment(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, const char* pURI, Lib3MF_Attachment* pAttachmentInstance);
+
+Lib3MFResult CCall_lib3mf_model_getattachmentcount(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_uint32* pAttachmentCount);
+
+Lib3MFResult CCall_lib3mf_model_haspackagethumbnailattachment(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, bool* pHasThumbnail);
+
+Lib3MFResult CCall_lib3mf_model_createpackagethumbnailattachment(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Attachment* pAttachment);
+
+Lib3MFResult CCall_lib3mf_model_getpackagethumbnailattachment(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Attachment* pAttachment);
+
+Lib3MFResult CCall_lib3mf_model_removepackagethumbnailattachment(Lib3MFHandle libraryHandle, Lib3MF_Model pModel);
+
+Lib3MFResult CCall_lib3mf_model_addcustomcontenttype(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, const char* pExtension, const char* pContentType);
+
+Lib3MFResult CCall_lib3mf_model_removecustomcontenttype(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, const char* pExtension);
+
+Lib3MFResult CCall_lib3mf_model_setrandomnumbercallback(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MFRandomNumberCallback pTheCallback, Lib3MF_pvoid pUserData);
+
+Lib3MFResult CCall_lib3mf_model_getkeystore(
+    Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_KeyStore* pKeyStore);
+
+Lib3MFResult CCall_lib3mf_getlibraryversion(
+    Lib3MFHandle libraryHandle, Lib3MF_uint32* pMajor, Lib3MF_uint32* pMinor, Lib3MF_uint32* pMicro);
+
+Lib3MFResult CCall_lib3mf_getprereleaseinformation(Lib3MFHandle libraryHandle, bool* pHasPrereleaseInfo,
+    const Lib3MF_uint32 nPrereleaseInfoBufferSize, Lib3MF_uint32* pPrereleaseInfoNeededChars,
+    char* pPrereleaseInfoBuffer);
+
+Lib3MFResult CCall_lib3mf_getbuildinformation(Lib3MFHandle libraryHandle, bool* pHasBuildInfo,
+    const Lib3MF_uint32 nBuildInformationBufferSize, Lib3MF_uint32* pBuildInformationNeededChars,
+    char* pBuildInformationBuffer);
+
+Lib3MFResult CCall_lib3mf_getspecificationversion(Lib3MFHandle libraryHandle, const char* pSpecificationURL,
+    bool* pIsSupported, Lib3MF_uint32* pMajor, Lib3MF_uint32* pMinor, Lib3MF_uint32* pMicro);
+
+Lib3MFResult CCall_lib3mf_createmodel(Lib3MFHandle libraryHandle, Lib3MF_Model* pModel);
+
+Lib3MFResult CCall_lib3mf_release(Lib3MFHandle libraryHandle, Lib3MF_Base pInstance);
+
+Lib3MFResult CCall_lib3mf_acquire(Lib3MFHandle libraryHandle, Lib3MF_Base pInstance);
+
+Lib3MFResult CCall_lib3mf_setjournal(Lib3MFHandle libraryHandle, const char* pJournalPath);
+
+Lib3MFResult CCall_lib3mf_getlasterror(Lib3MFHandle libraryHandle, Lib3MF_Base pInstance,
+    const Lib3MF_uint32 nLastErrorStringBufferSize, Lib3MF_uint32* pLastErrorStringNeededChars,
+    char* pLastErrorStringBuffer, bool* pHasLastError);
+
+Lib3MFResult CCall_lib3mf_getsymbollookupmethod(Lib3MFHandle libraryHandle, Lib3MF_pvoid* pSymbolLookupMethod);
+
+Lib3MFResult CCall_lib3mf_retrieveprogressmessage(Lib3MFHandle libraryHandle,
+    eLib3MFProgressIdentifier eTheProgressIdentifier, const Lib3MF_uint32 nProgressMessageBufferSize,
+    Lib3MF_uint32* pProgressMessageNeededChars, char* pProgressMessageBuffer);
+
+Lib3MFResult CCall_lib3mf_rgbatocolor(Lib3MFHandle libraryHandle, Lib3MF_uint8 nRed, Lib3MF_uint8 nGreen,
+    Lib3MF_uint8 nBlue, Lib3MF_uint8 nAlpha, sLib3MFColor* pTheColor);
+
+Lib3MFResult CCall_lib3mf_floatrgbatocolor(Lib3MFHandle libraryHandle, Lib3MF_single fRed, Lib3MF_single fGreen,
+    Lib3MF_single fBlue, Lib3MF_single fAlpha, sLib3MFColor* pTheColor);
+
+Lib3MFResult CCall_lib3mf_colortorgba(Lib3MFHandle libraryHandle, const sLib3MFColor* pTheColor, Lib3MF_uint8* pRed,
+    Lib3MF_uint8* pGreen, Lib3MF_uint8* pBlue, Lib3MF_uint8* pAlpha);
+
+Lib3MFResult CCall_lib3mf_colortofloatrgba(Lib3MFHandle libraryHandle, const sLib3MFColor* pTheColor,
+    Lib3MF_single* pRed, Lib3MF_single* pGreen, Lib3MF_single* pBlue, Lib3MF_single* pAlpha);
+
+Lib3MFResult CCall_lib3mf_getidentitytransform(Lib3MFHandle libraryHandle, sLib3MFTransform * pTransform);
+
+Lib3MFResult CCall_lib3mf_getuniformscaletransform(Lib3MFHandle libraryHandle, Lib3MF_single fFactor, sLib3MFTransform * pTransform);
+
+Lib3MFResult CCall_lib3mf_getscaletransform(Lib3MFHandle libraryHandle, Lib3MF_single fFactorX, Lib3MF_single fFactorY, Lib3MF_single fFactorZ, sLib3MFTransform * pTransform);
+
+Lib3MFResult CCall_lib3mf_gettranslationtransform(Lib3MFHandle libraryHandle, Lib3MF_single fVectorX, Lib3MF_single fVectorY, Lib3MF_single fVectorZ, sLib3MFTransform * pTransform);
+
+
 #endif // __LIB3MF_DYNAMICHEADER
 

@@ -1,9 +1,15 @@
 # Copy this to root folder of lib3mf then build and run this image. 
 FROM ubuntu:20.04
 
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install build-essential uuid-dev wget
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install build-essential uuid-dev wget nano curl
 
 RUN wget -qO- "https://cmake.org/files/v3.28/cmake-3.28.1-linux-x86_64.tar.gz" | tar --strip-components=1 -xz -C /usr/local
+
+# Golang
+RUN (cd /opt && curl -O -L https://golang.org/dl/go1.17.2.linux-amd64.tar.gz \
+    && tar zxvf go1.17.2.linux-amd64.tar.gz)
+
+ENV PATH="${PATH}:/opt/go/bin"
 
 ADD . lib3mf-repo
 
