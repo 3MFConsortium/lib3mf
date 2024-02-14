@@ -143,15 +143,23 @@ namespace NMR
 				
             }
 
-            auto inputs = node.getInputs();
-            if (!inputs->empty())
+            bool const isNodeWithoutInputs = node.getNodeType() == Lib3MF::eImplicitNodeType::Constant ||
+                node.getNodeType() == Lib3MF::eImplicitNodeType::ConstVec ||
+                node.getNodeType() == Lib3MF::eImplicitNodeType::ConstMat ||
+                node.getNodeType() == Lib3MF::eImplicitNodeType::Resource;
+
+            if (!isNodeWithoutInputs)   // Certain node types are not allowed to have inputs, but may have been set by the producer
             {
-                writeStartElementWithPrefix(XML_3MF_ELEMENT_IMPLICIT_NODE_INPUT,
-                                        XML_3MF_NAMESPACEPREFIX_IMPLICIT);
+                auto inputs = node.getInputs();
+                if (!inputs->empty())
                 {
-                    writeImplicitInputs(*inputs);
+                    writeStartElementWithPrefix(XML_3MF_ELEMENT_IMPLICIT_NODE_INPUT,
+                                            XML_3MF_NAMESPACEPREFIX_IMPLICIT);
+                    {
+                        writeImplicitInputs(*inputs);
+                    }
+                    writeFullEndElement();
                 }
-                writeFullEndElement();
             }
 
             writeStartElementWithPrefix(XML_3MF_ELEMENT_IMPLICIT_NODE_OUTPUT,
