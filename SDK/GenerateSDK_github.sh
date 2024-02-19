@@ -47,5 +47,6 @@ zip -r ../$OUTFILE ./* || failed "Error zipping SDK"
 
 
 # Test other packages
-unzip lib3mf-2.3.0-Linux.zip
-ls lib3mf-2.3.0-Linux
+unzip build/lib3mf-2.3.0-Linux.zip
+ls -al
+ls build/
