@@ -1424,7 +1424,34 @@ namespace NMR {
 			return false;
 		}
 
-		return false;
+		if(sExtension == XML_3MF_NAMESPACE_VOLUMETRICSPEC)
+		{
+			for(size_t i = 0; i < m_ObjectLookup.size(); i++)
+			{
+				CModelMeshObject *pMeshObject =
+					dynamic_cast<CModelMeshObject *>(
+						m_ObjectLookup[i].get());
+				if(pMeshObject == nullptr ||
+					pMeshObject->getMesh() == nullptr)
+					continue;
+
+				auto volumeData = pMeshObject->getVolumeData();
+				if (!volumeData)
+					continue;
+
+				if (volumeData->hasBoundary() || volumeData->hasColor() || volumeData->getPropertyCount() > 0 || volumeData->hasComposite())
+				{
+		            return true;
+				}
+			}
+		}
+
+		if (sExtension == XML_3MF_NAMESPACE_IMPLICITSPEC)
+		{
+			if (m_FunctionLookup.size() > 0)
+				return true;
+		}
+        return false;	
 	}
 
 	nfUint32 CModel::getSliceStackCount() {

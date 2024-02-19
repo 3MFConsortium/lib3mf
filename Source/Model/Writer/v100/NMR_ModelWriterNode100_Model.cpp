@@ -170,10 +170,20 @@ namespace NMR {
 
 		if (m_bWriteVolumetricExtension) {
 			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC, XML_3MF_NAMESPACE_VOLUMETRICSPEC);
+			if (m_pModel->RequireExtension(XML_3MF_NAMESPACE_VOLUMETRICSPEC)) {
+				if (sRequiredExtensions.size() > 0)
+					sRequiredExtensions = sRequiredExtensions + " ";
+				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_VOLUMETRIC;
+			}
 		}
 
 		if (m_bWriteImplicitExtension) {
 			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_IMPLICIT, XML_3MF_NAMESPACE_IMPLICITSPEC);
+			if (m_pModel->RequireExtension(XML_3MF_NAMESPACE_IMPLICITSPEC)) {
+				if (sRequiredExtensions.size() > 0)
+					sRequiredExtensions = sRequiredExtensions + " ";
+				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_IMPLICIT;
+			}
 		}
 
 		if (m_bWriteCustomNamespaces) {
