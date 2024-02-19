@@ -32,16 +32,13 @@ add_library(lib3mf::lib3mf SHARED IMPORTED)
 
 # Set target properties for include directory and library path
 set_target_properties(lib3mf::lib3mf PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${lib3mf_INCLUDE_DIR}"
-    IMPORTED_LOCATION "${lib3mf_LIBRARY}"
+        INTERFACE_INCLUDE_DIRECTORIES "${lib3mf_INCLUDE_DIR}"
+        IMPORTED_LOCATION "${lib3mf_LIBRARY}"
+)
+target_compile_definitions(lib3mf::lib3mf INTERFACE
+        "LIB3MF_LIBRARY_LOCATION=\"$<TARGET_PROPERTY:lib3mf::lib3mf,IMPORTED_LOCATION>\""
 )
 
 if(WIN32)
-    set_property(TARGET lib3mf PROPERTY IMPORTED_IMPLIB "${lib3mf_LIBRARY_IMPORT}")
-endif()
-
-# Check if CDynamic variant is selected and set CDYNAMIC_SOURCE variable
-if("${lib3mf_selected_variant}" STREQUAL "CDynamic")
-    # Set CDYNAMIC_SOURCE to the path of the .cc file
-    set(CDYNAMIC_SOURCE "${CMAKE_CURRENT_LIST_DIR}/../../../include/Bindings/CDynamic/lib3mf_dynamic.cc" PARENT_SCOPE)
+    set_property(TARGET lib3mf::lib3mf PROPERTY IMPORTED_IMPLIB "${lib3mf_LIBRARY_IMPORT}")
 endif()
