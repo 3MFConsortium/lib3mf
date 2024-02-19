@@ -40,3 +40,8 @@ if(WIN32)
     set_property(TARGET lib3mf PROPERTY IMPORTED_IMPLIB "${lib3mf_LIBRARY_IMPORT}")
 endif()
 
+# Check if CDynamic variant is selected and set CDYNAMIC_SOURCE variable
+if("${lib3mf_selected_variant}" STREQUAL "CDynamic")
+    # Set CDYNAMIC_SOURCE to the path of the .cc file
+    set(CDYNAMIC_SOURCE "${CMAKE_CURRENT_LIST_DIR}/../../../include/Bindings/CDynamic/lib3mf_dynamic.cc" PARENT_SCOPE)
+endif()
