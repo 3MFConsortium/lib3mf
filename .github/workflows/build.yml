@@ -328,11 +328,11 @@ jobs:
       - name: Download lib3mf (Debian Linux)
         uses: actions/download-artifact@v2
         with:
-          name: lib3mf-debian.zip
+          name: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
           path: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
       - name: Unpack the cpacked SDK
         run: |
-          unzip lib3mf-debian.zip
+          unzip lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb.zip
       - run: pwd
       - run: ls -Rl .
       - name: Install the debian package
