@@ -44,10 +44,3 @@ echo "GITRevision = "`git rev-parse HEAD` >> $VERSIONTXT
 echo Zip SDK artifacts
 cd $SDKARTIFACT
 zip -r ../$OUTFILE ./* || failed "Error zipping SDK"
-
-
-# Test other packages
-ls -al $LOCATION
-#unzip build/lib3mf-2.3.0-Linux.zip
-#ls -al
-#ls build/
