@@ -333,6 +333,7 @@ jobs:
       - name: Check the file type
         run: |
           file lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
+          file lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
       - run: pwd
       - run: ls -Rl .
 #      - name: Install the debian package
