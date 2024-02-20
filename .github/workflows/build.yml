@@ -163,7 +163,7 @@ jobs:
           path: build/Debug/lib3mf.pdb
       - uses: actions/upload-artifact@v2
         with:
-         name: lib3mf.lib
+         name: lib3mf.debug.lib
          path: build/Debug/lib3mf.lib
   build-windows-32bit:
     runs-on: windows-2019
