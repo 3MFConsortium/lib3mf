@@ -4,17 +4,17 @@ env:
 name: Build
 jobs:
 
-#  build-linux-memtest:
-#    runs-on: ubuntu-20.04
-#    steps:
-#      - run: sudo apt update
-#      - run: sudo apt install -y valgrind uuid-dev
-#      - uses: actions/checkout@v2
-#        with:
-#          submodules: true
-#      - run: sh cmake/GenerateMake.sh
-#      - run: cmake --build . --target lib3mf_memcheck
-#        working-directory: ./build
+  build-linux-memtest:
+    runs-on: ubuntu-20.04
+    steps:
+      - run: sudo apt update
+      - run: sudo apt install -y valgrind uuid-dev
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - run: sh cmake/GenerateMake.sh
+      - run: cmake --build . --target lib3mf_memcheck
+        working-directory: ./build
 
   build-linux-ubi8-gcc12:
     runs-on: ubuntu-20.04
@@ -115,32 +115,32 @@ jobs:
           name: ${{ env.ARTIFACT_NAME }}
           path: build/${{ env.ARTIFACT_NAME }}
 
-#  codecoverage-macos:
-#    runs-on: macos-latest
-#    steps:
-#      - uses: actions/checkout@v4
-#        with:
-#          submodules: true
-#      - name: Install Prerequisites
-#        run: |
-#          brew install lcov
-#          brew install gcovr
-#      - run: sh cmake/GenerateMake.sh -DBUILD_FOR_CODECOVERAGE=ON
-#      - run: cmake --build .
-#        working-directory: ./build
-#      - run: ./Tests/codecoverage/run_codecoverage.sh
-#      - name: Archive Code Coverage Results
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: codecoverage.zip
-#          path: build/codecoverage.zip
-#      - name: Upload code coverage to codecov
-#        uses: codecov/codecov-action@v3
-#        with:
-#          token: ${{ secrets.CODECOV_TOKEN }}
-#          files: ./build/Test_CPP_Bindings_filtered.info
-#          fail_ci_if_error: true # optional (default = false)
-#          verbose: true # optional (default = false)
+  codecoverage-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Install Prerequisites
+        run: |
+          brew install lcov
+          brew install gcovr
+      - run: sh cmake/GenerateMake.sh -DBUILD_FOR_CODECOVERAGE=ON
+      - run: cmake --build .
+        working-directory: ./build
+      - run: ./Tests/codecoverage/run_codecoverage.sh
+      - name: Archive Code Coverage Results
+        uses: actions/upload-artifact@v2
+        with:
+          name: codecoverage.zip
+          path: build/codecoverage.zip
+      - name: Upload code coverage to codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./build/Test_CPP_Bindings_filtered.info
+          fail_ci_if_error: true # optional (default = false)
+          verbose: true # optional (default = false)
           
   build-windows-release:
     runs-on: windows-2019
@@ -176,55 +176,55 @@ jobs:
           name: ${{ env.ARTIFACT_NAME }}
           path: build/${{ env.ARTIFACT_NAME }}
 
-#  build-windows-debug:
-#    runs-on: windows-2019
-#    steps:
-#      - uses: actions/checkout@v2
-#        with:
-#          submodules: true
-#      - run: ./cmake/GenerateVS2019.bat
-#      - run: cmake --build . --config Debug
-#        working-directory: ./build
-#      - run: ctest -V
-#        working-directory: ./build
-#      - name: Archive Windows Debug binary
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: lib3mf.debug.dll
-#          path: build/Debug/lib3mf.dll
-#  build-windows-32bit:
-#    runs-on: windows-2019
-#    steps:
-#      - uses: actions/checkout@v2
-#        with:
-#          submodules: true
-#      - run: ./cmake/GenerateVS2019_32bit.bat
-#      - run: cmake --build . --config Release
-#        working-directory: ./build_32bit
-#      - run: ctest -V
-#        working-directory: ./build_32bit
-#      - name: Archive Windows 32 bit Release binary
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: lib3mf_32bit.dll
-#          path: build_32bit/Release/lib3mf.dll
-#      - name: Archive Windows 32 bit Release lib
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: lib3mf_32bit.lib
-#          path: build_32bit/Release/lib3mf.lib
-#  build-mingw-w64:
-#    runs-on: windows-2019
-#    steps:
-#      - run: choco install mingw -y
-#      - uses: actions/checkout@v2
-#        with:
-#          submodules: true
-#      - run: ./cmake/GenerateMinGW.bat
-#      - run: cmake --build .
-#        working-directory: ./build
-#      - run: ctest -V
-#        working-directory: ./build
+  build-windows-debug:
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - run: ./cmake/GenerateVS2019.bat
+      - run: cmake --build . --config Debug
+        working-directory: ./build
+      - run: ctest -V
+        working-directory: ./build
+      - name: Archive Windows Debug binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: lib3mf.debug.dll
+          path: build/Debug/lib3mf.dll
+  build-windows-32bit:
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - run: ./cmake/GenerateVS2019_32bit.bat
+      - run: cmake --build . --config Release
+        working-directory: ./build_32bit
+      - run: ctest -V
+        working-directory: ./build_32bit
+      - name: Archive Windows 32 bit Release binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: lib3mf_32bit.dll
+          path: build_32bit/Release/lib3mf.dll
+      - name: Archive Windows 32 bit Release lib
+        uses: actions/upload-artifact@v2
+        with:
+          name: lib3mf_32bit.lib
+          path: build_32bit/Release/lib3mf.lib
+  build-mingw-w64:
+    runs-on: windows-2019
+    steps:
+      - run: choco install mingw -y
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - run: ./cmake/GenerateMinGW.bat
+      - run: cmake --build .
+        working-directory: ./build
+      - run: ctest -V
+        working-directory: ./build
 
 
   assemble-sdk:
