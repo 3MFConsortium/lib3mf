@@ -10,12 +10,18 @@ elseif(APPLE)
 	# Path for macOS (Darwin)
 	set(lib3mf_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../lib3mf-2.3.0-Darwin/lib/cmake/lib3mf")
 else()
-	# Assuming the else case is Linux or other Unix-like except macOS
-	set(lib3mf_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../lib3mf-2.3.0-Linux/lib/cmake/lib3mf")
+	# Path for Linux (Here we check twice to test for Debian / RPM packages properly)
+	find_package(lib3mf QUIET COMPONENTS Cpp)
+	# Check if the package was not found
+	if(NOT lib3mf_FOUND)
+		# lib3mf not found, so set lib3mf_DIR to the fallback directory
+		set(lib3mf_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../lib3mf-2.3.0-Linux/lib/cmake/lib3mf")
+
+	endif()
 endif()
 
 # Find package (lib3mf)
-find_package(lib3mf REQUIRED Cpp)
+find_package(lib3mf REQUIRED COMPONENTS Cpp)
 
 add_definitions(-DTEXTURESPATH="${CMAKE_CURRENT_SOURCE_DIR}/../Files/Textures/")
 
