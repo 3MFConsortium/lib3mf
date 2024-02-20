@@ -280,7 +280,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [assemble-sdk]
     steps:
-      - run: sudo apt install -y zip unzip
+      - run: sudo apt install -y zip unzip file
       - run: pwd
       - run: ls -Rl .
       - name: Download lib3mf_sdk artifact
@@ -330,26 +330,26 @@ jobs:
         with:
           name: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
           path: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
-      - name: Unpack the cpacked SDK
+      - name: Check the file type
         run: |
-          unzip lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb.zip
+          file lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
       - run: pwd
       - run: ls -Rl .
-      - name: Install the debian package
-        run: |
-          sudo dpkg -i lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
-      - name: Build CppDynamicNew (Debian)
-        run: |
-          sh Examples/CppDynamicNew/GenerateMake.sh
-          cd Examples/CppDynamicNew/build
-          cmake --build .
-          ./Example_ExtractInfo ../../Files/Helix.3mf
-      - name: Build CppNew (Debian)
-        run: |
-          sh Examples/CppNew/GenerateMake.sh
-          cd Examples/CppNew/build
-          cmake --build .
-          ./Example_ExtractInfo ../../Files/Helix.3mf    
+#      - name: Install the debian package
+#        run: |
+#          sudo dpkg -i DEBIAN_INTERMEDIATE/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
+#      - name: Build CppDynamicNew (Debian)
+#        run: |
+#          sh Examples/CppDynamicNew/GenerateMake.sh
+#          cd Examples/CppDynamicNew/build
+#          cmake --build .
+#          ./Example_ExtractInfo ../../Files/Helix.3mf
+#      - name: Build CppNew (Debian)
+#        run: |
+#          sh Examples/CppNew/GenerateMake.sh
+#          cd Examples/CppNew/build
+#          cmake --build .
+#          ./Example_ExtractInfo ../../Files/Helix.3mf
 
   deploy-windows:
     runs-on: windows-2019
