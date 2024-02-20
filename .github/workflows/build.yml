@@ -336,21 +336,21 @@ jobs:
           file lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
       - run: pwd
       - run: ls -Rl .
-#      - name: Install the debian package
-#        run: |
-#          sudo dpkg -i DEBIAN_INTERMEDIATE/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
-#      - name: Build CppDynamicNew (Debian)
-#        run: |
-#          sh Examples/CppDynamicNew/GenerateMake.sh
-#          cd Examples/CppDynamicNew/build
-#          cmake --build .
-#          ./Example_ExtractInfo ../../Files/Helix.3mf
-#      - name: Build CppNew (Debian)
-#        run: |
-#          sh Examples/CppNew/GenerateMake.sh
-#          cd Examples/CppNew/build
-#          cmake --build .
-#          ./Example_ExtractInfo ../../Files/Helix.3mf
+      - name: Install the debian package
+        run: |
+          sudo dpkg -i lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
+      - name: Build CppDynamicNew (Debian)
+        run: |
+          sh Examples/CppDynamicNew/GenerateMake.sh
+          cd Examples/CppDynamicNew/build
+          cmake --build .
+          ./Example_ExtractInfo ../../Files/Helix.3mf
+      - name: Build CppNew (Debian)
+        run: |
+          sh Examples/CppNew/GenerateMake.sh
+          cd Examples/CppNew/build
+          cmake --build .
+          ./Example_ExtractInfo ../../Files/Helix.3mf
 
   deploy-windows:
     runs-on: windows-2019
