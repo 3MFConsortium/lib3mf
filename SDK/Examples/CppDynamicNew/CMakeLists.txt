@@ -47,12 +47,16 @@ elseif(APPLE)
 	# Path for macOS (Darwin)
 	set(lib3mf_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../lib3mf-2.3.0-Darwin/lib/cmake/lib3mf")
 else()
-	# Assuming the else case is Linux or other Unix-like except macOS
-	set(lib3mf_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../lib3mf-2.3.0-Linux/lib/cmake/lib3mf")
+	# Path for Linux (Here we check twice to test for Debian / RPM packages properly)
+	find_package(lib3mf QUIET COMPONENTS CppDynamic)
+	# Check if the package was not found
+	if(NOT lib3mf_FOUND)
+		# lib3mf not found, so set lib3mf_DIR to the fallback directory
+		set(lib3mf_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../lib3mf-2.3.0-Linux/lib/cmake/lib3mf")
+		# Find package (lib3mf)
+		find_package(lib3mf REQUIRED COMPONENTS CppDynamic)
+	endif()
 endif()
-
-# Find package
-find_package(lib3mf REQUIRED CppDynamic)
 
 add_executable(Example_ExtractInfo "${CMAKE_CURRENT_SOURCE_DIR}/Source/ExtractInfo.cpp")
 
