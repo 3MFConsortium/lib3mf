@@ -47,7 +47,7 @@ find_package(lib3mf REQUIRED CppDynamic)
 add_executable(Example_ExtractInfo "${CMAKE_CURRENT_SOURCE_DIR}/Source/ExtractInfo.cpp")
 
 # In case of CDynamic and CppDynamic, the lib3mf::lib3mf is simply an alias to an interface
-target_link_libraries(Example_ExtractInfo lib3mf::lib3mf)
+target_link_libraries(Example_ExtractInfo lib3mf::lib3mf ${CMAKE_DL_LIBS})
 
 if (${MSVC})
 	IF(${CMAKE_VERSION} VERSION_LESS 3.6.3)
