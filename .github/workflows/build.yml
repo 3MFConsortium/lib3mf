@@ -354,6 +354,28 @@ jobs:
           cd Examples/Cpp/build
           cmake --build . --config Release
           ./Release/Example_ExtractInfo.exe ../../Files/Helix.3mf
+      - name: Download lib3mf cpack (Windows)
+        uses: actions/download-artifact@v2
+        with:
+          name: lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
+          path: lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
+      - run: ls -Rl .
+      - name: Unpack the cpacked SDK
+        run: |
+          unzip lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip/lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
+      - name: Build CppDynamic (Windows)
+        run: |
+          ./Examples/CppDynamic/GenerateVS2019.bat
+          cd Examples/CppDynamic/build
+          cmake --build . --config Release
+          ./Release/Example_ExtractInfo.exe ../../Files/Helix.3mf
+      - name: Build Cpp (Windows)
+        run: |
+          ./Examples/Cpp/GenerateVS2019.bat
+          cd Examples/Cpp/build
+          cmake --build . --config Release
+          ./Release/Example_ExtractInfo.exe ../../Files/Helix.3mf
+
   deploy-macos:
     runs-on: macos-latest
     needs: [assemble-sdk]
@@ -376,5 +398,26 @@ jobs:
         run: |
           sh Examples/Cpp/GenerateMake.sh
           cd Examples/Cpp/build
+          cmake --build .
+          ./Example_ExtractInfo ../../Files/Helix.3mf
+      - name: Download lib3mf cpack (Darwin)
+        uses: actions/download-artifact@v2
+        with:
+          name: lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip
+          path: lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip
+      - run: ls -Rl .
+      - name: Unpack the cpacked SDK (Darwin)
+        run: |
+          unzip lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip/lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip
+      - name: Build CppDynamicNew (Darwin)
+        run: |
+          sh Examples/CppDynamicNew/GenerateMake.sh
+          cd Examples/CppDynamicNew/build
+          cmake --build .
+          ./Example_ExtractInfo ../../Files/Helix.3mf
+      - name: Build CppNew (Darwin)
+        run: |
+          sh Examples/CppNew/GenerateMake.sh
+          cd Examples/CppNew/build
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
