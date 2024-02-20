@@ -39,9 +39,19 @@ cmake_minimum_required(VERSION 3.5)
 project(Example_ExtractInfo)
 set(CMAKE_CXX_STANDARD 11)
 
-# For Linux
-set(lib3mf_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../lib3mf-2.3.0-Linux/lib/cmake/lib3mf)
+# Determine the platform and set lib3mf_DIR accordingly
+if(WIN32)
+	# Path for Windows
+	set(lib3mf_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../lib3mf-2.3.0-Windows/lib/cmake/lib3mf")
+elseif(APPLE)
+	# Path for macOS (Darwin)
+	set(lib3mf_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../lib3mf-2.3.0-Darwin/lib/cmake/lib3mf")
+else()
+	# Assuming the else case is Linux or other Unix-like except macOS
+	set(lib3mf_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../lib3mf-2.3.0-Linux/lib/cmake/lib3mf")
+endif()
 
+# Find package
 find_package(lib3mf REQUIRED CppDynamic)
 
 add_executable(Example_ExtractInfo "${CMAKE_CURRENT_SOURCE_DIR}/Source/ExtractInfo.cpp")
