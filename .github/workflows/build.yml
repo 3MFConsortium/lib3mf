@@ -330,6 +330,7 @@ jobs:
         with:
           name: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
           path: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
+      - run: pwd
       - run: ls -Rl .
       - name: Install the debian package
         run: |
