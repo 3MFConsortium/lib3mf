@@ -317,7 +317,12 @@ jobs:
       - name: Unpack the cpacked SDK
         run: |
           unzip lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip
-      - run: ls -Rl .
+      - name: Build CppDynamicNew
+        run: |
+          sh Examples/CppDynamicNew/GenerateMake.sh
+          cd Examples/CppDynamicNew/build
+          cmake --build .
+          ./Example_ExtractInfo ../../Files/Helix.3mf
 
   deploy-windows:
     runs-on: windows-2019
