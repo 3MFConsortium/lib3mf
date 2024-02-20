@@ -323,6 +323,12 @@ jobs:
           cd Examples/CppDynamicNew/build
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
+      - name: Build CppNew
+        run: |
+          sh Examples/CppNew/GenerateMake.sh
+          cd Examples/CppNew/build
+          cmake --build .
+          ./Example_ExtractInfo ../../Files/Helix.3mf          
 
   deploy-windows:
     runs-on: windows-2019
