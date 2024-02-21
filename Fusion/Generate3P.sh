@@ -51,14 +51,14 @@ major_version=$(grep -oPm1 "(?<=lib3mf\"\sversion=\")[^.]+" AutomaticComponentTo
 echo Copy binaries
 cp $LOCATION/lib3mf.dll/lib3mf.dll $SDKARTIFACT/win64_0/libs/Release/lib3mf.$major_version.dll || failed "Error copying binary"
 cp $LOCATION/lib3mf.lib/lib3mf.lib $SDKARTIFACT/win64_0/libs/Release/lib3mf.$major_version.lib || failed "Error copying binary"
-cp $LOCATION/lib3mf.debug.dll/lib3mf.debug.dll $SDKARTIFACT/win64_0/libs/Debug/lib3mf.$major_version.dll || failed "Error copying binary"
-cp $LOCATION/lib3mf.debug.lib/lib3mf.debug.lib $SDKARTIFACT/win64_0/libs/Debug/lib3mf.$major_version.lib || failed "Error copying binary"
+cp $LOCATION/lib3mf.debug.dll/lib3mf.dll $SDKARTIFACT/win64_0/libs/Debug/lib3mf.$major_version.dll || failed "Error copying binary"
+cp $LOCATION/lib3mf.debug.lib/lib3mf.lib $SDKARTIFACT/win64_0/libs/Debug/lib3mf.$major_version.lib || failed "Error copying binary"
 cp $LOCATION/lib3mf.pdb/lib3mf.pdb $SDKARTIFACT/win64_0/libs/Debug/lib3mf.$major_version.pdb || failed "Error copying binary"
 cp $LOCATION/lib3mf.dll/lib3mf.dll $SDKARTIFACT/win64_0/runtimeroots/Release/lib3mf.$major_version.dll || failed "Error copying binary"
 
 
 cp $LOCATION/lib3mf.dylib/lib3mf.dylib $SDKARTIFACT/mac64_0/libs/Release/lib3mf/lib3mf.$major_version.dylib || failed "Error copying binary"
-cp $LOCATION/lib3mf.debug.dylib/lib3mf.debug.dylib $SDKARTIFACT/mac64_0/libs/Debug/lib3mf/lib3mf.$major_version.dylib || failed "Error copying binary"
+cp $LOCATION/lib3mf.debug.dylib/lib3mf.dylib $SDKARTIFACT/mac64_0/libs/Debug/lib3mf/lib3mf.$major_version.dylib || failed "Error copying binary"
 cp $LOCATION/lib3mf.dylib/lib3mf.dylib $SDKARTIFACT/mac64_0/Frameworks/Release/lib3mf/lib3mf.$major_version.dylib || failed "Error copying binary"
 
 cp $LOCATION/lib3mf.so/lib3mf.so.2 $SDKARTIFACT/linux_0/lib/lib3mf.$major_version.so || failed "Error copying binary"
