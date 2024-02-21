@@ -200,7 +200,7 @@ jobs:
         working-directory: ./build
   assemble-sdk:
     runs-on: ubuntu-20.04
-    needs: [build-windows-release, build-macos, build-linux-ubi8-gcc12]
+    needs: [build-windows-debug, build-windows-release, build-macos-debug, build-macos, build-linux-ubi8-gcc12]
     steps:
       - run: sudo apt install -y zip unzip
       - run: mkdir build
@@ -215,11 +215,24 @@ jobs:
       - run: unzip bindings.zip/bindings.zip
         working-directory: ./build
       - run: bash SDK/GenerateSDK_github.sh
+      - run: bash Fusion/Generate3P.sh
       - name: Archive SDK artifact
         uses: actions/upload-artifact@v2
         with:
           name: lib3mf_sdk.zip
           path: build/lib3mf_sdk.zip
+      - uses: actions/upload-artifact@v2
+        with:
+          name: win64_0.zip
+          path: build/win64_0.zip
+      - uses: actions/upload-artifact@v2
+        with:
+          name: mac64_0.zip
+          path: build/mac64_0.zip
+      - uses: actions/upload-artifact@v2
+        with:
+            name: linux_0.zip
+            path: build/linux_0.zip
   deploy-linux:
     runs-on: ubuntu-20.04
     needs: [assemble-sdk]
