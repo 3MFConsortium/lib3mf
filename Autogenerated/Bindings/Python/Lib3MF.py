@@ -147,6 +147,10 @@ class FunctionTable:
 	lib3mf_base_classtypeid = None
 	lib3mf_binarystream_getpath = None
 	lib3mf_binarystream_getuuid = None
+	lib3mf_binarystream_disablediscretizedarraycompression = None
+	lib3mf_binarystream_enablediscretizedarraycompression = None
+	lib3mf_binarystream_enablelzma = None
+	lib3mf_binarystream_disablelzma = None
 	lib3mf_writer_writetofile = None
 	lib3mf_writer_getstreamsize = None
 	lib3mf_writer_writetobuffer = None
@@ -697,6 +701,11 @@ class BeamLatticeBallMode(CTypesEnum):
 	None = 0
 	Mixed = 1
 	All = 2
+'''Definition of BinaryStreamPredictionType
+'''
+class BinaryStreamPredictionType(CTypesEnum):
+	NoPrediction = 0
+	DeltaPrediction = 1
 '''Definition of ProgressIdentifier
 '''
 class ProgressIdentifier(CTypesEnum):
@@ -1072,6 +1081,30 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
 			self.lib.lib3mf_binarystream_getuuid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_binarystream_disablediscretizedarraycompression")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_binarystream_disablediscretizedarraycompression = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_binarystream_enablediscretizedarraycompression")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_double, BinaryStreamPredictionType)
+			self.lib.lib3mf_binarystream_enablediscretizedarraycompression = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_binarystream_enablelzma")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
+			self.lib.lib3mf_binarystream_enablelzma = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_binarystream_disablelzma")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_binarystream_disablelzma = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_writer_writetofile")), methodAddress)
 			if err != 0:
@@ -3940,6 +3973,18 @@ class Wrapper:
 			self.lib.lib3mf_binarystream_getuuid.restype = ctypes.c_int32
 			self.lib.lib3mf_binarystream_getuuid.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
+			self.lib.lib3mf_binarystream_disablediscretizedarraycompression.restype = ctypes.c_int32
+			self.lib.lib3mf_binarystream_disablediscretizedarraycompression.argtypes = [ctypes.c_void_p]
+			
+			self.lib.lib3mf_binarystream_enablediscretizedarraycompression.restype = ctypes.c_int32
+			self.lib.lib3mf_binarystream_enablediscretizedarraycompression.argtypes = [ctypes.c_void_p, ctypes.c_double, BinaryStreamPredictionType]
+			
+			self.lib.lib3mf_binarystream_enablelzma.restype = ctypes.c_int32
+			self.lib.lib3mf_binarystream_enablelzma.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			
+			self.lib.lib3mf_binarystream_disablelzma.restype = ctypes.c_int32
+			self.lib.lib3mf_binarystream_disablelzma.argtypes = [ctypes.c_void_p]
+			
 			self.lib.lib3mf_writer_writetofile.restype = ctypes.c_int32
 			self.lib.lib3mf_writer_writetofile.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
 			
@@ -5705,6 +5750,24 @@ class BinaryStream(Base):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_getuuid(self._handle, nUUIDBufferSize, nUUIDNeededChars, pUUIDBuffer))
 		
 		return pUUIDBuffer.value.decode()
+	
+	def DisableDiscretizedArrayCompression(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_disablediscretizedarraycompression(self._handle))
+		
+	
+	def EnableDiscretizedArrayCompression(self, Units, PredictionType):
+		dUnits = ctypes.c_double(Units)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_enablediscretizedarraycompression(self._handle, dUnits, PredictionType))
+		
+	
+	def EnableLZMA(self, LZMALevel):
+		nLZMALevel = ctypes.c_uint32(LZMALevel)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_enablelzma(self._handle, nLZMALevel))
+		
+	
+	def DisableLZMA(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_disablelzma(self._handle))
+		
 	
 
 

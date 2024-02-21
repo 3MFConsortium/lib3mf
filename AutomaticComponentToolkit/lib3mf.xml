@@ -180,6 +180,12 @@
 		<option name="Mixed" value="1"/>
 		<option name="All" value="2"/>
 	</enum>
+	
+	<enum name="BinaryStreamPredictionType">
+		<option name="NoPrediction" value="0"/>
+		<option name="DeltaPrediction" value="1"/>
+	</enum>
+	
 
 	<enum name="ProgressIdentifier">
 		<option name="QUERYCANCELED" value="0"/>
@@ -323,6 +329,7 @@
 		</method>
 	</class>
 
+
 	<class name="BinaryStream" parent="Base">  
 		<method name="GetPath" description = "Retrieves an binary streams package path.">
 			<param name="Path" type="string" pass="return" description="binary streams package path." />
@@ -331,6 +338,22 @@
 		<method name="GetUUID" description = "Retrieves an binary streams uuid.">
 			<param name="UUID" type="string" pass="return" description="binary streams uuid" />
 		</method>
+
+		<method name="DisableDiscretizedArrayCompression" description="Sets the float compression mode to raw. All subsequent writes will adhere to this mode.">
+		</method>
+		
+		<method name="EnableDiscretizedArrayCompression" description="Sets the compression mode to a quantized array. All subsequent writes will adhere to this mode.">
+			<param name="Units" type="double" pass="in" description="Unit factor to use for quantization." />
+			<param name="PredictionType" type="enum" class="BinaryStreamPredictionType" pass="in" description="Prediction type to use for arrays." />			
+		</method>
+		
+		<method name="EnableLZMA" description="Enables LZMA mode.">
+			<param name="LZMALevel" type="uint32" pass="in" description="LZMA Level (0-9)" />
+		</method>
+		
+		<method name="DisableLZMA" description="Disables LZMA mode.">
+		</method>
+		
 	</class>
 
 
@@ -388,7 +411,7 @@
 			<param name="BinaryStream" type="class" class="BinaryStream" pass="return" description="Returns a package path." />
 		</method>
 		
-		<method name="AssignBinaryStream" description="Sets a binary stream for a mesh object. Currently supported objects are Meshes and Toolpath layers.">
+		<method name="AssignBinaryStream" description="Sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.">
 			<param name="Instance" type="class" class="Base" pass="in" description="Object instance to assign Binary stream to." />
 			<param name="BinaryStream" type="class" class="BinaryStream" pass="in" description="Binary stream object to use for this layer." />
 		</method>
@@ -942,6 +965,7 @@
 		<method name="AssignSliceStack" description="assigns a slicestack to the object">
 			<param name="SliceStackInstance" type="handle" class="SliceStack" pass="in" description="the new slice stack of this Object"/>
 		</method>
+		
 	</class>
 
 	<class name="MeshObject" parent="Object">

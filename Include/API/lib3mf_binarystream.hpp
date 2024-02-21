@@ -67,6 +67,12 @@ public:
 	std::string GetPath();
 	std::string GetUUID();
 
+
+	void DisableDiscretizedArrayCompression();
+	void EnableDiscretizedArrayCompression(const Lib3MF_double dUnits, const Lib3MF::eBinaryStreamPredictionType ePredictionType);
+	void EnableLZMA(const Lib3MF_uint32 nLZMALevel);
+	void DisableLZMA();
+
 };
 
 } // namespace Impl

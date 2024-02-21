@@ -357,6 +357,11 @@ namespace Lib3MF {
     All = 2
   };
   
+  enum class eBinaryStreamPredictionType : Lib3MF_int32 {
+    NoPrediction = 0,
+    DeltaPrediction = 1
+  };
+  
   enum class eProgressIdentifier : Lib3MF_int32 {
     QUERYCANCELED = 0,
     DONE = 1,
@@ -588,6 +593,7 @@ typedef Lib3MF::eTextureFilter eLib3MFTextureFilter;
 typedef Lib3MF::eBeamLatticeCapMode eLib3MFBeamLatticeCapMode;
 typedef Lib3MF::eBeamLatticeClipMode eLib3MFBeamLatticeClipMode;
 typedef Lib3MF::eBeamLatticeBallMode eLib3MFBeamLatticeBallMode;
+typedef Lib3MF::eBinaryStreamPredictionType eLib3MFBinaryStreamPredictionType;
 typedef Lib3MF::eProgressIdentifier eLib3MFProgressIdentifier;
 typedef Lib3MF::eBlendMethod eLib3MFBlendMethod;
 typedef Lib3MF::eToolpathSegmentType eLib3MFToolpathSegmentType;

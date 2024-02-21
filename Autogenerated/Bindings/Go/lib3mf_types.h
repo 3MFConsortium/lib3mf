@@ -356,6 +356,11 @@ typedef enum eLib3MFBeamLatticeBallMode {
   eBeamLatticeBallModeAll = 2
 } eLib3MFBeamLatticeBallMode;
 
+typedef enum eLib3MFBinaryStreamPredictionType {
+  eBinaryStreamPredictionTypeNoPrediction = 0,
+  eBinaryStreamPredictionTypeDeltaPrediction = 1
+} eLib3MFBinaryStreamPredictionType;
+
 typedef enum eLib3MFProgressIdentifier {
   eProgressIdentifierQUERYCANCELED = 0,
   eProgressIdentifierDONE = 1,
@@ -486,6 +491,11 @@ typedef union {
   eLib3MFBeamLatticeBallMode m_enum;
   int m_code;
 } structEnumLib3MFBeamLatticeBallMode;
+
+typedef union {
+  eLib3MFBinaryStreamPredictionType m_enum;
+  int m_code;
+} structEnumLib3MFBinaryStreamPredictionType;
 
 typedef union {
   eLib3MFProgressIdentifier m_enum;

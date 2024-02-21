@@ -47,6 +47,13 @@ namespace NMR {
 
 		nfBool m_bIsEmpty;
 
+		bool m_bEnableLZMA;
+		uint32_t m_nLZMALevel;
+
+		eChunkedBinaryPredictionType m_PredictionType;
+		bool m_bQuantizeFloats;
+		double m_dQuantizationUnits;
+
 		std::vector<BINARYCHUNKFILECHUNK> m_Chunks;
 
 		BINARYCHUNKFILECHUNK * m_CurrentChunk;
@@ -64,14 +71,24 @@ namespace NMR {
 		void finishChunk();
 		nfUint32 getChunkCount ();
 
+		void setEnableLZMA(bool bEnableLZMA);
+		void setLZMALevel(uint32_t nLZMALevel);
+
 		void finishWriting ();
 
 		nfUint32 addIntArray (const nfInt32 * pData, nfUint32 nLength, eChunkedBinaryPredictionType predictionType);
 		nfUint32 addFloatArray(const nfFloat * pData, nfUint32 nLength, eChunkedBinaryPredictionType predictionType, nfFloat fDiscretizationUnits);
+		nfUint32 addRawFloatArray(const nfFloat* pData, nfUint32 nLength);
 
 		void copyToStream (PExportStream pStream);
 
 		nfBool isEmpty();
+
+		void setDefaultCompressionMode (bool bQuantizeFloat, double dQuantizationUnits, eChunkedBinaryPredictionType predictionType);
+		bool getFloatQuantization();
+		double getFloatQuantizationUnits();
+		eChunkedBinaryPredictionType getPredictionType();
+		
 
 	};
 

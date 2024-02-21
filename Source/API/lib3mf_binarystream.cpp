@@ -64,3 +64,35 @@ std::string CBinaryStream::GetUUID()
 {
 	return m_sUUID;
 }
+
+void CBinaryStream::DisableDiscretizedArrayCompression()
+{
+	m_pStreamWriter->setDefaultCompressionMode(false, 0.001, NMR::eChunkedBinaryPredictionType::eptNoPredicition);
+}
+
+void CBinaryStream::EnableDiscretizedArrayCompression(const Lib3MF_double dUnits, const Lib3MF::eBinaryStreamPredictionType ePredictionType)
+{
+	switch (ePredictionType) {
+		case eBinaryStreamPredictionType::NoPrediction: 
+			m_pStreamWriter->setDefaultCompressionMode(true, dUnits, NMR::eChunkedBinaryPredictionType::eptNoPredicition);
+			break;
+		case eBinaryStreamPredictionType::DeltaPrediction:
+			m_pStreamWriter->setDefaultCompressionMode(true, dUnits, NMR::eChunkedBinaryPredictionType::eptDeltaPredicition);
+			break;
+		default:
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	}
+}
+
+
+void CBinaryStream::EnableLZMA(const Lib3MF_uint32 nLZMALevel)
+{
+	m_pStreamWriter->setEnableLZMA(true);
+	m_pStreamWriter->setLZMALevel(nLZMALevel);
+
+}
+
+void CBinaryStream::DisableLZMA()
+{
+	m_pStreamWriter->setEnableLZMA(false);
+}

@@ -1262,6 +1262,10 @@ void CLib3MFBinaryStream::Init()
 		// Prototype
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetPath", GetPath);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetUUID", GetUUID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "DisableDiscretizedArrayCompression", DisableDiscretizedArrayCompression);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "EnableDiscretizedArrayCompression", EnableDiscretizedArrayCompression);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "EnableLZMA", EnableLZMA);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "DisableLZMA", DisableLZMA);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -1342,6 +1346,98 @@ void CLib3MFBinaryStream::GetUUID(const FunctionCallbackInfo<Value>& args)
         Lib3MFResult errorCode = wrapperTable->m_BinaryStream_GetUUID(instanceHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferUUID[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFBinaryStream::DisableDiscretizedArrayCompression(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method DisableDiscretizedArrayCompression.");
+        if (wrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BinaryStream::DisableDiscretizedArrayCompression.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression(instanceHandle);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFBinaryStream::EnableDiscretizedArrayCompression(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsNumber()) {
+            throw std::runtime_error("Expected double parameter 0 (Units)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 1 (PredictionType)");
+        }
+        double dUnits = (double) args[0]->NumberValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int ePredictionType = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method EnableDiscretizedArrayCompression.");
+        if (wrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BinaryStream::EnableDiscretizedArrayCompression.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression(instanceHandle, dUnits, (eLib3MFBinaryStreamPredictionType) ePredictionType);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFBinaryStream::EnableLZMA(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (LZMALevel)");
+        }
+        unsigned int nLZMALevel = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method EnableLZMA.");
+        if (wrapperTable->m_BinaryStream_EnableLZMA == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BinaryStream::EnableLZMA.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_BinaryStream_EnableLZMA(instanceHandle, nLZMALevel);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFBinaryStream::DisableLZMA(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method DisableLZMA.");
+        if (wrapperTable->m_BinaryStream_DisableLZMA == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BinaryStream::DisableLZMA.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_BinaryStream_DisableLZMA(instanceHandle);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -16773,6 +16869,8 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeBallMode_None"), Integer::New(isolate, 0));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeBallMode_Mixed"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeBallMode_All"), Integer::New(isolate, 2));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBinaryStreamPredictionType_NoPrediction"), Integer::New(isolate, 0));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBinaryStreamPredictionType_DeltaPrediction"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_QUERYCANCELED"), Integer::New(isolate, 0));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_DONE"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_CLEANUP"), Integer::New(isolate, 2));

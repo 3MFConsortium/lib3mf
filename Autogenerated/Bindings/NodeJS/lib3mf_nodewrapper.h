@@ -96,6 +96,10 @@ private:
 	static v8::Persistent<v8::Function> constructor;
 	static void GetPath(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void DisableDiscretizedArrayCompression(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void EnableDiscretizedArrayCompression(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void EnableLZMA(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void DisableLZMA(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFBinaryStream();

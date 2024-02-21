@@ -337,6 +337,29 @@ public:
 	*/
 	virtual std::string GetUUID() = 0;
 
+	/**
+	* IBinaryStream::DisableDiscretizedArrayCompression - Sets the float compression mode to raw. All subsequent writes will adhere to this mode.
+	*/
+	virtual void DisableDiscretizedArrayCompression() = 0;
+
+	/**
+	* IBinaryStream::EnableDiscretizedArrayCompression - Sets the compression mode to a quantized array. All subsequent writes will adhere to this mode.
+	* @param[in] dUnits - Unit factor to use for quantization.
+	* @param[in] ePredictionType - Prediction type to use for arrays.
+	*/
+	virtual void EnableDiscretizedArrayCompression(const Lib3MF_double dUnits, const Lib3MF::eBinaryStreamPredictionType ePredictionType) = 0;
+
+	/**
+	* IBinaryStream::EnableLZMA - Enables LZMA mode.
+	* @param[in] nLZMALevel - LZMA Level (0-9)
+	*/
+	virtual void EnableLZMA(const Lib3MF_uint32 nLZMALevel) = 0;
+
+	/**
+	* IBinaryStream::DisableLZMA - Disables LZMA mode.
+	*/
+	virtual void DisableLZMA() = 0;
+
 };
 
 typedef IBaseSharedPtr<IBinaryStream> PIBinaryStream;
@@ -453,7 +476,7 @@ public:
 	virtual IBinaryStream * CreateBinaryStream(const std::string & sPath) = 0;
 
 	/**
-	* IWriter::AssignBinaryStream - Sets a binary stream for a mesh object. Currently supported objects are Meshes and Toolpath layers.
+	* IWriter::AssignBinaryStream - Sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.
 	* @param[in] pInstance - Object instance to assign Binary stream to.
 	* @param[in] pBinaryStream - Binary stream object to use for this layer.
 	*/

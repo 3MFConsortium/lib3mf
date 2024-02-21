@@ -215,6 +215,11 @@ type
 		eBeamLatticeBallModeAll
 	);
 
+	TLib3MFBinaryStreamPredictionType = (
+		eBinaryStreamPredictionTypeNoPrediction,
+		eBinaryStreamPredictionTypeDeltaPrediction
+	);
+
 	TLib3MFProgressIdentifier = (
 		eProgressIdentifierQUERYCANCELED,
 		eProgressIdentifierDONE,
@@ -497,6 +502,41 @@ type
 	*)
 	TLib3MFBinaryStream_GetUUIDFunc = function(pBinaryStream: TLib3MFHandle; const nUUIDBufferSize: Cardinal; out pUUIDNeededChars: Cardinal; pUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
 	
+	(**
+	* Sets the float compression mode to raw. All subsequent writes will adhere to this mode.
+	*
+	* @param[in] pBinaryStream - BinaryStream instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc = function(pBinaryStream: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the compression mode to a quantized array. All subsequent writes will adhere to this mode.
+	*
+	* @param[in] pBinaryStream - BinaryStream instance.
+	* @param[in] dUnits - Unit factor to use for quantization.
+	* @param[in] ePredictionType - Prediction type to use for arrays.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc = function(pBinaryStream: TLib3MFHandle; const dUnits: Double; const ePredictionType: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Enables LZMA mode.
+	*
+	* @param[in] pBinaryStream - BinaryStream instance.
+	* @param[in] nLZMALevel - LZMA Level (0-9)
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBinaryStream_EnableLZMAFunc = function(pBinaryStream: TLib3MFHandle; const nLZMALevel: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Disables LZMA mode.
+	*
+	* @param[in] pBinaryStream - BinaryStream instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBinaryStream_DisableLZMAFunc = function(pBinaryStream: TLib3MFHandle): TLib3MFResult; cdecl;
+	
 
 (*************************************************************************************************************************
  Function type definitions for Writer
@@ -642,7 +682,7 @@ type
 	TLib3MFWriter_CreateBinaryStreamFunc = function(pWriter: TLib3MFHandle; const pPath: PAnsiChar; out pBinaryStream: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
-	* Sets a binary stream for a mesh object. Currently supported objects are Meshes and Toolpath layers.
+	* Sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.
 	*
 	* @param[in] pWriter - Writer instance.
 	* @param[in] pInstance - Object instance to assign Binary stream to.
@@ -5621,6 +5661,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		destructor Destroy; override;
 		function GetPath(): String;
 		function GetUUID(): String;
+		procedure DisableDiscretizedArrayCompression();
+		procedure EnableDiscretizedArrayCompression(const AUnits: Double; const APredictionType: TLib3MFBinaryStreamPredictionType);
+		procedure EnableLZMA(const ALZMALevel: Cardinal);
+		procedure DisableLZMA();
 	end;
 
 
@@ -6660,6 +6704,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFBase_ClassTypeIdFunc: TLib3MFBase_ClassTypeIdFunc;
 		FLib3MFBinaryStream_GetPathFunc: TLib3MFBinaryStream_GetPathFunc;
 		FLib3MFBinaryStream_GetUUIDFunc: TLib3MFBinaryStream_GetUUIDFunc;
+		FLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc: TLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc;
+		FLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc: TLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc;
+		FLib3MFBinaryStream_EnableLZMAFunc: TLib3MFBinaryStream_EnableLZMAFunc;
+		FLib3MFBinaryStream_DisableLZMAFunc: TLib3MFBinaryStream_DisableLZMAFunc;
 		FLib3MFWriter_WriteToFileFunc: TLib3MFWriter_WriteToFileFunc;
 		FLib3MFWriter_GetStreamSizeFunc: TLib3MFWriter_GetStreamSizeFunc;
 		FLib3MFWriter_WriteToBufferFunc: TLib3MFWriter_WriteToBufferFunc;
@@ -7158,6 +7206,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFBase_ClassTypeIdFunc: TLib3MFBase_ClassTypeIdFunc read FLib3MFBase_ClassTypeIdFunc;
 		property Lib3MFBinaryStream_GetPathFunc: TLib3MFBinaryStream_GetPathFunc read FLib3MFBinaryStream_GetPathFunc;
 		property Lib3MFBinaryStream_GetUUIDFunc: TLib3MFBinaryStream_GetUUIDFunc read FLib3MFBinaryStream_GetUUIDFunc;
+		property Lib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc: TLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc read FLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc;
+		property Lib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc: TLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc read FLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc;
+		property Lib3MFBinaryStream_EnableLZMAFunc: TLib3MFBinaryStream_EnableLZMAFunc read FLib3MFBinaryStream_EnableLZMAFunc;
+		property Lib3MFBinaryStream_DisableLZMAFunc: TLib3MFBinaryStream_DisableLZMAFunc read FLib3MFBinaryStream_DisableLZMAFunc;
 		property Lib3MFWriter_WriteToFileFunc: TLib3MFWriter_WriteToFileFunc read FLib3MFWriter_WriteToFileFunc;
 		property Lib3MFWriter_GetStreamSizeFunc: TLib3MFWriter_GetStreamSizeFunc read FLib3MFWriter_GetStreamSizeFunc;
 		property Lib3MFWriter_WriteToBufferFunc: TLib3MFWriter_WriteToBufferFunc read FLib3MFWriter_WriteToBufferFunc;
@@ -7695,6 +7747,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function convertConstToBeamLatticeClipMode(const AValue: Integer): TLib3MFBeamLatticeClipMode;
 	function convertBeamLatticeBallModeToConst(const AValue: TLib3MFBeamLatticeBallMode): Integer;
 	function convertConstToBeamLatticeBallMode(const AValue: Integer): TLib3MFBeamLatticeBallMode;
+	function convertBinaryStreamPredictionTypeToConst(const AValue: TLib3MFBinaryStreamPredictionType): Integer;
+	function convertConstToBinaryStreamPredictionType(const AValue: Integer): TLib3MFBinaryStreamPredictionType;
 	function convertProgressIdentifierToConst(const AValue: TLib3MFProgressIdentifier): Integer;
 	function convertConstToProgressIdentifier(const AValue: Integer): TLib3MFProgressIdentifier;
 	function convertBlendMethodToConst(const AValue: TLib3MFBlendMethod): Integer;
@@ -8040,6 +8094,27 @@ implementation
 			0: Result := eBeamLatticeBallModeNone;
 			1: Result := eBeamLatticeBallModeMixed;
 			2: Result := eBeamLatticeBallModeAll;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
+		end;
+	end;
+	
+	
+	function convertBinaryStreamPredictionTypeToConst(const AValue: TLib3MFBinaryStreamPredictionType): Integer;
+	begin
+		case AValue of
+			eBinaryStreamPredictionTypeNoPrediction: Result := 0;
+			eBinaryStreamPredictionTypeDeltaPrediction: Result := 1;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
+		end;
+	end;
+	
+	function convertConstToBinaryStreamPredictionType(const AValue: Integer): TLib3MFBinaryStreamPredictionType;
+	begin
+		case AValue of
+			0: Result := eBinaryStreamPredictionTypeNoPrediction;
+			1: Result := eBinaryStreamPredictionTypeDeltaPrediction;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;
@@ -8727,6 +8802,26 @@ implementation
 		SetLength(bufferUUID, bytesNeededUUID);
 		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_GetUUIDFunc(FHandle, bytesNeededUUID, bytesWrittenUUID, @bufferUUID[0]));
 		Result := StrPas(@bufferUUID[0]);
+	end;
+
+	procedure TLib3MFBinaryStream.DisableDiscretizedArrayCompression();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc(FHandle));
+	end;
+
+	procedure TLib3MFBinaryStream.EnableDiscretizedArrayCompression(const AUnits: Double; const APredictionType: TLib3MFBinaryStreamPredictionType);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc(FHandle, AUnits, convertBinaryStreamPredictionTypeToConst(APredictionType)));
+	end;
+
+	procedure TLib3MFBinaryStream.EnableLZMA(const ALZMALevel: Cardinal);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_EnableLZMAFunc(FHandle, ALZMALevel));
+	end;
+
+	procedure TLib3MFBinaryStream.DisableLZMA();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_DisableLZMAFunc(FHandle));
 	end;
 
 (*************************************************************************************************************************
@@ -13801,6 +13896,10 @@ implementation
 		FLib3MFBase_ClassTypeIdFunc := LoadFunction('lib3mf_base_classtypeid');
 		FLib3MFBinaryStream_GetPathFunc := LoadFunction('lib3mf_binarystream_getpath');
 		FLib3MFBinaryStream_GetUUIDFunc := LoadFunction('lib3mf_binarystream_getuuid');
+		FLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc := LoadFunction('lib3mf_binarystream_disablediscretizedarraycompression');
+		FLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc := LoadFunction('lib3mf_binarystream_enablediscretizedarraycompression');
+		FLib3MFBinaryStream_EnableLZMAFunc := LoadFunction('lib3mf_binarystream_enablelzma');
+		FLib3MFBinaryStream_DisableLZMAFunc := LoadFunction('lib3mf_binarystream_disablelzma');
 		FLib3MFWriter_WriteToFileFunc := LoadFunction('lib3mf_writer_writetofile');
 		FLib3MFWriter_GetStreamSizeFunc := LoadFunction('lib3mf_writer_getstreamsize');
 		FLib3MFWriter_WriteToBufferFunc := LoadFunction('lib3mf_writer_writetobuffer');
@@ -14304,6 +14403,18 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_getuuid'), @FLib3MFBinaryStream_GetUUIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_disablediscretizedarraycompression'), @FLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_enablediscretizedarraycompression'), @FLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_enablelzma'), @FLib3MFBinaryStream_EnableLZMAFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_disablelzma'), @FLib3MFBinaryStream_DisableLZMAFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_writer_writetofile'), @FLib3MFWriter_WriteToFileFunc);

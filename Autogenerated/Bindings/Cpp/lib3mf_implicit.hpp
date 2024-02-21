@@ -723,6 +723,10 @@ public:
 	
 	inline std::string GetPath();
 	inline std::string GetUUID();
+	inline void DisableDiscretizedArrayCompression();
+	inline void EnableDiscretizedArrayCompression(const Lib3MF_double dUnits, const eBinaryStreamPredictionType ePredictionType);
+	inline void EnableLZMA(const Lib3MF_uint32 nLZMALevel);
+	inline void DisableLZMA();
 };
 	
 /*************************************************************************************************************************
@@ -2408,6 +2412,41 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CBinaryStream::DisableDiscretizedArrayCompression - Sets the float compression mode to raw. All subsequent writes will adhere to this mode.
+	*/
+	void CBinaryStream::DisableDiscretizedArrayCompression()
+	{
+		CheckError(lib3mf_binarystream_disablediscretizedarraycompression(m_pHandle));
+	}
+	
+	/**
+	* CBinaryStream::EnableDiscretizedArrayCompression - Sets the compression mode to a quantized array. All subsequent writes will adhere to this mode.
+	* @param[in] dUnits - Unit factor to use for quantization.
+	* @param[in] ePredictionType - Prediction type to use for arrays.
+	*/
+	void CBinaryStream::EnableDiscretizedArrayCompression(const Lib3MF_double dUnits, const eBinaryStreamPredictionType ePredictionType)
+	{
+		CheckError(lib3mf_binarystream_enablediscretizedarraycompression(m_pHandle, dUnits, ePredictionType));
+	}
+	
+	/**
+	* CBinaryStream::EnableLZMA - Enables LZMA mode.
+	* @param[in] nLZMALevel - LZMA Level (0-9)
+	*/
+	void CBinaryStream::EnableLZMA(const Lib3MF_uint32 nLZMALevel)
+	{
+		CheckError(lib3mf_binarystream_enablelzma(m_pHandle, nLZMALevel));
+	}
+	
+	/**
+	* CBinaryStream::DisableLZMA - Disables LZMA mode.
+	*/
+	void CBinaryStream::DisableLZMA()
+	{
+		CheckError(lib3mf_binarystream_disablelzma(m_pHandle));
+	}
+	
+	/**
 	 * Method definitions for class CWriter
 	 */
 	
@@ -2575,7 +2614,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CWriter::AssignBinaryStream - Sets a binary stream for a mesh object. Currently supported objects are Meshes and Toolpath layers.
+	* CWriter::AssignBinaryStream - Sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.
 	* @param[in] pInstance - Object instance to assign Binary stream to.
 	* @param[in] pBinaryStream - Binary stream object to use for this layer.
 	*/

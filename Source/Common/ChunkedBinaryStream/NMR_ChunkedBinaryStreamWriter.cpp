@@ -39,12 +39,17 @@ namespace NMR {
 
 
 	CChunkedBinaryStreamWriter::CChunkedBinaryStreamWriter(PExportStreamMemory pExportStream)
-		: m_pExportStream (pExportStream), 
-		  m_elementIDCounter (1), 
-		  m_CurrentChunk (nullptr), 
-		  m_ChunkTableStart (0), 
-		  m_bIsFinished (false), 
-		  m_bIsEmpty (true)
+		: m_pExportStream(pExportStream),
+		m_elementIDCounter(1),
+		m_CurrentChunk(nullptr),
+		m_ChunkTableStart(0),
+		m_bIsFinished(false),
+		m_bIsEmpty(true),
+		m_bQuantizeFloats(false),
+		m_dQuantizationUnits(0.001),
+		m_PredictionType (eptNoPredicition),
+		m_nLZMALevel (5),
+		m_bEnableLZMA (false)
 	{
 		if (pExportStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -104,39 +109,45 @@ namespace NMR {
 			size_t outBufferSize = outBuffer.size ();
 			size_t outPropsSize = outProps.size ();
 
-			int error;
-			error = LzmaCompress (
-				outBuffer.data(), &outBufferSize, 
-				pInputBuffer, inputSize,  
-				outProps.data(), &outPropsSize,
+			if (m_bEnableLZMA) {
 
-//				7, /* 0 <= level <= 9, default = 5 */
-//				64 * 1024 * 1024, /* use (1 << N) or (3 << N). 4 KB < dictSize <= 128 MB */
-//				5, /* 0 <= lc <= 8, default = 3  */
-//				2, /* 0 <= lp <= 4, default = 0  */
-//				3, /* 0 <= pb <= 4, default = 2  */
-//				64,  /* 5 <= fb <= 273, default = 32 */
-//				1 /* 1 or 2, default = 2 */
+				int error;
+				error = LzmaCompress(
+					outBuffer.data(), &outBufferSize,
+					pInputBuffer, inputSize,
+					outProps.data(), &outPropsSize,
 
-				3, /* 0 <= level <= 9, default = 5 */
-				8 * 1024 * 1024, /* use (1 << N) or (3 << N). 4 KB < dictSize <= 128 MB */
-				5, /* 0 <= lc <= 8, default = 3  */
-				2, /* 0 <= lp <= 4, default = 0  */
-				3, /* 0 <= pb <= 4, default = 2  */
-				64,  /* 5 <= fb <= 273, default = 32 */
-				1 /* 1 or 2, default = 2 */
+					//				7, /* 0 <= level <= 9, default = 5 */
+					//				64 * 1024 * 1024, /* use (1 << N) or (3 << N). 4 KB < dictSize <= 128 MB */
+					//				5, /* 0 <= lc <= 8, default = 3  */
+					//				2, /* 0 <= lp <= 4, default = 0  */
+					//				3, /* 0 <= pb <= 4, default = 2  */
+					//				64,  /* 5 <= fb <= 273, default = 32 */
+					//				1 /* 1 or 2, default = 2 */
 
-			);
+					m_nLZMALevel, /* 0 <= level <= 9, default = 5 */
+					8 * 1024 * 1024, /* use (1 << N) or (3 << N). 4 KB < dictSize <= 128 MB */
+					5, /* 0 <= lc <= 8, default = 3  */
+					2, /* 0 <= lp <= 4, default = 0  */
+					3, /* 0 <= pb <= 4, default = 2  */
+					64,  /* 5 <= fb <= 273, default = 32 */
+					1 /* 1 or 2, default = 2 */
 
-			if (error != SZ_OK)
-				throw CNMRException(NMR_ERROR_COULDNOTCOMPRESSDATA);
+				);
 
+				if (error != SZ_OK)
+					throw CNMRException(NMR_ERROR_COULDNOTCOMPRESSDATA);
 
-			// Uncompressed for LibZ Compression
-//			outBufferSize = inputSize; 
-			//for (size_t nIndex = 0; nIndex < inputSize; nIndex++)
-				//outBuffer[nIndex] = pInputBuffer[nIndex]; 
-			//outPropsSize = 0;
+			}
+			else {
+
+				// Uncompressed for LibZ Compression of 3MF Package
+				outBufferSize = inputSize;
+				for (size_t nIndex = 0; nIndex < inputSize; nIndex++)
+					outBuffer[nIndex] = pInputBuffer[nIndex];
+				outPropsSize = 0;
+
+			}
 
 			m_CurrentChunk->m_CompressedDataSize = (nfUint32) outBufferSize;
 			m_CurrentChunk->m_CompressedPropsSize = (nfUint32) outPropsSize;
@@ -147,6 +158,16 @@ namespace NMR {
 		}
 
 		m_CurrentChunk = nullptr;
+	}
+
+	void CChunkedBinaryStreamWriter::setEnableLZMA(bool bEnableLZMA)
+	{
+		m_bEnableLZMA = bEnableLZMA;
+	}
+
+	void CChunkedBinaryStreamWriter::setLZMALevel(uint32_t nLZMALevel)
+	{
+		m_nLZMALevel = nLZMALevel;
 	}
 
 	void CChunkedBinaryStreamWriter::finishWriting()
@@ -218,6 +239,50 @@ namespace NMR {
 
 	}
 
+
+	nfUint32 CChunkedBinaryStreamWriter::addRawFloatArray(const nfFloat* pData, nfUint32 nLength)
+	{
+		nfUint32 nIndex;
+
+		if (m_bIsFinished)
+			throw CNMRException(NMR_ERROR_STREAMWRITERALREADYFINISHED);
+
+		if (pData == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (nLength == 0)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		if (m_CurrentChunk == nullptr)
+			beginChunk();
+
+		unsigned int nElementID = m_elementIDCounter;
+		m_elementIDCounter++;
+
+		m_bIsEmpty = false;
+
+		BINARYCHUNKFILEENTRY Entry;
+		Entry.m_EntryID = nElementID;
+		Entry.m_SizeInBytes = (nLength * 4) + 4;
+		Entry.m_PositionInChunk = m_CurrentChunk->m_UncompressedDataSize;
+
+		Entry.m_EntryType = BINARYCHUNKFILEENTRYTYPE_FLOAT32ARRAY_RAWDATA;
+
+		for (nIndex = 0; nIndex < nLength; nIndex++) {
+			float fValue = pData[nIndex];
+			nfInt32* pValue = (nfInt32*)&fValue;
+
+			m_CurrentChunkData.push_back(*pValue);
+		}
+
+		m_CurrentChunkEntries.push_back(Entry);
+
+		m_CurrentChunk->m_EntryCount++;
+		m_CurrentChunk->m_UncompressedDataSize += Entry.m_SizeInBytes;
+
+		return nElementID;
+
+
+	}
 
 	nfUint32 CChunkedBinaryStreamWriter::addFloatArray(const nfFloat * pData, nfUint32 nLength, eChunkedBinaryPredictionType predictionType, nfFloat fDiscretizationUnits)
 	{
@@ -360,5 +425,28 @@ namespace NMR {
 	{
 		return m_bIsEmpty;
 	}
+
+	void CChunkedBinaryStreamWriter::setDefaultCompressionMode(bool bQuantizeFloat, double dQuantizationUnits, eChunkedBinaryPredictionType predictionType)
+	{
+		m_bQuantizeFloats = bQuantizeFloat;
+		m_dQuantizationUnits = dQuantizationUnits;
+		m_PredictionType = predictionType;
+	}
+
+	bool CChunkedBinaryStreamWriter::getFloatQuantization()
+	{
+		return m_bQuantizeFloats;
+	}
+
+	double CChunkedBinaryStreamWriter::getFloatQuantizationUnits()
+	{
+		return m_dQuantizationUnits;
+	}
+
+	eChunkedBinaryPredictionType CChunkedBinaryStreamWriter::getPredictionType()
+	{
+		return m_PredictionType;
+	}
+
 
 }

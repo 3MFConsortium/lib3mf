@@ -71,7 +71,7 @@ Lib3MF_uint32 CToolpath::GetLayerCount()
 
 Lib3MF_uint32 CToolpath::GetProfileCount()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_pToolpath->getProfileCount();
 }
 
 Lib3MF_uint32 CToolpath::GetLayerZ(const Lib3MF_uint32 nLayerIndex)

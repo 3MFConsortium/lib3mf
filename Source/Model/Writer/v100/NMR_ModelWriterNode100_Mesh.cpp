@@ -140,8 +140,6 @@ namespace NMR {
 		writeStartElement(XML_3MF_ELEMENT_VERTICES);
 		if (m_pBinaryStreamWriter != nullptr) {
 
-			float fUnits = 0.001f;
-
 			if (nNodeCount > 0) {
 
 				MESHNODE* pMeshNode = pMesh->getNode(0);
@@ -161,9 +159,24 @@ namespace NMR {
 					ZValues[nNodeIndex] = pMeshNode->m_position.m_fields[2];
 				}
 
-				unsigned int binaryKeyX = m_pBinaryStreamWriter->addFloatArray(XValues.data(), nNodeCount, eptNoPredicition, fUnits);
-				unsigned int binaryKeyY = m_pBinaryStreamWriter->addFloatArray(YValues.data(), nNodeCount, eptNoPredicition, fUnits);
-				unsigned int binaryKeyZ = m_pBinaryStreamWriter->addFloatArray(ZValues.data(), nNodeCount, eptNoPredicition, fUnits);
+				unsigned int binaryKeyX;
+				unsigned int binaryKeyY; 
+				unsigned int binaryKeyZ; 
+
+				if (m_pBinaryStreamWriter->getFloatQuantization()) {
+
+					float fUnits = (float) m_pBinaryStreamWriter->getFloatQuantizationUnits();
+					auto predictionType = m_pBinaryStreamWriter->getPredictionType();
+
+					binaryKeyX = m_pBinaryStreamWriter->addFloatArray(XValues.data(), nNodeCount, predictionType, fUnits);
+					binaryKeyY = m_pBinaryStreamWriter->addFloatArray(YValues.data(), nNodeCount, predictionType, fUnits);
+					binaryKeyZ = m_pBinaryStreamWriter->addFloatArray(ZValues.data(), nNodeCount, predictionType, fUnits);
+				}
+				else {
+					binaryKeyX = m_pBinaryStreamWriter->addRawFloatArray(XValues.data(), nNodeCount);
+					binaryKeyY = m_pBinaryStreamWriter->addRawFloatArray(YValues.data(), nNodeCount);
+					binaryKeyZ = m_pBinaryStreamWriter->addRawFloatArray(ZValues.data(), nNodeCount);
+				}
 
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_VERTEX, XML_3MF_NAMESPACEPREFIX_BINARY);
 				writeIntAttribute(XML_3MF_ATTRIBUTE_VERTEX_X, binaryKeyX);

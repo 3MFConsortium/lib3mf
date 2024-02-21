@@ -747,6 +747,10 @@ public:
 	
 	inline std::string GetPath();
 	inline std::string GetUUID();
+	inline void DisableDiscretizedArrayCompression();
+	inline void EnableDiscretizedArrayCompression(const Lib3MF_double dUnits, const eBinaryStreamPredictionType ePredictionType);
+	inline void EnableLZMA(const Lib3MF_uint32 nLZMALevel);
+	inline void DisableLZMA();
 };
 	
 /*************************************************************************************************************************
@@ -2389,6 +2393,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Base_ClassTypeId = nullptr;
 		pWrapperTable->m_BinaryStream_GetPath = nullptr;
 		pWrapperTable->m_BinaryStream_GetUUID = nullptr;
+		pWrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression = nullptr;
+		pWrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression = nullptr;
+		pWrapperTable->m_BinaryStream_EnableLZMA = nullptr;
+		pWrapperTable->m_BinaryStream_DisableLZMA = nullptr;
 		pWrapperTable->m_Writer_WriteToFile = nullptr;
 		pWrapperTable->m_Writer_GetStreamSize = nullptr;
 		pWrapperTable->m_Writer_WriteToBuffer = nullptr;
@@ -2949,6 +2957,42 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_BinaryStream_GetUUID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression = (PLib3MFBinaryStream_DisableDiscretizedArrayCompressionPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_disablediscretizedarraycompression");
+		#else // _WIN32
+		pWrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression = (PLib3MFBinaryStream_DisableDiscretizedArrayCompressionPtr) dlsym(hLibrary, "lib3mf_binarystream_disablediscretizedarraycompression");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression = (PLib3MFBinaryStream_EnableDiscretizedArrayCompressionPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_enablediscretizedarraycompression");
+		#else // _WIN32
+		pWrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression = (PLib3MFBinaryStream_EnableDiscretizedArrayCompressionPtr) dlsym(hLibrary, "lib3mf_binarystream_enablediscretizedarraycompression");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_BinaryStream_EnableLZMA = (PLib3MFBinaryStream_EnableLZMAPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_enablelzma");
+		#else // _WIN32
+		pWrapperTable->m_BinaryStream_EnableLZMA = (PLib3MFBinaryStream_EnableLZMAPtr) dlsym(hLibrary, "lib3mf_binarystream_enablelzma");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BinaryStream_EnableLZMA == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_BinaryStream_DisableLZMA = (PLib3MFBinaryStream_DisableLZMAPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_disablelzma");
+		#else // _WIN32
+		pWrapperTable->m_BinaryStream_DisableLZMA = (PLib3MFBinaryStream_DisableLZMAPtr) dlsym(hLibrary, "lib3mf_binarystream_disablelzma");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BinaryStream_DisableLZMA == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -7344,6 +7388,22 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_BinaryStream_GetUUID == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_binarystream_disablediscretizedarraycompression", (void**)&(pWrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_binarystream_enablediscretizedarraycompression", (void**)&(pWrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_binarystream_enablelzma", (void**)&(pWrapperTable->m_BinaryStream_EnableLZMA));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BinaryStream_EnableLZMA == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_binarystream_disablelzma", (void**)&(pWrapperTable->m_BinaryStream_DisableLZMA));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BinaryStream_DisableLZMA == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_writer_writetofile", (void**)&(pWrapperTable->m_Writer_WriteToFile));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Writer_WriteToFile == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -9340,6 +9400,41 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CBinaryStream::DisableDiscretizedArrayCompression - Sets the float compression mode to raw. All subsequent writes will adhere to this mode.
+	*/
+	void CBinaryStream::DisableDiscretizedArrayCompression()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_BinaryStream_DisableDiscretizedArrayCompression(m_pHandle));
+	}
+	
+	/**
+	* CBinaryStream::EnableDiscretizedArrayCompression - Sets the compression mode to a quantized array. All subsequent writes will adhere to this mode.
+	* @param[in] dUnits - Unit factor to use for quantization.
+	* @param[in] ePredictionType - Prediction type to use for arrays.
+	*/
+	void CBinaryStream::EnableDiscretizedArrayCompression(const Lib3MF_double dUnits, const eBinaryStreamPredictionType ePredictionType)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_BinaryStream_EnableDiscretizedArrayCompression(m_pHandle, dUnits, ePredictionType));
+	}
+	
+	/**
+	* CBinaryStream::EnableLZMA - Enables LZMA mode.
+	* @param[in] nLZMALevel - LZMA Level (0-9)
+	*/
+	void CBinaryStream::EnableLZMA(const Lib3MF_uint32 nLZMALevel)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_BinaryStream_EnableLZMA(m_pHandle, nLZMALevel));
+	}
+	
+	/**
+	* CBinaryStream::DisableLZMA - Disables LZMA mode.
+	*/
+	void CBinaryStream::DisableLZMA()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_BinaryStream_DisableLZMA(m_pHandle));
+	}
+	
+	/**
 	 * Method definitions for class CWriter
 	 */
 	
@@ -9507,7 +9602,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CWriter::AssignBinaryStream - Sets a binary stream for a mesh object. Currently supported objects are Meshes and Toolpath layers.
+	* CWriter::AssignBinaryStream - Sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.
 	* @param[in] pInstance - Object instance to assign Binary stream to.
 	* @param[in] pBinaryStream - Binary stream object to use for this layer.
 	*/

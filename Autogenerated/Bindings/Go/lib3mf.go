@@ -99,6 +99,42 @@ Lib3MFResult CCall_lib3mf_binarystream_getuuid(Lib3MFHandle libraryHandle, Lib3M
 }
 
 
+Lib3MFResult CCall_lib3mf_binarystream_disablediscretizedarraycompression(Lib3MFHandle libraryHandle, Lib3MF_BinaryStream pBinaryStream)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression (pBinaryStream);
+}
+
+
+Lib3MFResult CCall_lib3mf_binarystream_enablediscretizedarraycompression(Lib3MFHandle libraryHandle, Lib3MF_BinaryStream pBinaryStream, Lib3MF_double dUnits, eLib3MFBinaryStreamPredictionType ePredictionType)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression (pBinaryStream, dUnits, ePredictionType);
+}
+
+
+Lib3MFResult CCall_lib3mf_binarystream_enablelzma(Lib3MFHandle libraryHandle, Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nLZMALevel)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BinaryStream_EnableLZMA (pBinaryStream, nLZMALevel);
+}
+
+
+Lib3MFResult CCall_lib3mf_binarystream_disablelzma(Lib3MFHandle libraryHandle, Lib3MF_BinaryStream pBinaryStream)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BinaryStream_DisableLZMA (pBinaryStream);
+}
+
+
 Lib3MFResult CCall_lib3mf_writer_writetofile(Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter, const char * pFilename)
 {
 	if (libraryHandle == 0) 
@@ -4582,6 +4618,14 @@ const (
 	BeamLatticeBallMode_All = 2
 )
 
+// BinaryStreamPredictionType represents a Lib3MF enum.
+type BinaryStreamPredictionType int
+
+const (
+	BinaryStreamPredictionType_NoPrediction = 0
+	BinaryStreamPredictionType_DeltaPrediction = 1
+)
+
 // ProgressIdentifier represents a Lib3MF enum.
 type ProgressIdentifier int
 
@@ -5126,6 +5170,42 @@ func (inst BinaryStream) GetUUID() (string, error) {
 	return string(bufferuUID[:(filledinuUID-1)]), nil
 }
 
+// DisableDiscretizedArrayCompression sets the float compression mode to raw. All subsequent writes will adhere to this mode.
+func (inst BinaryStream) DisableDiscretizedArrayCompression() error {
+	ret := C.CCall_lib3mf_binarystream_disablediscretizedarraycompression(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// EnableDiscretizedArrayCompression sets the compression mode to a quantized array. All subsequent writes will adhere to this mode.
+func (inst BinaryStream) EnableDiscretizedArrayCompression(units float64, predictionType BinaryStreamPredictionType) error {
+	ret := C.CCall_lib3mf_binarystream_enablediscretizedarraycompression(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(units), C.eLib3MFBinaryStreamPredictionType(predictionType))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// EnableLZMA enables LZMA mode.
+func (inst BinaryStream) EnableLZMA(lZMALevel uint32) error {
+	ret := C.CCall_lib3mf_binarystream_enablelzma(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(lZMALevel))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// DisableLZMA disables LZMA mode.
+func (inst BinaryStream) DisableLZMA() error {
+	ret := C.CCall_lib3mf_binarystream_disablelzma(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
 
 // Writer represents a Lib3MF class.
 type Writer struct {
@@ -5289,7 +5369,7 @@ func (inst Writer) CreateBinaryStream(path string) (BinaryStream, error) {
 	return inst.wrapperRef.NewBinaryStream(binaryStream), nil
 }
 
-// AssignBinaryStream sets a binary stream for a mesh object. Currently supported objects are Meshes and Toolpath layers.
+// AssignBinaryStream sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.
 func (inst Writer) AssignBinaryStream(instance Base, binaryStream BinaryStream) error {
 	ret := C.CCall_lib3mf_writer_assignbinarystream(inst.wrapperRef.LibraryHandle, inst.Ref, instance.Ref, binaryStream.Ref)
 	if ret != 0 {

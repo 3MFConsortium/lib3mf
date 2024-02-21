@@ -113,6 +113,11 @@ namespace Lib3MF {
 		All = 2
 	};
 
+	public enum eBinaryStreamPredictionType {
+		NoPrediction = 0,
+		DeltaPrediction = 1
+	};
+
 	public enum eProgressIdentifier {
 		QUERYCANCELED = 0,
 		DONE = 1,
@@ -353,6 +358,18 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_getuuid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BinaryStream_GetUUID (IntPtr Handle, UInt32 sizeUUID, out UInt32 neededUUID, IntPtr dataUUID);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_disablediscretizedarraycompression", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BinaryStream_DisableDiscretizedArrayCompression (IntPtr Handle);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_enablediscretizedarraycompression", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BinaryStream_EnableDiscretizedArrayCompression (IntPtr Handle, Double AUnits, Int32 APredictionType);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_enablelzma", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BinaryStream_EnableLZMA (IntPtr Handle, UInt32 ALZMALevel);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_disablelzma", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BinaryStream_DisableLZMA (IntPtr Handle);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_writer_writetofile", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Writer_WriteToFile (IntPtr Handle, byte[] AFilename);
@@ -2264,6 +2281,31 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.BinaryStream_GetUUID (Handle, sizeUUID, out neededUUID, dataUUID.AddrOfPinnedObject()));
 			dataUUID.Free();
 			return Encoding.UTF8.GetString(bytesUUID).TrimEnd(char.MinValue);
+		}
+
+		public void DisableDiscretizedArrayCompression ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.BinaryStream_DisableDiscretizedArrayCompression (Handle));
+		}
+
+		public void EnableDiscretizedArrayCompression (Double AUnits, eBinaryStreamPredictionType APredictionType)
+		{
+			Int32 enumPredictionType = (Int32) APredictionType;
+
+			CheckError(Internal.Lib3MFWrapper.BinaryStream_EnableDiscretizedArrayCompression (Handle, AUnits, enumPredictionType));
+		}
+
+		public void EnableLZMA (UInt32 ALZMALevel)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.BinaryStream_EnableLZMA (Handle, ALZMALevel));
+		}
+
+		public void DisableLZMA ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.BinaryStream_DisableLZMA (Handle));
 		}
 
 	}

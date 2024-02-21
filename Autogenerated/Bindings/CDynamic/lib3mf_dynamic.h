@@ -79,6 +79,41 @@ typedef Lib3MFResult (*PLib3MFBinaryStream_GetPathPtr) (Lib3MF_BinaryStream pBin
 */
 typedef Lib3MFResult (*PLib3MFBinaryStream_GetUUIDPtr) (Lib3MF_BinaryStream pBinaryStream, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer);
 
+/**
+* Sets the float compression mode to raw. All subsequent writes will adhere to this mode.
+*
+* @param[in] pBinaryStream - BinaryStream instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBinaryStream_DisableDiscretizedArrayCompressionPtr) (Lib3MF_BinaryStream pBinaryStream);
+
+/**
+* Sets the compression mode to a quantized array. All subsequent writes will adhere to this mode.
+*
+* @param[in] pBinaryStream - BinaryStream instance.
+* @param[in] dUnits - Unit factor to use for quantization.
+* @param[in] ePredictionType - Prediction type to use for arrays.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBinaryStream_EnableDiscretizedArrayCompressionPtr) (Lib3MF_BinaryStream pBinaryStream, Lib3MF_double dUnits, eLib3MFBinaryStreamPredictionType ePredictionType);
+
+/**
+* Enables LZMA mode.
+*
+* @param[in] pBinaryStream - BinaryStream instance.
+* @param[in] nLZMALevel - LZMA Level (0-9)
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBinaryStream_EnableLZMAPtr) (Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nLZMALevel);
+
+/**
+* Disables LZMA mode.
+*
+* @param[in] pBinaryStream - BinaryStream instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBinaryStream_DisableLZMAPtr) (Lib3MF_BinaryStream pBinaryStream);
+
 /*************************************************************************************************************************
  Class definition for Writer
 **************************************************************************************************************************/
@@ -223,7 +258,7 @@ typedef Lib3MFResult (*PLib3MFWriter_SetContentEncryptionCallbackPtr) (Lib3MF_Wr
 typedef Lib3MFResult (*PLib3MFWriter_CreateBinaryStreamPtr) (Lib3MF_Writer pWriter, const char * pPath, Lib3MF_BinaryStream * pBinaryStream);
 
 /**
-* Sets a binary stream for a mesh object. Currently supported objects are Meshes and Toolpath layers.
+* Sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.
 *
 * @param[in] pWriter - Writer instance.
 * @param[in] pInstance - Object instance to assign Binary stream to.
@@ -5113,6 +5148,10 @@ typedef struct {
 	PLib3MFBase_ClassTypeIdPtr m_Base_ClassTypeId;
 	PLib3MFBinaryStream_GetPathPtr m_BinaryStream_GetPath;
 	PLib3MFBinaryStream_GetUUIDPtr m_BinaryStream_GetUUID;
+	PLib3MFBinaryStream_DisableDiscretizedArrayCompressionPtr m_BinaryStream_DisableDiscretizedArrayCompression;
+	PLib3MFBinaryStream_EnableDiscretizedArrayCompressionPtr m_BinaryStream_EnableDiscretizedArrayCompression;
+	PLib3MFBinaryStream_EnableLZMAPtr m_BinaryStream_EnableLZMA;
+	PLib3MFBinaryStream_DisableLZMAPtr m_BinaryStream_DisableLZMA;
 	PLib3MFWriter_WriteToFilePtr m_Writer_WriteToFile;
 	PLib3MFWriter_GetStreamSizePtr m_Writer_GetStreamSize;
 	PLib3MFWriter_WriteToBufferPtr m_Writer_WriteToBuffer;
