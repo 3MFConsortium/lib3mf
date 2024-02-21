@@ -65,6 +65,10 @@ cp $LOCATION/lib3mf.so/lib3mf.so.2 $SDKARTIFACT/linux_0/lib/lib3mf.$major_versio
 
 echo Zip SDK artifacts
 cd $SDKARTIFACT
-zip -r ../win64_0.zip ./win64_0/* || failed "Error zipping SDK"
-zip -r ../mac64_0.zip ./mac64_0/* || failed "Error zipping SDK"
-zip -r ../linux_0.zip ./linux_0/* || failed "Error zipping SDK"
+cd win64_0
+zip -r ../../win64_0.zip * || failed "Error zipping SDK"
+cd ../mac64_0
+zip -r ../../mac64_0.zip * || failed "Error zipping SDK"
+cd ../linux_0
+zip -r ../../linux_0.zip * || failed "Error zipping SDK"
+cd ..
