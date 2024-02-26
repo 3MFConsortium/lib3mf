@@ -63,4 +63,28 @@ else()
     if(WIN32)
         set_property(TARGET lib3mf::lib3mf PROPERTY IMPORTED_IMPLIB "${lib3mf_LIBRARY_IMPORT}")
     endif()
+
+    # Define a custom function to handle library copying
+    function(copy_lib3mf_libraries target)
+        if(TARGET ${target})
+            if(APPLE)
+                # On macOS, copy .dylib files, preserving symlinks
+                add_custom_command(TARGET ${target} POST_BUILD
+                        COMMAND sh -c "cp -P '${lib3mf_LIBRARY_DIR}/lib3mf.dylib'* '$<TARGET_FILE_DIR:${target}>'"
+                        COMMENT "Copying all lib3mf library files to target directory on MacOS")
+            elseif(UNIX)
+                # On Unix-like systems (excluding macOS), copy .so files, preserving symlinks
+                add_custom_command(TARGET ${target} POST_BUILD
+                        COMMAND sh -c "cp -P '${lib3mf_LIBRARY_DIR}/lib3mf.so'* '$<TARGET_FILE_DIR:${target}>'"
+                        COMMENT "Copying all lib3mf.so* files to target directory on Linux")
+            else()
+                # On Windows, directly copy the .dll file without worrying about symlinks
+                add_custom_command(TARGET ${target} POST_BUILD
+                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${lib3mf_LIBRARY}" "$<TARGET_FILE_DIR:${target}>"
+                        COMMENT "Copying lib3mf.dll to target directory on Windows")
+            endif()
+        else()
+            message(WARNING "Target '${target}' not found. lib3mf library was not copied.")
+        endif()
+    endfunction()
 endif()
