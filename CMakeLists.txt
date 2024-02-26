@@ -131,6 +131,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/I
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
 if (USE_INCLUDED_LIBZIP)
+    # Something goes here to check if submodules exist and initialize the submodules if it does not
     target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/libzip/Include)
     if(MSVC)
       target_compile_definitions(${PROJECT_NAME} PRIVATE _CRT_SECURE_NO_WARNINGS)
@@ -266,7 +267,7 @@ set(CPACK_PACKAGE_VERSION_MAJOR "${LIB3MF_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${LIB3MF_VERSION_MINOR}")
 set(CPACK_PACKAGE_VERSION_PATCH "${LIB3MF_VERSION_MICRO}")
 set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
-set(CPACK_PACKAGE_CONTACT "maintainer@3mf.io") # An actual email id is required here
+set(CPACK_PACKAGE_CONTACT "lib3mf@3mf.io")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "3MF Consortium")
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CMAKE_SYSTEM_NAME}")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-Source")
