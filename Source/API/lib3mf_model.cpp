@@ -765,19 +765,11 @@ void Lib3MF::Impl::CModel::SetRandomNumberCallback(Lib3MF::RandomNumberCallback 
 	m_model->setCryptoRandCallback(descriptor);
 }
 
-// auto pResult = std::unique_ptr<CBuildItemIterator>(new CBuildItemIterator());
-// 	Lib3MF_uint32 nBuildItemCount = m_model->getBuildItemCount();
-// 	Lib3MF_uint32 nIdx;
-
-// 	for (nIdx = 0; nIdx < nBuildItemCount; nIdx++)
-// 		pResult->addBuildItem(m_model->getBuildItem(nIdx));
-
-// 	return pResult.release();
 INameSpaceIterator * CModel::GetRequiredNameSpaces()
 {
 	auto pResult = std::unique_ptr<CNameSpaceIterator>(new CNameSpaceIterator());
 
-	//ToDo: Add namespaces
+	pResult->setNameSpaces(std::move(m_model->getRequiredNameSpaces()));
 
 	return pResult.release();
 }
