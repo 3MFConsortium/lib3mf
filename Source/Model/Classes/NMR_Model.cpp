@@ -1315,4 +1315,22 @@ namespace NMR {
 		return size;
 	}
 
+    NameSpaces CModel::getRequiredNameSpaces()
+    {
+        static const NameSpaces ExtensionNameSpaces {XML_3MF_NAMESPACE_MATERIALSPEC,
+			XML_3MF_NAMESPACE_PRODUCTIONSPEC,
+			XML_3MF_NAMESPACE_BEAMLATTICESPEC,
+			XML_3MF_NAMESPACE_SLICESPEC,
+			XML_3MF_NAMESPACE_SECURECONTENTSPEC,
+			XML_3MF_NAMESPACE_DIGITALSIGNATURESPEC,
+			XML_3MF_NAMESPACE_CIPHERVALUESPEC};
+		
+		NameSpaces requiredNameSpaces;
+		for (auto const &nameSpace : ExtensionNameSpaces) {
+			if (RequireExtension(nameSpace)) {
+				requiredNameSpaces.push_back(nameSpace);
+			}
+		}
+		return requiredNameSpaces;
+    }
 }

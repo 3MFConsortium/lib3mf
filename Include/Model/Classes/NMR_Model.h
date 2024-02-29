@@ -96,6 +96,9 @@ namespace NMR {
 
 	typedef std::map<NMR::UniqueResourceID, NMR::UniqueResourceID> UniqueResourceIDMapping;
 
+
+	using NameSpaces = std::vector<std::string>;
+
 	// The Model class implements the unification of all model-file in a 3MF package
 	// It should be understood as a "MultiModel"
 	class CModel {
@@ -327,6 +330,9 @@ namespace NMR {
 		nfBool hasCryptoRandCallbak() const;
 		nfUint64 generateRandomBytes(nfByte *, nfUint64);
 
+		/// @brief Determines the namespaces that are required by the model
+		/// @return The namespaces that are required by the model
+		NameSpaces getRequiredNameSpaces();
 	};
 
 	typedef std::shared_ptr <CModel> PModel;

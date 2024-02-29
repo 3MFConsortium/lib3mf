@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,14 +24,12 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CNameSpaceIterator
+Abstract: Iterator for namespaces
 
 */
 
 #include "lib3mf_namespaceiterator.hpp"
 #include "lib3mf_interfaceexception.hpp"
-
-// Include custom headers here.
 
 
 using namespace Lib3MF::Impl;
@@ -42,21 +40,47 @@ using namespace Lib3MF::Impl;
 
 bool CNameSpaceIterator::MoveNext()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	Lib3MF_int32 count = (Lib3MF_int32)m_namespaces.size();
+	m_nCurrentIndex++;
+
+	// Check new Index
+	if (m_nCurrentIndex >= count) {
+		m_nCurrentIndex = count;
+		return false;
+	}
+	else {
+		return true;
+	}
 }
 
 bool CNameSpaceIterator::MovePrevious()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_nCurrentIndex--;
+
+	// Check new Index
+	if (m_nCurrentIndex < 0) {
+		m_nCurrentIndex = -1;
+		return false;
+	}
+	else {
+		return true;
+	}
 }
 
 std::string CNameSpaceIterator::GetCurrent()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	if ((m_nCurrentIndex < 0) || (m_nCurrentIndex >= (Lib3MF_int32)m_namespaces.size()))
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_ITERATORINVALIDINDEX);
+
+	return m_namespaces[m_nCurrentIndex];
 }
 
 Lib3MF_uint64 CNameSpaceIterator::Count()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return (Lib3MF_uint64)m_namespaces.size();
 }
 
+void Lib3MF::Impl::CNameSpaceIterator::setNameSpaces(std::vector<std::string> &&nameSpaces)
+{
+	m_namespaces = std::move(nameSpaces);
+}

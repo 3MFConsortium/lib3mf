@@ -58,6 +58,8 @@ private:
 	/**
 	* Put private members here.
 	*/
+	std::vector<std::string> m_namespaces;
+	Lib3MF_int32 m_nCurrentIndex = -1;
 
 protected:
 
@@ -71,6 +73,7 @@ public:
 	* Put additional public members here. They will not be visible in the external API.
 	*/
 
+	void setNameSpaces(std::vector<std::string>&& namespaces);
 
 	/**
 	* Public member functions to implement.
