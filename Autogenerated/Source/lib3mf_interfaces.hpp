@@ -92,6 +92,7 @@ class IContentEncryptionParams;
 class IResourceData;
 class IResourceDataGroup;
 class IKeyStore;
+class INameSpaceIterator;
 class IModel;
 
 
@@ -2132,13 +2133,13 @@ public:
 	virtual void WriteToFile(const std::string & sFileName) = 0;
 
 	/**
-	* IAttachment::ReadFromFile - Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF packege, or via the WriteToFile or WriteToBuffer-methods.
+	* IAttachment::ReadFromFile - Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
 	* @param[in] sFileName - file to read from.
 	*/
 	virtual void ReadFromFile(const std::string & sFileName) = 0;
 
 	/**
-	* IAttachment::ReadFromCallback - Reads a model and from the data provided by a callback function
+	* IAttachment::ReadFromCallback - Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
 	* @param[in] pTheReadCallback - callback function
 	* @param[in] nStreamSize - number of bytes the callback returns
 	* @param[in] pTheSeekCallback - callback function
@@ -2161,7 +2162,7 @@ public:
 	virtual void WriteToBuffer(Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer) = 0;
 
 	/**
-	* IAttachment::ReadFromBuffer - Reads an attachment from a memory buffer
+	* IAttachment::ReadFromBuffer - Reads an attachment from a memory buffer. This buffer is immediatly read (in contrast to the ReadFromCallback and ReadFromFile-methods).
 	* @param[in] nBufferBufferSize - Number of elements in buffer
 	* @param[in] pBufferBuffer - Buffer to read from
 	*/
@@ -2939,6 +2940,50 @@ typedef IBaseSharedPtr<IKeyStore> PIKeyStore;
 
 
 /*************************************************************************************************************************
+ Class interface for NameSpaceIterator 
+**************************************************************************************************************************/
+
+class INameSpaceIterator : public virtual IBase {
+public:
+	/**
+	* INameSpaceIterator::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x8D1206A0FEEFCC31UL; // First 64 bits of SHA1 of a string: "Lib3MF::NameSpaceIterator"
+	}
+
+	/**
+	* INameSpaceIterator::MoveNext - Iterates to the next namespace in the list.
+	* @return Iterates to the namespace in the list.
+	*/
+	virtual bool MoveNext() = 0;
+
+	/**
+	* INameSpaceIterator::MovePrevious - Iterates to the previous namespace in the list.
+	* @return Iterates to the previous required namespace in the list.
+	*/
+	virtual bool MovePrevious() = 0;
+
+	/**
+	* INameSpaceIterator::GetCurrent - Returns the required namespace the iterator points at.
+	* @return returns the namespace.
+	*/
+	virtual std::string GetCurrent() = 0;
+
+	/**
+	* INameSpaceIterator::Count - Returns the number of namespaces the iterator captures.
+	* @return returns the number of namspaces the iterator captures.
+	*/
+	virtual Lib3MF_uint64 Count() = 0;
+
+};
+
+typedef IBaseSharedPtr<INameSpaceIterator> PINameSpaceIterator;
+
+
+/*************************************************************************************************************************
  Class interface for Model 
 **************************************************************************************************************************/
 
@@ -3338,6 +3383,12 @@ public:
 	* @return The package keystore
 	*/
 	virtual IKeyStore * GetKeyStore() = 0;
+
+	/**
+	* IModel::GetRequiredNameSpaces - Gets the list of required namespaces for the model
+	* @return The required namespace iterator
+	*/
+	virtual INameSpaceIterator * GetRequiredNameSpaces() = 0;
 
 };
 

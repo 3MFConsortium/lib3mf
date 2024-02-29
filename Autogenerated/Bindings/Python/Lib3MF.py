@@ -410,6 +410,10 @@ class FunctionTable:
 	lib3mf_keystore_getresourcedata = None
 	lib3mf_keystore_getuuid = None
 	lib3mf_keystore_setuuid = None
+	lib3mf_namespaceiterator_movenext = None
+	lib3mf_namespaceiterator_moveprevious = None
+	lib3mf_namespaceiterator_getcurrent = None
+	lib3mf_namespaceiterator_count = None
 	lib3mf_model_rootmodelpart = None
 	lib3mf_model_findorcreatepackagepart = None
 	lib3mf_model_setunit = None
@@ -470,6 +474,7 @@ class FunctionTable:
 	lib3mf_model_removecustomcontenttype = None
 	lib3mf_model_setrandomnumbercallback = None
 	lib3mf_model_getkeystore = None
+	lib3mf_model_getrequirednamespaces = None
 
 '''Definition of Enumerations
 '''
@@ -2572,6 +2577,30 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
 			self.lib.lib3mf_keystore_setuuid = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_namespaceiterator_movenext")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_namespaceiterator_movenext = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_namespaceiterator_moveprevious")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_namespaceiterator_moveprevious = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_namespaceiterator_getcurrent")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_namespaceiterator_getcurrent = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_namespaceiterator_count")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint64))
+			self.lib.lib3mf_namespaceiterator_count = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_rootmodelpart")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -2931,6 +2960,12 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_getkeystore = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getrequirednamespaces")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_getrequirednamespaces = methodType(int(methodAddress.value))
 			
 		except AttributeError as ae:
 			raise ELib3MFException(ErrorCodes.COULDNOTFINDLIBRARYEXPORT, ae.args[0])
@@ -3834,6 +3869,18 @@ class Wrapper:
 			self.lib.lib3mf_keystore_setuuid.restype = ctypes.c_int32
 			self.lib.lib3mf_keystore_setuuid.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
 			
+			self.lib.lib3mf_namespaceiterator_movenext.restype = ctypes.c_int32
+			self.lib.lib3mf_namespaceiterator_movenext.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_namespaceiterator_moveprevious.restype = ctypes.c_int32
+			self.lib.lib3mf_namespaceiterator_moveprevious.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_namespaceiterator_getcurrent.restype = ctypes.c_int32
+			self.lib.lib3mf_namespaceiterator_getcurrent.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_namespaceiterator_count.restype = ctypes.c_int32
+			self.lib.lib3mf_namespaceiterator_count.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint64)]
+			
 			self.lib.lib3mf_model_rootmodelpart.restype = ctypes.c_int32
 			self.lib.lib3mf_model_rootmodelpart.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
@@ -4013,6 +4060,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_model_getkeystore.restype = ctypes.c_int32
 			self.lib.lib3mf_model_getkeystore.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_getrequirednamespaces.restype = ctypes.c_int32
+			self.lib.lib3mf_model_getrequirednamespaces.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 		except AttributeError as ae:
 			raise ELib3MFException(ErrorCodes.COULDNOTFINDLIBRARYEXPORT, ae.args[0])
@@ -4302,6 +4352,8 @@ class Wrapper:
 				return ResourceDataGroup(handle, wrapper)
 			def getObjectById_1CC9E0CC082253C6(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::KeyStore"
 				return KeyStore(handle, wrapper)
+			def getObjectById_8D1206A0FEEFCC31(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::NameSpaceIterator"
+				return NameSpaceIterator(handle, wrapper)
 			def getObjectById_5A8164ECEDB03F09(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Model"
 				return Model(handle, wrapper)
 		
@@ -6783,6 +6835,42 @@ class KeyStore(Base):
 	
 
 
+''' Class Implementation for NameSpaceIterator
+'''
+class NameSpaceIterator(Base):
+	def __init__(self, handle, wrapper):
+		Base.__init__(self, handle, wrapper)
+	def MoveNext(self):
+		pHasNext = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_namespaceiterator_movenext(self._handle, pHasNext))
+		
+		return pHasNext.value
+	
+	def MovePrevious(self):
+		pHasPrevious = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_namespaceiterator_moveprevious(self._handle, pHasPrevious))
+		
+		return pHasPrevious.value
+	
+	def GetCurrent(self):
+		nNameSpaceBufferSize = ctypes.c_uint64(0)
+		nNameSpaceNeededChars = ctypes.c_uint64(0)
+		pNameSpaceBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_namespaceiterator_getcurrent(self._handle, nNameSpaceBufferSize, nNameSpaceNeededChars, pNameSpaceBuffer))
+		nNameSpaceBufferSize = ctypes.c_uint64(nNameSpaceNeededChars.value)
+		pNameSpaceBuffer = (ctypes.c_char * (nNameSpaceNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_namespaceiterator_getcurrent(self._handle, nNameSpaceBufferSize, nNameSpaceNeededChars, pNameSpaceBuffer))
+		
+		return pNameSpaceBuffer.value.decode()
+	
+	def Count(self):
+		pCount = ctypes.c_uint64()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_namespaceiterator_count(self._handle, pCount))
+		
+		return pCount.value
+	
+
+
 ''' Class Implementation for Model
 '''
 class Model(Base):
@@ -7371,5 +7459,15 @@ class Model(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return KeyStoreObject
+	
+	def GetRequiredNameSpaces(self):
+		NameSpaceIteratorHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_getrequirednamespaces(self._handle, NameSpaceIteratorHandle))
+		if NameSpaceIteratorHandle:
+			NameSpaceIteratorObject = self._wrapper._polymorphicFactory(NameSpaceIteratorHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return NameSpaceIteratorObject
 	
 		

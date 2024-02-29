@@ -34,32 +34,33 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_reader.hpp"
 #include "lib3mf_writer.hpp"
 
+#include "lib3mf_attachment.hpp"
+#include "lib3mf_basematerialgroup.hpp"
+#include "lib3mf_basematerialgroupiterator.hpp"
 #include "lib3mf_builditem.hpp"
 #include "lib3mf_builditemiterator.hpp"
-#include "lib3mf_meshobject.hpp"
-#include "lib3mf_objectiterator.hpp"
-#include "lib3mf_meshobjectiterator.hpp"
-#include "lib3mf_resourceiterator.hpp"
+#include "lib3mf_colorgroup.hpp"
+#include "lib3mf_colorgroupiterator.hpp"
 #include "lib3mf_componentsobject.hpp"
 #include "lib3mf_componentsobjectiterator.hpp"
-#include "lib3mf_basematerialgroup.hpp"
+#include "lib3mf_compositematerials.hpp"
+#include "lib3mf_compositematerialsiterator.hpp"
+#include "lib3mf_keystore.hpp"
+#include "lib3mf_meshobject.hpp"
+#include "lib3mf_meshobjectiterator.hpp"
 #include "lib3mf_metadatagroup.hpp"
-#include "lib3mf_attachment.hpp"
+#include "lib3mf_multipropertygroup.hpp"
+#include "lib3mf_multipropertygroupiterator.hpp"
+#include "lib3mf_namespaceiterator.hpp"
+#include "lib3mf_objectiterator.hpp"
+#include "lib3mf_packagepart.hpp"
+#include "lib3mf_resourceiterator.hpp"
 #include "lib3mf_slicestack.hpp"
 #include "lib3mf_slicestackiterator.hpp"
 #include "lib3mf_texture2d.hpp"
-#include "lib3mf_texture2diterator.hpp"
-#include "lib3mf_basematerialgroupiterator.hpp"
-#include "lib3mf_colorgroup.hpp"
-#include "lib3mf_colorgroupiterator.hpp"
 #include "lib3mf_texture2dgroup.hpp"
 #include "lib3mf_texture2dgroupiterator.hpp"
-#include "lib3mf_compositematerials.hpp"
-#include "lib3mf_compositematerialsiterator.hpp"
-#include "lib3mf_multipropertygroup.hpp"
-#include "lib3mf_multipropertygroupiterator.hpp"
-#include "lib3mf_packagepart.hpp"
-#include "lib3mf_keystore.hpp"
+#include "lib3mf_texture2diterator.hpp"
 
 
 // Include custom headers here.
@@ -764,3 +765,19 @@ void Lib3MF::Impl::CModel::SetRandomNumberCallback(Lib3MF::RandomNumberCallback 
 	m_model->setCryptoRandCallback(descriptor);
 }
 
+// auto pResult = std::unique_ptr<CBuildItemIterator>(new CBuildItemIterator());
+// 	Lib3MF_uint32 nBuildItemCount = m_model->getBuildItemCount();
+// 	Lib3MF_uint32 nIdx;
+
+// 	for (nIdx = 0; nIdx < nBuildItemCount; nIdx++)
+// 		pResult->addBuildItem(m_model->getBuildItem(nIdx));
+
+// 	return pResult.release();
+INameSpaceIterator * CModel::GetRequiredNameSpaces()
+{
+	auto pResult = std::unique_ptr<CNameSpaceIterator>(new CNameSpaceIterator());
+
+	//ToDo: Add namespaces
+
+	return pResult.release();
+}

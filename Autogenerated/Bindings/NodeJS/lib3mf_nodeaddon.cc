@@ -89,6 +89,7 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFResourceData::Init();
 	CLib3MFResourceDataGroup::Init();
 	CLib3MFKeyStore::Init();
+	CLib3MFNameSpaceIterator::Init();
 	CLib3MFModel::Init();
 	CLib3MFWrapper::Init();
 	NODE_SET_METHOD(module, "exports", LoadLib3MF);
