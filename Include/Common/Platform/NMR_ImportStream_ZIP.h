@@ -35,7 +35,7 @@ This is a stream class for importing from a libZIP object.
 #define __NMR_IMPORTSTREAM_ZIP
 
 #include "Common/Platform/NMR_ImportStream.h"
-#include "Libraries/libzip/zip.h"
+#include "zip.h"
 
 #define IMPORTSTREAM_ZIP_CHUNKSIZE (1024 * 1024)
 
