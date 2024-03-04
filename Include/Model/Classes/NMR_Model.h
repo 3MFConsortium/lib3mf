@@ -156,6 +156,8 @@ namespace NMR {
 
 		CryptoRandGenDescriptor m_sRandDescriptor;
 
+		NameSpaces m_requiredNameSpaces;
+
 		// Add Resource to resource lookup tables
 		void addResourceToLookupTable(_In_ PModelResource pResource);
 
@@ -330,6 +332,8 @@ namespace NMR {
 		nfBool hasCryptoRandCallbak() const;
 		nfUint64 generateRandomBytes(nfByte *, nfUint64);
 
+
+		void registerRequiredNameSpace(std::string const& nameSpace);
 		/// @brief Determines the namespaces that are required by the model
 		/// @return The namespaces that are required by the model
 		NameSpaces getRequiredNameSpaces();

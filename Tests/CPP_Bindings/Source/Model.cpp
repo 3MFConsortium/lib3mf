@@ -218,4 +218,21 @@ namespace Lib3MF
 		EXPECT_EQ(requiredNamespaces->GetCurrent(), "http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02");
 		EXPECT_EQ(requiredNamespaces->MoveNext(), false);
 	}
+
+	TEST_F(Model, GetRequiredNamespaces_3mfFileWithUnknownExtension_ContainsUnknownNameSpace)
+	{
+		auto model = wrapper->CreateModel(); // create a new model to avoid interference with other tests
+		auto reader3MF = model->QueryReader("3mf");
+
+
+		ASSERT_TRUE(reader3MF);
+		reader3MF->ReadFromFile(sTestFilesPath + "/RequiredExtensions/" + "Unsupported.3mf");
+		EXPECT_GE(reader3MF->GetWarningCount(), 1u);
+		auto requiredNameSpaces = model->GetRequiredNameSpaces();
+
+		EXPECT_TRUE(requiredNameSpaces->MoveNext());
+		std::string const fictionalNameSpace = "http://schemas.autodesk.com/dmg/ExtensionUnsupported/2999/12";
+		EXPECT_EQ(requiredNameSpaces->GetCurrent(), fictionalNameSpace);
+		EXPECT_FALSE(requiredNameSpaces->MoveNext());
+	}
 }

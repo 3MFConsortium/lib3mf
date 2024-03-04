@@ -1315,22 +1315,40 @@ namespace NMR {
 		return size;
 	}
 
-    NameSpaces CModel::getRequiredNameSpaces()
+    void CModel::registerRequiredNameSpace(std::string const&nameSpace)
     {
-        static const NameSpaces ExtensionNameSpaces {XML_3MF_NAMESPACE_MATERIALSPEC,
-			XML_3MF_NAMESPACE_PRODUCTIONSPEC,
-			XML_3MF_NAMESPACE_BEAMLATTICESPEC,
-			XML_3MF_NAMESPACE_SLICESPEC,
-			XML_3MF_NAMESPACE_SECURECONTENTSPEC,
-			XML_3MF_NAMESPACE_DIGITALSIGNATURESPEC,
-			XML_3MF_NAMESPACE_CIPHERVALUESPEC};
-		
+		m_requiredNameSpaces.push_back(nameSpace);
+    }
+
+	NameSpaces CModel::getRequiredNameSpaces()
+	{
+		static const NameSpaces knownExtensionNameSpaces{XML_3MF_NAMESPACE_MATERIALSPEC,
+														 XML_3MF_NAMESPACE_PRODUCTIONSPEC,
+														 XML_3MF_NAMESPACE_BEAMLATTICESPEC,
+														 XML_3MF_NAMESPACE_SLICESPEC,
+														 XML_3MF_NAMESPACE_SECURECONTENTSPEC,
+														 XML_3MF_NAMESPACE_DIGITALSIGNATURESPEC,
+														 XML_3MF_NAMESPACE_CIPHERVALUESPEC};
+
 		NameSpaces requiredNameSpaces;
-		for (auto const &nameSpace : ExtensionNameSpaces) {
-			if (RequireExtension(nameSpace)) {
+
+		// Add all namespaces from m_requiredExtensions that are not in knownExtensionNameSpaces to requiredNameSpaces
+		for (auto const &nameSpace : m_requiredNameSpaces)
+		{
+			if (std::find(knownExtensionNameSpaces.begin(), knownExtensionNameSpaces.end(), nameSpace) == knownExtensionNameSpaces.end())
+			{
+				requiredNameSpaces.push_back(nameSpace);
+			}
+		}
+
+		// For the namespaces this version of lib3mf knows, we test if the namespace is required by the model
+		for (auto const &nameSpace : knownExtensionNameSpaces)
+		{
+			if (RequireExtension(nameSpace))
+			{
 				requiredNameSpaces.push_back(nameSpace);
 			}
 		}
 		return requiredNameSpaces;
-    }
+	}
 }
