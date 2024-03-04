@@ -84,8 +84,8 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACE_SECURECONTENTSPEC "http://schemas.microsoft.com/3dmanufacturing/securecontent/2019/04"
 #define XML_3MF_NAMESPACE_DIGITALSIGNATURESPEC "http://www.w3.org/2000/09/xmldsig#"
 #define XML_3MF_NAMESPACE_CIPHERVALUESPEC "http://www.w3.org/2001/04/xmlenc#"
-#define XML_3MF_NAMESPACE_VOLUMETRICSPEC "http://schemas.microsoft.com/3dmanufacturing/volumetric/2022/01"
-#define XML_3MF_NAMESPACE_IMPLICITSPEC "http://schemas.microsoft.com/3dmanufacturing/implicit/2024/02"
+#define XML_3MF_NAMESPACE_VOLUMETRICSPEC "http://schemas.3mf.io/3dmanufacturing/volumetric/2022/01"
+#define XML_3MF_NAMESPACE_IMPLICITSPEC "http://schemas.3mf.io/3dmanufacturing/implicit/2023/12"
 
 #define XML_3MF_NAMESPACEPREFIX_MATERIAL "m"
 #define XML_3MF_NAMESPACEPREFIX_PRODUCTION "p"
