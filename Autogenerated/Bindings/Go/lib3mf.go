@@ -6230,7 +6230,7 @@ func (inst Attachment) WriteToFile(fileName string) error {
 	return nil
 }
 
-// ReadFromFile reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF packege, or via the WriteToFile or WriteToBuffer-methods.
+// ReadFromFile reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
 func (inst Attachment) ReadFromFile(fileName string) error {
 	ret := C.CCall_lib3mf_attachment_readfromfile(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(fileName)[0])))
 	if ret != 0 {
@@ -6239,7 +6239,7 @@ func (inst Attachment) ReadFromFile(fileName string) error {
 	return nil
 }
 
-// ReadFromCallback reads a model and from the data provided by a callback function.
+// ReadFromCallback reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
 func (inst Attachment) ReadFromCallback(theReadCallback ReadCallbackFunc, streamSize uint64, theSeekCallback SeekCallbackFunc, userData uintptr) error {
 	ret := C.CCall_lib3mf_attachment_readfromcallback(inst.wrapperRef.LibraryHandle, inst.Ref, (C.Lib3MFReadCallback)(unsafe.Pointer(C.Lib3MFReadCallback_cgo)), C.uint64_t(streamSize), (C.Lib3MFSeekCallback)(unsafe.Pointer(C.Lib3MFSeekCallback_cgo)), (C.Lib3MF_pvoid)(userData))
 	if ret != 0 {
@@ -6277,7 +6277,7 @@ func (inst Attachment) WriteToBuffer(buffer []uint8) ([]uint8, error) {
 	return buffer[:int(neededforbuffer)], nil
 }
 
-// ReadFromBuffer reads an attachment from a memory buffer.
+// ReadFromBuffer reads an attachment from a memory buffer. This buffer is immediatly read (in contrast to the ReadFromCallback and ReadFromFile-methods).
 func (inst Attachment) ReadFromBuffer(buffer []uint8) error {
 	ret := C.CCall_lib3mf_attachment_readfrombuffer(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint64_t(len(buffer)), (*C.uint8_t)(unsafe.Pointer(&buffer[0])))
 	if ret != 0 {
