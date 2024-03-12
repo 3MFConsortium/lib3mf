@@ -170,8 +170,10 @@ namespace NMR {
 
 		auto iOverrideIterator = m_OverrideContentTypes.begin();
 		while (iOverrideIterator != m_OverrideContentTypes.end()) {
+			std::string sAbsolutePartName = fnIncludeLeadingPathDelimiter(iOverrideIterator->first);
+
 			pXMLWriter->WriteStartElement(nullptr, OPC_CONTENTTYPES_NODE_OVERRIDE, nullptr);
-			pXMLWriter->WriteAttributeString(nullptr, OPC_CONTENTTYPES_ATTRIB_PARTNAME, nullptr, iOverrideIterator->first.c_str());
+			pXMLWriter->WriteAttributeString(nullptr, OPC_CONTENTTYPES_ATTRIB_PARTNAME, nullptr, sAbsolutePartName.c_str());
 			pXMLWriter->WriteAttributeString(nullptr, OPC_CONTENTTYPES_ATTRIB_CONTENTTYPE, nullptr, iOverrideIterator->second.c_str());
 			pXMLWriter->WriteEndElement();
 

@@ -128,7 +128,10 @@ namespace NMR {
 		case NMR_ERROR_ZIPCONTAINSINCONSISTENCIES: return "ZIP file contains inconsistencies. It might load with errors or incorrectly.";
 		case NMR_ERROR_XMLNAMESPACEALREADYREGISTERED: return "An XML namespace is already registered.";
 		case NMR_ERROR_XMLPREFIXALREADYREGISTERED: return "An XML prefix is already registered.";
-
+		case NMR_ERROR_COULDNOTINITINFLATE: return "Failed to initialize a zlib buffer";
+		case NMR_ERROR_COULDNOTINFLATE: return "Failed to decompress part";
+		case NMR_ERROR_COULDNOTINITDEFLATE: return "Failed to initialize a zlib buffer";
+		case NMR_ERROR_TOOMANYSLICES: return "Too many slices";
 
 		// Unhandled exception
 		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;
@@ -213,7 +216,7 @@ namespace NMR {
 		case NMR_ERROR_OPCCONTENTTYPEMISMATCH: return "Content type mismatch";
 		case NMR_ERROR_OPCRELATIONSHIPENUMERATIONFAILED: return "Could not enumerate relationships";
 		case NMR_ERROR_OPCRELATIONSHIPNOTFOUND: return "Could not find relationship type";
-		case NMR_ERROR_OPCRELATIONSHIPNOTUNIQUE: return "Ambiguous relationship type";
+		case NMR_ERROR_OPCRELATIONSHIPNOTUNIQUE: return "Relationship type not unique";
 		case NMR_ERROR_OPCCOULDNOTGETMODELSTREAM: return "Could not get OPC Model Stream";
 		case NMR_ERROR_CREATEXMLREADERFAILED: return "Could not create XML Reader";
 		case NMR_ERROR_SETXMLREADERINPUTFAILED: return "Could not set XML reader input";
@@ -402,6 +405,9 @@ namespace NMR {
 		case NMR_ERROR_MODELRESOURCE_IN_DIFFERENT_MODEL: return "Referenced model resource must not be in a different model.";
 		case NMR_ERROR_PATH_NOT_ABSOLUTE: return "A path attribute element is not absolute.";
 		case NMR_ERROR_BEAMSET_IDENTIFIER_NOT_UNIQUE: return "A beamset identifier is not unique.";
+		case NMR_ERROR_DUPLICATETRANSFORM: return "A transform attribute is duplicated";
+		case NMR_ERROR_INVALIDCOMPONENTRESOURCE: return "A component resource is invalid.";
+		
 			//keystore error codes
 		case NMR_ERROR_KEYSTOREDUPLICATECONSUMER: return "A consumer already exists for this consumerid";
 		case NMR_ERROR_KEYSTOREDUPLICATECONSUMERID: return "The attribute consumerid is duplicated";
@@ -412,6 +418,7 @@ namespace NMR {
 		case NMR_ERROR_KEYSTOREDUPLICATEACCESSRIGHT: return "An AccessRight already exists for this consumer in a ResourceDataGroup";
 		case NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAGROUP: return "A resource data group already exist for this keyuuid";
 		case NMR_ERROR_KEYSTOREINVALIDALGORITHM: return "The algorithm attribute is invalid";
+		case NMR_ERROR_KEYSTOREINVALIDENCODING: return "The keystore element value is not base64 encoded.";
 		case NMR_ERROR_KEYSTOREINVALIDCOMPRESSION: return "The KeyStore ResourceData compression is invalid";
 		case NMR_ERROR_KEYSTOREINVALIDCIPHERVALUE: return "Invalid CipherValue elment value";
 		case NMR_ERROR_KEYSTOREINVALIDMGF: return "The mfgalgorithm attribute has invalid value";

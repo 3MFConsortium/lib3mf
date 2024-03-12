@@ -29,6 +29,7 @@ Abstract: This is a stub class definition of CResourceIterator
 */
 
 #include "lib3mf_resource.hpp"
+#include "lib3mf_model.hpp"
 #include "lib3mf_resourceiterator.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
@@ -98,7 +99,7 @@ NMR::PModelResource CResourceIterator::GetCurrentResource()
 IResource * CResourceIterator::GetCurrent ()
 {
 	// Create specific API class
-	return new CResource(GetCurrentResource());
+	return CModel::createIResourceFromModelResource(GetCurrentResource(), true);
 }
 
 IResourceIterator * CResourceIterator::Clone ()

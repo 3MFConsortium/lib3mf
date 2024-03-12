@@ -45,3 +45,7 @@ IMultiPropertyGroup * CMultiPropertyGroupIterator::GetCurrentMultiPropertyGroup 
 	return new CMultiPropertyGroup(std::dynamic_pointer_cast<NMR::CModelMultiPropertyGroupResource>(GetCurrentResource()));
 }
 
+IResource * CMultiPropertyGroupIterator::GetCurrent()
+{
+	return GetCurrentMultiPropertyGroup();
+}

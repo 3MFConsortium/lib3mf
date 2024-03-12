@@ -9,6 +9,9 @@
 
 #include "Common/NMR_Architecture_Utils.h"
 #include <cstring>
+
+#define LIB3MF_MAXENCRYPTIONHEADERSIZE (1UL << 31)
+
 namespace NMR {
 
 	CEncryptionHeader::CEncryptionHeader(std::vector<nfByte> const & additionalData)
@@ -28,18 +31,27 @@ namespace NMR {
 		if (header.Header.majorVersion != 0 || header.Header.minorVersion != 0)
 			throw CNMRException(NMR_ERROR_ENCRYPTEDCONTENTVERSIONUNSUPPORTED);
 		constexpr size_t headerSize = sizeof(header);
+
+		if (header.Header.Length.length < (uint64_t) headerSize)
+			throw CNMRException(NMR_ERROR_COULDNOTREADENCRYPTEDSTREAM);
+		if (header.Header.Length.length > LIB3MF_MAXENCRYPTIONHEADERSIZE)
+			throw CNMRException(NMR_ERROR_COULDNOTREADENCRYPTEDSTREAM);
+
 		nfUint32 remainingBytes = header.Header.Length.length - headerSize;
 		if (remainingBytes > 0) {
 			m_rgAdditionalData.resize(remainingBytes, 0);
 			from->readIntoBuffer(m_rgAdditionalData.data(), remainingBytes, true);
 		}
-		m_nfHeaderSize = header.Header.Length.length;
-		return m_nfHeaderSize;
+		m_nfHeaderSize = (size_t) header.Header.Length.length;
+		return (size_t) m_nfHeaderSize;
 	}
 	size_t CEncryptionHeader::writeTo(PExportStream to) {
 		uEncryptedFileHeader header = { { '%', '3', 'M', 'c', 'F', 0, 0, 0, 0, 0, 0, 0 } };
 		constexpr size_t headerSize = sizeof(header);
 		m_nfHeaderSize = (nfUint32)(headerSize + m_rgAdditionalData.size());
+		if (m_nfHeaderSize > LIB3MF_MAXENCRYPTIONHEADERSIZE)
+			throw CNMRException(NMR_ERROR_COULDNOTWRITESTREAM);
+
 		header.Header.Length.length = (nfUint32)m_nfHeaderSize;
 		if (isBigEndian()) {
 			header.Header.Length.length = swapBytes(header.Header.Length.length);
@@ -47,7 +59,7 @@ namespace NMR {
 		to->writeBuffer(header.bytes, headerSize);
 		if (m_rgAdditionalData.size() > 0)
 			to->writeBuffer(m_rgAdditionalData.data(), m_rgAdditionalData.size());
-		return m_nfHeaderSize;
+		return (size_t)m_nfHeaderSize;
 	}
 	std::vector<nfByte> const & CEncryptionHeader::additionalData() const {
 		return m_rgAdditionalData;

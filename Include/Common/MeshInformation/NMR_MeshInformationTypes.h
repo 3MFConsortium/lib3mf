@@ -50,9 +50,9 @@ namespace NMR {
 	typedef nfByte MESHINFORMATIONFACEDATA;
 
 #pragma pack (1)
-	typedef struct {
-		nfUint32 m_nUniqueResourceID;
-		nfUint32 m_nPropertyIDs[3];
+	typedef struct sMESHINFORMATION_PROPERTIES {
+		nfUint32 m_nUniqueResourceID = 0;
+		nfUint32 m_nPropertyIDs[3] = { 0,0,0 };
 	} MESHINFORMATION_PROPERTIES;
 
 

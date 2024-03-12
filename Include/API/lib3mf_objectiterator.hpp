@@ -76,7 +76,10 @@ public:
 	* Public member functions to implement.
 	*/
 
-	IObject * GetCurrentObject ();
+	IObject * GetCurrentObject() override;
+
+
+	IResource * GetCurrent() override;
 
 };
 

@@ -126,4 +126,44 @@ namespace Lib3MF
 		ASSERT_EQ(28, model->GetObjects()->Count());
 	}
 
+	TEST_F(Reader, DuplicateStartPart)
+	{
+		// the /.rels-file of this 3MF contains two Relationship-entries with the StartPart relationship.
+		// The 3MFReader should raise a warning when reading this file.
+		Reader::reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "CS-1111_3dmodel-e1r1_other-e1r1.3mf");
+
+		CheckReaderWarnings(Reader::reader3MF, 1);
+	}
+
+	TEST_F(Reader, BrokeComposite) {
+		auto reader = model->QueryReader("3mf");
+		ASSERT_SPECIFIC_THROW(reader->ReadFromFile(sTestFilesPath + "/Reader/" + "DOS-FUZ-LIB3MF.3mf");, ELib3MFException);
+	}
+
+	TEST_F(Reader, DuplicateTransformComponent) {
+		auto reader = model->QueryReader("3mf");
+		ASSERT_SPECIFIC_THROW(reader->ReadFromFile(sTestFilesPath + "/Reader/" + "GEN-C-ADA-COMPONENT-TRANSFORM-0.3mf"), ELib3MFException);
+	}
+
+	TEST_F(Reader, DuplicateTransformBuildItem) {
+		auto reader = model->QueryReader("3mf");
+		ASSERT_SPECIFIC_THROW(reader->ReadFromFile(sTestFilesPath + "/Reader/" + "GEN-M-ADA-ITEM-TRANSFORM-0.3mf"), ELib3MFException);
+	}
+
+
+	TEST_F(Reader, ReadVerticesCommaSeparatedValue) {
+		// This file N_XXX_0422_01.3mf contains vertices with comma-separated values.
+		// The 3MFReader should throw an error at NMR_StringUtils::fnStringToDouble when reading this file because 
+		// comma-separated values are not allowed in 3MF files.
+		auto reader = model->QueryReader("3mf");
+		ASSERT_SPECIFIC_THROW(reader->ReadFromFile(sTestFilesPath + "/Reader/" + "N_XXX_0422_01.3mf"), ELib3MFException);
+	}
+
+	TEST_F(Reader, ReadVerticesWithLeadingPLUSSign) {
+		// This file P_XXM_0519_01.3mf contains vertices with leading + sign e.g +1E+2.
+		// The 3MFReader allows leading = sign at NMR_StringUtils::fnStringToDouble when reading this file.
+		auto reader = model->QueryReader("3mf");
+		reader->ReadFromFile(sTestFilesPath + "/Reader/" + "P_XXM_0519_01.3mf");
+		CheckReaderWarnings(Reader::reader3MF, 0);
+	}
 }

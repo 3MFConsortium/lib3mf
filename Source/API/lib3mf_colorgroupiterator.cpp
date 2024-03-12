@@ -46,3 +46,7 @@ IColorGroup * CColorGroupIterator::GetCurrentColorGroup ()
 	return new CColorGroup(std::dynamic_pointer_cast<NMR::CModelColorGroupResource>(GetCurrentResource()));
 }
 
+IResource * CColorGroupIterator::GetCurrent()
+{
+	return GetCurrentColorGroup();
+}

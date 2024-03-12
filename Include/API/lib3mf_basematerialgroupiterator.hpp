@@ -76,7 +76,9 @@ public:
 	* Public member functions to implement.
 	*/
 
-	IBaseMaterialGroup * GetCurrentBaseMaterialGroup ();
+	IBaseMaterialGroup * GetCurrentBaseMaterialGroup() override;
+
+	IResource * GetCurrent() override;
 
 };
 
