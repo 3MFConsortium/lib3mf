@@ -98,6 +98,7 @@ class CContentEncryptionParams;
 class CResourceData;
 class CResourceDataGroup;
 class CKeyStore;
+class CNameSpaceIterator;
 class CModel;
 
 /*************************************************************************************************************************
@@ -145,6 +146,7 @@ typedef CContentEncryptionParams CLib3MFContentEncryptionParams;
 typedef CResourceData CLib3MFResourceData;
 typedef CResourceDataGroup CLib3MFResourceDataGroup;
 typedef CKeyStore CLib3MFKeyStore;
+typedef CNameSpaceIterator CLib3MFNameSpaceIterator;
 typedef CModel CLib3MFModel;
 
 /*************************************************************************************************************************
@@ -192,6 +194,7 @@ typedef std::shared_ptr<CContentEncryptionParams> PContentEncryptionParams;
 typedef std::shared_ptr<CResourceData> PResourceData;
 typedef std::shared_ptr<CResourceDataGroup> PResourceDataGroup;
 typedef std::shared_ptr<CKeyStore> PKeyStore;
+typedef std::shared_ptr<CNameSpaceIterator> PNameSpaceIterator;
 typedef std::shared_ptr<CModel> PModel;
 
 /*************************************************************************************************************************
@@ -239,6 +242,7 @@ typedef PContentEncryptionParams PLib3MFContentEncryptionParams;
 typedef PResourceData PLib3MFResourceData;
 typedef PResourceDataGroup PLib3MFResourceDataGroup;
 typedef PKeyStore PLib3MFKeyStore;
+typedef PNameSpaceIterator PLib3MFNameSpaceIterator;
 typedef PModel PLib3MFModel;
 
 
@@ -586,6 +590,7 @@ private:
 	friend class CResourceData;
 	friend class CResourceDataGroup;
 	friend class CKeyStore;
+	friend class CNameSpaceIterator;
 	friend class CModel;
 
 };
@@ -1568,6 +1573,26 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CNameSpaceIterator 
+**************************************************************************************************************************/
+class CNameSpaceIterator : public CBase {
+public:
+	
+	/**
+	* CNameSpaceIterator::CNameSpaceIterator - Constructor for NameSpaceIterator class.
+	*/
+	CNameSpaceIterator(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline bool MoveNext();
+	inline bool MovePrevious();
+	inline std::string GetCurrent();
+	inline Lib3MF_uint64 Count();
+};
+	
+/*************************************************************************************************************************
  Class CModel 
 **************************************************************************************************************************/
 class CModel : public CBase {
@@ -1641,6 +1666,7 @@ public:
 	inline void RemoveCustomContentType(const std::string & sExtension);
 	inline void SetRandomNumberCallback(const RandomNumberCallback pTheCallback, const Lib3MF_pvoid pUserData);
 	inline PKeyStore GetKeyStore();
+	inline PNameSpaceIterator GetRequiredNameSpaces();
 };
 
 /*************************************************************************************************************************
@@ -1700,6 +1726,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0x1A47A5E258E22EF9UL: return new CResourceData(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ResourceData"
 		case 0xD59067227E428AA4UL: return new CResourceDataGroup(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ResourceDataGroup"
 		case 0x1CC9E0CC082253C6UL: return new CKeyStore(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::KeyStore"
+		case 0x8D1206A0FEEFCC31UL: return new CNameSpaceIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::NameSpaceIterator"
 		case 0x5A8164ECEDB03F09UL: return new CModel(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Model"
 	}
 	return new CBase(this, pHandle);
@@ -2267,6 +2294,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_KeyStore_GetResourceData = nullptr;
 		pWrapperTable->m_KeyStore_GetUUID = nullptr;
 		pWrapperTable->m_KeyStore_SetUUID = nullptr;
+		pWrapperTable->m_NameSpaceIterator_MoveNext = nullptr;
+		pWrapperTable->m_NameSpaceIterator_MovePrevious = nullptr;
+		pWrapperTable->m_NameSpaceIterator_GetCurrent = nullptr;
+		pWrapperTable->m_NameSpaceIterator_Count = nullptr;
 		pWrapperTable->m_Model_RootModelPart = nullptr;
 		pWrapperTable->m_Model_FindOrCreatePackagePart = nullptr;
 		pWrapperTable->m_Model_SetUnit = nullptr;
@@ -2327,6 +2358,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Model_RemoveCustomContentType = nullptr;
 		pWrapperTable->m_Model_SetRandomNumberCallback = nullptr;
 		pWrapperTable->m_Model_GetKeyStore = nullptr;
+		pWrapperTable->m_Model_GetRequiredNameSpaces = nullptr;
 		pWrapperTable->m_GetLibraryVersion = nullptr;
 		pWrapperTable->m_GetPrereleaseInformation = nullptr;
 		pWrapperTable->m_GetBuildInformation = nullptr;
@@ -4917,6 +4949,42 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_NameSpaceIterator_MoveNext = (PLib3MFNameSpaceIterator_MoveNextPtr) GetProcAddress(hLibrary, "lib3mf_namespaceiterator_movenext");
+		#else // _WIN32
+		pWrapperTable->m_NameSpaceIterator_MoveNext = (PLib3MFNameSpaceIterator_MoveNextPtr) dlsym(hLibrary, "lib3mf_namespaceiterator_movenext");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_NameSpaceIterator_MoveNext == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_NameSpaceIterator_MovePrevious = (PLib3MFNameSpaceIterator_MovePreviousPtr) GetProcAddress(hLibrary, "lib3mf_namespaceiterator_moveprevious");
+		#else // _WIN32
+		pWrapperTable->m_NameSpaceIterator_MovePrevious = (PLib3MFNameSpaceIterator_MovePreviousPtr) dlsym(hLibrary, "lib3mf_namespaceiterator_moveprevious");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_NameSpaceIterator_MovePrevious == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_NameSpaceIterator_GetCurrent = (PLib3MFNameSpaceIterator_GetCurrentPtr) GetProcAddress(hLibrary, "lib3mf_namespaceiterator_getcurrent");
+		#else // _WIN32
+		pWrapperTable->m_NameSpaceIterator_GetCurrent = (PLib3MFNameSpaceIterator_GetCurrentPtr) dlsym(hLibrary, "lib3mf_namespaceiterator_getcurrent");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_NameSpaceIterator_GetCurrent == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_NameSpaceIterator_Count = (PLib3MFNameSpaceIterator_CountPtr) GetProcAddress(hLibrary, "lib3mf_namespaceiterator_count");
+		#else // _WIN32
+		pWrapperTable->m_NameSpaceIterator_Count = (PLib3MFNameSpaceIterator_CountPtr) dlsym(hLibrary, "lib3mf_namespaceiterator_count");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_NameSpaceIterator_Count == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_Model_RootModelPart = (PLib3MFModel_RootModelPartPtr) GetProcAddress(hLibrary, "lib3mf_model_rootmodelpart");
 		#else // _WIN32
 		pWrapperTable->m_Model_RootModelPart = (PLib3MFModel_RootModelPartPtr) dlsym(hLibrary, "lib3mf_model_rootmodelpart");
@@ -5454,6 +5522,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_Model_GetKeyStore == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_GetRequiredNameSpaces = (PLib3MFModel_GetRequiredNameSpacesPtr) GetProcAddress(hLibrary, "lib3mf_model_getrequirednamespaces");
+		#else // _WIN32
+		pWrapperTable->m_Model_GetRequiredNameSpaces = (PLib3MFModel_GetRequiredNameSpacesPtr) dlsym(hLibrary, "lib3mf_model_getrequirednamespaces");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_GetRequiredNameSpaces == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -6763,6 +6840,22 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_KeyStore_SetUUID == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_namespaceiterator_movenext", (void**)&(pWrapperTable->m_NameSpaceIterator_MoveNext));
+		if ( (eLookupError != 0) || (pWrapperTable->m_NameSpaceIterator_MoveNext == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_namespaceiterator_moveprevious", (void**)&(pWrapperTable->m_NameSpaceIterator_MovePrevious));
+		if ( (eLookupError != 0) || (pWrapperTable->m_NameSpaceIterator_MovePrevious == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_namespaceiterator_getcurrent", (void**)&(pWrapperTable->m_NameSpaceIterator_GetCurrent));
+		if ( (eLookupError != 0) || (pWrapperTable->m_NameSpaceIterator_GetCurrent == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_namespaceiterator_count", (void**)&(pWrapperTable->m_NameSpaceIterator_Count));
+		if ( (eLookupError != 0) || (pWrapperTable->m_NameSpaceIterator_Count == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_model_rootmodelpart", (void**)&(pWrapperTable->m_Model_RootModelPart));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Model_RootModelPart == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -7001,6 +7094,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_model_getkeystore", (void**)&(pWrapperTable->m_Model_GetKeyStore));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetKeyStore == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_getrequirednamespaces", (void**)&(pWrapperTable->m_Model_GetRequiredNameSpaces));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetRequiredNameSpaces == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_getlibraryversion", (void**)&(pWrapperTable->m_GetLibraryVersion));
@@ -10702,6 +10799,61 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	 * Method definitions for class CNameSpaceIterator
+	 */
+	
+	/**
+	* CNameSpaceIterator::MoveNext - Iterates to the next namespace in the list.
+	* @return Iterates to the namespace in the list.
+	*/
+	bool CNameSpaceIterator::MoveNext()
+	{
+		bool resultHasNext = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_NameSpaceIterator_MoveNext(m_pHandle, &resultHasNext));
+		
+		return resultHasNext;
+	}
+	
+	/**
+	* CNameSpaceIterator::MovePrevious - Iterates to the previous namespace in the list.
+	* @return Iterates to the previous required namespace in the list.
+	*/
+	bool CNameSpaceIterator::MovePrevious()
+	{
+		bool resultHasPrevious = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_NameSpaceIterator_MovePrevious(m_pHandle, &resultHasPrevious));
+		
+		return resultHasPrevious;
+	}
+	
+	/**
+	* CNameSpaceIterator::GetCurrent - Returns the required namespace the iterator points at.
+	* @return returns the namespace.
+	*/
+	std::string CNameSpaceIterator::GetCurrent()
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_NameSpaceIterator_GetCurrent(m_pHandle, 0, &bytesNeededNameSpace, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		CheckError(m_pWrapper->m_WrapperTable.m_NameSpaceIterator_GetCurrent(m_pHandle, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0]));
+		
+		return std::string(&bufferNameSpace[0]);
+	}
+	
+	/**
+	* CNameSpaceIterator::Count - Returns the number of namespaces the iterator captures.
+	* @return returns the number of namspaces the iterator captures.
+	*/
+	Lib3MF_uint64 CNameSpaceIterator::Count()
+	{
+		Lib3MF_uint64 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_NameSpaceIterator_Count(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
 	 * Method definitions for class CModel
 	 */
 	
@@ -11567,6 +11719,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CKeyStore>(dynamic_cast<CKeyStore*>(m_pWrapper->polymorphicFactory(hKeyStore)));
+	}
+	
+	/**
+	* CModel::GetRequiredNameSpaces - Gets the list of required namespaces for the model
+	* @return The required namespace iterator
+	*/
+	PNameSpaceIterator CModel::GetRequiredNameSpaces()
+	{
+		Lib3MFHandle hNameSpaceIterator = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_GetRequiredNameSpaces(m_pHandle, &hNameSpaceIterator));
+		
+		if (!hNameSpaceIterator) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CNameSpaceIterator>(dynamic_cast<CNameSpaceIterator*>(m_pWrapper->polymorphicFactory(hNameSpaceIterator)));
 	}
 
 } // namespace Lib3MF

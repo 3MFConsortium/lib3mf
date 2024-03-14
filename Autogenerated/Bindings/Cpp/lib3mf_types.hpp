@@ -236,6 +236,7 @@ typedef Lib3MFHandle Lib3MF_ContentEncryptionParams;
 typedef Lib3MFHandle Lib3MF_ResourceData;
 typedef Lib3MFHandle Lib3MF_ResourceDataGroup;
 typedef Lib3MFHandle Lib3MF_KeyStore;
+typedef Lib3MFHandle Lib3MF_NameSpaceIterator;
 typedef Lib3MFHandle Lib3MF_Model;
 
 namespace Lib3MF {

@@ -1398,6 +1398,21 @@
 		</method>
 	</class>
 
+	<class name="NameSpaceIterator" parent="Base">
+		<method name="MoveNext" description="Iterates to the next namespace in the list.">
+			<param name="HasNext" type="bool" pass="return" description="Iterates to the namespace in the list."/>
+		</method>
+		<method name="MovePrevious" description="Iterates to the previous namespace in the list.">
+			<param name="HasPrevious" type="bool" pass="return" description="Iterates to the previous required namespace in the list."/>
+		</method>
+		<method name="GetCurrent" description="Returns the required namespace the iterator points at.">
+			<param name="NameSpace" type="string" pass="return" description="returns the namespace."/>
+		</method>
+		<method name="Count" description="Returns the number of namespaces the iterator captures.">
+			<param name="Count" type="uint64" pass="return" description="returns the number of namspaces the iterator captures."/>
+		</method>
+	</class>
+
 	<class name="Model" parent="Base">
 		<method name="RootModelPart" description="Returns the PackagePart within the OPC package that holds the root model.">
 			<param name="RootModelPart" type="class" class="PackagePart" pass="return" description="the PackagePart within the OPC package that holds the model-file"/>
@@ -1604,6 +1619,10 @@
 		</method>
 		<method name="GetKeyStore" description="Gets the keystore associated with this model">
 			<param name="KeyStore" type="handle" class="KeyStore" pass="return" description="The package keystore"/>
+		</method>
+
+		<method name="GetRequiredNameSpaces" description="Gets the list of required namespaces for the model">
+			<param name="NameSpaceIterator" type="handle" class="NameSpaceIterator" pass="return" description="The required namespace iterator"/>
 		</method>
 	</class>
 

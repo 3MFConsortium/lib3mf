@@ -1165,6 +1165,18 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_keystore_setuuid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 KeyStore_SetUUID (IntPtr Handle, byte[] AUUID);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_namespaceiterator_movenext", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 NameSpaceIterator_MoveNext (IntPtr Handle, out Byte AHasNext);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_namespaceiterator_moveprevious", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 NameSpaceIterator_MovePrevious (IntPtr Handle, out Byte AHasPrevious);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_namespaceiterator_getcurrent", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 NameSpaceIterator_GetCurrent (IntPtr Handle, UInt32 sizeNameSpace, out UInt32 neededNameSpace, IntPtr dataNameSpace);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_namespaceiterator_count", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 NameSpaceIterator_Count (IntPtr Handle, out UInt64 ACount);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_rootmodelpart", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_RootModelPart (IntPtr Handle, out IntPtr ARootModelPart);
 
@@ -1344,6 +1356,9 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getkeystore", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetKeyStore (IntPtr Handle, out IntPtr AKeyStore);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getrequirednamespaces", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetRequiredNameSpaces (IntPtr Handle, out IntPtr ANameSpaceIterator);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_getlibraryversion", CharSet = CharSet.Ansi, CallingConvention=CallingConvention.Cdecl)]
 			public extern static Int32 GetLibraryVersion (out UInt32 AMajor, out UInt32 AMinor, out UInt32 AMicro);
@@ -1751,6 +1766,7 @@ namespace Lib3MF {
 					case 0x1A47A5E258E22EF9: Object = new CResourceData(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ResourceData"
 					case 0xD59067227E428AA4: Object = new CResourceDataGroup(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ResourceDataGroup"
 					case 0x1CC9E0CC082253C6: Object = new CKeyStore(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::KeyStore"
+					case 0x8D1206A0FEEFCC31: Object = new CNameSpaceIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::NameSpaceIterator"
 					case 0x5A8164ECEDB03F09: Object = new CModel(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Model"
 					default: Object = System.Activator.CreateInstance(typeof(T), Handle) as T; break;
 				}
@@ -4664,6 +4680,52 @@ namespace Lib3MF {
 
 	}
 
+	public class CNameSpaceIterator : CBase
+	{
+		public CNameSpaceIterator (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public bool MoveNext ()
+		{
+			Byte resultHasNext = 0;
+
+			CheckError(Internal.Lib3MFWrapper.NameSpaceIterator_MoveNext (Handle, out resultHasNext));
+			return (resultHasNext != 0);
+		}
+
+		public bool MovePrevious ()
+		{
+			Byte resultHasPrevious = 0;
+
+			CheckError(Internal.Lib3MFWrapper.NameSpaceIterator_MovePrevious (Handle, out resultHasPrevious));
+			return (resultHasPrevious != 0);
+		}
+
+		public String GetCurrent ()
+		{
+			UInt32 sizeNameSpace = 0;
+			UInt32 neededNameSpace = 0;
+			CheckError(Internal.Lib3MFWrapper.NameSpaceIterator_GetCurrent (Handle, sizeNameSpace, out neededNameSpace, IntPtr.Zero));
+			sizeNameSpace = neededNameSpace;
+			byte[] bytesNameSpace = new byte[sizeNameSpace];
+			GCHandle dataNameSpace = GCHandle.Alloc(bytesNameSpace, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.NameSpaceIterator_GetCurrent (Handle, sizeNameSpace, out neededNameSpace, dataNameSpace.AddrOfPinnedObject()));
+			dataNameSpace.Free();
+			return Encoding.UTF8.GetString(bytesNameSpace).TrimEnd(char.MinValue);
+		}
+
+		public UInt64 Count ()
+		{
+			UInt64 resultCount = 0;
+
+			CheckError(Internal.Lib3MFWrapper.NameSpaceIterator_Count (Handle, out resultCount));
+			return resultCount;
+		}
+
+	}
+
 	public class CModel : CBase
 	{
 		public CModel (IntPtr NewHandle) : base (NewHandle)
@@ -5175,6 +5237,14 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Model_GetKeyStore (Handle, out newKeyStore));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CKeyStore>(newKeyStore);
+		}
+
+		public CNameSpaceIterator GetRequiredNameSpaces ()
+		{
+			IntPtr newNameSpaceIterator = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetRequiredNameSpaces (Handle, out newNameSpaceIterator));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CNameSpaceIterator>(newNameSpaceIterator);
 		}
 
 	}

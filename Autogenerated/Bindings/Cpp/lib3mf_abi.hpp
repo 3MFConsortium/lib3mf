@@ -2955,6 +2955,48 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_keystore_getuuid(Lib3MF_KeyStore pKeyStore, 
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_keystore_setuuid(Lib3MF_KeyStore pKeyStore, const char * pUUID);
 
 /*************************************************************************************************************************
+ Class definition for NameSpaceIterator
+**************************************************************************************************************************/
+
+/**
+* Iterates to the next namespace in the list.
+*
+* @param[in] pNameSpaceIterator - NameSpaceIterator instance.
+* @param[out] pHasNext - Iterates to the namespace in the list.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_namespaceiterator_movenext(Lib3MF_NameSpaceIterator pNameSpaceIterator, bool * pHasNext);
+
+/**
+* Iterates to the previous namespace in the list.
+*
+* @param[in] pNameSpaceIterator - NameSpaceIterator instance.
+* @param[out] pHasPrevious - Iterates to the previous required namespace in the list.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_namespaceiterator_moveprevious(Lib3MF_NameSpaceIterator pNameSpaceIterator, bool * pHasPrevious);
+
+/**
+* Returns the required namespace the iterator points at.
+*
+* @param[in] pNameSpaceIterator - NameSpaceIterator instance.
+* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameSpaceBuffer -  buffer of returns the namespace., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_namespaceiterator_getcurrent(Lib3MF_NameSpaceIterator pNameSpaceIterator, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer);
+
+/**
+* Returns the number of namespaces the iterator captures.
+*
+* @param[in] pNameSpaceIterator - NameSpaceIterator instance.
+* @param[out] pCount - returns the number of namspaces the iterator captures.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_namespaceiterator_count(Lib3MF_NameSpaceIterator pNameSpaceIterator, Lib3MF_uint64 * pCount);
+
+/*************************************************************************************************************************
  Class definition for Model
 **************************************************************************************************************************/
 
@@ -3527,6 +3569,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_setrandomnumbercallback(Lib3MF_Model p
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getkeystore(Lib3MF_Model pModel, Lib3MF_KeyStore * pKeyStore);
+
+/**
+* Gets the list of required namespaces for the model
+*
+* @param[in] pModel - Model instance.
+* @param[out] pNameSpaceIterator - The required namespace iterator
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getrequirednamespaces(Lib3MF_Model pModel, Lib3MF_NameSpaceIterator * pNameSpaceIterator);
 
 /*************************************************************************************************************************
  Global functions

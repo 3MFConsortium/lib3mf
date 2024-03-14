@@ -2592,6 +2592,42 @@ Lib3MFResult CCall_lib3mf_keystore_setuuid(Lib3MFHandle libraryHandle, Lib3MF_Ke
 }
 
 
+Lib3MFResult CCall_lib3mf_namespaceiterator_movenext(Lib3MFHandle libraryHandle, Lib3MF_NameSpaceIterator pNameSpaceIterator, bool * pHasNext)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_NameSpaceIterator_MoveNext (pNameSpaceIterator, pHasNext);
+}
+
+
+Lib3MFResult CCall_lib3mf_namespaceiterator_moveprevious(Lib3MFHandle libraryHandle, Lib3MF_NameSpaceIterator pNameSpaceIterator, bool * pHasPrevious)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_NameSpaceIterator_MovePrevious (pNameSpaceIterator, pHasPrevious);
+}
+
+
+Lib3MFResult CCall_lib3mf_namespaceiterator_getcurrent(Lib3MFHandle libraryHandle, Lib3MF_NameSpaceIterator pNameSpaceIterator, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_NameSpaceIterator_GetCurrent (pNameSpaceIterator, nNameSpaceBufferSize, pNameSpaceNeededChars, pNameSpaceBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_namespaceiterator_count(Lib3MFHandle libraryHandle, Lib3MF_NameSpaceIterator pNameSpaceIterator, Lib3MF_uint64 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_NameSpaceIterator_Count (pNameSpaceIterator, pCount);
+}
+
+
 Lib3MFResult CCall_lib3mf_model_rootmodelpart(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_PackagePart * pRootModelPart)
 {
 	if (libraryHandle == 0) 
@@ -3129,6 +3165,15 @@ Lib3MFResult CCall_lib3mf_model_getkeystore(Lib3MFHandle libraryHandle, Lib3MF_M
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_Model_GetKeyStore (pModel, pKeyStore);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_getrequirednamespaces(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_NameSpaceIterator * pNameSpaceIterator)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_GetRequiredNameSpaces (pModel, pNameSpaceIterator);
 }
 
 
@@ -7344,6 +7389,63 @@ func (inst KeyStore) SetUUID(uUID string) error {
 }
 
 
+// NameSpaceIterator represents a Lib3MF class.
+type NameSpaceIterator struct {
+	Base
+}
+
+func (wrapper Wrapper) NewNameSpaceIterator(r ref) NameSpaceIterator {
+	return NameSpaceIterator{wrapper.NewBase(r)}
+}
+
+// MoveNext iterates to the next namespace in the list.
+func (inst NameSpaceIterator) MoveNext() (bool, error) {
+	var hasNext C.bool
+	ret := C.CCall_lib3mf_namespaceiterator_movenext(inst.wrapperRef.LibraryHandle, inst.Ref, &hasNext)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(hasNext), nil
+}
+
+// MovePrevious iterates to the previous namespace in the list.
+func (inst NameSpaceIterator) MovePrevious() (bool, error) {
+	var hasPrevious C.bool
+	ret := C.CCall_lib3mf_namespaceiterator_moveprevious(inst.wrapperRef.LibraryHandle, inst.Ref, &hasPrevious)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(hasPrevious), nil
+}
+
+// GetCurrent returns the required namespace the iterator points at.
+func (inst NameSpaceIterator) GetCurrent() (string, error) {
+	var neededfornameSpace C.uint32_t
+	var filledinnameSpace C.uint32_t
+	ret := C.CCall_lib3mf_namespaceiterator_getcurrent(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededfornameSpace, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizenameSpace := neededfornameSpace
+	buffernameSpace := make([]byte, bufferSizenameSpace)
+	ret = C.CCall_lib3mf_namespaceiterator_getcurrent(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizenameSpace, &filledinnameSpace, (*C.char)(unsafe.Pointer(&buffernameSpace[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffernameSpace[:(filledinnameSpace-1)]), nil
+}
+
+// Count returns the number of namespaces the iterator captures.
+func (inst NameSpaceIterator) Count() (uint64, error) {
+	var count C.uint64_t
+	ret := C.CCall_lib3mf_namespaceiterator_count(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint64(count), nil
+}
+
+
 // Model represents a Lib3MF class.
 type Model struct {
 	Base
@@ -7963,6 +8065,16 @@ func (inst Model) GetKeyStore() (KeyStore, error) {
 		return KeyStore{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewKeyStore(keyStore), nil
+}
+
+// GetRequiredNameSpaces gets the list of required namespaces for the model.
+func (inst Model) GetRequiredNameSpaces() (NameSpaceIterator, error) {
+	var nameSpaceIterator ref
+	ret := C.CCall_lib3mf_model_getrequirednamespaces(inst.wrapperRef.LibraryHandle, inst.Ref, &nameSpaceIterator)
+	if ret != 0 {
+		return NameSpaceIterator{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewNameSpaceIterator(nameSpaceIterator), nil
 }
 
 

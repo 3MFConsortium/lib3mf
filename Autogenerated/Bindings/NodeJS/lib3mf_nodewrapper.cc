@@ -82,6 +82,7 @@ Persistent<Function> CLib3MFContentEncryptionParams::constructor;
 Persistent<Function> CLib3MFResourceData::constructor;
 Persistent<Function> CLib3MFResourceDataGroup::constructor;
 Persistent<Function> CLib3MFKeyStore::constructor;
+Persistent<Function> CLib3MFNameSpaceIterator::constructor;
 Persistent<Function> CLib3MFModel::constructor;
 
 /*************************************************************************************************************************
@@ -10588,6 +10589,158 @@ void CLib3MFKeyStore::SetUUID(const FunctionCallbackInfo<Value>& args)
 }
 
 /*************************************************************************************************************************
+ Class CLib3MFNameSpaceIterator Implementation
+**************************************************************************************************************************/
+
+CLib3MFNameSpaceIterator::CLib3MFNameSpaceIterator()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFNameSpaceIterator::~CLib3MFNameSpaceIterator()
+{
+}
+
+void CLib3MFNameSpaceIterator::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFNameSpaceIterator"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "MoveNext", MoveNext);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "MovePrevious", MovePrevious);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCurrent", GetCurrent);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "Count", Count);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFNameSpaceIterator::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFNameSpaceIterator * namespaceiteratorInstance = new CLib3MFNameSpaceIterator();
+				namespaceiteratorInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFNameSpaceIterator: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFNameSpaceIterator::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFNameSpaceIterator::MoveNext(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        bool bReturnHasNext = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method MoveNext.");
+        if (wrapperTable->m_NameSpaceIterator_MoveNext == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method NameSpaceIterator::MoveNext.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_NameSpaceIterator_MoveNext(instanceHandle, &bReturnHasNext);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnHasNext));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFNameSpaceIterator::MovePrevious(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        bool bReturnHasPrevious = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method MovePrevious.");
+        if (wrapperTable->m_NameSpaceIterator_MovePrevious == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method NameSpaceIterator::MovePrevious.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_NameSpaceIterator_MovePrevious(instanceHandle, &bReturnHasPrevious);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnHasPrevious));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFNameSpaceIterator::GetCurrent(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int bytesNeededNameSpace = 0;
+        unsigned int bytesWrittenNameSpace = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCurrent.");
+        if (wrapperTable->m_NameSpaceIterator_GetCurrent == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method NameSpaceIterator::GetCurrent.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_NameSpaceIterator_GetCurrent(instanceHandle, 0, &bytesNeededNameSpace, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferNameSpace;
+        bufferNameSpace.resize(bytesNeededNameSpace);
+        Lib3MFResult errorCode = wrapperTable->m_NameSpaceIterator_GetCurrent(instanceHandle, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferNameSpace[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFNameSpaceIterator::Count(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        uint64_t nReturnCount = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method Count.");
+        if (wrapperTable->m_NameSpaceIterator_Count == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method NameSpaceIterator::Count.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_NameSpaceIterator_Count(instanceHandle, &nReturnCount);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
  Class CLib3MFModel Implementation
 **************************************************************************************************************************/
 
@@ -10670,6 +10823,7 @@ void CLib3MFModel::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveCustomContentType", RemoveCustomContentType);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetRandomNumberCallback", SetRandomNumberCallback);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetKeyStore", GetKeyStore);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetRequiredNameSpaces", GetRequiredNameSpaces);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -12225,6 +12379,29 @@ void CLib3MFModel::GetKeyStore(const FunctionCallbackInfo<Value>& args)
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjKeyStore = CLib3MFKeyStore::NewInstance(args.Holder(), hReturnKeyStore);
         args.GetReturnValue().Set(instanceObjKeyStore);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::GetRequiredNameSpaces(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnNameSpaceIterator = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetRequiredNameSpaces.");
+        if (wrapperTable->m_Model_GetRequiredNameSpaces == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::GetRequiredNameSpaces.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_GetRequiredNameSpaces(instanceHandle, &hReturnNameSpaceIterator);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjNameSpaceIterator = CLib3MFNameSpaceIterator::NewInstance(args.Holder(), hReturnNameSpaceIterator);
+        args.GetReturnValue().Set(instanceObjNameSpaceIterator);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

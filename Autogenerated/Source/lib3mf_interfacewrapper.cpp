@@ -10535,6 +10535,168 @@ Lib3MFResult lib3mf_keystore_setuuid(Lib3MF_KeyStore pKeyStore, const char * pUU
 
 
 /*************************************************************************************************************************
+ Class implementation for NameSpaceIterator
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_namespaceiterator_movenext(Lib3MF_NameSpaceIterator pNameSpaceIterator, bool * pHasNext)
+{
+	IBase* pIBaseClass = (IBase *)pNameSpaceIterator;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pNameSpaceIterator, "NameSpaceIterator", "MoveNext");
+		}
+		if (pHasNext == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		INameSpaceIterator* pINameSpaceIterator = dynamic_cast<INameSpaceIterator*>(pIBaseClass);
+		if (!pINameSpaceIterator)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pHasNext = pINameSpaceIterator->MoveNext();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("HasNext", *pHasNext);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_namespaceiterator_moveprevious(Lib3MF_NameSpaceIterator pNameSpaceIterator, bool * pHasPrevious)
+{
+	IBase* pIBaseClass = (IBase *)pNameSpaceIterator;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pNameSpaceIterator, "NameSpaceIterator", "MovePrevious");
+		}
+		if (pHasPrevious == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		INameSpaceIterator* pINameSpaceIterator = dynamic_cast<INameSpaceIterator*>(pIBaseClass);
+		if (!pINameSpaceIterator)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pHasPrevious = pINameSpaceIterator->MovePrevious();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("HasPrevious", *pHasPrevious);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_namespaceiterator_getcurrent(Lib3MF_NameSpaceIterator pNameSpaceIterator, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pNameSpaceIterator;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pNameSpaceIterator, "NameSpaceIterator", "GetCurrent");
+		}
+		if ( (!pNameSpaceBuffer) && !(pNameSpaceNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace("");
+		INameSpaceIterator* pINameSpaceIterator = dynamic_cast<INameSpaceIterator*>(pIBaseClass);
+		if (!pINameSpaceIterator)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pNameSpaceBuffer == nullptr);
+		if (isCacheCall) {
+			sNameSpace = pINameSpaceIterator->GetCurrent();
+
+			pINameSpaceIterator->_setCache (new ParameterCache_1<std::string> (sNameSpace));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pINameSpaceIterator->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sNameSpace);
+			pINameSpaceIterator->_setCache (nullptr);
+		}
+		
+		if (pNameSpaceNeededChars)
+			*pNameSpaceNeededChars = (Lib3MF_uint32) (sNameSpace.size()+1);
+		if (pNameSpaceBuffer) {
+			if (sNameSpace.size() >= nNameSpaceBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iNameSpace = 0; iNameSpace < sNameSpace.size(); iNameSpace++)
+				pNameSpaceBuffer[iNameSpace] = sNameSpace[iNameSpace];
+			pNameSpaceBuffer[sNameSpace.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("NameSpace", sNameSpace.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_namespaceiterator_count(Lib3MF_NameSpaceIterator pNameSpaceIterator, Lib3MF_uint64 * pCount)
+{
+	IBase* pIBaseClass = (IBase *)pNameSpaceIterator;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pNameSpaceIterator, "NameSpaceIterator", "Count");
+		}
+		if (pCount == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		INameSpaceIterator* pINameSpaceIterator = dynamic_cast<INameSpaceIterator*>(pIBaseClass);
+		if (!pINameSpaceIterator)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pCount = pINameSpaceIterator->Count();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt64Result("Count", *pCount);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
  Class implementation for Model
 **************************************************************************************************************************/
 Lib3MFResult lib3mf_model_rootmodelpart(Lib3MF_Model pModel, Lib3MF_PackagePart * pRootModelPart)
@@ -12779,6 +12941,42 @@ Lib3MFResult lib3mf_model_getkeystore(Lib3MF_Model pModel, Lib3MF_KeyStore * pKe
 	}
 }
 
+Lib3MFResult lib3mf_model_getrequirednamespaces(Lib3MF_Model pModel, Lib3MF_NameSpaceIterator * pNameSpaceIterator)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetRequiredNameSpaces");
+		}
+		if (pNameSpaceIterator == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseNameSpaceIterator(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNameSpaceIterator = pIModel->GetRequiredNameSpaces();
+
+		*pNameSpaceIterator = (IBase*)(pBaseNameSpaceIterator);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("NameSpaceIterator", *pNameSpaceIterator);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 
 
 /*************************************************************************************************************************
@@ -13354,6 +13552,14 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_keystore_getuuid;
 	if (sProcName == "lib3mf_keystore_setuuid") 
 		*ppProcAddress = (void*) &lib3mf_keystore_setuuid;
+	if (sProcName == "lib3mf_namespaceiterator_movenext") 
+		*ppProcAddress = (void*) &lib3mf_namespaceiterator_movenext;
+	if (sProcName == "lib3mf_namespaceiterator_moveprevious") 
+		*ppProcAddress = (void*) &lib3mf_namespaceiterator_moveprevious;
+	if (sProcName == "lib3mf_namespaceiterator_getcurrent") 
+		*ppProcAddress = (void*) &lib3mf_namespaceiterator_getcurrent;
+	if (sProcName == "lib3mf_namespaceiterator_count") 
+		*ppProcAddress = (void*) &lib3mf_namespaceiterator_count;
 	if (sProcName == "lib3mf_model_rootmodelpart") 
 		*ppProcAddress = (void*) &lib3mf_model_rootmodelpart;
 	if (sProcName == "lib3mf_model_findorcreatepackagepart") 
@@ -13474,6 +13680,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_model_setrandomnumbercallback;
 	if (sProcName == "lib3mf_model_getkeystore") 
 		*ppProcAddress = (void*) &lib3mf_model_getkeystore;
+	if (sProcName == "lib3mf_model_getrequirednamespaces") 
+		*ppProcAddress = (void*) &lib3mf_model_getrequirednamespaces;
 	if (sProcName == "lib3mf_getlibraryversion") 
 		*ppProcAddress = (void*) &lib3mf_getlibraryversion;
 	if (sProcName == "lib3mf_getprereleaseinformation") 
