@@ -73,9 +73,9 @@ class IMetaData;
 class IMetaDataGroup;
 class IObject;
 class IMeshObject;
+class IBoundaryShape;
 class IBeamLattice;
 class IFunctionReference;
-class IVolumeDataBoundary;
 class IVolumeDataColor;
 class IMaterialMapping;
 class IVolumeDataComposite;
@@ -1493,6 +1493,116 @@ typedef IBaseSharedPtr<IMeshObject> PIMeshObject;
 
 
 /*************************************************************************************************************************
+ Class interface for BoundaryShape 
+**************************************************************************************************************************/
+
+class IBoundaryShape : public virtual IObject {
+public:
+	/**
+	* IBoundaryShape::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x2BE0E57BA81B2ECBUL; // First 64 bits of SHA1 of a string: "Lib3MF::BoundaryShape"
+	}
+
+	/**
+	* IBoundaryShape::GetFunction - Returns the function that is used as boundary shape.
+	* @return the function to use as boundary shape
+	*/
+	virtual IFunction * GetFunction() = 0;
+
+	/**
+	* IBoundaryShape::SetFunction - Sets the function to use as boundary shape.
+	* @param[in] pTheFunction - the function to use as boundary shape
+	*/
+	virtual void SetFunction(IFunction* pTheFunction) = 0;
+
+	/**
+	* IBoundaryShape::GetTransform - Returns the transformation matrix into the coordinate system of the referenced Function.
+	* @return the transformation matrix
+	*/
+	virtual Lib3MF::sTransform GetTransform() = 0;
+
+	/**
+	* IBoundaryShape::SetTransform - Sets the transformation matrix into the coordinate system of the referenced Function.
+	* @param[in] Transform - new transformation matrix
+	*/
+	virtual void SetTransform(const Lib3MF::sTransform Transform) = 0;
+
+	/**
+	* IBoundaryShape::GetChannelName - Returns the name of the function output channel to use.
+	* @return the name of the function output channel
+	*/
+	virtual std::string GetChannelName() = 0;
+
+	/**
+	* IBoundaryShape::SetChannelName - Sets the name of the function output channel to use.
+	* @param[in] sChannelName - new name of the function output channel
+	*/
+	virtual void SetChannelName(const std::string & sChannelName) = 0;
+
+	/**
+	* IBoundaryShape::SetMinFeatureSize - Sets the minimal feature size as a hint for the function evaluator
+	* @param[in] dMinFeatureSize - minimal feature size
+	*/
+	virtual void SetMinFeatureSize(const Lib3MF_double dMinFeatureSize) = 0;
+
+	/**
+	* IBoundaryShape::GetMinFeatureSize - Returns the minimal feature size as a hint for the function evaluator
+	* @return minimal feature size
+	*/
+	virtual Lib3MF_double GetMinFeatureSize() = 0;
+
+	/**
+	* IBoundaryShape::SetFallBackValue - Sets the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+	* @param[in] dFallBackValue - fallback value
+	*/
+	virtual void SetFallBackValue(const Lib3MF_double dFallBackValue) = 0;
+
+	/**
+	* IBoundaryShape::GetFallBackValue - Returns the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+	* @return fallback value
+	*/
+	virtual Lib3MF_double GetFallBackValue() = 0;
+
+	/**
+	* IBoundaryShape::SetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+	* @param[in] bMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+	*/
+	virtual void SetMeshBBoxOnly(const bool bMeshBBoxOnly) = 0;
+
+	/**
+	* IBoundaryShape::GetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+	* @return If set only the bounding box of the mesh is intersected with the boundary
+	*/
+	virtual bool GetMeshBBoxOnly() = 0;
+
+	/**
+	* IBoundaryShape::SetMesh - Sets the mesh to use as evaluation domain
+	* @param[in] pTheMesh - The mesh
+	*/
+	virtual void SetMesh(IMeshObject* pTheMesh) = 0;
+
+	/**
+	* IBoundaryShape::GetMesh - Returns the mesh that is used as evaluation domain
+	* @return The mesh
+	*/
+	virtual IMeshObject * GetMesh() = 0;
+
+	/**
+	* IBoundaryShape::VolumeData - Retrieves the VolumeData referenced by this BoundaryShape.
+	* @return the VolumeData of this BoundaryShape
+	*/
+	virtual IVolumeData * VolumeData() = 0;
+
+};
+
+typedef IBaseSharedPtr<IBoundaryShape> PIBoundaryShape;
+
+
+/*************************************************************************************************************************
  Class interface for BeamLattice 
 **************************************************************************************************************************/
 
@@ -1749,38 +1859,6 @@ typedef IBaseSharedPtr<IFunctionReference> PIFunctionReference;
 
 
 /*************************************************************************************************************************
- Class interface for VolumeDataBoundary 
-**************************************************************************************************************************/
-
-class IVolumeDataBoundary : public virtual IFunctionReference {
-public:
-	/**
-	* IVolumeDataBoundary::ClassTypeId - Get Class Type Id
-	* @return Class type as a 64 bits integer
-	*/
-	Lib3MF_uint64 ClassTypeId() override
-	{
-		return 0xE7B8A8C7BC9DE5C1UL; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeDataBoundary"
-	}
-
-	/**
-	* IVolumeDataBoundary::SetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
-	* @param[in] bMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
-	*/
-	virtual void SetMeshBBoxOnly(const bool bMeshBBoxOnly) = 0;
-
-	/**
-	* IVolumeDataBoundary::GetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
-	* @return If set only the bounding box of the mesh is intersected with the boundary
-	*/
-	virtual bool GetMeshBBoxOnly() = 0;
-
-};
-
-typedef IBaseSharedPtr<IVolumeDataBoundary> PIVolumeDataBoundary;
-
-
-/*************************************************************************************************************************
  Class interface for VolumeDataColor 
 **************************************************************************************************************************/
 
@@ -1930,24 +2008,6 @@ public:
 	{
 		return 0x9200586FB91587A7UL; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeData"
 	}
-
-	/**
-	* IVolumeData::GetBoundary - Returns the VolumeDataBoundary of this VolumeData instance
-	* @return filled with the VolumeDataBoundary of this VolumeData instance.
-	*/
-	virtual IVolumeDataBoundary * GetBoundary() = 0;
-
-	/**
-	* IVolumeData::CreateNewBoundary - Creates a new VolumeDataBoundary for this VolumeData instance
-	* @param[in] pTheFunction - Function used in this element
-	* @return The new VolumeDataBoundary of this VolumeData instance.
-	*/
-	virtual IVolumeDataBoundary * CreateNewBoundary(IFunction* pTheFunction) = 0;
-
-	/**
-	* IVolumeData::RemoveBoundary - Removes the VolumeDataBoundary of this VolumeData instance
-	*/
-	virtual void RemoveBoundary() = 0;
 
 	/**
 	* IVolumeData::GetComposite - Returns the VolumeDataComposite of this VolumeData instance

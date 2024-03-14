@@ -80,13 +80,6 @@ public:
 	/**
 	* Public member functions to implement.
 	*/
-
-	IVolumeDataBoundary * GetBoundary() override;
-
-    IVolumeDataBoundary* CreateNewBoundary(IFunction* pTheFunction) override;
-
-    void RemoveBoundary() override;
-
 	IVolumeDataComposite * GetComposite() override;
 
 	IVolumeDataComposite * CreateNewComposite() override;

@@ -964,6 +964,88 @@
 		</method>
 	</class>
 
+	<class name="BoundaryShape" parent="Object">
+		<method name="GetFunction"
+			description="Returns the function that is used as boundary shape.">
+			<param name="TheFunction" type="optionalclass" class="Function" pass="return"
+				description="the function to use as boundary shape" />
+		</method>
+
+		<method name="SetFunction"
+			description="Sets the function to use as boundary shape.">
+			<param name="TheFunction" type="handle" class="Function" pass="in"
+				description="the function to use as boundary shape" />
+		</method>
+
+		<method name="GetTransform"
+			description="Returns the transformation matrix into the coordinate system of the referenced Function.">
+			<param name="Transform" type="struct" class="Transform" pass="return"
+				description="the transformation matrix" />
+		</method>
+		<method name="SetTransform"
+			description="Sets the transformation matrix into the coordinate system of the referenced Function.">
+			<param name="Transform" type="struct" class="Transform" pass="in"
+				description="new transformation matrix" />
+		</method>
+
+		<method name="GetChannelName"
+			description="Returns the name of the function output channel to use.">
+			<param name="ChannelName" type="string" pass="return"
+				description="the name of the function output channel" />
+		</method>
+		<method name="SetChannelName"
+			description="Sets the name of the function output channel to use.">
+			<param name="ChannelName" type="string" pass="in"
+				description="new name of the function output channel" />
+		</method>
+
+		<method name="SetMinFeatureSize"
+			description="Sets the minimal feature size as a hint for the function evaluator">
+			<param name="MinFeatureSize" type="double" pass="in" description="minimal feature size" />
+		</method>
+		<method name="GetMinFeatureSize"
+			description="Returns the minimal feature size as a hint for the function evaluator">
+			<param name="MinFeatureSize" type="double" pass="return"
+				description="minimal feature size" />
+		</method>
+
+		<method name="SetFallBackValue"
+			description="Sets the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).">
+			<param name="FallBackValue" type="double" pass="in" description="fallback value" />
+		</method>
+
+		<method name="GetFallBackValue"
+			description="Returns the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).">
+			<param name="FallBackValue" type="double" pass="return" description="fallback value" />
+		</method>
+
+		<method name="SetMeshBBoxOnly"
+			description="If set only the bounding box of the mesh is intersected with the boundary">
+			<param name="MeshBBoxOnly" type="bool" pass="in"
+				description="If set only the bounding box of the mesh is intersected with the boundary" />
+		</method>
+		<method name="GetMeshBBoxOnly"
+			description="If set only the bounding box of the mesh is intersected with the boundary">
+			<param name="MeshBBoxOnly" type="bool" pass="return"
+				description="If set only the bounding box of the mesh is intersected with the boundary" />
+		</method>
+				
+		<method name="SetMesh" description="Sets the mesh to use as evaluation domain">
+			<param name="TheMesh" type="handle" class="MeshObject" pass="in"
+				description="The mesh" />
+		</method>
+
+		<method name="GetMesh" description="Returns the mesh that is used as evaluation domain">
+			<param name="TheMesh" type="optionalclass" class="MeshObject" pass="return"
+				description="The mesh" />
+		</method>
+
+		<method name="VolumeData" description="Retrieves the VolumeData referenced by this BoundaryShape.">
+			<param name="TheVolumeData" type="optionalclass" class="VolumeData" pass="return"
+				description="the VolumeData of this BoundaryShape" />
+		</method>
+	</class>
+
 	<class name="BeamLattice" parent="Base">
 		<method name="GetMinLength"
 			description="Returns the minimal length of beams for the beamlattice.">
@@ -1152,19 +1234,6 @@
 		</method>
 	</class>
 
-	<class name="VolumeDataBoundary" parent="FunctionReference">
-		<method name="SetMeshBBoxOnly"
-			description="If set only the bounding box of the mesh is intersected with the boundary">
-			<param name="MeshBBoxOnly" type="bool" pass="in"
-				description="If set only the bounding box of the mesh is intersected with the boundary" />
-		</method>
-		<method name="GetMeshBBoxOnly"
-			description="If set only the bounding box of the mesh is intersected with the boundary">
-			<param name="MeshBBoxOnly" type="bool" pass="return"
-				description="If set only the bounding box of the mesh is intersected with the boundary" />
-		</method>
-	</class>
-
 	<class name="VolumeDataColor" parent="FunctionReference">
 	</class>
 
@@ -1225,22 +1294,6 @@
 	</class>
 
 	<class name="VolumeData">
-		<method name="GetBoundary"
-			description="Returns the VolumeDataBoundary of this VolumeData instance">
-			<param name="TheBoundaryData" type="optionalclass" class="VolumeDataBoundary"
-				pass="return"
-				description="filled with the VolumeDataBoundary of this VolumeData instance." />
-		</method>
-		<method name="CreateNewBoundary"
-			description="Creates a new VolumeDataBoundary for this VolumeData instance">
-			<param name="TheFunction" type="class" class="Function" pass="in"
-				description="Function used in this element" />
-			<param name="TheBoundaryData" type="class" class="VolumeDataBoundary" pass="return"
-				description="The new VolumeDataBoundary of this VolumeData instance." />
-		</method>
-		<method name="RemoveBoundary"
-			description="Removes the VolumeDataBoundary of this VolumeData instance">
-		</method>
 		<method name="GetComposite"
 			description="Returns the VolumeDataComposite of this VolumeData instance">
 			<param name="TheCompositeData" type="optionalclass" class="VolumeDataComposite"

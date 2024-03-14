@@ -79,9 +79,9 @@ class CMetaData;
 class CMetaDataGroup;
 class CObject;
 class CMeshObject;
+class CBoundaryShape;
 class CBeamLattice;
 class CFunctionReference;
-class CVolumeDataBoundary;
 class CVolumeDataColor;
 class CMaterialMapping;
 class CVolumeDataComposite;
@@ -197,9 +197,9 @@ typedef CMetaData CLib3MFMetaData;
 typedef CMetaDataGroup CLib3MFMetaDataGroup;
 typedef CObject CLib3MFObject;
 typedef CMeshObject CLib3MFMeshObject;
+typedef CBoundaryShape CLib3MFBoundaryShape;
 typedef CBeamLattice CLib3MFBeamLattice;
 typedef CFunctionReference CLib3MFFunctionReference;
-typedef CVolumeDataBoundary CLib3MFVolumeDataBoundary;
 typedef CVolumeDataColor CLib3MFVolumeDataColor;
 typedef CMaterialMapping CLib3MFMaterialMapping;
 typedef CVolumeDataComposite CLib3MFVolumeDataComposite;
@@ -315,9 +315,9 @@ typedef std::shared_ptr<CMetaData> PMetaData;
 typedef std::shared_ptr<CMetaDataGroup> PMetaDataGroup;
 typedef std::shared_ptr<CObject> PObject;
 typedef std::shared_ptr<CMeshObject> PMeshObject;
+typedef std::shared_ptr<CBoundaryShape> PBoundaryShape;
 typedef std::shared_ptr<CBeamLattice> PBeamLattice;
 typedef std::shared_ptr<CFunctionReference> PFunctionReference;
-typedef std::shared_ptr<CVolumeDataBoundary> PVolumeDataBoundary;
 typedef std::shared_ptr<CVolumeDataColor> PVolumeDataColor;
 typedef std::shared_ptr<CMaterialMapping> PMaterialMapping;
 typedef std::shared_ptr<CVolumeDataComposite> PVolumeDataComposite;
@@ -433,9 +433,9 @@ typedef PMetaData PLib3MFMetaData;
 typedef PMetaDataGroup PLib3MFMetaDataGroup;
 typedef PObject PLib3MFObject;
 typedef PMeshObject PLib3MFMeshObject;
+typedef PBoundaryShape PLib3MFBoundaryShape;
 typedef PBeamLattice PLib3MFBeamLattice;
 typedef PFunctionReference PLib3MFFunctionReference;
-typedef PVolumeDataBoundary PLib3MFVolumeDataBoundary;
 typedef PVolumeDataColor PLib3MFVolumeDataColor;
 typedef PMaterialMapping PLib3MFMaterialMapping;
 typedef PVolumeDataComposite PLib3MFVolumeDataComposite;
@@ -835,9 +835,9 @@ private:
 	friend class CMetaDataGroup;
 	friend class CObject;
 	friend class CMeshObject;
+	friend class CBoundaryShape;
 	friend class CBeamLattice;
 	friend class CFunctionReference;
-	friend class CVolumeDataBoundary;
 	friend class CVolumeDataColor;
 	friend class CMaterialMapping;
 	friend class CVolumeDataComposite;
@@ -1433,6 +1433,37 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CBoundaryShape 
+**************************************************************************************************************************/
+class CBoundaryShape : public CObject {
+public:
+	
+	/**
+	* CBoundaryShape::CBoundaryShape - Constructor for BoundaryShape class.
+	*/
+	CBoundaryShape(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CObject(pWrapper, pHandle)
+	{
+	}
+	
+	inline PFunction GetFunction();
+	inline void SetFunction(classParam<CFunction> pTheFunction);
+	inline sTransform GetTransform();
+	inline void SetTransform(const sTransform & Transform);
+	inline std::string GetChannelName();
+	inline void SetChannelName(const std::string & sChannelName);
+	inline void SetMinFeatureSize(const Lib3MF_double dMinFeatureSize);
+	inline Lib3MF_double GetMinFeatureSize();
+	inline void SetFallBackValue(const Lib3MF_double dFallBackValue);
+	inline Lib3MF_double GetFallBackValue();
+	inline void SetMeshBBoxOnly(const bool bMeshBBoxOnly);
+	inline bool GetMeshBBoxOnly();
+	inline void SetMesh(classParam<CMeshObject> pTheMesh);
+	inline PMeshObject GetMesh();
+	inline PVolumeData VolumeData();
+};
+	
+/*************************************************************************************************************************
  Class CBeamLattice 
 **************************************************************************************************************************/
 class CBeamLattice : public CBase {
@@ -1495,24 +1526,6 @@ public:
 	inline Lib3MF_double GetMinFeatureSize();
 	inline void SetFallBackValue(const Lib3MF_double dFallBackValue);
 	inline Lib3MF_double GetFallBackValue();
-};
-	
-/*************************************************************************************************************************
- Class CVolumeDataBoundary 
-**************************************************************************************************************************/
-class CVolumeDataBoundary : public CFunctionReference {
-public:
-	
-	/**
-	* CVolumeDataBoundary::CVolumeDataBoundary - Constructor for VolumeDataBoundary class.
-	*/
-	CVolumeDataBoundary(CWrapper* pWrapper, Lib3MFHandle pHandle)
-		: CFunctionReference(pWrapper, pHandle)
-	{
-	}
-	
-	inline void SetMeshBBoxOnly(const bool bMeshBBoxOnly);
-	inline bool GetMeshBBoxOnly();
 };
 	
 /*************************************************************************************************************************
@@ -1602,9 +1615,6 @@ public:
 	{
 	}
 	
-	inline PVolumeDataBoundary GetBoundary();
-	inline PVolumeDataBoundary CreateNewBoundary(classParam<CFunction> pTheFunction);
-	inline void RemoveBoundary();
 	inline PVolumeDataComposite GetComposite();
 	inline PVolumeDataComposite CreateNewComposite();
 	inline void RemoveComposite();
@@ -3382,9 +3392,9 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0x0C3B85369E9B25D3UL: return new CMetaDataGroup(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaDataGroup"
 		case 0x2DA2136F577A779CUL: return new CObject(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Object"
 		case 0x3B3A6DC6EC610497UL: return new CMeshObject(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObject"
+		case 0x2BE0E57BA81B2ECBUL: return new CBoundaryShape(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BoundaryShape"
 		case 0x63B3B461B30B4BA5UL: return new CBeamLattice(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BeamLattice"
 		case 0x4DF17E76926221C2UL: return new CFunctionReference(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionReference"
-		case 0xE7B8A8C7BC9DE5C1UL: return new CVolumeDataBoundary(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeDataBoundary"
 		case 0xD85B5B6143E787E3UL: return new CVolumeDataColor(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeDataColor"
 		case 0x241FE6B4817C3FE4UL: return new CMaterialMapping(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MaterialMapping"
 		case 0x46F1DAC40581B304UL: return new CVolumeDataComposite(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeDataComposite"
@@ -5184,6 +5194,186 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	 * Method definitions for class CBoundaryShape
+	 */
+	
+	/**
+	* CBoundaryShape::GetFunction - Returns the function that is used as boundary shape.
+	* @return the function to use as boundary shape
+	*/
+	PFunction CBoundaryShape::GetFunction()
+	{
+		Lib3MFHandle hTheFunction = nullptr;
+		CheckError(lib3mf_boundaryshape_getfunction(m_pHandle, &hTheFunction));
+		
+		if (hTheFunction) {
+			return std::shared_ptr<CFunction>(dynamic_cast<CFunction*>(m_pWrapper->polymorphicFactory(hTheFunction)));
+		} else {
+			return nullptr;
+		}
+	}
+	
+	/**
+	* CBoundaryShape::SetFunction - Sets the function to use as boundary shape.
+	* @param[in] pTheFunction - the function to use as boundary shape
+	*/
+	void CBoundaryShape::SetFunction(classParam<CFunction> pTheFunction)
+	{
+		Lib3MFHandle hTheFunction = pTheFunction.GetHandle();
+		CheckError(lib3mf_boundaryshape_setfunction(m_pHandle, hTheFunction));
+	}
+	
+	/**
+	* CBoundaryShape::GetTransform - Returns the transformation matrix into the coordinate system of the referenced Function.
+	* @return the transformation matrix
+	*/
+	sTransform CBoundaryShape::GetTransform()
+	{
+		sTransform resultTransform;
+		CheckError(lib3mf_boundaryshape_gettransform(m_pHandle, &resultTransform));
+		
+		return resultTransform;
+	}
+	
+	/**
+	* CBoundaryShape::SetTransform - Sets the transformation matrix into the coordinate system of the referenced Function.
+	* @param[in] Transform - new transformation matrix
+	*/
+	void CBoundaryShape::SetTransform(const sTransform & Transform)
+	{
+		CheckError(lib3mf_boundaryshape_settransform(m_pHandle, &Transform));
+	}
+	
+	/**
+	* CBoundaryShape::GetChannelName - Returns the name of the function output channel to use.
+	* @return the name of the function output channel
+	*/
+	std::string CBoundaryShape::GetChannelName()
+	{
+		Lib3MF_uint32 bytesNeededChannelName = 0;
+		Lib3MF_uint32 bytesWrittenChannelName = 0;
+		CheckError(lib3mf_boundaryshape_getchannelname(m_pHandle, 0, &bytesNeededChannelName, nullptr));
+		std::vector<char> bufferChannelName(bytesNeededChannelName);
+		CheckError(lib3mf_boundaryshape_getchannelname(m_pHandle, bytesNeededChannelName, &bytesWrittenChannelName, &bufferChannelName[0]));
+		
+		return std::string(&bufferChannelName[0]);
+	}
+	
+	/**
+	* CBoundaryShape::SetChannelName - Sets the name of the function output channel to use.
+	* @param[in] sChannelName - new name of the function output channel
+	*/
+	void CBoundaryShape::SetChannelName(const std::string & sChannelName)
+	{
+		CheckError(lib3mf_boundaryshape_setchannelname(m_pHandle, sChannelName.c_str()));
+	}
+	
+	/**
+	* CBoundaryShape::SetMinFeatureSize - Sets the minimal feature size as a hint for the function evaluator
+	* @param[in] dMinFeatureSize - minimal feature size
+	*/
+	void CBoundaryShape::SetMinFeatureSize(const Lib3MF_double dMinFeatureSize)
+	{
+		CheckError(lib3mf_boundaryshape_setminfeaturesize(m_pHandle, dMinFeatureSize));
+	}
+	
+	/**
+	* CBoundaryShape::GetMinFeatureSize - Returns the minimal feature size as a hint for the function evaluator
+	* @return minimal feature size
+	*/
+	Lib3MF_double CBoundaryShape::GetMinFeatureSize()
+	{
+		Lib3MF_double resultMinFeatureSize = 0;
+		CheckError(lib3mf_boundaryshape_getminfeaturesize(m_pHandle, &resultMinFeatureSize));
+		
+		return resultMinFeatureSize;
+	}
+	
+	/**
+	* CBoundaryShape::SetFallBackValue - Sets the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+	* @param[in] dFallBackValue - fallback value
+	*/
+	void CBoundaryShape::SetFallBackValue(const Lib3MF_double dFallBackValue)
+	{
+		CheckError(lib3mf_boundaryshape_setfallbackvalue(m_pHandle, dFallBackValue));
+	}
+	
+	/**
+	* CBoundaryShape::GetFallBackValue - Returns the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+	* @return fallback value
+	*/
+	Lib3MF_double CBoundaryShape::GetFallBackValue()
+	{
+		Lib3MF_double resultFallBackValue = 0;
+		CheckError(lib3mf_boundaryshape_getfallbackvalue(m_pHandle, &resultFallBackValue));
+		
+		return resultFallBackValue;
+	}
+	
+	/**
+	* CBoundaryShape::SetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+	* @param[in] bMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+	*/
+	void CBoundaryShape::SetMeshBBoxOnly(const bool bMeshBBoxOnly)
+	{
+		CheckError(lib3mf_boundaryshape_setmeshbboxonly(m_pHandle, bMeshBBoxOnly));
+	}
+	
+	/**
+	* CBoundaryShape::GetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+	* @return If set only the bounding box of the mesh is intersected with the boundary
+	*/
+	bool CBoundaryShape::GetMeshBBoxOnly()
+	{
+		bool resultMeshBBoxOnly = 0;
+		CheckError(lib3mf_boundaryshape_getmeshbboxonly(m_pHandle, &resultMeshBBoxOnly));
+		
+		return resultMeshBBoxOnly;
+	}
+	
+	/**
+	* CBoundaryShape::SetMesh - Sets the mesh to use as evaluation domain
+	* @param[in] pTheMesh - The mesh
+	*/
+	void CBoundaryShape::SetMesh(classParam<CMeshObject> pTheMesh)
+	{
+		Lib3MFHandle hTheMesh = pTheMesh.GetHandle();
+		CheckError(lib3mf_boundaryshape_setmesh(m_pHandle, hTheMesh));
+	}
+	
+	/**
+	* CBoundaryShape::GetMesh - Returns the mesh that is used as evaluation domain
+	* @return The mesh
+	*/
+	PMeshObject CBoundaryShape::GetMesh()
+	{
+		Lib3MFHandle hTheMesh = nullptr;
+		CheckError(lib3mf_boundaryshape_getmesh(m_pHandle, &hTheMesh));
+		
+		if (hTheMesh) {
+			return std::shared_ptr<CMeshObject>(dynamic_cast<CMeshObject*>(m_pWrapper->polymorphicFactory(hTheMesh)));
+		} else {
+			return nullptr;
+		}
+	}
+	
+	/**
+	* CBoundaryShape::VolumeData - Retrieves the VolumeData referenced by this BoundaryShape.
+	* @return the VolumeData of this BoundaryShape
+	*/
+	PVolumeData CBoundaryShape::VolumeData()
+	{
+		Lib3MFHandle hTheVolumeData = nullptr;
+		CheckError(lib3mf_boundaryshape_volumedata(m_pHandle, &hTheVolumeData));
+		
+		if (hTheVolumeData) {
+			return std::shared_ptr<CVolumeData>(dynamic_cast<CVolumeData*>(m_pWrapper->polymorphicFactory(hTheVolumeData)));
+		} else {
+			return nullptr;
+		}
+	}
+	
+	/**
 	 * Method definitions for class CBeamLattice
 	 */
 	
@@ -5566,31 +5756,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	 * Method definitions for class CVolumeDataBoundary
-	 */
-	
-	/**
-	* CVolumeDataBoundary::SetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
-	* @param[in] bMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
-	*/
-	void CVolumeDataBoundary::SetMeshBBoxOnly(const bool bMeshBBoxOnly)
-	{
-		CheckError(lib3mf_volumedataboundary_setmeshbboxonly(m_pHandle, bMeshBBoxOnly));
-	}
-	
-	/**
-	* CVolumeDataBoundary::GetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
-	* @return If set only the bounding box of the mesh is intersected with the boundary
-	*/
-	bool CVolumeDataBoundary::GetMeshBBoxOnly()
-	{
-		bool resultMeshBBoxOnly = 0;
-		CheckError(lib3mf_volumedataboundary_getmeshbboxonly(m_pHandle, &resultMeshBBoxOnly));
-		
-		return resultMeshBBoxOnly;
-	}
-	
-	/**
 	 * Method definitions for class CVolumeDataColor
 	 */
 	
@@ -5723,47 +5888,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	 * Method definitions for class CVolumeData
 	 */
-	
-	/**
-	* CVolumeData::GetBoundary - Returns the VolumeDataBoundary of this VolumeData instance
-	* @return filled with the VolumeDataBoundary of this VolumeData instance.
-	*/
-	PVolumeDataBoundary CVolumeData::GetBoundary()
-	{
-		Lib3MFHandle hTheBoundaryData = nullptr;
-		CheckError(lib3mf_volumedata_getboundary(m_pHandle, &hTheBoundaryData));
-		
-		if (hTheBoundaryData) {
-			return std::shared_ptr<CVolumeDataBoundary>(dynamic_cast<CVolumeDataBoundary*>(m_pWrapper->polymorphicFactory(hTheBoundaryData)));
-		} else {
-			return nullptr;
-		}
-	}
-	
-	/**
-	* CVolumeData::CreateNewBoundary - Creates a new VolumeDataBoundary for this VolumeData instance
-	* @param[in] pTheFunction - Function used in this element
-	* @return The new VolumeDataBoundary of this VolumeData instance.
-	*/
-	PVolumeDataBoundary CVolumeData::CreateNewBoundary(classParam<CFunction> pTheFunction)
-	{
-		Lib3MFHandle hTheFunction = pTheFunction.GetHandle();
-		Lib3MFHandle hTheBoundaryData = nullptr;
-		CheckError(lib3mf_volumedata_createnewboundary(m_pHandle, hTheFunction, &hTheBoundaryData));
-		
-		if (!hTheBoundaryData) {
-			CheckError(LIB3MF_ERROR_INVALIDPARAM);
-		}
-		return std::shared_ptr<CVolumeDataBoundary>(dynamic_cast<CVolumeDataBoundary*>(m_pWrapper->polymorphicFactory(hTheBoundaryData)));
-	}
-	
-	/**
-	* CVolumeData::RemoveBoundary - Removes the VolumeDataBoundary of this VolumeData instance
-	*/
-	void CVolumeData::RemoveBoundary()
-	{
-		CheckError(lib3mf_volumedata_removeboundary(m_pHandle));
-	}
 	
 	/**
 	* CVolumeData::GetComposite - Returns the VolumeDataComposite of this VolumeData instance

@@ -1062,6 +1062,141 @@ Lib3MFResult CCall_lib3mf_meshobject_volumedata(Lib3MFHandle libraryHandle, Lib3
 }
 
 
+Lib3MFResult CCall_lib3mf_boundaryshape_getfunction(Lib3MFHandle libraryHandle, Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_Function * pTheFunction)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BoundaryShape_GetFunction (pBoundaryShape, pTheFunction);
+}
+
+
+Lib3MFResult CCall_lib3mf_boundaryshape_setfunction(Lib3MFHandle libraryHandle, Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_Function pTheFunction)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BoundaryShape_SetFunction (pBoundaryShape, pTheFunction);
+}
+
+
+Lib3MFResult CCall_lib3mf_boundaryshape_gettransform(Lib3MFHandle libraryHandle, Lib3MF_BoundaryShape pBoundaryShape, sLib3MFTransform * pTransform)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BoundaryShape_GetTransform (pBoundaryShape, pTransform);
+}
+
+
+Lib3MFResult CCall_lib3mf_boundaryshape_settransform(Lib3MFHandle libraryHandle, Lib3MF_BoundaryShape pBoundaryShape, const sLib3MFTransform * pTransform)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BoundaryShape_SetTransform (pBoundaryShape, pTransform);
+}
+
+
+Lib3MFResult CCall_lib3mf_boundaryshape_getchannelname(Lib3MFHandle libraryHandle, Lib3MF_BoundaryShape pBoundaryShape, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BoundaryShape_GetChannelName (pBoundaryShape, nChannelNameBufferSize, pChannelNameNeededChars, pChannelNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_boundaryshape_setchannelname(Lib3MFHandle libraryHandle, Lib3MF_BoundaryShape pBoundaryShape, const char * pChannelName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BoundaryShape_SetChannelName (pBoundaryShape, pChannelName);
+}
+
+
+Lib3MFResult CCall_lib3mf_boundaryshape_setminfeaturesize(Lib3MFHandle libraryHandle, Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_double dMinFeatureSize)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BoundaryShape_SetMinFeatureSize (pBoundaryShape, dMinFeatureSize);
+}
+
+
+Lib3MFResult CCall_lib3mf_boundaryshape_getminfeaturesize(Lib3MFHandle libraryHandle, Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_double * pMinFeatureSize)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BoundaryShape_GetMinFeatureSize (pBoundaryShape, pMinFeatureSize);
+}
+
+
+Lib3MFResult CCall_lib3mf_boundaryshape_setfallbackvalue(Lib3MFHandle libraryHandle, Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_double dFallBackValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BoundaryShape_SetFallBackValue (pBoundaryShape, dFallBackValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_boundaryshape_getfallbackvalue(Lib3MFHandle libraryHandle, Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_double * pFallBackValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BoundaryShape_GetFallBackValue (pBoundaryShape, pFallBackValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_boundaryshape_setmeshbboxonly(Lib3MFHandle libraryHandle, Lib3MF_BoundaryShape pBoundaryShape, bool bMeshBBoxOnly)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BoundaryShape_SetMeshBBoxOnly (pBoundaryShape, bMeshBBoxOnly);
+}
+
+
+Lib3MFResult CCall_lib3mf_boundaryshape_getmeshbboxonly(Lib3MFHandle libraryHandle, Lib3MF_BoundaryShape pBoundaryShape, bool * pMeshBBoxOnly)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BoundaryShape_GetMeshBBoxOnly (pBoundaryShape, pMeshBBoxOnly);
+}
+
+
+Lib3MFResult CCall_lib3mf_boundaryshape_setmesh(Lib3MFHandle libraryHandle, Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_MeshObject pTheMesh)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BoundaryShape_SetMesh (pBoundaryShape, pTheMesh);
+}
+
+
+Lib3MFResult CCall_lib3mf_boundaryshape_getmesh(Lib3MFHandle libraryHandle, Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_MeshObject * pTheMesh)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BoundaryShape_GetMesh (pBoundaryShape, pTheMesh);
+}
+
+
+Lib3MFResult CCall_lib3mf_boundaryshape_volumedata(Lib3MFHandle libraryHandle, Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_VolumeData * pTheVolumeData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BoundaryShape_VolumeData (pBoundaryShape, pTheVolumeData);
+}
+
+
 Lib3MFResult CCall_lib3mf_beamlattice_getminlength(Lib3MFHandle libraryHandle, Lib3MF_BeamLattice pBeamLattice, Lib3MF_double * pMinLength)
 {
 	if (libraryHandle == 0) 
@@ -1359,24 +1494,6 @@ Lib3MFResult CCall_lib3mf_functionreference_getfallbackvalue(Lib3MFHandle librar
 }
 
 
-Lib3MFResult CCall_lib3mf_volumedataboundary_setmeshbboxonly(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataBoundary pVolumeDataBoundary, bool bMeshBBoxOnly)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_VolumeDataBoundary_SetMeshBBoxOnly (pVolumeDataBoundary, bMeshBBoxOnly);
-}
-
-
-Lib3MFResult CCall_lib3mf_volumedataboundary_getmeshbboxonly(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataBoundary pVolumeDataBoundary, bool * pMeshBBoxOnly)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_VolumeDataBoundary_GetMeshBBoxOnly (pVolumeDataBoundary, pMeshBBoxOnly);
-}
-
-
 Lib3MFResult CCall_lib3mf_volumedatacomposite_getbasematerialgroup(Lib3MFHandle libraryHandle, Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_BaseMaterialGroup * pBaseMaterialGroupInstance)
 {
 	if (libraryHandle == 0) 
@@ -1455,33 +1572,6 @@ Lib3MFResult CCall_lib3mf_volumedataproperty_isrequired(Lib3MFHandle libraryHand
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_VolumeDataProperty_IsRequired (pVolumeDataProperty, pIsRequired);
-}
-
-
-Lib3MFResult CCall_lib3mf_volumedata_getboundary(Lib3MFHandle libraryHandle, Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataBoundary * pTheBoundaryData)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_VolumeData_GetBoundary (pVolumeData, pTheBoundaryData);
-}
-
-
-Lib3MFResult CCall_lib3mf_volumedata_createnewboundary(Lib3MFHandle libraryHandle, Lib3MF_VolumeData pVolumeData, Lib3MF_Function pTheFunction, Lib3MF_VolumeDataBoundary * pTheBoundaryData)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_VolumeData_CreateNewBoundary (pVolumeData, pTheFunction, pTheBoundaryData);
-}
-
-
-Lib3MFResult CCall_lib3mf_volumedata_removeboundary(Lib3MFHandle libraryHandle, Lib3MF_VolumeData pVolumeData)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_VolumeData_RemoveBoundary (pVolumeData);
 }
 
 
@@ -7396,6 +7486,181 @@ func (inst MeshObject) VolumeData() (VolumeData, error) {
 }
 
 
+// BoundaryShape represents a Lib3MF class.
+type BoundaryShape struct {
+	Object
+}
+
+func (wrapper Wrapper) NewBoundaryShape(r ref) BoundaryShape {
+	return BoundaryShape{wrapper.NewObject(r)}
+}
+
+// GetFunction returns the function that is used as boundary shape.
+func (inst BoundaryShape) GetFunction() (*Function, error) {
+	var theFunction ref
+	ret := C.CCall_lib3mf_boundaryshape_getfunction(inst.wrapperRef.LibraryHandle, inst.Ref, &theFunction)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	var _theFunctionPtr *Function
+	if theFunction != nil {
+		_theFunctionPtrVal := inst.wrapperRef.NewFunction(theFunction)
+		_theFunctionPtr = &_theFunctionPtrVal
+	}
+	return _theFunctionPtr, nil
+}
+
+// SetFunction sets the function to use as boundary shape.
+func (inst BoundaryShape) SetFunction(theFunction Function) error {
+	ret := C.CCall_lib3mf_boundaryshape_setfunction(inst.wrapperRef.LibraryHandle, inst.Ref, theFunction.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetTransform returns the transformation matrix into the coordinate system of the referenced Function.
+func (inst BoundaryShape) GetTransform() (Transform, error) {
+	var transform C.sLib3MFTransform
+	ret := C.CCall_lib3mf_boundaryshape_gettransform(inst.wrapperRef.LibraryHandle, inst.Ref, &transform)
+	if ret != 0 {
+		return Transform{}, makeError(uint32(ret))
+	}
+	return *(*Transform)(unsafe.Pointer(&transform)), nil
+}
+
+// SetTransform sets the transformation matrix into the coordinate system of the referenced Function.
+func (inst BoundaryShape) SetTransform(transform Transform) error {
+	ret := C.CCall_lib3mf_boundaryshape_settransform(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.sLib3MFTransform)(unsafe.Pointer(&transform)))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetChannelName returns the name of the function output channel to use.
+func (inst BoundaryShape) GetChannelName() (string, error) {
+	var neededforchannelName C.uint32_t
+	var filledinchannelName C.uint32_t
+	ret := C.CCall_lib3mf_boundaryshape_getchannelname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforchannelName, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizechannelName := neededforchannelName
+	bufferchannelName := make([]byte, bufferSizechannelName)
+	ret = C.CCall_lib3mf_boundaryshape_getchannelname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizechannelName, &filledinchannelName, (*C.char)(unsafe.Pointer(&bufferchannelName[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferchannelName[:(filledinchannelName-1)]), nil
+}
+
+// SetChannelName sets the name of the function output channel to use.
+func (inst BoundaryShape) SetChannelName(channelName string) error {
+	ret := C.CCall_lib3mf_boundaryshape_setchannelname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(channelName)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SetMinFeatureSize sets the minimal feature size as a hint for the function evaluator.
+func (inst BoundaryShape) SetMinFeatureSize(minFeatureSize float64) error {
+	ret := C.CCall_lib3mf_boundaryshape_setminfeaturesize(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(minFeatureSize))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetMinFeatureSize returns the minimal feature size as a hint for the function evaluator.
+func (inst BoundaryShape) GetMinFeatureSize() (float64, error) {
+	var minFeatureSize C.double
+	ret := C.CCall_lib3mf_boundaryshape_getminfeaturesize(inst.wrapperRef.LibraryHandle, inst.Ref, &minFeatureSize)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(minFeatureSize), nil
+}
+
+// SetFallBackValue sets the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+func (inst BoundaryShape) SetFallBackValue(fallBackValue float64) error {
+	ret := C.CCall_lib3mf_boundaryshape_setfallbackvalue(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(fallBackValue))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetFallBackValue returns the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+func (inst BoundaryShape) GetFallBackValue() (float64, error) {
+	var fallBackValue C.double
+	ret := C.CCall_lib3mf_boundaryshape_getfallbackvalue(inst.wrapperRef.LibraryHandle, inst.Ref, &fallBackValue)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(fallBackValue), nil
+}
+
+// SetMeshBBoxOnly if set only the bounding box of the mesh is intersected with the boundary.
+func (inst BoundaryShape) SetMeshBBoxOnly(meshBBoxOnly bool) error {
+	ret := C.CCall_lib3mf_boundaryshape_setmeshbboxonly(inst.wrapperRef.LibraryHandle, inst.Ref, C.bool(meshBBoxOnly))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetMeshBBoxOnly if set only the bounding box of the mesh is intersected with the boundary.
+func (inst BoundaryShape) GetMeshBBoxOnly() (bool, error) {
+	var meshBBoxOnly C.bool
+	ret := C.CCall_lib3mf_boundaryshape_getmeshbboxonly(inst.wrapperRef.LibraryHandle, inst.Ref, &meshBBoxOnly)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(meshBBoxOnly), nil
+}
+
+// SetMesh sets the mesh to use as evaluation domain.
+func (inst BoundaryShape) SetMesh(theMesh MeshObject) error {
+	ret := C.CCall_lib3mf_boundaryshape_setmesh(inst.wrapperRef.LibraryHandle, inst.Ref, theMesh.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetMesh returns the mesh that is used as evaluation domain.
+func (inst BoundaryShape) GetMesh() (*MeshObject, error) {
+	var theMesh ref
+	ret := C.CCall_lib3mf_boundaryshape_getmesh(inst.wrapperRef.LibraryHandle, inst.Ref, &theMesh)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	var _theMeshPtr *MeshObject
+	if theMesh != nil {
+		_theMeshPtrVal := inst.wrapperRef.NewMeshObject(theMesh)
+		_theMeshPtr = &_theMeshPtrVal
+	}
+	return _theMeshPtr, nil
+}
+
+// VolumeData retrieves the VolumeData referenced by this BoundaryShape.
+func (inst BoundaryShape) VolumeData() (*VolumeData, error) {
+	var theVolumeData ref
+	ret := C.CCall_lib3mf_boundaryshape_volumedata(inst.wrapperRef.LibraryHandle, inst.Ref, &theVolumeData)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	var _theVolumeDataPtr *VolumeData
+	if theVolumeData != nil {
+		_theVolumeDataPtrVal := inst.wrapperRef.NewVolumeData(theVolumeData)
+		_theVolumeDataPtr = &_theVolumeDataPtrVal
+	}
+	return _theVolumeDataPtr, nil
+}
+
+
 // BeamLattice represents a Lib3MF class.
 type BeamLattice struct {
 	Base
@@ -7757,35 +8022,6 @@ func (inst FunctionReference) GetFallBackValue() (float64, error) {
 }
 
 
-// VolumeDataBoundary represents a Lib3MF class.
-type VolumeDataBoundary struct {
-	FunctionReference
-}
-
-func (wrapper Wrapper) NewVolumeDataBoundary(r ref) VolumeDataBoundary {
-	return VolumeDataBoundary{wrapper.NewFunctionReference(r)}
-}
-
-// SetMeshBBoxOnly if set only the bounding box of the mesh is intersected with the boundary.
-func (inst VolumeDataBoundary) SetMeshBBoxOnly(meshBBoxOnly bool) error {
-	ret := C.CCall_lib3mf_volumedataboundary_setmeshbboxonly(inst.wrapperRef.LibraryHandle, inst.Ref, C.bool(meshBBoxOnly))
-	if ret != 0 {
-		return makeError(uint32(ret))
-	}
-	return nil
-}
-
-// GetMeshBBoxOnly if set only the bounding box of the mesh is intersected with the boundary.
-func (inst VolumeDataBoundary) GetMeshBBoxOnly() (bool, error) {
-	var meshBBoxOnly C.bool
-	ret := C.CCall_lib3mf_volumedataboundary_getmeshbboxonly(inst.wrapperRef.LibraryHandle, inst.Ref, &meshBBoxOnly)
-	if ret != 0 {
-		return false, makeError(uint32(ret))
-	}
-	return bool(meshBBoxOnly), nil
-}
-
-
 // VolumeDataColor represents a Lib3MF class.
 type VolumeDataColor struct {
 	FunctionReference
@@ -7927,40 +8163,6 @@ type VolumeData struct {
 
 func (wrapper Wrapper) NewVolumeData(r ref) VolumeData {
 	return VolumeData{wrapper.NewBase(r)}
-}
-
-// GetBoundary returns the VolumeDataBoundary of this VolumeData instance.
-func (inst VolumeData) GetBoundary() (*VolumeDataBoundary, error) {
-	var theBoundaryData ref
-	ret := C.CCall_lib3mf_volumedata_getboundary(inst.wrapperRef.LibraryHandle, inst.Ref, &theBoundaryData)
-	if ret != 0 {
-		return nil, makeError(uint32(ret))
-	}
-	var _theBoundaryDataPtr *VolumeDataBoundary
-	if theBoundaryData != nil {
-		_theBoundaryDataPtrVal := inst.wrapperRef.NewVolumeDataBoundary(theBoundaryData)
-		_theBoundaryDataPtr = &_theBoundaryDataPtrVal
-	}
-	return _theBoundaryDataPtr, nil
-}
-
-// CreateNewBoundary creates a new VolumeDataBoundary for this VolumeData instance.
-func (inst VolumeData) CreateNewBoundary(theFunction Function) (VolumeDataBoundary, error) {
-	var theBoundaryData ref
-	ret := C.CCall_lib3mf_volumedata_createnewboundary(inst.wrapperRef.LibraryHandle, inst.Ref, theFunction.Ref, &theBoundaryData)
-	if ret != 0 {
-		return VolumeDataBoundary{}, makeError(uint32(ret))
-	}
-	return inst.wrapperRef.NewVolumeDataBoundary(theBoundaryData), nil
-}
-
-// RemoveBoundary removes the VolumeDataBoundary of this VolumeData instance.
-func (inst VolumeData) RemoveBoundary() error {
-	ret := C.CCall_lib3mf_volumedata_removeboundary(inst.wrapperRef.LibraryHandle, inst.Ref)
-	if ret != 0 {
-		return makeError(uint32(ret))
-	}
-	return nil
 }
 
 // GetComposite returns the VolumeDataComposite of this VolumeData instance.

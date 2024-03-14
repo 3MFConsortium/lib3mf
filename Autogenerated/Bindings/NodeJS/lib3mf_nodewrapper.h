@@ -554,6 +554,38 @@ public:
 };
 
 /*************************************************************************************************************************
+ Class CLib3MFBoundaryShape 
+**************************************************************************************************************************/
+class CLib3MFBoundaryShape : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetTransform(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetTransform(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetChannelName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetChannelName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetMinFeatureSize(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetMinFeatureSize(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetFallBackValue(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetFallBackValue(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetMeshBBoxOnly(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetMeshBBoxOnly(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetMesh(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetMesh(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void VolumeData(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFBoundaryShape();
+	~CLib3MFBoundaryShape();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
  Class CLib3MFBeamLattice 
 **************************************************************************************************************************/
 class CLib3MFBeamLattice : public CLib3MFBaseClass {
@@ -614,25 +646,6 @@ private:
 public:
 	CLib3MFFunctionReference();
 	~CLib3MFFunctionReference();
-	
-	static void Init();
-	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
-	
-};
-
-/*************************************************************************************************************************
- Class CLib3MFVolumeDataBoundary 
-**************************************************************************************************************************/
-class CLib3MFVolumeDataBoundary : public CLib3MFBaseClass {
-private:
-	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static v8::Persistent<v8::Function> constructor;
-	static void SetMeshBBoxOnly(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetMeshBBoxOnly(const v8::FunctionCallbackInfo<v8::Value>& args);
-
-public:
-	CLib3MFVolumeDataBoundary();
-	~CLib3MFVolumeDataBoundary();
 	
 	static void Init();
 	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
@@ -723,9 +736,6 @@ class CLib3MFVolumeData : public CLib3MFBaseClass {
 private:
 	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static v8::Persistent<v8::Function> constructor;
-	static void GetBoundary(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void CreateNewBoundary(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void RemoveBoundary(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetComposite(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void CreateNewComposite(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void RemoveComposite(const v8::FunctionCallbackInfo<v8::Value>& args);

@@ -32,7 +32,6 @@ Abstract: This is a stub class definition of CVolumeData
 #include "lib3mf_interfaceexception.hpp"
 
 #include "lib3mf_volumedataproperty.hpp"
-#include "lib3mf_volumedataboundary.hpp"
 #include "lib3mf_volumedatacolor.hpp"
 #include "lib3mf_volumedatacomposite.hpp"
 
@@ -50,50 +49,6 @@ using namespace Lib3MF::Impl;
 CVolumeData::CVolumeData(NMR::PModelMeshObject pMeshObject, NMR::PModelVolumeData pVolumeData)
 	: m_pMeshObject(pMeshObject) , m_pVolumeData(pVolumeData)
 {
-}
-
-IVolumeDataBoundary * Lib3MF::Impl::CVolumeData::CreateNewBoundary(IFunction * pTheFunction)
-{
-	if (!pTheFunction)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-
-	NMR::CModel* pModel = m_pMeshObject->getModel();
-
-	if (!pModel)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-
-	NMR::PModelResource pResource = pModel->findResource(pTheFunction->GetUniqueResourceID());
-
-	if (!pResource)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-
-	NMR::PModelFunction pFunction = std::dynamic_pointer_cast<NMR::CModelFunction>(pResource);
-
-	if (!pFunction)
-	{
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	}
-
-	NMR::PVolumeDataBoundary pBoundary = m_pVolumeData->createBoundary(pFunction);
-	if(!pBoundary)
-	{
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	}
-	return new CVolumeDataBoundary(pBoundary);
-}
-
-IVolumeDataBoundary* CVolumeData::GetBoundary()
-{
-	auto pBoundary = m_pVolumeData->getBoundary();
-	if (!pBoundary) {
-		return nullptr;
-	}
-	return new CVolumeDataBoundary(pBoundary);
-}
-
-void CVolumeData::RemoveBoundary()
-{
-	m_pVolumeData->removeBoundary();
 }
 
 IVolumeDataComposite * CVolumeData::GetComposite()

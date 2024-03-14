@@ -4227,6 +4227,545 @@ Lib3MFResult lib3mf_meshobject_volumedata(Lib3MF_MeshObject pMeshObject, Lib3MF_
 
 
 /*************************************************************************************************************************
+ Class implementation for BoundaryShape
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_boundaryshape_getfunction(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_Function * pTheFunction)
+{
+	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "GetFunction");
+		}
+		if (pTheFunction == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseTheFunction(nullptr);
+		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
+		if (!pIBoundaryShape)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseTheFunction = pIBoundaryShape->GetFunction();
+
+		*pTheFunction = (IBase*)(pBaseTheFunction);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("TheFunction", *pTheFunction);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_boundaryshape_setfunction(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_Function pTheFunction)
+{
+	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "SetFunction");
+			pJournalEntry->addHandleParameter("TheFunction", pTheFunction);
+		}
+		IBase* pIBaseClassTheFunction = (IBase *)pTheFunction;
+		IFunction* pITheFunction = dynamic_cast<IFunction*>(pIBaseClassTheFunction);
+		if (!pITheFunction)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
+		if (!pIBoundaryShape)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIBoundaryShape->SetFunction(pITheFunction);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_boundaryshape_gettransform(Lib3MF_BoundaryShape pBoundaryShape, sLib3MFTransform * pTransform)
+{
+	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "GetTransform");
+		}
+		if (pTransform == nullptr)
+		throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
+		if (!pIBoundaryShape)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pTransform = pIBoundaryShape->GetTransform();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_boundaryshape_settransform(Lib3MF_BoundaryShape pBoundaryShape, const sLib3MFTransform * pTransform)
+{
+	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "SetTransform");
+		}
+		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
+		if (!pIBoundaryShape)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIBoundaryShape->SetTransform(*pTransform);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_boundaryshape_getchannelname(Lib3MF_BoundaryShape pBoundaryShape, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "GetChannelName");
+		}
+		if ( (!pChannelNameBuffer) && !(pChannelNameNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sChannelName("");
+		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
+		if (!pIBoundaryShape)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pChannelNameBuffer == nullptr);
+		if (isCacheCall) {
+			sChannelName = pIBoundaryShape->GetChannelName();
+
+			pIBoundaryShape->_setCache (new ParameterCache_1<std::string> (sChannelName));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIBoundaryShape->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sChannelName);
+			pIBoundaryShape->_setCache (nullptr);
+		}
+		
+		if (pChannelNameNeededChars)
+			*pChannelNameNeededChars = (Lib3MF_uint32) (sChannelName.size()+1);
+		if (pChannelNameBuffer) {
+			if (sChannelName.size() >= nChannelNameBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iChannelName = 0; iChannelName < sChannelName.size(); iChannelName++)
+				pChannelNameBuffer[iChannelName] = sChannelName[iChannelName];
+			pChannelNameBuffer[sChannelName.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("ChannelName", sChannelName.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_boundaryshape_setchannelname(Lib3MF_BoundaryShape pBoundaryShape, const char * pChannelName)
+{
+	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "SetChannelName");
+			pJournalEntry->addStringParameter("ChannelName", pChannelName);
+		}
+		if (pChannelName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sChannelName(pChannelName);
+		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
+		if (!pIBoundaryShape)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIBoundaryShape->SetChannelName(sChannelName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_boundaryshape_setminfeaturesize(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_double dMinFeatureSize)
+{
+	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "SetMinFeatureSize");
+			pJournalEntry->addDoubleParameter("MinFeatureSize", dMinFeatureSize);
+		}
+		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
+		if (!pIBoundaryShape)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIBoundaryShape->SetMinFeatureSize(dMinFeatureSize);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_boundaryshape_getminfeaturesize(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_double * pMinFeatureSize)
+{
+	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "GetMinFeatureSize");
+		}
+		if (pMinFeatureSize == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
+		if (!pIBoundaryShape)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pMinFeatureSize = pIBoundaryShape->GetMinFeatureSize();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addDoubleResult("MinFeatureSize", *pMinFeatureSize);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_boundaryshape_setfallbackvalue(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_double dFallBackValue)
+{
+	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "SetFallBackValue");
+			pJournalEntry->addDoubleParameter("FallBackValue", dFallBackValue);
+		}
+		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
+		if (!pIBoundaryShape)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIBoundaryShape->SetFallBackValue(dFallBackValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_boundaryshape_getfallbackvalue(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_double * pFallBackValue)
+{
+	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "GetFallBackValue");
+		}
+		if (pFallBackValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
+		if (!pIBoundaryShape)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pFallBackValue = pIBoundaryShape->GetFallBackValue();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addDoubleResult("FallBackValue", *pFallBackValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_boundaryshape_setmeshbboxonly(Lib3MF_BoundaryShape pBoundaryShape, bool bMeshBBoxOnly)
+{
+	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "SetMeshBBoxOnly");
+			pJournalEntry->addBooleanParameter("MeshBBoxOnly", bMeshBBoxOnly);
+		}
+		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
+		if (!pIBoundaryShape)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIBoundaryShape->SetMeshBBoxOnly(bMeshBBoxOnly);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_boundaryshape_getmeshbboxonly(Lib3MF_BoundaryShape pBoundaryShape, bool * pMeshBBoxOnly)
+{
+	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "GetMeshBBoxOnly");
+		}
+		if (pMeshBBoxOnly == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
+		if (!pIBoundaryShape)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pMeshBBoxOnly = pIBoundaryShape->GetMeshBBoxOnly();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("MeshBBoxOnly", *pMeshBBoxOnly);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_boundaryshape_setmesh(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_MeshObject pTheMesh)
+{
+	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "SetMesh");
+			pJournalEntry->addHandleParameter("TheMesh", pTheMesh);
+		}
+		IBase* pIBaseClassTheMesh = (IBase *)pTheMesh;
+		IMeshObject* pITheMesh = dynamic_cast<IMeshObject*>(pIBaseClassTheMesh);
+		if (!pITheMesh)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
+		if (!pIBoundaryShape)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIBoundaryShape->SetMesh(pITheMesh);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_boundaryshape_getmesh(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_MeshObject * pTheMesh)
+{
+	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "GetMesh");
+		}
+		if (pTheMesh == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseTheMesh(nullptr);
+		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
+		if (!pIBoundaryShape)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseTheMesh = pIBoundaryShape->GetMesh();
+
+		*pTheMesh = (IBase*)(pBaseTheMesh);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("TheMesh", *pTheMesh);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_boundaryshape_volumedata(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_VolumeData * pTheVolumeData)
+{
+	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "VolumeData");
+		}
+		if (pTheVolumeData == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseTheVolumeData(nullptr);
+		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
+		if (!pIBoundaryShape)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseTheVolumeData = pIBoundaryShape->VolumeData();
+
+		*pTheVolumeData = (IBase*)(pBaseTheVolumeData);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("TheVolumeData", *pTheVolumeData);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
  Class implementation for BeamLattice
 **************************************************************************************************************************/
 Lib3MFResult lib3mf_beamlattice_getminlength(Lib3MF_BeamLattice pBeamLattice, Lib3MF_double * pMinLength)
@@ -5370,76 +5909,6 @@ Lib3MFResult lib3mf_functionreference_getfallbackvalue(Lib3MF_FunctionReference 
 
 
 /*************************************************************************************************************************
- Class implementation for VolumeDataBoundary
-**************************************************************************************************************************/
-Lib3MFResult lib3mf_volumedataboundary_setmeshbboxonly(Lib3MF_VolumeDataBoundary pVolumeDataBoundary, bool bMeshBBoxOnly)
-{
-	IBase* pIBaseClass = (IBase *)pVolumeDataBoundary;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataBoundary, "VolumeDataBoundary", "SetMeshBBoxOnly");
-			pJournalEntry->addBooleanParameter("MeshBBoxOnly", bMeshBBoxOnly);
-		}
-		IVolumeDataBoundary* pIVolumeDataBoundary = dynamic_cast<IVolumeDataBoundary*>(pIBaseClass);
-		if (!pIVolumeDataBoundary)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumeDataBoundary->SetMeshBBoxOnly(bMeshBBoxOnly);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumedataboundary_getmeshbboxonly(Lib3MF_VolumeDataBoundary pVolumeDataBoundary, bool * pMeshBBoxOnly)
-{
-	IBase* pIBaseClass = (IBase *)pVolumeDataBoundary;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataBoundary, "VolumeDataBoundary", "GetMeshBBoxOnly");
-		}
-		if (pMeshBBoxOnly == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IVolumeDataBoundary* pIVolumeDataBoundary = dynamic_cast<IVolumeDataBoundary*>(pIBaseClass);
-		if (!pIVolumeDataBoundary)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		*pMeshBBoxOnly = pIVolumeDataBoundary->GetMeshBBoxOnly();
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addBooleanResult("MeshBBoxOnly", *pMeshBBoxOnly);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-
-/*************************************************************************************************************************
  Class implementation for VolumeDataColor
 **************************************************************************************************************************/
 
@@ -5792,115 +6261,6 @@ Lib3MFResult lib3mf_volumedataproperty_isrequired(Lib3MF_VolumeDataProperty pVol
 /*************************************************************************************************************************
  Class implementation for VolumeData
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_volumedata_getboundary(Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataBoundary * pTheBoundaryData)
-{
-	IBase* pIBaseClass = (IBase *)pVolumeData;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "GetBoundary");
-		}
-		if (pTheBoundaryData == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseTheBoundaryData(nullptr);
-		IVolumeData* pIVolumeData = dynamic_cast<IVolumeData*>(pIBaseClass);
-		if (!pIVolumeData)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pBaseTheBoundaryData = pIVolumeData->GetBoundary();
-
-		*pTheBoundaryData = (IBase*)(pBaseTheBoundaryData);
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("TheBoundaryData", *pTheBoundaryData);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumedata_createnewboundary(Lib3MF_VolumeData pVolumeData, Lib3MF_Function pTheFunction, Lib3MF_VolumeDataBoundary * pTheBoundaryData)
-{
-	IBase* pIBaseClass = (IBase *)pVolumeData;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "CreateNewBoundary");
-			pJournalEntry->addHandleParameter("TheFunction", pTheFunction);
-		}
-		if (pTheBoundaryData == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pIBaseClassTheFunction = (IBase *)pTheFunction;
-		IFunction* pITheFunction = dynamic_cast<IFunction*>(pIBaseClassTheFunction);
-		if (!pITheFunction)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
-		
-		IBase* pBaseTheBoundaryData(nullptr);
-		IVolumeData* pIVolumeData = dynamic_cast<IVolumeData*>(pIBaseClass);
-		if (!pIVolumeData)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pBaseTheBoundaryData = pIVolumeData->CreateNewBoundary(pITheFunction);
-
-		*pTheBoundaryData = (IBase*)(pBaseTheBoundaryData);
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("TheBoundaryData", *pTheBoundaryData);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumedata_removeboundary(Lib3MF_VolumeData pVolumeData)
-{
-	IBase* pIBaseClass = (IBase *)pVolumeData;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "RemoveBoundary");
-		}
-		IVolumeData* pIVolumeData = dynamic_cast<IVolumeData*>(pIBaseClass);
-		if (!pIVolumeData)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumeData->RemoveBoundary();
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
 Lib3MFResult lib3mf_volumedata_getcomposite(Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataComposite * pTheCompositeData)
 {
 	IBase* pIBaseClass = (IBase *)pVolumeData;
@@ -22257,6 +22617,36 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_meshobject_beamlattice;
 	if (sProcName == "lib3mf_meshobject_volumedata") 
 		*ppProcAddress = (void*) &lib3mf_meshobject_volumedata;
+	if (sProcName == "lib3mf_boundaryshape_getfunction") 
+		*ppProcAddress = (void*) &lib3mf_boundaryshape_getfunction;
+	if (sProcName == "lib3mf_boundaryshape_setfunction") 
+		*ppProcAddress = (void*) &lib3mf_boundaryshape_setfunction;
+	if (sProcName == "lib3mf_boundaryshape_gettransform") 
+		*ppProcAddress = (void*) &lib3mf_boundaryshape_gettransform;
+	if (sProcName == "lib3mf_boundaryshape_settransform") 
+		*ppProcAddress = (void*) &lib3mf_boundaryshape_settransform;
+	if (sProcName == "lib3mf_boundaryshape_getchannelname") 
+		*ppProcAddress = (void*) &lib3mf_boundaryshape_getchannelname;
+	if (sProcName == "lib3mf_boundaryshape_setchannelname") 
+		*ppProcAddress = (void*) &lib3mf_boundaryshape_setchannelname;
+	if (sProcName == "lib3mf_boundaryshape_setminfeaturesize") 
+		*ppProcAddress = (void*) &lib3mf_boundaryshape_setminfeaturesize;
+	if (sProcName == "lib3mf_boundaryshape_getminfeaturesize") 
+		*ppProcAddress = (void*) &lib3mf_boundaryshape_getminfeaturesize;
+	if (sProcName == "lib3mf_boundaryshape_setfallbackvalue") 
+		*ppProcAddress = (void*) &lib3mf_boundaryshape_setfallbackvalue;
+	if (sProcName == "lib3mf_boundaryshape_getfallbackvalue") 
+		*ppProcAddress = (void*) &lib3mf_boundaryshape_getfallbackvalue;
+	if (sProcName == "lib3mf_boundaryshape_setmeshbboxonly") 
+		*ppProcAddress = (void*) &lib3mf_boundaryshape_setmeshbboxonly;
+	if (sProcName == "lib3mf_boundaryshape_getmeshbboxonly") 
+		*ppProcAddress = (void*) &lib3mf_boundaryshape_getmeshbboxonly;
+	if (sProcName == "lib3mf_boundaryshape_setmesh") 
+		*ppProcAddress = (void*) &lib3mf_boundaryshape_setmesh;
+	if (sProcName == "lib3mf_boundaryshape_getmesh") 
+		*ppProcAddress = (void*) &lib3mf_boundaryshape_getmesh;
+	if (sProcName == "lib3mf_boundaryshape_volumedata") 
+		*ppProcAddress = (void*) &lib3mf_boundaryshape_volumedata;
 	if (sProcName == "lib3mf_beamlattice_getminlength") 
 		*ppProcAddress = (void*) &lib3mf_beamlattice_getminlength;
 	if (sProcName == "lib3mf_beamlattice_setminlength") 
@@ -22323,10 +22713,6 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_functionreference_setfallbackvalue;
 	if (sProcName == "lib3mf_functionreference_getfallbackvalue") 
 		*ppProcAddress = (void*) &lib3mf_functionreference_getfallbackvalue;
-	if (sProcName == "lib3mf_volumedataboundary_setmeshbboxonly") 
-		*ppProcAddress = (void*) &lib3mf_volumedataboundary_setmeshbboxonly;
-	if (sProcName == "lib3mf_volumedataboundary_getmeshbboxonly") 
-		*ppProcAddress = (void*) &lib3mf_volumedataboundary_getmeshbboxonly;
 	if (sProcName == "lib3mf_volumedatacomposite_getbasematerialgroup") 
 		*ppProcAddress = (void*) &lib3mf_volumedatacomposite_getbasematerialgroup;
 	if (sProcName == "lib3mf_volumedatacomposite_setbasematerialgroup") 
@@ -22345,12 +22731,6 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_volumedataproperty_setisrequired;
 	if (sProcName == "lib3mf_volumedataproperty_isrequired") 
 		*ppProcAddress = (void*) &lib3mf_volumedataproperty_isrequired;
-	if (sProcName == "lib3mf_volumedata_getboundary") 
-		*ppProcAddress = (void*) &lib3mf_volumedata_getboundary;
-	if (sProcName == "lib3mf_volumedata_createnewboundary") 
-		*ppProcAddress = (void*) &lib3mf_volumedata_createnewboundary;
-	if (sProcName == "lib3mf_volumedata_removeboundary") 
-		*ppProcAddress = (void*) &lib3mf_volumedata_removeboundary;
 	if (sProcName == "lib3mf_volumedata_getcomposite") 
 		*ppProcAddress = (void*) &lib3mf_volumedata_getcomposite;
 	if (sProcName == "lib3mf_volumedata_createnewcomposite") 

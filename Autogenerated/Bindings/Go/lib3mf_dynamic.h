@@ -1189,6 +1189,147 @@ typedef Lib3MFResult (*PLib3MFMeshObject_BeamLatticePtr) (Lib3MF_MeshObject pMes
 typedef Lib3MFResult (*PLib3MFMeshObject_VolumeDataPtr) (Lib3MF_MeshObject pMeshObject, Lib3MF_VolumeData * pTheVolumeData);
 
 /*************************************************************************************************************************
+ Class definition for BoundaryShape
+**************************************************************************************************************************/
+
+/**
+* Returns the function that is used as boundary shape.
+*
+* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[out] pTheFunction - the function to use as boundary shape
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBoundaryShape_GetFunctionPtr) (Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_Function * pTheFunction);
+
+/**
+* Sets the function to use as boundary shape.
+*
+* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pTheFunction - the function to use as boundary shape
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBoundaryShape_SetFunctionPtr) (Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_Function pTheFunction);
+
+/**
+* Returns the transformation matrix into the coordinate system of the referenced Function.
+*
+* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[out] pTransform - the transformation matrix
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBoundaryShape_GetTransformPtr) (Lib3MF_BoundaryShape pBoundaryShape, sLib3MFTransform * pTransform);
+
+/**
+* Sets the transformation matrix into the coordinate system of the referenced Function.
+*
+* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pTransform - new transformation matrix
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBoundaryShape_SetTransformPtr) (Lib3MF_BoundaryShape pBoundaryShape, const sLib3MFTransform * pTransform);
+
+/**
+* Returns the name of the function output channel to use.
+*
+* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] nChannelNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pChannelNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pChannelNameBuffer -  buffer of the name of the function output channel, may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBoundaryShape_GetChannelNamePtr) (Lib3MF_BoundaryShape pBoundaryShape, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer);
+
+/**
+* Sets the name of the function output channel to use.
+*
+* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pChannelName - new name of the function output channel
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBoundaryShape_SetChannelNamePtr) (Lib3MF_BoundaryShape pBoundaryShape, const char * pChannelName);
+
+/**
+* Sets the minimal feature size as a hint for the function evaluator
+*
+* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] dMinFeatureSize - minimal feature size
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBoundaryShape_SetMinFeatureSizePtr) (Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_double dMinFeatureSize);
+
+/**
+* Returns the minimal feature size as a hint for the function evaluator
+*
+* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[out] pMinFeatureSize - minimal feature size
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBoundaryShape_GetMinFeatureSizePtr) (Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_double * pMinFeatureSize);
+
+/**
+* Sets the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+*
+* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] dFallBackValue - fallback value
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBoundaryShape_SetFallBackValuePtr) (Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_double dFallBackValue);
+
+/**
+* Returns the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+*
+* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[out] pFallBackValue - fallback value
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBoundaryShape_GetFallBackValuePtr) (Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_double * pFallBackValue);
+
+/**
+* If set only the bounding box of the mesh is intersected with the boundary
+*
+* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] bMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBoundaryShape_SetMeshBBoxOnlyPtr) (Lib3MF_BoundaryShape pBoundaryShape, bool bMeshBBoxOnly);
+
+/**
+* If set only the bounding box of the mesh is intersected with the boundary
+*
+* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[out] pMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBoundaryShape_GetMeshBBoxOnlyPtr) (Lib3MF_BoundaryShape pBoundaryShape, bool * pMeshBBoxOnly);
+
+/**
+* Sets the mesh to use as evaluation domain
+*
+* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pTheMesh - The mesh
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBoundaryShape_SetMeshPtr) (Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_MeshObject pTheMesh);
+
+/**
+* Returns the mesh that is used as evaluation domain
+*
+* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[out] pTheMesh - The mesh
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBoundaryShape_GetMeshPtr) (Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_MeshObject * pTheMesh);
+
+/**
+* Retrieves the VolumeData referenced by this BoundaryShape.
+*
+* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[out] pTheVolumeData - the VolumeData of this BoundaryShape
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBoundaryShape_VolumeDataPtr) (Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_VolumeData * pTheVolumeData);
+
+/*************************************************************************************************************************
  Class definition for BeamLattice
 **************************************************************************************************************************/
 
@@ -1514,28 +1655,6 @@ typedef Lib3MFResult (*PLib3MFFunctionReference_SetFallBackValuePtr) (Lib3MF_Fun
 typedef Lib3MFResult (*PLib3MFFunctionReference_GetFallBackValuePtr) (Lib3MF_FunctionReference pFunctionReference, Lib3MF_double * pFallBackValue);
 
 /*************************************************************************************************************************
- Class definition for VolumeDataBoundary
-**************************************************************************************************************************/
-
-/**
-* If set only the bounding box of the mesh is intersected with the boundary
-*
-* @param[in] pVolumeDataBoundary - VolumeDataBoundary instance.
-* @param[in] bMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFVolumeDataBoundary_SetMeshBBoxOnlyPtr) (Lib3MF_VolumeDataBoundary pVolumeDataBoundary, bool bMeshBBoxOnly);
-
-/**
-* If set only the bounding box of the mesh is intersected with the boundary
-*
-* @param[in] pVolumeDataBoundary - VolumeDataBoundary instance.
-* @param[out] pMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFVolumeDataBoundary_GetMeshBBoxOnlyPtr) (Lib3MF_VolumeDataBoundary pVolumeDataBoundary, bool * pMeshBBoxOnly);
-
-/*************************************************************************************************************************
  Class definition for VolumeDataColor
 **************************************************************************************************************************/
 
@@ -1639,33 +1758,6 @@ typedef Lib3MFResult (*PLib3MFVolumeDataProperty_IsRequiredPtr) (Lib3MF_VolumeDa
 /*************************************************************************************************************************
  Class definition for VolumeData
 **************************************************************************************************************************/
-
-/**
-* Returns the VolumeDataBoundary of this VolumeData instance
-*
-* @param[in] pVolumeData - VolumeData instance.
-* @param[out] pTheBoundaryData - filled with the VolumeDataBoundary of this VolumeData instance.
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFVolumeData_GetBoundaryPtr) (Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataBoundary * pTheBoundaryData);
-
-/**
-* Creates a new VolumeDataBoundary for this VolumeData instance
-*
-* @param[in] pVolumeData - VolumeData instance.
-* @param[in] pTheFunction - Function used in this element
-* @param[out] pTheBoundaryData - The new VolumeDataBoundary of this VolumeData instance.
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFVolumeData_CreateNewBoundaryPtr) (Lib3MF_VolumeData pVolumeData, Lib3MF_Function pTheFunction, Lib3MF_VolumeDataBoundary * pTheBoundaryData);
-
-/**
-* Removes the VolumeDataBoundary of this VolumeData instance
-*
-* @param[in] pVolumeData - VolumeData instance.
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFVolumeData_RemoveBoundaryPtr) (Lib3MF_VolumeData pVolumeData);
 
 /**
 * Returns the VolumeDataComposite of this VolumeData instance
@@ -6390,6 +6482,21 @@ typedef struct {
 	PLib3MFMeshObject_IsManifoldAndOrientedPtr m_MeshObject_IsManifoldAndOriented;
 	PLib3MFMeshObject_BeamLatticePtr m_MeshObject_BeamLattice;
 	PLib3MFMeshObject_VolumeDataPtr m_MeshObject_VolumeData;
+	PLib3MFBoundaryShape_GetFunctionPtr m_BoundaryShape_GetFunction;
+	PLib3MFBoundaryShape_SetFunctionPtr m_BoundaryShape_SetFunction;
+	PLib3MFBoundaryShape_GetTransformPtr m_BoundaryShape_GetTransform;
+	PLib3MFBoundaryShape_SetTransformPtr m_BoundaryShape_SetTransform;
+	PLib3MFBoundaryShape_GetChannelNamePtr m_BoundaryShape_GetChannelName;
+	PLib3MFBoundaryShape_SetChannelNamePtr m_BoundaryShape_SetChannelName;
+	PLib3MFBoundaryShape_SetMinFeatureSizePtr m_BoundaryShape_SetMinFeatureSize;
+	PLib3MFBoundaryShape_GetMinFeatureSizePtr m_BoundaryShape_GetMinFeatureSize;
+	PLib3MFBoundaryShape_SetFallBackValuePtr m_BoundaryShape_SetFallBackValue;
+	PLib3MFBoundaryShape_GetFallBackValuePtr m_BoundaryShape_GetFallBackValue;
+	PLib3MFBoundaryShape_SetMeshBBoxOnlyPtr m_BoundaryShape_SetMeshBBoxOnly;
+	PLib3MFBoundaryShape_GetMeshBBoxOnlyPtr m_BoundaryShape_GetMeshBBoxOnly;
+	PLib3MFBoundaryShape_SetMeshPtr m_BoundaryShape_SetMesh;
+	PLib3MFBoundaryShape_GetMeshPtr m_BoundaryShape_GetMesh;
+	PLib3MFBoundaryShape_VolumeDataPtr m_BoundaryShape_VolumeData;
 	PLib3MFBeamLattice_GetMinLengthPtr m_BeamLattice_GetMinLength;
 	PLib3MFBeamLattice_SetMinLengthPtr m_BeamLattice_SetMinLength;
 	PLib3MFBeamLattice_GetClippingPtr m_BeamLattice_GetClipping;
@@ -6423,8 +6530,6 @@ typedef struct {
 	PLib3MFFunctionReference_GetMinFeatureSizePtr m_FunctionReference_GetMinFeatureSize;
 	PLib3MFFunctionReference_SetFallBackValuePtr m_FunctionReference_SetFallBackValue;
 	PLib3MFFunctionReference_GetFallBackValuePtr m_FunctionReference_GetFallBackValue;
-	PLib3MFVolumeDataBoundary_SetMeshBBoxOnlyPtr m_VolumeDataBoundary_SetMeshBBoxOnly;
-	PLib3MFVolumeDataBoundary_GetMeshBBoxOnlyPtr m_VolumeDataBoundary_GetMeshBBoxOnly;
 	PLib3MFVolumeDataComposite_GetBaseMaterialGroupPtr m_VolumeDataComposite_GetBaseMaterialGroup;
 	PLib3MFVolumeDataComposite_SetBaseMaterialGroupPtr m_VolumeDataComposite_SetBaseMaterialGroup;
 	PLib3MFVolumeDataComposite_GetMaterialMappingCountPtr m_VolumeDataComposite_GetMaterialMappingCount;
@@ -6434,9 +6539,6 @@ typedef struct {
 	PLib3MFVolumeDataProperty_GetNamePtr m_VolumeDataProperty_GetName;
 	PLib3MFVolumeDataProperty_SetIsRequiredPtr m_VolumeDataProperty_SetIsRequired;
 	PLib3MFVolumeDataProperty_IsRequiredPtr m_VolumeDataProperty_IsRequired;
-	PLib3MFVolumeData_GetBoundaryPtr m_VolumeData_GetBoundary;
-	PLib3MFVolumeData_CreateNewBoundaryPtr m_VolumeData_CreateNewBoundary;
-	PLib3MFVolumeData_RemoveBoundaryPtr m_VolumeData_RemoveBoundary;
 	PLib3MFVolumeData_GetCompositePtr m_VolumeData_GetComposite;
 	PLib3MFVolumeData_CreateNewCompositePtr m_VolumeData_CreateNewComposite;
 	PLib3MFVolumeData_RemoveCompositePtr m_VolumeData_RemoveComposite;

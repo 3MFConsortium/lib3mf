@@ -70,9 +70,9 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFMetaDataGroup::Init();
 	CLib3MFObject::Init();
 	CLib3MFMeshObject::Init();
+	CLib3MFBoundaryShape::Init();
 	CLib3MFBeamLattice::Init();
 	CLib3MFFunctionReference::Init();
-	CLib3MFVolumeDataBoundary::Init();
 	CLib3MFVolumeDataColor::Init();
 	CLib3MFMaterialMapping::Init();
 	CLib3MFVolumeDataComposite::Init();
