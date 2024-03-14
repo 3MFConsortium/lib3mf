@@ -1,2 +1,3 @@
 sphinx>=2.0.0
 sphinx-tabs
+sphinx-rtd-theme
