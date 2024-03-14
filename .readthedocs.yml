@@ -22,6 +22,5 @@ formats:
   - htmlzip
 
 python:
-  version: 3.7
   install:
     - requirements: Documentation/requirements.txt
