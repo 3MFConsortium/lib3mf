@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CBoundaryShape
 #endif
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelBoundaryShapeObject.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -58,7 +58,7 @@ private:
 	/**
 	* Put private members here.
 	*/
-
+	NMR::PModelBoundaryShapeObject boundaryShapeObject();
 protected:
 
 	/**
@@ -70,6 +70,10 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
+
+	CBoundaryShape() = delete;
+
+	CBoundaryShape(NMR::PModelResource pResource);
 
 
 	/**

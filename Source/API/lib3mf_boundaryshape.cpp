@@ -32,6 +32,10 @@ Abstract: This is a stub class definition of CBoundaryShape
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
+#include "lib3mf_utils.hpp"
+#include "Model/Classes/NMR_ModelBoundaryShapeObject.h"
+#include "Model/Classes/NMR_ModelFunction.h"
+#include "Model/Classes/NMR_ModelMeshObject.h"
 
 
 using namespace Lib3MF::Impl;
@@ -45,64 +49,116 @@ IFunction * CBoundaryShape::GetFunction()
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
+NMR::PModelBoundaryShapeObject
+Lib3MF::Impl::CBoundaryShape::boundaryShapeObject()
+{
+    NMR::PModelBoundaryShapeObject pBoundaryShape = std::dynamic_pointer_cast<NMR::CModelBoundaryShapeObject>(resource());
+	if (pBoundaryShape.get() == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+	return pBoundaryShape;
+}
+
+CBoundaryShape::CBoundaryShape(NMR::PModelResource pResource)
+    : CResource(pResource), CObject(pResource)
+{
+}
+
 void CBoundaryShape::SetFunction(IFunction* pTheFunction)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+    if(pTheFunction == nullptr)
+	{
+        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	}
+
+    NMR::CModel* pModel = boundaryShapeObject()->getModel();
+    if(pModel == nullptr)
+	{
+        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+	}
+
+    NMR::PModelFunction pFunction =
+        std::dynamic_pointer_cast<NMR::CModelFunction>(
+            pModel->findResource(pTheFunction->GetUniqueResourceID()));
+
+    if(!pFunction)
+	{
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	} 
+	boundaryShapeObject()->setFunction(pFunction);
 }
 
 Lib3MF::sTransform CBoundaryShape::GetTransform()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return MatrixToTransform(boundaryShapeObject()->getTransform());
 }
 
 void CBoundaryShape::SetTransform(const Lib3MF::sTransform Transform)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	boundaryShapeObject()->setTransform(TransformToMatrix(Transform));
 }
 
 std::string CBoundaryShape::GetChannelName()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return boundaryShapeObject()->getChannelName();
 }
 
 void CBoundaryShape::SetChannelName(const std::string & sChannelName)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	boundaryShapeObject()->setChannelName(sChannelName);
 }
 
 void CBoundaryShape::SetMinFeatureSize(const Lib3MF_double dMinFeatureSize)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	boundaryShapeObject()->setMinFeatureSize(dMinFeatureSize);
 }
 
 Lib3MF_double CBoundaryShape::GetMinFeatureSize()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return boundaryShapeObject()->getMinFeatureSize();
 }
 
 void CBoundaryShape::SetFallBackValue(const Lib3MF_double dFallBackValue)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	boundaryShapeObject()->setFallBackValue(dFallBackValue);
 }
 
 Lib3MF_double CBoundaryShape::GetFallBackValue()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return boundaryShapeObject()->getFallBackValue();
 }
 
 void CBoundaryShape::SetMeshBBoxOnly(const bool bMeshBBoxOnly)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	boundaryShapeObject()->setMeshBBoxOnly(bMeshBBoxOnly);
 }
 
 bool CBoundaryShape::GetMeshBBoxOnly()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return boundaryShapeObject()->getMeshBBoxOnly();
 }
 
 void CBoundaryShape::SetMesh(IMeshObject* pTheMesh)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	if(pTheMesh == nullptr)
+	{
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	}
+
+	NMR::CModel* pModel = boundaryShapeObject()->getModel();
+	if(pModel == nullptr)
+	{
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+	}
+
+	NMR::PModelMeshObject pMesh =
+		std::dynamic_pointer_cast<NMR::CModelMeshObject>(
+			pModel->findResource(pTheMesh->GetUniqueResourceID()));
+
+	if(!pMesh)
+	{
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	} 
+	boundaryShapeObject()->setMesh(pMesh);
 }
 
 IMeshObject * CBoundaryShape::GetMesh()

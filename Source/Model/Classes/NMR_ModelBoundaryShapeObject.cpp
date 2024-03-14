@@ -36,37 +36,32 @@ boundaryshape object.
 #include "Model/Classes/NMR_ModelVolumeData.h"
 #include "Model/Classes/NMR_ModelObject.h" 
 #include "Model/Classes/NMR_ModelBoundaryShapeObject.h" 
-#include "Common/Math/NMR_PairMatchingTree.h" 
+#include "Model/Classes/NMR_ModelMeshObject.h"
+#include "Common/Math/NMR_PairMatchingTree.h"
 
 namespace NMR {
-
-	CModelBoundaryShapeObject::CModelBoundaryShapeObject(_In_ const ModelResourceID sID, _In_ CModel * pModel)
+	
+	CModelBoundaryShapeObject::CModelBoundaryShapeObject(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ PModelMeshObject pMesh)
 		: CModelObject(sID, pModel)
 	{
-		m_pMesh = std::make_shared<CMesh>();
-		m_pVolumeData = std::make_shared<CModelVolumeData>();
-	}
-
-	CModelBoundaryShapeObject::CModelBoundaryShapeObject(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ PMesh pMesh)
-		: CModelObject(sID, pModel)
-	{
-		m_pMesh = pMesh;
-		if (m_pMesh.get() == nullptr)
-			m_pMesh = std::make_shared<CMesh>();
+		m_pMesh = pMesh;		
 		m_pVolumeData = std::make_shared<CModelVolumeData>();
 	}
 
 	CModelBoundaryShapeObject::~CModelBoundaryShapeObject()
 	{
-		m_pMesh = NULL;
 	}
 
-	_Ret_notnull_ CMesh * CModelBoundaryShapeObject::getMesh()
+	CMesh * CModelBoundaryShapeObject::getMesh()
 	{
-		return m_pMesh.get();
+		if (!m_pMesh)
+		{
+			return nullptr;
+		}
+		return m_pMesh->getMesh();
 	}
 
-	void CModelBoundaryShapeObject::setMesh(_In_ PMesh pMesh)
+	void CModelBoundaryShapeObject::setMesh(PModelMeshObject pMesh)
 	{
 		if (!pMesh)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -160,5 +155,14 @@ namespace NMR {
 	{
 		return m_fallBackValue;
 	}	
-}
+	
+	void CModelBoundaryShapeObject::setMeshBBoxOnly(bool bMeshBBoxOnly)
+	{
+		m_meshBBoxOnly = bMeshBBoxOnly;
+	}
 
+	bool CModelBoundaryShapeObject::getMeshBBoxOnly() const
+	{
+		return m_meshBBoxOnly;
+	}
+}  // namespace NMR

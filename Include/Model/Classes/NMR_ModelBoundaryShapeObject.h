@@ -47,15 +47,15 @@ namespace NMR {
     class CModelVolumeData;
 	typedef std::shared_ptr <CModelVolumeData> PModelVolumeData;
 
-	class CMesh;
-	typedef std::shared_ptr <CMesh> PMesh;
+	class CModelMeshObject;
+	typedef std::shared_ptr <CModelMeshObject> PModelMeshObject;
 
 	class CModelFunction;
 	typedef std::shared_ptr <CModelFunction> PModelFunction;
 
     class CModelBoundaryShapeObject : public CModelObject {
 	private:
-		PMesh m_pMesh; 
+		PModelMeshObject m_pMesh; 
 		PModelFunction m_pFunction;
 		PModelVolumeData m_pVolumeData;
 
@@ -64,14 +64,15 @@ namespace NMR {
 		bool m_bHasTransform = false;
 		double m_minFeatureSize = 0.0;
 		double m_fallBackValue = 0.0;
+		bool m_meshBBoxOnly = false;
 	public:
 		CModelBoundaryShapeObject() = delete;
-		CModelBoundaryShapeObject(_In_ const ModelResourceID sID, _In_ CModel * pModel);
-		CModelBoundaryShapeObject(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ PMesh pMesh);
+		CModelBoundaryShapeObject(const ModelResourceID sID, CModel * pModel);
+		CModelBoundaryShapeObject(const ModelResourceID sID, CModel * pModel, PModelMeshObject pMesh);
 		~CModelBoundaryShapeObject();
-		
+ 
 		CMesh * getMesh ();
-		void setMesh (PMesh pMesh);
+		void setMesh (PModelMeshObject pMesh);
 
 		nfBool hasSlices(nfBool bRecursive) override;
 		nfBool isValidForSlices(const NMATRIX3& totalParentMatrix) override;
@@ -94,6 +95,9 @@ namespace NMR {
 
 		void setFallBackValue(double fallBackValue);
 		double getFallBackValue() const;
+
+		void setMeshBBoxOnly(bool bMeshBBoxOnly);
+		bool getMeshBBoxOnly() const;
 	};
 
 	typedef std::shared_ptr <CModelBoundaryShapeObject> PModelBoundaryShapeObject;
