@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
-	"../../Bindings/Go"
+	"../Go/go_bindings"
 )
 
-func investigateModel(model* lib3mf.Lib3MFModel) {
+func investigateModel(model* lib3mf.Model) {
 	{
 		buildItems, err := model.GetBuildItems()
 		if (err != nil) {
@@ -69,7 +69,7 @@ func investigateModel(model* lib3mf.Lib3MFModel) {
 }
 
 func main() {
-	wrapper, err := lib3mf.Lib3MFLoadWrapper("../../Bin/lib3mf.dll")
+	wrapper, err := lib3mf.LoadLibrary("../../../build/Debug/lib3mf.dll")
 	if (err != nil) {
 		log.Fatal(err)
 	}
