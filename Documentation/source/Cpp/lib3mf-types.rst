@@ -334,7 +334,7 @@ ELib3MFException: The standard exception class of the 3MF Library
 	
 	.. cpp:class:: Lib3MF::ELib3MFException
 	
-		.. cpp:function:: void ELib3MFException::what() const noexcept
+		.. cpp:function:: const char* ELib3MFException::what() const noexcept
 		
 			 Returns error message
 		
