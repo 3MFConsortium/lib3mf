@@ -26,7 +26,7 @@ CMeshObject
 
 	.. cpp:function:: sPosition GetVertex(const Lib3MF_uint32 nIndex)
 
-		Returns the vertex count of a mesh object.
+		Returns the coordinates of a single vertex of a mesh object.
 
 		:param nIndex: Index of the vertex (0 to vertexcount - 1) 
 		:returns: filled with the vertex coordinates.
