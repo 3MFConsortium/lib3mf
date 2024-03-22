@@ -32,6 +32,7 @@ Abstract: This is a stub class definition of CBoundaryShape
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
+#include "lib3mf_meshobject.hpp"
 #include "lib3mf_utils.hpp"
 #include "Model/Classes/NMR_ModelBoundaryShapeObject.h"
 #include "Model/Classes/NMR_ModelFunction.h"
@@ -163,7 +164,14 @@ void CBoundaryShape::SetMesh(IMeshObject* pTheMesh)
 
 IMeshObject * CBoundaryShape::GetMesh()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+     NMR::PModelMeshObject meshObject = boundaryShapeObject()->getMesh();
+
+	 if (!meshObject)
+	 {
+		 throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+	 }
+
+	 return new CMeshObject(meshObject);
 }
 
 IVolumeData * CBoundaryShape::VolumeData()

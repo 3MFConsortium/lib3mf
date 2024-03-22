@@ -26,143 +26,157 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelBoundaryShapeObject.cpp implements the Model BoundaryShape Object Class.
-A model boundaryshape object is an in memory representation of the 3MF
+NMR_ModelBoundaryShapeObject.cpp implements the Model BoundaryShape Object
+Class. A model boundaryshape object is an in memory representation of the 3MF
 boundaryshape object.
 
 --*/
 
-#include "Common/Mesh/NMR_Mesh.h"
-#include "Model/Classes/NMR_ModelVolumeData.h"
-#include "Model/Classes/NMR_ModelObject.h" 
-#include "Model/Classes/NMR_ModelBoundaryShapeObject.h" 
-#include "Model/Classes/NMR_ModelMeshObject.h"
+#include "Model/Classes/NMR_ModelBoundaryShapeObject.h"
+
 #include "Common/Math/NMR_PairMatchingTree.h"
+#include "Common/Mesh/NMR_Mesh.h"
+#include "Model/Classes/NMR_ModelMeshObject.h"
+#include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelVolumeData.h"
 
-namespace NMR {
-	
-	CModelBoundaryShapeObject::CModelBoundaryShapeObject(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ PModelMeshObject pMesh)
-		: CModelObject(sID, pModel)
-	{
-		m_pMesh = pMesh;		
-		m_pVolumeData = std::make_shared<CModelVolumeData>();
-	}
+namespace NMR
+{
 
-	CModelBoundaryShapeObject::~CModelBoundaryShapeObject()
-	{
-	}
+    CModelBoundaryShapeObject::CModelBoundaryShapeObject(
+        const ModelResourceID sID, CModel* pModel)
+        : CModelObject(sID, pModel)
+    {
+        m_pVolumeData = std::make_shared<CModelVolumeData>();
+    }
 
-	CMesh * CModelBoundaryShapeObject::getMesh()
-	{
-		if (!m_pMesh)
-		{
-			return nullptr;
-		}
-		return m_pMesh->getMesh();
-	}
+    CModelBoundaryShapeObject::~CModelBoundaryShapeObject() {}
 
-	void CModelBoundaryShapeObject::setMesh(PModelMeshObject pMesh)
-	{
-		if (!pMesh)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+    void CModelBoundaryShapeObject::mergeToMesh(CMesh* pMesh,
+                                                const NMATRIX3 mMatrix)
+    {
+		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+    }
 
-		m_pMesh = pMesh;
-	}
+    PModelMeshObject CModelBoundaryShapeObject::getMesh()
+    {
+        return m_pMesh;
+    }
 
-	nfBool CModelBoundaryShapeObject::hasSlices(nfBool bRecursive)
-	{
-		return (this->getSliceStack().get() != nullptr);
-	}
+    void CModelBoundaryShapeObject::setMesh(PModelMeshObject pMesh)
+    {
+        if(!pMesh) throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-	nfBool CModelBoundaryShapeObject::isValidForSlices(const NMATRIX3& totalParentMatrix)
-	{
-		if (!this->getSliceStack().get()) {
-			return true;
-		}
-		else {
-			return fnMATRIX3_isplanar(totalParentMatrix);
-		}
-	}
+        m_pMesh = pMesh;
+    }
 
-	PModelFunction CModelBoundaryShapeObject::getFunction()
-	{
-		return m_pFunction;
-	}
+    nfBool CModelBoundaryShapeObject::isValid()
+    {
+        return true;
+    }
+
+    nfBool CModelBoundaryShapeObject::hasSlices(nfBool bRecursive)
+    {
+        return (this->getSliceStack().get() != nullptr);
+    }
+
+    nfBool CModelBoundaryShapeObject::isValidForSlices(
+        const NMATRIX3& totalParentMatrix)
+    {
+        if(!this->getSliceStack().get())
+        {
+            return true;
+        }
+        else
+        {
+            return fnMATRIX3_isplanar(totalParentMatrix);
+        }
+    }
+
+    void CModelBoundaryShapeObject::extendOutbox(
+        NOUTBOX3& vOutBox, const NMATRIX3 mAccumulatedMatrix)
+    {
+		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+    }
+
+    PModelFunction CModelBoundaryShapeObject::getFunction()
+    {
+        return m_pFunction;
+    }
 
     void CModelBoundaryShapeObject::setFunction(PModelFunction pFunction)
-	{
-		if (!pFunction)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		m_pFunction = pFunction;
-	}
-    
-	PModelVolumeData CModelBoundaryShapeObject::getVolumeData()
     {
-		return m_pVolumeData;
-	}
+        if(!pFunction) throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-	void CModelBoundaryShapeObject::setVolumeData(_In_ PModelVolumeData pVolumeData)
-	{
-		if (!pVolumeData)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+        m_pFunction = pFunction;
+    }
 
-		m_pVolumeData = pVolumeData;
-	}
+    PModelVolumeData CModelBoundaryShapeObject::getVolumeData()
+    {
+        return m_pVolumeData;
+    }
 
-	void CModelBoundaryShapeObject::setChannelName(std::string outputPortName)
-	{
-		m_outputPortName = std::move(outputPortName);
-	}
+    void CModelBoundaryShapeObject::setVolumeData(
+        _In_ PModelVolumeData pVolumeData)
+    {
+        if(!pVolumeData) throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-	std::string const& CModelBoundaryShapeObject::getChannelName() const
-	{
-		return m_outputPortName;
-	}
+        m_pVolumeData = pVolumeData;
+    }
 
-	void CModelBoundaryShapeObject::setTransform(NMR::NMATRIX3 transform)
-	{
-		m_transform = transform;
-		m_bHasTransform = true;
-	}
+    void CModelBoundaryShapeObject::setChannelName(std::string outputPortName)
+    {
+        m_outputPortName = std::move(outputPortName);
+    }
 
-	NMR::NMATRIX3 CModelBoundaryShapeObject::getTransform() const
-	{
-		return m_transform;
-	}
+    std::string const& CModelBoundaryShapeObject::getChannelName() const
+    {
+        return m_outputPortName;
+    }
 
-	bool CModelBoundaryShapeObject::hasTransform() const
-	{
-		return m_bHasTransform;
-	}
+    void CModelBoundaryShapeObject::setTransform(NMR::NMATRIX3 transform)
+    {
+        m_transform = transform;
+        m_bHasTransform = true;
+    }
 
-	void CModelBoundaryShapeObject::setMinFeatureSize(double minFeatureSize)
-	{
-		m_minFeatureSize = minFeatureSize;
-	}
+    NMR::NMATRIX3 CModelBoundaryShapeObject::getTransform() const
+    {
+        return m_transform;
+    }
 
-	double CModelBoundaryShapeObject::getMinFeatureSize() const
-	{
-		return m_minFeatureSize;
-	}
+    bool CModelBoundaryShapeObject::hasTransform() const
+    {
+        return m_bHasTransform;
+    }
 
-	void CModelBoundaryShapeObject::setFallBackValue(double fallBackValue)
-	{
-		m_fallBackValue = fallBackValue;
-	}
+    void CModelBoundaryShapeObject::setMinFeatureSize(double minFeatureSize)
+    {
+        m_minFeatureSize = minFeatureSize;
+    }
 
-	double CModelBoundaryShapeObject::getFallBackValue() const
-	{
-		return m_fallBackValue;
-	}	
-	
-	void CModelBoundaryShapeObject::setMeshBBoxOnly(bool bMeshBBoxOnly)
-	{
-		m_meshBBoxOnly = bMeshBBoxOnly;
-	}
+    double CModelBoundaryShapeObject::getMinFeatureSize() const
+    {
+        return m_minFeatureSize;
+    }
 
-	bool CModelBoundaryShapeObject::getMeshBBoxOnly() const
-	{
-		return m_meshBBoxOnly;
-	}
+    void CModelBoundaryShapeObject::setFallBackValue(double fallBackValue)
+    {
+        m_fallBackValue = fallBackValue;
+    }
+
+    double CModelBoundaryShapeObject::getFallBackValue() const
+    {
+        return m_fallBackValue;
+    }
+
+    void CModelBoundaryShapeObject::setMeshBBoxOnly(bool bMeshBBoxOnly)
+    {
+        m_meshBBoxOnly = bMeshBBoxOnly;
+    }
+
+    bool CModelBoundaryShapeObject::getMeshBBoxOnly() const
+    {
+        return m_meshBBoxOnly;
+    }
 }  // namespace NMR

@@ -1431,6 +1431,27 @@ Model error codes (0x8XXX)
 // Duplicate attribute fallbackvalue in volumedata element
 #define NMR_ERROR_DUPLICATE_VOLUMEDATA_FALLBACKVALUE 0x8842
 
+// Duplicate attribute functionid in boundaryshape element
+#define NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_FUNCTION_ID 0x8843
+
+// Duplicate attribute channel in boundaryshape element
+#define NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_CHANNEL 0x8844
+
+// Duplicate attribute fallbackvalue in boundaryshape element
+#define NMR_ERROR_DUPLICATE_BOUNDARY_SHAOE_FALLBACKVALUE 0x8845
+
+// Duplicate attribute transform in boundaryshape element
+#define NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_TRANSFORM 0x8846
+
+// Duplicate attribute minfeaturesize in boundaryshape element
+#define NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_MIN_FEATURE_SIZE 0x8847
+
+// Duplicate attribute fallbackvalue in boundaryshape element
+#define NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_FALLBACK_VALUE 0x8848
+
+// Duplicate attribute volumeid in boundaryshape element
+#define NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_VOLUME_ID 0x8849
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

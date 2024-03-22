@@ -549,6 +549,10 @@ namespace NMR {
 		if (pFunctionFromImage3D != nullptr)
 			m_FunctionLookup.push_back(pResource);
 
+		CModelVolumeData* pVolumeData = dynamic_cast<CModelVolumeData*>(pResource.get());
+		if (pVolumeData != nullptr)
+			m_VolumeDataLookup.push_back(pResource);
+
 	}
 
 	// Clear all build items and Resources
@@ -572,6 +576,7 @@ namespace NMR {
 		m_MetaDataGroup->clear();
 
 		m_FunctionLookup.clear();
+		m_VolumeDataLookup.clear();
 	}
 
 	_Ret_maybenull_ PModelBaseMaterialResource CModel::findBaseMaterial(_In_ PPackageResourceID pID)
@@ -1579,5 +1584,17 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
 		return dynamic_cast<CModelFunctionFromImage3D*>(pResource.get());
+	}
+
+	PModelVolumeData CModel::findVolumeData(UniqueResourceID nResourceID)
+	{
+		//TODO: Reactivate this code when the volume data has become a resource
+		// for (size_t i = 0; i < m_VolumeDataLookup.size(); i++)
+		// {
+		// 	PModelVolumeData pVolumeData = std::dynamic_pointer_cast<CModelVolumeData>(m_VolumeDataLookup[i]);
+		// 	if (pVolumeData->getPackageResourceID()->getUniqueID() == nResourceID)
+		// 		return pVolumeData;
+		// }
+		return nullptr;
 	}
 }  // namespace NMR

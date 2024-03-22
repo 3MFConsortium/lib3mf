@@ -68,16 +68,23 @@ namespace NMR {
 	public:
 		CModelBoundaryShapeObject() = delete;
 		CModelBoundaryShapeObject(const ModelResourceID sID, CModel * pModel);
-		CModelBoundaryShapeObject(const ModelResourceID sID, CModel * pModel, PModelMeshObject pMesh);
 		~CModelBoundaryShapeObject();
- 
-		CMesh * getMesh ();
-		void setMesh (PModelMeshObject pMesh);
 
+		void mergeToMesh(_In_ CMesh* pMesh,
+							_In_ const NMATRIX3 mMatrix) override;
+
+		nfBool isValid() override;
 		nfBool hasSlices(nfBool bRecursive) override;
-		nfBool isValidForSlices(const NMATRIX3& totalParentMatrix) override;
+		nfBool isValidForSlices(
+			const NMATRIX3& totalParentMatrix) override;
+		void extendOutbox(_Out_ NOUTBOX3& vOutBox,
+							_In_ const NMATRIX3
+								mAccumulatedMatrix) override;
 
-		PModelFunction getFunction();
+		PModelMeshObject getMesh();
+		void setMesh(PModelMeshObject pMesh);
+
+        PModelFunction getFunction();
 		void setFunction(PModelFunction pFunction);
 
 		PModelVolumeData getVolumeData();

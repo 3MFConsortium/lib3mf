@@ -505,6 +505,14 @@ namespace NMR {
 		case NMR_ERROR_IMPLICIT_FUNCTION_CYCLIC_GRAPH : return "Cyclic graph in implicit function";
 		case NMR_ERROR_DUPLICATE_VOLUMEDATA_FALLBACKVALUE : return "Duplicate VolumeData FallbackValue";
 
+		case NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_FUNCTION_ID: return "Duplicate attribute functionid in boundaryshape element";
+		case NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_CHANNEL: return "Duplicate attribute channel in boundaryshape element";
+		case NMR_ERROR_DUPLICATE_BOUNDARY_SHAOE_FALLBACKVALUE: return "Duplicate attribute fallbackvalue in boundaryshape element";
+		case NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_TRANSFORM: return "Duplicate attribute transform in boundaryshape element";
+		case NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_MIN_FEATURE_SIZE: return "Duplicate attribute minfeaturesize in boundaryshape element";
+		case NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_FALLBACK_VALUE: return "Duplicate attribute fallbackvalue in boundaryshape element";
+		case NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_VOLUME_ID: return "Duplicate attribute volumeid in boundaryshape element";
+
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";
 		case NMR_ERROR_XMLPARSER_INVALIDPARSERESULT: return "Invalid XML parse result";
