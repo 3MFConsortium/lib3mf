@@ -31,7 +31,6 @@ NMR_ModelReaderNode_Volumetric2201_VolumeData.cpp covers the official 3MF volume
 
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_VolumeData.h"
 
-#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Boundary.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Property.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Color.h"
 #include "Model/Classes/NMR_ModelConstants.h"
@@ -51,7 +50,6 @@ namespace NMR {
 		if ((pVolumeData == nullptr) ||  (pModel == nullptr))
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		m_bHasBoundary = false;
 	}
 
 	void CModelReaderNode_Volumetric2201_VolumeData::parseXML(_In_ CXmlReader * pXMLReader)
@@ -78,19 +76,7 @@ namespace NMR {
 		__NMRASSERT(pNameSpace);
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_VOLUMETRICSPEC) == 0) {
-			if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMETRIC_BOUNDARY) == 0)
-			{
-				if (m_bHasBoundary) {
-					throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATABOUNDARY);
-				}
-				m_bHasBoundary = true;
-				PModelReaderNode_Volumetric2201_Boundary pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_Boundary>(m_pWarnings);
-				pXMLNode->parseXML(pXMLReader);
-
-				PVolumeDataBoundary pLevelSet = pXMLNode->MakeLevelset(m_pModel);
-				m_pVolumeData->setBoundary(pLevelSet);
-			}
-			else if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMETRIC_PROPERTY) == 0)
+			if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMETRIC_PROPERTY) == 0)
 			{
 				PModelReaderNode_Volumetric2201_Property pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_Property>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);

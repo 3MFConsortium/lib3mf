@@ -43,7 +43,6 @@ namespace NMR {
 		CModel* m_pModel;
 		CModelVolumeData* m_pVolumeData;
 
-		nfBool m_bHasBoundary;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:
