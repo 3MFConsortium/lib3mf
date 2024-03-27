@@ -1,7 +1,7 @@
 {$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 (*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -1747,13 +1747,22 @@ type
 	TLib3MFMeshObject_BeamLatticeFunc = function(pMeshObject: TLib3MFHandle; out pTheBeamLattice: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
-	* Retrieves the VolumeData of this MeshObject.
+	* Retrieves the VolumeData this MeshObject.
 	*
 	* @param[in] pMeshObject - MeshObject instance.
 	* @param[out] pTheVolumeData - the VolumeData of this MeshObject
 	* @return error code or 0 (success)
 	*)
-	TLib3MFMeshObject_VolumeDataFunc = function(pMeshObject: TLib3MFHandle; out pTheVolumeData: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFMeshObject_GetVolumeDataFunc = function(pMeshObject: TLib3MFHandle; out pTheVolumeData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the VolumeData this MeshObject.
+	*
+	* @param[in] pMeshObject - MeshObject instance.
+	* @param[in] pTheVolumeData - the VolumeData of this MeshObject
+	* @return error code or 0 (success)
+	*)
+	TLib3MFMeshObject_SetVolumeDataFunc = function(pMeshObject: TLib3MFHandle; const pTheVolumeData: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -1889,13 +1898,22 @@ type
 	TLib3MFBoundaryShape_GetMeshFunc = function(pBoundaryShape: TLib3MFHandle; out pTheMesh: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
-	* Retrieves the VolumeData referenced by this BoundaryShape.
+	* Retrieves the VolumeData this MeshObject.
 	*
 	* @param[in] pBoundaryShape - BoundaryShape instance.
-	* @param[out] pTheVolumeData - the VolumeData of this BoundaryShape
+	* @param[out] pTheVolumeData - the VolumeData of this MeshObject
 	* @return error code or 0 (success)
 	*)
-	TLib3MFBoundaryShape_VolumeDataFunc = function(pBoundaryShape: TLib3MFHandle; out pTheVolumeData: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFBoundaryShape_GetVolumeDataFunc = function(pBoundaryShape: TLib3MFHandle; out pTheVolumeData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the VolumeData of this BoundaryShape.
+	*
+	* @param[in] pBoundaryShape - BoundaryShape instance.
+	* @param[in] pTheVolumeData - the VolumeData of this MeshObject
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBoundaryShape_SetVolumeDataFunc = function(pBoundaryShape: TLib3MFHandle; const pTheVolumeData: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -6826,6 +6844,15 @@ type
 	*)
 	TLib3MFModel_AddFunctionFromImage3DFunc = function(pModel: TLib3MFHandle; const pImage3DInstance: TLib3MFHandle; out pFunctionInstance: TLib3MFHandle): TLib3MFResult; cdecl;
 	
+	(**
+	* adds a volume data resource to the model.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[out] pVolumeDataInstance - returns the new volume data instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_AddVolumeDataFunc = function(pModel: TLib3MFHandle; out pVolumeDataInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
 (*************************************************************************************************************************
  Global function definitions 
 **************************************************************************************************************************)
@@ -7398,7 +7425,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure SetGeometry(const AVertices: ArrayOfLib3MFPosition; const AIndices: ArrayOfLib3MFTriangle);
 		function IsManifoldAndOriented(): Boolean;
 		function BeamLattice(): TLib3MFBeamLattice;
-		function VolumeData(): TLib3MFVolumeData;
+		function GetVolumeData(): TLib3MFVolumeData;
+		procedure SetVolumeData(const ATheVolumeData: TLib3MFVolumeData);
 	end;
 
 
@@ -7424,7 +7452,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetMeshBBoxOnly(): Boolean;
 		procedure SetMesh(const ATheMesh: TLib3MFMeshObject);
 		function GetMesh(): TLib3MFMeshObject;
-		function VolumeData(): TLib3MFVolumeData;
+		function GetVolumeData(): TLib3MFVolumeData;
+		procedure SetVolumeData(const ATheVolumeData: TLib3MFVolumeData);
 	end;
 
 
@@ -7540,7 +7569,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
  Class definition for VolumeData
 **************************************************************************************************************************)
 
-	TLib3MFVolumeData = class(TLib3MFBase)
+	TLib3MFVolumeData = class(TLib3MFResource)
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
@@ -8866,6 +8895,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetFunctions(): TLib3MFFunctionIterator;
 		function AddImplicitFunction(): TLib3MFImplicitFunction;
 		function AddFunctionFromImage3D(const AImage3DInstance: TLib3MFImage3D): TLib3MFFunctionFromImage3D;
+		function AddVolumeData(): TLib3MFVolumeData;
 	end;
 
 (*************************************************************************************************************************
@@ -8984,7 +9014,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFMeshObject_SetGeometryFunc: TLib3MFMeshObject_SetGeometryFunc;
 		FLib3MFMeshObject_IsManifoldAndOrientedFunc: TLib3MFMeshObject_IsManifoldAndOrientedFunc;
 		FLib3MFMeshObject_BeamLatticeFunc: TLib3MFMeshObject_BeamLatticeFunc;
-		FLib3MFMeshObject_VolumeDataFunc: TLib3MFMeshObject_VolumeDataFunc;
+		FLib3MFMeshObject_GetVolumeDataFunc: TLib3MFMeshObject_GetVolumeDataFunc;
+		FLib3MFMeshObject_SetVolumeDataFunc: TLib3MFMeshObject_SetVolumeDataFunc;
 		FLib3MFBoundaryShape_GetFunctionFunc: TLib3MFBoundaryShape_GetFunctionFunc;
 		FLib3MFBoundaryShape_SetFunctionFunc: TLib3MFBoundaryShape_SetFunctionFunc;
 		FLib3MFBoundaryShape_GetTransformFunc: TLib3MFBoundaryShape_GetTransformFunc;
@@ -8999,7 +9030,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFBoundaryShape_GetMeshBBoxOnlyFunc: TLib3MFBoundaryShape_GetMeshBBoxOnlyFunc;
 		FLib3MFBoundaryShape_SetMeshFunc: TLib3MFBoundaryShape_SetMeshFunc;
 		FLib3MFBoundaryShape_GetMeshFunc: TLib3MFBoundaryShape_GetMeshFunc;
-		FLib3MFBoundaryShape_VolumeDataFunc: TLib3MFBoundaryShape_VolumeDataFunc;
+		FLib3MFBoundaryShape_GetVolumeDataFunc: TLib3MFBoundaryShape_GetVolumeDataFunc;
+		FLib3MFBoundaryShape_SetVolumeDataFunc: TLib3MFBoundaryShape_SetVolumeDataFunc;
 		FLib3MFBeamLattice_GetMinLengthFunc: TLib3MFBeamLattice_GetMinLengthFunc;
 		FLib3MFBeamLattice_SetMinLengthFunc: TLib3MFBeamLattice_SetMinLengthFunc;
 		FLib3MFBeamLattice_GetClippingFunc: TLib3MFBeamLattice_GetClippingFunc;
@@ -9451,6 +9483,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_GetFunctionsFunc: TLib3MFModel_GetFunctionsFunc;
 		FLib3MFModel_AddImplicitFunctionFunc: TLib3MFModel_AddImplicitFunctionFunc;
 		FLib3MFModel_AddFunctionFromImage3DFunc: TLib3MFModel_AddFunctionFromImage3DFunc;
+		FLib3MFModel_AddVolumeDataFunc: TLib3MFModel_AddVolumeDataFunc;
 		FLib3MFGetLibraryVersionFunc: TLib3MFGetLibraryVersionFunc;
 		FLib3MFGetPrereleaseInformationFunc: TLib3MFGetPrereleaseInformationFunc;
 		FLib3MFGetBuildInformationFunc: TLib3MFGetBuildInformationFunc;
@@ -9589,7 +9622,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFMeshObject_SetGeometryFunc: TLib3MFMeshObject_SetGeometryFunc read FLib3MFMeshObject_SetGeometryFunc;
 		property Lib3MFMeshObject_IsManifoldAndOrientedFunc: TLib3MFMeshObject_IsManifoldAndOrientedFunc read FLib3MFMeshObject_IsManifoldAndOrientedFunc;
 		property Lib3MFMeshObject_BeamLatticeFunc: TLib3MFMeshObject_BeamLatticeFunc read FLib3MFMeshObject_BeamLatticeFunc;
-		property Lib3MFMeshObject_VolumeDataFunc: TLib3MFMeshObject_VolumeDataFunc read FLib3MFMeshObject_VolumeDataFunc;
+		property Lib3MFMeshObject_GetVolumeDataFunc: TLib3MFMeshObject_GetVolumeDataFunc read FLib3MFMeshObject_GetVolumeDataFunc;
+		property Lib3MFMeshObject_SetVolumeDataFunc: TLib3MFMeshObject_SetVolumeDataFunc read FLib3MFMeshObject_SetVolumeDataFunc;
 		property Lib3MFBoundaryShape_GetFunctionFunc: TLib3MFBoundaryShape_GetFunctionFunc read FLib3MFBoundaryShape_GetFunctionFunc;
 		property Lib3MFBoundaryShape_SetFunctionFunc: TLib3MFBoundaryShape_SetFunctionFunc read FLib3MFBoundaryShape_SetFunctionFunc;
 		property Lib3MFBoundaryShape_GetTransformFunc: TLib3MFBoundaryShape_GetTransformFunc read FLib3MFBoundaryShape_GetTransformFunc;
@@ -9604,7 +9638,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFBoundaryShape_GetMeshBBoxOnlyFunc: TLib3MFBoundaryShape_GetMeshBBoxOnlyFunc read FLib3MFBoundaryShape_GetMeshBBoxOnlyFunc;
 		property Lib3MFBoundaryShape_SetMeshFunc: TLib3MFBoundaryShape_SetMeshFunc read FLib3MFBoundaryShape_SetMeshFunc;
 		property Lib3MFBoundaryShape_GetMeshFunc: TLib3MFBoundaryShape_GetMeshFunc read FLib3MFBoundaryShape_GetMeshFunc;
-		property Lib3MFBoundaryShape_VolumeDataFunc: TLib3MFBoundaryShape_VolumeDataFunc read FLib3MFBoundaryShape_VolumeDataFunc;
+		property Lib3MFBoundaryShape_GetVolumeDataFunc: TLib3MFBoundaryShape_GetVolumeDataFunc read FLib3MFBoundaryShape_GetVolumeDataFunc;
+		property Lib3MFBoundaryShape_SetVolumeDataFunc: TLib3MFBoundaryShape_SetVolumeDataFunc read FLib3MFBoundaryShape_SetVolumeDataFunc;
 		property Lib3MFBeamLattice_GetMinLengthFunc: TLib3MFBeamLattice_GetMinLengthFunc read FLib3MFBeamLattice_GetMinLengthFunc;
 		property Lib3MFBeamLattice_SetMinLengthFunc: TLib3MFBeamLattice_SetMinLengthFunc read FLib3MFBeamLattice_SetMinLengthFunc;
 		property Lib3MFBeamLattice_GetClippingFunc: TLib3MFBeamLattice_GetClippingFunc read FLib3MFBeamLattice_GetClippingFunc;
@@ -10056,6 +10091,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_GetFunctionsFunc: TLib3MFModel_GetFunctionsFunc read FLib3MFModel_GetFunctionsFunc;
 		property Lib3MFModel_AddImplicitFunctionFunc: TLib3MFModel_AddImplicitFunctionFunc read FLib3MFModel_AddImplicitFunctionFunc;
 		property Lib3MFModel_AddFunctionFromImage3DFunc: TLib3MFModel_AddFunctionFromImage3DFunc read FLib3MFModel_AddFunctionFromImage3DFunc;
+		property Lib3MFModel_AddVolumeDataFunc: TLib3MFModel_AddVolumeDataFunc read FLib3MFModel_AddVolumeDataFunc;
 		property Lib3MFGetLibraryVersionFunc: TLib3MFGetLibraryVersionFunc read FLib3MFGetLibraryVersionFunc;
 		property Lib3MFGetPrereleaseInformationFunc: TLib3MFGetPrereleaseInformationFunc read FLib3MFGetPrereleaseInformationFunc;
 		property Lib3MFGetBuildInformationFunc: TLib3MFGetBuildInformationFunc read FLib3MFGetBuildInformationFunc;
@@ -12877,15 +12913,26 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFBeamLattice, TLib3MFBeamLattice>.Make(FWrapper, HTheBeamLattice);
 	end;
 
-	function TLib3MFMeshObject.VolumeData(): TLib3MFVolumeData;
+	function TLib3MFMeshObject.GetVolumeData(): TLib3MFVolumeData;
 	var
 		HTheVolumeData: TLib3MFHandle;
 	begin
 		Result := nil;
 		HTheVolumeData := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFMeshObject_VolumeDataFunc(FHandle, HTheVolumeData));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFMeshObject_GetVolumeDataFunc(FHandle, HTheVolumeData));
 		if Assigned(HTheVolumeData) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFVolumeData, TLib3MFVolumeData>.Make(FWrapper, HTheVolumeData);
+	end;
+
+	procedure TLib3MFMeshObject.SetVolumeData(const ATheVolumeData: TLib3MFVolumeData);
+	var
+		ATheVolumeDataHandle: TLib3MFHandle;
+	begin
+		if Assigned(ATheVolumeData) then
+		ATheVolumeDataHandle := ATheVolumeData.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheVolumeData is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFMeshObject_SetVolumeDataFunc(FHandle, ATheVolumeDataHandle));
 	end;
 
 (*************************************************************************************************************************
@@ -13009,15 +13056,26 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFMeshObject, TLib3MFMeshObject>.Make(FWrapper, HTheMesh);
 	end;
 
-	function TLib3MFBoundaryShape.VolumeData(): TLib3MFVolumeData;
+	function TLib3MFBoundaryShape.GetVolumeData(): TLib3MFVolumeData;
 	var
 		HTheVolumeData: TLib3MFHandle;
 	begin
 		Result := nil;
 		HTheVolumeData := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFBoundaryShape_VolumeDataFunc(FHandle, HTheVolumeData));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBoundaryShape_GetVolumeDataFunc(FHandle, HTheVolumeData));
 		if Assigned(HTheVolumeData) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFVolumeData, TLib3MFVolumeData>.Make(FWrapper, HTheVolumeData);
+	end;
+
+	procedure TLib3MFBoundaryShape.SetVolumeData(const ATheVolumeData: TLib3MFVolumeData);
+	var
+		ATheVolumeDataHandle: TLib3MFHandle;
+	begin
+		if Assigned(ATheVolumeData) then
+		ATheVolumeDataHandle := ATheVolumeData.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheVolumeData is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBoundaryShape_SetVolumeDataFunc(FHandle, ATheVolumeDataHandle));
 	end;
 
 (*************************************************************************************************************************
@@ -18678,6 +18736,17 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFFunctionFromImage3D, TLib3MFFunctionFromImage3D>.Make(FWrapper, HFunctionInstance);
 	end;
 
+	function TLib3MFModel.AddVolumeData(): TLib3MFVolumeData;
+	var
+		HVolumeDataInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HVolumeDataInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddVolumeDataFunc(FHandle, HVolumeDataInstance));
+		if Assigned(HVolumeDataInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFVolumeData, TLib3MFVolumeData>.Make(FWrapper, HVolumeDataInstance);
+	end;
+
 (*************************************************************************************************************************
  Wrapper class implementation
 **************************************************************************************************************************)
@@ -18809,7 +18878,8 @@ implementation
 		FLib3MFMeshObject_SetGeometryFunc := LoadFunction('lib3mf_meshobject_setgeometry');
 		FLib3MFMeshObject_IsManifoldAndOrientedFunc := LoadFunction('lib3mf_meshobject_ismanifoldandoriented');
 		FLib3MFMeshObject_BeamLatticeFunc := LoadFunction('lib3mf_meshobject_beamlattice');
-		FLib3MFMeshObject_VolumeDataFunc := LoadFunction('lib3mf_meshobject_volumedata');
+		FLib3MFMeshObject_GetVolumeDataFunc := LoadFunction('lib3mf_meshobject_getvolumedata');
+		FLib3MFMeshObject_SetVolumeDataFunc := LoadFunction('lib3mf_meshobject_setvolumedata');
 		FLib3MFBoundaryShape_GetFunctionFunc := LoadFunction('lib3mf_boundaryshape_getfunction');
 		FLib3MFBoundaryShape_SetFunctionFunc := LoadFunction('lib3mf_boundaryshape_setfunction');
 		FLib3MFBoundaryShape_GetTransformFunc := LoadFunction('lib3mf_boundaryshape_gettransform');
@@ -18824,7 +18894,8 @@ implementation
 		FLib3MFBoundaryShape_GetMeshBBoxOnlyFunc := LoadFunction('lib3mf_boundaryshape_getmeshbboxonly');
 		FLib3MFBoundaryShape_SetMeshFunc := LoadFunction('lib3mf_boundaryshape_setmesh');
 		FLib3MFBoundaryShape_GetMeshFunc := LoadFunction('lib3mf_boundaryshape_getmesh');
-		FLib3MFBoundaryShape_VolumeDataFunc := LoadFunction('lib3mf_boundaryshape_volumedata');
+		FLib3MFBoundaryShape_GetVolumeDataFunc := LoadFunction('lib3mf_boundaryshape_getvolumedata');
+		FLib3MFBoundaryShape_SetVolumeDataFunc := LoadFunction('lib3mf_boundaryshape_setvolumedata');
 		FLib3MFBeamLattice_GetMinLengthFunc := LoadFunction('lib3mf_beamlattice_getminlength');
 		FLib3MFBeamLattice_SetMinLengthFunc := LoadFunction('lib3mf_beamlattice_setminlength');
 		FLib3MFBeamLattice_GetClippingFunc := LoadFunction('lib3mf_beamlattice_getclipping');
@@ -19276,6 +19347,7 @@ implementation
 		FLib3MFModel_GetFunctionsFunc := LoadFunction('lib3mf_model_getfunctions');
 		FLib3MFModel_AddImplicitFunctionFunc := LoadFunction('lib3mf_model_addimplicitfunction');
 		FLib3MFModel_AddFunctionFromImage3DFunc := LoadFunction('lib3mf_model_addfunctionfromimage3d');
+		FLib3MFModel_AddVolumeDataFunc := LoadFunction('lib3mf_model_addvolumedata');
 		FLib3MFGetLibraryVersionFunc := LoadFunction('lib3mf_getlibraryversion');
 		FLib3MFGetPrereleaseInformationFunc := LoadFunction('lib3mf_getprereleaseinformation');
 		FLib3MFGetBuildInformationFunc := LoadFunction('lib3mf_getbuildinformation');
@@ -19633,7 +19705,10 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_meshobject_beamlattice'), @FLib3MFMeshObject_BeamLatticeFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_meshobject_volumedata'), @FLib3MFMeshObject_VolumeDataFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_meshobject_getvolumedata'), @FLib3MFMeshObject_GetVolumeDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_meshobject_setvolumedata'), @FLib3MFMeshObject_SetVolumeDataFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_boundaryshape_getfunction'), @FLib3MFBoundaryShape_GetFunctionFunc);
@@ -19678,7 +19753,10 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_boundaryshape_getmesh'), @FLib3MFBoundaryShape_GetMeshFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_boundaryshape_volumedata'), @FLib3MFBoundaryShape_VolumeDataFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_boundaryshape_getvolumedata'), @FLib3MFBoundaryShape_GetVolumeDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_boundaryshape_setvolumedata'), @FLib3MFBoundaryShape_SetVolumeDataFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_beamlattice_getminlength'), @FLib3MFBeamLattice_GetMinLengthFunc);
@@ -21032,6 +21110,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addfunctionfromimage3d'), @FLib3MFModel_AddFunctionFromImage3DFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addvolumedata'), @FLib3MFModel_AddVolumeDataFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_getlibraryversion'), @FLib3MFGetLibraryVersionFunc);

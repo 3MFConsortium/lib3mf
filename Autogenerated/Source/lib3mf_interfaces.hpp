@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -1482,10 +1482,16 @@ public:
 	virtual IBeamLattice * BeamLattice() = 0;
 
 	/**
-	* IMeshObject::VolumeData - Retrieves the VolumeData of this MeshObject.
+	* IMeshObject::GetVolumeData - Retrieves the VolumeData this MeshObject.
 	* @return the VolumeData of this MeshObject
 	*/
-	virtual IVolumeData * VolumeData() = 0;
+	virtual IVolumeData * GetVolumeData() = 0;
+
+	/**
+	* IMeshObject::SetVolumeData - Sets the VolumeData this MeshObject.
+	* @param[in] pTheVolumeData - the VolumeData of this MeshObject
+	*/
+	virtual void SetVolumeData(IVolumeData* pTheVolumeData) = 0;
 
 };
 
@@ -1592,10 +1598,16 @@ public:
 	virtual IMeshObject * GetMesh() = 0;
 
 	/**
-	* IBoundaryShape::VolumeData - Retrieves the VolumeData referenced by this BoundaryShape.
-	* @return the VolumeData of this BoundaryShape
+	* IBoundaryShape::GetVolumeData - Retrieves the VolumeData this MeshObject.
+	* @return the VolumeData of this MeshObject
 	*/
-	virtual IVolumeData * VolumeData() = 0;
+	virtual IVolumeData * GetVolumeData() = 0;
+
+	/**
+	* IBoundaryShape::SetVolumeData - Sets the VolumeData of this BoundaryShape.
+	* @param[in] pTheVolumeData - the VolumeData of this MeshObject
+	*/
+	virtual void SetVolumeData(IVolumeData* pTheVolumeData) = 0;
 
 };
 
@@ -1998,7 +2010,7 @@ typedef IBaseSharedPtr<IVolumeDataProperty> PIVolumeDataProperty;
  Class interface for VolumeData 
 **************************************************************************************************************************/
 
-class IVolumeData : public virtual IBase {
+class IVolumeData : public virtual IResource {
 public:
 	/**
 	* IVolumeData::ClassTypeId - Get Class Type Id
@@ -6466,6 +6478,12 @@ public:
 	* @return returns the function instance
 	*/
 	virtual IFunctionFromImage3D * AddFunctionFromImage3D(IImage3D* pImage3DInstance) = 0;
+
+	/**
+	* IModel::AddVolumeData - adds a volume data resource to the model.
+	* @return returns the new volume data instance.
+	*/
+	virtual IVolumeData * AddVolumeData() = 0;
 
 };
 

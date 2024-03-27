@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -1453,7 +1453,8 @@ public:
 	inline void SetGeometry(const CInputVector<sPosition> & VerticesBuffer, const CInputVector<sTriangle> & IndicesBuffer);
 	inline bool IsManifoldAndOriented();
 	inline PBeamLattice BeamLattice();
-	inline PVolumeData VolumeData();
+	inline PVolumeData GetVolumeData();
+	inline void SetVolumeData(classParam<CVolumeData> pTheVolumeData);
 };
 	
 /*************************************************************************************************************************
@@ -1484,7 +1485,8 @@ public:
 	inline bool GetMeshBBoxOnly();
 	inline void SetMesh(classParam<CMeshObject> pTheMesh);
 	inline PMeshObject GetMesh();
-	inline PVolumeData VolumeData();
+	inline PVolumeData GetVolumeData();
+	inline void SetVolumeData(classParam<CVolumeData> pTheVolumeData);
 };
 	
 /*************************************************************************************************************************
@@ -1628,14 +1630,14 @@ public:
 /*************************************************************************************************************************
  Class CVolumeData 
 **************************************************************************************************************************/
-class CVolumeData : public CBase {
+class CVolumeData : public CResource {
 public:
 	
 	/**
 	* CVolumeData::CVolumeData - Constructor for VolumeData class.
 	*/
 	CVolumeData(CWrapper* pWrapper, Lib3MFHandle pHandle)
-		: CBase(pWrapper, pHandle)
+		: CResource(pWrapper, pHandle)
 	{
 	}
 	
@@ -3376,6 +3378,7 @@ public:
 	inline PFunctionIterator GetFunctions();
 	inline PImplicitFunction AddImplicitFunction();
 	inline PFunctionFromImage3D AddFunctionFromImage3D(classParam<CImage3D> pImage3DInstance);
+	inline PVolumeData AddVolumeData();
 };
 
 /*************************************************************************************************************************
@@ -3902,7 +3905,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_MeshObject_SetGeometry = nullptr;
 		pWrapperTable->m_MeshObject_IsManifoldAndOriented = nullptr;
 		pWrapperTable->m_MeshObject_BeamLattice = nullptr;
-		pWrapperTable->m_MeshObject_VolumeData = nullptr;
+		pWrapperTable->m_MeshObject_GetVolumeData = nullptr;
+		pWrapperTable->m_MeshObject_SetVolumeData = nullptr;
 		pWrapperTable->m_BoundaryShape_GetFunction = nullptr;
 		pWrapperTable->m_BoundaryShape_SetFunction = nullptr;
 		pWrapperTable->m_BoundaryShape_GetTransform = nullptr;
@@ -3917,7 +3921,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_BoundaryShape_GetMeshBBoxOnly = nullptr;
 		pWrapperTable->m_BoundaryShape_SetMesh = nullptr;
 		pWrapperTable->m_BoundaryShape_GetMesh = nullptr;
-		pWrapperTable->m_BoundaryShape_VolumeData = nullptr;
+		pWrapperTable->m_BoundaryShape_GetVolumeData = nullptr;
+		pWrapperTable->m_BoundaryShape_SetVolumeData = nullptr;
 		pWrapperTable->m_BeamLattice_GetMinLength = nullptr;
 		pWrapperTable->m_BeamLattice_SetMinLength = nullptr;
 		pWrapperTable->m_BeamLattice_GetClipping = nullptr;
@@ -4369,6 +4374,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Model_GetFunctions = nullptr;
 		pWrapperTable->m_Model_AddImplicitFunction = nullptr;
 		pWrapperTable->m_Model_AddFunctionFromImage3D = nullptr;
+		pWrapperTable->m_Model_AddVolumeData = nullptr;
 		pWrapperTable->m_GetLibraryVersion = nullptr;
 		pWrapperTable->m_GetPrereleaseInformation = nullptr;
 		pWrapperTable->m_GetBuildInformation = nullptr;
@@ -5420,12 +5426,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_MeshObject_VolumeData = (PLib3MFMeshObject_VolumeDataPtr) GetProcAddress(hLibrary, "lib3mf_meshobject_volumedata");
+		pWrapperTable->m_MeshObject_GetVolumeData = (PLib3MFMeshObject_GetVolumeDataPtr) GetProcAddress(hLibrary, "lib3mf_meshobject_getvolumedata");
 		#else // _WIN32
-		pWrapperTable->m_MeshObject_VolumeData = (PLib3MFMeshObject_VolumeDataPtr) dlsym(hLibrary, "lib3mf_meshobject_volumedata");
+		pWrapperTable->m_MeshObject_GetVolumeData = (PLib3MFMeshObject_GetVolumeDataPtr) dlsym(hLibrary, "lib3mf_meshobject_getvolumedata");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_MeshObject_VolumeData == nullptr)
+		if (pWrapperTable->m_MeshObject_GetVolumeData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_MeshObject_SetVolumeData = (PLib3MFMeshObject_SetVolumeDataPtr) GetProcAddress(hLibrary, "lib3mf_meshobject_setvolumedata");
+		#else // _WIN32
+		pWrapperTable->m_MeshObject_SetVolumeData = (PLib3MFMeshObject_SetVolumeDataPtr) dlsym(hLibrary, "lib3mf_meshobject_setvolumedata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_MeshObject_SetVolumeData == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -5555,12 +5570,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_BoundaryShape_VolumeData = (PLib3MFBoundaryShape_VolumeDataPtr) GetProcAddress(hLibrary, "lib3mf_boundaryshape_volumedata");
+		pWrapperTable->m_BoundaryShape_GetVolumeData = (PLib3MFBoundaryShape_GetVolumeDataPtr) GetProcAddress(hLibrary, "lib3mf_boundaryshape_getvolumedata");
 		#else // _WIN32
-		pWrapperTable->m_BoundaryShape_VolumeData = (PLib3MFBoundaryShape_VolumeDataPtr) dlsym(hLibrary, "lib3mf_boundaryshape_volumedata");
+		pWrapperTable->m_BoundaryShape_GetVolumeData = (PLib3MFBoundaryShape_GetVolumeDataPtr) dlsym(hLibrary, "lib3mf_boundaryshape_getvolumedata");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_BoundaryShape_VolumeData == nullptr)
+		if (pWrapperTable->m_BoundaryShape_GetVolumeData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_BoundaryShape_SetVolumeData = (PLib3MFBoundaryShape_SetVolumeDataPtr) GetProcAddress(hLibrary, "lib3mf_boundaryshape_setvolumedata");
+		#else // _WIN32
+		pWrapperTable->m_BoundaryShape_SetVolumeData = (PLib3MFBoundaryShape_SetVolumeDataPtr) dlsym(hLibrary, "lib3mf_boundaryshape_setvolumedata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BoundaryShape_SetVolumeData == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -9623,6 +9647,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_Model_AddVolumeData = (PLib3MFModel_AddVolumeDataPtr) GetProcAddress(hLibrary, "lib3mf_model_addvolumedata");
+		#else // _WIN32
+		pWrapperTable->m_Model_AddVolumeData = (PLib3MFModel_AddVolumeDataPtr) dlsym(hLibrary, "lib3mf_model_addvolumedata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_AddVolumeData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_GetLibraryVersion = (PLib3MFGetLibraryVersionPtr) GetProcAddress(hLibrary, "lib3mf_getlibraryversion");
 		#else // _WIN32
 		pWrapperTable->m_GetLibraryVersion = (PLib3MFGetLibraryVersionPtr) dlsym(hLibrary, "lib3mf_getlibraryversion");
@@ -10245,8 +10278,12 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_MeshObject_BeamLattice == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_meshobject_volumedata", (void**)&(pWrapperTable->m_MeshObject_VolumeData));
-		if ( (eLookupError != 0) || (pWrapperTable->m_MeshObject_VolumeData == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_meshobject_getvolumedata", (void**)&(pWrapperTable->m_MeshObject_GetVolumeData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_MeshObject_GetVolumeData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_meshobject_setvolumedata", (void**)&(pWrapperTable->m_MeshObject_SetVolumeData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_MeshObject_SetVolumeData == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_boundaryshape_getfunction", (void**)&(pWrapperTable->m_BoundaryShape_GetFunction));
@@ -10305,8 +10342,12 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_BoundaryShape_GetMesh == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_boundaryshape_volumedata", (void**)&(pWrapperTable->m_BoundaryShape_VolumeData));
-		if ( (eLookupError != 0) || (pWrapperTable->m_BoundaryShape_VolumeData == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_boundaryshape_getvolumedata", (void**)&(pWrapperTable->m_BoundaryShape_GetVolumeData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BoundaryShape_GetVolumeData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_boundaryshape_setvolumedata", (void**)&(pWrapperTable->m_BoundaryShape_SetVolumeData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BoundaryShape_SetVolumeData == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_beamlattice_getminlength", (void**)&(pWrapperTable->m_BeamLattice_GetMinLength));
@@ -12113,6 +12154,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_Model_AddFunctionFromImage3D == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_model_addvolumedata", (void**)&(pWrapperTable->m_Model_AddVolumeData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_AddVolumeData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_getlibraryversion", (void**)&(pWrapperTable->m_GetLibraryVersion));
 		if ( (eLookupError != 0) || (pWrapperTable->m_GetLibraryVersion == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -13609,18 +13654,29 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CMeshObject::VolumeData - Retrieves the VolumeData of this MeshObject.
+	* CMeshObject::GetVolumeData - Retrieves the VolumeData this MeshObject.
 	* @return the VolumeData of this MeshObject
 	*/
-	PVolumeData CMeshObject::VolumeData()
+	PVolumeData CMeshObject::GetVolumeData()
 	{
 		Lib3MFHandle hTheVolumeData = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_MeshObject_VolumeData(m_pHandle, &hTheVolumeData));
+		CheckError(m_pWrapper->m_WrapperTable.m_MeshObject_GetVolumeData(m_pHandle, &hTheVolumeData));
 		
-		if (!hTheVolumeData) {
-			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		if (hTheVolumeData) {
+			return std::shared_ptr<CVolumeData>(dynamic_cast<CVolumeData*>(m_pWrapper->polymorphicFactory(hTheVolumeData)));
+		} else {
+			return nullptr;
 		}
-		return std::shared_ptr<CVolumeData>(dynamic_cast<CVolumeData*>(m_pWrapper->polymorphicFactory(hTheVolumeData)));
+	}
+	
+	/**
+	* CMeshObject::SetVolumeData - Sets the VolumeData this MeshObject.
+	* @param[in] pTheVolumeData - the VolumeData of this MeshObject
+	*/
+	void CMeshObject::SetVolumeData(classParam<CVolumeData> pTheVolumeData)
+	{
+		Lib3MFHandle hTheVolumeData = pTheVolumeData.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_MeshObject_SetVolumeData(m_pHandle, hTheVolumeData));
 	}
 	
 	/**
@@ -13788,19 +13844,29 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CBoundaryShape::VolumeData - Retrieves the VolumeData referenced by this BoundaryShape.
-	* @return the VolumeData of this BoundaryShape
+	* CBoundaryShape::GetVolumeData - Retrieves the VolumeData this MeshObject.
+	* @return the VolumeData of this MeshObject
 	*/
-	PVolumeData CBoundaryShape::VolumeData()
+	PVolumeData CBoundaryShape::GetVolumeData()
 	{
 		Lib3MFHandle hTheVolumeData = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_BoundaryShape_VolumeData(m_pHandle, &hTheVolumeData));
+		CheckError(m_pWrapper->m_WrapperTable.m_BoundaryShape_GetVolumeData(m_pHandle, &hTheVolumeData));
 		
 		if (hTheVolumeData) {
 			return std::shared_ptr<CVolumeData>(dynamic_cast<CVolumeData*>(m_pWrapper->polymorphicFactory(hTheVolumeData)));
 		} else {
 			return nullptr;
 		}
+	}
+	
+	/**
+	* CBoundaryShape::SetVolumeData - Sets the VolumeData of this BoundaryShape.
+	* @param[in] pTheVolumeData - the VolumeData of this MeshObject
+	*/
+	void CBoundaryShape::SetVolumeData(classParam<CVolumeData> pTheVolumeData)
+	{
+		Lib3MFHandle hTheVolumeData = pTheVolumeData.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_BoundaryShape_SetVolumeData(m_pHandle, hTheVolumeData));
 	}
 	
 	/**
@@ -20368,6 +20434,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CFunctionFromImage3D>(dynamic_cast<CFunctionFromImage3D*>(m_pWrapper->polymorphicFactory(hFunctionInstance)));
+	}
+	
+	/**
+	* CModel::AddVolumeData - adds a volume data resource to the model.
+	* @return returns the new volume data instance.
+	*/
+	PVolumeData CModel::AddVolumeData()
+	{
+		Lib3MFHandle hVolumeDataInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_AddVolumeData(m_pHandle, &hVolumeDataInstance));
+		
+		if (!hVolumeDataInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVolumeData>(dynamic_cast<CVolumeData*>(m_pWrapper->polymorphicFactory(hVolumeDataInstance)));
 	}
 
 } // namespace Lib3MF

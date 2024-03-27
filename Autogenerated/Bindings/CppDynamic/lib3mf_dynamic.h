@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -1180,13 +1180,22 @@ typedef Lib3MFResult (*PLib3MFMeshObject_IsManifoldAndOrientedPtr) (Lib3MF_MeshO
 typedef Lib3MFResult (*PLib3MFMeshObject_BeamLatticePtr) (Lib3MF_MeshObject pMeshObject, Lib3MF_BeamLattice * pTheBeamLattice);
 
 /**
-* Retrieves the VolumeData of this MeshObject.
+* Retrieves the VolumeData this MeshObject.
 *
 * @param[in] pMeshObject - MeshObject instance.
 * @param[out] pTheVolumeData - the VolumeData of this MeshObject
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFMeshObject_VolumeDataPtr) (Lib3MF_MeshObject pMeshObject, Lib3MF_VolumeData * pTheVolumeData);
+typedef Lib3MFResult (*PLib3MFMeshObject_GetVolumeDataPtr) (Lib3MF_MeshObject pMeshObject, Lib3MF_VolumeData * pTheVolumeData);
+
+/**
+* Sets the VolumeData this MeshObject.
+*
+* @param[in] pMeshObject - MeshObject instance.
+* @param[in] pTheVolumeData - the VolumeData of this MeshObject
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFMeshObject_SetVolumeDataPtr) (Lib3MF_MeshObject pMeshObject, Lib3MF_VolumeData pTheVolumeData);
 
 /*************************************************************************************************************************
  Class definition for BoundaryShape
@@ -1321,13 +1330,22 @@ typedef Lib3MFResult (*PLib3MFBoundaryShape_SetMeshPtr) (Lib3MF_BoundaryShape pB
 typedef Lib3MFResult (*PLib3MFBoundaryShape_GetMeshPtr) (Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_MeshObject * pTheMesh);
 
 /**
-* Retrieves the VolumeData referenced by this BoundaryShape.
+* Retrieves the VolumeData this MeshObject.
 *
 * @param[in] pBoundaryShape - BoundaryShape instance.
-* @param[out] pTheVolumeData - the VolumeData of this BoundaryShape
+* @param[out] pTheVolumeData - the VolumeData of this MeshObject
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFBoundaryShape_VolumeDataPtr) (Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_VolumeData * pTheVolumeData);
+typedef Lib3MFResult (*PLib3MFBoundaryShape_GetVolumeDataPtr) (Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_VolumeData * pTheVolumeData);
+
+/**
+* Sets the VolumeData of this BoundaryShape.
+*
+* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pTheVolumeData - the VolumeData of this MeshObject
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBoundaryShape_SetVolumeDataPtr) (Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_VolumeData pTheVolumeData);
 
 /*************************************************************************************************************************
  Class definition for BeamLattice
@@ -6168,6 +6186,15 @@ typedef Lib3MFResult (*PLib3MFModel_AddImplicitFunctionPtr) (Lib3MF_Model pModel
 */
 typedef Lib3MFResult (*PLib3MFModel_AddFunctionFromImage3DPtr) (Lib3MF_Model pModel, Lib3MF_Image3D pImage3DInstance, Lib3MF_FunctionFromImage3D * pFunctionInstance);
 
+/**
+* adds a volume data resource to the model.
+*
+* @param[in] pModel - Model instance.
+* @param[out] pVolumeDataInstance - returns the new volume data instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_AddVolumeDataPtr) (Lib3MF_Model pModel, Lib3MF_VolumeData * pVolumeDataInstance);
+
 /*************************************************************************************************************************
  Global functions
 **************************************************************************************************************************/
@@ -6481,7 +6508,8 @@ typedef struct {
 	PLib3MFMeshObject_SetGeometryPtr m_MeshObject_SetGeometry;
 	PLib3MFMeshObject_IsManifoldAndOrientedPtr m_MeshObject_IsManifoldAndOriented;
 	PLib3MFMeshObject_BeamLatticePtr m_MeshObject_BeamLattice;
-	PLib3MFMeshObject_VolumeDataPtr m_MeshObject_VolumeData;
+	PLib3MFMeshObject_GetVolumeDataPtr m_MeshObject_GetVolumeData;
+	PLib3MFMeshObject_SetVolumeDataPtr m_MeshObject_SetVolumeData;
 	PLib3MFBoundaryShape_GetFunctionPtr m_BoundaryShape_GetFunction;
 	PLib3MFBoundaryShape_SetFunctionPtr m_BoundaryShape_SetFunction;
 	PLib3MFBoundaryShape_GetTransformPtr m_BoundaryShape_GetTransform;
@@ -6496,7 +6524,8 @@ typedef struct {
 	PLib3MFBoundaryShape_GetMeshBBoxOnlyPtr m_BoundaryShape_GetMeshBBoxOnly;
 	PLib3MFBoundaryShape_SetMeshPtr m_BoundaryShape_SetMesh;
 	PLib3MFBoundaryShape_GetMeshPtr m_BoundaryShape_GetMesh;
-	PLib3MFBoundaryShape_VolumeDataPtr m_BoundaryShape_VolumeData;
+	PLib3MFBoundaryShape_GetVolumeDataPtr m_BoundaryShape_GetVolumeData;
+	PLib3MFBoundaryShape_SetVolumeDataPtr m_BoundaryShape_SetVolumeData;
 	PLib3MFBeamLattice_GetMinLengthPtr m_BeamLattice_GetMinLength;
 	PLib3MFBeamLattice_SetMinLengthPtr m_BeamLattice_SetMinLength;
 	PLib3MFBeamLattice_GetClippingPtr m_BeamLattice_GetClipping;
@@ -6948,6 +6977,7 @@ typedef struct {
 	PLib3MFModel_GetFunctionsPtr m_Model_GetFunctions;
 	PLib3MFModel_AddImplicitFunctionPtr m_Model_AddImplicitFunction;
 	PLib3MFModel_AddFunctionFromImage3DPtr m_Model_AddFunctionFromImage3D;
+	PLib3MFModel_AddVolumeDataPtr m_Model_AddVolumeData;
 	PLib3MFGetLibraryVersionPtr m_GetLibraryVersion;
 	PLib3MFGetPrereleaseInformationPtr m_GetPrereleaseInformation;
 	PLib3MFGetBuildInformationPtr m_GetBuildInformation;

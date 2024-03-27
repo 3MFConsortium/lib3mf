@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -542,7 +542,8 @@ private:
 	static void SetGeometry(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void IsManifoldAndOriented(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void BeamLattice(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void VolumeData(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetVolumeData(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetVolumeData(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFMeshObject();
@@ -574,7 +575,8 @@ private:
 	static void GetMeshBBoxOnly(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetMesh(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetMesh(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void VolumeData(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetVolumeData(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetVolumeData(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFBoundaryShape();
@@ -2556,6 +2558,7 @@ private:
 	static void GetFunctions(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddImplicitFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddFunctionFromImage3D(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddVolumeData(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFModel();

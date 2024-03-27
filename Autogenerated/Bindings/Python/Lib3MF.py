@@ -1,6 +1,6 @@
 '''++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -243,7 +243,8 @@ class FunctionTable:
 	lib3mf_meshobject_setgeometry = None
 	lib3mf_meshobject_ismanifoldandoriented = None
 	lib3mf_meshobject_beamlattice = None
-	lib3mf_meshobject_volumedata = None
+	lib3mf_meshobject_getvolumedata = None
+	lib3mf_meshobject_setvolumedata = None
 	lib3mf_boundaryshape_getfunction = None
 	lib3mf_boundaryshape_setfunction = None
 	lib3mf_boundaryshape_gettransform = None
@@ -258,7 +259,8 @@ class FunctionTable:
 	lib3mf_boundaryshape_getmeshbboxonly = None
 	lib3mf_boundaryshape_setmesh = None
 	lib3mf_boundaryshape_getmesh = None
-	lib3mf_boundaryshape_volumedata = None
+	lib3mf_boundaryshape_getvolumedata = None
+	lib3mf_boundaryshape_setvolumedata = None
 	lib3mf_beamlattice_getminlength = None
 	lib3mf_beamlattice_setminlength = None
 	lib3mf_beamlattice_getclipping = None
@@ -710,6 +712,7 @@ class FunctionTable:
 	lib3mf_model_getfunctions = None
 	lib3mf_model_addimplicitfunction = None
 	lib3mf_model_addfunctionfromimage3d = None
+	lib3mf_model_addvolumedata = None
 
 '''Definition of Enumerations
 '''
@@ -1887,11 +1890,17 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_meshobject_beamlattice = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_meshobject_volumedata")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_meshobject_getvolumedata")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_meshobject_volumedata = methodType(int(methodAddress.value))
+			self.lib.lib3mf_meshobject_getvolumedata = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_meshobject_setvolumedata")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
+			self.lib.lib3mf_meshobject_setvolumedata = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_boundaryshape_getfunction")), methodAddress)
 			if err != 0:
@@ -1977,11 +1986,17 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_boundaryshape_getmesh = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_boundaryshape_volumedata")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_boundaryshape_getvolumedata")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_boundaryshape_volumedata = methodType(int(methodAddress.value))
+			self.lib.lib3mf_boundaryshape_getvolumedata = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_boundaryshape_setvolumedata")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
+			self.lib.lib3mf_boundaryshape_setvolumedata = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_beamlattice_getminlength")), methodAddress)
 			if err != 0:
@@ -4689,6 +4704,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_addfunctionfromimage3d = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_addvolumedata")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_addvolumedata = methodType(int(methodAddress.value))
+			
 		except AttributeError as ae:
 			raise ELib3MFException(ErrorCodes.COULDNOTFINDLIBRARYEXPORT, ae.args[0])
 		
@@ -5078,8 +5099,11 @@ class Wrapper:
 			self.lib.lib3mf_meshobject_beamlattice.restype = ctypes.c_int32
 			self.lib.lib3mf_meshobject_beamlattice.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_meshobject_volumedata.restype = ctypes.c_int32
-			self.lib.lib3mf_meshobject_volumedata.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_meshobject_getvolumedata.restype = ctypes.c_int32
+			self.lib.lib3mf_meshobject_getvolumedata.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_meshobject_setvolumedata.restype = ctypes.c_int32
+			self.lib.lib3mf_meshobject_setvolumedata.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
 			
 			self.lib.lib3mf_boundaryshape_getfunction.restype = ctypes.c_int32
 			self.lib.lib3mf_boundaryshape_getfunction.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -5123,8 +5147,11 @@ class Wrapper:
 			self.lib.lib3mf_boundaryshape_getmesh.restype = ctypes.c_int32
 			self.lib.lib3mf_boundaryshape_getmesh.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_boundaryshape_volumedata.restype = ctypes.c_int32
-			self.lib.lib3mf_boundaryshape_volumedata.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_boundaryshape_getvolumedata.restype = ctypes.c_int32
+			self.lib.lib3mf_boundaryshape_getvolumedata.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_boundaryshape_setvolumedata.restype = ctypes.c_int32
+			self.lib.lib3mf_boundaryshape_setvolumedata.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
 			
 			self.lib.lib3mf_beamlattice_getminlength.restype = ctypes.c_int32
 			self.lib.lib3mf_beamlattice_getminlength.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
@@ -6478,6 +6505,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_model_addfunctionfromimage3d.restype = ctypes.c_int32
 			self.lib.lib3mf_model_addfunctionfromimage3d.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_addvolumedata.restype = ctypes.c_int32
+			self.lib.lib3mf_model_addvolumedata.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 		except AttributeError as ae:
 			raise ELib3MFException(ErrorCodes.COULDNOTFINDLIBRARYEXPORT, ae.args[0])
@@ -7894,15 +7924,24 @@ class MeshObject(Object):
 		
 		return TheBeamLatticeObject
 	
-	def VolumeData(self):
+	def GetVolumeData(self):
 		TheVolumeDataHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_meshobject_volumedata(self._handle, TheVolumeDataHandle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_meshobject_getvolumedata(self._handle, TheVolumeDataHandle))
 		if TheVolumeDataHandle:
 			TheVolumeDataObject = self._wrapper._polymorphicFactory(TheVolumeDataHandle)
 		else:
-			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+			TheVolumeDataObject = None
 		
 		return TheVolumeDataObject
+	
+	def SetVolumeData(self, TheVolumeDataObject):
+		TheVolumeDataHandle = None
+		if TheVolumeDataObject:
+			TheVolumeDataHandle = TheVolumeDataObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_meshobject_setvolumedata(self._handle, TheVolumeDataHandle))
+		
 	
 
 
@@ -8008,15 +8047,24 @@ class BoundaryShape(Object):
 		
 		return TheMeshObject
 	
-	def VolumeData(self):
+	def GetVolumeData(self):
 		TheVolumeDataHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_boundaryshape_volumedata(self._handle, TheVolumeDataHandle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_boundaryshape_getvolumedata(self._handle, TheVolumeDataHandle))
 		if TheVolumeDataHandle:
 			TheVolumeDataObject = self._wrapper._polymorphicFactory(TheVolumeDataHandle)
 		else:
 			TheVolumeDataObject = None
 		
 		return TheVolumeDataObject
+	
+	def SetVolumeData(self, TheVolumeDataObject):
+		TheVolumeDataHandle = None
+		if TheVolumeDataObject:
+			TheVolumeDataHandle = TheVolumeDataObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_boundaryshape_setvolumedata(self._handle, TheVolumeDataHandle))
+		
 	
 
 
@@ -8352,9 +8400,9 @@ class VolumeDataProperty(FunctionReference):
 
 ''' Class Implementation for VolumeData
 '''
-class VolumeData(Base):
+class VolumeData(Resource):
 	def __init__(self, handle, wrapper):
-		Base.__init__(self, handle, wrapper)
+		Resource.__init__(self, handle, wrapper)
 	def GetComposite(self):
 		TheCompositeDataHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_getcomposite(self._handle, TheCompositeDataHandle))
@@ -12731,5 +12779,15 @@ class Model(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return FunctionInstanceObject
+	
+	def AddVolumeData(self):
+		VolumeDataInstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_addvolumedata(self._handle, VolumeDataInstanceHandle))
+		if VolumeDataInstanceHandle:
+			VolumeDataInstanceObject = self._wrapper._polymorphicFactory(VolumeDataInstanceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return VolumeDataInstanceObject
 	
 		

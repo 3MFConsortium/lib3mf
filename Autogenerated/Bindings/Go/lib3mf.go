@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -1053,12 +1053,21 @@ Lib3MFResult CCall_lib3mf_meshobject_beamlattice(Lib3MFHandle libraryHandle, Lib
 }
 
 
-Lib3MFResult CCall_lib3mf_meshobject_volumedata(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject, Lib3MF_VolumeData * pTheVolumeData)
+Lib3MFResult CCall_lib3mf_meshobject_getvolumedata(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject, Lib3MF_VolumeData * pTheVolumeData)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_MeshObject_VolumeData (pMeshObject, pTheVolumeData);
+	return wrapperTable->m_MeshObject_GetVolumeData (pMeshObject, pTheVolumeData);
+}
+
+
+Lib3MFResult CCall_lib3mf_meshobject_setvolumedata(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject, Lib3MF_VolumeData pTheVolumeData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_MeshObject_SetVolumeData (pMeshObject, pTheVolumeData);
 }
 
 
@@ -1188,12 +1197,21 @@ Lib3MFResult CCall_lib3mf_boundaryshape_getmesh(Lib3MFHandle libraryHandle, Lib3
 }
 
 
-Lib3MFResult CCall_lib3mf_boundaryshape_volumedata(Lib3MFHandle libraryHandle, Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_VolumeData * pTheVolumeData)
+Lib3MFResult CCall_lib3mf_boundaryshape_getvolumedata(Lib3MFHandle libraryHandle, Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_VolumeData * pTheVolumeData)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_BoundaryShape_VolumeData (pBoundaryShape, pTheVolumeData);
+	return wrapperTable->m_BoundaryShape_GetVolumeData (pBoundaryShape, pTheVolumeData);
+}
+
+
+Lib3MFResult CCall_lib3mf_boundaryshape_setvolumedata(Lib3MFHandle libraryHandle, Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_VolumeData pTheVolumeData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BoundaryShape_SetVolumeData (pBoundaryShape, pTheVolumeData);
 }
 
 
@@ -5256,6 +5274,15 @@ Lib3MFResult CCall_lib3mf_model_addfunctionfromimage3d(Lib3MFHandle libraryHandl
 }
 
 
+Lib3MFResult CCall_lib3mf_model_addvolumedata(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_VolumeData * pVolumeDataInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_AddVolumeData (pModel, pVolumeDataInstance);
+}
+
+
 Lib3MFResult CCall_lib3mf_getlibraryversion(Lib3MFHandle libraryHandle, Lib3MF_uint32 * pMajor, Lib3MF_uint32 * pMinor, Lib3MF_uint32 * pMicro)
 {
 	if (libraryHandle == 0) 
@@ -7475,14 +7502,28 @@ func (inst MeshObject) BeamLattice() (BeamLattice, error) {
 	return inst.wrapperRef.NewBeamLattice(theBeamLattice), nil
 }
 
-// VolumeData retrieves the VolumeData of this MeshObject.
-func (inst MeshObject) VolumeData() (VolumeData, error) {
+// GetVolumeData retrieves the VolumeData this MeshObject.
+func (inst MeshObject) GetVolumeData() (*VolumeData, error) {
 	var theVolumeData ref
-	ret := C.CCall_lib3mf_meshobject_volumedata(inst.wrapperRef.LibraryHandle, inst.Ref, &theVolumeData)
+	ret := C.CCall_lib3mf_meshobject_getvolumedata(inst.wrapperRef.LibraryHandle, inst.Ref, &theVolumeData)
 	if ret != 0 {
-		return VolumeData{}, makeError(uint32(ret))
+		return nil, makeError(uint32(ret))
 	}
-	return inst.wrapperRef.NewVolumeData(theVolumeData), nil
+	var _theVolumeDataPtr *VolumeData
+	if theVolumeData != nil {
+		_theVolumeDataPtrVal := inst.wrapperRef.NewVolumeData(theVolumeData)
+		_theVolumeDataPtr = &_theVolumeDataPtrVal
+	}
+	return _theVolumeDataPtr, nil
+}
+
+// SetVolumeData sets the VolumeData this MeshObject.
+func (inst MeshObject) SetVolumeData(theVolumeData VolumeData) error {
+	ret := C.CCall_lib3mf_meshobject_setvolumedata(inst.wrapperRef.LibraryHandle, inst.Ref, theVolumeData.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
 }
 
 
@@ -7645,10 +7686,10 @@ func (inst BoundaryShape) GetMesh() (*MeshObject, error) {
 	return _theMeshPtr, nil
 }
 
-// VolumeData retrieves the VolumeData referenced by this BoundaryShape.
-func (inst BoundaryShape) VolumeData() (*VolumeData, error) {
+// GetVolumeData retrieves the VolumeData this MeshObject.
+func (inst BoundaryShape) GetVolumeData() (*VolumeData, error) {
 	var theVolumeData ref
-	ret := C.CCall_lib3mf_boundaryshape_volumedata(inst.wrapperRef.LibraryHandle, inst.Ref, &theVolumeData)
+	ret := C.CCall_lib3mf_boundaryshape_getvolumedata(inst.wrapperRef.LibraryHandle, inst.Ref, &theVolumeData)
 	if ret != 0 {
 		return nil, makeError(uint32(ret))
 	}
@@ -7658,6 +7699,15 @@ func (inst BoundaryShape) VolumeData() (*VolumeData, error) {
 		_theVolumeDataPtr = &_theVolumeDataPtrVal
 	}
 	return _theVolumeDataPtr, nil
+}
+
+// SetVolumeData sets the VolumeData of this BoundaryShape.
+func (inst BoundaryShape) SetVolumeData(theVolumeData VolumeData) error {
+	ret := C.CCall_lib3mf_boundaryshape_setvolumedata(inst.wrapperRef.LibraryHandle, inst.Ref, theVolumeData.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
 }
 
 
@@ -8158,11 +8208,11 @@ func (inst VolumeDataProperty) IsRequired() (bool, error) {
 
 // VolumeData represents a Lib3MF class.
 type VolumeData struct {
-	Base
+	Resource
 }
 
 func (wrapper Wrapper) NewVolumeData(r ref) VolumeData {
-	return VolumeData{wrapper.NewBase(r)}
+	return VolumeData{wrapper.NewResource(r)}
 }
 
 // GetComposite returns the VolumeDataComposite of this VolumeData instance.
@@ -13357,6 +13407,16 @@ func (inst Model) AddFunctionFromImage3D(image3DInstance Image3D) (FunctionFromI
 		return FunctionFromImage3D{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewFunctionFromImage3D(functionInstance), nil
+}
+
+// AddVolumeData adds a volume data resource to the model.
+func (inst Model) AddVolumeData() (VolumeData, error) {
+	var volumeDataInstance ref
+	ret := C.CCall_lib3mf_model_addvolumedata(inst.wrapperRef.LibraryHandle, inst.Ref, &volumeDataInstance)
+	if ret != 0 {
+		return VolumeData{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewVolumeData(volumeDataInstance), nil
 }
 
 

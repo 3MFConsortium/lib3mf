@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -1193,13 +1193,22 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_meshobject_ismanifoldandoriented(Lib3MF_Mesh
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_meshobject_beamlattice(Lib3MF_MeshObject pMeshObject, Lib3MF_BeamLattice * pTheBeamLattice);
 
 /**
-* Retrieves the VolumeData of this MeshObject.
+* Retrieves the VolumeData this MeshObject.
 *
 * @param[in] pMeshObject - MeshObject instance.
 * @param[out] pTheVolumeData - the VolumeData of this MeshObject
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_meshobject_volumedata(Lib3MF_MeshObject pMeshObject, Lib3MF_VolumeData * pTheVolumeData);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_meshobject_getvolumedata(Lib3MF_MeshObject pMeshObject, Lib3MF_VolumeData * pTheVolumeData);
+
+/**
+* Sets the VolumeData this MeshObject.
+*
+* @param[in] pMeshObject - MeshObject instance.
+* @param[in] pTheVolumeData - the VolumeData of this MeshObject
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_meshobject_setvolumedata(Lib3MF_MeshObject pMeshObject, Lib3MF_VolumeData pTheVolumeData);
 
 /*************************************************************************************************************************
  Class definition for BoundaryShape
@@ -1334,13 +1343,22 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshape_setmesh(Lib3MF_BoundaryShape p
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshape_getmesh(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_MeshObject * pTheMesh);
 
 /**
-* Retrieves the VolumeData referenced by this BoundaryShape.
+* Retrieves the VolumeData this MeshObject.
 *
 * @param[in] pBoundaryShape - BoundaryShape instance.
-* @param[out] pTheVolumeData - the VolumeData of this BoundaryShape
+* @param[out] pTheVolumeData - the VolumeData of this MeshObject
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshape_volumedata(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_VolumeData * pTheVolumeData);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshape_getvolumedata(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_VolumeData * pTheVolumeData);
+
+/**
+* Sets the VolumeData of this BoundaryShape.
+*
+* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pTheVolumeData - the VolumeData of this MeshObject
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshape_setvolumedata(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_VolumeData pTheVolumeData);
 
 /*************************************************************************************************************************
  Class definition for BeamLattice
@@ -6180,6 +6198,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addimplicitfunction(Lib3MF_Model pMode
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addfunctionfromimage3d(Lib3MF_Model pModel, Lib3MF_Image3D pImage3DInstance, Lib3MF_FunctionFromImage3D * pFunctionInstance);
+
+/**
+* adds a volume data resource to the model.
+*
+* @param[in] pModel - Model instance.
+* @param[out] pVolumeDataInstance - returns the new volume data instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addvolumedata(Lib3MF_Model pModel, Lib3MF_VolumeData * pVolumeDataInstance);
 
 /*************************************************************************************************************************
  Global functions

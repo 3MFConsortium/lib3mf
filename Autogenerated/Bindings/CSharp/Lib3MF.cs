@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -761,8 +761,11 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshobject_beamlattice", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 MeshObject_BeamLattice (IntPtr Handle, out IntPtr ATheBeamLattice);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshobject_volumedata", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 MeshObject_VolumeData (IntPtr Handle, out IntPtr ATheVolumeData);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshobject_getvolumedata", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 MeshObject_GetVolumeData (IntPtr Handle, out IntPtr ATheVolumeData);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshobject_setvolumedata", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 MeshObject_SetVolumeData (IntPtr Handle, IntPtr ATheVolumeData);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshape_getfunction", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BoundaryShape_GetFunction (IntPtr Handle, out IntPtr ATheFunction);
@@ -806,8 +809,11 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshape_getmesh", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BoundaryShape_GetMesh (IntPtr Handle, out IntPtr ATheMesh);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshape_volumedata", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BoundaryShape_VolumeData (IntPtr Handle, out IntPtr ATheVolumeData);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshape_getvolumedata", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BoundaryShape_GetVolumeData (IntPtr Handle, out IntPtr ATheVolumeData);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshape_setvolumedata", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BoundaryShape_SetVolumeData (IntPtr Handle, IntPtr ATheVolumeData);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_beamlattice_getminlength", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BeamLattice_GetMinLength (IntPtr Handle, out Double AMinLength);
@@ -2161,6 +2167,9 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addfunctionfromimage3d", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_AddFunctionFromImage3D (IntPtr Handle, IntPtr AImage3DInstance, out IntPtr AFunctionInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addvolumedata", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_AddVolumeData (IntPtr Handle, out IntPtr AVolumeDataInstance);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_getlibraryversion", CharSet = CharSet.Ansi, CallingConvention=CallingConvention.Cdecl)]
 			public extern static Int32 GetLibraryVersion (out UInt32 AMajor, out UInt32 AMinor, out UInt32 AMicro);
@@ -3850,12 +3859,21 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CBeamLattice>(newTheBeamLattice);
 		}
 
-		public CVolumeData VolumeData ()
+		public CVolumeData GetVolumeData ()
 		{
 			IntPtr newTheVolumeData = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.MeshObject_VolumeData (Handle, out newTheVolumeData));
+			CheckError(Internal.Lib3MFWrapper.MeshObject_GetVolumeData (Handle, out newTheVolumeData));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CVolumeData>(newTheVolumeData);
+		}
+
+		public void SetVolumeData (CVolumeData ATheVolumeData)
+		{
+			IntPtr ATheVolumeDataHandle = IntPtr.Zero;
+			if (ATheVolumeData != null)
+				ATheVolumeDataHandle = ATheVolumeData.GetHandle();
+
+			CheckError(Internal.Lib3MFWrapper.MeshObject_SetVolumeData (Handle, ATheVolumeDataHandle));
 		}
 
 	}
@@ -3978,12 +3996,21 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CMeshObject>(newTheMesh);
 		}
 
-		public CVolumeData VolumeData ()
+		public CVolumeData GetVolumeData ()
 		{
 			IntPtr newTheVolumeData = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.BoundaryShape_VolumeData (Handle, out newTheVolumeData));
+			CheckError(Internal.Lib3MFWrapper.BoundaryShape_GetVolumeData (Handle, out newTheVolumeData));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CVolumeData>(newTheVolumeData);
+		}
+
+		public void SetVolumeData (CVolumeData ATheVolumeData)
+		{
+			IntPtr ATheVolumeDataHandle = IntPtr.Zero;
+			if (ATheVolumeData != null)
+				ATheVolumeDataHandle = ATheVolumeData.GetHandle();
+
+			CheckError(Internal.Lib3MFWrapper.BoundaryShape_SetVolumeData (Handle, ATheVolumeDataHandle));
 		}
 
 	}
@@ -4390,7 +4417,7 @@ namespace Lib3MF {
 
 	}
 
-	public class CVolumeData : CBase
+	public class CVolumeData : CResource
 	{
 		public CVolumeData (IntPtr NewHandle) : base (NewHandle)
 		{
@@ -8818,6 +8845,14 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Model_AddFunctionFromImage3D (Handle, AImage3DInstanceHandle, out newFunctionInstance));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CFunctionFromImage3D>(newFunctionInstance);
+		}
+
+		public CVolumeData AddVolumeData ()
+		{
+			IntPtr newVolumeDataInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_AddVolumeData (Handle, out newVolumeDataInstance));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CVolumeData>(newVolumeDataInstance);
 		}
 
 	}

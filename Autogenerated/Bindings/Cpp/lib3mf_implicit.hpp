@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -1429,7 +1429,8 @@ public:
 	inline void SetGeometry(const CInputVector<sPosition> & VerticesBuffer, const CInputVector<sTriangle> & IndicesBuffer);
 	inline bool IsManifoldAndOriented();
 	inline PBeamLattice BeamLattice();
-	inline PVolumeData VolumeData();
+	inline PVolumeData GetVolumeData();
+	inline void SetVolumeData(classParam<CVolumeData> pTheVolumeData);
 };
 	
 /*************************************************************************************************************************
@@ -1460,7 +1461,8 @@ public:
 	inline bool GetMeshBBoxOnly();
 	inline void SetMesh(classParam<CMeshObject> pTheMesh);
 	inline PMeshObject GetMesh();
-	inline PVolumeData VolumeData();
+	inline PVolumeData GetVolumeData();
+	inline void SetVolumeData(classParam<CVolumeData> pTheVolumeData);
 };
 	
 /*************************************************************************************************************************
@@ -1604,14 +1606,14 @@ public:
 /*************************************************************************************************************************
  Class CVolumeData 
 **************************************************************************************************************************/
-class CVolumeData : public CBase {
+class CVolumeData : public CResource {
 public:
 	
 	/**
 	* CVolumeData::CVolumeData - Constructor for VolumeData class.
 	*/
 	CVolumeData(CWrapper* pWrapper, Lib3MFHandle pHandle)
-		: CBase(pWrapper, pHandle)
+		: CResource(pWrapper, pHandle)
 	{
 	}
 	
@@ -3352,6 +3354,7 @@ public:
 	inline PFunctionIterator GetFunctions();
 	inline PImplicitFunction AddImplicitFunction();
 	inline PFunctionFromImage3D AddFunctionFromImage3D(classParam<CImage3D> pImage3DInstance);
+	inline PVolumeData AddVolumeData();
 };
 
 /*************************************************************************************************************************
@@ -5179,18 +5182,29 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CMeshObject::VolumeData - Retrieves the VolumeData of this MeshObject.
+	* CMeshObject::GetVolumeData - Retrieves the VolumeData this MeshObject.
 	* @return the VolumeData of this MeshObject
 	*/
-	PVolumeData CMeshObject::VolumeData()
+	PVolumeData CMeshObject::GetVolumeData()
 	{
 		Lib3MFHandle hTheVolumeData = nullptr;
-		CheckError(lib3mf_meshobject_volumedata(m_pHandle, &hTheVolumeData));
+		CheckError(lib3mf_meshobject_getvolumedata(m_pHandle, &hTheVolumeData));
 		
-		if (!hTheVolumeData) {
-			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		if (hTheVolumeData) {
+			return std::shared_ptr<CVolumeData>(dynamic_cast<CVolumeData*>(m_pWrapper->polymorphicFactory(hTheVolumeData)));
+		} else {
+			return nullptr;
 		}
-		return std::shared_ptr<CVolumeData>(dynamic_cast<CVolumeData*>(m_pWrapper->polymorphicFactory(hTheVolumeData)));
+	}
+	
+	/**
+	* CMeshObject::SetVolumeData - Sets the VolumeData this MeshObject.
+	* @param[in] pTheVolumeData - the VolumeData of this MeshObject
+	*/
+	void CMeshObject::SetVolumeData(classParam<CVolumeData> pTheVolumeData)
+	{
+		Lib3MFHandle hTheVolumeData = pTheVolumeData.GetHandle();
+		CheckError(lib3mf_meshobject_setvolumedata(m_pHandle, hTheVolumeData));
 	}
 	
 	/**
@@ -5358,19 +5372,29 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CBoundaryShape::VolumeData - Retrieves the VolumeData referenced by this BoundaryShape.
-	* @return the VolumeData of this BoundaryShape
+	* CBoundaryShape::GetVolumeData - Retrieves the VolumeData this MeshObject.
+	* @return the VolumeData of this MeshObject
 	*/
-	PVolumeData CBoundaryShape::VolumeData()
+	PVolumeData CBoundaryShape::GetVolumeData()
 	{
 		Lib3MFHandle hTheVolumeData = nullptr;
-		CheckError(lib3mf_boundaryshape_volumedata(m_pHandle, &hTheVolumeData));
+		CheckError(lib3mf_boundaryshape_getvolumedata(m_pHandle, &hTheVolumeData));
 		
 		if (hTheVolumeData) {
 			return std::shared_ptr<CVolumeData>(dynamic_cast<CVolumeData*>(m_pWrapper->polymorphicFactory(hTheVolumeData)));
 		} else {
 			return nullptr;
 		}
+	}
+	
+	/**
+	* CBoundaryShape::SetVolumeData - Sets the VolumeData of this BoundaryShape.
+	* @param[in] pTheVolumeData - the VolumeData of this MeshObject
+	*/
+	void CBoundaryShape::SetVolumeData(classParam<CVolumeData> pTheVolumeData)
+	{
+		Lib3MFHandle hTheVolumeData = pTheVolumeData.GetHandle();
+		CheckError(lib3mf_boundaryshape_setvolumedata(m_pHandle, hTheVolumeData));
 	}
 	
 	/**
@@ -11938,6 +11962,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CFunctionFromImage3D>(dynamic_cast<CFunctionFromImage3D*>(m_pWrapper->polymorphicFactory(hFunctionInstance)));
+	}
+	
+	/**
+	* CModel::AddVolumeData - adds a volume data resource to the model.
+	* @return returns the new volume data instance.
+	*/
+	PVolumeData CModel::AddVolumeData()
+	{
+		Lib3MFHandle hVolumeDataInstance = nullptr;
+		CheckError(lib3mf_model_addvolumedata(m_pHandle, &hVolumeDataInstance));
+		
+		if (!hVolumeDataInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CVolumeData>(dynamic_cast<CVolumeData*>(m_pWrapper->polymorphicFactory(hVolumeDataInstance)));
 	}
 
 } // namespace Lib3MF
