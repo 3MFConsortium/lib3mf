@@ -39,49 +39,45 @@ NMR_VolumeData.h defines the class CVolumeData.
 
 #include "Common/Mesh/NMR_VolumeDataColor.h"
 #include "Common/Mesh/NMR_VolumeDataProperty.h"
-#include "Common/Mesh/NMR_VolumeDataBoundary.h"
 #include "Common/Mesh/NMR_VolumeDataComposite.h"
+#include "Model/Classes/NMR_ModelResource.h"
 
 namespace NMR {
 	class CModelFunction;
 	typedef std::shared_ptr<CModelFunction> PModelFunction;
 
-	class CModelVolumeData {
+	class CModelVolumeData : public CModelResource {
 	private:
-		PVolumeDataBoundary m_pBoundary;
 		PVolumeDataComposite m_pComposite;
 		PVolumeDataColor m_pColor;
 		std::map<std::string, PVolumeDataProperty> m_mapProperties;
 	public:
-		CModelVolumeData();
+         CModelVolumeData() = delete;
+         CModelVolumeData(ModelResourceID sResourceID,
+                        CModel* pModel);
 
-		void clear();
+         void clear();
 
-		bool hasBoundary() const;
-		PVolumeDataBoundary getBoundary();
-		PVolumeDataBoundary createBoundary(PModelFunction pFunction);
-		void setBoundary(PVolumeDataBoundary pLevelset);
-		void removeBoundary();
+         nfBool hasProperty(std::string sName);
+         nfUint32 getPropertyCount() const;
+         PVolumeDataProperty getProperty(nfUint32 nIndex);
+         PVolumeDataProperty findProperty(std::string sName);
+         void addProperty(PVolumeDataProperty pProperty);
+         PVolumeDataProperty addProperty(std::string sName,
+                                         PModelFunction pfunction);
+         void removeProperty(std::string sName);
 
-		nfBool hasProperty(std::string sName);
-		nfUint32 getPropertyCount() const;
-		PVolumeDataProperty getProperty(nfUint32 nIndex);
-		PVolumeDataProperty findProperty(std::string sName);
-		void addProperty(PVolumeDataProperty pProperty);
-		PVolumeDataProperty addProperty(std::string sName, PModelFunction pfunction);
-		void removeProperty(std::string sName);
+         bool hasColor() const;
+         PVolumeDataColor getColor();
+         PVolumeDataColor createColor(PModelFunction pfunction);
+         void setColor(PVolumeDataColor pColor);
+         void removeColor();
 
-		bool hasColor() const;
-		PVolumeDataColor getColor();
-		PVolumeDataColor createColor(PModelFunction pfunction);
-		void setColor(PVolumeDataColor pColor);
-		void removeColor();
-
-		bool hasComposite() const;
-		PVolumeDataComposite getComposite();
-		PVolumeDataComposite createComposite(/* basematerialgroupd*/);
-		void setComposite(PVolumeDataComposite pComposite);
-		void removeComposite();
+         bool hasComposite() const;
+         PVolumeDataComposite getComposite();
+         PVolumeDataComposite createComposite(/* basematerialgroupd*/);
+         void setComposite(PVolumeDataComposite pComposite);
+         void removeComposite();
 	};
 
 	typedef std::shared_ptr <CModelVolumeData> PModelVolumeData;

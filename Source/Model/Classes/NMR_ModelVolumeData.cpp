@@ -34,51 +34,18 @@ NMR_ModelVolumeData.cpp implements the class CModelVolumeData.
 
 #include "Model/Classes/NMR_ModelFunction.h"
 
-namespace NMR {
-
-	CModelVolumeData::CModelVolumeData()
-		:m_pBoundary(nullptr), m_pComposite(nullptr), m_pColor(nullptr), m_mapProperties()
+namespace NMR 
+{
+	CModelVolumeData::CModelVolumeData(ModelResourceID sResourceID, CModel * pModel) : CModelResource(sResourceID, pModel)
 	{
-
-	}
-
+		clear();
+	}	
+	
 	void CModelVolumeData::clear()
 	{
-		m_pBoundary.reset();
 		m_pComposite.reset();
 		m_pColor.reset();
 		m_mapProperties.clear();
-	}
-
-	bool CModelVolumeData::hasBoundary() const
-	{
-		return m_pBoundary.get() != nullptr;
-	}
-
-	void CModelVolumeData::setBoundary(PVolumeDataBoundary pLevelset)
-	{
-		if (!pLevelset)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		m_pBoundary = pLevelset;
-	}
-
-	PVolumeDataBoundary CModelVolumeData::createBoundary(PModelFunction pFunction)
-	{
-		if(!pFunction) throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		
-		m_pBoundary = std::make_shared<CVolumeDataBoundary>(pFunction);
-		return m_pBoundary;
-	}
-
-	PVolumeDataBoundary CModelVolumeData::getBoundary()
-	{
-		return m_pBoundary;
-	}
-
-	void CModelVolumeData::removeBoundary()
-	{
-		m_pBoundary.reset();
 	}
 
 	nfBool CModelVolumeData::hasProperty(std::string sName)
