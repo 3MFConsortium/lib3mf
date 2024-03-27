@@ -1,5 +1,14 @@
 # lib3mfConfig.cmake
 
+if(VCPKG_TOOLCHAIN)
+    message("Lib3MF - VCPKG Tool Chain")
+    set(LIB3MF_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
+else()
+    message("Lib3MF - General CMake Tool Chain")
+    set(LIB3MF_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../..")
+endif()
+
+
 # Initial setup for known components and default selection
 set(lib3mf_known_components "C" "CDynamic" "Cpp" "CppDynamic")
 set(lib3mf_selected_variant "Cpp") # Default variant
@@ -13,9 +22,9 @@ foreach(comp ${lib3mf_FIND_COMPONENTS})
 endforeach()
 
 # Configure paths based on the selected variant
-set(lib3mf_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../include/Bindings/${lib3mf_selected_variant}")
-set(lib3mf_LIBRARY_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../lib")
-set(lib3mf_BINARY_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../bin")
+set(lib3mf_INCLUDE_DIR "${LIB3MF_ROOT_DIR}/include/Bindings/${lib3mf_selected_variant}")
+set(lib3mf_LIBRARY_DIR "${LIB3MF_ROOT_DIR}/lib")
+set(lib3mf_BINARY_DIR "${LIB3MF_ROOT_DIR}/bin")
 
 # Adjust library file name based on platform
 if(WIN32)
@@ -43,7 +52,7 @@ if("${lib3mf_selected_variant}" STREQUAL "CppDynamic" OR "${lib3mf_selected_vari
         message("                  You must append this to your sources                      ")
         message("")
         message("*****************************************************************************")
-        set(LIB3MF_CDYNAMIC_ADDITIONAL_SOURCE "${CMAKE_CURRENT_LIST_DIR}/../../../include/Bindings/CDynamic/lib3mf_dynamic.cc")
+        set(LIB3MF_CDYNAMIC_ADDITIONAL_SOURCE "${LIB3MF_ROOT_DIR}/include/Bindings/CDynamic/lib3mf_dynamic.cc")
     endif()
     add_library(lib3mfdynamic INTERFACE)
     # Now alias lib3mfdynamic to include the namespace
