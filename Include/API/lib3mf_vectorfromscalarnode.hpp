@@ -35,7 +35,7 @@ Abstract: This is the class declaration of CVectorFromScalarNode
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_implicitnode.hpp"
+#include "lib3mf_oneinputnode.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
@@ -52,7 +52,7 @@ namespace Impl {
  Class declaration of CVectorFromScalarNode 
 **************************************************************************************************************************/
 
-class CVectorFromScalarNode : public virtual IVectorFromScalarNode, public virtual CImplicitNode {
+class CVectorFromScalarNode : public virtual IVectorFromScalarNode, public virtual COneInputNode {
 private:
 
 	/**
@@ -76,19 +76,6 @@ public:
 	/**
 	* Public member functions to implement.
 	*/
-
-	/**
-	* IVectorFromScalarNode::GetInputA - Retrieves the input
-	* @return the input for the x component
-	*/
-	IImplicitPort * GetInputA() override;
-
-	/**
-	* IVectorFromScalarNode::GetOutputResult - Retrieves the output
-	* @return the output
-	*/
-	IImplicitPort * GetOutputResult() override;
-
 };
 
 } // namespace Impl

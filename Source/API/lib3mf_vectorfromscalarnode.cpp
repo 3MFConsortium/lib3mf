@@ -46,14 +46,3 @@ CVectorFromScalarNode::
 {
 	CImplicitNode::m_pImplicitNode = pImplicitNode;
 }
-
-IImplicitPort * CVectorFromScalarNode::GetInputA()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-IImplicitPort * CVectorFromScalarNode::GetOutputResult()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-

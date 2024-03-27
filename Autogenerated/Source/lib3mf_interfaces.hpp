@@ -4076,7 +4076,7 @@ typedef IBaseSharedPtr<IComposeVectorNode> PIComposeVectorNode;
  Class interface for VectorFromScalarNode 
 **************************************************************************************************************************/
 
-class IVectorFromScalarNode : public virtual IImplicitNode {
+class IVectorFromScalarNode : public virtual IOneInputNode {
 public:
 	/**
 	* IVectorFromScalarNode::ClassTypeId - Get Class Type Id
@@ -4086,19 +4086,6 @@ public:
 	{
 		return 0x2E417B93351375E2UL; // First 64 bits of SHA1 of a string: "Lib3MF::VectorFromScalarNode"
 	}
-
-	/**
-	* IVectorFromScalarNode::GetInputA - Retrieves the input
-	* @return the input for the x component
-	*/
-	virtual IImplicitPort * GetInputA() = 0;
-
-	/**
-	* IVectorFromScalarNode::GetOutputResult - Retrieves the output
-	* @return the output
-	*/
-	virtual IImplicitPort * GetOutputResult() = 0;
-
 };
 
 typedef IBaseSharedPtr<IVectorFromScalarNode> PIVectorFromScalarNode;
