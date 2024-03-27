@@ -35,6 +35,8 @@ Abstract: This is a stub class definition of CMeshObject
 // Include custom headers here.
 
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
+#include "Model/Classes/NMR_ModelVolumeData.h"
+#include "Model/Classes/NMR_ModelResource.h"
 #include <cmath>
 
 using namespace Lib3MF::Impl;
@@ -390,8 +392,13 @@ IBeamLattice* CMeshObject::BeamLattice()
 	return new CBeamLattice(meshObject(), meshObject()->getBeamLatticeAttributes());
 }
 
-IVolumeData * CMeshObject::VolumeData()
+IVolumeData * CMeshObject::GetVolumeData()
 {
-	return new CVolumeData(meshObject(), meshObject()->getVolumeData());
+	//return new CVolumeData(meshObject(), meshObject()->getVolumeData());
+	return new CVolumeData(std::dynamic_pointer_cast<NMR::CModelResource>(meshObject()->getVolumeData()));
 }
 
+void CMeshObject::SetVolumeData(IVolumeData* pTheVolumeData)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}

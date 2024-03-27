@@ -127,7 +127,9 @@ public:
 
 	void ClearAllProperties();
 
-	IVolumeData * VolumeData();
+	IVolumeData * GetVolumeData() override;
+
+	void SetVolumeData(IVolumeData* pTheVolumeData) override;
 };
 
 }

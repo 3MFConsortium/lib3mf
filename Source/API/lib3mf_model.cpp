@@ -66,6 +66,7 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_implicitfunction.hpp"
 #include "lib3mf_functioniterator.hpp"
 #include "lib3mf_functionfromimage3d.hpp"
+#include "lib3mf_volumedata.hpp"
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -77,6 +78,7 @@ Abstract: This is a stub class definition of CModel
 #include "Model/Classes/NMR_ModelImageStack.h"
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
 #include "Model/Classes/NMR_ModelFunctionFromImage3D.h"
+#include "Model/Classes/NMR_ModelVolumeData.h"
 #include "Common/NMR_SecureContentTypes.h"
 #include "lib3mf_utils.hpp"
 
@@ -881,5 +883,15 @@ IFunctionFromImage3D* CModel::AddFunctionFromImage3D(IImage3D* pImage3DInstance)
 	return newFunc;
 }
 
+
+IVolumeData * CModel::AddVolumeData()
+{
+	NMR::ModelResourceID NewResourceID = model().generateResourceID();
+	NMR::PModelVolumeData pNewResource = std::make_shared<NMR::CModelVolumeData>(NewResourceID, &model());
+
+	model().addResource(pNewResource);
+
+	return new CVolumeData(pNewResource);
+}
 
 

@@ -174,8 +174,12 @@ IMeshObject * CBoundaryShape::GetMesh()
 	 return new CMeshObject(meshObject);
 }
 
-IVolumeData * CBoundaryShape::VolumeData()
+void CBoundaryShape::SetVolumeData(IVolumeData* pVolumeData)
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
+IVolumeData * CBoundaryShape::GetVolumeData()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}

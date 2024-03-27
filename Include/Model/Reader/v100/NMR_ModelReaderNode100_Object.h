@@ -71,7 +71,6 @@ namespace NMR {
 
 		void createDefaultProperties();
 		void handleBeamLatticeExtension(CModelReaderNode100_Mesh* pXMLNode);
-		void handleVolumetricExtension(CModelReaderNode100_Mesh* pXMLNode);
 	protected:
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);

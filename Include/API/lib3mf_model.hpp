@@ -215,7 +215,7 @@ public:
 
 	IFunctionFromImage3D* AddFunctionFromImage3D(IImage3D* pImage3DInstance) override;
 
-
+	IVolumeData * AddVolumeData() override;
 };
 
 }

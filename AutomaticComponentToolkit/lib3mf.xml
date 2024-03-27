@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component xmlns="http://schemas.autodesk.com/netfabb/automaticcomponenttoolkit/2018"
 	libraryname="the 3MF Library" namespace="Lib3MF" copyright="3MF Consortium (Original Author)"
-	year="2023" basename="lib3mf" version="2.4.0-implicit">
+	year="2024" basename="lib3mf" version="2.4.0-implicit">
 
 	<license>
 		<line value="All rights reserved." />
@@ -958,8 +958,12 @@
 			<param name="TheBeamLattice" type="handle" class="BeamLattice" pass="return"
 				description="the BeamLattice within this MeshObject" />
 		</method>
-		<method name="VolumeData" description="Retrieves the VolumeData of this MeshObject.">
-			<param name="TheVolumeData" type="handle" class="VolumeData" pass="return"
+		<method name="GetVolumeData" description="Retrieves the VolumeData this MeshObject.">
+			<param name="TheVolumeData" type="optionalclass" class="VolumeData" pass="return"
+				description="the VolumeData of this MeshObject" />
+		</method>
+		<method name="SetVolumeData" description="Sets the VolumeData this MeshObject.">
+			<param name="TheVolumeData" type="handle" class="VolumeData" pass="in"
 				description="the VolumeData of this MeshObject" />
 		</method>
 	</class>
@@ -1040,9 +1044,13 @@
 				description="The mesh" />
 		</method>
 
-		<method name="VolumeData" description="Retrieves the VolumeData referenced by this BoundaryShape.">
+		<method name="GetVolumeData" description="Retrieves the VolumeData this MeshObject.">
 			<param name="TheVolumeData" type="optionalclass" class="VolumeData" pass="return"
-				description="the VolumeData of this BoundaryShape" />
+				description="the VolumeData of this MeshObject" />
+		</method>
+		<method name="SetVolumeData" description="Sets the VolumeData of this BoundaryShape.">
+			<param name="TheVolumeData" type="handle" class="VolumeData" pass="in"
+				description="the VolumeData of this MeshObject" />
 		</method>
 	</class>
 
@@ -1293,7 +1301,7 @@
 		</method>
 	</class>
 
-	<class name="VolumeData">
+	<class name="VolumeData" parent="Resource">
 		<method name="GetComposite"
 			description="Returns the VolumeDataComposite of this VolumeData instance">
 			<param name="TheCompositeData" type="optionalclass" class="VolumeDataComposite"
@@ -4099,6 +4107,12 @@
 				description="the Image3D-instance used for this function" />
 			<param name="FunctionInstance" type="handle" class="FunctionFromImage3D" pass="return"
 				description="returns the function instance" />
+		</method>
+
+		<method name="AddVolumeData"
+			description="adds a volume data resource to the model.">
+			<param name="VolumeDataInstance" type="handle" class="VolumeData" pass="return"
+				description="returns the new volume data instance." />
 		</method>
 	</class>
 

@@ -369,45 +369,13 @@ namespace NMR {
 		if (m_bWriteVolumetricExtension)
 		{
 			// TODO: different logic
-			if (m_pModelMeshObject->getVolumeData()->hasBoundary() ||
-				m_pModelMeshObject->getVolumeData()->getPropertyCount() ||
-				m_pModelMeshObject->getVolumeData()->hasColor()) {
+ 			if (m_pModelMeshObject->getVolumeData()->getPropertyCount() ||
+				m_pModelMeshObject->getVolumeData()->hasColor()) 
+				{
 
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMEDATA, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 
-				if (m_pModelMeshObject->getVolumeData()->hasBoundary()) {
-					writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_BOUNDARY, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-					PVolumeDataBoundary pBoundary = m_pModelMeshObject->getVolumeData()->getBoundary();
-
-					PPackageResourceID pID = m_pModel->findPackageResourceID(pBoundary->getFunctionResourceID());
-					if (!pID)
-						throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
-					writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FUNCTIONID, pID->getModelResourceID());
-
-					if (!fnMATRIX3_isIdentity(pBoundary->getTransform())) {
-						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pBoundary->getTransform()));
-					}
-
-					if (!pBoundary->getChannelName().empty())
-					{
-						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pBoundary->getChannelName());
-					}
-					else
-					{
-						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, XML_3MF_VOLUMEDATACHANNEL_BOUNDARY_DEFAULT);
-					}
-
-					writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_BOUNDARY_MESHBBONLY, pBoundary->getMeshBBoxOnly() ? "true" : "false");
-					if (pBoundary->getMinFeatureSize() != 0.0) {
-						writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_MINFEATURESIZE, float(pBoundary->getMinFeatureSize()));
-					}
-
-					if (pBoundary->getFallBackValue() != 0.0) {
-						writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FALLBACKVALUE, float(pBoundary->getFallBackValue()));
-					}
-
-					writeEndElement();
-				}
+				
 
 				if (m_pModelMeshObject->getVolumeData()->getPropertyCount())
 				{

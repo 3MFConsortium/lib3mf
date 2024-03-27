@@ -58,8 +58,6 @@ namespace NMR {
 		m_pMesh = pMesh;
 		m_pModel = pModel;
 
-		m_pVolumeData = std::make_shared<CModelVolumeData>();
-
 		m_bHasClippingMeshID = false;
 		m_nClippingMeshID = 0;
 		m_eClipMode = eModelBeamLatticeClipMode::MODELBEAMLATTICECLIPMODE_NONE;
@@ -154,22 +152,6 @@ namespace NMR {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 
-
-		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_VOLUMETRICSPEC) == 0) {
-			if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMEDATA) == 0)
-			{
-				m_pVolumeData = std::make_shared<CModelVolumeData>();
-				PModelReaderNode_Volumetric2201_VolumeData pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_VolumeData>(m_pModel, m_pVolumeData.get(), m_pWarnings);
-				pXMLNode->parseXML(pXMLReader);
-			}
-			else
-				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
-		}
-
 	}
 
-	PModelVolumeData CModelReaderNode100_Mesh::getVolumeData()
-	{
-		return m_pVolumeData;
-	}
 }

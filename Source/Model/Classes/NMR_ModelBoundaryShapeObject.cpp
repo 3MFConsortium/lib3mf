@@ -47,7 +47,7 @@ namespace NMR
         const ModelResourceID sID, CModel* pModel)
         : CModelObject(sID, pModel)
     {
-        m_pVolumeData = std::make_shared<CModelVolumeData>();
+        m_pVolumeData = std::make_shared<CModelVolumeData>( sID, pModel);
     }
 
     CModelBoundaryShapeObject::~CModelBoundaryShapeObject() {}

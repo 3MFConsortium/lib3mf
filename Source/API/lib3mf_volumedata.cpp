@@ -46,10 +46,17 @@ using namespace Lib3MF::Impl;
  Class definition of CVolumeData 
 **************************************************************************************************************************/
 
-CVolumeData::CVolumeData(NMR::PModelMeshObject pMeshObject, NMR::PModelVolumeData pVolumeData)
-	: m_pMeshObject(pMeshObject) , m_pVolumeData(pVolumeData)
+// CVolumeData::CVolumeData(NMR::PModelMeshObject pMeshObject, NMR::PModelVolumeData pVolumeData)
+// 	: m_pMeshObject(pMeshObject) , m_pVolumeData(pVolumeData)
+// {
+// }
+
+CVolumeData::CVolumeData(NMR::PModelResource pResource)
+	: CResource(pResource)
 {
+
 }
+
 
 IVolumeDataComposite * CVolumeData::GetComposite()
 {
@@ -110,7 +117,9 @@ void CVolumeData::RemoveProperty(const Lib3MF_uint32 nIndex)
 	m_pVolumeData->removeProperty(pProperty->getName());
 }
 
-IVolumeDataColor * Lib3MF::Impl::CVolumeData::CreateNewColor(IFunction * pTheFunction)
+
+IVolumeDataColor* Lib3MF::Impl::CVolumeData::CreateNewColor(
+    IFunction* pTheFunction)
 {
 	NMR::CModel* pModel = m_pMeshObject->getModel();
 

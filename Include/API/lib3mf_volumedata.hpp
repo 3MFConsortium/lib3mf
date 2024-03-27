@@ -36,6 +36,7 @@ Abstract: This is the class declaration of CVolumeData
 
 // Parent classes
 #include "lib3mf_base.hpp"
+#include "lib3mf_resource.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
@@ -45,6 +46,7 @@ Abstract: This is the class declaration of CVolumeData
 #include "Common/Mesh/NMR_Mesh.h"
 #include "Model/Classes/NMR_ModelVolumeData.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
+#include "Model/Classes/NMR_ModelResource.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -54,7 +56,7 @@ namespace Impl {
  Class declaration of CVolumeData 
 **************************************************************************************************************************/
 
-class CVolumeData : public virtual IVolumeData, public virtual CBase {
+class CVolumeData : public virtual IVolumeData, public virtual CResource {
 private:
 
 	/**
@@ -75,7 +77,9 @@ public:
 	* Put additional public members here. They will not be visible in the external API.
 	*/
 	CVolumeData() = delete;
-	CVolumeData(NMR::PModelMeshObject pMeshObject, NMR::PModelVolumeData pVolumeData);
+	CVolumeData(NMR::PModelResource pResource);
+
+	// CVolumeData(NMR::PModelMeshObject pMeshObject, NMR::PModelVolumeData pVolumeData);
 
 	/**
 	* Public member functions to implement.

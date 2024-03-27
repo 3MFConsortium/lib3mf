@@ -1444,7 +1444,7 @@ namespace NMR {
 				if (!volumeData)
 					continue;
 
-				if (volumeData->hasBoundary() || volumeData->hasColor() || volumeData->getPropertyCount() > 0 || volumeData->hasComposite())
+				if (volumeData->hasColor() || volumeData->getPropertyCount() > 0 || volumeData->hasComposite())
 				{
 		            return true;
 				}
@@ -1588,13 +1588,40 @@ namespace NMR {
 
 	PModelVolumeData CModel::findVolumeData(UniqueResourceID nResourceID)
 	{
-		//TODO: Reactivate this code when the volume data has become a resource
-		// for (size_t i = 0; i < m_VolumeDataLookup.size(); i++)
-		// {
-		// 	PModelVolumeData pVolumeData = std::dynamic_pointer_cast<CModelVolumeData>(m_VolumeDataLookup[i]);
-		// 	if (pVolumeData->getPackageResourceID()->getUniqueID() == nResourceID)
-		// 		return pVolumeData;
-		// }
+		for(size_t i = 0; i < m_VolumeDataLookup.size(); i++)
+		{
+			PModelVolumeData pVolumeData =
+				std::dynamic_pointer_cast<CModelVolumeData>(
+					m_VolumeDataLookup[i]);
+			if(pVolumeData->getPackageResourceID()->getUniqueID() ==
+				nResourceID)
+				return pVolumeData;
+		}
 		return nullptr;
 	}
+
+	nfUint32 NMR::CModel::getVolumeDataCount()
+	{
+		return (nfUint32)m_VolumeDataLookup.size();
+	}
+
+	PModelResource CModel::getVolumeDataResource(nfUint32 nIndex)
+	{
+		nfUint32 nCount = getVolumeDataCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_VolumeDataLookup[nIndex];
+	}
+
+	CModelVolumeData * CModel::getVolumeData(nfUint32 nIndex)
+	{
+		PModelResource pResource = getVolumeDataResource(nIndex);
+		if (pResource.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return dynamic_cast<CModelVolumeData*>(pResource.get());
+	}
+
 }  // namespace NMR
+

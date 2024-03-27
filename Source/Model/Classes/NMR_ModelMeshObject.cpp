@@ -43,7 +43,7 @@ namespace NMR {
 	{
 		m_pMesh = std::make_shared<CMesh>();
 		m_pBeamLatticeAttributes = std::make_shared<CModelMeshBeamLatticeAttributes>();
-		m_pVolumeData = std::make_shared<CModelVolumeData>();
+		m_pVolumeData = std::make_shared<CModelVolumeData>(sID, pModel);
 	}
 
 	CModelMeshObject::CModelMeshObject(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ PMesh pMesh)
@@ -53,7 +53,7 @@ namespace NMR {
 		if (m_pMesh.get() == nullptr)
 			m_pMesh = std::make_shared<CMesh>();
 		m_pBeamLatticeAttributes = std::make_shared<CModelMeshBeamLatticeAttributes>();
-		m_pVolumeData = std::make_shared<CModelVolumeData>();
+		m_pVolumeData = std::make_shared<CModelVolumeData>(sID, pModel);
 	}
 
 	CModelMeshObject::~CModelMeshObject()
@@ -223,7 +223,7 @@ namespace NMR {
 		m_pBeamLatticeAttributes = pBeamLatticeAttributes;
 	}
 
-	_Ret_notnull_ PModelVolumeData CModelMeshObject::getVolumeData()
+	PModelVolumeData CModelMeshObject::getVolumeData()
 	{
 		return m_pVolumeData;
 	}

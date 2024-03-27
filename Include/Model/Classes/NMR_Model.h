@@ -318,6 +318,9 @@ namespace NMR {
 
 		// Convenience functions for volume data
 		PModelVolumeData findVolumeData(UniqueResourceID nResourceID);
+		nfUint32 getVolumeDataCount();
+		PModelResource getVolumeDataResource(_In_ nfUint32 nIndex);
+		CModelVolumeData* getVolumeData(_In_ nfUint32 nIndex);
 		
 		// Clear all build items and Resources
 		void clearAll ();

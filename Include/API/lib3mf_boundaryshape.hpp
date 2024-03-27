@@ -164,11 +164,18 @@ public:
 	*/
 	IMeshObject * GetMesh() override;
 
+
 	/**
-	* IBoundaryShape::VolumeData - Retrieves the VolumeData referenced by this BoundaryShape.
-	* @return the VolumeData of this BoundaryShape
+	* IBoundaryShape::GetVolumeData - Retrieves the VolumeData this MeshObject.
+	* @return the VolumeData of this MeshObject
 	*/
-	IVolumeData * VolumeData() override;
+	IVolumeData * GetVolumeData() override;
+
+	/**
+	* IBoundaryShape::SetVolumeData - Sets the VolumeData of this BoundaryShape.
+	* @param[in] pTheVolumeData - the VolumeData of this MeshObject
+	*/
+	void SetVolumeData(IVolumeData* pTheVolumeData) override;
 
 };
 
