@@ -35,23 +35,24 @@ Reader for boundary shape objects
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 #include "Model/Classes/NMR_ModelBoundaryShapeObject.h"
+#include "Model/Classes/NMR_ModelMeshObject.h"
+#include "Model/Classes/NMR_ModelResource.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 
 namespace NMR
 {
 
     NMR::CModelReaderNode_BoundaryShape::CModelReaderNode_BoundaryShape(
-        CModel* pModel,
-
-        PModelWarnings pWarnings)
-        : CModelReaderNode(pWarnings), m_pModel(pModel)
+       CModel * pModel, PModelWarnings pWarnings,  PProgressMonitor pProgressMonitor)
+        : CModelReaderNode100_Object(pModel, pWarnings, pProgressMonitor), m_parentModel(pModel)
     {
-        __NMRASSERT(pModel);
+        
     }
 
     void CModelReaderNode_BoundaryShape::parseXML(CXmlReader* pXMLReader)
     {
         __NMRASSERT(pXMLReader);
+        CModelReaderNode100_Object::parseXML(pXMLReader);
 
         // Parse name
         parseName(pXMLReader);
@@ -61,19 +62,19 @@ namespace NMR
 
         // Create BoundaryShape
         m_pBoundaryShape =
-            std::make_shared<CModelBoundaryShapeObject>(m_nID, m_pModel);
+            std::make_shared<CModelBoundaryShapeObject>(m_resID, m_parentModel);
 
         // Parse Content
         parseContent(pXMLReader);
 
-        PPackageResourceID functionPackageId = m_pModel->findPackageResourceID(
-            m_pModel->currentPath(), m_nFunctionID);
+        PPackageResourceID functionPackageId = m_parentModel->findPackageResourceID(
+            m_parentModel->currentPath(), m_nFunctionID);
         if(!functionPackageId.get())
         {
             throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
         }
 
-        auto pFunction = m_pModel->findFunction(functionPackageId->getUniqueID());
+        auto pFunction = m_parentModel->findFunction(functionPackageId->getUniqueID());
         if(!pFunction)
         {
             throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
@@ -81,6 +82,30 @@ namespace NMR
 
         m_pBoundaryShape->setFunction(pFunction);
 
+        PPackageResourceID meshPackageId = m_parentModel->findPackageResourceID(
+            m_parentModel->currentPath(), m_nMeshID);
+
+        if(!meshPackageId.get())
+        {
+            throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
+        }
+
+        PModelResource pMeshResource = m_parentModel->findResource(meshPackageId);
+        
+        if(!pMeshResource)
+        {
+            throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+        }
+
+        PModelMeshObject pMeshObject = std::dynamic_pointer_cast<CModelMeshObject>(pMeshResource);
+
+        if(!pMeshObject)
+        {
+            throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+        }
+
+        m_pBoundaryShape->setMesh(pMeshObject);
+    	
         if(m_bHasTransform)
         {
             m_pBoundaryShape->setTransform(m_Transform);
@@ -109,7 +134,7 @@ namespace NMR
         if(m_bHasVolumeDataID)
         {
             PPackageResourceID volumePackageId =
-                m_pModel->findPackageResourceID(m_pModel->currentPath(),
+                m_parentModel->findPackageResourceID(m_parentModel->currentPath(),
                                                 m_nVolumeDataID);
             
             if(!volumePackageId.get())
@@ -117,19 +142,24 @@ namespace NMR
                 throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
             }
 
-            auto pVolumeData = m_pModel->findVolumeData(
+            auto pVolumeData = m_parentModel->findVolumeData(
                 volumePackageId->getUniqueID());
 
             m_pBoundaryShape->setVolumeData(pVolumeData);
         }
 
 
-        m_pModel->addResource(m_pBoundaryShape);
+        m_parentModel->addResource(m_pBoundaryShape);
     }
 
     void CModelReaderNode_BoundaryShape::OnAttribute(
         const nfChar* pAttributeName, const nfChar* pAttributeValue)
     {
+        if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_ID) == 0)
+        {
+            m_resID = fnStringToUint32(pAttributeValue);
+        }
+        
         if(strcmp(pAttributeName,
                   XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_FUNCTION_ID) == 0)
         {
@@ -193,6 +223,13 @@ namespace NMR
         else if(strcmp(pAttributeName,
                        XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_MESH_ID) == 0)
         {
+            if(m_bHasMeshID)
+            {
+                throw CNMRException(
+                    NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_MESH_ID);
+            }
+            m_bHasMeshID = true;
+            m_nMeshID = fnStringToUint32(pAttributeValue);
         }
         else if(strcmp(pAttributeName,
                        XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_VOLUME_ID) == 0)

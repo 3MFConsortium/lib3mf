@@ -25,85 +25,103 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-NMR_ModelReaderNode_Volumetric2201_VolumeData.cpp covers the official 3MF volumetric extension.
+NMR_ModelReaderNode_Volumetric2201_VolumeData.cpp covers the official 3MF
+volumetric extension.
 
 --*/
 
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_VolumeData.h"
 
-#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Property.h"
-#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Color.h"
+#include "Common/NMR_Exception.h"
+#include "Common/NMR_Exception_Windows.h"
+#include "Common/NMR_StringUtils.h"
+#include "Model/Classes/NMR_Model.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelResource.h"
-#include "Model/Classes/NMR_Model.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Color.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Property.h"
 
-#include "Common/NMR_StringUtils.h"
-#include "Common/NMR_Exception.h"
-#include "Common/NMR_Exception_Windows.h"
+namespace NMR
+{
 
-namespace NMR {
-
-	CModelReaderNode_Volumetric2201_VolumeData::CModelReaderNode_Volumetric2201_VolumeData(_In_ CModel* pModel, _In_ CModelVolumeData * pVolumeData, _In_ PModelWarnings pWarnings)
-		: CModelReaderNode(pWarnings), m_pModel(pModel), m_pVolumeData(pVolumeData)
-	{
-		if ((pVolumeData == nullptr) ||  (pModel == nullptr))
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-	}
-
-	void CModelReaderNode_Volumetric2201_VolumeData::parseXML(_In_ CXmlReader * pXMLReader)
-	{
-		// Parse name
-		parseName(pXMLReader);
-
-		// Parse attribute
-		parseAttributes(pXMLReader);
-
-		// Parse Content
-		parseContent(pXMLReader);
-	}
-	
-	
-	void CModelReaderNode_Volumetric2201_VolumeData::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
-	{
-	}
-	
-	void CModelReaderNode_Volumetric2201_VolumeData::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
-	{
-		__NMRASSERT(pChildName);
-		__NMRASSERT(pXMLReader);
-		__NMRASSERT(pNameSpace);
-
-		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_VOLUMETRICSPEC) == 0) {
-			if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMETRIC_PROPERTY) == 0)
-			{
-				PModelReaderNode_Volumetric2201_Property pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_Property>(m_pWarnings);
-				pXMLNode->parseXML(pXMLReader);
-
-				PVolumeDataProperty pProperty = pXMLNode->MakeProperty(m_pModel);
-
-				if (m_pVolumeData->hasProperty(pProperty->getName()) == false) {
-					m_pVolumeData->addProperty(pProperty);
-				}
-				else {
-					throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY);
-				}
-			}
-			else if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMETRIC_COLOR) == 0)
-			{
-				PModelReaderNode_Volumetric2201_Color pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_Color>(m_pWarnings);
-				pXMLNode->parseXML(pXMLReader);
-
-				PVolumeDataColor pColor = pXMLNode->MakeColor(m_pModel);
-				m_pVolumeData->setColor(pColor);
-			}
-			else
-				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+    CModelReaderNode_Volumetric2201_VolumeData::
+        CModelReaderNode_Volumetric2201_VolumeData(CModel* pModel,
+                                                   PModelWarnings pWarnings)
+        : CModelReaderNode(pWarnings),
+          m_pModel(pModel)
+         
+    {
+        if(pModel == nullptr)
+		{
+            throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		}
-	}
+    }
 
+    void CModelReaderNode_Volumetric2201_VolumeData::parseXML(
+        CXmlReader* pXMLReader)
+    {
+        // Parse name
+        parseName(pXMLReader);
 
+        // Parse attribute
+        parseAttributes(pXMLReader);
 
+        // Parse Content
+        parseContent(pXMLReader);
 
-}
+		m_pVolumeData = std::make_shared<CModelVolumeData>(m_nID, m_pModel);
+    }
+
+    void CModelReaderNode_Volumetric2201_VolumeData::OnAttribute(
+        const nfChar* pAttributeName, const nfChar* pAttributeValue)
+    {
+    }
+
+    void CModelReaderNode_Volumetric2201_VolumeData::OnNSChildElement(
+        const nfChar* pChildName, const nfChar* pNameSpace,
+        CXmlReader* pXMLReader)
+    {
+        __NMRASSERT(pChildName);
+        __NMRASSERT(pXMLReader);
+        __NMRASSERT(pNameSpace);
+
+        if(strcmp(pNameSpace, XML_3MF_NAMESPACE_VOLUMETRICSPEC) == 0)
+        {
+            if(strcmp(pChildName, XML_3MF_ELEMENT_VOLUMETRIC_PROPERTY) == 0)
+            {
+                PModelReaderNode_Volumetric2201_Property pXMLNode =
+                    std::make_shared<CModelReaderNode_Volumetric2201_Property>(
+                        m_pWarnings);
+                pXMLNode->parseXML(pXMLReader);
+
+                PVolumeDataProperty pProperty =
+                    pXMLNode->MakeProperty(m_pModel);
+
+                if(m_pVolumeData->hasProperty(pProperty->getName()) == false)
+                {
+                    m_pVolumeData->addProperty(pProperty);
+                }
+                else
+                {
+                    throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY);
+                }
+            }
+            else if(strcmp(pChildName, XML_3MF_ELEMENT_VOLUMETRIC_COLOR) == 0)
+            {
+                PModelReaderNode_Volumetric2201_Color pXMLNode =
+                    std::make_shared<CModelReaderNode_Volumetric2201_Color>(
+                        m_pWarnings);
+                pXMLNode->parseXML(pXMLReader);
+
+                PVolumeDataColor pColor = pXMLNode->MakeColor(m_pModel);
+                m_pVolumeData->setColor(pColor);
+            }
+            else
+                m_pWarnings->addException(
+                    CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT),
+                    mrwInvalidOptionalValue);
+        }
+    }
+
+}  // namespace NMR

@@ -34,22 +34,24 @@ Reader for boundary shape objects
 #include "Model/Classes/NMR_ImplicitNodeTypes.h"
 #include "Model/Classes/NMR_ModelBoundaryShapeObject.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Reader/v100/NMR_ModelReaderNode100_Object.h"
 
 namespace NMR
 {
-    class CModelReaderNode_BoundaryShape : public CModelReaderNode
+    class CModelReaderNode_BoundaryShape : public CModelReaderNode100_Object
     {
        private:
         PModelBoundaryShapeObject m_pBoundaryShape;
-        CModel* m_pModel = nullptr;
+        CModel* m_parentModel = nullptr;
 
-        ModelResourceID m_nID = 0;
+        ModelResourceID m_resID = 0;
 
         nfBool m_bHasFunctionID = false;
         nfBool m_bHasTransform = false;
         nfBool m_bHasChannel = false;
         nfBool m_bHasMeshBBoxOnly = false;
         nfBool m_meshBBoxOnly = false;
+        nfBool m_bHasMeshID = false;
 
         double m_dMinFeatureSize = 0.0;
         nfBool m_bHasMinFeatureSize = false;
@@ -63,12 +65,13 @@ namespace NMR
         std::string m_sChannel;
 
         ModelResourceID m_nVolumeDataID = 0;
+        ModelResourceID m_nMeshID = 0;
         nfBool m_bHasVolumeDataID = false;
 
        public:
         CModelReaderNode_BoundaryShape() = delete;
-        CModelReaderNode_BoundaryShape(_In_ CModel* pModel,
-                                       _In_ PModelWarnings pWarnings);
+        CModelReaderNode_BoundaryShape(CModel* pModel, PModelWarnings pWarnings,
+                                       PProgressMonitor pProgressMonitor);
 
         void parseXML(_In_ CXmlReader* pXMLReader) override;
 

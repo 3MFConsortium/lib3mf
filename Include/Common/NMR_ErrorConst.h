@@ -1452,6 +1452,9 @@ Model error codes (0x8XXX)
 // Duplicate attribute volumeid in boundaryshape element
 #define NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_VOLUME_ID 0x8849
 
+// Duplicate attribute mesh id in boundaryshape element
+#define NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_MESH_ID 0x884A
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

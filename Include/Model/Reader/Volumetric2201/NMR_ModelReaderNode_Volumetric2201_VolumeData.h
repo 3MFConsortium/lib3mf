@@ -41,17 +41,18 @@ namespace NMR {
 	class CModelReaderNode_Volumetric2201_VolumeData : public CModelReaderNode {
 	private:
 		CModel* m_pModel;
-		CModelVolumeData* m_pVolumeData;
+		ModelResourceID m_nID = 0;
+		PModelVolumeData m_pVolumeData;
 
 	protected:
-		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnAttribute(const nfChar * pAttributeName, const nfChar * pAttributeValue);
 	public:
 		CModelReaderNode_Volumetric2201_VolumeData() = delete;
-		CModelReaderNode_Volumetric2201_VolumeData(_In_ CModel* pModel, _In_ CModelVolumeData * pVolumeData, _In_ PModelWarnings pWarnings);
+		CModelReaderNode_Volumetric2201_VolumeData(CModel* pModel, PModelWarnings pWarnings);
 
-		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+		virtual void parseXML(CXmlReader * pXMLReader);
 
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+		virtual void OnNSChildElement(const nfChar * pChildName, const nfChar * pNameSpace, CXmlReader * pXMLReader);
 	};
 
 	typedef std::shared_ptr <CModelReaderNode_Volumetric2201_VolumeData> PModelReaderNode_Volumetric2201_VolumeData;
