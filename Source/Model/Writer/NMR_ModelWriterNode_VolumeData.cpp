@@ -56,26 +56,13 @@ namespace NMR
             {
                 continue;
             }
-
-            // writeStartElementWithPrefix(XML_3MF_ELEMENT_IMPLICIT_FUNCTION,
-            //                             XML_3MF_NAMESPACEPREFIX_IMPLICIT);
-            // {
-            //     writeIntAttribute(
-            //         XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_ID,
-            //         pFunction->getPackageResourceID()->getModelResourceID());
-            //     writeStringAttribute(
-            //         XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_DISPLAY_NAME,
-            //         pFunction->getDisplayName());
-
-            //     writeImplicitFunctionElements(*pFunction);
-            // }
-            // writeFullEndElement();
+            writeVolumeDataResource(*pVolumeData);
         }
     }
 
     void CModelWriterNode_VolumeData::writeToXML()
     {
-        throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+        writeVolumeDataResources();   
     }
 
     void CModelWriterNode_VolumeData::writeVolumeDataResource(

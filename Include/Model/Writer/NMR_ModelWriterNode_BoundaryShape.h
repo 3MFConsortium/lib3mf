@@ -25,7 +25,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-Writer node for VolumeData resources
+Writer node for BoundaryShape resources
 
 --*/
 
@@ -46,23 +46,22 @@ namespace NMR
         class NodeTypes;
     }
 
-    class CModelWriterNode_VolumeData : public CModelWriterNode_ModelBase
+    class CModelBoundaryShapeObject;
+
+    class CModelWriterNode_BoundaryShape : public CModelWriterNode_ModelBase
     {
 
       public:
-        CModelWriterNode_VolumeData() = delete;
-        CModelWriterNode_VolumeData(CModel * pModel,
+        CModelWriterNode_BoundaryShape() = delete;
+        CModelWriterNode_BoundaryShape(CModel * pModel,
                                   CXmlWriter * pXMLWriter,
                                   PProgressMonitor pProgressMonitor);
-
 
         void writeToXML() override;
 
       private:
-        void writeVolumeDataResources();
-        void writeVolumeDataResource(CModelVolumeData & volumeData);   
-        void writeProperty(CVolumeDataProperty & property);
-        void writeColor(CVolumeDataColor & color);
+        void writeBoundaryShapeResources();
+        void writeBoundaryShapeResource(CModelBoundaryShapeObject& boundaryShape);
         
     };
 
