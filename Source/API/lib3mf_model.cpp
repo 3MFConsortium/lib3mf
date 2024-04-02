@@ -67,6 +67,7 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_functioniterator.hpp"
 #include "lib3mf_functionfromimage3d.hpp"
 #include "lib3mf_volumedata.hpp"
+#include "lib3mf_boundaryshape.hpp"
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -79,6 +80,7 @@ Abstract: This is a stub class definition of CModel
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
 #include "Model/Classes/NMR_ModelFunctionFromImage3D.h"
 #include "Model/Classes/NMR_ModelVolumeData.h"
+#include "Model/Classes/NMR_ModelBoundaryShapeObject.h"
 #include "Common/NMR_SecureContentTypes.h"
 #include "lib3mf_utils.hpp"
 
@@ -894,4 +896,13 @@ IVolumeData * CModel::AddVolumeData()
 	return new CVolumeData(pNewResource);
 }
 
+IBoundaryShape* CModel::AddBoundaryShape()
+{
+	NMR::ModelResourceID NewResourceID = model().generateResourceID();
+	NMR::PModelBoundaryShapeObject pNewResource = std::make_shared<NMR::CModelBoundaryShapeObject>(NewResourceID, &model());
+
+	model().addResource(pNewResource);
+
+	return new CBoundaryShape(pNewResource);
+}
 

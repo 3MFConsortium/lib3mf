@@ -4086,6 +4086,7 @@ public:
 	{
 		return 0x2E417B93351375E2UL; // First 64 bits of SHA1 of a string: "Lib3MF::VectorFromScalarNode"
 	}
+
 };
 
 typedef IBaseSharedPtr<IVectorFromScalarNode> PIVectorFromScalarNode;
@@ -6471,6 +6472,12 @@ public:
 	* @return returns the new volume data instance.
 	*/
 	virtual IVolumeData * AddVolumeData() = 0;
+
+	/**
+	* IModel::AddBoundaryShape - adds an empty boundary shape object to the model.
+	* @return  returns the mesh object instance
+	*/
+	virtual IBoundaryShape * AddBoundaryShape() = 0;
 
 };
 

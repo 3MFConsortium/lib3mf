@@ -2844,24 +2844,6 @@ Lib3MFResult CCall_lib3mf_composevectornode_getoutputresult(Lib3MFHandle library
 }
 
 
-Lib3MFResult CCall_lib3mf_vectorfromscalarnode_getinputa(Lib3MFHandle libraryHandle, Lib3MF_VectorFromScalarNode pVectorFromScalarNode, Lib3MF_ImplicitPort * pA)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_VectorFromScalarNode_GetInputA (pVectorFromScalarNode, pA);
-}
-
-
-Lib3MFResult CCall_lib3mf_vectorfromscalarnode_getoutputresult(Lib3MFHandle libraryHandle, Lib3MF_VectorFromScalarNode pVectorFromScalarNode, Lib3MF_ImplicitPort * pResult)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_VectorFromScalarNode_GetOutputResult (pVectorFromScalarNode, pResult);
-}
-
-
 Lib3MFResult CCall_lib3mf_decomposevectornode_getinputa(Lib3MFHandle libraryHandle, Lib3MF_DecomposeVectorNode pDecomposeVectorNode, Lib3MF_ImplicitPort * pA)
 {
 	if (libraryHandle == 0) 
@@ -5280,6 +5262,15 @@ Lib3MFResult CCall_lib3mf_model_addvolumedata(Lib3MFHandle libraryHandle, Lib3MF
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_Model_AddVolumeData (pModel, pVolumeDataInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_addboundaryshape(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_BoundaryShape * pBoundaryShapeInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_AddBoundaryShape (pModel, pBoundaryShapeInstance);
 }
 
 
@@ -10322,31 +10313,11 @@ func (inst ComposeVectorNode) GetOutputResult() (ImplicitPort, error) {
 
 // VectorFromScalarNode represents a Lib3MF class.
 type VectorFromScalarNode struct {
-	ImplicitNode
+	OneInputNode
 }
 
 func (wrapper Wrapper) NewVectorFromScalarNode(r ref) VectorFromScalarNode {
-	return VectorFromScalarNode{wrapper.NewImplicitNode(r)}
-}
-
-// GetInputA retrieves the input.
-func (inst VectorFromScalarNode) GetInputA() (ImplicitPort, error) {
-	var a ref
-	ret := C.CCall_lib3mf_vectorfromscalarnode_getinputa(inst.wrapperRef.LibraryHandle, inst.Ref, &a)
-	if ret != 0 {
-		return ImplicitPort{}, makeError(uint32(ret))
-	}
-	return inst.wrapperRef.NewImplicitPort(a), nil
-}
-
-// GetOutputResult retrieves the output.
-func (inst VectorFromScalarNode) GetOutputResult() (ImplicitPort, error) {
-	var result ref
-	ret := C.CCall_lib3mf_vectorfromscalarnode_getoutputresult(inst.wrapperRef.LibraryHandle, inst.Ref, &result)
-	if ret != 0 {
-		return ImplicitPort{}, makeError(uint32(ret))
-	}
-	return inst.wrapperRef.NewImplicitPort(result), nil
+	return VectorFromScalarNode{wrapper.NewOneInputNode(r)}
 }
 
 
@@ -13417,6 +13388,16 @@ func (inst Model) AddVolumeData() (VolumeData, error) {
 		return VolumeData{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewVolumeData(volumeDataInstance), nil
+}
+
+// AddBoundaryShape adds an empty boundary shape object to the model.
+func (inst Model) AddBoundaryShape() (BoundaryShape, error) {
+	var boundaryShapeInstance ref
+	ret := C.CCall_lib3mf_model_addboundaryshape(inst.wrapperRef.LibraryHandle, inst.Ref, &boundaryShapeInstance)
+	if ret != 0 {
+		return BoundaryShape{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewBoundaryShape(boundaryShapeInstance), nil
 }
 
 

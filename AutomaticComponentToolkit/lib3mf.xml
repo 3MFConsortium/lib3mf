@@ -2258,16 +2258,8 @@
 		</method>
 	</class>
 
-	<class name="VectorFromScalarNode" parent="ImplicitNode"
+	<class name="VectorFromScalarNode" parent="OneInputNode"
 		description="Creates a vector from one scalar values">
-		<method name="GetInputA" description="Retrieves the input">
-			<param name="A" type="class" class="ImplicitPort" pass="return"
-				description="the input for the x component" />
-		</method>
-		<method name="GetOutputResult" description="Retrieves the output">
-			<param name="Result" type="class" class="ImplicitPort" pass="return"
-				description="the output" />
-		</method>
 	</class>
 
 	<class name="DecomposeVectorNode" parent="ImplicitNode"
@@ -4113,6 +4105,11 @@
 			description="adds a volume data resource to the model.">
 			<param name="VolumeDataInstance" type="handle" class="VolumeData" pass="return"
 				description="returns the new volume data instance." />
+		</method>
+
+		<method name="AddBoundaryShape" description="adds an empty boundary shape object to the model.">
+			<param name="BoundaryShapeInstance" type="handle" class="BoundaryShape" pass="return"
+				description=" returns the mesh object instance" />
 		</method>
 	</class>
 

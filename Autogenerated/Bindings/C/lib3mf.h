@@ -3371,24 +3371,6 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_composevectornode_getoutputresult(Lib3MF_Com
  Class definition for VectorFromScalarNode
 **************************************************************************************************************************/
 
-/**
-* Retrieves the input
-*
-* @param[in] pVectorFromScalarNode - VectorFromScalarNode instance.
-* @param[out] pA - the input for the x component
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_vectorfromscalarnode_getinputa(Lib3MF_VectorFromScalarNode pVectorFromScalarNode, Lib3MF_ImplicitPort * pA);
-
-/**
-* Retrieves the output
-*
-* @param[in] pVectorFromScalarNode - VectorFromScalarNode instance.
-* @param[out] pResult - the output
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_vectorfromscalarnode_getoutputresult(Lib3MF_VectorFromScalarNode pVectorFromScalarNode, Lib3MF_ImplicitPort * pResult);
-
 /*************************************************************************************************************************
  Class definition for DecomposeVectorNode
 **************************************************************************************************************************/
@@ -6207,6 +6189,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addfunctionfromimage3d(Lib3MF_Model pM
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addvolumedata(Lib3MF_Model pModel, Lib3MF_VolumeData * pVolumeDataInstance);
+
+/**
+* adds an empty boundary shape object to the model.
+*
+* @param[in] pModel - Model instance.
+* @param[out] pBoundaryShapeInstance -  returns the mesh object instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addboundaryshape(Lib3MF_Model pModel, Lib3MF_BoundaryShape * pBoundaryShapeInstance);
 
 /*************************************************************************************************************************
  Global functions

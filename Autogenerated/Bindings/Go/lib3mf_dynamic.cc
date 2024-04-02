@@ -356,8 +356,6 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ComposeVectorNode_GetInputY = NULL;
 	pWrapperTable->m_ComposeVectorNode_GetInputZ = NULL;
 	pWrapperTable->m_ComposeVectorNode_GetOutputResult = NULL;
-	pWrapperTable->m_VectorFromScalarNode_GetInputA = NULL;
-	pWrapperTable->m_VectorFromScalarNode_GetOutputResult = NULL;
 	pWrapperTable->m_DecomposeVectorNode_GetInputA = NULL;
 	pWrapperTable->m_DecomposeVectorNode_GetOutputX = NULL;
 	pWrapperTable->m_DecomposeVectorNode_GetOutputY = NULL;
@@ -627,6 +625,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Model_AddImplicitFunction = NULL;
 	pWrapperTable->m_Model_AddFunctionFromImage3D = NULL;
 	pWrapperTable->m_Model_AddVolumeData = NULL;
+	pWrapperTable->m_Model_AddBoundaryShape = NULL;
 	pWrapperTable->m_GetLibraryVersion = NULL;
 	pWrapperTable->m_GetPrereleaseInformation = NULL;
 	pWrapperTable->m_GetBuildInformation = NULL;
@@ -3473,24 +3472,6 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_VectorFromScalarNode_GetInputA = (PLib3MFVectorFromScalarNode_GetInputAPtr) GetProcAddress(hLibrary, "lib3mf_vectorfromscalarnode_getinputa");
-	#else // _WIN32
-	pWrapperTable->m_VectorFromScalarNode_GetInputA = (PLib3MFVectorFromScalarNode_GetInputAPtr) dlsym(hLibrary, "lib3mf_vectorfromscalarnode_getinputa");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_VectorFromScalarNode_GetInputA == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
-	pWrapperTable->m_VectorFromScalarNode_GetOutputResult = (PLib3MFVectorFromScalarNode_GetOutputResultPtr) GetProcAddress(hLibrary, "lib3mf_vectorfromscalarnode_getoutputresult");
-	#else // _WIN32
-	pWrapperTable->m_VectorFromScalarNode_GetOutputResult = (PLib3MFVectorFromScalarNode_GetOutputResultPtr) dlsym(hLibrary, "lib3mf_vectorfromscalarnode_getoutputresult");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_VectorFromScalarNode_GetOutputResult == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
 	pWrapperTable->m_DecomposeVectorNode_GetInputA = (PLib3MFDecomposeVectorNode_GetInputAPtr) GetProcAddress(hLibrary, "lib3mf_decomposevectornode_getinputa");
 	#else // _WIN32
 	pWrapperTable->m_DecomposeVectorNode_GetInputA = (PLib3MFDecomposeVectorNode_GetInputAPtr) dlsym(hLibrary, "lib3mf_decomposevectornode_getinputa");
@@ -5909,6 +5890,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Model_AddVolumeData == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_AddBoundaryShape = (PLib3MFModel_AddBoundaryShapePtr) GetProcAddress(hLibrary, "lib3mf_model_addboundaryshape");
+	#else // _WIN32
+	pWrapperTable->m_Model_AddBoundaryShape = (PLib3MFModel_AddBoundaryShapePtr) dlsym(hLibrary, "lib3mf_model_addboundaryshape");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_AddBoundaryShape == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

@@ -442,8 +442,6 @@ class FunctionTable:
 	lib3mf_composevectornode_getinputy = None
 	lib3mf_composevectornode_getinputz = None
 	lib3mf_composevectornode_getoutputresult = None
-	lib3mf_vectorfromscalarnode_getinputa = None
-	lib3mf_vectorfromscalarnode_getoutputresult = None
 	lib3mf_decomposevectornode_getinputa = None
 	lib3mf_decomposevectornode_getoutputx = None
 	lib3mf_decomposevectornode_getoutputy = None
@@ -713,6 +711,7 @@ class FunctionTable:
 	lib3mf_model_addimplicitfunction = None
 	lib3mf_model_addfunctionfromimage3d = None
 	lib3mf_model_addvolumedata = None
+	lib3mf_model_addboundaryshape = None
 
 '''Definition of Enumerations
 '''
@@ -3084,18 +3083,6 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_composevectornode_getoutputresult = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_vectorfromscalarnode_getinputa")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_vectorfromscalarnode_getinputa = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_vectorfromscalarnode_getoutputresult")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_vectorfromscalarnode_getoutputresult = methodType(int(methodAddress.value))
-			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_decomposevectornode_getinputa")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -4710,6 +4697,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_addvolumedata = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_addboundaryshape")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_addboundaryshape = methodType(int(methodAddress.value))
+			
 		except AttributeError as ae:
 			raise ELib3MFException(ErrorCodes.COULDNOTFINDLIBRARYEXPORT, ae.args[0])
 		
@@ -5696,12 +5689,6 @@ class Wrapper:
 			self.lib.lib3mf_composevectornode_getoutputresult.restype = ctypes.c_int32
 			self.lib.lib3mf_composevectornode_getoutputresult.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_vectorfromscalarnode_getinputa.restype = ctypes.c_int32
-			self.lib.lib3mf_vectorfromscalarnode_getinputa.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
-			
-			self.lib.lib3mf_vectorfromscalarnode_getoutputresult.restype = ctypes.c_int32
-			self.lib.lib3mf_vectorfromscalarnode_getoutputresult.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
-			
 			self.lib.lib3mf_decomposevectornode_getinputa.restype = ctypes.c_int32
 			self.lib.lib3mf_decomposevectornode_getinputa.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
@@ -6508,6 +6495,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_model_addvolumedata.restype = ctypes.c_int32
 			self.lib.lib3mf_model_addvolumedata.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_addboundaryshape.restype = ctypes.c_int32
+			self.lib.lib3mf_model_addboundaryshape.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 		except AttributeError as ae:
 			raise ELib3MFException(ErrorCodes.COULDNOTFINDLIBRARYEXPORT, ae.args[0])
@@ -9927,29 +9917,9 @@ class ComposeVectorNode(ImplicitNode):
 
 ''' Class Implementation for VectorFromScalarNode
 '''
-class VectorFromScalarNode(ImplicitNode):
+class VectorFromScalarNode(OneInputNode):
 	def __init__(self, handle, wrapper):
-		ImplicitNode.__init__(self, handle, wrapper)
-	def GetInputA(self):
-		AHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_vectorfromscalarnode_getinputa(self._handle, AHandle))
-		if AHandle:
-			AObject = self._wrapper._polymorphicFactory(AHandle)
-		else:
-			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
-		
-		return AObject
-	
-	def GetOutputResult(self):
-		ResultHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_vectorfromscalarnode_getoutputresult(self._handle, ResultHandle))
-		if ResultHandle:
-			ResultObject = self._wrapper._polymorphicFactory(ResultHandle)
-		else:
-			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
-		
-		return ResultObject
-	
+		OneInputNode.__init__(self, handle, wrapper)
 
 
 ''' Class Implementation for DecomposeVectorNode
@@ -12789,5 +12759,15 @@ class Model(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return VolumeDataInstanceObject
+	
+	def AddBoundaryShape(self):
+		BoundaryShapeInstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_addboundaryshape(self._handle, BoundaryShapeInstanceHandle))
+		if BoundaryShapeInstanceHandle:
+			BoundaryShapeInstanceObject = self._wrapper._polymorphicFactory(BoundaryShapeInstanceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return BoundaryShapeInstanceObject
 	
 		

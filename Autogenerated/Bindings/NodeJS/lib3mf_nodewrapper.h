@@ -1863,8 +1863,6 @@ class CLib3MFVectorFromScalarNode : public CLib3MFBaseClass {
 private:
 	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static v8::Persistent<v8::Function> constructor;
-	static void GetInputA(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetOutputResult(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFVectorFromScalarNode();
@@ -2559,6 +2557,7 @@ private:
 	static void AddImplicitFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddFunctionFromImage3D(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddVolumeData(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddBoundaryShape(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFModel();

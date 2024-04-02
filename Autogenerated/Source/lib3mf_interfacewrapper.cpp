@@ -11715,78 +11715,6 @@ Lib3MFResult lib3mf_composevectornode_getoutputresult(Lib3MF_ComposeVectorNode p
 /*************************************************************************************************************************
  Class implementation for VectorFromScalarNode
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_vectorfromscalarnode_getinputa(Lib3MF_VectorFromScalarNode pVectorFromScalarNode, Lib3MF_ImplicitPort * pA)
-{
-	IBase* pIBaseClass = (IBase *)pVectorFromScalarNode;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVectorFromScalarNode, "VectorFromScalarNode", "GetInputA");
-		}
-		if (pA == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseA(nullptr);
-		IVectorFromScalarNode* pIVectorFromScalarNode = dynamic_cast<IVectorFromScalarNode*>(pIBaseClass);
-		if (!pIVectorFromScalarNode)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pBaseA = pIVectorFromScalarNode->GetInputA();
-
-		*pA = (IBase*)(pBaseA);
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("A", *pA);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_vectorfromscalarnode_getoutputresult(Lib3MF_VectorFromScalarNode pVectorFromScalarNode, Lib3MF_ImplicitPort * pResult)
-{
-	IBase* pIBaseClass = (IBase *)pVectorFromScalarNode;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVectorFromScalarNode, "VectorFromScalarNode", "GetOutputResult");
-		}
-		if (pResult == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseResult(nullptr);
-		IVectorFromScalarNode* pIVectorFromScalarNode = dynamic_cast<IVectorFromScalarNode*>(pIBaseClass);
-		if (!pIVectorFromScalarNode)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pBaseResult = pIVectorFromScalarNode->GetOutputResult();
-
-		*pResult = (IBase*)(pBaseResult);
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("Result", *pResult);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
 
 /*************************************************************************************************************************
  Class implementation for DecomposeVectorNode
@@ -22492,6 +22420,42 @@ Lib3MFResult lib3mf_model_addvolumedata(Lib3MF_Model pModel, Lib3MF_VolumeData *
 	}
 }
 
+Lib3MFResult lib3mf_model_addboundaryshape(Lib3MF_Model pModel, Lib3MF_BoundaryShape * pBoundaryShapeInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "AddBoundaryShape");
+		}
+		if (pBoundaryShapeInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseBoundaryShapeInstance(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseBoundaryShapeInstance = pIModel->AddBoundaryShape();
+
+		*pBoundaryShapeInstance = (IBase*)(pBaseBoundaryShapeInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("BoundaryShapeInstance", *pBoundaryShapeInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 
 
 /*************************************************************************************************************************
@@ -23123,10 +23087,6 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_composevectornode_getinputz;
 	if (sProcName == "lib3mf_composevectornode_getoutputresult") 
 		*ppProcAddress = (void*) &lib3mf_composevectornode_getoutputresult;
-	if (sProcName == "lib3mf_vectorfromscalarnode_getinputa") 
-		*ppProcAddress = (void*) &lib3mf_vectorfromscalarnode_getinputa;
-	if (sProcName == "lib3mf_vectorfromscalarnode_getoutputresult") 
-		*ppProcAddress = (void*) &lib3mf_vectorfromscalarnode_getoutputresult;
 	if (sProcName == "lib3mf_decomposevectornode_getinputa") 
 		*ppProcAddress = (void*) &lib3mf_decomposevectornode_getinputa;
 	if (sProcName == "lib3mf_decomposevectornode_getoutputx") 
@@ -23665,6 +23625,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_model_addfunctionfromimage3d;
 	if (sProcName == "lib3mf_model_addvolumedata") 
 		*ppProcAddress = (void*) &lib3mf_model_addvolumedata;
+	if (sProcName == "lib3mf_model_addboundaryshape") 
+		*ppProcAddress = (void*) &lib3mf_model_addboundaryshape;
 	if (sProcName == "lib3mf_getlibraryversion") 
 		*ppProcAddress = (void*) &lib3mf_getlibraryversion;
 	if (sProcName == "lib3mf_getprereleaseinformation") 

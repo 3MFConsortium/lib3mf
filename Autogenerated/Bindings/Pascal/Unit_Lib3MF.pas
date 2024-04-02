@@ -3991,24 +3991,6 @@ type
  Function type definitions for VectorFromScalarNode
 **************************************************************************************************************************)
 
-	(**
-	* Retrieves the input
-	*
-	* @param[in] pVectorFromScalarNode - VectorFromScalarNode instance.
-	* @param[out] pA - the input for the x component
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVectorFromScalarNode_GetInputAFunc = function(pVectorFromScalarNode: TLib3MFHandle; out pA: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the output
-	*
-	* @param[in] pVectorFromScalarNode - VectorFromScalarNode instance.
-	* @param[out] pResult - the output
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVectorFromScalarNode_GetOutputResultFunc = function(pVectorFromScalarNode: TLib3MFHandle; out pResult: TLib3MFHandle): TLib3MFResult; cdecl;
-	
 
 (*************************************************************************************************************************
  Function type definitions for DecomposeVectorNode
@@ -6853,6 +6835,15 @@ type
 	*)
 	TLib3MFModel_AddVolumeDataFunc = function(pModel: TLib3MFHandle; out pVolumeDataInstance: TLib3MFHandle): TLib3MFResult; cdecl;
 	
+	(**
+	* adds an empty boundary shape object to the model.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[out] pBoundaryShapeInstance -  returns the mesh object instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_AddBoundaryShapeFunc = function(pModel: TLib3MFHandle; out pBoundaryShapeInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
 (*************************************************************************************************************************
  Global function definitions 
 **************************************************************************************************************************)
@@ -8346,12 +8337,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
  Class definition for VectorFromScalarNode
 **************************************************************************************************************************)
 
-	TLib3MFVectorFromScalarNode = class(TLib3MFImplicitNode)
+	TLib3MFVectorFromScalarNode = class(TLib3MFOneInputNode)
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
-		function GetInputA(): TLib3MFImplicitPort;
-		function GetOutputResult(): TLib3MFImplicitPort;
 	end;
 
 
@@ -8896,6 +8885,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function AddImplicitFunction(): TLib3MFImplicitFunction;
 		function AddFunctionFromImage3D(const AImage3DInstance: TLib3MFImage3D): TLib3MFFunctionFromImage3D;
 		function AddVolumeData(): TLib3MFVolumeData;
+		function AddBoundaryShape(): TLib3MFBoundaryShape;
 	end;
 
 (*************************************************************************************************************************
@@ -9213,8 +9203,6 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFComposeVectorNode_GetInputYFunc: TLib3MFComposeVectorNode_GetInputYFunc;
 		FLib3MFComposeVectorNode_GetInputZFunc: TLib3MFComposeVectorNode_GetInputZFunc;
 		FLib3MFComposeVectorNode_GetOutputResultFunc: TLib3MFComposeVectorNode_GetOutputResultFunc;
-		FLib3MFVectorFromScalarNode_GetInputAFunc: TLib3MFVectorFromScalarNode_GetInputAFunc;
-		FLib3MFVectorFromScalarNode_GetOutputResultFunc: TLib3MFVectorFromScalarNode_GetOutputResultFunc;
 		FLib3MFDecomposeVectorNode_GetInputAFunc: TLib3MFDecomposeVectorNode_GetInputAFunc;
 		FLib3MFDecomposeVectorNode_GetOutputXFunc: TLib3MFDecomposeVectorNode_GetOutputXFunc;
 		FLib3MFDecomposeVectorNode_GetOutputYFunc: TLib3MFDecomposeVectorNode_GetOutputYFunc;
@@ -9484,6 +9472,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_AddImplicitFunctionFunc: TLib3MFModel_AddImplicitFunctionFunc;
 		FLib3MFModel_AddFunctionFromImage3DFunc: TLib3MFModel_AddFunctionFromImage3DFunc;
 		FLib3MFModel_AddVolumeDataFunc: TLib3MFModel_AddVolumeDataFunc;
+		FLib3MFModel_AddBoundaryShapeFunc: TLib3MFModel_AddBoundaryShapeFunc;
 		FLib3MFGetLibraryVersionFunc: TLib3MFGetLibraryVersionFunc;
 		FLib3MFGetPrereleaseInformationFunc: TLib3MFGetPrereleaseInformationFunc;
 		FLib3MFGetBuildInformationFunc: TLib3MFGetBuildInformationFunc;
@@ -9821,8 +9810,6 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFComposeVectorNode_GetInputYFunc: TLib3MFComposeVectorNode_GetInputYFunc read FLib3MFComposeVectorNode_GetInputYFunc;
 		property Lib3MFComposeVectorNode_GetInputZFunc: TLib3MFComposeVectorNode_GetInputZFunc read FLib3MFComposeVectorNode_GetInputZFunc;
 		property Lib3MFComposeVectorNode_GetOutputResultFunc: TLib3MFComposeVectorNode_GetOutputResultFunc read FLib3MFComposeVectorNode_GetOutputResultFunc;
-		property Lib3MFVectorFromScalarNode_GetInputAFunc: TLib3MFVectorFromScalarNode_GetInputAFunc read FLib3MFVectorFromScalarNode_GetInputAFunc;
-		property Lib3MFVectorFromScalarNode_GetOutputResultFunc: TLib3MFVectorFromScalarNode_GetOutputResultFunc read FLib3MFVectorFromScalarNode_GetOutputResultFunc;
 		property Lib3MFDecomposeVectorNode_GetInputAFunc: TLib3MFDecomposeVectorNode_GetInputAFunc read FLib3MFDecomposeVectorNode_GetInputAFunc;
 		property Lib3MFDecomposeVectorNode_GetOutputXFunc: TLib3MFDecomposeVectorNode_GetOutputXFunc read FLib3MFDecomposeVectorNode_GetOutputXFunc;
 		property Lib3MFDecomposeVectorNode_GetOutputYFunc: TLib3MFDecomposeVectorNode_GetOutputYFunc read FLib3MFDecomposeVectorNode_GetOutputYFunc;
@@ -10092,6 +10079,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_AddImplicitFunctionFunc: TLib3MFModel_AddImplicitFunctionFunc read FLib3MFModel_AddImplicitFunctionFunc;
 		property Lib3MFModel_AddFunctionFromImage3DFunc: TLib3MFModel_AddFunctionFromImage3DFunc read FLib3MFModel_AddFunctionFromImage3DFunc;
 		property Lib3MFModel_AddVolumeDataFunc: TLib3MFModel_AddVolumeDataFunc read FLib3MFModel_AddVolumeDataFunc;
+		property Lib3MFModel_AddBoundaryShapeFunc: TLib3MFModel_AddBoundaryShapeFunc read FLib3MFModel_AddBoundaryShapeFunc;
 		property Lib3MFGetLibraryVersionFunc: TLib3MFGetLibraryVersionFunc read FLib3MFGetLibraryVersionFunc;
 		property Lib3MFGetPrereleaseInformationFunc: TLib3MFGetPrereleaseInformationFunc read FLib3MFGetPrereleaseInformationFunc;
 		property Lib3MFGetBuildInformationFunc: TLib3MFGetBuildInformationFunc read FLib3MFGetBuildInformationFunc;
@@ -15573,28 +15561,6 @@ implementation
 		inherited;
 	end;
 
-	function TLib3MFVectorFromScalarNode.GetInputA(): TLib3MFImplicitPort;
-	var
-		HA: TLib3MFHandle;
-	begin
-		Result := nil;
-		HA := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVectorFromScalarNode_GetInputAFunc(FHandle, HA));
-		if Assigned(HA) then
-			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HA);
-	end;
-
-	function TLib3MFVectorFromScalarNode.GetOutputResult(): TLib3MFImplicitPort;
-	var
-		HResult: TLib3MFHandle;
-	begin
-		Result := nil;
-		HResult := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVectorFromScalarNode_GetOutputResultFunc(FHandle, HResult));
-		if Assigned(HResult) then
-			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HResult);
-	end;
-
 (*************************************************************************************************************************
  Class implementation for DecomposeVectorNode
 **************************************************************************************************************************)
@@ -18747,6 +18713,17 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFVolumeData, TLib3MFVolumeData>.Make(FWrapper, HVolumeDataInstance);
 	end;
 
+	function TLib3MFModel.AddBoundaryShape(): TLib3MFBoundaryShape;
+	var
+		HBoundaryShapeInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HBoundaryShapeInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddBoundaryShapeFunc(FHandle, HBoundaryShapeInstance));
+		if Assigned(HBoundaryShapeInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFBoundaryShape, TLib3MFBoundaryShape>.Make(FWrapper, HBoundaryShapeInstance);
+	end;
+
 (*************************************************************************************************************************
  Wrapper class implementation
 **************************************************************************************************************************)
@@ -19077,8 +19054,6 @@ implementation
 		FLib3MFComposeVectorNode_GetInputYFunc := LoadFunction('lib3mf_composevectornode_getinputy');
 		FLib3MFComposeVectorNode_GetInputZFunc := LoadFunction('lib3mf_composevectornode_getinputz');
 		FLib3MFComposeVectorNode_GetOutputResultFunc := LoadFunction('lib3mf_composevectornode_getoutputresult');
-		FLib3MFVectorFromScalarNode_GetInputAFunc := LoadFunction('lib3mf_vectorfromscalarnode_getinputa');
-		FLib3MFVectorFromScalarNode_GetOutputResultFunc := LoadFunction('lib3mf_vectorfromscalarnode_getoutputresult');
 		FLib3MFDecomposeVectorNode_GetInputAFunc := LoadFunction('lib3mf_decomposevectornode_getinputa');
 		FLib3MFDecomposeVectorNode_GetOutputXFunc := LoadFunction('lib3mf_decomposevectornode_getoutputx');
 		FLib3MFDecomposeVectorNode_GetOutputYFunc := LoadFunction('lib3mf_decomposevectornode_getoutputy');
@@ -19348,6 +19323,7 @@ implementation
 		FLib3MFModel_AddImplicitFunctionFunc := LoadFunction('lib3mf_model_addimplicitfunction');
 		FLib3MFModel_AddFunctionFromImage3DFunc := LoadFunction('lib3mf_model_addfunctionfromimage3d');
 		FLib3MFModel_AddVolumeDataFunc := LoadFunction('lib3mf_model_addvolumedata');
+		FLib3MFModel_AddBoundaryShapeFunc := LoadFunction('lib3mf_model_addboundaryshape');
 		FLib3MFGetLibraryVersionFunc := LoadFunction('lib3mf_getlibraryversion');
 		FLib3MFGetPrereleaseInformationFunc := LoadFunction('lib3mf_getprereleaseinformation');
 		FLib3MFGetBuildInformationFunc := LoadFunction('lib3mf_getbuildinformation');
@@ -20302,12 +20278,6 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_composevectornode_getoutputresult'), @FLib3MFComposeVectorNode_GetOutputResultFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_vectorfromscalarnode_getinputa'), @FLib3MFVectorFromScalarNode_GetInputAFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_vectorfromscalarnode_getoutputresult'), @FLib3MFVectorFromScalarNode_GetOutputResultFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_decomposevectornode_getinputa'), @FLib3MFDecomposeVectorNode_GetInputAFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -21113,6 +21083,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addvolumedata'), @FLib3MFModel_AddVolumeDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addboundaryshape'), @FLib3MFModel_AddBoundaryShapeFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_getlibraryversion'), @FLib3MFGetLibraryVersionFunc);

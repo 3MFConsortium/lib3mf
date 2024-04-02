@@ -3358,24 +3358,6 @@ typedef Lib3MFResult (*PLib3MFComposeVectorNode_GetOutputResultPtr) (Lib3MF_Comp
  Class definition for VectorFromScalarNode
 **************************************************************************************************************************/
 
-/**
-* Retrieves the input
-*
-* @param[in] pVectorFromScalarNode - VectorFromScalarNode instance.
-* @param[out] pA - the input for the x component
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFVectorFromScalarNode_GetInputAPtr) (Lib3MF_VectorFromScalarNode pVectorFromScalarNode, Lib3MF_ImplicitPort * pA);
-
-/**
-* Retrieves the output
-*
-* @param[in] pVectorFromScalarNode - VectorFromScalarNode instance.
-* @param[out] pResult - the output
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFVectorFromScalarNode_GetOutputResultPtr) (Lib3MF_VectorFromScalarNode pVectorFromScalarNode, Lib3MF_ImplicitPort * pResult);
-
 /*************************************************************************************************************************
  Class definition for DecomposeVectorNode
 **************************************************************************************************************************/
@@ -6195,6 +6177,15 @@ typedef Lib3MFResult (*PLib3MFModel_AddFunctionFromImage3DPtr) (Lib3MF_Model pMo
 */
 typedef Lib3MFResult (*PLib3MFModel_AddVolumeDataPtr) (Lib3MF_Model pModel, Lib3MF_VolumeData * pVolumeDataInstance);
 
+/**
+* adds an empty boundary shape object to the model.
+*
+* @param[in] pModel - Model instance.
+* @param[out] pBoundaryShapeInstance -  returns the mesh object instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_AddBoundaryShapePtr) (Lib3MF_Model pModel, Lib3MF_BoundaryShape * pBoundaryShapeInstance);
+
 /*************************************************************************************************************************
  Global functions
 **************************************************************************************************************************/
@@ -6707,8 +6698,6 @@ typedef struct {
 	PLib3MFComposeVectorNode_GetInputYPtr m_ComposeVectorNode_GetInputY;
 	PLib3MFComposeVectorNode_GetInputZPtr m_ComposeVectorNode_GetInputZ;
 	PLib3MFComposeVectorNode_GetOutputResultPtr m_ComposeVectorNode_GetOutputResult;
-	PLib3MFVectorFromScalarNode_GetInputAPtr m_VectorFromScalarNode_GetInputA;
-	PLib3MFVectorFromScalarNode_GetOutputResultPtr m_VectorFromScalarNode_GetOutputResult;
 	PLib3MFDecomposeVectorNode_GetInputAPtr m_DecomposeVectorNode_GetInputA;
 	PLib3MFDecomposeVectorNode_GetOutputXPtr m_DecomposeVectorNode_GetOutputX;
 	PLib3MFDecomposeVectorNode_GetOutputYPtr m_DecomposeVectorNode_GetOutputY;
@@ -6978,6 +6967,7 @@ typedef struct {
 	PLib3MFModel_AddImplicitFunctionPtr m_Model_AddImplicitFunction;
 	PLib3MFModel_AddFunctionFromImage3DPtr m_Model_AddFunctionFromImage3D;
 	PLib3MFModel_AddVolumeDataPtr m_Model_AddVolumeData;
+	PLib3MFModel_AddBoundaryShapePtr m_Model_AddBoundaryShape;
 	PLib3MFGetLibraryVersionPtr m_GetLibraryVersion;
 	PLib3MFGetPrereleaseInformationPtr m_GetPrereleaseInformation;
 	PLib3MFGetBuildInformationPtr m_GetBuildInformation;

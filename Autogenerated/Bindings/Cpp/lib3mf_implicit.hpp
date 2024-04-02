@@ -2673,19 +2673,17 @@ public:
 /*************************************************************************************************************************
  Class CVectorFromScalarNode 
 **************************************************************************************************************************/
-class CVectorFromScalarNode : public CImplicitNode {
+class CVectorFromScalarNode : public COneInputNode {
 public:
 	
 	/**
 	* CVectorFromScalarNode::CVectorFromScalarNode - Constructor for VectorFromScalarNode class.
 	*/
 	CVectorFromScalarNode(CWrapper* pWrapper, Lib3MFHandle pHandle)
-		: CImplicitNode(pWrapper, pHandle)
+		: COneInputNode(pWrapper, pHandle)
 	{
 	}
 	
-	inline PImplicitPort GetInputA();
-	inline PImplicitPort GetOutputResult();
 };
 	
 /*************************************************************************************************************************
@@ -3355,6 +3353,7 @@ public:
 	inline PImplicitFunction AddImplicitFunction();
 	inline PFunctionFromImage3D AddFunctionFromImage3D(classParam<CImage3D> pImage3DInstance);
 	inline PVolumeData AddVolumeData();
+	inline PBoundaryShape AddBoundaryShape();
 };
 
 /*************************************************************************************************************************
@@ -7906,36 +7905,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	 */
 	
 	/**
-	* CVectorFromScalarNode::GetInputA - Retrieves the input
-	* @return the input for the x component
-	*/
-	PImplicitPort CVectorFromScalarNode::GetInputA()
-	{
-		Lib3MFHandle hA = nullptr;
-		CheckError(lib3mf_vectorfromscalarnode_getinputa(m_pHandle, &hA));
-		
-		if (!hA) {
-			CheckError(LIB3MF_ERROR_INVALIDPARAM);
-		}
-		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hA)));
-	}
-	
-	/**
-	* CVectorFromScalarNode::GetOutputResult - Retrieves the output
-	* @return the output
-	*/
-	PImplicitPort CVectorFromScalarNode::GetOutputResult()
-	{
-		Lib3MFHandle hResult = nullptr;
-		CheckError(lib3mf_vectorfromscalarnode_getoutputresult(m_pHandle, &hResult));
-		
-		if (!hResult) {
-			CheckError(LIB3MF_ERROR_INVALIDPARAM);
-		}
-		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hResult)));
-	}
-	
-	/**
 	 * Method definitions for class CDecomposeVectorNode
 	 */
 	
@@ -11977,6 +11946,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CVolumeData>(dynamic_cast<CVolumeData*>(m_pWrapper->polymorphicFactory(hVolumeDataInstance)));
+	}
+	
+	/**
+	* CModel::AddBoundaryShape - adds an empty boundary shape object to the model.
+	* @return  returns the mesh object instance
+	*/
+	PBoundaryShape CModel::AddBoundaryShape()
+	{
+		Lib3MFHandle hBoundaryShapeInstance = nullptr;
+		CheckError(lib3mf_model_addboundaryshape(m_pHandle, &hBoundaryShapeInstance));
+		
+		if (!hBoundaryShapeInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CBoundaryShape>(dynamic_cast<CBoundaryShape*>(m_pWrapper->polymorphicFactory(hBoundaryShapeInstance)));
 	}
 
 } // namespace Lib3MF

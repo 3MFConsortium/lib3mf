@@ -2697,19 +2697,17 @@ public:
 /*************************************************************************************************************************
  Class CVectorFromScalarNode 
 **************************************************************************************************************************/
-class CVectorFromScalarNode : public CImplicitNode {
+class CVectorFromScalarNode : public COneInputNode {
 public:
 	
 	/**
 	* CVectorFromScalarNode::CVectorFromScalarNode - Constructor for VectorFromScalarNode class.
 	*/
 	CVectorFromScalarNode(CWrapper* pWrapper, Lib3MFHandle pHandle)
-		: CImplicitNode(pWrapper, pHandle)
+		: COneInputNode(pWrapper, pHandle)
 	{
 	}
 	
-	inline PImplicitPort GetInputA();
-	inline PImplicitPort GetOutputResult();
 };
 	
 /*************************************************************************************************************************
@@ -3379,6 +3377,7 @@ public:
 	inline PImplicitFunction AddImplicitFunction();
 	inline PFunctionFromImage3D AddFunctionFromImage3D(classParam<CImage3D> pImage3DInstance);
 	inline PVolumeData AddVolumeData();
+	inline PBoundaryShape AddBoundaryShape();
 };
 
 /*************************************************************************************************************************
@@ -4104,8 +4103,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ComposeVectorNode_GetInputY = nullptr;
 		pWrapperTable->m_ComposeVectorNode_GetInputZ = nullptr;
 		pWrapperTable->m_ComposeVectorNode_GetOutputResult = nullptr;
-		pWrapperTable->m_VectorFromScalarNode_GetInputA = nullptr;
-		pWrapperTable->m_VectorFromScalarNode_GetOutputResult = nullptr;
 		pWrapperTable->m_DecomposeVectorNode_GetInputA = nullptr;
 		pWrapperTable->m_DecomposeVectorNode_GetOutputX = nullptr;
 		pWrapperTable->m_DecomposeVectorNode_GetOutputY = nullptr;
@@ -4375,6 +4372,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Model_AddImplicitFunction = nullptr;
 		pWrapperTable->m_Model_AddFunctionFromImage3D = nullptr;
 		pWrapperTable->m_Model_AddVolumeData = nullptr;
+		pWrapperTable->m_Model_AddBoundaryShape = nullptr;
 		pWrapperTable->m_GetLibraryVersion = nullptr;
 		pWrapperTable->m_GetPrereleaseInformation = nullptr;
 		pWrapperTable->m_GetBuildInformation = nullptr;
@@ -7217,24 +7215,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_VectorFromScalarNode_GetInputA = (PLib3MFVectorFromScalarNode_GetInputAPtr) GetProcAddress(hLibrary, "lib3mf_vectorfromscalarnode_getinputa");
-		#else // _WIN32
-		pWrapperTable->m_VectorFromScalarNode_GetInputA = (PLib3MFVectorFromScalarNode_GetInputAPtr) dlsym(hLibrary, "lib3mf_vectorfromscalarnode_getinputa");
-		dlerror();
-		#endif // _WIN32
-		if (pWrapperTable->m_VectorFromScalarNode_GetInputA == nullptr)
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		#ifdef _WIN32
-		pWrapperTable->m_VectorFromScalarNode_GetOutputResult = (PLib3MFVectorFromScalarNode_GetOutputResultPtr) GetProcAddress(hLibrary, "lib3mf_vectorfromscalarnode_getoutputresult");
-		#else // _WIN32
-		pWrapperTable->m_VectorFromScalarNode_GetOutputResult = (PLib3MFVectorFromScalarNode_GetOutputResultPtr) dlsym(hLibrary, "lib3mf_vectorfromscalarnode_getoutputresult");
-		dlerror();
-		#endif // _WIN32
-		if (pWrapperTable->m_VectorFromScalarNode_GetOutputResult == nullptr)
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		#ifdef _WIN32
 		pWrapperTable->m_DecomposeVectorNode_GetInputA = (PLib3MFDecomposeVectorNode_GetInputAPtr) GetProcAddress(hLibrary, "lib3mf_decomposevectornode_getinputa");
 		#else // _WIN32
 		pWrapperTable->m_DecomposeVectorNode_GetInputA = (PLib3MFDecomposeVectorNode_GetInputAPtr) dlsym(hLibrary, "lib3mf_decomposevectornode_getinputa");
@@ -9656,6 +9636,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_Model_AddBoundaryShape = (PLib3MFModel_AddBoundaryShapePtr) GetProcAddress(hLibrary, "lib3mf_model_addboundaryshape");
+		#else // _WIN32
+		pWrapperTable->m_Model_AddBoundaryShape = (PLib3MFModel_AddBoundaryShapePtr) dlsym(hLibrary, "lib3mf_model_addboundaryshape");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_AddBoundaryShape == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_GetLibraryVersion = (PLib3MFGetLibraryVersionPtr) GetProcAddress(hLibrary, "lib3mf_getlibraryversion");
 		#else // _WIN32
 		pWrapperTable->m_GetLibraryVersion = (PLib3MFGetLibraryVersionPtr) dlsym(hLibrary, "lib3mf_getlibraryversion");
@@ -11074,14 +11063,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ComposeVectorNode_GetOutputResult == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_vectorfromscalarnode_getinputa", (void**)&(pWrapperTable->m_VectorFromScalarNode_GetInputA));
-		if ( (eLookupError != 0) || (pWrapperTable->m_VectorFromScalarNode_GetInputA == nullptr) )
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		eLookupError = (*pLookup)("lib3mf_vectorfromscalarnode_getoutputresult", (void**)&(pWrapperTable->m_VectorFromScalarNode_GetOutputResult));
-		if ( (eLookupError != 0) || (pWrapperTable->m_VectorFromScalarNode_GetOutputResult == nullptr) )
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
 		eLookupError = (*pLookup)("lib3mf_decomposevectornode_getinputa", (void**)&(pWrapperTable->m_DecomposeVectorNode_GetInputA));
 		if ( (eLookupError != 0) || (pWrapperTable->m_DecomposeVectorNode_GetInputA == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -12156,6 +12137,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_model_addvolumedata", (void**)&(pWrapperTable->m_Model_AddVolumeData));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Model_AddVolumeData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_addboundaryshape", (void**)&(pWrapperTable->m_Model_AddBoundaryShape));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_AddBoundaryShape == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_getlibraryversion", (void**)&(pWrapperTable->m_GetLibraryVersion));
@@ -16378,36 +16363,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	 */
 	
 	/**
-	* CVectorFromScalarNode::GetInputA - Retrieves the input
-	* @return the input for the x component
-	*/
-	PImplicitPort CVectorFromScalarNode::GetInputA()
-	{
-		Lib3MFHandle hA = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_VectorFromScalarNode_GetInputA(m_pHandle, &hA));
-		
-		if (!hA) {
-			CheckError(LIB3MF_ERROR_INVALIDPARAM);
-		}
-		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hA)));
-	}
-	
-	/**
-	* CVectorFromScalarNode::GetOutputResult - Retrieves the output
-	* @return the output
-	*/
-	PImplicitPort CVectorFromScalarNode::GetOutputResult()
-	{
-		Lib3MFHandle hResult = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_VectorFromScalarNode_GetOutputResult(m_pHandle, &hResult));
-		
-		if (!hResult) {
-			CheckError(LIB3MF_ERROR_INVALIDPARAM);
-		}
-		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hResult)));
-	}
-	
-	/**
 	 * Method definitions for class CDecomposeVectorNode
 	 */
 	
@@ -20449,6 +20404,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CVolumeData>(dynamic_cast<CVolumeData*>(m_pWrapper->polymorphicFactory(hVolumeDataInstance)));
+	}
+	
+	/**
+	* CModel::AddBoundaryShape - adds an empty boundary shape object to the model.
+	* @return  returns the mesh object instance
+	*/
+	PBoundaryShape CModel::AddBoundaryShape()
+	{
+		Lib3MFHandle hBoundaryShapeInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_AddBoundaryShape(m_pHandle, &hBoundaryShapeInstance));
+		
+		if (!hBoundaryShapeInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CBoundaryShape>(dynamic_cast<CBoundaryShape*>(m_pWrapper->polymorphicFactory(hBoundaryShapeInstance)));
 	}
 
 } // namespace Lib3MF

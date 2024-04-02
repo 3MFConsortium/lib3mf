@@ -1358,12 +1358,6 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_composevectornode_getoutputresult", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ComposeVectorNode_GetOutputResult (IntPtr Handle, out IntPtr AResult);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vectorfromscalarnode_getinputa", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VectorFromScalarNode_GetInputA (IntPtr Handle, out IntPtr AA);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vectorfromscalarnode_getoutputresult", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VectorFromScalarNode_GetOutputResult (IntPtr Handle, out IntPtr AResult);
-
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_decomposevectornode_getinputa", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 DecomposeVectorNode_GetInputA (IntPtr Handle, out IntPtr AA);
 
@@ -2170,6 +2164,9 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addvolumedata", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_AddVolumeData (IntPtr Handle, out IntPtr AVolumeDataInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addboundaryshape", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_AddBoundaryShape (IntPtr Handle, out IntPtr ABoundaryShapeInstance);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_getlibraryversion", CharSet = CharSet.Ansi, CallingConvention=CallingConvention.Cdecl)]
 			public extern static Int32 GetLibraryVersion (out UInt32 AMajor, out UInt32 AMinor, out UInt32 AMicro);
@@ -6121,26 +6118,10 @@ namespace Lib3MF {
 
 	}
 
-	public class CVectorFromScalarNode : CImplicitNode
+	public class CVectorFromScalarNode : COneInputNode
 	{
 		public CVectorFromScalarNode (IntPtr NewHandle) : base (NewHandle)
 		{
-		}
-
-		public CImplicitPort GetInputA ()
-		{
-			IntPtr newA = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.VectorFromScalarNode_GetInputA (Handle, out newA));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newA);
-		}
-
-		public CImplicitPort GetOutputResult ()
-		{
-			IntPtr newResult = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.VectorFromScalarNode_GetOutputResult (Handle, out newResult));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newResult);
 		}
 
 	}
@@ -8853,6 +8834,14 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Model_AddVolumeData (Handle, out newVolumeDataInstance));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CVolumeData>(newVolumeDataInstance);
+		}
+
+		public CBoundaryShape AddBoundaryShape ()
+		{
+			IntPtr newBoundaryShapeInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_AddBoundaryShape (Handle, out newBoundaryShapeInstance));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CBoundaryShape>(newBoundaryShapeInstance);
 		}
 
 	}
