@@ -387,8 +387,10 @@ namespace Lib3MF
         newFunction->AddLink(subNodeOutputResult, output);
 
         auto theMesh = GetMesh();
-        auto volumeData = theMesh->VolumeData();
-        auto theBoundary = volumeData->CreateNewBoundary(newFunction.get());
+        // auto volumeData = theMesh->VolumeData();
+        // auto theBoundary = volumeData->CreateNewBoundary(newFunction.get());
+        auto theBoundary = model->AddBoundaryShape();
+        theBoundary->SetMesh(theMesh);
 
         // Write to file
         writer3MF->WriteToFile(Volumetric::OutFolder +
@@ -473,8 +475,8 @@ namespace Lib3MF
         output->SetReference("distance_2.result");
 
         auto theMesh = GetMesh();
-        auto volumeData = theMesh->VolumeData();
-        auto theBoundary = volumeData->CreateNewBoundary(newFunction.get());
+        auto theBoundary = model->AddBoundaryShape();
+        theBoundary->SetMesh(theMesh);
         theBoundary->SetFallBackValue(-1.2345);
 
         // Write to file
@@ -501,7 +503,7 @@ namespace Lib3MF
             meshesFromWrittenFile->GetCurrentMeshObject();
 
         // Check the fallback value
-        auto volumeDataFromWrittenFile = meshFromWrittenFile->VolumeData();
+        auto volumeDataFromWrittenFile = meshFromWrittenFile->GetVolumeData();
         auto boundaryFromWrittenFile = volumeDataFromWrittenFile->GetBoundary();
         EXPECT_EQ(boundaryFromWrittenFile->GetFallBackValue(), -1.2345);
 
@@ -515,8 +517,8 @@ namespace Lib3MF
         PImplicitFunction newFunction = helper::createGyroidFunction(*model);
 
         auto theMesh = GetMesh();
-        auto volumeData = theMesh->VolumeData();
-        auto theBoundary = volumeData->CreateNewBoundary(newFunction.get());
+        auto theBoundary = model->AddBoundaryShape();
+        theBoundary->SetMesh(theMesh);
 
         // write to file
         writer3MF->WriteToFile(Volumetric::OutFolder + "ImplicitGyroid.3mf");
@@ -595,8 +597,9 @@ namespace Lib3MF
         output->SetReference("subtraction.result");
 
         auto theMesh = GetMesh();
-        auto volumeData = theMesh->VolumeData();
-        auto theBoundary = volumeData->CreateNewBoundary(newFunction.get());
+        auto theBoundary = model->AddBoundaryShape();
+        theBoundary->SetMesh(theMesh);
+
         theBoundary->SetMinFeatureSize(0.1);
         theBoundary->SetChannelName("shape");
 
@@ -737,8 +740,8 @@ namespace Lib3MF
 
         // Add a boundary to the volume data
         auto theMesh = GetMesh();
-        auto volumeData = theMesh->VolumeData();
-        auto theBoundary = volumeData->CreateNewBoundary(newFunction.get());
+        auto theBoundary = model->AddBoundaryShape();
+        theBoundary->SetMesh(theMesh);
         theBoundary->SetMinFeatureSize(0.1);
         theBoundary->SetChannelName("shape");
         
@@ -844,8 +847,9 @@ namespace Lib3MF
         implicitFunction->AddLinkByNames("functionCall.color", "outputs.color");
 
         auto theMesh = GetMesh();
-        auto volumeData = theMesh->VolumeData();
+        auto volumeData = model->AddVolumeData();
         auto theColor = volumeData->CreateNewColor(implicitFunction.get());
+        theMesh->SetVolumeData(volumeData);
 
         // Set transformation
         auto transformation =
@@ -910,10 +914,14 @@ namespace Lib3MF
 
         // add volume data
         auto theMesh = GetMesh();
-        auto volumeData = theMesh->VolumeData();
+        auto volumeData = model->AddVolumeData();
+        
 
         // Add boundary
-        auto boundary = volumeData->CreateNewBoundary(funcFromImage3d.get());
+        auto boundary = model->AddBoundaryShape();
+        boundary->SetMesh(theMesh);
+        boundary->SetFunction(funcFromImage3d.get());
+
         boundary->SetTransform(
             helper::ComputeTransformFromMeshCoordinatesToUVW(theMesh));
         boundary->SetChannelName("red");
@@ -989,7 +997,8 @@ namespace Lib3MF
 
         // add volume data
         auto theMesh = GetMesh();
-        auto volumeData = theMesh->VolumeData();
+        auto volumeData = model->AddVolumeData();
+        theMesh->SetVolumeData(volumeData);
 
         // Add property
         auto property =

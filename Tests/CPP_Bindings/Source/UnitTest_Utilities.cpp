@@ -273,13 +273,6 @@ namespace Lib3MF
         void CompareVolumeData(Lib3MF::PModel modelA, Lib3MF::PVolumeData A,
                                Lib3MF::PModel modelB, Lib3MF::PVolumeData B)
         {
-            ASSERT_EQ(A->GetBoundary() == nullptr, B->GetBoundary() == nullptr);
-            if(A->GetBoundary())
-            {
-                CompareFunctionReferences(modelA, A->GetBoundary(), modelB,
-                                          B->GetBoundary());
-            }
-
             ASSERT_EQ(A->GetColor() == nullptr, B->GetColor() == nullptr);
             if(A->GetColor())
             {
