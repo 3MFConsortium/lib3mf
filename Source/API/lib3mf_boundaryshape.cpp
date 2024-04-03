@@ -35,6 +35,7 @@ Abstract: This is a stub class definition of CBoundaryShape
 #include "lib3mf_meshobject.hpp"
 #include "lib3mf_utils.hpp"
 #include "lib3mf_function.hpp"
+#include "lib3mf_volumedata.hpp"
 #include "Model/Classes/NMR_ModelBoundaryShapeObject.h"
 #include "Model/Classes/NMR_ModelFunction.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -200,12 +201,26 @@ IMeshObject * CBoundaryShape::GetMesh()
 	 return new CMeshObject(meshObject);
 }
 
-void CBoundaryShape::SetVolumeData(IVolumeData* pVolumeData)
+void CBoundaryShape::SetVolumeData(IVolumeData* pTheVolumeData)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::CModel * pModel = boundaryShapeObject()->getModel();
+	if (pModel == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+
+	NMR::PModelResource pResource = pModel->findResource(pTheVolumeData->GetResourceID());
+
+	NMR::PModelVolumeData pVolumeData = std::dynamic_pointer_cast<NMR::CModelVolumeData>(pResource);
+
+	if (pVolumeData == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+
+	boundaryShapeObject()->setVolumeData(pVolumeData);
 }
 
 IVolumeData * CBoundaryShape::GetVolumeData()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelVolumeData pVolumeData = boundaryShapeObject()->getVolumeData();
+	if (pVolumeData == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+	return new CVolumeData(pVolumeData);
 }
