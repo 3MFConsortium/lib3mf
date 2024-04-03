@@ -10,3 +10,7 @@
 [submodule "submodules/fast_float"]
 	path = submodules/fast_float
 	url = https://github.com/fastfloat/fast_float.git
+[submodule "submodules/cpp-base64"]
+	path = submodules/cpp-base64
+	url = https://github.com/ReneNyffenegger/cpp-base64.git
+	
