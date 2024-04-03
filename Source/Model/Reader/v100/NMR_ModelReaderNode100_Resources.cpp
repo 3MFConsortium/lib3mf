@@ -43,6 +43,8 @@ XML Model Stream.
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Image3D.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Function.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_FunctionFromImage3D.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_BoundaryShape.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_VolumeData.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_StringUtils.h"
@@ -146,7 +148,6 @@ namespace NMR {
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_VOLUMETRICSPEC) == 0) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_IMAGE3D) == 0) {
-
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_Image3D>(
 					m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);

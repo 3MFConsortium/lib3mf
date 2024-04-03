@@ -59,6 +59,7 @@ Persistent<Function> CLib3MFCompositeMaterialsIterator::constructor;
 Persistent<Function> CLib3MFMultiPropertyGroupIterator::constructor;
 Persistent<Function> CLib3MFImage3DIterator::constructor;
 Persistent<Function> CLib3MFFunctionIterator::constructor;
+Persistent<Function> CLib3MFBoundaryShapeIterator::constructor;
 Persistent<Function> CLib3MFMetaData::constructor;
 Persistent<Function> CLib3MFMetaDataGroup::constructor;
 Persistent<Function> CLib3MFObject::constructor;
@@ -3630,6 +3631,85 @@ void CLib3MFFunctionIterator::GetCurrentFunction(const FunctionCallbackInfo<Valu
         Lib3MFResult errorCode = wrapperTable->m_FunctionIterator_GetCurrentFunction(instanceHandle, &hReturnResource);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjResource = CLib3MFFunction::NewInstance(args.Holder(), hReturnResource);
+        args.GetReturnValue().Set(instanceObjResource);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
+ Class CLib3MFBoundaryShapeIterator Implementation
+**************************************************************************************************************************/
+
+CLib3MFBoundaryShapeIterator::CLib3MFBoundaryShapeIterator()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFBoundaryShapeIterator::~CLib3MFBoundaryShapeIterator()
+{
+}
+
+void CLib3MFBoundaryShapeIterator::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFBoundaryShapeIterator"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCurrentBoundaryShape", GetCurrentBoundaryShape);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFBoundaryShapeIterator::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFBoundaryShapeIterator * boundaryshapeiteratorInstance = new CLib3MFBoundaryShapeIterator();
+				boundaryshapeiteratorInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFBoundaryShapeIterator: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFBoundaryShapeIterator::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFBoundaryShapeIterator::GetCurrentBoundaryShape(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnResource = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCurrentBoundaryShape.");
+        if (wrapperTable->m_BoundaryShapeIterator_GetCurrentBoundaryShape == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BoundaryShapeIterator::GetCurrentBoundaryShape.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_BoundaryShapeIterator_GetCurrentBoundaryShape(instanceHandle, &hReturnResource);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjResource = CLib3MFBoundaryShape::NewInstance(args.Holder(), hReturnResource);
         args.GetReturnValue().Set(instanceObjResource);
 
 		} catch (std::exception & E) {
@@ -21475,6 +21555,7 @@ void CLib3MFModel::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddFunctionFromImage3D", AddFunctionFromImage3D);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddVolumeData", AddVolumeData);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddBoundaryShape", AddBoundaryShape);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetBoundaryShapes", GetBoundaryShapes);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -23266,6 +23347,29 @@ void CLib3MFModel::AddBoundaryShape(const FunctionCallbackInfo<Value>& args)
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjBoundaryShapeInstance = CLib3MFBoundaryShape::NewInstance(args.Holder(), hReturnBoundaryShapeInstance);
         args.GetReturnValue().Set(instanceObjBoundaryShapeInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::GetBoundaryShapes(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnResourceIterator = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetBoundaryShapes.");
+        if (wrapperTable->m_Model_GetBoundaryShapes == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::GetBoundaryShapes.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_GetBoundaryShapes(instanceHandle, &hReturnResourceIterator);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjResourceIterator = CLib3MFBoundaryShapeIterator::NewInstance(args.Holder(), hReturnResourceIterator);
+        args.GetReturnValue().Set(instanceObjResourceIterator);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

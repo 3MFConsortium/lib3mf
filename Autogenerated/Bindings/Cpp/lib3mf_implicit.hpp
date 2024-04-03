@@ -75,6 +75,7 @@ class CCompositeMaterialsIterator;
 class CMultiPropertyGroupIterator;
 class CImage3DIterator;
 class CFunctionIterator;
+class CBoundaryShapeIterator;
 class CMetaData;
 class CMetaDataGroup;
 class CObject;
@@ -193,6 +194,7 @@ typedef CCompositeMaterialsIterator CLib3MFCompositeMaterialsIterator;
 typedef CMultiPropertyGroupIterator CLib3MFMultiPropertyGroupIterator;
 typedef CImage3DIterator CLib3MFImage3DIterator;
 typedef CFunctionIterator CLib3MFFunctionIterator;
+typedef CBoundaryShapeIterator CLib3MFBoundaryShapeIterator;
 typedef CMetaData CLib3MFMetaData;
 typedef CMetaDataGroup CLib3MFMetaDataGroup;
 typedef CObject CLib3MFObject;
@@ -311,6 +313,7 @@ typedef std::shared_ptr<CCompositeMaterialsIterator> PCompositeMaterialsIterator
 typedef std::shared_ptr<CMultiPropertyGroupIterator> PMultiPropertyGroupIterator;
 typedef std::shared_ptr<CImage3DIterator> PImage3DIterator;
 typedef std::shared_ptr<CFunctionIterator> PFunctionIterator;
+typedef std::shared_ptr<CBoundaryShapeIterator> PBoundaryShapeIterator;
 typedef std::shared_ptr<CMetaData> PMetaData;
 typedef std::shared_ptr<CMetaDataGroup> PMetaDataGroup;
 typedef std::shared_ptr<CObject> PObject;
@@ -429,6 +432,7 @@ typedef PCompositeMaterialsIterator PLib3MFCompositeMaterialsIterator;
 typedef PMultiPropertyGroupIterator PLib3MFMultiPropertyGroupIterator;
 typedef PImage3DIterator PLib3MFImage3DIterator;
 typedef PFunctionIterator PLib3MFFunctionIterator;
+typedef PBoundaryShapeIterator PLib3MFBoundaryShapeIterator;
 typedef PMetaData PLib3MFMetaData;
 typedef PMetaDataGroup PLib3MFMetaDataGroup;
 typedef PObject PLib3MFObject;
@@ -831,6 +835,7 @@ private:
 	friend class CMultiPropertyGroupIterator;
 	friend class CImage3DIterator;
 	friend class CFunctionIterator;
+	friend class CBoundaryShapeIterator;
 	friend class CMetaData;
 	friend class CMetaDataGroup;
 	friend class CObject;
@@ -1306,6 +1311,23 @@ public:
 	}
 	
 	inline PFunction GetCurrentFunction();
+};
+	
+/*************************************************************************************************************************
+ Class CBoundaryShapeIterator 
+**************************************************************************************************************************/
+class CBoundaryShapeIterator : public CResourceIterator {
+public:
+	
+	/**
+	* CBoundaryShapeIterator::CBoundaryShapeIterator - Constructor for BoundaryShapeIterator class.
+	*/
+	CBoundaryShapeIterator(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CResourceIterator(pWrapper, pHandle)
+	{
+	}
+	
+	inline PBoundaryShape GetCurrentBoundaryShape();
 };
 	
 /*************************************************************************************************************************
@@ -3354,6 +3376,7 @@ public:
 	inline PFunctionFromImage3D AddFunctionFromImage3D(classParam<CImage3D> pImage3DInstance);
 	inline PVolumeData AddVolumeData();
 	inline PBoundaryShape AddBoundaryShape();
+	inline PBoundaryShapeIterator GetBoundaryShapes();
 };
 
 /*************************************************************************************************************************
@@ -3390,6 +3413,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0xC2BDF5D8CBBDB1F0UL: return new CMultiPropertyGroupIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MultiPropertyGroupIterator"
 		case 0xC4B8EC00A82BF336UL: return new CImage3DIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Image3DIterator"
 		case 0x40E9035363ACE65EUL: return new CFunctionIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionIterator"
+		case 0x9FBC898CF30CDEF3UL: return new CBoundaryShapeIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BoundaryShapeIterator"
 		case 0xD17716D063DE2C22UL: return new CMetaData(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaData"
 		case 0x0C3B85369E9B25D3UL: return new CMetaDataGroup(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaDataGroup"
 		case 0x2DA2136F577A779CUL: return new CObject(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Object"
@@ -4455,6 +4479,25 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CFunction>(dynamic_cast<CFunction*>(m_pWrapper->polymorphicFactory(hResource)));
+	}
+	
+	/**
+	 * Method definitions for class CBoundaryShapeIterator
+	 */
+	
+	/**
+	* CBoundaryShapeIterator::GetCurrentBoundaryShape - Returns the BoundaryShape the iterator points at.
+	* @return returns the MeshObject instance.
+	*/
+	PBoundaryShape CBoundaryShapeIterator::GetCurrentBoundaryShape()
+	{
+		Lib3MFHandle hResource = nullptr;
+		CheckError(lib3mf_boundaryshapeiterator_getcurrentboundaryshape(m_pHandle, &hResource));
+		
+		if (!hResource) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CBoundaryShape>(dynamic_cast<CBoundaryShape*>(m_pWrapper->polymorphicFactory(hResource)));
 	}
 	
 	/**
@@ -11961,6 +12004,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CBoundaryShape>(dynamic_cast<CBoundaryShape*>(m_pWrapper->polymorphicFactory(hBoundaryShapeInstance)));
+	}
+	
+	/**
+	* CModel::GetBoundaryShapes - creates a resource iterator instance with all boundary shape resources.
+	* @return returns the iterator instance.
+	*/
+	PBoundaryShapeIterator CModel::GetBoundaryShapes()
+	{
+		Lib3MFHandle hResourceIterator = nullptr;
+		CheckError(lib3mf_model_getboundaryshapes(m_pHandle, &hResourceIterator));
+		
+		if (!hResourceIterator) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CBoundaryShapeIterator>(dynamic_cast<CBoundaryShapeIterator*>(m_pWrapper->polymorphicFactory(hResourceIterator)));
 	}
 
 } // namespace Lib3MF

@@ -584,6 +584,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functioniterator_getcurrentfunction", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 FunctionIterator_GetCurrentFunction (IntPtr Handle, out IntPtr AResource);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshapeiterator_getcurrentboundaryshape", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BoundaryShapeIterator_GetCurrentBoundaryShape (IntPtr Handle, out IntPtr AResource);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_metadata_getnamespace", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 MetaData_GetNameSpace (IntPtr Handle, UInt32 sizeNameSpace, out UInt32 neededNameSpace, IntPtr dataNameSpace);
 
@@ -2168,6 +2171,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addboundaryshape", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_AddBoundaryShape (IntPtr Handle, out IntPtr ABoundaryShapeInstance);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getboundaryshapes", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetBoundaryShapes (IntPtr Handle, out IntPtr AResourceIterator);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_getlibraryversion", CharSet = CharSet.Ansi, CallingConvention=CallingConvention.Cdecl)]
 			public extern static Int32 GetLibraryVersion (out UInt32 AMajor, out UInt32 AMinor, out UInt32 AMicro);
 
@@ -2598,6 +2604,7 @@ namespace Lib3MF {
 					case 0xC2BDF5D8CBBDB1F0: Object = new CMultiPropertyGroupIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MultiPropertyGroupIterator"
 					case 0xC4B8EC00A82BF336: Object = new CImage3DIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Image3DIterator"
 					case 0x40E9035363ACE65E: Object = new CFunctionIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionIterator"
+					case 0x9FBC898CF30CDEF3: Object = new CBoundaryShapeIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BoundaryShapeIterator"
 					case 0xD17716D063DE2C22: Object = new CMetaData(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaData"
 					case 0x0C3B85369E9B25D3: Object = new CMetaDataGroup(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaDataGroup"
 					case 0x2DA2136F577A779C: Object = new CObject(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Object"
@@ -3278,6 +3285,22 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.FunctionIterator_GetCurrentFunction (Handle, out newResource));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CFunction>(newResource);
+		}
+
+	}
+
+	public class CBoundaryShapeIterator : CResourceIterator
+	{
+		public CBoundaryShapeIterator (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CBoundaryShape GetCurrentBoundaryShape ()
+		{
+			IntPtr newResource = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.BoundaryShapeIterator_GetCurrentBoundaryShape (Handle, out newResource));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CBoundaryShape>(newResource);
 		}
 
 	}
@@ -8842,6 +8865,14 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Model_AddBoundaryShape (Handle, out newBoundaryShapeInstance));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CBoundaryShape>(newBoundaryShapeInstance);
+		}
+
+		public CBoundaryShapeIterator GetBoundaryShapes ()
+		{
+			IntPtr newResourceIterator = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetBoundaryShapes (Handle, out newResourceIterator));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CBoundaryShapeIterator>(newResourceIterator);
 		}
 
 	}

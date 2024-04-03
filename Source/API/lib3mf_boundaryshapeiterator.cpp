@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2024 3MF Consortium
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,47 +24,25 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
-Writer node for BoundaryShape resources
+Abstract: This is a stub class definition of CBoundaryShapeIterator
 
---*/
+*/
 
-#pragma once
+#include "lib3mf_boundaryshapeiterator.hpp"
+#include "lib3mf_interfaceexception.hpp"
 
-#include "Common/3MF_ProgressMonitor.h"
-#include "Common/Platform/NMR_XmlWriter.h"
-#include "Model/Classes/NMR_ModelConstants.h"
-#include "Model/Classes/NMR_ModelResource.h"
-#include "Model/Classes/NMR_ModelVolumeData.h"
+// Include custom headers here.
+#include "lib3mf_boundaryshape.hpp"
 
-#include "Model/Writer/NMR_ModelWriterNode_ModelBase.h"
 
-namespace NMR
+using namespace Lib3MF::Impl;
+
+/*************************************************************************************************************************
+ Class definition of CBoundaryShapeIterator 
+**************************************************************************************************************************/
+
+IBoundaryShape * CBoundaryShapeIterator::GetCurrentBoundaryShape()
 {
-    namespace implicit
-    {
-        class NodeTypes;
-    }
-
-    class CModelBoundaryShapeObject;
-
-    class CModelWriterNode_BoundaryShape : public CModelWriterNode_ModelBase
-    {
-
-      public:
-        CModelWriterNode_BoundaryShape() = delete;
-        CModelWriterNode_BoundaryShape(CModel * pModel,
-                                  CModelBoundaryShapeObject * pBoundaryShape,
-                                  CXmlWriter * pXMLWriter,
-                                  PProgressMonitor pProgressMonitor);
-
-        void writeToXML() override;
-
-      private:
-        void writeBoundaryShapeResources();
-        void writeBoundaryShapeResource(CModelBoundaryShapeObject& boundaryShape);
-        
-        CModelBoundaryShapeObject * m_pBoundaryShape = nullptr;
-    };
-
+	return CBoundaryShape::fnCreateBoundaryShapeFromModelResource(GetCurrentResource(), true);
 }
+

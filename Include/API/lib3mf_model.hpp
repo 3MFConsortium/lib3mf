@@ -218,6 +218,8 @@ public:
 	IVolumeData * AddVolumeData() override;
 
 	IBoundaryShape* AddBoundaryShape() override;
+
+	IBoundaryShapeIterator * GetBoundaryShapes() override;
 };
 
 }

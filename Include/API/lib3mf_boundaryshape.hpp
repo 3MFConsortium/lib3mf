@@ -66,7 +66,6 @@ protected:
 	*/
 
 public:
-
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
@@ -79,8 +78,10 @@ public:
 	/**
 	* Public member functions to implement.
 	*/
+    static IBoundaryShape* fnCreateBoundaryShapeFromModelResource(
+            NMR::PModelResource pResource, bool bFailIfUnkownClass);
 
-	/**
+        /**
 	* IBoundaryShape::GetFunction - Returns the function that is used as boundary shape.
 	* @return the function to use as boundary shape
 	*/

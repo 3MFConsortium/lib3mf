@@ -66,6 +66,7 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFMultiPropertyGroupIterator::Init();
 	CLib3MFImage3DIterator::Init();
 	CLib3MFFunctionIterator::Init();
+	CLib3MFBoundaryShapeIterator::Init();
 	CLib3MFMetaData::Init();
 	CLib3MFMetaDataGroup::Init();
 	CLib3MFObject::Init();

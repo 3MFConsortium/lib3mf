@@ -68,6 +68,7 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_functionfromimage3d.hpp"
 #include "lib3mf_volumedata.hpp"
 #include "lib3mf_boundaryshape.hpp"
+#include "lib3mf_boundaryshapeiterator.hpp"
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -175,6 +176,14 @@ IResource* CModel::createIResourceFromModelResource(NMR::PModelResource pResourc
 	{
         return new CFunctionFromImage3D(p);
     }
+	
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelVolumeData>(pResource)) {
+		return new CVolumeData(p);
+	}
+
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelBoundaryShapeObject>(pResource)) {
+		return new CBoundaryShape(p);
+	}
 
 	if (bFailIfUnkownClass)
 		throw ELib3MFInterfaceException(NMR_ERROR_UNKNOWNMODELRESOURCE);
@@ -904,5 +913,18 @@ IBoundaryShape* CModel::AddBoundaryShape()
 	model().addResource(pNewResource);
 
 	return new CBoundaryShape(pNewResource);
+}
+
+IBoundaryShapeIterator * CModel::GetBoundaryShapes()
+{
+	auto pResult = std::unique_ptr<CBoundaryShapeIterator>(new CBoundaryShapeIterator());
+	Lib3MF_uint32 nObjectsCount = model().getObjectCount();
+
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nObjectsCount; nIdx++) {
+		auto resource = model().getObjectResource(nIdx);
+		if (dynamic_cast<NMR::CModelBoundaryShapeObject *>(resource.get()))
+			pResult->addResource(resource);
+	}
+	return pResult.release();
 }
 

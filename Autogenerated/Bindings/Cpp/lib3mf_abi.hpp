@@ -602,6 +602,19 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3diterator_getcurrentimage3d(Lib3MF_Ima
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_functioniterator_getcurrentfunction(Lib3MF_FunctionIterator pFunctionIterator, Lib3MF_Function * pResource);
 
 /*************************************************************************************************************************
+ Class definition for BoundaryShapeIterator
+**************************************************************************************************************************/
+
+/**
+* Returns the BoundaryShape the iterator points at.
+*
+* @param[in] pBoundaryShapeIterator - BoundaryShapeIterator instance.
+* @param[out] pResource - returns the MeshObject instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshapeiterator_getcurrentboundaryshape(Lib3MF_BoundaryShapeIterator pBoundaryShapeIterator, Lib3MF_BoundaryShape * pResource);
+
+/*************************************************************************************************************************
  Class definition for MetaData
 **************************************************************************************************************************/
 
@@ -6198,6 +6211,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addvolumedata(Lib3MF_Model pModel, Lib
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addboundaryshape(Lib3MF_Model pModel, Lib3MF_BoundaryShape * pBoundaryShapeInstance);
+
+/**
+* creates a resource iterator instance with all boundary shape resources.
+*
+* @param[in] pModel - Model instance.
+* @param[out] pResourceIterator - returns the iterator instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getboundaryshapes(Lib3MF_Model pModel, Lib3MF_BoundaryShapeIterator * pResourceIterator);
 
 /*************************************************************************************************************************
  Global functions

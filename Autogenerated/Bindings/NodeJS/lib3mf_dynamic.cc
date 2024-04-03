@@ -98,6 +98,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_MultiPropertyGroupIterator_GetCurrentMultiPropertyGroup = NULL;
 	pWrapperTable->m_Image3DIterator_GetCurrentImage3D = NULL;
 	pWrapperTable->m_FunctionIterator_GetCurrentFunction = NULL;
+	pWrapperTable->m_BoundaryShapeIterator_GetCurrentBoundaryShape = NULL;
 	pWrapperTable->m_MetaData_GetNameSpace = NULL;
 	pWrapperTable->m_MetaData_SetNameSpace = NULL;
 	pWrapperTable->m_MetaData_GetName = NULL;
@@ -626,6 +627,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Model_AddFunctionFromImage3D = NULL;
 	pWrapperTable->m_Model_AddVolumeData = NULL;
 	pWrapperTable->m_Model_AddBoundaryShape = NULL;
+	pWrapperTable->m_Model_GetBoundaryShapes = NULL;
 	pWrapperTable->m_GetLibraryVersion = NULL;
 	pWrapperTable->m_GetPrereleaseInformation = NULL;
 	pWrapperTable->m_GetBuildInformation = NULL;
@@ -1147,6 +1149,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_FunctionIterator_GetCurrentFunction == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_BoundaryShapeIterator_GetCurrentBoundaryShape = (PLib3MFBoundaryShapeIterator_GetCurrentBoundaryShapePtr) GetProcAddress(hLibrary, "lib3mf_boundaryshapeiterator_getcurrentboundaryshape");
+	#else // _WIN32
+	pWrapperTable->m_BoundaryShapeIterator_GetCurrentBoundaryShape = (PLib3MFBoundaryShapeIterator_GetCurrentBoundaryShapePtr) dlsym(hLibrary, "lib3mf_boundaryshapeiterator_getcurrentboundaryshape");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_BoundaryShapeIterator_GetCurrentBoundaryShape == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -5899,6 +5910,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Model_AddBoundaryShape == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_GetBoundaryShapes = (PLib3MFModel_GetBoundaryShapesPtr) GetProcAddress(hLibrary, "lib3mf_model_getboundaryshapes");
+	#else // _WIN32
+	pWrapperTable->m_Model_GetBoundaryShapes = (PLib3MFModel_GetBoundaryShapesPtr) dlsym(hLibrary, "lib3mf_model_getboundaryshapes");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_GetBoundaryShapes == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

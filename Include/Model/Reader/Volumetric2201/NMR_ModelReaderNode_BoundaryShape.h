@@ -38,7 +38,7 @@ Reader for boundary shape objects
 
 namespace NMR
 {
-    class CModelReaderNode_BoundaryShape : public CModelReaderNode100_Object
+    class CModelReaderNode_BoundaryShape : public CModelReaderNode
     {
        private:
         PModelBoundaryShapeObject m_pBoundaryShape;
@@ -70,7 +70,7 @@ namespace NMR
 
        public:
         CModelReaderNode_BoundaryShape() = delete;
-        CModelReaderNode_BoundaryShape(CModel* pModel, PModelWarnings pWarnings,
+        CModelReaderNode_BoundaryShape(CModel* pModel, PModelBoundaryShapeObject boundaryShape, PModelWarnings pWarnings,
                                        PProgressMonitor pProgressMonitor);
 
         void parseXML(_In_ CXmlReader* pXMLReader) override;

@@ -184,6 +184,7 @@ class FunctionTable:
 	lib3mf_multipropertygroupiterator_getcurrentmultipropertygroup = None
 	lib3mf_image3diterator_getcurrentimage3d = None
 	lib3mf_functioniterator_getcurrentfunction = None
+	lib3mf_boundaryshapeiterator_getcurrentboundaryshape = None
 	lib3mf_metadata_getnamespace = None
 	lib3mf_metadata_setnamespace = None
 	lib3mf_metadata_getname = None
@@ -712,6 +713,7 @@ class FunctionTable:
 	lib3mf_model_addfunctionfromimage3d = None
 	lib3mf_model_addvolumedata = None
 	lib3mf_model_addboundaryshape = None
+	lib3mf_model_getboundaryshapes = None
 
 '''Definition of Enumerations
 '''
@@ -1534,6 +1536,12 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_functioniterator_getcurrentfunction = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_boundaryshapeiterator_getcurrentboundaryshape")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_boundaryshapeiterator_getcurrentboundaryshape = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_metadata_getnamespace")), methodAddress)
 			if err != 0:
@@ -4703,6 +4711,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_addboundaryshape = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getboundaryshapes")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_getboundaryshapes = methodType(int(methodAddress.value))
+			
 		except AttributeError as ae:
 			raise ELib3MFException(ErrorCodes.COULDNOTFINDLIBRARYEXPORT, ae.args[0])
 		
@@ -4914,6 +4928,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_functioniterator_getcurrentfunction.restype = ctypes.c_int32
 			self.lib.lib3mf_functioniterator_getcurrentfunction.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_boundaryshapeiterator_getcurrentboundaryshape.restype = ctypes.c_int32
+			self.lib.lib3mf_boundaryshapeiterator_getcurrentboundaryshape.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_metadata_getnamespace.restype = ctypes.c_int32
 			self.lib.lib3mf_metadata_getnamespace.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
@@ -6499,6 +6516,9 @@ class Wrapper:
 			self.lib.lib3mf_model_addboundaryshape.restype = ctypes.c_int32
 			self.lib.lib3mf_model_addboundaryshape.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
+			self.lib.lib3mf_model_getboundaryshapes.restype = ctypes.c_int32
+			self.lib.lib3mf_model_getboundaryshapes.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
 		except AttributeError as ae:
 			raise ELib3MFException(ErrorCodes.COULDNOTFINDLIBRARYEXPORT, ae.args[0])
 	
@@ -6741,6 +6761,8 @@ class Wrapper:
 				return Image3DIterator(handle, wrapper)
 			def getObjectById_40E9035363ACE65E(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::FunctionIterator"
 				return FunctionIterator(handle, wrapper)
+			def getObjectById_9FBC898CF30CDEF3(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::BoundaryShapeIterator"
+				return BoundaryShapeIterator(handle, wrapper)
 			def getObjectById_D17716D063DE2C22(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::MetaData"
 				return MetaData(handle, wrapper)
 			def getObjectById_0C3B85369E9B25D3(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::MetaDataGroup"
@@ -7438,6 +7460,23 @@ class FunctionIterator(ResourceIterator):
 	def GetCurrentFunction(self):
 		ResourceHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functioniterator_getcurrentfunction(self._handle, ResourceHandle))
+		if ResourceHandle:
+			ResourceObject = self._wrapper._polymorphicFactory(ResourceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ResourceObject
+	
+
+
+''' Class Implementation for BoundaryShapeIterator
+'''
+class BoundaryShapeIterator(ResourceIterator):
+	def __init__(self, handle, wrapper):
+		ResourceIterator.__init__(self, handle, wrapper)
+	def GetCurrentBoundaryShape(self):
+		ResourceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_boundaryshapeiterator_getcurrentboundaryshape(self._handle, ResourceHandle))
 		if ResourceHandle:
 			ResourceObject = self._wrapper._polymorphicFactory(ResourceHandle)
 		else:
@@ -12769,5 +12808,15 @@ class Model(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return BoundaryShapeInstanceObject
+	
+	def GetBoundaryShapes(self):
+		ResourceIteratorHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_getboundaryshapes(self._handle, ResourceIteratorHandle))
+		if ResourceIteratorHandle:
+			ResourceIteratorObject = self._wrapper._polymorphicFactory(ResourceIteratorHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ResourceIteratorObject
 	
 		

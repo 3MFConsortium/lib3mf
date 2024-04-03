@@ -69,6 +69,7 @@ class ICompositeMaterialsIterator;
 class IMultiPropertyGroupIterator;
 class IImage3DIterator;
 class IFunctionIterator;
+class IBoundaryShapeIterator;
 class IMetaData;
 class IMetaDataGroup;
 class IObject;
@@ -1022,6 +1023,32 @@ public:
 };
 
 typedef IBaseSharedPtr<IFunctionIterator> PIFunctionIterator;
+
+
+/*************************************************************************************************************************
+ Class interface for BoundaryShapeIterator 
+**************************************************************************************************************************/
+
+class IBoundaryShapeIterator : public virtual IResourceIterator {
+public:
+	/**
+	* IBoundaryShapeIterator::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x9FBC898CF30CDEF3UL; // First 64 bits of SHA1 of a string: "Lib3MF::BoundaryShapeIterator"
+	}
+
+	/**
+	* IBoundaryShapeIterator::GetCurrentBoundaryShape - Returns the BoundaryShape the iterator points at.
+	* @return returns the MeshObject instance.
+	*/
+	virtual IBoundaryShape * GetCurrentBoundaryShape() = 0;
+
+};
+
+typedef IBaseSharedPtr<IBoundaryShapeIterator> PIBoundaryShapeIterator;
 
 
 /*************************************************************************************************************************
@@ -6478,6 +6505,12 @@ public:
 	* @return  returns the mesh object instance
 	*/
 	virtual IBoundaryShape * AddBoundaryShape() = 0;
+
+	/**
+	* IModel::GetBoundaryShapes - creates a resource iterator instance with all boundary shape resources.
+	* @return returns the iterator instance.
+	*/
+	virtual IBoundaryShapeIterator * GetBoundaryShapes() = 0;
 
 };
 

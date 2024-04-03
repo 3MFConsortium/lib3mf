@@ -368,9 +368,7 @@ namespace NMR {
 
 		if (m_bWriteVolumetricExtension)
 		{
-			// TODO: different logic
- 			if (m_pModelMeshObject->getVolumeData()->getPropertyCount() ||
-				m_pModelMeshObject->getVolumeData()->hasColor()) 
+ 			if (m_pModelMeshObject->getVolumeData()) 
 				{
 
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMEDATA, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);

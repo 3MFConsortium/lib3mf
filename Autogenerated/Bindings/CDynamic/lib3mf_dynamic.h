@@ -589,6 +589,19 @@ typedef Lib3MFResult (*PLib3MFImage3DIterator_GetCurrentImage3DPtr) (Lib3MF_Imag
 typedef Lib3MFResult (*PLib3MFFunctionIterator_GetCurrentFunctionPtr) (Lib3MF_FunctionIterator pFunctionIterator, Lib3MF_Function * pResource);
 
 /*************************************************************************************************************************
+ Class definition for BoundaryShapeIterator
+**************************************************************************************************************************/
+
+/**
+* Returns the BoundaryShape the iterator points at.
+*
+* @param[in] pBoundaryShapeIterator - BoundaryShapeIterator instance.
+* @param[out] pResource - returns the MeshObject instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBoundaryShapeIterator_GetCurrentBoundaryShapePtr) (Lib3MF_BoundaryShapeIterator pBoundaryShapeIterator, Lib3MF_BoundaryShape * pResource);
+
+/*************************************************************************************************************************
  Class definition for MetaData
 **************************************************************************************************************************/
 
@@ -6186,6 +6199,15 @@ typedef Lib3MFResult (*PLib3MFModel_AddVolumeDataPtr) (Lib3MF_Model pModel, Lib3
 */
 typedef Lib3MFResult (*PLib3MFModel_AddBoundaryShapePtr) (Lib3MF_Model pModel, Lib3MF_BoundaryShape * pBoundaryShapeInstance);
 
+/**
+* creates a resource iterator instance with all boundary shape resources.
+*
+* @param[in] pModel - Model instance.
+* @param[out] pResourceIterator - returns the iterator instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetBoundaryShapesPtr) (Lib3MF_Model pModel, Lib3MF_BoundaryShapeIterator * pResourceIterator);
+
 /*************************************************************************************************************************
  Global functions
 **************************************************************************************************************************/
@@ -6440,6 +6462,7 @@ typedef struct {
 	PLib3MFMultiPropertyGroupIterator_GetCurrentMultiPropertyGroupPtr m_MultiPropertyGroupIterator_GetCurrentMultiPropertyGroup;
 	PLib3MFImage3DIterator_GetCurrentImage3DPtr m_Image3DIterator_GetCurrentImage3D;
 	PLib3MFFunctionIterator_GetCurrentFunctionPtr m_FunctionIterator_GetCurrentFunction;
+	PLib3MFBoundaryShapeIterator_GetCurrentBoundaryShapePtr m_BoundaryShapeIterator_GetCurrentBoundaryShape;
 	PLib3MFMetaData_GetNameSpacePtr m_MetaData_GetNameSpace;
 	PLib3MFMetaData_SetNameSpacePtr m_MetaData_SetNameSpace;
 	PLib3MFMetaData_GetNamePtr m_MetaData_GetName;
@@ -6968,6 +6991,7 @@ typedef struct {
 	PLib3MFModel_AddFunctionFromImage3DPtr m_Model_AddFunctionFromImage3D;
 	PLib3MFModel_AddVolumeDataPtr m_Model_AddVolumeData;
 	PLib3MFModel_AddBoundaryShapePtr m_Model_AddBoundaryShape;
+	PLib3MFModel_GetBoundaryShapesPtr m_Model_GetBoundaryShapes;
 	PLib3MFGetLibraryVersionPtr m_GetLibraryVersion;
 	PLib3MFGetPrereleaseInformationPtr m_GetPrereleaseInformation;
 	PLib3MFGetBuildInformationPtr m_GetBuildInformation;

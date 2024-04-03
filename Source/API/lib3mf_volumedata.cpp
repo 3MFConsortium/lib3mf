@@ -46,15 +46,16 @@ using namespace Lib3MF::Impl;
  Class definition of CVolumeData 
 **************************************************************************************************************************/
 
-// CVolumeData::CVolumeData(NMR::PModelMeshObject pMeshObject, NMR::PModelVolumeData pVolumeData)
-// 	: m_pMeshObject(pMeshObject) , m_pVolumeData(pVolumeData)
-// {
-// }
 
 CVolumeData::CVolumeData(NMR::PModelResource pResource)
 	: CResource(pResource)
 {
+	if (!pResource.get())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 
+	m_pVolumeData = std::dynamic_pointer_cast<NMR::CModelVolumeData>(pResource);
+	if (!m_pVolumeData)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 }
 
 
@@ -121,7 +122,7 @@ void CVolumeData::RemoveProperty(const Lib3MF_uint32 nIndex)
 IVolumeDataColor* Lib3MF::Impl::CVolumeData::CreateNewColor(
     IFunction* pTheFunction)
 {
-	NMR::CModel* pModel = m_pMeshObject->getModel();
+	NMR::CModel* pModel = m_pVolumeData->getModel();
 
 	NMR::PModelResource pResource = pModel->findResource(pTheFunction->GetUniqueResourceID());
 	NMR::PModelFunction pFunction = std::dynamic_pointer_cast<NMR::CModelFunction>(pResource);
@@ -141,7 +142,7 @@ IVolumeDataColor* Lib3MF::Impl::CVolumeData::CreateNewColor(
 
 IVolumeDataProperty * Lib3MF::Impl::CVolumeData::AddPropertyFromFunction(const std::string & sName, IFunction * pTheFunction)
 {
-	NMR::CModel* pModel = m_pMeshObject->getModel();
+	NMR::CModel* pModel = m_pVolumeData->getModel();
 
 	NMR::PModelResource pResource = pModel->findResource(pTheFunction->GetUniqueResourceID());
 	NMR::PModelFunction pFunction = std::dynamic_pointer_cast<NMR::CModelFunction>(pResource);

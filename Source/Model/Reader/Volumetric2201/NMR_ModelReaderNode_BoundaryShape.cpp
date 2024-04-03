@@ -43,8 +43,9 @@ namespace NMR
 {
 
     NMR::CModelReaderNode_BoundaryShape::CModelReaderNode_BoundaryShape(
-       CModel * pModel, PModelWarnings pWarnings,  PProgressMonitor pProgressMonitor)
-        : CModelReaderNode100_Object(pModel, pWarnings, pProgressMonitor), m_parentModel(pModel)
+       CModel * pModel, PModelBoundaryShapeObject boundaryShape,
+       PModelWarnings pWarnings,  PProgressMonitor pProgressMonitor)
+        : CModelReaderNode(pWarnings, pProgressMonitor), m_parentModel(pModel), m_pBoundaryShape(std::move(boundaryShape))
     {
         
     }
@@ -52,17 +53,11 @@ namespace NMR
     void CModelReaderNode_BoundaryShape::parseXML(CXmlReader* pXMLReader)
     {
         __NMRASSERT(pXMLReader);
-        CModelReaderNode100_Object::parseXML(pXMLReader);
-
         // Parse name
         parseName(pXMLReader);
 
         // Parse Attributes
         parseAttributes(pXMLReader);
-
-        // Create BoundaryShape
-        m_pBoundaryShape =
-            std::make_shared<CModelBoundaryShapeObject>(m_resID, m_parentModel);
 
         // Parse Content
         parseContent(pXMLReader);
@@ -147,14 +142,11 @@ namespace NMR
 
             m_pBoundaryShape->setVolumeData(pVolumeData);
         }
-
-
-        m_parentModel->addResource(m_pBoundaryShape);
     }
 
     void CModelReaderNode_BoundaryShape::OnAttribute(
         const nfChar* pAttributeName, const nfChar* pAttributeValue)
-    {
+    {        
         if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_ID) == 0)
         {
             m_resID = fnStringToUint32(pAttributeValue);

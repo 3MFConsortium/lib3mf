@@ -1622,6 +1622,5 @@ namespace NMR {
 
 		return dynamic_cast<CModelVolumeData*>(pResource.get());
 	}
-
 }  // namespace NMR
 

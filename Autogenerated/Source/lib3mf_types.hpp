@@ -221,6 +221,7 @@ typedef Lib3MFHandle Lib3MF_CompositeMaterialsIterator;
 typedef Lib3MFHandle Lib3MF_MultiPropertyGroupIterator;
 typedef Lib3MFHandle Lib3MF_Image3DIterator;
 typedef Lib3MFHandle Lib3MF_FunctionIterator;
+typedef Lib3MFHandle Lib3MF_BoundaryShapeIterator;
 typedef Lib3MFHandle Lib3MF_MetaData;
 typedef Lib3MFHandle Lib3MF_MetaDataGroup;
 typedef Lib3MFHandle Lib3MF_Object;

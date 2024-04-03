@@ -666,6 +666,14 @@
 		</method>
 	</class>
 
+	<class name="BoundaryShapeIterator" parent="ResourceIterator">
+		<method name="GetCurrentBoundaryShape"
+			description="Returns the BoundaryShape the iterator points at.">
+			<param name="Resource" type="handle" class="BoundaryShape" pass="return"
+				description="returns the MeshObject instance." />
+		</method>
+	</class>
+
 	<class name="MetaData" parent="Base">
 		<method name="GetNameSpace" description="returns the namespace URL of the metadata">
 			<param name="NameSpace" type="string" pass="return"
@@ -4110,6 +4118,12 @@
 		<method name="AddBoundaryShape" description="adds an empty boundary shape object to the model.">
 			<param name="BoundaryShapeInstance" type="handle" class="BoundaryShape" pass="return"
 				description=" returns the mesh object instance" />
+		</method>
+
+		<method name="GetBoundaryShapes"
+			description="creates a resource iterator instance with all boundary shape resources.">
+			<param name="ResourceIterator" type="handle" class="BoundaryShapeIterator" pass="return"
+				description="returns the iterator instance." />
 		</method>
 	</class>
 

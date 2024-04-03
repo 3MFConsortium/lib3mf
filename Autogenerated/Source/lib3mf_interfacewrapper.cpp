@@ -1955,6 +1955,46 @@ Lib3MFResult lib3mf_functioniterator_getcurrentfunction(Lib3MF_FunctionIterator 
 
 
 /*************************************************************************************************************************
+ Class implementation for BoundaryShapeIterator
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_boundaryshapeiterator_getcurrentboundaryshape(Lib3MF_BoundaryShapeIterator pBoundaryShapeIterator, Lib3MF_BoundaryShape * pResource)
+{
+	IBase* pIBaseClass = (IBase *)pBoundaryShapeIterator;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShapeIterator, "BoundaryShapeIterator", "GetCurrentBoundaryShape");
+		}
+		if (pResource == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseResource(nullptr);
+		IBoundaryShapeIterator* pIBoundaryShapeIterator = dynamic_cast<IBoundaryShapeIterator*>(pIBaseClass);
+		if (!pIBoundaryShapeIterator)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseResource = pIBoundaryShapeIterator->GetCurrentBoundaryShape();
+
+		*pResource = (IBase*)(pBaseResource);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Resource", *pResource);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
  Class implementation for MetaData
 **************************************************************************************************************************/
 Lib3MFResult lib3mf_metadata_getnamespace(Lib3MF_MetaData pMetaData, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer)
@@ -22456,6 +22496,42 @@ Lib3MFResult lib3mf_model_addboundaryshape(Lib3MF_Model pModel, Lib3MF_BoundaryS
 	}
 }
 
+Lib3MFResult lib3mf_model_getboundaryshapes(Lib3MF_Model pModel, Lib3MF_BoundaryShapeIterator * pResourceIterator)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetBoundaryShapes");
+		}
+		if (pResourceIterator == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseResourceIterator(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseResourceIterator = pIModel->GetBoundaryShapes();
+
+		*pResourceIterator = (IBase*)(pBaseResourceIterator);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("ResourceIterator", *pResourceIterator);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 
 
 /*************************************************************************************************************************
@@ -22571,6 +22647,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_image3diterator_getcurrentimage3d;
 	if (sProcName == "lib3mf_functioniterator_getcurrentfunction") 
 		*ppProcAddress = (void*) &lib3mf_functioniterator_getcurrentfunction;
+	if (sProcName == "lib3mf_boundaryshapeiterator_getcurrentboundaryshape") 
+		*ppProcAddress = (void*) &lib3mf_boundaryshapeiterator_getcurrentboundaryshape;
 	if (sProcName == "lib3mf_metadata_getnamespace") 
 		*ppProcAddress = (void*) &lib3mf_metadata_getnamespace;
 	if (sProcName == "lib3mf_metadata_setnamespace") 
@@ -23627,6 +23705,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_model_addvolumedata;
 	if (sProcName == "lib3mf_model_addboundaryshape") 
 		*ppProcAddress = (void*) &lib3mf_model_addboundaryshape;
+	if (sProcName == "lib3mf_model_getboundaryshapes") 
+		*ppProcAddress = (void*) &lib3mf_model_getboundaryshapes;
 	if (sProcName == "lib3mf_getlibraryversion") 
 		*ppProcAddress = (void*) &lib3mf_getlibraryversion;
 	if (sProcName == "lib3mf_getprereleaseinformation") 

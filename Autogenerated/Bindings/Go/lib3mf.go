@@ -522,6 +522,15 @@ Lib3MFResult CCall_lib3mf_functioniterator_getcurrentfunction(Lib3MFHandle libra
 }
 
 
+Lib3MFResult CCall_lib3mf_boundaryshapeiterator_getcurrentboundaryshape(Lib3MFHandle libraryHandle, Lib3MF_BoundaryShapeIterator pBoundaryShapeIterator, Lib3MF_BoundaryShape * pResource)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BoundaryShapeIterator_GetCurrentBoundaryShape (pBoundaryShapeIterator, pResource);
+}
+
+
 Lib3MFResult CCall_lib3mf_metadata_getnamespace(Lib3MFHandle libraryHandle, Lib3MF_MetaData pMetaData, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer)
 {
 	if (libraryHandle == 0) 
@@ -5274,6 +5283,15 @@ Lib3MFResult CCall_lib3mf_model_addboundaryshape(Lib3MFHandle libraryHandle, Lib
 }
 
 
+Lib3MFResult CCall_lib3mf_model_getboundaryshapes(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_BoundaryShapeIterator * pResourceIterator)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_GetBoundaryShapes (pModel, pResourceIterator);
+}
+
+
 Lib3MFResult CCall_lib3mf_getlibraryversion(Lib3MFHandle libraryHandle, Lib3MF_uint32 * pMajor, Lib3MF_uint32 * pMinor, Lib3MF_uint32 * pMicro)
 {
 	if (libraryHandle == 0) 
@@ -6799,6 +6817,26 @@ func (inst FunctionIterator) GetCurrentFunction() (Function, error) {
 		return Function{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewFunction(resource), nil
+}
+
+
+// BoundaryShapeIterator represents a Lib3MF class.
+type BoundaryShapeIterator struct {
+	ResourceIterator
+}
+
+func (wrapper Wrapper) NewBoundaryShapeIterator(r ref) BoundaryShapeIterator {
+	return BoundaryShapeIterator{wrapper.NewResourceIterator(r)}
+}
+
+// GetCurrentBoundaryShape returns the BoundaryShape the iterator points at.
+func (inst BoundaryShapeIterator) GetCurrentBoundaryShape() (BoundaryShape, error) {
+	var resource ref
+	ret := C.CCall_lib3mf_boundaryshapeiterator_getcurrentboundaryshape(inst.wrapperRef.LibraryHandle, inst.Ref, &resource)
+	if ret != 0 {
+		return BoundaryShape{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewBoundaryShape(resource), nil
 }
 
 
@@ -13398,6 +13436,16 @@ func (inst Model) AddBoundaryShape() (BoundaryShape, error) {
 		return BoundaryShape{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewBoundaryShape(boundaryShapeInstance), nil
+}
+
+// GetBoundaryShapes creates a resource iterator instance with all boundary shape resources.
+func (inst Model) GetBoundaryShapes() (BoundaryShapeIterator, error) {
+	var resourceIterator ref
+	ret := C.CCall_lib3mf_model_getboundaryshapes(inst.wrapperRef.LibraryHandle, inst.Ref, &resourceIterator)
+	if ret != 0 {
+		return BoundaryShapeIterator{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewBoundaryShapeIterator(resourceIterator), nil
 }
 
 

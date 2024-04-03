@@ -41,9 +41,11 @@ Writer node for BoundaryShape resources
 namespace NMR
 {
     CModelWriterNode_BoundaryShape::CModelWriterNode_BoundaryShape(
-        CModel* pModel, CXmlWriter* pXMLWriter,
+        CModel* pModel, 
+        CModelBoundaryShapeObject * pBoundaryShape,
+        CXmlWriter* pXMLWriter,
         PProgressMonitor pProgressMonitor)
-        : CModelWriterNode_ModelBase(pModel, pXMLWriter, pProgressMonitor)
+        : CModelWriterNode_ModelBase(pModel, pXMLWriter, pProgressMonitor), m_pBoundaryShape(pBoundaryShape)
     {
     }
 
@@ -68,11 +70,7 @@ namespace NMR
     void CModelWriterNode_BoundaryShape::writeBoundaryShapeResource(
         CModelBoundaryShapeObject& boundaryShape)
     {
-        writeStartElementWithPrefix(XML_3MF_NAMESPACEPREFIX_VOLUMETRIC,
-                                    XML_3MF_ELEMENT_BOUNDARY_SHAPE);
-
-        writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_BOUNDARY,
-                                    XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+        writeStartElementWithPrefix(XML_3MF_ELEMENT_BOUNDARY_SHAPE, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 
         auto function = boundaryShape.getFunction();
         if(!function)
@@ -134,12 +132,15 @@ namespace NMR
                                 float(boundaryShape.getFallBackValue()));
         }
 
-        writeEndElement();
+        // writeEndElement();
         writeFullEndElement();
     }
     void CModelWriterNode_BoundaryShape::writeToXML()
     {
-        writeBoundaryShapeResources();
+        if (m_pBoundaryShape)
+        {
+            writeBoundaryShapeResource(*m_pBoundaryShape);
+        }
     }
 
 }  // namespace NMR

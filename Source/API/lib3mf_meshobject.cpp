@@ -399,5 +399,16 @@ IVolumeData * CMeshObject::GetVolumeData()
 
 void CMeshObject::SetVolumeData(IVolumeData* pTheVolumeData)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::CModel * pModel = meshObject()->getModel();
+	if (pModel == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+
+	NMR::PModelResource pResource = pModel->findResource(pTheVolumeData->GetResourceID());
+
+	NMR::PModelVolumeData pVolumeData = std::dynamic_pointer_cast<NMR::CModelVolumeData>(pResource);
+
+	if (pVolumeData == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+
+	meshObject()->setVolumeData(pVolumeData);
 }

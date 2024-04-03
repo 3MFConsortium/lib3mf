@@ -34,6 +34,7 @@ Abstract: This is a stub class definition of CBoundaryShape
 // Include custom headers here.
 #include "lib3mf_meshobject.hpp"
 #include "lib3mf_utils.hpp"
+#include "lib3mf_function.hpp"
 #include "Model/Classes/NMR_ModelBoundaryShapeObject.h"
 #include "Model/Classes/NMR_ModelFunction.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -45,9 +46,34 @@ using namespace Lib3MF::Impl;
  Class definition of CBoundaryShape 
 **************************************************************************************************************************/
 
+
+IBoundaryShape* CBoundaryShape::fnCreateBoundaryShapeFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass) {
+
+	if (!pResource.get())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	NMR::CModelBoundaryShapeObject * BoundaryShapeObject = dynamic_cast<NMR::CModelBoundaryShapeObject *> (pResource.get());
+	if (BoundaryShapeObject) {
+		return new CBoundaryShape(pResource);
+	}
+
+	if (bFailIfUnkownClass)
+		throw ELib3MFInterfaceException(NMR_ERROR_UNKNOWNMODELRESOURCE);
+
+	return nullptr;
+}
+
+
+
 IFunction * CBoundaryShape::GetFunction()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto boundaryShape = boundaryShapeObject();
+	auto function = boundaryShape->getFunction();
+	if (!function)
+	{
+		return nullptr;
+	}
+	return new CFunction(function);
 }
 
 NMR::PModelBoundaryShapeObject

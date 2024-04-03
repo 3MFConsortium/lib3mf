@@ -129,6 +129,8 @@ namespace Lib3MF
 				*/
 				Lib3MF::sTransform ComputeTransformFromMeshCoordinatesToUVW(Lib3MF::PMeshObject mesh);
 
+				Lib3MF::PBoundaryShape getFirstBoundaryShape(Lib3MF::PModel model);
+
         }  // namespace helper
 }  // namespace Lib3MF
 

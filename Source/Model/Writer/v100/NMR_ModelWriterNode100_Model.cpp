@@ -55,7 +55,11 @@ This is the class for exporting the 3mf model stream root node.
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
 #include "Model/Classes/NMR_ModelConstants_Slices.h"
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
+#include "Model/Classes/NMR_ModelBoundaryShapeObject.h"
+#include "Model/Classes/NMR_ModelVolumeData.h"
 #include "Model/Writer/NMR_ModelWriterNode_Implicit.h"
+#include "Model/Writer/NMR_ModelWriterNode_BoundaryShape.h"
+#include "Model/Writer/NMR_ModelWriterNode_VolumeData.h"
 
 
 #include "Common/3MF_ProgressMonitor.h"
@@ -506,6 +510,12 @@ namespace NMR {
 			CModelComponentsObject * pComponentObject = dynamic_cast<CModelComponentsObject *> (pObject);
 			if (pComponentObject) {
 				writeComponentsObject(pComponentObject);
+			}
+
+			CModelBoundaryShapeObject * pBoundaryShape = dynamic_cast<CModelBoundaryShapeObject *> (pObject);
+			if (pBoundaryShape) {
+				CModelWriterNode_BoundaryShape ModelWriter_BoundaryShape(m_pModel, pBoundaryShape, m_pXMLWriter, m_pProgressMonitor);
+				ModelWriter_BoundaryShape.writeToXML();
 			}
 
 			writeFullEndElement();

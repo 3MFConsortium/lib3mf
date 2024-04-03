@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,45 +24,40 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CVolumeData
+Abstract: This is the class declaration of CBoundaryShapeIterator
 
 */
 
 
-#ifndef __LIB3MF_VOLUMEDATA
-#define __LIB3MF_VOLUMEDATA
+#ifndef __LIB3MF_BOUNDARYSHAPEITERATOR
+#define __LIB3MF_BOUNDARYSHAPEITERATOR
 
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_base.hpp"
-#include "lib3mf_resource.hpp"
+#include "lib3mf_resourceiterator.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
 // Include custom headers here.
-#include "Common/Mesh/NMR_Mesh.h"
-#include "Model/Classes/NMR_ModelVolumeData.h"
-#include "Model/Classes/NMR_ModelMeshObject.h"
-#include "Model/Classes/NMR_ModelResource.h"
+
 
 namespace Lib3MF {
 namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CVolumeData 
+ Class declaration of CBoundaryShapeIterator 
 **************************************************************************************************************************/
 
-class CVolumeData : public virtual IVolumeData, public virtual CResource {
+class CBoundaryShapeIterator : public virtual IBoundaryShapeIterator, public virtual CResourceIterator {
 private:
 
 	/**
 	* Put private members here.
 	*/
-	NMR::PModelVolumeData m_pVolumeData;
 
 protected:
 
@@ -75,35 +70,17 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CVolumeData() = delete;
-	CVolumeData(NMR::PModelResource pResource);
 
-	// CVolumeData(NMR::PModelMeshObject pMeshObject, NMR::PModelVolumeData pVolumeData);
 
 	/**
 	* Public member functions to implement.
 	*/
-	IVolumeDataComposite * GetComposite() override;
 
-	IVolumeDataComposite * CreateNewComposite() override;
-
-	void RemoveComposite() override;
-
-	IVolumeDataColor * GetColor() override;
-
-	IVolumeDataColor* CreateNewColor(IFunction* pTheFunction) override;
-
-	void RemoveColor() override;
-
-	Lib3MF_uint32 GetPropertyCount() override;
-
-	IVolumeDataProperty * GetProperty(const Lib3MF_uint32 nIndex) override;
-
-	IVolumeDataProperty* AddPropertyFromFunction(
-            const std::string& sName, IFunction* pTheFunction) override;
-
-    
-	void RemoveProperty(const Lib3MF_uint32 nIndex) override;
+	/**
+	* IBoundaryShapeIterator::GetCurrentBoundaryShape - Returns the BoundaryShape the iterator points at.
+	* @return returns the MeshObject instance.
+	*/
+	IBoundaryShape * GetCurrentBoundaryShape() override;
 
 };
 
@@ -113,4 +90,4 @@ public:
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-#endif // __LIB3MF_VOLUMEDATA
+#endif // __LIB3MF_BOUNDARYSHAPEITERATOR

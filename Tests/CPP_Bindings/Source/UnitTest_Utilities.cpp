@@ -340,6 +340,18 @@ namespace Lib3MF
 
             return transform;
         }
+
+        Lib3MF::PBoundaryShape getFirstBoundaryShape(Lib3MF::PModel model)
+        {
+            auto iterator = model->GetBoundaryShapes();
+            if(iterator->MoveNext())
+            {
+                return iterator->GetCurrentBoundaryShape();
+            }
+            return {};
+        }
+
+
     }  // namespace helper
 }  // namespace Lib3MF
 

@@ -489,6 +489,7 @@ type
 	TLib3MFMultiPropertyGroupIterator = class;
 	TLib3MFImage3DIterator = class;
 	TLib3MFFunctionIterator = class;
+	TLib3MFBoundaryShapeIterator = class;
 	TLib3MFMetaData = class;
 	TLib3MFMetaDataGroup = class;
 	TLib3MFObject = class;
@@ -1150,6 +1151,20 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFFunctionIterator_GetCurrentFunctionFunc = function(pFunctionIterator: TLib3MFHandle; out pResource: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for BoundaryShapeIterator
+**************************************************************************************************************************)
+
+	(**
+	* Returns the BoundaryShape the iterator points at.
+	*
+	* @param[in] pBoundaryShapeIterator - BoundaryShapeIterator instance.
+	* @param[out] pResource - returns the MeshObject instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBoundaryShapeIterator_GetCurrentBoundaryShapeFunc = function(pBoundaryShapeIterator: TLib3MFHandle; out pResource: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -6844,6 +6859,15 @@ type
 	*)
 	TLib3MFModel_AddBoundaryShapeFunc = function(pModel: TLib3MFHandle; out pBoundaryShapeInstance: TLib3MFHandle): TLib3MFResult; cdecl;
 	
+	(**
+	* creates a resource iterator instance with all boundary shape resources.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[out] pResourceIterator - returns the iterator instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetBoundaryShapesFunc = function(pModel: TLib3MFHandle; out pResourceIterator: TLib3MFHandle): TLib3MFResult; cdecl;
+	
 (*************************************************************************************************************************
  Global function definitions 
 **************************************************************************************************************************)
@@ -7313,6 +7337,18 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
 		function GetCurrentFunction(): TLib3MFFunction;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for BoundaryShapeIterator
+**************************************************************************************************************************)
+
+	TLib3MFBoundaryShapeIterator = class(TLib3MFResourceIterator)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetCurrentBoundaryShape(): TLib3MFBoundaryShape;
 	end;
 
 
@@ -8886,6 +8922,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function AddFunctionFromImage3D(const AImage3DInstance: TLib3MFImage3D): TLib3MFFunctionFromImage3D;
 		function AddVolumeData(): TLib3MFVolumeData;
 		function AddBoundaryShape(): TLib3MFBoundaryShape;
+		function GetBoundaryShapes(): TLib3MFBoundaryShapeIterator;
 	end;
 
 (*************************************************************************************************************************
@@ -8945,6 +8982,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFMultiPropertyGroupIterator_GetCurrentMultiPropertyGroupFunc: TLib3MFMultiPropertyGroupIterator_GetCurrentMultiPropertyGroupFunc;
 		FLib3MFImage3DIterator_GetCurrentImage3DFunc: TLib3MFImage3DIterator_GetCurrentImage3DFunc;
 		FLib3MFFunctionIterator_GetCurrentFunctionFunc: TLib3MFFunctionIterator_GetCurrentFunctionFunc;
+		FLib3MFBoundaryShapeIterator_GetCurrentBoundaryShapeFunc: TLib3MFBoundaryShapeIterator_GetCurrentBoundaryShapeFunc;
 		FLib3MFMetaData_GetNameSpaceFunc: TLib3MFMetaData_GetNameSpaceFunc;
 		FLib3MFMetaData_SetNameSpaceFunc: TLib3MFMetaData_SetNameSpaceFunc;
 		FLib3MFMetaData_GetNameFunc: TLib3MFMetaData_GetNameFunc;
@@ -9473,6 +9511,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_AddFunctionFromImage3DFunc: TLib3MFModel_AddFunctionFromImage3DFunc;
 		FLib3MFModel_AddVolumeDataFunc: TLib3MFModel_AddVolumeDataFunc;
 		FLib3MFModel_AddBoundaryShapeFunc: TLib3MFModel_AddBoundaryShapeFunc;
+		FLib3MFModel_GetBoundaryShapesFunc: TLib3MFModel_GetBoundaryShapesFunc;
 		FLib3MFGetLibraryVersionFunc: TLib3MFGetLibraryVersionFunc;
 		FLib3MFGetPrereleaseInformationFunc: TLib3MFGetPrereleaseInformationFunc;
 		FLib3MFGetBuildInformationFunc: TLib3MFGetBuildInformationFunc;
@@ -9552,6 +9591,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFMultiPropertyGroupIterator_GetCurrentMultiPropertyGroupFunc: TLib3MFMultiPropertyGroupIterator_GetCurrentMultiPropertyGroupFunc read FLib3MFMultiPropertyGroupIterator_GetCurrentMultiPropertyGroupFunc;
 		property Lib3MFImage3DIterator_GetCurrentImage3DFunc: TLib3MFImage3DIterator_GetCurrentImage3DFunc read FLib3MFImage3DIterator_GetCurrentImage3DFunc;
 		property Lib3MFFunctionIterator_GetCurrentFunctionFunc: TLib3MFFunctionIterator_GetCurrentFunctionFunc read FLib3MFFunctionIterator_GetCurrentFunctionFunc;
+		property Lib3MFBoundaryShapeIterator_GetCurrentBoundaryShapeFunc: TLib3MFBoundaryShapeIterator_GetCurrentBoundaryShapeFunc read FLib3MFBoundaryShapeIterator_GetCurrentBoundaryShapeFunc;
 		property Lib3MFMetaData_GetNameSpaceFunc: TLib3MFMetaData_GetNameSpaceFunc read FLib3MFMetaData_GetNameSpaceFunc;
 		property Lib3MFMetaData_SetNameSpaceFunc: TLib3MFMetaData_SetNameSpaceFunc read FLib3MFMetaData_SetNameSpaceFunc;
 		property Lib3MFMetaData_GetNameFunc: TLib3MFMetaData_GetNameFunc read FLib3MFMetaData_GetNameFunc;
@@ -10080,6 +10120,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_AddFunctionFromImage3DFunc: TLib3MFModel_AddFunctionFromImage3DFunc read FLib3MFModel_AddFunctionFromImage3DFunc;
 		property Lib3MFModel_AddVolumeDataFunc: TLib3MFModel_AddVolumeDataFunc read FLib3MFModel_AddVolumeDataFunc;
 		property Lib3MFModel_AddBoundaryShapeFunc: TLib3MFModel_AddBoundaryShapeFunc read FLib3MFModel_AddBoundaryShapeFunc;
+		property Lib3MFModel_GetBoundaryShapesFunc: TLib3MFModel_GetBoundaryShapesFunc read FLib3MFModel_GetBoundaryShapesFunc;
 		property Lib3MFGetLibraryVersionFunc: TLib3MFGetLibraryVersionFunc read FLib3MFGetLibraryVersionFunc;
 		property Lib3MFGetPrereleaseInformationFunc: TLib3MFGetPrereleaseInformationFunc read FLib3MFGetPrereleaseInformationFunc;
 		property Lib3MFGetBuildInformationFunc: TLib3MFGetBuildInformationFunc read FLib3MFGetBuildInformationFunc;
@@ -10197,6 +10238,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function TLib3MFPolymorphicFactoryMakeMultiPropertyGroupIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMultiPropertyGroupIterator;
 	function TLib3MFPolymorphicFactoryMakeImage3DIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImage3DIterator;
 	function TLib3MFPolymorphicFactoryMakeFunctionIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFFunctionIterator;
+	function TLib3MFPolymorphicFactoryMakeBoundaryShapeIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBoundaryShapeIterator;
 	function TLib3MFPolymorphicFactoryMakeMetaData(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMetaData;
 	function TLib3MFPolymorphicFactoryMakeMetaDataGroup(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMetaDataGroup;
 	function TLib3MFPolymorphicFactoryMakeObject(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFObject;
@@ -11017,6 +11059,7 @@ implementation
 			QWord($C2BDF5D8CBBDB1F0): begin Obj := TLIB3MFMultiPropertyGroupIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::MultiPropertyGroupIterator"
 			QWord($C4B8EC00A82BF336): begin Obj := TLIB3MFImage3DIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Image3DIterator"
 			QWord($40E9035363ACE65E): begin Obj := TLIB3MFFunctionIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionIterator"
+			QWord($9FBC898CF30CDEF3): begin Obj := TLIB3MFBoundaryShapeIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::BoundaryShapeIterator"
 			QWord($D17716D063DE2C22): begin Obj := TLIB3MFMetaData.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::MetaData"
 			QWord($0C3B85369E9B25D3): begin Obj := TLIB3MFMetaDataGroup.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::MetaDataGroup"
 			QWord($2DA2136F577A779C): begin Obj := TLIB3MFObject.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Object"
@@ -11186,6 +11229,10 @@ implementation
 	function TLib3MFPolymorphicFactoryMakeFunctionIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFFunctionIterator;
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFFunctionIterator, TLIB3MFFunctionIterator>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeBoundaryShapeIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBoundaryShapeIterator;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFBoundaryShapeIterator, TLIB3MFBoundaryShapeIterator>.Make(Wrapper, Handle);
 	end;
 	function TLib3MFPolymorphicFactoryMakeMetaData(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMetaData;
 	begin
@@ -12324,6 +12371,31 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionIterator_GetCurrentFunctionFunc(FHandle, HResource));
 		if Assigned(HResource) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFFunction, TLib3MFFunction>.Make(FWrapper, HResource);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for BoundaryShapeIterator
+**************************************************************************************************************************)
+
+	constructor TLib3MFBoundaryShapeIterator.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFBoundaryShapeIterator.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFBoundaryShapeIterator.GetCurrentBoundaryShape(): TLib3MFBoundaryShape;
+	var
+		HResource: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResource := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBoundaryShapeIterator_GetCurrentBoundaryShapeFunc(FHandle, HResource));
+		if Assigned(HResource) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFBoundaryShape, TLib3MFBoundaryShape>.Make(FWrapper, HResource);
 	end;
 
 (*************************************************************************************************************************
@@ -18724,6 +18796,17 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFBoundaryShape, TLib3MFBoundaryShape>.Make(FWrapper, HBoundaryShapeInstance);
 	end;
 
+	function TLib3MFModel.GetBoundaryShapes(): TLib3MFBoundaryShapeIterator;
+	var
+		HResourceIterator: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResourceIterator := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetBoundaryShapesFunc(FHandle, HResourceIterator));
+		if Assigned(HResourceIterator) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFBoundaryShapeIterator, TLib3MFBoundaryShapeIterator>.Make(FWrapper, HResourceIterator);
+	end;
+
 (*************************************************************************************************************************
  Wrapper class implementation
 **************************************************************************************************************************)
@@ -18796,6 +18879,7 @@ implementation
 		FLib3MFMultiPropertyGroupIterator_GetCurrentMultiPropertyGroupFunc := LoadFunction('lib3mf_multipropertygroupiterator_getcurrentmultipropertygroup');
 		FLib3MFImage3DIterator_GetCurrentImage3DFunc := LoadFunction('lib3mf_image3diterator_getcurrentimage3d');
 		FLib3MFFunctionIterator_GetCurrentFunctionFunc := LoadFunction('lib3mf_functioniterator_getcurrentfunction');
+		FLib3MFBoundaryShapeIterator_GetCurrentBoundaryShapeFunc := LoadFunction('lib3mf_boundaryshapeiterator_getcurrentboundaryshape');
 		FLib3MFMetaData_GetNameSpaceFunc := LoadFunction('lib3mf_metadata_getnamespace');
 		FLib3MFMetaData_SetNameSpaceFunc := LoadFunction('lib3mf_metadata_setnamespace');
 		FLib3MFMetaData_GetNameFunc := LoadFunction('lib3mf_metadata_getname');
@@ -19324,6 +19408,7 @@ implementation
 		FLib3MFModel_AddFunctionFromImage3DFunc := LoadFunction('lib3mf_model_addfunctionfromimage3d');
 		FLib3MFModel_AddVolumeDataFunc := LoadFunction('lib3mf_model_addvolumedata');
 		FLib3MFModel_AddBoundaryShapeFunc := LoadFunction('lib3mf_model_addboundaryshape');
+		FLib3MFModel_GetBoundaryShapesFunc := LoadFunction('lib3mf_model_getboundaryshapes');
 		FLib3MFGetLibraryVersionFunc := LoadFunction('lib3mf_getlibraryversion');
 		FLib3MFGetPrereleaseInformationFunc := LoadFunction('lib3mf_getprereleaseinformation');
 		FLib3MFGetBuildInformationFunc := LoadFunction('lib3mf_getbuildinformation');
@@ -19502,6 +19587,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_functioniterator_getcurrentfunction'), @FLib3MFFunctionIterator_GetCurrentFunctionFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_boundaryshapeiterator_getcurrentboundaryshape'), @FLib3MFBoundaryShapeIterator_GetCurrentBoundaryShapeFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_metadata_getnamespace'), @FLib3MFMetaData_GetNameSpaceFunc);
@@ -21086,6 +21174,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addboundaryshape'), @FLib3MFModel_AddBoundaryShapeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getboundaryshapes'), @FLib3MFModel_GetBoundaryShapesFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_getlibraryversion'), @FLib3MFGetLibraryVersionFunc);

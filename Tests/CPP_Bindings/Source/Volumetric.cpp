@@ -391,6 +391,7 @@ namespace Lib3MF
         // auto theBoundary = volumeData->CreateNewBoundary(newFunction.get());
         auto theBoundary = model->AddBoundaryShape();
         theBoundary->SetMesh(theMesh);
+        theBoundary->SetFunction(newFunction.get());
 
         // Write to file
         writer3MF->WriteToFile(Volumetric::OutFolder +
@@ -477,6 +478,7 @@ namespace Lib3MF
         auto theMesh = GetMesh();
         auto theBoundary = model->AddBoundaryShape();
         theBoundary->SetMesh(theMesh);
+        theBoundary->SetFunction(newFunction.get());
         theBoundary->SetFallBackValue(-1.2345);
 
         // Write to file
@@ -503,8 +505,7 @@ namespace Lib3MF
             meshesFromWrittenFile->GetCurrentMeshObject();
 
         // Check the fallback value
-        auto volumeDataFromWrittenFile = meshFromWrittenFile->GetVolumeData();
-        auto boundaryFromWrittenFile = volumeDataFromWrittenFile->GetBoundary();
+        auto boundaryFromWrittenFile = helper::getFirstBoundaryShape(ioModel);
         EXPECT_EQ(boundaryFromWrittenFile->GetFallBackValue(), -1.2345);
 
         // Compare the functions
@@ -518,6 +519,7 @@ namespace Lib3MF
 
         auto theMesh = GetMesh();
         auto theBoundary = model->AddBoundaryShape();
+        theBoundary->SetFunction(newFunction.get());
         theBoundary->SetMesh(theMesh);
 
         // write to file
@@ -599,6 +601,7 @@ namespace Lib3MF
         auto theMesh = GetMesh();
         auto theBoundary = model->AddBoundaryShape();
         theBoundary->SetMesh(theMesh);
+        theBoundary->SetFunction(std::dynamic_pointer_cast<CFunction>(newFunction));
 
         theBoundary->SetMinFeatureSize(0.1);
         theBoundary->SetChannelName("shape");
@@ -742,6 +745,7 @@ namespace Lib3MF
         auto theMesh = GetMesh();
         auto theBoundary = model->AddBoundaryShape();
         theBoundary->SetMesh(theMesh);
+        theBoundary->SetFunction(newFunction.get());
         theBoundary->SetMinFeatureSize(0.1);
         theBoundary->SetChannelName("shape");
         
@@ -952,9 +956,9 @@ namespace Lib3MF
                                  functionFromFile);
 
         // Check the boundary
-        auto boundaryFromFile = volumeData->GetBoundary();
+        auto boundaryFromFile = helper::getFirstBoundaryShape(ioModel);
         ASSERT_TRUE(boundaryFromFile);
-        EXPECT_EQ(boundaryFromFile->GetFunctionResourceID(), funcImg3dId);
+        EXPECT_EQ(boundaryFromFile->GetFunction()->GetModelResourceID(), funcImg3dId);
         helper::CompareTransforms(boundary->GetTransform(),
                                   boundaryFromFile->GetTransform());
         EXPECT_EQ(boundary->GetChannelName(),
