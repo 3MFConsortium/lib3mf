@@ -426,17 +426,17 @@ public:
 };
 
 /*************************************************************************************************************************
- Class CLib3MFBoundaryShapeIterator 
+ Class CLib3MFLevelSetIterator 
 **************************************************************************************************************************/
-class CLib3MFBoundaryShapeIterator : public CLib3MFBaseClass {
+class CLib3MFLevelSetIterator : public CLib3MFBaseClass {
 private:
 	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static v8::Persistent<v8::Function> constructor;
-	static void GetCurrentBoundaryShape(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetCurrentLevelSet(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
-	CLib3MFBoundaryShapeIterator();
-	~CLib3MFBoundaryShapeIterator();
+	CLib3MFLevelSetIterator();
+	~CLib3MFLevelSetIterator();
 	
 	static void Init();
 	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
@@ -573,9 +573,9 @@ public:
 };
 
 /*************************************************************************************************************************
- Class CLib3MFBoundaryShape 
+ Class CLib3MFLevelSet 
 **************************************************************************************************************************/
-class CLib3MFBoundaryShape : public CLib3MFBaseClass {
+class CLib3MFLevelSet : public CLib3MFBaseClass {
 private:
 	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static v8::Persistent<v8::Function> constructor;
@@ -597,8 +597,8 @@ private:
 	static void SetVolumeData(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
-	CLib3MFBoundaryShape();
-	~CLib3MFBoundaryShape();
+	CLib3MFLevelSet();
+	~CLib3MFLevelSet();
 	
 	static void Init();
 	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
@@ -2575,8 +2575,8 @@ private:
 	static void AddImplicitFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddFunctionFromImage3D(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddVolumeData(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void AddBoundaryShape(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetBoundaryShapes(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddLevelSet(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetLevelSets(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFModel();

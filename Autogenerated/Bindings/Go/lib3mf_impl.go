@@ -6939,46 +6939,46 @@ func (implementation *Lib3MFImplementation) VolumeDataProperty_IsRequired(Volume
 
 func (implementation *Lib3MFImplementation) VolumeData_GetBoundary(VolumeData Lib3MFHandle) (Lib3MFHandle, error) {
 	var err error = nil
-	hTheBoundaryData := implementation.NewHandle()
+	hTheLevelSetData := implementation.NewHandle()
 	
 	implementation_volumedata, err := implementation.GetWrapperHandle(VolumeData)
 	if (err != nil) {
-		return hTheBoundaryData, err
+		return hTheLevelSetData, err
 	}
 
-	err = implementation.CallFunction(implementation.Lib3MF_volumedata_getboundary, implementation_volumedata.GetDLLInHandle(), hTheBoundaryData.GetDLLOutHandle())
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_getboundary, implementation_volumedata.GetDLLInHandle(), hTheLevelSetData.GetDLLOutHandle())
 	if (err != nil) {
-		return hTheBoundaryData, err
+		return hTheLevelSetData, err
 	}
 	
-	return hTheBoundaryData, err
+	return hTheLevelSetData, err
 }
 
 func (implementation *Lib3MFImplementation) VolumeData_CreateNewBoundary(VolumeData Lib3MFHandle, TheScalarField Lib3MFHandle) (Lib3MFHandle, error) {
 	var err error = nil
-	hTheBoundaryData := implementation.NewHandle()
+	hTheLevelSetData := implementation.NewHandle()
 	
 	implementation_volumedata, err := implementation.GetWrapperHandle(VolumeData)
 	if (err != nil) {
-		return hTheBoundaryData, err
+		return hTheLevelSetData, err
 	}
 	implementation_thescalarfield, err := implementation.GetWrapperHandle(TheScalarField)
 	if (err != nil) {
-		return hTheBoundaryData, err
+		return hTheLevelSetData, err
 	}
 	
 	TheScalarFieldDLLHandle := implementation_thescalarfield.GetDLLInHandle()
 	if (TheScalarFieldDLLHandle == 0) {
 		err := fmt.Errorf("Handle must not be 0.")
-		return hTheBoundaryData, err
+		return hTheLevelSetData, err
 	}
 
-	err = implementation.CallFunction(implementation.Lib3MF_volumedata_createnewboundary, implementation_volumedata.GetDLLInHandle(), TheScalarFieldDLLHandle, hTheBoundaryData.GetDLLOutHandle())
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_createnewboundary, implementation_volumedata.GetDLLInHandle(), TheScalarFieldDLLHandle, hTheLevelSetData.GetDLLOutHandle())
 	if (err != nil) {
-		return hTheBoundaryData, err
+		return hTheLevelSetData, err
 	}
 	
-	return hTheBoundaryData, err
+	return hTheLevelSetData, err
 }
 
 func (implementation *Lib3MFImplementation) VolumeData_RemoveBoundary(VolumeData Lib3MFHandle) (error) {

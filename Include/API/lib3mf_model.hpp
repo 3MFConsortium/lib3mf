@@ -217,9 +217,9 @@ public:
 
 	IVolumeData * AddVolumeData() override;
 
-	IBoundaryShape* AddBoundaryShape() override;
+	ILevelSet* AddLevelSet() override;
 
-	IBoundaryShapeIterator * GetBoundaryShapes() override;
+	ILevelSetIterator * GetLevelSets() override;
 };
 
 }

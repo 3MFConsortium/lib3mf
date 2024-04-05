@@ -36,7 +36,7 @@ Stream.
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Mesh.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_MetaDataGroup.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Components.h"
-#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_BoundaryShape.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_LevelSet.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -321,13 +321,13 @@ namespace NMR {
 		{
 			if(strcmp(pChildName, XML_3MF_ELEMENT_BOUNDARY_SHAPE) == 0)
 			{
-				auto boundaryShape = std::make_shared<CModelBoundaryShapeObject>(m_nID, m_pModel);
+				auto levelSet = std::make_shared<CModelLevelSetObject>(m_nID, m_pModel);
 
 				PModelReaderNode pXMLNode =
-					std::make_shared<CModelReaderNode_BoundaryShape>(
-						m_pModel, boundaryShape, m_pWarnings, m_pProgressMonitor);
+					std::make_shared<CModelReaderNode_LevelSet>(
+						m_pModel, levelSet, m_pWarnings, m_pProgressMonitor);
 				pXMLNode->parseXML(pXMLReader);
-				m_pObject = boundaryShape;
+				m_pObject = levelSet;
 				m_pModel->addResource(m_pObject);
 
 			}

@@ -584,8 +584,8 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functioniterator_getcurrentfunction", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 FunctionIterator_GetCurrentFunction (IntPtr Handle, out IntPtr AResource);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshapeiterator_getcurrentboundaryshape", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BoundaryShapeIterator_GetCurrentBoundaryShape (IntPtr Handle, out IntPtr AResource);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_levelsetiterator_getcurrentlevelset", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 LevelSetIterator_GetCurrentLevelSet (IntPtr Handle, out IntPtr AResource);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_metadata_getnamespace", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 MetaData_GetNameSpace (IntPtr Handle, UInt32 sizeNameSpace, out UInt32 neededNameSpace, IntPtr dataNameSpace);
@@ -770,53 +770,53 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshobject_setvolumedata", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 MeshObject_SetVolumeData (IntPtr Handle, IntPtr ATheVolumeData);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshape_getfunction", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BoundaryShape_GetFunction (IntPtr Handle, out IntPtr ATheFunction);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_levelset_getfunction", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 LevelSet_GetFunction (IntPtr Handle, out IntPtr ATheFunction);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshape_setfunction", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BoundaryShape_SetFunction (IntPtr Handle, IntPtr ATheFunction);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_levelset_setfunction", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 LevelSet_SetFunction (IntPtr Handle, IntPtr ATheFunction);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshape_gettransform", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BoundaryShape_GetTransform (IntPtr Handle, out InternalTransform ATransform);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_levelset_gettransform", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 LevelSet_GetTransform (IntPtr Handle, out InternalTransform ATransform);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshape_settransform", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BoundaryShape_SetTransform (IntPtr Handle, InternalTransform ATransform);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_levelset_settransform", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 LevelSet_SetTransform (IntPtr Handle, InternalTransform ATransform);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshape_getchannelname", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BoundaryShape_GetChannelName (IntPtr Handle, UInt32 sizeChannelName, out UInt32 neededChannelName, IntPtr dataChannelName);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_levelset_getchannelname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 LevelSet_GetChannelName (IntPtr Handle, UInt32 sizeChannelName, out UInt32 neededChannelName, IntPtr dataChannelName);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshape_setchannelname", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BoundaryShape_SetChannelName (IntPtr Handle, byte[] AChannelName);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_levelset_setchannelname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 LevelSet_SetChannelName (IntPtr Handle, byte[] AChannelName);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshape_setminfeaturesize", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BoundaryShape_SetMinFeatureSize (IntPtr Handle, Double AMinFeatureSize);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_levelset_setminfeaturesize", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 LevelSet_SetMinFeatureSize (IntPtr Handle, Double AMinFeatureSize);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshape_getminfeaturesize", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BoundaryShape_GetMinFeatureSize (IntPtr Handle, out Double AMinFeatureSize);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_levelset_getminfeaturesize", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 LevelSet_GetMinFeatureSize (IntPtr Handle, out Double AMinFeatureSize);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshape_setfallbackvalue", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BoundaryShape_SetFallBackValue (IntPtr Handle, Double AFallBackValue);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_levelset_setfallbackvalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 LevelSet_SetFallBackValue (IntPtr Handle, Double AFallBackValue);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshape_getfallbackvalue", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BoundaryShape_GetFallBackValue (IntPtr Handle, out Double AFallBackValue);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_levelset_getfallbackvalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 LevelSet_GetFallBackValue (IntPtr Handle, out Double AFallBackValue);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshape_setmeshbboxonly", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BoundaryShape_SetMeshBBoxOnly (IntPtr Handle, Byte AMeshBBoxOnly);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_levelset_setmeshbboxonly", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 LevelSet_SetMeshBBoxOnly (IntPtr Handle, Byte AMeshBBoxOnly);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshape_getmeshbboxonly", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BoundaryShape_GetMeshBBoxOnly (IntPtr Handle, out Byte AMeshBBoxOnly);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_levelset_getmeshbboxonly", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 LevelSet_GetMeshBBoxOnly (IntPtr Handle, out Byte AMeshBBoxOnly);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshape_setmesh", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BoundaryShape_SetMesh (IntPtr Handle, IntPtr ATheMesh);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_levelset_setmesh", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 LevelSet_SetMesh (IntPtr Handle, IntPtr ATheMesh);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshape_getmesh", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BoundaryShape_GetMesh (IntPtr Handle, out IntPtr ATheMesh);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_levelset_getmesh", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 LevelSet_GetMesh (IntPtr Handle, out IntPtr ATheMesh);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshape_getvolumedata", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BoundaryShape_GetVolumeData (IntPtr Handle, out IntPtr ATheVolumeData);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_levelset_getvolumedata", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 LevelSet_GetVolumeData (IntPtr Handle, out IntPtr ATheVolumeData);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_boundaryshape_setvolumedata", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BoundaryShape_SetVolumeData (IntPtr Handle, IntPtr ATheVolumeData);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_levelset_setvolumedata", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 LevelSet_SetVolumeData (IntPtr Handle, IntPtr ATheVolumeData);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_beamlattice_getminlength", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BeamLattice_GetMinLength (IntPtr Handle, out Double AMinLength);
@@ -2168,11 +2168,11 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addvolumedata", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_AddVolumeData (IntPtr Handle, out IntPtr AVolumeDataInstance);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addboundaryshape", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_AddBoundaryShape (IntPtr Handle, out IntPtr ABoundaryShapeInstance);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addlevelset", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_AddLevelSet (IntPtr Handle, out IntPtr ALevelSetInstance);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getboundaryshapes", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_GetBoundaryShapes (IntPtr Handle, out IntPtr AResourceIterator);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getlevelsets", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetLevelSets (IntPtr Handle, out IntPtr AResourceIterator);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_getlibraryversion", CharSet = CharSet.Ansi, CallingConvention=CallingConvention.Cdecl)]
 			public extern static Int32 GetLibraryVersion (out UInt32 AMajor, out UInt32 AMinor, out UInt32 AMicro);
@@ -2604,12 +2604,12 @@ namespace Lib3MF {
 					case 0xC2BDF5D8CBBDB1F0: Object = new CMultiPropertyGroupIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MultiPropertyGroupIterator"
 					case 0xC4B8EC00A82BF336: Object = new CImage3DIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Image3DIterator"
 					case 0x40E9035363ACE65E: Object = new CFunctionIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionIterator"
-					case 0x9FBC898CF30CDEF3: Object = new CBoundaryShapeIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BoundaryShapeIterator"
+					case 0x9FBC898CF30CDEF3: Object = new CLevelSetIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSetIterator"
 					case 0xD17716D063DE2C22: Object = new CMetaData(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaData"
 					case 0x0C3B85369E9B25D3: Object = new CMetaDataGroup(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaDataGroup"
 					case 0x2DA2136F577A779C: Object = new CObject(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Object"
 					case 0x3B3A6DC6EC610497: Object = new CMeshObject(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObject"
-					case 0x2BE0E57BA81B2ECB: Object = new CBoundaryShape(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BoundaryShape"
+					case 0x2BE0E57BA81B2ECB: Object = new CLevelSet(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSet"
 					case 0x63B3B461B30B4BA5: Object = new CBeamLattice(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BeamLattice"
 					case 0x4DF17E76926221C2: Object = new CFunctionReference(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionReference"
 					case 0xD85B5B6143E787E3: Object = new CVolumeDataColor(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeDataColor"
@@ -3289,18 +3289,18 @@ namespace Lib3MF {
 
 	}
 
-	public class CBoundaryShapeIterator : CResourceIterator
+	public class CLevelSetIterator : CResourceIterator
 	{
-		public CBoundaryShapeIterator (IntPtr NewHandle) : base (NewHandle)
+		public CLevelSetIterator (IntPtr NewHandle) : base (NewHandle)
 		{
 		}
 
-		public CBoundaryShape GetCurrentBoundaryShape ()
+		public CLevelSet GetCurrentLevelSet ()
 		{
 			IntPtr newResource = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.BoundaryShapeIterator_GetCurrentBoundaryShape (Handle, out newResource));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CBoundaryShape>(newResource);
+			CheckError(Internal.Lib3MFWrapper.LevelSetIterator_GetCurrentLevelSet (Handle, out newResource));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CLevelSet>(newResource);
 		}
 
 	}
@@ -3898,9 +3898,9 @@ namespace Lib3MF {
 
 	}
 
-	public class CBoundaryShape : CObject
+	public class CLevelSet : CObject
 	{
-		public CBoundaryShape (IntPtr NewHandle) : base (NewHandle)
+		public CLevelSet (IntPtr NewHandle) : base (NewHandle)
 		{
 		}
 
@@ -3908,7 +3908,7 @@ namespace Lib3MF {
 		{
 			IntPtr newTheFunction = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.BoundaryShape_GetFunction (Handle, out newTheFunction));
+			CheckError(Internal.Lib3MFWrapper.LevelSet_GetFunction (Handle, out newTheFunction));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CFunction>(newTheFunction);
 		}
 
@@ -3918,14 +3918,14 @@ namespace Lib3MF {
 			if (ATheFunction != null)
 				ATheFunctionHandle = ATheFunction.GetHandle();
 
-			CheckError(Internal.Lib3MFWrapper.BoundaryShape_SetFunction (Handle, ATheFunctionHandle));
+			CheckError(Internal.Lib3MFWrapper.LevelSet_SetFunction (Handle, ATheFunctionHandle));
 		}
 
 		public sTransform GetTransform ()
 		{
 			Internal.InternalTransform intresultTransform;
 
-			CheckError(Internal.Lib3MFWrapper.BoundaryShape_GetTransform (Handle, out intresultTransform));
+			CheckError(Internal.Lib3MFWrapper.LevelSet_GetTransform (Handle, out intresultTransform));
 			return Internal.Lib3MFWrapper.convertInternalToStruct_Transform (intresultTransform);
 		}
 
@@ -3933,19 +3933,19 @@ namespace Lib3MF {
 		{
 			Internal.InternalTransform intTransform = Internal.Lib3MFWrapper.convertStructToInternal_Transform (ATransform);
 
-			CheckError(Internal.Lib3MFWrapper.BoundaryShape_SetTransform (Handle, intTransform));
+			CheckError(Internal.Lib3MFWrapper.LevelSet_SetTransform (Handle, intTransform));
 		}
 
 		public String GetChannelName ()
 		{
 			UInt32 sizeChannelName = 0;
 			UInt32 neededChannelName = 0;
-			CheckError(Internal.Lib3MFWrapper.BoundaryShape_GetChannelName (Handle, sizeChannelName, out neededChannelName, IntPtr.Zero));
+			CheckError(Internal.Lib3MFWrapper.LevelSet_GetChannelName (Handle, sizeChannelName, out neededChannelName, IntPtr.Zero));
 			sizeChannelName = neededChannelName;
 			byte[] bytesChannelName = new byte[sizeChannelName];
 			GCHandle dataChannelName = GCHandle.Alloc(bytesChannelName, GCHandleType.Pinned);
 
-			CheckError(Internal.Lib3MFWrapper.BoundaryShape_GetChannelName (Handle, sizeChannelName, out neededChannelName, dataChannelName.AddrOfPinnedObject()));
+			CheckError(Internal.Lib3MFWrapper.LevelSet_GetChannelName (Handle, sizeChannelName, out neededChannelName, dataChannelName.AddrOfPinnedObject()));
 			dataChannelName.Free();
 			return Encoding.UTF8.GetString(bytesChannelName).TrimEnd(char.MinValue);
 		}
@@ -3954,48 +3954,48 @@ namespace Lib3MF {
 		{
 			byte[] byteChannelName = Encoding.UTF8.GetBytes(AChannelName + char.MinValue);
 
-			CheckError(Internal.Lib3MFWrapper.BoundaryShape_SetChannelName (Handle, byteChannelName));
+			CheckError(Internal.Lib3MFWrapper.LevelSet_SetChannelName (Handle, byteChannelName));
 		}
 
 		public void SetMinFeatureSize (Double AMinFeatureSize)
 		{
 
-			CheckError(Internal.Lib3MFWrapper.BoundaryShape_SetMinFeatureSize (Handle, AMinFeatureSize));
+			CheckError(Internal.Lib3MFWrapper.LevelSet_SetMinFeatureSize (Handle, AMinFeatureSize));
 		}
 
 		public Double GetMinFeatureSize ()
 		{
 			Double resultMinFeatureSize = 0;
 
-			CheckError(Internal.Lib3MFWrapper.BoundaryShape_GetMinFeatureSize (Handle, out resultMinFeatureSize));
+			CheckError(Internal.Lib3MFWrapper.LevelSet_GetMinFeatureSize (Handle, out resultMinFeatureSize));
 			return resultMinFeatureSize;
 		}
 
 		public void SetFallBackValue (Double AFallBackValue)
 		{
 
-			CheckError(Internal.Lib3MFWrapper.BoundaryShape_SetFallBackValue (Handle, AFallBackValue));
+			CheckError(Internal.Lib3MFWrapper.LevelSet_SetFallBackValue (Handle, AFallBackValue));
 		}
 
 		public Double GetFallBackValue ()
 		{
 			Double resultFallBackValue = 0;
 
-			CheckError(Internal.Lib3MFWrapper.BoundaryShape_GetFallBackValue (Handle, out resultFallBackValue));
+			CheckError(Internal.Lib3MFWrapper.LevelSet_GetFallBackValue (Handle, out resultFallBackValue));
 			return resultFallBackValue;
 		}
 
 		public void SetMeshBBoxOnly (bool AMeshBBoxOnly)
 		{
 
-			CheckError(Internal.Lib3MFWrapper.BoundaryShape_SetMeshBBoxOnly (Handle, (Byte)( AMeshBBoxOnly ? 1 : 0 )));
+			CheckError(Internal.Lib3MFWrapper.LevelSet_SetMeshBBoxOnly (Handle, (Byte)( AMeshBBoxOnly ? 1 : 0 )));
 		}
 
 		public bool GetMeshBBoxOnly ()
 		{
 			Byte resultMeshBBoxOnly = 0;
 
-			CheckError(Internal.Lib3MFWrapper.BoundaryShape_GetMeshBBoxOnly (Handle, out resultMeshBBoxOnly));
+			CheckError(Internal.Lib3MFWrapper.LevelSet_GetMeshBBoxOnly (Handle, out resultMeshBBoxOnly));
 			return (resultMeshBBoxOnly != 0);
 		}
 
@@ -4005,14 +4005,14 @@ namespace Lib3MF {
 			if (ATheMesh != null)
 				ATheMeshHandle = ATheMesh.GetHandle();
 
-			CheckError(Internal.Lib3MFWrapper.BoundaryShape_SetMesh (Handle, ATheMeshHandle));
+			CheckError(Internal.Lib3MFWrapper.LevelSet_SetMesh (Handle, ATheMeshHandle));
 		}
 
 		public CMeshObject GetMesh ()
 		{
 			IntPtr newTheMesh = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.BoundaryShape_GetMesh (Handle, out newTheMesh));
+			CheckError(Internal.Lib3MFWrapper.LevelSet_GetMesh (Handle, out newTheMesh));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CMeshObject>(newTheMesh);
 		}
 
@@ -4020,7 +4020,7 @@ namespace Lib3MF {
 		{
 			IntPtr newTheVolumeData = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.BoundaryShape_GetVolumeData (Handle, out newTheVolumeData));
+			CheckError(Internal.Lib3MFWrapper.LevelSet_GetVolumeData (Handle, out newTheVolumeData));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CVolumeData>(newTheVolumeData);
 		}
 
@@ -4030,7 +4030,7 @@ namespace Lib3MF {
 			if (ATheVolumeData != null)
 				ATheVolumeDataHandle = ATheVolumeData.GetHandle();
 
-			CheckError(Internal.Lib3MFWrapper.BoundaryShape_SetVolumeData (Handle, ATheVolumeDataHandle));
+			CheckError(Internal.Lib3MFWrapper.LevelSet_SetVolumeData (Handle, ATheVolumeDataHandle));
 		}
 
 	}
@@ -8859,20 +8859,20 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CVolumeData>(newVolumeDataInstance);
 		}
 
-		public CBoundaryShape AddBoundaryShape ()
+		public CLevelSet AddLevelSet ()
 		{
-			IntPtr newBoundaryShapeInstance = IntPtr.Zero;
+			IntPtr newLevelSetInstance = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.Model_AddBoundaryShape (Handle, out newBoundaryShapeInstance));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CBoundaryShape>(newBoundaryShapeInstance);
+			CheckError(Internal.Lib3MFWrapper.Model_AddLevelSet (Handle, out newLevelSetInstance));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CLevelSet>(newLevelSetInstance);
 		}
 
-		public CBoundaryShapeIterator GetBoundaryShapes ()
+		public CLevelSetIterator GetLevelSets ()
 		{
 			IntPtr newResourceIterator = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.Model_GetBoundaryShapes (Handle, out newResourceIterator));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CBoundaryShapeIterator>(newResourceIterator);
+			CheckError(Internal.Lib3MFWrapper.Model_GetLevelSets (Handle, out newResourceIterator));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CLevelSetIterator>(newResourceIterator);
 		}
 
 	}

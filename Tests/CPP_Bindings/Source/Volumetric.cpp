@@ -389,7 +389,7 @@ namespace Lib3MF
         auto theMesh = GetMesh();
         // auto volumeData = theMesh->VolumeData();
         // auto theBoundary = volumeData->CreateNewBoundary(newFunction.get());
-        auto theBoundary = model->AddBoundaryShape();
+        auto theBoundary = model->AddLevelSet();
         theBoundary->SetMesh(theMesh);
         theBoundary->SetFunction(newFunction.get());
 
@@ -476,7 +476,7 @@ namespace Lib3MF
         output->SetReference("distance_2.result");
 
         auto theMesh = GetMesh();
-        auto theBoundary = model->AddBoundaryShape();
+        auto theBoundary = model->AddLevelSet();
         theBoundary->SetMesh(theMesh);
         theBoundary->SetFunction(newFunction.get());
         theBoundary->SetFallBackValue(-1.2345);
@@ -505,7 +505,7 @@ namespace Lib3MF
             meshesFromWrittenFile->GetCurrentMeshObject();
 
         // Check the fallback value
-        auto boundaryFromWrittenFile = helper::getFirstBoundaryShape(ioModel);
+        auto boundaryFromWrittenFile = helper::getFirstLevelSet(ioModel);
         EXPECT_EQ(boundaryFromWrittenFile->GetFallBackValue(), -1.2345);
 
         // Compare the functions
@@ -518,7 +518,7 @@ namespace Lib3MF
         PImplicitFunction newFunction = helper::createGyroidFunction(*model);
 
         auto theMesh = GetMesh();
-        auto theBoundary = model->AddBoundaryShape();
+        auto theBoundary = model->AddLevelSet();
         theBoundary->SetFunction(newFunction.get());
         theBoundary->SetMesh(theMesh);
 
@@ -599,7 +599,7 @@ namespace Lib3MF
         output->SetReference("subtraction.result");
 
         auto theMesh = GetMesh();
-        auto theBoundary = model->AddBoundaryShape();
+        auto theBoundary = model->AddLevelSet();
         theBoundary->SetMesh(theMesh);
         theBoundary->SetFunction(std::dynamic_pointer_cast<CFunction>(newFunction));
 
@@ -743,7 +743,7 @@ namespace Lib3MF
 
         // Add a boundary to the volume data
         auto theMesh = GetMesh();
-        auto theBoundary = model->AddBoundaryShape();
+        auto theBoundary = model->AddLevelSet();
         theBoundary->SetMesh(theMesh);
         theBoundary->SetFunction(newFunction.get());
         theBoundary->SetMinFeatureSize(0.1);
@@ -922,7 +922,7 @@ namespace Lib3MF
         
 
         // Add boundary
-        auto boundary = model->AddBoundaryShape();
+        auto boundary = model->AddLevelSet();
         boundary->SetMesh(theMesh);
         boundary->SetFunction(funcFromImage3d.get());
 
@@ -956,7 +956,7 @@ namespace Lib3MF
                                  functionFromFile);
 
         // Check the boundary
-        auto boundaryFromFile = helper::getFirstBoundaryShape(ioModel);
+        auto boundaryFromFile = helper::getFirstLevelSet(ioModel);
         ASSERT_TRUE(boundaryFromFile);
         EXPECT_EQ(boundaryFromFile->GetFunction()->GetModelResourceID(), funcImg3dId);
         helper::CompareTransforms(boundary->GetTransform(),

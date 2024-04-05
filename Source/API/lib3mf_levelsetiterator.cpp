@@ -24,25 +24,25 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CBoundaryShapeIterator
+Abstract: This is a stub class definition of CLevelSetIterator
 
 */
 
-#include "lib3mf_boundaryshapeiterator.hpp"
+#include "lib3mf_levelsetiterator.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_boundaryshape.hpp"
+#include "lib3mf_levelset.hpp"
 
 
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CBoundaryShapeIterator 
+ Class definition of CLevelSetIterator 
 **************************************************************************************************************************/
 
-IBoundaryShape * CBoundaryShapeIterator::GetCurrentBoundaryShape()
+ILevelSet * CLevelSetIterator::GetCurrentLevelSet()
 {
-	return CBoundaryShape::fnCreateBoundaryShapeFromModelResource(GetCurrentResource(), true);
+	return CLevelSet::fnCreateLevelSetFromModelResource(GetCurrentResource(), true);
 }
 

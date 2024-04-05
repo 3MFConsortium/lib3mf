@@ -75,12 +75,12 @@ class CCompositeMaterialsIterator;
 class CMultiPropertyGroupIterator;
 class CImage3DIterator;
 class CFunctionIterator;
-class CBoundaryShapeIterator;
+class CLevelSetIterator;
 class CMetaData;
 class CMetaDataGroup;
 class CObject;
 class CMeshObject;
-class CBoundaryShape;
+class CLevelSet;
 class CBeamLattice;
 class CFunctionReference;
 class CVolumeDataColor;
@@ -194,12 +194,12 @@ typedef CCompositeMaterialsIterator CLib3MFCompositeMaterialsIterator;
 typedef CMultiPropertyGroupIterator CLib3MFMultiPropertyGroupIterator;
 typedef CImage3DIterator CLib3MFImage3DIterator;
 typedef CFunctionIterator CLib3MFFunctionIterator;
-typedef CBoundaryShapeIterator CLib3MFBoundaryShapeIterator;
+typedef CLevelSetIterator CLib3MFLevelSetIterator;
 typedef CMetaData CLib3MFMetaData;
 typedef CMetaDataGroup CLib3MFMetaDataGroup;
 typedef CObject CLib3MFObject;
 typedef CMeshObject CLib3MFMeshObject;
-typedef CBoundaryShape CLib3MFBoundaryShape;
+typedef CLevelSet CLib3MFLevelSet;
 typedef CBeamLattice CLib3MFBeamLattice;
 typedef CFunctionReference CLib3MFFunctionReference;
 typedef CVolumeDataColor CLib3MFVolumeDataColor;
@@ -313,12 +313,12 @@ typedef std::shared_ptr<CCompositeMaterialsIterator> PCompositeMaterialsIterator
 typedef std::shared_ptr<CMultiPropertyGroupIterator> PMultiPropertyGroupIterator;
 typedef std::shared_ptr<CImage3DIterator> PImage3DIterator;
 typedef std::shared_ptr<CFunctionIterator> PFunctionIterator;
-typedef std::shared_ptr<CBoundaryShapeIterator> PBoundaryShapeIterator;
+typedef std::shared_ptr<CLevelSetIterator> PLevelSetIterator;
 typedef std::shared_ptr<CMetaData> PMetaData;
 typedef std::shared_ptr<CMetaDataGroup> PMetaDataGroup;
 typedef std::shared_ptr<CObject> PObject;
 typedef std::shared_ptr<CMeshObject> PMeshObject;
-typedef std::shared_ptr<CBoundaryShape> PBoundaryShape;
+typedef std::shared_ptr<CLevelSet> PLevelSet;
 typedef std::shared_ptr<CBeamLattice> PBeamLattice;
 typedef std::shared_ptr<CFunctionReference> PFunctionReference;
 typedef std::shared_ptr<CVolumeDataColor> PVolumeDataColor;
@@ -432,12 +432,12 @@ typedef PCompositeMaterialsIterator PLib3MFCompositeMaterialsIterator;
 typedef PMultiPropertyGroupIterator PLib3MFMultiPropertyGroupIterator;
 typedef PImage3DIterator PLib3MFImage3DIterator;
 typedef PFunctionIterator PLib3MFFunctionIterator;
-typedef PBoundaryShapeIterator PLib3MFBoundaryShapeIterator;
+typedef PLevelSetIterator PLib3MFLevelSetIterator;
 typedef PMetaData PLib3MFMetaData;
 typedef PMetaDataGroup PLib3MFMetaDataGroup;
 typedef PObject PLib3MFObject;
 typedef PMeshObject PLib3MFMeshObject;
-typedef PBoundaryShape PLib3MFBoundaryShape;
+typedef PLevelSet PLib3MFLevelSet;
 typedef PBeamLattice PLib3MFBeamLattice;
 typedef PFunctionReference PLib3MFFunctionReference;
 typedef PVolumeDataColor PLib3MFVolumeDataColor;
@@ -835,12 +835,12 @@ private:
 	friend class CMultiPropertyGroupIterator;
 	friend class CImage3DIterator;
 	friend class CFunctionIterator;
-	friend class CBoundaryShapeIterator;
+	friend class CLevelSetIterator;
 	friend class CMetaData;
 	friend class CMetaDataGroup;
 	friend class CObject;
 	friend class CMeshObject;
-	friend class CBoundaryShape;
+	friend class CLevelSet;
 	friend class CBeamLattice;
 	friend class CFunctionReference;
 	friend class CVolumeDataColor;
@@ -1314,20 +1314,20 @@ public:
 };
 	
 /*************************************************************************************************************************
- Class CBoundaryShapeIterator 
+ Class CLevelSetIterator 
 **************************************************************************************************************************/
-class CBoundaryShapeIterator : public CResourceIterator {
+class CLevelSetIterator : public CResourceIterator {
 public:
 	
 	/**
-	* CBoundaryShapeIterator::CBoundaryShapeIterator - Constructor for BoundaryShapeIterator class.
+	* CLevelSetIterator::CLevelSetIterator - Constructor for LevelSetIterator class.
 	*/
-	CBoundaryShapeIterator(CWrapper* pWrapper, Lib3MFHandle pHandle)
+	CLevelSetIterator(CWrapper* pWrapper, Lib3MFHandle pHandle)
 		: CResourceIterator(pWrapper, pHandle)
 	{
 	}
 	
-	inline PBoundaryShape GetCurrentBoundaryShape();
+	inline PLevelSet GetCurrentLevelSet();
 };
 	
 /*************************************************************************************************************************
@@ -1456,15 +1456,15 @@ public:
 };
 	
 /*************************************************************************************************************************
- Class CBoundaryShape 
+ Class CLevelSet 
 **************************************************************************************************************************/
-class CBoundaryShape : public CObject {
+class CLevelSet : public CObject {
 public:
 	
 	/**
-	* CBoundaryShape::CBoundaryShape - Constructor for BoundaryShape class.
+	* CLevelSet::CLevelSet - Constructor for LevelSet class.
 	*/
-	CBoundaryShape(CWrapper* pWrapper, Lib3MFHandle pHandle)
+	CLevelSet(CWrapper* pWrapper, Lib3MFHandle pHandle)
 		: CObject(pWrapper, pHandle)
 	{
 	}
@@ -3375,8 +3375,8 @@ public:
 	inline PImplicitFunction AddImplicitFunction();
 	inline PFunctionFromImage3D AddFunctionFromImage3D(classParam<CImage3D> pImage3DInstance);
 	inline PVolumeData AddVolumeData();
-	inline PBoundaryShape AddBoundaryShape();
-	inline PBoundaryShapeIterator GetBoundaryShapes();
+	inline PLevelSet AddLevelSet();
+	inline PLevelSetIterator GetLevelSets();
 };
 
 /*************************************************************************************************************************
@@ -3413,12 +3413,12 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0xC2BDF5D8CBBDB1F0UL: return new CMultiPropertyGroupIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MultiPropertyGroupIterator"
 		case 0xC4B8EC00A82BF336UL: return new CImage3DIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Image3DIterator"
 		case 0x40E9035363ACE65EUL: return new CFunctionIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionIterator"
-		case 0x9FBC898CF30CDEF3UL: return new CBoundaryShapeIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BoundaryShapeIterator"
+		case 0x9FBC898CF30CDEF3UL: return new CLevelSetIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSetIterator"
 		case 0xD17716D063DE2C22UL: return new CMetaData(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaData"
 		case 0x0C3B85369E9B25D3UL: return new CMetaDataGroup(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaDataGroup"
 		case 0x2DA2136F577A779CUL: return new CObject(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Object"
 		case 0x3B3A6DC6EC610497UL: return new CMeshObject(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObject"
-		case 0x2BE0E57BA81B2ECBUL: return new CBoundaryShape(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BoundaryShape"
+		case 0x2BE0E57BA81B2ECBUL: return new CLevelSet(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSet"
 		case 0x63B3B461B30B4BA5UL: return new CBeamLattice(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BeamLattice"
 		case 0x4DF17E76926221C2UL: return new CFunctionReference(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionReference"
 		case 0xD85B5B6143E787E3UL: return new CVolumeDataColor(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeDataColor"
@@ -4482,22 +4482,22 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	 * Method definitions for class CBoundaryShapeIterator
+	 * Method definitions for class CLevelSetIterator
 	 */
 	
 	/**
-	* CBoundaryShapeIterator::GetCurrentBoundaryShape - Returns the BoundaryShape the iterator points at.
+	* CLevelSetIterator::GetCurrentLevelSet - Returns the LevelSet the iterator points at.
 	* @return returns the MeshObject instance.
 	*/
-	PBoundaryShape CBoundaryShapeIterator::GetCurrentBoundaryShape()
+	PLevelSet CLevelSetIterator::GetCurrentLevelSet()
 	{
 		Lib3MFHandle hResource = nullptr;
-		CheckError(lib3mf_boundaryshapeiterator_getcurrentboundaryshape(m_pHandle, &hResource));
+		CheckError(lib3mf_levelsetiterator_getcurrentlevelset(m_pHandle, &hResource));
 		
 		if (!hResource) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::shared_ptr<CBoundaryShape>(dynamic_cast<CBoundaryShape*>(m_pWrapper->polymorphicFactory(hResource)));
+		return std::shared_ptr<CLevelSet>(dynamic_cast<CLevelSet*>(m_pWrapper->polymorphicFactory(hResource)));
 	}
 	
 	/**
@@ -5250,17 +5250,17 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	 * Method definitions for class CBoundaryShape
+	 * Method definitions for class CLevelSet
 	 */
 	
 	/**
-	* CBoundaryShape::GetFunction - Returns the function that is used as boundary shape.
+	* CLevelSet::GetFunction - Returns the function that is used as boundary shape.
 	* @return the function to use as boundary shape
 	*/
-	PFunction CBoundaryShape::GetFunction()
+	PFunction CLevelSet::GetFunction()
 	{
 		Lib3MFHandle hTheFunction = nullptr;
-		CheckError(lib3mf_boundaryshape_getfunction(m_pHandle, &hTheFunction));
+		CheckError(lib3mf_levelset_getfunction(m_pHandle, &hTheFunction));
 		
 		if (hTheFunction) {
 			return std::shared_ptr<CFunction>(dynamic_cast<CFunction*>(m_pWrapper->polymorphicFactory(hTheFunction)));
@@ -5270,141 +5270,141 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CBoundaryShape::SetFunction - Sets the function to use as boundary shape.
+	* CLevelSet::SetFunction - Sets the function to use as boundary shape.
 	* @param[in] pTheFunction - the function to use as boundary shape
 	*/
-	void CBoundaryShape::SetFunction(classParam<CFunction> pTheFunction)
+	void CLevelSet::SetFunction(classParam<CFunction> pTheFunction)
 	{
 		Lib3MFHandle hTheFunction = pTheFunction.GetHandle();
-		CheckError(lib3mf_boundaryshape_setfunction(m_pHandle, hTheFunction));
+		CheckError(lib3mf_levelset_setfunction(m_pHandle, hTheFunction));
 	}
 	
 	/**
-	* CBoundaryShape::GetTransform - Returns the transformation matrix into the coordinate system of the referenced Function.
+	* CLevelSet::GetTransform - Returns the transformation matrix into the coordinate system of the referenced Function.
 	* @return the transformation matrix
 	*/
-	sTransform CBoundaryShape::GetTransform()
+	sTransform CLevelSet::GetTransform()
 	{
 		sTransform resultTransform;
-		CheckError(lib3mf_boundaryshape_gettransform(m_pHandle, &resultTransform));
+		CheckError(lib3mf_levelset_gettransform(m_pHandle, &resultTransform));
 		
 		return resultTransform;
 	}
 	
 	/**
-	* CBoundaryShape::SetTransform - Sets the transformation matrix into the coordinate system of the referenced Function.
+	* CLevelSet::SetTransform - Sets the transformation matrix into the coordinate system of the referenced Function.
 	* @param[in] Transform - new transformation matrix
 	*/
-	void CBoundaryShape::SetTransform(const sTransform & Transform)
+	void CLevelSet::SetTransform(const sTransform & Transform)
 	{
-		CheckError(lib3mf_boundaryshape_settransform(m_pHandle, &Transform));
+		CheckError(lib3mf_levelset_settransform(m_pHandle, &Transform));
 	}
 	
 	/**
-	* CBoundaryShape::GetChannelName - Returns the name of the function output channel to use.
+	* CLevelSet::GetChannelName - Returns the name of the function output channel to use.
 	* @return the name of the function output channel
 	*/
-	std::string CBoundaryShape::GetChannelName()
+	std::string CLevelSet::GetChannelName()
 	{
 		Lib3MF_uint32 bytesNeededChannelName = 0;
 		Lib3MF_uint32 bytesWrittenChannelName = 0;
-		CheckError(lib3mf_boundaryshape_getchannelname(m_pHandle, 0, &bytesNeededChannelName, nullptr));
+		CheckError(lib3mf_levelset_getchannelname(m_pHandle, 0, &bytesNeededChannelName, nullptr));
 		std::vector<char> bufferChannelName(bytesNeededChannelName);
-		CheckError(lib3mf_boundaryshape_getchannelname(m_pHandle, bytesNeededChannelName, &bytesWrittenChannelName, &bufferChannelName[0]));
+		CheckError(lib3mf_levelset_getchannelname(m_pHandle, bytesNeededChannelName, &bytesWrittenChannelName, &bufferChannelName[0]));
 		
 		return std::string(&bufferChannelName[0]);
 	}
 	
 	/**
-	* CBoundaryShape::SetChannelName - Sets the name of the function output channel to use.
+	* CLevelSet::SetChannelName - Sets the name of the function output channel to use.
 	* @param[in] sChannelName - new name of the function output channel
 	*/
-	void CBoundaryShape::SetChannelName(const std::string & sChannelName)
+	void CLevelSet::SetChannelName(const std::string & sChannelName)
 	{
-		CheckError(lib3mf_boundaryshape_setchannelname(m_pHandle, sChannelName.c_str()));
+		CheckError(lib3mf_levelset_setchannelname(m_pHandle, sChannelName.c_str()));
 	}
 	
 	/**
-	* CBoundaryShape::SetMinFeatureSize - Sets the minimal feature size as a hint for the function evaluator
+	* CLevelSet::SetMinFeatureSize - Sets the minimal feature size as a hint for the function evaluator
 	* @param[in] dMinFeatureSize - minimal feature size
 	*/
-	void CBoundaryShape::SetMinFeatureSize(const Lib3MF_double dMinFeatureSize)
+	void CLevelSet::SetMinFeatureSize(const Lib3MF_double dMinFeatureSize)
 	{
-		CheckError(lib3mf_boundaryshape_setminfeaturesize(m_pHandle, dMinFeatureSize));
+		CheckError(lib3mf_levelset_setminfeaturesize(m_pHandle, dMinFeatureSize));
 	}
 	
 	/**
-	* CBoundaryShape::GetMinFeatureSize - Returns the minimal feature size as a hint for the function evaluator
+	* CLevelSet::GetMinFeatureSize - Returns the minimal feature size as a hint for the function evaluator
 	* @return minimal feature size
 	*/
-	Lib3MF_double CBoundaryShape::GetMinFeatureSize()
+	Lib3MF_double CLevelSet::GetMinFeatureSize()
 	{
 		Lib3MF_double resultMinFeatureSize = 0;
-		CheckError(lib3mf_boundaryshape_getminfeaturesize(m_pHandle, &resultMinFeatureSize));
+		CheckError(lib3mf_levelset_getminfeaturesize(m_pHandle, &resultMinFeatureSize));
 		
 		return resultMinFeatureSize;
 	}
 	
 	/**
-	* CBoundaryShape::SetFallBackValue - Sets the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+	* CLevelSet::SetFallBackValue - Sets the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
 	* @param[in] dFallBackValue - fallback value
 	*/
-	void CBoundaryShape::SetFallBackValue(const Lib3MF_double dFallBackValue)
+	void CLevelSet::SetFallBackValue(const Lib3MF_double dFallBackValue)
 	{
-		CheckError(lib3mf_boundaryshape_setfallbackvalue(m_pHandle, dFallBackValue));
+		CheckError(lib3mf_levelset_setfallbackvalue(m_pHandle, dFallBackValue));
 	}
 	
 	/**
-	* CBoundaryShape::GetFallBackValue - Returns the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+	* CLevelSet::GetFallBackValue - Returns the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
 	* @return fallback value
 	*/
-	Lib3MF_double CBoundaryShape::GetFallBackValue()
+	Lib3MF_double CLevelSet::GetFallBackValue()
 	{
 		Lib3MF_double resultFallBackValue = 0;
-		CheckError(lib3mf_boundaryshape_getfallbackvalue(m_pHandle, &resultFallBackValue));
+		CheckError(lib3mf_levelset_getfallbackvalue(m_pHandle, &resultFallBackValue));
 		
 		return resultFallBackValue;
 	}
 	
 	/**
-	* CBoundaryShape::SetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+	* CLevelSet::SetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
 	* @param[in] bMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
 	*/
-	void CBoundaryShape::SetMeshBBoxOnly(const bool bMeshBBoxOnly)
+	void CLevelSet::SetMeshBBoxOnly(const bool bMeshBBoxOnly)
 	{
-		CheckError(lib3mf_boundaryshape_setmeshbboxonly(m_pHandle, bMeshBBoxOnly));
+		CheckError(lib3mf_levelset_setmeshbboxonly(m_pHandle, bMeshBBoxOnly));
 	}
 	
 	/**
-	* CBoundaryShape::GetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+	* CLevelSet::GetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
 	* @return If set only the bounding box of the mesh is intersected with the boundary
 	*/
-	bool CBoundaryShape::GetMeshBBoxOnly()
+	bool CLevelSet::GetMeshBBoxOnly()
 	{
 		bool resultMeshBBoxOnly = 0;
-		CheckError(lib3mf_boundaryshape_getmeshbboxonly(m_pHandle, &resultMeshBBoxOnly));
+		CheckError(lib3mf_levelset_getmeshbboxonly(m_pHandle, &resultMeshBBoxOnly));
 		
 		return resultMeshBBoxOnly;
 	}
 	
 	/**
-	* CBoundaryShape::SetMesh - Sets the mesh to use as evaluation domain
+	* CLevelSet::SetMesh - Sets the mesh to use as evaluation domain
 	* @param[in] pTheMesh - The mesh
 	*/
-	void CBoundaryShape::SetMesh(classParam<CMeshObject> pTheMesh)
+	void CLevelSet::SetMesh(classParam<CMeshObject> pTheMesh)
 	{
 		Lib3MFHandle hTheMesh = pTheMesh.GetHandle();
-		CheckError(lib3mf_boundaryshape_setmesh(m_pHandle, hTheMesh));
+		CheckError(lib3mf_levelset_setmesh(m_pHandle, hTheMesh));
 	}
 	
 	/**
-	* CBoundaryShape::GetMesh - Returns the mesh that is used as evaluation domain
+	* CLevelSet::GetMesh - Returns the mesh that is used as evaluation domain
 	* @return The mesh
 	*/
-	PMeshObject CBoundaryShape::GetMesh()
+	PMeshObject CLevelSet::GetMesh()
 	{
 		Lib3MFHandle hTheMesh = nullptr;
-		CheckError(lib3mf_boundaryshape_getmesh(m_pHandle, &hTheMesh));
+		CheckError(lib3mf_levelset_getmesh(m_pHandle, &hTheMesh));
 		
 		if (hTheMesh) {
 			return std::shared_ptr<CMeshObject>(dynamic_cast<CMeshObject*>(m_pWrapper->polymorphicFactory(hTheMesh)));
@@ -5414,13 +5414,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CBoundaryShape::GetVolumeData - Retrieves the VolumeData this MeshObject.
+	* CLevelSet::GetVolumeData - Retrieves the VolumeData this MeshObject.
 	* @return the VolumeData of this MeshObject
 	*/
-	PVolumeData CBoundaryShape::GetVolumeData()
+	PVolumeData CLevelSet::GetVolumeData()
 	{
 		Lib3MFHandle hTheVolumeData = nullptr;
-		CheckError(lib3mf_boundaryshape_getvolumedata(m_pHandle, &hTheVolumeData));
+		CheckError(lib3mf_levelset_getvolumedata(m_pHandle, &hTheVolumeData));
 		
 		if (hTheVolumeData) {
 			return std::shared_ptr<CVolumeData>(dynamic_cast<CVolumeData*>(m_pWrapper->polymorphicFactory(hTheVolumeData)));
@@ -5430,13 +5430,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CBoundaryShape::SetVolumeData - Sets the VolumeData of this BoundaryShape.
+	* CLevelSet::SetVolumeData - Sets the VolumeData of this LevelSet.
 	* @param[in] pTheVolumeData - the VolumeData of this MeshObject
 	*/
-	void CBoundaryShape::SetVolumeData(classParam<CVolumeData> pTheVolumeData)
+	void CLevelSet::SetVolumeData(classParam<CVolumeData> pTheVolumeData)
 	{
 		Lib3MFHandle hTheVolumeData = pTheVolumeData.GetHandle();
-		CheckError(lib3mf_boundaryshape_setvolumedata(m_pHandle, hTheVolumeData));
+		CheckError(lib3mf_levelset_setvolumedata(m_pHandle, hTheVolumeData));
 	}
 	
 	/**
@@ -11992,33 +11992,33 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CModel::AddBoundaryShape - adds an empty boundary shape object to the model.
+	* CModel::AddLevelSet - adds an empty boundary shape object to the model.
 	* @return  returns the mesh object instance
 	*/
-	PBoundaryShape CModel::AddBoundaryShape()
+	PLevelSet CModel::AddLevelSet()
 	{
-		Lib3MFHandle hBoundaryShapeInstance = nullptr;
-		CheckError(lib3mf_model_addboundaryshape(m_pHandle, &hBoundaryShapeInstance));
+		Lib3MFHandle hLevelSetInstance = nullptr;
+		CheckError(lib3mf_model_addlevelset(m_pHandle, &hLevelSetInstance));
 		
-		if (!hBoundaryShapeInstance) {
+		if (!hLevelSetInstance) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::shared_ptr<CBoundaryShape>(dynamic_cast<CBoundaryShape*>(m_pWrapper->polymorphicFactory(hBoundaryShapeInstance)));
+		return std::shared_ptr<CLevelSet>(dynamic_cast<CLevelSet*>(m_pWrapper->polymorphicFactory(hLevelSetInstance)));
 	}
 	
 	/**
-	* CModel::GetBoundaryShapes - creates a resource iterator instance with all boundary shape resources.
+	* CModel::GetLevelSets - creates a resource iterator instance with all boundary shape resources.
 	* @return returns the iterator instance.
 	*/
-	PBoundaryShapeIterator CModel::GetBoundaryShapes()
+	PLevelSetIterator CModel::GetLevelSets()
 	{
 		Lib3MFHandle hResourceIterator = nullptr;
-		CheckError(lib3mf_model_getboundaryshapes(m_pHandle, &hResourceIterator));
+		CheckError(lib3mf_model_getlevelsets(m_pHandle, &hResourceIterator));
 		
 		if (!hResourceIterator) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::shared_ptr<CBoundaryShapeIterator>(dynamic_cast<CBoundaryShapeIterator*>(m_pWrapper->polymorphicFactory(hResourceIterator)));
+		return std::shared_ptr<CLevelSetIterator>(dynamic_cast<CLevelSetIterator*>(m_pWrapper->polymorphicFactory(hResourceIterator)));
 	}
 
 } // namespace Lib3MF

@@ -32,16 +32,16 @@ Reader for boundary shape objects
 #pragma once
 
 #include "Model/Classes/NMR_ImplicitNodeTypes.h"
-#include "Model/Classes/NMR_ModelBoundaryShapeObject.h"
+#include "Model/Classes/NMR_ModelLevelSetObject.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Object.h"
 
 namespace NMR
 {
-    class CModelReaderNode_BoundaryShape : public CModelReaderNode
+    class CModelReaderNode_LevelSet : public CModelReaderNode
     {
        private:
-        PModelBoundaryShapeObject m_pBoundaryShape;
+        PModelLevelSetObject m_pLevelSet;
         CModel* m_parentModel = nullptr;
 
         ModelResourceID m_resID = 0;
@@ -69,8 +69,8 @@ namespace NMR
         nfBool m_bHasVolumeDataID = false;
 
        public:
-        CModelReaderNode_BoundaryShape() = delete;
-        CModelReaderNode_BoundaryShape(CModel* pModel, PModelBoundaryShapeObject boundaryShape, PModelWarnings pWarnings,
+        CModelReaderNode_LevelSet() = delete;
+        CModelReaderNode_LevelSet(CModel* pModel, PModelLevelSetObject levelSet, PModelWarnings pWarnings,
                                        PProgressMonitor pProgressMonitor);
 
         void parseXML(_In_ CXmlReader* pXMLReader) override;
@@ -83,6 +83,6 @@ namespace NMR
                               _In_ CXmlReader* pXMLReader) override;
     };
 
-    typedef std::shared_ptr<CModelReaderNode_BoundaryShape>
-        PModelReaderNode_BoundaryShape;
+    typedef std::shared_ptr<CModelReaderNode_LevelSet>
+        PModelReaderNode_LevelSet;
 }  // namespace NMR

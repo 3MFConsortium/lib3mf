@@ -98,7 +98,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_MultiPropertyGroupIterator_GetCurrentMultiPropertyGroup = NULL;
 	pWrapperTable->m_Image3DIterator_GetCurrentImage3D = NULL;
 	pWrapperTable->m_FunctionIterator_GetCurrentFunction = NULL;
-	pWrapperTable->m_BoundaryShapeIterator_GetCurrentBoundaryShape = NULL;
+	pWrapperTable->m_LevelSetIterator_GetCurrentLevelSet = NULL;
 	pWrapperTable->m_MetaData_GetNameSpace = NULL;
 	pWrapperTable->m_MetaData_SetNameSpace = NULL;
 	pWrapperTable->m_MetaData_GetName = NULL;
@@ -160,22 +160,22 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_MeshObject_BeamLattice = NULL;
 	pWrapperTable->m_MeshObject_GetVolumeData = NULL;
 	pWrapperTable->m_MeshObject_SetVolumeData = NULL;
-	pWrapperTable->m_BoundaryShape_GetFunction = NULL;
-	pWrapperTable->m_BoundaryShape_SetFunction = NULL;
-	pWrapperTable->m_BoundaryShape_GetTransform = NULL;
-	pWrapperTable->m_BoundaryShape_SetTransform = NULL;
-	pWrapperTable->m_BoundaryShape_GetChannelName = NULL;
-	pWrapperTable->m_BoundaryShape_SetChannelName = NULL;
-	pWrapperTable->m_BoundaryShape_SetMinFeatureSize = NULL;
-	pWrapperTable->m_BoundaryShape_GetMinFeatureSize = NULL;
-	pWrapperTable->m_BoundaryShape_SetFallBackValue = NULL;
-	pWrapperTable->m_BoundaryShape_GetFallBackValue = NULL;
-	pWrapperTable->m_BoundaryShape_SetMeshBBoxOnly = NULL;
-	pWrapperTable->m_BoundaryShape_GetMeshBBoxOnly = NULL;
-	pWrapperTable->m_BoundaryShape_SetMesh = NULL;
-	pWrapperTable->m_BoundaryShape_GetMesh = NULL;
-	pWrapperTable->m_BoundaryShape_GetVolumeData = NULL;
-	pWrapperTable->m_BoundaryShape_SetVolumeData = NULL;
+	pWrapperTable->m_LevelSet_GetFunction = NULL;
+	pWrapperTable->m_LevelSet_SetFunction = NULL;
+	pWrapperTable->m_LevelSet_GetTransform = NULL;
+	pWrapperTable->m_LevelSet_SetTransform = NULL;
+	pWrapperTable->m_LevelSet_GetChannelName = NULL;
+	pWrapperTable->m_LevelSet_SetChannelName = NULL;
+	pWrapperTable->m_LevelSet_SetMinFeatureSize = NULL;
+	pWrapperTable->m_LevelSet_GetMinFeatureSize = NULL;
+	pWrapperTable->m_LevelSet_SetFallBackValue = NULL;
+	pWrapperTable->m_LevelSet_GetFallBackValue = NULL;
+	pWrapperTable->m_LevelSet_SetMeshBBoxOnly = NULL;
+	pWrapperTable->m_LevelSet_GetMeshBBoxOnly = NULL;
+	pWrapperTable->m_LevelSet_SetMesh = NULL;
+	pWrapperTable->m_LevelSet_GetMesh = NULL;
+	pWrapperTable->m_LevelSet_GetVolumeData = NULL;
+	pWrapperTable->m_LevelSet_SetVolumeData = NULL;
 	pWrapperTable->m_BeamLattice_GetMinLength = NULL;
 	pWrapperTable->m_BeamLattice_SetMinLength = NULL;
 	pWrapperTable->m_BeamLattice_GetClipping = NULL;
@@ -626,8 +626,8 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Model_AddImplicitFunction = NULL;
 	pWrapperTable->m_Model_AddFunctionFromImage3D = NULL;
 	pWrapperTable->m_Model_AddVolumeData = NULL;
-	pWrapperTable->m_Model_AddBoundaryShape = NULL;
-	pWrapperTable->m_Model_GetBoundaryShapes = NULL;
+	pWrapperTable->m_Model_AddLevelSet = NULL;
+	pWrapperTable->m_Model_GetLevelSets = NULL;
 	pWrapperTable->m_GetLibraryVersion = NULL;
 	pWrapperTable->m_GetPrereleaseInformation = NULL;
 	pWrapperTable->m_GetBuildInformation = NULL;
@@ -1152,12 +1152,12 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_BoundaryShapeIterator_GetCurrentBoundaryShape = (PLib3MFBoundaryShapeIterator_GetCurrentBoundaryShapePtr) GetProcAddress(hLibrary, "lib3mf_boundaryshapeiterator_getcurrentboundaryshape");
+	pWrapperTable->m_LevelSetIterator_GetCurrentLevelSet = (PLib3MFLevelSetIterator_GetCurrentLevelSetPtr) GetProcAddress(hLibrary, "lib3mf_levelsetiterator_getcurrentlevelset");
 	#else // _WIN32
-	pWrapperTable->m_BoundaryShapeIterator_GetCurrentBoundaryShape = (PLib3MFBoundaryShapeIterator_GetCurrentBoundaryShapePtr) dlsym(hLibrary, "lib3mf_boundaryshapeiterator_getcurrentboundaryshape");
+	pWrapperTable->m_LevelSetIterator_GetCurrentLevelSet = (PLib3MFLevelSetIterator_GetCurrentLevelSetPtr) dlsym(hLibrary, "lib3mf_levelsetiterator_getcurrentlevelset");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_BoundaryShapeIterator_GetCurrentBoundaryShape == NULL)
+	if (pWrapperTable->m_LevelSetIterator_GetCurrentLevelSet == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -1710,147 +1710,147 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_BoundaryShape_GetFunction = (PLib3MFBoundaryShape_GetFunctionPtr) GetProcAddress(hLibrary, "lib3mf_boundaryshape_getfunction");
+	pWrapperTable->m_LevelSet_GetFunction = (PLib3MFLevelSet_GetFunctionPtr) GetProcAddress(hLibrary, "lib3mf_levelset_getfunction");
 	#else // _WIN32
-	pWrapperTable->m_BoundaryShape_GetFunction = (PLib3MFBoundaryShape_GetFunctionPtr) dlsym(hLibrary, "lib3mf_boundaryshape_getfunction");
+	pWrapperTable->m_LevelSet_GetFunction = (PLib3MFLevelSet_GetFunctionPtr) dlsym(hLibrary, "lib3mf_levelset_getfunction");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_BoundaryShape_GetFunction == NULL)
+	if (pWrapperTable->m_LevelSet_GetFunction == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_BoundaryShape_SetFunction = (PLib3MFBoundaryShape_SetFunctionPtr) GetProcAddress(hLibrary, "lib3mf_boundaryshape_setfunction");
+	pWrapperTable->m_LevelSet_SetFunction = (PLib3MFLevelSet_SetFunctionPtr) GetProcAddress(hLibrary, "lib3mf_levelset_setfunction");
 	#else // _WIN32
-	pWrapperTable->m_BoundaryShape_SetFunction = (PLib3MFBoundaryShape_SetFunctionPtr) dlsym(hLibrary, "lib3mf_boundaryshape_setfunction");
+	pWrapperTable->m_LevelSet_SetFunction = (PLib3MFLevelSet_SetFunctionPtr) dlsym(hLibrary, "lib3mf_levelset_setfunction");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_BoundaryShape_SetFunction == NULL)
+	if (pWrapperTable->m_LevelSet_SetFunction == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_BoundaryShape_GetTransform = (PLib3MFBoundaryShape_GetTransformPtr) GetProcAddress(hLibrary, "lib3mf_boundaryshape_gettransform");
+	pWrapperTable->m_LevelSet_GetTransform = (PLib3MFLevelSet_GetTransformPtr) GetProcAddress(hLibrary, "lib3mf_levelset_gettransform");
 	#else // _WIN32
-	pWrapperTable->m_BoundaryShape_GetTransform = (PLib3MFBoundaryShape_GetTransformPtr) dlsym(hLibrary, "lib3mf_boundaryshape_gettransform");
+	pWrapperTable->m_LevelSet_GetTransform = (PLib3MFLevelSet_GetTransformPtr) dlsym(hLibrary, "lib3mf_levelset_gettransform");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_BoundaryShape_GetTransform == NULL)
+	if (pWrapperTable->m_LevelSet_GetTransform == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_BoundaryShape_SetTransform = (PLib3MFBoundaryShape_SetTransformPtr) GetProcAddress(hLibrary, "lib3mf_boundaryshape_settransform");
+	pWrapperTable->m_LevelSet_SetTransform = (PLib3MFLevelSet_SetTransformPtr) GetProcAddress(hLibrary, "lib3mf_levelset_settransform");
 	#else // _WIN32
-	pWrapperTable->m_BoundaryShape_SetTransform = (PLib3MFBoundaryShape_SetTransformPtr) dlsym(hLibrary, "lib3mf_boundaryshape_settransform");
+	pWrapperTable->m_LevelSet_SetTransform = (PLib3MFLevelSet_SetTransformPtr) dlsym(hLibrary, "lib3mf_levelset_settransform");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_BoundaryShape_SetTransform == NULL)
+	if (pWrapperTable->m_LevelSet_SetTransform == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_BoundaryShape_GetChannelName = (PLib3MFBoundaryShape_GetChannelNamePtr) GetProcAddress(hLibrary, "lib3mf_boundaryshape_getchannelname");
+	pWrapperTable->m_LevelSet_GetChannelName = (PLib3MFLevelSet_GetChannelNamePtr) GetProcAddress(hLibrary, "lib3mf_levelset_getchannelname");
 	#else // _WIN32
-	pWrapperTable->m_BoundaryShape_GetChannelName = (PLib3MFBoundaryShape_GetChannelNamePtr) dlsym(hLibrary, "lib3mf_boundaryshape_getchannelname");
+	pWrapperTable->m_LevelSet_GetChannelName = (PLib3MFLevelSet_GetChannelNamePtr) dlsym(hLibrary, "lib3mf_levelset_getchannelname");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_BoundaryShape_GetChannelName == NULL)
+	if (pWrapperTable->m_LevelSet_GetChannelName == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_BoundaryShape_SetChannelName = (PLib3MFBoundaryShape_SetChannelNamePtr) GetProcAddress(hLibrary, "lib3mf_boundaryshape_setchannelname");
+	pWrapperTable->m_LevelSet_SetChannelName = (PLib3MFLevelSet_SetChannelNamePtr) GetProcAddress(hLibrary, "lib3mf_levelset_setchannelname");
 	#else // _WIN32
-	pWrapperTable->m_BoundaryShape_SetChannelName = (PLib3MFBoundaryShape_SetChannelNamePtr) dlsym(hLibrary, "lib3mf_boundaryshape_setchannelname");
+	pWrapperTable->m_LevelSet_SetChannelName = (PLib3MFLevelSet_SetChannelNamePtr) dlsym(hLibrary, "lib3mf_levelset_setchannelname");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_BoundaryShape_SetChannelName == NULL)
+	if (pWrapperTable->m_LevelSet_SetChannelName == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_BoundaryShape_SetMinFeatureSize = (PLib3MFBoundaryShape_SetMinFeatureSizePtr) GetProcAddress(hLibrary, "lib3mf_boundaryshape_setminfeaturesize");
+	pWrapperTable->m_LevelSet_SetMinFeatureSize = (PLib3MFLevelSet_SetMinFeatureSizePtr) GetProcAddress(hLibrary, "lib3mf_levelset_setminfeaturesize");
 	#else // _WIN32
-	pWrapperTable->m_BoundaryShape_SetMinFeatureSize = (PLib3MFBoundaryShape_SetMinFeatureSizePtr) dlsym(hLibrary, "lib3mf_boundaryshape_setminfeaturesize");
+	pWrapperTable->m_LevelSet_SetMinFeatureSize = (PLib3MFLevelSet_SetMinFeatureSizePtr) dlsym(hLibrary, "lib3mf_levelset_setminfeaturesize");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_BoundaryShape_SetMinFeatureSize == NULL)
+	if (pWrapperTable->m_LevelSet_SetMinFeatureSize == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_BoundaryShape_GetMinFeatureSize = (PLib3MFBoundaryShape_GetMinFeatureSizePtr) GetProcAddress(hLibrary, "lib3mf_boundaryshape_getminfeaturesize");
+	pWrapperTable->m_LevelSet_GetMinFeatureSize = (PLib3MFLevelSet_GetMinFeatureSizePtr) GetProcAddress(hLibrary, "lib3mf_levelset_getminfeaturesize");
 	#else // _WIN32
-	pWrapperTable->m_BoundaryShape_GetMinFeatureSize = (PLib3MFBoundaryShape_GetMinFeatureSizePtr) dlsym(hLibrary, "lib3mf_boundaryshape_getminfeaturesize");
+	pWrapperTable->m_LevelSet_GetMinFeatureSize = (PLib3MFLevelSet_GetMinFeatureSizePtr) dlsym(hLibrary, "lib3mf_levelset_getminfeaturesize");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_BoundaryShape_GetMinFeatureSize == NULL)
+	if (pWrapperTable->m_LevelSet_GetMinFeatureSize == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_BoundaryShape_SetFallBackValue = (PLib3MFBoundaryShape_SetFallBackValuePtr) GetProcAddress(hLibrary, "lib3mf_boundaryshape_setfallbackvalue");
+	pWrapperTable->m_LevelSet_SetFallBackValue = (PLib3MFLevelSet_SetFallBackValuePtr) GetProcAddress(hLibrary, "lib3mf_levelset_setfallbackvalue");
 	#else // _WIN32
-	pWrapperTable->m_BoundaryShape_SetFallBackValue = (PLib3MFBoundaryShape_SetFallBackValuePtr) dlsym(hLibrary, "lib3mf_boundaryshape_setfallbackvalue");
+	pWrapperTable->m_LevelSet_SetFallBackValue = (PLib3MFLevelSet_SetFallBackValuePtr) dlsym(hLibrary, "lib3mf_levelset_setfallbackvalue");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_BoundaryShape_SetFallBackValue == NULL)
+	if (pWrapperTable->m_LevelSet_SetFallBackValue == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_BoundaryShape_GetFallBackValue = (PLib3MFBoundaryShape_GetFallBackValuePtr) GetProcAddress(hLibrary, "lib3mf_boundaryshape_getfallbackvalue");
+	pWrapperTable->m_LevelSet_GetFallBackValue = (PLib3MFLevelSet_GetFallBackValuePtr) GetProcAddress(hLibrary, "lib3mf_levelset_getfallbackvalue");
 	#else // _WIN32
-	pWrapperTable->m_BoundaryShape_GetFallBackValue = (PLib3MFBoundaryShape_GetFallBackValuePtr) dlsym(hLibrary, "lib3mf_boundaryshape_getfallbackvalue");
+	pWrapperTable->m_LevelSet_GetFallBackValue = (PLib3MFLevelSet_GetFallBackValuePtr) dlsym(hLibrary, "lib3mf_levelset_getfallbackvalue");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_BoundaryShape_GetFallBackValue == NULL)
+	if (pWrapperTable->m_LevelSet_GetFallBackValue == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_BoundaryShape_SetMeshBBoxOnly = (PLib3MFBoundaryShape_SetMeshBBoxOnlyPtr) GetProcAddress(hLibrary, "lib3mf_boundaryshape_setmeshbboxonly");
+	pWrapperTable->m_LevelSet_SetMeshBBoxOnly = (PLib3MFLevelSet_SetMeshBBoxOnlyPtr) GetProcAddress(hLibrary, "lib3mf_levelset_setmeshbboxonly");
 	#else // _WIN32
-	pWrapperTable->m_BoundaryShape_SetMeshBBoxOnly = (PLib3MFBoundaryShape_SetMeshBBoxOnlyPtr) dlsym(hLibrary, "lib3mf_boundaryshape_setmeshbboxonly");
+	pWrapperTable->m_LevelSet_SetMeshBBoxOnly = (PLib3MFLevelSet_SetMeshBBoxOnlyPtr) dlsym(hLibrary, "lib3mf_levelset_setmeshbboxonly");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_BoundaryShape_SetMeshBBoxOnly == NULL)
+	if (pWrapperTable->m_LevelSet_SetMeshBBoxOnly == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_BoundaryShape_GetMeshBBoxOnly = (PLib3MFBoundaryShape_GetMeshBBoxOnlyPtr) GetProcAddress(hLibrary, "lib3mf_boundaryshape_getmeshbboxonly");
+	pWrapperTable->m_LevelSet_GetMeshBBoxOnly = (PLib3MFLevelSet_GetMeshBBoxOnlyPtr) GetProcAddress(hLibrary, "lib3mf_levelset_getmeshbboxonly");
 	#else // _WIN32
-	pWrapperTable->m_BoundaryShape_GetMeshBBoxOnly = (PLib3MFBoundaryShape_GetMeshBBoxOnlyPtr) dlsym(hLibrary, "lib3mf_boundaryshape_getmeshbboxonly");
+	pWrapperTable->m_LevelSet_GetMeshBBoxOnly = (PLib3MFLevelSet_GetMeshBBoxOnlyPtr) dlsym(hLibrary, "lib3mf_levelset_getmeshbboxonly");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_BoundaryShape_GetMeshBBoxOnly == NULL)
+	if (pWrapperTable->m_LevelSet_GetMeshBBoxOnly == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_BoundaryShape_SetMesh = (PLib3MFBoundaryShape_SetMeshPtr) GetProcAddress(hLibrary, "lib3mf_boundaryshape_setmesh");
+	pWrapperTable->m_LevelSet_SetMesh = (PLib3MFLevelSet_SetMeshPtr) GetProcAddress(hLibrary, "lib3mf_levelset_setmesh");
 	#else // _WIN32
-	pWrapperTable->m_BoundaryShape_SetMesh = (PLib3MFBoundaryShape_SetMeshPtr) dlsym(hLibrary, "lib3mf_boundaryshape_setmesh");
+	pWrapperTable->m_LevelSet_SetMesh = (PLib3MFLevelSet_SetMeshPtr) dlsym(hLibrary, "lib3mf_levelset_setmesh");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_BoundaryShape_SetMesh == NULL)
+	if (pWrapperTable->m_LevelSet_SetMesh == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_BoundaryShape_GetMesh = (PLib3MFBoundaryShape_GetMeshPtr) GetProcAddress(hLibrary, "lib3mf_boundaryshape_getmesh");
+	pWrapperTable->m_LevelSet_GetMesh = (PLib3MFLevelSet_GetMeshPtr) GetProcAddress(hLibrary, "lib3mf_levelset_getmesh");
 	#else // _WIN32
-	pWrapperTable->m_BoundaryShape_GetMesh = (PLib3MFBoundaryShape_GetMeshPtr) dlsym(hLibrary, "lib3mf_boundaryshape_getmesh");
+	pWrapperTable->m_LevelSet_GetMesh = (PLib3MFLevelSet_GetMeshPtr) dlsym(hLibrary, "lib3mf_levelset_getmesh");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_BoundaryShape_GetMesh == NULL)
+	if (pWrapperTable->m_LevelSet_GetMesh == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_BoundaryShape_GetVolumeData = (PLib3MFBoundaryShape_GetVolumeDataPtr) GetProcAddress(hLibrary, "lib3mf_boundaryshape_getvolumedata");
+	pWrapperTable->m_LevelSet_GetVolumeData = (PLib3MFLevelSet_GetVolumeDataPtr) GetProcAddress(hLibrary, "lib3mf_levelset_getvolumedata");
 	#else // _WIN32
-	pWrapperTable->m_BoundaryShape_GetVolumeData = (PLib3MFBoundaryShape_GetVolumeDataPtr) dlsym(hLibrary, "lib3mf_boundaryshape_getvolumedata");
+	pWrapperTable->m_LevelSet_GetVolumeData = (PLib3MFLevelSet_GetVolumeDataPtr) dlsym(hLibrary, "lib3mf_levelset_getvolumedata");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_BoundaryShape_GetVolumeData == NULL)
+	if (pWrapperTable->m_LevelSet_GetVolumeData == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_BoundaryShape_SetVolumeData = (PLib3MFBoundaryShape_SetVolumeDataPtr) GetProcAddress(hLibrary, "lib3mf_boundaryshape_setvolumedata");
+	pWrapperTable->m_LevelSet_SetVolumeData = (PLib3MFLevelSet_SetVolumeDataPtr) GetProcAddress(hLibrary, "lib3mf_levelset_setvolumedata");
 	#else // _WIN32
-	pWrapperTable->m_BoundaryShape_SetVolumeData = (PLib3MFBoundaryShape_SetVolumeDataPtr) dlsym(hLibrary, "lib3mf_boundaryshape_setvolumedata");
+	pWrapperTable->m_LevelSet_SetVolumeData = (PLib3MFLevelSet_SetVolumeDataPtr) dlsym(hLibrary, "lib3mf_levelset_setvolumedata");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_BoundaryShape_SetVolumeData == NULL)
+	if (pWrapperTable->m_LevelSet_SetVolumeData == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -5904,21 +5904,21 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_Model_AddBoundaryShape = (PLib3MFModel_AddBoundaryShapePtr) GetProcAddress(hLibrary, "lib3mf_model_addboundaryshape");
+	pWrapperTable->m_Model_AddLevelSet = (PLib3MFModel_AddLevelSetPtr) GetProcAddress(hLibrary, "lib3mf_model_addlevelset");
 	#else // _WIN32
-	pWrapperTable->m_Model_AddBoundaryShape = (PLib3MFModel_AddBoundaryShapePtr) dlsym(hLibrary, "lib3mf_model_addboundaryshape");
+	pWrapperTable->m_Model_AddLevelSet = (PLib3MFModel_AddLevelSetPtr) dlsym(hLibrary, "lib3mf_model_addlevelset");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_Model_AddBoundaryShape == NULL)
+	if (pWrapperTable->m_Model_AddLevelSet == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_Model_GetBoundaryShapes = (PLib3MFModel_GetBoundaryShapesPtr) GetProcAddress(hLibrary, "lib3mf_model_getboundaryshapes");
+	pWrapperTable->m_Model_GetLevelSets = (PLib3MFModel_GetLevelSetsPtr) GetProcAddress(hLibrary, "lib3mf_model_getlevelsets");
 	#else // _WIN32
-	pWrapperTable->m_Model_GetBoundaryShapes = (PLib3MFModel_GetBoundaryShapesPtr) dlsym(hLibrary, "lib3mf_model_getboundaryshapes");
+	pWrapperTable->m_Model_GetLevelSets = (PLib3MFModel_GetLevelSetsPtr) dlsym(hLibrary, "lib3mf_model_getlevelsets");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_Model_GetBoundaryShapes == NULL)
+	if (pWrapperTable->m_Model_GetLevelSets == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

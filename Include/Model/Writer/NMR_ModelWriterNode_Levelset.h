@@ -25,7 +25,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-Writer node for BoundaryShape resources
+Writer node for LevelSet resources
 
 --*/
 
@@ -46,25 +46,25 @@ namespace NMR
         class NodeTypes;
     }
 
-    class CModelBoundaryShapeObject;
+    class CModelLevelSetObject;
 
-    class CModelWriterNode_BoundaryShape : public CModelWriterNode_ModelBase
+    class CModelWriterNode_LevelSet : public CModelWriterNode_ModelBase
     {
 
       public:
-        CModelWriterNode_BoundaryShape() = delete;
-        CModelWriterNode_BoundaryShape(CModel * pModel,
-                                  CModelBoundaryShapeObject * pBoundaryShape,
+        CModelWriterNode_LevelSet() = delete;
+        CModelWriterNode_LevelSet(CModel * pModel,
+                                  CModelLevelSetObject * pLevelSet,
                                   CXmlWriter * pXMLWriter,
                                   PProgressMonitor pProgressMonitor);
 
         void writeToXML() override;
 
       private:
-        void writeBoundaryShapeResources();
-        void writeBoundaryShapeResource(CModelBoundaryShapeObject& boundaryShape);
+        void writeLevelSetResources();
+        void writeLevelSetResource(CModelLevelSetObject& levelSet);
         
-        CModelBoundaryShapeObject * m_pBoundaryShape = nullptr;
+        CModelLevelSetObject * m_pLevelSet = nullptr;
     };
 
 }

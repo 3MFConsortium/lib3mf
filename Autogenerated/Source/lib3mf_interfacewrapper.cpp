@@ -1955,25 +1955,25 @@ Lib3MFResult lib3mf_functioniterator_getcurrentfunction(Lib3MF_FunctionIterator 
 
 
 /*************************************************************************************************************************
- Class implementation for BoundaryShapeIterator
+ Class implementation for LevelSetIterator
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_boundaryshapeiterator_getcurrentboundaryshape(Lib3MF_BoundaryShapeIterator pBoundaryShapeIterator, Lib3MF_BoundaryShape * pResource)
+Lib3MFResult lib3mf_levelsetiterator_getcurrentlevelset(Lib3MF_LevelSetIterator pLevelSetIterator, Lib3MF_LevelSet * pResource)
 {
-	IBase* pIBaseClass = (IBase *)pBoundaryShapeIterator;
+	IBase* pIBaseClass = (IBase *)pLevelSetIterator;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShapeIterator, "BoundaryShapeIterator", "GetCurrentBoundaryShape");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pLevelSetIterator, "LevelSetIterator", "GetCurrentLevelSet");
 		}
 		if (pResource == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		IBase* pBaseResource(nullptr);
-		IBoundaryShapeIterator* pIBoundaryShapeIterator = dynamic_cast<IBoundaryShapeIterator*>(pIBaseClass);
-		if (!pIBoundaryShapeIterator)
+		ILevelSetIterator* pILevelSetIterator = dynamic_cast<ILevelSetIterator*>(pIBaseClass);
+		if (!pILevelSetIterator)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseResource = pIBoundaryShapeIterator->GetCurrentBoundaryShape();
+		pBaseResource = pILevelSetIterator->GetCurrentLevelSet();
 
 		*pResource = (IBase*)(pBaseResource);
 		if (pJournalEntry.get() != nullptr) {
@@ -4304,25 +4304,25 @@ Lib3MFResult lib3mf_meshobject_setvolumedata(Lib3MF_MeshObject pMeshObject, Lib3
 
 
 /*************************************************************************************************************************
- Class implementation for BoundaryShape
+ Class implementation for LevelSet
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_boundaryshape_getfunction(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_Function * pTheFunction)
+Lib3MFResult lib3mf_levelset_getfunction(Lib3MF_LevelSet pLevelSet, Lib3MF_Function * pTheFunction)
 {
-	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+	IBase* pIBaseClass = (IBase *)pLevelSet;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "GetFunction");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pLevelSet, "LevelSet", "GetFunction");
 		}
 		if (pTheFunction == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		IBase* pBaseTheFunction(nullptr);
-		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
-		if (!pIBoundaryShape)
+		ILevelSet* pILevelSet = dynamic_cast<ILevelSet*>(pIBaseClass);
+		if (!pILevelSet)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseTheFunction = pIBoundaryShape->GetFunction();
+		pBaseTheFunction = pILevelSet->GetFunction();
 
 		*pTheFunction = (IBase*)(pBaseTheFunction);
 		if (pJournalEntry.get() != nullptr) {
@@ -4342,14 +4342,14 @@ Lib3MFResult lib3mf_boundaryshape_getfunction(Lib3MF_BoundaryShape pBoundaryShap
 	}
 }
 
-Lib3MFResult lib3mf_boundaryshape_setfunction(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_Function pTheFunction)
+Lib3MFResult lib3mf_levelset_setfunction(Lib3MF_LevelSet pLevelSet, Lib3MF_Function pTheFunction)
 {
-	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+	IBase* pIBaseClass = (IBase *)pLevelSet;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "SetFunction");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pLevelSet, "LevelSet", "SetFunction");
 			pJournalEntry->addHandleParameter("TheFunction", pTheFunction);
 		}
 		IBase* pIBaseClassTheFunction = (IBase *)pTheFunction;
@@ -4357,11 +4357,11 @@ Lib3MFResult lib3mf_boundaryshape_setfunction(Lib3MF_BoundaryShape pBoundaryShap
 		if (!pITheFunction)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
 		
-		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
-		if (!pIBoundaryShape)
+		ILevelSet* pILevelSet = dynamic_cast<ILevelSet*>(pIBaseClass);
+		if (!pILevelSet)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIBoundaryShape->SetFunction(pITheFunction);
+		pILevelSet->SetFunction(pITheFunction);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -4379,22 +4379,22 @@ Lib3MFResult lib3mf_boundaryshape_setfunction(Lib3MF_BoundaryShape pBoundaryShap
 	}
 }
 
-Lib3MFResult lib3mf_boundaryshape_gettransform(Lib3MF_BoundaryShape pBoundaryShape, sLib3MFTransform * pTransform)
+Lib3MFResult lib3mf_levelset_gettransform(Lib3MF_LevelSet pLevelSet, sLib3MFTransform * pTransform)
 {
-	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+	IBase* pIBaseClass = (IBase *)pLevelSet;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "GetTransform");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pLevelSet, "LevelSet", "GetTransform");
 		}
 		if (pTransform == nullptr)
 		throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
-		if (!pIBoundaryShape)
+		ILevelSet* pILevelSet = dynamic_cast<ILevelSet*>(pIBaseClass);
+		if (!pILevelSet)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		*pTransform = pIBoundaryShape->GetTransform();
+		*pTransform = pILevelSet->GetTransform();
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -4412,20 +4412,20 @@ Lib3MFResult lib3mf_boundaryshape_gettransform(Lib3MF_BoundaryShape pBoundarySha
 	}
 }
 
-Lib3MFResult lib3mf_boundaryshape_settransform(Lib3MF_BoundaryShape pBoundaryShape, const sLib3MFTransform * pTransform)
+Lib3MFResult lib3mf_levelset_settransform(Lib3MF_LevelSet pLevelSet, const sLib3MFTransform * pTransform)
 {
-	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+	IBase* pIBaseClass = (IBase *)pLevelSet;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "SetTransform");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pLevelSet, "LevelSet", "SetTransform");
 		}
-		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
-		if (!pIBoundaryShape)
+		ILevelSet* pILevelSet = dynamic_cast<ILevelSet*>(pIBaseClass);
+		if (!pILevelSet)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIBoundaryShape->SetTransform(*pTransform);
+		pILevelSet->SetTransform(*pTransform);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -4443,34 +4443,34 @@ Lib3MFResult lib3mf_boundaryshape_settransform(Lib3MF_BoundaryShape pBoundarySha
 	}
 }
 
-Lib3MFResult lib3mf_boundaryshape_getchannelname(Lib3MF_BoundaryShape pBoundaryShape, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer)
+Lib3MFResult lib3mf_levelset_getchannelname(Lib3MF_LevelSet pLevelSet, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer)
 {
-	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+	IBase* pIBaseClass = (IBase *)pLevelSet;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "GetChannelName");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pLevelSet, "LevelSet", "GetChannelName");
 		}
 		if ( (!pChannelNameBuffer) && !(pChannelNameNeededChars) )
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		std::string sChannelName("");
-		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
-		if (!pIBoundaryShape)
+		ILevelSet* pILevelSet = dynamic_cast<ILevelSet*>(pIBaseClass);
+		if (!pILevelSet)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
 		bool isCacheCall = (pChannelNameBuffer == nullptr);
 		if (isCacheCall) {
-			sChannelName = pIBoundaryShape->GetChannelName();
+			sChannelName = pILevelSet->GetChannelName();
 
-			pIBoundaryShape->_setCache (new ParameterCache_1<std::string> (sChannelName));
+			pILevelSet->_setCache (new ParameterCache_1<std::string> (sChannelName));
 		}
 		else {
-			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIBoundaryShape->_getCache ());
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pILevelSet->_getCache ());
 			if (cache == nullptr)
 				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 			cache->retrieveData (sChannelName);
-			pIBoundaryShape->_setCache (nullptr);
+			pILevelSet->_setCache (nullptr);
 		}
 		
 		if (pChannelNameNeededChars)
@@ -4499,24 +4499,24 @@ Lib3MFResult lib3mf_boundaryshape_getchannelname(Lib3MF_BoundaryShape pBoundaryS
 	}
 }
 
-Lib3MFResult lib3mf_boundaryshape_setchannelname(Lib3MF_BoundaryShape pBoundaryShape, const char * pChannelName)
+Lib3MFResult lib3mf_levelset_setchannelname(Lib3MF_LevelSet pLevelSet, const char * pChannelName)
 {
-	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+	IBase* pIBaseClass = (IBase *)pLevelSet;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "SetChannelName");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pLevelSet, "LevelSet", "SetChannelName");
 			pJournalEntry->addStringParameter("ChannelName", pChannelName);
 		}
 		if (pChannelName == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		std::string sChannelName(pChannelName);
-		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
-		if (!pIBoundaryShape)
+		ILevelSet* pILevelSet = dynamic_cast<ILevelSet*>(pIBaseClass);
+		if (!pILevelSet)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIBoundaryShape->SetChannelName(sChannelName);
+		pILevelSet->SetChannelName(sChannelName);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -4534,21 +4534,21 @@ Lib3MFResult lib3mf_boundaryshape_setchannelname(Lib3MF_BoundaryShape pBoundaryS
 	}
 }
 
-Lib3MFResult lib3mf_boundaryshape_setminfeaturesize(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_double dMinFeatureSize)
+Lib3MFResult lib3mf_levelset_setminfeaturesize(Lib3MF_LevelSet pLevelSet, Lib3MF_double dMinFeatureSize)
 {
-	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+	IBase* pIBaseClass = (IBase *)pLevelSet;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "SetMinFeatureSize");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pLevelSet, "LevelSet", "SetMinFeatureSize");
 			pJournalEntry->addDoubleParameter("MinFeatureSize", dMinFeatureSize);
 		}
-		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
-		if (!pIBoundaryShape)
+		ILevelSet* pILevelSet = dynamic_cast<ILevelSet*>(pIBaseClass);
+		if (!pILevelSet)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIBoundaryShape->SetMinFeatureSize(dMinFeatureSize);
+		pILevelSet->SetMinFeatureSize(dMinFeatureSize);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -4566,22 +4566,22 @@ Lib3MFResult lib3mf_boundaryshape_setminfeaturesize(Lib3MF_BoundaryShape pBounda
 	}
 }
 
-Lib3MFResult lib3mf_boundaryshape_getminfeaturesize(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_double * pMinFeatureSize)
+Lib3MFResult lib3mf_levelset_getminfeaturesize(Lib3MF_LevelSet pLevelSet, Lib3MF_double * pMinFeatureSize)
 {
-	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+	IBase* pIBaseClass = (IBase *)pLevelSet;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "GetMinFeatureSize");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pLevelSet, "LevelSet", "GetMinFeatureSize");
 		}
 		if (pMinFeatureSize == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
-		if (!pIBoundaryShape)
+		ILevelSet* pILevelSet = dynamic_cast<ILevelSet*>(pIBaseClass);
+		if (!pILevelSet)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		*pMinFeatureSize = pIBoundaryShape->GetMinFeatureSize();
+		*pMinFeatureSize = pILevelSet->GetMinFeatureSize();
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->addDoubleResult("MinFeatureSize", *pMinFeatureSize);
@@ -4600,21 +4600,21 @@ Lib3MFResult lib3mf_boundaryshape_getminfeaturesize(Lib3MF_BoundaryShape pBounda
 	}
 }
 
-Lib3MFResult lib3mf_boundaryshape_setfallbackvalue(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_double dFallBackValue)
+Lib3MFResult lib3mf_levelset_setfallbackvalue(Lib3MF_LevelSet pLevelSet, Lib3MF_double dFallBackValue)
 {
-	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+	IBase* pIBaseClass = (IBase *)pLevelSet;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "SetFallBackValue");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pLevelSet, "LevelSet", "SetFallBackValue");
 			pJournalEntry->addDoubleParameter("FallBackValue", dFallBackValue);
 		}
-		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
-		if (!pIBoundaryShape)
+		ILevelSet* pILevelSet = dynamic_cast<ILevelSet*>(pIBaseClass);
+		if (!pILevelSet)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIBoundaryShape->SetFallBackValue(dFallBackValue);
+		pILevelSet->SetFallBackValue(dFallBackValue);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -4632,22 +4632,22 @@ Lib3MFResult lib3mf_boundaryshape_setfallbackvalue(Lib3MF_BoundaryShape pBoundar
 	}
 }
 
-Lib3MFResult lib3mf_boundaryshape_getfallbackvalue(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_double * pFallBackValue)
+Lib3MFResult lib3mf_levelset_getfallbackvalue(Lib3MF_LevelSet pLevelSet, Lib3MF_double * pFallBackValue)
 {
-	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+	IBase* pIBaseClass = (IBase *)pLevelSet;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "GetFallBackValue");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pLevelSet, "LevelSet", "GetFallBackValue");
 		}
 		if (pFallBackValue == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
-		if (!pIBoundaryShape)
+		ILevelSet* pILevelSet = dynamic_cast<ILevelSet*>(pIBaseClass);
+		if (!pILevelSet)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		*pFallBackValue = pIBoundaryShape->GetFallBackValue();
+		*pFallBackValue = pILevelSet->GetFallBackValue();
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->addDoubleResult("FallBackValue", *pFallBackValue);
@@ -4666,21 +4666,21 @@ Lib3MFResult lib3mf_boundaryshape_getfallbackvalue(Lib3MF_BoundaryShape pBoundar
 	}
 }
 
-Lib3MFResult lib3mf_boundaryshape_setmeshbboxonly(Lib3MF_BoundaryShape pBoundaryShape, bool bMeshBBoxOnly)
+Lib3MFResult lib3mf_levelset_setmeshbboxonly(Lib3MF_LevelSet pLevelSet, bool bMeshBBoxOnly)
 {
-	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+	IBase* pIBaseClass = (IBase *)pLevelSet;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "SetMeshBBoxOnly");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pLevelSet, "LevelSet", "SetMeshBBoxOnly");
 			pJournalEntry->addBooleanParameter("MeshBBoxOnly", bMeshBBoxOnly);
 		}
-		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
-		if (!pIBoundaryShape)
+		ILevelSet* pILevelSet = dynamic_cast<ILevelSet*>(pIBaseClass);
+		if (!pILevelSet)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIBoundaryShape->SetMeshBBoxOnly(bMeshBBoxOnly);
+		pILevelSet->SetMeshBBoxOnly(bMeshBBoxOnly);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -4698,22 +4698,22 @@ Lib3MFResult lib3mf_boundaryshape_setmeshbboxonly(Lib3MF_BoundaryShape pBoundary
 	}
 }
 
-Lib3MFResult lib3mf_boundaryshape_getmeshbboxonly(Lib3MF_BoundaryShape pBoundaryShape, bool * pMeshBBoxOnly)
+Lib3MFResult lib3mf_levelset_getmeshbboxonly(Lib3MF_LevelSet pLevelSet, bool * pMeshBBoxOnly)
 {
-	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+	IBase* pIBaseClass = (IBase *)pLevelSet;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "GetMeshBBoxOnly");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pLevelSet, "LevelSet", "GetMeshBBoxOnly");
 		}
 		if (pMeshBBoxOnly == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
-		if (!pIBoundaryShape)
+		ILevelSet* pILevelSet = dynamic_cast<ILevelSet*>(pIBaseClass);
+		if (!pILevelSet)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		*pMeshBBoxOnly = pIBoundaryShape->GetMeshBBoxOnly();
+		*pMeshBBoxOnly = pILevelSet->GetMeshBBoxOnly();
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->addBooleanResult("MeshBBoxOnly", *pMeshBBoxOnly);
@@ -4732,14 +4732,14 @@ Lib3MFResult lib3mf_boundaryshape_getmeshbboxonly(Lib3MF_BoundaryShape pBoundary
 	}
 }
 
-Lib3MFResult lib3mf_boundaryshape_setmesh(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_MeshObject pTheMesh)
+Lib3MFResult lib3mf_levelset_setmesh(Lib3MF_LevelSet pLevelSet, Lib3MF_MeshObject pTheMesh)
 {
-	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+	IBase* pIBaseClass = (IBase *)pLevelSet;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "SetMesh");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pLevelSet, "LevelSet", "SetMesh");
 			pJournalEntry->addHandleParameter("TheMesh", pTheMesh);
 		}
 		IBase* pIBaseClassTheMesh = (IBase *)pTheMesh;
@@ -4747,11 +4747,11 @@ Lib3MFResult lib3mf_boundaryshape_setmesh(Lib3MF_BoundaryShape pBoundaryShape, L
 		if (!pITheMesh)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
 		
-		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
-		if (!pIBoundaryShape)
+		ILevelSet* pILevelSet = dynamic_cast<ILevelSet*>(pIBaseClass);
+		if (!pILevelSet)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIBoundaryShape->SetMesh(pITheMesh);
+		pILevelSet->SetMesh(pITheMesh);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -4769,23 +4769,23 @@ Lib3MFResult lib3mf_boundaryshape_setmesh(Lib3MF_BoundaryShape pBoundaryShape, L
 	}
 }
 
-Lib3MFResult lib3mf_boundaryshape_getmesh(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_MeshObject * pTheMesh)
+Lib3MFResult lib3mf_levelset_getmesh(Lib3MF_LevelSet pLevelSet, Lib3MF_MeshObject * pTheMesh)
 {
-	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+	IBase* pIBaseClass = (IBase *)pLevelSet;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "GetMesh");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pLevelSet, "LevelSet", "GetMesh");
 		}
 		if (pTheMesh == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		IBase* pBaseTheMesh(nullptr);
-		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
-		if (!pIBoundaryShape)
+		ILevelSet* pILevelSet = dynamic_cast<ILevelSet*>(pIBaseClass);
+		if (!pILevelSet)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseTheMesh = pIBoundaryShape->GetMesh();
+		pBaseTheMesh = pILevelSet->GetMesh();
 
 		*pTheMesh = (IBase*)(pBaseTheMesh);
 		if (pJournalEntry.get() != nullptr) {
@@ -4805,23 +4805,23 @@ Lib3MFResult lib3mf_boundaryshape_getmesh(Lib3MF_BoundaryShape pBoundaryShape, L
 	}
 }
 
-Lib3MFResult lib3mf_boundaryshape_getvolumedata(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_VolumeData * pTheVolumeData)
+Lib3MFResult lib3mf_levelset_getvolumedata(Lib3MF_LevelSet pLevelSet, Lib3MF_VolumeData * pTheVolumeData)
 {
-	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+	IBase* pIBaseClass = (IBase *)pLevelSet;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "GetVolumeData");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pLevelSet, "LevelSet", "GetVolumeData");
 		}
 		if (pTheVolumeData == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		IBase* pBaseTheVolumeData(nullptr);
-		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
-		if (!pIBoundaryShape)
+		ILevelSet* pILevelSet = dynamic_cast<ILevelSet*>(pIBaseClass);
+		if (!pILevelSet)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseTheVolumeData = pIBoundaryShape->GetVolumeData();
+		pBaseTheVolumeData = pILevelSet->GetVolumeData();
 
 		*pTheVolumeData = (IBase*)(pBaseTheVolumeData);
 		if (pJournalEntry.get() != nullptr) {
@@ -4841,14 +4841,14 @@ Lib3MFResult lib3mf_boundaryshape_getvolumedata(Lib3MF_BoundaryShape pBoundarySh
 	}
 }
 
-Lib3MFResult lib3mf_boundaryshape_setvolumedata(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_VolumeData pTheVolumeData)
+Lib3MFResult lib3mf_levelset_setvolumedata(Lib3MF_LevelSet pLevelSet, Lib3MF_VolumeData pTheVolumeData)
 {
-	IBase* pIBaseClass = (IBase *)pBoundaryShape;
+	IBase* pIBaseClass = (IBase *)pLevelSet;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pBoundaryShape, "BoundaryShape", "SetVolumeData");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pLevelSet, "LevelSet", "SetVolumeData");
 			pJournalEntry->addHandleParameter("TheVolumeData", pTheVolumeData);
 		}
 		IBase* pIBaseClassTheVolumeData = (IBase *)pTheVolumeData;
@@ -4856,11 +4856,11 @@ Lib3MFResult lib3mf_boundaryshape_setvolumedata(Lib3MF_BoundaryShape pBoundarySh
 		if (!pITheVolumeData)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
 		
-		IBoundaryShape* pIBoundaryShape = dynamic_cast<IBoundaryShape*>(pIBaseClass);
-		if (!pIBoundaryShape)
+		ILevelSet* pILevelSet = dynamic_cast<ILevelSet*>(pIBaseClass);
+		if (!pILevelSet)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIBoundaryShape->SetVolumeData(pITheVolumeData);
+		pILevelSet->SetVolumeData(pITheVolumeData);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -22460,27 +22460,27 @@ Lib3MFResult lib3mf_model_addvolumedata(Lib3MF_Model pModel, Lib3MF_VolumeData *
 	}
 }
 
-Lib3MFResult lib3mf_model_addboundaryshape(Lib3MF_Model pModel, Lib3MF_BoundaryShape * pBoundaryShapeInstance)
+Lib3MFResult lib3mf_model_addlevelset(Lib3MF_Model pModel, Lib3MF_LevelSet * pLevelSetInstance)
 {
 	IBase* pIBaseClass = (IBase *)pModel;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "AddBoundaryShape");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "AddLevelSet");
 		}
-		if (pBoundaryShapeInstance == nullptr)
+		if (pLevelSetInstance == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseBoundaryShapeInstance(nullptr);
+		IBase* pBaseLevelSetInstance(nullptr);
 		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
 		if (!pIModel)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseBoundaryShapeInstance = pIModel->AddBoundaryShape();
+		pBaseLevelSetInstance = pIModel->AddLevelSet();
 
-		*pBoundaryShapeInstance = (IBase*)(pBaseBoundaryShapeInstance);
+		*pLevelSetInstance = (IBase*)(pBaseLevelSetInstance);
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("BoundaryShapeInstance", *pBoundaryShapeInstance);
+			pJournalEntry->addHandleResult("LevelSetInstance", *pLevelSetInstance);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -22496,14 +22496,14 @@ Lib3MFResult lib3mf_model_addboundaryshape(Lib3MF_Model pModel, Lib3MF_BoundaryS
 	}
 }
 
-Lib3MFResult lib3mf_model_getboundaryshapes(Lib3MF_Model pModel, Lib3MF_BoundaryShapeIterator * pResourceIterator)
+Lib3MFResult lib3mf_model_getlevelsets(Lib3MF_Model pModel, Lib3MF_LevelSetIterator * pResourceIterator)
 {
 	IBase* pIBaseClass = (IBase *)pModel;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetBoundaryShapes");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetLevelSets");
 		}
 		if (pResourceIterator == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
@@ -22512,7 +22512,7 @@ Lib3MFResult lib3mf_model_getboundaryshapes(Lib3MF_Model pModel, Lib3MF_Boundary
 		if (!pIModel)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseResourceIterator = pIModel->GetBoundaryShapes();
+		pBaseResourceIterator = pIModel->GetLevelSets();
 
 		*pResourceIterator = (IBase*)(pBaseResourceIterator);
 		if (pJournalEntry.get() != nullptr) {
@@ -22647,8 +22647,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_image3diterator_getcurrentimage3d;
 	if (sProcName == "lib3mf_functioniterator_getcurrentfunction") 
 		*ppProcAddress = (void*) &lib3mf_functioniterator_getcurrentfunction;
-	if (sProcName == "lib3mf_boundaryshapeiterator_getcurrentboundaryshape") 
-		*ppProcAddress = (void*) &lib3mf_boundaryshapeiterator_getcurrentboundaryshape;
+	if (sProcName == "lib3mf_levelsetiterator_getcurrentlevelset") 
+		*ppProcAddress = (void*) &lib3mf_levelsetiterator_getcurrentlevelset;
 	if (sProcName == "lib3mf_metadata_getnamespace") 
 		*ppProcAddress = (void*) &lib3mf_metadata_getnamespace;
 	if (sProcName == "lib3mf_metadata_setnamespace") 
@@ -22771,38 +22771,38 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_meshobject_getvolumedata;
 	if (sProcName == "lib3mf_meshobject_setvolumedata") 
 		*ppProcAddress = (void*) &lib3mf_meshobject_setvolumedata;
-	if (sProcName == "lib3mf_boundaryshape_getfunction") 
-		*ppProcAddress = (void*) &lib3mf_boundaryshape_getfunction;
-	if (sProcName == "lib3mf_boundaryshape_setfunction") 
-		*ppProcAddress = (void*) &lib3mf_boundaryshape_setfunction;
-	if (sProcName == "lib3mf_boundaryshape_gettransform") 
-		*ppProcAddress = (void*) &lib3mf_boundaryshape_gettransform;
-	if (sProcName == "lib3mf_boundaryshape_settransform") 
-		*ppProcAddress = (void*) &lib3mf_boundaryshape_settransform;
-	if (sProcName == "lib3mf_boundaryshape_getchannelname") 
-		*ppProcAddress = (void*) &lib3mf_boundaryshape_getchannelname;
-	if (sProcName == "lib3mf_boundaryshape_setchannelname") 
-		*ppProcAddress = (void*) &lib3mf_boundaryshape_setchannelname;
-	if (sProcName == "lib3mf_boundaryshape_setminfeaturesize") 
-		*ppProcAddress = (void*) &lib3mf_boundaryshape_setminfeaturesize;
-	if (sProcName == "lib3mf_boundaryshape_getminfeaturesize") 
-		*ppProcAddress = (void*) &lib3mf_boundaryshape_getminfeaturesize;
-	if (sProcName == "lib3mf_boundaryshape_setfallbackvalue") 
-		*ppProcAddress = (void*) &lib3mf_boundaryshape_setfallbackvalue;
-	if (sProcName == "lib3mf_boundaryshape_getfallbackvalue") 
-		*ppProcAddress = (void*) &lib3mf_boundaryshape_getfallbackvalue;
-	if (sProcName == "lib3mf_boundaryshape_setmeshbboxonly") 
-		*ppProcAddress = (void*) &lib3mf_boundaryshape_setmeshbboxonly;
-	if (sProcName == "lib3mf_boundaryshape_getmeshbboxonly") 
-		*ppProcAddress = (void*) &lib3mf_boundaryshape_getmeshbboxonly;
-	if (sProcName == "lib3mf_boundaryshape_setmesh") 
-		*ppProcAddress = (void*) &lib3mf_boundaryshape_setmesh;
-	if (sProcName == "lib3mf_boundaryshape_getmesh") 
-		*ppProcAddress = (void*) &lib3mf_boundaryshape_getmesh;
-	if (sProcName == "lib3mf_boundaryshape_getvolumedata") 
-		*ppProcAddress = (void*) &lib3mf_boundaryshape_getvolumedata;
-	if (sProcName == "lib3mf_boundaryshape_setvolumedata") 
-		*ppProcAddress = (void*) &lib3mf_boundaryshape_setvolumedata;
+	if (sProcName == "lib3mf_levelset_getfunction") 
+		*ppProcAddress = (void*) &lib3mf_levelset_getfunction;
+	if (sProcName == "lib3mf_levelset_setfunction") 
+		*ppProcAddress = (void*) &lib3mf_levelset_setfunction;
+	if (sProcName == "lib3mf_levelset_gettransform") 
+		*ppProcAddress = (void*) &lib3mf_levelset_gettransform;
+	if (sProcName == "lib3mf_levelset_settransform") 
+		*ppProcAddress = (void*) &lib3mf_levelset_settransform;
+	if (sProcName == "lib3mf_levelset_getchannelname") 
+		*ppProcAddress = (void*) &lib3mf_levelset_getchannelname;
+	if (sProcName == "lib3mf_levelset_setchannelname") 
+		*ppProcAddress = (void*) &lib3mf_levelset_setchannelname;
+	if (sProcName == "lib3mf_levelset_setminfeaturesize") 
+		*ppProcAddress = (void*) &lib3mf_levelset_setminfeaturesize;
+	if (sProcName == "lib3mf_levelset_getminfeaturesize") 
+		*ppProcAddress = (void*) &lib3mf_levelset_getminfeaturesize;
+	if (sProcName == "lib3mf_levelset_setfallbackvalue") 
+		*ppProcAddress = (void*) &lib3mf_levelset_setfallbackvalue;
+	if (sProcName == "lib3mf_levelset_getfallbackvalue") 
+		*ppProcAddress = (void*) &lib3mf_levelset_getfallbackvalue;
+	if (sProcName == "lib3mf_levelset_setmeshbboxonly") 
+		*ppProcAddress = (void*) &lib3mf_levelset_setmeshbboxonly;
+	if (sProcName == "lib3mf_levelset_getmeshbboxonly") 
+		*ppProcAddress = (void*) &lib3mf_levelset_getmeshbboxonly;
+	if (sProcName == "lib3mf_levelset_setmesh") 
+		*ppProcAddress = (void*) &lib3mf_levelset_setmesh;
+	if (sProcName == "lib3mf_levelset_getmesh") 
+		*ppProcAddress = (void*) &lib3mf_levelset_getmesh;
+	if (sProcName == "lib3mf_levelset_getvolumedata") 
+		*ppProcAddress = (void*) &lib3mf_levelset_getvolumedata;
+	if (sProcName == "lib3mf_levelset_setvolumedata") 
+		*ppProcAddress = (void*) &lib3mf_levelset_setvolumedata;
 	if (sProcName == "lib3mf_beamlattice_getminlength") 
 		*ppProcAddress = (void*) &lib3mf_beamlattice_getminlength;
 	if (sProcName == "lib3mf_beamlattice_setminlength") 
@@ -23703,10 +23703,10 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_model_addfunctionfromimage3d;
 	if (sProcName == "lib3mf_model_addvolumedata") 
 		*ppProcAddress = (void*) &lib3mf_model_addvolumedata;
-	if (sProcName == "lib3mf_model_addboundaryshape") 
-		*ppProcAddress = (void*) &lib3mf_model_addboundaryshape;
-	if (sProcName == "lib3mf_model_getboundaryshapes") 
-		*ppProcAddress = (void*) &lib3mf_model_getboundaryshapes;
+	if (sProcName == "lib3mf_model_addlevelset") 
+		*ppProcAddress = (void*) &lib3mf_model_addlevelset;
+	if (sProcName == "lib3mf_model_getlevelsets") 
+		*ppProcAddress = (void*) &lib3mf_model_getlevelsets;
 	if (sProcName == "lib3mf_getlibraryversion") 
 		*ppProcAddress = (void*) &lib3mf_getlibraryversion;
 	if (sProcName == "lib3mf_getprereleaseinformation") 

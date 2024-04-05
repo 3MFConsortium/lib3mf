@@ -24,11 +24,11 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CBoundaryShape
+Abstract: This is a stub class definition of CLevelSet
 
 */
 
-#include "lib3mf_boundaryshape.hpp"
+#include "lib3mf_levelset.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
@@ -36,7 +36,7 @@ Abstract: This is a stub class definition of CBoundaryShape
 #include "lib3mf_utils.hpp"
 #include "lib3mf_function.hpp"
 #include "lib3mf_volumedata.hpp"
-#include "Model/Classes/NMR_ModelBoundaryShapeObject.h"
+#include "Model/Classes/NMR_ModelLevelSetObject.h"
 #include "Model/Classes/NMR_ModelFunction.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 
@@ -44,18 +44,18 @@ Abstract: This is a stub class definition of CBoundaryShape
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CBoundaryShape 
+ Class definition of CLevelSet 
 **************************************************************************************************************************/
 
 
-IBoundaryShape* CBoundaryShape::fnCreateBoundaryShapeFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass) {
+ILevelSet* CLevelSet::fnCreateLevelSetFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass) {
 
 	if (!pResource.get())
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 
-	NMR::CModelBoundaryShapeObject * BoundaryShapeObject = dynamic_cast<NMR::CModelBoundaryShapeObject *> (pResource.get());
-	if (BoundaryShapeObject) {
-		return new CBoundaryShape(pResource);
+	NMR::CModelLevelSetObject * LevelSetObject = dynamic_cast<NMR::CModelLevelSetObject *> (pResource.get());
+	if (LevelSetObject) {
+		return new CLevelSet(pResource);
 	}
 
 	if (bFailIfUnkownClass)
@@ -66,10 +66,10 @@ IBoundaryShape* CBoundaryShape::fnCreateBoundaryShapeFromModelResource(NMR::PMod
 
 
 
-IFunction * CBoundaryShape::GetFunction()
+IFunction * CLevelSet::GetFunction()
 {
-	auto boundaryShape = boundaryShapeObject();
-	auto function = boundaryShape->getFunction();
+	auto levelSet = levelSetObject();
+	auto function = levelSet->getFunction();
 	if (!function)
 	{
 		return nullptr;
@@ -77,28 +77,28 @@ IFunction * CBoundaryShape::GetFunction()
 	return new CFunction(function);
 }
 
-NMR::PModelBoundaryShapeObject
-Lib3MF::Impl::CBoundaryShape::boundaryShapeObject()
+NMR::PModelLevelSetObject
+Lib3MF::Impl::CLevelSet::levelSetObject()
 {
-    NMR::PModelBoundaryShapeObject pBoundaryShape = std::dynamic_pointer_cast<NMR::CModelBoundaryShapeObject>(resource());
-	if (pBoundaryShape.get() == nullptr)
+    NMR::PModelLevelSetObject pLevelSet = std::dynamic_pointer_cast<NMR::CModelLevelSetObject>(resource());
+	if (pLevelSet.get() == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
-	return pBoundaryShape;
+	return pLevelSet;
 }
 
-CBoundaryShape::CBoundaryShape(NMR::PModelResource pResource)
+CLevelSet::CLevelSet(NMR::PModelResource pResource)
     : CResource(pResource), CObject(pResource)
 {
 }
 
-void CBoundaryShape::SetFunction(IFunction* pTheFunction)
+void CLevelSet::SetFunction(IFunction* pTheFunction)
 {
     if(pTheFunction == nullptr)
 	{
         throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 	}
 
-    NMR::CModel* pModel = boundaryShapeObject()->getModel();
+    NMR::CModel* pModel = levelSetObject()->getModel();
     if(pModel == nullptr)
 	{
         throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
@@ -112,67 +112,67 @@ void CBoundaryShape::SetFunction(IFunction* pTheFunction)
 	{
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 	} 
-	boundaryShapeObject()->setFunction(pFunction);
+	levelSetObject()->setFunction(pFunction);
 }
 
-Lib3MF::sTransform CBoundaryShape::GetTransform()
+Lib3MF::sTransform CLevelSet::GetTransform()
 {
-	return MatrixToTransform(boundaryShapeObject()->getTransform());
+	return MatrixToTransform(levelSetObject()->getTransform());
 }
 
-void CBoundaryShape::SetTransform(const Lib3MF::sTransform Transform)
+void CLevelSet::SetTransform(const Lib3MF::sTransform Transform)
 {
-	boundaryShapeObject()->setTransform(TransformToMatrix(Transform));
+	levelSetObject()->setTransform(TransformToMatrix(Transform));
 }
 
-std::string CBoundaryShape::GetChannelName()
+std::string CLevelSet::GetChannelName()
 {
-	return boundaryShapeObject()->getChannelName();
+	return levelSetObject()->getChannelName();
 }
 
-void CBoundaryShape::SetChannelName(const std::string & sChannelName)
+void CLevelSet::SetChannelName(const std::string & sChannelName)
 {
-	boundaryShapeObject()->setChannelName(sChannelName);
+	levelSetObject()->setChannelName(sChannelName);
 }
 
-void CBoundaryShape::SetMinFeatureSize(const Lib3MF_double dMinFeatureSize)
+void CLevelSet::SetMinFeatureSize(const Lib3MF_double dMinFeatureSize)
 {
-	boundaryShapeObject()->setMinFeatureSize(dMinFeatureSize);
+	levelSetObject()->setMinFeatureSize(dMinFeatureSize);
 }
 
-Lib3MF_double CBoundaryShape::GetMinFeatureSize()
+Lib3MF_double CLevelSet::GetMinFeatureSize()
 {
-	return boundaryShapeObject()->getMinFeatureSize();
+	return levelSetObject()->getMinFeatureSize();
 }
 
-void CBoundaryShape::SetFallBackValue(const Lib3MF_double dFallBackValue)
+void CLevelSet::SetFallBackValue(const Lib3MF_double dFallBackValue)
 {
-	boundaryShapeObject()->setFallBackValue(dFallBackValue);
+	levelSetObject()->setFallBackValue(dFallBackValue);
 }
 
-Lib3MF_double CBoundaryShape::GetFallBackValue()
+Lib3MF_double CLevelSet::GetFallBackValue()
 {
-	return boundaryShapeObject()->getFallBackValue();
+	return levelSetObject()->getFallBackValue();
 }
 
-void CBoundaryShape::SetMeshBBoxOnly(const bool bMeshBBoxOnly)
+void CLevelSet::SetMeshBBoxOnly(const bool bMeshBBoxOnly)
 {
-	boundaryShapeObject()->setMeshBBoxOnly(bMeshBBoxOnly);
+	levelSetObject()->setMeshBBoxOnly(bMeshBBoxOnly);
 }
 
-bool CBoundaryShape::GetMeshBBoxOnly()
+bool CLevelSet::GetMeshBBoxOnly()
 {
-	return boundaryShapeObject()->getMeshBBoxOnly();
+	return levelSetObject()->getMeshBBoxOnly();
 }
 
-void CBoundaryShape::SetMesh(IMeshObject* pTheMesh)
+void CLevelSet::SetMesh(IMeshObject* pTheMesh)
 {
 	if(pTheMesh == nullptr)
 	{
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 	}
 
-	NMR::CModel* pModel = boundaryShapeObject()->getModel();
+	NMR::CModel* pModel = levelSetObject()->getModel();
 	if(pModel == nullptr)
 	{
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
@@ -186,12 +186,12 @@ void CBoundaryShape::SetMesh(IMeshObject* pTheMesh)
 	{
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 	} 
-	boundaryShapeObject()->setMesh(pMesh);
+	levelSetObject()->setMesh(pMesh);
 }
 
-IMeshObject * CBoundaryShape::GetMesh()
+IMeshObject * CLevelSet::GetMesh()
 {
-     NMR::PModelMeshObject meshObject = boundaryShapeObject()->getMesh();
+     NMR::PModelMeshObject meshObject = levelSetObject()->getMesh();
 
 	 if (!meshObject)
 	 {
@@ -201,9 +201,9 @@ IMeshObject * CBoundaryShape::GetMesh()
 	 return new CMeshObject(meshObject);
 }
 
-void CBoundaryShape::SetVolumeData(IVolumeData* pTheVolumeData)
+void CLevelSet::SetVolumeData(IVolumeData* pTheVolumeData)
 {
-	NMR::CModel * pModel = boundaryShapeObject()->getModel();
+	NMR::CModel * pModel = levelSetObject()->getModel();
 	if (pModel == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
 
@@ -214,12 +214,12 @@ void CBoundaryShape::SetVolumeData(IVolumeData* pTheVolumeData)
 	if (pVolumeData == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
 
-	boundaryShapeObject()->setVolumeData(pVolumeData);
+	levelSetObject()->setVolumeData(pVolumeData);
 }
 
-IVolumeData * CBoundaryShape::GetVolumeData()
+IVolumeData * CLevelSet::GetVolumeData()
 {
-	NMR::PModelVolumeData pVolumeData = boundaryShapeObject()->getVolumeData();
+	NMR::PModelVolumeData pVolumeData = levelSetObject()->getVolumeData();
 	if (pVolumeData == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
 	return new CVolumeData(pVolumeData);

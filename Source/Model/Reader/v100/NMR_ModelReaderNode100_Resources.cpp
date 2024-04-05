@@ -43,7 +43,7 @@ XML Model Stream.
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Image3D.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Function.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_FunctionFromImage3D.h"
-#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_BoundaryShape.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_LevelSet.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_VolumeData.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"

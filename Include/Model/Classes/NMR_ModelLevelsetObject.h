@@ -26,14 +26,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelBoundaryShapeObject.cpp implements the Model BoundaryShape Object Class.
-A model boundaryshape object is an in memory representation of the 3MF
-boundaryshape object.
+NMR_ModelLevelSetObject.cpp implements the Model LevelSet Object Class.
+A model levelset object is an in memory representation of the 3MF
+levelset object.
 
 --*/
 
-#ifndef __NMR_ModelBoundaryShapeObject
-#define __NMR_ModelBoundaryShapeObject
+#ifndef __NMR_ModelLevelSetObject
+#define __NMR_ModelLevelSetObject
 
 #include "Model/Classes/NMR_ModelObject.h" 
 
@@ -53,7 +53,7 @@ namespace NMR {
 	class CModelFunction;
 	typedef std::shared_ptr <CModelFunction> PModelFunction;
 
-    class CModelBoundaryShapeObject : public CModelObject {
+    class CModelLevelSetObject : public CModelObject {
 	private:
 		PModelMeshObject m_pMesh; 
 		PModelFunction m_pFunction;
@@ -66,9 +66,9 @@ namespace NMR {
 		double m_fallBackValue = 0.0;
 		bool m_meshBBoxOnly = false;
 	public:
-		CModelBoundaryShapeObject() = delete;
-		CModelBoundaryShapeObject(const ModelResourceID sID, CModel * pModel);
-		~CModelBoundaryShapeObject();
+		CModelLevelSetObject() = delete;
+		CModelLevelSetObject(const ModelResourceID sID, CModel * pModel);
+		~CModelLevelSetObject();
 
 		void mergeToMesh(_In_ CMesh* pMesh,
 							_In_ const NMATRIX3 mMatrix) override;
@@ -107,8 +107,8 @@ namespace NMR {
 		bool getMeshBBoxOnly() const;
 	};
 
-	typedef std::shared_ptr <CModelBoundaryShapeObject> PModelBoundaryShapeObject;
+	typedef std::shared_ptr <CModelLevelSetObject> PModelLevelSetObject;
 
 }
 
-#endif // __NMR_ModelBoundaryShapeObject
+#endif // __NMR_ModelLevelSetObject

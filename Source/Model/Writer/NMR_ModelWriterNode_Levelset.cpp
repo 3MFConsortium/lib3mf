@@ -25,54 +25,54 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-Writer node for BoundaryShape resources
+Writer node for LevelSet resources
 
 --*/
-#include "Model/Writer/NMR_ModelWriterNode_BoundaryShape.h"
+#include "Model/Writer/NMR_ModelWriterNode_LevelSet.h"
 
 #include <sstream>
 
 #include "Common/NMR_Exception.h"
 #include "Model/Classes/NMR_ImplicitNodeTypes.h"
-#include "Model/Classes/NMR_ModelBoundaryShapeObject.h"
+#include "Model/Classes/NMR_ModelLevelSetObject.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "lib3mf_types.hpp"
 
 namespace NMR
 {
-    CModelWriterNode_BoundaryShape::CModelWriterNode_BoundaryShape(
+    CModelWriterNode_LevelSet::CModelWriterNode_LevelSet(
         CModel* pModel, 
-        CModelBoundaryShapeObject * pBoundaryShape,
+        CModelLevelSetObject * pLevelSet,
         CXmlWriter* pXMLWriter,
         PProgressMonitor pProgressMonitor)
-        : CModelWriterNode_ModelBase(pModel, pXMLWriter, pProgressMonitor), m_pBoundaryShape(pBoundaryShape)
+        : CModelWriterNode_ModelBase(pModel, pXMLWriter, pProgressMonitor), m_pLevelSet(pLevelSet)
     {
     }
 
-    void CModelWriterNode_BoundaryShape::writeBoundaryShapeResources()
+    void CModelWriterNode_LevelSet::writeLevelSetResources()
     {
         nfUint32 const nCount = m_pModel->getObjectCount();
 
         for(nfUint32 nIndex = 0; nIndex < nCount; nIndex++)
         {
             m_pProgressMonitor->IncrementProgress(1);
-            CModelBoundaryShapeObject* pBoundaryShape =
-                dynamic_cast<CModelBoundaryShapeObject*>(
+            CModelLevelSetObject* pLevelSet =
+                dynamic_cast<CModelLevelSetObject*>(
                     m_pModel->getObject(nIndex));
-            if(!pBoundaryShape)
+            if(!pLevelSet)
             {
                 continue;
             }
-            writeBoundaryShapeResource(*pBoundaryShape);
+            writeLevelSetResource(*pLevelSet);
         }
     }
 
-    void CModelWriterNode_BoundaryShape::writeBoundaryShapeResource(
-        CModelBoundaryShapeObject& boundaryShape)
+    void CModelWriterNode_LevelSet::writeLevelSetResource(
+        CModelLevelSetObject& levelSet)
     {
         writeStartElementWithPrefix(XML_3MF_ELEMENT_BOUNDARY_SHAPE, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 
-        auto function = boundaryShape.getFunction();
+        auto function = levelSet.getFunction();
         if(!function)
         {
             throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
@@ -87,7 +87,7 @@ namespace NMR
                           functionPackageID->getModelResourceID());
 
 
-        PModelMeshObject mesh = boundaryShape.getMesh();
+        PModelMeshObject mesh = levelSet.getMesh();
         if(!mesh)
         {
             throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
@@ -101,16 +101,16 @@ namespace NMR
         writeIntAttribute(XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_MESH_ID,
                           meshPackageID->getModelResourceID());
 
-        if(!fnMATRIX3_isIdentity(boundaryShape.getTransform()))
+        if(!fnMATRIX3_isIdentity(levelSet.getTransform()))
         {
             writeStringAttribute(XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_TRANSFORM,
-                                 fnMATRIX3_toString(boundaryShape.getTransform()));
+                                 fnMATRIX3_toString(levelSet.getTransform()));
         }
 
-        if(!boundaryShape.getChannelName().empty())
+        if(!levelSet.getChannelName().empty())
         {
             writeStringAttribute(XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_CHANNEL,
-                                 boundaryShape.getChannelName());
+                                 levelSet.getChannelName());
         }
         else
         {
@@ -119,27 +119,27 @@ namespace NMR
         }
 
         writeStringAttribute(XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_MESH_BBOX_ONLY,
-                             boundaryShape.getMeshBBoxOnly() ? "true" : "false");
-        if(boundaryShape.getMinFeatureSize() != 0.0)
+                             levelSet.getMeshBBoxOnly() ? "true" : "false");
+        if(levelSet.getMinFeatureSize() != 0.0)
         {
             writeFloatAttribute(XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_MIN_FEATURE_SIZE,
-                                float(boundaryShape.getMinFeatureSize()));
+                                float(levelSet.getMinFeatureSize()));
         }
 
-        if(boundaryShape.getFallBackValue() != 0.0)
+        if(levelSet.getFallBackValue() != 0.0)
         {
             writeFloatAttribute(XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_FALLBACK_VALUE,
-                                float(boundaryShape.getFallBackValue()));
+                                float(levelSet.getFallBackValue()));
         }
 
         // writeEndElement();
         writeFullEndElement();
     }
-    void CModelWriterNode_BoundaryShape::writeToXML()
+    void CModelWriterNode_LevelSet::writeToXML()
     {
-        if (m_pBoundaryShape)
+        if (m_pLevelSet)
         {
-            writeBoundaryShapeResource(*m_pBoundaryShape);
+            writeLevelSetResource(*m_pLevelSet);
         }
     }
 

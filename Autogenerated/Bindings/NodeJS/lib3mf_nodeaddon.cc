@@ -66,12 +66,12 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFMultiPropertyGroupIterator::Init();
 	CLib3MFImage3DIterator::Init();
 	CLib3MFFunctionIterator::Init();
-	CLib3MFBoundaryShapeIterator::Init();
+	CLib3MFLevelSetIterator::Init();
 	CLib3MFMetaData::Init();
 	CLib3MFMetaDataGroup::Init();
 	CLib3MFObject::Init();
 	CLib3MFMeshObject::Init();
-	CLib3MFBoundaryShape::Init();
+	CLib3MFLevelSet::Init();
 	CLib3MFBeamLattice::Init();
 	CLib3MFFunctionReference::Init();
 	CLib3MFVolumeDataColor::Init();

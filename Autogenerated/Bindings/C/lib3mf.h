@@ -602,17 +602,17 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3diterator_getcurrentimage3d(Lib3MF_Ima
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_functioniterator_getcurrentfunction(Lib3MF_FunctionIterator pFunctionIterator, Lib3MF_Function * pResource);
 
 /*************************************************************************************************************************
- Class definition for BoundaryShapeIterator
+ Class definition for LevelSetIterator
 **************************************************************************************************************************/
 
 /**
-* Returns the BoundaryShape the iterator points at.
+* Returns the LevelSet the iterator points at.
 *
-* @param[in] pBoundaryShapeIterator - BoundaryShapeIterator instance.
+* @param[in] pLevelSetIterator - LevelSetIterator instance.
 * @param[out] pResource - returns the MeshObject instance.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshapeiterator_getcurrentboundaryshape(Lib3MF_BoundaryShapeIterator pBoundaryShapeIterator, Lib3MF_BoundaryShape * pResource);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_levelsetiterator_getcurrentlevelset(Lib3MF_LevelSetIterator pLevelSetIterator, Lib3MF_LevelSet * pResource);
 
 /*************************************************************************************************************************
  Class definition for MetaData
@@ -1224,154 +1224,154 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_meshobject_getvolumedata(Lib3MF_MeshObject p
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_meshobject_setvolumedata(Lib3MF_MeshObject pMeshObject, Lib3MF_VolumeData pTheVolumeData);
 
 /*************************************************************************************************************************
- Class definition for BoundaryShape
+ Class definition for LevelSet
 **************************************************************************************************************************/
 
 /**
 * Returns the function that is used as boundary shape.
 *
-* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pLevelSet - LevelSet instance.
 * @param[out] pTheFunction - the function to use as boundary shape
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshape_getfunction(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_Function * pTheFunction);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_levelset_getfunction(Lib3MF_LevelSet pLevelSet, Lib3MF_Function * pTheFunction);
 
 /**
 * Sets the function to use as boundary shape.
 *
-* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pLevelSet - LevelSet instance.
 * @param[in] pTheFunction - the function to use as boundary shape
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshape_setfunction(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_Function pTheFunction);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_levelset_setfunction(Lib3MF_LevelSet pLevelSet, Lib3MF_Function pTheFunction);
 
 /**
 * Returns the transformation matrix into the coordinate system of the referenced Function.
 *
-* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pLevelSet - LevelSet instance.
 * @param[out] pTransform - the transformation matrix
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshape_gettransform(Lib3MF_BoundaryShape pBoundaryShape, sLib3MFTransform * pTransform);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_levelset_gettransform(Lib3MF_LevelSet pLevelSet, sLib3MFTransform * pTransform);
 
 /**
 * Sets the transformation matrix into the coordinate system of the referenced Function.
 *
-* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pLevelSet - LevelSet instance.
 * @param[in] pTransform - new transformation matrix
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshape_settransform(Lib3MF_BoundaryShape pBoundaryShape, const sLib3MFTransform * pTransform);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_levelset_settransform(Lib3MF_LevelSet pLevelSet, const sLib3MFTransform * pTransform);
 
 /**
 * Returns the name of the function output channel to use.
 *
-* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pLevelSet - LevelSet instance.
 * @param[in] nChannelNameBufferSize - size of the buffer (including trailing 0)
 * @param[out] pChannelNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
 * @param[out] pChannelNameBuffer -  buffer of the name of the function output channel, may be NULL
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshape_getchannelname(Lib3MF_BoundaryShape pBoundaryShape, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_levelset_getchannelname(Lib3MF_LevelSet pLevelSet, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer);
 
 /**
 * Sets the name of the function output channel to use.
 *
-* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pLevelSet - LevelSet instance.
 * @param[in] pChannelName - new name of the function output channel
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshape_setchannelname(Lib3MF_BoundaryShape pBoundaryShape, const char * pChannelName);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_levelset_setchannelname(Lib3MF_LevelSet pLevelSet, const char * pChannelName);
 
 /**
 * Sets the minimal feature size as a hint for the function evaluator
 *
-* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pLevelSet - LevelSet instance.
 * @param[in] dMinFeatureSize - minimal feature size
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshape_setminfeaturesize(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_double dMinFeatureSize);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_levelset_setminfeaturesize(Lib3MF_LevelSet pLevelSet, Lib3MF_double dMinFeatureSize);
 
 /**
 * Returns the minimal feature size as a hint for the function evaluator
 *
-* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pLevelSet - LevelSet instance.
 * @param[out] pMinFeatureSize - minimal feature size
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshape_getminfeaturesize(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_double * pMinFeatureSize);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_levelset_getminfeaturesize(Lib3MF_LevelSet pLevelSet, Lib3MF_double * pMinFeatureSize);
 
 /**
 * Sets the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
 *
-* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pLevelSet - LevelSet instance.
 * @param[in] dFallBackValue - fallback value
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshape_setfallbackvalue(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_double dFallBackValue);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_levelset_setfallbackvalue(Lib3MF_LevelSet pLevelSet, Lib3MF_double dFallBackValue);
 
 /**
 * Returns the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
 *
-* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pLevelSet - LevelSet instance.
 * @param[out] pFallBackValue - fallback value
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshape_getfallbackvalue(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_double * pFallBackValue);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_levelset_getfallbackvalue(Lib3MF_LevelSet pLevelSet, Lib3MF_double * pFallBackValue);
 
 /**
 * If set only the bounding box of the mesh is intersected with the boundary
 *
-* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pLevelSet - LevelSet instance.
 * @param[in] bMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshape_setmeshbboxonly(Lib3MF_BoundaryShape pBoundaryShape, bool bMeshBBoxOnly);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_levelset_setmeshbboxonly(Lib3MF_LevelSet pLevelSet, bool bMeshBBoxOnly);
 
 /**
 * If set only the bounding box of the mesh is intersected with the boundary
 *
-* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pLevelSet - LevelSet instance.
 * @param[out] pMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshape_getmeshbboxonly(Lib3MF_BoundaryShape pBoundaryShape, bool * pMeshBBoxOnly);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_levelset_getmeshbboxonly(Lib3MF_LevelSet pLevelSet, bool * pMeshBBoxOnly);
 
 /**
 * Sets the mesh to use as evaluation domain
 *
-* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pLevelSet - LevelSet instance.
 * @param[in] pTheMesh - The mesh
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshape_setmesh(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_MeshObject pTheMesh);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_levelset_setmesh(Lib3MF_LevelSet pLevelSet, Lib3MF_MeshObject pTheMesh);
 
 /**
 * Returns the mesh that is used as evaluation domain
 *
-* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pLevelSet - LevelSet instance.
 * @param[out] pTheMesh - The mesh
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshape_getmesh(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_MeshObject * pTheMesh);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_levelset_getmesh(Lib3MF_LevelSet pLevelSet, Lib3MF_MeshObject * pTheMesh);
 
 /**
 * Retrieves the VolumeData this MeshObject.
 *
-* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pLevelSet - LevelSet instance.
 * @param[out] pTheVolumeData - the VolumeData of this MeshObject
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshape_getvolumedata(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_VolumeData * pTheVolumeData);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_levelset_getvolumedata(Lib3MF_LevelSet pLevelSet, Lib3MF_VolumeData * pTheVolumeData);
 
 /**
-* Sets the VolumeData of this BoundaryShape.
+* Sets the VolumeData of this LevelSet.
 *
-* @param[in] pBoundaryShape - BoundaryShape instance.
+* @param[in] pLevelSet - LevelSet instance.
 * @param[in] pTheVolumeData - the VolumeData of this MeshObject
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_boundaryshape_setvolumedata(Lib3MF_BoundaryShape pBoundaryShape, Lib3MF_VolumeData pTheVolumeData);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_levelset_setvolumedata(Lib3MF_LevelSet pLevelSet, Lib3MF_VolumeData pTheVolumeData);
 
 /*************************************************************************************************************************
  Class definition for BeamLattice
@@ -6207,10 +6207,10 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addvolumedata(Lib3MF_Model pModel, Lib
 * adds an empty boundary shape object to the model.
 *
 * @param[in] pModel - Model instance.
-* @param[out] pBoundaryShapeInstance -  returns the mesh object instance
+* @param[out] pLevelSetInstance -  returns the mesh object instance
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addboundaryshape(Lib3MF_Model pModel, Lib3MF_BoundaryShape * pBoundaryShapeInstance);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addlevelset(Lib3MF_Model pModel, Lib3MF_LevelSet * pLevelSetInstance);
 
 /**
 * creates a resource iterator instance with all boundary shape resources.
@@ -6219,7 +6219,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addboundaryshape(Lib3MF_Model pModel, 
 * @param[out] pResourceIterator - returns the iterator instance.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getboundaryshapes(Lib3MF_Model pModel, Lib3MF_BoundaryShapeIterator * pResourceIterator);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getlevelsets(Lib3MF_Model pModel, Lib3MF_LevelSetIterator * pResourceIterator);
 
 /*************************************************************************************************************************
  Global functions

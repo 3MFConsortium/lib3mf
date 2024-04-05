@@ -69,12 +69,12 @@ class ICompositeMaterialsIterator;
 class IMultiPropertyGroupIterator;
 class IImage3DIterator;
 class IFunctionIterator;
-class IBoundaryShapeIterator;
+class ILevelSetIterator;
 class IMetaData;
 class IMetaDataGroup;
 class IObject;
 class IMeshObject;
-class IBoundaryShape;
+class ILevelSet;
 class IBeamLattice;
 class IFunctionReference;
 class IVolumeDataColor;
@@ -1026,29 +1026,29 @@ typedef IBaseSharedPtr<IFunctionIterator> PIFunctionIterator;
 
 
 /*************************************************************************************************************************
- Class interface for BoundaryShapeIterator 
+ Class interface for LevelSetIterator 
 **************************************************************************************************************************/
 
-class IBoundaryShapeIterator : public virtual IResourceIterator {
+class ILevelSetIterator : public virtual IResourceIterator {
 public:
 	/**
-	* IBoundaryShapeIterator::ClassTypeId - Get Class Type Id
+	* ILevelSetIterator::ClassTypeId - Get Class Type Id
 	* @return Class type as a 64 bits integer
 	*/
 	Lib3MF_uint64 ClassTypeId() override
 	{
-		return 0x9FBC898CF30CDEF3UL; // First 64 bits of SHA1 of a string: "Lib3MF::BoundaryShapeIterator"
+		return 0x9FBC898CF30CDEF3UL; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSetIterator"
 	}
 
 	/**
-	* IBoundaryShapeIterator::GetCurrentBoundaryShape - Returns the BoundaryShape the iterator points at.
+	* ILevelSetIterator::GetCurrentLevelSet - Returns the LevelSet the iterator points at.
 	* @return returns the MeshObject instance.
 	*/
-	virtual IBoundaryShape * GetCurrentBoundaryShape() = 0;
+	virtual ILevelSet * GetCurrentLevelSet() = 0;
 
 };
 
-typedef IBaseSharedPtr<IBoundaryShapeIterator> PIBoundaryShapeIterator;
+typedef IBaseSharedPtr<ILevelSetIterator> PILevelSetIterator;
 
 
 /*************************************************************************************************************************
@@ -1526,119 +1526,119 @@ typedef IBaseSharedPtr<IMeshObject> PIMeshObject;
 
 
 /*************************************************************************************************************************
- Class interface for BoundaryShape 
+ Class interface for LevelSet 
 **************************************************************************************************************************/
 
-class IBoundaryShape : public virtual IObject {
+class ILevelSet : public virtual IObject {
 public:
 	/**
-	* IBoundaryShape::ClassTypeId - Get Class Type Id
+	* ILevelSet::ClassTypeId - Get Class Type Id
 	* @return Class type as a 64 bits integer
 	*/
 	Lib3MF_uint64 ClassTypeId() override
 	{
-		return 0x2BE0E57BA81B2ECBUL; // First 64 bits of SHA1 of a string: "Lib3MF::BoundaryShape"
+		return 0x2BE0E57BA81B2ECBUL; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSet"
 	}
 
 	/**
-	* IBoundaryShape::GetFunction - Returns the function that is used as boundary shape.
+	* ILevelSet::GetFunction - Returns the function that is used as boundary shape.
 	* @return the function to use as boundary shape
 	*/
 	virtual IFunction * GetFunction() = 0;
 
 	/**
-	* IBoundaryShape::SetFunction - Sets the function to use as boundary shape.
+	* ILevelSet::SetFunction - Sets the function to use as boundary shape.
 	* @param[in] pTheFunction - the function to use as boundary shape
 	*/
 	virtual void SetFunction(IFunction* pTheFunction) = 0;
 
 	/**
-	* IBoundaryShape::GetTransform - Returns the transformation matrix into the coordinate system of the referenced Function.
+	* ILevelSet::GetTransform - Returns the transformation matrix into the coordinate system of the referenced Function.
 	* @return the transformation matrix
 	*/
 	virtual Lib3MF::sTransform GetTransform() = 0;
 
 	/**
-	* IBoundaryShape::SetTransform - Sets the transformation matrix into the coordinate system of the referenced Function.
+	* ILevelSet::SetTransform - Sets the transformation matrix into the coordinate system of the referenced Function.
 	* @param[in] Transform - new transformation matrix
 	*/
 	virtual void SetTransform(const Lib3MF::sTransform Transform) = 0;
 
 	/**
-	* IBoundaryShape::GetChannelName - Returns the name of the function output channel to use.
+	* ILevelSet::GetChannelName - Returns the name of the function output channel to use.
 	* @return the name of the function output channel
 	*/
 	virtual std::string GetChannelName() = 0;
 
 	/**
-	* IBoundaryShape::SetChannelName - Sets the name of the function output channel to use.
+	* ILevelSet::SetChannelName - Sets the name of the function output channel to use.
 	* @param[in] sChannelName - new name of the function output channel
 	*/
 	virtual void SetChannelName(const std::string & sChannelName) = 0;
 
 	/**
-	* IBoundaryShape::SetMinFeatureSize - Sets the minimal feature size as a hint for the function evaluator
+	* ILevelSet::SetMinFeatureSize - Sets the minimal feature size as a hint for the function evaluator
 	* @param[in] dMinFeatureSize - minimal feature size
 	*/
 	virtual void SetMinFeatureSize(const Lib3MF_double dMinFeatureSize) = 0;
 
 	/**
-	* IBoundaryShape::GetMinFeatureSize - Returns the minimal feature size as a hint for the function evaluator
+	* ILevelSet::GetMinFeatureSize - Returns the minimal feature size as a hint for the function evaluator
 	* @return minimal feature size
 	*/
 	virtual Lib3MF_double GetMinFeatureSize() = 0;
 
 	/**
-	* IBoundaryShape::SetFallBackValue - Sets the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+	* ILevelSet::SetFallBackValue - Sets the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
 	* @param[in] dFallBackValue - fallback value
 	*/
 	virtual void SetFallBackValue(const Lib3MF_double dFallBackValue) = 0;
 
 	/**
-	* IBoundaryShape::GetFallBackValue - Returns the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
+	* ILevelSet::GetFallBackValue - Returns the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
 	* @return fallback value
 	*/
 	virtual Lib3MF_double GetFallBackValue() = 0;
 
 	/**
-	* IBoundaryShape::SetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+	* ILevelSet::SetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
 	* @param[in] bMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
 	*/
 	virtual void SetMeshBBoxOnly(const bool bMeshBBoxOnly) = 0;
 
 	/**
-	* IBoundaryShape::GetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
+	* ILevelSet::GetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
 	* @return If set only the bounding box of the mesh is intersected with the boundary
 	*/
 	virtual bool GetMeshBBoxOnly() = 0;
 
 	/**
-	* IBoundaryShape::SetMesh - Sets the mesh to use as evaluation domain
+	* ILevelSet::SetMesh - Sets the mesh to use as evaluation domain
 	* @param[in] pTheMesh - The mesh
 	*/
 	virtual void SetMesh(IMeshObject* pTheMesh) = 0;
 
 	/**
-	* IBoundaryShape::GetMesh - Returns the mesh that is used as evaluation domain
+	* ILevelSet::GetMesh - Returns the mesh that is used as evaluation domain
 	* @return The mesh
 	*/
 	virtual IMeshObject * GetMesh() = 0;
 
 	/**
-	* IBoundaryShape::GetVolumeData - Retrieves the VolumeData this MeshObject.
+	* ILevelSet::GetVolumeData - Retrieves the VolumeData this MeshObject.
 	* @return the VolumeData of this MeshObject
 	*/
 	virtual IVolumeData * GetVolumeData() = 0;
 
 	/**
-	* IBoundaryShape::SetVolumeData - Sets the VolumeData of this BoundaryShape.
+	* ILevelSet::SetVolumeData - Sets the VolumeData of this LevelSet.
 	* @param[in] pTheVolumeData - the VolumeData of this MeshObject
 	*/
 	virtual void SetVolumeData(IVolumeData* pTheVolumeData) = 0;
 
 };
 
-typedef IBaseSharedPtr<IBoundaryShape> PIBoundaryShape;
+typedef IBaseSharedPtr<ILevelSet> PILevelSet;
 
 
 /*************************************************************************************************************************
@@ -6501,16 +6501,16 @@ public:
 	virtual IVolumeData * AddVolumeData() = 0;
 
 	/**
-	* IModel::AddBoundaryShape - adds an empty boundary shape object to the model.
+	* IModel::AddLevelSet - adds an empty boundary shape object to the model.
 	* @return  returns the mesh object instance
 	*/
-	virtual IBoundaryShape * AddBoundaryShape() = 0;
+	virtual ILevelSet * AddLevelSet() = 0;
 
 	/**
-	* IModel::GetBoundaryShapes - creates a resource iterator instance with all boundary shape resources.
+	* IModel::GetLevelSets - creates a resource iterator instance with all boundary shape resources.
 	* @return returns the iterator instance.
 	*/
-	virtual IBoundaryShapeIterator * GetBoundaryShapes() = 0;
+	virtual ILevelSetIterator * GetLevelSets() = 0;
 
 };
 

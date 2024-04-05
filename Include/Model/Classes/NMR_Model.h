@@ -114,8 +114,8 @@ namespace NMR {
 	class CModelVolumeData;
 	typedef std::shared_ptr <CModelVolumeData> PModelVolumeData;
 
-	class BoundaryShapeObject;
-	typedef std::shared_ptr <BoundaryShapeObject> PBoundaryShapeObject;
+	class LevelSetObject;
+	typedef std::shared_ptr <LevelSetObject> PLevelSetObject;
 
 	// The Model class implements the unification of all model-file in a 3MF package
 	// It should be understood as a "MultiModel"
@@ -171,7 +171,7 @@ namespace NMR {
 		std::vector<PModelResource> m_Image3DLookup;
 		std::vector<PModelResource> m_FunctionLookup; // for implicit models
 		std::vector<PModelResource> m_VolumeDataLookup;
-		std::vector<PModelResource> m_boundaryShapeObjectLookup;
+		std::vector<PModelResource> m_levelSetObjectLookup;
 
 		// The KeyStore reference
 		PKeyStore m_pKeyStore;

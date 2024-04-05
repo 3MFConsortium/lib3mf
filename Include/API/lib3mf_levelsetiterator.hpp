@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CBoundaryShapeIterator
+Abstract: This is the class declaration of CLevelSetIterator
 
 */
 
@@ -49,10 +49,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CBoundaryShapeIterator 
+ Class declaration of CLevelSetIterator 
 **************************************************************************************************************************/
 
-class CBoundaryShapeIterator : public virtual IBoundaryShapeIterator, public virtual CResourceIterator {
+class CLevelSetIterator : public virtual ILevelSetIterator, public virtual CResourceIterator {
 private:
 
 	/**
@@ -77,10 +77,10 @@ public:
 	*/
 
 	/**
-	* IBoundaryShapeIterator::GetCurrentBoundaryShape - Returns the BoundaryShape the iterator points at.
+	* ILevelSetIterator::GetCurrentLevelSet - Returns the LevelSet the iterator points at.
 	* @return returns the MeshObject instance.
 	*/
-	IBoundaryShape * GetCurrentBoundaryShape() override;
+	ILevelSet * GetCurrentLevelSet() override;
 
 };
 

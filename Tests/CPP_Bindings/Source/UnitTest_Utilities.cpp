@@ -341,12 +341,12 @@ namespace Lib3MF
             return transform;
         }
 
-        Lib3MF::PBoundaryShape getFirstBoundaryShape(Lib3MF::PModel model)
+        Lib3MF::PLevelSet getFirstLevelSet(Lib3MF::PModel model)
         {
-            auto iterator = model->GetBoundaryShapes();
+            auto iterator = model->GetLevelSets();
             if(iterator->MoveNext())
             {
-                return iterator->GetCurrentBoundaryShape();
+                return iterator->GetCurrentLevelSet();
             }
             return {};
         }

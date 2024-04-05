@@ -29,12 +29,12 @@ Reader for boundary shape objects
 
 --*/
 
-#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_BoundaryShape.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_LevelSet.h"
 
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
-#include "Model/Classes/NMR_ModelBoundaryShapeObject.h"
+#include "Model/Classes/NMR_ModelLevelSetObject.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelResource.h"
 #include "Model/Classes/NMR_ModelConstants.h"
@@ -42,15 +42,15 @@ Reader for boundary shape objects
 namespace NMR
 {
 
-    NMR::CModelReaderNode_BoundaryShape::CModelReaderNode_BoundaryShape(
-       CModel * pModel, PModelBoundaryShapeObject boundaryShape,
+    NMR::CModelReaderNode_LevelSet::CModelReaderNode_LevelSet(
+       CModel * pModel, PModelLevelSetObject levelSet,
        PModelWarnings pWarnings,  PProgressMonitor pProgressMonitor)
-        : CModelReaderNode(pWarnings, pProgressMonitor), m_parentModel(pModel), m_pBoundaryShape(std::move(boundaryShape))
+        : CModelReaderNode(pWarnings, pProgressMonitor), m_parentModel(pModel), m_pLevelSet(std::move(levelSet))
     {
         
     }
 
-    void CModelReaderNode_BoundaryShape::parseXML(CXmlReader* pXMLReader)
+    void CModelReaderNode_LevelSet::parseXML(CXmlReader* pXMLReader)
     {
         __NMRASSERT(pXMLReader);
         // Parse name
@@ -75,7 +75,7 @@ namespace NMR
             throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
         }
 
-        m_pBoundaryShape->setFunction(pFunction);
+        m_pLevelSet->setFunction(pFunction);
 
         PPackageResourceID meshPackageId = m_parentModel->findPackageResourceID(
             m_parentModel->currentPath(), m_nMeshID);
@@ -99,31 +99,31 @@ namespace NMR
             throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
         }
 
-        m_pBoundaryShape->setMesh(pMeshObject);
+        m_pLevelSet->setMesh(pMeshObject);
     	
         if(m_bHasTransform)
         {
-            m_pBoundaryShape->setTransform(m_Transform);
+            m_pLevelSet->setTransform(m_Transform);
         }
 
         if(m_bHasChannel)
         {
-            m_pBoundaryShape->setChannelName(m_sChannel);
+            m_pLevelSet->setChannelName(m_sChannel);
         }
 
         if(m_bHasMeshBBoxOnly)
         {
-            m_pBoundaryShape->setMeshBBoxOnly(m_meshBBoxOnly);
+            m_pLevelSet->setMeshBBoxOnly(m_meshBBoxOnly);
         }
 
         if(m_bHasMinFeatureSize)
         {
-            m_pBoundaryShape->setMinFeatureSize(m_dMinFeatureSize);
+            m_pLevelSet->setMinFeatureSize(m_dMinFeatureSize);
         }
 
         if(m_bHasFallBackValue)
         {
-            m_pBoundaryShape->setFallBackValue(m_dFallBackValue);
+            m_pLevelSet->setFallBackValue(m_dFallBackValue);
         }
 
         if(m_bHasVolumeDataID)
@@ -140,11 +140,11 @@ namespace NMR
             auto pVolumeData = m_parentModel->findVolumeData(
                 volumePackageId->getUniqueID());
 
-            m_pBoundaryShape->setVolumeData(pVolumeData);
+            m_pLevelSet->setVolumeData(pVolumeData);
         }
     }
 
-    void CModelReaderNode_BoundaryShape::OnAttribute(
+    void CModelReaderNode_LevelSet::OnAttribute(
         const nfChar* pAttributeName, const nfChar* pAttributeValue)
     {        
         if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_ID) == 0)
@@ -235,7 +235,7 @@ namespace NMR
             m_nVolumeDataID = fnStringToUint32(pAttributeValue);
         }
     }
-    void CModelReaderNode_BoundaryShape::OnNSChildElement(
+    void CModelReaderNode_LevelSet::OnNSChildElement(
         const nfChar* pChildName, const nfChar* pNameSpace,
         CXmlReader* pXMLReader)
     {

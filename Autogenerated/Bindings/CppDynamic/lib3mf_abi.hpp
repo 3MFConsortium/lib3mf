@@ -2213,20 +2213,20 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedataproperty_isrequired(Lib3MF_VolumeD
 * Returns the VolumeDataBoundary of this VolumeData instance
 *
 * @param[in] pVolumeData - VolumeData instance.
-* @param[out] pTheBoundaryData - filled with the VolumeDataBoundary of this VolumeData instance.
+* @param[out] pTheLevelSetData - filled with the VolumeDataBoundary of this VolumeData instance.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedata_getboundary(Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataBoundary * pTheBoundaryData);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedata_getboundary(Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataBoundary * pTheLevelSetData);
 
 /**
 * Creates a new VolumeDataBoundary for this VolumeData instance
 *
 * @param[in] pVolumeData - VolumeData instance.
 * @param[in] pTheScalarField - ScalarField used in this element
-* @param[out] pTheBoundaryData - The new VolumeDataBoundary of this VolumeData instance.
+* @param[out] pTheLevelSetData - The new VolumeDataBoundary of this VolumeData instance.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedata_createnewboundary(Lib3MF_VolumeData pVolumeData, Lib3MF_ScalarField pTheScalarField, Lib3MF_VolumeDataBoundary * pTheBoundaryData);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedata_createnewboundary(Lib3MF_VolumeData pVolumeData, Lib3MF_ScalarField pTheScalarField, Lib3MF_VolumeDataBoundary * pTheLevelSetData);
 
 /**
 * Removes the VolumeDataBoundary of this VolumeData instance
