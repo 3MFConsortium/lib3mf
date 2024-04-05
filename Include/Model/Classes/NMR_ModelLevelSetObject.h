@@ -35,7 +35,7 @@ levelset object.
 #ifndef __NMR_ModelLevelSetObject
 #define __NMR_ModelLevelSetObject
 
-#include "Model/Classes/NMR_ModelObject.h" 
+#include "Model/Classes/NMR_ModelObject.h"
 
 #include <memory>
 
