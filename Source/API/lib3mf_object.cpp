@@ -32,6 +32,7 @@ Abstract: This is a stub class definition of CObject
 #include "lib3mf_interfaceexception.hpp"
 
 #include "lib3mf_meshobject.hpp"
+#include "lib3mf_levelset.hpp"
 #include "lib3mf_componentsobject.hpp"
 #include "lib3mf_metadatagroup.hpp"
 #include "lib3mf_slicestack.hpp"
@@ -39,6 +40,7 @@ Abstract: This is a stub class definition of CObject
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h" 
+#include "Model/Classes/NMR_ModelLevelSetObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h" 
 
 using namespace Lib3MF::Impl;
@@ -63,6 +65,11 @@ IObject* CObject::fnCreateObjectFromModelResource(NMR::PModelResource pResource,
 	NMR::CModelMeshObject * pMeshObject = dynamic_cast<NMR::CModelMeshObject *> (pResource.get());
 	if (pMeshObject) {
 		return new CMeshObject(pResource);
+	}
+
+	NMR::CModelLevelSetObject * PILevelSet = dynamic_cast<NMR::CModelLevelSetObject *> (pResource.get());
+	if (PILevelSet) {
+		return new CLevelSet(pResource);
 	}
 
 	NMR::CModelComponentsObject * pComponentsResource = dynamic_cast<NMR::CModelComponentsObject *> (pResource.get());
