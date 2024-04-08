@@ -217,6 +217,11 @@ void CLevelSet::SetVolumeData(IVolumeData* pTheVolumeData)
 	levelSetObject()->setVolumeData(pVolumeData);
 }
 
+bool Lib3MF::Impl::CLevelSet::IsMeshObject()
+{
+    return false;
+}
+
 IVolumeData * CLevelSet::GetVolumeData()
 {
 	NMR::PModelVolumeData pVolumeData = levelSetObject()->getVolumeData();

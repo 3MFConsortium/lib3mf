@@ -178,6 +178,7 @@ public:
 	*/
 	void SetVolumeData(IVolumeData* pTheVolumeData) override;
 
+    bool IsMeshObject() override;
 };
 
 } // namespace Impl
