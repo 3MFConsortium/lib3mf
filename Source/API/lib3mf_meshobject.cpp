@@ -399,6 +399,11 @@ IBeamLattice* CMeshObject::BeamLattice()
 
 IVolumeData * CMeshObject::GetVolumeData()
 {
+	auto volumeData = meshObject()->getVolumeData();
+	if (!volumeData)
+	{
+		return nullptr;
+	}
 	return new CVolumeData(std::dynamic_pointer_cast<NMR::CModelResource>(meshObject()->getVolumeData()));
 }
 
