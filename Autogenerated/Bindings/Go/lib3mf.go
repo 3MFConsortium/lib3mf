@@ -4842,6 +4842,15 @@ Lib3MFResult CCall_lib3mf_model_getslicestackbyid(Lib3MFHandle libraryHandle, Li
 }
 
 
+Lib3MFResult CCall_lib3mf_model_getlevelsetbyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_LevelSet * pLevelSetObjectInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_GetLevelSetByID (pModel, nUniqueResourceID, pLevelSetObjectInstance);
+}
+
+
 Lib3MFResult CCall_lib3mf_model_getbuilduuid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, bool * pHasUUID, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer)
 {
 	if (libraryHandle == 0) 
@@ -12949,6 +12958,16 @@ func (inst Model) GetSliceStackByID(uniqueResourceID uint32) (SliceStack, error)
 		return SliceStack{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewSliceStack(sliceStacInstance), nil
+}
+
+// GetLevelSetByID finds a level set object by its UniqueResourceID.
+func (inst Model) GetLevelSetByID(uniqueResourceID uint32) (LevelSet, error) {
+	var levelSetObjectInstance ref
+	ret := C.CCall_lib3mf_model_getlevelsetbyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(uniqueResourceID), &levelSetObjectInstance)
+	if ret != 0 {
+		return LevelSet{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewLevelSet(levelSetObjectInstance), nil
 }
 
 // GetBuildUUID returns, whether a build has a UUID and, if true, the build's UUID.

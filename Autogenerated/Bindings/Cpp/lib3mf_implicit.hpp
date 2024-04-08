@@ -3327,6 +3327,7 @@ public:
 	inline PComponentsObject GetComponentsObjectByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PColorGroup GetColorGroupByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PSliceStack GetSliceStackByID(const Lib3MF_uint32 nUniqueResourceID);
+	inline PLevelSet GetLevelSetByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline std::string GetBuildUUID(bool & bHasUUID);
 	inline void SetBuildUUID(const std::string & sUUID);
 	inline PBuildItemIterator GetBuildItems();
@@ -11298,6 +11299,22 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CSliceStack>(dynamic_cast<CSliceStack*>(m_pWrapper->polymorphicFactory(hSliceStacInstance)));
+	}
+	
+	/**
+	* CModel::GetLevelSetByID - finds a level set object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the level set object instance
+	*/
+	PLevelSet CModel::GetLevelSetByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hLevelSetObjectInstance = nullptr;
+		CheckError(lib3mf_model_getlevelsetbyid(m_pHandle, nUniqueResourceID, &hLevelSetObjectInstance));
+		
+		if (!hLevelSetObjectInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CLevelSet>(dynamic_cast<CLevelSet*>(m_pWrapper->polymorphicFactory(hLevelSetObjectInstance)));
 	}
 	
 	/**

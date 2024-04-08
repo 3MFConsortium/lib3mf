@@ -334,6 +334,17 @@ ISliceStack * CModel::GetSliceStackByID(const Lib3MF_uint32 nUniqueResourceID)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDSLICESTACKRESOURCE);
 }
 
+ILevelSet* CModel::GetLevelSetByID(const Lib3MF_uint32 nUniqueResourceID)
+{
+	NMR::PModelResource pResource = model().findResource(nUniqueResourceID);
+	if (dynamic_cast<NMR::CModelLevelSetObject*>(pResource.get())) {
+		return new CLevelSet(std::dynamic_pointer_cast<NMR::CModelLevelSetObject>(pResource));
+	}
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDLEVELSETRESOURCE);
+
+}
+
 ITexture2DGroup * CModel::GetTexture2DGroupByID(const Lib3MF_uint32 nUniqueResourceID)
 {
 	NMR::PModelResource pResource = model().findResource(nUniqueResourceID);

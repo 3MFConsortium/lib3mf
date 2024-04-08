@@ -119,7 +119,9 @@ public:
 
 	ISliceStack * GetSliceStackByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
-	std::string GetBuildUUID (bool & bHasUUID) override;
+    ILevelSet* GetLevelSetByID(const Lib3MF_uint32 nUniqueResourceID) override;
+
+    std::string GetBuildUUID (bool & bHasUUID) override;
 
 	void SetBuildUUID (const std::string & sUUID) override;
 

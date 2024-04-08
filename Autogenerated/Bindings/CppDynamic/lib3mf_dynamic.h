@@ -5740,6 +5740,16 @@ typedef Lib3MFResult (*PLib3MFModel_GetColorGroupByIDPtr) (Lib3MF_Model pModel, 
 typedef Lib3MFResult (*PLib3MFModel_GetSliceStackByIDPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_SliceStack * pSliceStacInstance);
 
 /**
+* finds a level set object by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pLevelSetObjectInstance - returns the level set object instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetLevelSetByIDPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_LevelSet * pLevelSetObjectInstance);
+
+/**
 * returns, whether a build has a UUID and, if true, the build's UUID
 *
 * @param[in] pModel - Model instance.
@@ -6951,6 +6961,7 @@ typedef struct {
 	PLib3MFModel_GetComponentsObjectByIDPtr m_Model_GetComponentsObjectByID;
 	PLib3MFModel_GetColorGroupByIDPtr m_Model_GetColorGroupByID;
 	PLib3MFModel_GetSliceStackByIDPtr m_Model_GetSliceStackByID;
+	PLib3MFModel_GetLevelSetByIDPtr m_Model_GetLevelSetByID;
 	PLib3MFModel_GetBuildUUIDPtr m_Model_GetBuildUUID;
 	PLib3MFModel_SetBuildUUIDPtr m_Model_SetBuildUUID;
 	PLib3MFModel_GetBuildItemsPtr m_Model_GetBuildItems;

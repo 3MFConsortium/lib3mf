@@ -6400,6 +6400,16 @@ type
 	TLib3MFModel_GetSliceStackByIDFunc = function(pModel: TLib3MFHandle; const nUniqueResourceID: Cardinal; out pSliceStacInstance: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
+	* finds a level set object by its UniqueResourceID
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @param[out] pLevelSetObjectInstance - returns the level set object instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetLevelSetByIDFunc = function(pModel: TLib3MFHandle; const nUniqueResourceID: Cardinal; out pLevelSetObjectInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
 	* returns, whether a build has a UUID and, if true, the build's UUID
 	*
 	* @param[in] pModel - Model instance.
@@ -8882,6 +8892,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetComponentsObjectByID(const AUniqueResourceID: Cardinal): TLib3MFComponentsObject;
 		function GetColorGroupByID(const AUniqueResourceID: Cardinal): TLib3MFColorGroup;
 		function GetSliceStackByID(const AUniqueResourceID: Cardinal): TLib3MFSliceStack;
+		function GetLevelSetByID(const AUniqueResourceID: Cardinal): TLib3MFLevelSet;
 		function GetBuildUUID(out AHasUUID: Boolean): String;
 		procedure SetBuildUUID(const AUUID: String);
 		function GetBuildItems(): TLib3MFBuildItemIterator;
@@ -9472,6 +9483,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_GetComponentsObjectByIDFunc: TLib3MFModel_GetComponentsObjectByIDFunc;
 		FLib3MFModel_GetColorGroupByIDFunc: TLib3MFModel_GetColorGroupByIDFunc;
 		FLib3MFModel_GetSliceStackByIDFunc: TLib3MFModel_GetSliceStackByIDFunc;
+		FLib3MFModel_GetLevelSetByIDFunc: TLib3MFModel_GetLevelSetByIDFunc;
 		FLib3MFModel_GetBuildUUIDFunc: TLib3MFModel_GetBuildUUIDFunc;
 		FLib3MFModel_SetBuildUUIDFunc: TLib3MFModel_SetBuildUUIDFunc;
 		FLib3MFModel_GetBuildItemsFunc: TLib3MFModel_GetBuildItemsFunc;
@@ -10082,6 +10094,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_GetComponentsObjectByIDFunc: TLib3MFModel_GetComponentsObjectByIDFunc read FLib3MFModel_GetComponentsObjectByIDFunc;
 		property Lib3MFModel_GetColorGroupByIDFunc: TLib3MFModel_GetColorGroupByIDFunc read FLib3MFModel_GetColorGroupByIDFunc;
 		property Lib3MFModel_GetSliceStackByIDFunc: TLib3MFModel_GetSliceStackByIDFunc read FLib3MFModel_GetSliceStackByIDFunc;
+		property Lib3MFModel_GetLevelSetByIDFunc: TLib3MFModel_GetLevelSetByIDFunc read FLib3MFModel_GetLevelSetByIDFunc;
 		property Lib3MFModel_GetBuildUUIDFunc: TLib3MFModel_GetBuildUUIDFunc read FLib3MFModel_GetBuildUUIDFunc;
 		property Lib3MFModel_SetBuildUUIDFunc: TLib3MFModel_SetBuildUUIDFunc read FLib3MFModel_SetBuildUUIDFunc;
 		property Lib3MFModel_GetBuildItemsFunc: TLib3MFModel_GetBuildItemsFunc read FLib3MFModel_GetBuildItemsFunc;
@@ -18278,6 +18291,17 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFSliceStack, TLib3MFSliceStack>.Make(FWrapper, HSliceStacInstance);
 	end;
 
+	function TLib3MFModel.GetLevelSetByID(const AUniqueResourceID: Cardinal): TLib3MFLevelSet;
+	var
+		HLevelSetObjectInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HLevelSetObjectInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetLevelSetByIDFunc(FHandle, AUniqueResourceID, HLevelSetObjectInstance));
+		if Assigned(HLevelSetObjectInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFLevelSet, TLib3MFLevelSet>.Make(FWrapper, HLevelSetObjectInstance);
+	end;
+
 	function TLib3MFModel.GetBuildUUID(out AHasUUID: Boolean): String;
 	var
 		ResultHasUUID: Byte;
@@ -19380,6 +19404,7 @@ implementation
 		FLib3MFModel_GetComponentsObjectByIDFunc := LoadFunction('lib3mf_model_getcomponentsobjectbyid');
 		FLib3MFModel_GetColorGroupByIDFunc := LoadFunction('lib3mf_model_getcolorgroupbyid');
 		FLib3MFModel_GetSliceStackByIDFunc := LoadFunction('lib3mf_model_getslicestackbyid');
+		FLib3MFModel_GetLevelSetByIDFunc := LoadFunction('lib3mf_model_getlevelsetbyid');
 		FLib3MFModel_GetBuildUUIDFunc := LoadFunction('lib3mf_model_getbuilduuid');
 		FLib3MFModel_SetBuildUUIDFunc := LoadFunction('lib3mf_model_setbuilduuid');
 		FLib3MFModel_GetBuildItemsFunc := LoadFunction('lib3mf_model_getbuilditems');
@@ -21049,6 +21074,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getslicestackbyid'), @FLib3MFModel_GetSliceStackByIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getlevelsetbyid'), @FLib3MFModel_GetLevelSetByIDFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getbuilduuid'), @FLib3MFModel_GetBuildUUIDFunc);

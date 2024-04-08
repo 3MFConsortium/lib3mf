@@ -5753,6 +5753,16 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getcolorgroupbyid(Lib3MF_Model pModel,
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getslicestackbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_SliceStack * pSliceStacInstance);
 
 /**
+* finds a level set object by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pLevelSetObjectInstance - returns the level set object instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getlevelsetbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_LevelSet * pLevelSetObjectInstance);
+
+/**
 * returns, whether a build has a UUID and, if true, the build's UUID
 *
 * @param[in] pModel - Model instance.

@@ -6196,6 +6196,13 @@ public:
 	virtual ISliceStack * GetSliceStackByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
 
 	/**
+	* IModel::GetLevelSetByID - finds a level set object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the level set object instance
+	*/
+	virtual ILevelSet * GetLevelSetByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
 	* IModel::GetBuildUUID - returns, whether a build has a UUID and, if true, the build's UUID
 	* @param[out] bHasUUID - flag whether the build has a UUID
 	* @return the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'

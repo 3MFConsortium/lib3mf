@@ -664,6 +664,7 @@ class FunctionTable:
 	lib3mf_model_getcomponentsobjectbyid = None
 	lib3mf_model_getcolorgroupbyid = None
 	lib3mf_model_getslicestackbyid = None
+	lib3mf_model_getlevelsetbyid = None
 	lib3mf_model_getbuilduuid = None
 	lib3mf_model_setbuilduuid = None
 	lib3mf_model_getbuilditems = None
@@ -4418,6 +4419,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_getslicestackbyid = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getlevelsetbyid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_getlevelsetbyid = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getbuilduuid")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -6375,6 +6382,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_model_getslicestackbyid.restype = ctypes.c_int32
 			self.lib.lib3mf_model_getslicestackbyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_getlevelsetbyid.restype = ctypes.c_int32
+			self.lib.lib3mf_model_getlevelsetbyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_model_getbuilduuid.restype = ctypes.c_int32
 			self.lib.lib3mf_model_getbuilduuid.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool), ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
@@ -12328,6 +12338,17 @@ class Model(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return SliceStacInstanceObject
+	
+	def GetLevelSetByID(self, UniqueResourceID):
+		nUniqueResourceID = ctypes.c_uint32(UniqueResourceID)
+		LevelSetObjectInstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_getlevelsetbyid(self._handle, nUniqueResourceID, LevelSetObjectInstanceHandle))
+		if LevelSetObjectInstanceHandle:
+			LevelSetObjectInstanceObject = self._wrapper._polymorphicFactory(LevelSetObjectInstanceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return LevelSetObjectInstanceObject
 	
 	def GetBuildUUID(self):
 		pHasUUID = ctypes.c_bool()

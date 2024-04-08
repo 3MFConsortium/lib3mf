@@ -2024,6 +2024,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getslicestackbyid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetSliceStackByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr ASliceStacInstance);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getlevelsetbyid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetLevelSetByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr ALevelSetObjectInstance);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getbuilduuid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetBuildUUID (IntPtr Handle, out Byte AHasUUID, UInt32 sizeUUID, out UInt32 neededUUID, IntPtr dataUUID);
 
@@ -8452,6 +8455,14 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Model_GetSliceStackByID (Handle, AUniqueResourceID, out newSliceStacInstance));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CSliceStack>(newSliceStacInstance);
+		}
+
+		public CLevelSet GetLevelSetByID (UInt32 AUniqueResourceID)
+		{
+			IntPtr newLevelSetObjectInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetLevelSetByID (Handle, AUniqueResourceID, out newLevelSetObjectInstance));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CLevelSet>(newLevelSetObjectInstance);
 		}
 
 		public String GetBuildUUID (out bool AHasUUID)

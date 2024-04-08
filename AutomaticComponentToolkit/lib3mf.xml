@@ -97,6 +97,7 @@
 		<error name="ELEMENTCOUNTEXCEEDSLIMIT" code="141"
 			description="An element buffer exceeds its spec limit" />
 		<error name="INVALIDRESOURCE" code="142" description="A resource is invalid" />
+		<error name="INVALIDLEVELSET " code="143" description="A level set is invalid" />
 
 		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000"
 			description="This object type is not valid for beamlattices" />
@@ -3852,6 +3853,11 @@
 			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
 			<param name="SliceStacInstance" type="handle" class="SliceStack" pass="return"
 				description="returns the slicestack instance" />
+		</method>
+		<method name="GetLevelSetByID" description="finds a level set object by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
+			<param name="LevelSetObjectInstance" type="handle" class="LevelSet" pass="return"
+				description="returns the level set object instance" />
 		</method>
 		<method name="GetBuildUUID"
 			description="returns, whether a build has a UUID and, if true, the build's UUID">

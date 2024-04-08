@@ -20671,6 +20671,43 @@ Lib3MFResult lib3mf_model_getslicestackbyid(Lib3MF_Model pModel, Lib3MF_uint32 n
 	}
 }
 
+Lib3MFResult lib3mf_model_getlevelsetbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_LevelSet * pLevelSetObjectInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetLevelSetByID");
+			pJournalEntry->addUInt32Parameter("UniqueResourceID", nUniqueResourceID);
+		}
+		if (pLevelSetObjectInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseLevelSetObjectInstance(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseLevelSetObjectInstance = pIModel->GetLevelSetByID(nUniqueResourceID);
+
+		*pLevelSetObjectInstance = (IBase*)(pBaseLevelSetObjectInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("LevelSetObjectInstance", *pLevelSetObjectInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_model_getbuilduuid(Lib3MF_Model pModel, bool * pHasUUID, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer)
 {
 	IBase* pIBaseClass = (IBase *)pModel;
@@ -23641,6 +23678,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_model_getcolorgroupbyid;
 	if (sProcName == "lib3mf_model_getslicestackbyid") 
 		*ppProcAddress = (void*) &lib3mf_model_getslicestackbyid;
+	if (sProcName == "lib3mf_model_getlevelsetbyid") 
+		*ppProcAddress = (void*) &lib3mf_model_getlevelsetbyid;
 	if (sProcName == "lib3mf_model_getbuilduuid") 
 		*ppProcAddress = (void*) &lib3mf_model_getbuilduuid;
 	if (sProcName == "lib3mf_model_setbuilduuid") 

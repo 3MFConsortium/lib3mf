@@ -578,6 +578,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Model_GetComponentsObjectByID = NULL;
 	pWrapperTable->m_Model_GetColorGroupByID = NULL;
 	pWrapperTable->m_Model_GetSliceStackByID = NULL;
+	pWrapperTable->m_Model_GetLevelSetByID = NULL;
 	pWrapperTable->m_Model_GetBuildUUID = NULL;
 	pWrapperTable->m_Model_SetBuildUUID = NULL;
 	pWrapperTable->m_Model_GetBuildItems = NULL;
@@ -5470,6 +5471,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Model_GetSliceStackByID == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_GetLevelSetByID = (PLib3MFModel_GetLevelSetByIDPtr) GetProcAddress(hLibrary, "lib3mf_model_getlevelsetbyid");
+	#else // _WIN32
+	pWrapperTable->m_Model_GetLevelSetByID = (PLib3MFModel_GetLevelSetByIDPtr) dlsym(hLibrary, "lib3mf_model_getlevelsetbyid");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_GetLevelSetByID == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

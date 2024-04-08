@@ -3351,6 +3351,7 @@ public:
 	inline PComponentsObject GetComponentsObjectByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PColorGroup GetColorGroupByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PSliceStack GetSliceStackByID(const Lib3MF_uint32 nUniqueResourceID);
+	inline PLevelSet GetLevelSetByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline std::string GetBuildUUID(bool & bHasUUID);
 	inline void SetBuildUUID(const std::string & sUUID);
 	inline PBuildItemIterator GetBuildItems();
@@ -4350,6 +4351,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Model_GetComponentsObjectByID = nullptr;
 		pWrapperTable->m_Model_GetColorGroupByID = nullptr;
 		pWrapperTable->m_Model_GetSliceStackByID = nullptr;
+		pWrapperTable->m_Model_GetLevelSetByID = nullptr;
 		pWrapperTable->m_Model_GetBuildUUID = nullptr;
 		pWrapperTable->m_Model_SetBuildUUID = nullptr;
 		pWrapperTable->m_Model_GetBuildItems = nullptr;
@@ -9241,6 +9243,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_Model_GetLevelSetByID = (PLib3MFModel_GetLevelSetByIDPtr) GetProcAddress(hLibrary, "lib3mf_model_getlevelsetbyid");
+		#else // _WIN32
+		pWrapperTable->m_Model_GetLevelSetByID = (PLib3MFModel_GetLevelSetByIDPtr) dlsym(hLibrary, "lib3mf_model_getlevelsetbyid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_GetLevelSetByID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_Model_GetBuildUUID = (PLib3MFModel_GetBuildUUIDPtr) GetProcAddress(hLibrary, "lib3mf_model_getbuilduuid");
 		#else // _WIN32
 		pWrapperTable->m_Model_GetBuildUUID = (PLib3MFModel_GetBuildUUIDPtr) dlsym(hLibrary, "lib3mf_model_getbuilduuid");
@@ -12004,6 +12015,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_model_getslicestackbyid", (void**)&(pWrapperTable->m_Model_GetSliceStackByID));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetSliceStackByID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_getlevelsetbyid", (void**)&(pWrapperTable->m_Model_GetLevelSetByID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetLevelSetByID == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_model_getbuilduuid", (void**)&(pWrapperTable->m_Model_GetBuildUUID));
@@ -19798,6 +19813,22 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CSliceStack>(dynamic_cast<CSliceStack*>(m_pWrapper->polymorphicFactory(hSliceStacInstance)));
+	}
+	
+	/**
+	* CModel::GetLevelSetByID - finds a level set object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the level set object instance
+	*/
+	PLevelSet CModel::GetLevelSetByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hLevelSetObjectInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_GetLevelSetByID(m_pHandle, nUniqueResourceID, &hLevelSetObjectInstance));
+		
+		if (!hLevelSetObjectInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CLevelSet>(dynamic_cast<CLevelSet*>(m_pWrapper->polymorphicFactory(hLevelSetObjectInstance)));
 	}
 	
 	/**

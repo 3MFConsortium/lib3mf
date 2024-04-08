@@ -2527,6 +2527,7 @@ private:
 	static void GetComponentsObjectByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetColorGroupByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSliceStackByID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetLevelSetByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetBuildUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetBuildUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetBuildItems(const v8::FunctionCallbackInfo<v8::Value>& args);
