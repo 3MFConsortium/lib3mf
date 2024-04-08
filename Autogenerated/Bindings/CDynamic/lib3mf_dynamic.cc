@@ -124,6 +124,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Object_SetPartNumber = NULL;
 	pWrapperTable->m_Object_IsMeshObject = NULL;
 	pWrapperTable->m_Object_IsComponentsObject = NULL;
+	pWrapperTable->m_Object_IsLevelSetObject = NULL;
 	pWrapperTable->m_Object_IsValid = NULL;
 	pWrapperTable->m_Object_SetAttachmentAsThumbnail = NULL;
 	pWrapperTable->m_Object_GetThumbnailAttachment = NULL;
@@ -1383,6 +1384,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Object_IsComponentsObject == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Object_IsLevelSetObject = (PLib3MFObject_IsLevelSetObjectPtr) GetProcAddress(hLibrary, "lib3mf_object_islevelsetobject");
+	#else // _WIN32
+	pWrapperTable->m_Object_IsLevelSetObject = (PLib3MFObject_IsLevelSetObjectPtr) dlsym(hLibrary, "lib3mf_object_islevelsetobject");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Object_IsLevelSetObject == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

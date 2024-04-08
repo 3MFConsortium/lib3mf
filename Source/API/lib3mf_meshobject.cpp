@@ -382,6 +382,11 @@ bool CMeshObject::IsComponentsObject()
 	return false;
 }
 
+bool CMeshObject::IsLevelSetObject()
+{
+	return false;
+}
+
 bool CMeshObject::IsValid()
 {
 	return meshObject()->isValid();

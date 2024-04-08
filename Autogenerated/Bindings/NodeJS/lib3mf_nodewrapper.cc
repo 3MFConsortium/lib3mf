@@ -4337,6 +4337,7 @@ void CLib3MFObject::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetPartNumber", SetPartNumber);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "IsMeshObject", IsMeshObject);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "IsComponentsObject", IsComponentsObject);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "IsLevelSetObject", IsLevelSetObject);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "IsValid", IsValid);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetAttachmentAsThumbnail", SetAttachmentAsThumbnail);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetThumbnailAttachment", GetThumbnailAttachment);
@@ -4571,6 +4572,28 @@ void CLib3MFObject::IsComponentsObject(const FunctionCallbackInfo<Value>& args)
         Lib3MFResult errorCode = wrapperTable->m_Object_IsComponentsObject(instanceHandle, &bReturnIsComponentsObject);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         args.GetReturnValue().Set(Boolean::New(isolate, bReturnIsComponentsObject));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFObject::IsLevelSetObject(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        bool bReturnIsLevelSetObject = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method IsLevelSetObject.");
+        if (wrapperTable->m_Object_IsLevelSetObject == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Object::IsLevelSetObject.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Object_IsLevelSetObject(instanceHandle, &bReturnIsLevelSetObject);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnIsLevelSetObject));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

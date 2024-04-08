@@ -874,6 +874,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_object_ismeshobject(Lib3MF_Object pObject, b
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_object_iscomponentsobject(Lib3MF_Object pObject, bool * pIsComponentsObject);
 
 /**
+* Retrieves, if an object is a level set object
+*
+* @param[in] pObject - Object instance.
+* @param[out] pIsLevelSetObject - returns, whether the object is a level set object
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_object_islevelsetobject(Lib3MF_Object pObject, bool * pIsLevelSetObject);
+
+/**
 * Retrieves, if the object is valid according to the core spec. For mesh objects, we distinguish between the type attribute of the object:In case of object type other, this always means false.In case of object type model or solidsupport, this means, if the mesh suffices all requirements of the core spec chapter 4.1.In case of object type support or surface, this always means true.A component objects is valid if and only if it contains at least one component and all child components are valid objects.
 *
 * @param[in] pObject - Object instance.
@@ -1356,10 +1365,10 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_levelset_setmesh(Lib3MF_LevelSet pLevelSet, 
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_levelset_getmesh(Lib3MF_LevelSet pLevelSet, Lib3MF_MeshObject * pTheMesh);
 
 /**
-* Retrieves the VolumeData this MeshObject.
+* Retrieves the VolumeData this Object.
 *
 * @param[in] pLevelSet - LevelSet instance.
-* @param[out] pTheVolumeData - the VolumeData of this MeshObject
+* @param[out] pTheVolumeData - the VolumeData of this Object
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_levelset_getvolumedata(Lib3MF_LevelSet pLevelSet, Lib3MF_VolumeData * pTheVolumeData);

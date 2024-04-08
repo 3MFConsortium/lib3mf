@@ -3044,6 +3044,40 @@ Lib3MFResult lib3mf_object_iscomponentsobject(Lib3MF_Object pObject, bool * pIsC
 	}
 }
 
+Lib3MFResult lib3mf_object_islevelsetobject(Lib3MF_Object pObject, bool * pIsLevelSetObject)
+{
+	IBase* pIBaseClass = (IBase *)pObject;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pObject, "Object", "IsLevelSetObject");
+		}
+		if (pIsLevelSetObject == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IObject* pIObject = dynamic_cast<IObject*>(pIBaseClass);
+		if (!pIObject)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pIsLevelSetObject = pIObject->IsLevelSetObject();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("IsLevelSetObject", *pIsLevelSetObject);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_object_isvalid(Lib3MF_Object pObject, bool * pIsValid)
 {
 	IBase* pIBaseClass = (IBase *)pObject;
@@ -22699,6 +22733,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_object_ismeshobject;
 	if (sProcName == "lib3mf_object_iscomponentsobject") 
 		*ppProcAddress = (void*) &lib3mf_object_iscomponentsobject;
+	if (sProcName == "lib3mf_object_islevelsetobject") 
+		*ppProcAddress = (void*) &lib3mf_object_islevelsetobject;
 	if (sProcName == "lib3mf_object_isvalid") 
 		*ppProcAddress = (void*) &lib3mf_object_isvalid;
 	if (sProcName == "lib3mf_object_setattachmentasthumbnail") 

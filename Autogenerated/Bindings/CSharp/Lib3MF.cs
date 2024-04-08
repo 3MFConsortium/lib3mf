@@ -662,6 +662,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_object_iscomponentsobject", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Object_IsComponentsObject (IntPtr Handle, out Byte AIsComponentsObject);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_object_islevelsetobject", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Object_IsLevelSetObject (IntPtr Handle, out Byte AIsLevelSetObject);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_object_isvalid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Object_IsValid (IntPtr Handle, out Byte AIsValid);
 
@@ -2604,12 +2607,12 @@ namespace Lib3MF {
 					case 0xC2BDF5D8CBBDB1F0: Object = new CMultiPropertyGroupIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MultiPropertyGroupIterator"
 					case 0xC4B8EC00A82BF336: Object = new CImage3DIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Image3DIterator"
 					case 0x40E9035363ACE65E: Object = new CFunctionIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionIterator"
-					case 0x9FBC898CF30CDEF3: Object = new CLevelSetIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSetIterator"
+					case 0xA0C005C035D5371D: Object = new CLevelSetIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSetIterator"
 					case 0xD17716D063DE2C22: Object = new CMetaData(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaData"
 					case 0x0C3B85369E9B25D3: Object = new CMetaDataGroup(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaDataGroup"
 					case 0x2DA2136F577A779C: Object = new CObject(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Object"
 					case 0x3B3A6DC6EC610497: Object = new CMeshObject(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObject"
-					case 0x2BE0E57BA81B2ECB: Object = new CLevelSet(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSet"
+					case 0xE8A7D9C192EFD0E2: Object = new CLevelSet(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSet"
 					case 0x63B3B461B30B4BA5: Object = new CBeamLattice(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BeamLattice"
 					case 0x4DF17E76926221C2: Object = new CFunctionReference(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionReference"
 					case 0xD85B5B6143E787E3: Object = new CVolumeDataColor(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeDataColor"
@@ -3563,6 +3566,14 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Object_IsComponentsObject (Handle, out resultIsComponentsObject));
 			return (resultIsComponentsObject != 0);
+		}
+
+		public bool IsLevelSetObject ()
+		{
+			Byte resultIsLevelSetObject = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Object_IsLevelSetObject (Handle, out resultIsLevelSetObject));
+			return (resultIsLevelSetObject != 0);
 		}
 
 		public bool IsValid ()

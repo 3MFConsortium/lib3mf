@@ -743,11 +743,11 @@ namespace Lib3MF
 
         // Add a boundary to the volume data
         auto theMesh = GetMesh();
-        auto theBoundary = model->AddLevelSet();
-        theBoundary->SetMesh(theMesh);
-        theBoundary->SetFunction(newFunction.get());
-        theBoundary->SetMinFeatureSize(0.1);
-        theBoundary->SetChannelName("shape");
+        auto theLevelSet = model->AddLevelSet();
+        theLevelSet->SetMesh(theMesh);
+        theLevelSet->SetFunction(newFunction.get());
+        theLevelSet->SetMinFeatureSize(0.1);
+        theLevelSet->SetChannelName("shape");
         
         // Write the model to a file
         writer3MF->WriteToFile(Volumetric::OutFolder +

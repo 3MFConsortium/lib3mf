@@ -109,7 +109,9 @@ public:
 
 	bool IsComponentsObject();
 
-	bool IsValid();
+    bool IsLevelSetObject() override;
+
+    bool IsValid();
 
 	virtual IBeamLattice * BeamLattice();
 

@@ -210,6 +210,7 @@ class FunctionTable:
 	lib3mf_object_setpartnumber = None
 	lib3mf_object_ismeshobject = None
 	lib3mf_object_iscomponentsobject = None
+	lib3mf_object_islevelsetobject = None
 	lib3mf_object_isvalid = None
 	lib3mf_object_setattachmentasthumbnail = None
 	lib3mf_object_getthumbnailattachment = None
@@ -1692,6 +1693,12 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
 			self.lib.lib3mf_object_iscomponentsobject = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_object_islevelsetobject")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_object_islevelsetobject = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_object_isvalid")), methodAddress)
 			if err != 0:
@@ -5007,6 +5014,9 @@ class Wrapper:
 			self.lib.lib3mf_object_iscomponentsobject.restype = ctypes.c_int32
 			self.lib.lib3mf_object_iscomponentsobject.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
 			
+			self.lib.lib3mf_object_islevelsetobject.restype = ctypes.c_int32
+			self.lib.lib3mf_object_islevelsetobject.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
+			
 			self.lib.lib3mf_object_isvalid.restype = ctypes.c_int32
 			self.lib.lib3mf_object_isvalid.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
 			
@@ -6761,7 +6771,7 @@ class Wrapper:
 				return Image3DIterator(handle, wrapper)
 			def getObjectById_40E9035363ACE65E(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::FunctionIterator"
 				return FunctionIterator(handle, wrapper)
-			def getObjectById_9FBC898CF30CDEF3(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::LevelSetIterator"
+			def getObjectById_A0C005C035D5371D(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::LevelSetIterator"
 				return LevelSetIterator(handle, wrapper)
 			def getObjectById_D17716D063DE2C22(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::MetaData"
 				return MetaData(handle, wrapper)
@@ -6771,7 +6781,7 @@ class Wrapper:
 				return Object(handle, wrapper)
 			def getObjectById_3B3A6DC6EC610497(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::MeshObject"
 				return MeshObject(handle, wrapper)
-			def getObjectById_2BE0E57BA81B2ECB(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::LevelSet"
+			def getObjectById_E8A7D9C192EFD0E2(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::LevelSet"
 				return LevelSet(handle, wrapper)
 			def getObjectById_63B3B461B30B4BA5(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::BeamLattice"
 				return BeamLattice(handle, wrapper)
@@ -7702,6 +7712,12 @@ class Object(Resource):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_object_iscomponentsobject(self._handle, pIsComponentsObject))
 		
 		return pIsComponentsObject.value
+	
+	def IsLevelSetObject(self):
+		pIsLevelSetObject = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_object_islevelsetobject(self._handle, pIsLevelSetObject))
+		
+		return pIsLevelSetObject.value
 	
 	def IsValid(self):
 		pIsValid = ctypes.c_bool()

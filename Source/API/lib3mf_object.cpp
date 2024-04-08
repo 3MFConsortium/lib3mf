@@ -124,6 +124,13 @@ bool CObject::IsComponentsObject ()
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_SHOULDNOTBECALLED);
 }
 
+bool CObject::IsLevelSetObject()
+{
+	// overwritten by child class
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_SHOULDNOTBECALLED);
+}
+
+
 IMeshObject * CObject::AsMeshObject()
 {
 	if (dynamic_cast<NMR::CModelMeshObject*>(resource().get()))

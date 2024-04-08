@@ -217,9 +217,14 @@ void CLevelSet::SetVolumeData(IVolumeData* pTheVolumeData)
 	levelSetObject()->setVolumeData(pVolumeData);
 }
 
-bool Lib3MF::Impl::CLevelSet::IsMeshObject()
+bool CLevelSet::IsMeshObject()
 {
     return false;
+}
+
+bool CLevelSet::IsLevelSetObject()
+{
+    return true;
 }
 
 IVolumeData * CLevelSet::GetVolumeData()

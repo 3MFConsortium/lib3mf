@@ -1037,7 +1037,7 @@ public:
 	*/
 	Lib3MF_uint64 ClassTypeId() override
 	{
-		return 0x9FBC898CF30CDEF3UL; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSetIterator"
+		return 0xA0C005C035D5371DUL; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSetIterator"
 	}
 
 	/**
@@ -1263,6 +1263,12 @@ public:
 	* @return returns, whether the object is a components object
 	*/
 	virtual bool IsComponentsObject() = 0;
+
+	/**
+	* IObject::IsLevelSetObject - Retrieves, if an object is a level set object
+	* @return returns, whether the object is a level set object
+	*/
+	virtual bool IsLevelSetObject() = 0;
 
 	/**
 	* IObject::IsValid - Retrieves, if the object is valid according to the core spec. For mesh objects, we distinguish between the type attribute of the object:In case of object type other, this always means false.In case of object type model or solidsupport, this means, if the mesh suffices all requirements of the core spec chapter 4.1.In case of object type support or surface, this always means true.A component objects is valid if and only if it contains at least one component and all child components are valid objects.
@@ -1537,7 +1543,7 @@ public:
 	*/
 	Lib3MF_uint64 ClassTypeId() override
 	{
-		return 0x2BE0E57BA81B2ECBUL; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSet"
+		return 0xE8A7D9C192EFD0E2UL; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSet"
 	}
 
 	/**
@@ -1625,8 +1631,8 @@ public:
 	virtual IMeshObject * GetMesh() = 0;
 
 	/**
-	* ILevelSet::GetVolumeData - Retrieves the VolumeData this MeshObject.
-	* @return the VolumeData of this MeshObject
+	* ILevelSet::GetVolumeData - Retrieves the VolumeData this Object.
+	* @return the VolumeData of this Object
 	*/
 	virtual IVolumeData * GetVolumeData() = 0;
 

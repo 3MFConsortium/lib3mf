@@ -509,6 +509,7 @@ private:
 	static void SetPartNumber(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void IsMeshObject(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void IsComponentsObject(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void IsLevelSetObject(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void IsValid(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetAttachmentAsThumbnail(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetThumbnailAttachment(const v8::FunctionCallbackInfo<v8::Value>& args);

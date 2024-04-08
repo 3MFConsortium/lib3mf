@@ -1429,6 +1429,15 @@ type
 	TLib3MFObject_IsComponentsObjectFunc = function(pObject: TLib3MFHandle; out pIsComponentsObject: Byte): TLib3MFResult; cdecl;
 	
 	(**
+	* Retrieves, if an object is a level set object
+	*
+	* @param[in] pObject - Object instance.
+	* @param[out] pIsLevelSetObject - returns, whether the object is a level set object
+	* @return error code or 0 (success)
+	*)
+	TLib3MFObject_IsLevelSetObjectFunc = function(pObject: TLib3MFHandle; out pIsLevelSetObject: Byte): TLib3MFResult; cdecl;
+	
+	(**
 	* Retrieves, if the object is valid according to the core spec. For mesh objects, we distinguish between the type attribute of the object:In case of object type other, this always means false.In case of object type model or solidsupport, this means, if the mesh suffices all requirements of the core spec chapter 4.1.In case of object type support or surface, this always means true.A component objects is valid if and only if it contains at least one component and all child components are valid objects.
 	*
 	* @param[in] pObject - Object instance.
@@ -1913,10 +1922,10 @@ type
 	TLib3MFLevelSet_GetMeshFunc = function(pLevelSet: TLib3MFHandle; out pTheMesh: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
-	* Retrieves the VolumeData this MeshObject.
+	* Retrieves the VolumeData this Object.
 	*
 	* @param[in] pLevelSet - LevelSet instance.
-	* @param[out] pTheVolumeData - the VolumeData of this MeshObject
+	* @param[out] pTheVolumeData - the VolumeData of this Object
 	* @return error code or 0 (success)
 	*)
 	TLib3MFLevelSet_GetVolumeDataFunc = function(pLevelSet: TLib3MFHandle; out pTheVolumeData: TLib3MFHandle): TLib3MFResult; cdecl;
@@ -7407,6 +7416,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure SetPartNumber(const APartNumber: String);
 		function IsMeshObject(): Boolean;
 		function IsComponentsObject(): Boolean;
+		function IsLevelSetObject(): Boolean;
 		function IsValid(): Boolean;
 		procedure SetAttachmentAsThumbnail(const AAttachment: TLib3MFAttachment);
 		function GetThumbnailAttachment(): TLib3MFAttachment;
@@ -9008,6 +9018,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFObject_SetPartNumberFunc: TLib3MFObject_SetPartNumberFunc;
 		FLib3MFObject_IsMeshObjectFunc: TLib3MFObject_IsMeshObjectFunc;
 		FLib3MFObject_IsComponentsObjectFunc: TLib3MFObject_IsComponentsObjectFunc;
+		FLib3MFObject_IsLevelSetObjectFunc: TLib3MFObject_IsLevelSetObjectFunc;
 		FLib3MFObject_IsValidFunc: TLib3MFObject_IsValidFunc;
 		FLib3MFObject_SetAttachmentAsThumbnailFunc: TLib3MFObject_SetAttachmentAsThumbnailFunc;
 		FLib3MFObject_GetThumbnailAttachmentFunc: TLib3MFObject_GetThumbnailAttachmentFunc;
@@ -9617,6 +9628,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFObject_SetPartNumberFunc: TLib3MFObject_SetPartNumberFunc read FLib3MFObject_SetPartNumberFunc;
 		property Lib3MFObject_IsMeshObjectFunc: TLib3MFObject_IsMeshObjectFunc read FLib3MFObject_IsMeshObjectFunc;
 		property Lib3MFObject_IsComponentsObjectFunc: TLib3MFObject_IsComponentsObjectFunc read FLib3MFObject_IsComponentsObjectFunc;
+		property Lib3MFObject_IsLevelSetObjectFunc: TLib3MFObject_IsLevelSetObjectFunc read FLib3MFObject_IsLevelSetObjectFunc;
 		property Lib3MFObject_IsValidFunc: TLib3MFObject_IsValidFunc read FLib3MFObject_IsValidFunc;
 		property Lib3MFObject_SetAttachmentAsThumbnailFunc: TLib3MFObject_SetAttachmentAsThumbnailFunc read FLib3MFObject_SetAttachmentAsThumbnailFunc;
 		property Lib3MFObject_GetThumbnailAttachmentFunc: TLib3MFObject_GetThumbnailAttachmentFunc read FLib3MFObject_GetThumbnailAttachmentFunc;
@@ -11059,12 +11071,12 @@ implementation
 			QWord($C2BDF5D8CBBDB1F0): begin Obj := TLIB3MFMultiPropertyGroupIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::MultiPropertyGroupIterator"
 			QWord($C4B8EC00A82BF336): begin Obj := TLIB3MFImage3DIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Image3DIterator"
 			QWord($40E9035363ACE65E): begin Obj := TLIB3MFFunctionIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionIterator"
-			QWord($9FBC898CF30CDEF3): begin Obj := TLIB3MFLevelSetIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSetIterator"
+			QWord($A0C005C035D5371D): begin Obj := TLIB3MFLevelSetIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSetIterator"
 			QWord($D17716D063DE2C22): begin Obj := TLIB3MFMetaData.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::MetaData"
 			QWord($0C3B85369E9B25D3): begin Obj := TLIB3MFMetaDataGroup.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::MetaDataGroup"
 			QWord($2DA2136F577A779C): begin Obj := TLIB3MFObject.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Object"
 			QWord($3B3A6DC6EC610497): begin Obj := TLIB3MFMeshObject.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObject"
-			QWord($2BE0E57BA81B2ECB): begin Obj := TLIB3MFLevelSet.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSet"
+			QWord($E8A7D9C192EFD0E2): begin Obj := TLIB3MFLevelSet.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSet"
 			QWord($63B3B461B30B4BA5): begin Obj := TLIB3MFBeamLattice.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::BeamLattice"
 			QWord($4DF17E76926221C2): begin Obj := TLIB3MFFunctionReference.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionReference"
 			QWord($D85B5B6143E787E3): begin Obj := TLIB3MFVolumeDataColor.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeDataColor"
@@ -12666,6 +12678,15 @@ implementation
 		ResultIsComponentsObject := 0;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFObject_IsComponentsObjectFunc(FHandle, ResultIsComponentsObject));
 		Result := (ResultIsComponentsObject <> 0);
+	end;
+
+	function TLib3MFObject.IsLevelSetObject(): Boolean;
+	var
+		ResultIsLevelSetObject: Byte;
+	begin
+		ResultIsLevelSetObject := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFObject_IsLevelSetObjectFunc(FHandle, ResultIsLevelSetObject));
+		Result := (ResultIsLevelSetObject <> 0);
 	end;
 
 	function TLib3MFObject.IsValid(): Boolean;
@@ -18905,6 +18926,7 @@ implementation
 		FLib3MFObject_SetPartNumberFunc := LoadFunction('lib3mf_object_setpartnumber');
 		FLib3MFObject_IsMeshObjectFunc := LoadFunction('lib3mf_object_ismeshobject');
 		FLib3MFObject_IsComponentsObjectFunc := LoadFunction('lib3mf_object_iscomponentsobject');
+		FLib3MFObject_IsLevelSetObjectFunc := LoadFunction('lib3mf_object_islevelsetobject');
 		FLib3MFObject_IsValidFunc := LoadFunction('lib3mf_object_isvalid');
 		FLib3MFObject_SetAttachmentAsThumbnailFunc := LoadFunction('lib3mf_object_setattachmentasthumbnail');
 		FLib3MFObject_GetThumbnailAttachmentFunc := LoadFunction('lib3mf_object_getthumbnailattachment');
@@ -19665,6 +19687,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_object_iscomponentsobject'), @FLib3MFObject_IsComponentsObjectFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_object_islevelsetobject'), @FLib3MFObject_IsLevelSetObjectFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_object_isvalid'), @FLib3MFObject_IsValidFunc);

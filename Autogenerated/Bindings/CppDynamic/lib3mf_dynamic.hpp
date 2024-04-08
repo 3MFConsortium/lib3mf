@@ -1425,6 +1425,7 @@ public:
 	inline void SetPartNumber(const std::string & sPartNumber);
 	inline bool IsMeshObject();
 	inline bool IsComponentsObject();
+	inline bool IsLevelSetObject();
 	inline bool IsValid();
 	inline void SetAttachmentAsThumbnail(classParam<CAttachment> pAttachment);
 	inline PAttachment GetThumbnailAttachment();
@@ -3437,12 +3438,12 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0xC2BDF5D8CBBDB1F0UL: return new CMultiPropertyGroupIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MultiPropertyGroupIterator"
 		case 0xC4B8EC00A82BF336UL: return new CImage3DIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Image3DIterator"
 		case 0x40E9035363ACE65EUL: return new CFunctionIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionIterator"
-		case 0x9FBC898CF30CDEF3UL: return new CLevelSetIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSetIterator"
+		case 0xA0C005C035D5371DUL: return new CLevelSetIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSetIterator"
 		case 0xD17716D063DE2C22UL: return new CMetaData(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaData"
 		case 0x0C3B85369E9B25D3UL: return new CMetaDataGroup(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaDataGroup"
 		case 0x2DA2136F577A779CUL: return new CObject(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Object"
 		case 0x3B3A6DC6EC610497UL: return new CMeshObject(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObject"
-		case 0x2BE0E57BA81B2ECBUL: return new CLevelSet(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSet"
+		case 0xE8A7D9C192EFD0E2UL: return new CLevelSet(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSet"
 		case 0x63B3B461B30B4BA5UL: return new CBeamLattice(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BeamLattice"
 		case 0x4DF17E76926221C2UL: return new CFunctionReference(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionReference"
 		case 0xD85B5B6143E787E3UL: return new CVolumeDataColor(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::VolumeDataColor"
@@ -3895,6 +3896,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Object_SetPartNumber = nullptr;
 		pWrapperTable->m_Object_IsMeshObject = nullptr;
 		pWrapperTable->m_Object_IsComponentsObject = nullptr;
+		pWrapperTable->m_Object_IsLevelSetObject = nullptr;
 		pWrapperTable->m_Object_IsValid = nullptr;
 		pWrapperTable->m_Object_SetAttachmentAsThumbnail = nullptr;
 		pWrapperTable->m_Object_GetThumbnailAttachment = nullptr;
@@ -5150,6 +5152,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_Object_IsComponentsObject == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Object_IsLevelSetObject = (PLib3MFObject_IsLevelSetObjectPtr) GetProcAddress(hLibrary, "lib3mf_object_islevelsetobject");
+		#else // _WIN32
+		pWrapperTable->m_Object_IsLevelSetObject = (PLib3MFObject_IsLevelSetObjectPtr) dlsym(hLibrary, "lib3mf_object_islevelsetobject");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Object_IsLevelSetObject == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -10179,6 +10190,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_Object_IsComponentsObject == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_object_islevelsetobject", (void**)&(pWrapperTable->m_Object_IsLevelSetObject));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Object_IsLevelSetObject == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_object_isvalid", (void**)&(pWrapperTable->m_Object_IsValid));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Object_IsValid == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -13308,6 +13323,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CObject::IsLevelSetObject - Retrieves, if an object is a level set object
+	* @return returns, whether the object is a level set object
+	*/
+	bool CObject::IsLevelSetObject()
+	{
+		bool resultIsLevelSetObject = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Object_IsLevelSetObject(m_pHandle, &resultIsLevelSetObject));
+		
+		return resultIsLevelSetObject;
+	}
+	
+	/**
 	* CObject::IsValid - Retrieves, if the object is valid according to the core spec. For mesh objects, we distinguish between the type attribute of the object:In case of object type other, this always means false.In case of object type model or solidsupport, this means, if the mesh suffices all requirements of the core spec chapter 4.1.In case of object type support or surface, this always means true.A component objects is valid if and only if it contains at least one component and all child components are valid objects.
 	* @return returns whether the object is a valid object description
 	*/
@@ -13900,8 +13927,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CLevelSet::GetVolumeData - Retrieves the VolumeData this MeshObject.
-	* @return the VolumeData of this MeshObject
+	* CLevelSet::GetVolumeData - Retrieves the VolumeData this Object.
+	* @return the VolumeData of this Object
 	*/
 	PVolumeData CLevelSet::GetVolumeData()
 	{

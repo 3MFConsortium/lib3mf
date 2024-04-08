@@ -787,6 +787,12 @@
 			<param name="IsComponentsObject" type="bool" pass="return"
 				description="returns, whether the object is a components object" />
 		</method>
+		<method name="IsLevelSetObject"
+			description="Retrieves, if an object is a level set object">
+			<param name="IsLevelSetObject" type="bool" pass="return"
+				description="returns, whether the object is a level set object" />
+		</method>
+
 		<method name="IsValid"
 			description="Retrieves, if the object is valid according to the core spec. For mesh objects, we distinguish between the type attribute of the object:In case of object type other, this always means false.In case of object type model or solidsupport, this means, if the mesh suffices all requirements of the core spec chapter 4.1.In case of object type support or surface, this always means true.A component objects is valid if and only if it contains at least one component and all child components are valid objects.">
 			<param name="IsValid" type="bool" pass="return"
@@ -1052,9 +1058,9 @@
 				description="The mesh" />
 		</method>
 
-		<method name="GetVolumeData" description="Retrieves the VolumeData this MeshObject.">
+		<method name="GetVolumeData" description="Retrieves the VolumeData this Object.">
 			<param name="TheVolumeData" type="optionalclass" class="VolumeData" pass="return"
-				description="the VolumeData of this MeshObject" />
+				description="the VolumeData of this Object" />
 		</method>
 		<method name="SetVolumeData" description="Sets the VolumeData of this LevelSet.">
 			<param name="TheVolumeData" type="handle" class="VolumeData" pass="in"

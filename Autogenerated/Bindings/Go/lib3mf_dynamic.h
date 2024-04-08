@@ -861,6 +861,15 @@ typedef Lib3MFResult (*PLib3MFObject_IsMeshObjectPtr) (Lib3MF_Object pObject, bo
 typedef Lib3MFResult (*PLib3MFObject_IsComponentsObjectPtr) (Lib3MF_Object pObject, bool * pIsComponentsObject);
 
 /**
+* Retrieves, if an object is a level set object
+*
+* @param[in] pObject - Object instance.
+* @param[out] pIsLevelSetObject - returns, whether the object is a level set object
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFObject_IsLevelSetObjectPtr) (Lib3MF_Object pObject, bool * pIsLevelSetObject);
+
+/**
 * Retrieves, if the object is valid according to the core spec. For mesh objects, we distinguish between the type attribute of the object:In case of object type other, this always means false.In case of object type model or solidsupport, this means, if the mesh suffices all requirements of the core spec chapter 4.1.In case of object type support or surface, this always means true.A component objects is valid if and only if it contains at least one component and all child components are valid objects.
 *
 * @param[in] pObject - Object instance.
@@ -1343,10 +1352,10 @@ typedef Lib3MFResult (*PLib3MFLevelSet_SetMeshPtr) (Lib3MF_LevelSet pLevelSet, L
 typedef Lib3MFResult (*PLib3MFLevelSet_GetMeshPtr) (Lib3MF_LevelSet pLevelSet, Lib3MF_MeshObject * pTheMesh);
 
 /**
-* Retrieves the VolumeData this MeshObject.
+* Retrieves the VolumeData this Object.
 *
 * @param[in] pLevelSet - LevelSet instance.
-* @param[out] pTheVolumeData - the VolumeData of this MeshObject
+* @param[out] pTheVolumeData - the VolumeData of this Object
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFLevelSet_GetVolumeDataPtr) (Lib3MF_LevelSet pLevelSet, Lib3MF_VolumeData * pTheVolumeData);
@@ -6488,6 +6497,7 @@ typedef struct {
 	PLib3MFObject_SetPartNumberPtr m_Object_SetPartNumber;
 	PLib3MFObject_IsMeshObjectPtr m_Object_IsMeshObject;
 	PLib3MFObject_IsComponentsObjectPtr m_Object_IsComponentsObject;
+	PLib3MFObject_IsLevelSetObjectPtr m_Object_IsLevelSetObject;
 	PLib3MFObject_IsValidPtr m_Object_IsValid;
 	PLib3MFObject_SetAttachmentAsThumbnailPtr m_Object_SetAttachmentAsThumbnail;
 	PLib3MFObject_GetThumbnailAttachmentPtr m_Object_GetThumbnailAttachment;

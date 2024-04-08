@@ -756,6 +756,15 @@ Lib3MFResult CCall_lib3mf_object_iscomponentsobject(Lib3MFHandle libraryHandle, 
 }
 
 
+Lib3MFResult CCall_lib3mf_object_islevelsetobject(Lib3MFHandle libraryHandle, Lib3MF_Object pObject, bool * pIsLevelSetObject)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Object_IsLevelSetObject (pObject, pIsLevelSetObject);
+}
+
+
 Lib3MFResult CCall_lib3mf_object_isvalid(Lib3MFHandle libraryHandle, Lib3MF_Object pObject, bool * pIsValid)
 {
 	if (libraryHandle == 0) 
@@ -7158,6 +7167,16 @@ func (inst Object) IsComponentsObject() (bool, error) {
 	return bool(isComponentsObject), nil
 }
 
+// IsLevelSetObject retrieves, if an object is a level set object.
+func (inst Object) IsLevelSetObject() (bool, error) {
+	var isLevelSetObject C.bool
+	ret := C.CCall_lib3mf_object_islevelsetobject(inst.wrapperRef.LibraryHandle, inst.Ref, &isLevelSetObject)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(isLevelSetObject), nil
+}
+
 // IsValid retrieves, if the object is valid according to the core spec. For mesh objects, we distinguish between the type attribute of the object:In case of object type other, this always means false.In case of object type model or solidsupport, this means, if the mesh suffices all requirements of the core spec chapter 4.1.In case of object type support or surface, this always means true.A component objects is valid if and only if it contains at least one component and all child components are valid objects.
 func (inst Object) IsValid() (bool, error) {
 	var isValid C.bool
@@ -7715,7 +7734,7 @@ func (inst LevelSet) GetMesh() (*MeshObject, error) {
 	return _theMeshPtr, nil
 }
 
-// GetVolumeData retrieves the VolumeData this MeshObject.
+// GetVolumeData retrieves the VolumeData this Object.
 func (inst LevelSet) GetVolumeData() (*VolumeData, error) {
 	var theVolumeData ref
 	ret := C.CCall_lib3mf_levelset_getvolumedata(inst.wrapperRef.LibraryHandle, inst.Ref, &theVolumeData)
