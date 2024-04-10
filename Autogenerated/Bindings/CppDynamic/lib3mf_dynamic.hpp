@@ -141,6 +141,7 @@ class CMatVecMultiplicationNode;
 class CMinNode;
 class CMaxNode;
 class CFmodNode;
+class CModNode;
 class CPowNode;
 class CSelectNode;
 class CClampNode;
@@ -260,6 +261,7 @@ typedef CMatVecMultiplicationNode CLib3MFMatVecMultiplicationNode;
 typedef CMinNode CLib3MFMinNode;
 typedef CMaxNode CLib3MFMaxNode;
 typedef CFmodNode CLib3MFFmodNode;
+typedef CModNode CLib3MFModNode;
 typedef CPowNode CLib3MFPowNode;
 typedef CSelectNode CLib3MFSelectNode;
 typedef CClampNode CLib3MFClampNode;
@@ -379,6 +381,7 @@ typedef std::shared_ptr<CMatVecMultiplicationNode> PMatVecMultiplicationNode;
 typedef std::shared_ptr<CMinNode> PMinNode;
 typedef std::shared_ptr<CMaxNode> PMaxNode;
 typedef std::shared_ptr<CFmodNode> PFmodNode;
+typedef std::shared_ptr<CModNode> PModNode;
 typedef std::shared_ptr<CPowNode> PPowNode;
 typedef std::shared_ptr<CSelectNode> PSelectNode;
 typedef std::shared_ptr<CClampNode> PClampNode;
@@ -498,6 +501,7 @@ typedef PMatVecMultiplicationNode PLib3MFMatVecMultiplicationNode;
 typedef PMinNode PLib3MFMinNode;
 typedef PMaxNode PLib3MFMaxNode;
 typedef PFmodNode PLib3MFFmodNode;
+typedef PModNode PLib3MFModNode;
 typedef PPowNode PLib3MFPowNode;
 typedef PSelectNode PLib3MFSelectNode;
 typedef PClampNode PLib3MFClampNode;
@@ -643,6 +647,7 @@ public:
 			case LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER: return "UNKOWNPROGRESSIDENTIFIER";
 			case LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: return "ELEMENTCOUNTEXCEEDSLIMIT";
 			case LIB3MF_ERROR_INVALIDRESOURCE: return "INVALIDRESOURCE";
+			case LIB3MF_ERROR_INVALIDLEVELSET: return "INVALIDLEVELSET";
 			case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "BEAMLATTICE_INVALID_OBJECTTYPE";
 			case LIB3MF_ERROR_INVALIDKEYSTORE: return "INVALIDKEYSTORE";
 			case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "INVALIDKEYSTORECONSUMER";
@@ -698,6 +703,7 @@ public:
 			case LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER: return "A progress identifier is unknown";
 			case LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: return "An element buffer exceeds its spec limit";
 			case LIB3MF_ERROR_INVALIDRESOURCE: return "A resource is invalid";
+			case LIB3MF_ERROR_INVALIDLEVELSET: return "A level set is invalid";
 			case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "This object type is not valid for beamlattices";
 			case LIB3MF_ERROR_INVALIDKEYSTORE: return "The keystore object is invalid";
 			case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "The consumer keystore object is invalid";
@@ -925,6 +931,7 @@ private:
 	friend class CMinNode;
 	friend class CMaxNode;
 	friend class CFmodNode;
+	friend class CModNode;
 	friend class CPowNode;
 	friend class CSelectNode;
 	friend class CClampNode;
@@ -2645,6 +2652,22 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CModNode 
+**************************************************************************************************************************/
+class CModNode : public CTwoInputNode {
+public:
+	
+	/**
+	* CModNode::CModNode - Constructor for ModNode class.
+	*/
+	CModNode(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CTwoInputNode(pWrapper, pHandle)
+	{
+	}
+	
+};
+	
+/*************************************************************************************************************************
  Class CPowNode 
 **************************************************************************************************************************/
 class CPowNode : public CTwoInputNode {
@@ -3505,6 +3528,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0x846AFDE9A091E997UL: return new CMinNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MinNode"
 		case 0x073F910381BF250DUL: return new CMaxNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MaxNode"
 		case 0x1EF703D298223F2AUL: return new CFmodNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::FmodNode"
+		case 0xEA57335849379F22UL: return new CModNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ModNode"
 		case 0x7700AA17CA1AC0F8UL: return new CPowNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::PowNode"
 		case 0x1127ED71E05A9BD4UL: return new CSelectNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::SelectNode"
 		case 0x77AF68C971B1485FUL: return new CClampNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ClampNode"
@@ -16318,6 +16342,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	
 	/**
 	 * Method definitions for class CFmodNode
+	 */
+	
+	/**
+	 * Method definitions for class CModNode
 	 */
 	
 	/**

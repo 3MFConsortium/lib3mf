@@ -100,6 +100,7 @@ class ErrorCodes(enum.IntEnum):
 	UNKOWNPROGRESSIDENTIFIER = 140
 	ELEMENTCOUNTEXCEEDSLIMIT = 141
 	INVALIDRESOURCE = 142
+	INVALIDLEVELSET = 143
 	BEAMLATTICE_INVALID_OBJECTTYPE = 2000
 	INVALIDKEYSTORE = 3000
 	INVALIDKEYSTORECONSUMER = 3001
@@ -899,6 +900,7 @@ class ImplicitNodeType(CTypesEnum):
 	Resource = 48
 	VectorFromScalar = 49
 	UnsignedMesh = 50
+	Mod = 51
 '''Definition of ImplicitPortType
 '''
 class ImplicitPortType(CTypesEnum):
@@ -6913,6 +6915,8 @@ class Wrapper:
 				return MaxNode(handle, wrapper)
 			def getObjectById_1EF703D298223F2A(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::FmodNode"
 				return FmodNode(handle, wrapper)
+			def getObjectById_EA57335849379F22(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ModNode"
+				return ModNode(handle, wrapper)
 			def getObjectById_7700AA17CA1AC0F8(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::PowNode"
 				return PowNode(handle, wrapper)
 			def getObjectById_1127ED71E05A9BD4(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::SelectNode"
@@ -9858,6 +9862,13 @@ class MaxNode(TwoInputNode):
 ''' Class Implementation for FmodNode
 '''
 class FmodNode(TwoInputNode):
+	def __init__(self, handle, wrapper):
+		TwoInputNode.__init__(self, handle, wrapper)
+
+
+''' Class Implementation for ModNode
+'''
+class ModNode(TwoInputNode):
 	def __init__(self, handle, wrapper):
 		TwoInputNode.__init__(self, handle, wrapper)
 

@@ -132,6 +132,7 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFMinNode::Init();
 	CLib3MFMaxNode::Init();
 	CLib3MFFmodNode::Init();
+	CLib3MFModNode::Init();
 	CLib3MFPowNode::Init();
 	CLib3MFSelectNode::Init();
 	CLib3MFClampNode::Init();

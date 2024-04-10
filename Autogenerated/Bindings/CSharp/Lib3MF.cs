@@ -209,7 +209,8 @@ namespace Lib3MF {
 		Length = 47,
 		Resource = 48,
 		VectorFromScalar = 49,
-		UnsignedMesh = 50
+		UnsignedMesh = 50,
+		Mod = 51
 	};
 
 	public enum eImplicitPortType {
@@ -2676,6 +2677,7 @@ namespace Lib3MF {
 					case 0x846AFDE9A091E997: Object = new CMinNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MinNode"
 					case 0x073F910381BF250D: Object = new CMaxNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MaxNode"
 					case 0x1EF703D298223F2A: Object = new CFmodNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::FmodNode"
+					case 0xEA57335849379F22: Object = new CModNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ModNode"
 					case 0x7700AA17CA1AC0F8: Object = new CPowNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::PowNode"
 					case 0x1127ED71E05A9BD4: Object = new CSelectNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::SelectNode"
 					case 0x77AF68C971B1485F: Object = new CClampNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ClampNode"
@@ -6046,6 +6048,14 @@ namespace Lib3MF {
 	public class CFmodNode : CTwoInputNode
 	{
 		public CFmodNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+	}
+
+	public class CModNode : CTwoInputNode
+	{
+		public CModNode (IntPtr NewHandle) : base (NewHandle)
 		{
 		}
 

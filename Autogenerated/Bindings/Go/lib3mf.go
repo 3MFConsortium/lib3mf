@@ -5711,6 +5711,7 @@ const (
 	ImplicitNodeType_Resource = 48
 	ImplicitNodeType_VectorFromScalar = 49
 	ImplicitNodeType_UnsignedMesh = 50
+	ImplicitNodeType_Mod = 51
 )
 
 // ImplicitPortType represents a Lib3MF enum.
@@ -5892,6 +5893,7 @@ const LIB3MF_ERROR_INVALIDPROPERTYCOUNT = 132;
 const LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER = 140;
 const LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT = 141;
 const LIB3MF_ERROR_INVALIDRESOURCE = 142;
+const LIB3MF_ERROR_INVALIDLEVELSET = 143;
 const LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE = 2000;
 const LIB3MF_ERROR_INVALIDKEYSTORE = 3000;
 const LIB3MF_ERROR_INVALIDKEYSTORECONSUMER = 3001;
@@ -5988,6 +5990,8 @@ func errorMessage(errorcode uint32) string {
 		return "An element buffer exceeds its spec limit";
 	case LIB3MF_ERROR_INVALIDRESOURCE:
 		return "A resource is invalid";
+	case LIB3MF_ERROR_INVALIDLEVELSET:
+		return "A level set is invalid";
 	case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE:
 		return "This object type is not valid for beamlattices";
 	case LIB3MF_ERROR_INVALIDKEYSTORE:
@@ -10244,6 +10248,16 @@ type FmodNode struct {
 
 func (wrapper Wrapper) NewFmodNode(r ref) FmodNode {
 	return FmodNode{wrapper.NewTwoInputNode(r)}
+}
+
+
+// ModNode represents a Lib3MF class.
+type ModNode struct {
+	TwoInputNode
+}
+
+func (wrapper Wrapper) NewModNode(r ref) ModNode {
+	return ModNode{wrapper.NewTwoInputNode(r)}
 }
 
 

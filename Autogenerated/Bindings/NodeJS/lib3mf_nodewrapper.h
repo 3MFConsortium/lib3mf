@@ -1799,6 +1799,23 @@ public:
 };
 
 /*************************************************************************************************************************
+ Class CLib3MFModNode 
+**************************************************************************************************************************/
+class CLib3MFModNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+
+public:
+	CLib3MFModNode();
+	~CLib3MFModNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
  Class CLib3MFPowNode 
 **************************************************************************************************************************/
 class CLib3MFPowNode : public CLib3MFBaseClass {

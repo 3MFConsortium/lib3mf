@@ -97,8 +97,7 @@
 		<error name="ELEMENTCOUNTEXCEEDSLIMIT" code="141"
 			description="An element buffer exceeds its spec limit" />
 		<error name="INVALIDRESOURCE" code="142" description="A resource is invalid" />
-		<error name="INVALIDLEVELSET " code="143" description="A level set is invalid" />
-
+		<error name="INVALIDLEVELSET" code="143" description="A level set is invalid" />
 		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000"
 			description="This object type is not valid for beamlattices" />
 		<error name="INVALIDKEYSTORE" code="3000" description="The keystore object is invalid" />
@@ -1900,7 +1899,7 @@
 		<option name="Min" description="Calculates the minimum tow values" value="25" />
 		<option name="Max" description="Calculates the maximum of two values" value="26" />
 		<option name="Abs" description="Calcul the absolute value" value="27" />
-		<option name="Fmod" description="Calculates the modulo of two values" value="28" />
+		<option name="Fmod" description="Computes the remainder of the divison of the inputs (same behavior as C fmod)" value="28" />
 		<option name="Pow" description="Calculates the power A^B" value="29" />
 		<option name="Sqrt" description="Calculates the square root" value="30" />
 		<option name="Exp" description="Exponential function" value="31" />
@@ -1926,6 +1925,7 @@
 			value="49" />
 		<option name="UnsignedMesh" description="Calculates the unsigned distance to a mesh"
 			value="50" />
+		<option name="Mod" description="Calculates the modulo of two values (same behaviour as glsl mod)" value="51" />
 	</enum>
 
 	<enum name="ImplicitPortType" description="The type of the port">
@@ -2220,7 +2220,10 @@
 	<class name="MaxNode" parent="TwoInputNode" description="Calculates the maximum of two values">
 	</class>
 
-	<class name="FmodNode" parent="TwoInputNode" description="Calculates the modulo of two values">
+	<class name="FmodNode" parent="TwoInputNode" description="Calculates the modulo of two values (C fmod)">
+	</class>
+
+	<class name="ModNode" parent="TwoInputNode" description="Calculates the modulo of two values (GLSL mod)">
 	</class>
 
 	<class name="PowNode" parent="TwoInputNode" description="Calculates the power A by B">

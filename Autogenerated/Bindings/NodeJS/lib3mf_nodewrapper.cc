@@ -125,6 +125,7 @@ Persistent<Function> CLib3MFMatVecMultiplicationNode::constructor;
 Persistent<Function> CLib3MFMinNode::constructor;
 Persistent<Function> CLib3MFMaxNode::constructor;
 Persistent<Function> CLib3MFFmodNode::constructor;
+Persistent<Function> CLib3MFModNode::constructor;
 Persistent<Function> CLib3MFPowNode::constructor;
 Persistent<Function> CLib3MFSelectNode::constructor;
 Persistent<Function> CLib3MFClampNode::constructor;
@@ -13712,6 +13713,61 @@ Local<Object> CLib3MFFmodNode::NewInstance(Local<Object> pParent, Lib3MFHandle p
 }
 
 /*************************************************************************************************************************
+ Class CLib3MFModNode Implementation
+**************************************************************************************************************************/
+
+CLib3MFModNode::CLib3MFModNode()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFModNode::~CLib3MFModNode()
+{
+}
+
+void CLib3MFModNode::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFModNode"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFModNode::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFModNode * modnodeInstance = new CLib3MFModNode();
+				modnodeInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFModNode: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFModNode::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+/*************************************************************************************************************************
  Class CLib3MFPowNode Implementation
 **************************************************************************************************************************/
 
@@ -23623,6 +23679,7 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Resource"), Integer::New(isolate, 48));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_VectorFromScalar"), Integer::New(isolate, 49));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_UnsignedMesh"), Integer::New(isolate, 50));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Mod"), Integer::New(isolate, 51));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitPortType_Scalar"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitPortType_Vector"), Integer::New(isolate, 2));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitPortType_Matrix"), Integer::New(isolate, 3));

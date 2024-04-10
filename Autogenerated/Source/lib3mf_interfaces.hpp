@@ -135,6 +135,7 @@ class IMatVecMultiplicationNode;
 class IMinNode;
 class IMaxNode;
 class IFmodNode;
+class IModNode;
 class IPowNode;
 class ISelectNode;
 class IClampNode;
@@ -3969,6 +3970,26 @@ public:
 };
 
 typedef IBaseSharedPtr<IFmodNode> PIFmodNode;
+
+
+/*************************************************************************************************************************
+ Class interface for ModNode 
+**************************************************************************************************************************/
+
+class IModNode : public virtual ITwoInputNode {
+public:
+	/**
+	* IModNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xEA57335849379F22UL; // First 64 bits of SHA1 of a string: "Lib3MF::ModNode"
+	}
+
+};
+
+typedef IBaseSharedPtr<IModNode> PIModNode;
 
 
 /*************************************************************************************************************************

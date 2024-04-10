@@ -113,6 +113,7 @@ const
 	LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER = 140;
 	LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT = 141;
 	LIB3MF_ERROR_INVALIDRESOURCE = 142;
+	LIB3MF_ERROR_INVALIDLEVELSET = 143;
 	LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE = 2000;
 	LIB3MF_ERROR_INVALIDKEYSTORE = 3000;
 	LIB3MF_ERROR_INVALIDKEYSTORECONSUMER = 3001;
@@ -301,7 +302,8 @@ type
 		eImplicitNodeTypeLength,
 		eImplicitNodeTypeResource,
 		eImplicitNodeTypeVectorFromScalar,
-		eImplicitNodeTypeUnsignedMesh
+		eImplicitNodeTypeUnsignedMesh,
+		eImplicitNodeTypeMod
 	);
 
 	TLib3MFImplicitPortType = (
@@ -555,6 +557,7 @@ type
 	TLib3MFMinNode = class;
 	TLib3MFMaxNode = class;
 	TLib3MFFmodNode = class;
+	TLib3MFModNode = class;
 	TLib3MFPowNode = class;
 	TLib3MFSelectNode = class;
 	TLib3MFClampNode = class;
@@ -3907,6 +3910,11 @@ type
 
 (*************************************************************************************************************************
  Function type definitions for FmodNode
+**************************************************************************************************************************)
+
+
+(*************************************************************************************************************************
+ Function type definitions for ModNode
 **************************************************************************************************************************)
 
 
@@ -8337,6 +8345,17 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 
 (*************************************************************************************************************************
+ Class definition for ModNode
+**************************************************************************************************************************)
+
+	TLib3MFModNode = class(TLib3MFTwoInputNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+	end;
+
+
+(*************************************************************************************************************************
  Class definition for PowNode
 **************************************************************************************************************************)
 
@@ -10329,6 +10348,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function TLib3MFPolymorphicFactoryMakeMinNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMinNode;
 	function TLib3MFPolymorphicFactoryMakeMaxNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMaxNode;
 	function TLib3MFPolymorphicFactoryMakeFmodNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFFmodNode;
+	function TLib3MFPolymorphicFactoryMakeModNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFModNode;
 	function TLib3MFPolymorphicFactoryMakePowNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFPowNode;
 	function TLib3MFPolymorphicFactoryMakeSelectNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSelectNode;
 	function TLib3MFPolymorphicFactoryMakeClampNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFClampNode;
@@ -10824,6 +10844,7 @@ implementation
 			eImplicitNodeTypeResource: Result := 48;
 			eImplicitNodeTypeVectorFromScalar: Result := 49;
 			eImplicitNodeTypeUnsignedMesh: Result := 50;
+			eImplicitNodeTypeMod: Result := 51;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
 		end;
@@ -10882,6 +10903,7 @@ implementation
 			48: Result := eImplicitNodeTypeResource;
 			49: Result := eImplicitNodeTypeVectorFromScalar;
 			50: Result := eImplicitNodeTypeUnsignedMesh;
+			51: Result := eImplicitNodeTypeMod;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;
@@ -11150,6 +11172,7 @@ implementation
 			QWord($846AFDE9A091E997): begin Obj := TLIB3MFMinNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::MinNode"
 			QWord($073F910381BF250D): begin Obj := TLIB3MFMaxNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::MaxNode"
 			QWord($1EF703D298223F2A): begin Obj := TLIB3MFFmodNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::FmodNode"
+			QWord($EA57335849379F22): begin Obj := TLIB3MFModNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ModNode"
 			QWord($7700AA17CA1AC0F8): begin Obj := TLIB3MFPowNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::PowNode"
 			QWord($1127ED71E05A9BD4): begin Obj := TLIB3MFSelectNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::SelectNode"
 			QWord($77AF68C971B1485F): begin Obj := TLIB3MFClampNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ClampNode"
@@ -11519,6 +11542,10 @@ implementation
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFFmodNode, TLIB3MFFmodNode>.Make(Wrapper, Handle);
 	end;
+	function TLib3MFPolymorphicFactoryMakeModNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFModNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFModNode, TLIB3MFModNode>.Make(Wrapper, Handle);
+	end;
 	function TLib3MFPolymorphicFactoryMakePowNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFPowNode;
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFPowNode, TLIB3MFPowNode>.Make(Wrapper, Handle);
@@ -11686,6 +11713,7 @@ implementation
 			LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER: ADescription := 'A progress identifier is unknown';
 			LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: ADescription := 'An element buffer exceeds its spec limit';
 			LIB3MF_ERROR_INVALIDRESOURCE: ADescription := 'A resource is invalid';
+			LIB3MF_ERROR_INVALIDLEVELSET: ADescription := 'A level set is invalid';
 			LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: ADescription := 'This object type is not valid for beamlattices';
 			LIB3MF_ERROR_INVALIDKEYSTORE: ADescription := 'The keystore object is invalid';
 			LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: ADescription := 'The consumer keystore object is invalid';
@@ -15494,6 +15522,20 @@ implementation
 	end;
 
 	destructor TLib3MFFmodNode.Destroy;
+	begin
+		inherited;
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ModNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFModNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFModNode.Destroy;
 	begin
 		inherited;
 	end;

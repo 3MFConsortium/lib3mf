@@ -246,6 +246,7 @@ namespace NMR
                 {eImplicitNodeType::Abs,
                  {"abs", oneParameterFunctionSameDimensions}},
                 {eImplicitNodeType::Fmod, {"fmod", twoParameterSameDimensions}},
+                {eImplicitNodeType::Mod, {"mod", twoParameterSameDimensions}},
                 {eImplicitNodeType::Pow, {"pow", twoParameterSameDimensions}},
                 {eImplicitNodeType::Sqrt,
                  {"sqrt", oneParameterFunctionSameDimensions}},

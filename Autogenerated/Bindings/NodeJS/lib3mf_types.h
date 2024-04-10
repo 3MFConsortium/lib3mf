@@ -130,6 +130,7 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER 140 /** A progress identifier is unknown */
 #define LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT 141 /** An element buffer exceeds its spec limit */
 #define LIB3MF_ERROR_INVALIDRESOURCE 142 /** A resource is invalid */
+#define LIB3MF_ERROR_INVALIDLEVELSET 143 /** A level set is invalid */
 #define LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE 2000 /** This object type is not valid for beamlattices */
 #define LIB3MF_ERROR_INVALIDKEYSTORE 3000 /** The keystore object is invalid */
 #define LIB3MF_ERROR_INVALIDKEYSTORECONSUMER 3001 /** The consumer keystore object is invalid */
@@ -185,6 +186,7 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
     case LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER: return "A progress identifier is unknown";
     case LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: return "An element buffer exceeds its spec limit";
     case LIB3MF_ERROR_INVALIDRESOURCE: return "A resource is invalid";
+    case LIB3MF_ERROR_INVALIDLEVELSET: return "A level set is invalid";
     case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "This object type is not valid for beamlattices";
     case LIB3MF_ERROR_INVALIDKEYSTORE: return "The keystore object is invalid";
     case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "The consumer keystore object is invalid";
@@ -288,6 +290,7 @@ typedef Lib3MFHandle Lib3MF_MatVecMultiplicationNode;
 typedef Lib3MFHandle Lib3MF_MinNode;
 typedef Lib3MFHandle Lib3MF_MaxNode;
 typedef Lib3MFHandle Lib3MF_FmodNode;
+typedef Lib3MFHandle Lib3MF_ModNode;
 typedef Lib3MFHandle Lib3MF_PowNode;
 typedef Lib3MFHandle Lib3MF_SelectNode;
 typedef Lib3MFHandle Lib3MF_ClampNode;
@@ -474,7 +477,7 @@ typedef enum eLib3MFImplicitNodeType {
   eImplicitNodeTypeMin = 25, /** Calculates the minimum tow values */
   eImplicitNodeTypeMax = 26, /** Calculates the maximum of two values */
   eImplicitNodeTypeAbs = 27, /** Calcul the absolute value */
-  eImplicitNodeTypeFmod = 28, /** Calculates the modulo of two values */
+  eImplicitNodeTypeFmod = 28, /** Computes the remainder of the divison of the inputs (same behavior as C fmod) */
   eImplicitNodeTypePow = 29, /** Calculates the power A^B */
   eImplicitNodeTypeSqrt = 30, /** Calculates the square root */
   eImplicitNodeTypeExp = 31, /** Exponential function */
@@ -496,7 +499,8 @@ typedef enum eLib3MFImplicitNodeType {
   eImplicitNodeTypeLength = 47, /** Calculates the length of a vector */
   eImplicitNodeTypeResource = 48, /** Selects a resource (function, mesh etc.) */
   eImplicitNodeTypeVectorFromScalar = 49, /** Creates a vector from one scalar values */
-  eImplicitNodeTypeUnsignedMesh = 50 /** Calculates the unsigned distance to a mesh */
+  eImplicitNodeTypeUnsignedMesh = 50, /** Calculates the unsigned distance to a mesh */
+  eImplicitNodeTypeMod = 51 /** Calculates the modulo of two values (same behaviour as glsl mod) */
 } eLib3MFImplicitNodeType;
 
 /**

@@ -341,7 +341,7 @@ ILevelSet* CModel::GetLevelSetByID(const Lib3MF_uint32 nUniqueResourceID)
 		return new CLevelSet(std::dynamic_pointer_cast<NMR::CModelLevelSetObject>(pResource));
 	}
 	else
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDLEVELSETRESOURCE);
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDLEVELSET);
 
 }
 
