@@ -161,9 +161,17 @@ namespace Lib3MF
 
 	TEST_F(Reader, ReadVerticesWithLeadingPLUSSign) {
 		// This file P_XXM_0519_01.3mf contains vertices with leading + sign e.g +1E+2.
-		// The 3MFReader allows leading = sign at NMR_StringUtils::fnStringToDouble when reading this file.
+		// The 3MFReader allows leading + sign at NMR_StringUtils::fnStringToDouble when reading this file.
 		auto reader = model->QueryReader("3mf");
 		reader->ReadFromFile(sTestFilesPath + "/Reader/" + "P_XXM_0519_01.3mf");
+		CheckReaderWarnings(Reader::reader3MF, 0);
+	}
+
+	TEST_F(Reader, ReadVerticesValueWithLeadingTrialingSpaces) {
+		// This file cam-51476-test.3mf contains vertices with leading whitespaces.
+		// The 3MFReader allows leading/trialing whitespaces at NMR_StringUtils::fnStringToDouble when reading this file.
+		auto reader = model->QueryReader("3mf");
+		reader->ReadFromFile(sTestFilesPath + "/Reader/" + "cam_51476_test.3mf");
 		CheckReaderWarnings(Reader::reader3MF, 0);
 	}
 }
