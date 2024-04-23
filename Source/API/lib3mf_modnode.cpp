@@ -40,3 +40,8 @@ using namespace Lib3MF::Impl;
  Class definition of CModNode 
 **************************************************************************************************************************/
 
+Lib3MF::Impl::CModNode::CModNode(NMR::PModelImplicitNode pImplicitNode)
+    : CTwoInputNode{pImplicitNode}
+{
+    CImplicitNode::m_pImplicitNode = pImplicitNode;
+}
