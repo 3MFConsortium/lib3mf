@@ -109,6 +109,11 @@ jobs:
         with:
           name: lib3mf.dylib
           path: build/lib3mf.dylib
+      - name: Upload Artifact (CPacked Archive)
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: build/${{ env.ARTIFACT_NAME }}          
 
   build-macos-debug:
     runs-on: macos-latest
@@ -126,12 +131,6 @@ jobs:
         with:
           name: lib3mf.debug.dylib
           path: build/lib3mf.dylib
-
-      - name: Upload Artifact (CPacked Archive)
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ env.ARTIFACT_NAME }}
-          path: build/${{ env.ARTIFACT_NAME }}
 
   codecoverage-macos:
     runs-on: macos-latest
