@@ -237,10 +237,6 @@ option(LIB3MF_TESTS "Switch whether the tests of lib3mf should be build" ON)
 message("LIB3MF_TESTS ... " ${LIB3MF_TESTS})
 
 if(LIB3MF_TESTS)
-  if(APPLE)
-    # libressl only compiles on arm64
-    SET(CMAKE_OSX_ARCHITECTURES "x86_64")
-  endif()
   enable_testing()
   add_subdirectory(Tests)
 endif()
