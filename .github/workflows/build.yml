@@ -1,6 +1,6 @@
 on: [push, pull_request]
 env:
-  LIB3MF_VERSION: "2.3.0"
+  LIB3MF_VERSION: "2.3.1"
 name: Build
 jobs:
 
