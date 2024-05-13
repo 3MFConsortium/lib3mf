@@ -109,6 +109,24 @@ jobs:
         with:
           name: lib3mf.dylib
           path: build/lib3mf.dylib
+
+  build-macos-debug:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - run: sh cmake/GenerateMake.sh "-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64 -DCMAKE_BUILD_TYPE=Debug"
+      - run: cmake --build .
+        working-directory: ./build
+      - run: ctest -V
+        working-directory: ./build
+      - name: Archive Mac binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: lib3mf.debug.dylib
+          path: build/lib3mf.dylib
+
       - name: Upload Artifact (CPacked Archive)
         uses: actions/upload-artifact@v2
         with:
@@ -192,6 +210,14 @@ jobs:
         with:
           name: lib3mf.debug.dll
           path: build/Debug/lib3mf.dll
+      - uses: actions/upload-artifact@v2
+        with:
+          name: lib3mf.pdb
+          path: build/Debug/lib3mf.pdb
+      - uses: actions/upload-artifact@v2
+        with:
+         name: lib3mf.debug.lib
+         path: build/Debug/lib3mf.lib
   build-windows-32bit:
     runs-on: windows-2019
     steps:
