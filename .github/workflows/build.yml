@@ -295,7 +295,6 @@ jobs:
 
   integration_tests-latest-release:
     runs-on: ubuntu-20.04
-    if: github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
