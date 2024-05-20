@@ -342,7 +342,7 @@ jobs:
 
       - name: Copy integration test script
         run: |
-          cp CI/integration_test.py test_suites/ && cp lib3mf_sdk/Examples/CppDynamic/build/* test_suites/
+          cp CI/integration_test.py test_suites/ && cp -r lib3mf_sdk/Examples/CppDynamic/build/* test_suites/
 
       - name: Run integration tests
         run: |
