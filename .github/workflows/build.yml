@@ -336,6 +336,10 @@ jobs:
           wget https://github.com/3MFConsortium/test_suites/releases/download/v2.0.0/3MF_Conformance_Test_Suites_v2.0.0.zip
           unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
 
+      - name: List files
+        run: |
+          ls -al          
+
       - name: Copy integration test script
         run: |
           cp CI/integration_test.py test_suites/
