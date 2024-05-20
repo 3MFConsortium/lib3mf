@@ -310,19 +310,19 @@ jobs:
         run: |
           python -m pip install --upgrade pip
 
-      - name: Get latest release info from GitHub API
-        id: get_release
+      - name: Get latest lib3mf SDK release info from GitHub API
+        id: get_lib3mf_release
         run: |
-          LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/3MFConsortium/test_suites/releases/latest | grep "zipball_url" | cut -d '"' -f 4)
-          echo "LATEST_RELEASE_URL=${LATEST_RELEASE_URL}" >> $GITHUB_ENV
+          LATEST_LIB3MF_URL=$(curl -s https://api.github.com/repos/3MFConsortium/lib3mf/releases/latest | grep "browser_download_url.*zip" | cut -d '"' -f 4)
+          echo "LATEST_LIB3MF_URL=${LATEST_LIB3MF_URL}" >> $GITHUB_ENV
 
-      - name: Download latest SDK zip
+      - name: Download latest lib3mf SDK zip
         run: |
-          wget ${{ env.LATEST_RELEASE_URL }} -O latest_release.zip
+          wget ${{ env.LATEST_LIB3MF_URL }} -O latest_lib3mf_sdk.zip
 
       - name: Unpack the SDK
         run: |
-          unzip latest_release.zip -d lib3mf_sdk
+          unzip latest_lib3mf_sdk.zip -d lib3mf_sdk
 
       - name: Build CppDynamic
         run: |
