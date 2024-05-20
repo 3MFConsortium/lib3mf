@@ -65,6 +65,10 @@ if __name__ == "__main__":
 
     execCommand = os.path.join(root, "../lib3mf_sdk", "Examples", "CppDynamic", "build", "Example_ExtractInfo")
 
+    print("Execute once for testing")
+    os.system(execCommand)
+    print("Execution done")
+
     positives = []
     negatives = []
 
