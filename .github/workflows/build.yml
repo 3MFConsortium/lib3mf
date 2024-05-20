@@ -338,8 +338,8 @@ jobs:
 
       - name: Copy integration test script
         run: |
-          cp CI/integration_test.py test_suites/3MF_Conformance_Test_Suites_v2.0.0/
+          cp CI/integration_test.py test_suites/
 
       - name: Run integration tests
         run: |
-          python test_suites/3MF_Conformance_Test_Suites_v2.0.0/integration_test.py
+          python test_suites/integration_test.py
