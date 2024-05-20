@@ -63,7 +63,7 @@ if __name__ == "__main__":
 
     root = os.path.dirname(os.path.realpath(__file__))
 
-    execCommand = os.path.join(root, "lib3mf_sdk", "Examples", "CppDynamic", "build", "Example_ExtractInfo")
+    execCommand = os.path.join(root, "../lib3mf_sdk", "Examples", "CppDynamic", "build", "Example_ExtractInfo")
 
     positives = []
     negatives = []
