@@ -407,13 +407,7 @@ jobs:
           sh latest_lib3mf_sdk/Examples/CppDynamic/GenerateMake.sh
           cd latest_lib3mf_sdk/Examples/CppDynamic/build
           cmake --build .
-          echo "First Debug"
-          ls -al ../../
-          echo "Second Debug"
-          ls -al ../../../
-          echo "Following script will fail"
-          cp * ../../../test_suites/
-          cp *.so ../../../test_suites/ || true
+          cp -r * ../../../../test_suites/
 
       - name: Run integration tests with latest SDK
         run: |
@@ -429,8 +423,7 @@ jobs:
           sh second_latest_lib3mf_sdk/Examples/CppDynamic/GenerateMake.sh
           cd second_latest_lib3mf_sdk/Examples/CppDynamic/build
           cmake --build .
-          cp * ../../../test_suites/
-          cp *.so ../../../test_suites/ || true
+          cp -r * ../../../../test_suites/
 
       - name: Run integration tests with second latest SDK
         run: |
