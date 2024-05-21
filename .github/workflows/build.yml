@@ -455,7 +455,6 @@ jobs:
             echo "New release is worse"
             fi
 
-
   integration-tests-latest-commit:
     runs-on: ubuntu-20.04
     steps:
