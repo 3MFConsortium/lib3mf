@@ -346,7 +346,14 @@ jobs:
 
       - name: Run integration tests
         run: |
-          cd test_suites && python integration_test.py
+          cd test_suites && /usr/bin/time -v python integration_test.py 2>&1 | tee latest_sdk_test.log
+
+      - name: Print results
+        run: |
+          LATEST_TIME=$(grep "Elapsed (wall clock) time" test_suites/latest_sdk_test.log | awk '{print $8}')
+          LATEST_TOTAL_SECONDS=$(echo $LATEST_TIME | awk -F: '{ print ($1 * 60) + $2 }')
+          echo "Latest SDK execution time in seconds: ${LATEST_TOTAL_SECONDS}"
+
 
   integration-tests-last-two-releases:
     runs-on: ubuntu-20.04
@@ -447,3 +454,57 @@ jobs:
             else
             echo "New release is worse"
             fi
+
+
+  integration-tests-latest-commit:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+
+      - name: Download lib3mf_sdk artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: lib3mf_sdk.zip
+          path: lib3mf_sdk.zip
+
+      - name: Unpack the SDK
+        run: |
+          unzip lib3mf_sdk.zip/lib3mf_sdk.zip
+
+      - name: Build CppDynamic
+        run: |
+          sh lib3mf_sdk/Examples/CppDynamic/GenerateMake.sh
+          cd lib3mf_sdk/Examples/CppDynamic/build
+          cmake --build .
+          ./Example_ExtractInfo ../../Files/Helix.3mf
+
+      - name: Download and unzip test suite
+        run: |
+          wget https://github.com/3MFConsortium/test_suites/releases/download/v2.0.0/3MF_Conformance_Test_Suites_v2.0.0.zip
+          unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+
+      - name: Copy integration test script
+        run: |
+          cp CI/integration_test.py test_suites/ && cp -r lib3mf_sdk/Examples/CppDynamic/build/* test_suites/
+
+      - name: Run integration tests
+        run: |
+          cd test_suites && /usr/bin/time -v python integration_test.py 2>&1 | tee latest_sdk_test.log
+
+      - name: Print results
+        run: |
+          LATEST_TIME=$(grep "Elapsed (wall clock) time" test_suites/latest_sdk_test.log | awk '{print $8}')
+          LATEST_TOTAL_SECONDS=$(echo $LATEST_TIME | awk -F: '{ print ($1 * 60) + $2 }')
+          echo "Latest SDK execution time in seconds: ${LATEST_TOTAL_SECONDS}"
