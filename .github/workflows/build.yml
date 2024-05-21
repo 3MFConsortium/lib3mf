@@ -293,7 +293,7 @@ jobs:
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
 
-  integration_tests-latest-release:
+  integration-tests-latest-release:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
@@ -348,7 +348,7 @@ jobs:
         run: |
           cd test_suites && python integration_test.py
 
-  integration_tests-last-two-releases:
+  integration-tests-last-two-releases:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
@@ -416,13 +416,16 @@ jobs:
 
       - name: Clean up latest SDK binaries
         run: |
-          find test_suites -maxdepth 1 ! -name 'integration_test.py' ! -name '3MF_Conformance_Test_Suites_v2.0.0' ! -name 'latest_sdk_test.log' -exec rm -rf {} +
+          find test_suites -maxdepth 1 ! -name 'integration_test.py' ! -name 'latest_sdk_test.log' -exec rm -rf {} +
 
       - name: Build and run CppDynamic with second latest SDK
         run: |
           sh second_latest_lib3mf_sdk/Examples/CppDynamic/GenerateMake.sh
           cd second_latest_lib3mf_sdk/Examples/CppDynamic/build
           cmake --build .
+          echo "First debug"
+          ls -al ../../../../
+          echo "This will fail"
           cp -r * ../../../../test_suites/
 
       - name: Run integration tests with second latest SDK
