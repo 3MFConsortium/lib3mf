@@ -195,28 +195,29 @@ jobs:
 #        working-directory: ./build
 #      - run: ctest -V
 #        working-directory: ./build
-#  assemble-sdk:
-#    runs-on: ubuntu-20.04
+  assemble-sdk:
+    runs-on: ubuntu-20.04
 #    needs: [ build-windows-release, build-macos, build-linux-ubi8-gcc12 ]
-#    steps:
-#      - run: sudo apt install -y zip unzip
-#      - run: mkdir build
-#      - uses: actions/checkout@v2
-#        with:
-#          submodules: false
-#      - name: Download all workflow run artifacts
-#        uses: actions/download-artifact@v2
-#        with:
-#          path: ./build
-#      - run: ls -Rl ./build
-#      - run: unzip bindings.zip/bindings.zip
-#        working-directory: ./build
-#      - run: bash SDK/GenerateSDK_github.sh
-#      - name: Archive SDK artifact
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: lib3mf_sdk.zip
-#          path: build/lib3mf_sdk.zip
+    needs: [ build-linux-ubi8-gcc12 ]
+    steps:
+      - run: sudo apt install -y zip unzip
+      - run: mkdir build
+      - uses: actions/checkout@v2
+        with:
+          submodules: false
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: ./build
+      - run: ls -Rl ./build
+      - run: unzip bindings.zip/bindings.zip
+        working-directory: ./build
+      - run: bash SDK/GenerateSDK_github.sh
+      - name: Archive SDK artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: lib3mf_sdk.zip
+          path: build/lib3mf_sdk.zip
 #  deploy-linux:
 #    runs-on: ubuntu-20.04
 #    needs: [ assemble-sdk ]
@@ -458,7 +459,7 @@ jobs:
 
   integration-tests-latest-commit:
     runs-on: ubuntu-20.04
-    needs: [build-linux-ubi8-gcc12]
+    needs: [ assemble-sdk ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
