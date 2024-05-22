@@ -13,6 +13,7 @@ jobs:
 #      - run: cmake --build . --target lib3mf_memcheck
 #        working-directory: ./build
 #
+
   build-linux-ubi8-gcc12:
     runs-on: ubuntu-20.04
     steps:
@@ -54,7 +55,7 @@ jobs:
         with:
           name: lib3mf.so
           path: dist/lib3mf.so.2
-#
+
 #  build-macos:
 #    runs-on: macos-latest
 #    steps:
@@ -481,7 +482,7 @@ jobs:
 
       - name: Unpack the SDK
         run: |
-          unzip lib3mf_sdk.zip/lib3mf_sdk.zip
+          ls -al && unzip lib3mf_sdk.zip/lib3mf_sdk.zip
 
       - name: Build CppDynamic
         run: |
