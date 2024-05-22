@@ -482,7 +482,7 @@ jobs:
 
       - name: Unpack the SDK
         run: |
-          ls -al && unzip lib3mf_sdk.zip/lib3mf_sdk.zip
+          unzip lib3mf_sdk.zip/lib3mf_sdk.zip && ls -al
 
       - name: Build CppDynamic
         run: |
