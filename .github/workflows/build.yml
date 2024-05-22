@@ -56,22 +56,22 @@ jobs:
           name: lib3mf.so
           path: dist/lib3mf.so.2
 
-#  build-macos:
-#    runs-on: macos-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#        with:
-#          submodules: true
-#      - run: sh cmake/GenerateMake.sh "-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64"
-#      - run: cmake --build .
-#        working-directory: ./build
-#      - run: ctest -V
-#        working-directory: ./build
-#      - name: Archive Mac binary
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: lib3mf.dylib
-#          path: build/lib3mf.dylib
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - run: sh cmake/GenerateMake.sh "-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64"
+      - run: cmake --build .
+        working-directory: ./build
+      - run: ctest -V
+        working-directory: ./build
+      - name: Archive Mac binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: lib3mf.dylib
+          path: build/lib3mf.dylib
 #
 #  build-macos-debug:
 #    runs-on: macos-latest
@@ -117,27 +117,27 @@ jobs:
 #          fail_ci_if_error: true # optional (default = false)
 #          verbose: true # optional (default = false)
 #
-#  build-windows-release:
-#    runs-on: windows-2019
-#    steps:
-#      - uses: actions/checkout@v2
-#        with:
-#          submodules: true
-#      - run: ./cmake/GenerateVS2019.bat
-#      - run: cmake --build . --config Release
-#        working-directory: ./build
-#      - run: ctest -V
-#        working-directory: ./build
-#      - name: Archive Windows Release binary
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: lib3mf.dll
-#          path: build/Release/lib3mf.dll
-#      - name: Archive Windows Release lib
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: lib3mf.lib
-#          path: build/Release/lib3mf.lib
+  build-windows-release:
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - run: ./cmake/GenerateVS2019.bat
+      - run: cmake --build . --config Release
+        working-directory: ./build
+      - run: ctest -V
+        working-directory: ./build
+      - name: Archive Windows Release binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: lib3mf.dll
+          path: build/Release/lib3mf.dll
+      - name: Archive Windows Release lib
+        uses: actions/upload-artifact@v2
+        with:
+          name: lib3mf.lib
+          path: build/Release/lib3mf.lib
 #  build-windows-debug:
 #    runs-on: windows-2019
 #    steps:
