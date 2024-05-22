@@ -300,8 +300,8 @@ jobs:
   integration-tests-latest-release:
     runs-on: ubuntu-20.04
     needs: [deploy-linux, deploy-windows, deploy-macos]
-    # uncomment the following line if this is only needed for a release event
-    if: github.event_name == 'release'
+    # comment / uncomment the following line if this is only needed for a release event
+#    if: github.event_name == 'release'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -366,7 +366,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [deploy-linux, deploy-windows, deploy-macos]
     # comment or uncomment the following line if this is only needed for a release event
-    if: github.event_name == 'release'
+#    if: github.event_name == 'release'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
