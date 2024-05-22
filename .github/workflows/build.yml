@@ -197,8 +197,7 @@ jobs:
 #        working-directory: ./build
   assemble-sdk:
     runs-on: ubuntu-20.04
-#    needs: [ build-windows-release, build-macos, build-linux-ubi8-gcc12 ]
-    needs: [ build-linux-ubi8-gcc12 ]
+    needs: [ build-windows-release, build-macos, build-linux-ubi8-gcc12 ]
     steps:
       - run: sudo apt install -y zip unzip
       - run: mkdir build
