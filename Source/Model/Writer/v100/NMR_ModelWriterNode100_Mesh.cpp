@@ -79,7 +79,7 @@ namespace NMR {
 		putBallRefString(MODELWRITERMESH100_BEAMLATTICE_BALLREFLINESTART);
 	}
 
-	bool stringRepresentationsDiffer(double a, double b, double putFactor) {
+	bool stringRepresentationsDiffer(double a, double b, nfInt64 putFactor) {
 		return  fabs(a - b) * putFactor > 0.1;
 	}
 
