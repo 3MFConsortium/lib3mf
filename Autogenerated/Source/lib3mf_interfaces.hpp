@@ -92,6 +92,7 @@ class IContentEncryptionParams;
 class IResourceData;
 class IResourceDataGroup;
 class IKeyStore;
+class INameSpaceIterator;
 class IModel;
 
 
@@ -2939,6 +2940,50 @@ typedef IBaseSharedPtr<IKeyStore> PIKeyStore;
 
 
 /*************************************************************************************************************************
+ Class interface for NameSpaceIterator 
+**************************************************************************************************************************/
+
+class INameSpaceIterator : public virtual IBase {
+public:
+	/**
+	* INameSpaceIterator::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x8D1206A0FEEFCC31UL; // First 64 bits of SHA1 of a string: "Lib3MF::NameSpaceIterator"
+	}
+
+	/**
+	* INameSpaceIterator::MoveNext - Iterates to the next namespace in the list.
+	* @return Iterates to the namespace in the list.
+	*/
+	virtual bool MoveNext() = 0;
+
+	/**
+	* INameSpaceIterator::MovePrevious - Iterates to the previous namespace in the list.
+	* @return Iterates to the previous required namespace in the list.
+	*/
+	virtual bool MovePrevious() = 0;
+
+	/**
+	* INameSpaceIterator::GetCurrent - Returns the required namespace the iterator points at.
+	* @return returns the namespace.
+	*/
+	virtual std::string GetCurrent() = 0;
+
+	/**
+	* INameSpaceIterator::Count - Returns the number of namespaces the iterator captures.
+	* @return returns the number of namspaces the iterator captures.
+	*/
+	virtual Lib3MF_uint64 Count() = 0;
+
+};
+
+typedef IBaseSharedPtr<INameSpaceIterator> PINameSpaceIterator;
+
+
+/*************************************************************************************************************************
  Class interface for Model 
 **************************************************************************************************************************/
 
@@ -3338,6 +3383,12 @@ public:
 	* @return The package keystore
 	*/
 	virtual IKeyStore * GetKeyStore() = 0;
+
+	/**
+	* IModel::GetRequiredNameSpaces - Gets the list of required namespaces for the model
+	* @return The required namespace iterator
+	*/
+	virtual INameSpaceIterator * GetRequiredNameSpaces() = 0;
 
 };
 

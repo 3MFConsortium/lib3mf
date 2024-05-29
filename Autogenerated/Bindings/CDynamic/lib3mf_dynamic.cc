@@ -328,6 +328,10 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_KeyStore_GetResourceData = NULL;
 	pWrapperTable->m_KeyStore_GetUUID = NULL;
 	pWrapperTable->m_KeyStore_SetUUID = NULL;
+	pWrapperTable->m_NameSpaceIterator_MoveNext = NULL;
+	pWrapperTable->m_NameSpaceIterator_MovePrevious = NULL;
+	pWrapperTable->m_NameSpaceIterator_GetCurrent = NULL;
+	pWrapperTable->m_NameSpaceIterator_Count = NULL;
 	pWrapperTable->m_Model_RootModelPart = NULL;
 	pWrapperTable->m_Model_FindOrCreatePackagePart = NULL;
 	pWrapperTable->m_Model_SetUnit = NULL;
@@ -388,6 +392,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Model_RemoveCustomContentType = NULL;
 	pWrapperTable->m_Model_SetRandomNumberCallback = NULL;
 	pWrapperTable->m_Model_GetKeyStore = NULL;
+	pWrapperTable->m_Model_GetRequiredNameSpaces = NULL;
 	pWrapperTable->m_GetLibraryVersion = NULL;
 	pWrapperTable->m_GetPrereleaseInformation = NULL;
 	pWrapperTable->m_GetBuildInformation = NULL;
@@ -2982,6 +2987,42 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_NameSpaceIterator_MoveNext = (PLib3MFNameSpaceIterator_MoveNextPtr) GetProcAddress(hLibrary, "lib3mf_namespaceiterator_movenext");
+	#else // _WIN32
+	pWrapperTable->m_NameSpaceIterator_MoveNext = (PLib3MFNameSpaceIterator_MoveNextPtr) dlsym(hLibrary, "lib3mf_namespaceiterator_movenext");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_NameSpaceIterator_MoveNext == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_NameSpaceIterator_MovePrevious = (PLib3MFNameSpaceIterator_MovePreviousPtr) GetProcAddress(hLibrary, "lib3mf_namespaceiterator_moveprevious");
+	#else // _WIN32
+	pWrapperTable->m_NameSpaceIterator_MovePrevious = (PLib3MFNameSpaceIterator_MovePreviousPtr) dlsym(hLibrary, "lib3mf_namespaceiterator_moveprevious");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_NameSpaceIterator_MovePrevious == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_NameSpaceIterator_GetCurrent = (PLib3MFNameSpaceIterator_GetCurrentPtr) GetProcAddress(hLibrary, "lib3mf_namespaceiterator_getcurrent");
+	#else // _WIN32
+	pWrapperTable->m_NameSpaceIterator_GetCurrent = (PLib3MFNameSpaceIterator_GetCurrentPtr) dlsym(hLibrary, "lib3mf_namespaceiterator_getcurrent");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_NameSpaceIterator_GetCurrent == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_NameSpaceIterator_Count = (PLib3MFNameSpaceIterator_CountPtr) GetProcAddress(hLibrary, "lib3mf_namespaceiterator_count");
+	#else // _WIN32
+	pWrapperTable->m_NameSpaceIterator_Count = (PLib3MFNameSpaceIterator_CountPtr) dlsym(hLibrary, "lib3mf_namespaceiterator_count");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_NameSpaceIterator_Count == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_Model_RootModelPart = (PLib3MFModel_RootModelPartPtr) GetProcAddress(hLibrary, "lib3mf_model_rootmodelpart");
 	#else // _WIN32
 	pWrapperTable->m_Model_RootModelPart = (PLib3MFModel_RootModelPartPtr) dlsym(hLibrary, "lib3mf_model_rootmodelpart");
@@ -3519,6 +3560,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Model_GetKeyStore == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_GetRequiredNameSpaces = (PLib3MFModel_GetRequiredNameSpacesPtr) GetProcAddress(hLibrary, "lib3mf_model_getrequirednamespaces");
+	#else // _WIN32
+	pWrapperTable->m_Model_GetRequiredNameSpaces = (PLib3MFModel_GetRequiredNameSpacesPtr) dlsym(hLibrary, "lib3mf_model_getrequirednamespaces");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_GetRequiredNameSpaces == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

@@ -98,6 +98,7 @@ class CContentEncryptionParams;
 class CResourceData;
 class CResourceDataGroup;
 class CKeyStore;
+class CNameSpaceIterator;
 class CModel;
 
 /*************************************************************************************************************************
@@ -145,6 +146,7 @@ typedef CContentEncryptionParams CLib3MFContentEncryptionParams;
 typedef CResourceData CLib3MFResourceData;
 typedef CResourceDataGroup CLib3MFResourceDataGroup;
 typedef CKeyStore CLib3MFKeyStore;
+typedef CNameSpaceIterator CLib3MFNameSpaceIterator;
 typedef CModel CLib3MFModel;
 
 /*************************************************************************************************************************
@@ -192,6 +194,7 @@ typedef std::shared_ptr<CContentEncryptionParams> PContentEncryptionParams;
 typedef std::shared_ptr<CResourceData> PResourceData;
 typedef std::shared_ptr<CResourceDataGroup> PResourceDataGroup;
 typedef std::shared_ptr<CKeyStore> PKeyStore;
+typedef std::shared_ptr<CNameSpaceIterator> PNameSpaceIterator;
 typedef std::shared_ptr<CModel> PModel;
 
 /*************************************************************************************************************************
@@ -239,6 +242,7 @@ typedef PContentEncryptionParams PLib3MFContentEncryptionParams;
 typedef PResourceData PLib3MFResourceData;
 typedef PResourceDataGroup PLib3MFResourceDataGroup;
 typedef PKeyStore PLib3MFKeyStore;
+typedef PNameSpaceIterator PLib3MFNameSpaceIterator;
 typedef PModel PLib3MFModel;
 
 
@@ -562,6 +566,7 @@ private:
 	friend class CResourceData;
 	friend class CResourceDataGroup;
 	friend class CKeyStore;
+	friend class CNameSpaceIterator;
 	friend class CModel;
 
 };
@@ -1544,6 +1549,26 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CNameSpaceIterator 
+**************************************************************************************************************************/
+class CNameSpaceIterator : public CBase {
+public:
+	
+	/**
+	* CNameSpaceIterator::CNameSpaceIterator - Constructor for NameSpaceIterator class.
+	*/
+	CNameSpaceIterator(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline bool MoveNext();
+	inline bool MovePrevious();
+	inline std::string GetCurrent();
+	inline Lib3MF_uint64 Count();
+};
+	
+/*************************************************************************************************************************
  Class CModel 
 **************************************************************************************************************************/
 class CModel : public CBase {
@@ -1617,6 +1642,7 @@ public:
 	inline void RemoveCustomContentType(const std::string & sExtension);
 	inline void SetRandomNumberCallback(const RandomNumberCallback pTheCallback, const Lib3MF_pvoid pUserData);
 	inline PKeyStore GetKeyStore();
+	inline PNameSpaceIterator GetRequiredNameSpaces();
 };
 
 /*************************************************************************************************************************
@@ -1676,6 +1702,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0x1A47A5E258E22EF9UL: return new CResourceData(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ResourceData"
 		case 0xD59067227E428AA4UL: return new CResourceDataGroup(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ResourceDataGroup"
 		case 0x1CC9E0CC082253C6UL: return new CKeyStore(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::KeyStore"
+		case 0x8D1206A0FEEFCC31UL: return new CNameSpaceIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::NameSpaceIterator"
 		case 0x5A8164ECEDB03F09UL: return new CModel(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Model"
 	}
 	return new CBase(this, pHandle);
@@ -5576,6 +5603,61 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	 * Method definitions for class CNameSpaceIterator
+	 */
+	
+	/**
+	* CNameSpaceIterator::MoveNext - Iterates to the next namespace in the list.
+	* @return Iterates to the namespace in the list.
+	*/
+	bool CNameSpaceIterator::MoveNext()
+	{
+		bool resultHasNext = 0;
+		CheckError(lib3mf_namespaceiterator_movenext(m_pHandle, &resultHasNext));
+		
+		return resultHasNext;
+	}
+	
+	/**
+	* CNameSpaceIterator::MovePrevious - Iterates to the previous namespace in the list.
+	* @return Iterates to the previous required namespace in the list.
+	*/
+	bool CNameSpaceIterator::MovePrevious()
+	{
+		bool resultHasPrevious = 0;
+		CheckError(lib3mf_namespaceiterator_moveprevious(m_pHandle, &resultHasPrevious));
+		
+		return resultHasPrevious;
+	}
+	
+	/**
+	* CNameSpaceIterator::GetCurrent - Returns the required namespace the iterator points at.
+	* @return returns the namespace.
+	*/
+	std::string CNameSpaceIterator::GetCurrent()
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		CheckError(lib3mf_namespaceiterator_getcurrent(m_pHandle, 0, &bytesNeededNameSpace, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		CheckError(lib3mf_namespaceiterator_getcurrent(m_pHandle, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0]));
+		
+		return std::string(&bufferNameSpace[0]);
+	}
+	
+	/**
+	* CNameSpaceIterator::Count - Returns the number of namespaces the iterator captures.
+	* @return returns the number of namspaces the iterator captures.
+	*/
+	Lib3MF_uint64 CNameSpaceIterator::Count()
+	{
+		Lib3MF_uint64 resultCount = 0;
+		CheckError(lib3mf_namespaceiterator_count(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
 	 * Method definitions for class CModel
 	 */
 	
@@ -6441,6 +6523,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CKeyStore>(dynamic_cast<CKeyStore*>(m_pWrapper->polymorphicFactory(hKeyStore)));
+	}
+	
+	/**
+	* CModel::GetRequiredNameSpaces - Gets the list of required namespaces for the model
+	* @return The required namespace iterator
+	*/
+	PNameSpaceIterator CModel::GetRequiredNameSpaces()
+	{
+		Lib3MFHandle hNameSpaceIterator = nullptr;
+		CheckError(lib3mf_model_getrequirednamespaces(m_pHandle, &hNameSpaceIterator));
+		
+		if (!hNameSpaceIterator) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CNameSpaceIterator>(dynamic_cast<CNameSpaceIterator*>(m_pWrapper->polymorphicFactory(hNameSpaceIterator)));
 	}
 
 } // namespace Lib3MF

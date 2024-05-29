@@ -80,6 +80,8 @@ namespace NMR {
 			}
 			// is the extension supported?
 			std::string sExtensionURI = m_ListedExtensions[token];
+			m_pModel->registerRequiredNameSpace(sExtensionURI);
+			
 			if (strcmp(sExtensionURI.c_str(), PACKAGE_XMLNS_100) != 0 &&
 				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_MATERIALSPEC) != 0 &&
 				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_PRODUCTIONSPEC) != 0 &&

@@ -195,9 +195,12 @@ public:
 
 	Lib3MF::sBox GetOutbox() override;
 
-	IKeyStore * GetKeyStore();
+	IKeyStore * GetKeyStore() override;
 
-	void SetRandomNumberCallback(const Lib3MF::RandomNumberCallback pTheCallback, const Lib3MF_pvoid pUserData);
+	void SetRandomNumberCallback(const Lib3MF::RandomNumberCallback pTheCallback, const Lib3MF_pvoid pUserData) override;
+
+
+	INameSpaceIterator * GetRequiredNameSpaces() override;
 };
 
 }
