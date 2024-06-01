@@ -303,7 +303,7 @@ jobs:
   integration-tests-latest-release:
     runs-on: ubuntu-20.04
     needs: [deploy-linux, deploy-windows, deploy-macos]
-    if: env.RUN_INTEGRATION_TESTS == 'on' # Single check before the job starts
+    if: ${{ env.RUN_INTEGRATION_TESTS == 'on' }} # Single check before the job starts
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -367,7 +367,7 @@ jobs:
   integration-tests-last-two-releases:
     runs-on: ubuntu-20.04
     needs: [deploy-linux, deploy-windows, deploy-macos]
-    if: env.RUN_INTEGRATION_TESTS == 'on' # Single check before the job starts
+    if: ${{ env.RUN_INTEGRATION_TESTS == 'on' }} # Single check before the job starts
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -469,7 +469,7 @@ jobs:
   integration-tests-latest-commit:
     runs-on: ubuntu-20.04
     needs: [deploy-linux, deploy-windows, deploy-macos]
-    if: env.RUN_INTEGRATION_TESTS == 'on' # Single check before the job starts
+    if: ${{ env.RUN_INTEGRATION_TESTS == 'on' }} # Single check before the job starts
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -524,7 +524,7 @@ jobs:
   integration-test-last-commit-and-last-release:
     runs-on: ubuntu-20.04
     needs: [deploy-linux, deploy-windows, deploy-macos]
-    if: env.RUN_INTEGRATION_TESTS == 'on' # Single check before the job starts
+    if: ${{ env.RUN_INTEGRATION_TESTS == 'on' }} # Single check before the job starts
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
