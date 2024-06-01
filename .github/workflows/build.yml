@@ -537,15 +537,15 @@ jobs:
         run: |
           python -m pip install --upgrade pip
 
-      - name: Download lib3mf_sdk artifact from latest commit
+      - name: Download lib3mf_sdk artifact
         uses: actions/download-artifact@v2
         with:
           name: lib3mf_sdk.zip
-          path: latest_commit_lib3mf_sdk.zip
+          path: lib3mf_sdk.zip
 
-      - name: Unpack the SDK from latest commit
+      - name: Unpack the SDK
         run: |
-          unzip latest_commit_lib3mf_sdk.zip -d latest_commit_lib3mf_sdk
+          unzip lib3mf_sdk.zip/lib3mf_sdk.zip -d latest_commit_lib3mf_sdk && ls -al
 
       - name: Build CppDynamic with latest commit SDK
         run: |
@@ -570,6 +570,10 @@ jobs:
       - name: Run integration tests with latest commit SDK
         run: |
           cd test_suites && /usr/bin/time -v python integration_test.py 2>&1 | tee latest_commit_sdk_test.log
+
+      - name: Clean up latest SDK binaries
+        run: |
+          find test_suites -maxdepth 1 -type f ! -name 'integration_test.py' ! -name 'latest_sdk_test.log' ! -name 'second_latest_sdk_test.log' -exec rm -rf {} +
 
       - name: Get latest lib3mf SDK release info from GitHub API
         id: get_latest_release
@@ -614,4 +618,3 @@ jobs:
           else
             echo "Latest release is better"
           fi
-  
