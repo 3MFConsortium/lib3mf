@@ -518,3 +518,97 @@ jobs:
           LATEST_TIME=$(grep "Elapsed (wall clock) time" test_suites/latest_sdk_test.log | awk '{print $8}')
           LATEST_TOTAL_SECONDS=$(echo $LATEST_TIME | awk -F: '{ print ($1 * 60) + $2 }')
           echo "Latest SDK execution time in seconds: ${LATEST_TOTAL_SECONDS}"
+
+  integration-test-last-commit-and-last-release:
+    runs-on: ubuntu-20.04
+    needs: [deploy-linux, deploy-windows, deploy-macos]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+
+      - name: Get latest lib3mf SDK release info from GitHub API
+        id: get_latest_release
+        run: |
+          LATEST_LIB3MF_URL=$(curl -s https://api.github.com/repos/3MFConsortium/lib3mf/releases/latest | grep "browser_download_url.*zip" | cut -d '"' -f 4)
+          echo "LATEST_LIB3MF_URL=${LATEST_LIB3MF_URL}" >> $GITHUB_ENV
+
+      - name: Download lib3mf_sdk artifact from latest commit
+        uses: actions/download-artifact@v2
+        with:
+          name: lib3mf_sdk.zip
+          path: latest_commit_lib3mf_sdk.zip
+
+      - name: Download latest lib3mf SDK release zip
+        run: |
+          wget ${{ env.LATEST_LIB3MF_URL }} -O latest_release_lib3mf_sdk.zip
+
+      - name: Unpack the SDK from latest commit
+        run: |
+          unzip latest_commit_lib3mf_sdk.zip -d latest_commit_lib3mf_sdk
+
+      - name: Unpack the SDK from latest release
+        run: |
+          unzip latest_release_lib3mf_sdk.zip -d latest_release_lib3mf_sdk
+
+      - name: Download and unzip test suite
+        run: |
+          wget https://github.com/3MFConsortium/test_suites/releases/download/v2.0.0/3MF_Conformance_Test_Suites_v2.0.0.zip
+          unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+
+      - name: Copy integration test script
+        run: |
+          cp CI/integration_test.py test_suites/
+
+      - name: Build and run CppDynamic with latest commit SDK
+        run: |
+          sh latest_commit_lib3mf_sdk/Examples/CppDynamic/GenerateMake.sh
+          cd latest_commit_lib3mf_sdk/Examples/CppDynamic/build
+          cmake --build .
+          cp -r * ../../../../test_suites/
+
+      - name: Run integration tests with latest commit SDK
+        run: |
+          cd test_suites
+          /usr/bin/time -v python integration_test.py 2>&1 | tee latest_commit_sdk_test.log
+
+      - name: Clean up latest commit SDK binaries
+        run: |
+          find test_suites -maxdepth 1 -type f ! -name 'integration_test.py' ! -name 'latest_commit_sdk_test.log' ! -name 'latest_release_sdk_test.log' -exec rm -rf {} +
+
+      - name: Build and run CppDynamic with latest release SDK
+        run: |
+          sh latest_release_lib3mf_sdk/Examples/CppDynamic/GenerateMake.sh
+          cd latest_release_lib3mf_sdk/Examples/CppDynamic/build
+          cmake --build .
+          cp -r * ../../../../test_suites/
+
+      - name: Run integration tests with latest release SDK
+        run: |
+          cd test_suites
+          /usr/bin/time -v python integration_test.py 2>&1 | tee latest_release_sdk_test.log
+
+      - name: Compare results (Checks the total python script execution time)
+        run: |
+          LATEST_COMMIT_TIME=$(grep "Elapsed (wall clock) time" test_suites/latest_commit_sdk_test.log | awk '{print $8}')
+          LATEST_RELEASE_TIME=$(grep "Elapsed (wall clock) time" test_suites/latest_release_sdk_test.log | awk '{print $8}')
+          LATEST_COMMIT_TOTAL_SECONDS=$(echo $LATEST_COMMIT_TIME | awk -F: '{ print ($1 * 60) + $2 }')
+          LATEST_RELEASE_TOTAL_SECONDS=$(echo $LATEST_RELEASE_TIME | awk -F: '{ print ($1 * 60) + $2 }')
+          echo "Latest commit SDK execution time in seconds: ${LATEST_COMMIT_TOTAL_SECONDS}"
+          echo "Latest release SDK execution time in seconds: ${LATEST_RELEASE_TOTAL_SECONDS}"
+          # Compare the total seconds
+          if (( $(echo "$LATEST_COMMIT_TOTAL_SECONDS < $LATEST_RELEASE_TOTAL_SECONDS" | bc -l) )); then
+            echo "Latest commit is better"
+          else
+            echo "Latest release is better"
+          fi
