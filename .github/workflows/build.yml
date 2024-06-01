@@ -1,7 +1,7 @@
 on: [push, pull_request]
 env:
   # Set this to "on" to enable integration tests and "off" to skip integration tests
-  RUN_INTEGRATION_TESTS: "off"
+  RUN_INTEGRATION_TESTS: "on"
 name: Build
 jobs:
   build-linux-memtest:
@@ -623,6 +623,7 @@ jobs:
           cd test_suites && /usr/bin/time -v python integration_test.py 2>&1 | tee latest_release_sdk_test.log
 
       - name: Compare results (Checks the total python script execution time)
+        id: compare_results
         run: |
           LATEST_COMMIT_TIME=$(grep "Elapsed (wall clock) time" test_suites/latest_commit_sdk_test.log | awk '{print $8}')
           LATEST_RELEASE_TIME=$(grep "Elapsed (wall clock) time" test_suites/latest_release_sdk_test.log | awk '{print $8}')
@@ -636,3 +637,11 @@ jobs:
           else
             echo "Latest release is better"
           fi
+          echo "${{ github.sha }} ${LATEST_COMMIT_TOTAL_SECONDS}" > results.txt
+          echo "${{ env.LATEST_RELEASE_NAME }} ${LATEST_RELEASE_TOTAL_SECONDS}" >> results.txt
+
+      - name: Upload results artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: integration-test-results
+          path: results.txt
