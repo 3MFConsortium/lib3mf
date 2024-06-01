@@ -1,4 +1,7 @@
 on: [push, pull_request]
+env:
+  # Set this to "on" to enable integration tests and "off" to skip integration tests
+  RUN_INTEGRATION_TESTS: "off"
 name: Build
 jobs:
   build-linux-memtest:
@@ -300,8 +303,7 @@ jobs:
   integration-tests-latest-release:
     runs-on: ubuntu-20.04
     needs: [deploy-linux, deploy-windows, deploy-macos]
-    # comment / uncomment the following line if this is only needed for a release event
-#    if: github.event_name == 'release'
+    if: env.RUN_INTEGRATION_TESTS == 'on' # Single check before the job starts
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -365,8 +367,7 @@ jobs:
   integration-tests-last-two-releases:
     runs-on: ubuntu-20.04
     needs: [deploy-linux, deploy-windows, deploy-macos]
-    # comment or uncomment the following line if this is only needed for a release event
-#    if: github.event_name == 'release'
+    if: env.RUN_INTEGRATION_TESTS == 'on' # Single check before the job starts
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -468,6 +469,7 @@ jobs:
   integration-tests-latest-commit:
     runs-on: ubuntu-20.04
     needs: [deploy-linux, deploy-windows, deploy-macos]
+    if: env.RUN_INTEGRATION_TESTS == 'on' # Single check before the job starts
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -521,7 +523,8 @@ jobs:
 
   integration-test-last-commit-and-last-release:
     runs-on: ubuntu-20.04
-    needs: [ deploy-linux, deploy-windows, deploy-macos ]
+    needs: [deploy-linux, deploy-windows, deploy-macos]
+    if: env.RUN_INTEGRATION_TESTS == 'on' # Single check before the job starts
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
