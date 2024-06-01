@@ -573,7 +573,7 @@ jobs:
 
       - name: Clean up latest SDK binaries
         run: |
-          find test_suites -maxdepth 1 -type f ! -name 'integration_test.py' ! -name 'latest_sdk_test.log' ! -name 'second_latest_sdk_test.log' -exec rm -rf {} +
+          find test_suites -maxdepth 1 -type f ! -name 'integration_test.py' ! -name '*.log' -exec rm -rf {} +
 
       - name: Get latest lib3mf SDK release info from GitHub API
         id: get_latest_release
