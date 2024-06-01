@@ -521,7 +521,7 @@ jobs:
 
   integration-test-last-commit-and-last-release:
     runs-on: ubuntu-20.04
-    needs: [deploy-linux, deploy-windows, deploy-macos]
+    needs: [ deploy-linux, deploy-windows, deploy-macos ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -537,29 +537,22 @@ jobs:
         run: |
           python -m pip install --upgrade pip
 
-      - name: Get latest lib3mf SDK release info from GitHub API
-        id: get_latest_release
-        run: |
-          LATEST_LIB3MF_URL=$(curl -s https://api.github.com/repos/3MFConsortium/lib3mf/releases/latest | grep "browser_download_url.*zip" | cut -d '"' -f 4)
-          echo "LATEST_LIB3MF_URL=${LATEST_LIB3MF_URL}" >> $GITHUB_ENV
-
       - name: Download lib3mf_sdk artifact from latest commit
         uses: actions/download-artifact@v2
         with:
           name: lib3mf_sdk.zip
           path: latest_commit_lib3mf_sdk.zip
 
-      - name: Download latest lib3mf SDK release zip
-        run: |
-          wget ${{ env.LATEST_LIB3MF_URL }} -O latest_release_lib3mf_sdk.zip
-
       - name: Unpack the SDK from latest commit
         run: |
           unzip latest_commit_lib3mf_sdk.zip -d latest_commit_lib3mf_sdk
 
-      - name: Unpack the SDK from latest release
+      - name: Build CppDynamic with latest commit SDK
         run: |
-          unzip latest_release_lib3mf_sdk.zip -d latest_release_lib3mf_sdk
+          sh latest_commit_lib3mf_sdk/Examples/CppDynamic/GenerateMake.sh
+          cd latest_commit_lib3mf_sdk/Examples/CppDynamic/build
+          cmake --build .
+          ./Example_ExtractInfo ../../Files/Helix.3mf
 
       - name: Download and unzip test suite
         run: |
@@ -570,33 +563,42 @@ jobs:
         run: |
           cp CI/integration_test.py test_suites/
 
-      - name: Build and run CppDynamic with latest commit SDK
+      - name: Copy latest commit SDK to test suite
         run: |
-          sh latest_commit_lib3mf_sdk/Examples/CppDynamic/GenerateMake.sh
-          cd latest_commit_lib3mf_sdk/Examples/CppDynamic/build
-          cmake --build .
-          cp -r * ../../../../test_suites/
+          cp -r latest_commit_lib3mf_sdk/Examples/CppDynamic/build/* test_suites/
 
       - name: Run integration tests with latest commit SDK
         run: |
-          cd test_suites
-          /usr/bin/time -v python integration_test.py 2>&1 | tee latest_commit_sdk_test.log
+          cd test_suites && /usr/bin/time -v python integration_test.py 2>&1 | tee latest_commit_sdk_test.log
 
-      - name: Clean up latest commit SDK binaries
+      - name: Get latest lib3mf SDK release info from GitHub API
+        id: get_latest_release
         run: |
-          find test_suites -maxdepth 1 -type f ! -name 'integration_test.py' ! -name 'latest_commit_sdk_test.log' ! -name 'latest_release_sdk_test.log' -exec rm -rf {} +
+          LATEST_LIB3MF_URL=$(curl -s https://api.github.com/repos/3MFConsortium/lib3mf/releases/latest | grep "browser_download_url.*zip" | cut -d '"' -f 4)
+          echo "LATEST_LIB3MF_URL=${LATEST_LIB3MF_URL}" >> $GITHUB_ENV
 
-      - name: Build and run CppDynamic with latest release SDK
+      - name: Download latest lib3mf SDK release zip
+        run: |
+          wget ${{ env.LATEST_LIB3MF_URL }} -O latest_release_lib3mf_sdk.zip
+
+      - name: Unpack the SDK from latest release
+        run: |
+          unzip latest_release_lib3mf_sdk.zip -d latest_release_lib3mf_sdk
+
+      - name: Build CppDynamic with latest release SDK
         run: |
           sh latest_release_lib3mf_sdk/Examples/CppDynamic/GenerateMake.sh
           cd latest_release_lib3mf_sdk/Examples/CppDynamic/build
           cmake --build .
-          cp -r * ../../../../test_suites/
+          ./Example_ExtractInfo ../../Files/Helix.3mf
+
+      - name: Copy latest release SDK to test suite
+        run: |
+          cp -r latest_release_lib3mf_sdk/Examples/CppDynamic/build/* test_suites/
 
       - name: Run integration tests with latest release SDK
         run: |
-          cd test_suites
-          /usr/bin/time -v python integration_test.py 2>&1 | tee latest_release_sdk_test.log
+          cd test_suites && /usr/bin/time -v python integration_test.py 2>&1 | tee latest_release_sdk_test.log
 
       - name: Compare results (Checks the total python script execution time)
         run: |
@@ -612,3 +614,4 @@ jobs:
           else
             echo "Latest release is better"
           fi
+  
