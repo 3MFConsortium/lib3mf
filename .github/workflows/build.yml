@@ -300,10 +300,25 @@ jobs:
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
 
-  integration-tests-latest-release:
+  set-integration-tests-status:
     runs-on: ubuntu-20.04
     needs: [deploy-linux, deploy-windows, deploy-macos]
-    if: ${{ env.RUN_INTEGRATION_TESTS == 'on' }} # Single check before the job starts
+    outputs:
+      run_integration_tests: ${{ steps.set-status.outputs.run_integration_tests }}
+    steps:
+      - name: Set status
+        id: set-status
+        run: |
+          if [ "${{ env.RUN_INTEGRATION_TESTS }}" == "on" ]; then
+            echo "::set-output name=run_integration_tests::true"
+          else
+            echo "::set-output name=run_integration_tests::false"
+          fi
+
+  integration-tests-latest-release:
+    runs-on: ubuntu-20.04
+    needs: [set-integration-tests-status]
+    if: needs.set-integration-tests-status.outputs.run_integration_tests == 'true' # Single check before the job starts
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -366,8 +381,8 @@ jobs:
 
   integration-tests-last-two-releases:
     runs-on: ubuntu-20.04
-    needs: [deploy-linux, deploy-windows, deploy-macos]
-    if: ${{ env.RUN_INTEGRATION_TESTS == 'on' }} # Single check before the job starts
+    needs: [set-integration-tests-status]
+    if: needs.set-integration-tests-status.outputs.run_integration_tests == 'true' # Single check before the job starts
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -468,8 +483,8 @@ jobs:
 
   integration-tests-latest-commit:
     runs-on: ubuntu-20.04
-    needs: [deploy-linux, deploy-windows, deploy-macos]
-    if: ${{ env.RUN_INTEGRATION_TESTS == 'on' }} # Single check before the job starts
+    needs: [set-integration-tests-status]
+    if: needs.set-integration-tests-status.outputs.run_integration_tests == 'true' # Single check before the job starts
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -523,8 +538,8 @@ jobs:
 
   integration-test-last-commit-and-last-release:
     runs-on: ubuntu-20.04
-    needs: [deploy-linux, deploy-windows, deploy-macos]
-    if: ${{ env.RUN_INTEGRATION_TESTS == 'on' }} # Single check before the job starts
+    needs: [set-integration-tests-status]
+    if: needs.set-integration-tests-status.outputs.run_integration_tests == 'true' # Single check before the job starts
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
