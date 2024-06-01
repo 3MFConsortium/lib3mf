@@ -598,6 +598,8 @@ jobs:
         run: |
           LATEST_LIB3MF_URL=$(curl -s https://api.github.com/repos/3MFConsortium/lib3mf/releases/latest | grep "browser_download_url.*zip" | cut -d '"' -f 4)
           echo "LATEST_LIB3MF_URL=${LATEST_LIB3MF_URL}" >> $GITHUB_ENV
+          LATEST_RELEASE_NAME=$(curl -s https://api.github.com/repos/3MFConsortium/lib3mf/releases/latest | grep '"tag_name"' | cut -d '"' -f 4)
+          echo "LATEST_RELEASE_NAME=${LATEST_RELEASE_NAME}" >> $GITHUB_ENV
 
       - name: Download latest lib3mf SDK release zip
         run: |
@@ -637,8 +639,8 @@ jobs:
           else
             echo "Latest release is better"
           fi
-          echo "${{ github.sha }} ${LATEST_COMMIT_TOTAL_SECONDS}" > results.txt
-          echo "${{ env.LATEST_RELEASE_NAME }} ${LATEST_RELEASE_TOTAL_SECONDS}" >> results.txt
+          echo "Latest commit with SHA ${{ github.sha }} ran in ${LATEST_COMMIT_TOTAL_SECONDS} seconds" > results.txt
+          echo "Latest release with tag ${{ env.LATEST_RELEASE_NAME }} ran in ${LATEST_RELEASE_TOTAL_SECONDS} seconds" >> results.txt
 
       - name: Upload results artifact
         uses: actions/upload-artifact@v2
