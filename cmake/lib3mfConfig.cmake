@@ -76,13 +76,19 @@ else()
     # Define a custom function to handle library copying
     function(copy_lib3mf_libraries target)
         if(TARGET ${target})
-            if(APPLE)
-                # On macOS, copy .dylib files, preserving symlinks
-                add_custom_command(TARGET ${target} POST_BUILD
-                        COMMAND sh -c "cp -P '${lib3mf_LIBRARY_DIR}/lib3mf.dylib'* '$<TARGET_FILE_DIR:${target}>' >/dev/null 2>&1 || true"
-                        COMMENT "Copying all lib3mf library files to target directory on MacOS")
+        if(APPLE)
+            # On macOS, copy .dylib files, preserving symlinks only if they don't already exist in the target directory
+            add_custom_command(TARGET ${target} POST_BUILD
+                    COMMAND sh -c "for file in '${lib3mf_LIBRARY_DIR}/lib3mf.dylib'*; do \
+                          target_file='$<TARGET_FILE_DIR:${target}/$(basename $file)'; \
+                          if [ ! -f \"$target_file\" ]; then \
+                              cp -P \"$file\" \"$target_file\"; \
+                          fi; \
+                       done"
+                    COMMENT "Copying all lib3mf library files to target directory on MacOS")
 
-            elseif(UNIX)
+
+        elseif(UNIX)
                 # On Unix-like systems (excluding macOS), copy .so files, preserving symlinks
                 add_custom_command(TARGET ${target} POST_BUILD
                         COMMAND sh -c "cp -P '${lib3mf_LIBRARY_DIR}/lib3mf.so'* '$<TARGET_FILE_DIR:${target}>'"
