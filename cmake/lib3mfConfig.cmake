@@ -79,8 +79,9 @@ else()
             if(APPLE)
                 # On macOS, copy .dylib files, preserving symlinks
                 add_custom_command(TARGET ${target} POST_BUILD
-                        COMMAND sh -c "cp -P '${lib3mf_LIBRARY_DIR}/lib3mf.dylib'* '$<TARGET_FILE_DIR:${target}>'"
+                        COMMAND sh -c "if [ ! -f '$<TARGET_FILE_DIR:${target}>/lib3mf.dylib' ]; then cp -P '${lib3mf_LIBRARY_DIR}/lib3mf.dylib'* '$<TARGET_FILE_DIR:${target}>'; fi"
                         COMMENT "Copying all lib3mf library files to target directory on MacOS")
+
             elseif(UNIX)
                 # On Unix-like systems (excluding macOS), copy .so files, preserving symlinks
                 add_custom_command(TARGET ${target} POST_BUILD
