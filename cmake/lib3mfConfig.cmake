@@ -79,8 +79,8 @@ else()
         if(APPLE)
             # On macOS, copy .dylib files, preserving symlinks only if they don't already exist in the target directory
             add_custom_command(TARGET ${target} POST_BUILD
-                    COMMAND sh -c "for file in '${lib3mf_LIBRARY_DIR}/lib3mf.dylib'*; do target_file='$<TARGET_FILE_DIR:${target}/$(basename $file)'; [ ! -f \"$target_file\" ] && cp -P \"$file\" \"$target_file\"; done"
-                    COMMENT "Copying all lib3mf library files to target directory on MacOS")
+                    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${lib3mf_LIBRARY_DIR}/lib3mf.dylib" "$<TARGET_FILE_DIR:${target}>"
+                    COMMENT "Copying lib3mf.dylib to target directory on macOS")
 
 
         elseif(UNIX)
