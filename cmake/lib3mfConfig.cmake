@@ -79,7 +79,7 @@ else()
             if(APPLE)
                 # On macOS, copy .dylib files, preserving symlinks
                 add_custom_command(TARGET ${target} POST_BUILD
-                        COMMAND sh -c "cp -P '${lib3mf_LIBRARY_DIR}/lib3mf.dylib'* '$<TARGET_FILE_DIR:${target}>'"
+                        COMMAND sh -c "cp -P '${lib3mf_LIBRARY_DIR}/lib3mf.dylib'* '$<TARGET_FILE_DIR:${target}>' || true"
                         COMMENT "Copying all lib3mf library files to target directory on MacOS")
 
             elseif(UNIX)
