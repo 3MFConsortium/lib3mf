@@ -36,7 +36,7 @@ jobs:
           fi
 
           # Set the environment variable
-#          echo "LIB3MF_VERSION=$LIB3MF_VERSION" >> $GITHUB_ENV
+          # echo "LIB3MF_VERSION=$LIB3MF_VERSION" >> $GITHUB_ENV
           
           # Always exit with success
           exit 0
