@@ -353,7 +353,7 @@ jobs:
           ./Example_ExtractInfo ../../Files/Helix.3mf
       - name: Python Bindings
         run: |
-          python Examples/Python/extract_info.py ../../Files/Helix.3mf
+          python Examples/Python/extract_info.py Examples/Files/Helix.3mf
       - name: Checkout code
         uses: actions/checkout@v2
         with:
@@ -432,7 +432,7 @@ jobs:
           ./Release/Example_ExtractInfo.exe ../../Files/Helix.3mf
       - name: Python Bindings
         run: |
-          python Examples/Python/extract_info.py ../../Files/Helix.3mf
+          python Examples/Python/extract_info.py Examples/Files/Helix.3mf
       - name: Checkout code
         uses: actions/checkout@v2
         with:
@@ -484,7 +484,7 @@ jobs:
           ./Example_ExtractInfo ../../Files/Helix.3mf
       - name: Python Bindings
         run: |
-          python Examples/Python/extract_info.py ../../Files/Helix.3mf
+          python Examples/Python/extract_info.py Examples/Files/Helix.3mf
       - name: Checkout code
         uses: actions/checkout@v2
         with:
