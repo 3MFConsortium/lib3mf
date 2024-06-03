@@ -14,10 +14,9 @@ jobs:
       - run: cat CMakeLists.txt
       - name: Run version extraction script and set environment variable
         run: |
-            version=$(python CI/extract_version.py)
-            echo "LIB3MF_VERSION=$version" >> $GITHUB_ENV
-            - name: Print GITHUB_ENV contents
-              run: cat $GITHUB_ENV
+            echo "LIB3MF_VERSION=$(python CI/extract_version.py)" >> $GITHUB_ENV
+      - name: Print GITHUB_ENV contents
+        run: cat $GITHUB_ENV
 
   build-linux-memtest:
     runs-on: ubuntu-20.04
