@@ -1,13 +1,36 @@
 on: [push, pull_request]
 env:
-  LIB3MF_VERSION: "2.3.1"
   # Set this to "on" to enable integration tests and "off" to skip integration tests
   RUN_INTEGRATION_TESTS: "on"
 name: Build
 jobs:
+  set-lib3mf-version:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Extract and set LIB3MF_VERSION
+        run: |
+          # Extract version components from CMakeLists.txt
+          LIB3MF_VERSION_MAJOR=$(grep -oP 'set\(LIB3MF_VERSION_MAJOR \K[0-9]+' CMakeLists.txt)
+          LIB3MF_VERSION_MINOR=$(grep -oP 'set\(LIB3MF_VERSION_MINOR \K[0-9]+' CMakeLists.txt)
+          LIB3MF_VERSION_MICRO=$(grep -oP 'set\(LIB3MF_VERSION_MICRO \K[0-9]+' CMakeLists.txt)
+          LIB3MF_VERSION_PRERELEASE=$(grep -oP 'set\(LIB3MF_VERSION_PRERELEASE "\K[^"]+' CMakeLists.txt)
+
+          # Combine the version components
+          if [ -z "$LIB3MF_VERSION_PRERELEASE" ]; then
+            LIB3MF_VERSION="${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}"
+          else
+            LIB3MF_VERSION="${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}-${LIB3MF_VERSION_PRERELEASE}"
+          fi
+
+          # Set the environment variable
+          echo "LIB3MF_VERSION=$LIB3MF_VERSION" >> $GITHUB_ENV
 
   build-linux-memtest:
     runs-on: ubuntu-20.04
+    needs: [set-lib3mf-version]
     steps:
       - run: sudo apt update
       - run: sudo apt install -y valgrind uuid-dev
@@ -20,6 +43,7 @@ jobs:
 
   build-linux-ubi8-gcc12:
     runs-on: ubuntu-20.04
+    needs: [set-lib3mf-version]
     steps:
       - run: sudo apt update
       - run: sudo apt install -y uuid-dev
@@ -93,6 +117,7 @@ jobs:
 
   build-macos:
     runs-on: macos-latest
+    needs: [set-lib3mf-version]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -122,6 +147,7 @@ jobs:
 
   build-macos-debug:
     runs-on: macos-latest
+    needs: [set-lib3mf-version]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -139,6 +165,7 @@ jobs:
 
   codecoverage-macos:
     runs-on: macos-latest
+    needs: [set-lib3mf-version]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -166,6 +193,7 @@ jobs:
           
   build-windows-release:
     runs-on: windows-2019
+    needs: [set-lib3mf-version]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -200,6 +228,7 @@ jobs:
 
   build-windows-debug:
     runs-on: windows-2019
+    needs: [set-lib3mf-version]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -224,6 +253,7 @@ jobs:
           path: build/Debug/lib3mf.lib
   build-windows-32bit:
     runs-on: windows-2019
+    needs: [set-lib3mf-version]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -245,6 +275,7 @@ jobs:
           path: build_32bit/Release/lib3mf.lib
   build-mingw-w64:
     runs-on: windows-2019
+    needs: [set-lib3mf-version]
     steps:
       - run: choco install mingw -y
       - uses: actions/checkout@v2
