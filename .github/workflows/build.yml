@@ -10,13 +10,9 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - run: ls -al
-      - run: cat CMakeLists.txt
       - name: Run version extraction script and set environment variable
         run: |
             echo "LIB3MF_VERSION=$(python CI/extract_version.py)" >> $GITHUB_ENV
-      - name: Print GITHUB_ENV contents
-        run: cat $GITHUB_ENV
 
   build-linux-memtest:
     runs-on: ubuntu-20.04
@@ -355,6 +351,9 @@ jobs:
           cd Examples/Cpp/build
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
+      - name: Python Bindings
+        run: |
+          python Examples/Python/extract_info.py ../../Files/Helix.3mf
       - name: Checkout code
         uses: actions/checkout@v2
         with:
@@ -431,6 +430,9 @@ jobs:
           cd Examples/Cpp/build
           cmake --build . --config Release
           ./Release/Example_ExtractInfo.exe ../../Files/Helix.3mf
+      - name: Python Bindings
+        run: |
+          python Examples/Python/extract_info.py ../../Files/Helix.3mf
       - name: Checkout code
         uses: actions/checkout@v2
         with:
@@ -480,6 +482,9 @@ jobs:
           cd Examples/Cpp/build
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
+      - name: Python Bindings
+        run: |
+          python Examples/Python/extract_info.py ../../Files/Helix.3mf
       - name: Checkout code
         uses: actions/checkout@v2
         with:
