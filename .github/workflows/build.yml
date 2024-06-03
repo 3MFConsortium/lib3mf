@@ -17,6 +17,12 @@ jobs:
           LIB3MF_VERSION_MINOR=$(grep -oP 'set\(LIB3MF_VERSION_MINOR \K[0-9]+' CMakeLists.txt)
           LIB3MF_VERSION_MICRO=$(grep -oP 'set\(LIB3MF_VERSION_MICRO \K[0-9]+' CMakeLists.txt)
           LIB3MF_VERSION_PRERELEASE=$(grep -oP 'set\(LIB3MF_VERSION_PRERELEASE "\K[^"]+' CMakeLists.txt)
+          
+          # Debug prints
+          echo "LIB3MF_VERSION_MAJOR=$LIB3MF_VERSION_MAJOR"
+          echo "LIB3MF_VERSION_MINOR=$LIB3MF_VERSION_MINOR"
+          echo "LIB3MF_VERSION_MICRO=$LIB3MF_VERSION_MICRO"
+          echo "LIB3MF_VERSION_PRERELEASE=$LIB3MF_VERSION_PRERELEASE"
 
           # Combine the version components
           if [ -z "$LIB3MF_VERSION_PRERELEASE" ]; then
