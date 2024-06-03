@@ -14,6 +14,8 @@ jobs:
       - run: cat CMakeLists.txt
       - name: Extract and set LIB3MF_VERSION
         run: |
+          set -e  # Exit immediately if a command exits with a non-zero status.
+          
           # Extract version components from CMakeLists.txt
           LIB3MF_VERSION_MAJOR=$(grep -oP 'set\(LIB3MF_VERSION_MAJOR \K[0-9]+' CMakeLists.txt)
           LIB3MF_VERSION_MINOR=$(grep -oP 'set\(LIB3MF_VERSION_MINOR \K[0-9]+' CMakeLists.txt)
@@ -35,6 +37,8 @@ jobs:
 
           # Set the environment variable
           echo "LIB3MF_VERSION=$LIB3MF_VERSION" >> $GITHUB_ENV
+      - name: Print GITHUB_ENV contents
+        run: cat $GITHUB_ENV
 
   build-linux-memtest:
     runs-on: ubuntu-20.04
