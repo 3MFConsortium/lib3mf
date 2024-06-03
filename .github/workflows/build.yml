@@ -347,18 +347,18 @@ jobs:
       - name: Unpack the cpacked SDK
         run: |
           unzip lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip && ls -Rl
-      - name: Build CppDynamicNew
+      - name: Build CppDynamic - CPack (Linux)
         run: | 
-          sh SDK/CPackExamples/CppDynamicNew/GenerateMake.sh
-          cd SDK/CPackExamples/CppDynamicNew/build
+          sh SDK/CPackExamples/CppDynamic/GenerateMake.sh
+          cd SDK/CPackExamples/CppDynamic/build
           cmake --build .
-          ./Example_ExtractInfo ../../Examples/Files/Helix.3mf
-      - name: Build CppNew
+          ./Example_ExtractInfo ../../../Examples/Files/Helix.3mf
+      - name: Build Cpp - CPack (Linux)
         run: |
-          sh SDK/CPackExamples/CppNew/GenerateMake.sh
-          cd SDK/CPackExamples/CppNew/build
+          sh SDK/CPackExamples/Cpp/GenerateMake.sh
+          cd SDK/CPackExamples/Cpp/build
           cmake --build .
-          ./Example_ExtractInfo ../../Examples/Files/Helix.3mf
+          ./Example_ExtractInfo ../../../Examples/Files/Helix.3mf
       - name: Download lib3mf (Debian Linux)
         uses: actions/download-artifact@v2
         with:
@@ -373,18 +373,18 @@ jobs:
       - name: Install the debian package
         run: |
           sudo dpkg -i lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
-      - name: Build CppDynamicNew (Debian)
+      - name: Build CppDynamic - CPack (Debian)
         run: |
-          sh SDK/CPackExamples/CppDynamicNew/GenerateMake.sh
-          cd SDK/CPackExamples/CppDynamicNew/build
+          sh SDK/CPackExamples/CppDynamic/GenerateMake.sh
+          cd SDK/CPackExamples/CppDynamic/build
           cmake --build .
-          ./Example_ExtractInfo ../../Examples/Files/Helix.3mf
-      - name: Build CppNew (Debian)
+          ./Example_ExtractInfo ../../../Examples/Files/Helix.3mf
+      - name: Build Cpp - CPack (Debian)
         run: |
-          sh SDK/CPackExamples/CppNew/GenerateMake.sh
-          cd SDK/CPackExamples/CppNew/build
+          sh SDK/CPackExamples/Cpp/GenerateMake.sh
+          cd SDK/CPackExamples/Cpp/build
           cmake --build .
-          ./Example_ExtractInfo ../../Examples/Files/Helix.3mf
+          ./Example_ExtractInfo ../../../Examples/Files/Helix.3mf
 
   deploy-windows:
     runs-on: windows-2019
@@ -424,18 +424,16 @@ jobs:
           unzip lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip/lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
       - name: Build CppDynamic - CPack (Windows)
         run: | 
-          ./SDK/CPackExamples/CppDynamicNew/GenerateVS2019.bat
-          cd SDK/CPackExamples/CppDynamicNew/build
+          ./SDK/CPackExamples/CppDynamic/GenerateVS2019.bat
+          cd SDK/CPackExamples/CppDynamic/build
           cmake --build . --config Release
-          ls ../../
-          ./Release/Example_ExtractInfo.exe ../../Examples/Files/Helix.3mf
+          ./Release/Example_ExtractInfo.exe ../../../Examples/Files/Helix.3mf
       - name: Build Cpp - CPack (Windows)
         run: |
-          ./SDK/CPackExamples/CppNew/GenerateVS2019.bat
-          cd SDK/CPackExamples/CppNew/build
+          ./SDK/CPackExamples/Cpp/GenerateVS2019.bat
+          cd SDK/CPackExamples/Cpp/build
           cmake --build . --config Release
-          ls ../../
-          ./Release/Example_ExtractInfo.exe ../../Examples/Files/Helix.3mf
+          ./Release/Example_ExtractInfo.exe ../../../Examples/Files/Helix.3mf
 
   deploy-macos:
     runs-on: macos-latest
@@ -474,18 +472,18 @@ jobs:
       - name: Unpack the cpacked SDK (Darwin)
         run: |
           unzip lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip/lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip
-      - name: Build CppDynamicNew (Darwin)
+      - name: Build CppDynamic - CPack (Darwin)
         run: |
-          sh SDK/CPackExamples/CppDynamicNew/GenerateMake.sh
-          cd SDK/CPackExamples/CppDynamicNew/build
+          sh SDK/CPackExamples/CppDynamic/GenerateMake.sh
+          cd SDK/CPackExamples/CppDynamic/build
           cmake --build .
-          ./Example_ExtractInfo ../../Examples/Files/Helix.3mf
-      - name: Build CppNew (Darwin)
+          ./Example_ExtractInfo ../../../Examples/Files/Helix.3mf
+      - name: Build Cpp - CPack (Darwin)
         run: |
-          sh SDK/CPackExamples/CppNew/GenerateMake.sh
-          cd SDK/CPackExamples/CppNew/build
+          sh SDK/CPackExamples/Cpp/GenerateMake.sh
+          cd SDK/CPackExamples/Cpp/build
           cmake --build .
-          ./Example_ExtractInfo ../../Examples/Files/Helix.3mf
+          ./Example_ExtractInfo ../../../Examples/Files/Helix.3mf
 
 
   set-integration-tests-status:
