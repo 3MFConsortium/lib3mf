@@ -10,9 +10,13 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
+      - run: ls -al
+      - run: cat CMakeLists.txt
       - name: Run version extraction script and set environment variable
         run: |
-            echo "LIB3MF_VERSION=$(python CI/extract_version.py)" >> $GITHUB_ENV
+          echo "LIB3MF_VERSION=$(python CI/extract_version.py)" >> $GITHUB_ENV
+      - name: Print GITHUB_ENV contents
+        run: cat $GITHUB_ENV
 
   build-linux-memtest:
     runs-on: ubuntu-20.04
