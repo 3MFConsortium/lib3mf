@@ -340,6 +340,11 @@ jobs:
           name: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip
           path: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip
       - run: ls -Rl .
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - run: ls -Rl .
       - name: Unpack the cpacked SDK
         run: |
           unzip lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip && ls -Rl
@@ -411,6 +416,11 @@ jobs:
         with:
           name: lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
           path: lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - run: ls -Rl .
       - name: Unpack the cpacked SDK
         run: |
           unzip lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip/lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
@@ -456,6 +466,11 @@ jobs:
         with:
           name: lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip
           path: lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip
+      - run: ls -Rl .
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: true
       - run: ls -Rl .
       - name: Unpack the cpacked SDK (Darwin)
         run: |
