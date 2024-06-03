@@ -6,17 +6,19 @@ name: Build
 jobs:
   set-lib3mf-version:
     runs-on: ubuntu-20.04
+    outputs:
+      lib3mf-version: ${{ steps.set-version.outputs.LIB3MF_VERSION }}
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - run: ls -al
-      - run: cat CMakeLists.txt
       - name: Run version extraction script and set environment variable
+        id: set-version
         run: |
-          echo "LIB3MF_VERSION=$(python CI/extract_version.py)" >> $GITHUB_ENV
-      - name: Print GITHUB_ENV contents
-        run: cat $GITHUB_ENV
+          LIB3MF_VERSION=$(python CI/extract_version.py)
+          echo "::set-output name=LIB3MF_VERSION::$LIB3MF_VERSION"
+      - name: Echo version for debug
+        run: echo ${{ steps.set-version.outputs.LIB3MF_VERSION }}
 
   build-linux-memtest:
     runs-on: ubuntu-20.04
