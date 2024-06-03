@@ -305,28 +305,28 @@ jobs:
       - name: Archive SDK artifact (CPack - Linux)
         uses: actions/upload-artifact@v2
         with:
-          name: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip
-          path: build/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip
+          name: lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Linux.zip
+          path: build/lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Linux.zip
       - name: Archive SDK artifact (CPack - Windows)
         uses: actions/upload-artifact@v2
         with:
-          name: lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
-          path: build/lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
+          name: lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Windows.zip
+          path: build/lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Windows.zip
       - name: Archive SDK artifact (CPack - Darwin)
         uses: actions/upload-artifact@v2
         with:
-          name: lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip
-          path: build/lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip
+          name: lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Darwin.zip
+          path: build/lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Darwin.zip
       - name: Archive SDK artifact (CPack - Debian)
         uses: actions/upload-artifact@v2
         with:
-          name: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
-          path: build/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
+          name: lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Linux.deb
+          path: build/lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Linux.deb
       - name: Archive SDK artifact (CPack - RPM)
         uses: actions/upload-artifact@v2
         with:
-          name: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.rpm
-          path: build/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.rpm
+          name: lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Linux.rpm
+          path: build/lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Linux.rpm
 
 
   deploy-linux:
@@ -368,11 +368,11 @@ jobs:
       - name: Download lib3mf cpack (Linux)
         uses: actions/download-artifact@v2
         with:
-          name: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip
-          path: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip
+          name: lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Linux.zip
+          path: lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Linux.zip
       - name: Unpack the cpacked SDK
         run: |
-          unzip lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip && ls -Rl
+          unzip lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Linux.zip/lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Linux.zip && ls -Rl
       - name: Build CppDynamic - CPack (Linux)
         run: | 
           sh SDK/CPackExamples/CppDynamic/GenerateMake.sh
@@ -388,17 +388,17 @@ jobs:
       - name: Download lib3mf (Debian Linux)
         uses: actions/download-artifact@v2
         with:
-          name: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
-          path: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
+          name: lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Linux.deb
+          path: lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Linux.deb
       - name: Check the file type
         run: |
-          file lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
-          file lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
+          file lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Linux.deb
+          file lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Linux.deb/lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Linux.deb
       - run: pwd
       - run: ls -Rl .
       - name: Install the debian package
         run: |
-          sudo dpkg -i lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
+          sudo dpkg -i lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Linux.deb/lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Linux.deb
       - name: Build CppDynamic - CPack (Debian)
         run: |
           sh SDK/CPackExamples/CppDynamic/GenerateMake.sh
@@ -446,11 +446,11 @@ jobs:
       - name: Download lib3mf cpack (Windows)
         uses: actions/download-artifact@v2
         with:
-          name: lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
-          path: lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
+          name: lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Windows.zip
+          path: lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Windows.zip
       - name: Unpack the cpacked SDK
         run: |
-          unzip lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip/lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
+          unzip lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Windows.zip/lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Windows.zip
       - name: Build CppDynamic - CPack (Windows)
         run: | 
           ./SDK/CPackExamples/CppDynamic/GenerateVS2019.bat
@@ -498,12 +498,12 @@ jobs:
       - name: Download lib3mf cpack (Darwin)
         uses: actions/download-artifact@v2
         with:
-          name: lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip
-          path: lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip
+          name: lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Darwin.zip
+          path: lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Darwin.zip
       - run: ls -Rl .
       - name: Unpack the cpacked SDK (Darwin)
         run: |
-          unzip lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip/lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip
+          unzip lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Darwin.zip/lib3mf-${{ needs.set-lib3mf-version.outputs.lib3mf-version }}-Darwin.zip
       - name: Build CppDynamic - CPack (Darwin)
         run: |
           sh SDK/CPackExamples/CppDynamic/GenerateMake.sh
