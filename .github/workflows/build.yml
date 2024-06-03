@@ -410,31 +410,30 @@ jobs:
           cd Examples/Cpp/build
           cmake --build . --config Release
           ./Release/Example_ExtractInfo.exe ../../Files/Helix.3mf
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: true
       - name: Download lib3mf cpack (Windows)
         uses: actions/download-artifact@v2
         with:
           name: lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
           path: lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          submodules: true
-      - run: ls -Rl .
       - name: Unpack the cpacked SDK
         run: |
           unzip lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip/lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
       - name: Build CppDynamic (Windows)
-        run: |
-          ./Examples/CppDynamic/GenerateVS2019.bat
-          cd Examples/CppDynamic/build
+        run: | 
+          ./SDK/CPackExamples/CppDynamicNew/GenerateVS2019.bat
+          cd SDK/CPackExamples/CppDynamicNew/build
           cmake --build . --config Release
-          ./Release/Example_ExtractInfo.exe ../../Files/Helix.3mf
+          ./Release/Example_ExtractInfo.exe ../../Examples/Files/Helix.3mf
       - name: Build Cpp (Windows)
         run: |
-          ./Examples/Cpp/GenerateVS2019.bat
-          cd Examples/Cpp/build
+          ./SDK/CPackExamples/CppNew/GenerateVS2019.bat
+          cd SDK/CPackExamples/CppNew/build
           cmake --build . --config Release
-          ./Release/Example_ExtractInfo.exe ../../Files/Helix.3mf
+          ./Release/Example_ExtractInfo.exe ../../Examples/Files/Helix.3mf
 
   deploy-macos:
     runs-on: macos-latest
