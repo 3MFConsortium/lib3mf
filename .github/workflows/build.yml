@@ -334,17 +334,16 @@ jobs:
           cd Examples/Cpp/build
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - run: ls -Rl
       - name: Download lib3mf cpack (Linux)
         uses: actions/download-artifact@v2
         with:
           name: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip
           path: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip
-      - run: ls -Rl .
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          submodules: true
-      - run: ls -Rl .
       - name: Unpack the cpacked SDK
         run: |
           unzip lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip && ls -Rl
