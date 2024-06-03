@@ -12,36 +12,12 @@ jobs:
           submodules: true
       - run: ls -al
       - run: cat CMakeLists.txt
-      - name: Extract and set LIB3MF_VERSION
+      - name: Run version extraction script and set environment variable
         run: |
-          set -e  # Exit immediately if a command exits with a non-zero status.
-          
-          # Extract version components from CMakeLists.txt
-          LIB3MF_VERSION_MAJOR=$(grep -oP 'set\(LIB3MF_VERSION_MAJOR \K[0-9]+' CMakeLists.txt)
-          LIB3MF_VERSION_MINOR=$(grep -oP 'set\(LIB3MF_VERSION_MINOR \K[0-9]+' CMakeLists.txt)
-          LIB3MF_VERSION_MICRO=$(grep -oP 'set\(LIB3MF_VERSION_MICRO \K[0-9]+' CMakeLists.txt)
-          LIB3MF_VERSION_PRERELEASE=$(grep -oP 'set\(LIB3MF_VERSION_PRERELEASE "\K[^"]+' CMakeLists.txt)
-          
-          # Debug prints
-          echo "LIB3MF_VERSION_MAJOR=$LIB3MF_VERSION_MAJOR"
-          echo "LIB3MF_VERSION_MINOR=$LIB3MF_VERSION_MINOR"
-          echo "LIB3MF_VERSION_MICRO=$LIB3MF_VERSION_MICRO"
-          echo "LIB3MF_VERSION_PRERELEASE=$LIB3MF_VERSION_PRERELEASE"
-
-          # Combine the version components
-          if [ -z "$LIB3MF_VERSION_PRERELEASE" ]; then
-            LIB3MF_VERSION="${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}"
-          else
-            LIB3MF_VERSION="${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}-${LIB3MF_VERSION_PRERELEASE}"
-          fi
-
-          # Set the environment variable
-          # echo "LIB3MF_VERSION=$LIB3MF_VERSION" >> $GITHUB_ENV
-          
-          # Always exit with success
-          exit 0
-      - name: Print GITHUB_ENV contents
-        run: cat $GITHUB_ENV
+            version=$(python CI/extract_version.py)
+            echo "LIB3MF_VERSION=$version" >> $GITHUB_ENV
+            - name: Print GITHUB_ENV contents
+              run: cat $GITHUB_ENV
 
   build-linux-memtest:
     runs-on: ubuntu-20.04
