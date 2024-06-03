@@ -10,6 +10,8 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
+      - run: ls -al
+      - run: cat CMakeLists.txt
       - name: Extract and set LIB3MF_VERSION
         run: |
           # Extract version components from CMakeLists.txt
