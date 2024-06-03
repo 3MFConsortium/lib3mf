@@ -422,17 +422,19 @@ jobs:
       - name: Unpack the cpacked SDK
         run: |
           unzip lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip/lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
-      - name: Build CppDynamic (Windows)
+      - name: Build CppDynamic - CPack (Windows)
         run: | 
           ./SDK/CPackExamples/CppDynamicNew/GenerateVS2019.bat
           cd SDK/CPackExamples/CppDynamicNew/build
           cmake --build . --config Release
+          ls ../../
           ./Release/Example_ExtractInfo.exe ../../Examples/Files/Helix.3mf
-      - name: Build Cpp (Windows)
+      - name: Build Cpp - CPack (Windows)
         run: |
           ./SDK/CPackExamples/CppNew/GenerateVS2019.bat
           cd SDK/CPackExamples/CppNew/build
           cmake --build . --config Release
+          ls ../../
           ./Release/Example_ExtractInfo.exe ../../Examples/Files/Helix.3mf
 
   deploy-macos:
@@ -459,16 +461,15 @@ jobs:
           cd Examples/Cpp/build
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: true
       - name: Download lib3mf cpack (Darwin)
         uses: actions/download-artifact@v2
         with:
           name: lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip
           path: lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip
-      - run: ls -Rl .
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          submodules: true
       - run: ls -Rl .
       - name: Unpack the cpacked SDK (Darwin)
         run: |
