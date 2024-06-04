@@ -16,9 +16,9 @@ jobs:
         id: set-version
         run: |
           LIB3MF_VERSION=$(python CI/extract_version.py)
-          echo "::set-output name=LIB3MF_VERSION::$LIB3MF_VERSION"
+          echo "LIB3MF_VERSION=$LIB3MF_VERSION" >> $GITHUB_OUTPUT
       - name: Echo version for debug
-        run: echo ${{ steps.set-version.outputs.LIB3MF_VERSION }}
+        run: echo "LIB3MF_VERSION=${{ steps.set-version.outputs.LIB3MF_VERSION }}"
 
   build-linux-memtest:
     runs-on: ubuntu-20.04
@@ -180,7 +180,7 @@ jobs:
           name: codecoverage.zip
           path: build/codecoverage.zip
       - name: Upload code coverage to codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./build/Test_CPP_Bindings_filtered.info
@@ -534,7 +534,7 @@ jobs:
 
   set-integration-tests-status:
     runs-on: ubuntu-20.04
-    needs: [deploy-linux, deploy-windows, deploy-macos]
+    needs: [ deploy-linux, deploy-windows, deploy-macos ]
     outputs:
       run_integration_tests: ${{ steps.set-status.outputs.run_integration_tests }}
     steps:
@@ -542,9 +542,9 @@ jobs:
         id: set-status
         run: |
           if [ "${{ env.RUN_INTEGRATION_TESTS }}" == "on" ]; then
-            echo "::set-output name=run_integration_tests::true"
+            echo "run_integration_tests=true" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=run_integration_tests::false"
+            echo "run_integration_tests=false" >> $GITHUB_OUTPUT
           fi
 
   integration-tests-latest-release:
