@@ -282,7 +282,7 @@ jobs:
 
   assemble-sdk:
     runs-on: ubuntu-20.04
-    needs: [build-windows-release, build-macos, build-linux-ubi8-gcc12]
+    needs: [set-lib3mf-version, build-windows-release, build-macos, build-linux-ubi8-gcc12]
     steps:
       - run: sudo apt install -y zip unzip
       - run: mkdir build
@@ -331,7 +331,7 @@ jobs:
 
   deploy-linux:
     runs-on: ubuntu-20.04
-    needs: [assemble-sdk]
+    needs: [set-lib3mf-version, assemble-sdk]
     steps:
       - run: sudo apt install -y zip unzip file
       - run: pwd
@@ -414,7 +414,7 @@ jobs:
 
   deploy-windows:
     runs-on: windows-2019
-    needs: [assemble-sdk]
+    needs: [set-lib3mf-version, assemble-sdk]
     steps:
       - name: Download lib3mf_sdk artifact
         uses: actions/download-artifact@v2
@@ -466,7 +466,7 @@ jobs:
 
   deploy-macos:
     runs-on: macos-latest
-    needs: [assemble-sdk]
+    needs: [set-lib3mf-version, assemble-sdk]
     steps:
       - name: Download lib3mf_sdk artifact
         uses: actions/download-artifact@v2
