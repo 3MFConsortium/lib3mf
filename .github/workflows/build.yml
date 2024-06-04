@@ -310,31 +310,6 @@ jobs:
         with:
           name: lib3mf_sdk.zip
           path: build/lib3mf_sdk.zip
-      - name: Archive SDK artifact (CPack - Linux)
-        uses: actions/upload-artifact@v4
-        with:
-          name: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip
-          path: build/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip
-      - name: Archive SDK artifact (CPack - Windows)
-        uses: actions/upload-artifact@v4
-        with:
-          name: lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
-          path: build/lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
-      - name: Archive SDK artifact (CPack - Darwin)
-        uses: actions/upload-artifact@v4
-        with:
-          name: lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip
-          path: build/lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip
-      - name: Archive SDK artifact (CPack - Debian)
-        uses: actions/upload-artifact@v4
-        with:
-          name: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
-          path: build/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
-      - name: Archive SDK artifact (CPack - RPM)
-        uses: actions/upload-artifact@v4
-        with:
-          name: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.rpm
-          path: build/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.rpm
 
 
   deploy-linux:
