@@ -46,10 +46,10 @@ if (${MSVC})
   # using Visual Studio C++
 
   # this ensures that the min/max macros of minwindef.h are not used
-  add_definitions(-DNOMINMAX /W3)
+  add_definitions(-DNOMINMAX)
 
-  add_definitions(/W3)
-  
+  #add_definitions(/W3)
+
   # add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS)
   # set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
   # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
@@ -131,6 +131,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/I
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
 if (USE_INCLUDED_LIBZIP)
+    # Something goes here to check if submodules exist and initialize the submodules if it does not
     target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/libzip/Include)
     if(MSVC)
       target_compile_definitions(${PROJECT_NAME} PRIVATE _CRT_SECURE_NO_WARNINGS)
@@ -226,6 +227,8 @@ endif(WIN32)
 
 configure_file(lib3mf.pc.in lib3mf.pc @ONLY)
 install(FILES ${CMAKE_BINARY_DIR}/lib3mf.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+install(FILES cmake/lib3mfConfig.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/lib3mf)
 install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
@@ -249,3 +252,21 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${STARTUPPROJECT})
   ENDIF()
 endif()
+
+
+#########################################################
+set(CPACK_PACKAGE_NAME "lib3mf")
+set(CPACK_PACKAGE_VENDOR "3MF Consortium")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "lib3mf - An implementation of the 3D Manufacturing Format file standard")
+set(CPACK_PACKAGE_VERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}")
+set(CPACK_PACKAGE_VERSION_MAJOR "${LIB3MF_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${LIB3MF_VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${LIB3MF_VERSION_MICRO}")
+set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
+set(CPACK_PACKAGE_CONTACT "lib3mf@3mf.io")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "3MF Consortium")
+set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CMAKE_SYSTEM_NAME}")
+set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-Source")
+
+#########################################################
+include(CPack)
