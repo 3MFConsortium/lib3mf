@@ -34,16 +34,19 @@ option(BUILD_FOR_CODECOVERAGE "Build for code coverage analysis" OFF)
 option(STRIP_BINARIES "Strip binaries (on non-apple)" ON)
 option(USE_PLATFORM_UUID "Use UUID geneator that is provided by the OS (always ON for Windows)" OFF)
 
+add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
+set (CMAKE_CXX_STANDARD 17)
+
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
   add_definitions(-DBUILD_DLL)
   add_compile_options(-Wall)
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -O2")
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O2")
 elseif ("${CMAKE_SYSTEM_NAME}" MATCHES "Darwin")
   # using GCC
   add_definitions(-DBUILD_DLL)
   add_compile_options(-Wall) 
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -O2")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O2")
   set(CMAKE_MACOSX_RPATH ON)
 endif()
 
