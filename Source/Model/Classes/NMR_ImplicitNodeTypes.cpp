@@ -338,8 +338,8 @@ namespace NMR
                           In{{"A", eImplicitPortType::Scalar}},
                           Out{{"result", eImplicitPortType::Vector}}},
                   }}},
-                {eImplicitNodeType::Resource,
-                 {"resource",
+                {eImplicitNodeType::ConstResourceID,
+                 {"constresourceid",
                   {
                       InputOutputRule{
                           Lib3MF::eImplicitNodeConfiguration::Default, In{},

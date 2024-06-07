@@ -1092,7 +1092,7 @@ namespace NMR {
 
 				for (auto & node : *pNewImplicitFunction->getNodes())
 				{
-					if (node->getNodeType() == Lib3MF::eImplicitNodeType::Resource)
+					if (node->getNodeType() == Lib3MF::eImplicitNodeType::ConstResourceID)
 					{
 						auto const oldId = pSourceModel->findPackageResourceID(pSourceModel->currentPath(), node->getModelResourceID());
 						if (!oldId)

@@ -133,7 +133,7 @@ namespace NMR
             auto const mat = node.getMatrix();
             writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_MATRIX, mat4x4ToString(mat));
             }
-            else if(node.getNodeType() == Lib3MF::eImplicitNodeType::Resource)
+            else if(node.getNodeType() == Lib3MF::eImplicitNodeType::ConstResourceID)
             {
 				auto resource = node.getResource();
 				if (resource != nullptr)
@@ -146,7 +146,7 @@ namespace NMR
             bool const isNodeWithoutInputs = node.getNodeType() == Lib3MF::eImplicitNodeType::Constant ||
                 node.getNodeType() == Lib3MF::eImplicitNodeType::ConstVec ||
                 node.getNodeType() == Lib3MF::eImplicitNodeType::ConstMat ||
-                node.getNodeType() == Lib3MF::eImplicitNodeType::Resource;
+                node.getNodeType() == Lib3MF::eImplicitNodeType::ConstResourceID;
 
             if (!isNodeWithoutInputs)   // Certain node types are not allowed to have inputs, but may have been set by the producer
             {
