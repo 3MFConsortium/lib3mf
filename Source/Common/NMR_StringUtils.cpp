@@ -38,7 +38,6 @@ correctly and Exception-safe
 #include <cmath>
 #include <string.h>
 #include <vector>
-#include <charconv>
 
 namespace NMR {
 
@@ -151,7 +150,7 @@ namespace NMR {
 
 	nfDouble fnStringToDouble(_In_z_ const nfChar * pszValue)
 	{
-		__NMRASSERT(pszValue);
+		__NMRASSERT(pwszValue);
 		nfDouble dResult = 0.0;
 
 		//skip leading whitespaces
@@ -174,18 +173,7 @@ namespace NMR {
 		}
 		if ((dResult == HUGE_VAL) || (dResult == -HUGE_VAL))
 			throw CNMRException(NMR_ERROR_STRINGTODOUBLECONVERSIONOUTOFRANGE);
-#else
-		// Convert to double and make a input and range check!
-		std::from_chars_result result = std::from_chars(pszValue, pszValue + strlen(pszValue), dResult, std::chars_format::general);
 
-		// Check if any conversion happened
-		if (result.ec == std::errc::invalid_argument || result.ec == std::errc::result_out_of_range)
-			throw CNMRException(NMR_ERROR_EMPTYSTRINGTODOUBLECONVERSION);
-
-		if ((*result.ptr != '\0') && (*result.ptr != ' '))
-			throw CNMRException(NMR_ERROR_INVALIDSTRINGTODOUBLECONVERSION);
-
-#endif
 		return dResult;
 	}
 
