@@ -81,12 +81,13 @@ namespace NMR
     void CModelWriterNode_Implicit::writeImplicitFunctionElements(CModelImplicitFunction & function)
     {
         writeImplicitFunctionInputs(*function.getInputs());
-        writeImplicitFunctionOutputs(*function.getOutputs());
 
         for (auto node : *function.getNodes())
         {
             writeImplicitNode(*node);
         }
+        
+        writeImplicitFunctionOutputs(*function.getOutputs());
     }
 
     std::string mat4x4ToString(Lib3MF::sMatrix4x4 const & mat)
