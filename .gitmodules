@@ -1,25 +1,18 @@
-[submodule "Tests/googletest"]
-	path = Tests/googletest
-	url = https://github.com/google/googletest.git
-[submodule "Tests/libressl"]
-	path = Tests/libressl
-	url = https://github.com/3MFConsortium/forks-libressl-distribution.git
 [submodule "submodules/AutomaticComponentToolkit"]
 	path = submodules/AutomaticComponentToolkit
 	url = https://github.com/Autodesk/AutomaticComponentToolkit.git
 [submodule "submodules/fast_float"]
 	path = submodules/fast_float
 	url = https://github.com/fastfloat/fast_float.git
-[submodule "submodules/cpp-base64"]
-	path = submodules/cpp-base64
-	url = https://github.com/ReneNyffenegger/cpp-base64.git
-[submodule "submodules/googletest"]
-	path = submodules/googletest
-	url = https://github.com/google/googletest.git
-[submodule "submodules/libzip"]
-	path = submodules/libzip
-	url = https://github.com/nih-at/libzip.git
 [submodule "submodules/zlib"]
 	path = submodules/zlib
 	url = https://github.com/madler/zlib.git
-
+[submodule "submodules/cpp-base64"]
+	path = submodules/cpp-base64
+	url = https://github.com/ReneNyffenegger/cpp-base64.git
+[submodule "submodules/libzip"]
+	path = submodules/libzip
+	url = https://github.com/nih-at/libzip.git
+[submodule "submodules/googletest"]
+	path = submodules/googletest
+	url = https://github.com/google/googletest.git

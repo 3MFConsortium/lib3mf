@@ -5,7 +5,8 @@ Include/Model/COM/NMR_COMVersion.h
 debug
 .DS_Store
 .vscode
-TestOutput
+.idea
+cmake-build-*TestOutput
 nonrootmodels.3mf
 SetupWriteRead1.3mf
 SetupWriteRead2.3mf

@@ -1228,6 +1228,9 @@ Model error codes (0x8XXX)
 // A component resource is invalid
 #define NMR_ERROR_INVALIDCOMPONENTRESOURCE 0x810D
 
+// A keystore element is not base64 encoded
+#define NMR_ERROR_KEYSTOREINVALIDENCODING 0x810E
+
 // errors for the volumetric extension 0x88xx
 
 // Invalid Image3D Size
