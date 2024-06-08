@@ -481,15 +481,26 @@ type
 **************************************************************************************************************************)
 
 	(**
-	* Retrieves an binary streams package path.
+	* Retrieves an binary streams package path for the binary data.
 	*
 	* @param[in] pBinaryStream - BinaryStream instance.
 	* @param[in] nPathBufferSize - size of the buffer (including trailing 0)
 	* @param[out] pPathNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pPathBuffer -  buffer of binary streams package path., may be NULL
+	* @param[out] pPathBuffer -  buffer of binary streams package binary path., may be NULL
 	* @return error code or 0 (success)
 	*)
-	TLib3MFBinaryStream_GetPathFunc = function(pBinaryStream: TLib3MFHandle; const nPathBufferSize: Cardinal; out pPathNeededChars: Cardinal; pPathBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	TLib3MFBinaryStream_GetBinaryPathFunc = function(pBinaryStream: TLib3MFHandle; const nPathBufferSize: Cardinal; out pPathNeededChars: Cardinal; pPathBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves an binary streams package path for the index data.
+	*
+	* @param[in] pBinaryStream - BinaryStream instance.
+	* @param[in] nPathBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pPathNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pPathBuffer -  buffer of binary streams package index path., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBinaryStream_GetIndexPathFunc = function(pBinaryStream: TLib3MFHandle; const nPathBufferSize: Cardinal; out pPathNeededChars: Cardinal; pPathBuffer: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves an binary streams uuid.
@@ -675,11 +686,12 @@ type
 	* Creates a binary stream object. Only applicable for 3MF Writers.
 	*
 	* @param[in] pWriter - Writer instance.
-	* @param[in] pPath - Package path to write into
+	* @param[in] pIndexPath - Package path to write the index into
+	* @param[in] pBinaryPath - Package path to write raw binary data into
 	* @param[out] pBinaryStream - Returns a package path.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFWriter_CreateBinaryStreamFunc = function(pWriter: TLib3MFHandle; const pPath: PAnsiChar; out pBinaryStream: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFWriter_CreateBinaryStreamFunc = function(pWriter: TLib3MFHandle; const pIndexPath: PAnsiChar; const pBinaryPath: PAnsiChar; out pBinaryStream: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.
@@ -5659,7 +5671,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
-		function GetPath(): String;
+		function GetBinaryPath(): String;
+		function GetIndexPath(): String;
 		function GetUUID(): String;
 		procedure DisableDiscretizedArrayCompression();
 		procedure EnableDiscretizedArrayCompression(const AUnits: Double; const APredictionType: TLib3MFBinaryStreamPredictionType);
@@ -5689,7 +5702,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetWarningCount(): Cardinal;
 		procedure AddKeyWrappingCallback(const AConsumerID: String; const ATheCallback: PLib3MF_KeyWrappingCallback; const AUserData: Pointer);
 		procedure SetContentEncryptionCallback(const ATheCallback: PLib3MF_ContentEncryptionCallback; const AUserData: Pointer);
-		function CreateBinaryStream(const APath: String): TLib3MFBinaryStream;
+		function CreateBinaryStream(const AIndexPath: String; const ABinaryPath: String): TLib3MFBinaryStream;
 		procedure AssignBinaryStream(const AInstance: TLib3MFBase; const ABinaryStream: TLib3MFBinaryStream);
 		procedure RegisterCustomNamespace(const APrefix: String; const ANameSpace: String);
 	end;
@@ -6702,7 +6715,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	private
 		FModule: HMODULE;
 		FLib3MFBase_ClassTypeIdFunc: TLib3MFBase_ClassTypeIdFunc;
-		FLib3MFBinaryStream_GetPathFunc: TLib3MFBinaryStream_GetPathFunc;
+		FLib3MFBinaryStream_GetBinaryPathFunc: TLib3MFBinaryStream_GetBinaryPathFunc;
+		FLib3MFBinaryStream_GetIndexPathFunc: TLib3MFBinaryStream_GetIndexPathFunc;
 		FLib3MFBinaryStream_GetUUIDFunc: TLib3MFBinaryStream_GetUUIDFunc;
 		FLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc: TLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc;
 		FLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc: TLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc;
@@ -7204,7 +7218,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 	protected
 		property Lib3MFBase_ClassTypeIdFunc: TLib3MFBase_ClassTypeIdFunc read FLib3MFBase_ClassTypeIdFunc;
-		property Lib3MFBinaryStream_GetPathFunc: TLib3MFBinaryStream_GetPathFunc read FLib3MFBinaryStream_GetPathFunc;
+		property Lib3MFBinaryStream_GetBinaryPathFunc: TLib3MFBinaryStream_GetBinaryPathFunc read FLib3MFBinaryStream_GetBinaryPathFunc;
+		property Lib3MFBinaryStream_GetIndexPathFunc: TLib3MFBinaryStream_GetIndexPathFunc read FLib3MFBinaryStream_GetIndexPathFunc;
 		property Lib3MFBinaryStream_GetUUIDFunc: TLib3MFBinaryStream_GetUUIDFunc read FLib3MFBinaryStream_GetUUIDFunc;
 		property Lib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc: TLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc read FLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc;
 		property Lib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc: TLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc read FLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc;
@@ -8776,7 +8791,7 @@ implementation
 		inherited;
 	end;
 
-	function TLib3MFBinaryStream.GetPath(): String;
+	function TLib3MFBinaryStream.GetBinaryPath(): String;
 	var
 		bytesNeededPath: Cardinal;
 		bytesWrittenPath: Cardinal;
@@ -8784,9 +8799,23 @@ implementation
 	begin
 		bytesNeededPath:= 0;
 		bytesWrittenPath:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_GetPathFunc(FHandle, 0, bytesNeededPath, nil));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_GetBinaryPathFunc(FHandle, 0, bytesNeededPath, nil));
 		SetLength(bufferPath, bytesNeededPath);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_GetPathFunc(FHandle, bytesNeededPath, bytesWrittenPath, @bufferPath[0]));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_GetBinaryPathFunc(FHandle, bytesNeededPath, bytesWrittenPath, @bufferPath[0]));
+		Result := StrPas(@bufferPath[0]);
+	end;
+
+	function TLib3MFBinaryStream.GetIndexPath(): String;
+	var
+		bytesNeededPath: Cardinal;
+		bytesWrittenPath: Cardinal;
+		bufferPath: array of Char;
+	begin
+		bytesNeededPath:= 0;
+		bytesWrittenPath:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_GetIndexPathFunc(FHandle, 0, bytesNeededPath, nil));
+		SetLength(bufferPath, bytesNeededPath);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_GetIndexPathFunc(FHandle, bytesNeededPath, bytesWrittenPath, @bufferPath[0]));
 		Result := StrPas(@bufferPath[0]);
 	end;
 
@@ -8933,13 +8962,13 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFWriter_SetContentEncryptionCallbackFunc(FHandle, ATheCallback, AUserData));
 	end;
 
-	function TLib3MFWriter.CreateBinaryStream(const APath: String): TLib3MFBinaryStream;
+	function TLib3MFWriter.CreateBinaryStream(const AIndexPath: String; const ABinaryPath: String): TLib3MFBinaryStream;
 	var
 		HBinaryStream: TLib3MFHandle;
 	begin
 		Result := nil;
 		HBinaryStream := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFWriter_CreateBinaryStreamFunc(FHandle, PAnsiChar(APath), HBinaryStream));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFWriter_CreateBinaryStreamFunc(FHandle, PAnsiChar(AIndexPath), PAnsiChar(ABinaryPath), HBinaryStream));
 		if Assigned(HBinaryStream) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFBinaryStream, TLib3MFBinaryStream>.Make(FWrapper, HBinaryStream);
 	end;
@@ -13894,7 +13923,8 @@ implementation
 			raise ELib3MFException.Create(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 
 		FLib3MFBase_ClassTypeIdFunc := LoadFunction('lib3mf_base_classtypeid');
-		FLib3MFBinaryStream_GetPathFunc := LoadFunction('lib3mf_binarystream_getpath');
+		FLib3MFBinaryStream_GetBinaryPathFunc := LoadFunction('lib3mf_binarystream_getbinarypath');
+		FLib3MFBinaryStream_GetIndexPathFunc := LoadFunction('lib3mf_binarystream_getindexpath');
 		FLib3MFBinaryStream_GetUUIDFunc := LoadFunction('lib3mf_binarystream_getuuid');
 		FLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc := LoadFunction('lib3mf_binarystream_disablediscretizedarraycompression');
 		FLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc := LoadFunction('lib3mf_binarystream_enablediscretizedarraycompression');
@@ -14399,7 +14429,10 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_base_classtypeid'), @FLib3MFBase_ClassTypeIdFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_getpath'), @FLib3MFBinaryStream_GetPathFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_getbinarypath'), @FLib3MFBinaryStream_GetBinaryPathFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_getindexpath'), @FLib3MFBinaryStream_GetIndexPathFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_getuuid'), @FLib3MFBinaryStream_GetUUIDFunc);

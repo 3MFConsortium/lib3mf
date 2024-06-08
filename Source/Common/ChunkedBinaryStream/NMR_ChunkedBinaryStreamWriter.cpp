@@ -31,15 +31,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Common/NMR_Exception.h" 
 
 #include "Libraries/lzma/LzmaLib.h"
-
+#include "Common/Platform/NMR_XmlWriter_Native.h"
+#include "Model/Classes/NMR_ModelConstants.h"
 #include <vector>
 
 
 namespace NMR {
 
 
-	CChunkedBinaryStreamWriter::CChunkedBinaryStreamWriter(PExportStreamMemory pExportStream)
-		: m_pExportStream(pExportStream),
+	CChunkedBinaryStreamWriter::CChunkedBinaryStreamWriter(const std::string& sIndexPath, const std::string& sBinaryPath, PExportStreamMemory pBinaryExportStream)
+		: m_pBinaryExportStream (pBinaryExportStream),
 		m_elementIDCounter(1),
 		m_CurrentChunk(nullptr),
 		m_ChunkTableStart(0),
@@ -49,9 +50,11 @@ namespace NMR {
 		m_dQuantizationUnits(0.001),
 		m_PredictionType (eptNoPredicition),
 		m_nLZMALevel (5),
-		m_bEnableLZMA (false)
+		m_bEnableLZMA (false),
+		m_sBinaryPath (sBinaryPath),
+		m_sIndexPath (sIndexPath)
 	{
-		if (pExportStream.get() == nullptr)
+		if (pBinaryExportStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		writeHeader();
@@ -78,7 +81,8 @@ namespace NMR {
 		m_Chunks.push_back(Chunk);
 
 		m_CurrentChunk = &(*m_Chunks.rbegin());
-		m_CurrentChunkEntries.clear();
+		m_CurrentChunk->m_ChunkID = (uint32_t) m_Chunks.size();
+		m_CurrentChunkEntries = std::make_shared<std::vector<BINARYCHUNKFILEENTRY>>();
 		m_CurrentChunkData.clear();
 
 	}
@@ -90,10 +94,15 @@ namespace NMR {
 
 		__NMRASSERT(m_CurrentChunk->m_UncompressedDataSize == (m_CurrentChunkData.size() * 4));
 
-		if (m_CurrentChunkEntries.size() > 0) {
-			m_CurrentChunk->m_EntryCount = (nfUint32)m_CurrentChunkEntries.size();
-			m_CurrentChunk->m_EntryTableStart = m_pExportStream->getPosition();
-			m_pExportStream->writeBuffer(m_CurrentChunkEntries.data(), m_CurrentChunkEntries.size() * sizeof (BINARYCHUNKFILEENTRY));
+		if (m_CurrentChunkEntries.get() != nullptr) {
+
+			if (m_CurrentChunkEntries->size() > 0) {
+				m_CurrentChunk->m_EntryCount = (nfUint32)m_CurrentChunkEntries->size();
+				m_CurrentChunk->m_EntryTableStart = m_pBinaryExportStream->getPosition();
+				m_pBinaryExportStream->writeBuffer(m_CurrentChunkEntries->data(), m_CurrentChunkEntries->size() * sizeof(BINARYCHUNKFILEENTRY));
+
+				m_ChunkEntries.insert(std::make_pair(m_CurrentChunk->m_ChunkID, m_CurrentChunkEntries));
+			}
 		}
 
 		if (m_CurrentChunkData.size() > 0) {
@@ -152,9 +161,9 @@ namespace NMR {
 			m_CurrentChunk->m_CompressedDataSize = (nfUint32) outBufferSize;
 			m_CurrentChunk->m_CompressedPropsSize = (nfUint32) outPropsSize;
 
-			m_CurrentChunk->m_CompressedDataStart = m_pExportStream->getPosition();
-			m_pExportStream->writeBuffer (outBuffer.data(), outBufferSize);
-			m_pExportStream->writeBuffer (outProps.data(), outPropsSize);
+			m_CurrentChunk->m_CompressedDataStart = m_pBinaryExportStream->getPosition();
+			m_pBinaryExportStream->writeBuffer (outBuffer.data(), outBufferSize);
+			m_pBinaryExportStream->writeBuffer (outProps.data(), outPropsSize);
 		}
 
 		m_CurrentChunk = nullptr;
@@ -230,7 +239,8 @@ namespace NMR {
 		};
 
 
-		m_CurrentChunkEntries.push_back(Entry);
+		if (m_CurrentChunkEntries.get () != nullptr)
+			m_CurrentChunkEntries->push_back(Entry);
 
 		m_CurrentChunk->m_EntryCount++;
 		m_CurrentChunk->m_UncompressedDataSize += Entry.m_SizeInBytes;
@@ -274,7 +284,8 @@ namespace NMR {
 			m_CurrentChunkData.push_back(*pValue);
 		}
 
-		m_CurrentChunkEntries.push_back(Entry);
+		if (m_CurrentChunkEntries.get() != nullptr)
+			m_CurrentChunkEntries->push_back(Entry);
 
 		m_CurrentChunk->m_EntryCount++;
 		m_CurrentChunk->m_UncompressedDataSize += Entry.m_SizeInBytes;
@@ -355,7 +366,8 @@ namespace NMR {
 		};
 
 
-		m_CurrentChunkEntries.push_back(Entry);
+		if (m_CurrentChunkEntries.get() != nullptr)
+			m_CurrentChunkEntries->push_back(Entry);
 
 		m_CurrentChunk->m_EntryCount++;
 		m_CurrentChunk->m_UncompressedDataSize += Entry.m_SizeInBytes;
@@ -381,9 +393,9 @@ namespace NMR {
 		for (int j = 0; j < BINARYCHUNKFILEHEADERRESERVED; j++)
 			Header.m_Reserved[j] = 0;
 
-		m_pExportStream->seekPosition(0, true);
-		m_pExportStream->writeBuffer(&Header, sizeof(Header));
-		m_pExportStream->seekFromEnd(0, true);
+		m_pBinaryExportStream->seekPosition(0, true);
+		m_pBinaryExportStream->writeBuffer(&Header, sizeof(Header));
+		m_pBinaryExportStream->seekFromEnd(0, true);
 	}
 
 	nfUint32 CChunkedBinaryStreamWriter::getChunkCount()
@@ -391,7 +403,7 @@ namespace NMR {
 		return (nfUint32) m_Chunks.size ();
 	}
 
-	void CChunkedBinaryStreamWriter::copyToStream(PExportStream pStream)
+	void CChunkedBinaryStreamWriter::copyBinaryToStream(PExportStream pStream)
 	{
 		if (!m_bIsFinished)
 			throw CNMRException(NMR_ERROR_STREAMWRITERNOTFINISHED);
@@ -399,10 +411,72 @@ namespace NMR {
 		if (pStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		const nfByte * pData = m_pExportStream->getData();
-		nfUint64 nDataSize = m_pExportStream->getDataSize();
+		const nfByte * pData = m_pBinaryExportStream->getData();
+		nfUint64 nDataSize = m_pBinaryExportStream->getDataSize();
 
 		pStream->writeBuffer(pData, nDataSize);
+
+	}
+
+	void CChunkedBinaryStreamWriter::writeIndexXML(PExportStream pStream)
+	{
+		if (pStream.get () == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(pStream);
+
+		pXMLWriter->WriteStartElement (nullptr, "binaryindex", XML_3MF_NAMESPACE_BINARYSPEC);
+
+		pXMLWriter->WriteStartElement(nullptr, "chunks", nullptr);
+		pXMLWriter->WriteAttributeString(nullptr, "data", "", m_sBinaryPath.c_str());
+
+		for (auto& chunk : m_Chunks) {
+			std::string sChunkID = std::to_string(chunk.m_ChunkID);
+			std::string sChunkCompressedSize = std::to_string(chunk.m_CompressedDataSize);
+			std::string sChunkUncompressedSize = std::to_string(chunk.m_UncompressedDataSize);
+			std::string sChunkDataOffset = std::to_string(chunk.m_CompressedDataStart);
+			pXMLWriter->WriteStartElement(nullptr, "chunk", nullptr);
+			pXMLWriter->WriteAttributeString(nullptr, "id", "", sChunkID.c_str());
+			pXMLWriter->WriteAttributeString(nullptr, "fileoffset", "", sChunkDataOffset.c_str());
+			pXMLWriter->WriteAttributeString(nullptr, "compressedsize", "", sChunkCompressedSize.c_str());
+			pXMLWriter->WriteAttributeString(nullptr, "uncompressedsize", "", sChunkUncompressedSize.c_str());
+
+			auto iIter = m_ChunkEntries.find(chunk.m_ChunkID);
+			if (iIter != m_ChunkEntries.end()) {
+				for (auto & entry : *iIter->second) {
+					pXMLWriter->WriteStartElement(nullptr, "entry", nullptr);
+					std::string sEntryID = std::to_string (entry.m_EntryID);
+					std::string sEntrySize = std::to_string(entry.m_SizeInBytes);
+					std::string sEntryPosition = std::to_string(entry.m_PositionInChunk);
+					std::string sEntryType;
+					switch (entry.m_EntryType) {
+						case BINARYCHUNKFILEENTRYTYPE_INT32ARRAY_NOPREDICTION: sEntryType = "int32_noprediction"; break;
+						case BINARYCHUNKFILEENTRYTYPE_INT32ARRAY_DELTAPREDICTION: sEntryType = "int32_deltaprediction"; break;
+						case BINARYCHUNKFILEENTRYTYPE_FLOAT32ARRAY_NOPREDICTION: sEntryType = "float32_noprediction"; break;
+						case BINARYCHUNKFILEENTRYTYPE_FLOAT32ARRAY_DELTAPREDICTION: sEntryType = "float32_deltaprediction"; break;
+						case BINARYCHUNKFILEENTRYTYPE_FLOAT32ARRAY_RAWDATA: sEntryType = "float32_rawdata"; break;
+						default:
+							sEntryType = "unknown";
+
+					}
+
+					pXMLWriter->WriteAttributeString(nullptr, "id", nullptr, sEntryID.c_str());
+					pXMLWriter->WriteAttributeString(nullptr, "size", nullptr, sEntrySize.c_str());
+					pXMLWriter->WriteAttributeString(nullptr, "positioninchunk", nullptr, sEntryPosition.c_str());
+					pXMLWriter->WriteAttributeString(nullptr, "type", nullptr, sEntryType.c_str());
+					pXMLWriter->WriteEndElement();
+				}
+			}
+
+			pXMLWriter->WriteFullEndElement();
+
+		} 
+
+		pXMLWriter->WriteFullEndElement(); 
+
+		pXMLWriter->WriteFullEndElement(); 
+
+		pXMLWriter->WriteEndDocument();
 
 	}
 
@@ -415,9 +489,9 @@ namespace NMR {
 		if (m_CurrentChunk != nullptr)
 			throw CNMRException(NMR_ERROR_STREAMCHUNKALREADYOPEN);
 
-		m_ChunkTableStart = m_pExportStream->getPosition();
+		m_ChunkTableStart = m_pBinaryExportStream->getPosition();
 		if (m_Chunks.size() > 0) {
-			m_pExportStream->writeBuffer (m_Chunks.data(), sizeof (BINARYCHUNKFILECHUNK) * m_Chunks.size());
+			m_pBinaryExportStream->writeBuffer (m_Chunks.data(), sizeof (BINARYCHUNKFILECHUNK) * m_Chunks.size());
 		}
 	}
 
@@ -448,5 +522,14 @@ namespace NMR {
 		return m_PredictionType;
 	}
 
+	std::string CChunkedBinaryStreamWriter::getBinaryPath()
+	{
+		return m_sBinaryPath;
+	}
+
+	std::string CChunkedBinaryStreamWriter::getIndexPath()
+	{
+		return m_sIndexPath;
+	}
 
 }

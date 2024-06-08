@@ -54,7 +54,8 @@ class CBinaryStream : public virtual IBinaryStream, public virtual CBase {
 private:
 
 	NMR::PChunkedBinaryStreamWriter m_pStreamWriter;
-	std::string m_sPackagePath;
+	std::string m_sPackageIndexPath;
+	std::string m_sPackageBinaryPath;
 	std::string m_sUUID;
 
 protected:
@@ -62,9 +63,10 @@ protected:
 
 public:
 
-	CBinaryStream (std::string sPackagePath, NMR::PChunkedBinaryStreamWriter pStreamWriter);
+	CBinaryStream (std::string sPackageIndexPath, std::string sPackageBinaryPath, NMR::PChunkedBinaryStreamWriter pStreamWriter);
 
-	std::string GetPath();
+	std::string GetBinaryPath();
+	std::string GetIndexPath();
 	std::string GetUUID();
 
 

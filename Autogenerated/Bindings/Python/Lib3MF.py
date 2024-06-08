@@ -145,7 +145,8 @@ class FunctionTable:
 	lib3mf_getscaletransform = None
 	lib3mf_gettranslationtransform = None
 	lib3mf_base_classtypeid = None
-	lib3mf_binarystream_getpath = None
+	lib3mf_binarystream_getbinarypath = None
+	lib3mf_binarystream_getindexpath = None
 	lib3mf_binarystream_getuuid = None
 	lib3mf_binarystream_disablediscretizedarraycompression = None
 	lib3mf_binarystream_enablediscretizedarraycompression = None
@@ -1070,11 +1071,17 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint64))
 			self.lib.lib3mf_base_classtypeid = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_binarystream_getpath")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_binarystream_getbinarypath")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
-			self.lib.lib3mf_binarystream_getpath = methodType(int(methodAddress.value))
+			self.lib.lib3mf_binarystream_getbinarypath = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_binarystream_getindexpath")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_binarystream_getindexpath = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_binarystream_getuuid")), methodAddress)
 			if err != 0:
@@ -1187,7 +1194,7 @@ class Wrapper:
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_writer_createbinarystream")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_writer_createbinarystream = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_writer_assignbinarystream")), methodAddress)
@@ -3967,8 +3974,11 @@ class Wrapper:
 			self.lib.lib3mf_base_classtypeid.restype = ctypes.c_int32
 			self.lib.lib3mf_base_classtypeid.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint64)]
 			
-			self.lib.lib3mf_binarystream_getpath.restype = ctypes.c_int32
-			self.lib.lib3mf_binarystream_getpath.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			self.lib.lib3mf_binarystream_getbinarypath.restype = ctypes.c_int32
+			self.lib.lib3mf_binarystream_getbinarypath.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_binarystream_getindexpath.restype = ctypes.c_int32
+			self.lib.lib3mf_binarystream_getindexpath.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
 			self.lib.lib3mf_binarystream_getuuid.restype = ctypes.c_int32
 			self.lib.lib3mf_binarystream_getuuid.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
@@ -4025,7 +4035,7 @@ class Wrapper:
 			self.lib.lib3mf_writer_setcontentencryptioncallback.argtypes = [ctypes.c_void_p, ContentEncryptionCallback, ctypes.c_void_p]
 			
 			self.lib.lib3mf_writer_createbinarystream.restype = ctypes.c_int32
-			self.lib.lib3mf_writer_createbinarystream.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_writer_createbinarystream.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_writer_assignbinarystream.restype = ctypes.c_int32
 			self.lib.lib3mf_writer_assignbinarystream.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p]
@@ -5729,14 +5739,25 @@ class Base:
 class BinaryStream(Base):
 	def __init__(self, handle, wrapper):
 		Base.__init__(self, handle, wrapper)
-	def GetPath(self):
+	def GetBinaryPath(self):
 		nPathBufferSize = ctypes.c_uint64(0)
 		nPathNeededChars = ctypes.c_uint64(0)
 		pPathBuffer = ctypes.c_char_p(None)
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_getpath(self._handle, nPathBufferSize, nPathNeededChars, pPathBuffer))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_getbinarypath(self._handle, nPathBufferSize, nPathNeededChars, pPathBuffer))
 		nPathBufferSize = ctypes.c_uint64(nPathNeededChars.value)
 		pPathBuffer = (ctypes.c_char * (nPathNeededChars.value))()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_getpath(self._handle, nPathBufferSize, nPathNeededChars, pPathBuffer))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_getbinarypath(self._handle, nPathBufferSize, nPathNeededChars, pPathBuffer))
+		
+		return pPathBuffer.value.decode()
+	
+	def GetIndexPath(self):
+		nPathBufferSize = ctypes.c_uint64(0)
+		nPathNeededChars = ctypes.c_uint64(0)
+		pPathBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_getindexpath(self._handle, nPathBufferSize, nPathNeededChars, pPathBuffer))
+		nPathBufferSize = ctypes.c_uint64(nPathNeededChars.value)
+		pPathBuffer = (ctypes.c_char * (nPathNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_getindexpath(self._handle, nPathBufferSize, nPathNeededChars, pPathBuffer))
 		
 		return pPathBuffer.value.decode()
 	
@@ -5860,10 +5881,11 @@ class Writer(Base):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_writer_setcontentencryptioncallback(self._handle, TheCallbackFunc, pUserData))
 		
 	
-	def CreateBinaryStream(self, Path):
-		pPath = ctypes.c_char_p(str.encode(Path))
+	def CreateBinaryStream(self, IndexPath, BinaryPath):
+		pIndexPath = ctypes.c_char_p(str.encode(IndexPath))
+		pBinaryPath = ctypes.c_char_p(str.encode(BinaryPath))
 		BinaryStreamHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_writer_createbinarystream(self._handle, pPath, BinaryStreamHandle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_writer_createbinarystream(self._handle, pIndexPath, pBinaryPath, BinaryStreamHandle))
 		if BinaryStreamHandle:
 			BinaryStreamObject = self._wrapper._polymorphicFactory(BinaryStreamHandle)
 		else:

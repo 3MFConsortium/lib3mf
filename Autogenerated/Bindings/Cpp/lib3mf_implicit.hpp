@@ -721,7 +721,8 @@ public:
 	{
 	}
 	
-	inline std::string GetPath();
+	inline std::string GetBinaryPath();
+	inline std::string GetIndexPath();
 	inline std::string GetUUID();
 	inline void DisableDiscretizedArrayCompression();
 	inline void EnableDiscretizedArrayCompression(const Lib3MF_double dUnits, const eBinaryStreamPredictionType ePredictionType);
@@ -756,7 +757,7 @@ public:
 	inline Lib3MF_uint32 GetWarningCount();
 	inline void AddKeyWrappingCallback(const std::string & sConsumerID, const KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData);
 	inline void SetContentEncryptionCallback(const ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData);
-	inline PBinaryStream CreateBinaryStream(const std::string & sPath);
+	inline PBinaryStream CreateBinaryStream(const std::string & sIndexPath, const std::string & sBinaryPath);
 	inline void AssignBinaryStream(classParam<CBase> pInstance, classParam<CBinaryStream> pBinaryStream);
 	inline void RegisterCustomNamespace(const std::string & sPrefix, const std::string & sNameSpace);
 };
@@ -2382,16 +2383,31 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	 */
 	
 	/**
-	* CBinaryStream::GetPath - Retrieves an binary streams package path.
-	* @return binary streams package path.
+	* CBinaryStream::GetBinaryPath - Retrieves an binary streams package path for the binary data.
+	* @return binary streams package binary path.
 	*/
-	std::string CBinaryStream::GetPath()
+	std::string CBinaryStream::GetBinaryPath()
 	{
 		Lib3MF_uint32 bytesNeededPath = 0;
 		Lib3MF_uint32 bytesWrittenPath = 0;
-		CheckError(lib3mf_binarystream_getpath(m_pHandle, 0, &bytesNeededPath, nullptr));
+		CheckError(lib3mf_binarystream_getbinarypath(m_pHandle, 0, &bytesNeededPath, nullptr));
 		std::vector<char> bufferPath(bytesNeededPath);
-		CheckError(lib3mf_binarystream_getpath(m_pHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]));
+		CheckError(lib3mf_binarystream_getbinarypath(m_pHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]));
+		
+		return std::string(&bufferPath[0]);
+	}
+	
+	/**
+	* CBinaryStream::GetIndexPath - Retrieves an binary streams package path for the index data.
+	* @return binary streams package index path.
+	*/
+	std::string CBinaryStream::GetIndexPath()
+	{
+		Lib3MF_uint32 bytesNeededPath = 0;
+		Lib3MF_uint32 bytesWrittenPath = 0;
+		CheckError(lib3mf_binarystream_getindexpath(m_pHandle, 0, &bytesNeededPath, nullptr));
+		std::vector<char> bufferPath(bytesNeededPath);
+		CheckError(lib3mf_binarystream_getindexpath(m_pHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]));
 		
 		return std::string(&bufferPath[0]);
 	}
@@ -2599,13 +2615,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	
 	/**
 	* CWriter::CreateBinaryStream - Creates a binary stream object. Only applicable for 3MF Writers.
-	* @param[in] sPath - Package path to write into
+	* @param[in] sIndexPath - Package path to write the index into
+	* @param[in] sBinaryPath - Package path to write raw binary data into
 	* @return Returns a package path.
 	*/
-	PBinaryStream CWriter::CreateBinaryStream(const std::string & sPath)
+	PBinaryStream CWriter::CreateBinaryStream(const std::string & sIndexPath, const std::string & sBinaryPath)
 	{
 		Lib3MFHandle hBinaryStream = nullptr;
-		CheckError(lib3mf_writer_createbinarystream(m_pHandle, sPath.c_str(), &hBinaryStream));
+		CheckError(lib3mf_writer_createbinarystream(m_pHandle, sIndexPath.c_str(), sBinaryPath.c_str(), &hBinaryStream));
 		
 		if (!hBinaryStream) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);

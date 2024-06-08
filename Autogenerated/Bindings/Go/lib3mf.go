@@ -81,12 +81,21 @@ Lib3MFResult CCall_lib3mf_base_classtypeid(Lib3MFHandle libraryHandle, Lib3MF_Ba
 }
 
 
-Lib3MFResult CCall_lib3mf_binarystream_getpath(Lib3MFHandle libraryHandle, Lib3MF_BinaryStream pBinaryStream, const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char * pPathBuffer)
+Lib3MFResult CCall_lib3mf_binarystream_getbinarypath(Lib3MFHandle libraryHandle, Lib3MF_BinaryStream pBinaryStream, const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char * pPathBuffer)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_BinaryStream_GetPath (pBinaryStream, nPathBufferSize, pPathNeededChars, pPathBuffer);
+	return wrapperTable->m_BinaryStream_GetBinaryPath (pBinaryStream, nPathBufferSize, pPathNeededChars, pPathBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_binarystream_getindexpath(Lib3MFHandle libraryHandle, Lib3MF_BinaryStream pBinaryStream, const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char * pPathBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BinaryStream_GetIndexPath (pBinaryStream, nPathBufferSize, pPathNeededChars, pPathBuffer);
 }
 
 
@@ -252,12 +261,12 @@ Lib3MFResult CCall_lib3mf_writer_setcontentencryptioncallback(Lib3MFHandle libra
 }
 
 
-Lib3MFResult CCall_lib3mf_writer_createbinarystream(Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter, const char * pPath, Lib3MF_BinaryStream * pBinaryStream)
+Lib3MFResult CCall_lib3mf_writer_createbinarystream(Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter, const char * pIndexPath, const char * pBinaryPath, Lib3MF_BinaryStream * pBinaryStream)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_Writer_CreateBinaryStream (pWriter, pPath, pBinaryStream);
+	return wrapperTable->m_Writer_CreateBinaryStream (pWriter, pIndexPath, pBinaryPath, pBinaryStream);
 }
 
 
@@ -5136,17 +5145,34 @@ func (wrapper Wrapper) NewBinaryStream(r ref) BinaryStream {
 	return BinaryStream{wrapper.NewBase(r)}
 }
 
-// GetPath retrieves an binary streams package path.
-func (inst BinaryStream) GetPath() (string, error) {
+// GetBinaryPath retrieves an binary streams package path for the binary data.
+func (inst BinaryStream) GetBinaryPath() (string, error) {
 	var neededforpath C.uint32_t
 	var filledinpath C.uint32_t
-	ret := C.CCall_lib3mf_binarystream_getpath(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforpath, nil)
+	ret := C.CCall_lib3mf_binarystream_getbinarypath(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforpath, nil)
 	if ret != 0 {
 		return "", makeError(uint32(ret))
 	}
 	bufferSizepath := neededforpath
 	bufferpath := make([]byte, bufferSizepath)
-	ret = C.CCall_lib3mf_binarystream_getpath(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizepath, &filledinpath, (*C.char)(unsafe.Pointer(&bufferpath[0])))
+	ret = C.CCall_lib3mf_binarystream_getbinarypath(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizepath, &filledinpath, (*C.char)(unsafe.Pointer(&bufferpath[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferpath[:(filledinpath-1)]), nil
+}
+
+// GetIndexPath retrieves an binary streams package path for the index data.
+func (inst BinaryStream) GetIndexPath() (string, error) {
+	var neededforpath C.uint32_t
+	var filledinpath C.uint32_t
+	ret := C.CCall_lib3mf_binarystream_getindexpath(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforpath, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizepath := neededforpath
+	bufferpath := make([]byte, bufferSizepath)
+	ret = C.CCall_lib3mf_binarystream_getindexpath(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizepath, &filledinpath, (*C.char)(unsafe.Pointer(&bufferpath[0])))
 	if ret != 0 {
 		return "", makeError(uint32(ret))
 	}
@@ -5360,9 +5386,9 @@ func (inst Writer) SetContentEncryptionCallback(theCallback ContentEncryptionCal
 }
 
 // CreateBinaryStream creates a binary stream object. Only applicable for 3MF Writers.
-func (inst Writer) CreateBinaryStream(path string) (BinaryStream, error) {
+func (inst Writer) CreateBinaryStream(indexPath string, binaryPath string) (BinaryStream, error) {
 	var binaryStream ref
-	ret := C.CCall_lib3mf_writer_createbinarystream(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(path)[0])), &binaryStream)
+	ret := C.CCall_lib3mf_writer_createbinarystream(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(indexPath)[0])), (*C.char)(unsafe.Pointer(&[]byte(binaryPath)[0])), &binaryStream)
 	if ret != 0 {
 		return BinaryStream{}, makeError(uint32(ret))
 	}

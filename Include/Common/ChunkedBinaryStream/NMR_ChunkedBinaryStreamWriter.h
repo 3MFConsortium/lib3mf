@@ -35,12 +35,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Common/Platform/NMR_ExportStream_Memory.h"
 
 #include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamTypes.h" 
+#include <string>
+#include <map>
 
 namespace NMR {
 
 	class CChunkedBinaryStreamWriter {
 	private:
-		PExportStreamMemory m_pExportStream;
+		PExportStreamMemory m_pBinaryExportStream;
+		std::string m_sBinaryPath;
+		std::string m_sIndexPath;
+
 		nfUint32 m_elementIDCounter;
 		nfBool m_bIsFinished;
 		nfUint64 m_ChunkTableStart;
@@ -55,9 +60,10 @@ namespace NMR {
 		double m_dQuantizationUnits;
 
 		std::vector<BINARYCHUNKFILECHUNK> m_Chunks;
+		std::map<uint32_t, std::shared_ptr<std::vector<BINARYCHUNKFILEENTRY>>> m_ChunkEntries;
 
 		BINARYCHUNKFILECHUNK * m_CurrentChunk;
-		std::vector<BINARYCHUNKFILEENTRY> m_CurrentChunkEntries;
+		std::shared_ptr<std::vector<BINARYCHUNKFILEENTRY>> m_CurrentChunkEntries;
 		std::vector<nfInt32> m_CurrentChunkData;
 
 		void writeHeader();
@@ -65,7 +71,7 @@ namespace NMR {
 
 	public:
 	
-		CChunkedBinaryStreamWriter (PExportStreamMemory pExportStream);
+		CChunkedBinaryStreamWriter (const std::string & sIndexPath, const std::string & sBinaryPath, PExportStreamMemory pBinaryExportStream);
 
 		void beginChunk();
 		void finishChunk();
@@ -80,7 +86,8 @@ namespace NMR {
 		nfUint32 addFloatArray(const nfFloat * pData, nfUint32 nLength, eChunkedBinaryPredictionType predictionType, nfFloat fDiscretizationUnits);
 		nfUint32 addRawFloatArray(const nfFloat* pData, nfUint32 nLength);
 
-		void copyToStream (PExportStream pStream);
+		void copyBinaryToStream (PExportStream pStream);
+		void writeIndexXML(PExportStream pStream);
 
 		nfBool isEmpty();
 
@@ -88,6 +95,10 @@ namespace NMR {
 		bool getFloatQuantization();
 		double getFloatQuantizationUnits();
 		eChunkedBinaryPredictionType getPredictionType();
+
+		std::string getBinaryPath();
+
+		std::string getIndexPath();
 		
 
 	};

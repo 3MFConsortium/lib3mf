@@ -278,16 +278,16 @@ NMR::PModelWriter CWriter::getModelWriter()
 
 }
 
-IBinaryStream* CWriter::CreateBinaryStream(const std::string& sPath)
+IBinaryStream* CWriter::CreateBinaryStream(const std::string& sIndexPath, const std::string& sBinaryPath)
 {
 	m_pWriter->allowBinaryStreams();
 
 	NMR::PExportStreamMemory pExportStream = std::make_shared<NMR::CExportStreamMemory>();
-	NMR::PChunkedBinaryStreamWriter pStreamWriter = std::make_shared<NMR::CChunkedBinaryStreamWriter>(pExportStream);
+	NMR::PChunkedBinaryStreamWriter pStreamWriter = std::make_shared<NMR::CChunkedBinaryStreamWriter>(sIndexPath, sBinaryPath, pExportStream);
 
-	std::unique_ptr<CBinaryStream> pBinaryStream(new CBinaryStream(sPath, pStreamWriter));
-	 
-	m_pWriter->registerBinaryStream(sPath, pBinaryStream->GetUUID(), pStreamWriter);
+	std::unique_ptr<CBinaryStream> pBinaryStream(new CBinaryStream(sIndexPath, sBinaryPath, pStreamWriter));
+
+	m_pWriter->registerBinaryStream(sIndexPath, pBinaryStream->GetUUID(), pStreamWriter);
 
 	return pBinaryStream.release();
 }

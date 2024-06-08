@@ -1260,7 +1260,8 @@ void CLib3MFBinaryStream::Init()
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
-		NODE_SET_PROTOTYPE_METHOD(tpl, "GetPath", GetPath);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetBinaryPath", GetBinaryPath);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetIndexPath", GetIndexPath);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetUUID", GetUUID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "DisableDiscretizedArrayCompression", DisableDiscretizedArrayCompression);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "EnableDiscretizedArrayCompression", EnableDiscretizedArrayCompression);
@@ -1299,7 +1300,7 @@ Local<Object> CLib3MFBinaryStream::NewInstance(Local<Object> pParent, Lib3MFHand
 }
 
 
-void CLib3MFBinaryStream::GetPath(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFBinaryStream::GetBinaryPath(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
@@ -1308,15 +1309,42 @@ void CLib3MFBinaryStream::GetPath(const FunctionCallbackInfo<Value>& args)
         unsigned int bytesWrittenPath = 0;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetPath.");
-        if (wrapperTable->m_BinaryStream_GetPath == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method BinaryStream::GetPath.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetBinaryPath.");
+        if (wrapperTable->m_BinaryStream_GetBinaryPath == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BinaryStream::GetBinaryPath.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult initErrorCode = wrapperTable->m_BinaryStream_GetPath(instanceHandle, 0, &bytesNeededPath, nullptr);
+        Lib3MFResult initErrorCode = wrapperTable->m_BinaryStream_GetBinaryPath(instanceHandle, 0, &bytesNeededPath, nullptr);
         CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
         std::vector<char> bufferPath;
         bufferPath.resize(bytesNeededPath);
-        Lib3MFResult errorCode = wrapperTable->m_BinaryStream_GetPath(instanceHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]);
+        Lib3MFResult errorCode = wrapperTable->m_BinaryStream_GetBinaryPath(instanceHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferPath[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFBinaryStream::GetIndexPath(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int bytesNeededPath = 0;
+        unsigned int bytesWrittenPath = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetIndexPath.");
+        if (wrapperTable->m_BinaryStream_GetIndexPath == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BinaryStream::GetIndexPath.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_BinaryStream_GetIndexPath(instanceHandle, 0, &bytesNeededPath, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferPath;
+        bufferPath.resize(bytesNeededPath);
+        Lib3MFResult errorCode = wrapperTable->m_BinaryStream_GetIndexPath(instanceHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferPath[0]));
 
@@ -1847,10 +1875,15 @@ void CLib3MFWriter::CreateBinaryStream(const FunctionCallbackInfo<Value>& args)
 		HandleScope scope(isolate);
 		try {
         if (!args[0]->IsString()) {
-            throw std::runtime_error("Expected string parameter 0 (Path)");
+            throw std::runtime_error("Expected string parameter 0 (IndexPath)");
         }
-        v8::String::Utf8Value sutf8Path(isolate, args[0]);
-        std::string sPath = *sutf8Path;
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (BinaryPath)");
+        }
+        v8::String::Utf8Value sutf8IndexPath(isolate, args[0]);
+        std::string sIndexPath = *sutf8IndexPath;
+        v8::String::Utf8Value sutf8BinaryPath(isolate, args[1]);
+        std::string sBinaryPath = *sutf8BinaryPath;
         Lib3MFHandle hReturnBinaryStream = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
@@ -1858,7 +1891,7 @@ void CLib3MFWriter::CreateBinaryStream(const FunctionCallbackInfo<Value>& args)
         if (wrapperTable->m_Writer_CreateBinaryStream == nullptr)
             throw std::runtime_error("Could not call Lib3MF method Writer::CreateBinaryStream.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Writer_CreateBinaryStream(instanceHandle, sPath.c_str(), &hReturnBinaryStream);
+        Lib3MFResult errorCode = wrapperTable->m_Writer_CreateBinaryStream(instanceHandle, sIndexPath.c_str(), sBinaryPath.c_str(), &hReturnBinaryStream);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjBinaryStream = CLib3MFBinaryStream::NewInstance(args.Holder(), hReturnBinaryStream);
         args.GetReturnValue().Set(instanceObjBinaryStream);

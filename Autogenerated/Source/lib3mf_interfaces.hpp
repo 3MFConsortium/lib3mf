@@ -326,10 +326,16 @@ public:
 	}
 
 	/**
-	* IBinaryStream::GetPath - Retrieves an binary streams package path.
-	* @return binary streams package path.
+	* IBinaryStream::GetBinaryPath - Retrieves an binary streams package path for the binary data.
+	* @return binary streams package binary path.
 	*/
-	virtual std::string GetPath() = 0;
+	virtual std::string GetBinaryPath() = 0;
+
+	/**
+	* IBinaryStream::GetIndexPath - Retrieves an binary streams package path for the index data.
+	* @return binary streams package index path.
+	*/
+	virtual std::string GetIndexPath() = 0;
 
 	/**
 	* IBinaryStream::GetUUID - Retrieves an binary streams uuid.
@@ -470,10 +476,11 @@ public:
 
 	/**
 	* IWriter::CreateBinaryStream - Creates a binary stream object. Only applicable for 3MF Writers.
-	* @param[in] sPath - Package path to write into
+	* @param[in] sIndexPath - Package path to write the index into
+	* @param[in] sBinaryPath - Package path to write raw binary data into
 	* @return Returns a package path.
 	*/
-	virtual IBinaryStream * CreateBinaryStream(const std::string & sPath) = 0;
+	virtual IBinaryStream * CreateBinaryStream(const std::string & sIndexPath, const std::string & sBinaryPath) = 0;
 
 	/**
 	* IWriter::AssignBinaryStream - Sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.

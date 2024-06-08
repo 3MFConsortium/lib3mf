@@ -353,8 +353,11 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_base_classtypeid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Base_ClassTypeId (IntPtr Handle, out UInt64 AClassTypeId);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_getpath", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BinaryStream_GetPath (IntPtr Handle, UInt32 sizePath, out UInt32 neededPath, IntPtr dataPath);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_getbinarypath", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BinaryStream_GetBinaryPath (IntPtr Handle, UInt32 sizePath, out UInt32 neededPath, IntPtr dataPath);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_getindexpath", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BinaryStream_GetIndexPath (IntPtr Handle, UInt32 sizePath, out UInt32 neededPath, IntPtr dataPath);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_getuuid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BinaryStream_GetUUID (IntPtr Handle, UInt32 sizeUUID, out UInt32 neededUUID, IntPtr dataUUID);
@@ -411,7 +414,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 Writer_SetContentEncryptionCallback (IntPtr Handle, IntPtr ATheCallback, UInt64 AUserData);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_writer_createbinarystream", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Writer_CreateBinaryStream (IntPtr Handle, byte[] APath, out IntPtr ABinaryStream);
+			public unsafe extern static Int32 Writer_CreateBinaryStream (IntPtr Handle, byte[] AIndexPath, byte[] ABinaryPath, out IntPtr ABinaryStream);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_writer_assignbinarystream", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Writer_AssignBinaryStream (IntPtr Handle, IntPtr AInstance, IntPtr ABinaryStream);
@@ -2255,16 +2258,30 @@ namespace Lib3MF {
 		{
 		}
 
-		public String GetPath ()
+		public String GetBinaryPath ()
 		{
 			UInt32 sizePath = 0;
 			UInt32 neededPath = 0;
-			CheckError(Internal.Lib3MFWrapper.BinaryStream_GetPath (Handle, sizePath, out neededPath, IntPtr.Zero));
+			CheckError(Internal.Lib3MFWrapper.BinaryStream_GetBinaryPath (Handle, sizePath, out neededPath, IntPtr.Zero));
 			sizePath = neededPath;
 			byte[] bytesPath = new byte[sizePath];
 			GCHandle dataPath = GCHandle.Alloc(bytesPath, GCHandleType.Pinned);
 
-			CheckError(Internal.Lib3MFWrapper.BinaryStream_GetPath (Handle, sizePath, out neededPath, dataPath.AddrOfPinnedObject()));
+			CheckError(Internal.Lib3MFWrapper.BinaryStream_GetBinaryPath (Handle, sizePath, out neededPath, dataPath.AddrOfPinnedObject()));
+			dataPath.Free();
+			return Encoding.UTF8.GetString(bytesPath).TrimEnd(char.MinValue);
+		}
+
+		public String GetIndexPath ()
+		{
+			UInt32 sizePath = 0;
+			UInt32 neededPath = 0;
+			CheckError(Internal.Lib3MFWrapper.BinaryStream_GetIndexPath (Handle, sizePath, out neededPath, IntPtr.Zero));
+			sizePath = neededPath;
+			byte[] bytesPath = new byte[sizePath];
+			GCHandle dataPath = GCHandle.Alloc(bytesPath, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.BinaryStream_GetIndexPath (Handle, sizePath, out neededPath, dataPath.AddrOfPinnedObject()));
 			dataPath.Free();
 			return Encoding.UTF8.GetString(bytesPath).TrimEnd(char.MinValue);
 		}
@@ -2419,12 +2436,13 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.Writer_SetContentEncryptionCallback (Handle, ATheCallback, AUserData));
 		}
 
-		public CBinaryStream CreateBinaryStream (String APath)
+		public CBinaryStream CreateBinaryStream (String AIndexPath, String ABinaryPath)
 		{
-			byte[] bytePath = Encoding.UTF8.GetBytes(APath + char.MinValue);
+			byte[] byteIndexPath = Encoding.UTF8.GetBytes(AIndexPath + char.MinValue);
+			byte[] byteBinaryPath = Encoding.UTF8.GetBytes(ABinaryPath + char.MinValue);
 			IntPtr newBinaryStream = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.Writer_CreateBinaryStream (Handle, bytePath, out newBinaryStream));
+			CheckError(Internal.Lib3MFWrapper.Writer_CreateBinaryStream (Handle, byteIndexPath, byteBinaryPath, out newBinaryStream));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CBinaryStream>(newBinaryStream);
 		}
 

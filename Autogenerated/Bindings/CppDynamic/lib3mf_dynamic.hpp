@@ -745,7 +745,8 @@ public:
 	{
 	}
 	
-	inline std::string GetPath();
+	inline std::string GetBinaryPath();
+	inline std::string GetIndexPath();
 	inline std::string GetUUID();
 	inline void DisableDiscretizedArrayCompression();
 	inline void EnableDiscretizedArrayCompression(const Lib3MF_double dUnits, const eBinaryStreamPredictionType ePredictionType);
@@ -780,7 +781,7 @@ public:
 	inline Lib3MF_uint32 GetWarningCount();
 	inline void AddKeyWrappingCallback(const std::string & sConsumerID, const KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData);
 	inline void SetContentEncryptionCallback(const ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData);
-	inline PBinaryStream CreateBinaryStream(const std::string & sPath);
+	inline PBinaryStream CreateBinaryStream(const std::string & sIndexPath, const std::string & sBinaryPath);
 	inline void AssignBinaryStream(classParam<CBase> pInstance, classParam<CBinaryStream> pBinaryStream);
 	inline void RegisterCustomNamespace(const std::string & sPrefix, const std::string & sNameSpace);
 };
@@ -2391,7 +2392,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		pWrapperTable->m_LibraryHandle = nullptr;
 		pWrapperTable->m_Base_ClassTypeId = nullptr;
-		pWrapperTable->m_BinaryStream_GetPath = nullptr;
+		pWrapperTable->m_BinaryStream_GetBinaryPath = nullptr;
+		pWrapperTable->m_BinaryStream_GetIndexPath = nullptr;
 		pWrapperTable->m_BinaryStream_GetUUID = nullptr;
 		pWrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression = nullptr;
 		pWrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression = nullptr;
@@ -2942,12 +2944,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_BinaryStream_GetPath = (PLib3MFBinaryStream_GetPathPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_getpath");
+		pWrapperTable->m_BinaryStream_GetBinaryPath = (PLib3MFBinaryStream_GetBinaryPathPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_getbinarypath");
 		#else // _WIN32
-		pWrapperTable->m_BinaryStream_GetPath = (PLib3MFBinaryStream_GetPathPtr) dlsym(hLibrary, "lib3mf_binarystream_getpath");
+		pWrapperTable->m_BinaryStream_GetBinaryPath = (PLib3MFBinaryStream_GetBinaryPathPtr) dlsym(hLibrary, "lib3mf_binarystream_getbinarypath");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_BinaryStream_GetPath == nullptr)
+		if (pWrapperTable->m_BinaryStream_GetBinaryPath == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_BinaryStream_GetIndexPath = (PLib3MFBinaryStream_GetIndexPathPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_getindexpath");
+		#else // _WIN32
+		pWrapperTable->m_BinaryStream_GetIndexPath = (PLib3MFBinaryStream_GetIndexPathPtr) dlsym(hLibrary, "lib3mf_binarystream_getindexpath");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BinaryStream_GetIndexPath == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -7380,8 +7391,12 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_Base_ClassTypeId == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_binarystream_getpath", (void**)&(pWrapperTable->m_BinaryStream_GetPath));
-		if ( (eLookupError != 0) || (pWrapperTable->m_BinaryStream_GetPath == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_binarystream_getbinarypath", (void**)&(pWrapperTable->m_BinaryStream_GetBinaryPath));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BinaryStream_GetBinaryPath == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_binarystream_getindexpath", (void**)&(pWrapperTable->m_BinaryStream_GetIndexPath));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BinaryStream_GetIndexPath == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_binarystream_getuuid", (void**)&(pWrapperTable->m_BinaryStream_GetUUID));
@@ -9370,16 +9385,31 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	 */
 	
 	/**
-	* CBinaryStream::GetPath - Retrieves an binary streams package path.
-	* @return binary streams package path.
+	* CBinaryStream::GetBinaryPath - Retrieves an binary streams package path for the binary data.
+	* @return binary streams package binary path.
 	*/
-	std::string CBinaryStream::GetPath()
+	std::string CBinaryStream::GetBinaryPath()
 	{
 		Lib3MF_uint32 bytesNeededPath = 0;
 		Lib3MF_uint32 bytesWrittenPath = 0;
-		CheckError(m_pWrapper->m_WrapperTable.m_BinaryStream_GetPath(m_pHandle, 0, &bytesNeededPath, nullptr));
+		CheckError(m_pWrapper->m_WrapperTable.m_BinaryStream_GetBinaryPath(m_pHandle, 0, &bytesNeededPath, nullptr));
 		std::vector<char> bufferPath(bytesNeededPath);
-		CheckError(m_pWrapper->m_WrapperTable.m_BinaryStream_GetPath(m_pHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]));
+		CheckError(m_pWrapper->m_WrapperTable.m_BinaryStream_GetBinaryPath(m_pHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]));
+		
+		return std::string(&bufferPath[0]);
+	}
+	
+	/**
+	* CBinaryStream::GetIndexPath - Retrieves an binary streams package path for the index data.
+	* @return binary streams package index path.
+	*/
+	std::string CBinaryStream::GetIndexPath()
+	{
+		Lib3MF_uint32 bytesNeededPath = 0;
+		Lib3MF_uint32 bytesWrittenPath = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_BinaryStream_GetIndexPath(m_pHandle, 0, &bytesNeededPath, nullptr));
+		std::vector<char> bufferPath(bytesNeededPath);
+		CheckError(m_pWrapper->m_WrapperTable.m_BinaryStream_GetIndexPath(m_pHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]));
 		
 		return std::string(&bufferPath[0]);
 	}
@@ -9587,13 +9617,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	
 	/**
 	* CWriter::CreateBinaryStream - Creates a binary stream object. Only applicable for 3MF Writers.
-	* @param[in] sPath - Package path to write into
+	* @param[in] sIndexPath - Package path to write the index into
+	* @param[in] sBinaryPath - Package path to write raw binary data into
 	* @return Returns a package path.
 	*/
-	PBinaryStream CWriter::CreateBinaryStream(const std::string & sPath)
+	PBinaryStream CWriter::CreateBinaryStream(const std::string & sIndexPath, const std::string & sBinaryPath)
 	{
 		Lib3MFHandle hBinaryStream = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_Writer_CreateBinaryStream(m_pHandle, sPath.c_str(), &hBinaryStream));
+		CheckError(m_pWrapper->m_WrapperTable.m_Writer_CreateBinaryStream(m_pHandle, sIndexPath.c_str(), sBinaryPath.c_str(), &hBinaryStream));
 		
 		if (!hBinaryStream) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);

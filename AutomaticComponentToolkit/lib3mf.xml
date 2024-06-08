@@ -331,10 +331,14 @@
 
 
 	<class name="BinaryStream" parent="Base">  
-		<method name="GetPath" description = "Retrieves an binary streams package path.">
-			<param name="Path" type="string" pass="return" description="binary streams package path." />
+		<method name="GetBinaryPath" description = "Retrieves an binary streams package path for the binary data.">
+			<param name="Path" type="string" pass="return" description="binary streams package binary path." />
 		</method>
 
+		<method name="GetIndexPath" description = "Retrieves an binary streams package path for the index data.">
+			<param name="Path" type="string" pass="return" description="binary streams package index path." />
+		</method>
+		
 		<method name="GetUUID" description = "Retrieves an binary streams uuid.">
 			<param name="UUID" type="string" pass="return" description="binary streams uuid" />
 		</method>
@@ -407,7 +411,8 @@
 		</method>
 		
 		<method name="CreateBinaryStream" description = "Creates a binary stream object. Only applicable for 3MF Writers.">
-			<param name="Path" type="string" pass="in" description="Package path to write into" />
+			<param name="IndexPath" type="string" pass="in" description="Package path to write the index into" />
+			<param name="BinaryPath" type="string" pass="in" description="Package path to write raw binary data into" />
 			<param name="BinaryStream" type="class" class="BinaryStream" pass="return" description="Returns a package path." />
 		</method>
 		

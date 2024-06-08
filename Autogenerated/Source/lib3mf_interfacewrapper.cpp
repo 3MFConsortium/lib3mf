@@ -126,14 +126,14 @@ Lib3MFResult lib3mf_base_classtypeid(Lib3MF_Base pBase, Lib3MF_uint64 * pClassTy
 /*************************************************************************************************************************
  Class implementation for BinaryStream
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_binarystream_getpath(Lib3MF_BinaryStream pBinaryStream, const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char * pPathBuffer)
+Lib3MFResult lib3mf_binarystream_getbinarypath(Lib3MF_BinaryStream pBinaryStream, const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char * pPathBuffer)
 {
 	IBase* pIBaseClass = (IBase *)pBinaryStream;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pBinaryStream, "BinaryStream", "GetPath");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBinaryStream, "BinaryStream", "GetBinaryPath");
 		}
 		if ( (!pPathBuffer) && !(pPathNeededChars) )
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
@@ -144,7 +144,63 @@ Lib3MFResult lib3mf_binarystream_getpath(Lib3MF_BinaryStream pBinaryStream, cons
 		
 		bool isCacheCall = (pPathBuffer == nullptr);
 		if (isCacheCall) {
-			sPath = pIBinaryStream->GetPath();
+			sPath = pIBinaryStream->GetBinaryPath();
+
+			pIBinaryStream->_setCache (new ParameterCache_1<std::string> (sPath));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIBinaryStream->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sPath);
+			pIBinaryStream->_setCache (nullptr);
+		}
+		
+		if (pPathNeededChars)
+			*pPathNeededChars = (Lib3MF_uint32) (sPath.size()+1);
+		if (pPathBuffer) {
+			if (sPath.size() >= nPathBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iPath = 0; iPath < sPath.size(); iPath++)
+				pPathBuffer[iPath] = sPath[iPath];
+			pPathBuffer[sPath.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("Path", sPath.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_binarystream_getindexpath(Lib3MF_BinaryStream pBinaryStream, const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char * pPathBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pBinaryStream;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBinaryStream, "BinaryStream", "GetIndexPath");
+		}
+		if ( (!pPathBuffer) && !(pPathNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sPath("");
+		IBinaryStream* pIBinaryStream = dynamic_cast<IBinaryStream*>(pIBaseClass);
+		if (!pIBinaryStream)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pPathBuffer == nullptr);
+		if (isCacheCall) {
+			sPath = pIBinaryStream->GetIndexPath();
 
 			pIBinaryStream->_setCache (new ParameterCache_1<std::string> (sPath));
 		}
@@ -829,7 +885,7 @@ Lib3MFResult lib3mf_writer_setcontentencryptioncallback(Lib3MF_Writer pWriter, L
 	}
 }
 
-Lib3MFResult lib3mf_writer_createbinarystream(Lib3MF_Writer pWriter, const char * pPath, Lib3MF_BinaryStream * pBinaryStream)
+Lib3MFResult lib3mf_writer_createbinarystream(Lib3MF_Writer pWriter, const char * pIndexPath, const char * pBinaryPath, Lib3MF_BinaryStream * pBinaryStream)
 {
 	IBase* pIBaseClass = (IBase *)pWriter;
 
@@ -837,19 +893,23 @@ Lib3MFResult lib3mf_writer_createbinarystream(Lib3MF_Writer pWriter, const char 
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pWriter, "Writer", "CreateBinaryStream");
-			pJournalEntry->addStringParameter("Path", pPath);
+			pJournalEntry->addStringParameter("IndexPath", pIndexPath);
+			pJournalEntry->addStringParameter("BinaryPath", pBinaryPath);
 		}
-		if (pPath == nullptr)
+		if (pIndexPath == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pBinaryPath == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		if (pBinaryStream == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sPath(pPath);
+		std::string sIndexPath(pIndexPath);
+		std::string sBinaryPath(pBinaryPath);
 		IBase* pBaseBinaryStream(nullptr);
 		IWriter* pIWriter = dynamic_cast<IWriter*>(pIBaseClass);
 		if (!pIWriter)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseBinaryStream = pIWriter->CreateBinaryStream(sPath);
+		pBaseBinaryStream = pIWriter->CreateBinaryStream(sIndexPath, sBinaryPath);
 
 		*pBinaryStream = (IBase*)(pBaseBinaryStream);
 		if (pJournalEntry.get() != nullptr) {
@@ -18268,8 +18328,10 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 	
 	if (sProcName == "lib3mf_base_classtypeid") 
 		*ppProcAddress = (void*) &lib3mf_base_classtypeid;
-	if (sProcName == "lib3mf_binarystream_getpath") 
-		*ppProcAddress = (void*) &lib3mf_binarystream_getpath;
+	if (sProcName == "lib3mf_binarystream_getbinarypath") 
+		*ppProcAddress = (void*) &lib3mf_binarystream_getbinarypath;
+	if (sProcName == "lib3mf_binarystream_getindexpath") 
+		*ppProcAddress = (void*) &lib3mf_binarystream_getindexpath;
 	if (sProcName == "lib3mf_binarystream_getuuid") 
 		*ppProcAddress = (void*) &lib3mf_binarystream_getuuid;
 	if (sProcName == "lib3mf_binarystream_disablediscretizedarraycompression") 

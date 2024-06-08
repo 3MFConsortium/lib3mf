@@ -52,9 +52,9 @@ namespace NMR {
 
 	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
 		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension,
-		CChunkedBinaryStreamWriter* pBinaryStreamWriter, const std::string& sBinaryStreamPath)
+		CChunkedBinaryStreamWriter* pBinaryStreamWriter)
 		:CModelWriterNode_ModelBase(pModelMeshObject->getModel(), pXMLWriter, pProgressMonitor), m_nPosAfterDecPoint(nPosAfterDecPoint), m_nPutDoubleFactor((int)(pow(10, CModelWriterNode100_Mesh::m_nPosAfterDecPoint))),
-		m_pBinaryStreamWriter (pBinaryStreamWriter), m_sBinaryStreamPath (sBinaryStreamPath)
+		m_pBinaryStreamWriter (pBinaryStreamWriter)
 	{
 		__NMRASSERT(pModelMeshObject != nullptr);
 		if (!pPropertyIndexMapping.get())
@@ -79,6 +79,7 @@ namespace NMR {
 		putBallString(MODELWRITERMESH100_BEAMLATTICE_BALLLINESTART);
 		putBeamRefString(MODELWRITERMESH100_BEAMLATTICE_REFLINESTART);
 		putBallRefString(MODELWRITERMESH100_BEAMLATTICE_BALLREFLINESTART);
+
 	}
 
 	bool stringRepresentationsDiffer(double a, double b, double putFactor) {
@@ -132,7 +133,7 @@ namespace NMR {
 		writeStartElement(XML_3MF_ELEMENT_MESH);
 
 		if (m_pBinaryStreamWriter != nullptr) {
-			writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_ATTRIBUTE_MESH_BINARY, m_sBinaryStreamPath.c_str());
+			writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_ATTRIBUTE_MESH_BINARY, m_pBinaryStreamWriter->getIndexPath().c_str());
 		}
 
 		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENODES);

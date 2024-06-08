@@ -41,8 +41,8 @@ using namespace Lib3MF::Impl;
  Class definition of CBinaryStream 
 **************************************************************************************************************************/
 
-CBinaryStream::CBinaryStream(std::string sPackagePath, NMR::PChunkedBinaryStreamWriter pStreamWriter)
-	: m_sPackagePath (sPackagePath), m_pStreamWriter (pStreamWriter)
+CBinaryStream::CBinaryStream(std::string sPackageIndexPath, std::string sPackageBinaryPath, NMR::PChunkedBinaryStreamWriter pStreamWriter)
+	: m_sPackageIndexPath (sPackageIndexPath), m_sPackageBinaryPath (sPackageBinaryPath), m_pStreamWriter (pStreamWriter)
 {
 	if (pStreamWriter.get() == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
@@ -54,11 +54,15 @@ CBinaryStream::CBinaryStream(std::string sPackagePath, NMR::PChunkedBinaryStream
 
 
 
-std::string CBinaryStream::GetPath()
+std::string CBinaryStream::GetBinaryPath()
 {
-	return m_sPackagePath;
+	return m_sPackageBinaryPath;
 }
 
+std::string CBinaryStream::GetIndexPath()
+{
+	return m_sPackageIndexPath;
+}
 
 std::string CBinaryStream::GetUUID()
 {

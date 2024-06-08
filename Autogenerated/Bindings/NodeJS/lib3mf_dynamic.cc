@@ -49,7 +49,8 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	
 	pWrapperTable->m_LibraryHandle = NULL;
 	pWrapperTable->m_Base_ClassTypeId = NULL;
-	pWrapperTable->m_BinaryStream_GetPath = NULL;
+	pWrapperTable->m_BinaryStream_GetBinaryPath = NULL;
+	pWrapperTable->m_BinaryStream_GetIndexPath = NULL;
 	pWrapperTable->m_BinaryStream_GetUUID = NULL;
 	pWrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression = NULL;
 	pWrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression = NULL;
@@ -604,12 +605,21 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_BinaryStream_GetPath = (PLib3MFBinaryStream_GetPathPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_getpath");
+	pWrapperTable->m_BinaryStream_GetBinaryPath = (PLib3MFBinaryStream_GetBinaryPathPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_getbinarypath");
 	#else // _WIN32
-	pWrapperTable->m_BinaryStream_GetPath = (PLib3MFBinaryStream_GetPathPtr) dlsym(hLibrary, "lib3mf_binarystream_getpath");
+	pWrapperTable->m_BinaryStream_GetBinaryPath = (PLib3MFBinaryStream_GetBinaryPathPtr) dlsym(hLibrary, "lib3mf_binarystream_getbinarypath");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_BinaryStream_GetPath == NULL)
+	if (pWrapperTable->m_BinaryStream_GetBinaryPath == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_BinaryStream_GetIndexPath = (PLib3MFBinaryStream_GetIndexPathPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_getindexpath");
+	#else // _WIN32
+	pWrapperTable->m_BinaryStream_GetIndexPath = (PLib3MFBinaryStream_GetIndexPathPtr) dlsym(hLibrary, "lib3mf_binarystream_getindexpath");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_BinaryStream_GetIndexPath == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

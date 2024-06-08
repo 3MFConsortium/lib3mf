@@ -65,7 +65,6 @@ namespace NMR {
 	protected:
 		CModelMeshObject * m_pModelMeshObject;
 		CChunkedBinaryStreamWriter* m_pBinaryStreamWriter;
-		std::string m_sBinaryStreamPath;
 
 		PMeshInformation_PropertyIndexMapping m_pPropertyIndexMapping;
 
@@ -124,7 +123,7 @@ namespace NMR {
 		CModelWriterNode100_Mesh() = delete;
 		CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
 			_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool m_bWriteBeamLatticeExtension,
-			CChunkedBinaryStreamWriter* pBinaryStreamWriter, const std::string & sBinaryStreamPath);
+			CChunkedBinaryStreamWriter* pBinaryStreamWriter);
 
 		virtual void writeToXML();
 	};

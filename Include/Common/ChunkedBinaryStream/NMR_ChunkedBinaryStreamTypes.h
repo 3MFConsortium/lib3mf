@@ -67,6 +67,7 @@ namespace NMR {
 
 
 	typedef struct {
+		nfUint32 m_ChunkID;
 		nfUint32 m_EntryCount;
 		nfUint64 m_EntryTableStart;
 		nfUint64 m_CompressedDataStart;

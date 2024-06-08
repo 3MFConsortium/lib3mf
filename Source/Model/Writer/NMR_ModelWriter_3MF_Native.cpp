@@ -223,10 +223,18 @@ namespace NMR {
 			auto pBinaryWriter = iBinaryIter.second.second;
 
 			if (!pBinaryWriter->isEmpty()) {
-				iBinaryIter.second.second->finishWriting();
-				POpcPackagePart pBinaryPart = m_pPackageWriter->addPart(iBinaryIter.second.first);
+				pBinaryWriter->finishWriting();
+				POpcPackagePart pBinaryPart = m_pPackageWriter->addPart(pBinaryWriter->getBinaryPath ());
 				pModelPart->addRelationship("binary" + iBinaryIter.first, PACKAGE_BINARY_RELATIONSHIP_TYPE, pBinaryPart->getURI());
-				pBinaryWriter->copyToStream(pBinaryPart->getExportStream());
+				pBinaryWriter->copyBinaryToStream(pBinaryPart->getExportStream());
+
+				POpcPackagePart pIndexPart = m_pPackageWriter->addPart(pBinaryWriter->getIndexPath ());
+				pModelPart->addRelationship("binaryindex" + iBinaryIter.first, PACKAGE_BINARYINDEX_RELATIONSHIP_TYPE, pIndexPart->getURI());
+
+				pIndexPart->addRelationship("binary" + iBinaryIter.first, PACKAGE_BINARY_RELATIONSHIP_TYPE, pBinaryPart->getURI());				
+				pBinaryWriter->writeIndexXML(pIndexPart->getExportStream());
+				
+
 			}
 
 		}

@@ -74,6 +74,8 @@ These are given by the 3MF Standard
 #define PACKAGE_ENCRYPTED_FILE_RELATIONSHIP "http://schemas.openxmlformats.org/package/2006/relationships/encryptedfile"
 #define PACKAGE_TOOLPATH_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/05/toolpath"
 #define PACKAGE_BINARY_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/05/binary"
+#define PACKAGE_BINARYINDEX_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/05/binaryindex"
+
 
 #define XML_3MF_NAMESPACE_XML "http://www.w3.org/XML/1998/namespace"
 #define XML_3MF_NAMESPACE_XMLNS "http://www.w3.org/2000/xmlns/"

@@ -94,7 +94,8 @@ class CLib3MFBinaryStream : public CLib3MFBaseClass {
 private:
 	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static v8::Persistent<v8::Function> constructor;
-	static void GetPath(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetBinaryPath(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetIndexPath(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void DisableDiscretizedArrayCompression(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void EnableDiscretizedArrayCompression(const v8::FunctionCallbackInfo<v8::Value>& args);
