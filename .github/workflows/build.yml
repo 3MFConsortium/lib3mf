@@ -517,7 +517,7 @@ jobs:
           submodules: true
       - run: |
           mkdir -p lib3mf-${{ env.LIB3MF_VERSION }}-source-with-submodules
-          rsync -av --progress . ./lib3mf-${{ env.LIB3MF_VERSION }}-source-with-submodules --exclude .git --exclude .gitignore --exclude .github --exclude .gitmodules --exclude *.yml
+          rsync -av --progress . ./lib3mf-${{ env.LIB3MF_VERSION }}-source-with-submodules --exclude .git --exclude .gitignore --exclude .github --exclude .gitmodules --exclude *.yml --exclude lib3mf-${{ env.LIB3MF_VERSION }}-source-with-submodules
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
