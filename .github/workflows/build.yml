@@ -506,9 +506,9 @@ jobs:
           cmake --build .
           ./Example_ExtractInfo ../../../Examples/Files/Helix.3mf
 
-  deploy-artifact-with-submodules:
+  deploy-source-code-with-submodules:
     runs-on: ubuntu-20.04
-    needs: [ set-lib3mf-version ]
+    needs: [ set-lib3mf-version, assemble-sdk ]
     env:
       LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
     steps:
