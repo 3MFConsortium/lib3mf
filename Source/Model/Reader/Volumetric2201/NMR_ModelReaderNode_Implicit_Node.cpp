@@ -139,7 +139,7 @@ namespace NMR
                 m_pImplicitNode->setMatrix(matFromString(pAttributeValue));
             }
         }
-		else if (m_pImplicitNode->getNodeType() == Lib3MF::eImplicitNodeType::Resource)
+		else if (m_pImplicitNode->getNodeType() == Lib3MF::eImplicitNodeType::ConstResourceID)
 		{
 			if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_RESOURCE_ID) == 0)
             {

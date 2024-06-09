@@ -498,7 +498,7 @@ namespace Lib3MF {
     FunctionCall = 45, /** Calls a function */
     Mesh = 46, /** Calculates the signed distance to a mesh */
     Length = 47, /** Calculates the length of a vector */
-    Resource = 48, /** Selects a resource (function, mesh etc.) */
+    ConstResourceID = 48, /** Selects a resource (function, mesh etc.) */
     VectorFromScalar = 49, /** Creates a vector from one scalar values */
     UnsignedMesh = 50, /** Calculates the unsigned distance to a mesh */
     Mod = 51 /** Calculates the modulo of two values (same behaviour as glsl mod) */

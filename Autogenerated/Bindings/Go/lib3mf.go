@@ -5708,7 +5708,7 @@ const (
 	ImplicitNodeType_FunctionCall = 45
 	ImplicitNodeType_Mesh = 46
 	ImplicitNodeType_Length = 47
-	ImplicitNodeType_Resource = 48
+	ImplicitNodeType_ConstResourceID = 48
 	ImplicitNodeType_VectorFromScalar = 49
 	ImplicitNodeType_UnsignedMesh = 50
 	ImplicitNodeType_Mod = 51

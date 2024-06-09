@@ -207,7 +207,7 @@ namespace Lib3MF {
 		FunctionCall = 45,
 		Mesh = 46,
 		Length = 47,
-		Resource = 48,
+		ConstResourceID = 48,
 		VectorFromScalar = 49,
 		UnsignedMesh = 50,
 		Mod = 51

@@ -300,7 +300,7 @@ type
 		eImplicitNodeTypeFunctionCall,
 		eImplicitNodeTypeMesh,
 		eImplicitNodeTypeLength,
-		eImplicitNodeTypeResource,
+		eImplicitNodeTypeConstResourceID,
 		eImplicitNodeTypeVectorFromScalar,
 		eImplicitNodeTypeUnsignedMesh,
 		eImplicitNodeTypeMod
@@ -10841,7 +10841,7 @@ implementation
 			eImplicitNodeTypeFunctionCall: Result := 45;
 			eImplicitNodeTypeMesh: Result := 46;
 			eImplicitNodeTypeLength: Result := 47;
-			eImplicitNodeTypeResource: Result := 48;
+			eImplicitNodeTypeConstResourceID: Result := 48;
 			eImplicitNodeTypeVectorFromScalar: Result := 49;
 			eImplicitNodeTypeUnsignedMesh: Result := 50;
 			eImplicitNodeTypeMod: Result := 51;
@@ -10900,7 +10900,7 @@ implementation
 			45: Result := eImplicitNodeTypeFunctionCall;
 			46: Result := eImplicitNodeTypeMesh;
 			47: Result := eImplicitNodeTypeLength;
-			48: Result := eImplicitNodeTypeResource;
+			48: Result := eImplicitNodeTypeConstResourceID;
 			49: Result := eImplicitNodeTypeVectorFromScalar;
 			50: Result := eImplicitNodeTypeUnsignedMesh;
 			51: Result := eImplicitNodeTypeMod;

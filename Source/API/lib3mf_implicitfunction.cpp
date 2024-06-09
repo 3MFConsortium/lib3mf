@@ -386,7 +386,7 @@ IResourceIdNode* CImplicitFunction::AddResourceIdNode(
     const std::string& sTag)
 {
     auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Resource,
+        function()->addNode(Lib3MF::eImplicitNodeType::ConstResourceID,
                             Lib3MF::eImplicitNodeConfiguration::Default,
                             sIdentifier, sDisplayName, sTag);
     return new CResourceIdNode(newNode);

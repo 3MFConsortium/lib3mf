@@ -23676,7 +23676,7 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_FunctionCall"), Integer::New(isolate, 45));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Mesh"), Integer::New(isolate, 46));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Length"), Integer::New(isolate, 47));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Resource"), Integer::New(isolate, 48));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_ConstResourceID"), Integer::New(isolate, 48));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_VectorFromScalar"), Integer::New(isolate, 49));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_UnsignedMesh"), Integer::New(isolate, 50));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Mod"), Integer::New(isolate, 51));

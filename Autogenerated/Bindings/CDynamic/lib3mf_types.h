@@ -497,7 +497,7 @@ typedef enum eLib3MFImplicitNodeType {
   eImplicitNodeTypeFunctionCall = 45, /** Calls a function */
   eImplicitNodeTypeMesh = 46, /** Calculates the signed distance to a mesh */
   eImplicitNodeTypeLength = 47, /** Calculates the length of a vector */
-  eImplicitNodeTypeResource = 48, /** Selects a resource (function, mesh etc.) */
+  eImplicitNodeTypeConstResourceID = 48, /** Selects a resource (function, mesh etc.) */
   eImplicitNodeTypeVectorFromScalar = 49, /** Creates a vector from one scalar values */
   eImplicitNodeTypeUnsignedMesh = 50, /** Calculates the unsigned distance to a mesh */
   eImplicitNodeTypeMod = 51 /** Calculates the modulo of two values (same behaviour as glsl mod) */

@@ -1920,7 +1920,7 @@
 		<option name="FunctionCall" description="Calls a function" value="45" />
 		<option name="Mesh" description="Calculates the signed distance to a mesh" value="46" />
 		<option name="Length" description="Calculates the length of a vector" value="47" />
-		<option name="Resource" description="Selects a resource (function, mesh etc.)" value="48" />
+		<option name="ConstResourceID" description="Selects a resource (function, mesh etc.)" value="48" />
 		<option name="VectorFromScalar" description="Creates a vector from one scalar values"
 			value="49" />
 		<option name="UnsignedMesh" description="Calculates the unsigned distance to a mesh"

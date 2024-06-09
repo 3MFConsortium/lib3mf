@@ -259,7 +259,7 @@ IImplicitNode* Lib3MF::Impl::CNodeIterator::implicitNodeFromModelImplicitNode(
         return new CUnsignedMeshNode(pNode);
     case eImplicitNodeType::Length:
         return new CLengthNode(pNode);
-    case eImplicitNodeType::Resource:
+    case eImplicitNodeType::ConstResourceID:
         return new CResourceIdNode(pNode);
     case eImplicitNodeType::Mod:
         return new CModNode(pNode);

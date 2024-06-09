@@ -202,14 +202,14 @@ namespace NMR
 
     void CModelImplicitNode::setModelResourceID(UniqueResourceID resourceID)
     {
-        if (m_type != Lib3MF::eImplicitNodeType::Resource)
+        if (m_type != Lib3MF::eImplicitNodeType::ConstResourceID)
             throw CNMRException(NMR_ERROR_INVALIDPARAM);
         m_modelResourceID = resourceID;
     }
 
     UniqueResourceID CModelImplicitNode::getModelResourceID() const
     {
-        if (m_type != Lib3MF::eImplicitNodeType::Resource)
+        if (m_type != Lib3MF::eImplicitNodeType::ConstResourceID)
             throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
         return m_modelResourceID;
