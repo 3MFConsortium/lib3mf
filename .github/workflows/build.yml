@@ -521,7 +521,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: lib3mf-${{ env.LIB3MF_VERSION }}-source-with-submodules.zip
+          name: lib3mf-${{ env.LIB3MF_VERSION }}-source-with-submodules
           path: lib3mf-${{ env.LIB3MF_VERSION }}-source-with-submodules
 
 
