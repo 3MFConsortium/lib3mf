@@ -506,16 +506,19 @@ jobs:
           cmake --build .
           ./Example_ExtractInfo ../../../Examples/Files/Helix.3mf
 
-  deploy-source-code-with-submodules:
+  deploy-artifact-with-submodules:
     runs-on: ubuntu-20.04
-    needs: [set-lib3mf-version, assemble-sdk]
+    needs: [ set-lib3mf-version ]
     env:
       LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: true
-      - run: zip -r lib3mf-${{ env.LIB3MF_VERSION }}-source-with-submodules.zip .
+      - run: |
+          rsync -av --progress . ./temp --exclude .git --exclude .gitignore --exclude .github --exclude .gitmodules --exclude *.yml
+          cd temp
+          zip -r ../lib3mf-${{ env.LIB3MF_VERSION }}-source-with-submodules.zip .
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -523,9 +526,10 @@ jobs:
           path: lib3mf-${{ env.LIB3MF_VERSION }}-source-with-submodules.zip
 
 
+
   set-integration-tests-status:
     runs-on: ubuntu-20.04
-    needs: [ deploy-linux, deploy-windows, deploy-macos ]
+    needs: [ deploy-linux, deploy-windows, deploy-macos, deploy-source-code-with-submodules ]
     outputs:
       run_integration_tests: ${{ steps.set-status.outputs.run_integration_tests }}
     steps:
