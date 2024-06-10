@@ -36,7 +36,7 @@ NMR_PortableZIPWriter.h defines a portable stream to write into ZIP files
 #include "Common/NMR_Types.h"
 #include "Common/Platform/NMR_ExportStream.h"
 #include "Common/Platform/NMR_PortableZIPWriter.h"
-#include "Libraries/zlib/zlib.h"
+#include "zlib.h"
 
 #include <array>
 

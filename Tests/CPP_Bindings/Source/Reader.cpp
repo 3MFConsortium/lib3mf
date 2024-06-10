@@ -150,69 +150,28 @@ namespace Lib3MF
 		ASSERT_SPECIFIC_THROW(reader->ReadFromFile(sTestFilesPath + "/Reader/" + "GEN-M-ADA-ITEM-TRANSFORM-0.3mf"), ELib3MFException);
 	}
 
-	// TODO
-	//TEST_F(Reader, 3MFReadVolumetric)
-	//{
-	//	ASSERT_EQ(false, true);
-	//	// Reader::reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "PyramidVolume.3mf");
-	//	// CheckReaderWarnings(Reader::reader3MF, 0);
 
-	//	//auto pIterator = model->GetImage3Ds();
-	//	//ASSERT_EQ (pIterator->MoveNext (), true);
-	//	//auto pImage3D = pIterator->GetCurrentImage3D();
-	//	//ASSERT_EQ(pImage3D->GetSizeX(), 10);
-	//	//ASSERT_EQ(pImage3D->GetSizeY(), 10);
-	//	//ASSERT_EQ(pImage3D->GetSheetCount(), 3);
+	TEST_F(Reader, ReadVerticesCommaSeparatedValue) {
+		// This file N_XXX_0422_01.3mf contains vertices with comma-separated values.
+		// The 3MFReader should throw an error at NMR_StringUtils::fnStringToDouble when reading this file because 
+		// comma-separated values are not allowed in 3MF files.
+		auto reader = model->QueryReader("3mf");
+		ASSERT_SPECIFIC_THROW(reader->ReadFromFile(sTestFilesPath + "/Reader/" + "N_XXX_0422_01.3mf"), ELib3MFException);
+	}
 
-	//	//ASSERT_EQ(pIterator->MoveNext(), false);
+	TEST_F(Reader, ReadVerticesWithLeadingPLUSSign) {
+		// This file P_XXM_0519_01.3mf contains vertices with leading + sign e.g +1E+2.
+		// The 3MFReader allows leading + sign at NMR_StringUtils::fnStringToDouble when reading this file.
+		auto reader = model->QueryReader("3mf");
+		reader->ReadFromFile(sTestFilesPath + "/Reader/" + "P_XXM_0519_01.3mf");
+		CheckReaderWarnings(Reader::reader3MF, 0);
+	}
 
-	//	//auto pVolumeIterator = model->GetVolumetricStacks();
-	//	//ASSERT_EQ(pVolumeIterator->MoveNext(), true);
-	//	//auto pVolumetricStack = pVolumeIterator->GetCurrentVolumetricStack();
-
-	//	//ASSERT_EQ(pVolumeIterator->MoveNext(), false);
-	//}
-
-	//TEST_F(Reader, 3MFReadVolumetric2)
-	//{
-	//	ASSERT_TRUE(false);
-	//	//Reader::reader3MF->ReadFromFile(sTestFilesPath + "/Volumetric/" + "ColoredVolume.3mf");
-	//	//CheckReaderWarnings(Reader::reader3MF, 1); // missing Image3D Name
-
-	//	//auto pIterator = model->GetImage3Ds();
-	//	//ASSERT_EQ(pIterator->MoveNext(), true);
-	//	//auto pImage3D = pIterator->GetCurrentImage3D();
-	//	//ASSERT_EQ(pImage3D->GetSizeX(), 821);
-	//	//ASSERT_EQ(pImage3D->GetSizeY(), 819);
-	//	//ASSERT_EQ(pImage3D->GetSheetCount(), 11);
-
-	//	//ASSERT_EQ(pIterator->MoveNext(), false);
-
-	//	//auto pVolumeIterator = model->GetVolumetricStacks();
-	//	//ASSERT_EQ(pVolumeIterator->MoveNext(), true);
-	//	//auto pVolumetricStack = pVolumeIterator->GetCurrentVolumetricStack();
-
-	//	//ASSERT_EQ(pVolumetricStack->GetDestinationChannelCount(), 1);
-
-	//	//ASSERT_EQ(pVolumeIterator->MoveNext(), false);
-
-	//	//auto meshObjects = model->GetMeshObjects();
-	//	//ASSERT_EQ(meshObjects->MoveNext(), true);
-	//	//auto mesh = meshObjects->GetCurrentMeshObject();
-
-	//	//auto levelset = mesh->VolumeData()->GetBoundary();
-	//	//ASSERT_TRUE(levelset != nullptr);
-
-	//	//std::string sChannelName;
-	//	//double dValue;
-	//	//pVolumetricStack->GetDestinationChannel(0, sChannelName, dValue);
-	//	//ASSERT_TRUE(levelset->GetChannel() == sChannelName);
-
-	//	//ASSERT_DOUBLE_EQ(levelset->GetSolidThreshold(), 0.4);
-	//	//auto pLevelsetStack = levelset->GetVolumetricStack();
-	//	//ASSERT_EQ(pLevelsetStack->GetResourceID(), pVolumetricStack->GetResourceID());
-
-	//	//sLib3MFTransform sTransform = levelset->SetTransform();
-	//	//ASSERT_FLOAT_EQ(sTransform.m_Fields[1][1], 2.0f);
-	//}
+	TEST_F(Reader, ReadVerticesValueWithLeadingTrialingSpaces) {
+		// This file cam-51476-test.3mf contains vertices with leading whitespaces.
+		// The 3MFReader allows leading/trialing whitespaces at NMR_StringUtils::fnStringToDouble when reading this file.
+		auto reader = model->QueryReader("3mf");
+		reader->ReadFromFile(sTestFilesPath + "/Reader/" + "cam_51476_test.3mf");
+		CheckReaderWarnings(Reader::reader3MF, 0);
+	}
 }

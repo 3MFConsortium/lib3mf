@@ -41,7 +41,7 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 #include "Common/NMR_StringUtils.h"
 
 #include "Model/Reader/NMR_ModelReaderNode_StringValue.h"
-#include "Libraries/cpp-base64/base64.h"
+#include "base64.h"
 
 namespace NMR {
 
@@ -71,7 +71,14 @@ namespace NMR {
 			&& strcmp(pChildName, XML_3MF_ELEMENT_CIPHERVALUE) == 0) {
 			PModelReaderNode_StringValue pNode = std::make_shared<CModelReaderNode_StringValue>(m_pWarnings);
 			pNode->parseXML(pXMLReader);
-			m_sCipherValue = base64_decode(pNode->getValue());
+			try {
+				std::string result = base64_decode(pNode->getValue());
+				m_sCipherValue = std::vector<nfByte>(result.begin(), result.end());
+			}
+			catch (...) {
+				// base64_decode throws an exception if the input is not valid base64
+				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDENCODING), NMR::eModelWarningLevel::mrwInvalidMandatoryValue);
+            }
 		}
 	}
 

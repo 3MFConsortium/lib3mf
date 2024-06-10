@@ -288,7 +288,8 @@ void EncryptionCallbacks::keyDecryptClientCallback(
 		|| Lib3MF::eDigestMethod::SHA1 != ar.GetDigestMethod())
 		*status = 0;
 	else if (nullptr == plainBuffer || 0 == plainSize) {
-		*plainNeeded = 32;
+		// plainNeeded should be bigger than the plain text size for padding cases to avoid mem leak.
+		*plainNeeded = RsaMethods::getSize(context->key) - 42;
 		*status = 32;
 	}
 	else {

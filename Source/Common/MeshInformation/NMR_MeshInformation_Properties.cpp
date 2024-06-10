@@ -117,12 +117,16 @@ namespace NMR {
 
 	void CMeshInformation_Properties::cloneDefaultInfosFrom(_In_ CMeshInformation * pOtherInformation)
 	{
+		MESHINFORMATION_PROPERTIES* pSourceDefaultData = (MESHINFORMATION_PROPERTIES*)pOtherInformation->getDefaultData();
+		if (!pSourceDefaultData)
+			return;
+
 		MESHINFORMATION_PROPERTIES * pTargetDefaultData = (MESHINFORMATION_PROPERTIES*)getDefaultData();
 		if (!pTargetDefaultData) {
 			setDefaultData((MESHINFORMATIONFACEDATA*)new MESHINFORMATION_PROPERTIES);
 			pTargetDefaultData = (MESHINFORMATION_PROPERTIES*)getDefaultData();
 		}
-		MESHINFORMATION_PROPERTIES * pSourceDefaultData = (MESHINFORMATION_PROPERTIES*)pOtherInformation->getDefaultData();
+		
 		if (pTargetDefaultData && pSourceDefaultData) {
 			for (nfUint32 j = 0; j < 3; j++)
 				pTargetDefaultData->m_nPropertyIDs[j] = pSourceDefaultData->m_nPropertyIDs[j];

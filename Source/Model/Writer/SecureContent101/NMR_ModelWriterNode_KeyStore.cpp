@@ -39,7 +39,7 @@ This is the class for exporting the 3mf keystore stream root node.
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_UUID.h"
-#include "Libraries/cpp-base64/base64.h"
+#include "base64.h"
 #include <vector>
 #include <array>
 
@@ -182,7 +182,8 @@ void NMR::CModelWriterNode_KeyStore::writeAccessRight(PKeyStoreAccessRight const
 	writeStartElement(XML_3MF_ELEMENT_CIPHERDATA);
 	// <xenc:CipherValue>
 	writeStartElementWithPrefix(XML_3MF_ELEMENT_CIPHERVALUE, XML_3MF_NAMESPACEPREFIX_XENC);
-	std::string encodedCv = base64_encode(ar->getCipherValue());
+	std::string input(ar->getCipherValue().begin(), ar->getCipherValue().end());
+	std::string encodedCv = base64_encode(input);
 	writeText(encodedCv.c_str(), (nfUint32)encodedCv.length());
 	// </xenc:CipherValue>
 	writeFullEndElement();
@@ -209,7 +210,8 @@ void NMR::CModelWriterNode_KeyStore::writeResourceData(PKeyStoreResourceData con
 	std::vector<nfByte> const & iv = rd->getInitVector();
 	if (!iv.empty()) {
 		writeStartElement(XML_3MF_SECURE_CONTENT_IV);
-		std::string encodedIv = base64_encode(iv);
+		std::string input(iv.begin(), iv.end());
+		std::string encodedIv = base64_encode(input);
 		writeText(encodedIv.c_str(), (nfUint32)encodedIv.length());
 		writeFullEndElement();
 	}
@@ -217,7 +219,8 @@ void NMR::CModelWriterNode_KeyStore::writeResourceData(PKeyStoreResourceData con
 	std::vector<nfByte> const & tag = rd->getAuthTag();
 	if (!tag.empty()) {
 		writeStartElement(XML_3MF_SECURE_CONTENT_TAG);
-		std::string encodedTag = base64_encode(tag);
+		std::string input(tag.begin(), tag.end());
+		std::string encodedTag = base64_encode(input);
 		writeText(encodedTag.c_str(), (nfUint32)encodedTag.length());
 		writeFullEndElement();
 	}
@@ -225,7 +228,8 @@ void NMR::CModelWriterNode_KeyStore::writeResourceData(PKeyStoreResourceData con
 	std::vector<nfByte> const & aad = rd->getAddAuthData();
 	if (!aad.empty()) {
 		writeStartElement(XML_3MF_SECURE_CONTENT_AAD);
-		std::string encodedAad = base64_encode(aad);
+		std::string input(aad.begin(), aad.end());
+		std::string encodedAad = base64_encode(input);
 		writeText(encodedAad.c_str(), (nfUint32)encodedAad.length());
 		writeFullEndElement();
 	}

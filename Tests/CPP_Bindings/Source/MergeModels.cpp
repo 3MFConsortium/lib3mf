@@ -67,7 +67,45 @@ namespace Lib3MF
 		{
 			auto writer3MF = pMergedModel->QueryWriter("3mf");
 			writer3MF->WriteToBuffer(buffer);
-			// writer3MF->WriteToFile(sTestFilesPath + "/Models/" + "WithSomeResources_out.3mf");
+			//writer3MF->WriteToFile(sTestFilesPath + "/Models/" + "WithSomeResources_out.3mf");
+		}
+
+		ExpectEqModels(m_pModel, pMergedModel);
+		EXPECT_EQ(pMergedModel->GetMeshObjects()->Count(), 1);
+		EXPECT_EQ(pMergedModel->GetComponentsObjects()->Count(), 0);
+		EXPECT_EQ(pMergedModel->GetBuildItems()->Count(), 1);
+
+		auto pReadModel = wrapper->CreateModel();
+		{
+			auto reader3MF = pReadModel->QueryReader("3mf");
+			reader3MF->ReadFromBuffer(buffer);
+		}
+		ExpectEqModels(m_pModel, pReadModel);
+	}
+
+
+	class MergeModels2 : public Lib3MFTest {
+	protected:
+		virtual void SetUp() {
+			m_pModel = wrapper->CreateModel();
+			auto reader3MF = m_pModel->QueryReader("3mf");
+			reader3MF->ReadFromFile(sTestFilesPath + "/Models/" + "platform.3mf");
+
+		}
+		virtual void TearDown() {
+			m_pModel.reset();
+		}
+
+		PModel m_pModel;
+	};
+
+	TEST_F(MergeModels2, MergeModel)
+	{
+		std::vector<Lib3MF_uint8> buffer;
+		auto pMergedModel = m_pModel->MergeToModel();
+		{
+			auto writer3MF = pMergedModel->QueryWriter("3mf");
+			writer3MF->WriteToBuffer(buffer);
 		}
 
 		ExpectEqModels(m_pModel, pMergedModel);

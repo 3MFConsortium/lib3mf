@@ -395,7 +395,7 @@ namespace Lib3MF {
 
 	TEST_F(SecureContentT, ModelReaderKeyStoreNoAttributesWarnings) {
 		PReader reader3MF = readKeyStore(NEGATIVEUNENCRYPTEDKEYSTOREMISSINGATTRIBUTES);
-		CheckReaderWarnings(reader3MF, 6);
+		CheckReaderWarnings(reader3MF, 8);
 		Lib3MF_uint32 iWarning = 0;
 
 		// NMR_ERROR_KEYSTOREMISSINGCONSUMERID
@@ -418,21 +418,32 @@ namespace Lib3MF {
 		reader3MF->GetWarning(3, iWarning);
 		ASSERT_EQ(0x8105, iWarning);
 
+		// NMR_ERROR_KEYSTOREINVALIDENCODING 
+		// invalid key store element value in ResourceData
+		reader3MF->GetWarning(4, iWarning);
+		ASSERT_EQ(0x810E, iWarning);
+
+		// NMR_ERROR_KEYSTOREINVALIDENCODING 
+		// invalid key store element value in ResourceData
+		reader3MF->GetWarning(5, iWarning);
+		ASSERT_EQ(0x810E, iWarning);
+
+
 		// NMR_ERROR_KEYSTOREMISSINGALGORTHM
 		// missing encryptionalgorithm on cekparams
-		reader3MF->GetWarning(4, iWarning);
+		reader3MF->GetWarning(6, iWarning);
 		ASSERT_EQ(0x810A, iWarning);
 
 		// NMR_ERROR_MISSINGUUID
 		//missing guid on keystore
-		reader3MF->GetWarning(5, iWarning);
+		reader3MF->GetWarning(7, iWarning);
 		ASSERT_EQ(0x80B0, iWarning);
 
 	}
 
 	TEST_F(SecureContentT, ModelReaderKeyStoreInvalidAttributesWarnings) {
 		PReader reader3MF = readKeyStore(NEGATIVEUNENCRYPTEDKEYSTOREINVALIDATTRIBUTES);
-		CheckReaderWarnings(reader3MF, 8);
+		CheckReaderWarnings(reader3MF, 10);
 		Lib3MF_uint32 iWarning = 0;
 
 		// NMR_ERROR_KEYSTOREDUPLICATECONSUMERID
@@ -474,6 +485,16 @@ namespace Lib3MF {
 		// invalid compression attribute in ResourceData
 		reader3MF->GetWarning(7, iWarning);
 		ASSERT_EQ(0x80F8, iWarning);
+
+		// NMR_ERROR_KEYSTOREINVALIDENCODING 
+		// invalid key store element value in ResourceData
+		reader3MF->GetWarning(8, iWarning);
+		ASSERT_EQ(0x810E, iWarning);
+
+		// NMR_ERROR_KEYSTOREINVALIDENCODING 
+		// invalid key store element value in ResourceData
+		reader3MF->GetWarning(9, iWarning);
+		ASSERT_EQ(0x810E, iWarning);
 	}
 	
 	TEST_F(SecureContentT, CheckKeyStoreConsumers) {

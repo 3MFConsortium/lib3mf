@@ -119,8 +119,10 @@ namespace NMR {
 	{
 		nfInt32 eType;
 		for (eType = emiAbstract; eType < emiLastType; eType++) {
-			if ((pOtherInfoHandler->m_pLookup[eType]) && (m_pLookup[eType]))
-				m_pLookup[eType]->cloneDefaultInfosFrom(pOtherInfoHandler->m_pLookup[eType]);
+			if ((pOtherInfoHandler->m_pLookup[eType]) && (m_pLookup[eType])) {
+				if (pOtherInfoHandler->m_pLookup[eType]->getDefaultData())
+					m_pLookup[eType]->cloneDefaultInfosFrom(pOtherInfoHandler->m_pLookup[eType]);
+			}
 		}
 	}
 
@@ -128,7 +130,7 @@ namespace NMR {
 	{
 		nfInt32 eType;
 		for (eType = emiAbstract; eType < emiLastType; eType++) {
-			if ((pOtherInfoHandler->m_pLookup[eType]) && (m_pLookup[eType]))
+			if ((pOtherInfoHandler->m_pLookup[eType]) && (m_pLookup[eType]) && (m_pLookup[eType]->getDefaultData()))
 				m_pLookup[eType]->cloneFaceInfosFrom(nFaceIdx, pOtherInfoHandler->m_pLookup[eType], nOtherFaceIndex);
 		}
 	}
