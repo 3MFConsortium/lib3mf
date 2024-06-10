@@ -2,11 +2,12 @@ cmake_minimum_required (VERSION 3.5)
 project(Examples)
 set(CMAKE_CXX_STANDARD 11)
 
-# read the version of the 3MF Library from en environment variable LIB3MF_VERSION
+# read the version of the 3MF Library from environment variable LIB3MF_VERSION
 if (DEFINED ENV{LIB3MF_VERSION})
 	set(LIB3MF_VERSION $ENV{LIB3MF_VERSION})
 else()
 	set(LIB3MF_VERSION "2.3.1")
+endif()
 
 # Determine the platform and set lib3mf_DIR accordingly
 if(WIN32)
