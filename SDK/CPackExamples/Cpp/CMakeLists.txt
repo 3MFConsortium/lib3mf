@@ -5,11 +5,11 @@ set(CMAKE_CXX_STANDARD 11)
 # Determine the platform and set lib3mf_DIR accordingly
 if(WIN32)
 	# Path for Windows
-	set(lib3mf_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../lib3mf-2.3.1-Windows/lib/cmake/lib3mf")
+	set(lib3mf_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../lib3mf-2.3.2-Windows/lib/cmake/lib3mf")
 	find_package(lib3mf REQUIRED COMPONENTS Cpp)
 elseif(APPLE)
 	# Path for macOS (Darwin)
-	set(lib3mf_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../lib3mf-2.3.1-Darwin/lib/cmake/lib3mf")
+	set(lib3mf_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../lib3mf-2.3.2-Darwin/lib/cmake/lib3mf")
 	find_package(lib3mf REQUIRED COMPONENTS Cpp)
 else()
 	# Path for Linux (Here we check twice to test for Debian / RPM packages properly)
@@ -17,7 +17,7 @@ else()
 	# Check if the package was not found
 	if(NOT lib3mf_FOUND)
 		# lib3mf not found, so set lib3mf_DIR to the fallback directory
-		set(lib3mf_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../lib3mf-2.3.1-Linux/lib/cmake/lib3mf")
+		set(lib3mf_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../lib3mf-2.3.2-Linux/lib/cmake/lib3mf")
 		# Find package (lib3mf)
 		find_package(lib3mf REQUIRED COMPONENTS Cpp)
 	endif()

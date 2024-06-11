@@ -1,8 +1,8 @@
 # lib3mf
 
-[![Build Status]](https://github.com/3MFConsortium/lib3mf/workflows/Build/badge.svg?branch=release%2F2.3.1)
+[![Build Status]](https://github.com/3MFConsortium/lib3mf/workflows/Build/badge.svg?branch=release%2F2.3.2)
 [![Documentation Status](https://readthedocs.org/projects/lib3mf/badge/?version=master)](https://readthedocs.org/projects/lib3mf)
-[![Version 2.3.1](https://img.shields.io/static/v1.svg?label=lib3mf&message=v2.3.1&color=green)]()
+[![Version 2.3.2](https://img.shields.io/static/v1.svg?label=lib3mf&message=v2.3.2&color=green)]()
 [![Supported platforms](https://img.shields.io/static/v1.svg?label=platform&message=windows%20%7C%20macos%20%7C%20linux&color=lightgrey)]()
 [![Simplified BSD License](https://img.shields.io/static/v1.svg?label=license&message=BSD&color=green)](LICENSE)
 [![codecov](https://codecov.io/gh/3MFConsortium/lib3mf/branch/develop/graph/badge.svg?token=3ARnBye33c)](https://codecov.io/gh/3MFConsortium/lib3mf)

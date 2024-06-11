@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract: Create a simple cube
 
-Interface version: 2.3.1
+Interface version: 2.3.2
 
 '''
 
