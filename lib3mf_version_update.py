@@ -1,3 +1,22 @@
+'''
+
+@author: Vijai Kumar Suriyababu
+
+A simple script to update the lib3mf version number in all the necessary places.
+Its run as follows
+
+python lib3mf_version_update.py 2.3.1 2.3.2
+
+First argument is current version number and the second one is new version number
+
+It does the following
+* Update version number in lib3mf.xml and generate bindings using ACT
+* Patch the Python bindings
+* Update the CMakeLists.txt
+* Update all the docs, readme's and python, CPP examples and so on
+
+'''
+
 import os
 import argparse
 import re
