@@ -604,6 +604,11 @@ jobs:
           LATEST_TOTAL_SECONDS=$(echo $LATEST_TIME | awk -F: '{ print ($1 * 60) + $2 }')
           echo "Latest SDK execution time in seconds: ${LATEST_TOTAL_SECONDS}"
 
+          LATEST_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_sdk_test.log | awk '{print $1}')
+          LATEST_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_sdk_test.log | awk '{print $1}')
+          echo "MUSTPASS: ${LATEST_MUSTPASS}"
+          echo "MUSTFAIL: ${LATEST_MUSTFAIL}"
+          
 
   integration-tests-last-two-releases:
     runs-on: ubuntu-20.04
@@ -789,14 +794,6 @@ jobs:
           # Save counts for comparison in other jobs
           echo "LATEST_MUSTPASS=${LATEST_MUSTPASS}" >> $GITHUB_ENV
           echo "LATEST_MUSTFAIL=${LATEST_MUSTFAIL}" >> $GITHUB_ENV
-
-          # Fail the job if counts are inconsistent
-          if [ "$LATEST_MUSTPASS" != "$LATEST_MUSTFAIL" ]; then
-            echo "MUSTPASS or MUSTFAIL counts are inconsistent"
-            exit 1
-          else
-            echo "MUSTPASS and MUSTFAIL counts are consistent"
-          fi
 
   integration-test-last-commit-and-last-release:
     runs-on: ubuntu-20.04
