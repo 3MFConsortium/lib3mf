@@ -605,9 +605,13 @@ jobs:
           echo "Latest SDK execution time in seconds: ${LATEST_TOTAL_SECONDS}"
 
           LATEST_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_sdk_test.log | awk '{print $1}')
+          LATEST_TOTAL_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_sdk_test.log | awk '{print $3}' | tr -d '()')
           LATEST_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_sdk_test.log | awk '{print $1}')
-          echo "MUSTPASS: ${LATEST_MUSTPASS}"
-          echo "MUSTFAIL: ${LATEST_MUSTFAIL}"
+          LATEST_TOTAL_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_sdk_test.log | awk '{print $3}' | tr -d '()')
+
+        
+          echo "MUSTPASS: ${LATEST_MUSTPASS} / ${LATEST_TOTAL_MUSTPASS}"
+          echo "MUSTFAIL: ${LATEST_MUSTFAIL} / ${LATEST_TOTAL_MUSTFAIL}"
           
 
   integration-tests-last-two-releases:
@@ -699,36 +703,43 @@ jobs:
 
       - name: Compare results (Checks the total python script execution time and must pass/fail counts)
         run: |
-          LATEST_TIME=$(grep "Elapsed (wall clock) time" test_suites/latest_sdk_test.log | awk '{print $8}')
-          SECOND_LATEST_TIME=$(grep "Elapsed (wall clock) time" test_suites/second_latest_sdk_test.log | awk '{print $8}')
-          LATEST_TOTAL_SECONDS=$(echo $LATEST_TIME | awk -F: '{ print ($1 * 60) + $2 }')
-          SECOND_LATEST_TOTAL_SECONDS=$(echo $SECOND_LATEST_TIME | awk -F: '{ print ($1 * 60) + $2 }')
-          echo "Latest SDK execution time in seconds: ${LATEST_TOTAL_SECONDS}"
-          echo "Second Latest SDK execution time in seconds: ${SECOND_LATEST_TOTAL_SECONDS}"
-
-          LATEST_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_sdk_test.log | awk '{print $1}')
-          SECOND_LATEST_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/second_latest_sdk_test.log | awk '{print $1}')
-          LATEST_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_sdk_test.log | awk '{print $1}')
-          SECOND_LATEST_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/second_latest_sdk_test.log | awk '{print $1}')
-          echo "Latest MUSTPASS: ${LATEST_MUSTPASS}"
-          echo "Second Latest MUSTPASS: ${SECOND_LATEST_MUSTPASS}"
-          echo "Latest MUSTFAIL: ${LATEST_MUSTFAIL}"
-          echo "Second Latest MUSTFAIL: ${SECOND_LATEST_MUSTFAIL}"
-
-          # Compare the total seconds
-          if (( $(echo "$LATEST_TOTAL_SECONDS < $SECOND_LATEST_TOTAL_SECONDS" | bc -l) )); then
-            echo "New release is better in execution time"
-          else
-            echo "New release is worse in execution time"
-          fi
-
-          # Compare MUSTPASS and MUSTFAIL counts
-          if [ "$LATEST_MUSTPASS" != "$SECOND_LATEST_MUSTPASS" ] || [ "$LATEST_MUSTFAIL" != "$SECOND_LATEST_MUSTFAIL" ]; then
-            echo "MUSTPASS or MUSTFAIL counts have changed"
-            exit 1
-          else
-            echo "MUSTPASS and MUSTFAIL counts are consistent"
-          fi
+            LATEST_TIME=$(grep "Elapsed (wall clock) time" test_suites/latest_sdk_test.log | awk '{print $8}')
+            SECOND_LATEST_TIME=$(grep "Elapsed (wall clock) time" test_suites/second_latest_sdk_test.log | awk '{print $8}')
+            LATEST_TOTAL_SECONDS=$(echo $LATEST_TIME | awk -F: '{ print ($1 * 60) + $2 }')
+            SECOND_LATEST_TOTAL_SECONDS=$(echo $SECOND_LATEST_TIME | awk -F: '{ print ($1 * 60) + $2 }')
+            echo "Latest SDK execution time in seconds: ${LATEST_TOTAL_SECONDS}"
+            echo "Second Latest SDK execution time in seconds: ${SECOND_LATEST_TOTAL_SECONDS}"
+        
+            LATEST_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_sdk_test.log | awk '{print $1}')
+            LATEST_TOTAL_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_sdk_test.log | awk '{print $3}' | tr -d '()')
+            SECOND_LATEST_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/second_latest_sdk_test.log | awk '{print $1}')
+            SECOND_LATEST_TOTAL_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/second_latest_sdk_test.log | awk '{print $3}' | tr -d '()')
+            
+            LATEST_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_sdk_test.log | awk '{print $1}')
+            LATEST_TOTAL_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_sdk_test.log | awk '{print $3}' | tr -d '()')
+            SECOND_LATEST_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/second_latest_sdk_test.log | awk '{print $1}')
+            SECOND_LATEST_TOTAL_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/second_latest_sdk_test.log | awk '{print $3}' | tr -d '()')
+        
+            echo "Latest MUSTPASS: ${LATEST_MUSTPASS} / ${LATEST_TOTAL_MUSTPASS}"
+            echo "Second Latest MUSTPASS: ${SECOND_LATEST_MUSTPASS} / ${SECOND_LATEST_TOTAL_MUSTPASS}"
+            echo "Latest MUSTFAIL: ${LATEST_MUSTFAIL} / ${LATEST_TOTAL_MUSTFAIL}"
+            echo "Second Latest MUSTFAIL: ${SECOND_LATEST_MUSTFAIL} / ${SECOND_LATEST_TOTAL_MUSTFAIL}"
+        
+            # Compare the total seconds
+            if (( $(echo "$LATEST_TOTAL_SECONDS < $SECOND_LATEST_TOTAL_SECONDS" | bc -l) )); then
+              echo "New release is better in execution time"
+            else
+              echo "New release is worse in execution time"
+            fi
+        
+            # Compare MUSTPASS and MUSTFAIL counts
+            if [ "$LATEST_MUSTPASS" != "$SECOND_LATEST_MUSTPASS" ] || [ "$LATEST_MUSTFAIL" != "$SECOND_LATEST_MUSTFAIL" ]; then
+              echo "MUSTPASS or MUSTFAIL counts have changed"
+              exit 1
+            else
+              echo "MUSTPASS and MUSTFAIL counts are consistent"
+            fi
+        
 
 
   integration-tests-latest-commit:
@@ -787,13 +798,18 @@ jobs:
           echo "Latest SDK execution time in seconds: ${LATEST_TOTAL_SECONDS}"
 
           LATEST_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_sdk_test.log | awk '{print $1}')
+          LATEST_TOTAL_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_sdk_test.log | awk '{print $3}' | tr -d '()')
           LATEST_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_sdk_test.log | awk '{print $1}')
-          echo "MUSTPASS: ${LATEST_MUSTPASS}"
-          echo "MUSTFAIL: ${LATEST_MUSTFAIL}"
+          LATEST_TOTAL_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_sdk_test.log | awk '{print $3}' | tr -d '()')
+
+          echo "MUSTPASS: ${LATEST_MUSTPASS} / ${LATEST_TOTAL_MUSTPASS}"
+          echo "MUSTFAIL: ${LATEST_MUSTFAIL} / ${LATEST_TOTAL_MUSTFAIL}"
 
           # Save counts for comparison in other jobs
           echo "LATEST_MUSTPASS=${LATEST_MUSTPASS}" >> $GITHUB_ENV
+          echo "LATEST_TOTAL_MUSTPASS=${LATEST_TOTAL_MUSTPASS}" >> $GITHUB_ENV
           echo "LATEST_MUSTFAIL=${LATEST_MUSTFAIL}" >> $GITHUB_ENV
+          echo "LATEST_TOTAL_MUSTFAIL=${LATEST_TOTAL_MUSTFAIL}" >> $GITHUB_ENV
 
   integration-test-last-commit-and-last-release:
     runs-on: ubuntu-20.04
@@ -894,13 +910,19 @@ jobs:
           echo "Latest release SDK execution time in seconds: ${LATEST_RELEASE_TOTAL_SECONDS}"
 
           LATEST_COMMIT_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_commit_sdk_test.log | awk '{print $1}')
+          LATEST_TOTAL_COMMIT_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_commit_sdk_test.log | awk '{print $3}' | tr -d '()')
           LATEST_RELEASE_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_release_sdk_test.log | awk '{print $1}')
+          LATEST_TOTAL_RELEASE_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_release_sdk_test.log | awk '{print $3}' | tr -d '()')
+
           LATEST_COMMIT_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_commit_sdk_test.log | awk '{print $1}')
+          LATEST_TOTAL_COMMIT_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_commit_sdk_test.log | awk '{print $3}' | tr -d '()')
           LATEST_RELEASE_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_release_sdk_test.log | awk '{print $1}')
-          echo "Latest commit MUSTPASS: ${LATEST_COMMIT_MUSTPASS}"
-          echo "Latest release MUSTPASS: ${LATEST_RELEASE_MUSTPASS}"
-          echo "Latest commit MUSTFAIL: ${LATEST_COMMIT_MUSTFAIL}"
-          echo "Latest release MUSTFAIL: ${LATEST_RELEASE_MUSTFAIL}"
+          LATEST_TOTAL_RELEASE_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_release_sdk_test.log | awk '{print $3}' | tr -d '()')
+
+          echo "Latest commit MUSTPASS: ${LATEST_COMMIT_MUSTPASS} / ${LATEST_TOTAL_COMMIT_MUSTPASS}"
+          echo "Latest release MUSTPASS: ${LATEST_RELEASE_MUSTPASS} / ${LATEST_TOTAL_RELEASE_MUSTPASS}"
+          echo "Latest commit MUSTFAIL: ${LATEST_COMMIT_MUSTFAIL} / ${LATEST_TOTAL_COMMIT_MUSTFAIL}"
+          echo "Latest release MUSTFAIL: ${LATEST_RELEASE_MUSTFAIL} / ${LATEST_TOTAL_RELEASE_MUSTFAIL}"
 
           # Compare MUSTPASS and MUSTFAIL counts
           if [ "$LATEST_COMMIT_MUSTPASS" != "$LATEST_RELEASE_MUSTPASS" ] || [ "$LATEST_COMMIT_MUSTFAIL" != "$LATEST_RELEASE_MUSTFAIL" ]; then
@@ -919,10 +941,10 @@ jobs:
 
           echo "Latest commit with SHA ${{ github.sha }} ran in ${LATEST_COMMIT_TOTAL_SECONDS} seconds" > results.txt
           echo "Latest release with tag ${{ env.LATEST_RELEASE_NAME }} ran in ${LATEST_RELEASE_TOTAL_SECONDS} seconds" >> results.txt
-          echo "Latest commit MUSTPASS: ${LATEST_COMMIT_MUSTPASS}" >> results.txt
-          echo "Latest release MUSTPASS: ${LATEST_RELEASE_MUSTPASS}" >> results.txt
-          echo "Latest commit MUSTFAIL: ${LATEST_COMMIT_MUSTFAIL}" >> results.txt
-          echo "Latest release MUSTFAIL: ${LATEST_RELEASE_MUSTFAIL}" >> results.txt
+          echo "Latest commit MUSTPASS: ${LATEST_COMMIT_MUSTPASS} / ${LATEST_TOTAL_COMMIT_MUSTPASS}" >> results.txt
+          echo "Latest release MUSTPASS: ${LATEST_RELEASE_MUSTPASS} / ${LATEST_TOTAL_RELEASE_MUSTPASS}" >> results.txt
+          echo "Latest commit MUSTFAIL: ${LATEST_COMMIT_MUSTFAIL} / ${LATEST_TOTAL_COMMIT_MUSTFAIL}" >> results.txt
+          echo "Latest release MUSTFAIL: ${LATEST_RELEASE_MUSTFAIL} / ${LATEST_TOTAL_RELEASE_MUSTFAIL}" >> results.txt
 
       - name: Upload results artifact
         uses: actions/upload-artifact@v4
