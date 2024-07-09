@@ -637,12 +637,12 @@ jobs:
       - name: Get latest lib3mf SDK release info from GitHub API
         id: get_latest_release
         run: |
-          echo "LATEST_LIB3MF_URL=$(curl -s https://api.github.com/repos/3MFConsortium/lib3mf/releases/latest | grep "browser_download_url.*lib3mf_sdk.zip" | cut -d '"' -f 4 | xargs)" >> $GITHUB_ENV
+          echo "LATEST_LIB3MF_URL=$(python CI/ci_cd_helper.py 0 --get-url | xargs)" >> $GITHUB_ENV
 
       - name: Get second latest lib3mf SDK release info from GitHub API
         id: get_second_latest_release
         run: |
-          echo "SECOND_LATEST_LIB3MF_URL=$(curl -s https://api.github.com/repos/3MFConsortium/lib3mf/releases | grep "browser_download_url.*lib3mf_sdk.zip" | cut -d '"' -f 4 | sed -n '2p' | xargs)" >> $GITHUB_ENV
+          echo "SECOND_LATEST_LIB3MF_URL=$(python CI/ci_cd_helper.py 1 --get-url | xargs)" >> $GITHUB_ENV
 
       - name: Download latest lib3mf SDK zip
         run: |
