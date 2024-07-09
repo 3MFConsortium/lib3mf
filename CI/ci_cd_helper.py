@@ -27,6 +27,24 @@ def extract_version_from_cmake():
 
     return version
 
+def get_integration_sdk_url(index):
+    url = "https://api.github.com/repos/3MFConsortium/test_suites/releases"
+    
+    try:
+        with urllib.request.urlopen(url) as response:
+            data = response.read().decode('utf-8')
+        
+        releases = json.loads(data)
+        selected_release = releases[index]  # Select the release by index
+        for asset in selected_release['assets']:
+            asset_name = str(asset['name'])
+            if asset_name.startswith("3MF_Conformance_Test_Suites") and asset_name.endswith(".zip"):
+                return asset['browser_download_url']
+        return None
+    except Exception as e:
+        print(f"Error fetching the SDK URL: {e}")
+        return None    
+
 def get_sdk_url(index):
     url = "https://api.github.com/repos/3MFConsortium/lib3mf/releases"
     
@@ -50,6 +68,10 @@ def main():
     
     subparsers = parser.add_subparsers(dest='command')
     
+    # Subparser for the fetch-integration-test-sdk-url command
+    parser_fetch_sdk_url = subparsers.add_parser('fetch-integration-test-sdk-url', help='Fetch the SDK URL for a specific integration test release index.')
+    parser_fetch_sdk_url.add_argument('index', type=int, help='Index of the release (0 for latest, 1 for second latest, etc.)')
+
     # Subparser for the fetch-sdk-url command
     parser_fetch_sdk_url = subparsers.add_parser('fetch-sdk-url', help='Fetch the SDK URL for a specific release index.')
     parser_fetch_sdk_url.add_argument('index', type=int, help='Index of the release (0 for latest, 1 for second latest, etc.)')
@@ -61,6 +83,12 @@ def main():
 
     if args.command == 'fetch-sdk-url':
         url = get_sdk_url(args.index)
+        if url:
+            print(url)
+        else:
+            print("FAIL")
+    elif args.command == 'fetch-integration-test-sdk-url':
+        url = get_integration_sdk_url(args.index)
         if url:
             print(url)
         else:
