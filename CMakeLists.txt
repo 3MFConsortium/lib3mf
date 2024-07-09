@@ -3,6 +3,7 @@ cmake_minimum_required (VERSION 3.0)
 cmake_policy(SET CMP0054 NEW)
 cmake_policy(SET CMP0048 NEW)
 
+
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 include(GNUInstallDirs)
@@ -12,7 +13,7 @@ set(LIB3MF_VERSION_MAJOR 2)        # increase on every backward-compatibility br
 set(LIB3MF_VERSION_MINOR 4)        # increase on every backward compatible change of the API
 set(LIB3MF_VERSION_MICRO 0)        # increase on on every change that does not alter the API
 set(LIB3MF_VERSION_PRERELEASE "")  # denotes pre-release information of a version of lib3mf
-
+set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum OS X deployment version")
 project(lib3mf
   VERSION ${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}
   DESCRIPTION "An implementation of the 3D Manufacturing Format file standard"
