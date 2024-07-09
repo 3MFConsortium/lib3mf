@@ -572,6 +572,8 @@ jobs:
       - name: Unpack the SDK
         run: |
           unzip latest_lib3mf_sdk.zip -d lib3mf_sdk
+          mv lib3mf_sdk/lib3mf_sdk/* lib3mf_sdk/
+          rmdir lib3mf_sdk/lib3mf_sdk
 
       - name: Build CppDynamic
         run: |
@@ -837,6 +839,7 @@ jobs:
         run: |
           unzip lib3mf_sdk.zip/lib3mf_sdk.zip -d latest_commit_lib3mf_sdk && ls -al
 
+
       - name: Build CppDynamic with latest commit SDK
         run: |
           sh latest_commit_lib3mf_sdk/Examples/CppDynamic/GenerateMake.sh
@@ -879,6 +882,8 @@ jobs:
       - name: Unpack the SDK from latest release
         run: |
           unzip latest_release_lib3mf_sdk.zip -d latest_release_lib3mf_sdk
+          mv latest_release_lib3mf_sdk/lib3mf_sdk/* latest_release_lib3mf_sdk/
+          rmdir latest_release_lib3mf_sdk/lib3mf_sdk/
 
       - name: Build CppDynamic with latest release SDK
         run: |
