@@ -540,17 +540,6 @@ jobs:
           else
             echo "run_integration_tests=false" >> $GITHUB_OUTPUT
           fi
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          submodules: true
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.8'
-      - name: Fetch the latest integration SDK url
-        run: |
-          echo "LATEST_INTEGRATION_TEST_SDK_URL=$(python CI/ci_cd_helper.py fetch-integration-test-sdk-url 0 | xargs)" >> $GITHUB_ENV
       
 
   integration-tests-latest-release:
@@ -596,6 +585,7 @@ jobs:
 
       - name: Download and unzip test suite
         run: |
+          echo "LATEST_INTEGRATION_TEST_SDK_URL=$(python CI/ci_cd_helper.py fetch-integration-test-sdk-url 0 | xargs)" >> $GITHUB_ENV
           wget ${{ env.LATEST_INTEGRATION_TEST_SDK_URL }}
           unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
 
@@ -676,6 +666,7 @@ jobs:
 
       - name: Download and unzip test suite
         run: |
+          echo "LATEST_INTEGRATION_TEST_SDK_URL=$(python CI/ci_cd_helper.py fetch-integration-test-sdk-url 0 | xargs)" >> $GITHUB_ENV
           wget ${{ env.LATEST_INTEGRATION_TEST_SDK_URL }}
           unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
 
@@ -793,6 +784,7 @@ jobs:
 
       - name: Download and unzip test suite
         run: |
+          echo "LATEST_INTEGRATION_TEST_SDK_URL=$(python CI/ci_cd_helper.py fetch-integration-test-sdk-url 0 | xargs)" >> $GITHUB_ENV
           wget ${{ env.LATEST_INTEGRATION_TEST_SDK_URL }}
           unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
 
@@ -863,6 +855,7 @@ jobs:
 
       - name: Download and unzip test suite
         run: |
+          echo "LATEST_INTEGRATION_TEST_SDK_URL=$(python CI/ci_cd_helper.py fetch-integration-test-sdk-url 0 | xargs)" >> $GITHUB_ENV
           wget ${{ env.LATEST_INTEGRATION_TEST_SDK_URL }}
           unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
 
