@@ -1,6 +1,31 @@
 import argparse
 import urllib.request
 import json
+import os
+import re
+
+def extract_version_from_cmake():
+    cmake_file = 'CMakeLists.txt'
+
+    if not os.path.exists(cmake_file):
+        raise FileNotFoundError(f"{cmake_file} not found in the current directory")
+
+    with open(cmake_file, 'r') as file:
+        content = file.read()
+
+    major = re.search(r'set\(LIB3MF_VERSION_MAJOR\s+([0-9]+)\)', content)
+    minor = re.search(r'set\(LIB3MF_VERSION_MINOR\s+([0-9]+)\)', content)
+    micro = re.search(r'set\(LIB3MF_VERSION_MICRO\s+([0-9]+)\)', content)
+    prerelease = re.search(r'set\(LIB3MF_VERSION_PRERELEASE\s+"([^"]*)"\)', content)
+
+    if not major or not minor or not micro:
+        raise ValueError("Could not find version components in CMakeLists.txt")
+
+    version = f"{major.group(1)}.{minor.group(1)}.{micro.group(1)}"
+    if prerelease and prerelease.group(1):
+        version += f"-{prerelease.group(1)}"
+
+    return version
 
 def get_sdk_url(index):
     url = "https://api.github.com/repos/3MFConsortium/lib3mf/releases"
@@ -21,18 +46,33 @@ def get_sdk_url(index):
         return None
 
 def main():
-    parser = argparse.ArgumentParser(description="Fetch a specific release URL for the 3MFConsortium/lib3mf repository.")
-    parser.add_argument('index', type=int, help='Index of the release (0 for latest, 1 for second latest, etc.)')
-    parser.add_argument('--get-url', action='store_true', help='Get the specified release URL')
+    parser = argparse.ArgumentParser(description="Multi-utility script for CI/CD.")
+    
+    subparsers = parser.add_subparsers(dest='command')
+    
+    # Subparser for the fetch-sdk-url command
+    parser_fetch_sdk_url = subparsers.add_parser('fetch-sdk-url', help='Fetch the SDK URL for a specific release index.')
+    parser_fetch_sdk_url.add_argument('index', type=int, help='Index of the release (0 for latest, 1 for second latest, etc.)')
+
+    # Subparser for the extract-version command
+    parser_extract_version = subparsers.add_parser('extract-version', help='Extract the version from CMakeLists.txt.')
 
     args = parser.parse_args()
 
-    if args.get_url:
+    if args.command == 'fetch-sdk-url':
         url = get_sdk_url(args.index)
         if url:
             print(url)
         else:
             print("FAIL")
+    elif args.command == 'extract-version':
+        try:
+            version = extract_version_from_cmake()
+            print(version)
+        except Exception as e:
+            print("FAIL")
+    else:
+        parser.print_help()
 
 if __name__ == "__main__":
     main()

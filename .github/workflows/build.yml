@@ -15,7 +15,7 @@ jobs:
       - name: Run version extraction script and set environment variable
         id: set-version
         run: |
-          LIB3MF_VERSION=$(python CI/extract_version.py)
+          LIB3MF_VERSION=$(python CI/ci_cd_helper.py extract-version)
           echo "LIB3MF_VERSION=$LIB3MF_VERSION" >> $GITHUB_OUTPUT
       - name: Echo version for debug
         run: echo "LIB3MF_VERSION=${{ steps.set-version.outputs.LIB3MF_VERSION }}"
@@ -563,7 +563,7 @@ jobs:
       - name: Get latest lib3mf SDK release info from GitHub API
         id: get_lib3mf_release
         run: |
-          echo "LATEST_LIB3MF_URL=$(curl -s https://api.github.com/repos/3MFConsortium/lib3mf/releases/latest | grep "browser_download_url.*lib3mf_sdk.zip" | cut -d '"' -f 4 | xargs)" >> $GITHUB_ENV
+          echo "LATEST_LIB3MF_URL=$(python CI/ci_cd_helper.py fetch-sdk-url 0 | xargs)" >> $GITHUB_ENV
 
       - name: Download latest lib3mf SDK zip
         run: |
@@ -637,12 +637,12 @@ jobs:
       - name: Get latest lib3mf SDK release info from GitHub API
         id: get_latest_release
         run: |
-          echo "LATEST_LIB3MF_URL=$(python CI/ci_cd_helper.py 0 --get-url | xargs)" >> $GITHUB_ENV
+          echo "LATEST_LIB3MF_URL=$(python CI/ci_cd_helper.py fetch-sdk-url 0 | xargs)" >> $GITHUB_ENV
 
       - name: Get second latest lib3mf SDK release info from GitHub API
         id: get_second_latest_release
         run: |
-          echo "SECOND_LATEST_LIB3MF_URL=$(python CI/ci_cd_helper.py 1 --get-url | xargs)" >> $GITHUB_ENV
+          echo "SECOND_LATEST_LIB3MF_URL=$(python CI/ci_cd_helper.py fetch-sdk-url 1 | xargs)" >> $GITHUB_ENV
 
       - name: Download latest lib3mf SDK zip
         run: |
@@ -655,6 +655,8 @@ jobs:
       - name: Unpack the latest SDK
         run: |
           unzip latest_lib3mf_sdk.zip -d latest_lib3mf_sdk
+          mv latest_lib3mf_sdk/lib3mf_sdk/* latest_lib3mf_sdk
+          rmdir latest_lib3mf_sdk/lib3mf_sdk
 
       - name: Unpack the second latest SDK
         run: |
@@ -871,7 +873,7 @@ jobs:
       - name: Get latest lib3mf SDK release info from GitHub API
         id: get_latest_release
         run: |
-          echo "LATEST_LIB3MF_URL=$(curl -s https://api.github.com/repos/3MFConsortium/lib3mf/releases/latest | grep "browser_download_url.*lib3mf_sdk.zip" | cut -d '"' -f 4 | xargs)" >> $GITHUB_ENV
+          echo "LATEST_LIB3MF_URL=$(python CI/ci_cd_helper.py fetch-sdk-url 0 | xargs)" >> $GITHUB_ENV
           LATEST_RELEASE_NAME=$(curl -s https://api.github.com/repos/3MFConsortium/lib3mf/releases/latest | grep '"tag_name"' | cut -d '"' -f 4)
           echo "LATEST_RELEASE_NAME=${LATEST_RELEASE_NAME}" >> $GITHUB_ENV
 
