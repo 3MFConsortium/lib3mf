@@ -70,6 +70,8 @@ namespace NMR
         m_pFunctionFromImage3D->setTileStyleV(m_tileStyleV);
         m_pFunctionFromImage3D->setTileStyleW(m_tileStyleW);
         m_pFunctionFromImage3D->setFilter(m_filter);
+        m_pFunctionFromImage3D->setOffset(m_offset);
+        m_pFunctionFromImage3D->setScale(m_scale);
        
 
         // Parse Content
