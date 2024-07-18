@@ -76,7 +76,7 @@ namespace NMR {
 
 		size_t nNumberOfAttributes = m_SegmentAttributeDefinitions.size();
 
-		m_pCurrentSegment->m_pAttributeData = allocAttributeBuffer((uint32_t)(nNumberOfAttributes));
+		m_pCurrentSegment->m_pAttributeData = (NMR::nfInt64*) allocAttributeBuffer((uint32_t)(nNumberOfAttributes));
 
 		for (size_t nIndex = 0; nIndex < nNumberOfAttributes; nIndex++)
 			m_pCurrentSegment->m_pAttributeData[nIndex] = m_AttributesOfNextSegment.at(nIndex);

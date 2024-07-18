@@ -30,7 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Model/Classes/NMR_CustomXMLNode.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
-#include "Common/Platform/NMR_XMLWriter_Native.h"
+#include "Common/Platform/NMR_XmlWriter_Native.h"
 #include "Common/Platform/NMR_ExportStream_Memory.h"
 
 namespace NMR {

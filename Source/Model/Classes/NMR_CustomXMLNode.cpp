@@ -31,6 +31,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_StringUtils.h"
 
+#include <algorithm>
+
 namespace NMR {
 
 	CCustomXMLNode::CCustomXMLNode(CCustomXMLNode * pParentNode, const std::string& sName)

@@ -9,8 +9,6 @@ if (USE_INCLUDED_LIBZIP)
 endif()
 
 
-file(GLOB LIBLZMA_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/lzma/*.c")
-
 if (USE_INCLUDED_ZLIB)
   file(GLOB ZLIB_FILES ./Source/Libraries/zlib/*.c)
 endif()
@@ -21,7 +19,6 @@ file (GLOB CPPBASE64_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Librarie
 set(SRCS_PLATFORM
   ${LIBZIP_FILES}
   ${LIBZIP_FILES_PLATFORM}
-  ${LIBLZMA_FILES}
   Source/Common/Platform/NMR_Platform.cpp
   Source/Common/Platform/NMR_ImportStream_Native.cpp
   Source/Common/Platform/NMR_ExportStream_Native.cpp
