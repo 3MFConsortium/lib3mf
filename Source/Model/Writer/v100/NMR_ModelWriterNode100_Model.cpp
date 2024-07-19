@@ -89,7 +89,7 @@ namespace NMR {
 				std::string prefix = "customXMLNS" + std::to_string(m_pXMLWriter->GetNamespaceCount());
 				std::string sDummy;
 				if (!m_pXMLWriter->GetNamespacePrefix(md->getNameSpace(), sDummy)) {
-					m_pXMLWriter->RegisterCustomNameSpace(md->getNameSpace(), prefix);
+					m_pXMLWriter->RegisterCustomNameSpace(md->getNameSpace(), prefix, false);
 				}
 			}
 		}
@@ -924,9 +924,9 @@ namespace NMR {
 		m_bWriteBinaryExtension = bWriteBinaryExtension;
 	}
 
-	void CModelWriterNode100_Model::registerCustomNamespace(const std::string& sPrefix, const std::string& sNamespace)
+	void CModelWriterNode100_Model::registerCustomNamespace(const std::string& sPrefix, const std::string& sNamespace, bool bFailIfExisting)
 	{
-		m_pXMLWriter->RegisterCustomNameSpace(sNamespace, sPrefix);
+		m_pXMLWriter->RegisterCustomNameSpace(sNamespace, sPrefix, bFailIfExisting);
 	}
 
 	void CModelWriterNode100_Model::writeCustomToolpathXMLNode(PCustomXMLNode pXMLNode, const std::string& sPrefix)

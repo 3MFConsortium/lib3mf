@@ -67,7 +67,7 @@ namespace NMR {
 
 		void addAdditionalAttachment(_In_ std::string sPath, _In_ PImportStream pStream, _In_ std::string sRelationShipType);
 
-		void registerCustomNameSpace(const std::string& sPrefix, const std::string& sNameSpace) override;
+		void registerCustomNameSpace(const std::string& sPrefix, const std::string& sNameSpace, bool bFailIfExisting) override;
 		std::map<std::string, std::string> getCustomNamespaceMap();
 
 	};

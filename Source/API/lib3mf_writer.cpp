@@ -323,5 +323,5 @@ void CWriter::RegisterCustomNamespace(const std::string& sPrefix, const std::str
 	if (!NMR::fnStringIsValidAlphanumericNameString (sPrefix))
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDNAMESPACEPREFIX);
 
-	m_pWriter->registerCustomNameSpace(sPrefix, sNameSpace);
+	m_pWriter->registerCustomNameSpace(sPrefix, sNameSpace, false);
 }

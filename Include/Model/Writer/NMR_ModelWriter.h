@@ -72,7 +72,7 @@ namespace NMR {
 		void assignBinaryStream(const std::string& InstanceUUID, const std::string& sBinaryStreamUUID);
 		CChunkedBinaryStreamWriter* findBinaryStream(const std::string& InstanceUUID, std::string& Path);
 
-		virtual void registerCustomNameSpace(const std::string & sPrefix, const std::string & sNameSpace);
+		virtual void registerCustomNameSpace(const std::string & sPrefix, const std::string & sNameSpace, bool bFailIfExisting);
 
 	};
 

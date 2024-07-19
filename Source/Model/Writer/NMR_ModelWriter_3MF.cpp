@@ -108,7 +108,7 @@ namespace NMR {
 		for (auto iIter : m_CustomNameSpaces) {
 			std::string sPrefix = iIter.first;
 			std::string sNameSpace = iIter.second;
-			ModelNode.registerCustomNamespace(sPrefix, sNameSpace);
+			ModelNode.registerCustomNamespace(sPrefix, sNameSpace, false);
 		}
 
 		for (auto iAssignmentIter : m_BinaryWriterAssignmentMap) {
@@ -132,7 +132,7 @@ namespace NMR {
 		m_AdditionalAttachments.insert(std::make_pair(sPath, std::make_pair(pStream, sRelationShipType)));
 	}
 
-	void CModelWriter_3MF::registerCustomNameSpace(const std::string& sPrefix, const std::string& sNameSpace)
+	void CModelWriter_3MF::registerCustomNameSpace(const std::string& sPrefix, const std::string& sNameSpace, bool bFailIfExisting)
 	{
 		if (sPrefix.empty ())
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
