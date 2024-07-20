@@ -1675,6 +1675,8 @@ public:
 	inline std::string GetSegmentProfileUUID(const Lib3MF_uint32 nIndex);
 	inline PBuildItem GetSegmentPart(const Lib3MF_uint32 nIndex);
 	inline std::string GetSegmentPartUUID(const Lib3MF_uint32 nIndex);
+	inline Lib3MF_uint32 GetSegmentLocalPartID(const Lib3MF_uint32 nIndex);
+	inline std::string GetPartUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID);
 	inline void GetSegmentPointData(const Lib3MF_uint32 nIndex, std::vector<sPosition2D> & PointDataBuffer);
 	inline void FindAttributeInfoByName(const std::string & sNameSpace, const std::string & sAttributeName, Lib3MF_uint32 & nID, eToolpathAttributeType & eAttributeType);
 	inline Lib3MF_uint32 FindAttributeIDByName(const std::string & sNameSpace, const std::string & sAttributeName);
@@ -6413,6 +6415,35 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		CheckError(lib3mf_toolpathlayerreader_getsegmentpartuuid(m_pHandle, nIndex, 0, &bytesNeededPartUUID, nullptr));
 		std::vector<char> bufferPartUUID(bytesNeededPartUUID);
 		CheckError(lib3mf_toolpathlayerreader_getsegmentpartuuid(m_pHandle, nIndex, bytesNeededPartUUID, &bytesWrittenPartUUID, &bufferPartUUID[0]));
+		
+		return std::string(&bufferPartUUID[0]);
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentLocalPartID - Retrieves the assigned segment part id. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Local Segment Part ID
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::GetSegmentLocalPartID(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_uint32 resultLocalPartID = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentlocalpartid(m_pHandle, nIndex, &resultLocalPartID));
+		
+		return resultLocalPartID;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetPartUUIDByLocalPartID - Retrieves the global part UUID by the local part ID. Fails if part ID does not exist in this layer. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+	* @param[in] nLocalPartID - Local Segment Part ID
+	* @return Segment Part UUID
+	*/
+	std::string CToolpathLayerReader::GetPartUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID)
+	{
+		Lib3MF_uint32 bytesNeededPartUUID = 0;
+		Lib3MF_uint32 bytesWrittenPartUUID = 0;
+		CheckError(lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(m_pHandle, nLocalPartID, 0, &bytesNeededPartUUID, nullptr));
+		std::vector<char> bufferPartUUID(bytesNeededPartUUID);
+		CheckError(lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(m_pHandle, nLocalPartID, bytesNeededPartUUID, &bytesWrittenPartUUID, &bufferPartUUID[0]));
 		
 		return std::string(&bufferPartUUID[0]);
 	}

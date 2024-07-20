@@ -12096,6 +12096,98 @@ Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpartuuid(Lib3MF_ToolpathLayerR
 	}
 }
 
+Lib3MFResult lib3mf_toolpathlayerreader_getsegmentlocalpartid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 * pLocalPartID)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "GetSegmentLocalPartID");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+		}
+		if (pLocalPartID == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
+		if (!pIToolpathLayerReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pLocalPartID = pIToolpathLayerReader->GetSegmentLocalPartID(nIndex);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("LocalPartID", *pLocalPartID);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nLocalPartID, const Lib3MF_uint32 nPartUUIDBufferSize, Lib3MF_uint32* pPartUUIDNeededChars, char * pPartUUIDBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "GetPartUUIDByLocalPartID");
+			pJournalEntry->addUInt32Parameter("LocalPartID", nLocalPartID);
+		}
+		if ( (!pPartUUIDBuffer) && !(pPartUUIDNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sPartUUID("");
+		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
+		if (!pIToolpathLayerReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pPartUUIDBuffer == nullptr);
+		if (isCacheCall) {
+			sPartUUID = pIToolpathLayerReader->GetPartUUIDByLocalPartID(nLocalPartID);
+
+			pIToolpathLayerReader->_setCache (new ParameterCache_1<std::string> (sPartUUID));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIToolpathLayerReader->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sPartUUID);
+			pIToolpathLayerReader->_setCache (nullptr);
+		}
+		
+		if (pPartUUIDNeededChars)
+			*pPartUUIDNeededChars = (Lib3MF_uint32) (sPartUUID.size()+1);
+		if (pPartUUIDBuffer) {
+			if (sPartUUID.size() >= nPartUUIDBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iPartUUID = 0; iPartUUID < sPartUUID.size(); iPartUUID++)
+				pPartUUIDBuffer[iPartUUID] = sPartUUID[iPartUUID];
+			pPartUUIDBuffer[sPartUUID.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("PartUUID", sPartUUID.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpointdata(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, sLib3MFPosition2D * pPointDataBuffer)
 {
 	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
@@ -18956,6 +19048,10 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentpart;
 	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentpartuuid") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentpartuuid;
+	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentlocalpartid") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentlocalpartid;
+	if (sProcName == "lib3mf_toolpathlayerreader_getpartuuidbylocalpartid") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getpartuuidbylocalpartid;
 	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentpointdata") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentpointdata;
 	if (sProcName == "lib3mf_toolpathlayerreader_findattributeinfobyname") 

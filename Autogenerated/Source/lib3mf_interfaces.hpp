@@ -3214,6 +3214,20 @@ public:
 	virtual std::string GetSegmentPartUUID(const Lib3MF_uint32 nIndex) = 0;
 
 	/**
+	* IToolpathLayerReader::GetSegmentLocalPartID - Retrieves the assigned segment part id. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Local Segment Part ID
+	*/
+	virtual Lib3MF_uint32 GetSegmentLocalPartID(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetPartUUIDByLocalPartID - Retrieves the global part UUID by the local part ID. Fails if part ID does not exist in this layer. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+	* @param[in] nLocalPartID - Local Segment Part ID
+	* @return Segment Part UUID
+	*/
+	virtual std::string GetPartUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID) = 0;
+
+	/**
 	* IToolpathLayerReader::GetSegmentPointData - Retrieves the assigned segment point list. For type hatch, the points are taken pairwise.
 	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
 	* @param[in] nPointDataBufferSize - Number of elements in buffer

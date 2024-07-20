@@ -1295,6 +1295,12 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentpartuuid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentPartUUID (IntPtr Handle, UInt32 AIndex, UInt32 sizePartUUID, out UInt32 neededPartUUID, IntPtr dataPartUUID);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentlocalpartid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentLocalPartID (IntPtr Handle, UInt32 AIndex, out UInt32 ALocalPartID);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getpartuuidbylocalpartid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetPartUUIDByLocalPartID (IntPtr Handle, UInt32 ALocalPartID, UInt32 sizePartUUID, out UInt32 neededPartUUID, IntPtr dataPartUUID);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentpointdata", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentPointData (IntPtr Handle, UInt32 AIndex, UInt64 sizePointData, out UInt64 neededPointData, IntPtr dataPointData);
 
@@ -5412,6 +5418,28 @@ namespace Lib3MF {
 			GCHandle dataPartUUID = GCHandle.Alloc(bytesPartUUID, GCHandleType.Pinned);
 
 			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentPartUUID (Handle, AIndex, sizePartUUID, out neededPartUUID, dataPartUUID.AddrOfPinnedObject()));
+			dataPartUUID.Free();
+			return Encoding.UTF8.GetString(bytesPartUUID).TrimEnd(char.MinValue);
+		}
+
+		public UInt32 GetSegmentLocalPartID (UInt32 AIndex)
+		{
+			UInt32 resultLocalPartID = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentLocalPartID (Handle, AIndex, out resultLocalPartID));
+			return resultLocalPartID;
+		}
+
+		public String GetPartUUIDByLocalPartID (UInt32 ALocalPartID)
+		{
+			UInt32 sizePartUUID = 0;
+			UInt32 neededPartUUID = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetPartUUIDByLocalPartID (Handle, ALocalPartID, sizePartUUID, out neededPartUUID, IntPtr.Zero));
+			sizePartUUID = neededPartUUID;
+			byte[] bytesPartUUID = new byte[sizePartUUID];
+			GCHandle dataPartUUID = GCHandle.Alloc(bytesPartUUID, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetPartUUIDByLocalPartID (Handle, ALocalPartID, sizePartUUID, out neededPartUUID, dataPartUUID.AddrOfPinnedObject()));
 			dataPartUUID.Free();
 			return Encoding.UTF8.GetString(bytesPartUUID).TrimEnd(char.MinValue);
 		}

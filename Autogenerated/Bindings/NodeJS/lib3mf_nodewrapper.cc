@@ -11567,6 +11567,8 @@ void CLib3MFToolpathLayerReader::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentProfileUUID", GetSegmentProfileUUID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPart", GetSegmentPart);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPartUUID", GetSegmentPartUUID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentLocalPartID", GetSegmentLocalPartID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetPartUUIDByLocalPartID", GetPartUUIDByLocalPartID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPointData", GetSegmentPointData);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "FindAttributeInfoByName", FindAttributeInfoByName);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "FindAttributeIDByName", FindAttributeIDByName);
@@ -11797,6 +11799,63 @@ void CLib3MFToolpathLayerReader::GetSegmentPartUUID(const FunctionCallbackInfo<V
         std::vector<char> bufferPartUUID;
         bufferPartUUID.resize(bytesNeededPartUUID);
         Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID(instanceHandle, nIndex, bytesNeededPartUUID, &bytesWrittenPartUUID, &bufferPartUUID[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferPartUUID[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::GetSegmentLocalPartID(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nReturnLocalPartID = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentLocalPartID.");
+        if (wrapperTable->m_ToolpathLayerReader_GetSegmentLocalPartID == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentLocalPartID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentLocalPartID(instanceHandle, nIndex, &nReturnLocalPartID);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnLocalPartID));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::GetPartUUIDByLocalPartID(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (LocalPartID)");
+        }
+        unsigned int nLocalPartID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int bytesNeededPartUUID = 0;
+        unsigned int bytesWrittenPartUUID = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetPartUUIDByLocalPartID.");
+        if (wrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetPartUUIDByLocalPartID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID(instanceHandle, nLocalPartID, 0, &bytesNeededPartUUID, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferPartUUID;
+        bufferPartUUID.resize(bytesNeededPartUUID);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID(instanceHandle, nLocalPartID, bytesNeededPartUUID, &bytesWrittenPartUUID, &bufferPartUUID[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferPartUUID[0]));
 

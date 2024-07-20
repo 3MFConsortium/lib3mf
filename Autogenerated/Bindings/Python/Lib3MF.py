@@ -459,6 +459,8 @@ class FunctionTable:
 	lib3mf_toolpathlayerreader_getsegmentprofileuuid = None
 	lib3mf_toolpathlayerreader_getsegmentpart = None
 	lib3mf_toolpathlayerreader_getsegmentpartuuid = None
+	lib3mf_toolpathlayerreader_getsegmentlocalpartid = None
+	lib3mf_toolpathlayerreader_getpartuuidbylocalpartid = None
 	lib3mf_toolpathlayerreader_getsegmentpointdata = None
 	lib3mf_toolpathlayerreader_findattributeinfobyname = None
 	lib3mf_toolpathlayerreader_findattributeidbyname = None
@@ -2955,6 +2957,18 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
 			self.lib.lib3mf_toolpathlayerreader_getsegmentpartuuid = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentlocalpartid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentlocalpartid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getpartuuidbylocalpartid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathlayerreader_getpartuuidbylocalpartid = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentpointdata")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -4915,6 +4929,12 @@ class Wrapper:
 			
 			self.lib.lib3mf_toolpathlayerreader_getsegmentpartuuid.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_getsegmentpartuuid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentlocalpartid.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentlocalpartid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getpartuuidbylocalpartid.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getpartuuidbylocalpartid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
 			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdata.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdata.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(Position2D)]
@@ -8424,6 +8444,25 @@ class ToolpathLayerReader(Base):
 		nPartUUIDBufferSize = ctypes.c_uint64(nPartUUIDNeededChars.value)
 		pPartUUIDBuffer = (ctypes.c_char * (nPartUUIDNeededChars.value))()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentpartuuid(self._handle, nIndex, nPartUUIDBufferSize, nPartUUIDNeededChars, pPartUUIDBuffer))
+		
+		return pPartUUIDBuffer.value.decode()
+	
+	def GetSegmentLocalPartID(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		pLocalPartID = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentlocalpartid(self._handle, nIndex, pLocalPartID))
+		
+		return pLocalPartID.value
+	
+	def GetPartUUIDByLocalPartID(self, LocalPartID):
+		nLocalPartID = ctypes.c_uint32(LocalPartID)
+		nPartUUIDBufferSize = ctypes.c_uint64(0)
+		nPartUUIDNeededChars = ctypes.c_uint64(0)
+		pPartUUIDBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(self._handle, nLocalPartID, nPartUUIDBufferSize, nPartUUIDNeededChars, pPartUUIDBuffer))
+		nPartUUIDBufferSize = ctypes.c_uint64(nPartUUIDNeededChars.value)
+		pPartUUIDBuffer = (ctypes.c_char * (nPartUUIDNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(self._handle, nLocalPartID, nPartUUIDBufferSize, nPartUUIDNeededChars, pPartUUIDBuffer))
 		
 		return pPartUUIDBuffer.value.decode()
 	

@@ -3335,6 +3335,28 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpart(Lib3MF_To
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpartuuid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nPartUUIDBufferSize, Lib3MF_uint32* pPartUUIDNeededChars, char * pPartUUIDBuffer);
 
 /**
+* Retrieves the assigned segment part id. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+* @param[out] pLocalPartID - Local Segment Part ID
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentlocalpartid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 * pLocalPartID);
+
+/**
+* Retrieves the global part UUID by the local part ID. Fails if part ID does not exist in this layer. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nLocalPartID - Local Segment Part ID
+* @param[in] nPartUUIDBufferSize - size of the buffer (including trailing 0)
+* @param[out] pPartUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pPartUUIDBuffer -  buffer of Segment Part UUID, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nLocalPartID, const Lib3MF_uint32 nPartUUIDBufferSize, Lib3MF_uint32* pPartUUIDNeededChars, char * pPartUUIDBuffer);
+
+/**
 * Retrieves the assigned segment point list. For type hatch, the points are taken pairwise.
 *
 * @param[in] pToolpathLayerReader - ToolpathLayerReader instance.

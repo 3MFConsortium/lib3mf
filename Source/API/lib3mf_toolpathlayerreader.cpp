@@ -109,6 +109,23 @@ std::string CToolpathLayerReader::GetSegmentPartUUID(const Lib3MF_uint32 nIndex)
 	return m_pReadData->mapIDtoUUID(nPartID);
 }
 
+Lib3MF_uint32 CToolpathLayerReader::GetSegmentLocalPartID(const Lib3MF_uint32 nIndex)
+{
+	NMR::eModelToolpathSegmentType eNMRType;
+	uint32_t nProfileID;
+	uint32_t nPartID;
+	uint32_t nPointCount;
+	m_pReadData->getSegmentInfo(nIndex, eNMRType, nProfileID, nPartID, nPointCount);
+
+	return nPartID;
+}
+
+std::string CToolpathLayerReader::GetPartUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID)
+{
+	return m_pReadData->mapIDtoUUID(nLocalPartID);
+}
+
+
 void CToolpathLayerReader::GetSegmentPointData(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D* pPointDataBuffer)
 {
 	NMR::eModelToolpathSegmentType eNMRType;

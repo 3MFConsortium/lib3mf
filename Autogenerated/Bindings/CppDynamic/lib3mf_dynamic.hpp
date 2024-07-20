@@ -1699,6 +1699,8 @@ public:
 	inline std::string GetSegmentProfileUUID(const Lib3MF_uint32 nIndex);
 	inline PBuildItem GetSegmentPart(const Lib3MF_uint32 nIndex);
 	inline std::string GetSegmentPartUUID(const Lib3MF_uint32 nIndex);
+	inline Lib3MF_uint32 GetSegmentLocalPartID(const Lib3MF_uint32 nIndex);
+	inline std::string GetPartUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID);
 	inline void GetSegmentPointData(const Lib3MF_uint32 nIndex, std::vector<sPosition2D> & PointDataBuffer);
 	inline void FindAttributeInfoByName(const std::string & sNameSpace, const std::string & sAttributeName, Lib3MF_uint32 & nID, eToolpathAttributeType & eAttributeType);
 	inline Lib3MF_uint32 FindAttributeIDByName(const std::string & sNameSpace, const std::string & sAttributeName);
@@ -2706,6 +2708,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentProfileUUID = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentPart = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentLocalPartID = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentPointData = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_FindAttributeInfoByName = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_FindAttributeIDByName = nullptr;
@@ -5770,6 +5774,24 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentLocalPartID = (PLib3MFToolpathLayerReader_GetSegmentLocalPartIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentlocalpartid");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentLocalPartID = (PLib3MFToolpathLayerReader_GetSegmentLocalPartIDPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentlocalpartid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetSegmentLocalPartID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID = (PLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getpartuuidbylocalpartid");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID = (PLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getpartuuidbylocalpartid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentPointData = (PLib3MFToolpathLayerReader_GetSegmentPointDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentpointdata");
 		#else // _WIN32
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentPointData = (PLib3MFToolpathLayerReader_GetSegmentPointDataPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentpointdata");
@@ -8645,6 +8667,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmentpartuuid", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmentlocalpartid", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentLocalPartID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentLocalPartID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getpartuuidbylocalpartid", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmentpointdata", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentPointData));
@@ -13415,6 +13445,35 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentPartUUID(m_pHandle, nIndex, 0, &bytesNeededPartUUID, nullptr));
 		std::vector<char> bufferPartUUID(bytesNeededPartUUID);
 		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentPartUUID(m_pHandle, nIndex, bytesNeededPartUUID, &bytesWrittenPartUUID, &bufferPartUUID[0]));
+		
+		return std::string(&bufferPartUUID[0]);
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentLocalPartID - Retrieves the assigned segment part id. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Local Segment Part ID
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::GetSegmentLocalPartID(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_uint32 resultLocalPartID = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentLocalPartID(m_pHandle, nIndex, &resultLocalPartID));
+		
+		return resultLocalPartID;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetPartUUIDByLocalPartID - Retrieves the global part UUID by the local part ID. Fails if part ID does not exist in this layer. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+	* @param[in] nLocalPartID - Local Segment Part ID
+	* @return Segment Part UUID
+	*/
+	std::string CToolpathLayerReader::GetPartUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID)
+	{
+		Lib3MF_uint32 bytesNeededPartUUID = 0;
+		Lib3MF_uint32 bytesWrittenPartUUID = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetPartUUIDByLocalPartID(m_pHandle, nLocalPartID, 0, &bytesNeededPartUUID, nullptr));
+		std::vector<char> bufferPartUUID(bytesNeededPartUUID);
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetPartUUIDByLocalPartID(m_pHandle, nLocalPartID, bytesNeededPartUUID, &bytesWrittenPartUUID, &bufferPartUUID[0]));
 		
 		return std::string(&bufferPartUUID[0]);
 	}

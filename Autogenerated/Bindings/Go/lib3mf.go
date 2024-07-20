@@ -2907,6 +2907,24 @@ Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentpartuuid(Lib3MFHandle li
 }
 
 
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentlocalpartid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 * pLocalPartID)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentLocalPartID (pToolpathLayerReader, nIndex, pLocalPartID);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nLocalPartID, const Lib3MF_uint32 nPartUUIDBufferSize, Lib3MF_uint32* pPartUUIDNeededChars, char * pPartUUIDBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID (pToolpathLayerReader, nLocalPartID, nPartUUIDBufferSize, pPartUUIDNeededChars, pPartUUIDBuffer);
+}
+
+
 Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentpointdata(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, sLib3MFPosition2D * pPointDataBuffer)
 {
 	if (libraryHandle == 0) 
@@ -9004,6 +9022,33 @@ func (inst ToolpathLayerReader) GetSegmentPartUUID(index uint32) (string, error)
 	bufferSizepartUUID := neededforpartUUID
 	bufferpartUUID := make([]byte, bufferSizepartUUID)
 	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmentpartuuid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), bufferSizepartUUID, &filledinpartUUID, (*C.char)(unsafe.Pointer(&bufferpartUUID[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferpartUUID[:(filledinpartUUID-1)]), nil
+}
+
+// GetSegmentLocalPartID retrieves the assigned segment part id. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+func (inst ToolpathLayerReader) GetSegmentLocalPartID(index uint32) (uint32, error) {
+	var localPartID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentlocalpartid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &localPartID)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(localPartID), nil
+}
+
+// GetPartUUIDByLocalPartID retrieves the global part UUID by the local part ID. Fails if part ID does not exist in this layer. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+func (inst ToolpathLayerReader) GetPartUUIDByLocalPartID(localPartID uint32) (string, error) {
+	var neededforpartUUID C.uint32_t
+	var filledinpartUUID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(localPartID), 0, &neededforpartUUID, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizepartUUID := neededforpartUUID
+	bufferpartUUID := make([]byte, bufferSizepartUUID)
+	ret = C.CCall_lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(localPartID), bufferSizepartUUID, &filledinpartUUID, (*C.char)(unsafe.Pointer(&bufferpartUUID[0])))
 	if ret != 0 {
 		return "", makeError(uint32(ret))
 	}

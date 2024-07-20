@@ -363,6 +363,8 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ToolpathLayerReader_GetSegmentProfileUUID = NULL;
 	pWrapperTable->m_ToolpathLayerReader_GetSegmentPart = NULL;
 	pWrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID = NULL;
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentLocalPartID = NULL;
+	pWrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID = NULL;
 	pWrapperTable->m_ToolpathLayerReader_GetSegmentPointData = NULL;
 	pWrapperTable->m_ToolpathLayerReader_FindAttributeInfoByName = NULL;
 	pWrapperTable->m_ToolpathLayerReader_FindAttributeIDByName = NULL;
@@ -3428,6 +3430,24 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentLocalPartID = (PLib3MFToolpathLayerReader_GetSegmentLocalPartIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentlocalpartid");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentLocalPartID = (PLib3MFToolpathLayerReader_GetSegmentLocalPartIDPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentlocalpartid");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerReader_GetSegmentLocalPartID == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID = (PLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getpartuuidbylocalpartid");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID = (PLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getpartuuidbylocalpartid");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

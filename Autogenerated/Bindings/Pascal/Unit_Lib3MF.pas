@@ -3785,6 +3785,28 @@ type
 	TLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nPartUUIDBufferSize: Cardinal; out pPartUUIDNeededChars: Cardinal; pPartUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
+	* Retrieves the assigned segment part id. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[out] pLocalPartID - Local Segment Part ID
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; out pLocalPartID: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the global part UUID by the local part ID. Fails if part ID does not exist in this layer. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nLocalPartID - Local Segment Part ID
+	* @param[in] nPartUUIDBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pPartUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pPartUUIDBuffer -  buffer of Segment Part UUID, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nLocalPartID: Cardinal; const nPartUUIDBufferSize: Cardinal; out pPartUUIDNeededChars: Cardinal; pPartUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
 	* Retrieves the assigned segment point list. For type hatch, the points are taken pairwise.
 	*
 	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
@@ -6425,6 +6447,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetSegmentProfileUUID(const AIndex: Cardinal): String;
 		function GetSegmentPart(const AIndex: Cardinal): TLib3MFBuildItem;
 		function GetSegmentPartUUID(const AIndex: Cardinal): String;
+		function GetSegmentLocalPartID(const AIndex: Cardinal): Cardinal;
+		function GetPartUUIDByLocalPartID(const ALocalPartID: Cardinal): String;
 		procedure GetSegmentPointData(const AIndex: Cardinal; out APointData: ArrayOfLib3MFPosition2D);
 		procedure FindAttributeInfoByName(const ANameSpace: String; const AAttributeName: String; out AID: Cardinal; out AAttributeType: TLib3MFToolpathAttributeType);
 		function FindAttributeIDByName(const ANameSpace: String; const AAttributeName: String): Cardinal;
@@ -7029,6 +7053,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc;
 		FLib3MFToolpathLayerReader_GetSegmentPartFunc: TLib3MFToolpathLayerReader_GetSegmentPartFunc;
 		FLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc;
+		FLib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc: TLib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc;
+		FLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc: TLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc;
 		FLib3MFToolpathLayerReader_GetSegmentPointDataFunc: TLib3MFToolpathLayerReader_GetSegmentPointDataFunc;
 		FLib3MFToolpathLayerReader_FindAttributeInfoByNameFunc: TLib3MFToolpathLayerReader_FindAttributeInfoByNameFunc;
 		FLib3MFToolpathLayerReader_FindAttributeIDByNameFunc: TLib3MFToolpathLayerReader_FindAttributeIDByNameFunc;
@@ -7532,6 +7558,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc read FLib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc;
 		property Lib3MFToolpathLayerReader_GetSegmentPartFunc: TLib3MFToolpathLayerReader_GetSegmentPartFunc read FLib3MFToolpathLayerReader_GetSegmentPartFunc;
 		property Lib3MFToolpathLayerReader_GetSegmentPartUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc read FLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc: TLib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc read FLib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc;
+		property Lib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc: TLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc read FLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc;
 		property Lib3MFToolpathLayerReader_GetSegmentPointDataFunc: TLib3MFToolpathLayerReader_GetSegmentPointDataFunc read FLib3MFToolpathLayerReader_GetSegmentPointDataFunc;
 		property Lib3MFToolpathLayerReader_FindAttributeInfoByNameFunc: TLib3MFToolpathLayerReader_FindAttributeInfoByNameFunc read FLib3MFToolpathLayerReader_FindAttributeInfoByNameFunc;
 		property Lib3MFToolpathLayerReader_FindAttributeIDByNameFunc: TLib3MFToolpathLayerReader_FindAttributeIDByNameFunc read FLib3MFToolpathLayerReader_FindAttributeIDByNameFunc;
@@ -12074,6 +12102,25 @@ implementation
 		Result := StrPas(@bufferPartUUID[0]);
 	end;
 
+	function TLib3MFToolpathLayerReader.GetSegmentLocalPartID(const AIndex: Cardinal): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc(FHandle, AIndex, Result));
+	end;
+
+	function TLib3MFToolpathLayerReader.GetPartUUIDByLocalPartID(const ALocalPartID: Cardinal): String;
+	var
+		bytesNeededPartUUID: Cardinal;
+		bytesWrittenPartUUID: Cardinal;
+		bufferPartUUID: array of Char;
+	begin
+		bytesNeededPartUUID:= 0;
+		bytesWrittenPartUUID:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc(FHandle, ALocalPartID, 0, bytesNeededPartUUID, nil));
+		SetLength(bufferPartUUID, bytesNeededPartUUID);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc(FHandle, ALocalPartID, bytesNeededPartUUID, bytesWrittenPartUUID, @bufferPartUUID[0]));
+		Result := StrPas(@bufferPartUUID[0]);
+	end;
+
 	procedure TLib3MFToolpathLayerReader.GetSegmentPointData(const AIndex: Cardinal; out APointData: ArrayOfLib3MFPosition2D);
 	var
 		countNeededPointData: QWord;
@@ -14237,6 +14284,8 @@ implementation
 		FLib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentprofileuuid');
 		FLib3MFToolpathLayerReader_GetSegmentPartFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentpart');
 		FLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentpartuuid');
+		FLib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentlocalpartid');
+		FLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getpartuuidbylocalpartid');
 		FLib3MFToolpathLayerReader_GetSegmentPointDataFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentpointdata');
 		FLib3MFToolpathLayerReader_FindAttributeInfoByNameFunc := LoadFunction('lib3mf_toolpathlayerreader_findattributeinfobyname');
 		FLib3MFToolpathLayerReader_FindAttributeIDByNameFunc := LoadFunction('lib3mf_toolpathlayerreader_findattributeidbyname');
@@ -15369,6 +15418,12 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentpartuuid'), @FLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentlocalpartid'), @FLib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getpartuuidbylocalpartid'), @FLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentpointdata'), @FLib3MFToolpathLayerReader_GetSegmentPointDataFunc);

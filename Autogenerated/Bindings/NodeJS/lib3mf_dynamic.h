@@ -3322,6 +3322,28 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentPartPtr) (Lib3MF_Too
 typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentPartUUIDPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nPartUUIDBufferSize, Lib3MF_uint32* pPartUUIDNeededChars, char * pPartUUIDBuffer);
 
 /**
+* Retrieves the assigned segment part id. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+* @param[out] pLocalPartID - Local Segment Part ID
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentLocalPartIDPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 * pLocalPartID);
+
+/**
+* Retrieves the global part UUID by the local part ID. Fails if part ID does not exist in this layer. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nLocalPartID - Local Segment Part ID
+* @param[in] nPartUUIDBufferSize - size of the buffer (including trailing 0)
+* @param[out] pPartUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pPartUUIDBuffer -  buffer of Segment Part UUID, may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nLocalPartID, const Lib3MF_uint32 nPartUUIDBufferSize, Lib3MF_uint32* pPartUUIDNeededChars, char * pPartUUIDBuffer);
+
+/**
 * Retrieves the assigned segment point list. For type hatch, the points are taken pairwise.
 *
 * @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
@@ -5472,6 +5494,8 @@ typedef struct {
 	PLib3MFToolpathLayerReader_GetSegmentProfileUUIDPtr m_ToolpathLayerReader_GetSegmentProfileUUID;
 	PLib3MFToolpathLayerReader_GetSegmentPartPtr m_ToolpathLayerReader_GetSegmentPart;
 	PLib3MFToolpathLayerReader_GetSegmentPartUUIDPtr m_ToolpathLayerReader_GetSegmentPartUUID;
+	PLib3MFToolpathLayerReader_GetSegmentLocalPartIDPtr m_ToolpathLayerReader_GetSegmentLocalPartID;
+	PLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDPtr m_ToolpathLayerReader_GetPartUUIDByLocalPartID;
 	PLib3MFToolpathLayerReader_GetSegmentPointDataPtr m_ToolpathLayerReader_GetSegmentPointData;
 	PLib3MFToolpathLayerReader_FindAttributeInfoByNamePtr m_ToolpathLayerReader_FindAttributeInfoByName;
 	PLib3MFToolpathLayerReader_FindAttributeIDByNamePtr m_ToolpathLayerReader_FindAttributeIDByName;
