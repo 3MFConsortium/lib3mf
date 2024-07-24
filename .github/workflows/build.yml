@@ -15,7 +15,7 @@ jobs:
       - name: Run version extraction script and set environment variable
         id: set-version
         run: |
-          LIB3MF_VERSION=$(python CI/extract_version.py)
+          LIB3MF_VERSION=$(python CI/ci_cd_helper.py extract-version)
           echo "LIB3MF_VERSION=$LIB3MF_VERSION" >> $GITHUB_OUTPUT
       - name: Echo version for debug
         run: echo "LIB3MF_VERSION=${{ steps.set-version.outputs.LIB3MF_VERSION }}"
@@ -118,7 +118,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
-      - run: sh cmake/GenerateMake.sh "-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64"
+      - run: sh cmake/GenerateMake.sh
       - run: cmake --build .
         working-directory: ./build
       - run: ctest -V
@@ -148,7 +148,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
-      - run: sh cmake/GenerateMake.sh "-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64 -DCMAKE_BUILD_TYPE=Debug"
+      - run: sh cmake/GenerateMake.sh "Debug"
       - run: cmake --build .
         working-directory: ./build
       - run: ctest -V
@@ -540,6 +540,7 @@ jobs:
           else
             echo "run_integration_tests=false" >> $GITHUB_OUTPUT
           fi
+      
 
   integration-tests-latest-release:
     runs-on: ubuntu-20.04
@@ -563,8 +564,7 @@ jobs:
       - name: Get latest lib3mf SDK release info from GitHub API
         id: get_lib3mf_release
         run: |
-          LATEST_LIB3MF_URL=$(curl -s https://api.github.com/repos/3MFConsortium/lib3mf/releases/latest | grep "browser_download_url.*zip" | cut -d '"' -f 4)
-          echo "LATEST_LIB3MF_URL=${LATEST_LIB3MF_URL}" >> $GITHUB_ENV
+          echo "LATEST_LIB3MF_URL=$(python CI/ci_cd_helper.py fetch-sdk-url 0 | xargs)" >> $GITHUB_ENV
 
       - name: Download latest lib3mf SDK zip
         run: |
@@ -573,6 +573,8 @@ jobs:
       - name: Unpack the SDK
         run: |
           unzip latest_lib3mf_sdk.zip -d lib3mf_sdk
+          mv lib3mf_sdk/lib3mf_sdk/* lib3mf_sdk/
+          rmdir lib3mf_sdk/lib3mf_sdk
 
       - name: Build CppDynamic
         run: |
@@ -604,6 +606,15 @@ jobs:
           LATEST_TOTAL_SECONDS=$(echo $LATEST_TIME | awk -F: '{ print ($1 * 60) + $2 }')
           echo "Latest SDK execution time in seconds: ${LATEST_TOTAL_SECONDS}"
 
+          LATEST_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_sdk_test.log | awk '{print $1}')
+          LATEST_TOTAL_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_sdk_test.log | awk '{print $3}' | tr -d '()')
+          LATEST_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_sdk_test.log | awk '{print $1}')
+          LATEST_TOTAL_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_sdk_test.log | awk '{print $3}' | tr -d '()')
+
+        
+          echo "MUSTPASS: ${LATEST_MUSTPASS} / ${LATEST_TOTAL_MUSTPASS}"
+          echo "MUSTFAIL: ${LATEST_MUSTFAIL} / ${LATEST_TOTAL_MUSTFAIL}"
+          
 
   integration-tests-last-two-releases:
     runs-on: ubuntu-20.04
@@ -627,14 +638,12 @@ jobs:
       - name: Get latest lib3mf SDK release info from GitHub API
         id: get_latest_release
         run: |
-          LATEST_LIB3MF_URL=$(curl -s https://api.github.com/repos/3MFConsortium/lib3mf/releases/latest | grep "browser_download_url.*zip" | cut -d '"' -f 4)
-          echo "LATEST_LIB3MF_URL=${LATEST_LIB3MF_URL}" >> $GITHUB_ENV
+          echo "LATEST_LIB3MF_URL=$(python CI/ci_cd_helper.py fetch-sdk-url 0 | xargs)" >> $GITHUB_ENV
 
       - name: Get second latest lib3mf SDK release info from GitHub API
         id: get_second_latest_release
         run: |
-          SECOND_LATEST_LIB3MF_URL=$(curl -s https://api.github.com/repos/3MFConsortium/lib3mf/releases | grep "browser_download_url.*zip" | cut -d '"' -f 4 | sed -n '2p')
-          echo "SECOND_LATEST_LIB3MF_URL=${SECOND_LATEST_LIB3MF_URL}" >> $GITHUB_ENV
+          echo "SECOND_LATEST_LIB3MF_URL=$(python CI/ci_cd_helper.py fetch-sdk-url 1 | xargs)" >> $GITHUB_ENV
 
       - name: Download latest lib3mf SDK zip
         run: |
@@ -647,6 +656,8 @@ jobs:
       - name: Unpack the latest SDK
         run: |
           unzip latest_lib3mf_sdk.zip -d latest_lib3mf_sdk
+          mv latest_lib3mf_sdk/lib3mf_sdk/* latest_lib3mf_sdk
+          rmdir latest_lib3mf_sdk/lib3mf_sdk
 
       - name: Unpack the second latest SDK
         run: |
@@ -692,20 +703,46 @@ jobs:
           cd test_suites
           /usr/bin/time -v python integration_test.py 2>&1 | tee second_latest_sdk_test.log
 
-      - name: Compare results (Checks the total python script execution time)
+      - name: Compare results (Checks the total python script execution time and must pass/fail counts)
         run: |
-          LATEST_TIME=$(grep "Elapsed (wall clock) time" test_suites/latest_sdk_test.log | awk '{print $8}')
-          SECOND_LATEST_TIME=$(grep "Elapsed (wall clock) time" test_suites/second_latest_sdk_test.log | awk '{print $8}')
-          LATEST_TOTAL_SECONDS=$(echo $LATEST_TIME | awk -F: '{ print ($1 * 60) + $2 }')
-          SECOND_LATEST_TOTAL_SECONDS=$(echo $SECOND_LATEST_TIME | awk -F: '{ print ($1 * 60) + $2 }')
-          echo "Latest SDK execution time in seconds: ${LATEST_TOTAL_SECONDS}"
-          echo "Second Latest SDK execution time in seconds: ${SECOND_LATEST_TOTAL_SECONDS}"
-          # Compare the total seconds
+            LATEST_TIME=$(grep "Elapsed (wall clock) time" test_suites/latest_sdk_test.log | awk '{print $8}')
+            SECOND_LATEST_TIME=$(grep "Elapsed (wall clock) time" test_suites/second_latest_sdk_test.log | awk '{print $8}')
+            LATEST_TOTAL_SECONDS=$(echo $LATEST_TIME | awk -F: '{ print ($1 * 60) + $2 }')
+            SECOND_LATEST_TOTAL_SECONDS=$(echo $SECOND_LATEST_TIME | awk -F: '{ print ($1 * 60) + $2 }')
+            echo "Latest SDK execution time in seconds: ${LATEST_TOTAL_SECONDS}"
+            echo "Second Latest SDK execution time in seconds: ${SECOND_LATEST_TOTAL_SECONDS}"
+        
+            LATEST_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_sdk_test.log | awk '{print $1}')
+            LATEST_TOTAL_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_sdk_test.log | awk '{print $3}' | tr -d '()')
+            SECOND_LATEST_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/second_latest_sdk_test.log | awk '{print $1}')
+            SECOND_LATEST_TOTAL_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/second_latest_sdk_test.log | awk '{print $3}' | tr -d '()')
+            
+            LATEST_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_sdk_test.log | awk '{print $1}')
+            LATEST_TOTAL_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_sdk_test.log | awk '{print $3}' | tr -d '()')
+            SECOND_LATEST_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/second_latest_sdk_test.log | awk '{print $1}')
+            SECOND_LATEST_TOTAL_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/second_latest_sdk_test.log | awk '{print $3}' | tr -d '()')
+        
+            echo "Latest MUSTPASS: ${LATEST_MUSTPASS} / ${LATEST_TOTAL_MUSTPASS}"
+            echo "Second Latest MUSTPASS: ${SECOND_LATEST_MUSTPASS} / ${SECOND_LATEST_TOTAL_MUSTPASS}"
+            echo "Latest MUSTFAIL: ${LATEST_MUSTFAIL} / ${LATEST_TOTAL_MUSTFAIL}"
+            echo "Second Latest MUSTFAIL: ${SECOND_LATEST_MUSTFAIL} / ${SECOND_LATEST_TOTAL_MUSTFAIL}"
+        
+            # Compare the total seconds
             if (( $(echo "$LATEST_TOTAL_SECONDS < $SECOND_LATEST_TOTAL_SECONDS" | bc -l) )); then
-            echo "New release is better"
+              echo "New release is better in execution time"
             else
-            echo "New release is worse"
+              echo "New release is worse in execution time"
             fi
+        
+            # Compare MUSTPASS and MUSTFAIL counts
+            if [ "$LATEST_MUSTPASS" != "$SECOND_LATEST_MUSTPASS" ] || [ "$LATEST_MUSTFAIL" != "$SECOND_LATEST_MUSTFAIL" ]; then
+              echo "MUSTPASS or MUSTFAIL counts have changed"
+              exit 1
+            else
+              echo "MUSTPASS and MUSTFAIL counts are consistent"
+            fi
+        
+
 
   integration-tests-latest-commit:
     runs-on: ubuntu-20.04
@@ -762,6 +799,20 @@ jobs:
           LATEST_TOTAL_SECONDS=$(echo $LATEST_TIME | awk -F: '{ print ($1 * 60) + $2 }')
           echo "Latest SDK execution time in seconds: ${LATEST_TOTAL_SECONDS}"
 
+          LATEST_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_sdk_test.log | awk '{print $1}')
+          LATEST_TOTAL_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_sdk_test.log | awk '{print $3}' | tr -d '()')
+          LATEST_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_sdk_test.log | awk '{print $1}')
+          LATEST_TOTAL_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_sdk_test.log | awk '{print $3}' | tr -d '()')
+
+          echo "MUSTPASS: ${LATEST_MUSTPASS} / ${LATEST_TOTAL_MUSTPASS}"
+          echo "MUSTFAIL: ${LATEST_MUSTFAIL} / ${LATEST_TOTAL_MUSTFAIL}"
+
+          # Save counts for comparison in other jobs
+          echo "LATEST_MUSTPASS=${LATEST_MUSTPASS}" >> $GITHUB_ENV
+          echo "LATEST_TOTAL_MUSTPASS=${LATEST_TOTAL_MUSTPASS}" >> $GITHUB_ENV
+          echo "LATEST_MUSTFAIL=${LATEST_MUSTFAIL}" >> $GITHUB_ENV
+          echo "LATEST_TOTAL_MUSTFAIL=${LATEST_TOTAL_MUSTFAIL}" >> $GITHUB_ENV
+
   integration-test-last-commit-and-last-release:
     runs-on: ubuntu-20.04
     needs: [set-integration-tests-status]
@@ -790,6 +841,7 @@ jobs:
       - name: Unpack the SDK
         run: |
           unzip lib3mf_sdk.zip/lib3mf_sdk.zip -d latest_commit_lib3mf_sdk && ls -al
+
 
       - name: Build CppDynamic with latest commit SDK
         run: |
@@ -822,8 +874,7 @@ jobs:
       - name: Get latest lib3mf SDK release info from GitHub API
         id: get_latest_release
         run: |
-          LATEST_LIB3MF_URL=$(curl -s https://api.github.com/repos/3MFConsortium/lib3mf/releases/latest | grep "browser_download_url.*zip" | cut -d '"' -f 4)
-          echo "LATEST_LIB3MF_URL=${LATEST_LIB3MF_URL}" >> $GITHUB_ENV
+          echo "LATEST_LIB3MF_URL=$(python CI/ci_cd_helper.py fetch-sdk-url 0 | xargs)" >> $GITHUB_ENV
           LATEST_RELEASE_NAME=$(curl -s https://api.github.com/repos/3MFConsortium/lib3mf/releases/latest | grep '"tag_name"' | cut -d '"' -f 4)
           echo "LATEST_RELEASE_NAME=${LATEST_RELEASE_NAME}" >> $GITHUB_ENV
 
@@ -834,6 +885,8 @@ jobs:
       - name: Unpack the SDK from latest release
         run: |
           unzip latest_release_lib3mf_sdk.zip -d latest_release_lib3mf_sdk
+          mv latest_release_lib3mf_sdk/lib3mf_sdk/* latest_release_lib3mf_sdk/
+          rmdir latest_release_lib3mf_sdk/lib3mf_sdk/
 
       - name: Build CppDynamic with latest release SDK
         run: |
@@ -859,14 +912,43 @@ jobs:
           LATEST_RELEASE_TOTAL_SECONDS=$(echo $LATEST_RELEASE_TIME | awk -F: '{ print ($1 * 60) + $2 }')
           echo "Latest commit SDK execution time in seconds: ${LATEST_COMMIT_TOTAL_SECONDS}"
           echo "Latest release SDK execution time in seconds: ${LATEST_RELEASE_TOTAL_SECONDS}"
+
+          LATEST_COMMIT_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_commit_sdk_test.log | awk '{print $1}')
+          LATEST_TOTAL_COMMIT_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_commit_sdk_test.log | awk '{print $3}' | tr -d '()')
+          LATEST_RELEASE_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_release_sdk_test.log | awk '{print $1}')
+          LATEST_TOTAL_RELEASE_MUSTPASS=$(grep "MUSTPASS files passed" test_suites/latest_release_sdk_test.log | awk '{print $3}' | tr -d '()')
+
+          LATEST_COMMIT_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_commit_sdk_test.log | awk '{print $1}')
+          LATEST_TOTAL_COMMIT_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_commit_sdk_test.log | awk '{print $3}' | tr -d '()')
+          LATEST_RELEASE_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_release_sdk_test.log | awk '{print $1}')
+          LATEST_TOTAL_RELEASE_MUSTFAIL=$(grep "MUSTFAIL files failed" test_suites/latest_release_sdk_test.log | awk '{print $3}' | tr -d '()')
+
+          echo "Latest commit MUSTPASS: ${LATEST_COMMIT_MUSTPASS} / ${LATEST_TOTAL_COMMIT_MUSTPASS}"
+          echo "Latest release MUSTPASS: ${LATEST_RELEASE_MUSTPASS} / ${LATEST_TOTAL_RELEASE_MUSTPASS}"
+          echo "Latest commit MUSTFAIL: ${LATEST_COMMIT_MUSTFAIL} / ${LATEST_TOTAL_COMMIT_MUSTFAIL}"
+          echo "Latest release MUSTFAIL: ${LATEST_RELEASE_MUSTFAIL} / ${LATEST_TOTAL_RELEASE_MUSTFAIL}"
+
+          # Compare MUSTPASS and MUSTFAIL counts
+          if [ "$LATEST_COMMIT_MUSTPASS" != "$LATEST_RELEASE_MUSTPASS" ] || [ "$LATEST_COMMIT_MUSTFAIL" != "$LATEST_RELEASE_MUSTFAIL" ]; then
+            echo "MUSTPASS or MUSTFAIL counts have changed"
+            exit 1
+          else
+            echo "MUSTPASS and MUSTFAIL counts are consistent"
+          fi
+
           # Compare the total seconds
           if (( $(echo "$LATEST_COMMIT_TOTAL_SECONDS < $LATEST_RELEASE_TOTAL_SECONDS" | bc -l) )); then
             echo "Latest commit is better"
           else
             echo "Latest release is better"
           fi
+
           echo "Latest commit with SHA ${{ github.sha }} ran in ${LATEST_COMMIT_TOTAL_SECONDS} seconds" > results.txt
           echo "Latest release with tag ${{ env.LATEST_RELEASE_NAME }} ran in ${LATEST_RELEASE_TOTAL_SECONDS} seconds" >> results.txt
+          echo "Latest commit MUSTPASS: ${LATEST_COMMIT_MUSTPASS} / ${LATEST_TOTAL_COMMIT_MUSTPASS}" >> results.txt
+          echo "Latest release MUSTPASS: ${LATEST_RELEASE_MUSTPASS} / ${LATEST_TOTAL_RELEASE_MUSTPASS}" >> results.txt
+          echo "Latest commit MUSTFAIL: ${LATEST_COMMIT_MUSTFAIL} / ${LATEST_TOTAL_COMMIT_MUSTFAIL}" >> results.txt
+          echo "Latest release MUSTFAIL: ${LATEST_RELEASE_MUSTFAIL} / ${LATEST_TOTAL_RELEASE_MUSTFAIL}" >> results.txt
 
       - name: Upload results artifact
         uses: actions/upload-artifact@v4
