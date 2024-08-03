@@ -84,7 +84,7 @@ namespace NMR {
 		nfUint32 m_nBallRefBufferPos;
 	private:
 		const int m_nPosAfterDecPoint;
-		const int m_nPutDoubleFactor;
+		const nfInt64 m_nPutDoubleFactor;
 		__NMR_INLINE void putFloat(_In_ const nfFloat fValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos);
 		__NMR_INLINE void putDouble(_In_ const nfDouble dValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos);
 

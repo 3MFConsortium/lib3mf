@@ -153,6 +153,9 @@ namespace NMR {
 		__NMRASSERT(pwszValue);
 		nfDouble dResult = 0.0;
 
+		//skip leading whitespaces
+		for (; *pszValue && *pszValue == ' '; pszValue++);
+
 		// Convert to double and make a input and range check!
 		auto answer = fast_float::from_chars(pszValue, pszValue + strlen(pszValue), dResult);
 
