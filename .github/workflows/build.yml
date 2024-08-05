@@ -470,6 +470,7 @@ jobs:
           sh Examples/CppDynamic/GenerateMake.sh
           cd Examples/CppDynamic/build
           cmake --build .
+          ls -al
           ./Example_ExtractInfo ../../Files/Helix.3mf
       - name: Build Cpp
         run: |
