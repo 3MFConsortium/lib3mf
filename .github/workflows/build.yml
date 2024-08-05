@@ -130,6 +130,7 @@ jobs:
           ZIP_FILE=$(ls build/lib3mf-*.zip)
           echo "ARTIFACT_NAME=$(basename ${ZIP_FILE})" >> $GITHUB_ENV
         shell: bash
+      - run: ls -al build/
       - name: Archive Mac binary
         uses: actions/upload-artifact@v4
         with:
