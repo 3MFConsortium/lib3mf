@@ -302,7 +302,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ./build
-      - run: ls -Rl ./build
+      - run: ls -Rlh ./build
       - run: unzip bindings.zip/bindings.zip
         working-directory: ./build
       - run: bash SDK/GenerateSDK_github.sh
