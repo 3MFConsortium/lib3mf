@@ -391,19 +391,30 @@ namespace NMR {
 		}
 	}
 
+    ModelResourceID CModel::generateResourceID()
+    {
+        // Build a map with existing resource IDs
+        std::map<ModelResourceID, bool> existingResourceIDs;
+        for (const auto& resource : m_Resources) {
+            existingResourceIDs[resource->getPackageResourceID()->getModelResourceID()] = true;
+        }
 
-	// Retrieve a unique Resource ID
-	ModelResourceID CModel::generateResourceID()
-	{
-		// TODO: is this truly safe?
-		auto iIterator = m_ResourceMap.rbegin();
-		if (iIterator != m_ResourceMap.rend())
-			return iIterator->first + 1;
-		else
-			return 1;
-	}
+        // Determine the initial resource ID
+        ModelResourceID currentResourceID = 1;
+        auto iIterator = m_ResourceMap.rbegin();
+        if (iIterator != m_ResourceMap.rend()) {
+            currentResourceID = iIterator->first + 1;
+        }
 
-	void CModel::updateUniqueResourceID(UniqueResourceID nOldID, UniqueResourceID nNewID)
+        // Ensure the generated ID is not in the existing resource IDs map
+        if (!existingResourceIDs.empty() && existingResourceIDs.find(currentResourceID) != existingResourceIDs.end()) {
+            currentResourceID = existingResourceIDs.rbegin()->first + 1;
+        }
+
+        return currentResourceID;
+    }
+
+    void CModel::updateUniqueResourceID(UniqueResourceID nOldID, UniqueResourceID nNewID)
 	{
 		if (m_ResourceMap.find(nNewID) != m_ResourceMap.end()) {
 			throw CNMRException(NMR_ERROR_DUPLICATEMODELRESOURCE);
