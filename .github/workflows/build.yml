@@ -135,7 +135,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: lib3mf.dylib
-          path: build/lib3mf.dylib
+          path: build/lib3mf.${{ env.LIB3MF_VERSION }}.0.dylib
       - name: Upload Artifact (CPacked Archive)
         uses: actions/upload-artifact@v4
         with:
@@ -466,22 +466,22 @@ jobs:
       - name: Unpack the SDK
         run: |
           unzip lib3mf_sdk.zip/lib3mf_sdk.zip
-#      - name: Build CppDynamic
-#        run: |
-#          sh Examples/CppDynamic/GenerateMake.sh
-#          cd Examples/CppDynamic/build
-#          cmake --build .
-#          ls -al
-#          ./Example_ExtractInfo ../../Files/Helix.3mf
-#      - name: Build Cpp
-#        run: |
-#          sh Examples/Cpp/GenerateMake.sh
-#          cd Examples/Cpp/build
-#          cmake --build .
-#          ./Example_ExtractInfo ../../Files/Helix.3mf
-#      - name: Python Bindings
-#        run: |
-#          python Examples/Python/extract_info.py Examples/Files/Helix.3mf
+      - name: Build CppDynamic
+        run: |
+          sh Examples/CppDynamic/GenerateMake.sh
+          cd Examples/CppDynamic/build
+          cmake --build .
+          ls -al
+          ./Example_ExtractInfo ../../Files/Helix.3mf
+      - name: Build Cpp
+        run: |
+          sh Examples/Cpp/GenerateMake.sh
+          cd Examples/Cpp/build
+          cmake --build .
+          ./Example_ExtractInfo ../../Files/Helix.3mf
+      - name: Python Bindings
+        run: |
+          python Examples/Python/extract_info.py Examples/Files/Helix.3mf
       - name: Checkout code
         uses: actions/checkout@v4
         with:
