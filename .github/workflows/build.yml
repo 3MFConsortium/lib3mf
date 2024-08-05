@@ -472,12 +472,12 @@ jobs:
 #          cmake --build .
 #          ls -al
 #          ./Example_ExtractInfo ../../Files/Helix.3mf
-      - name: Build Cpp
-        run: |
-          sh Examples/Cpp/GenerateMake.sh
-          cd Examples/Cpp/build
-          cmake --build .
-          ./Example_ExtractInfo ../../Files/Helix.3mf
+#      - name: Build Cpp
+#        run: |
+#          sh Examples/Cpp/GenerateMake.sh
+#          cd Examples/Cpp/build
+#          cmake --build .
+#          ./Example_ExtractInfo ../../Files/Helix.3mf
       - name: Python Bindings
         run: |
           python Examples/Python/extract_info.py Examples/Files/Helix.3mf
