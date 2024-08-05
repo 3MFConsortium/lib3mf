@@ -10,16 +10,20 @@ if [ "$(uname)" = "Darwin" ]; then
     # Check if the first argument is Debug mode
     if [ "$1" = "Debug" ]; then
         shift # Remove the first argument to pass remaining arguments
+        echo -e "DARWIN+DEBUG\n"
         cmake .. -G "Unix Makefiles" -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" -DCMAKE_BUILD_TYPE=Debug "$@"
     else
+        echo -e "DARWIN+RELEASE\n"
         cmake .. -G "Unix Makefiles" -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" -DCMAKE_BUILD_TYPE=Release "$@"
     fi
 else
     # For Linux and other OSes
     if [ "$1" = "Debug" ]; then
         shift # Remove the first argument to pass remaining arguments
+        echo -e "LINUX+DEBUG\n"
         cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug "$@"
     else
+        echo -e "LINUX+RELEASE\n"
         cmake .. -G "Unix Makefiles" "$@"
     fi
 fi
