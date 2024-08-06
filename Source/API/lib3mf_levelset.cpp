@@ -222,6 +222,11 @@ bool CLevelSet::IsMeshObject()
     return false;
 }
 
+bool Lib3MF::Impl::CLevelSet::IsComponentsObject()
+{
+    return false;
+}
+
 bool CLevelSet::IsLevelSetObject()
 {
     return true;
