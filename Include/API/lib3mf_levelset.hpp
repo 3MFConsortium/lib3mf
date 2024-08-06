@@ -180,6 +180,8 @@ public:
 
     bool IsMeshObject() override;
 
+	bool IsComponentsObject() override;
+
 	bool IsLevelSetObject() override;
 };
 
