@@ -59,6 +59,48 @@ namespace Lib3MF
 		CheckReaderWarnings(Reader::reader3MF, 0);
 	}
 
+    TEST_F(Reader, 3MFReadFromFileAndAddMeshObjects)
+    {
+        auto reader = model->QueryReader("3mf");
+        reader->ReadFromFile(sTestFilesPath + "/Reader/" + "Box.3mf");
+        ASSERT_NO_THROW(model->AddMeshObject());
+        ASSERT_NO_THROW(model->AddMeshObject());
+        ASSERT_NO_THROW(model->AddMeshObject());
+        std::vector<Lib3MF_uint32> resourceIDs;
+        std::vector<Lib3MF_uint32> modelResourceIDs;
+        std::vector<Lib3MF_uint32> expectedModelResourceIDs({2,3,5,6,7});
+        std::vector<Lib3MF_uint32> expectedResourceIDs({2,3,4,5,6});
+        auto objectIterator = model->GetObjects();
+        while (objectIterator->MoveNext()) {
+            auto object = objectIterator->GetCurrentObject();
+            modelResourceIDs.push_back(object->GetModelResourceID());
+            resourceIDs.push_back(object->GetResourceID());
+        }
+        ASSERT_EQ(modelResourceIDs, expectedModelResourceIDs);
+        ASSERT_EQ(resourceIDs, expectedResourceIDs);
+    }
+
+    TEST_F(Reader, 3MFReadFromFileAndAddComponents)
+    {
+        auto reader = model->QueryReader("3mf");
+        reader->ReadFromFile(sTestFilesPath + "/Reader/" + "Globo.3mf");
+        ASSERT_NO_THROW(model->AddComponentsObject());
+        ASSERT_NO_THROW(model->AddComponentsObject());
+        ASSERT_NO_THROW(model->AddComponentsObject());
+        std::vector<Lib3MF_uint32> resourceIDs;
+        std::vector<Lib3MF_uint32> modelResourceIDs;
+        std::vector<Lib3MF_uint32> expectedModelResourceIDs({2,3,4,5,6,7,8,9});
+        std::vector<Lib3MF_uint32> expectedResourceIDs({1,2,3,4,5,6,7,8});
+        auto objectIterator = model->GetObjects();
+        while (objectIterator->MoveNext()) {
+            auto object = objectIterator->GetCurrentObject();
+            modelResourceIDs.push_back(object->GetModelResourceID());
+            resourceIDs.push_back(object->GetResourceID());
+        }
+        ASSERT_EQ(modelResourceIDs, expectedModelResourceIDs);
+        ASSERT_EQ(resourceIDs, expectedResourceIDs);
+    }
+
 	TEST_F(Reader, STLReadFromFile)
 	{
 		Reader::readerSTL->ReadFromFile(sTestFilesPath + "/Reader/" + "Pyramid.stl");
