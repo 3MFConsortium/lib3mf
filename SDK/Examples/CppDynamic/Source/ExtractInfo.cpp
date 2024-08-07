@@ -185,8 +185,6 @@ void ExtractInfoExample(std::string sFileName) {
 	std::cout << "3MF Read example" << std::endl;
 	
 	std::string libpath = ("."); // TODO: put the location of the Lib3MF-library file here.
-    auto library_path = libpath + "/lib3mf" + LSUFFIXOUT;
-    std::cout << "Library path is : " << library_path << std::endl;
 	auto wrapper = Lib3MF::CWrapper::loadLibrary(libpath + "/lib3mf" + LSUFFIXOUT); // TODO: add correct suffix of the library
 
 	printVersion(wrapper);
