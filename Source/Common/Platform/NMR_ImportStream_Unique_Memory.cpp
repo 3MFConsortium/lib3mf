@@ -35,6 +35,8 @@ This is a platform independent class for keeping data in a memory stream that ow
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 
+#include <cstdint>
+
 namespace NMR {
 
 	CImportStream_Unique_Memory::CImportStream_Unique_Memory()
