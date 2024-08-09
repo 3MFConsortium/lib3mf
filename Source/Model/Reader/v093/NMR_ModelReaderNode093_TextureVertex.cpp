@@ -86,7 +86,7 @@ namespace NMR {
 		__NMRASSERT(pAttributeValue);
 
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE_U) == 0) {
-			m_fU = strtof(pAttributeValue, nullptr);
+			m_fU = fnStringToFloat(pAttributeValue);
 			if (std::isnan (m_fU))
 				throw CNMRException(NMR_ERROR_INVALIDMODELTEXTURECOORDINATES);
 			if (fabs (m_fU) > XML_3MF_MAXIMUMCOORDINATEVALUE)
@@ -95,7 +95,7 @@ namespace NMR {
 		}
 
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE_V) == 0) {
-			m_fV = strtof(pAttributeValue, nullptr);
+			m_fV = fnStringToFloat(pAttributeValue);
 			if (std::isnan (m_fV))
 				throw CNMRException(NMR_ERROR_INVALIDMODELTEXTURECOORDINATES);
 			if (fabs(m_fV) > XML_3MF_MAXIMUMCOORDINATEVALUE)

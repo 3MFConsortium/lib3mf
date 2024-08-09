@@ -1436,6 +1436,9 @@ Model error codes (0x8XXX)
 #define NMR_ERROR_MISSINGUNITFACTOR 0x8120
 
 
+// A keystore element is not base64 encoded
+#define NMR_ERROR_KEYSTOREINVALIDENCODING 0x810E
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

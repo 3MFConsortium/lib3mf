@@ -36,6 +36,9 @@ and Exception-safe
 
 #include "Common/NMR_Types.h"
 #include "Common/NMR_Local.h"
+
+#include <fast_float.h>
+
 #include <string>
 #include <string.h>
 #include <vector>
