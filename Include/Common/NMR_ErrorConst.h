@@ -1379,8 +1379,11 @@ Model error codes (0x8XXX)
 #define NMR_ERROR_DUPLICATETRANSFORM 0x810C
 // A component resource is invalid
 #define NMR_ERROR_INVALIDCOMPONENTRESOURCE 0x810D
-// Invalid Mesh Binary Path
-#define NMR_ERROR_INVALIDMESHBINARYPATH 0x810E
+
+// A keystore element is not base64 encoded
+#define NMR_ERROR_KEYSTOREINVALIDENCODING 0x810E
+
+
 // Duplicate Mesh Binary Path
 #define NMR_ERROR_DUPLICATEMESHBINARYPATH 0x810F
 
@@ -1435,9 +1438,9 @@ Model error codes (0x8XXX)
 // Missing Unit Factor
 #define NMR_ERROR_MISSINGUNITFACTOR 0x8120
 
+// Invalid Mesh Binary Path
+#define NMR_ERROR_INVALIDMESHBINARYPATH 0x8121
 
-// A keystore element is not base64 encoded
-#define NMR_ERROR_KEYSTOREINVALIDENCODING 0x810E
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
