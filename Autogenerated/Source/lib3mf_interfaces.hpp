@@ -52,11 +52,17 @@ namespace Impl {
  Forward declarations of class interfaces
 */
 class IBase;
+class IBinaryStream;
 class IWriter;
+class IPersistentReaderSource;
 class IReader;
 class IPackagePart;
 class IResource;
 class IResourceIterator;
+class ICustomXMLAttribute;
+class ICustomXMLNode;
+class ICustomXMLNodes;
+class ICustomDOMTree;
 class ISliceStackIterator;
 class IObjectIterator;
 class IMeshObjectIterator;
@@ -85,6 +91,11 @@ class ITexture2D;
 class IBuildItem;
 class IBuildItemIterator;
 class ISlice;
+class IToolpathProfile;
+class IToolpathLayerReader;
+class IToolpathLayerData;
+class IToolpath;
+class IToolpathIterator;
 class ISliceStack;
 class IConsumer;
 class IAccessRight;
@@ -300,6 +311,67 @@ typedef IBaseSharedPtr<IBase> PIBase;
 
 
 /*************************************************************************************************************************
+ Class interface for BinaryStream 
+**************************************************************************************************************************/
+
+class IBinaryStream : public virtual IBase {
+public:
+	/**
+	* IBinaryStream::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xA0EB26254C981E1AUL; // First 64 bits of SHA1 of a string: "Lib3MF::BinaryStream"
+	}
+
+	/**
+	* IBinaryStream::GetBinaryPath - Retrieves an binary streams package path for the binary data.
+	* @return binary streams package binary path.
+	*/
+	virtual std::string GetBinaryPath() = 0;
+
+	/**
+	* IBinaryStream::GetIndexPath - Retrieves an binary streams package path for the index data.
+	* @return binary streams package index path.
+	*/
+	virtual std::string GetIndexPath() = 0;
+
+	/**
+	* IBinaryStream::GetUUID - Retrieves an binary streams uuid.
+	* @return binary streams uuid
+	*/
+	virtual std::string GetUUID() = 0;
+
+	/**
+	* IBinaryStream::DisableDiscretizedArrayCompression - Sets the float compression mode to raw. All subsequent writes will adhere to this mode.
+	*/
+	virtual void DisableDiscretizedArrayCompression() = 0;
+
+	/**
+	* IBinaryStream::EnableDiscretizedArrayCompression - Sets the compression mode to a quantized array. All subsequent writes will adhere to this mode.
+	* @param[in] dUnits - Unit factor to use for quantization.
+	* @param[in] ePredictionType - Prediction type to use for arrays.
+	*/
+	virtual void EnableDiscretizedArrayCompression(const Lib3MF_double dUnits, const Lib3MF::eBinaryStreamPredictionType ePredictionType) = 0;
+
+	/**
+	* IBinaryStream::EnableLZMA - Enables LZMA mode.
+	* @param[in] nLZMALevel - LZMA Level (0-9)
+	*/
+	virtual void EnableLZMA(const Lib3MF_uint32 nLZMALevel) = 0;
+
+	/**
+	* IBinaryStream::DisableLZMA - Disables LZMA mode.
+	*/
+	virtual void DisableLZMA() = 0;
+
+};
+
+typedef IBaseSharedPtr<IBinaryStream> PIBinaryStream;
+
+
+/*************************************************************************************************************************
  Class interface for Writer 
 **************************************************************************************************************************/
 
@@ -402,9 +474,68 @@ public:
 	*/
 	virtual void SetContentEncryptionCallback(const Lib3MF::ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData) = 0;
 
+	/**
+	* IWriter::CreateBinaryStream - Creates a binary stream object. Only applicable for 3MF Writers.
+	* @param[in] sIndexPath - Package path to write the index into
+	* @param[in] sBinaryPath - Package path to write raw binary data into
+	* @return Returns a package path.
+	*/
+	virtual IBinaryStream * CreateBinaryStream(const std::string & sIndexPath, const std::string & sBinaryPath) = 0;
+
+	/**
+	* IWriter::AssignBinaryStream - Sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.
+	* @param[in] pInstance - Object instance to assign Binary stream to.
+	* @param[in] pBinaryStream - Binary stream object to use for this layer.
+	*/
+	virtual void AssignBinaryStream(IBase* pInstance, IBinaryStream* pBinaryStream) = 0;
+
+	/**
+	* IWriter::RegisterCustomNamespace - Registers a custom 3MF Namespace. Fails if Prefix is already registered.
+	* @param[in] sPrefix - Prefix to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number
+	* @param[in] sNameSpace - Namespace to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number
+	*/
+	virtual void RegisterCustomNamespace(const std::string & sPrefix, const std::string & sNameSpace) = 0;
+
 };
 
 typedef IBaseSharedPtr<IWriter> PIWriter;
+
+
+/*************************************************************************************************************************
+ Class interface for PersistentReaderSource 
+**************************************************************************************************************************/
+
+class IPersistentReaderSource : public virtual IBase {
+public:
+	/**
+	* IPersistentReaderSource::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xBE46884397CE1319UL; // First 64 bits of SHA1 of a string: "Lib3MF::PersistentReaderSource"
+	}
+
+	/**
+	* IPersistentReaderSource::GetSourceType - Retrieves the type of source data.
+	* @return Reader Source Type
+	*/
+	virtual Lib3MF::ePersistentReaderSourceType GetSourceType() = 0;
+
+	/**
+	* IPersistentReaderSource::InvalidateSourceData - Invalidates the reader source. Every subsequent read on this data will fail.
+	*/
+	virtual void InvalidateSourceData() = 0;
+
+	/**
+	* IPersistentReaderSource::SourceDataIsValid - Checks if the source data is valid. Any read on an invalid source object will fail.
+	* @return The source data is valid.
+	*/
+	virtual bool SourceDataIsValid() = 0;
+
+};
+
+typedef IBaseSharedPtr<IPersistentReaderSource> PIPersistentReaderSource;
 
 
 /*************************************************************************************************************************
@@ -421,6 +552,12 @@ public:
 	{
 		return 0x2D86831DA59FBE72UL; // First 64 bits of SHA1 of a string: "Lib3MF::Reader"
 	}
+
+	/**
+	* IReader::ReadFromPersistentSource - Reads a model from a persistent source object. The object will be referenced until the Model is destroyed or cleared.
+	* @param[in] pSource - Source object to read from
+	*/
+	virtual void ReadFromPersistentSource(IPersistentReaderSource* pSource) = 0;
 
 	/**
 	* IReader::ReadFromFile - Reads a model from a file. The file type is specified by the Model Reader class
@@ -639,6 +776,389 @@ public:
 };
 
 typedef IBaseSharedPtr<IResourceIterator> PIResourceIterator;
+
+
+/*************************************************************************************************************************
+ Class interface for CustomXMLAttribute 
+**************************************************************************************************************************/
+
+class ICustomXMLAttribute : public virtual IBase {
+public:
+	/**
+	* ICustomXMLAttribute::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xEA18C54DBD42B5F6UL; // First 64 bits of SHA1 of a string: "Lib3MF::CustomXMLAttribute"
+	}
+
+	/**
+	* ICustomXMLAttribute::GetName - Retrieves name of the attribute.
+	* @return returns the name of the attribute.
+	*/
+	virtual std::string GetName() = 0;
+
+	/**
+	* ICustomXMLAttribute::GetValue - Retrieves value of the attribute as string.
+	* @return returns the value of the attribute.
+	*/
+	virtual std::string GetValue() = 0;
+
+	/**
+	* ICustomXMLAttribute::IsValidInteger - Checks if the value is a valid integer in the given range.
+	* @param[in] nMinValue - Minimum allowed value
+	* @param[in] nMaxValue - Maximum allowed value
+	* @return returns if the value is a valid integer.
+	*/
+	virtual bool IsValidInteger(const Lib3MF_int64 nMinValue, const Lib3MF_int64 nMaxValue) = 0;
+
+	/**
+	* ICustomXMLAttribute::GetIntegerValue - Returns the value as integer. Fails if the value is not a valid integer in the given range.
+	* @param[in] nMinValue - Minimum allowed value
+	* @param[in] nMaxValue - Maximum allowed value
+	* @return returns the value.
+	*/
+	virtual Lib3MF_int64 GetIntegerValue(const Lib3MF_int64 nMinValue, const Lib3MF_int64 nMaxValue) = 0;
+
+	/**
+	* ICustomXMLAttribute::IsValidDouble - Checks if the value is a valid double in the given range.
+	* @param[in] dMinValue - Minimum allowed value
+	* @param[in] dMaxValue - Maximum allowed value
+	* @return returns if the value is a valid double.
+	*/
+	virtual bool IsValidDouble(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue) = 0;
+
+	/**
+	* ICustomXMLAttribute::GetDoubleValue - Returns the value as double. Fails if the value is not a valid double in the given range.
+	* @param[in] dMinValue - Minimum allowed value
+	* @param[in] dMaxValue - Maximum allowed value
+	* @return returns the value .
+	*/
+	virtual Lib3MF_double GetDoubleValue(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue) = 0;
+
+	/**
+	* ICustomXMLAttribute::IsValidBool - Checks if the value is a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+	* @return returns if the value is a valid bool.
+	*/
+	virtual bool IsValidBool() = 0;
+
+	/**
+	* ICustomXMLAttribute::GetBoolValue - Returns the value as bool. Fails if the value is not a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+	* @param[in] dMinValue - Minimum allowed value
+	* @param[in] dMaxValue - Maximum allowed value
+	* @return returns the value .
+	*/
+	virtual bool GetBoolValue(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue) = 0;
+
+	/**
+	* ICustomXMLAttribute::SetValue - Sets the value of the attribute as string.
+	* @param[in] sValue - new value of the attribute.
+	*/
+	virtual void SetValue(const std::string & sValue) = 0;
+
+	/**
+	* ICustomXMLAttribute::SetIntegerValue - Sets the value of the attribute as integer.
+	* @param[in] nValue - new value of the attribute.
+	*/
+	virtual void SetIntegerValue(const Lib3MF_int64 nValue) = 0;
+
+	/**
+	* ICustomXMLAttribute::SetDoubleValue - Sets the value of the attribute as double.
+	* @param[in] dValue - new value of the attribute.
+	*/
+	virtual void SetDoubleValue(const Lib3MF_double dValue) = 0;
+
+	/**
+	* ICustomXMLAttribute::SetBoolValue - Sets the value of the attribute as bool.
+	* @param[in] bValue - new value of the attribute.
+	*/
+	virtual void SetBoolValue(const bool bValue) = 0;
+
+	/**
+	* ICustomXMLAttribute::Remove - Removes the attribute from its parent node. All subsequent calls to the class will fail.
+	*/
+	virtual void Remove() = 0;
+
+};
+
+typedef IBaseSharedPtr<ICustomXMLAttribute> PICustomXMLAttribute;
+
+
+/*************************************************************************************************************************
+ Class interface for CustomXMLNode 
+**************************************************************************************************************************/
+
+class ICustomXMLNode : public virtual IBase {
+public:
+	/**
+	* ICustomXMLNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x26B5AD02041EDF96UL; // First 64 bits of SHA1 of a string: "Lib3MF::CustomXMLNode"
+	}
+
+	/**
+	* ICustomXMLNode::GetName - Retrieves name of the node.
+	* @return returns the name of the node.
+	*/
+	virtual std::string GetName() = 0;
+
+	/**
+	* ICustomXMLNode::GetNameSpace - Retrieves namespace of the node.
+	* @return returns the namespace of the node.
+	*/
+	virtual std::string GetNameSpace() = 0;
+
+	/**
+	* ICustomXMLNode::GetAttributeCount - Returns number of attributes.
+	* @return returns the number of attributes.
+	*/
+	virtual Lib3MF_uint64 GetAttributeCount() = 0;
+
+	/**
+	* ICustomXMLNode::GetAttribute - Returns attribute instance. Fails if Index is out of range.
+	* @param[in] nIndex - Index of the attribute to return (0-based).
+	* @return XML Document attribute.
+	*/
+	virtual ICustomXMLAttribute * GetAttribute(const Lib3MF_uint64 nIndex) = 0;
+
+	/**
+	* ICustomXMLNode::HasAttribute - Returns if attribute of a specific name exists.
+	* @param[in] sName - Name of the attribute.
+	* @return Returns if the attribute exists.
+	*/
+	virtual bool HasAttribute(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNode::FindAttribute - Returns attribute instance of a specific name. 
+	* @param[in] sName - Name of the attribute.
+	* @param[in] bMustExist - If true, the call fails if attribute does not exist. If falls, the call will return null if the attribute does not exist.
+	* @return XML Document attribute.
+	*/
+	virtual ICustomXMLAttribute * FindAttribute(const std::string & sName, const bool bMustExist) = 0;
+
+	/**
+	* ICustomXMLNode::RemoveAttribute - Removes the attribute with a specific name. Does nothing if attribute does not exist.
+	* @param[in] sName - Name of the attribute.
+	* @return Returns true if an attribute was removed.
+	*/
+	virtual bool RemoveAttribute(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNode::RemoveAttributeByIndex - Removes the attribute with a specific index. Fails if index is invalid
+	* @param[in] nIndex - Index of the attribute to remove (0-based).
+	* @return Returns true if an attribute was removed.
+	*/
+	virtual bool RemoveAttributeByIndex(const Lib3MF_uint64 nIndex) = 0;
+
+	/**
+	* ICustomXMLNode::AddAttribute - Adds an attribute with a specific name and string value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] sValue - Value of the attribute.
+	*/
+	virtual void AddAttribute(const std::string & sName, const std::string & sValue) = 0;
+
+	/**
+	* ICustomXMLNode::AddIntegerAttribute - Adds an attribute with a specific name and integer value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] nValue - Value of the attribute.
+	*/
+	virtual void AddIntegerAttribute(const std::string & sName, const Lib3MF_int64 nValue) = 0;
+
+	/**
+	* ICustomXMLNode::AddDoubleAttribute - Adds an attribute with a specific name and double value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] dValue - Value of the attribute.
+	*/
+	virtual void AddDoubleAttribute(const std::string & sName, const Lib3MF_double dValue) = 0;
+
+	/**
+	* ICustomXMLNode::AddBoolAttribute - Adds an attribute with a specific name and bool value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] bValue - Value of the attribute.
+	*/
+	virtual void AddBoolAttribute(const std::string & sName, const bool bValue) = 0;
+
+	/**
+	* ICustomXMLNode::GetChildren - Returns all the child nodes of the XML Node.
+	* @return returns the list of child nodes.
+	*/
+	virtual ICustomXMLNodes * GetChildren() = 0;
+
+	/**
+	* ICustomXMLNode::CountChildrenByName - Returns how many children of the XML Node have a specific name.
+	* @param[in] sName - Name of the node.
+	* @return returns the number children with the specified name.
+	*/
+	virtual Lib3MF_uint64 CountChildrenByName(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNode::GetChildrenByName - Returns all the child nodes of the XML Node with a specific name.
+	* @param[in] sName - Name of the child.
+	* @return returns the list of child nodes.
+	*/
+	virtual ICustomXMLNodes * GetChildrenByName(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNode::HasChild - Returns if a child with a specific name exist.
+	* @param[in] sName - Name of the child.
+	* @return returns if a child with a specific name exists.
+	*/
+	virtual bool HasChild(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNode::HasUniqueChild - Returns if a child with a specific name exist once and only once.
+	* @param[in] sName - Name of the child.
+	* @return returns if a child with a specific name exists once and only once.
+	*/
+	virtual bool HasUniqueChild(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNode::FindChild - Returns child with a specific name. Throws an error if name does not exist once and only once.
+	* @param[in] sName - Name of the child.
+	* @param[in] bMustExist - If true, the call fails if child does not exist. If falls, the call will return null if the child does not exist.
+	* @return returns child instance or null.
+	*/
+	virtual ICustomXMLNode * FindChild(const std::string & sName, const bool bMustExist) = 0;
+
+	/**
+	* ICustomXMLNode::AddChild - Adds a new child with a specific name.
+	* @param[in] sName - Name of the child.
+	* @return returns child instance.
+	*/
+	virtual ICustomXMLNode * AddChild(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNode::RemoveChild - Removes a specific child. All subsequent calls to the child will fail after the call.
+	* @param[in] pChildInstance - child instance to remove. Fails if given instance is not a child of the node.
+	*/
+	virtual void RemoveChild(ICustomXMLNode* pChildInstance) = 0;
+
+	/**
+	* ICustomXMLNode::RemoveChildrenWithName - Removes all children with a specific name. Does nothing if no child with the name exists. All subsequent calls to the deleted children will fail after the call.
+	* @param[in] sName - Name of the children.
+	* @return Returns how many children have been deleted.
+	*/
+	virtual Lib3MF_uint64 RemoveChildrenWithName(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNode::Remove - Removes the node from its parent. The root node of the document can not be removed. Any subsequent call to the node fails after this.
+	*/
+	virtual void Remove() = 0;
+
+};
+
+typedef IBaseSharedPtr<ICustomXMLNode> PICustomXMLNode;
+
+
+/*************************************************************************************************************************
+ Class interface for CustomXMLNodes 
+**************************************************************************************************************************/
+
+class ICustomXMLNodes : public virtual IBase {
+public:
+	/**
+	* ICustomXMLNodes::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x8C4B47C97D310E89UL; // First 64 bits of SHA1 of a string: "Lib3MF::CustomXMLNodes"
+	}
+
+	/**
+	* ICustomXMLNodes::GetNodeCount - Returns number of nodes.
+	* @return returns the number of nodes in the list.
+	*/
+	virtual Lib3MF_uint64 GetNodeCount() = 0;
+
+	/**
+	* ICustomXMLNodes::GetNode - Returns node instance. Fails if Index is out of range.
+	* @param[in] nIndex - Index of the node to return (0-based).
+	* @return XML Node node.
+	*/
+	virtual ICustomXMLNode * GetNode(const Lib3MF_uint64 nIndex) = 0;
+
+	/**
+	* ICustomXMLNodes::CountNodesByName - Returns how many nodes of the XML Node have a specific name.
+	* @param[in] sName - Name of the node.
+	* @return returns the number of nodes with the specified name.
+	*/
+	virtual Lib3MF_uint64 CountNodesByName(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNodes::GetNodesByName - Returns all the nodes nodes of the XML Node with a specific name.
+	* @param[in] sName - Name of the node.
+	* @return returns the list of node nodes.
+	*/
+	virtual ICustomXMLNodes * GetNodesByName(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNodes::HasNode - Returns if a node with a specific name exist.
+	* @param[in] sName - Name of the node.
+	* @return returns if a node with a specific name exists.
+	*/
+	virtual bool HasNode(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNodes::HasUniqueNode - Returns if a node with a specific name exist once and only once.
+	* @param[in] sName - Name of the node.
+	* @return returns if a node with a specific name exists once and only once.
+	*/
+	virtual bool HasUniqueNode(const std::string & sName) = 0;
+
+	/**
+	* ICustomXMLNodes::FindNode - Returns node with a specific name. Throws an error if name does not exist once and only once.
+	* @param[in] sName - Name of the node.
+	* @param[in] bMustExist - If true, the call fails if node does not exist. If falls, the call will return null if the node does not exist.
+	* @return returns node instance.
+	*/
+	virtual ICustomXMLNode * FindNode(const std::string & sName, const bool bMustExist) = 0;
+
+};
+
+typedef IBaseSharedPtr<ICustomXMLNodes> PICustomXMLNodes;
+
+
+/*************************************************************************************************************************
+ Class interface for CustomDOMTree 
+**************************************************************************************************************************/
+
+class ICustomDOMTree : public virtual IBase {
+public:
+	/**
+	* ICustomDOMTree::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x5E0CF70A6DB6256AUL; // First 64 bits of SHA1 of a string: "Lib3MF::CustomDOMTree"
+	}
+
+	/**
+	* ICustomDOMTree::GetNameSpace - Returns the namespace identifier for the DOM Tree.
+	* @return returns the namespace of the DOM Tree.
+	*/
+	virtual std::string GetNameSpace() = 0;
+
+	/**
+	* ICustomDOMTree::GetRootNode - Returns root node of the tree.
+	* @return Root node of the document.
+	*/
+	virtual ICustomXMLNode * GetRootNode() = 0;
+
+	/**
+	* ICustomDOMTree::SaveToString - Saves the XML tree into a string.
+	* @return String with the XML Content.
+	*/
+	virtual std::string SaveToString() = 0;
+
+};
+
+typedef IBaseSharedPtr<ICustomDOMTree> PICustomDOMTree;
 
 
 /*************************************************************************************************************************
@@ -2465,6 +2985,637 @@ typedef IBaseSharedPtr<ISlice> PISlice;
 
 
 /*************************************************************************************************************************
+ Class interface for ToolpathProfile 
+**************************************************************************************************************************/
+
+class IToolpathProfile : public virtual IBase {
+public:
+	/**
+	* IToolpathProfile::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xC869620B90242CA7UL; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathProfile"
+	}
+
+	/**
+	* IToolpathProfile::GetUUID - Retrieves the profile's uuid
+	* @return Returns the uuid value.
+	*/
+	virtual std::string GetUUID() = 0;
+
+	/**
+	* IToolpathProfile::GetName - Retrieves the profile's name
+	* @return Returns the name.
+	*/
+	virtual std::string GetName() = 0;
+
+	/**
+	* IToolpathProfile::GetParameterCount - Returns the number of parameters.
+	* @return Returns the number of parameters.
+	*/
+	virtual Lib3MF_uint32 GetParameterCount() = 0;
+
+	/**
+	* IToolpathProfile::GetParameterName - Returns the Name of a parameter.
+	* @param[in] nIndex - Index of Parameter (0-based). Call will fail if an invalid index is given.
+	* @return Returns the name of the parameter.
+	*/
+	virtual std::string GetParameterName(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpathProfile::GetParameterNameSpace - Returns the NameSpace of a parameter.
+	* @param[in] nIndex - Index of Parameter (0-based). Call will fail if an invalid index is given.
+	* @return Returns the namespace of the parameter.
+	*/
+	virtual std::string GetParameterNameSpace(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpathProfile::HasParameterValue - Checks if a parameter value exists.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns if a value exists.
+	*/
+	virtual bool HasParameterValue(const std::string & sNameSpaceName, const std::string & sValueName) = 0;
+
+	/**
+	* IToolpathProfile::GetParameterValue - Retrieves a profile's parameter value. Fails if value does not exist.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns the value of the field.
+	*/
+	virtual std::string GetParameterValue(const std::string & sNameSpaceName, const std::string & sValueName) = 0;
+
+	/**
+	* IToolpathProfile::GetParameterValueDef - Retrieves a profile's parameter value
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] sDefaultValue - Default value if value does not exist.
+	* @return Returns the value of the field.
+	*/
+	virtual std::string GetParameterValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const std::string & sDefaultValue) = 0;
+
+	/**
+	* IToolpathProfile::GetParameterDoubleValue - Retrieves a profile's parameter value as double. Fails if value does not exist or is not a double value.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns the value of the field.
+	*/
+	virtual Lib3MF_double GetParameterDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName) = 0;
+
+	/**
+	* IToolpathProfile::GetParameterDoubleValueDef - Retrieves a profile's parameter value as double.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] dDefaultValue - Default value if value does not exist or is not a double value.
+	* @return Returns the value of the field.
+	*/
+	virtual Lib3MF_double GetParameterDoubleValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dDefaultValue) = 0;
+
+	/**
+	* IToolpathProfile::GetParameterIntegerValue - Retrieves a profile's parameter value as integer. Fails if value does not exist or is not a integer value.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns the value of the field.
+	*/
+	virtual Lib3MF_int64 GetParameterIntegerValue(const std::string & sNameSpaceName, const std::string & sValueName) = 0;
+
+	/**
+	* IToolpathProfile::GetParameterIntegerValueDef - Retrieves a profile's parameter value as integer.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] nDefaultValue - Default value if value does not exist or is not a integer value.
+	* @return Returns the value of the field.
+	*/
+	virtual Lib3MF_int64 GetParameterIntegerValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_int64 nDefaultValue) = 0;
+
+	/**
+	* IToolpathProfile::GetParameterBoolValue - Retrieves a profile's parameter value as boolean. Fails if value does not exist or is not a boolean value.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns the value of the field.
+	*/
+	virtual bool GetParameterBoolValue(const std::string & sNameSpaceName, const std::string & sValueName) = 0;
+
+	/**
+	* IToolpathProfile::GetParameterBoolValueDef - Retrieves a profile's parameter value as boolean.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] bDefaultValue - Default value if value does not exist or is not a boolean value.
+	* @return Returns the value of the field.
+	*/
+	virtual bool GetParameterBoolValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const bool bDefaultValue) = 0;
+
+	/**
+	* IToolpathProfile::SetName - Sets the profile's name
+	* @param[in] sName - Returns the name.
+	*/
+	virtual void SetName(const std::string & sName) = 0;
+
+	/**
+	* IToolpathProfile::SetParameterValue - Sets a profile's parameter value.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] sValue - String value of the parameter.
+	*/
+	virtual void SetParameterValue(const std::string & sNameSpaceName, const std::string & sValueName, const std::string & sValue) = 0;
+
+	/**
+	* IToolpathProfile::SetParameterDoubleValue - Sets a profile's parameter value as double.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] dValue - Double value of the parameter.
+	*/
+	virtual void SetParameterDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dValue) = 0;
+
+	/**
+	* IToolpathProfile::SetParameterIntegerValue - Sets a profile's parameter value as integer.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] nValue - Integer value of the parameter.
+	*/
+	virtual void SetParameterIntegerValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_int64 nValue) = 0;
+
+	/**
+	* IToolpathProfile::SetParameterBoolValue - Sets a profile's parameter value as boolean.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] bValue - Boolean value of the parameter.
+	*/
+	virtual void SetParameterBoolValue(const std::string & sNameSpaceName, const std::string & sValueName, const bool bValue) = 0;
+
+};
+
+typedef IBaseSharedPtr<IToolpathProfile> PIToolpathProfile;
+
+
+/*************************************************************************************************************************
+ Class interface for ToolpathLayerReader 
+**************************************************************************************************************************/
+
+class IToolpathLayerReader : public virtual IBase {
+public:
+	/**
+	* IToolpathLayerReader::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x28DD7D3718F0616EUL; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerReader"
+	}
+
+	/**
+	* IToolpathLayerReader::GetLayerDataUUID - Retrieves the layerdata's uuid
+	* @return Returns the uuid value.
+	*/
+	virtual std::string GetLayerDataUUID() = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentCount - Retrieves the count of segments.
+	* @return Count
+	*/
+	virtual Lib3MF_uint32 GetSegmentCount() = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentInfo - Retrieves the segment type information .
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[out] eType - Segment Type
+	* @param[out] nPointCount - Point count of segment.
+	*/
+	virtual void GetSegmentInfo(const Lib3MF_uint32 nIndex, Lib3MF::eToolpathSegmentType & eType, Lib3MF_uint32 & nPointCount) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentProfile - Retrieves the assigned segment profile.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Profile
+	*/
+	virtual IToolpathProfile * GetSegmentProfile(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentProfileUUID - Retrieves the assigned segment profile uuid.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Profile UUID
+	*/
+	virtual std::string GetSegmentProfileUUID(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentPart - Retrieves the assigned segment profile.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Build Item
+	*/
+	virtual IBuildItem * GetSegmentPart(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentPartUUID - Retrieves the assigned segment part uuid.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Part UUID
+	*/
+	virtual std::string GetSegmentPartUUID(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentLocalPartID - Retrieves the assigned segment part id. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Local Segment Part ID
+	*/
+	virtual Lib3MF_uint32 GetSegmentLocalPartID(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetPartUUIDByLocalPartID - Retrieves the global part UUID by the local part ID. Fails if part ID does not exist in this layer. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+	* @param[in] nLocalPartID - Local Segment Part ID
+	* @return Segment Part UUID
+	*/
+	virtual std::string GetPartUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentPointData - Retrieves the assigned segment point list. For type hatch, the points are taken pairwise.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[in] nPointDataBufferSize - Number of elements in buffer
+	* @param[out] pPointDataNeededCount - will be filled with the count of the written structs, or needed buffer size.
+	* @param[out] pPointDataBuffer - Position2D buffer of The point data array
+	*/
+	virtual void GetSegmentPointData(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer) = 0;
+
+	/**
+	* IToolpathLayerReader::FindAttributeInfoByName - Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @param[out] nID - Attribute ID.
+	* @param[out] eAttributeType - Attribute Type.
+	*/
+	virtual void FindAttributeInfoByName(const std::string & sNameSpace, const std::string & sAttributeName, Lib3MF_uint32 & nID, Lib3MF::eToolpathAttributeType & eAttributeType) = 0;
+
+	/**
+	* IToolpathLayerReader::FindAttributeIDByName - Retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute ID.
+	*/
+	virtual Lib3MF_uint32 FindAttributeIDByName(const std::string & sNameSpace, const std::string & sAttributeName) = 0;
+
+	/**
+	* IToolpathLayerReader::FindAttributeValueByName - Retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute Type.
+	*/
+	virtual Lib3MF::eToolpathAttributeType FindAttributeValueByName(const std::string & sNameSpace, const std::string & sAttributeName) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentIntegerAttributeByID - Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nID - Attribute ID.
+	* @return Attribute Value.
+	*/
+	virtual Lib3MF_int64 GetSegmentIntegerAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentIntegerAttributeByName - Retrieves a segment integer attribute by Attribute Name. Will fail if Attribute does not exist or is of different type.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute Value.
+	*/
+	virtual Lib3MF_int64 GetSegmentIntegerAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentDoubleAttributeByID - Retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nID - Attribute ID.
+	* @return Attribute Value.
+	*/
+	virtual Lib3MF_double GetSegmentDoubleAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentDoubleAttributeByName - Retrieves a segment Double attribute by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute Value.
+	*/
+	virtual Lib3MF_double GetSegmentDoubleAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName) = 0;
+
+	/**
+	* IToolpathLayerReader::GetCustomDataCount - Retrieves the count of custom data elements.
+	* @return Count
+	*/
+	virtual Lib3MF_uint32 GetCustomDataCount() = 0;
+
+	/**
+	* IToolpathLayerReader::GetCustomData - Retrieves the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @return DOM Tree of the data.
+	*/
+	virtual ICustomDOMTree * GetCustomData(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetCustomDataName - Retrieves the node name of the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @param[out] sNameSpace - Namespace of the custom data tree.
+	* @param[out] sDataName - Root name of the data tree.
+	*/
+	virtual void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName) = 0;
+
+};
+
+typedef IBaseSharedPtr<IToolpathLayerReader> PIToolpathLayerReader;
+
+
+/*************************************************************************************************************************
+ Class interface for ToolpathLayerData 
+**************************************************************************************************************************/
+
+class IToolpathLayerData : public virtual IBase {
+public:
+	/**
+	* IToolpathLayerData::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x28C0E70CC44F931AUL; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerData"
+	}
+
+	/**
+	* IToolpathLayerData::GetLayerDataUUID - Retrieves the layerdata's uuid
+	* @return Returns the uuid value.
+	*/
+	virtual std::string GetLayerDataUUID() = 0;
+
+	/**
+	* IToolpathLayerData::RegisterProfile - Registers a toolpath profile
+	* @param[in] pProfile - The toolpath profile to register.
+	* @return returns the local profile ID for the layer.
+	*/
+	virtual Lib3MF_uint32 RegisterProfile(IToolpathProfile* pProfile) = 0;
+
+	/**
+	* IToolpathLayerData::RegisterBuildItem - Registers a Model Build Item
+	* @param[in] pBuildItem - The model build item to use.
+	* @return returns the local part ID for the layer.
+	*/
+	virtual Lib3MF_uint32 RegisterBuildItem(IBuildItem* pBuildItem) = 0;
+
+	/**
+	* IToolpathLayerData::SetSegmentAttribute - Sets Segment Attribute for all following segments that are added. Overrides previously set attribute.
+	* @param[in] sNameSpace - The namespace of the attribute to register.
+	* @param[in] sAttributeName - The name of the attribute to register.
+	* @param[in] sValue - The value of the attribute to register.
+	*/
+	virtual void SetSegmentAttribute(const std::string & sNameSpace, const std::string & sAttributeName, const std::string & sValue) = 0;
+
+	/**
+	* IToolpathLayerData::ClearSegmentAttributes - Clears current segment attributes.
+	*/
+	virtual void ClearSegmentAttributes() = 0;
+
+	/**
+	* IToolpathLayerData::WriteHatchData - writes hatch data to the layer.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nPointDataBufferSize - Number of elements in buffer
+	* @param[in] pPointDataBuffer - The point data
+	*/
+	virtual void WriteHatchData(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer) = 0;
+
+	/**
+	* IToolpathLayerData::WriteLoop - writes loop data to the layer.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nPointDataBufferSize - Number of elements in buffer
+	* @param[in] pPointDataBuffer - The point data
+	*/
+	virtual void WriteLoop(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer) = 0;
+
+	/**
+	* IToolpathLayerData::WritePolyline - writes polyline data to the layer.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nPointDataBufferSize - Number of elements in buffer
+	* @param[in] pPointDataBuffer - The point data
+	*/
+	virtual void WritePolyline(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer) = 0;
+
+	/**
+	* IToolpathLayerData::AddCustomData - Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
+	* @return DOM Tree of the data.
+	*/
+	virtual ICustomDOMTree * AddCustomData(const std::string & sNameSpace, const std::string & sDataName) = 0;
+
+	/**
+	* IToolpathLayerData::Finish - finishes all writing of the layer and compresses toolpath data.
+	*/
+	virtual void Finish() = 0;
+
+};
+
+typedef IBaseSharedPtr<IToolpathLayerData> PIToolpathLayerData;
+
+
+/*************************************************************************************************************************
+ Class interface for Toolpath 
+**************************************************************************************************************************/
+
+class IToolpath : public virtual IResource {
+public:
+	/**
+	* IToolpath::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xF0AAB2C814D9FFB1UL; // First 64 bits of SHA1 of a string: "Lib3MF::Toolpath"
+	}
+
+	/**
+	* IToolpath::GetUnits - Retrieves the unit factor
+	* @return Returns the unit factor.
+	*/
+	virtual Lib3MF_double GetUnits() = 0;
+
+	/**
+	* IToolpath::GetLayerCount - Retrieves the count of layers
+	* @return Returns the layer count
+	*/
+	virtual Lib3MF_uint32 GetLayerCount() = 0;
+
+	/**
+	* IToolpath::GetProfileCount - Retrieves the count of profiles
+	* @return Returns the profile count
+	*/
+	virtual Lib3MF_uint32 GetProfileCount() = 0;
+
+	/**
+	* IToolpath::AddLayer - Adds a new toolpath layer
+	* @param[in] nZMax - ZMax value
+	* @param[in] sPath - Package Path
+	* @param[in] pModelWriter - The model writer that writes out the 3MF.
+	* @return Returns the layerdata object to write the layer content into.
+	*/
+	virtual IToolpathLayerData * AddLayer(const Lib3MF_uint32 nZMax, const std::string & sPath, IWriter* pModelWriter) = 0;
+
+	/**
+	* IToolpath::GetLayerAttachment - Retrieves the Attachment of a layer
+	* @param[in] nIndex - Layer Index
+	* @return Attachment
+	*/
+	virtual IAttachment * GetLayerAttachment(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpath::ReadLayerData - Reads the toolpath of a layer.
+	* @param[in] nIndex - Layer Index
+	* @return Toolpath Reader Instance
+	*/
+	virtual IToolpathLayerReader * ReadLayerData(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpath::GetLayerPath - Retrieves the Path of a layer
+	* @param[in] nIndex - Layer Index
+	* @return Package Path
+	*/
+	virtual std::string GetLayerPath(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpath::GetLayerZMax - Retrieves the ZMax of a layer
+	* @param[in] nIndex - Layer Index
+	* @return ZMax value
+	*/
+	virtual Lib3MF_uint32 GetLayerZMax(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpath::GetLayerZ - Return the z value of a layer in units.
+	* @param[in] nLayerIndex - Layer Index.
+	* @return Z Value in Units.
+	*/
+	virtual Lib3MF_uint32 GetLayerZ(const Lib3MF_uint32 nLayerIndex) = 0;
+
+	/**
+	* IToolpath::AddProfile - Adds a new profile to the toolpath.
+	* @param[in] sName - the name.
+	* @return Returns the profile.
+	*/
+	virtual IToolpathProfile * AddProfile(const std::string & sName) = 0;
+
+	/**
+	* IToolpath::GetProfile - Returns a profile of the toolpath.
+	* @param[in] nProfileIndex - Layer Index.
+	* @return Returns the profile.
+	*/
+	virtual IToolpathProfile * GetProfile(const Lib3MF_uint32 nProfileIndex) = 0;
+
+	/**
+	* IToolpath::GetProfileUUID - Returns a profile of the toolpath by UUID.
+	* @param[in] sProfileUUID - UUID string.
+	* @return Returns the profile.
+	*/
+	virtual IToolpathProfile * GetProfileUUID(const std::string & sProfileUUID) = 0;
+
+	/**
+	* IToolpath::GetCustomDataCount - Retrieves the count of custom data elements.
+	* @return Count
+	*/
+	virtual Lib3MF_uint32 GetCustomDataCount() = 0;
+
+	/**
+	* IToolpath::GetCustomData - Retrieves the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @return DOM Tree of the data.
+	*/
+	virtual ICustomDOMTree * GetCustomData(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpath::GetCustomDataName - Retrieves the node name of the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @param[out] sNameSpace - Namespace of the custom data tree.
+	* @param[out] sDataName - Root name of the data tree.
+	*/
+	virtual void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName) = 0;
+
+	/**
+	* IToolpath::HasUniqueCustomData - Retrieves if custom data with a specific namespace and name combination exists.
+	* @param[in] sNameSpace - Namespace of the custom data tree.
+	* @param[in] sDataName - Root name of the data tree.
+	* @return Returns true if DOM Tree Exists.
+	*/
+	virtual bool HasUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName) = 0;
+
+	/**
+	* IToolpath::FindUniqueCustomData - Retrieves the custom data with a specific namespace and name combination. Fails if combination is not unique.
+	* @param[in] sNameSpace - Namespace of the custom data tree.
+	* @param[in] sDataName - Root name of the data tree.
+	* @return DOM Tree of the data.
+	*/
+	virtual ICustomDOMTree * FindUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName) = 0;
+
+	/**
+	* IToolpath::AddCustomData - Adds a custom data DOM tree to the toolpath.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
+	* @return DOM Tree of the data.
+	*/
+	virtual ICustomDOMTree * AddCustomData(const std::string & sNameSpace, const std::string & sDataName) = 0;
+
+	/**
+	* IToolpath::ClearCustomData - Deletes all custom data.
+	* @return Returns number of deleted items.
+	*/
+	virtual Lib3MF_uint32 ClearCustomData() = 0;
+
+	/**
+	* IToolpath::DeleteCustomData - Deletes a custom data instance from the list.
+	* @param[in] pData - DOM Tree of the data.
+	* @return Returns if deletion was successful.
+	*/
+	virtual bool DeleteCustomData(ICustomDOMTree* pData) = 0;
+
+	/**
+	* IToolpath::RegisterCustomIntegerAttribute - Registers an Integer Attribute that each segment holds.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sAttributeName - Attribute name. MUST not be empty.
+	*/
+	virtual void RegisterCustomIntegerAttribute(const std::string & sNameSpace, const std::string & sAttributeName) = 0;
+
+	/**
+	* IToolpath::RegisterCustomDoubleAttribute - Registers a Double Attribute that each segment holds. Registering only applies to reader or writer objects created after the call.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sAttributeName - Attribute name. MUST not be empty.
+	*/
+	virtual void RegisterCustomDoubleAttribute(const std::string & sNameSpace, const std::string & sAttributeName) = 0;
+
+};
+
+typedef IBaseSharedPtr<IToolpath> PIToolpath;
+
+
+/*************************************************************************************************************************
+ Class interface for ToolpathIterator 
+**************************************************************************************************************************/
+
+class IToolpathIterator : public virtual IResourceIterator {
+public:
+	/**
+	* IToolpathIterator::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xD0F24425A07F2A81UL; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathIterator"
+	}
+
+	/**
+	* IToolpathIterator::GetCurrentToolpath - Returns the Toolpath the iterator points at.
+	* @return returns the Toolpath instance.
+	*/
+	virtual IToolpath * GetCurrentToolpath() = 0;
+
+};
+
+typedef IBaseSharedPtr<IToolpathIterator> PIToolpathIterator;
+
+
+/*************************************************************************************************************************
  Class interface for SliceStack 
 **************************************************************************************************************************/
 
@@ -3167,6 +4318,12 @@ public:
 	virtual IMultiPropertyGroupIterator * GetMultiPropertyGroups() = 0;
 
 	/**
+	* IModel::GetToolpaths - creates a Toolpath instance with all toolpath resources.
+	* @return returns the iterator instance.
+	*/
+	virtual IToolpathIterator * GetToolpaths() = 0;
+
+	/**
 	* IModel::GetSliceStacks - creates a resource iterator instance with all slice stack resources.
 	* @return returns the iterator instance.
 	*/
@@ -3249,6 +4406,13 @@ public:
 	* @param[in] pBuildItemInstance - Build item to remove.
 	*/
 	virtual void RemoveBuildItem(IBuildItem* pBuildItemInstance) = 0;
+
+	/**
+	* IModel::AddToolpath - adds an empty Toolpath resource to the model.
+	* @param[in] dUnitFactor - The toolpath instance of the created Toolpath.
+	* @return The toolpath instance of the created Toolpath.
+	*/
+	virtual IToolpath * AddToolpath(const Lib3MF_double dUnitFactor) = 0;
 
 	/**
 	* IModel::GetMetaDataGroup - Returns the metadata of the model as MetaDataGroup
@@ -3338,6 +4502,31 @@ public:
 	* @return The package keystore
 	*/
 	virtual IKeyStore * GetKeyStore() = 0;
+
+	/**
+	* IModel::CreatePersistentSourceFromFile - Creates an OPC Reader Source from a file.
+	* @param[in] sFilename - Filename to read from
+	* @return The instance of the created reader source
+	*/
+	virtual IPersistentReaderSource * CreatePersistentSourceFromFile(const std::string & sFilename) = 0;
+
+	/**
+	* IModel::CreatePersistentSourceFromBuffer - Creates an OPC Reader Source from a memory buffer. The memory buffer MUST exist as long as the Source object exists.
+	* @param[in] nBufferBufferSize - Number of elements in buffer
+	* @param[in] pBufferBuffer - Buffer to read from
+	* @return The instance of the created reader source
+	*/
+	virtual IPersistentReaderSource * CreatePersistentSourceFromBuffer(const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer) = 0;
+
+	/**
+	* IModel::CreatePersistentSourceFromCallback - Creates an OPC Reader Source from a data provided by a callback function. The callbacks MUST exist as long as the source object exists.
+	* @param[in] pTheReadCallback - callback function
+	* @param[in] nStreamSize - number of bytes the callback returns
+	* @param[in] pTheSeekCallback - callback function
+	* @param[in] nUserData - Userdata that is passed to the callback function
+	* @return The instance of the created reader source
+	*/
+	virtual IPersistentReaderSource * CreatePersistentSourceFromCallback(const Lib3MF::ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MF::SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData) = 0;
 
 };
 

@@ -60,16 +60,27 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_multipropertygroupiterator.hpp"
 #include "lib3mf_packagepart.hpp"
 #include "lib3mf_keystore.hpp"
+#include "lib3mf_toolpath.hpp"
+#include "lib3mf_toolpathiterator.hpp"
 
+#include "lib3mf_persistentreadersource.hpp"
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
+
 #include "Model/Classes/NMR_ModelColorGroup.h"
 #include "Model/Classes/NMR_ModelTexture2DGroup.h"
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
+#include "Model/Classes/NMR_ModelToolpath.h"
+
 #include "Common/NMR_SecureContentTypes.h"
+#include "Common/Platform/NMR_ImportStream_Callback.h"
+#include "Common/Platform/NMR_ImportStream_Memory.h"
+#include "Common/Platform/NMR_Platform.h"
+
 #include "lib3mf_utils.hpp"
 
 using namespace Lib3MF::Impl;
@@ -634,6 +645,18 @@ void CModel::RemoveBuildItem (IBuildItem* pBuildItemInstance)
 	model().removeBuildItem(pLib3MFBuildItem->GetHandle(), true);
 }
 
+IToolpath* CModel::AddToolpath(const Lib3MF_double dUnitFactor)
+{
+	if (dUnitFactor <= 0.0)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	auto pToolpath = NMR::CModelToolpath::make(model().generateResourceID(), &model(), dUnitFactor);
+	model().addResource(pToolpath);
+
+	return new CToolpath(pToolpath);
+}
+
+
 IMetaDataGroup * CModel::GetMetaDataGroup ()
 {
 	return new CMetaDataGroup(model().getMetaDataGroup());
@@ -764,3 +787,60 @@ void Lib3MF::Impl::CModel::SetRandomNumberCallback(Lib3MF::RandomNumberCallback 
 	m_model->setCryptoRandCallback(descriptor);
 }
 
+
+IToolpathIterator* CModel::GetToolpaths()
+{
+	auto pResult = std::unique_ptr<CToolpathIterator>(new CToolpathIterator());
+	Lib3MF_uint32 nCount = model().getResourceCount();
+
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nCount; nIdx++) {
+		auto resource = model().getResource(nIdx);
+		if (dynamic_cast<NMR::CModelToolpath*>(resource.get()))
+			pResult->addResource(resource);
+	}
+	return pResult.release();
+}
+
+
+IPersistentReaderSource* CModel::CreatePersistentSourceFromFile(const std::string& sFilename)
+{
+	NMR::PImportStream pImportStream = NMR::fnCreateImportStreamInstance(sFilename.c_str());
+
+	auto pDataSource = std::make_shared <NMR::CModelPersistentDataSource>(pImportStream);
+
+	return new CPersistentReaderSource(pDataSource);
+}
+
+IPersistentReaderSource* CModel::CreatePersistentSourceFromBuffer(const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8* pBufferBuffer)
+{
+	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Shared_Memory>(pBufferBuffer, nBufferBufferSize);
+
+	auto pDataSource = std::make_shared <NMR::CModelPersistentDataSource>(pImportStream);
+
+	return new CPersistentReaderSource(pDataSource);
+}
+
+IPersistentReaderSource* CModel::CreatePersistentSourceFromCallback(const Lib3MF::ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MF::SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData)
+{
+	NMR::ImportStream_ReadCallbackType lambdaReadCallback =
+		[pTheReadCallback](NMR::nfByte* pData, NMR::nfUint64 cbBytes, void* pUserData)
+	{
+		(*pTheReadCallback)(reinterpret_cast<Lib3MF_uint64>(pData), cbBytes, pUserData);
+		return 0;
+	};
+
+	NMR::ImportStream_SeekCallbackType lambdaSeekCallback =
+		[pTheSeekCallback](NMR::nfUint64 nPosition, void* pUserData)
+	{
+		(*pTheSeekCallback)(nPosition, pUserData);
+		return 0;
+	};
+
+	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Callback>(
+		lambdaReadCallback, lambdaSeekCallback,
+		pUserData, nStreamSize);
+
+	auto pDataSource = std::make_shared <NMR::CModelPersistentDataSource>(pImportStream);
+
+	return new CPersistentReaderSource(pDataSource);
+}

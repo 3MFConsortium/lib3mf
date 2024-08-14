@@ -53,7 +53,7 @@ NMR_KeyStoreOpcPackageReader.cpp defines an OPC Package reader in a portable way
 #include <cstring>
 
 namespace NMR {
-	CKeyStoreOpcPackageReader::CKeyStoreOpcPackageReader(PImportStream pImportStream, CModelContext const & context)
+	CKeyStoreOpcPackageReader::CKeyStoreOpcPackageReader (PImportStream pImportStream, CModelContext const & context)
 		:m_pContext(context)
 	{
 		if (!context.isComplete())
@@ -187,17 +187,27 @@ namespace NMR {
 		}
 	}
 	void CKeyStoreOpcPackageReader::checkAuthenticatedTags() {
-		auto secureContext = m_pContext.secureContext();
-		auto keyStore = m_pContext.keyStore();
-		if (secureContext->hasDekCtx()) {
-			for (nfUint64 i = 0; i < m_pContext.keyStore()->getResourceDataCount(); ++i) {
-				NMR::PKeyStoreResourceData rd = keyStore->getResourceData(i);
-				NMR::PKeyStoreResourceDataGroup rdg = keyStore->findResourceDataGroupByResourceDataPath(rd->packagePath());
-				PKeyStoreContentEncryptionParams params = CKeyStoreFactory::makeContentEncryptionParams(rd, rdg);
-				ContentEncryptionDescriptor descriptor = secureContext->getDekCtx();
-				descriptor.m_sDekDecryptData.m_sParams= params;
-				descriptor.m_fnCrypt(0, nullptr, nullptr, descriptor.m_sDekDecryptData);
+
+		if (m_pContext.isComplete()) {
+
+			auto secureContext = m_pContext.secureContext();
+			auto keyStore = m_pContext.keyStore();
+			if (secureContext->hasDekCtx()) {
+				for (nfUint64 i = 0; i < m_pContext.keyStore()->getResourceDataCount(); ++i) {
+					NMR::PKeyStoreResourceData rd = keyStore->getResourceData(i);
+					NMR::PKeyStoreResourceDataGroup rdg = keyStore->findResourceDataGroupByResourceDataPath(rd->packagePath());
+					PKeyStoreContentEncryptionParams params = CKeyStoreFactory::makeContentEncryptionParams(rd, rdg);
+					ContentEncryptionDescriptor descriptor = secureContext->getDekCtx();
+					descriptor.m_sDekDecryptData.m_sParams = params;
+					descriptor.m_fnCrypt(0, nullptr, nullptr, descriptor.m_sDekDecryptData);
+				}
 			}
 		}
 	}
+
+	PImportStream CKeyStoreOpcPackageReader::readPartStreamIntoMemory(_In_ std::string sPath)
+	{
+		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+	}
+
 }

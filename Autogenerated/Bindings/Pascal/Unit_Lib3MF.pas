@@ -113,6 +113,10 @@ const
 	LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER = 140;
 	LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT = 141;
 	LIB3MF_ERROR_INVALIDRESOURCE = 142;
+	LIB3MF_ERROR_INVALIDNODEINDEX = 143;
+	LIB3MF_ERROR_INVALIDATTRIBUTEINDEX = 144;
+	LIB3MF_ERROR_DUPLICATECUSTOMDATA = 145;
+	LIB3MF_ERROR_CUSTOMDATANOTFOUND = 146;
 	LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE = 2000;
 	LIB3MF_ERROR_INVALIDKEYSTORE = 3000;
 	LIB3MF_ERROR_INVALIDKEYSTORECONSUMER = 3001;
@@ -120,6 +124,16 @@ const
 	LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND = 3003;
 	LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED = 3004;
 	LIB3MF_ERROR_INVALIDKEYSIZE = 3005;
+	LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER = 4000;
+	LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA = 4001;
+	LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN = 4002;
+	LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT = 4003;
+	LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED = 4004;
+	LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE = 4005;
+	LIB3MF_ERROR_EMPTYNAMESPACEPREFIX = 4006;
+	LIB3MF_ERROR_EMPTYNAMESPACE = 4007;
+	LIB3MF_ERROR_INVALIDNAMESPACEPREFIX = 4008;
+	LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES = 4009;
 
 (*************************************************************************************************************************
  Declaration of enums
@@ -139,6 +153,13 @@ type
 	TLib3MFSlicesMeshResolution = (
 		eSlicesMeshResolutionFullres,
 		eSlicesMeshResolutionLowres
+	);
+
+	TLib3MFPersistentReaderSourceType = (
+		ePersistentReaderSourceTypeUnknown,
+		ePersistentReaderSourceTypeFileOnDisk,
+		ePersistentReaderSourceTypeMemoryBuffer,
+		ePersistentReaderSourceTypeCallback
 	);
 
 	TLib3MFModelUnit = (
@@ -194,6 +215,11 @@ type
 		eBeamLatticeBallModeAll
 	);
 
+	TLib3MFBinaryStreamPredictionType = (
+		eBinaryStreamPredictionTypeNoPrediction,
+		eBinaryStreamPredictionTypeDeltaPrediction
+	);
+
 	TLib3MFProgressIdentifier = (
 		eProgressIdentifierQUERYCANCELED,
 		eProgressIdentifierDONE,
@@ -225,6 +251,19 @@ type
 		eBlendMethodNoBlendMethod,
 		eBlendMethodMix,
 		eBlendMethodMultiply
+	);
+
+	TLib3MFToolpathSegmentType = (
+		eToolpathSegmentTypeUnknown,
+		eToolpathSegmentTypeHatch,
+		eToolpathSegmentTypeLoop,
+		eToolpathSegmentTypePolyline
+	);
+
+	TLib3MFToolpathAttributeType = (
+		eToolpathAttributeTypeUnknown,
+		eToolpathAttributeTypeInteger,
+		eToolpathAttributeTypeDouble
 	);
 
 	TLib3MFEncryptionAlgorithm = (
@@ -369,11 +408,17 @@ type
 type
 	TLib3MFWrapper = class;
 	TLib3MFBase = class;
+	TLib3MFBinaryStream = class;
 	TLib3MFWriter = class;
+	TLib3MFPersistentReaderSource = class;
 	TLib3MFReader = class;
 	TLib3MFPackagePart = class;
 	TLib3MFResource = class;
 	TLib3MFResourceIterator = class;
+	TLib3MFCustomXMLAttribute = class;
+	TLib3MFCustomXMLNode = class;
+	TLib3MFCustomXMLNodes = class;
+	TLib3MFCustomDOMTree = class;
 	TLib3MFSliceStackIterator = class;
 	TLib3MFObjectIterator = class;
 	TLib3MFMeshObjectIterator = class;
@@ -402,6 +447,11 @@ type
 	TLib3MFBuildItem = class;
 	TLib3MFBuildItemIterator = class;
 	TLib3MFSlice = class;
+	TLib3MFToolpathProfile = class;
+	TLib3MFToolpathLayerReader = class;
+	TLib3MFToolpathLayerData = class;
+	TLib3MFToolpath = class;
+	TLib3MFToolpathIterator = class;
 	TLib3MFSliceStack = class;
 	TLib3MFConsumer = class;
 	TLib3MFAccessRight = class;
@@ -424,6 +474,79 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFBase_ClassTypeIdFunc = function(pBase: TLib3MFHandle; out pClassTypeId: QWord): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for BinaryStream
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves an binary streams package path for the binary data.
+	*
+	* @param[in] pBinaryStream - BinaryStream instance.
+	* @param[in] nPathBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pPathNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pPathBuffer -  buffer of binary streams package binary path., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBinaryStream_GetBinaryPathFunc = function(pBinaryStream: TLib3MFHandle; const nPathBufferSize: Cardinal; out pPathNeededChars: Cardinal; pPathBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves an binary streams package path for the index data.
+	*
+	* @param[in] pBinaryStream - BinaryStream instance.
+	* @param[in] nPathBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pPathNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pPathBuffer -  buffer of binary streams package index path., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBinaryStream_GetIndexPathFunc = function(pBinaryStream: TLib3MFHandle; const nPathBufferSize: Cardinal; out pPathNeededChars: Cardinal; pPathBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves an binary streams uuid.
+	*
+	* @param[in] pBinaryStream - BinaryStream instance.
+	* @param[in] nUUIDBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pUUIDBuffer -  buffer of binary streams uuid, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBinaryStream_GetUUIDFunc = function(pBinaryStream: TLib3MFHandle; const nUUIDBufferSize: Cardinal; out pUUIDNeededChars: Cardinal; pUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the float compression mode to raw. All subsequent writes will adhere to this mode.
+	*
+	* @param[in] pBinaryStream - BinaryStream instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc = function(pBinaryStream: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the compression mode to a quantized array. All subsequent writes will adhere to this mode.
+	*
+	* @param[in] pBinaryStream - BinaryStream instance.
+	* @param[in] dUnits - Unit factor to use for quantization.
+	* @param[in] ePredictionType - Prediction type to use for arrays.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc = function(pBinaryStream: TLib3MFHandle; const dUnits: Double; const ePredictionType: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Enables LZMA mode.
+	*
+	* @param[in] pBinaryStream - BinaryStream instance.
+	* @param[in] nLZMALevel - LZMA Level (0-9)
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBinaryStream_EnableLZMAFunc = function(pBinaryStream: TLib3MFHandle; const nLZMALevel: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Disables LZMA mode.
+	*
+	* @param[in] pBinaryStream - BinaryStream instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBinaryStream_DisableLZMAFunc = function(pBinaryStream: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -559,11 +682,82 @@ type
 	*)
 	TLib3MFWriter_SetContentEncryptionCallbackFunc = function(pWriter: TLib3MFHandle; const pTheCallback: PLib3MF_ContentEncryptionCallback; const pUserData: Pointer): TLib3MFResult; cdecl;
 	
+	(**
+	* Creates a binary stream object. Only applicable for 3MF Writers.
+	*
+	* @param[in] pWriter - Writer instance.
+	* @param[in] pIndexPath - Package path to write the index into
+	* @param[in] pBinaryPath - Package path to write raw binary data into
+	* @param[out] pBinaryStream - Returns a package path.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFWriter_CreateBinaryStreamFunc = function(pWriter: TLib3MFHandle; const pIndexPath: PAnsiChar; const pBinaryPath: PAnsiChar; out pBinaryStream: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.
+	*
+	* @param[in] pWriter - Writer instance.
+	* @param[in] pInstance - Object instance to assign Binary stream to.
+	* @param[in] pBinaryStream - Binary stream object to use for this layer.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFWriter_AssignBinaryStreamFunc = function(pWriter: TLib3MFHandle; const pInstance: TLib3MFHandle; const pBinaryStream: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Registers a custom 3MF Namespace. Fails if Prefix is already registered.
+	*
+	* @param[in] pWriter - Writer instance.
+	* @param[in] pPrefix - Prefix to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number
+	* @param[in] pNameSpace - Namespace to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number
+	* @return error code or 0 (success)
+	*)
+	TLib3MFWriter_RegisterCustomNamespaceFunc = function(pWriter: TLib3MFHandle; const pPrefix: PAnsiChar; const pNameSpace: PAnsiChar): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for PersistentReaderSource
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the type of source data.
+	*
+	* @param[in] pPersistentReaderSource - PersistentReaderSource instance.
+	* @param[out] pSourceType - Reader Source Type
+	* @return error code or 0 (success)
+	*)
+	TLib3MFPersistentReaderSource_GetSourceTypeFunc = function(pPersistentReaderSource: TLib3MFHandle; out pSourceType: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Invalidates the reader source. Every subsequent read on this data will fail.
+	*
+	* @param[in] pPersistentReaderSource - PersistentReaderSource instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFPersistentReaderSource_InvalidateSourceDataFunc = function(pPersistentReaderSource: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Checks if the source data is valid. Any read on an invalid source object will fail.
+	*
+	* @param[in] pPersistentReaderSource - PersistentReaderSource instance.
+	* @param[out] pDataIsValid - The source data is valid.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFPersistentReaderSource_SourceDataIsValidFunc = function(pPersistentReaderSource: TLib3MFHandle; out pDataIsValid: Byte): TLib3MFResult; cdecl;
+	
 
 (*************************************************************************************************************************
  Function type definitions for Reader
 **************************************************************************************************************************)
 
+	(**
+	* Reads a model from a persistent source object. The object will be referenced until the Model is destroyed or cleared.
+	*
+	* @param[in] pReader - Reader instance.
+	* @param[in] pSource - Source object to read from
+	* @return error code or 0 (success)
+	*)
+	TLib3MFReader_ReadFromPersistentSourceFunc = function(pReader: TLib3MFHandle; const pSource: TLib3MFHandle): TLib3MFResult; cdecl;
+	
 	(**
 	* Reads a model from a file. The file type is specified by the Model Reader class
 	*
@@ -808,6 +1002,476 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFResourceIterator_CountFunc = function(pResourceIterator: TLib3MFHandle; out pCount: QWord): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for CustomXMLAttribute
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves name of the attribute.
+	*
+	* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+	* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameBuffer -  buffer of returns the name of the attribute., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLAttribute_GetNameFunc = function(pCustomXMLAttribute: TLib3MFHandle; const nNameBufferSize: Cardinal; out pNameNeededChars: Cardinal; pNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves value of the attribute as string.
+	*
+	* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+	* @param[in] nValueBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pValueNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pValueBuffer -  buffer of returns the value of the attribute., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLAttribute_GetValueFunc = function(pCustomXMLAttribute: TLib3MFHandle; const nValueBufferSize: Cardinal; out pValueNeededChars: Cardinal; pValueBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Checks if the value is a valid integer in the given range.
+	*
+	* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+	* @param[in] nMinValue - Minimum allowed value
+	* @param[in] nMaxValue - Maximum allowed value
+	* @param[out] pIsValid - returns if the value is a valid integer.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLAttribute_IsValidIntegerFunc = function(pCustomXMLAttribute: TLib3MFHandle; const nMinValue: Int64; const nMaxValue: Int64; out pIsValid: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the value as integer. Fails if the value is not a valid integer in the given range.
+	*
+	* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+	* @param[in] nMinValue - Minimum allowed value
+	* @param[in] nMaxValue - Maximum allowed value
+	* @param[out] pValue - returns the value.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLAttribute_GetIntegerValueFunc = function(pCustomXMLAttribute: TLib3MFHandle; const nMinValue: Int64; const nMaxValue: Int64; out pValue: Int64): TLib3MFResult; cdecl;
+	
+	(**
+	* Checks if the value is a valid double in the given range.
+	*
+	* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+	* @param[in] dMinValue - Minimum allowed value
+	* @param[in] dMaxValue - Maximum allowed value
+	* @param[out] pIsValid - returns if the value is a valid double.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLAttribute_IsValidDoubleFunc = function(pCustomXMLAttribute: TLib3MFHandle; const dMinValue: Double; const dMaxValue: Double; out pIsValid: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the value as double. Fails if the value is not a valid double in the given range.
+	*
+	* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+	* @param[in] dMinValue - Minimum allowed value
+	* @param[in] dMaxValue - Maximum allowed value
+	* @param[out] pValue - returns the value .
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLAttribute_GetDoubleValueFunc = function(pCustomXMLAttribute: TLib3MFHandle; const dMinValue: Double; const dMaxValue: Double; out pValue: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Checks if the value is a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+	*
+	* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+	* @param[out] pIsValid - returns if the value is a valid bool.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLAttribute_IsValidBoolFunc = function(pCustomXMLAttribute: TLib3MFHandle; out pIsValid: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the value as bool. Fails if the value is not a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+	*
+	* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+	* @param[in] dMinValue - Minimum allowed value
+	* @param[in] dMaxValue - Maximum allowed value
+	* @param[out] pValue - returns the value .
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLAttribute_GetBoolValueFunc = function(pCustomXMLAttribute: TLib3MFHandle; const dMinValue: Double; const dMaxValue: Double; out pValue: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the value of the attribute as string.
+	*
+	* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+	* @param[in] pValue - new value of the attribute.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLAttribute_SetValueFunc = function(pCustomXMLAttribute: TLib3MFHandle; const pValue: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the value of the attribute as integer.
+	*
+	* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+	* @param[in] nValue - new value of the attribute.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLAttribute_SetIntegerValueFunc = function(pCustomXMLAttribute: TLib3MFHandle; const nValue: Int64): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the value of the attribute as double.
+	*
+	* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+	* @param[in] dValue - new value of the attribute.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLAttribute_SetDoubleValueFunc = function(pCustomXMLAttribute: TLib3MFHandle; const dValue: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the value of the attribute as bool.
+	*
+	* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+	* @param[in] bValue - new value of the attribute.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLAttribute_SetBoolValueFunc = function(pCustomXMLAttribute: TLib3MFHandle; const bValue: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Removes the attribute from its parent node. All subsequent calls to the class will fail.
+	*
+	* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLAttribute_RemoveFunc = function(pCustomXMLAttribute: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for CustomXMLNode
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves name of the node.
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameBuffer -  buffer of returns the name of the node., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_GetNameFunc = function(pCustomXMLNode: TLib3MFHandle; const nNameBufferSize: Cardinal; out pNameNeededChars: Cardinal; pNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves namespace of the node.
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameSpaceBuffer -  buffer of returns the namespace of the node., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_GetNameSpaceFunc = function(pCustomXMLNode: TLib3MFHandle; const nNameSpaceBufferSize: Cardinal; out pNameSpaceNeededChars: Cardinal; pNameSpaceBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns number of attributes.
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @param[out] pCount - returns the number of attributes.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_GetAttributeCountFunc = function(pCustomXMLNode: TLib3MFHandle; out pCount: QWord): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns attribute instance. Fails if Index is out of range.
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @param[in] nIndex - Index of the attribute to return (0-based).
+	* @param[out] pAttributeInstance - XML Document attribute.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_GetAttributeFunc = function(pCustomXMLNode: TLib3MFHandle; const nIndex: QWord; out pAttributeInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns if attribute of a specific name exists.
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @param[in] pName - Name of the attribute.
+	* @param[out] pAttributeExists - Returns if the attribute exists.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_HasAttributeFunc = function(pCustomXMLNode: TLib3MFHandle; const pName: PAnsiChar; out pAttributeExists: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns attribute instance of a specific name. 
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @param[in] pName - Name of the attribute.
+	* @param[in] bMustExist - If true, the call fails if attribute does not exist. If falls, the call will return null if the attribute does not exist.
+	* @param[out] pAttributeInstance - XML Document attribute.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_FindAttributeFunc = function(pCustomXMLNode: TLib3MFHandle; const pName: PAnsiChar; const bMustExist: Byte; out pAttributeInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Removes the attribute with a specific name. Does nothing if attribute does not exist.
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @param[in] pName - Name of the attribute.
+	* @param[out] pAttributeRemoved - Returns true if an attribute was removed.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_RemoveAttributeFunc = function(pCustomXMLNode: TLib3MFHandle; const pName: PAnsiChar; out pAttributeRemoved: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Removes the attribute with a specific index. Fails if index is invalid
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @param[in] nIndex - Index of the attribute to remove (0-based).
+	* @param[out] pAttributeRemoved - Returns true if an attribute was removed.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_RemoveAttributeByIndexFunc = function(pCustomXMLNode: TLib3MFHandle; const nIndex: QWord; out pAttributeRemoved: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Adds an attribute with a specific name and string value. Fails if attribute already exists.
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @param[in] pName - Name of the attribute.
+	* @param[in] pValue - Value of the attribute.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_AddAttributeFunc = function(pCustomXMLNode: TLib3MFHandle; const pName: PAnsiChar; const pValue: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Adds an attribute with a specific name and integer value. Fails if attribute already exists.
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @param[in] pName - Name of the attribute.
+	* @param[in] nValue - Value of the attribute.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_AddIntegerAttributeFunc = function(pCustomXMLNode: TLib3MFHandle; const pName: PAnsiChar; const nValue: Int64): TLib3MFResult; cdecl;
+	
+	(**
+	* Adds an attribute with a specific name and double value. Fails if attribute already exists.
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @param[in] pName - Name of the attribute.
+	* @param[in] dValue - Value of the attribute.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_AddDoubleAttributeFunc = function(pCustomXMLNode: TLib3MFHandle; const pName: PAnsiChar; const dValue: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Adds an attribute with a specific name and bool value. Fails if attribute already exists.
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @param[in] pName - Name of the attribute.
+	* @param[in] bValue - Value of the attribute.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_AddBoolAttributeFunc = function(pCustomXMLNode: TLib3MFHandle; const pName: PAnsiChar; const bValue: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns all the child nodes of the XML Node.
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @param[out] pChildNodes - returns the list of child nodes.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_GetChildrenFunc = function(pCustomXMLNode: TLib3MFHandle; out pChildNodes: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns how many children of the XML Node have a specific name.
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @param[in] pName - Name of the node.
+	* @param[out] pCount - returns the number children with the specified name.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_CountChildrenByNameFunc = function(pCustomXMLNode: TLib3MFHandle; const pName: PAnsiChar; out pCount: QWord): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns all the child nodes of the XML Node with a specific name.
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @param[in] pName - Name of the child.
+	* @param[out] pChildNodes - returns the list of child nodes.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_GetChildrenByNameFunc = function(pCustomXMLNode: TLib3MFHandle; const pName: PAnsiChar; out pChildNodes: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns if a child with a specific name exist.
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @param[in] pName - Name of the child.
+	* @param[out] pChildExists - returns if a child with a specific name exists.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_HasChildFunc = function(pCustomXMLNode: TLib3MFHandle; const pName: PAnsiChar; out pChildExists: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns if a child with a specific name exist once and only once.
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @param[in] pName - Name of the child.
+	* @param[out] pChildExists - returns if a child with a specific name exists once and only once.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_HasUniqueChildFunc = function(pCustomXMLNode: TLib3MFHandle; const pName: PAnsiChar; out pChildExists: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns child with a specific name. Throws an error if name does not exist once and only once.
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @param[in] pName - Name of the child.
+	* @param[in] bMustExist - If true, the call fails if child does not exist. If falls, the call will return null if the child does not exist.
+	* @param[out] pChildInstance - returns child instance or null.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_FindChildFunc = function(pCustomXMLNode: TLib3MFHandle; const pName: PAnsiChar; const bMustExist: Byte; out pChildInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Adds a new child with a specific name.
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @param[in] pName - Name of the child.
+	* @param[out] pChildInstance - returns child instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_AddChildFunc = function(pCustomXMLNode: TLib3MFHandle; const pName: PAnsiChar; out pChildInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Removes a specific child. All subsequent calls to the child will fail after the call.
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @param[in] pChildInstance - child instance to remove. Fails if given instance is not a child of the node.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_RemoveChildFunc = function(pCustomXMLNode: TLib3MFHandle; const pChildInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Removes all children with a specific name. Does nothing if no child with the name exists. All subsequent calls to the deleted children will fail after the call.
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @param[in] pName - Name of the children.
+	* @param[out] pNumberOfDeletedChildren - Returns how many children have been deleted.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_RemoveChildrenWithNameFunc = function(pCustomXMLNode: TLib3MFHandle; const pName: PAnsiChar; out pNumberOfDeletedChildren: QWord): TLib3MFResult; cdecl;
+	
+	(**
+	* Removes the node from its parent. The root node of the document can not be removed. Any subsequent call to the node fails after this.
+	*
+	* @param[in] pCustomXMLNode - CustomXMLNode instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNode_RemoveFunc = function(pCustomXMLNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for CustomXMLNodes
+**************************************************************************************************************************)
+
+	(**
+	* Returns number of nodes.
+	*
+	* @param[in] pCustomXMLNodes - CustomXMLNodes instance.
+	* @param[out] pCount - returns the number of nodes in the list.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNodes_GetNodeCountFunc = function(pCustomXMLNodes: TLib3MFHandle; out pCount: QWord): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns node instance. Fails if Index is out of range.
+	*
+	* @param[in] pCustomXMLNodes - CustomXMLNodes instance.
+	* @param[in] nIndex - Index of the node to return (0-based).
+	* @param[out] pNodeInstance - XML Node node.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNodes_GetNodeFunc = function(pCustomXMLNodes: TLib3MFHandle; const nIndex: QWord; out pNodeInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns how many nodes of the XML Node have a specific name.
+	*
+	* @param[in] pCustomXMLNodes - CustomXMLNodes instance.
+	* @param[in] pName - Name of the node.
+	* @param[out] pCount - returns the number of nodes with the specified name.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNodes_CountNodesByNameFunc = function(pCustomXMLNodes: TLib3MFHandle; const pName: PAnsiChar; out pCount: QWord): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns all the nodes nodes of the XML Node with a specific name.
+	*
+	* @param[in] pCustomXMLNodes - CustomXMLNodes instance.
+	* @param[in] pName - Name of the node.
+	* @param[out] pNodes - returns the list of node nodes.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNodes_GetNodesByNameFunc = function(pCustomXMLNodes: TLib3MFHandle; const pName: PAnsiChar; out pNodes: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns if a node with a specific name exist.
+	*
+	* @param[in] pCustomXMLNodes - CustomXMLNodes instance.
+	* @param[in] pName - Name of the node.
+	* @param[out] pNodeExists - returns if a node with a specific name exists.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNodes_HasNodeFunc = function(pCustomXMLNodes: TLib3MFHandle; const pName: PAnsiChar; out pNodeExists: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns if a node with a specific name exist once and only once.
+	*
+	* @param[in] pCustomXMLNodes - CustomXMLNodes instance.
+	* @param[in] pName - Name of the node.
+	* @param[out] pNodeExists - returns if a node with a specific name exists once and only once.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNodes_HasUniqueNodeFunc = function(pCustomXMLNodes: TLib3MFHandle; const pName: PAnsiChar; out pNodeExists: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns node with a specific name. Throws an error if name does not exist once and only once.
+	*
+	* @param[in] pCustomXMLNodes - CustomXMLNodes instance.
+	* @param[in] pName - Name of the node.
+	* @param[in] bMustExist - If true, the call fails if node does not exist. If falls, the call will return null if the node does not exist.
+	* @param[out] pNodeInstance - returns node instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomXMLNodes_FindNodeFunc = function(pCustomXMLNodes: TLib3MFHandle; const pName: PAnsiChar; const bMustExist: Byte; out pNodeInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for CustomDOMTree
+**************************************************************************************************************************)
+
+	(**
+	* Returns the namespace identifier for the DOM Tree.
+	*
+	* @param[in] pCustomDOMTree - CustomDOMTree instance.
+	* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameSpaceBuffer -  buffer of returns the namespace of the DOM Tree., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomDOMTree_GetNameSpaceFunc = function(pCustomDOMTree: TLib3MFHandle; const nNameSpaceBufferSize: Cardinal; out pNameSpaceNeededChars: Cardinal; pNameSpaceBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns root node of the tree.
+	*
+	* @param[in] pCustomDOMTree - CustomDOMTree instance.
+	* @param[out] pRootNode - Root node of the document.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomDOMTree_GetRootNodeFunc = function(pCustomDOMTree: TLib3MFHandle; out pRootNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Saves the XML tree into a string.
+	*
+	* @param[in] pCustomDOMTree - CustomDOMTree instance.
+	* @param[in] nXMLStringBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pXMLStringNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pXMLStringBuffer -  buffer of String with the XML Content., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFCustomDOMTree_SaveToStringFunc = function(pCustomDOMTree: TLib3MFHandle; const nXMLStringBufferSize: Cardinal; out pXMLStringNeededChars: Cardinal; pXMLStringBuffer: PAnsiChar): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -2822,6 +3486,810 @@ type
 	
 
 (*************************************************************************************************************************
+ Function type definitions for ToolpathProfile
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the profile's uuid
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] nUUIDBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pUUIDBuffer -  buffer of Returns the uuid value., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetUUIDFunc = function(pToolpathProfile: TLib3MFHandle; const nUUIDBufferSize: Cardinal; out pUUIDNeededChars: Cardinal; pUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the profile's name
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameBuffer -  buffer of Returns the name., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetNameFunc = function(pToolpathProfile: TLib3MFHandle; const nNameBufferSize: Cardinal; out pNameNeededChars: Cardinal; pNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the number of parameters.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[out] pCount - Returns the number of parameters.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterCountFunc = function(pToolpathProfile: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the Name of a parameter.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] nIndex - Index of Parameter (0-based). Call will fail if an invalid index is given.
+	* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameBuffer -  buffer of Returns the name of the parameter., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterNameFunc = function(pToolpathProfile: TLib3MFHandle; const nIndex: Cardinal; const nNameBufferSize: Cardinal; out pNameNeededChars: Cardinal; pNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the NameSpace of a parameter.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] nIndex - Index of Parameter (0-based). Call will fail if an invalid index is given.
+	* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameSpaceBuffer -  buffer of Returns the namespace of the parameter., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterNameSpaceFunc = function(pToolpathProfile: TLib3MFHandle; const nIndex: Cardinal; const nNameSpaceBufferSize: Cardinal; out pNameSpaceNeededChars: Cardinal; pNameSpaceBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Checks if a parameter value exists.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[out] pValueExists - Returns if a value exists.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_HasParameterValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; out pValueExists: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a profile's parameter value. Fails if value does not exist.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[in] nValueBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pValueNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pValueBuffer -  buffer of Returns the value of the field., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const nValueBufferSize: Cardinal; out pValueNeededChars: Cardinal; pValueBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a profile's parameter value
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[in] pDefaultValue - Default value if value does not exist.
+	* @param[in] nValueBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pValueNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pValueBuffer -  buffer of Returns the value of the field., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterValueDefFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const pDefaultValue: PAnsiChar; const nValueBufferSize: Cardinal; out pValueNeededChars: Cardinal; pValueBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a profile's parameter value as double. Fails if value does not exist or is not a double value.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[out] pValue - Returns the value of the field.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterDoubleValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; out pValue: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a profile's parameter value as double.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[in] dDefaultValue - Default value if value does not exist or is not a double value.
+	* @param[out] pValue - Returns the value of the field.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterDoubleValueDefFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const dDefaultValue: Double; out pValue: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a profile's parameter value as integer. Fails if value does not exist or is not a integer value.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[out] pValue - Returns the value of the field.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterIntegerValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; out pValue: Int64): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a profile's parameter value as integer.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[in] nDefaultValue - Default value if value does not exist or is not a integer value.
+	* @param[out] pValue - Returns the value of the field.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterIntegerValueDefFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const nDefaultValue: Int64; out pValue: Int64): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a profile's parameter value as boolean. Fails if value does not exist or is not a boolean value.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[out] pValue - Returns the value of the field.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterBoolValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; out pValue: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a profile's parameter value as boolean.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[in] bDefaultValue - Default value if value does not exist or is not a boolean value.
+	* @param[out] pValue - Returns the value of the field.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterBoolValueDefFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const bDefaultValue: Byte; out pValue: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the profile's name
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pName - Returns the name.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_SetNameFunc = function(pToolpathProfile: TLib3MFHandle; const pName: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets a profile's parameter value.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[in] pValue - String value of the parameter.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_SetParameterValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const pValue: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets a profile's parameter value as double.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[in] dValue - Double value of the parameter.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_SetParameterDoubleValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const dValue: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets a profile's parameter value as integer.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[in] nValue - Integer value of the parameter.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_SetParameterIntegerValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const nValue: Int64): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets a profile's parameter value as boolean.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[in] bValue - Boolean value of the parameter.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_SetParameterBoolValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const bValue: Byte): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for ToolpathLayerReader
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the layerdata's uuid
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nUUIDBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pUUIDBuffer -  buffer of Returns the uuid value., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetLayerDataUUIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nUUIDBufferSize: Cardinal; out pUUIDNeededChars: Cardinal; pUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the count of segments.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[out] pCount - Count
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentCountFunc = function(pToolpathLayerReader: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the segment type information .
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[out] pType - Segment Type
+	* @param[out] pPointCount - Point count of segment.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentInfoFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; out pType: Integer; out pPointCount: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the assigned segment profile.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[out] pProfile - Segment Profile
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentProfileFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; out pProfile: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the assigned segment profile uuid.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[in] nProfileUUIDBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pProfileUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pProfileUUIDBuffer -  buffer of Segment Profile UUID, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nProfileUUIDBufferSize: Cardinal; out pProfileUUIDNeededChars: Cardinal; pProfileUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the assigned segment profile.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[out] pBuildItem - Segment Build Item
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentPartFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; out pBuildItem: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the assigned segment part uuid.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[in] nPartUUIDBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pPartUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pPartUUIDBuffer -  buffer of Segment Part UUID, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nPartUUIDBufferSize: Cardinal; out pPartUUIDNeededChars: Cardinal; pPartUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the assigned segment part id. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[out] pLocalPartID - Local Segment Part ID
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; out pLocalPartID: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the global part UUID by the local part ID. Fails if part ID does not exist in this layer. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nLocalPartID - Local Segment Part ID
+	* @param[in] nPartUUIDBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pPartUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pPartUUIDBuffer -  buffer of Segment Part UUID, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nLocalPartID: Cardinal; const nPartUUIDBufferSize: Cardinal; out pPartUUIDNeededChars: Cardinal; pPartUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the assigned segment point list. For type hatch, the points are taken pairwise.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[in] nPointDataCount - Number of elements in buffer
+	* @param[out] pPointDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
+	* @param[out] pPointDataBuffer - Position2D buffer of The point data array
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentPointDataFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nPointDataCount: QWord; out pPointDataNeededCount: QWord; pPointDataBuffer: PLib3MFPosition2D): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] pNameSpace - Namespace of the custom attribute.
+	* @param[in] pAttributeName - Name of the custom attribute.
+	* @param[out] pID - Attribute ID.
+	* @param[out] pAttributeType - Attribute Type.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_FindAttributeInfoByNameFunc = function(pToolpathLayerReader: TLib3MFHandle; const pNameSpace: PAnsiChar; const pAttributeName: PAnsiChar; out pID: Cardinal; out pAttributeType: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] pNameSpace - Namespace of the custom attribute.
+	* @param[in] pAttributeName - Name of the custom attribute.
+	* @param[out] pID - Attribute ID.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_FindAttributeIDByNameFunc = function(pToolpathLayerReader: TLib3MFHandle; const pNameSpace: PAnsiChar; const pAttributeName: PAnsiChar; out pID: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] pNameSpace - Namespace of the custom attribute.
+	* @param[in] pAttributeName - Name of the custom attribute.
+	* @param[out] pAttributeType - Attribute Type.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_FindAttributeValueByNameFunc = function(pToolpathLayerReader: TLib3MFHandle; const pNameSpace: PAnsiChar; const pAttributeName: PAnsiChar; out pAttributeType: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nID - Attribute ID.
+	* @param[out] pValue - Attribute Value.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nID: Cardinal; out pValue: Int64): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a segment integer attribute by Attribute Name. Will fail if Attribute does not exist or is of different type.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] pNameSpace - Namespace of the custom attribute.
+	* @param[in] pAttributeName - Name of the custom attribute.
+	* @param[out] pValue - Attribute Value.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const pNameSpace: PAnsiChar; const pAttributeName: PAnsiChar; out pValue: Int64): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nID - Attribute ID.
+	* @param[out] pValue - Attribute Value.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nID: Cardinal; out pValue: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a segment Double attribute by Attribute Name. Will fail if Attribute does not exist.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] pNameSpace - Namespace of the custom attribute.
+	* @param[in] pAttributeName - Name of the custom attribute.
+	* @param[out] pValue - Attribute Value.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const pNameSpace: PAnsiChar; const pAttributeName: PAnsiChar; out pValue: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the count of custom data elements.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[out] pCount - Count
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetCustomDataCountFunc = function(pToolpathLayerReader: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the custom data.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @param[out] pData - DOM Tree of the data.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetCustomDataFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; out pData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the node name of the custom data.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameSpaceBuffer -  buffer of Namespace of the custom data tree., may be NULL
+	* @param[in] nDataNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pDataNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pDataNameBuffer -  buffer of Root name of the data tree., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetCustomDataNameFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nNameSpaceBufferSize: Cardinal; out pNameSpaceNeededChars: Cardinal; pNameSpaceBuffer: PAnsiChar; const nDataNameBufferSize: Cardinal; out pDataNameNeededChars: Cardinal; pDataNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for ToolpathLayerData
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the layerdata's uuid
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] nUUIDBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pUUIDBuffer -  buffer of Returns the uuid value., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_GetLayerDataUUIDFunc = function(pToolpathLayerData: TLib3MFHandle; const nUUIDBufferSize: Cardinal; out pUUIDNeededChars: Cardinal; pUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Registers a toolpath profile
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] pProfile - The toolpath profile to register.
+	* @param[out] pProfileID - returns the local profile ID for the layer.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_RegisterProfileFunc = function(pToolpathLayerData: TLib3MFHandle; const pProfile: TLib3MFHandle; out pProfileID: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Registers a Model Build Item
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] pBuildItem - The model build item to use.
+	* @param[out] pPartID - returns the local part ID for the layer.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_RegisterBuildItemFunc = function(pToolpathLayerData: TLib3MFHandle; const pBuildItem: TLib3MFHandle; out pPartID: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets Segment Attribute for all following segments that are added. Overrides previously set attribute.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] pNameSpace - The namespace of the attribute to register.
+	* @param[in] pAttributeName - The name of the attribute to register.
+	* @param[in] pValue - The value of the attribute to register.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_SetSegmentAttributeFunc = function(pToolpathLayerData: TLib3MFHandle; const pNameSpace: PAnsiChar; const pAttributeName: PAnsiChar; const pValue: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Clears current segment attributes.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_ClearSegmentAttributesFunc = function(pToolpathLayerData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* writes hatch data to the layer.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nPointDataCount - Number of elements in buffer
+	* @param[in] pPointDataBuffer - Position2D buffer of The point data
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_WriteHatchDataFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nPointDataCount: QWord; const pPointDataBuffer: PLib3MFPosition2D): TLib3MFResult; cdecl;
+	
+	(**
+	* writes loop data to the layer.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nPointDataCount - Number of elements in buffer
+	* @param[in] pPointDataBuffer - Position2D buffer of The point data
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_WriteLoopFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nPointDataCount: QWord; const pPointDataBuffer: PLib3MFPosition2D): TLib3MFResult; cdecl;
+	
+	(**
+	* writes polyline data to the layer.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nPointDataCount - Number of elements in buffer
+	* @param[in] pPointDataBuffer - Position2D buffer of The point data
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_WritePolylineFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nPointDataCount: QWord; const pPointDataBuffer: PLib3MFPosition2D): TLib3MFResult; cdecl;
+	
+	(**
+	* Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] pNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] pDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
+	* @param[out] pData - DOM Tree of the data.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_AddCustomDataFunc = function(pToolpathLayerData: TLib3MFHandle; const pNameSpace: PAnsiChar; const pDataName: PAnsiChar; out pData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* finishes all writing of the layer and compresses toolpath data.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_FinishFunc = function(pToolpathLayerData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for Toolpath
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the unit factor
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[out] pUnits - Returns the unit factor.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetUnitsFunc = function(pToolpath: TLib3MFHandle; out pUnits: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the count of layers
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[out] pCount - Returns the layer count
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetLayerCountFunc = function(pToolpath: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the count of profiles
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[out] pCount - Returns the profile count
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetProfileCountFunc = function(pToolpath: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Adds a new toolpath layer
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] nZMax - ZMax value
+	* @param[in] pPath - Package Path
+	* @param[in] pModelWriter - The model writer that writes out the 3MF.
+	* @param[out] pLayerData - Returns the layerdata object to write the layer content into.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_AddLayerFunc = function(pToolpath: TLib3MFHandle; const nZMax: Cardinal; const pPath: PAnsiChar; const pModelWriter: TLib3MFHandle; out pLayerData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the Attachment of a layer
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] nIndex - Layer Index
+	* @param[out] pAttachment - Attachment
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetLayerAttachmentFunc = function(pToolpath: TLib3MFHandle; const nIndex: Cardinal; out pAttachment: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Reads the toolpath of a layer.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] nIndex - Layer Index
+	* @param[out] pToolpathReader - Toolpath Reader Instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_ReadLayerDataFunc = function(pToolpath: TLib3MFHandle; const nIndex: Cardinal; out pToolpathReader: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the Path of a layer
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] nIndex - Layer Index
+	* @param[in] nPathBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pPathNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pPathBuffer -  buffer of Package Path, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetLayerPathFunc = function(pToolpath: TLib3MFHandle; const nIndex: Cardinal; const nPathBufferSize: Cardinal; out pPathNeededChars: Cardinal; pPathBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the ZMax of a layer
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] nIndex - Layer Index
+	* @param[out] pZMax - ZMax value
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetLayerZMaxFunc = function(pToolpath: TLib3MFHandle; const nIndex: Cardinal; out pZMax: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Return the z value of a layer in units.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] nLayerIndex - Layer Index.
+	* @param[out] pZValue - Z Value in Units.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetLayerZFunc = function(pToolpath: TLib3MFHandle; const nLayerIndex: Cardinal; out pZValue: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Adds a new profile to the toolpath.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] pName - the name.
+	* @param[out] pProfile - Returns the profile.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_AddProfileFunc = function(pToolpath: TLib3MFHandle; const pName: PAnsiChar; out pProfile: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns a profile of the toolpath.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] nProfileIndex - Layer Index.
+	* @param[out] pProfile - Returns the profile.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetProfileFunc = function(pToolpath: TLib3MFHandle; const nProfileIndex: Cardinal; out pProfile: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns a profile of the toolpath by UUID.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] pProfileUUID - UUID string.
+	* @param[out] pProfile - Returns the profile.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetProfileUUIDFunc = function(pToolpath: TLib3MFHandle; const pProfileUUID: PAnsiChar; out pProfile: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the count of custom data elements.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[out] pCount - Count
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetCustomDataCountFunc = function(pToolpath: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the custom data.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @param[out] pData - DOM Tree of the data.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetCustomDataFunc = function(pToolpath: TLib3MFHandle; const nIndex: Cardinal; out pData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the node name of the custom data.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameSpaceBuffer -  buffer of Namespace of the custom data tree., may be NULL
+	* @param[in] nDataNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pDataNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pDataNameBuffer -  buffer of Root name of the data tree., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetCustomDataNameFunc = function(pToolpath: TLib3MFHandle; const nIndex: Cardinal; const nNameSpaceBufferSize: Cardinal; out pNameSpaceNeededChars: Cardinal; pNameSpaceBuffer: PAnsiChar; const nDataNameBufferSize: Cardinal; out pDataNameNeededChars: Cardinal; pDataNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves if custom data with a specific namespace and name combination exists.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] pNameSpace - Namespace of the custom data tree.
+	* @param[in] pDataName - Root name of the data tree.
+	* @param[out] pCustomDataExists - Returns true if DOM Tree Exists.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_HasUniqueCustomDataFunc = function(pToolpath: TLib3MFHandle; const pNameSpace: PAnsiChar; const pDataName: PAnsiChar; out pCustomDataExists: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the custom data with a specific namespace and name combination. Fails if combination is not unique.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] pNameSpace - Namespace of the custom data tree.
+	* @param[in] pDataName - Root name of the data tree.
+	* @param[out] pData - DOM Tree of the data.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_FindUniqueCustomDataFunc = function(pToolpath: TLib3MFHandle; const pNameSpace: PAnsiChar; const pDataName: PAnsiChar; out pData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Adds a custom data DOM tree to the toolpath.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] pNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] pDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
+	* @param[out] pData - DOM Tree of the data.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_AddCustomDataFunc = function(pToolpath: TLib3MFHandle; const pNameSpace: PAnsiChar; const pDataName: PAnsiChar; out pData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Deletes all custom data.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[out] pNumberOfDeletedItems - Returns number of deleted items.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_ClearCustomDataFunc = function(pToolpath: TLib3MFHandle; out pNumberOfDeletedItems: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Deletes a custom data instance from the list.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] pData - DOM Tree of the data.
+	* @param[out] pSuccess - Returns if deletion was successful.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_DeleteCustomDataFunc = function(pToolpath: TLib3MFHandle; const pData: TLib3MFHandle; out pSuccess: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Registers an Integer Attribute that each segment holds.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] pNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] pAttributeName - Attribute name. MUST not be empty.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_RegisterCustomIntegerAttributeFunc = function(pToolpath: TLib3MFHandle; const pNameSpace: PAnsiChar; const pAttributeName: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Registers a Double Attribute that each segment holds. Registering only applies to reader or writer objects created after the call.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] pNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] pAttributeName - Attribute name. MUST not be empty.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_RegisterCustomDoubleAttributeFunc = function(pToolpath: TLib3MFHandle; const pNameSpace: PAnsiChar; const pAttributeName: PAnsiChar): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for ToolpathIterator
+**************************************************************************************************************************)
+
+	(**
+	* Returns the Toolpath the iterator points at.
+	*
+	* @param[in] pToolpathIterator - ToolpathIterator instance.
+	* @param[out] pResource - returns the Toolpath instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathIterator_GetCurrentToolpathFunc = function(pToolpathIterator: TLib3MFHandle; out pResource: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
  Function type definitions for SliceStack
 **************************************************************************************************************************)
 
@@ -3675,6 +5143,15 @@ type
 	TLib3MFModel_GetMultiPropertyGroupsFunc = function(pModel: TLib3MFHandle; out pResourceIterator: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
+	* creates a Toolpath instance with all toolpath resources.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[out] pResourceIterator - returns the iterator instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetToolpathsFunc = function(pModel: TLib3MFHandle; out pResourceIterator: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
 	* creates a resource iterator instance with all slice stack resources.
 	*
 	* @param[in] pModel - Model instance.
@@ -3796,6 +5273,16 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFModel_RemoveBuildItemFunc = function(pModel: TLib3MFHandle; const pBuildItemInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* adds an empty Toolpath resource to the model.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] dUnitFactor - The toolpath instance of the created Toolpath.
+	* @param[out] pToolpathInstance - The toolpath instance of the created Toolpath.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_AddToolpathFunc = function(pModel: TLib3MFHandle; const dUnitFactor: Double; out pToolpathInstance: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Returns the metadata of the model as MetaDataGroup
@@ -3927,6 +5414,40 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFModel_GetKeyStoreFunc = function(pModel: TLib3MFHandle; out pKeyStore: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Creates an OPC Reader Source from a file.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] pFilename - Filename to read from
+	* @param[out] pInstance - The instance of the created reader source
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_CreatePersistentSourceFromFileFunc = function(pModel: TLib3MFHandle; const pFilename: PAnsiChar; out pInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Creates an OPC Reader Source from a memory buffer. The memory buffer MUST exist as long as the Source object exists.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] nBufferCount - Number of elements in buffer
+	* @param[in] pBufferBuffer - uint8 buffer of Buffer to read from
+	* @param[out] pInstance - The instance of the created reader source
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_CreatePersistentSourceFromBufferFunc = function(pModel: TLib3MFHandle; const nBufferCount: QWord; const pBufferBuffer: PByte; out pInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Creates an OPC Reader Source from a data provided by a callback function. The callbacks MUST exist as long as the source object exists.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] pTheReadCallback - Callback to call for reading a data chunk
+	* @param[in] nStreamSize - number of bytes the callback returns
+	* @param[in] pTheSeekCallback - Callback to call for seeking in the stream.
+	* @param[in] pUserData - Userdata that is passed to the callback function
+	* @param[out] pInstance - The instance of the created reader source
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_CreatePersistentSourceFromCallbackFunc = function(pModel: TLib3MFHandle; const pTheReadCallback: PLib3MF_ReadCallback; const nStreamSize: QWord; const pTheSeekCallback: PLib3MF_SeekCallback; const pUserData: Pointer; out pInstance: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 (*************************************************************************************************************************
  Global function definitions 
@@ -4165,6 +5686,24 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 
 (*************************************************************************************************************************
+ Class definition for BinaryStream
+**************************************************************************************************************************)
+
+	TLib3MFBinaryStream = class(TLib3MFBase)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetBinaryPath(): String;
+		function GetIndexPath(): String;
+		function GetUUID(): String;
+		procedure DisableDiscretizedArrayCompression();
+		procedure EnableDiscretizedArrayCompression(const AUnits: Double; const APredictionType: TLib3MFBinaryStreamPredictionType);
+		procedure EnableLZMA(const ALZMALevel: Cardinal);
+		procedure DisableLZMA();
+	end;
+
+
+(*************************************************************************************************************************
  Class definition for Writer
 **************************************************************************************************************************)
 
@@ -4185,6 +5724,23 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetWarningCount(): Cardinal;
 		procedure AddKeyWrappingCallback(const AConsumerID: String; const ATheCallback: PLib3MF_KeyWrappingCallback; const AUserData: Pointer);
 		procedure SetContentEncryptionCallback(const ATheCallback: PLib3MF_ContentEncryptionCallback; const AUserData: Pointer);
+		function CreateBinaryStream(const AIndexPath: String; const ABinaryPath: String): TLib3MFBinaryStream;
+		procedure AssignBinaryStream(const AInstance: TLib3MFBase; const ABinaryStream: TLib3MFBinaryStream);
+		procedure RegisterCustomNamespace(const APrefix: String; const ANameSpace: String);
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for PersistentReaderSource
+**************************************************************************************************************************)
+
+	TLib3MFPersistentReaderSource = class(TLib3MFBase)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetSourceType(): TLib3MFPersistentReaderSourceType;
+		procedure InvalidateSourceData();
+		function SourceDataIsValid(): Boolean;
 	end;
 
 
@@ -4196,6 +5752,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
+		procedure ReadFromPersistentSource(const ASource: TLib3MFPersistentReaderSource);
 		procedure ReadFromFile(const AFilename: String);
 		procedure ReadFromBuffer(const ABuffer: TByteDynArray);
 		procedure ReadFromCallback(const ATheReadCallback: PLib3MF_ReadCallback; const AStreamSize: QWord; const ATheSeekCallback: PLib3MF_SeekCallback; const AUserData: Pointer);
@@ -4253,6 +5810,95 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetCurrent(): TLib3MFResource;
 		function Clone(): TLib3MFResourceIterator;
 		function Count(): QWord;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for CustomXMLAttribute
+**************************************************************************************************************************)
+
+	TLib3MFCustomXMLAttribute = class(TLib3MFBase)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetName(): String;
+		function GetValue(): String;
+		function IsValidInteger(const AMinValue: Int64; const AMaxValue: Int64): Boolean;
+		function GetIntegerValue(const AMinValue: Int64; const AMaxValue: Int64): Int64;
+		function IsValidDouble(const AMinValue: Double; const AMaxValue: Double): Boolean;
+		function GetDoubleValue(const AMinValue: Double; const AMaxValue: Double): Double;
+		function IsValidBool(): Boolean;
+		function GetBoolValue(const AMinValue: Double; const AMaxValue: Double): Boolean;
+		procedure SetValue(const AValue: String);
+		procedure SetIntegerValue(const AValue: Int64);
+		procedure SetDoubleValue(const AValue: Double);
+		procedure SetBoolValue(const AValue: Boolean);
+		procedure Remove();
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for CustomXMLNode
+**************************************************************************************************************************)
+
+	TLib3MFCustomXMLNode = class(TLib3MFBase)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetName(): String;
+		function GetNameSpace(): String;
+		function GetAttributeCount(): QWord;
+		function GetAttribute(const AIndex: QWord): TLib3MFCustomXMLAttribute;
+		function HasAttribute(const AName: String): Boolean;
+		function FindAttribute(const AName: String; const AMustExist: Boolean): TLib3MFCustomXMLAttribute;
+		function RemoveAttribute(const AName: String): Boolean;
+		function RemoveAttributeByIndex(const AIndex: QWord): Boolean;
+		procedure AddAttribute(const AName: String; const AValue: String);
+		procedure AddIntegerAttribute(const AName: String; const AValue: Int64);
+		procedure AddDoubleAttribute(const AName: String; const AValue: Double);
+		procedure AddBoolAttribute(const AName: String; const AValue: Boolean);
+		function GetChildren(): TLib3MFCustomXMLNodes;
+		function CountChildrenByName(const AName: String): QWord;
+		function GetChildrenByName(const AName: String): TLib3MFCustomXMLNodes;
+		function HasChild(const AName: String): Boolean;
+		function HasUniqueChild(const AName: String): Boolean;
+		function FindChild(const AName: String; const AMustExist: Boolean): TLib3MFCustomXMLNode;
+		function AddChild(const AName: String): TLib3MFCustomXMLNode;
+		procedure RemoveChild(const AChildInstance: TLib3MFCustomXMLNode);
+		function RemoveChildrenWithName(const AName: String): QWord;
+		procedure Remove();
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for CustomXMLNodes
+**************************************************************************************************************************)
+
+	TLib3MFCustomXMLNodes = class(TLib3MFBase)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetNodeCount(): QWord;
+		function GetNode(const AIndex: QWord): TLib3MFCustomXMLNode;
+		function CountNodesByName(const AName: String): QWord;
+		function GetNodesByName(const AName: String): TLib3MFCustomXMLNodes;
+		function HasNode(const AName: String): Boolean;
+		function HasUniqueNode(const AName: String): Boolean;
+		function FindNode(const AName: String; const AMustExist: Boolean): TLib3MFCustomXMLNode;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for CustomDOMTree
+**************************************************************************************************************************)
+
+	TLib3MFCustomDOMTree = class(TLib3MFBase)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetNameSpace(): String;
+		function GetRootNode(): TLib3MFCustomXMLNode;
+		function SaveToString(): String;
 	end;
 
 
@@ -4757,6 +6403,133 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 
 (*************************************************************************************************************************
+ Class definition for ToolpathProfile
+**************************************************************************************************************************)
+
+	TLib3MFToolpathProfile = class(TLib3MFBase)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetUUID(): String;
+		function GetName(): String;
+		function GetParameterCount(): Cardinal;
+		function GetParameterName(const AIndex: Cardinal): String;
+		function GetParameterNameSpace(const AIndex: Cardinal): String;
+		function HasParameterValue(const ANameSpaceName: String; const AValueName: String): Boolean;
+		function GetParameterValue(const ANameSpaceName: String; const AValueName: String): String;
+		function GetParameterValueDef(const ANameSpaceName: String; const AValueName: String; const ADefaultValue: String): String;
+		function GetParameterDoubleValue(const ANameSpaceName: String; const AValueName: String): Double;
+		function GetParameterDoubleValueDef(const ANameSpaceName: String; const AValueName: String; const ADefaultValue: Double): Double;
+		function GetParameterIntegerValue(const ANameSpaceName: String; const AValueName: String): Int64;
+		function GetParameterIntegerValueDef(const ANameSpaceName: String; const AValueName: String; const ADefaultValue: Int64): Int64;
+		function GetParameterBoolValue(const ANameSpaceName: String; const AValueName: String): Boolean;
+		function GetParameterBoolValueDef(const ANameSpaceName: String; const AValueName: String; const ADefaultValue: Boolean): Boolean;
+		procedure SetName(const AName: String);
+		procedure SetParameterValue(const ANameSpaceName: String; const AValueName: String; const AValue: String);
+		procedure SetParameterDoubleValue(const ANameSpaceName: String; const AValueName: String; const AValue: Double);
+		procedure SetParameterIntegerValue(const ANameSpaceName: String; const AValueName: String; const AValue: Int64);
+		procedure SetParameterBoolValue(const ANameSpaceName: String; const AValueName: String; const AValue: Boolean);
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ToolpathLayerReader
+**************************************************************************************************************************)
+
+	TLib3MFToolpathLayerReader = class(TLib3MFBase)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetLayerDataUUID(): String;
+		function GetSegmentCount(): Cardinal;
+		procedure GetSegmentInfo(const AIndex: Cardinal; out AType: TLib3MFToolpathSegmentType; out APointCount: Cardinal);
+		function GetSegmentProfile(const AIndex: Cardinal): TLib3MFToolpathProfile;
+		function GetSegmentProfileUUID(const AIndex: Cardinal): String;
+		function GetSegmentPart(const AIndex: Cardinal): TLib3MFBuildItem;
+		function GetSegmentPartUUID(const AIndex: Cardinal): String;
+		function GetSegmentLocalPartID(const AIndex: Cardinal): Cardinal;
+		function GetPartUUIDByLocalPartID(const ALocalPartID: Cardinal): String;
+		procedure GetSegmentPointData(const AIndex: Cardinal; out APointData: ArrayOfLib3MFPosition2D);
+		procedure FindAttributeInfoByName(const ANameSpace: String; const AAttributeName: String; out AID: Cardinal; out AAttributeType: TLib3MFToolpathAttributeType);
+		function FindAttributeIDByName(const ANameSpace: String; const AAttributeName: String): Cardinal;
+		function FindAttributeValueByName(const ANameSpace: String; const AAttributeName: String): TLib3MFToolpathAttributeType;
+		function GetSegmentIntegerAttributeByID(const AIndex: Cardinal; const AID: Cardinal): Int64;
+		function GetSegmentIntegerAttributeByName(const AIndex: Cardinal; const ANameSpace: String; const AAttributeName: String): Int64;
+		function GetSegmentDoubleAttributeByID(const AIndex: Cardinal; const AID: Cardinal): Double;
+		function GetSegmentDoubleAttributeByName(const AIndex: Cardinal; const ANameSpace: String; const AAttributeName: String): Double;
+		function GetCustomDataCount(): Cardinal;
+		function GetCustomData(const AIndex: Cardinal): TLib3MFCustomDOMTree;
+		procedure GetCustomDataName(const AIndex: Cardinal; out ANameSpace: String; out ADataName: String);
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ToolpathLayerData
+**************************************************************************************************************************)
+
+	TLib3MFToolpathLayerData = class(TLib3MFBase)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetLayerDataUUID(): String;
+		function RegisterProfile(const AProfile: TLib3MFToolpathProfile): Cardinal;
+		function RegisterBuildItem(const ABuildItem: TLib3MFBuildItem): Cardinal;
+		procedure SetSegmentAttribute(const ANameSpace: String; const AAttributeName: String; const AValue: String);
+		procedure ClearSegmentAttributes();
+		procedure WriteHatchData(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D);
+		procedure WriteLoop(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D);
+		procedure WritePolyline(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D);
+		function AddCustomData(const ANameSpace: String; const ADataName: String): TLib3MFCustomDOMTree;
+		procedure Finish();
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for Toolpath
+**************************************************************************************************************************)
+
+	TLib3MFToolpath = class(TLib3MFResource)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetUnits(): Double;
+		function GetLayerCount(): Cardinal;
+		function GetProfileCount(): Cardinal;
+		function AddLayer(const AZMax: Cardinal; const APath: String; const AModelWriter: TLib3MFWriter): TLib3MFToolpathLayerData;
+		function GetLayerAttachment(const AIndex: Cardinal): TLib3MFAttachment;
+		function ReadLayerData(const AIndex: Cardinal): TLib3MFToolpathLayerReader;
+		function GetLayerPath(const AIndex: Cardinal): String;
+		function GetLayerZMax(const AIndex: Cardinal): Cardinal;
+		function GetLayerZ(const ALayerIndex: Cardinal): Cardinal;
+		function AddProfile(const AName: String): TLib3MFToolpathProfile;
+		function GetProfile(const AProfileIndex: Cardinal): TLib3MFToolpathProfile;
+		function GetProfileUUID(const AProfileUUID: String): TLib3MFToolpathProfile;
+		function GetCustomDataCount(): Cardinal;
+		function GetCustomData(const AIndex: Cardinal): TLib3MFCustomDOMTree;
+		procedure GetCustomDataName(const AIndex: Cardinal; out ANameSpace: String; out ADataName: String);
+		function HasUniqueCustomData(const ANameSpace: String; const ADataName: String): Boolean;
+		function FindUniqueCustomData(const ANameSpace: String; const ADataName: String): TLib3MFCustomDOMTree;
+		function AddCustomData(const ANameSpace: String; const ADataName: String): TLib3MFCustomDOMTree;
+		function ClearCustomData(): Cardinal;
+		function DeleteCustomData(const AData: TLib3MFCustomDOMTree): Boolean;
+		procedure RegisterCustomIntegerAttribute(const ANameSpace: String; const AAttributeName: String);
+		procedure RegisterCustomDoubleAttribute(const ANameSpace: String; const AAttributeName: String);
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ToolpathIterator
+**************************************************************************************************************************)
+
+	TLib3MFToolpathIterator = class(TLib3MFResourceIterator)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetCurrentToolpath(): TLib3MFToolpath;
+	end;
+
+
+(*************************************************************************************************************************
  Class definition for SliceStack
 **************************************************************************************************************************)
 
@@ -4924,6 +6697,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetTexture2DGroups(): TLib3MFTexture2DGroupIterator;
 		function GetCompositeMaterials(): TLib3MFCompositeMaterialsIterator;
 		function GetMultiPropertyGroups(): TLib3MFMultiPropertyGroupIterator;
+		function GetToolpaths(): TLib3MFToolpathIterator;
 		function GetSliceStacks(): TLib3MFSliceStackIterator;
 		function MergeToModel(): TLib3MFModel;
 		function AddMeshObject(): TLib3MFMeshObject;
@@ -4937,6 +6711,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function AddMultiPropertyGroup(): TLib3MFMultiPropertyGroup;
 		function AddBuildItem(const AObject: TLib3MFObject; const ATransform: TLib3MFTransform): TLib3MFBuildItem;
 		procedure RemoveBuildItem(const ABuildItemInstance: TLib3MFBuildItem);
+		function AddToolpath(const AUnitFactor: Double): TLib3MFToolpath;
 		function GetMetaDataGroup(): TLib3MFMetaDataGroup;
 		function AddAttachment(const AURI: String; const ARelationShipType: String): TLib3MFAttachment;
 		procedure RemoveAttachment(const AAttachmentInstance: TLib3MFAttachment);
@@ -4951,6 +6726,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure RemoveCustomContentType(const AExtension: String);
 		procedure SetRandomNumberCallback(const ATheCallback: PLib3MF_RandomNumberCallback; const AUserData: Pointer);
 		function GetKeyStore(): TLib3MFKeyStore;
+		function CreatePersistentSourceFromFile(const AFilename: String): TLib3MFPersistentReaderSource;
+		function CreatePersistentSourceFromBuffer(const ABuffer: TByteDynArray): TLib3MFPersistentReaderSource;
+		function CreatePersistentSourceFromCallback(const ATheReadCallback: PLib3MF_ReadCallback; const AStreamSize: QWord; const ATheSeekCallback: PLib3MF_SeekCallback; const AUserData: Pointer): TLib3MFPersistentReaderSource;
 	end;
 
 (*************************************************************************************************************************
@@ -4961,6 +6739,13 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	private
 		FModule: HMODULE;
 		FLib3MFBase_ClassTypeIdFunc: TLib3MFBase_ClassTypeIdFunc;
+		FLib3MFBinaryStream_GetBinaryPathFunc: TLib3MFBinaryStream_GetBinaryPathFunc;
+		FLib3MFBinaryStream_GetIndexPathFunc: TLib3MFBinaryStream_GetIndexPathFunc;
+		FLib3MFBinaryStream_GetUUIDFunc: TLib3MFBinaryStream_GetUUIDFunc;
+		FLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc: TLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc;
+		FLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc: TLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc;
+		FLib3MFBinaryStream_EnableLZMAFunc: TLib3MFBinaryStream_EnableLZMAFunc;
+		FLib3MFBinaryStream_DisableLZMAFunc: TLib3MFBinaryStream_DisableLZMAFunc;
 		FLib3MFWriter_WriteToFileFunc: TLib3MFWriter_WriteToFileFunc;
 		FLib3MFWriter_GetStreamSizeFunc: TLib3MFWriter_GetStreamSizeFunc;
 		FLib3MFWriter_WriteToBufferFunc: TLib3MFWriter_WriteToBufferFunc;
@@ -4974,6 +6759,13 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFWriter_GetWarningCountFunc: TLib3MFWriter_GetWarningCountFunc;
 		FLib3MFWriter_AddKeyWrappingCallbackFunc: TLib3MFWriter_AddKeyWrappingCallbackFunc;
 		FLib3MFWriter_SetContentEncryptionCallbackFunc: TLib3MFWriter_SetContentEncryptionCallbackFunc;
+		FLib3MFWriter_CreateBinaryStreamFunc: TLib3MFWriter_CreateBinaryStreamFunc;
+		FLib3MFWriter_AssignBinaryStreamFunc: TLib3MFWriter_AssignBinaryStreamFunc;
+		FLib3MFWriter_RegisterCustomNamespaceFunc: TLib3MFWriter_RegisterCustomNamespaceFunc;
+		FLib3MFPersistentReaderSource_GetSourceTypeFunc: TLib3MFPersistentReaderSource_GetSourceTypeFunc;
+		FLib3MFPersistentReaderSource_InvalidateSourceDataFunc: TLib3MFPersistentReaderSource_InvalidateSourceDataFunc;
+		FLib3MFPersistentReaderSource_SourceDataIsValidFunc: TLib3MFPersistentReaderSource_SourceDataIsValidFunc;
+		FLib3MFReader_ReadFromPersistentSourceFunc: TLib3MFReader_ReadFromPersistentSourceFunc;
 		FLib3MFReader_ReadFromFileFunc: TLib3MFReader_ReadFromFileFunc;
 		FLib3MFReader_ReadFromBufferFunc: TLib3MFReader_ReadFromBufferFunc;
 		FLib3MFReader_ReadFromCallbackFunc: TLib3MFReader_ReadFromCallbackFunc;
@@ -4998,6 +6790,51 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFResourceIterator_GetCurrentFunc: TLib3MFResourceIterator_GetCurrentFunc;
 		FLib3MFResourceIterator_CloneFunc: TLib3MFResourceIterator_CloneFunc;
 		FLib3MFResourceIterator_CountFunc: TLib3MFResourceIterator_CountFunc;
+		FLib3MFCustomXMLAttribute_GetNameFunc: TLib3MFCustomXMLAttribute_GetNameFunc;
+		FLib3MFCustomXMLAttribute_GetValueFunc: TLib3MFCustomXMLAttribute_GetValueFunc;
+		FLib3MFCustomXMLAttribute_IsValidIntegerFunc: TLib3MFCustomXMLAttribute_IsValidIntegerFunc;
+		FLib3MFCustomXMLAttribute_GetIntegerValueFunc: TLib3MFCustomXMLAttribute_GetIntegerValueFunc;
+		FLib3MFCustomXMLAttribute_IsValidDoubleFunc: TLib3MFCustomXMLAttribute_IsValidDoubleFunc;
+		FLib3MFCustomXMLAttribute_GetDoubleValueFunc: TLib3MFCustomXMLAttribute_GetDoubleValueFunc;
+		FLib3MFCustomXMLAttribute_IsValidBoolFunc: TLib3MFCustomXMLAttribute_IsValidBoolFunc;
+		FLib3MFCustomXMLAttribute_GetBoolValueFunc: TLib3MFCustomXMLAttribute_GetBoolValueFunc;
+		FLib3MFCustomXMLAttribute_SetValueFunc: TLib3MFCustomXMLAttribute_SetValueFunc;
+		FLib3MFCustomXMLAttribute_SetIntegerValueFunc: TLib3MFCustomXMLAttribute_SetIntegerValueFunc;
+		FLib3MFCustomXMLAttribute_SetDoubleValueFunc: TLib3MFCustomXMLAttribute_SetDoubleValueFunc;
+		FLib3MFCustomXMLAttribute_SetBoolValueFunc: TLib3MFCustomXMLAttribute_SetBoolValueFunc;
+		FLib3MFCustomXMLAttribute_RemoveFunc: TLib3MFCustomXMLAttribute_RemoveFunc;
+		FLib3MFCustomXMLNode_GetNameFunc: TLib3MFCustomXMLNode_GetNameFunc;
+		FLib3MFCustomXMLNode_GetNameSpaceFunc: TLib3MFCustomXMLNode_GetNameSpaceFunc;
+		FLib3MFCustomXMLNode_GetAttributeCountFunc: TLib3MFCustomXMLNode_GetAttributeCountFunc;
+		FLib3MFCustomXMLNode_GetAttributeFunc: TLib3MFCustomXMLNode_GetAttributeFunc;
+		FLib3MFCustomXMLNode_HasAttributeFunc: TLib3MFCustomXMLNode_HasAttributeFunc;
+		FLib3MFCustomXMLNode_FindAttributeFunc: TLib3MFCustomXMLNode_FindAttributeFunc;
+		FLib3MFCustomXMLNode_RemoveAttributeFunc: TLib3MFCustomXMLNode_RemoveAttributeFunc;
+		FLib3MFCustomXMLNode_RemoveAttributeByIndexFunc: TLib3MFCustomXMLNode_RemoveAttributeByIndexFunc;
+		FLib3MFCustomXMLNode_AddAttributeFunc: TLib3MFCustomXMLNode_AddAttributeFunc;
+		FLib3MFCustomXMLNode_AddIntegerAttributeFunc: TLib3MFCustomXMLNode_AddIntegerAttributeFunc;
+		FLib3MFCustomXMLNode_AddDoubleAttributeFunc: TLib3MFCustomXMLNode_AddDoubleAttributeFunc;
+		FLib3MFCustomXMLNode_AddBoolAttributeFunc: TLib3MFCustomXMLNode_AddBoolAttributeFunc;
+		FLib3MFCustomXMLNode_GetChildrenFunc: TLib3MFCustomXMLNode_GetChildrenFunc;
+		FLib3MFCustomXMLNode_CountChildrenByNameFunc: TLib3MFCustomXMLNode_CountChildrenByNameFunc;
+		FLib3MFCustomXMLNode_GetChildrenByNameFunc: TLib3MFCustomXMLNode_GetChildrenByNameFunc;
+		FLib3MFCustomXMLNode_HasChildFunc: TLib3MFCustomXMLNode_HasChildFunc;
+		FLib3MFCustomXMLNode_HasUniqueChildFunc: TLib3MFCustomXMLNode_HasUniqueChildFunc;
+		FLib3MFCustomXMLNode_FindChildFunc: TLib3MFCustomXMLNode_FindChildFunc;
+		FLib3MFCustomXMLNode_AddChildFunc: TLib3MFCustomXMLNode_AddChildFunc;
+		FLib3MFCustomXMLNode_RemoveChildFunc: TLib3MFCustomXMLNode_RemoveChildFunc;
+		FLib3MFCustomXMLNode_RemoveChildrenWithNameFunc: TLib3MFCustomXMLNode_RemoveChildrenWithNameFunc;
+		FLib3MFCustomXMLNode_RemoveFunc: TLib3MFCustomXMLNode_RemoveFunc;
+		FLib3MFCustomXMLNodes_GetNodeCountFunc: TLib3MFCustomXMLNodes_GetNodeCountFunc;
+		FLib3MFCustomXMLNodes_GetNodeFunc: TLib3MFCustomXMLNodes_GetNodeFunc;
+		FLib3MFCustomXMLNodes_CountNodesByNameFunc: TLib3MFCustomXMLNodes_CountNodesByNameFunc;
+		FLib3MFCustomXMLNodes_GetNodesByNameFunc: TLib3MFCustomXMLNodes_GetNodesByNameFunc;
+		FLib3MFCustomXMLNodes_HasNodeFunc: TLib3MFCustomXMLNodes_HasNodeFunc;
+		FLib3MFCustomXMLNodes_HasUniqueNodeFunc: TLib3MFCustomXMLNodes_HasUniqueNodeFunc;
+		FLib3MFCustomXMLNodes_FindNodeFunc: TLib3MFCustomXMLNodes_FindNodeFunc;
+		FLib3MFCustomDOMTree_GetNameSpaceFunc: TLib3MFCustomDOMTree_GetNameSpaceFunc;
+		FLib3MFCustomDOMTree_GetRootNodeFunc: TLib3MFCustomDOMTree_GetRootNodeFunc;
+		FLib3MFCustomDOMTree_SaveToStringFunc: TLib3MFCustomDOMTree_SaveToStringFunc;
 		FLib3MFSliceStackIterator_GetCurrentSliceStackFunc: TLib3MFSliceStackIterator_GetCurrentSliceStackFunc;
 		FLib3MFObjectIterator_GetCurrentObjectFunc: TLib3MFObjectIterator_GetCurrentObjectFunc;
 		FLib3MFMeshObjectIterator_GetCurrentMeshObjectFunc: TLib3MFMeshObjectIterator_GetCurrentMeshObjectFunc;
@@ -5190,6 +7027,78 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFSlice_GetPolygonIndicesFunc: TLib3MFSlice_GetPolygonIndicesFunc;
 		FLib3MFSlice_GetPolygonIndexCountFunc: TLib3MFSlice_GetPolygonIndexCountFunc;
 		FLib3MFSlice_GetZTopFunc: TLib3MFSlice_GetZTopFunc;
+		FLib3MFToolpathProfile_GetUUIDFunc: TLib3MFToolpathProfile_GetUUIDFunc;
+		FLib3MFToolpathProfile_GetNameFunc: TLib3MFToolpathProfile_GetNameFunc;
+		FLib3MFToolpathProfile_GetParameterCountFunc: TLib3MFToolpathProfile_GetParameterCountFunc;
+		FLib3MFToolpathProfile_GetParameterNameFunc: TLib3MFToolpathProfile_GetParameterNameFunc;
+		FLib3MFToolpathProfile_GetParameterNameSpaceFunc: TLib3MFToolpathProfile_GetParameterNameSpaceFunc;
+		FLib3MFToolpathProfile_HasParameterValueFunc: TLib3MFToolpathProfile_HasParameterValueFunc;
+		FLib3MFToolpathProfile_GetParameterValueFunc: TLib3MFToolpathProfile_GetParameterValueFunc;
+		FLib3MFToolpathProfile_GetParameterValueDefFunc: TLib3MFToolpathProfile_GetParameterValueDefFunc;
+		FLib3MFToolpathProfile_GetParameterDoubleValueFunc: TLib3MFToolpathProfile_GetParameterDoubleValueFunc;
+		FLib3MFToolpathProfile_GetParameterDoubleValueDefFunc: TLib3MFToolpathProfile_GetParameterDoubleValueDefFunc;
+		FLib3MFToolpathProfile_GetParameterIntegerValueFunc: TLib3MFToolpathProfile_GetParameterIntegerValueFunc;
+		FLib3MFToolpathProfile_GetParameterIntegerValueDefFunc: TLib3MFToolpathProfile_GetParameterIntegerValueDefFunc;
+		FLib3MFToolpathProfile_GetParameterBoolValueFunc: TLib3MFToolpathProfile_GetParameterBoolValueFunc;
+		FLib3MFToolpathProfile_GetParameterBoolValueDefFunc: TLib3MFToolpathProfile_GetParameterBoolValueDefFunc;
+		FLib3MFToolpathProfile_SetNameFunc: TLib3MFToolpathProfile_SetNameFunc;
+		FLib3MFToolpathProfile_SetParameterValueFunc: TLib3MFToolpathProfile_SetParameterValueFunc;
+		FLib3MFToolpathProfile_SetParameterDoubleValueFunc: TLib3MFToolpathProfile_SetParameterDoubleValueFunc;
+		FLib3MFToolpathProfile_SetParameterIntegerValueFunc: TLib3MFToolpathProfile_SetParameterIntegerValueFunc;
+		FLib3MFToolpathProfile_SetParameterBoolValueFunc: TLib3MFToolpathProfile_SetParameterBoolValueFunc;
+		FLib3MFToolpathLayerReader_GetLayerDataUUIDFunc: TLib3MFToolpathLayerReader_GetLayerDataUUIDFunc;
+		FLib3MFToolpathLayerReader_GetSegmentCountFunc: TLib3MFToolpathLayerReader_GetSegmentCountFunc;
+		FLib3MFToolpathLayerReader_GetSegmentInfoFunc: TLib3MFToolpathLayerReader_GetSegmentInfoFunc;
+		FLib3MFToolpathLayerReader_GetSegmentProfileFunc: TLib3MFToolpathLayerReader_GetSegmentProfileFunc;
+		FLib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc;
+		FLib3MFToolpathLayerReader_GetSegmentPartFunc: TLib3MFToolpathLayerReader_GetSegmentPartFunc;
+		FLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc;
+		FLib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc: TLib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc;
+		FLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc: TLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc;
+		FLib3MFToolpathLayerReader_GetSegmentPointDataFunc: TLib3MFToolpathLayerReader_GetSegmentPointDataFunc;
+		FLib3MFToolpathLayerReader_FindAttributeInfoByNameFunc: TLib3MFToolpathLayerReader_FindAttributeInfoByNameFunc;
+		FLib3MFToolpathLayerReader_FindAttributeIDByNameFunc: TLib3MFToolpathLayerReader_FindAttributeIDByNameFunc;
+		FLib3MFToolpathLayerReader_FindAttributeValueByNameFunc: TLib3MFToolpathLayerReader_FindAttributeValueByNameFunc;
+		FLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc: TLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc;
+		FLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc: TLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc;
+		FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc: TLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc;
+		FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc: TLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc;
+		FLib3MFToolpathLayerReader_GetCustomDataCountFunc: TLib3MFToolpathLayerReader_GetCustomDataCountFunc;
+		FLib3MFToolpathLayerReader_GetCustomDataFunc: TLib3MFToolpathLayerReader_GetCustomDataFunc;
+		FLib3MFToolpathLayerReader_GetCustomDataNameFunc: TLib3MFToolpathLayerReader_GetCustomDataNameFunc;
+		FLib3MFToolpathLayerData_GetLayerDataUUIDFunc: TLib3MFToolpathLayerData_GetLayerDataUUIDFunc;
+		FLib3MFToolpathLayerData_RegisterProfileFunc: TLib3MFToolpathLayerData_RegisterProfileFunc;
+		FLib3MFToolpathLayerData_RegisterBuildItemFunc: TLib3MFToolpathLayerData_RegisterBuildItemFunc;
+		FLib3MFToolpathLayerData_SetSegmentAttributeFunc: TLib3MFToolpathLayerData_SetSegmentAttributeFunc;
+		FLib3MFToolpathLayerData_ClearSegmentAttributesFunc: TLib3MFToolpathLayerData_ClearSegmentAttributesFunc;
+		FLib3MFToolpathLayerData_WriteHatchDataFunc: TLib3MFToolpathLayerData_WriteHatchDataFunc;
+		FLib3MFToolpathLayerData_WriteLoopFunc: TLib3MFToolpathLayerData_WriteLoopFunc;
+		FLib3MFToolpathLayerData_WritePolylineFunc: TLib3MFToolpathLayerData_WritePolylineFunc;
+		FLib3MFToolpathLayerData_AddCustomDataFunc: TLib3MFToolpathLayerData_AddCustomDataFunc;
+		FLib3MFToolpathLayerData_FinishFunc: TLib3MFToolpathLayerData_FinishFunc;
+		FLib3MFToolpath_GetUnitsFunc: TLib3MFToolpath_GetUnitsFunc;
+		FLib3MFToolpath_GetLayerCountFunc: TLib3MFToolpath_GetLayerCountFunc;
+		FLib3MFToolpath_GetProfileCountFunc: TLib3MFToolpath_GetProfileCountFunc;
+		FLib3MFToolpath_AddLayerFunc: TLib3MFToolpath_AddLayerFunc;
+		FLib3MFToolpath_GetLayerAttachmentFunc: TLib3MFToolpath_GetLayerAttachmentFunc;
+		FLib3MFToolpath_ReadLayerDataFunc: TLib3MFToolpath_ReadLayerDataFunc;
+		FLib3MFToolpath_GetLayerPathFunc: TLib3MFToolpath_GetLayerPathFunc;
+		FLib3MFToolpath_GetLayerZMaxFunc: TLib3MFToolpath_GetLayerZMaxFunc;
+		FLib3MFToolpath_GetLayerZFunc: TLib3MFToolpath_GetLayerZFunc;
+		FLib3MFToolpath_AddProfileFunc: TLib3MFToolpath_AddProfileFunc;
+		FLib3MFToolpath_GetProfileFunc: TLib3MFToolpath_GetProfileFunc;
+		FLib3MFToolpath_GetProfileUUIDFunc: TLib3MFToolpath_GetProfileUUIDFunc;
+		FLib3MFToolpath_GetCustomDataCountFunc: TLib3MFToolpath_GetCustomDataCountFunc;
+		FLib3MFToolpath_GetCustomDataFunc: TLib3MFToolpath_GetCustomDataFunc;
+		FLib3MFToolpath_GetCustomDataNameFunc: TLib3MFToolpath_GetCustomDataNameFunc;
+		FLib3MFToolpath_HasUniqueCustomDataFunc: TLib3MFToolpath_HasUniqueCustomDataFunc;
+		FLib3MFToolpath_FindUniqueCustomDataFunc: TLib3MFToolpath_FindUniqueCustomDataFunc;
+		FLib3MFToolpath_AddCustomDataFunc: TLib3MFToolpath_AddCustomDataFunc;
+		FLib3MFToolpath_ClearCustomDataFunc: TLib3MFToolpath_ClearCustomDataFunc;
+		FLib3MFToolpath_DeleteCustomDataFunc: TLib3MFToolpath_DeleteCustomDataFunc;
+		FLib3MFToolpath_RegisterCustomIntegerAttributeFunc: TLib3MFToolpath_RegisterCustomIntegerAttributeFunc;
+		FLib3MFToolpath_RegisterCustomDoubleAttributeFunc: TLib3MFToolpath_RegisterCustomDoubleAttributeFunc;
+		FLib3MFToolpathIterator_GetCurrentToolpathFunc: TLib3MFToolpathIterator_GetCurrentToolpathFunc;
 		FLib3MFSliceStack_GetBottomZFunc: TLib3MFSliceStack_GetBottomZFunc;
 		FLib3MFSliceStack_GetSliceCountFunc: TLib3MFSliceStack_GetSliceCountFunc;
 		FLib3MFSliceStack_GetSliceFunc: TLib3MFSliceStack_GetSliceFunc;
@@ -5273,6 +7182,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_GetTexture2DGroupsFunc: TLib3MFModel_GetTexture2DGroupsFunc;
 		FLib3MFModel_GetCompositeMaterialsFunc: TLib3MFModel_GetCompositeMaterialsFunc;
 		FLib3MFModel_GetMultiPropertyGroupsFunc: TLib3MFModel_GetMultiPropertyGroupsFunc;
+		FLib3MFModel_GetToolpathsFunc: TLib3MFModel_GetToolpathsFunc;
 		FLib3MFModel_GetSliceStacksFunc: TLib3MFModel_GetSliceStacksFunc;
 		FLib3MFModel_MergeToModelFunc: TLib3MFModel_MergeToModelFunc;
 		FLib3MFModel_AddMeshObjectFunc: TLib3MFModel_AddMeshObjectFunc;
@@ -5286,6 +7196,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_AddMultiPropertyGroupFunc: TLib3MFModel_AddMultiPropertyGroupFunc;
 		FLib3MFModel_AddBuildItemFunc: TLib3MFModel_AddBuildItemFunc;
 		FLib3MFModel_RemoveBuildItemFunc: TLib3MFModel_RemoveBuildItemFunc;
+		FLib3MFModel_AddToolpathFunc: TLib3MFModel_AddToolpathFunc;
 		FLib3MFModel_GetMetaDataGroupFunc: TLib3MFModel_GetMetaDataGroupFunc;
 		FLib3MFModel_AddAttachmentFunc: TLib3MFModel_AddAttachmentFunc;
 		FLib3MFModel_RemoveAttachmentFunc: TLib3MFModel_RemoveAttachmentFunc;
@@ -5300,6 +7211,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_RemoveCustomContentTypeFunc: TLib3MFModel_RemoveCustomContentTypeFunc;
 		FLib3MFModel_SetRandomNumberCallbackFunc: TLib3MFModel_SetRandomNumberCallbackFunc;
 		FLib3MFModel_GetKeyStoreFunc: TLib3MFModel_GetKeyStoreFunc;
+		FLib3MFModel_CreatePersistentSourceFromFileFunc: TLib3MFModel_CreatePersistentSourceFromFileFunc;
+		FLib3MFModel_CreatePersistentSourceFromBufferFunc: TLib3MFModel_CreatePersistentSourceFromBufferFunc;
+		FLib3MFModel_CreatePersistentSourceFromCallbackFunc: TLib3MFModel_CreatePersistentSourceFromCallbackFunc;
 		FLib3MFGetLibraryVersionFunc: TLib3MFGetLibraryVersionFunc;
 		FLib3MFGetPrereleaseInformationFunc: TLib3MFGetPrereleaseInformationFunc;
 		FLib3MFGetBuildInformationFunc: TLib3MFGetBuildInformationFunc;
@@ -5330,6 +7244,13 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 	protected
 		property Lib3MFBase_ClassTypeIdFunc: TLib3MFBase_ClassTypeIdFunc read FLib3MFBase_ClassTypeIdFunc;
+		property Lib3MFBinaryStream_GetBinaryPathFunc: TLib3MFBinaryStream_GetBinaryPathFunc read FLib3MFBinaryStream_GetBinaryPathFunc;
+		property Lib3MFBinaryStream_GetIndexPathFunc: TLib3MFBinaryStream_GetIndexPathFunc read FLib3MFBinaryStream_GetIndexPathFunc;
+		property Lib3MFBinaryStream_GetUUIDFunc: TLib3MFBinaryStream_GetUUIDFunc read FLib3MFBinaryStream_GetUUIDFunc;
+		property Lib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc: TLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc read FLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc;
+		property Lib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc: TLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc read FLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc;
+		property Lib3MFBinaryStream_EnableLZMAFunc: TLib3MFBinaryStream_EnableLZMAFunc read FLib3MFBinaryStream_EnableLZMAFunc;
+		property Lib3MFBinaryStream_DisableLZMAFunc: TLib3MFBinaryStream_DisableLZMAFunc read FLib3MFBinaryStream_DisableLZMAFunc;
 		property Lib3MFWriter_WriteToFileFunc: TLib3MFWriter_WriteToFileFunc read FLib3MFWriter_WriteToFileFunc;
 		property Lib3MFWriter_GetStreamSizeFunc: TLib3MFWriter_GetStreamSizeFunc read FLib3MFWriter_GetStreamSizeFunc;
 		property Lib3MFWriter_WriteToBufferFunc: TLib3MFWriter_WriteToBufferFunc read FLib3MFWriter_WriteToBufferFunc;
@@ -5343,6 +7264,13 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFWriter_GetWarningCountFunc: TLib3MFWriter_GetWarningCountFunc read FLib3MFWriter_GetWarningCountFunc;
 		property Lib3MFWriter_AddKeyWrappingCallbackFunc: TLib3MFWriter_AddKeyWrappingCallbackFunc read FLib3MFWriter_AddKeyWrappingCallbackFunc;
 		property Lib3MFWriter_SetContentEncryptionCallbackFunc: TLib3MFWriter_SetContentEncryptionCallbackFunc read FLib3MFWriter_SetContentEncryptionCallbackFunc;
+		property Lib3MFWriter_CreateBinaryStreamFunc: TLib3MFWriter_CreateBinaryStreamFunc read FLib3MFWriter_CreateBinaryStreamFunc;
+		property Lib3MFWriter_AssignBinaryStreamFunc: TLib3MFWriter_AssignBinaryStreamFunc read FLib3MFWriter_AssignBinaryStreamFunc;
+		property Lib3MFWriter_RegisterCustomNamespaceFunc: TLib3MFWriter_RegisterCustomNamespaceFunc read FLib3MFWriter_RegisterCustomNamespaceFunc;
+		property Lib3MFPersistentReaderSource_GetSourceTypeFunc: TLib3MFPersistentReaderSource_GetSourceTypeFunc read FLib3MFPersistentReaderSource_GetSourceTypeFunc;
+		property Lib3MFPersistentReaderSource_InvalidateSourceDataFunc: TLib3MFPersistentReaderSource_InvalidateSourceDataFunc read FLib3MFPersistentReaderSource_InvalidateSourceDataFunc;
+		property Lib3MFPersistentReaderSource_SourceDataIsValidFunc: TLib3MFPersistentReaderSource_SourceDataIsValidFunc read FLib3MFPersistentReaderSource_SourceDataIsValidFunc;
+		property Lib3MFReader_ReadFromPersistentSourceFunc: TLib3MFReader_ReadFromPersistentSourceFunc read FLib3MFReader_ReadFromPersistentSourceFunc;
 		property Lib3MFReader_ReadFromFileFunc: TLib3MFReader_ReadFromFileFunc read FLib3MFReader_ReadFromFileFunc;
 		property Lib3MFReader_ReadFromBufferFunc: TLib3MFReader_ReadFromBufferFunc read FLib3MFReader_ReadFromBufferFunc;
 		property Lib3MFReader_ReadFromCallbackFunc: TLib3MFReader_ReadFromCallbackFunc read FLib3MFReader_ReadFromCallbackFunc;
@@ -5367,6 +7295,51 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFResourceIterator_GetCurrentFunc: TLib3MFResourceIterator_GetCurrentFunc read FLib3MFResourceIterator_GetCurrentFunc;
 		property Lib3MFResourceIterator_CloneFunc: TLib3MFResourceIterator_CloneFunc read FLib3MFResourceIterator_CloneFunc;
 		property Lib3MFResourceIterator_CountFunc: TLib3MFResourceIterator_CountFunc read FLib3MFResourceIterator_CountFunc;
+		property Lib3MFCustomXMLAttribute_GetNameFunc: TLib3MFCustomXMLAttribute_GetNameFunc read FLib3MFCustomXMLAttribute_GetNameFunc;
+		property Lib3MFCustomXMLAttribute_GetValueFunc: TLib3MFCustomXMLAttribute_GetValueFunc read FLib3MFCustomXMLAttribute_GetValueFunc;
+		property Lib3MFCustomXMLAttribute_IsValidIntegerFunc: TLib3MFCustomXMLAttribute_IsValidIntegerFunc read FLib3MFCustomXMLAttribute_IsValidIntegerFunc;
+		property Lib3MFCustomXMLAttribute_GetIntegerValueFunc: TLib3MFCustomXMLAttribute_GetIntegerValueFunc read FLib3MFCustomXMLAttribute_GetIntegerValueFunc;
+		property Lib3MFCustomXMLAttribute_IsValidDoubleFunc: TLib3MFCustomXMLAttribute_IsValidDoubleFunc read FLib3MFCustomXMLAttribute_IsValidDoubleFunc;
+		property Lib3MFCustomXMLAttribute_GetDoubleValueFunc: TLib3MFCustomXMLAttribute_GetDoubleValueFunc read FLib3MFCustomXMLAttribute_GetDoubleValueFunc;
+		property Lib3MFCustomXMLAttribute_IsValidBoolFunc: TLib3MFCustomXMLAttribute_IsValidBoolFunc read FLib3MFCustomXMLAttribute_IsValidBoolFunc;
+		property Lib3MFCustomXMLAttribute_GetBoolValueFunc: TLib3MFCustomXMLAttribute_GetBoolValueFunc read FLib3MFCustomXMLAttribute_GetBoolValueFunc;
+		property Lib3MFCustomXMLAttribute_SetValueFunc: TLib3MFCustomXMLAttribute_SetValueFunc read FLib3MFCustomXMLAttribute_SetValueFunc;
+		property Lib3MFCustomXMLAttribute_SetIntegerValueFunc: TLib3MFCustomXMLAttribute_SetIntegerValueFunc read FLib3MFCustomXMLAttribute_SetIntegerValueFunc;
+		property Lib3MFCustomXMLAttribute_SetDoubleValueFunc: TLib3MFCustomXMLAttribute_SetDoubleValueFunc read FLib3MFCustomXMLAttribute_SetDoubleValueFunc;
+		property Lib3MFCustomXMLAttribute_SetBoolValueFunc: TLib3MFCustomXMLAttribute_SetBoolValueFunc read FLib3MFCustomXMLAttribute_SetBoolValueFunc;
+		property Lib3MFCustomXMLAttribute_RemoveFunc: TLib3MFCustomXMLAttribute_RemoveFunc read FLib3MFCustomXMLAttribute_RemoveFunc;
+		property Lib3MFCustomXMLNode_GetNameFunc: TLib3MFCustomXMLNode_GetNameFunc read FLib3MFCustomXMLNode_GetNameFunc;
+		property Lib3MFCustomXMLNode_GetNameSpaceFunc: TLib3MFCustomXMLNode_GetNameSpaceFunc read FLib3MFCustomXMLNode_GetNameSpaceFunc;
+		property Lib3MFCustomXMLNode_GetAttributeCountFunc: TLib3MFCustomXMLNode_GetAttributeCountFunc read FLib3MFCustomXMLNode_GetAttributeCountFunc;
+		property Lib3MFCustomXMLNode_GetAttributeFunc: TLib3MFCustomXMLNode_GetAttributeFunc read FLib3MFCustomXMLNode_GetAttributeFunc;
+		property Lib3MFCustomXMLNode_HasAttributeFunc: TLib3MFCustomXMLNode_HasAttributeFunc read FLib3MFCustomXMLNode_HasAttributeFunc;
+		property Lib3MFCustomXMLNode_FindAttributeFunc: TLib3MFCustomXMLNode_FindAttributeFunc read FLib3MFCustomXMLNode_FindAttributeFunc;
+		property Lib3MFCustomXMLNode_RemoveAttributeFunc: TLib3MFCustomXMLNode_RemoveAttributeFunc read FLib3MFCustomXMLNode_RemoveAttributeFunc;
+		property Lib3MFCustomXMLNode_RemoveAttributeByIndexFunc: TLib3MFCustomXMLNode_RemoveAttributeByIndexFunc read FLib3MFCustomXMLNode_RemoveAttributeByIndexFunc;
+		property Lib3MFCustomXMLNode_AddAttributeFunc: TLib3MFCustomXMLNode_AddAttributeFunc read FLib3MFCustomXMLNode_AddAttributeFunc;
+		property Lib3MFCustomXMLNode_AddIntegerAttributeFunc: TLib3MFCustomXMLNode_AddIntegerAttributeFunc read FLib3MFCustomXMLNode_AddIntegerAttributeFunc;
+		property Lib3MFCustomXMLNode_AddDoubleAttributeFunc: TLib3MFCustomXMLNode_AddDoubleAttributeFunc read FLib3MFCustomXMLNode_AddDoubleAttributeFunc;
+		property Lib3MFCustomXMLNode_AddBoolAttributeFunc: TLib3MFCustomXMLNode_AddBoolAttributeFunc read FLib3MFCustomXMLNode_AddBoolAttributeFunc;
+		property Lib3MFCustomXMLNode_GetChildrenFunc: TLib3MFCustomXMLNode_GetChildrenFunc read FLib3MFCustomXMLNode_GetChildrenFunc;
+		property Lib3MFCustomXMLNode_CountChildrenByNameFunc: TLib3MFCustomXMLNode_CountChildrenByNameFunc read FLib3MFCustomXMLNode_CountChildrenByNameFunc;
+		property Lib3MFCustomXMLNode_GetChildrenByNameFunc: TLib3MFCustomXMLNode_GetChildrenByNameFunc read FLib3MFCustomXMLNode_GetChildrenByNameFunc;
+		property Lib3MFCustomXMLNode_HasChildFunc: TLib3MFCustomXMLNode_HasChildFunc read FLib3MFCustomXMLNode_HasChildFunc;
+		property Lib3MFCustomXMLNode_HasUniqueChildFunc: TLib3MFCustomXMLNode_HasUniqueChildFunc read FLib3MFCustomXMLNode_HasUniqueChildFunc;
+		property Lib3MFCustomXMLNode_FindChildFunc: TLib3MFCustomXMLNode_FindChildFunc read FLib3MFCustomXMLNode_FindChildFunc;
+		property Lib3MFCustomXMLNode_AddChildFunc: TLib3MFCustomXMLNode_AddChildFunc read FLib3MFCustomXMLNode_AddChildFunc;
+		property Lib3MFCustomXMLNode_RemoveChildFunc: TLib3MFCustomXMLNode_RemoveChildFunc read FLib3MFCustomXMLNode_RemoveChildFunc;
+		property Lib3MFCustomXMLNode_RemoveChildrenWithNameFunc: TLib3MFCustomXMLNode_RemoveChildrenWithNameFunc read FLib3MFCustomXMLNode_RemoveChildrenWithNameFunc;
+		property Lib3MFCustomXMLNode_RemoveFunc: TLib3MFCustomXMLNode_RemoveFunc read FLib3MFCustomXMLNode_RemoveFunc;
+		property Lib3MFCustomXMLNodes_GetNodeCountFunc: TLib3MFCustomXMLNodes_GetNodeCountFunc read FLib3MFCustomXMLNodes_GetNodeCountFunc;
+		property Lib3MFCustomXMLNodes_GetNodeFunc: TLib3MFCustomXMLNodes_GetNodeFunc read FLib3MFCustomXMLNodes_GetNodeFunc;
+		property Lib3MFCustomXMLNodes_CountNodesByNameFunc: TLib3MFCustomXMLNodes_CountNodesByNameFunc read FLib3MFCustomXMLNodes_CountNodesByNameFunc;
+		property Lib3MFCustomXMLNodes_GetNodesByNameFunc: TLib3MFCustomXMLNodes_GetNodesByNameFunc read FLib3MFCustomXMLNodes_GetNodesByNameFunc;
+		property Lib3MFCustomXMLNodes_HasNodeFunc: TLib3MFCustomXMLNodes_HasNodeFunc read FLib3MFCustomXMLNodes_HasNodeFunc;
+		property Lib3MFCustomXMLNodes_HasUniqueNodeFunc: TLib3MFCustomXMLNodes_HasUniqueNodeFunc read FLib3MFCustomXMLNodes_HasUniqueNodeFunc;
+		property Lib3MFCustomXMLNodes_FindNodeFunc: TLib3MFCustomXMLNodes_FindNodeFunc read FLib3MFCustomXMLNodes_FindNodeFunc;
+		property Lib3MFCustomDOMTree_GetNameSpaceFunc: TLib3MFCustomDOMTree_GetNameSpaceFunc read FLib3MFCustomDOMTree_GetNameSpaceFunc;
+		property Lib3MFCustomDOMTree_GetRootNodeFunc: TLib3MFCustomDOMTree_GetRootNodeFunc read FLib3MFCustomDOMTree_GetRootNodeFunc;
+		property Lib3MFCustomDOMTree_SaveToStringFunc: TLib3MFCustomDOMTree_SaveToStringFunc read FLib3MFCustomDOMTree_SaveToStringFunc;
 		property Lib3MFSliceStackIterator_GetCurrentSliceStackFunc: TLib3MFSliceStackIterator_GetCurrentSliceStackFunc read FLib3MFSliceStackIterator_GetCurrentSliceStackFunc;
 		property Lib3MFObjectIterator_GetCurrentObjectFunc: TLib3MFObjectIterator_GetCurrentObjectFunc read FLib3MFObjectIterator_GetCurrentObjectFunc;
 		property Lib3MFMeshObjectIterator_GetCurrentMeshObjectFunc: TLib3MFMeshObjectIterator_GetCurrentMeshObjectFunc read FLib3MFMeshObjectIterator_GetCurrentMeshObjectFunc;
@@ -5559,6 +7532,78 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFSlice_GetPolygonIndicesFunc: TLib3MFSlice_GetPolygonIndicesFunc read FLib3MFSlice_GetPolygonIndicesFunc;
 		property Lib3MFSlice_GetPolygonIndexCountFunc: TLib3MFSlice_GetPolygonIndexCountFunc read FLib3MFSlice_GetPolygonIndexCountFunc;
 		property Lib3MFSlice_GetZTopFunc: TLib3MFSlice_GetZTopFunc read FLib3MFSlice_GetZTopFunc;
+		property Lib3MFToolpathProfile_GetUUIDFunc: TLib3MFToolpathProfile_GetUUIDFunc read FLib3MFToolpathProfile_GetUUIDFunc;
+		property Lib3MFToolpathProfile_GetNameFunc: TLib3MFToolpathProfile_GetNameFunc read FLib3MFToolpathProfile_GetNameFunc;
+		property Lib3MFToolpathProfile_GetParameterCountFunc: TLib3MFToolpathProfile_GetParameterCountFunc read FLib3MFToolpathProfile_GetParameterCountFunc;
+		property Lib3MFToolpathProfile_GetParameterNameFunc: TLib3MFToolpathProfile_GetParameterNameFunc read FLib3MFToolpathProfile_GetParameterNameFunc;
+		property Lib3MFToolpathProfile_GetParameterNameSpaceFunc: TLib3MFToolpathProfile_GetParameterNameSpaceFunc read FLib3MFToolpathProfile_GetParameterNameSpaceFunc;
+		property Lib3MFToolpathProfile_HasParameterValueFunc: TLib3MFToolpathProfile_HasParameterValueFunc read FLib3MFToolpathProfile_HasParameterValueFunc;
+		property Lib3MFToolpathProfile_GetParameterValueFunc: TLib3MFToolpathProfile_GetParameterValueFunc read FLib3MFToolpathProfile_GetParameterValueFunc;
+		property Lib3MFToolpathProfile_GetParameterValueDefFunc: TLib3MFToolpathProfile_GetParameterValueDefFunc read FLib3MFToolpathProfile_GetParameterValueDefFunc;
+		property Lib3MFToolpathProfile_GetParameterDoubleValueFunc: TLib3MFToolpathProfile_GetParameterDoubleValueFunc read FLib3MFToolpathProfile_GetParameterDoubleValueFunc;
+		property Lib3MFToolpathProfile_GetParameterDoubleValueDefFunc: TLib3MFToolpathProfile_GetParameterDoubleValueDefFunc read FLib3MFToolpathProfile_GetParameterDoubleValueDefFunc;
+		property Lib3MFToolpathProfile_GetParameterIntegerValueFunc: TLib3MFToolpathProfile_GetParameterIntegerValueFunc read FLib3MFToolpathProfile_GetParameterIntegerValueFunc;
+		property Lib3MFToolpathProfile_GetParameterIntegerValueDefFunc: TLib3MFToolpathProfile_GetParameterIntegerValueDefFunc read FLib3MFToolpathProfile_GetParameterIntegerValueDefFunc;
+		property Lib3MFToolpathProfile_GetParameterBoolValueFunc: TLib3MFToolpathProfile_GetParameterBoolValueFunc read FLib3MFToolpathProfile_GetParameterBoolValueFunc;
+		property Lib3MFToolpathProfile_GetParameterBoolValueDefFunc: TLib3MFToolpathProfile_GetParameterBoolValueDefFunc read FLib3MFToolpathProfile_GetParameterBoolValueDefFunc;
+		property Lib3MFToolpathProfile_SetNameFunc: TLib3MFToolpathProfile_SetNameFunc read FLib3MFToolpathProfile_SetNameFunc;
+		property Lib3MFToolpathProfile_SetParameterValueFunc: TLib3MFToolpathProfile_SetParameterValueFunc read FLib3MFToolpathProfile_SetParameterValueFunc;
+		property Lib3MFToolpathProfile_SetParameterDoubleValueFunc: TLib3MFToolpathProfile_SetParameterDoubleValueFunc read FLib3MFToolpathProfile_SetParameterDoubleValueFunc;
+		property Lib3MFToolpathProfile_SetParameterIntegerValueFunc: TLib3MFToolpathProfile_SetParameterIntegerValueFunc read FLib3MFToolpathProfile_SetParameterIntegerValueFunc;
+		property Lib3MFToolpathProfile_SetParameterBoolValueFunc: TLib3MFToolpathProfile_SetParameterBoolValueFunc read FLib3MFToolpathProfile_SetParameterBoolValueFunc;
+		property Lib3MFToolpathLayerReader_GetLayerDataUUIDFunc: TLib3MFToolpathLayerReader_GetLayerDataUUIDFunc read FLib3MFToolpathLayerReader_GetLayerDataUUIDFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentCountFunc: TLib3MFToolpathLayerReader_GetSegmentCountFunc read FLib3MFToolpathLayerReader_GetSegmentCountFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentInfoFunc: TLib3MFToolpathLayerReader_GetSegmentInfoFunc read FLib3MFToolpathLayerReader_GetSegmentInfoFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentProfileFunc: TLib3MFToolpathLayerReader_GetSegmentProfileFunc read FLib3MFToolpathLayerReader_GetSegmentProfileFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc read FLib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentPartFunc: TLib3MFToolpathLayerReader_GetSegmentPartFunc read FLib3MFToolpathLayerReader_GetSegmentPartFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentPartUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc read FLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc: TLib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc read FLib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc;
+		property Lib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc: TLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc read FLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentPointDataFunc: TLib3MFToolpathLayerReader_GetSegmentPointDataFunc read FLib3MFToolpathLayerReader_GetSegmentPointDataFunc;
+		property Lib3MFToolpathLayerReader_FindAttributeInfoByNameFunc: TLib3MFToolpathLayerReader_FindAttributeInfoByNameFunc read FLib3MFToolpathLayerReader_FindAttributeInfoByNameFunc;
+		property Lib3MFToolpathLayerReader_FindAttributeIDByNameFunc: TLib3MFToolpathLayerReader_FindAttributeIDByNameFunc read FLib3MFToolpathLayerReader_FindAttributeIDByNameFunc;
+		property Lib3MFToolpathLayerReader_FindAttributeValueByNameFunc: TLib3MFToolpathLayerReader_FindAttributeValueByNameFunc read FLib3MFToolpathLayerReader_FindAttributeValueByNameFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc: TLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc read FLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc: TLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc read FLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc: TLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc read FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc: TLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc read FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc;
+		property Lib3MFToolpathLayerReader_GetCustomDataCountFunc: TLib3MFToolpathLayerReader_GetCustomDataCountFunc read FLib3MFToolpathLayerReader_GetCustomDataCountFunc;
+		property Lib3MFToolpathLayerReader_GetCustomDataFunc: TLib3MFToolpathLayerReader_GetCustomDataFunc read FLib3MFToolpathLayerReader_GetCustomDataFunc;
+		property Lib3MFToolpathLayerReader_GetCustomDataNameFunc: TLib3MFToolpathLayerReader_GetCustomDataNameFunc read FLib3MFToolpathLayerReader_GetCustomDataNameFunc;
+		property Lib3MFToolpathLayerData_GetLayerDataUUIDFunc: TLib3MFToolpathLayerData_GetLayerDataUUIDFunc read FLib3MFToolpathLayerData_GetLayerDataUUIDFunc;
+		property Lib3MFToolpathLayerData_RegisterProfileFunc: TLib3MFToolpathLayerData_RegisterProfileFunc read FLib3MFToolpathLayerData_RegisterProfileFunc;
+		property Lib3MFToolpathLayerData_RegisterBuildItemFunc: TLib3MFToolpathLayerData_RegisterBuildItemFunc read FLib3MFToolpathLayerData_RegisterBuildItemFunc;
+		property Lib3MFToolpathLayerData_SetSegmentAttributeFunc: TLib3MFToolpathLayerData_SetSegmentAttributeFunc read FLib3MFToolpathLayerData_SetSegmentAttributeFunc;
+		property Lib3MFToolpathLayerData_ClearSegmentAttributesFunc: TLib3MFToolpathLayerData_ClearSegmentAttributesFunc read FLib3MFToolpathLayerData_ClearSegmentAttributesFunc;
+		property Lib3MFToolpathLayerData_WriteHatchDataFunc: TLib3MFToolpathLayerData_WriteHatchDataFunc read FLib3MFToolpathLayerData_WriteHatchDataFunc;
+		property Lib3MFToolpathLayerData_WriteLoopFunc: TLib3MFToolpathLayerData_WriteLoopFunc read FLib3MFToolpathLayerData_WriteLoopFunc;
+		property Lib3MFToolpathLayerData_WritePolylineFunc: TLib3MFToolpathLayerData_WritePolylineFunc read FLib3MFToolpathLayerData_WritePolylineFunc;
+		property Lib3MFToolpathLayerData_AddCustomDataFunc: TLib3MFToolpathLayerData_AddCustomDataFunc read FLib3MFToolpathLayerData_AddCustomDataFunc;
+		property Lib3MFToolpathLayerData_FinishFunc: TLib3MFToolpathLayerData_FinishFunc read FLib3MFToolpathLayerData_FinishFunc;
+		property Lib3MFToolpath_GetUnitsFunc: TLib3MFToolpath_GetUnitsFunc read FLib3MFToolpath_GetUnitsFunc;
+		property Lib3MFToolpath_GetLayerCountFunc: TLib3MFToolpath_GetLayerCountFunc read FLib3MFToolpath_GetLayerCountFunc;
+		property Lib3MFToolpath_GetProfileCountFunc: TLib3MFToolpath_GetProfileCountFunc read FLib3MFToolpath_GetProfileCountFunc;
+		property Lib3MFToolpath_AddLayerFunc: TLib3MFToolpath_AddLayerFunc read FLib3MFToolpath_AddLayerFunc;
+		property Lib3MFToolpath_GetLayerAttachmentFunc: TLib3MFToolpath_GetLayerAttachmentFunc read FLib3MFToolpath_GetLayerAttachmentFunc;
+		property Lib3MFToolpath_ReadLayerDataFunc: TLib3MFToolpath_ReadLayerDataFunc read FLib3MFToolpath_ReadLayerDataFunc;
+		property Lib3MFToolpath_GetLayerPathFunc: TLib3MFToolpath_GetLayerPathFunc read FLib3MFToolpath_GetLayerPathFunc;
+		property Lib3MFToolpath_GetLayerZMaxFunc: TLib3MFToolpath_GetLayerZMaxFunc read FLib3MFToolpath_GetLayerZMaxFunc;
+		property Lib3MFToolpath_GetLayerZFunc: TLib3MFToolpath_GetLayerZFunc read FLib3MFToolpath_GetLayerZFunc;
+		property Lib3MFToolpath_AddProfileFunc: TLib3MFToolpath_AddProfileFunc read FLib3MFToolpath_AddProfileFunc;
+		property Lib3MFToolpath_GetProfileFunc: TLib3MFToolpath_GetProfileFunc read FLib3MFToolpath_GetProfileFunc;
+		property Lib3MFToolpath_GetProfileUUIDFunc: TLib3MFToolpath_GetProfileUUIDFunc read FLib3MFToolpath_GetProfileUUIDFunc;
+		property Lib3MFToolpath_GetCustomDataCountFunc: TLib3MFToolpath_GetCustomDataCountFunc read FLib3MFToolpath_GetCustomDataCountFunc;
+		property Lib3MFToolpath_GetCustomDataFunc: TLib3MFToolpath_GetCustomDataFunc read FLib3MFToolpath_GetCustomDataFunc;
+		property Lib3MFToolpath_GetCustomDataNameFunc: TLib3MFToolpath_GetCustomDataNameFunc read FLib3MFToolpath_GetCustomDataNameFunc;
+		property Lib3MFToolpath_HasUniqueCustomDataFunc: TLib3MFToolpath_HasUniqueCustomDataFunc read FLib3MFToolpath_HasUniqueCustomDataFunc;
+		property Lib3MFToolpath_FindUniqueCustomDataFunc: TLib3MFToolpath_FindUniqueCustomDataFunc read FLib3MFToolpath_FindUniqueCustomDataFunc;
+		property Lib3MFToolpath_AddCustomDataFunc: TLib3MFToolpath_AddCustomDataFunc read FLib3MFToolpath_AddCustomDataFunc;
+		property Lib3MFToolpath_ClearCustomDataFunc: TLib3MFToolpath_ClearCustomDataFunc read FLib3MFToolpath_ClearCustomDataFunc;
+		property Lib3MFToolpath_DeleteCustomDataFunc: TLib3MFToolpath_DeleteCustomDataFunc read FLib3MFToolpath_DeleteCustomDataFunc;
+		property Lib3MFToolpath_RegisterCustomIntegerAttributeFunc: TLib3MFToolpath_RegisterCustomIntegerAttributeFunc read FLib3MFToolpath_RegisterCustomIntegerAttributeFunc;
+		property Lib3MFToolpath_RegisterCustomDoubleAttributeFunc: TLib3MFToolpath_RegisterCustomDoubleAttributeFunc read FLib3MFToolpath_RegisterCustomDoubleAttributeFunc;
+		property Lib3MFToolpathIterator_GetCurrentToolpathFunc: TLib3MFToolpathIterator_GetCurrentToolpathFunc read FLib3MFToolpathIterator_GetCurrentToolpathFunc;
 		property Lib3MFSliceStack_GetBottomZFunc: TLib3MFSliceStack_GetBottomZFunc read FLib3MFSliceStack_GetBottomZFunc;
 		property Lib3MFSliceStack_GetSliceCountFunc: TLib3MFSliceStack_GetSliceCountFunc read FLib3MFSliceStack_GetSliceCountFunc;
 		property Lib3MFSliceStack_GetSliceFunc: TLib3MFSliceStack_GetSliceFunc read FLib3MFSliceStack_GetSliceFunc;
@@ -5642,6 +7687,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_GetTexture2DGroupsFunc: TLib3MFModel_GetTexture2DGroupsFunc read FLib3MFModel_GetTexture2DGroupsFunc;
 		property Lib3MFModel_GetCompositeMaterialsFunc: TLib3MFModel_GetCompositeMaterialsFunc read FLib3MFModel_GetCompositeMaterialsFunc;
 		property Lib3MFModel_GetMultiPropertyGroupsFunc: TLib3MFModel_GetMultiPropertyGroupsFunc read FLib3MFModel_GetMultiPropertyGroupsFunc;
+		property Lib3MFModel_GetToolpathsFunc: TLib3MFModel_GetToolpathsFunc read FLib3MFModel_GetToolpathsFunc;
 		property Lib3MFModel_GetSliceStacksFunc: TLib3MFModel_GetSliceStacksFunc read FLib3MFModel_GetSliceStacksFunc;
 		property Lib3MFModel_MergeToModelFunc: TLib3MFModel_MergeToModelFunc read FLib3MFModel_MergeToModelFunc;
 		property Lib3MFModel_AddMeshObjectFunc: TLib3MFModel_AddMeshObjectFunc read FLib3MFModel_AddMeshObjectFunc;
@@ -5655,6 +7701,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_AddMultiPropertyGroupFunc: TLib3MFModel_AddMultiPropertyGroupFunc read FLib3MFModel_AddMultiPropertyGroupFunc;
 		property Lib3MFModel_AddBuildItemFunc: TLib3MFModel_AddBuildItemFunc read FLib3MFModel_AddBuildItemFunc;
 		property Lib3MFModel_RemoveBuildItemFunc: TLib3MFModel_RemoveBuildItemFunc read FLib3MFModel_RemoveBuildItemFunc;
+		property Lib3MFModel_AddToolpathFunc: TLib3MFModel_AddToolpathFunc read FLib3MFModel_AddToolpathFunc;
 		property Lib3MFModel_GetMetaDataGroupFunc: TLib3MFModel_GetMetaDataGroupFunc read FLib3MFModel_GetMetaDataGroupFunc;
 		property Lib3MFModel_AddAttachmentFunc: TLib3MFModel_AddAttachmentFunc read FLib3MFModel_AddAttachmentFunc;
 		property Lib3MFModel_RemoveAttachmentFunc: TLib3MFModel_RemoveAttachmentFunc read FLib3MFModel_RemoveAttachmentFunc;
@@ -5669,6 +7716,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_RemoveCustomContentTypeFunc: TLib3MFModel_RemoveCustomContentTypeFunc read FLib3MFModel_RemoveCustomContentTypeFunc;
 		property Lib3MFModel_SetRandomNumberCallbackFunc: TLib3MFModel_SetRandomNumberCallbackFunc read FLib3MFModel_SetRandomNumberCallbackFunc;
 		property Lib3MFModel_GetKeyStoreFunc: TLib3MFModel_GetKeyStoreFunc read FLib3MFModel_GetKeyStoreFunc;
+		property Lib3MFModel_CreatePersistentSourceFromFileFunc: TLib3MFModel_CreatePersistentSourceFromFileFunc read FLib3MFModel_CreatePersistentSourceFromFileFunc;
+		property Lib3MFModel_CreatePersistentSourceFromBufferFunc: TLib3MFModel_CreatePersistentSourceFromBufferFunc read FLib3MFModel_CreatePersistentSourceFromBufferFunc;
+		property Lib3MFModel_CreatePersistentSourceFromCallbackFunc: TLib3MFModel_CreatePersistentSourceFromCallbackFunc read FLib3MFModel_CreatePersistentSourceFromCallbackFunc;
 		property Lib3MFGetLibraryVersionFunc: TLib3MFGetLibraryVersionFunc read FLib3MFGetLibraryVersionFunc;
 		property Lib3MFGetPrereleaseInformationFunc: TLib3MFGetPrereleaseInformationFunc read FLib3MFGetPrereleaseInformationFunc;
 		property Lib3MFGetBuildInformationFunc: TLib3MFGetBuildInformationFunc read FLib3MFGetBuildInformationFunc;
@@ -5722,6 +7772,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function convertConstToPropertyType(const AValue: Integer): TLib3MFPropertyType;
 	function convertSlicesMeshResolutionToConst(const AValue: TLib3MFSlicesMeshResolution): Integer;
 	function convertConstToSlicesMeshResolution(const AValue: Integer): TLib3MFSlicesMeshResolution;
+	function convertPersistentReaderSourceTypeToConst(const AValue: TLib3MFPersistentReaderSourceType): Integer;
+	function convertConstToPersistentReaderSourceType(const AValue: Integer): TLib3MFPersistentReaderSourceType;
 	function convertModelUnitToConst(const AValue: TLib3MFModelUnit): Integer;
 	function convertConstToModelUnit(const AValue: Integer): TLib3MFModelUnit;
 	function convertObjectTypeToConst(const AValue: TLib3MFObjectType): Integer;
@@ -5738,10 +7790,16 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function convertConstToBeamLatticeClipMode(const AValue: Integer): TLib3MFBeamLatticeClipMode;
 	function convertBeamLatticeBallModeToConst(const AValue: TLib3MFBeamLatticeBallMode): Integer;
 	function convertConstToBeamLatticeBallMode(const AValue: Integer): TLib3MFBeamLatticeBallMode;
+	function convertBinaryStreamPredictionTypeToConst(const AValue: TLib3MFBinaryStreamPredictionType): Integer;
+	function convertConstToBinaryStreamPredictionType(const AValue: Integer): TLib3MFBinaryStreamPredictionType;
 	function convertProgressIdentifierToConst(const AValue: TLib3MFProgressIdentifier): Integer;
 	function convertConstToProgressIdentifier(const AValue: Integer): TLib3MFProgressIdentifier;
 	function convertBlendMethodToConst(const AValue: TLib3MFBlendMethod): Integer;
 	function convertConstToBlendMethod(const AValue: Integer): TLib3MFBlendMethod;
+	function convertToolpathSegmentTypeToConst(const AValue: TLib3MFToolpathSegmentType): Integer;
+	function convertConstToToolpathSegmentType(const AValue: Integer): TLib3MFToolpathSegmentType;
+	function convertToolpathAttributeTypeToConst(const AValue: TLib3MFToolpathAttributeType): Integer;
+	function convertConstToToolpathAttributeType(const AValue: Integer): TLib3MFToolpathAttributeType;
 	function convertEncryptionAlgorithmToConst(const AValue: TLib3MFEncryptionAlgorithm): Integer;
 	function convertConstToEncryptionAlgorithm(const AValue: Integer): TLib3MFEncryptionAlgorithm;
 	function convertWrappingAlgorithmToConst(const AValue: TLib3MFWrappingAlgorithm): Integer;
@@ -5757,11 +7815,17 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		class function Make(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): _T; static;
 	end;
 	function TLib3MFPolymorphicFactoryMakeBase(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBase;
+	function TLib3MFPolymorphicFactoryMakeBinaryStream(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBinaryStream;
 	function TLib3MFPolymorphicFactoryMakeWriter(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFWriter;
+	function TLib3MFPolymorphicFactoryMakePersistentReaderSource(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFPersistentReaderSource;
 	function TLib3MFPolymorphicFactoryMakeReader(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFReader;
 	function TLib3MFPolymorphicFactoryMakePackagePart(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFPackagePart;
 	function TLib3MFPolymorphicFactoryMakeResource(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFResource;
 	function TLib3MFPolymorphicFactoryMakeResourceIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFResourceIterator;
+	function TLib3MFPolymorphicFactoryMakeCustomXMLAttribute(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFCustomXMLAttribute;
+	function TLib3MFPolymorphicFactoryMakeCustomXMLNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFCustomXMLNode;
+	function TLib3MFPolymorphicFactoryMakeCustomXMLNodes(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFCustomXMLNodes;
+	function TLib3MFPolymorphicFactoryMakeCustomDOMTree(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFCustomDOMTree;
 	function TLib3MFPolymorphicFactoryMakeSliceStackIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSliceStackIterator;
 	function TLib3MFPolymorphicFactoryMakeObjectIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFObjectIterator;
 	function TLib3MFPolymorphicFactoryMakeMeshObjectIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMeshObjectIterator;
@@ -5790,6 +7854,11 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function TLib3MFPolymorphicFactoryMakeBuildItem(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBuildItem;
 	function TLib3MFPolymorphicFactoryMakeBuildItemIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBuildItemIterator;
 	function TLib3MFPolymorphicFactoryMakeSlice(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSlice;
+	function TLib3MFPolymorphicFactoryMakeToolpathProfile(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathProfile;
+	function TLib3MFPolymorphicFactoryMakeToolpathLayerReader(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathLayerReader;
+	function TLib3MFPolymorphicFactoryMakeToolpathLayerData(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathLayerData;
+	function TLib3MFPolymorphicFactoryMakeToolpath(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpath;
+	function TLib3MFPolymorphicFactoryMakeToolpathIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathIterator;
 	function TLib3MFPolymorphicFactoryMakeSliceStack(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSliceStack;
 	function TLib3MFPolymorphicFactoryMakeConsumer(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFConsumer;
 	function TLib3MFPolymorphicFactoryMakeAccessRight(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFAccessRight;
@@ -5849,6 +7918,31 @@ implementation
 		case AValue of
 			0: Result := eSlicesMeshResolutionFullres;
 			1: Result := eSlicesMeshResolutionLowres;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
+		end;
+	end;
+	
+	
+	function convertPersistentReaderSourceTypeToConst(const AValue: TLib3MFPersistentReaderSourceType): Integer;
+	begin
+		case AValue of
+			ePersistentReaderSourceTypeUnknown: Result := 0;
+			ePersistentReaderSourceTypeFileOnDisk: Result := 1;
+			ePersistentReaderSourceTypeMemoryBuffer: Result := 2;
+			ePersistentReaderSourceTypeCallback: Result := 3;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
+		end;
+	end;
+	
+	function convertConstToPersistentReaderSourceType(const AValue: Integer): TLib3MFPersistentReaderSourceType;
+	begin
+		case AValue of
+			0: Result := ePersistentReaderSourceTypeUnknown;
+			1: Result := ePersistentReaderSourceTypeFileOnDisk;
+			2: Result := ePersistentReaderSourceTypeMemoryBuffer;
+			3: Result := ePersistentReaderSourceTypeCallback;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;
@@ -6049,6 +8143,27 @@ implementation
 	end;
 	
 	
+	function convertBinaryStreamPredictionTypeToConst(const AValue: TLib3MFBinaryStreamPredictionType): Integer;
+	begin
+		case AValue of
+			eBinaryStreamPredictionTypeNoPrediction: Result := 0;
+			eBinaryStreamPredictionTypeDeltaPrediction: Result := 1;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
+		end;
+	end;
+	
+	function convertConstToBinaryStreamPredictionType(const AValue: Integer): TLib3MFBinaryStreamPredictionType;
+	begin
+		case AValue of
+			0: Result := eBinaryStreamPredictionTypeNoPrediction;
+			1: Result := eBinaryStreamPredictionTypeDeltaPrediction;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
+		end;
+	end;
+	
+	
 	function convertProgressIdentifierToConst(const AValue: TLib3MFProgressIdentifier): Integer;
 	begin
 		case AValue of
@@ -6131,6 +8246,54 @@ implementation
 			0: Result := eBlendMethodNoBlendMethod;
 			1: Result := eBlendMethodMix;
 			2: Result := eBlendMethodMultiply;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
+		end;
+	end;
+	
+	
+	function convertToolpathSegmentTypeToConst(const AValue: TLib3MFToolpathSegmentType): Integer;
+	begin
+		case AValue of
+			eToolpathSegmentTypeUnknown: Result := 0;
+			eToolpathSegmentTypeHatch: Result := 1;
+			eToolpathSegmentTypeLoop: Result := 2;
+			eToolpathSegmentTypePolyline: Result := 3;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
+		end;
+	end;
+	
+	function convertConstToToolpathSegmentType(const AValue: Integer): TLib3MFToolpathSegmentType;
+	begin
+		case AValue of
+			0: Result := eToolpathSegmentTypeUnknown;
+			1: Result := eToolpathSegmentTypeHatch;
+			2: Result := eToolpathSegmentTypeLoop;
+			3: Result := eToolpathSegmentTypePolyline;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
+		end;
+	end;
+	
+	
+	function convertToolpathAttributeTypeToConst(const AValue: TLib3MFToolpathAttributeType): Integer;
+	begin
+		case AValue of
+			eToolpathAttributeTypeUnknown: Result := 0;
+			eToolpathAttributeTypeInteger: Result := 1;
+			eToolpathAttributeTypeDouble: Result := 2;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
+		end;
+	end;
+	
+	function convertConstToToolpathAttributeType(const AValue: Integer): TLib3MFToolpathAttributeType;
+	begin
+		case AValue of
+			0: Result := eToolpathAttributeTypeUnknown;
+			1: Result := eToolpathAttributeTypeInteger;
+			2: Result := eToolpathAttributeTypeDouble;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;
@@ -6266,11 +8429,17 @@ implementation
 		Wrapper.CheckError(nil, Wrapper.Lib3MFBase_ClassTypeIdFunc(handle, ClassTypeId));
 		case (ClassTypeId) of
 			QWord($856632D0BAF1D8B7): begin Obj := TLIB3MFBase.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Base"
+			QWord($A0EB26254C981E1A): begin Obj := TLIB3MFBinaryStream.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::BinaryStream"
 			QWord($E76F642F363FD7E9): begin Obj := TLIB3MFWriter.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Writer"
+			QWord($BE46884397CE1319): begin Obj := TLIB3MFPersistentReaderSource.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::PersistentReaderSource"
 			QWord($2D86831DA59FBE72): begin Obj := TLIB3MFReader.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Reader"
 			QWord($0E55A826D377483E): begin Obj := TLIB3MFPackagePart.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::PackagePart"
 			QWord($DFE3889D1B269CBB): begin Obj := TLIB3MFResource.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Resource"
 			QWord($460F3515E2621DBE): begin Obj := TLIB3MFResourceIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ResourceIterator"
+			QWord($EA18C54DBD42B5F6): begin Obj := TLIB3MFCustomXMLAttribute.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::CustomXMLAttribute"
+			QWord($26B5AD02041EDF96): begin Obj := TLIB3MFCustomXMLNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::CustomXMLNode"
+			QWord($8C4B47C97D310E89): begin Obj := TLIB3MFCustomXMLNodes.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::CustomXMLNodes"
+			QWord($5E0CF70A6DB6256A): begin Obj := TLIB3MFCustomDOMTree.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::CustomDOMTree"
 			QWord($69684DB99FA813F6): begin Obj := TLIB3MFSliceStackIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::SliceStackIterator"
 			QWord($DE92510BD2112288): begin Obj := TLIB3MFObjectIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ObjectIterator"
 			QWord($F4196034E2B9FDE6): begin Obj := TLIB3MFMeshObjectIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObjectIterator"
@@ -6299,6 +8468,11 @@ implementation
 			QWord($68FB2D5FFC4BA12A): begin Obj := TLIB3MFBuildItem.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItem"
 			QWord($A7D21BD364910860): begin Obj := TLIB3MFBuildItemIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItemIterator"
 			QWord($2198BCF4D8DF9C40): begin Obj := TLIB3MFSlice.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Slice"
+			QWord($C869620B90242CA7): begin Obj := TLIB3MFToolpathProfile.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathProfile"
+			QWord($28DD7D3718F0616E): begin Obj := TLIB3MFToolpathLayerReader.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerReader"
+			QWord($28C0E70CC44F931A): begin Obj := TLIB3MFToolpathLayerData.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerData"
+			QWord($F0AAB2C814D9FFB1): begin Obj := TLIB3MFToolpath.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Toolpath"
+			QWord($D0F24425A07F2A81): begin Obj := TLIB3MFToolpathIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathIterator"
 			QWord($6594B031B6096238): begin Obj := TLIB3MFSliceStack.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::SliceStack"
 			QWord($D9E46D5E6D8118EE): begin Obj := TLIB3MFConsumer.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Consumer"
 			QWord($385C42FC5609498A): begin Obj := TLIB3MFAccessRight.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::AccessRight"
@@ -6314,9 +8488,17 @@ implementation
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFBase, TLIB3MFBase>.Make(Wrapper, Handle);
 	end;
+	function TLib3MFPolymorphicFactoryMakeBinaryStream(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBinaryStream;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFBinaryStream, TLIB3MFBinaryStream>.Make(Wrapper, Handle);
+	end;
 	function TLib3MFPolymorphicFactoryMakeWriter(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFWriter;
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFWriter, TLIB3MFWriter>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakePersistentReaderSource(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFPersistentReaderSource;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFPersistentReaderSource, TLIB3MFPersistentReaderSource>.Make(Wrapper, Handle);
 	end;
 	function TLib3MFPolymorphicFactoryMakeReader(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFReader;
 	begin
@@ -6333,6 +8515,22 @@ implementation
 	function TLib3MFPolymorphicFactoryMakeResourceIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFResourceIterator;
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFResourceIterator, TLIB3MFResourceIterator>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeCustomXMLAttribute(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFCustomXMLAttribute;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFCustomXMLAttribute, TLIB3MFCustomXMLAttribute>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeCustomXMLNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFCustomXMLNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFCustomXMLNode, TLIB3MFCustomXMLNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeCustomXMLNodes(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFCustomXMLNodes;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFCustomXMLNodes, TLIB3MFCustomXMLNodes>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeCustomDOMTree(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFCustomDOMTree;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFCustomDOMTree, TLIB3MFCustomDOMTree>.Make(Wrapper, Handle);
 	end;
 	function TLib3MFPolymorphicFactoryMakeSliceStackIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSliceStackIterator;
 	begin
@@ -6446,6 +8644,26 @@ implementation
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFSlice, TLIB3MFSlice>.Make(Wrapper, Handle);
 	end;
+	function TLib3MFPolymorphicFactoryMakeToolpathProfile(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathProfile;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFToolpathProfile, TLIB3MFToolpathProfile>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeToolpathLayerReader(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathLayerReader;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFToolpathLayerReader, TLIB3MFToolpathLayerReader>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeToolpathLayerData(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathLayerData;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFToolpathLayerData, TLIB3MFToolpathLayerData>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeToolpath(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpath;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFToolpath, TLIB3MFToolpath>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeToolpathIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathIterator;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFToolpathIterator, TLIB3MFToolpathIterator>.Make(Wrapper, Handle);
+	end;
 	function TLib3MFPolymorphicFactoryMakeSliceStack(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSliceStack;
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFSliceStack, TLIB3MFSliceStack>.Make(Wrapper, Handle);
@@ -6525,13 +8743,27 @@ implementation
 			LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER: ADescription := 'A progress identifier is unknown';
 			LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: ADescription := 'An element buffer exceeds its spec limit';
 			LIB3MF_ERROR_INVALIDRESOURCE: ADescription := 'A resource is invalid';
+			LIB3MF_ERROR_INVALIDNODEINDEX: ADescription := 'Invalid node index';
+			LIB3MF_ERROR_INVALIDATTRIBUTEINDEX: ADescription := 'Invalid attribute index';
+			LIB3MF_ERROR_DUPLICATECUSTOMDATA: ADescription := 'Duplicate custom data';
+			LIB3MF_ERROR_CUSTOMDATANOTFOUND: ADescription := 'Custom data not found';
 			LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: ADescription := 'This object type is not valid for beamlattices';
 			LIB3MF_ERROR_INVALIDKEYSTORE: ADescription := 'The keystore object is invalid';
 			LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: ADescription := 'The consumer keystore object is invalid';
 			LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND: ADescription := 'A consumer has not been found';
 			LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: ADescription := 'A resource data has not been found';
 			LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: ADescription := 'A Key or Conentent encryption callback has not been registered';
-			LIB3MF_ERROR_INVALIDKEYSIZE: ADescription := 'The key siue is invalid';
+			LIB3MF_ERROR_INVALIDKEYSIZE: ADescription := 'The key size is invalid';
+			LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER: ADescription := 'Not in toolpath header writing mode';
+			LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA: ADescription := 'Not in toolpath data writing mode';
+			LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: ADescription := 'Toolpath has already been written out';
+			LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: ADescription := 'Toolpath has an invalid number of points';
+			LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED: ADescription := 'Toolpath attribute already defined';
+			LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE: ADescription := 'Toolpath attribute is of invalid type';
+			LIB3MF_ERROR_EMPTYNAMESPACEPREFIX: ADescription := 'Empty namespace prefix.';
+			LIB3MF_ERROR_EMPTYNAMESPACE: ADescription := 'Empty namespace.';
+			LIB3MF_ERROR_INVALIDNAMESPACEPREFIX: ADescription := 'Invalid namespace prefix.';
+			LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES: ADescription := 'Writer does not support namespaces.';
 			else
 				ADescription := 'unknown';
 		end;
@@ -6571,6 +8803,82 @@ implementation
 	function TLib3MFBase.ClassTypeId(): QWord;
 	begin
 		FWrapper.CheckError(Self, FWrapper.Lib3MFBase_ClassTypeIdFunc(FHandle, Result));
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for BinaryStream
+**************************************************************************************************************************)
+
+	constructor TLib3MFBinaryStream.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFBinaryStream.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFBinaryStream.GetBinaryPath(): String;
+	var
+		bytesNeededPath: Cardinal;
+		bytesWrittenPath: Cardinal;
+		bufferPath: array of Char;
+	begin
+		bytesNeededPath:= 0;
+		bytesWrittenPath:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_GetBinaryPathFunc(FHandle, 0, bytesNeededPath, nil));
+		SetLength(bufferPath, bytesNeededPath);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_GetBinaryPathFunc(FHandle, bytesNeededPath, bytesWrittenPath, @bufferPath[0]));
+		Result := StrPas(@bufferPath[0]);
+	end;
+
+	function TLib3MFBinaryStream.GetIndexPath(): String;
+	var
+		bytesNeededPath: Cardinal;
+		bytesWrittenPath: Cardinal;
+		bufferPath: array of Char;
+	begin
+		bytesNeededPath:= 0;
+		bytesWrittenPath:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_GetIndexPathFunc(FHandle, 0, bytesNeededPath, nil));
+		SetLength(bufferPath, bytesNeededPath);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_GetIndexPathFunc(FHandle, bytesNeededPath, bytesWrittenPath, @bufferPath[0]));
+		Result := StrPas(@bufferPath[0]);
+	end;
+
+	function TLib3MFBinaryStream.GetUUID(): String;
+	var
+		bytesNeededUUID: Cardinal;
+		bytesWrittenUUID: Cardinal;
+		bufferUUID: array of Char;
+	begin
+		bytesNeededUUID:= 0;
+		bytesWrittenUUID:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_GetUUIDFunc(FHandle, 0, bytesNeededUUID, nil));
+		SetLength(bufferUUID, bytesNeededUUID);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_GetUUIDFunc(FHandle, bytesNeededUUID, bytesWrittenUUID, @bufferUUID[0]));
+		Result := StrPas(@bufferUUID[0]);
+	end;
+
+	procedure TLib3MFBinaryStream.DisableDiscretizedArrayCompression();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc(FHandle));
+	end;
+
+	procedure TLib3MFBinaryStream.EnableDiscretizedArrayCompression(const AUnits: Double; const APredictionType: TLib3MFBinaryStreamPredictionType);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc(FHandle, AUnits, convertBinaryStreamPredictionTypeToConst(APredictionType)));
+	end;
+
+	procedure TLib3MFBinaryStream.EnableLZMA(const ALZMALevel: Cardinal);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_EnableLZMAFunc(FHandle, ALZMALevel));
+	end;
+
+	procedure TLib3MFBinaryStream.DisableLZMA();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_DisableLZMAFunc(FHandle));
 	end;
 
 (*************************************************************************************************************************
@@ -6682,6 +8990,75 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFWriter_SetContentEncryptionCallbackFunc(FHandle, ATheCallback, AUserData));
 	end;
 
+	function TLib3MFWriter.CreateBinaryStream(const AIndexPath: String; const ABinaryPath: String): TLib3MFBinaryStream;
+	var
+		HBinaryStream: TLib3MFHandle;
+	begin
+		Result := nil;
+		HBinaryStream := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFWriter_CreateBinaryStreamFunc(FHandle, PAnsiChar(AIndexPath), PAnsiChar(ABinaryPath), HBinaryStream));
+		if Assigned(HBinaryStream) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFBinaryStream, TLib3MFBinaryStream>.Make(FWrapper, HBinaryStream);
+	end;
+
+	procedure TLib3MFWriter.AssignBinaryStream(const AInstance: TLib3MFBase; const ABinaryStream: TLib3MFBinaryStream);
+	var
+		AInstanceHandle: TLib3MFHandle;
+		ABinaryStreamHandle: TLib3MFHandle;
+	begin
+		if Assigned(AInstance) then
+		AInstanceHandle := AInstance.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AInstance is a nil value.');
+		if Assigned(ABinaryStream) then
+		ABinaryStreamHandle := ABinaryStream.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ABinaryStream is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFWriter_AssignBinaryStreamFunc(FHandle, AInstanceHandle, ABinaryStreamHandle));
+	end;
+
+	procedure TLib3MFWriter.RegisterCustomNamespace(const APrefix: String; const ANameSpace: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFWriter_RegisterCustomNamespaceFunc(FHandle, PAnsiChar(APrefix), PAnsiChar(ANameSpace)));
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for PersistentReaderSource
+**************************************************************************************************************************)
+
+	constructor TLib3MFPersistentReaderSource.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFPersistentReaderSource.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFPersistentReaderSource.GetSourceType(): TLib3MFPersistentReaderSourceType;
+	var
+		ResultSourceType: Integer;
+	begin
+		ResultSourceType := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFPersistentReaderSource_GetSourceTypeFunc(FHandle, ResultSourceType));
+		Result := convertConstToPersistentReaderSourceType(ResultSourceType);
+	end;
+
+	procedure TLib3MFPersistentReaderSource.InvalidateSourceData();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFPersistentReaderSource_InvalidateSourceDataFunc(FHandle));
+	end;
+
+	function TLib3MFPersistentReaderSource.SourceDataIsValid(): Boolean;
+	var
+		ResultDataIsValid: Byte;
+	begin
+		ResultDataIsValid := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFPersistentReaderSource_SourceDataIsValidFunc(FHandle, ResultDataIsValid));
+		Result := (ResultDataIsValid <> 0);
+	end;
+
 (*************************************************************************************************************************
  Class implementation for Reader
 **************************************************************************************************************************)
@@ -6694,6 +9071,17 @@ implementation
 	destructor TLib3MFReader.Destroy;
 	begin
 		inherited;
+	end;
+
+	procedure TLib3MFReader.ReadFromPersistentSource(const ASource: TLib3MFPersistentReaderSource);
+	var
+		ASourceHandle: TLib3MFHandle;
+	begin
+		if Assigned(ASource) then
+		ASourceHandle := ASource.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ASource is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFReader_ReadFromPersistentSourceFunc(FHandle, ASourceHandle));
 	end;
 
 	procedure TLib3MFReader.ReadFromFile(const AFilename: String);
@@ -6931,6 +9319,451 @@ implementation
 	function TLib3MFResourceIterator.Count(): QWord;
 	begin
 		FWrapper.CheckError(Self, FWrapper.Lib3MFResourceIterator_CountFunc(FHandle, Result));
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for CustomXMLAttribute
+**************************************************************************************************************************)
+
+	constructor TLib3MFCustomXMLAttribute.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFCustomXMLAttribute.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFCustomXMLAttribute.GetName(): String;
+	var
+		bytesNeededName: Cardinal;
+		bytesWrittenName: Cardinal;
+		bufferName: array of Char;
+	begin
+		bytesNeededName:= 0;
+		bytesWrittenName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLAttribute_GetNameFunc(FHandle, 0, bytesNeededName, nil));
+		SetLength(bufferName, bytesNeededName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLAttribute_GetNameFunc(FHandle, bytesNeededName, bytesWrittenName, @bufferName[0]));
+		Result := StrPas(@bufferName[0]);
+	end;
+
+	function TLib3MFCustomXMLAttribute.GetValue(): String;
+	var
+		bytesNeededValue: Cardinal;
+		bytesWrittenValue: Cardinal;
+		bufferValue: array of Char;
+	begin
+		bytesNeededValue:= 0;
+		bytesWrittenValue:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLAttribute_GetValueFunc(FHandle, 0, bytesNeededValue, nil));
+		SetLength(bufferValue, bytesNeededValue);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLAttribute_GetValueFunc(FHandle, bytesNeededValue, bytesWrittenValue, @bufferValue[0]));
+		Result := StrPas(@bufferValue[0]);
+	end;
+
+	function TLib3MFCustomXMLAttribute.IsValidInteger(const AMinValue: Int64; const AMaxValue: Int64): Boolean;
+	var
+		ResultIsValid: Byte;
+	begin
+		ResultIsValid := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLAttribute_IsValidIntegerFunc(FHandle, AMinValue, AMaxValue, ResultIsValid));
+		Result := (ResultIsValid <> 0);
+	end;
+
+	function TLib3MFCustomXMLAttribute.GetIntegerValue(const AMinValue: Int64; const AMaxValue: Int64): Int64;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLAttribute_GetIntegerValueFunc(FHandle, AMinValue, AMaxValue, Result));
+	end;
+
+	function TLib3MFCustomXMLAttribute.IsValidDouble(const AMinValue: Double; const AMaxValue: Double): Boolean;
+	var
+		ResultIsValid: Byte;
+	begin
+		ResultIsValid := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLAttribute_IsValidDoubleFunc(FHandle, AMinValue, AMaxValue, ResultIsValid));
+		Result := (ResultIsValid <> 0);
+	end;
+
+	function TLib3MFCustomXMLAttribute.GetDoubleValue(const AMinValue: Double; const AMaxValue: Double): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLAttribute_GetDoubleValueFunc(FHandle, AMinValue, AMaxValue, Result));
+	end;
+
+	function TLib3MFCustomXMLAttribute.IsValidBool(): Boolean;
+	var
+		ResultIsValid: Byte;
+	begin
+		ResultIsValid := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLAttribute_IsValidBoolFunc(FHandle, ResultIsValid));
+		Result := (ResultIsValid <> 0);
+	end;
+
+	function TLib3MFCustomXMLAttribute.GetBoolValue(const AMinValue: Double; const AMaxValue: Double): Boolean;
+	var
+		ResultValue: Byte;
+	begin
+		ResultValue := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLAttribute_GetBoolValueFunc(FHandle, AMinValue, AMaxValue, ResultValue));
+		Result := (ResultValue <> 0);
+	end;
+
+	procedure TLib3MFCustomXMLAttribute.SetValue(const AValue: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLAttribute_SetValueFunc(FHandle, PAnsiChar(AValue)));
+	end;
+
+	procedure TLib3MFCustomXMLAttribute.SetIntegerValue(const AValue: Int64);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLAttribute_SetIntegerValueFunc(FHandle, AValue));
+	end;
+
+	procedure TLib3MFCustomXMLAttribute.SetDoubleValue(const AValue: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLAttribute_SetDoubleValueFunc(FHandle, AValue));
+	end;
+
+	procedure TLib3MFCustomXMLAttribute.SetBoolValue(const AValue: Boolean);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLAttribute_SetBoolValueFunc(FHandle, Ord(AValue)));
+	end;
+
+	procedure TLib3MFCustomXMLAttribute.Remove();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLAttribute_RemoveFunc(FHandle));
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for CustomXMLNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFCustomXMLNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFCustomXMLNode.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFCustomXMLNode.GetName(): String;
+	var
+		bytesNeededName: Cardinal;
+		bytesWrittenName: Cardinal;
+		bufferName: array of Char;
+	begin
+		bytesNeededName:= 0;
+		bytesWrittenName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_GetNameFunc(FHandle, 0, bytesNeededName, nil));
+		SetLength(bufferName, bytesNeededName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_GetNameFunc(FHandle, bytesNeededName, bytesWrittenName, @bufferName[0]));
+		Result := StrPas(@bufferName[0]);
+	end;
+
+	function TLib3MFCustomXMLNode.GetNameSpace(): String;
+	var
+		bytesNeededNameSpace: Cardinal;
+		bytesWrittenNameSpace: Cardinal;
+		bufferNameSpace: array of Char;
+	begin
+		bytesNeededNameSpace:= 0;
+		bytesWrittenNameSpace:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_GetNameSpaceFunc(FHandle, 0, bytesNeededNameSpace, nil));
+		SetLength(bufferNameSpace, bytesNeededNameSpace);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_GetNameSpaceFunc(FHandle, bytesNeededNameSpace, bytesWrittenNameSpace, @bufferNameSpace[0]));
+		Result := StrPas(@bufferNameSpace[0]);
+	end;
+
+	function TLib3MFCustomXMLNode.GetAttributeCount(): QWord;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_GetAttributeCountFunc(FHandle, Result));
+	end;
+
+	function TLib3MFCustomXMLNode.GetAttribute(const AIndex: QWord): TLib3MFCustomXMLAttribute;
+	var
+		HAttributeInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HAttributeInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_GetAttributeFunc(FHandle, AIndex, HAttributeInstance));
+		if Assigned(HAttributeInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCustomXMLAttribute, TLib3MFCustomXMLAttribute>.Make(FWrapper, HAttributeInstance);
+	end;
+
+	function TLib3MFCustomXMLNode.HasAttribute(const AName: String): Boolean;
+	var
+		ResultAttributeExists: Byte;
+	begin
+		ResultAttributeExists := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_HasAttributeFunc(FHandle, PAnsiChar(AName), ResultAttributeExists));
+		Result := (ResultAttributeExists <> 0);
+	end;
+
+	function TLib3MFCustomXMLNode.FindAttribute(const AName: String; const AMustExist: Boolean): TLib3MFCustomXMLAttribute;
+	var
+		HAttributeInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HAttributeInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_FindAttributeFunc(FHandle, PAnsiChar(AName), Ord(AMustExist), HAttributeInstance));
+		if Assigned(HAttributeInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCustomXMLAttribute, TLib3MFCustomXMLAttribute>.Make(FWrapper, HAttributeInstance);
+	end;
+
+	function TLib3MFCustomXMLNode.RemoveAttribute(const AName: String): Boolean;
+	var
+		ResultAttributeRemoved: Byte;
+	begin
+		ResultAttributeRemoved := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_RemoveAttributeFunc(FHandle, PAnsiChar(AName), ResultAttributeRemoved));
+		Result := (ResultAttributeRemoved <> 0);
+	end;
+
+	function TLib3MFCustomXMLNode.RemoveAttributeByIndex(const AIndex: QWord): Boolean;
+	var
+		ResultAttributeRemoved: Byte;
+	begin
+		ResultAttributeRemoved := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_RemoveAttributeByIndexFunc(FHandle, AIndex, ResultAttributeRemoved));
+		Result := (ResultAttributeRemoved <> 0);
+	end;
+
+	procedure TLib3MFCustomXMLNode.AddAttribute(const AName: String; const AValue: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_AddAttributeFunc(FHandle, PAnsiChar(AName), PAnsiChar(AValue)));
+	end;
+
+	procedure TLib3MFCustomXMLNode.AddIntegerAttribute(const AName: String; const AValue: Int64);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_AddIntegerAttributeFunc(FHandle, PAnsiChar(AName), AValue));
+	end;
+
+	procedure TLib3MFCustomXMLNode.AddDoubleAttribute(const AName: String; const AValue: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_AddDoubleAttributeFunc(FHandle, PAnsiChar(AName), AValue));
+	end;
+
+	procedure TLib3MFCustomXMLNode.AddBoolAttribute(const AName: String; const AValue: Boolean);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_AddBoolAttributeFunc(FHandle, PAnsiChar(AName), Ord(AValue)));
+	end;
+
+	function TLib3MFCustomXMLNode.GetChildren(): TLib3MFCustomXMLNodes;
+	var
+		HChildNodes: TLib3MFHandle;
+	begin
+		Result := nil;
+		HChildNodes := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_GetChildrenFunc(FHandle, HChildNodes));
+		if Assigned(HChildNodes) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCustomXMLNodes, TLib3MFCustomXMLNodes>.Make(FWrapper, HChildNodes);
+	end;
+
+	function TLib3MFCustomXMLNode.CountChildrenByName(const AName: String): QWord;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_CountChildrenByNameFunc(FHandle, PAnsiChar(AName), Result));
+	end;
+
+	function TLib3MFCustomXMLNode.GetChildrenByName(const AName: String): TLib3MFCustomXMLNodes;
+	var
+		HChildNodes: TLib3MFHandle;
+	begin
+		Result := nil;
+		HChildNodes := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_GetChildrenByNameFunc(FHandle, PAnsiChar(AName), HChildNodes));
+		if Assigned(HChildNodes) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCustomXMLNodes, TLib3MFCustomXMLNodes>.Make(FWrapper, HChildNodes);
+	end;
+
+	function TLib3MFCustomXMLNode.HasChild(const AName: String): Boolean;
+	var
+		ResultChildExists: Byte;
+	begin
+		ResultChildExists := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_HasChildFunc(FHandle, PAnsiChar(AName), ResultChildExists));
+		Result := (ResultChildExists <> 0);
+	end;
+
+	function TLib3MFCustomXMLNode.HasUniqueChild(const AName: String): Boolean;
+	var
+		ResultChildExists: Byte;
+	begin
+		ResultChildExists := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_HasUniqueChildFunc(FHandle, PAnsiChar(AName), ResultChildExists));
+		Result := (ResultChildExists <> 0);
+	end;
+
+	function TLib3MFCustomXMLNode.FindChild(const AName: String; const AMustExist: Boolean): TLib3MFCustomXMLNode;
+	var
+		HChildInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HChildInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_FindChildFunc(FHandle, PAnsiChar(AName), Ord(AMustExist), HChildInstance));
+		if Assigned(HChildInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCustomXMLNode, TLib3MFCustomXMLNode>.Make(FWrapper, HChildInstance);
+	end;
+
+	function TLib3MFCustomXMLNode.AddChild(const AName: String): TLib3MFCustomXMLNode;
+	var
+		HChildInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HChildInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_AddChildFunc(FHandle, PAnsiChar(AName), HChildInstance));
+		if Assigned(HChildInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCustomXMLNode, TLib3MFCustomXMLNode>.Make(FWrapper, HChildInstance);
+	end;
+
+	procedure TLib3MFCustomXMLNode.RemoveChild(const AChildInstance: TLib3MFCustomXMLNode);
+	var
+		AChildInstanceHandle: TLib3MFHandle;
+	begin
+		if Assigned(AChildInstance) then
+		AChildInstanceHandle := AChildInstance.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AChildInstance is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_RemoveChildFunc(FHandle, AChildInstanceHandle));
+	end;
+
+	function TLib3MFCustomXMLNode.RemoveChildrenWithName(const AName: String): QWord;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_RemoveChildrenWithNameFunc(FHandle, PAnsiChar(AName), Result));
+	end;
+
+	procedure TLib3MFCustomXMLNode.Remove();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNode_RemoveFunc(FHandle));
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for CustomXMLNodes
+**************************************************************************************************************************)
+
+	constructor TLib3MFCustomXMLNodes.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFCustomXMLNodes.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFCustomXMLNodes.GetNodeCount(): QWord;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNodes_GetNodeCountFunc(FHandle, Result));
+	end;
+
+	function TLib3MFCustomXMLNodes.GetNode(const AIndex: QWord): TLib3MFCustomXMLNode;
+	var
+		HNodeInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNodeInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNodes_GetNodeFunc(FHandle, AIndex, HNodeInstance));
+		if Assigned(HNodeInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCustomXMLNode, TLib3MFCustomXMLNode>.Make(FWrapper, HNodeInstance);
+	end;
+
+	function TLib3MFCustomXMLNodes.CountNodesByName(const AName: String): QWord;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNodes_CountNodesByNameFunc(FHandle, PAnsiChar(AName), Result));
+	end;
+
+	function TLib3MFCustomXMLNodes.GetNodesByName(const AName: String): TLib3MFCustomXMLNodes;
+	var
+		HNodes: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNodes := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNodes_GetNodesByNameFunc(FHandle, PAnsiChar(AName), HNodes));
+		if Assigned(HNodes) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCustomXMLNodes, TLib3MFCustomXMLNodes>.Make(FWrapper, HNodes);
+	end;
+
+	function TLib3MFCustomXMLNodes.HasNode(const AName: String): Boolean;
+	var
+		ResultNodeExists: Byte;
+	begin
+		ResultNodeExists := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNodes_HasNodeFunc(FHandle, PAnsiChar(AName), ResultNodeExists));
+		Result := (ResultNodeExists <> 0);
+	end;
+
+	function TLib3MFCustomXMLNodes.HasUniqueNode(const AName: String): Boolean;
+	var
+		ResultNodeExists: Byte;
+	begin
+		ResultNodeExists := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNodes_HasUniqueNodeFunc(FHandle, PAnsiChar(AName), ResultNodeExists));
+		Result := (ResultNodeExists <> 0);
+	end;
+
+	function TLib3MFCustomXMLNodes.FindNode(const AName: String; const AMustExist: Boolean): TLib3MFCustomXMLNode;
+	var
+		HNodeInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNodeInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomXMLNodes_FindNodeFunc(FHandle, PAnsiChar(AName), Ord(AMustExist), HNodeInstance));
+		if Assigned(HNodeInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCustomXMLNode, TLib3MFCustomXMLNode>.Make(FWrapper, HNodeInstance);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for CustomDOMTree
+**************************************************************************************************************************)
+
+	constructor TLib3MFCustomDOMTree.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFCustomDOMTree.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFCustomDOMTree.GetNameSpace(): String;
+	var
+		bytesNeededNameSpace: Cardinal;
+		bytesWrittenNameSpace: Cardinal;
+		bufferNameSpace: array of Char;
+	begin
+		bytesNeededNameSpace:= 0;
+		bytesWrittenNameSpace:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomDOMTree_GetNameSpaceFunc(FHandle, 0, bytesNeededNameSpace, nil));
+		SetLength(bufferNameSpace, bytesNeededNameSpace);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomDOMTree_GetNameSpaceFunc(FHandle, bytesNeededNameSpace, bytesWrittenNameSpace, @bufferNameSpace[0]));
+		Result := StrPas(@bufferNameSpace[0]);
+	end;
+
+	function TLib3MFCustomDOMTree.GetRootNode(): TLib3MFCustomXMLNode;
+	var
+		HRootNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HRootNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomDOMTree_GetRootNodeFunc(FHandle, HRootNode));
+		if Assigned(HRootNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCustomXMLNode, TLib3MFCustomXMLNode>.Make(FWrapper, HRootNode);
+	end;
+
+	function TLib3MFCustomDOMTree.SaveToString(): String;
+	var
+		bytesNeededXMLString: Cardinal;
+		bytesWrittenXMLString: Cardinal;
+		bufferXMLString: array of Char;
+	begin
+		bytesNeededXMLString:= 0;
+		bytesWrittenXMLString:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomDOMTree_SaveToStringFunc(FHandle, 0, bytesNeededXMLString, nil));
+		SetLength(bufferXMLString, bytesNeededXMLString);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFCustomDOMTree_SaveToStringFunc(FHandle, bytesNeededXMLString, bytesWrittenXMLString, @bufferXMLString[0]));
+		Result := StrPas(@bufferXMLString[0]);
 	end;
 
 (*************************************************************************************************************************
@@ -9003,6 +11836,754 @@ implementation
 	end;
 
 (*************************************************************************************************************************
+ Class implementation for ToolpathProfile
+**************************************************************************************************************************)
+
+	constructor TLib3MFToolpathProfile.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFToolpathProfile.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFToolpathProfile.GetUUID(): String;
+	var
+		bytesNeededUUID: Cardinal;
+		bytesWrittenUUID: Cardinal;
+		bufferUUID: array of Char;
+	begin
+		bytesNeededUUID:= 0;
+		bytesWrittenUUID:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetUUIDFunc(FHandle, 0, bytesNeededUUID, nil));
+		SetLength(bufferUUID, bytesNeededUUID);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetUUIDFunc(FHandle, bytesNeededUUID, bytesWrittenUUID, @bufferUUID[0]));
+		Result := StrPas(@bufferUUID[0]);
+	end;
+
+	function TLib3MFToolpathProfile.GetName(): String;
+	var
+		bytesNeededName: Cardinal;
+		bytesWrittenName: Cardinal;
+		bufferName: array of Char;
+	begin
+		bytesNeededName:= 0;
+		bytesWrittenName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetNameFunc(FHandle, 0, bytesNeededName, nil));
+		SetLength(bufferName, bytesNeededName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetNameFunc(FHandle, bytesNeededName, bytesWrittenName, @bufferName[0]));
+		Result := StrPas(@bufferName[0]);
+	end;
+
+	function TLib3MFToolpathProfile.GetParameterCount(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterCountFunc(FHandle, Result));
+	end;
+
+	function TLib3MFToolpathProfile.GetParameterName(const AIndex: Cardinal): String;
+	var
+		bytesNeededName: Cardinal;
+		bytesWrittenName: Cardinal;
+		bufferName: array of Char;
+	begin
+		bytesNeededName:= 0;
+		bytesWrittenName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterNameFunc(FHandle, AIndex, 0, bytesNeededName, nil));
+		SetLength(bufferName, bytesNeededName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterNameFunc(FHandle, AIndex, bytesNeededName, bytesWrittenName, @bufferName[0]));
+		Result := StrPas(@bufferName[0]);
+	end;
+
+	function TLib3MFToolpathProfile.GetParameterNameSpace(const AIndex: Cardinal): String;
+	var
+		bytesNeededNameSpace: Cardinal;
+		bytesWrittenNameSpace: Cardinal;
+		bufferNameSpace: array of Char;
+	begin
+		bytesNeededNameSpace:= 0;
+		bytesWrittenNameSpace:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterNameSpaceFunc(FHandle, AIndex, 0, bytesNeededNameSpace, nil));
+		SetLength(bufferNameSpace, bytesNeededNameSpace);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterNameSpaceFunc(FHandle, AIndex, bytesNeededNameSpace, bytesWrittenNameSpace, @bufferNameSpace[0]));
+		Result := StrPas(@bufferNameSpace[0]);
+	end;
+
+	function TLib3MFToolpathProfile.HasParameterValue(const ANameSpaceName: String; const AValueName: String): Boolean;
+	var
+		ResultValueExists: Byte;
+	begin
+		ResultValueExists := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_HasParameterValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), ResultValueExists));
+		Result := (ResultValueExists <> 0);
+	end;
+
+	function TLib3MFToolpathProfile.GetParameterValue(const ANameSpaceName: String; const AValueName: String): String;
+	var
+		bytesNeededValue: Cardinal;
+		bytesWrittenValue: Cardinal;
+		bufferValue: array of Char;
+	begin
+		bytesNeededValue:= 0;
+		bytesWrittenValue:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), 0, bytesNeededValue, nil));
+		SetLength(bufferValue, bytesNeededValue);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), bytesNeededValue, bytesWrittenValue, @bufferValue[0]));
+		Result := StrPas(@bufferValue[0]);
+	end;
+
+	function TLib3MFToolpathProfile.GetParameterValueDef(const ANameSpaceName: String; const AValueName: String; const ADefaultValue: String): String;
+	var
+		bytesNeededValue: Cardinal;
+		bytesWrittenValue: Cardinal;
+		bufferValue: array of Char;
+	begin
+		bytesNeededValue:= 0;
+		bytesWrittenValue:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterValueDefFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), PAnsiChar(ADefaultValue), 0, bytesNeededValue, nil));
+		SetLength(bufferValue, bytesNeededValue);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterValueDefFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), PAnsiChar(ADefaultValue), bytesNeededValue, bytesWrittenValue, @bufferValue[0]));
+		Result := StrPas(@bufferValue[0]);
+	end;
+
+	function TLib3MFToolpathProfile.GetParameterDoubleValue(const ANameSpaceName: String; const AValueName: String): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterDoubleValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), Result));
+	end;
+
+	function TLib3MFToolpathProfile.GetParameterDoubleValueDef(const ANameSpaceName: String; const AValueName: String; const ADefaultValue: Double): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterDoubleValueDefFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), ADefaultValue, Result));
+	end;
+
+	function TLib3MFToolpathProfile.GetParameterIntegerValue(const ANameSpaceName: String; const AValueName: String): Int64;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterIntegerValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), Result));
+	end;
+
+	function TLib3MFToolpathProfile.GetParameterIntegerValueDef(const ANameSpaceName: String; const AValueName: String; const ADefaultValue: Int64): Int64;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterIntegerValueDefFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), ADefaultValue, Result));
+	end;
+
+	function TLib3MFToolpathProfile.GetParameterBoolValue(const ANameSpaceName: String; const AValueName: String): Boolean;
+	var
+		ResultValue: Byte;
+	begin
+		ResultValue := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterBoolValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), ResultValue));
+		Result := (ResultValue <> 0);
+	end;
+
+	function TLib3MFToolpathProfile.GetParameterBoolValueDef(const ANameSpaceName: String; const AValueName: String; const ADefaultValue: Boolean): Boolean;
+	var
+		ResultValue: Byte;
+	begin
+		ResultValue := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterBoolValueDefFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), Ord(ADefaultValue), ResultValue));
+		Result := (ResultValue <> 0);
+	end;
+
+	procedure TLib3MFToolpathProfile.SetName(const AName: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_SetNameFunc(FHandle, PAnsiChar(AName)));
+	end;
+
+	procedure TLib3MFToolpathProfile.SetParameterValue(const ANameSpaceName: String; const AValueName: String; const AValue: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_SetParameterValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), PAnsiChar(AValue)));
+	end;
+
+	procedure TLib3MFToolpathProfile.SetParameterDoubleValue(const ANameSpaceName: String; const AValueName: String; const AValue: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_SetParameterDoubleValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), AValue));
+	end;
+
+	procedure TLib3MFToolpathProfile.SetParameterIntegerValue(const ANameSpaceName: String; const AValueName: String; const AValue: Int64);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_SetParameterIntegerValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), AValue));
+	end;
+
+	procedure TLib3MFToolpathProfile.SetParameterBoolValue(const ANameSpaceName: String; const AValueName: String; const AValue: Boolean);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_SetParameterBoolValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), Ord(AValue)));
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ToolpathLayerReader
+**************************************************************************************************************************)
+
+	constructor TLib3MFToolpathLayerReader.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFToolpathLayerReader.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFToolpathLayerReader.GetLayerDataUUID(): String;
+	var
+		bytesNeededUUID: Cardinal;
+		bytesWrittenUUID: Cardinal;
+		bufferUUID: array of Char;
+	begin
+		bytesNeededUUID:= 0;
+		bytesWrittenUUID:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetLayerDataUUIDFunc(FHandle, 0, bytesNeededUUID, nil));
+		SetLength(bufferUUID, bytesNeededUUID);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetLayerDataUUIDFunc(FHandle, bytesNeededUUID, bytesWrittenUUID, @bufferUUID[0]));
+		Result := StrPas(@bufferUUID[0]);
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentCount(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentCountFunc(FHandle, Result));
+	end;
+
+	procedure TLib3MFToolpathLayerReader.GetSegmentInfo(const AIndex: Cardinal; out AType: TLib3MFToolpathSegmentType; out APointCount: Cardinal);
+	var
+		ResultType: Integer;
+	begin
+		ResultType := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentInfoFunc(FHandle, AIndex, ResultType, APointCount));
+		AType := convertConstToToolpathSegmentType(ResultType);
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentProfile(const AIndex: Cardinal): TLib3MFToolpathProfile;
+	var
+		HProfile: TLib3MFHandle;
+	begin
+		Result := nil;
+		HProfile := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentProfileFunc(FHandle, AIndex, HProfile));
+		if Assigned(HProfile) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathProfile, TLib3MFToolpathProfile>.Make(FWrapper, HProfile);
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentProfileUUID(const AIndex: Cardinal): String;
+	var
+		bytesNeededProfileUUID: Cardinal;
+		bytesWrittenProfileUUID: Cardinal;
+		bufferProfileUUID: array of Char;
+	begin
+		bytesNeededProfileUUID:= 0;
+		bytesWrittenProfileUUID:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc(FHandle, AIndex, 0, bytesNeededProfileUUID, nil));
+		SetLength(bufferProfileUUID, bytesNeededProfileUUID);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc(FHandle, AIndex, bytesNeededProfileUUID, bytesWrittenProfileUUID, @bufferProfileUUID[0]));
+		Result := StrPas(@bufferProfileUUID[0]);
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentPart(const AIndex: Cardinal): TLib3MFBuildItem;
+	var
+		HBuildItem: TLib3MFHandle;
+	begin
+		Result := nil;
+		HBuildItem := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPartFunc(FHandle, AIndex, HBuildItem));
+		if Assigned(HBuildItem) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFBuildItem, TLib3MFBuildItem>.Make(FWrapper, HBuildItem);
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentPartUUID(const AIndex: Cardinal): String;
+	var
+		bytesNeededPartUUID: Cardinal;
+		bytesWrittenPartUUID: Cardinal;
+		bufferPartUUID: array of Char;
+	begin
+		bytesNeededPartUUID:= 0;
+		bytesWrittenPartUUID:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPartUUIDFunc(FHandle, AIndex, 0, bytesNeededPartUUID, nil));
+		SetLength(bufferPartUUID, bytesNeededPartUUID);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPartUUIDFunc(FHandle, AIndex, bytesNeededPartUUID, bytesWrittenPartUUID, @bufferPartUUID[0]));
+		Result := StrPas(@bufferPartUUID[0]);
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentLocalPartID(const AIndex: Cardinal): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc(FHandle, AIndex, Result));
+	end;
+
+	function TLib3MFToolpathLayerReader.GetPartUUIDByLocalPartID(const ALocalPartID: Cardinal): String;
+	var
+		bytesNeededPartUUID: Cardinal;
+		bytesWrittenPartUUID: Cardinal;
+		bufferPartUUID: array of Char;
+	begin
+		bytesNeededPartUUID:= 0;
+		bytesWrittenPartUUID:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc(FHandle, ALocalPartID, 0, bytesNeededPartUUID, nil));
+		SetLength(bufferPartUUID, bytesNeededPartUUID);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc(FHandle, ALocalPartID, bytesNeededPartUUID, bytesWrittenPartUUID, @bufferPartUUID[0]));
+		Result := StrPas(@bufferPartUUID[0]);
+	end;
+
+	procedure TLib3MFToolpathLayerReader.GetSegmentPointData(const AIndex: Cardinal; out APointData: ArrayOfLib3MFPosition2D);
+	var
+		countNeededPointData: QWord;
+		countWrittenPointData: QWord;
+	begin
+		countNeededPointData:= 0;
+		countWrittenPointData:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPointDataFunc(FHandle, AIndex, 0, countNeededPointData, nil));
+		SetLength(APointData, countNeededPointData);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPointDataFunc(FHandle, AIndex, countNeededPointData, countWrittenPointData, @APointData[0]));
+	end;
+
+	procedure TLib3MFToolpathLayerReader.FindAttributeInfoByName(const ANameSpace: String; const AAttributeName: String; out AID: Cardinal; out AAttributeType: TLib3MFToolpathAttributeType);
+	var
+		ResultAttributeType: Integer;
+	begin
+		ResultAttributeType := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_FindAttributeInfoByNameFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), AID, ResultAttributeType));
+		AAttributeType := convertConstToToolpathAttributeType(ResultAttributeType);
+	end;
+
+	function TLib3MFToolpathLayerReader.FindAttributeIDByName(const ANameSpace: String; const AAttributeName: String): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_FindAttributeIDByNameFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), Result));
+	end;
+
+	function TLib3MFToolpathLayerReader.FindAttributeValueByName(const ANameSpace: String; const AAttributeName: String): TLib3MFToolpathAttributeType;
+	var
+		ResultAttributeType: Integer;
+	begin
+		ResultAttributeType := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_FindAttributeValueByNameFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), ResultAttributeType));
+		Result := convertConstToToolpathAttributeType(ResultAttributeType);
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentIntegerAttributeByID(const AIndex: Cardinal; const AID: Cardinal): Int64;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc(FHandle, AIndex, AID, Result));
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentIntegerAttributeByName(const AIndex: Cardinal; const ANameSpace: String; const AAttributeName: String): Int64;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc(FHandle, AIndex, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), Result));
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentDoubleAttributeByID(const AIndex: Cardinal; const AID: Cardinal): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc(FHandle, AIndex, AID, Result));
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentDoubleAttributeByName(const AIndex: Cardinal; const ANameSpace: String; const AAttributeName: String): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc(FHandle, AIndex, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), Result));
+	end;
+
+	function TLib3MFToolpathLayerReader.GetCustomDataCount(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetCustomDataCountFunc(FHandle, Result));
+	end;
+
+	function TLib3MFToolpathLayerReader.GetCustomData(const AIndex: Cardinal): TLib3MFCustomDOMTree;
+	var
+		HData: TLib3MFHandle;
+	begin
+		Result := nil;
+		HData := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetCustomDataFunc(FHandle, AIndex, HData));
+		if Assigned(HData) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCustomDOMTree, TLib3MFCustomDOMTree>.Make(FWrapper, HData);
+	end;
+
+	procedure TLib3MFToolpathLayerReader.GetCustomDataName(const AIndex: Cardinal; out ANameSpace: String; out ADataName: String);
+	var
+		bytesNeededNameSpace: Cardinal;
+		bytesWrittenNameSpace: Cardinal;
+		bufferNameSpace: array of Char;
+		bytesNeededDataName: Cardinal;
+		bytesWrittenDataName: Cardinal;
+		bufferDataName: array of Char;
+	begin
+		bytesNeededNameSpace:= 0;
+		bytesWrittenNameSpace:= 0;
+		bytesNeededDataName:= 0;
+		bytesWrittenDataName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetCustomDataNameFunc(FHandle, AIndex, 0, bytesNeededNameSpace, nil, 0, bytesNeededDataName, nil));
+		SetLength(bufferNameSpace, bytesNeededNameSpace);
+		SetLength(bufferDataName, bytesNeededDataName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetCustomDataNameFunc(FHandle, AIndex, bytesNeededNameSpace, bytesWrittenNameSpace, @bufferNameSpace[0], bytesNeededDataName, bytesWrittenDataName, @bufferDataName[0]));
+		ANameSpace := StrPas(@bufferNameSpace[0]);
+		ADataName := StrPas(@bufferDataName[0]);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ToolpathLayerData
+**************************************************************************************************************************)
+
+	constructor TLib3MFToolpathLayerData.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFToolpathLayerData.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFToolpathLayerData.GetLayerDataUUID(): String;
+	var
+		bytesNeededUUID: Cardinal;
+		bytesWrittenUUID: Cardinal;
+		bufferUUID: array of Char;
+	begin
+		bytesNeededUUID:= 0;
+		bytesWrittenUUID:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_GetLayerDataUUIDFunc(FHandle, 0, bytesNeededUUID, nil));
+		SetLength(bufferUUID, bytesNeededUUID);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_GetLayerDataUUIDFunc(FHandle, bytesNeededUUID, bytesWrittenUUID, @bufferUUID[0]));
+		Result := StrPas(@bufferUUID[0]);
+	end;
+
+	function TLib3MFToolpathLayerData.RegisterProfile(const AProfile: TLib3MFToolpathProfile): Cardinal;
+	var
+		AProfileHandle: TLib3MFHandle;
+	begin
+		if Assigned(AProfile) then
+		AProfileHandle := AProfile.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AProfile is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_RegisterProfileFunc(FHandle, AProfileHandle, Result));
+	end;
+
+	function TLib3MFToolpathLayerData.RegisterBuildItem(const ABuildItem: TLib3MFBuildItem): Cardinal;
+	var
+		ABuildItemHandle: TLib3MFHandle;
+	begin
+		if Assigned(ABuildItem) then
+		ABuildItemHandle := ABuildItem.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ABuildItem is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_RegisterBuildItemFunc(FHandle, ABuildItemHandle, Result));
+	end;
+
+	procedure TLib3MFToolpathLayerData.SetSegmentAttribute(const ANameSpace: String; const AAttributeName: String; const AValue: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_SetSegmentAttributeFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), PAnsiChar(AValue)));
+	end;
+
+	procedure TLib3MFToolpathLayerData.ClearSegmentAttributes();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_ClearSegmentAttributesFunc(FHandle));
+	end;
+
+	procedure TLib3MFToolpathLayerData.WriteHatchData(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D);
+	var
+		PtrPointData: PLib3MFPosition2D;
+		LenPointData: QWord;
+	begin
+		LenPointData := Length(APointData);
+		if LenPointData > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenPointData > 0 then
+			PtrPointData := @APointData[0]
+		else
+			PtrPointData := nil;
+		
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WriteHatchDataFunc(FHandle, AProfileID, APartID, QWord(LenPointData), PtrPointData));
+	end;
+
+	procedure TLib3MFToolpathLayerData.WriteLoop(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D);
+	var
+		PtrPointData: PLib3MFPosition2D;
+		LenPointData: QWord;
+	begin
+		LenPointData := Length(APointData);
+		if LenPointData > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenPointData > 0 then
+			PtrPointData := @APointData[0]
+		else
+			PtrPointData := nil;
+		
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WriteLoopFunc(FHandle, AProfileID, APartID, QWord(LenPointData), PtrPointData));
+	end;
+
+	procedure TLib3MFToolpathLayerData.WritePolyline(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D);
+	var
+		PtrPointData: PLib3MFPosition2D;
+		LenPointData: QWord;
+	begin
+		LenPointData := Length(APointData);
+		if LenPointData > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenPointData > 0 then
+			PtrPointData := @APointData[0]
+		else
+			PtrPointData := nil;
+		
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WritePolylineFunc(FHandle, AProfileID, APartID, QWord(LenPointData), PtrPointData));
+	end;
+
+	function TLib3MFToolpathLayerData.AddCustomData(const ANameSpace: String; const ADataName: String): TLib3MFCustomDOMTree;
+	var
+		HData: TLib3MFHandle;
+	begin
+		Result := nil;
+		HData := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_AddCustomDataFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(ADataName), HData));
+		if Assigned(HData) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCustomDOMTree, TLib3MFCustomDOMTree>.Make(FWrapper, HData);
+	end;
+
+	procedure TLib3MFToolpathLayerData.Finish();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_FinishFunc(FHandle));
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for Toolpath
+**************************************************************************************************************************)
+
+	constructor TLib3MFToolpath.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFToolpath.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFToolpath.GetUnits(): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetUnitsFunc(FHandle, Result));
+	end;
+
+	function TLib3MFToolpath.GetLayerCount(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetLayerCountFunc(FHandle, Result));
+	end;
+
+	function TLib3MFToolpath.GetProfileCount(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetProfileCountFunc(FHandle, Result));
+	end;
+
+	function TLib3MFToolpath.AddLayer(const AZMax: Cardinal; const APath: String; const AModelWriter: TLib3MFWriter): TLib3MFToolpathLayerData;
+	var
+		AModelWriterHandle: TLib3MFHandle;
+		HLayerData: TLib3MFHandle;
+	begin
+		if Assigned(AModelWriter) then
+		AModelWriterHandle := AModelWriter.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AModelWriter is a nil value.');
+		Result := nil;
+		HLayerData := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_AddLayerFunc(FHandle, AZMax, PAnsiChar(APath), AModelWriterHandle, HLayerData));
+		if Assigned(HLayerData) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathLayerData, TLib3MFToolpathLayerData>.Make(FWrapper, HLayerData);
+	end;
+
+	function TLib3MFToolpath.GetLayerAttachment(const AIndex: Cardinal): TLib3MFAttachment;
+	var
+		HAttachment: TLib3MFHandle;
+	begin
+		Result := nil;
+		HAttachment := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetLayerAttachmentFunc(FHandle, AIndex, HAttachment));
+		if Assigned(HAttachment) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFAttachment, TLib3MFAttachment>.Make(FWrapper, HAttachment);
+	end;
+
+	function TLib3MFToolpath.ReadLayerData(const AIndex: Cardinal): TLib3MFToolpathLayerReader;
+	var
+		HToolpathReader: TLib3MFHandle;
+	begin
+		Result := nil;
+		HToolpathReader := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_ReadLayerDataFunc(FHandle, AIndex, HToolpathReader));
+		if Assigned(HToolpathReader) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathLayerReader, TLib3MFToolpathLayerReader>.Make(FWrapper, HToolpathReader);
+	end;
+
+	function TLib3MFToolpath.GetLayerPath(const AIndex: Cardinal): String;
+	var
+		bytesNeededPath: Cardinal;
+		bytesWrittenPath: Cardinal;
+		bufferPath: array of Char;
+	begin
+		bytesNeededPath:= 0;
+		bytesWrittenPath:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetLayerPathFunc(FHandle, AIndex, 0, bytesNeededPath, nil));
+		SetLength(bufferPath, bytesNeededPath);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetLayerPathFunc(FHandle, AIndex, bytesNeededPath, bytesWrittenPath, @bufferPath[0]));
+		Result := StrPas(@bufferPath[0]);
+	end;
+
+	function TLib3MFToolpath.GetLayerZMax(const AIndex: Cardinal): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetLayerZMaxFunc(FHandle, AIndex, Result));
+	end;
+
+	function TLib3MFToolpath.GetLayerZ(const ALayerIndex: Cardinal): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetLayerZFunc(FHandle, ALayerIndex, Result));
+	end;
+
+	function TLib3MFToolpath.AddProfile(const AName: String): TLib3MFToolpathProfile;
+	var
+		HProfile: TLib3MFHandle;
+	begin
+		Result := nil;
+		HProfile := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_AddProfileFunc(FHandle, PAnsiChar(AName), HProfile));
+		if Assigned(HProfile) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathProfile, TLib3MFToolpathProfile>.Make(FWrapper, HProfile);
+	end;
+
+	function TLib3MFToolpath.GetProfile(const AProfileIndex: Cardinal): TLib3MFToolpathProfile;
+	var
+		HProfile: TLib3MFHandle;
+	begin
+		Result := nil;
+		HProfile := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetProfileFunc(FHandle, AProfileIndex, HProfile));
+		if Assigned(HProfile) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathProfile, TLib3MFToolpathProfile>.Make(FWrapper, HProfile);
+	end;
+
+	function TLib3MFToolpath.GetProfileUUID(const AProfileUUID: String): TLib3MFToolpathProfile;
+	var
+		HProfile: TLib3MFHandle;
+	begin
+		Result := nil;
+		HProfile := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetProfileUUIDFunc(FHandle, PAnsiChar(AProfileUUID), HProfile));
+		if Assigned(HProfile) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathProfile, TLib3MFToolpathProfile>.Make(FWrapper, HProfile);
+	end;
+
+	function TLib3MFToolpath.GetCustomDataCount(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetCustomDataCountFunc(FHandle, Result));
+	end;
+
+	function TLib3MFToolpath.GetCustomData(const AIndex: Cardinal): TLib3MFCustomDOMTree;
+	var
+		HData: TLib3MFHandle;
+	begin
+		Result := nil;
+		HData := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetCustomDataFunc(FHandle, AIndex, HData));
+		if Assigned(HData) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCustomDOMTree, TLib3MFCustomDOMTree>.Make(FWrapper, HData);
+	end;
+
+	procedure TLib3MFToolpath.GetCustomDataName(const AIndex: Cardinal; out ANameSpace: String; out ADataName: String);
+	var
+		bytesNeededNameSpace: Cardinal;
+		bytesWrittenNameSpace: Cardinal;
+		bufferNameSpace: array of Char;
+		bytesNeededDataName: Cardinal;
+		bytesWrittenDataName: Cardinal;
+		bufferDataName: array of Char;
+	begin
+		bytesNeededNameSpace:= 0;
+		bytesWrittenNameSpace:= 0;
+		bytesNeededDataName:= 0;
+		bytesWrittenDataName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetCustomDataNameFunc(FHandle, AIndex, 0, bytesNeededNameSpace, nil, 0, bytesNeededDataName, nil));
+		SetLength(bufferNameSpace, bytesNeededNameSpace);
+		SetLength(bufferDataName, bytesNeededDataName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetCustomDataNameFunc(FHandle, AIndex, bytesNeededNameSpace, bytesWrittenNameSpace, @bufferNameSpace[0], bytesNeededDataName, bytesWrittenDataName, @bufferDataName[0]));
+		ANameSpace := StrPas(@bufferNameSpace[0]);
+		ADataName := StrPas(@bufferDataName[0]);
+	end;
+
+	function TLib3MFToolpath.HasUniqueCustomData(const ANameSpace: String; const ADataName: String): Boolean;
+	var
+		ResultCustomDataExists: Byte;
+	begin
+		ResultCustomDataExists := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_HasUniqueCustomDataFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(ADataName), ResultCustomDataExists));
+		Result := (ResultCustomDataExists <> 0);
+	end;
+
+	function TLib3MFToolpath.FindUniqueCustomData(const ANameSpace: String; const ADataName: String): TLib3MFCustomDOMTree;
+	var
+		HData: TLib3MFHandle;
+	begin
+		Result := nil;
+		HData := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_FindUniqueCustomDataFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(ADataName), HData));
+		if Assigned(HData) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCustomDOMTree, TLib3MFCustomDOMTree>.Make(FWrapper, HData);
+	end;
+
+	function TLib3MFToolpath.AddCustomData(const ANameSpace: String; const ADataName: String): TLib3MFCustomDOMTree;
+	var
+		HData: TLib3MFHandle;
+	begin
+		Result := nil;
+		HData := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_AddCustomDataFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(ADataName), HData));
+		if Assigned(HData) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFCustomDOMTree, TLib3MFCustomDOMTree>.Make(FWrapper, HData);
+	end;
+
+	function TLib3MFToolpath.ClearCustomData(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_ClearCustomDataFunc(FHandle, Result));
+	end;
+
+	function TLib3MFToolpath.DeleteCustomData(const AData: TLib3MFCustomDOMTree): Boolean;
+	var
+		ADataHandle: TLib3MFHandle;
+		ResultSuccess: Byte;
+	begin
+		if Assigned(AData) then
+		ADataHandle := AData.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AData is a nil value.');
+		ResultSuccess := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_DeleteCustomDataFunc(FHandle, ADataHandle, ResultSuccess));
+		Result := (ResultSuccess <> 0);
+	end;
+
+	procedure TLib3MFToolpath.RegisterCustomIntegerAttribute(const ANameSpace: String; const AAttributeName: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_RegisterCustomIntegerAttributeFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName)));
+	end;
+
+	procedure TLib3MFToolpath.RegisterCustomDoubleAttribute(const ANameSpace: String; const AAttributeName: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_RegisterCustomDoubleAttributeFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName)));
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ToolpathIterator
+**************************************************************************************************************************)
+
+	constructor TLib3MFToolpathIterator.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFToolpathIterator.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFToolpathIterator.GetCurrentToolpath(): TLib3MFToolpath;
+	var
+		HResource: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResource := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathIterator_GetCurrentToolpathFunc(FHandle, HResource));
+		if Assigned(HResource) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpath, TLib3MFToolpath>.Make(FWrapper, HResource);
+	end;
+
+(*************************************************************************************************************************
  Class implementation for SliceStack
 **************************************************************************************************************************)
 
@@ -10010,6 +13591,17 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFMultiPropertyGroupIterator, TLib3MFMultiPropertyGroupIterator>.Make(FWrapper, HResourceIterator);
 	end;
 
+	function TLib3MFModel.GetToolpaths(): TLib3MFToolpathIterator;
+	var
+		HResourceIterator: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResourceIterator := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetToolpathsFunc(FHandle, HResourceIterator));
+		if Assigned(HResourceIterator) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathIterator, TLib3MFToolpathIterator>.Make(FWrapper, HResourceIterator);
+	end;
+
 	function TLib3MFModel.GetSliceStacks(): TLib3MFSliceStackIterator;
 	var
 		HResourceIterator: TLib3MFHandle;
@@ -10173,6 +13765,17 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_RemoveBuildItemFunc(FHandle, ABuildItemInstanceHandle));
 	end;
 
+	function TLib3MFModel.AddToolpath(const AUnitFactor: Double): TLib3MFToolpath;
+	var
+		HToolpathInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HToolpathInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddToolpathFunc(FHandle, AUnitFactor, HToolpathInstance));
+		if Assigned(HToolpathInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpath, TLib3MFToolpath>.Make(FWrapper, HToolpathInstance);
+	end;
+
 	function TLib3MFModel.GetMetaDataGroup(): TLib3MFMetaDataGroup;
 	var
 		HTheMetaDataGroup: TLib3MFHandle;
@@ -10297,6 +13900,53 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFKeyStore, TLib3MFKeyStore>.Make(FWrapper, HKeyStore);
 	end;
 
+	function TLib3MFModel.CreatePersistentSourceFromFile(const AFilename: String): TLib3MFPersistentReaderSource;
+	var
+		HInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_CreatePersistentSourceFromFileFunc(FHandle, PAnsiChar(AFilename), HInstance));
+		if Assigned(HInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFPersistentReaderSource, TLib3MFPersistentReaderSource>.Make(FWrapper, HInstance);
+	end;
+
+	function TLib3MFModel.CreatePersistentSourceFromBuffer(const ABuffer: TByteDynArray): TLib3MFPersistentReaderSource;
+	var
+		PtrBuffer: PByte;
+		LenBuffer: QWord;
+		HInstance: TLib3MFHandle;
+	begin
+		LenBuffer := Length(ABuffer);
+		if LenBuffer > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenBuffer > 0 then
+			PtrBuffer := @ABuffer[0]
+		else
+			PtrBuffer := nil;
+		
+		Result := nil;
+		HInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_CreatePersistentSourceFromBufferFunc(FHandle, QWord(LenBuffer), PtrBuffer, HInstance));
+		if Assigned(HInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFPersistentReaderSource, TLib3MFPersistentReaderSource>.Make(FWrapper, HInstance);
+	end;
+
+	function TLib3MFModel.CreatePersistentSourceFromCallback(const ATheReadCallback: PLib3MF_ReadCallback; const AStreamSize: QWord; const ATheSeekCallback: PLib3MF_SeekCallback; const AUserData: Pointer): TLib3MFPersistentReaderSource;
+	var
+		HInstance: TLib3MFHandle;
+	begin
+		if not Assigned(ATheReadCallback) then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheReadCallback is a nil value.');
+		if not Assigned(ATheSeekCallback) then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheSeekCallback is a nil value.');
+		Result := nil;
+		HInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_CreatePersistentSourceFromCallbackFunc(FHandle, ATheReadCallback, AStreamSize, ATheSeekCallback, AUserData, HInstance));
+		if Assigned(HInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFPersistentReaderSource, TLib3MFPersistentReaderSource>.Make(FWrapper, HInstance);
+	end;
+
 (*************************************************************************************************************************
  Wrapper class implementation
 **************************************************************************************************************************)
@@ -10320,6 +13970,13 @@ implementation
 			raise ELib3MFException.Create(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 
 		FLib3MFBase_ClassTypeIdFunc := LoadFunction('lib3mf_base_classtypeid');
+		FLib3MFBinaryStream_GetBinaryPathFunc := LoadFunction('lib3mf_binarystream_getbinarypath');
+		FLib3MFBinaryStream_GetIndexPathFunc := LoadFunction('lib3mf_binarystream_getindexpath');
+		FLib3MFBinaryStream_GetUUIDFunc := LoadFunction('lib3mf_binarystream_getuuid');
+		FLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc := LoadFunction('lib3mf_binarystream_disablediscretizedarraycompression');
+		FLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc := LoadFunction('lib3mf_binarystream_enablediscretizedarraycompression');
+		FLib3MFBinaryStream_EnableLZMAFunc := LoadFunction('lib3mf_binarystream_enablelzma');
+		FLib3MFBinaryStream_DisableLZMAFunc := LoadFunction('lib3mf_binarystream_disablelzma');
 		FLib3MFWriter_WriteToFileFunc := LoadFunction('lib3mf_writer_writetofile');
 		FLib3MFWriter_GetStreamSizeFunc := LoadFunction('lib3mf_writer_getstreamsize');
 		FLib3MFWriter_WriteToBufferFunc := LoadFunction('lib3mf_writer_writetobuffer');
@@ -10333,6 +13990,13 @@ implementation
 		FLib3MFWriter_GetWarningCountFunc := LoadFunction('lib3mf_writer_getwarningcount');
 		FLib3MFWriter_AddKeyWrappingCallbackFunc := LoadFunction('lib3mf_writer_addkeywrappingcallback');
 		FLib3MFWriter_SetContentEncryptionCallbackFunc := LoadFunction('lib3mf_writer_setcontentencryptioncallback');
+		FLib3MFWriter_CreateBinaryStreamFunc := LoadFunction('lib3mf_writer_createbinarystream');
+		FLib3MFWriter_AssignBinaryStreamFunc := LoadFunction('lib3mf_writer_assignbinarystream');
+		FLib3MFWriter_RegisterCustomNamespaceFunc := LoadFunction('lib3mf_writer_registercustomnamespace');
+		FLib3MFPersistentReaderSource_GetSourceTypeFunc := LoadFunction('lib3mf_persistentreadersource_getsourcetype');
+		FLib3MFPersistentReaderSource_InvalidateSourceDataFunc := LoadFunction('lib3mf_persistentreadersource_invalidatesourcedata');
+		FLib3MFPersistentReaderSource_SourceDataIsValidFunc := LoadFunction('lib3mf_persistentreadersource_sourcedataisvalid');
+		FLib3MFReader_ReadFromPersistentSourceFunc := LoadFunction('lib3mf_reader_readfrompersistentsource');
 		FLib3MFReader_ReadFromFileFunc := LoadFunction('lib3mf_reader_readfromfile');
 		FLib3MFReader_ReadFromBufferFunc := LoadFunction('lib3mf_reader_readfrombuffer');
 		FLib3MFReader_ReadFromCallbackFunc := LoadFunction('lib3mf_reader_readfromcallback');
@@ -10357,6 +14021,51 @@ implementation
 		FLib3MFResourceIterator_GetCurrentFunc := LoadFunction('lib3mf_resourceiterator_getcurrent');
 		FLib3MFResourceIterator_CloneFunc := LoadFunction('lib3mf_resourceiterator_clone');
 		FLib3MFResourceIterator_CountFunc := LoadFunction('lib3mf_resourceiterator_count');
+		FLib3MFCustomXMLAttribute_GetNameFunc := LoadFunction('lib3mf_customxmlattribute_getname');
+		FLib3MFCustomXMLAttribute_GetValueFunc := LoadFunction('lib3mf_customxmlattribute_getvalue');
+		FLib3MFCustomXMLAttribute_IsValidIntegerFunc := LoadFunction('lib3mf_customxmlattribute_isvalidinteger');
+		FLib3MFCustomXMLAttribute_GetIntegerValueFunc := LoadFunction('lib3mf_customxmlattribute_getintegervalue');
+		FLib3MFCustomXMLAttribute_IsValidDoubleFunc := LoadFunction('lib3mf_customxmlattribute_isvaliddouble');
+		FLib3MFCustomXMLAttribute_GetDoubleValueFunc := LoadFunction('lib3mf_customxmlattribute_getdoublevalue');
+		FLib3MFCustomXMLAttribute_IsValidBoolFunc := LoadFunction('lib3mf_customxmlattribute_isvalidbool');
+		FLib3MFCustomXMLAttribute_GetBoolValueFunc := LoadFunction('lib3mf_customxmlattribute_getboolvalue');
+		FLib3MFCustomXMLAttribute_SetValueFunc := LoadFunction('lib3mf_customxmlattribute_setvalue');
+		FLib3MFCustomXMLAttribute_SetIntegerValueFunc := LoadFunction('lib3mf_customxmlattribute_setintegervalue');
+		FLib3MFCustomXMLAttribute_SetDoubleValueFunc := LoadFunction('lib3mf_customxmlattribute_setdoublevalue');
+		FLib3MFCustomXMLAttribute_SetBoolValueFunc := LoadFunction('lib3mf_customxmlattribute_setboolvalue');
+		FLib3MFCustomXMLAttribute_RemoveFunc := LoadFunction('lib3mf_customxmlattribute_remove');
+		FLib3MFCustomXMLNode_GetNameFunc := LoadFunction('lib3mf_customxmlnode_getname');
+		FLib3MFCustomXMLNode_GetNameSpaceFunc := LoadFunction('lib3mf_customxmlnode_getnamespace');
+		FLib3MFCustomXMLNode_GetAttributeCountFunc := LoadFunction('lib3mf_customxmlnode_getattributecount');
+		FLib3MFCustomXMLNode_GetAttributeFunc := LoadFunction('lib3mf_customxmlnode_getattribute');
+		FLib3MFCustomXMLNode_HasAttributeFunc := LoadFunction('lib3mf_customxmlnode_hasattribute');
+		FLib3MFCustomXMLNode_FindAttributeFunc := LoadFunction('lib3mf_customxmlnode_findattribute');
+		FLib3MFCustomXMLNode_RemoveAttributeFunc := LoadFunction('lib3mf_customxmlnode_removeattribute');
+		FLib3MFCustomXMLNode_RemoveAttributeByIndexFunc := LoadFunction('lib3mf_customxmlnode_removeattributebyindex');
+		FLib3MFCustomXMLNode_AddAttributeFunc := LoadFunction('lib3mf_customxmlnode_addattribute');
+		FLib3MFCustomXMLNode_AddIntegerAttributeFunc := LoadFunction('lib3mf_customxmlnode_addintegerattribute');
+		FLib3MFCustomXMLNode_AddDoubleAttributeFunc := LoadFunction('lib3mf_customxmlnode_adddoubleattribute');
+		FLib3MFCustomXMLNode_AddBoolAttributeFunc := LoadFunction('lib3mf_customxmlnode_addboolattribute');
+		FLib3MFCustomXMLNode_GetChildrenFunc := LoadFunction('lib3mf_customxmlnode_getchildren');
+		FLib3MFCustomXMLNode_CountChildrenByNameFunc := LoadFunction('lib3mf_customxmlnode_countchildrenbyname');
+		FLib3MFCustomXMLNode_GetChildrenByNameFunc := LoadFunction('lib3mf_customxmlnode_getchildrenbyname');
+		FLib3MFCustomXMLNode_HasChildFunc := LoadFunction('lib3mf_customxmlnode_haschild');
+		FLib3MFCustomXMLNode_HasUniqueChildFunc := LoadFunction('lib3mf_customxmlnode_hasuniquechild');
+		FLib3MFCustomXMLNode_FindChildFunc := LoadFunction('lib3mf_customxmlnode_findchild');
+		FLib3MFCustomXMLNode_AddChildFunc := LoadFunction('lib3mf_customxmlnode_addchild');
+		FLib3MFCustomXMLNode_RemoveChildFunc := LoadFunction('lib3mf_customxmlnode_removechild');
+		FLib3MFCustomXMLNode_RemoveChildrenWithNameFunc := LoadFunction('lib3mf_customxmlnode_removechildrenwithname');
+		FLib3MFCustomXMLNode_RemoveFunc := LoadFunction('lib3mf_customxmlnode_remove');
+		FLib3MFCustomXMLNodes_GetNodeCountFunc := LoadFunction('lib3mf_customxmlnodes_getnodecount');
+		FLib3MFCustomXMLNodes_GetNodeFunc := LoadFunction('lib3mf_customxmlnodes_getnode');
+		FLib3MFCustomXMLNodes_CountNodesByNameFunc := LoadFunction('lib3mf_customxmlnodes_countnodesbyname');
+		FLib3MFCustomXMLNodes_GetNodesByNameFunc := LoadFunction('lib3mf_customxmlnodes_getnodesbyname');
+		FLib3MFCustomXMLNodes_HasNodeFunc := LoadFunction('lib3mf_customxmlnodes_hasnode');
+		FLib3MFCustomXMLNodes_HasUniqueNodeFunc := LoadFunction('lib3mf_customxmlnodes_hasuniquenode');
+		FLib3MFCustomXMLNodes_FindNodeFunc := LoadFunction('lib3mf_customxmlnodes_findnode');
+		FLib3MFCustomDOMTree_GetNameSpaceFunc := LoadFunction('lib3mf_customdomtree_getnamespace');
+		FLib3MFCustomDOMTree_GetRootNodeFunc := LoadFunction('lib3mf_customdomtree_getrootnode');
+		FLib3MFCustomDOMTree_SaveToStringFunc := LoadFunction('lib3mf_customdomtree_savetostring');
 		FLib3MFSliceStackIterator_GetCurrentSliceStackFunc := LoadFunction('lib3mf_slicestackiterator_getcurrentslicestack');
 		FLib3MFObjectIterator_GetCurrentObjectFunc := LoadFunction('lib3mf_objectiterator_getcurrentobject');
 		FLib3MFMeshObjectIterator_GetCurrentMeshObjectFunc := LoadFunction('lib3mf_meshobjectiterator_getcurrentmeshobject');
@@ -10549,6 +14258,78 @@ implementation
 		FLib3MFSlice_GetPolygonIndicesFunc := LoadFunction('lib3mf_slice_getpolygonindices');
 		FLib3MFSlice_GetPolygonIndexCountFunc := LoadFunction('lib3mf_slice_getpolygonindexcount');
 		FLib3MFSlice_GetZTopFunc := LoadFunction('lib3mf_slice_getztop');
+		FLib3MFToolpathProfile_GetUUIDFunc := LoadFunction('lib3mf_toolpathprofile_getuuid');
+		FLib3MFToolpathProfile_GetNameFunc := LoadFunction('lib3mf_toolpathprofile_getname');
+		FLib3MFToolpathProfile_GetParameterCountFunc := LoadFunction('lib3mf_toolpathprofile_getparametercount');
+		FLib3MFToolpathProfile_GetParameterNameFunc := LoadFunction('lib3mf_toolpathprofile_getparametername');
+		FLib3MFToolpathProfile_GetParameterNameSpaceFunc := LoadFunction('lib3mf_toolpathprofile_getparameternamespace');
+		FLib3MFToolpathProfile_HasParameterValueFunc := LoadFunction('lib3mf_toolpathprofile_hasparametervalue');
+		FLib3MFToolpathProfile_GetParameterValueFunc := LoadFunction('lib3mf_toolpathprofile_getparametervalue');
+		FLib3MFToolpathProfile_GetParameterValueDefFunc := LoadFunction('lib3mf_toolpathprofile_getparametervaluedef');
+		FLib3MFToolpathProfile_GetParameterDoubleValueFunc := LoadFunction('lib3mf_toolpathprofile_getparameterdoublevalue');
+		FLib3MFToolpathProfile_GetParameterDoubleValueDefFunc := LoadFunction('lib3mf_toolpathprofile_getparameterdoublevaluedef');
+		FLib3MFToolpathProfile_GetParameterIntegerValueFunc := LoadFunction('lib3mf_toolpathprofile_getparameterintegervalue');
+		FLib3MFToolpathProfile_GetParameterIntegerValueDefFunc := LoadFunction('lib3mf_toolpathprofile_getparameterintegervaluedef');
+		FLib3MFToolpathProfile_GetParameterBoolValueFunc := LoadFunction('lib3mf_toolpathprofile_getparameterboolvalue');
+		FLib3MFToolpathProfile_GetParameterBoolValueDefFunc := LoadFunction('lib3mf_toolpathprofile_getparameterboolvaluedef');
+		FLib3MFToolpathProfile_SetNameFunc := LoadFunction('lib3mf_toolpathprofile_setname');
+		FLib3MFToolpathProfile_SetParameterValueFunc := LoadFunction('lib3mf_toolpathprofile_setparametervalue');
+		FLib3MFToolpathProfile_SetParameterDoubleValueFunc := LoadFunction('lib3mf_toolpathprofile_setparameterdoublevalue');
+		FLib3MFToolpathProfile_SetParameterIntegerValueFunc := LoadFunction('lib3mf_toolpathprofile_setparameterintegervalue');
+		FLib3MFToolpathProfile_SetParameterBoolValueFunc := LoadFunction('lib3mf_toolpathprofile_setparameterboolvalue');
+		FLib3MFToolpathLayerReader_GetLayerDataUUIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getlayerdatauuid');
+		FLib3MFToolpathLayerReader_GetSegmentCountFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentcount');
+		FLib3MFToolpathLayerReader_GetSegmentInfoFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentinfo');
+		FLib3MFToolpathLayerReader_GetSegmentProfileFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentprofile');
+		FLib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentprofileuuid');
+		FLib3MFToolpathLayerReader_GetSegmentPartFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentpart');
+		FLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentpartuuid');
+		FLib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentlocalpartid');
+		FLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getpartuuidbylocalpartid');
+		FLib3MFToolpathLayerReader_GetSegmentPointDataFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentpointdata');
+		FLib3MFToolpathLayerReader_FindAttributeInfoByNameFunc := LoadFunction('lib3mf_toolpathlayerreader_findattributeinfobyname');
+		FLib3MFToolpathLayerReader_FindAttributeIDByNameFunc := LoadFunction('lib3mf_toolpathlayerreader_findattributeidbyname');
+		FLib3MFToolpathLayerReader_FindAttributeValueByNameFunc := LoadFunction('lib3mf_toolpathlayerreader_findattributevaluebyname');
+		FLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentintegerattributebyid');
+		FLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentintegerattributebyname');
+		FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid');
+		FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname');
+		FLib3MFToolpathLayerReader_GetCustomDataCountFunc := LoadFunction('lib3mf_toolpathlayerreader_getcustomdatacount');
+		FLib3MFToolpathLayerReader_GetCustomDataFunc := LoadFunction('lib3mf_toolpathlayerreader_getcustomdata');
+		FLib3MFToolpathLayerReader_GetCustomDataNameFunc := LoadFunction('lib3mf_toolpathlayerreader_getcustomdataname');
+		FLib3MFToolpathLayerData_GetLayerDataUUIDFunc := LoadFunction('lib3mf_toolpathlayerdata_getlayerdatauuid');
+		FLib3MFToolpathLayerData_RegisterProfileFunc := LoadFunction('lib3mf_toolpathlayerdata_registerprofile');
+		FLib3MFToolpathLayerData_RegisterBuildItemFunc := LoadFunction('lib3mf_toolpathlayerdata_registerbuilditem');
+		FLib3MFToolpathLayerData_SetSegmentAttributeFunc := LoadFunction('lib3mf_toolpathlayerdata_setsegmentattribute');
+		FLib3MFToolpathLayerData_ClearSegmentAttributesFunc := LoadFunction('lib3mf_toolpathlayerdata_clearsegmentattributes');
+		FLib3MFToolpathLayerData_WriteHatchDataFunc := LoadFunction('lib3mf_toolpathlayerdata_writehatchdata');
+		FLib3MFToolpathLayerData_WriteLoopFunc := LoadFunction('lib3mf_toolpathlayerdata_writeloop');
+		FLib3MFToolpathLayerData_WritePolylineFunc := LoadFunction('lib3mf_toolpathlayerdata_writepolyline');
+		FLib3MFToolpathLayerData_AddCustomDataFunc := LoadFunction('lib3mf_toolpathlayerdata_addcustomdata');
+		FLib3MFToolpathLayerData_FinishFunc := LoadFunction('lib3mf_toolpathlayerdata_finish');
+		FLib3MFToolpath_GetUnitsFunc := LoadFunction('lib3mf_toolpath_getunits');
+		FLib3MFToolpath_GetLayerCountFunc := LoadFunction('lib3mf_toolpath_getlayercount');
+		FLib3MFToolpath_GetProfileCountFunc := LoadFunction('lib3mf_toolpath_getprofilecount');
+		FLib3MFToolpath_AddLayerFunc := LoadFunction('lib3mf_toolpath_addlayer');
+		FLib3MFToolpath_GetLayerAttachmentFunc := LoadFunction('lib3mf_toolpath_getlayerattachment');
+		FLib3MFToolpath_ReadLayerDataFunc := LoadFunction('lib3mf_toolpath_readlayerdata');
+		FLib3MFToolpath_GetLayerPathFunc := LoadFunction('lib3mf_toolpath_getlayerpath');
+		FLib3MFToolpath_GetLayerZMaxFunc := LoadFunction('lib3mf_toolpath_getlayerzmax');
+		FLib3MFToolpath_GetLayerZFunc := LoadFunction('lib3mf_toolpath_getlayerz');
+		FLib3MFToolpath_AddProfileFunc := LoadFunction('lib3mf_toolpath_addprofile');
+		FLib3MFToolpath_GetProfileFunc := LoadFunction('lib3mf_toolpath_getprofile');
+		FLib3MFToolpath_GetProfileUUIDFunc := LoadFunction('lib3mf_toolpath_getprofileuuid');
+		FLib3MFToolpath_GetCustomDataCountFunc := LoadFunction('lib3mf_toolpath_getcustomdatacount');
+		FLib3MFToolpath_GetCustomDataFunc := LoadFunction('lib3mf_toolpath_getcustomdata');
+		FLib3MFToolpath_GetCustomDataNameFunc := LoadFunction('lib3mf_toolpath_getcustomdataname');
+		FLib3MFToolpath_HasUniqueCustomDataFunc := LoadFunction('lib3mf_toolpath_hasuniquecustomdata');
+		FLib3MFToolpath_FindUniqueCustomDataFunc := LoadFunction('lib3mf_toolpath_finduniquecustomdata');
+		FLib3MFToolpath_AddCustomDataFunc := LoadFunction('lib3mf_toolpath_addcustomdata');
+		FLib3MFToolpath_ClearCustomDataFunc := LoadFunction('lib3mf_toolpath_clearcustomdata');
+		FLib3MFToolpath_DeleteCustomDataFunc := LoadFunction('lib3mf_toolpath_deletecustomdata');
+		FLib3MFToolpath_RegisterCustomIntegerAttributeFunc := LoadFunction('lib3mf_toolpath_registercustomintegerattribute');
+		FLib3MFToolpath_RegisterCustomDoubleAttributeFunc := LoadFunction('lib3mf_toolpath_registercustomdoubleattribute');
+		FLib3MFToolpathIterator_GetCurrentToolpathFunc := LoadFunction('lib3mf_toolpathiterator_getcurrenttoolpath');
 		FLib3MFSliceStack_GetBottomZFunc := LoadFunction('lib3mf_slicestack_getbottomz');
 		FLib3MFSliceStack_GetSliceCountFunc := LoadFunction('lib3mf_slicestack_getslicecount');
 		FLib3MFSliceStack_GetSliceFunc := LoadFunction('lib3mf_slicestack_getslice');
@@ -10632,6 +14413,7 @@ implementation
 		FLib3MFModel_GetTexture2DGroupsFunc := LoadFunction('lib3mf_model_gettexture2dgroups');
 		FLib3MFModel_GetCompositeMaterialsFunc := LoadFunction('lib3mf_model_getcompositematerials');
 		FLib3MFModel_GetMultiPropertyGroupsFunc := LoadFunction('lib3mf_model_getmultipropertygroups');
+		FLib3MFModel_GetToolpathsFunc := LoadFunction('lib3mf_model_gettoolpaths');
 		FLib3MFModel_GetSliceStacksFunc := LoadFunction('lib3mf_model_getslicestacks');
 		FLib3MFModel_MergeToModelFunc := LoadFunction('lib3mf_model_mergetomodel');
 		FLib3MFModel_AddMeshObjectFunc := LoadFunction('lib3mf_model_addmeshobject');
@@ -10645,6 +14427,7 @@ implementation
 		FLib3MFModel_AddMultiPropertyGroupFunc := LoadFunction('lib3mf_model_addmultipropertygroup');
 		FLib3MFModel_AddBuildItemFunc := LoadFunction('lib3mf_model_addbuilditem');
 		FLib3MFModel_RemoveBuildItemFunc := LoadFunction('lib3mf_model_removebuilditem');
+		FLib3MFModel_AddToolpathFunc := LoadFunction('lib3mf_model_addtoolpath');
 		FLib3MFModel_GetMetaDataGroupFunc := LoadFunction('lib3mf_model_getmetadatagroup');
 		FLib3MFModel_AddAttachmentFunc := LoadFunction('lib3mf_model_addattachment');
 		FLib3MFModel_RemoveAttachmentFunc := LoadFunction('lib3mf_model_removeattachment');
@@ -10659,6 +14442,9 @@ implementation
 		FLib3MFModel_RemoveCustomContentTypeFunc := LoadFunction('lib3mf_model_removecustomcontenttype');
 		FLib3MFModel_SetRandomNumberCallbackFunc := LoadFunction('lib3mf_model_setrandomnumbercallback');
 		FLib3MFModel_GetKeyStoreFunc := LoadFunction('lib3mf_model_getkeystore');
+		FLib3MFModel_CreatePersistentSourceFromFileFunc := LoadFunction('lib3mf_model_createpersistentsourcefromfile');
+		FLib3MFModel_CreatePersistentSourceFromBufferFunc := LoadFunction('lib3mf_model_createpersistentsourcefrombuffer');
+		FLib3MFModel_CreatePersistentSourceFromCallbackFunc := LoadFunction('lib3mf_model_createpersistentsourcefromcallback');
 		FLib3MFGetLibraryVersionFunc := LoadFunction('lib3mf_getlibraryversion');
 		FLib3MFGetPrereleaseInformationFunc := LoadFunction('lib3mf_getprereleaseinformation');
 		FLib3MFGetBuildInformationFunc := LoadFunction('lib3mf_getbuildinformation');
@@ -10690,6 +14476,27 @@ implementation
 		
 		
 		AResult := ALookupMethod(PAnsiChar('lib3mf_base_classtypeid'), @FLib3MFBase_ClassTypeIdFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_getbinarypath'), @FLib3MFBinaryStream_GetBinaryPathFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_getindexpath'), @FLib3MFBinaryStream_GetIndexPathFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_getuuid'), @FLib3MFBinaryStream_GetUUIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_disablediscretizedarraycompression'), @FLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_enablediscretizedarraycompression'), @FLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_enablelzma'), @FLib3MFBinaryStream_EnableLZMAFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_disablelzma'), @FLib3MFBinaryStream_DisableLZMAFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_writer_writetofile'), @FLib3MFWriter_WriteToFileFunc);
@@ -10729,6 +14536,27 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_writer_setcontentencryptioncallback'), @FLib3MFWriter_SetContentEncryptionCallbackFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_writer_createbinarystream'), @FLib3MFWriter_CreateBinaryStreamFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_writer_assignbinarystream'), @FLib3MFWriter_AssignBinaryStreamFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_writer_registercustomnamespace'), @FLib3MFWriter_RegisterCustomNamespaceFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_persistentreadersource_getsourcetype'), @FLib3MFPersistentReaderSource_GetSourceTypeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_persistentreadersource_invalidatesourcedata'), @FLib3MFPersistentReaderSource_InvalidateSourceDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_persistentreadersource_sourcedataisvalid'), @FLib3MFPersistentReaderSource_SourceDataIsValidFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_reader_readfrompersistentsource'), @FLib3MFReader_ReadFromPersistentSourceFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_reader_readfromfile'), @FLib3MFReader_ReadFromFileFunc);
@@ -10801,6 +14629,141 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_resourceiterator_count'), @FLib3MFResourceIterator_CountFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlattribute_getname'), @FLib3MFCustomXMLAttribute_GetNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlattribute_getvalue'), @FLib3MFCustomXMLAttribute_GetValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlattribute_isvalidinteger'), @FLib3MFCustomXMLAttribute_IsValidIntegerFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlattribute_getintegervalue'), @FLib3MFCustomXMLAttribute_GetIntegerValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlattribute_isvaliddouble'), @FLib3MFCustomXMLAttribute_IsValidDoubleFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlattribute_getdoublevalue'), @FLib3MFCustomXMLAttribute_GetDoubleValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlattribute_isvalidbool'), @FLib3MFCustomXMLAttribute_IsValidBoolFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlattribute_getboolvalue'), @FLib3MFCustomXMLAttribute_GetBoolValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlattribute_setvalue'), @FLib3MFCustomXMLAttribute_SetValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlattribute_setintegervalue'), @FLib3MFCustomXMLAttribute_SetIntegerValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlattribute_setdoublevalue'), @FLib3MFCustomXMLAttribute_SetDoubleValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlattribute_setboolvalue'), @FLib3MFCustomXMLAttribute_SetBoolValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlattribute_remove'), @FLib3MFCustomXMLAttribute_RemoveFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_getname'), @FLib3MFCustomXMLNode_GetNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_getnamespace'), @FLib3MFCustomXMLNode_GetNameSpaceFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_getattributecount'), @FLib3MFCustomXMLNode_GetAttributeCountFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_getattribute'), @FLib3MFCustomXMLNode_GetAttributeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_hasattribute'), @FLib3MFCustomXMLNode_HasAttributeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_findattribute'), @FLib3MFCustomXMLNode_FindAttributeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_removeattribute'), @FLib3MFCustomXMLNode_RemoveAttributeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_removeattributebyindex'), @FLib3MFCustomXMLNode_RemoveAttributeByIndexFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_addattribute'), @FLib3MFCustomXMLNode_AddAttributeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_addintegerattribute'), @FLib3MFCustomXMLNode_AddIntegerAttributeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_adddoubleattribute'), @FLib3MFCustomXMLNode_AddDoubleAttributeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_addboolattribute'), @FLib3MFCustomXMLNode_AddBoolAttributeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_getchildren'), @FLib3MFCustomXMLNode_GetChildrenFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_countchildrenbyname'), @FLib3MFCustomXMLNode_CountChildrenByNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_getchildrenbyname'), @FLib3MFCustomXMLNode_GetChildrenByNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_haschild'), @FLib3MFCustomXMLNode_HasChildFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_hasuniquechild'), @FLib3MFCustomXMLNode_HasUniqueChildFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_findchild'), @FLib3MFCustomXMLNode_FindChildFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_addchild'), @FLib3MFCustomXMLNode_AddChildFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_removechild'), @FLib3MFCustomXMLNode_RemoveChildFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_removechildrenwithname'), @FLib3MFCustomXMLNode_RemoveChildrenWithNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnode_remove'), @FLib3MFCustomXMLNode_RemoveFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnodes_getnodecount'), @FLib3MFCustomXMLNodes_GetNodeCountFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnodes_getnode'), @FLib3MFCustomXMLNodes_GetNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnodes_countnodesbyname'), @FLib3MFCustomXMLNodes_CountNodesByNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnodes_getnodesbyname'), @FLib3MFCustomXMLNodes_GetNodesByNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnodes_hasnode'), @FLib3MFCustomXMLNodes_HasNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnodes_hasuniquenode'), @FLib3MFCustomXMLNodes_HasUniqueNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customxmlnodes_findnode'), @FLib3MFCustomXMLNodes_FindNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customdomtree_getnamespace'), @FLib3MFCustomDOMTree_GetNameSpaceFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customdomtree_getrootnode'), @FLib3MFCustomDOMTree_GetRootNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_customdomtree_savetostring'), @FLib3MFCustomDOMTree_SaveToStringFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_slicestackiterator_getcurrentslicestack'), @FLib3MFSliceStackIterator_GetCurrentSliceStackFunc);
@@ -11379,6 +15342,222 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_slice_getztop'), @FLib3MFSlice_GetZTopFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getuuid'), @FLib3MFToolpathProfile_GetUUIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getname'), @FLib3MFToolpathProfile_GetNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparametercount'), @FLib3MFToolpathProfile_GetParameterCountFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparametername'), @FLib3MFToolpathProfile_GetParameterNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparameternamespace'), @FLib3MFToolpathProfile_GetParameterNameSpaceFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_hasparametervalue'), @FLib3MFToolpathProfile_HasParameterValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparametervalue'), @FLib3MFToolpathProfile_GetParameterValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparametervaluedef'), @FLib3MFToolpathProfile_GetParameterValueDefFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparameterdoublevalue'), @FLib3MFToolpathProfile_GetParameterDoubleValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparameterdoublevaluedef'), @FLib3MFToolpathProfile_GetParameterDoubleValueDefFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparameterintegervalue'), @FLib3MFToolpathProfile_GetParameterIntegerValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparameterintegervaluedef'), @FLib3MFToolpathProfile_GetParameterIntegerValueDefFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparameterboolvalue'), @FLib3MFToolpathProfile_GetParameterBoolValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparameterboolvaluedef'), @FLib3MFToolpathProfile_GetParameterBoolValueDefFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_setname'), @FLib3MFToolpathProfile_SetNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_setparametervalue'), @FLib3MFToolpathProfile_SetParameterValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_setparameterdoublevalue'), @FLib3MFToolpathProfile_SetParameterDoubleValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_setparameterintegervalue'), @FLib3MFToolpathProfile_SetParameterIntegerValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_setparameterboolvalue'), @FLib3MFToolpathProfile_SetParameterBoolValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getlayerdatauuid'), @FLib3MFToolpathLayerReader_GetLayerDataUUIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentcount'), @FLib3MFToolpathLayerReader_GetSegmentCountFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentinfo'), @FLib3MFToolpathLayerReader_GetSegmentInfoFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentprofile'), @FLib3MFToolpathLayerReader_GetSegmentProfileFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentprofileuuid'), @FLib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentpart'), @FLib3MFToolpathLayerReader_GetSegmentPartFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentpartuuid'), @FLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentlocalpartid'), @FLib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getpartuuidbylocalpartid'), @FLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentpointdata'), @FLib3MFToolpathLayerReader_GetSegmentPointDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_findattributeinfobyname'), @FLib3MFToolpathLayerReader_FindAttributeInfoByNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_findattributeidbyname'), @FLib3MFToolpathLayerReader_FindAttributeIDByNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_findattributevaluebyname'), @FLib3MFToolpathLayerReader_FindAttributeValueByNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentintegerattributebyid'), @FLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentintegerattributebyname'), @FLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid'), @FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname'), @FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getcustomdatacount'), @FLib3MFToolpathLayerReader_GetCustomDataCountFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getcustomdata'), @FLib3MFToolpathLayerReader_GetCustomDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getcustomdataname'), @FLib3MFToolpathLayerReader_GetCustomDataNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_getlayerdatauuid'), @FLib3MFToolpathLayerData_GetLayerDataUUIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_registerprofile'), @FLib3MFToolpathLayerData_RegisterProfileFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_registerbuilditem'), @FLib3MFToolpathLayerData_RegisterBuildItemFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_setsegmentattribute'), @FLib3MFToolpathLayerData_SetSegmentAttributeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_clearsegmentattributes'), @FLib3MFToolpathLayerData_ClearSegmentAttributesFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writehatchdata'), @FLib3MFToolpathLayerData_WriteHatchDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writeloop'), @FLib3MFToolpathLayerData_WriteLoopFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writepolyline'), @FLib3MFToolpathLayerData_WritePolylineFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_addcustomdata'), @FLib3MFToolpathLayerData_AddCustomDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_finish'), @FLib3MFToolpathLayerData_FinishFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getunits'), @FLib3MFToolpath_GetUnitsFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getlayercount'), @FLib3MFToolpath_GetLayerCountFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getprofilecount'), @FLib3MFToolpath_GetProfileCountFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_addlayer'), @FLib3MFToolpath_AddLayerFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getlayerattachment'), @FLib3MFToolpath_GetLayerAttachmentFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_readlayerdata'), @FLib3MFToolpath_ReadLayerDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getlayerpath'), @FLib3MFToolpath_GetLayerPathFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getlayerzmax'), @FLib3MFToolpath_GetLayerZMaxFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getlayerz'), @FLib3MFToolpath_GetLayerZFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_addprofile'), @FLib3MFToolpath_AddProfileFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getprofile'), @FLib3MFToolpath_GetProfileFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getprofileuuid'), @FLib3MFToolpath_GetProfileUUIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getcustomdatacount'), @FLib3MFToolpath_GetCustomDataCountFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getcustomdata'), @FLib3MFToolpath_GetCustomDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getcustomdataname'), @FLib3MFToolpath_GetCustomDataNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_hasuniquecustomdata'), @FLib3MFToolpath_HasUniqueCustomDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_finduniquecustomdata'), @FLib3MFToolpath_FindUniqueCustomDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_addcustomdata'), @FLib3MFToolpath_AddCustomDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_clearcustomdata'), @FLib3MFToolpath_ClearCustomDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_deletecustomdata'), @FLib3MFToolpath_DeleteCustomDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_registercustomintegerattribute'), @FLib3MFToolpath_RegisterCustomIntegerAttributeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_registercustomdoubleattribute'), @FLib3MFToolpath_RegisterCustomDoubleAttributeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathiterator_getcurrenttoolpath'), @FLib3MFToolpathIterator_GetCurrentToolpathFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_slicestack_getbottomz'), @FLib3MFSliceStack_GetBottomZFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -11628,6 +15807,9 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getmultipropertygroups'), @FLib3MFModel_GetMultiPropertyGroupsFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_gettoolpaths'), @FLib3MFModel_GetToolpathsFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getslicestacks'), @FLib3MFModel_GetSliceStacksFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -11665,6 +15847,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_removebuilditem'), @FLib3MFModel_RemoveBuildItemFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addtoolpath'), @FLib3MFModel_AddToolpathFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getmetadatagroup'), @FLib3MFModel_GetMetaDataGroupFunc);
@@ -11707,6 +15892,15 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getkeystore'), @FLib3MFModel_GetKeyStoreFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_createpersistentsourcefromfile'), @FLib3MFModel_CreatePersistentSourceFromFileFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_createpersistentsourcefrombuffer'), @FLib3MFModel_CreatePersistentSourceFromBufferFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_createpersistentsourcefromcallback'), @FLib3MFModel_CreatePersistentSourceFromCallbackFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_getlibraryversion'), @FLib3MFGetLibraryVersionFunc);

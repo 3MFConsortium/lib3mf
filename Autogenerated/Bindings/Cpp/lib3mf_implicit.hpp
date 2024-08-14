@@ -58,11 +58,17 @@ namespace Lib3MF {
 **************************************************************************************************************************/
 class CWrapper;
 class CBase;
+class CBinaryStream;
 class CWriter;
+class CPersistentReaderSource;
 class CReader;
 class CPackagePart;
 class CResource;
 class CResourceIterator;
+class CCustomXMLAttribute;
+class CCustomXMLNode;
+class CCustomXMLNodes;
+class CCustomDOMTree;
 class CSliceStackIterator;
 class CObjectIterator;
 class CMeshObjectIterator;
@@ -91,6 +97,11 @@ class CTexture2D;
 class CBuildItem;
 class CBuildItemIterator;
 class CSlice;
+class CToolpathProfile;
+class CToolpathLayerReader;
+class CToolpathLayerData;
+class CToolpath;
+class CToolpathIterator;
 class CSliceStack;
 class CConsumer;
 class CAccessRight;
@@ -105,11 +116,17 @@ class CModel;
 **************************************************************************************************************************/
 typedef CWrapper CLib3MFWrapper;
 typedef CBase CLib3MFBase;
+typedef CBinaryStream CLib3MFBinaryStream;
 typedef CWriter CLib3MFWriter;
+typedef CPersistentReaderSource CLib3MFPersistentReaderSource;
 typedef CReader CLib3MFReader;
 typedef CPackagePart CLib3MFPackagePart;
 typedef CResource CLib3MFResource;
 typedef CResourceIterator CLib3MFResourceIterator;
+typedef CCustomXMLAttribute CLib3MFCustomXMLAttribute;
+typedef CCustomXMLNode CLib3MFCustomXMLNode;
+typedef CCustomXMLNodes CLib3MFCustomXMLNodes;
+typedef CCustomDOMTree CLib3MFCustomDOMTree;
 typedef CSliceStackIterator CLib3MFSliceStackIterator;
 typedef CObjectIterator CLib3MFObjectIterator;
 typedef CMeshObjectIterator CLib3MFMeshObjectIterator;
@@ -138,6 +155,11 @@ typedef CTexture2D CLib3MFTexture2D;
 typedef CBuildItem CLib3MFBuildItem;
 typedef CBuildItemIterator CLib3MFBuildItemIterator;
 typedef CSlice CLib3MFSlice;
+typedef CToolpathProfile CLib3MFToolpathProfile;
+typedef CToolpathLayerReader CLib3MFToolpathLayerReader;
+typedef CToolpathLayerData CLib3MFToolpathLayerData;
+typedef CToolpath CLib3MFToolpath;
+typedef CToolpathIterator CLib3MFToolpathIterator;
 typedef CSliceStack CLib3MFSliceStack;
 typedef CConsumer CLib3MFConsumer;
 typedef CAccessRight CLib3MFAccessRight;
@@ -152,11 +174,17 @@ typedef CModel CLib3MFModel;
 **************************************************************************************************************************/
 typedef std::shared_ptr<CWrapper> PWrapper;
 typedef std::shared_ptr<CBase> PBase;
+typedef std::shared_ptr<CBinaryStream> PBinaryStream;
 typedef std::shared_ptr<CWriter> PWriter;
+typedef std::shared_ptr<CPersistentReaderSource> PPersistentReaderSource;
 typedef std::shared_ptr<CReader> PReader;
 typedef std::shared_ptr<CPackagePart> PPackagePart;
 typedef std::shared_ptr<CResource> PResource;
 typedef std::shared_ptr<CResourceIterator> PResourceIterator;
+typedef std::shared_ptr<CCustomXMLAttribute> PCustomXMLAttribute;
+typedef std::shared_ptr<CCustomXMLNode> PCustomXMLNode;
+typedef std::shared_ptr<CCustomXMLNodes> PCustomXMLNodes;
+typedef std::shared_ptr<CCustomDOMTree> PCustomDOMTree;
 typedef std::shared_ptr<CSliceStackIterator> PSliceStackIterator;
 typedef std::shared_ptr<CObjectIterator> PObjectIterator;
 typedef std::shared_ptr<CMeshObjectIterator> PMeshObjectIterator;
@@ -185,6 +213,11 @@ typedef std::shared_ptr<CTexture2D> PTexture2D;
 typedef std::shared_ptr<CBuildItem> PBuildItem;
 typedef std::shared_ptr<CBuildItemIterator> PBuildItemIterator;
 typedef std::shared_ptr<CSlice> PSlice;
+typedef std::shared_ptr<CToolpathProfile> PToolpathProfile;
+typedef std::shared_ptr<CToolpathLayerReader> PToolpathLayerReader;
+typedef std::shared_ptr<CToolpathLayerData> PToolpathLayerData;
+typedef std::shared_ptr<CToolpath> PToolpath;
+typedef std::shared_ptr<CToolpathIterator> PToolpathIterator;
 typedef std::shared_ptr<CSliceStack> PSliceStack;
 typedef std::shared_ptr<CConsumer> PConsumer;
 typedef std::shared_ptr<CAccessRight> PAccessRight;
@@ -199,11 +232,17 @@ typedef std::shared_ptr<CModel> PModel;
 **************************************************************************************************************************/
 typedef PWrapper PLib3MFWrapper;
 typedef PBase PLib3MFBase;
+typedef PBinaryStream PLib3MFBinaryStream;
 typedef PWriter PLib3MFWriter;
+typedef PPersistentReaderSource PLib3MFPersistentReaderSource;
 typedef PReader PLib3MFReader;
 typedef PPackagePart PLib3MFPackagePart;
 typedef PResource PLib3MFResource;
 typedef PResourceIterator PLib3MFResourceIterator;
+typedef PCustomXMLAttribute PLib3MFCustomXMLAttribute;
+typedef PCustomXMLNode PLib3MFCustomXMLNode;
+typedef PCustomXMLNodes PLib3MFCustomXMLNodes;
+typedef PCustomDOMTree PLib3MFCustomDOMTree;
 typedef PSliceStackIterator PLib3MFSliceStackIterator;
 typedef PObjectIterator PLib3MFObjectIterator;
 typedef PMeshObjectIterator PLib3MFMeshObjectIterator;
@@ -232,6 +271,11 @@ typedef PTexture2D PLib3MFTexture2D;
 typedef PBuildItem PLib3MFBuildItem;
 typedef PBuildItemIterator PLib3MFBuildItemIterator;
 typedef PSlice PLib3MFSlice;
+typedef PToolpathProfile PLib3MFToolpathProfile;
+typedef PToolpathLayerReader PLib3MFToolpathLayerReader;
+typedef PToolpathLayerData PLib3MFToolpathLayerData;
+typedef PToolpath PLib3MFToolpath;
+typedef PToolpathIterator PLib3MFToolpathIterator;
 typedef PSliceStack PLib3MFSliceStack;
 typedef PConsumer PLib3MFConsumer;
 typedef PAccessRight PLib3MFAccessRight;
@@ -355,6 +399,10 @@ public:
 			case LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER: return "UNKOWNPROGRESSIDENTIFIER";
 			case LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: return "ELEMENTCOUNTEXCEEDSLIMIT";
 			case LIB3MF_ERROR_INVALIDRESOURCE: return "INVALIDRESOURCE";
+			case LIB3MF_ERROR_INVALIDNODEINDEX: return "INVALIDNODEINDEX";
+			case LIB3MF_ERROR_INVALIDATTRIBUTEINDEX: return "INVALIDATTRIBUTEINDEX";
+			case LIB3MF_ERROR_DUPLICATECUSTOMDATA: return "DUPLICATECUSTOMDATA";
+			case LIB3MF_ERROR_CUSTOMDATANOTFOUND: return "CUSTOMDATANOTFOUND";
 			case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "BEAMLATTICE_INVALID_OBJECTTYPE";
 			case LIB3MF_ERROR_INVALIDKEYSTORE: return "INVALIDKEYSTORE";
 			case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "INVALIDKEYSTORECONSUMER";
@@ -362,6 +410,16 @@ public:
 			case LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: return "KEYSTORERESOURCEDATANOTFOUND";
 			case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: return "SECURECONTEXTNOTREGISTERED";
 			case LIB3MF_ERROR_INVALIDKEYSIZE: return "INVALIDKEYSIZE";
+			case LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER: return "TOOLPATH_NOTWRITINGHEADER";
+			case LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA: return "TOOLPATH_NOTWRITINGDATA";
+			case LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "TOOLPATH_DATAHASBEENWRITTEN";
+			case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "TOOLPATH_INVALIDPOINTCOUNT";
+			case LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED: return "TOOLPATH_ATTRIBUTEALREADYDEFINED";
+			case LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE: return "TOOLPATH_INVALIDATTRIBUTETYPE";
+			case LIB3MF_ERROR_EMPTYNAMESPACEPREFIX: return "EMPTYNAMESPACEPREFIX";
+			case LIB3MF_ERROR_EMPTYNAMESPACE: return "EMPTYNAMESPACE";
+			case LIB3MF_ERROR_INVALIDNAMESPACEPREFIX: return "INVALIDNAMESPACEPREFIX";
+			case LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES: return "WRITERDOESNOTSUPPORTNAMESPACES";
 		}
 		return "UNKNOWN";
 	}
@@ -406,13 +464,27 @@ public:
 			case LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER: return "A progress identifier is unknown";
 			case LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: return "An element buffer exceeds its spec limit";
 			case LIB3MF_ERROR_INVALIDRESOURCE: return "A resource is invalid";
+			case LIB3MF_ERROR_INVALIDNODEINDEX: return "Invalid node index";
+			case LIB3MF_ERROR_INVALIDATTRIBUTEINDEX: return "Invalid attribute index";
+			case LIB3MF_ERROR_DUPLICATECUSTOMDATA: return "Duplicate custom data";
+			case LIB3MF_ERROR_CUSTOMDATANOTFOUND: return "Custom data not found";
 			case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "This object type is not valid for beamlattices";
 			case LIB3MF_ERROR_INVALIDKEYSTORE: return "The keystore object is invalid";
 			case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "The consumer keystore object is invalid";
 			case LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND: return "A consumer has not been found";
 			case LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: return "A resource data has not been found";
 			case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: return "A Key or Conentent encryption callback has not been registered";
-			case LIB3MF_ERROR_INVALIDKEYSIZE: return "The key siue is invalid";
+			case LIB3MF_ERROR_INVALIDKEYSIZE: return "The key size is invalid";
+			case LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER: return "Not in toolpath header writing mode";
+			case LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA: return "Not in toolpath data writing mode";
+			case LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "Toolpath has already been written out";
+			case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "Toolpath has an invalid number of points";
+			case LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED: return "Toolpath attribute already defined";
+			case LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE: return "Toolpath attribute is of invalid type";
+			case LIB3MF_ERROR_EMPTYNAMESPACEPREFIX: return "Empty namespace prefix.";
+			case LIB3MF_ERROR_EMPTYNAMESPACE: return "Empty namespace.";
+			case LIB3MF_ERROR_INVALIDNAMESPACEPREFIX: return "Invalid namespace prefix.";
+			case LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES: return "Writer does not support namespaces.";
 		}
 		return "unknown error";
 	}
@@ -522,11 +594,17 @@ private:
 	}
 
 	friend class CBase;
+	friend class CBinaryStream;
 	friend class CWriter;
+	friend class CPersistentReaderSource;
 	friend class CReader;
 	friend class CPackagePart;
 	friend class CResource;
 	friend class CResourceIterator;
+	friend class CCustomXMLAttribute;
+	friend class CCustomXMLNode;
+	friend class CCustomXMLNodes;
+	friend class CCustomDOMTree;
 	friend class CSliceStackIterator;
 	friend class CObjectIterator;
 	friend class CMeshObjectIterator;
@@ -555,6 +633,11 @@ private:
 	friend class CBuildItem;
 	friend class CBuildItemIterator;
 	friend class CSlice;
+	friend class CToolpathProfile;
+	friend class CToolpathLayerReader;
+	friend class CToolpathLayerData;
+	friend class CToolpath;
+	friend class CToolpathIterator;
 	friend class CSliceStack;
 	friend class CConsumer;
 	friend class CAccessRight;
@@ -625,6 +708,29 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CBinaryStream 
+**************************************************************************************************************************/
+class CBinaryStream : public CBase {
+public:
+	
+	/**
+	* CBinaryStream::CBinaryStream - Constructor for BinaryStream class.
+	*/
+	CBinaryStream(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetBinaryPath();
+	inline std::string GetIndexPath();
+	inline std::string GetUUID();
+	inline void DisableDiscretizedArrayCompression();
+	inline void EnableDiscretizedArrayCompression(const Lib3MF_double dUnits, const eBinaryStreamPredictionType ePredictionType);
+	inline void EnableLZMA(const Lib3MF_uint32 nLZMALevel);
+	inline void DisableLZMA();
+};
+	
+/*************************************************************************************************************************
  Class CWriter 
 **************************************************************************************************************************/
 class CWriter : public CBase {
@@ -651,6 +757,28 @@ public:
 	inline Lib3MF_uint32 GetWarningCount();
 	inline void AddKeyWrappingCallback(const std::string & sConsumerID, const KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData);
 	inline void SetContentEncryptionCallback(const ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData);
+	inline PBinaryStream CreateBinaryStream(const std::string & sIndexPath, const std::string & sBinaryPath);
+	inline void AssignBinaryStream(classParam<CBase> pInstance, classParam<CBinaryStream> pBinaryStream);
+	inline void RegisterCustomNamespace(const std::string & sPrefix, const std::string & sNameSpace);
+};
+	
+/*************************************************************************************************************************
+ Class CPersistentReaderSource 
+**************************************************************************************************************************/
+class CPersistentReaderSource : public CBase {
+public:
+	
+	/**
+	* CPersistentReaderSource::CPersistentReaderSource - Constructor for PersistentReaderSource class.
+	*/
+	CPersistentReaderSource(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline ePersistentReaderSourceType GetSourceType();
+	inline void InvalidateSourceData();
+	inline bool SourceDataIsValid();
 };
 	
 /*************************************************************************************************************************
@@ -667,6 +795,7 @@ public:
 	{
 	}
 	
+	inline void ReadFromPersistentSource(classParam<CPersistentReaderSource> pSource);
 	inline void ReadFromFile(const std::string & sFilename);
 	inline void ReadFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer);
 	inline void ReadFromCallback(const ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData);
@@ -739,6 +868,115 @@ public:
 	inline PResource GetCurrent();
 	inline PResourceIterator Clone();
 	inline Lib3MF_uint64 Count();
+};
+	
+/*************************************************************************************************************************
+ Class CCustomXMLAttribute 
+**************************************************************************************************************************/
+class CCustomXMLAttribute : public CBase {
+public:
+	
+	/**
+	* CCustomXMLAttribute::CCustomXMLAttribute - Constructor for CustomXMLAttribute class.
+	*/
+	CCustomXMLAttribute(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetName();
+	inline std::string GetValue();
+	inline bool IsValidInteger(const Lib3MF_int64 nMinValue, const Lib3MF_int64 nMaxValue);
+	inline Lib3MF_int64 GetIntegerValue(const Lib3MF_int64 nMinValue, const Lib3MF_int64 nMaxValue);
+	inline bool IsValidDouble(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue);
+	inline Lib3MF_double GetDoubleValue(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue);
+	inline bool IsValidBool();
+	inline bool GetBoolValue(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue);
+	inline void SetValue(const std::string & sValue);
+	inline void SetIntegerValue(const Lib3MF_int64 nValue);
+	inline void SetDoubleValue(const Lib3MF_double dValue);
+	inline void SetBoolValue(const bool bValue);
+	inline void Remove();
+};
+	
+/*************************************************************************************************************************
+ Class CCustomXMLNode 
+**************************************************************************************************************************/
+class CCustomXMLNode : public CBase {
+public:
+	
+	/**
+	* CCustomXMLNode::CCustomXMLNode - Constructor for CustomXMLNode class.
+	*/
+	CCustomXMLNode(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetName();
+	inline std::string GetNameSpace();
+	inline Lib3MF_uint64 GetAttributeCount();
+	inline PCustomXMLAttribute GetAttribute(const Lib3MF_uint64 nIndex);
+	inline bool HasAttribute(const std::string & sName);
+	inline PCustomXMLAttribute FindAttribute(const std::string & sName, const bool bMustExist);
+	inline bool RemoveAttribute(const std::string & sName);
+	inline bool RemoveAttributeByIndex(const Lib3MF_uint64 nIndex);
+	inline void AddAttribute(const std::string & sName, const std::string & sValue);
+	inline void AddIntegerAttribute(const std::string & sName, const Lib3MF_int64 nValue);
+	inline void AddDoubleAttribute(const std::string & sName, const Lib3MF_double dValue);
+	inline void AddBoolAttribute(const std::string & sName, const bool bValue);
+	inline PCustomXMLNodes GetChildren();
+	inline Lib3MF_uint64 CountChildrenByName(const std::string & sName);
+	inline PCustomXMLNodes GetChildrenByName(const std::string & sName);
+	inline bool HasChild(const std::string & sName);
+	inline bool HasUniqueChild(const std::string & sName);
+	inline PCustomXMLNode FindChild(const std::string & sName, const bool bMustExist);
+	inline PCustomXMLNode AddChild(const std::string & sName);
+	inline void RemoveChild(classParam<CCustomXMLNode> pChildInstance);
+	inline Lib3MF_uint64 RemoveChildrenWithName(const std::string & sName);
+	inline void Remove();
+};
+	
+/*************************************************************************************************************************
+ Class CCustomXMLNodes 
+**************************************************************************************************************************/
+class CCustomXMLNodes : public CBase {
+public:
+	
+	/**
+	* CCustomXMLNodes::CCustomXMLNodes - Constructor for CustomXMLNodes class.
+	*/
+	CCustomXMLNodes(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline Lib3MF_uint64 GetNodeCount();
+	inline PCustomXMLNode GetNode(const Lib3MF_uint64 nIndex);
+	inline Lib3MF_uint64 CountNodesByName(const std::string & sName);
+	inline PCustomXMLNodes GetNodesByName(const std::string & sName);
+	inline bool HasNode(const std::string & sName);
+	inline bool HasUniqueNode(const std::string & sName);
+	inline PCustomXMLNode FindNode(const std::string & sName, const bool bMustExist);
+};
+	
+/*************************************************************************************************************************
+ Class CCustomDOMTree 
+**************************************************************************************************************************/
+class CCustomDOMTree : public CBase {
+public:
+	
+	/**
+	* CCustomDOMTree::CCustomDOMTree - Constructor for CustomDOMTree class.
+	*/
+	CCustomDOMTree(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetNameSpace();
+	inline PCustomXMLNode GetRootNode();
+	inline std::string SaveToString();
 };
 	
 /*************************************************************************************************************************
@@ -1382,6 +1620,158 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CToolpathProfile 
+**************************************************************************************************************************/
+class CToolpathProfile : public CBase {
+public:
+	
+	/**
+	* CToolpathProfile::CToolpathProfile - Constructor for ToolpathProfile class.
+	*/
+	CToolpathProfile(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetUUID();
+	inline std::string GetName();
+	inline Lib3MF_uint32 GetParameterCount();
+	inline std::string GetParameterName(const Lib3MF_uint32 nIndex);
+	inline std::string GetParameterNameSpace(const Lib3MF_uint32 nIndex);
+	inline bool HasParameterValue(const std::string & sNameSpaceName, const std::string & sValueName);
+	inline std::string GetParameterValue(const std::string & sNameSpaceName, const std::string & sValueName);
+	inline std::string GetParameterValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const std::string & sDefaultValue);
+	inline Lib3MF_double GetParameterDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName);
+	inline Lib3MF_double GetParameterDoubleValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dDefaultValue);
+	inline Lib3MF_int64 GetParameterIntegerValue(const std::string & sNameSpaceName, const std::string & sValueName);
+	inline Lib3MF_int64 GetParameterIntegerValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_int64 nDefaultValue);
+	inline bool GetParameterBoolValue(const std::string & sNameSpaceName, const std::string & sValueName);
+	inline bool GetParameterBoolValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const bool bDefaultValue);
+	inline void SetName(const std::string & sName);
+	inline void SetParameterValue(const std::string & sNameSpaceName, const std::string & sValueName, const std::string & sValue);
+	inline void SetParameterDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dValue);
+	inline void SetParameterIntegerValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_int64 nValue);
+	inline void SetParameterBoolValue(const std::string & sNameSpaceName, const std::string & sValueName, const bool bValue);
+};
+	
+/*************************************************************************************************************************
+ Class CToolpathLayerReader 
+**************************************************************************************************************************/
+class CToolpathLayerReader : public CBase {
+public:
+	
+	/**
+	* CToolpathLayerReader::CToolpathLayerReader - Constructor for ToolpathLayerReader class.
+	*/
+	CToolpathLayerReader(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetLayerDataUUID();
+	inline Lib3MF_uint32 GetSegmentCount();
+	inline void GetSegmentInfo(const Lib3MF_uint32 nIndex, eToolpathSegmentType & eType, Lib3MF_uint32 & nPointCount);
+	inline PToolpathProfile GetSegmentProfile(const Lib3MF_uint32 nIndex);
+	inline std::string GetSegmentProfileUUID(const Lib3MF_uint32 nIndex);
+	inline PBuildItem GetSegmentPart(const Lib3MF_uint32 nIndex);
+	inline std::string GetSegmentPartUUID(const Lib3MF_uint32 nIndex);
+	inline Lib3MF_uint32 GetSegmentLocalPartID(const Lib3MF_uint32 nIndex);
+	inline std::string GetPartUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID);
+	inline void GetSegmentPointData(const Lib3MF_uint32 nIndex, std::vector<sPosition2D> & PointDataBuffer);
+	inline void FindAttributeInfoByName(const std::string & sNameSpace, const std::string & sAttributeName, Lib3MF_uint32 & nID, eToolpathAttributeType & eAttributeType);
+	inline Lib3MF_uint32 FindAttributeIDByName(const std::string & sNameSpace, const std::string & sAttributeName);
+	inline eToolpathAttributeType FindAttributeValueByName(const std::string & sNameSpace, const std::string & sAttributeName);
+	inline Lib3MF_int64 GetSegmentIntegerAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID);
+	inline Lib3MF_int64 GetSegmentIntegerAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName);
+	inline Lib3MF_double GetSegmentDoubleAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID);
+	inline Lib3MF_double GetSegmentDoubleAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName);
+	inline Lib3MF_uint32 GetCustomDataCount();
+	inline PCustomDOMTree GetCustomData(const Lib3MF_uint32 nIndex);
+	inline void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName);
+};
+	
+/*************************************************************************************************************************
+ Class CToolpathLayerData 
+**************************************************************************************************************************/
+class CToolpathLayerData : public CBase {
+public:
+	
+	/**
+	* CToolpathLayerData::CToolpathLayerData - Constructor for ToolpathLayerData class.
+	*/
+	CToolpathLayerData(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetLayerDataUUID();
+	inline Lib3MF_uint32 RegisterProfile(classParam<CToolpathProfile> pProfile);
+	inline Lib3MF_uint32 RegisterBuildItem(classParam<CBuildItem> pBuildItem);
+	inline void SetSegmentAttribute(const std::string & sNameSpace, const std::string & sAttributeName, const std::string & sValue);
+	inline void ClearSegmentAttributes();
+	inline void WriteHatchData(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
+	inline void WriteLoop(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
+	inline void WritePolyline(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
+	inline PCustomDOMTree AddCustomData(const std::string & sNameSpace, const std::string & sDataName);
+	inline void Finish();
+};
+	
+/*************************************************************************************************************************
+ Class CToolpath 
+**************************************************************************************************************************/
+class CToolpath : public CResource {
+public:
+	
+	/**
+	* CToolpath::CToolpath - Constructor for Toolpath class.
+	*/
+	CToolpath(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CResource(pWrapper, pHandle)
+	{
+	}
+	
+	inline Lib3MF_double GetUnits();
+	inline Lib3MF_uint32 GetLayerCount();
+	inline Lib3MF_uint32 GetProfileCount();
+	inline PToolpathLayerData AddLayer(const Lib3MF_uint32 nZMax, const std::string & sPath, classParam<CWriter> pModelWriter);
+	inline PAttachment GetLayerAttachment(const Lib3MF_uint32 nIndex);
+	inline PToolpathLayerReader ReadLayerData(const Lib3MF_uint32 nIndex);
+	inline std::string GetLayerPath(const Lib3MF_uint32 nIndex);
+	inline Lib3MF_uint32 GetLayerZMax(const Lib3MF_uint32 nIndex);
+	inline Lib3MF_uint32 GetLayerZ(const Lib3MF_uint32 nLayerIndex);
+	inline PToolpathProfile AddProfile(const std::string & sName);
+	inline PToolpathProfile GetProfile(const Lib3MF_uint32 nProfileIndex);
+	inline PToolpathProfile GetProfileUUID(const std::string & sProfileUUID);
+	inline Lib3MF_uint32 GetCustomDataCount();
+	inline PCustomDOMTree GetCustomData(const Lib3MF_uint32 nIndex);
+	inline void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName);
+	inline bool HasUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName);
+	inline PCustomDOMTree FindUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName);
+	inline PCustomDOMTree AddCustomData(const std::string & sNameSpace, const std::string & sDataName);
+	inline Lib3MF_uint32 ClearCustomData();
+	inline bool DeleteCustomData(classParam<CCustomDOMTree> pData);
+	inline void RegisterCustomIntegerAttribute(const std::string & sNameSpace, const std::string & sAttributeName);
+	inline void RegisterCustomDoubleAttribute(const std::string & sNameSpace, const std::string & sAttributeName);
+};
+	
+/*************************************************************************************************************************
+ Class CToolpathIterator 
+**************************************************************************************************************************/
+class CToolpathIterator : public CResourceIterator {
+public:
+	
+	/**
+	* CToolpathIterator::CToolpathIterator - Constructor for ToolpathIterator class.
+	*/
+	CToolpathIterator(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CResourceIterator(pWrapper, pHandle)
+	{
+	}
+	
+	inline PToolpath GetCurrentToolpath();
+};
+	
+/*************************************************************************************************************************
  Class CSliceStack 
 **************************************************************************************************************************/
 class CSliceStack : public CResource {
@@ -1590,6 +1980,7 @@ public:
 	inline PTexture2DGroupIterator GetTexture2DGroups();
 	inline PCompositeMaterialsIterator GetCompositeMaterials();
 	inline PMultiPropertyGroupIterator GetMultiPropertyGroups();
+	inline PToolpathIterator GetToolpaths();
 	inline PSliceStackIterator GetSliceStacks();
 	inline PModel MergeToModel();
 	inline PMeshObject AddMeshObject();
@@ -1603,6 +1994,7 @@ public:
 	inline PMultiPropertyGroup AddMultiPropertyGroup();
 	inline PBuildItem AddBuildItem(classParam<CObject> pObject, const sTransform & Transform);
 	inline void RemoveBuildItem(classParam<CBuildItem> pBuildItemInstance);
+	inline PToolpath AddToolpath(const Lib3MF_double dUnitFactor);
 	inline PMetaDataGroup GetMetaDataGroup();
 	inline PAttachment AddAttachment(const std::string & sURI, const std::string & sRelationShipType);
 	inline void RemoveAttachment(classParam<CAttachment> pAttachmentInstance);
@@ -1617,6 +2009,9 @@ public:
 	inline void RemoveCustomContentType(const std::string & sExtension);
 	inline void SetRandomNumberCallback(const RandomNumberCallback pTheCallback, const Lib3MF_pvoid pUserData);
 	inline PKeyStore GetKeyStore();
+	inline PPersistentReaderSource CreatePersistentSourceFromFile(const std::string & sFilename);
+	inline PPersistentReaderSource CreatePersistentSourceFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer);
+	inline PPersistentReaderSource CreatePersistentSourceFromCallback(const ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData);
 };
 
 /*************************************************************************************************************************
@@ -1636,11 +2031,17 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	CheckError(nullptr, lib3mf_base_classtypeid(pHandle, &resultClassTypeId));
 	switch(resultClassTypeId) {
 		case 0x856632D0BAF1D8B7UL: return new CBase(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Base"
+		case 0xA0EB26254C981E1AUL: return new CBinaryStream(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BinaryStream"
 		case 0xE76F642F363FD7E9UL: return new CWriter(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Writer"
+		case 0xBE46884397CE1319UL: return new CPersistentReaderSource(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::PersistentReaderSource"
 		case 0x2D86831DA59FBE72UL: return new CReader(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Reader"
 		case 0x0E55A826D377483EUL: return new CPackagePart(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::PackagePart"
 		case 0xDFE3889D1B269CBBUL: return new CResource(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Resource"
 		case 0x460F3515E2621DBEUL: return new CResourceIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ResourceIterator"
+		case 0xEA18C54DBD42B5F6UL: return new CCustomXMLAttribute(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::CustomXMLAttribute"
+		case 0x26B5AD02041EDF96UL: return new CCustomXMLNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::CustomXMLNode"
+		case 0x8C4B47C97D310E89UL: return new CCustomXMLNodes(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::CustomXMLNodes"
+		case 0x5E0CF70A6DB6256AUL: return new CCustomDOMTree(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::CustomDOMTree"
 		case 0x69684DB99FA813F6UL: return new CSliceStackIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::SliceStackIterator"
 		case 0xDE92510BD2112288UL: return new CObjectIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ObjectIterator"
 		case 0xF4196034E2B9FDE6UL: return new CMeshObjectIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObjectIterator"
@@ -1669,6 +2070,11 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0x68FB2D5FFC4BA12AUL: return new CBuildItem(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItem"
 		case 0xA7D21BD364910860UL: return new CBuildItemIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItemIterator"
 		case 0x2198BCF4D8DF9C40UL: return new CSlice(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Slice"
+		case 0xC869620B90242CA7UL: return new CToolpathProfile(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathProfile"
+		case 0x28DD7D3718F0616EUL: return new CToolpathLayerReader(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerReader"
+		case 0x28C0E70CC44F931AUL: return new CToolpathLayerData(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerData"
+		case 0xF0AAB2C814D9FFB1UL: return new CToolpath(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Toolpath"
+		case 0xD0F24425A07F2A81UL: return new CToolpathIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathIterator"
 		case 0x6594B031B6096238UL: return new CSliceStack(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::SliceStack"
 		case 0xD9E46D5E6D8118EEUL: return new CConsumer(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Consumer"
 		case 0x385C42FC5609498AUL: return new CAccessRight(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::AccessRight"
@@ -1975,6 +2381,90 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	 * Method definitions for class CBinaryStream
+	 */
+	
+	/**
+	* CBinaryStream::GetBinaryPath - Retrieves an binary streams package path for the binary data.
+	* @return binary streams package binary path.
+	*/
+	std::string CBinaryStream::GetBinaryPath()
+	{
+		Lib3MF_uint32 bytesNeededPath = 0;
+		Lib3MF_uint32 bytesWrittenPath = 0;
+		CheckError(lib3mf_binarystream_getbinarypath(m_pHandle, 0, &bytesNeededPath, nullptr));
+		std::vector<char> bufferPath(bytesNeededPath);
+		CheckError(lib3mf_binarystream_getbinarypath(m_pHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]));
+		
+		return std::string(&bufferPath[0]);
+	}
+	
+	/**
+	* CBinaryStream::GetIndexPath - Retrieves an binary streams package path for the index data.
+	* @return binary streams package index path.
+	*/
+	std::string CBinaryStream::GetIndexPath()
+	{
+		Lib3MF_uint32 bytesNeededPath = 0;
+		Lib3MF_uint32 bytesWrittenPath = 0;
+		CheckError(lib3mf_binarystream_getindexpath(m_pHandle, 0, &bytesNeededPath, nullptr));
+		std::vector<char> bufferPath(bytesNeededPath);
+		CheckError(lib3mf_binarystream_getindexpath(m_pHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]));
+		
+		return std::string(&bufferPath[0]);
+	}
+	
+	/**
+	* CBinaryStream::GetUUID - Retrieves an binary streams uuid.
+	* @return binary streams uuid
+	*/
+	std::string CBinaryStream::GetUUID()
+	{
+		Lib3MF_uint32 bytesNeededUUID = 0;
+		Lib3MF_uint32 bytesWrittenUUID = 0;
+		CheckError(lib3mf_binarystream_getuuid(m_pHandle, 0, &bytesNeededUUID, nullptr));
+		std::vector<char> bufferUUID(bytesNeededUUID);
+		CheckError(lib3mf_binarystream_getuuid(m_pHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]));
+		
+		return std::string(&bufferUUID[0]);
+	}
+	
+	/**
+	* CBinaryStream::DisableDiscretizedArrayCompression - Sets the float compression mode to raw. All subsequent writes will adhere to this mode.
+	*/
+	void CBinaryStream::DisableDiscretizedArrayCompression()
+	{
+		CheckError(lib3mf_binarystream_disablediscretizedarraycompression(m_pHandle));
+	}
+	
+	/**
+	* CBinaryStream::EnableDiscretizedArrayCompression - Sets the compression mode to a quantized array. All subsequent writes will adhere to this mode.
+	* @param[in] dUnits - Unit factor to use for quantization.
+	* @param[in] ePredictionType - Prediction type to use for arrays.
+	*/
+	void CBinaryStream::EnableDiscretizedArrayCompression(const Lib3MF_double dUnits, const eBinaryStreamPredictionType ePredictionType)
+	{
+		CheckError(lib3mf_binarystream_enablediscretizedarraycompression(m_pHandle, dUnits, ePredictionType));
+	}
+	
+	/**
+	* CBinaryStream::EnableLZMA - Enables LZMA mode.
+	* @param[in] nLZMALevel - LZMA Level (0-9)
+	*/
+	void CBinaryStream::EnableLZMA(const Lib3MF_uint32 nLZMALevel)
+	{
+		CheckError(lib3mf_binarystream_enablelzma(m_pHandle, nLZMALevel));
+	}
+	
+	/**
+	* CBinaryStream::DisableLZMA - Disables LZMA mode.
+	*/
+	void CBinaryStream::DisableLZMA()
+	{
+		CheckError(lib3mf_binarystream_disablelzma(m_pHandle));
+	}
+	
+	/**
 	 * Method definitions for class CWriter
 	 */
 	
@@ -2126,8 +2616,93 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CWriter::CreateBinaryStream - Creates a binary stream object. Only applicable for 3MF Writers.
+	* @param[in] sIndexPath - Package path to write the index into
+	* @param[in] sBinaryPath - Package path to write raw binary data into
+	* @return Returns a package path.
+	*/
+	PBinaryStream CWriter::CreateBinaryStream(const std::string & sIndexPath, const std::string & sBinaryPath)
+	{
+		Lib3MFHandle hBinaryStream = nullptr;
+		CheckError(lib3mf_writer_createbinarystream(m_pHandle, sIndexPath.c_str(), sBinaryPath.c_str(), &hBinaryStream));
+		
+		if (!hBinaryStream) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CBinaryStream>(dynamic_cast<CBinaryStream*>(m_pWrapper->polymorphicFactory(hBinaryStream)));
+	}
+	
+	/**
+	* CWriter::AssignBinaryStream - Sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.
+	* @param[in] pInstance - Object instance to assign Binary stream to.
+	* @param[in] pBinaryStream - Binary stream object to use for this layer.
+	*/
+	void CWriter::AssignBinaryStream(classParam<CBase> pInstance, classParam<CBinaryStream> pBinaryStream)
+	{
+		Lib3MFHandle hInstance = pInstance.GetHandle();
+		Lib3MFHandle hBinaryStream = pBinaryStream.GetHandle();
+		CheckError(lib3mf_writer_assignbinarystream(m_pHandle, hInstance, hBinaryStream));
+	}
+	
+	/**
+	* CWriter::RegisterCustomNamespace - Registers a custom 3MF Namespace. Fails if Prefix is already registered.
+	* @param[in] sPrefix - Prefix to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number
+	* @param[in] sNameSpace - Namespace to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number
+	*/
+	void CWriter::RegisterCustomNamespace(const std::string & sPrefix, const std::string & sNameSpace)
+	{
+		CheckError(lib3mf_writer_registercustomnamespace(m_pHandle, sPrefix.c_str(), sNameSpace.c_str()));
+	}
+	
+	/**
+	 * Method definitions for class CPersistentReaderSource
+	 */
+	
+	/**
+	* CPersistentReaderSource::GetSourceType - Retrieves the type of source data.
+	* @return Reader Source Type
+	*/
+	ePersistentReaderSourceType CPersistentReaderSource::GetSourceType()
+	{
+		ePersistentReaderSourceType resultSourceType = (ePersistentReaderSourceType) 0;
+		CheckError(lib3mf_persistentreadersource_getsourcetype(m_pHandle, &resultSourceType));
+		
+		return resultSourceType;
+	}
+	
+	/**
+	* CPersistentReaderSource::InvalidateSourceData - Invalidates the reader source. Every subsequent read on this data will fail.
+	*/
+	void CPersistentReaderSource::InvalidateSourceData()
+	{
+		CheckError(lib3mf_persistentreadersource_invalidatesourcedata(m_pHandle));
+	}
+	
+	/**
+	* CPersistentReaderSource::SourceDataIsValid - Checks if the source data is valid. Any read on an invalid source object will fail.
+	* @return The source data is valid.
+	*/
+	bool CPersistentReaderSource::SourceDataIsValid()
+	{
+		bool resultDataIsValid = 0;
+		CheckError(lib3mf_persistentreadersource_sourcedataisvalid(m_pHandle, &resultDataIsValid));
+		
+		return resultDataIsValid;
+	}
+	
+	/**
 	 * Method definitions for class CReader
 	 */
+	
+	/**
+	* CReader::ReadFromPersistentSource - Reads a model from a persistent source object. The object will be referenced until the Model is destroyed or cleared.
+	* @param[in] pSource - Source object to read from
+	*/
+	void CReader::ReadFromPersistentSource(classParam<CPersistentReaderSource> pSource)
+	{
+		Lib3MFHandle hSource = pSource.GetHandle();
+		CheckError(lib3mf_reader_readfrompersistentsource(m_pHandle, hSource));
+	}
 	
 	/**
 	* CReader::ReadFromFile - Reads a model from a file. The file type is specified by the Model Reader class
@@ -2419,6 +2994,614 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		CheckError(lib3mf_resourceiterator_count(m_pHandle, &resultCount));
 		
 		return resultCount;
+	}
+	
+	/**
+	 * Method definitions for class CCustomXMLAttribute
+	 */
+	
+	/**
+	* CCustomXMLAttribute::GetName - Retrieves name of the attribute.
+	* @return returns the name of the attribute.
+	*/
+	std::string CCustomXMLAttribute::GetName()
+	{
+		Lib3MF_uint32 bytesNeededName = 0;
+		Lib3MF_uint32 bytesWrittenName = 0;
+		CheckError(lib3mf_customxmlattribute_getname(m_pHandle, 0, &bytesNeededName, nullptr));
+		std::vector<char> bufferName(bytesNeededName);
+		CheckError(lib3mf_customxmlattribute_getname(m_pHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]));
+		
+		return std::string(&bufferName[0]);
+	}
+	
+	/**
+	* CCustomXMLAttribute::GetValue - Retrieves value of the attribute as string.
+	* @return returns the value of the attribute.
+	*/
+	std::string CCustomXMLAttribute::GetValue()
+	{
+		Lib3MF_uint32 bytesNeededValue = 0;
+		Lib3MF_uint32 bytesWrittenValue = 0;
+		CheckError(lib3mf_customxmlattribute_getvalue(m_pHandle, 0, &bytesNeededValue, nullptr));
+		std::vector<char> bufferValue(bytesNeededValue);
+		CheckError(lib3mf_customxmlattribute_getvalue(m_pHandle, bytesNeededValue, &bytesWrittenValue, &bufferValue[0]));
+		
+		return std::string(&bufferValue[0]);
+	}
+	
+	/**
+	* CCustomXMLAttribute::IsValidInteger - Checks if the value is a valid integer in the given range.
+	* @param[in] nMinValue - Minimum allowed value
+	* @param[in] nMaxValue - Maximum allowed value
+	* @return returns if the value is a valid integer.
+	*/
+	bool CCustomXMLAttribute::IsValidInteger(const Lib3MF_int64 nMinValue, const Lib3MF_int64 nMaxValue)
+	{
+		bool resultIsValid = 0;
+		CheckError(lib3mf_customxmlattribute_isvalidinteger(m_pHandle, nMinValue, nMaxValue, &resultIsValid));
+		
+		return resultIsValid;
+	}
+	
+	/**
+	* CCustomXMLAttribute::GetIntegerValue - Returns the value as integer. Fails if the value is not a valid integer in the given range.
+	* @param[in] nMinValue - Minimum allowed value
+	* @param[in] nMaxValue - Maximum allowed value
+	* @return returns the value.
+	*/
+	Lib3MF_int64 CCustomXMLAttribute::GetIntegerValue(const Lib3MF_int64 nMinValue, const Lib3MF_int64 nMaxValue)
+	{
+		Lib3MF_int64 resultValue = 0;
+		CheckError(lib3mf_customxmlattribute_getintegervalue(m_pHandle, nMinValue, nMaxValue, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CCustomXMLAttribute::IsValidDouble - Checks if the value is a valid double in the given range.
+	* @param[in] dMinValue - Minimum allowed value
+	* @param[in] dMaxValue - Maximum allowed value
+	* @return returns if the value is a valid double.
+	*/
+	bool CCustomXMLAttribute::IsValidDouble(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue)
+	{
+		bool resultIsValid = 0;
+		CheckError(lib3mf_customxmlattribute_isvaliddouble(m_pHandle, dMinValue, dMaxValue, &resultIsValid));
+		
+		return resultIsValid;
+	}
+	
+	/**
+	* CCustomXMLAttribute::GetDoubleValue - Returns the value as double. Fails if the value is not a valid double in the given range.
+	* @param[in] dMinValue - Minimum allowed value
+	* @param[in] dMaxValue - Maximum allowed value
+	* @return returns the value .
+	*/
+	Lib3MF_double CCustomXMLAttribute::GetDoubleValue(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue)
+	{
+		Lib3MF_double resultValue = 0;
+		CheckError(lib3mf_customxmlattribute_getdoublevalue(m_pHandle, dMinValue, dMaxValue, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CCustomXMLAttribute::IsValidBool - Checks if the value is a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+	* @return returns if the value is a valid bool.
+	*/
+	bool CCustomXMLAttribute::IsValidBool()
+	{
+		bool resultIsValid = 0;
+		CheckError(lib3mf_customxmlattribute_isvalidbool(m_pHandle, &resultIsValid));
+		
+		return resultIsValid;
+	}
+	
+	/**
+	* CCustomXMLAttribute::GetBoolValue - Returns the value as bool. Fails if the value is not a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+	* @param[in] dMinValue - Minimum allowed value
+	* @param[in] dMaxValue - Maximum allowed value
+	* @return returns the value .
+	*/
+	bool CCustomXMLAttribute::GetBoolValue(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue)
+	{
+		bool resultValue = 0;
+		CheckError(lib3mf_customxmlattribute_getboolvalue(m_pHandle, dMinValue, dMaxValue, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CCustomXMLAttribute::SetValue - Sets the value of the attribute as string.
+	* @param[in] sValue - new value of the attribute.
+	*/
+	void CCustomXMLAttribute::SetValue(const std::string & sValue)
+	{
+		CheckError(lib3mf_customxmlattribute_setvalue(m_pHandle, sValue.c_str()));
+	}
+	
+	/**
+	* CCustomXMLAttribute::SetIntegerValue - Sets the value of the attribute as integer.
+	* @param[in] nValue - new value of the attribute.
+	*/
+	void CCustomXMLAttribute::SetIntegerValue(const Lib3MF_int64 nValue)
+	{
+		CheckError(lib3mf_customxmlattribute_setintegervalue(m_pHandle, nValue));
+	}
+	
+	/**
+	* CCustomXMLAttribute::SetDoubleValue - Sets the value of the attribute as double.
+	* @param[in] dValue - new value of the attribute.
+	*/
+	void CCustomXMLAttribute::SetDoubleValue(const Lib3MF_double dValue)
+	{
+		CheckError(lib3mf_customxmlattribute_setdoublevalue(m_pHandle, dValue));
+	}
+	
+	/**
+	* CCustomXMLAttribute::SetBoolValue - Sets the value of the attribute as bool.
+	* @param[in] bValue - new value of the attribute.
+	*/
+	void CCustomXMLAttribute::SetBoolValue(const bool bValue)
+	{
+		CheckError(lib3mf_customxmlattribute_setboolvalue(m_pHandle, bValue));
+	}
+	
+	/**
+	* CCustomXMLAttribute::Remove - Removes the attribute from its parent node. All subsequent calls to the class will fail.
+	*/
+	void CCustomXMLAttribute::Remove()
+	{
+		CheckError(lib3mf_customxmlattribute_remove(m_pHandle));
+	}
+	
+	/**
+	 * Method definitions for class CCustomXMLNode
+	 */
+	
+	/**
+	* CCustomXMLNode::GetName - Retrieves name of the node.
+	* @return returns the name of the node.
+	*/
+	std::string CCustomXMLNode::GetName()
+	{
+		Lib3MF_uint32 bytesNeededName = 0;
+		Lib3MF_uint32 bytesWrittenName = 0;
+		CheckError(lib3mf_customxmlnode_getname(m_pHandle, 0, &bytesNeededName, nullptr));
+		std::vector<char> bufferName(bytesNeededName);
+		CheckError(lib3mf_customxmlnode_getname(m_pHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]));
+		
+		return std::string(&bufferName[0]);
+	}
+	
+	/**
+	* CCustomXMLNode::GetNameSpace - Retrieves namespace of the node.
+	* @return returns the namespace of the node.
+	*/
+	std::string CCustomXMLNode::GetNameSpace()
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		CheckError(lib3mf_customxmlnode_getnamespace(m_pHandle, 0, &bytesNeededNameSpace, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		CheckError(lib3mf_customxmlnode_getnamespace(m_pHandle, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0]));
+		
+		return std::string(&bufferNameSpace[0]);
+	}
+	
+	/**
+	* CCustomXMLNode::GetAttributeCount - Returns number of attributes.
+	* @return returns the number of attributes.
+	*/
+	Lib3MF_uint64 CCustomXMLNode::GetAttributeCount()
+	{
+		Lib3MF_uint64 resultCount = 0;
+		CheckError(lib3mf_customxmlnode_getattributecount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CCustomXMLNode::GetAttribute - Returns attribute instance. Fails if Index is out of range.
+	* @param[in] nIndex - Index of the attribute to return (0-based).
+	* @return XML Document attribute.
+	*/
+	PCustomXMLAttribute CCustomXMLNode::GetAttribute(const Lib3MF_uint64 nIndex)
+	{
+		Lib3MFHandle hAttributeInstance = nullptr;
+		CheckError(lib3mf_customxmlnode_getattribute(m_pHandle, nIndex, &hAttributeInstance));
+		
+		if (!hAttributeInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLAttribute>(dynamic_cast<CCustomXMLAttribute*>(m_pWrapper->polymorphicFactory(hAttributeInstance)));
+	}
+	
+	/**
+	* CCustomXMLNode::HasAttribute - Returns if attribute of a specific name exists.
+	* @param[in] sName - Name of the attribute.
+	* @return Returns if the attribute exists.
+	*/
+	bool CCustomXMLNode::HasAttribute(const std::string & sName)
+	{
+		bool resultAttributeExists = 0;
+		CheckError(lib3mf_customxmlnode_hasattribute(m_pHandle, sName.c_str(), &resultAttributeExists));
+		
+		return resultAttributeExists;
+	}
+	
+	/**
+	* CCustomXMLNode::FindAttribute - Returns attribute instance of a specific name. 
+	* @param[in] sName - Name of the attribute.
+	* @param[in] bMustExist - If true, the call fails if attribute does not exist. If falls, the call will return null if the attribute does not exist.
+	* @return XML Document attribute.
+	*/
+	PCustomXMLAttribute CCustomXMLNode::FindAttribute(const std::string & sName, const bool bMustExist)
+	{
+		Lib3MFHandle hAttributeInstance = nullptr;
+		CheckError(lib3mf_customxmlnode_findattribute(m_pHandle, sName.c_str(), bMustExist, &hAttributeInstance));
+		
+		if (hAttributeInstance) {
+			return std::shared_ptr<CCustomXMLAttribute>(dynamic_cast<CCustomXMLAttribute*>(m_pWrapper->polymorphicFactory(hAttributeInstance)));
+		} else {
+			return nullptr;
+		}
+	}
+	
+	/**
+	* CCustomXMLNode::RemoveAttribute - Removes the attribute with a specific name. Does nothing if attribute does not exist.
+	* @param[in] sName - Name of the attribute.
+	* @return Returns true if an attribute was removed.
+	*/
+	bool CCustomXMLNode::RemoveAttribute(const std::string & sName)
+	{
+		bool resultAttributeRemoved = 0;
+		CheckError(lib3mf_customxmlnode_removeattribute(m_pHandle, sName.c_str(), &resultAttributeRemoved));
+		
+		return resultAttributeRemoved;
+	}
+	
+	/**
+	* CCustomXMLNode::RemoveAttributeByIndex - Removes the attribute with a specific index. Fails if index is invalid
+	* @param[in] nIndex - Index of the attribute to remove (0-based).
+	* @return Returns true if an attribute was removed.
+	*/
+	bool CCustomXMLNode::RemoveAttributeByIndex(const Lib3MF_uint64 nIndex)
+	{
+		bool resultAttributeRemoved = 0;
+		CheckError(lib3mf_customxmlnode_removeattributebyindex(m_pHandle, nIndex, &resultAttributeRemoved));
+		
+		return resultAttributeRemoved;
+	}
+	
+	/**
+	* CCustomXMLNode::AddAttribute - Adds an attribute with a specific name and string value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] sValue - Value of the attribute.
+	*/
+	void CCustomXMLNode::AddAttribute(const std::string & sName, const std::string & sValue)
+	{
+		CheckError(lib3mf_customxmlnode_addattribute(m_pHandle, sName.c_str(), sValue.c_str()));
+	}
+	
+	/**
+	* CCustomXMLNode::AddIntegerAttribute - Adds an attribute with a specific name and integer value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] nValue - Value of the attribute.
+	*/
+	void CCustomXMLNode::AddIntegerAttribute(const std::string & sName, const Lib3MF_int64 nValue)
+	{
+		CheckError(lib3mf_customxmlnode_addintegerattribute(m_pHandle, sName.c_str(), nValue));
+	}
+	
+	/**
+	* CCustomXMLNode::AddDoubleAttribute - Adds an attribute with a specific name and double value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] dValue - Value of the attribute.
+	*/
+	void CCustomXMLNode::AddDoubleAttribute(const std::string & sName, const Lib3MF_double dValue)
+	{
+		CheckError(lib3mf_customxmlnode_adddoubleattribute(m_pHandle, sName.c_str(), dValue));
+	}
+	
+	/**
+	* CCustomXMLNode::AddBoolAttribute - Adds an attribute with a specific name and bool value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] bValue - Value of the attribute.
+	*/
+	void CCustomXMLNode::AddBoolAttribute(const std::string & sName, const bool bValue)
+	{
+		CheckError(lib3mf_customxmlnode_addboolattribute(m_pHandle, sName.c_str(), bValue));
+	}
+	
+	/**
+	* CCustomXMLNode::GetChildren - Returns all the child nodes of the XML Node.
+	* @return returns the list of child nodes.
+	*/
+	PCustomXMLNodes CCustomXMLNode::GetChildren()
+	{
+		Lib3MFHandle hChildNodes = nullptr;
+		CheckError(lib3mf_customxmlnode_getchildren(m_pHandle, &hChildNodes));
+		
+		if (!hChildNodes) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNodes>(dynamic_cast<CCustomXMLNodes*>(m_pWrapper->polymorphicFactory(hChildNodes)));
+	}
+	
+	/**
+	* CCustomXMLNode::CountChildrenByName - Returns how many children of the XML Node have a specific name.
+	* @param[in] sName - Name of the node.
+	* @return returns the number children with the specified name.
+	*/
+	Lib3MF_uint64 CCustomXMLNode::CountChildrenByName(const std::string & sName)
+	{
+		Lib3MF_uint64 resultCount = 0;
+		CheckError(lib3mf_customxmlnode_countchildrenbyname(m_pHandle, sName.c_str(), &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CCustomXMLNode::GetChildrenByName - Returns all the child nodes of the XML Node with a specific name.
+	* @param[in] sName - Name of the child.
+	* @return returns the list of child nodes.
+	*/
+	PCustomXMLNodes CCustomXMLNode::GetChildrenByName(const std::string & sName)
+	{
+		Lib3MFHandle hChildNodes = nullptr;
+		CheckError(lib3mf_customxmlnode_getchildrenbyname(m_pHandle, sName.c_str(), &hChildNodes));
+		
+		if (!hChildNodes) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNodes>(dynamic_cast<CCustomXMLNodes*>(m_pWrapper->polymorphicFactory(hChildNodes)));
+	}
+	
+	/**
+	* CCustomXMLNode::HasChild - Returns if a child with a specific name exist.
+	* @param[in] sName - Name of the child.
+	* @return returns if a child with a specific name exists.
+	*/
+	bool CCustomXMLNode::HasChild(const std::string & sName)
+	{
+		bool resultChildExists = 0;
+		CheckError(lib3mf_customxmlnode_haschild(m_pHandle, sName.c_str(), &resultChildExists));
+		
+		return resultChildExists;
+	}
+	
+	/**
+	* CCustomXMLNode::HasUniqueChild - Returns if a child with a specific name exist once and only once.
+	* @param[in] sName - Name of the child.
+	* @return returns if a child with a specific name exists once and only once.
+	*/
+	bool CCustomXMLNode::HasUniqueChild(const std::string & sName)
+	{
+		bool resultChildExists = 0;
+		CheckError(lib3mf_customxmlnode_hasuniquechild(m_pHandle, sName.c_str(), &resultChildExists));
+		
+		return resultChildExists;
+	}
+	
+	/**
+	* CCustomXMLNode::FindChild - Returns child with a specific name. Throws an error if name does not exist once and only once.
+	* @param[in] sName - Name of the child.
+	* @param[in] bMustExist - If true, the call fails if child does not exist. If falls, the call will return null if the child does not exist.
+	* @return returns child instance or null.
+	*/
+	PCustomXMLNode CCustomXMLNode::FindChild(const std::string & sName, const bool bMustExist)
+	{
+		Lib3MFHandle hChildInstance = nullptr;
+		CheckError(lib3mf_customxmlnode_findchild(m_pHandle, sName.c_str(), bMustExist, &hChildInstance));
+		
+		if (hChildInstance) {
+			return std::shared_ptr<CCustomXMLNode>(dynamic_cast<CCustomXMLNode*>(m_pWrapper->polymorphicFactory(hChildInstance)));
+		} else {
+			return nullptr;
+		}
+	}
+	
+	/**
+	* CCustomXMLNode::AddChild - Adds a new child with a specific name.
+	* @param[in] sName - Name of the child.
+	* @return returns child instance.
+	*/
+	PCustomXMLNode CCustomXMLNode::AddChild(const std::string & sName)
+	{
+		Lib3MFHandle hChildInstance = nullptr;
+		CheckError(lib3mf_customxmlnode_addchild(m_pHandle, sName.c_str(), &hChildInstance));
+		
+		if (!hChildInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNode>(dynamic_cast<CCustomXMLNode*>(m_pWrapper->polymorphicFactory(hChildInstance)));
+	}
+	
+	/**
+	* CCustomXMLNode::RemoveChild - Removes a specific child. All subsequent calls to the child will fail after the call.
+	* @param[in] pChildInstance - child instance to remove. Fails if given instance is not a child of the node.
+	*/
+	void CCustomXMLNode::RemoveChild(classParam<CCustomXMLNode> pChildInstance)
+	{
+		Lib3MFHandle hChildInstance = pChildInstance.GetHandle();
+		CheckError(lib3mf_customxmlnode_removechild(m_pHandle, hChildInstance));
+	}
+	
+	/**
+	* CCustomXMLNode::RemoveChildrenWithName - Removes all children with a specific name. Does nothing if no child with the name exists. All subsequent calls to the deleted children will fail after the call.
+	* @param[in] sName - Name of the children.
+	* @return Returns how many children have been deleted.
+	*/
+	Lib3MF_uint64 CCustomXMLNode::RemoveChildrenWithName(const std::string & sName)
+	{
+		Lib3MF_uint64 resultNumberOfDeletedChildren = 0;
+		CheckError(lib3mf_customxmlnode_removechildrenwithname(m_pHandle, sName.c_str(), &resultNumberOfDeletedChildren));
+		
+		return resultNumberOfDeletedChildren;
+	}
+	
+	/**
+	* CCustomXMLNode::Remove - Removes the node from its parent. The root node of the document can not be removed. Any subsequent call to the node fails after this.
+	*/
+	void CCustomXMLNode::Remove()
+	{
+		CheckError(lib3mf_customxmlnode_remove(m_pHandle));
+	}
+	
+	/**
+	 * Method definitions for class CCustomXMLNodes
+	 */
+	
+	/**
+	* CCustomXMLNodes::GetNodeCount - Returns number of nodes.
+	* @return returns the number of nodes in the list.
+	*/
+	Lib3MF_uint64 CCustomXMLNodes::GetNodeCount()
+	{
+		Lib3MF_uint64 resultCount = 0;
+		CheckError(lib3mf_customxmlnodes_getnodecount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CCustomXMLNodes::GetNode - Returns node instance. Fails if Index is out of range.
+	* @param[in] nIndex - Index of the node to return (0-based).
+	* @return XML Node node.
+	*/
+	PCustomXMLNode CCustomXMLNodes::GetNode(const Lib3MF_uint64 nIndex)
+	{
+		Lib3MFHandle hNodeInstance = nullptr;
+		CheckError(lib3mf_customxmlnodes_getnode(m_pHandle, nIndex, &hNodeInstance));
+		
+		if (!hNodeInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNode>(dynamic_cast<CCustomXMLNode*>(m_pWrapper->polymorphicFactory(hNodeInstance)));
+	}
+	
+	/**
+	* CCustomXMLNodes::CountNodesByName - Returns how many nodes of the XML Node have a specific name.
+	* @param[in] sName - Name of the node.
+	* @return returns the number of nodes with the specified name.
+	*/
+	Lib3MF_uint64 CCustomXMLNodes::CountNodesByName(const std::string & sName)
+	{
+		Lib3MF_uint64 resultCount = 0;
+		CheckError(lib3mf_customxmlnodes_countnodesbyname(m_pHandle, sName.c_str(), &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CCustomXMLNodes::GetNodesByName - Returns all the nodes nodes of the XML Node with a specific name.
+	* @param[in] sName - Name of the node.
+	* @return returns the list of node nodes.
+	*/
+	PCustomXMLNodes CCustomXMLNodes::GetNodesByName(const std::string & sName)
+	{
+		Lib3MFHandle hNodes = nullptr;
+		CheckError(lib3mf_customxmlnodes_getnodesbyname(m_pHandle, sName.c_str(), &hNodes));
+		
+		if (!hNodes) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNodes>(dynamic_cast<CCustomXMLNodes*>(m_pWrapper->polymorphicFactory(hNodes)));
+	}
+	
+	/**
+	* CCustomXMLNodes::HasNode - Returns if a node with a specific name exist.
+	* @param[in] sName - Name of the node.
+	* @return returns if a node with a specific name exists.
+	*/
+	bool CCustomXMLNodes::HasNode(const std::string & sName)
+	{
+		bool resultNodeExists = 0;
+		CheckError(lib3mf_customxmlnodes_hasnode(m_pHandle, sName.c_str(), &resultNodeExists));
+		
+		return resultNodeExists;
+	}
+	
+	/**
+	* CCustomXMLNodes::HasUniqueNode - Returns if a node with a specific name exist once and only once.
+	* @param[in] sName - Name of the node.
+	* @return returns if a node with a specific name exists once and only once.
+	*/
+	bool CCustomXMLNodes::HasUniqueNode(const std::string & sName)
+	{
+		bool resultNodeExists = 0;
+		CheckError(lib3mf_customxmlnodes_hasuniquenode(m_pHandle, sName.c_str(), &resultNodeExists));
+		
+		return resultNodeExists;
+	}
+	
+	/**
+	* CCustomXMLNodes::FindNode - Returns node with a specific name. Throws an error if name does not exist once and only once.
+	* @param[in] sName - Name of the node.
+	* @param[in] bMustExist - If true, the call fails if node does not exist. If falls, the call will return null if the node does not exist.
+	* @return returns node instance.
+	*/
+	PCustomXMLNode CCustomXMLNodes::FindNode(const std::string & sName, const bool bMustExist)
+	{
+		Lib3MFHandle hNodeInstance = nullptr;
+		CheckError(lib3mf_customxmlnodes_findnode(m_pHandle, sName.c_str(), bMustExist, &hNodeInstance));
+		
+		if (hNodeInstance) {
+			return std::shared_ptr<CCustomXMLNode>(dynamic_cast<CCustomXMLNode*>(m_pWrapper->polymorphicFactory(hNodeInstance)));
+		} else {
+			return nullptr;
+		}
+	}
+	
+	/**
+	 * Method definitions for class CCustomDOMTree
+	 */
+	
+	/**
+	* CCustomDOMTree::GetNameSpace - Returns the namespace identifier for the DOM Tree.
+	* @return returns the namespace of the DOM Tree.
+	*/
+	std::string CCustomDOMTree::GetNameSpace()
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		CheckError(lib3mf_customdomtree_getnamespace(m_pHandle, 0, &bytesNeededNameSpace, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		CheckError(lib3mf_customdomtree_getnamespace(m_pHandle, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0]));
+		
+		return std::string(&bufferNameSpace[0]);
+	}
+	
+	/**
+	* CCustomDOMTree::GetRootNode - Returns root node of the tree.
+	* @return Root node of the document.
+	*/
+	PCustomXMLNode CCustomDOMTree::GetRootNode()
+	{
+		Lib3MFHandle hRootNode = nullptr;
+		CheckError(lib3mf_customdomtree_getrootnode(m_pHandle, &hRootNode));
+		
+		if (!hRootNode) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNode>(dynamic_cast<CCustomXMLNode*>(m_pWrapper->polymorphicFactory(hRootNode)));
+	}
+	
+	/**
+	* CCustomDOMTree::SaveToString - Saves the XML tree into a string.
+	* @return String with the XML Content.
+	*/
+	std::string CCustomDOMTree::SaveToString()
+	{
+		Lib3MF_uint32 bytesNeededXMLString = 0;
+		Lib3MF_uint32 bytesWrittenXMLString = 0;
+		CheckError(lib3mf_customdomtree_savetostring(m_pHandle, 0, &bytesNeededXMLString, nullptr));
+		std::vector<char> bufferXMLString(bytesNeededXMLString);
+		CheckError(lib3mf_customdomtree_savetostring(m_pHandle, bytesNeededXMLString, &bytesWrittenXMLString, &bufferXMLString[0]));
+		
+		return std::string(&bufferXMLString[0]);
 	}
 	
 	/**
@@ -4864,6 +6047,1034 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	 * Method definitions for class CToolpathProfile
+	 */
+	
+	/**
+	* CToolpathProfile::GetUUID - Retrieves the profile's uuid
+	* @return Returns the uuid value.
+	*/
+	std::string CToolpathProfile::GetUUID()
+	{
+		Lib3MF_uint32 bytesNeededUUID = 0;
+		Lib3MF_uint32 bytesWrittenUUID = 0;
+		CheckError(lib3mf_toolpathprofile_getuuid(m_pHandle, 0, &bytesNeededUUID, nullptr));
+		std::vector<char> bufferUUID(bytesNeededUUID);
+		CheckError(lib3mf_toolpathprofile_getuuid(m_pHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]));
+		
+		return std::string(&bufferUUID[0]);
+	}
+	
+	/**
+	* CToolpathProfile::GetName - Retrieves the profile's name
+	* @return Returns the name.
+	*/
+	std::string CToolpathProfile::GetName()
+	{
+		Lib3MF_uint32 bytesNeededName = 0;
+		Lib3MF_uint32 bytesWrittenName = 0;
+		CheckError(lib3mf_toolpathprofile_getname(m_pHandle, 0, &bytesNeededName, nullptr));
+		std::vector<char> bufferName(bytesNeededName);
+		CheckError(lib3mf_toolpathprofile_getname(m_pHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]));
+		
+		return std::string(&bufferName[0]);
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterCount - Returns the number of parameters.
+	* @return Returns the number of parameters.
+	*/
+	Lib3MF_uint32 CToolpathProfile::GetParameterCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(lib3mf_toolpathprofile_getparametercount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterName - Returns the Name of a parameter.
+	* @param[in] nIndex - Index of Parameter (0-based). Call will fail if an invalid index is given.
+	* @return Returns the name of the parameter.
+	*/
+	std::string CToolpathProfile::GetParameterName(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_uint32 bytesNeededName = 0;
+		Lib3MF_uint32 bytesWrittenName = 0;
+		CheckError(lib3mf_toolpathprofile_getparametername(m_pHandle, nIndex, 0, &bytesNeededName, nullptr));
+		std::vector<char> bufferName(bytesNeededName);
+		CheckError(lib3mf_toolpathprofile_getparametername(m_pHandle, nIndex, bytesNeededName, &bytesWrittenName, &bufferName[0]));
+		
+		return std::string(&bufferName[0]);
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterNameSpace - Returns the NameSpace of a parameter.
+	* @param[in] nIndex - Index of Parameter (0-based). Call will fail if an invalid index is given.
+	* @return Returns the namespace of the parameter.
+	*/
+	std::string CToolpathProfile::GetParameterNameSpace(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		CheckError(lib3mf_toolpathprofile_getparameternamespace(m_pHandle, nIndex, 0, &bytesNeededNameSpace, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		CheckError(lib3mf_toolpathprofile_getparameternamespace(m_pHandle, nIndex, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0]));
+		
+		return std::string(&bufferNameSpace[0]);
+	}
+	
+	/**
+	* CToolpathProfile::HasParameterValue - Checks if a parameter value exists.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns if a value exists.
+	*/
+	bool CToolpathProfile::HasParameterValue(const std::string & sNameSpaceName, const std::string & sValueName)
+	{
+		bool resultValueExists = 0;
+		CheckError(lib3mf_toolpathprofile_hasparametervalue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), &resultValueExists));
+		
+		return resultValueExists;
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterValue - Retrieves a profile's parameter value. Fails if value does not exist.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns the value of the field.
+	*/
+	std::string CToolpathProfile::GetParameterValue(const std::string & sNameSpaceName, const std::string & sValueName)
+	{
+		Lib3MF_uint32 bytesNeededValue = 0;
+		Lib3MF_uint32 bytesWrittenValue = 0;
+		CheckError(lib3mf_toolpathprofile_getparametervalue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), 0, &bytesNeededValue, nullptr));
+		std::vector<char> bufferValue(bytesNeededValue);
+		CheckError(lib3mf_toolpathprofile_getparametervalue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), bytesNeededValue, &bytesWrittenValue, &bufferValue[0]));
+		
+		return std::string(&bufferValue[0]);
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterValueDef - Retrieves a profile's parameter value
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] sDefaultValue - Default value if value does not exist.
+	* @return Returns the value of the field.
+	*/
+	std::string CToolpathProfile::GetParameterValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const std::string & sDefaultValue)
+	{
+		Lib3MF_uint32 bytesNeededValue = 0;
+		Lib3MF_uint32 bytesWrittenValue = 0;
+		CheckError(lib3mf_toolpathprofile_getparametervaluedef(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), sDefaultValue.c_str(), 0, &bytesNeededValue, nullptr));
+		std::vector<char> bufferValue(bytesNeededValue);
+		CheckError(lib3mf_toolpathprofile_getparametervaluedef(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), sDefaultValue.c_str(), bytesNeededValue, &bytesWrittenValue, &bufferValue[0]));
+		
+		return std::string(&bufferValue[0]);
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterDoubleValue - Retrieves a profile's parameter value as double. Fails if value does not exist or is not a double value.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns the value of the field.
+	*/
+	Lib3MF_double CToolpathProfile::GetParameterDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName)
+	{
+		Lib3MF_double resultValue = 0;
+		CheckError(lib3mf_toolpathprofile_getparameterdoublevalue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterDoubleValueDef - Retrieves a profile's parameter value as double.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] dDefaultValue - Default value if value does not exist or is not a double value.
+	* @return Returns the value of the field.
+	*/
+	Lib3MF_double CToolpathProfile::GetParameterDoubleValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dDefaultValue)
+	{
+		Lib3MF_double resultValue = 0;
+		CheckError(lib3mf_toolpathprofile_getparameterdoublevaluedef(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), dDefaultValue, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterIntegerValue - Retrieves a profile's parameter value as integer. Fails if value does not exist or is not a integer value.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns the value of the field.
+	*/
+	Lib3MF_int64 CToolpathProfile::GetParameterIntegerValue(const std::string & sNameSpaceName, const std::string & sValueName)
+	{
+		Lib3MF_int64 resultValue = 0;
+		CheckError(lib3mf_toolpathprofile_getparameterintegervalue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterIntegerValueDef - Retrieves a profile's parameter value as integer.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] nDefaultValue - Default value if value does not exist or is not a integer value.
+	* @return Returns the value of the field.
+	*/
+	Lib3MF_int64 CToolpathProfile::GetParameterIntegerValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_int64 nDefaultValue)
+	{
+		Lib3MF_int64 resultValue = 0;
+		CheckError(lib3mf_toolpathprofile_getparameterintegervaluedef(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), nDefaultValue, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterBoolValue - Retrieves a profile's parameter value as boolean. Fails if value does not exist or is not a boolean value.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns the value of the field.
+	*/
+	bool CToolpathProfile::GetParameterBoolValue(const std::string & sNameSpaceName, const std::string & sValueName)
+	{
+		bool resultValue = 0;
+		CheckError(lib3mf_toolpathprofile_getparameterboolvalue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterBoolValueDef - Retrieves a profile's parameter value as boolean.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] bDefaultValue - Default value if value does not exist or is not a boolean value.
+	* @return Returns the value of the field.
+	*/
+	bool CToolpathProfile::GetParameterBoolValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const bool bDefaultValue)
+	{
+		bool resultValue = 0;
+		CheckError(lib3mf_toolpathprofile_getparameterboolvaluedef(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), bDefaultValue, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathProfile::SetName - Sets the profile's name
+	* @param[in] sName - Returns the name.
+	*/
+	void CToolpathProfile::SetName(const std::string & sName)
+	{
+		CheckError(lib3mf_toolpathprofile_setname(m_pHandle, sName.c_str()));
+	}
+	
+	/**
+	* CToolpathProfile::SetParameterValue - Sets a profile's parameter value.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] sValue - String value of the parameter.
+	*/
+	void CToolpathProfile::SetParameterValue(const std::string & sNameSpaceName, const std::string & sValueName, const std::string & sValue)
+	{
+		CheckError(lib3mf_toolpathprofile_setparametervalue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), sValue.c_str()));
+	}
+	
+	/**
+	* CToolpathProfile::SetParameterDoubleValue - Sets a profile's parameter value as double.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] dValue - Double value of the parameter.
+	*/
+	void CToolpathProfile::SetParameterDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dValue)
+	{
+		CheckError(lib3mf_toolpathprofile_setparameterdoublevalue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), dValue));
+	}
+	
+	/**
+	* CToolpathProfile::SetParameterIntegerValue - Sets a profile's parameter value as integer.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] nValue - Integer value of the parameter.
+	*/
+	void CToolpathProfile::SetParameterIntegerValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_int64 nValue)
+	{
+		CheckError(lib3mf_toolpathprofile_setparameterintegervalue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), nValue));
+	}
+	
+	/**
+	* CToolpathProfile::SetParameterBoolValue - Sets a profile's parameter value as boolean.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] bValue - Boolean value of the parameter.
+	*/
+	void CToolpathProfile::SetParameterBoolValue(const std::string & sNameSpaceName, const std::string & sValueName, const bool bValue)
+	{
+		CheckError(lib3mf_toolpathprofile_setparameterboolvalue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), bValue));
+	}
+	
+	/**
+	 * Method definitions for class CToolpathLayerReader
+	 */
+	
+	/**
+	* CToolpathLayerReader::GetLayerDataUUID - Retrieves the layerdata's uuid
+	* @return Returns the uuid value.
+	*/
+	std::string CToolpathLayerReader::GetLayerDataUUID()
+	{
+		Lib3MF_uint32 bytesNeededUUID = 0;
+		Lib3MF_uint32 bytesWrittenUUID = 0;
+		CheckError(lib3mf_toolpathlayerreader_getlayerdatauuid(m_pHandle, 0, &bytesNeededUUID, nullptr));
+		std::vector<char> bufferUUID(bytesNeededUUID);
+		CheckError(lib3mf_toolpathlayerreader_getlayerdatauuid(m_pHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]));
+		
+		return std::string(&bufferUUID[0]);
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentCount - Retrieves the count of segments.
+	* @return Count
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::GetSegmentCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentcount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentInfo - Retrieves the segment type information .
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[out] eType - Segment Type
+	* @param[out] nPointCount - Point count of segment.
+	*/
+	void CToolpathLayerReader::GetSegmentInfo(const Lib3MF_uint32 nIndex, eToolpathSegmentType & eType, Lib3MF_uint32 & nPointCount)
+	{
+		CheckError(lib3mf_toolpathlayerreader_getsegmentinfo(m_pHandle, nIndex, &eType, &nPointCount));
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentProfile - Retrieves the assigned segment profile.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Profile
+	*/
+	PToolpathProfile CToolpathLayerReader::GetSegmentProfile(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hProfile = nullptr;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentprofile(m_pHandle, nIndex, &hProfile));
+		
+		if (!hProfile) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpathProfile>(dynamic_cast<CToolpathProfile*>(m_pWrapper->polymorphicFactory(hProfile)));
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentProfileUUID - Retrieves the assigned segment profile uuid.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Profile UUID
+	*/
+	std::string CToolpathLayerReader::GetSegmentProfileUUID(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_uint32 bytesNeededProfileUUID = 0;
+		Lib3MF_uint32 bytesWrittenProfileUUID = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentprofileuuid(m_pHandle, nIndex, 0, &bytesNeededProfileUUID, nullptr));
+		std::vector<char> bufferProfileUUID(bytesNeededProfileUUID);
+		CheckError(lib3mf_toolpathlayerreader_getsegmentprofileuuid(m_pHandle, nIndex, bytesNeededProfileUUID, &bytesWrittenProfileUUID, &bufferProfileUUID[0]));
+		
+		return std::string(&bufferProfileUUID[0]);
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentPart - Retrieves the assigned segment profile.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Build Item
+	*/
+	PBuildItem CToolpathLayerReader::GetSegmentPart(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hBuildItem = nullptr;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentpart(m_pHandle, nIndex, &hBuildItem));
+		
+		if (!hBuildItem) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CBuildItem>(dynamic_cast<CBuildItem*>(m_pWrapper->polymorphicFactory(hBuildItem)));
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentPartUUID - Retrieves the assigned segment part uuid.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Part UUID
+	*/
+	std::string CToolpathLayerReader::GetSegmentPartUUID(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_uint32 bytesNeededPartUUID = 0;
+		Lib3MF_uint32 bytesWrittenPartUUID = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentpartuuid(m_pHandle, nIndex, 0, &bytesNeededPartUUID, nullptr));
+		std::vector<char> bufferPartUUID(bytesNeededPartUUID);
+		CheckError(lib3mf_toolpathlayerreader_getsegmentpartuuid(m_pHandle, nIndex, bytesNeededPartUUID, &bytesWrittenPartUUID, &bufferPartUUID[0]));
+		
+		return std::string(&bufferPartUUID[0]);
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentLocalPartID - Retrieves the assigned segment part id. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Local Segment Part ID
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::GetSegmentLocalPartID(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_uint32 resultLocalPartID = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentlocalpartid(m_pHandle, nIndex, &resultLocalPartID));
+		
+		return resultLocalPartID;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetPartUUIDByLocalPartID - Retrieves the global part UUID by the local part ID. Fails if part ID does not exist in this layer. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+	* @param[in] nLocalPartID - Local Segment Part ID
+	* @return Segment Part UUID
+	*/
+	std::string CToolpathLayerReader::GetPartUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID)
+	{
+		Lib3MF_uint32 bytesNeededPartUUID = 0;
+		Lib3MF_uint32 bytesWrittenPartUUID = 0;
+		CheckError(lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(m_pHandle, nLocalPartID, 0, &bytesNeededPartUUID, nullptr));
+		std::vector<char> bufferPartUUID(bytesNeededPartUUID);
+		CheckError(lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(m_pHandle, nLocalPartID, bytesNeededPartUUID, &bytesWrittenPartUUID, &bufferPartUUID[0]));
+		
+		return std::string(&bufferPartUUID[0]);
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentPointData - Retrieves the assigned segment point list. For type hatch, the points are taken pairwise.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[out] PointDataBuffer - The point data array
+	*/
+	void CToolpathLayerReader::GetSegmentPointData(const Lib3MF_uint32 nIndex, std::vector<sPosition2D> & PointDataBuffer)
+	{
+		Lib3MF_uint64 elementsNeededPointData = 0;
+		Lib3MF_uint64 elementsWrittenPointData = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentpointdata(m_pHandle, nIndex, 0, &elementsNeededPointData, nullptr));
+		PointDataBuffer.resize((size_t) elementsNeededPointData);
+		CheckError(lib3mf_toolpathlayerreader_getsegmentpointdata(m_pHandle, nIndex, elementsNeededPointData, &elementsWrittenPointData, PointDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerReader::FindAttributeInfoByName - Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @param[out] nID - Attribute ID.
+	* @param[out] eAttributeType - Attribute Type.
+	*/
+	void CToolpathLayerReader::FindAttributeInfoByName(const std::string & sNameSpace, const std::string & sAttributeName, Lib3MF_uint32 & nID, eToolpathAttributeType & eAttributeType)
+	{
+		CheckError(lib3mf_toolpathlayerreader_findattributeinfobyname(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &nID, &eAttributeType));
+	}
+	
+	/**
+	* CToolpathLayerReader::FindAttributeIDByName - Retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute ID.
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::FindAttributeIDByName(const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		Lib3MF_uint32 resultID = 0;
+		CheckError(lib3mf_toolpathlayerreader_findattributeidbyname(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &resultID));
+		
+		return resultID;
+	}
+	
+	/**
+	* CToolpathLayerReader::FindAttributeValueByName - Retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute Type.
+	*/
+	eToolpathAttributeType CToolpathLayerReader::FindAttributeValueByName(const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		eToolpathAttributeType resultAttributeType = (eToolpathAttributeType) 0;
+		CheckError(lib3mf_toolpathlayerreader_findattributevaluebyname(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &resultAttributeType));
+		
+		return resultAttributeType;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentIntegerAttributeByID - Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nID - Attribute ID.
+	* @return Attribute Value.
+	*/
+	Lib3MF_int64 CToolpathLayerReader::GetSegmentIntegerAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID)
+	{
+		Lib3MF_int64 resultValue = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentintegerattributebyid(m_pHandle, nIndex, nID, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentIntegerAttributeByName - Retrieves a segment integer attribute by Attribute Name. Will fail if Attribute does not exist or is of different type.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute Value.
+	*/
+	Lib3MF_int64 CToolpathLayerReader::GetSegmentIntegerAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		Lib3MF_int64 resultValue = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentintegerattributebyname(m_pHandle, nIndex, sNameSpace.c_str(), sAttributeName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentDoubleAttributeByID - Retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nID - Attribute ID.
+	* @return Attribute Value.
+	*/
+	Lib3MF_double CToolpathLayerReader::GetSegmentDoubleAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID)
+	{
+		Lib3MF_double resultValue = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid(m_pHandle, nIndex, nID, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentDoubleAttributeByName - Retrieves a segment Double attribute by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute Value.
+	*/
+	Lib3MF_double CToolpathLayerReader::GetSegmentDoubleAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		Lib3MF_double resultValue = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname(m_pHandle, nIndex, sNameSpace.c_str(), sAttributeName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetCustomDataCount - Retrieves the count of custom data elements.
+	* @return Count
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::GetCustomDataCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(lib3mf_toolpathlayerreader_getcustomdatacount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetCustomData - Retrieves the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @return DOM Tree of the data.
+	*/
+	PCustomDOMTree CToolpathLayerReader::GetCustomData(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hData = nullptr;
+		CheckError(lib3mf_toolpathlayerreader_getcustomdata(m_pHandle, nIndex, &hData));
+		
+		if (!hData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomDOMTree>(dynamic_cast<CCustomDOMTree*>(m_pWrapper->polymorphicFactory(hData)));
+	}
+	
+	/**
+	* CToolpathLayerReader::GetCustomDataName - Retrieves the node name of the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @param[out] sNameSpace - Namespace of the custom data tree.
+	* @param[out] sDataName - Root name of the data tree.
+	*/
+	void CToolpathLayerReader::GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName)
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		Lib3MF_uint32 bytesNeededDataName = 0;
+		Lib3MF_uint32 bytesWrittenDataName = 0;
+		CheckError(lib3mf_toolpathlayerreader_getcustomdataname(m_pHandle, nIndex, 0, &bytesNeededNameSpace, nullptr, 0, &bytesNeededDataName, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		std::vector<char> bufferDataName(bytesNeededDataName);
+		CheckError(lib3mf_toolpathlayerreader_getcustomdataname(m_pHandle, nIndex, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0], bytesNeededDataName, &bytesWrittenDataName, &bufferDataName[0]));
+		sNameSpace = std::string(&bufferNameSpace[0]);
+		sDataName = std::string(&bufferDataName[0]);
+	}
+	
+	/**
+	 * Method definitions for class CToolpathLayerData
+	 */
+	
+	/**
+	* CToolpathLayerData::GetLayerDataUUID - Retrieves the layerdata's uuid
+	* @return Returns the uuid value.
+	*/
+	std::string CToolpathLayerData::GetLayerDataUUID()
+	{
+		Lib3MF_uint32 bytesNeededUUID = 0;
+		Lib3MF_uint32 bytesWrittenUUID = 0;
+		CheckError(lib3mf_toolpathlayerdata_getlayerdatauuid(m_pHandle, 0, &bytesNeededUUID, nullptr));
+		std::vector<char> bufferUUID(bytesNeededUUID);
+		CheckError(lib3mf_toolpathlayerdata_getlayerdatauuid(m_pHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]));
+		
+		return std::string(&bufferUUID[0]);
+	}
+	
+	/**
+	* CToolpathLayerData::RegisterProfile - Registers a toolpath profile
+	* @param[in] pProfile - The toolpath profile to register.
+	* @return returns the local profile ID for the layer.
+	*/
+	Lib3MF_uint32 CToolpathLayerData::RegisterProfile(classParam<CToolpathProfile> pProfile)
+	{
+		Lib3MFHandle hProfile = pProfile.GetHandle();
+		Lib3MF_uint32 resultProfileID = 0;
+		CheckError(lib3mf_toolpathlayerdata_registerprofile(m_pHandle, hProfile, &resultProfileID));
+		
+		return resultProfileID;
+	}
+	
+	/**
+	* CToolpathLayerData::RegisterBuildItem - Registers a Model Build Item
+	* @param[in] pBuildItem - The model build item to use.
+	* @return returns the local part ID for the layer.
+	*/
+	Lib3MF_uint32 CToolpathLayerData::RegisterBuildItem(classParam<CBuildItem> pBuildItem)
+	{
+		Lib3MFHandle hBuildItem = pBuildItem.GetHandle();
+		Lib3MF_uint32 resultPartID = 0;
+		CheckError(lib3mf_toolpathlayerdata_registerbuilditem(m_pHandle, hBuildItem, &resultPartID));
+		
+		return resultPartID;
+	}
+	
+	/**
+	* CToolpathLayerData::SetSegmentAttribute - Sets Segment Attribute for all following segments that are added. Overrides previously set attribute.
+	* @param[in] sNameSpace - The namespace of the attribute to register.
+	* @param[in] sAttributeName - The name of the attribute to register.
+	* @param[in] sValue - The value of the attribute to register.
+	*/
+	void CToolpathLayerData::SetSegmentAttribute(const std::string & sNameSpace, const std::string & sAttributeName, const std::string & sValue)
+	{
+		CheckError(lib3mf_toolpathlayerdata_setsegmentattribute(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), sValue.c_str()));
+	}
+	
+	/**
+	* CToolpathLayerData::ClearSegmentAttributes - Clears current segment attributes.
+	*/
+	void CToolpathLayerData::ClearSegmentAttributes()
+	{
+		CheckError(lib3mf_toolpathlayerdata_clearsegmentattributes(m_pHandle));
+	}
+	
+	/**
+	* CToolpathLayerData::WriteHatchData - writes hatch data to the layer.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data
+	*/
+	void CToolpathLayerData::WriteHatchData(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer)
+	{
+		CheckError(lib3mf_toolpathlayerdata_writehatchdata(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WriteLoop - writes loop data to the layer.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data
+	*/
+	void CToolpathLayerData::WriteLoop(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer)
+	{
+		CheckError(lib3mf_toolpathlayerdata_writeloop(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WritePolyline - writes polyline data to the layer.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data
+	*/
+	void CToolpathLayerData::WritePolyline(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer)
+	{
+		CheckError(lib3mf_toolpathlayerdata_writepolyline(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::AddCustomData - Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
+	* @return DOM Tree of the data.
+	*/
+	PCustomDOMTree CToolpathLayerData::AddCustomData(const std::string & sNameSpace, const std::string & sDataName)
+	{
+		Lib3MFHandle hData = nullptr;
+		CheckError(lib3mf_toolpathlayerdata_addcustomdata(m_pHandle, sNameSpace.c_str(), sDataName.c_str(), &hData));
+		
+		if (!hData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomDOMTree>(dynamic_cast<CCustomDOMTree*>(m_pWrapper->polymorphicFactory(hData)));
+	}
+	
+	/**
+	* CToolpathLayerData::Finish - finishes all writing of the layer and compresses toolpath data.
+	*/
+	void CToolpathLayerData::Finish()
+	{
+		CheckError(lib3mf_toolpathlayerdata_finish(m_pHandle));
+	}
+	
+	/**
+	 * Method definitions for class CToolpath
+	 */
+	
+	/**
+	* CToolpath::GetUnits - Retrieves the unit factor
+	* @return Returns the unit factor.
+	*/
+	Lib3MF_double CToolpath::GetUnits()
+	{
+		Lib3MF_double resultUnits = 0;
+		CheckError(lib3mf_toolpath_getunits(m_pHandle, &resultUnits));
+		
+		return resultUnits;
+	}
+	
+	/**
+	* CToolpath::GetLayerCount - Retrieves the count of layers
+	* @return Returns the layer count
+	*/
+	Lib3MF_uint32 CToolpath::GetLayerCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(lib3mf_toolpath_getlayercount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CToolpath::GetProfileCount - Retrieves the count of profiles
+	* @return Returns the profile count
+	*/
+	Lib3MF_uint32 CToolpath::GetProfileCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(lib3mf_toolpath_getprofilecount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CToolpath::AddLayer - Adds a new toolpath layer
+	* @param[in] nZMax - ZMax value
+	* @param[in] sPath - Package Path
+	* @param[in] pModelWriter - The model writer that writes out the 3MF.
+	* @return Returns the layerdata object to write the layer content into.
+	*/
+	PToolpathLayerData CToolpath::AddLayer(const Lib3MF_uint32 nZMax, const std::string & sPath, classParam<CWriter> pModelWriter)
+	{
+		Lib3MFHandle hModelWriter = pModelWriter.GetHandle();
+		Lib3MFHandle hLayerData = nullptr;
+		CheckError(lib3mf_toolpath_addlayer(m_pHandle, nZMax, sPath.c_str(), hModelWriter, &hLayerData));
+		
+		if (!hLayerData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpathLayerData>(dynamic_cast<CToolpathLayerData*>(m_pWrapper->polymorphicFactory(hLayerData)));
+	}
+	
+	/**
+	* CToolpath::GetLayerAttachment - Retrieves the Attachment of a layer
+	* @param[in] nIndex - Layer Index
+	* @return Attachment
+	*/
+	PAttachment CToolpath::GetLayerAttachment(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hAttachment = nullptr;
+		CheckError(lib3mf_toolpath_getlayerattachment(m_pHandle, nIndex, &hAttachment));
+		
+		if (!hAttachment) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CAttachment>(dynamic_cast<CAttachment*>(m_pWrapper->polymorphicFactory(hAttachment)));
+	}
+	
+	/**
+	* CToolpath::ReadLayerData - Reads the toolpath of a layer.
+	* @param[in] nIndex - Layer Index
+	* @return Toolpath Reader Instance
+	*/
+	PToolpathLayerReader CToolpath::ReadLayerData(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hToolpathReader = nullptr;
+		CheckError(lib3mf_toolpath_readlayerdata(m_pHandle, nIndex, &hToolpathReader));
+		
+		if (!hToolpathReader) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpathLayerReader>(dynamic_cast<CToolpathLayerReader*>(m_pWrapper->polymorphicFactory(hToolpathReader)));
+	}
+	
+	/**
+	* CToolpath::GetLayerPath - Retrieves the Path of a layer
+	* @param[in] nIndex - Layer Index
+	* @return Package Path
+	*/
+	std::string CToolpath::GetLayerPath(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_uint32 bytesNeededPath = 0;
+		Lib3MF_uint32 bytesWrittenPath = 0;
+		CheckError(lib3mf_toolpath_getlayerpath(m_pHandle, nIndex, 0, &bytesNeededPath, nullptr));
+		std::vector<char> bufferPath(bytesNeededPath);
+		CheckError(lib3mf_toolpath_getlayerpath(m_pHandle, nIndex, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]));
+		
+		return std::string(&bufferPath[0]);
+	}
+	
+	/**
+	* CToolpath::GetLayerZMax - Retrieves the ZMax of a layer
+	* @param[in] nIndex - Layer Index
+	* @return ZMax value
+	*/
+	Lib3MF_uint32 CToolpath::GetLayerZMax(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_uint32 resultZMax = 0;
+		CheckError(lib3mf_toolpath_getlayerzmax(m_pHandle, nIndex, &resultZMax));
+		
+		return resultZMax;
+	}
+	
+	/**
+	* CToolpath::GetLayerZ - Return the z value of a layer in units.
+	* @param[in] nLayerIndex - Layer Index.
+	* @return Z Value in Units.
+	*/
+	Lib3MF_uint32 CToolpath::GetLayerZ(const Lib3MF_uint32 nLayerIndex)
+	{
+		Lib3MF_uint32 resultZValue = 0;
+		CheckError(lib3mf_toolpath_getlayerz(m_pHandle, nLayerIndex, &resultZValue));
+		
+		return resultZValue;
+	}
+	
+	/**
+	* CToolpath::AddProfile - Adds a new profile to the toolpath.
+	* @param[in] sName - the name.
+	* @return Returns the profile.
+	*/
+	PToolpathProfile CToolpath::AddProfile(const std::string & sName)
+	{
+		Lib3MFHandle hProfile = nullptr;
+		CheckError(lib3mf_toolpath_addprofile(m_pHandle, sName.c_str(), &hProfile));
+		
+		if (!hProfile) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpathProfile>(dynamic_cast<CToolpathProfile*>(m_pWrapper->polymorphicFactory(hProfile)));
+	}
+	
+	/**
+	* CToolpath::GetProfile - Returns a profile of the toolpath.
+	* @param[in] nProfileIndex - Layer Index.
+	* @return Returns the profile.
+	*/
+	PToolpathProfile CToolpath::GetProfile(const Lib3MF_uint32 nProfileIndex)
+	{
+		Lib3MFHandle hProfile = nullptr;
+		CheckError(lib3mf_toolpath_getprofile(m_pHandle, nProfileIndex, &hProfile));
+		
+		if (!hProfile) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpathProfile>(dynamic_cast<CToolpathProfile*>(m_pWrapper->polymorphicFactory(hProfile)));
+	}
+	
+	/**
+	* CToolpath::GetProfileUUID - Returns a profile of the toolpath by UUID.
+	* @param[in] sProfileUUID - UUID string.
+	* @return Returns the profile.
+	*/
+	PToolpathProfile CToolpath::GetProfileUUID(const std::string & sProfileUUID)
+	{
+		Lib3MFHandle hProfile = nullptr;
+		CheckError(lib3mf_toolpath_getprofileuuid(m_pHandle, sProfileUUID.c_str(), &hProfile));
+		
+		if (!hProfile) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpathProfile>(dynamic_cast<CToolpathProfile*>(m_pWrapper->polymorphicFactory(hProfile)));
+	}
+	
+	/**
+	* CToolpath::GetCustomDataCount - Retrieves the count of custom data elements.
+	* @return Count
+	*/
+	Lib3MF_uint32 CToolpath::GetCustomDataCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(lib3mf_toolpath_getcustomdatacount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CToolpath::GetCustomData - Retrieves the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @return DOM Tree of the data.
+	*/
+	PCustomDOMTree CToolpath::GetCustomData(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hData = nullptr;
+		CheckError(lib3mf_toolpath_getcustomdata(m_pHandle, nIndex, &hData));
+		
+		if (!hData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomDOMTree>(dynamic_cast<CCustomDOMTree*>(m_pWrapper->polymorphicFactory(hData)));
+	}
+	
+	/**
+	* CToolpath::GetCustomDataName - Retrieves the node name of the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @param[out] sNameSpace - Namespace of the custom data tree.
+	* @param[out] sDataName - Root name of the data tree.
+	*/
+	void CToolpath::GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName)
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		Lib3MF_uint32 bytesNeededDataName = 0;
+		Lib3MF_uint32 bytesWrittenDataName = 0;
+		CheckError(lib3mf_toolpath_getcustomdataname(m_pHandle, nIndex, 0, &bytesNeededNameSpace, nullptr, 0, &bytesNeededDataName, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		std::vector<char> bufferDataName(bytesNeededDataName);
+		CheckError(lib3mf_toolpath_getcustomdataname(m_pHandle, nIndex, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0], bytesNeededDataName, &bytesWrittenDataName, &bufferDataName[0]));
+		sNameSpace = std::string(&bufferNameSpace[0]);
+		sDataName = std::string(&bufferDataName[0]);
+	}
+	
+	/**
+	* CToolpath::HasUniqueCustomData - Retrieves if custom data with a specific namespace and name combination exists.
+	* @param[in] sNameSpace - Namespace of the custom data tree.
+	* @param[in] sDataName - Root name of the data tree.
+	* @return Returns true if DOM Tree Exists.
+	*/
+	bool CToolpath::HasUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName)
+	{
+		bool resultCustomDataExists = 0;
+		CheckError(lib3mf_toolpath_hasuniquecustomdata(m_pHandle, sNameSpace.c_str(), sDataName.c_str(), &resultCustomDataExists));
+		
+		return resultCustomDataExists;
+	}
+	
+	/**
+	* CToolpath::FindUniqueCustomData - Retrieves the custom data with a specific namespace and name combination. Fails if combination is not unique.
+	* @param[in] sNameSpace - Namespace of the custom data tree.
+	* @param[in] sDataName - Root name of the data tree.
+	* @return DOM Tree of the data.
+	*/
+	PCustomDOMTree CToolpath::FindUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName)
+	{
+		Lib3MFHandle hData = nullptr;
+		CheckError(lib3mf_toolpath_finduniquecustomdata(m_pHandle, sNameSpace.c_str(), sDataName.c_str(), &hData));
+		
+		if (!hData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomDOMTree>(dynamic_cast<CCustomDOMTree*>(m_pWrapper->polymorphicFactory(hData)));
+	}
+	
+	/**
+	* CToolpath::AddCustomData - Adds a custom data DOM tree to the toolpath.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
+	* @return DOM Tree of the data.
+	*/
+	PCustomDOMTree CToolpath::AddCustomData(const std::string & sNameSpace, const std::string & sDataName)
+	{
+		Lib3MFHandle hData = nullptr;
+		CheckError(lib3mf_toolpath_addcustomdata(m_pHandle, sNameSpace.c_str(), sDataName.c_str(), &hData));
+		
+		if (!hData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomDOMTree>(dynamic_cast<CCustomDOMTree*>(m_pWrapper->polymorphicFactory(hData)));
+	}
+	
+	/**
+	* CToolpath::ClearCustomData - Deletes all custom data.
+	* @return Returns number of deleted items.
+	*/
+	Lib3MF_uint32 CToolpath::ClearCustomData()
+	{
+		Lib3MF_uint32 resultNumberOfDeletedItems = 0;
+		CheckError(lib3mf_toolpath_clearcustomdata(m_pHandle, &resultNumberOfDeletedItems));
+		
+		return resultNumberOfDeletedItems;
+	}
+	
+	/**
+	* CToolpath::DeleteCustomData - Deletes a custom data instance from the list.
+	* @param[in] pData - DOM Tree of the data.
+	* @return Returns if deletion was successful.
+	*/
+	bool CToolpath::DeleteCustomData(classParam<CCustomDOMTree> pData)
+	{
+		Lib3MFHandle hData = pData.GetHandle();
+		bool resultSuccess = 0;
+		CheckError(lib3mf_toolpath_deletecustomdata(m_pHandle, hData, &resultSuccess));
+		
+		return resultSuccess;
+	}
+	
+	/**
+	* CToolpath::RegisterCustomIntegerAttribute - Registers an Integer Attribute that each segment holds.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sAttributeName - Attribute name. MUST not be empty.
+	*/
+	void CToolpath::RegisterCustomIntegerAttribute(const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		CheckError(lib3mf_toolpath_registercustomintegerattribute(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str()));
+	}
+	
+	/**
+	* CToolpath::RegisterCustomDoubleAttribute - Registers a Double Attribute that each segment holds. Registering only applies to reader or writer objects created after the call.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sAttributeName - Attribute name. MUST not be empty.
+	*/
+	void CToolpath::RegisterCustomDoubleAttribute(const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		CheckError(lib3mf_toolpath_registercustomdoubleattribute(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str()));
+	}
+	
+	/**
+	 * Method definitions for class CToolpathIterator
+	 */
+	
+	/**
+	* CToolpathIterator::GetCurrentToolpath - Returns the Toolpath the iterator points at.
+	* @return returns the Toolpath instance.
+	*/
+	PToolpath CToolpathIterator::GetCurrentToolpath()
+	{
+		Lib3MFHandle hResource = nullptr;
+		CheckError(lib3mf_toolpathiterator_getcurrenttoolpath(m_pHandle, &hResource));
+		
+		if (!hResource) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpath>(dynamic_cast<CToolpath*>(m_pWrapper->polymorphicFactory(hResource)));
+	}
+	
+	/**
 	 * Method definitions for class CSliceStack
 	 */
 	
@@ -6063,6 +8274,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CModel::GetToolpaths - creates a Toolpath instance with all toolpath resources.
+	* @return returns the iterator instance.
+	*/
+	PToolpathIterator CModel::GetToolpaths()
+	{
+		Lib3MFHandle hResourceIterator = nullptr;
+		CheckError(lib3mf_model_gettoolpaths(m_pHandle, &hResourceIterator));
+		
+		if (!hResourceIterator) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpathIterator>(dynamic_cast<CToolpathIterator*>(m_pWrapper->polymorphicFactory(hResourceIterator)));
+	}
+	
+	/**
 	* CModel::GetSliceStacks - creates a resource iterator instance with all slice stack resources.
 	* @return returns the iterator instance.
 	*/
@@ -6263,6 +8489,22 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CModel::AddToolpath - adds an empty Toolpath resource to the model.
+	* @param[in] dUnitFactor - The toolpath instance of the created Toolpath.
+	* @return The toolpath instance of the created Toolpath.
+	*/
+	PToolpath CModel::AddToolpath(const Lib3MF_double dUnitFactor)
+	{
+		Lib3MFHandle hToolpathInstance = nullptr;
+		CheckError(lib3mf_model_addtoolpath(m_pHandle, dUnitFactor, &hToolpathInstance));
+		
+		if (!hToolpathInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpath>(dynamic_cast<CToolpath*>(m_pWrapper->polymorphicFactory(hToolpathInstance)));
+	}
+	
+	/**
 	* CModel::GetMetaDataGroup - Returns the metadata of the model as MetaDataGroup
 	* @return returns an Instance of the metadatagroup of the model
 	*/
@@ -6441,6 +8683,57 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CKeyStore>(dynamic_cast<CKeyStore*>(m_pWrapper->polymorphicFactory(hKeyStore)));
+	}
+	
+	/**
+	* CModel::CreatePersistentSourceFromFile - Creates an OPC Reader Source from a file.
+	* @param[in] sFilename - Filename to read from
+	* @return The instance of the created reader source
+	*/
+	PPersistentReaderSource CModel::CreatePersistentSourceFromFile(const std::string & sFilename)
+	{
+		Lib3MFHandle hInstance = nullptr;
+		CheckError(lib3mf_model_createpersistentsourcefromfile(m_pHandle, sFilename.c_str(), &hInstance));
+		
+		if (!hInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CPersistentReaderSource>(dynamic_cast<CPersistentReaderSource*>(m_pWrapper->polymorphicFactory(hInstance)));
+	}
+	
+	/**
+	* CModel::CreatePersistentSourceFromBuffer - Creates an OPC Reader Source from a memory buffer. The memory buffer MUST exist as long as the Source object exists.
+	* @param[in] BufferBuffer - Buffer to read from
+	* @return The instance of the created reader source
+	*/
+	PPersistentReaderSource CModel::CreatePersistentSourceFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer)
+	{
+		Lib3MFHandle hInstance = nullptr;
+		CheckError(lib3mf_model_createpersistentsourcefrombuffer(m_pHandle, (Lib3MF_uint64)BufferBuffer.size(), BufferBuffer.data(), &hInstance));
+		
+		if (!hInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CPersistentReaderSource>(dynamic_cast<CPersistentReaderSource*>(m_pWrapper->polymorphicFactory(hInstance)));
+	}
+	
+	/**
+	* CModel::CreatePersistentSourceFromCallback - Creates an OPC Reader Source from a data provided by a callback function. The callbacks MUST exist as long as the source object exists.
+	* @param[in] pTheReadCallback - Callback to call for reading a data chunk
+	* @param[in] nStreamSize - number of bytes the callback returns
+	* @param[in] pTheSeekCallback - Callback to call for seeking in the stream.
+	* @param[in] pUserData - Userdata that is passed to the callback function
+	* @return The instance of the created reader source
+	*/
+	PPersistentReaderSource CModel::CreatePersistentSourceFromCallback(const ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData)
+	{
+		Lib3MFHandle hInstance = nullptr;
+		CheckError(lib3mf_model_createpersistentsourcefromcallback(m_pHandle, pTheReadCallback, nStreamSize, pTheSeekCallback, pUserData, &hInstance));
+		
+		if (!hInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CPersistentReaderSource>(dynamic_cast<CPersistentReaderSource*>(m_pWrapper->polymorphicFactory(hInstance)));
 	}
 
 } // namespace Lib3MF

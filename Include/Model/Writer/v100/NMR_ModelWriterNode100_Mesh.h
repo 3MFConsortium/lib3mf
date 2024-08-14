@@ -39,6 +39,7 @@ This is the class for exporting the 3mf mesh node.
 #include "Model/Classes/NMR_ModelMeshObject.h" 
 
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
+#include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamWriter.h"
 
 #include "Common/Platform/NMR_XmlWriter.h"
 #include <array>
@@ -63,6 +64,7 @@ namespace NMR {
 	class CModelWriterNode100_Mesh : public CModelWriterNode_ModelBase {
 	protected:
 		CModelMeshObject * m_pModelMeshObject;
+		CChunkedBinaryStreamWriter* m_pBinaryStreamWriter;
 
 		PMeshInformation_PropertyIndexMapping m_pPropertyIndexMapping;
 
@@ -120,7 +122,9 @@ namespace NMR {
 	public:
 		CModelWriterNode100_Mesh() = delete;
 		CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
-			_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool m_bWriteBeamLatticeExtension);
+			_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool m_bWriteBeamLatticeExtension,
+			CChunkedBinaryStreamWriter* pBinaryStreamWriter);
+
 		virtual void writeToXML();
 	};
 

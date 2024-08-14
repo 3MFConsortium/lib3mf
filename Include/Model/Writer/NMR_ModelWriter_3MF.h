@@ -42,6 +42,10 @@ namespace NMR {
 
 	class CModelWriter_3MF : public CModelWriter {
 	protected:
+
+		// Additional streams to write into to package
+		std::map <std::string, std::pair<PImportStream, std::string>> m_AdditionalAttachments;
+
 		// Creates a model stream
 		void writeModelStream(_In_ CXmlWriter * pXMLWriter, _In_ CModel * pModel);
 
@@ -52,12 +56,23 @@ namespace NMR {
 		virtual void createPackage(_In_ CModel * pModel) = 0;
 		virtual void writePackageToStream(_In_ PExportStream pStream) = 0;
 		virtual void releasePackage() = 0;
+
+		// Namespace prefix mapping
+		std::map<std::string, std::string> m_CustomNameSpaces;
 	public:
 		CModelWriter_3MF() = delete;
 		CModelWriter_3MF(_In_ PModel pModel);
 
 		virtual void exportToStream(_In_ PExportStream pStream);
+
+		void addAdditionalAttachment(_In_ std::string sPath, _In_ PImportStream pStream, _In_ std::string sRelationShipType);
+
+		void registerCustomNameSpace(const std::string& sPrefix, const std::string& sNameSpace, bool bFailIfExisting) override;
+		std::map<std::string, std::string> getCustomNamespaceMap();
+
 	};
+
+	typedef std::shared_ptr<CModelWriter_3MF> PModelWriter_3MF;
 
 }
 

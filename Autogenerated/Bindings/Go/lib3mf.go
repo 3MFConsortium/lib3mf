@@ -81,6 +81,69 @@ Lib3MFResult CCall_lib3mf_base_classtypeid(Lib3MFHandle libraryHandle, Lib3MF_Ba
 }
 
 
+Lib3MFResult CCall_lib3mf_binarystream_getbinarypath(Lib3MFHandle libraryHandle, Lib3MF_BinaryStream pBinaryStream, const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char * pPathBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BinaryStream_GetBinaryPath (pBinaryStream, nPathBufferSize, pPathNeededChars, pPathBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_binarystream_getindexpath(Lib3MFHandle libraryHandle, Lib3MF_BinaryStream pBinaryStream, const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char * pPathBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BinaryStream_GetIndexPath (pBinaryStream, nPathBufferSize, pPathNeededChars, pPathBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_binarystream_getuuid(Lib3MFHandle libraryHandle, Lib3MF_BinaryStream pBinaryStream, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BinaryStream_GetUUID (pBinaryStream, nUUIDBufferSize, pUUIDNeededChars, pUUIDBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_binarystream_disablediscretizedarraycompression(Lib3MFHandle libraryHandle, Lib3MF_BinaryStream pBinaryStream)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression (pBinaryStream);
+}
+
+
+Lib3MFResult CCall_lib3mf_binarystream_enablediscretizedarraycompression(Lib3MFHandle libraryHandle, Lib3MF_BinaryStream pBinaryStream, Lib3MF_double dUnits, eLib3MFBinaryStreamPredictionType ePredictionType)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression (pBinaryStream, dUnits, ePredictionType);
+}
+
+
+Lib3MFResult CCall_lib3mf_binarystream_enablelzma(Lib3MFHandle libraryHandle, Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nLZMALevel)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BinaryStream_EnableLZMA (pBinaryStream, nLZMALevel);
+}
+
+
+Lib3MFResult CCall_lib3mf_binarystream_disablelzma(Lib3MFHandle libraryHandle, Lib3MF_BinaryStream pBinaryStream)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BinaryStream_DisableLZMA (pBinaryStream);
+}
+
+
 Lib3MFResult CCall_lib3mf_writer_writetofile(Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter, const char * pFilename)
 {
 	if (libraryHandle == 0) 
@@ -195,6 +258,69 @@ Lib3MFResult CCall_lib3mf_writer_setcontentencryptioncallback(Lib3MFHandle libra
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_Writer_SetContentEncryptionCallback (pWriter, pTheCallback, pUserData);
+}
+
+
+Lib3MFResult CCall_lib3mf_writer_createbinarystream(Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter, const char * pIndexPath, const char * pBinaryPath, Lib3MF_BinaryStream * pBinaryStream)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Writer_CreateBinaryStream (pWriter, pIndexPath, pBinaryPath, pBinaryStream);
+}
+
+
+Lib3MFResult CCall_lib3mf_writer_assignbinarystream(Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter, Lib3MF_Base pInstance, Lib3MF_BinaryStream pBinaryStream)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Writer_AssignBinaryStream (pWriter, pInstance, pBinaryStream);
+}
+
+
+Lib3MFResult CCall_lib3mf_writer_registercustomnamespace(Lib3MFHandle libraryHandle, Lib3MF_Writer pWriter, const char * pPrefix, const char * pNameSpace)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Writer_RegisterCustomNamespace (pWriter, pPrefix, pNameSpace);
+}
+
+
+Lib3MFResult CCall_lib3mf_persistentreadersource_getsourcetype(Lib3MFHandle libraryHandle, Lib3MF_PersistentReaderSource pPersistentReaderSource, eLib3MFPersistentReaderSourceType * pSourceType)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_PersistentReaderSource_GetSourceType (pPersistentReaderSource, pSourceType);
+}
+
+
+Lib3MFResult CCall_lib3mf_persistentreadersource_invalidatesourcedata(Lib3MFHandle libraryHandle, Lib3MF_PersistentReaderSource pPersistentReaderSource)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_PersistentReaderSource_InvalidateSourceData (pPersistentReaderSource);
+}
+
+
+Lib3MFResult CCall_lib3mf_persistentreadersource_sourcedataisvalid(Lib3MFHandle libraryHandle, Lib3MF_PersistentReaderSource pPersistentReaderSource, bool * pDataIsValid)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_PersistentReaderSource_SourceDataIsValid (pPersistentReaderSource, pDataIsValid);
+}
+
+
+Lib3MFResult CCall_lib3mf_reader_readfrompersistentsource(Lib3MFHandle libraryHandle, Lib3MF_Reader pReader, Lib3MF_PersistentReaderSource pSource)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Reader_ReadFromPersistentSource (pReader, pSource);
 }
 
 
@@ -411,6 +537,411 @@ Lib3MFResult CCall_lib3mf_resourceiterator_count(Lib3MFHandle libraryHandle, Lib
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_ResourceIterator_Count (pResourceIterator, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_getname(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_GetName (pCustomXMLAttribute, nNameBufferSize, pNameNeededChars, pNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_getvalue(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, const Lib3MF_uint32 nValueBufferSize, Lib3MF_uint32* pValueNeededChars, char * pValueBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_GetValue (pCustomXMLAttribute, nValueBufferSize, pValueNeededChars, pValueBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_isvalidinteger(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_int64 nMinValue, Lib3MF_int64 nMaxValue, bool * pIsValid)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_IsValidInteger (pCustomXMLAttribute, nMinValue, nMaxValue, pIsValid);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_getintegervalue(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_int64 nMinValue, Lib3MF_int64 nMaxValue, Lib3MF_int64 * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_GetIntegerValue (pCustomXMLAttribute, nMinValue, nMaxValue, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_isvaliddouble(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_double dMinValue, Lib3MF_double dMaxValue, bool * pIsValid)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_IsValidDouble (pCustomXMLAttribute, dMinValue, dMaxValue, pIsValid);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_getdoublevalue(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_double dMinValue, Lib3MF_double dMaxValue, Lib3MF_double * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_GetDoubleValue (pCustomXMLAttribute, dMinValue, dMaxValue, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_isvalidbool(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, bool * pIsValid)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_IsValidBool (pCustomXMLAttribute, pIsValid);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_getboolvalue(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_double dMinValue, Lib3MF_double dMaxValue, bool * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_GetBoolValue (pCustomXMLAttribute, dMinValue, dMaxValue, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_setvalue(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, const char * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_SetValue (pCustomXMLAttribute, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_setintegervalue(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_int64 nValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_SetIntegerValue (pCustomXMLAttribute, nValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_setdoublevalue(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_double dValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_SetDoubleValue (pCustomXMLAttribute, dValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_setboolvalue(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute, bool bValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_SetBoolValue (pCustomXMLAttribute, bValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlattribute_remove(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLAttribute pCustomXMLAttribute)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLAttribute_Remove (pCustomXMLAttribute);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_getname(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_GetName (pCustomXMLNode, nNameBufferSize, pNameNeededChars, pNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_getnamespace(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_GetNameSpace (pCustomXMLNode, nNameSpaceBufferSize, pNameSpaceNeededChars, pNameSpaceBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_getattributecount(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_uint64 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_GetAttributeCount (pCustomXMLNode, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_getattribute(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_uint64 nIndex, Lib3MF_CustomXMLAttribute * pAttributeInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_GetAttribute (pCustomXMLNode, nIndex, pAttributeInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_hasattribute(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool * pAttributeExists)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_HasAttribute (pCustomXMLNode, pName, pAttributeExists);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_findattribute(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool bMustExist, Lib3MF_CustomXMLAttribute * pAttributeInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_FindAttribute (pCustomXMLNode, pName, bMustExist, pAttributeInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_removeattribute(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool * pAttributeRemoved)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_RemoveAttribute (pCustomXMLNode, pName, pAttributeRemoved);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_removeattributebyindex(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_uint64 nIndex, bool * pAttributeRemoved)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_RemoveAttributeByIndex (pCustomXMLNode, nIndex, pAttributeRemoved);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_addattribute(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, const char * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_AddAttribute (pCustomXMLNode, pName, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_addintegerattribute(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_int64 nValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_AddIntegerAttribute (pCustomXMLNode, pName, nValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_adddoubleattribute(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_double dValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_AddDoubleAttribute (pCustomXMLNode, pName, dValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_addboolattribute(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool bValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_AddBoolAttribute (pCustomXMLNode, pName, bValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_getchildren(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_CustomXMLNodes * pChildNodes)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_GetChildren (pCustomXMLNode, pChildNodes);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_countchildrenbyname(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_uint64 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_CountChildrenByName (pCustomXMLNode, pName, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_getchildrenbyname(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_CustomXMLNodes * pChildNodes)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_GetChildrenByName (pCustomXMLNode, pName, pChildNodes);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_haschild(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool * pChildExists)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_HasChild (pCustomXMLNode, pName, pChildExists);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_hasuniquechild(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool * pChildExists)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_HasUniqueChild (pCustomXMLNode, pName, pChildExists);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_findchild(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool bMustExist, Lib3MF_CustomXMLNode * pChildInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_FindChild (pCustomXMLNode, pName, bMustExist, pChildInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_addchild(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_CustomXMLNode * pChildInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_AddChild (pCustomXMLNode, pName, pChildInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_removechild(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_CustomXMLNode pChildInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_RemoveChild (pCustomXMLNode, pChildInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_removechildrenwithname(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_uint64 * pNumberOfDeletedChildren)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_RemoveChildrenWithName (pCustomXMLNode, pName, pNumberOfDeletedChildren);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnode_remove(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNode pCustomXMLNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNode_Remove (pCustomXMLNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnodes_getnodecount(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNodes pCustomXMLNodes, Lib3MF_uint64 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNodes_GetNodeCount (pCustomXMLNodes, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnodes_getnode(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNodes pCustomXMLNodes, Lib3MF_uint64 nIndex, Lib3MF_CustomXMLNode * pNodeInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNodes_GetNode (pCustomXMLNodes, nIndex, pNodeInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnodes_countnodesbyname(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, Lib3MF_uint64 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNodes_CountNodesByName (pCustomXMLNodes, pName, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnodes_getnodesbyname(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, Lib3MF_CustomXMLNodes * pNodes)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNodes_GetNodesByName (pCustomXMLNodes, pName, pNodes);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnodes_hasnode(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, bool * pNodeExists)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNodes_HasNode (pCustomXMLNodes, pName, pNodeExists);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnodes_hasuniquenode(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, bool * pNodeExists)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNodes_HasUniqueNode (pCustomXMLNodes, pName, pNodeExists);
+}
+
+
+Lib3MFResult CCall_lib3mf_customxmlnodes_findnode(Lib3MFHandle libraryHandle, Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, bool bMustExist, Lib3MF_CustomXMLNode * pNodeInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomXMLNodes_FindNode (pCustomXMLNodes, pName, bMustExist, pNodeInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_customdomtree_getnamespace(Lib3MFHandle libraryHandle, Lib3MF_CustomDOMTree pCustomDOMTree, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomDOMTree_GetNameSpace (pCustomDOMTree, nNameSpaceBufferSize, pNameSpaceNeededChars, pNameSpaceBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_customdomtree_getrootnode(Lib3MFHandle libraryHandle, Lib3MF_CustomDOMTree pCustomDOMTree, Lib3MF_CustomXMLNode * pRootNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomDOMTree_GetRootNode (pCustomDOMTree, pRootNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_customdomtree_savetostring(Lib3MFHandle libraryHandle, Lib3MF_CustomDOMTree pCustomDOMTree, const Lib3MF_uint32 nXMLStringBufferSize, Lib3MF_uint32* pXMLStringNeededChars, char * pXMLStringBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_CustomDOMTree_SaveToString (pCustomDOMTree, nXMLStringBufferSize, pXMLStringNeededChars, pXMLStringBuffer);
 }
 
 
@@ -2142,6 +2673,654 @@ Lib3MFResult CCall_lib3mf_slice_getztop(Lib3MFHandle libraryHandle, Lib3MF_Slice
 }
 
 
+Lib3MFResult CCall_lib3mf_toolpathprofile_getuuid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetUUID (pToolpathProfile, nUUIDBufferSize, pUUIDNeededChars, pUUIDBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_getname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetName (pToolpathProfile, nNameBufferSize, pNameNeededChars, pNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_getparametercount(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, Lib3MF_uint32 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetParameterCount (pToolpathProfile, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_getparametername(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetParameterName (pToolpathProfile, nIndex, nNameBufferSize, pNameNeededChars, pNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_getparameternamespace(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetParameterNameSpace (pToolpathProfile, nIndex, nNameSpaceBufferSize, pNameSpaceNeededChars, pNameSpaceBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_hasparametervalue(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, bool * pValueExists)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_HasParameterValue (pToolpathProfile, pNameSpaceName, pValueName, pValueExists);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_getparametervalue(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, const Lib3MF_uint32 nValueBufferSize, Lib3MF_uint32* pValueNeededChars, char * pValueBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetParameterValue (pToolpathProfile, pNameSpaceName, pValueName, nValueBufferSize, pValueNeededChars, pValueBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_getparametervaluedef(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, const char * pDefaultValue, const Lib3MF_uint32 nValueBufferSize, Lib3MF_uint32* pValueNeededChars, char * pValueBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetParameterValueDef (pToolpathProfile, pNameSpaceName, pValueName, pDefaultValue, nValueBufferSize, pValueNeededChars, pValueBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_getparameterdoublevalue(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_double * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetParameterDoubleValue (pToolpathProfile, pNameSpaceName, pValueName, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_getparameterdoublevaluedef(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_double dDefaultValue, Lib3MF_double * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetParameterDoubleValueDef (pToolpathProfile, pNameSpaceName, pValueName, dDefaultValue, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_getparameterintegervalue(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_int64 * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetParameterIntegerValue (pToolpathProfile, pNameSpaceName, pValueName, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_getparameterintegervaluedef(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_int64 nDefaultValue, Lib3MF_int64 * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetParameterIntegerValueDef (pToolpathProfile, pNameSpaceName, pValueName, nDefaultValue, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_getparameterboolvalue(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, bool * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetParameterBoolValue (pToolpathProfile, pNameSpaceName, pValueName, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_getparameterboolvaluedef(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, bool bDefaultValue, bool * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetParameterBoolValueDef (pToolpathProfile, pNameSpaceName, pValueName, bDefaultValue, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_setname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_SetName (pToolpathProfile, pName);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_setparametervalue(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, const char * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_SetParameterValue (pToolpathProfile, pNameSpaceName, pValueName, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_setparameterdoublevalue(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_double dValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_SetParameterDoubleValue (pToolpathProfile, pNameSpaceName, pValueName, dValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_setparameterintegervalue(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_int64 nValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_SetParameterIntegerValue (pToolpathProfile, pNameSpaceName, pValueName, nValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_setparameterboolvalue(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, bool bValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_SetParameterBoolValue (pToolpathProfile, pNameSpaceName, pValueName, bValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getlayerdatauuid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetLayerDataUUID (pToolpathLayerReader, nUUIDBufferSize, pUUIDNeededChars, pUUIDBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentcount(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentCount (pToolpathLayerReader, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentinfo(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, eLib3MFToolpathSegmentType * pType, Lib3MF_uint32 * pPointCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentInfo (pToolpathLayerReader, nIndex, pType, pPointCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentprofile(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_ToolpathProfile * pProfile)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentProfile (pToolpathLayerReader, nIndex, pProfile);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentprofileuuid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nProfileUUIDBufferSize, Lib3MF_uint32* pProfileUUIDNeededChars, char * pProfileUUIDBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentProfileUUID (pToolpathLayerReader, nIndex, nProfileUUIDBufferSize, pProfileUUIDNeededChars, pProfileUUIDBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentpart(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_BuildItem * pBuildItem)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentPart (pToolpathLayerReader, nIndex, pBuildItem);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentpartuuid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nPartUUIDBufferSize, Lib3MF_uint32* pPartUUIDNeededChars, char * pPartUUIDBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID (pToolpathLayerReader, nIndex, nPartUUIDBufferSize, pPartUUIDNeededChars, pPartUUIDBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentlocalpartid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 * pLocalPartID)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentLocalPartID (pToolpathLayerReader, nIndex, pLocalPartID);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nLocalPartID, const Lib3MF_uint32 nPartUUIDBufferSize, Lib3MF_uint32* pPartUUIDNeededChars, char * pPartUUIDBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID (pToolpathLayerReader, nLocalPartID, nPartUUIDBufferSize, pPartUUIDNeededChars, pPartUUIDBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentpointdata(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, sLib3MFPosition2D * pPointDataBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentPointData (pToolpathLayerReader, nIndex, nPointDataBufferSize, pPointDataNeededCount, pPointDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_findattributeinfobyname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID, eLib3MFToolpathAttributeType * pAttributeType)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_FindAttributeInfoByName (pToolpathLayerReader, pNameSpace, pAttributeName, pID, pAttributeType);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_findattributeidbyname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_FindAttributeIDByName (pToolpathLayerReader, pNameSpace, pAttributeName, pID);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_findattributevaluebyname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, eLib3MFToolpathAttributeType * pAttributeType)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_FindAttributeValueByName (pToolpathLayerReader, pNameSpace, pAttributeName, pAttributeType);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentintegerattributebyid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 nID, Lib3MF_int64 * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByID (pToolpathLayerReader, nIndex, nID, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentintegerattributebyname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const char * pNameSpace, const char * pAttributeName, Lib3MF_int64 * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByName (pToolpathLayerReader, nIndex, pNameSpace, pAttributeName, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 nID, Lib3MF_double * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByID (pToolpathLayerReader, nIndex, nID, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const char * pNameSpace, const char * pAttributeName, Lib3MF_double * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByName (pToolpathLayerReader, nIndex, pNameSpace, pAttributeName, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getcustomdatacount(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetCustomDataCount (pToolpathLayerReader, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getcustomdata(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_CustomDOMTree * pData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetCustomData (pToolpathLayerReader, nIndex, pData);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getcustomdataname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer, const Lib3MF_uint32 nDataNameBufferSize, Lib3MF_uint32* pDataNameNeededChars, char * pDataNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetCustomDataName (pToolpathLayerReader, nIndex, nNameSpaceBufferSize, pNameSpaceNeededChars, pNameSpaceBuffer, nDataNameBufferSize, pDataNameNeededChars, pDataNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_getlayerdatauuid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_GetLayerDataUUID (pToolpathLayerData, nUUIDBufferSize, pUUIDNeededChars, pUUIDBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_registerprofile(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_ToolpathProfile pProfile, Lib3MF_uint32 * pProfileID)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_RegisterProfile (pToolpathLayerData, pProfile, pProfileID);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_registerbuilditem(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_BuildItem pBuildItem, Lib3MF_uint32 * pPartID)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_RegisterBuildItem (pToolpathLayerData, pBuildItem, pPartID);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_setsegmentattribute(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, const char * pNameSpace, const char * pAttributeName, const char * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_SetSegmentAttribute (pToolpathLayerData, pNameSpace, pAttributeName, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_clearsegmentattributes(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_ClearSegmentAttributes (pToolpathLayerData);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writehatchdata(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WriteHatchData (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writeloop(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WriteLoop (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writepolyline(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WritePolyline (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_addcustomdata(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, const char * pNameSpace, const char * pDataName, Lib3MF_CustomDOMTree * pData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_AddCustomData (pToolpathLayerData, pNameSpace, pDataName, pData);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_finish(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_Finish (pToolpathLayerData);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getunits(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_double * pUnits)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetUnits (pToolpath, pUnits);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getlayercount(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetLayerCount (pToolpath, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getprofilecount(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetProfileCount (pToolpath, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_addlayer(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nZMax, const char * pPath, Lib3MF_Writer pModelWriter, Lib3MF_ToolpathLayerData * pLayerData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_AddLayer (pToolpath, nZMax, pPath, pModelWriter, pLayerData);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getlayerattachment(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_Attachment * pAttachment)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetLayerAttachment (pToolpath, nIndex, pAttachment);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_readlayerdata(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_ToolpathLayerReader * pToolpathReader)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_ReadLayerData (pToolpath, nIndex, pToolpathReader);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getlayerpath(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char * pPathBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetLayerPath (pToolpath, nIndex, nPathBufferSize, pPathNeededChars, pPathBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getlayerzmax(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_uint32 * pZMax)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetLayerZMax (pToolpath, nIndex, pZMax);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getlayerz(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nLayerIndex, Lib3MF_uint32 * pZValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetLayerZ (pToolpath, nLayerIndex, pZValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_addprofile(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, const char * pName, Lib3MF_ToolpathProfile * pProfile)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_AddProfile (pToolpath, pName, pProfile);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getprofile(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nProfileIndex, Lib3MF_ToolpathProfile * pProfile)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetProfile (pToolpath, nProfileIndex, pProfile);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getprofileuuid(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, const char * pProfileUUID, Lib3MF_ToolpathProfile * pProfile)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetProfileUUID (pToolpath, pProfileUUID, pProfile);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getcustomdatacount(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetCustomDataCount (pToolpath, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getcustomdata(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_CustomDOMTree * pData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetCustomData (pToolpath, nIndex, pData);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getcustomdataname(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer, const Lib3MF_uint32 nDataNameBufferSize, Lib3MF_uint32* pDataNameNeededChars, char * pDataNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetCustomDataName (pToolpath, nIndex, nNameSpaceBufferSize, pNameSpaceNeededChars, pNameSpaceBuffer, nDataNameBufferSize, pDataNameNeededChars, pDataNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_hasuniquecustomdata(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pDataName, bool * pCustomDataExists)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_HasUniqueCustomData (pToolpath, pNameSpace, pDataName, pCustomDataExists);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_finduniquecustomdata(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pDataName, Lib3MF_CustomDOMTree * pData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_FindUniqueCustomData (pToolpath, pNameSpace, pDataName, pData);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_addcustomdata(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pDataName, Lib3MF_CustomDOMTree * pData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_AddCustomData (pToolpath, pNameSpace, pDataName, pData);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_clearcustomdata(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pNumberOfDeletedItems)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_ClearCustomData (pToolpath, pNumberOfDeletedItems);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_deletecustomdata(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_CustomDOMTree pData, bool * pSuccess)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_DeleteCustomData (pToolpath, pData, pSuccess);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_registercustomintegerattribute(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pAttributeName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_RegisterCustomIntegerAttribute (pToolpath, pNameSpace, pAttributeName);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_registercustomdoubleattribute(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pAttributeName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_RegisterCustomDoubleAttribute (pToolpath, pNameSpace, pAttributeName);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathiterator_getcurrenttoolpath(Lib3MFHandle libraryHandle, Lib3MF_ToolpathIterator pToolpathIterator, Lib3MF_Toolpath * pResource)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathIterator_GetCurrentToolpath (pToolpathIterator, pResource);
+}
+
+
 Lib3MFResult CCall_lib3mf_slicestack_getbottomz(Lib3MFHandle libraryHandle, Lib3MF_SliceStack pSliceStack, Lib3MF_double * pZBottom)
 {
 	if (libraryHandle == 0) 
@@ -2889,6 +4068,15 @@ Lib3MFResult CCall_lib3mf_model_getmultipropertygroups(Lib3MFHandle libraryHandl
 }
 
 
+Lib3MFResult CCall_lib3mf_model_gettoolpaths(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_ToolpathIterator * pResourceIterator)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_GetToolpaths (pModel, pResourceIterator);
+}
+
+
 Lib3MFResult CCall_lib3mf_model_getslicestacks(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_SliceStackIterator * pResourceIterator)
 {
 	if (libraryHandle == 0) 
@@ -3003,6 +4191,15 @@ Lib3MFResult CCall_lib3mf_model_removebuilditem(Lib3MFHandle libraryHandle, Lib3
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_Model_RemoveBuildItem (pModel, pBuildItemInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_addtoolpath(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_double dUnitFactor, Lib3MF_Toolpath * pToolpathInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_AddToolpath (pModel, dUnitFactor, pToolpathInstance);
 }
 
 
@@ -3129,6 +4326,33 @@ Lib3MFResult CCall_lib3mf_model_getkeystore(Lib3MFHandle libraryHandle, Lib3MF_M
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_Model_GetKeyStore (pModel, pKeyStore);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_createpersistentsourcefromfile(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, const char * pFilename, Lib3MF_PersistentReaderSource * pInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_CreatePersistentSourceFromFile (pModel, pFilename, pInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_createpersistentsourcefrombuffer(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer, Lib3MF_PersistentReaderSource * pInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_CreatePersistentSourceFromBuffer (pModel, nBufferBufferSize, pBufferBuffer, pInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_createpersistentsourcefromcallback(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MFReadCallback pTheReadCallback, Lib3MF_uint64 nStreamSize, Lib3MFSeekCallback pTheSeekCallback, Lib3MF_pvoid pUserData, Lib3MF_PersistentReaderSource * pInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_CreatePersistentSourceFromCallback (pModel, pTheReadCallback, nStreamSize, pTheSeekCallback, pUserData, pInstance);
 }
 
 
@@ -3334,6 +4558,16 @@ const (
 	SlicesMeshResolution_Lowres = 1
 )
 
+// PersistentReaderSourceType represents a Lib3MF enum.
+type PersistentReaderSourceType int
+
+const (
+	PersistentReaderSourceType_Unknown = 0
+	PersistentReaderSourceType_FileOnDisk = 1
+	PersistentReaderSourceType_MemoryBuffer = 2
+	PersistentReaderSourceType_Callback = 3
+)
+
 // ModelUnit represents a Lib3MF enum.
 type ModelUnit int
 
@@ -3411,6 +4645,14 @@ const (
 	BeamLatticeBallMode_All = 2
 )
 
+// BinaryStreamPredictionType represents a Lib3MF enum.
+type BinaryStreamPredictionType int
+
+const (
+	BinaryStreamPredictionType_NoPrediction = 0
+	BinaryStreamPredictionType_DeltaPrediction = 1
+)
+
 // ProgressIdentifier represents a Lib3MF enum.
 type ProgressIdentifier int
 
@@ -3448,6 +4690,25 @@ const (
 	BlendMethod_NoBlendMethod = 0
 	BlendMethod_Mix = 1
 	BlendMethod_Multiply = 2
+)
+
+// ToolpathSegmentType represents a Lib3MF enum.
+type ToolpathSegmentType int
+
+const (
+	ToolpathSegmentType_Unknown = 0
+	ToolpathSegmentType_Hatch = 1
+	ToolpathSegmentType_Loop = 2
+	ToolpathSegmentType_Polyline = 3
+)
+
+// ToolpathAttributeType represents a Lib3MF enum.
+type ToolpathAttributeType int
+
+const (
+	ToolpathAttributeType_Unknown = 0
+	ToolpathAttributeType_Integer = 1
+	ToolpathAttributeType_Double = 2
 )
 
 // EncryptionAlgorithm represents a Lib3MF enum.
@@ -3599,6 +4860,10 @@ const LIB3MF_ERROR_INVALIDPROPERTYCOUNT = 132;
 const LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER = 140;
 const LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT = 141;
 const LIB3MF_ERROR_INVALIDRESOURCE = 142;
+const LIB3MF_ERROR_INVALIDNODEINDEX = 143;
+const LIB3MF_ERROR_INVALIDATTRIBUTEINDEX = 144;
+const LIB3MF_ERROR_DUPLICATECUSTOMDATA = 145;
+const LIB3MF_ERROR_CUSTOMDATANOTFOUND = 146;
 const LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE = 2000;
 const LIB3MF_ERROR_INVALIDKEYSTORE = 3000;
 const LIB3MF_ERROR_INVALIDKEYSTORECONSUMER = 3001;
@@ -3606,6 +4871,16 @@ const LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND = 3002;
 const LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND = 3003;
 const LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED = 3004;
 const LIB3MF_ERROR_INVALIDKEYSIZE = 3005;
+const LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER = 4000;
+const LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA = 4001;
+const LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN = 4002;
+const LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT = 4003;
+const LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED = 4004;
+const LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE = 4005;
+const LIB3MF_ERROR_EMPTYNAMESPACEPREFIX = 4006;
+const LIB3MF_ERROR_EMPTYNAMESPACE = 4007;
+const LIB3MF_ERROR_INVALIDNAMESPACEPREFIX = 4008;
+const LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES = 4009;
 
 // WrappedError is an error that wraps a Lib3MF error.
 type WrappedError struct {
@@ -3691,6 +4966,14 @@ func errorMessage(errorcode uint32) string {
 		return "An element buffer exceeds its spec limit";
 	case LIB3MF_ERROR_INVALIDRESOURCE:
 		return "A resource is invalid";
+	case LIB3MF_ERROR_INVALIDNODEINDEX:
+		return "Invalid node index";
+	case LIB3MF_ERROR_INVALIDATTRIBUTEINDEX:
+		return "Invalid attribute index";
+	case LIB3MF_ERROR_DUPLICATECUSTOMDATA:
+		return "Duplicate custom data";
+	case LIB3MF_ERROR_CUSTOMDATANOTFOUND:
+		return "Custom data not found";
 	case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE:
 		return "This object type is not valid for beamlattices";
 	case LIB3MF_ERROR_INVALIDKEYSTORE:
@@ -3704,7 +4987,27 @@ func errorMessage(errorcode uint32) string {
 	case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED:
 		return "A Key or Conentent encryption callback has not been registered";
 	case LIB3MF_ERROR_INVALIDKEYSIZE:
-		return "The key siue is invalid";
+		return "The key size is invalid";
+	case LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER:
+		return "Not in toolpath header writing mode";
+	case LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA:
+		return "Not in toolpath data writing mode";
+	case LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN:
+		return "Toolpath has already been written out";
+	case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT:
+		return "Toolpath has an invalid number of points";
+	case LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED:
+		return "Toolpath attribute already defined";
+	case LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE:
+		return "Toolpath attribute is of invalid type";
+	case LIB3MF_ERROR_EMPTYNAMESPACEPREFIX:
+		return "Empty namespace prefix.";
+	case LIB3MF_ERROR_EMPTYNAMESPACE:
+		return "Empty namespace.";
+	case LIB3MF_ERROR_INVALIDNAMESPACEPREFIX:
+		return "Invalid namespace prefix.";
+	case LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES:
+		return "Writer does not support namespaces.";
 	default:
 		return "unknown";
 	}
@@ -3848,6 +5151,103 @@ func (inst Base) ClassTypeId() (uint64, error) {
 		return 0, makeError(uint32(ret))
 	}
 	return uint64(classTypeId), nil
+}
+
+
+// BinaryStream represents a Lib3MF class.
+type BinaryStream struct {
+	Base
+}
+
+func (wrapper Wrapper) NewBinaryStream(r ref) BinaryStream {
+	return BinaryStream{wrapper.NewBase(r)}
+}
+
+// GetBinaryPath retrieves an binary streams package path for the binary data.
+func (inst BinaryStream) GetBinaryPath() (string, error) {
+	var neededforpath C.uint32_t
+	var filledinpath C.uint32_t
+	ret := C.CCall_lib3mf_binarystream_getbinarypath(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforpath, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizepath := neededforpath
+	bufferpath := make([]byte, bufferSizepath)
+	ret = C.CCall_lib3mf_binarystream_getbinarypath(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizepath, &filledinpath, (*C.char)(unsafe.Pointer(&bufferpath[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferpath[:(filledinpath-1)]), nil
+}
+
+// GetIndexPath retrieves an binary streams package path for the index data.
+func (inst BinaryStream) GetIndexPath() (string, error) {
+	var neededforpath C.uint32_t
+	var filledinpath C.uint32_t
+	ret := C.CCall_lib3mf_binarystream_getindexpath(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforpath, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizepath := neededforpath
+	bufferpath := make([]byte, bufferSizepath)
+	ret = C.CCall_lib3mf_binarystream_getindexpath(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizepath, &filledinpath, (*C.char)(unsafe.Pointer(&bufferpath[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferpath[:(filledinpath-1)]), nil
+}
+
+// GetUUID retrieves an binary streams uuid.
+func (inst BinaryStream) GetUUID() (string, error) {
+	var neededforuUID C.uint32_t
+	var filledinuUID C.uint32_t
+	ret := C.CCall_lib3mf_binarystream_getuuid(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforuUID, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizeuUID := neededforuUID
+	bufferuUID := make([]byte, bufferSizeuUID)
+	ret = C.CCall_lib3mf_binarystream_getuuid(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizeuUID, &filledinuUID, (*C.char)(unsafe.Pointer(&bufferuUID[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferuUID[:(filledinuUID-1)]), nil
+}
+
+// DisableDiscretizedArrayCompression sets the float compression mode to raw. All subsequent writes will adhere to this mode.
+func (inst BinaryStream) DisableDiscretizedArrayCompression() error {
+	ret := C.CCall_lib3mf_binarystream_disablediscretizedarraycompression(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// EnableDiscretizedArrayCompression sets the compression mode to a quantized array. All subsequent writes will adhere to this mode.
+func (inst BinaryStream) EnableDiscretizedArrayCompression(units float64, predictionType BinaryStreamPredictionType) error {
+	ret := C.CCall_lib3mf_binarystream_enablediscretizedarraycompression(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(units), C.eLib3MFBinaryStreamPredictionType(predictionType))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// EnableLZMA enables LZMA mode.
+func (inst BinaryStream) EnableLZMA(lZMALevel uint32) error {
+	ret := C.CCall_lib3mf_binarystream_enablelzma(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(lZMALevel))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// DisableLZMA disables LZMA mode.
+func (inst BinaryStream) DisableLZMA() error {
+	ret := C.CCall_lib3mf_binarystream_disablelzma(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
 }
 
 
@@ -4003,6 +5403,73 @@ func (inst Writer) SetContentEncryptionCallback(theCallback ContentEncryptionCal
 	return nil
 }
 
+// CreateBinaryStream creates a binary stream object. Only applicable for 3MF Writers.
+func (inst Writer) CreateBinaryStream(indexPath string, binaryPath string) (BinaryStream, error) {
+	var binaryStream ref
+	ret := C.CCall_lib3mf_writer_createbinarystream(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(indexPath)[0])), (*C.char)(unsafe.Pointer(&[]byte(binaryPath)[0])), &binaryStream)
+	if ret != 0 {
+		return BinaryStream{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewBinaryStream(binaryStream), nil
+}
+
+// AssignBinaryStream sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.
+func (inst Writer) AssignBinaryStream(instance Base, binaryStream BinaryStream) error {
+	ret := C.CCall_lib3mf_writer_assignbinarystream(inst.wrapperRef.LibraryHandle, inst.Ref, instance.Ref, binaryStream.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// RegisterCustomNamespace registers a custom 3MF Namespace. Fails if Prefix is already registered.
+func (inst Writer) RegisterCustomNamespace(prefix string, nameSpace string) error {
+	ret := C.CCall_lib3mf_writer_registercustomnamespace(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(prefix)[0])), (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// PersistentReaderSource represents a Lib3MF class.
+type PersistentReaderSource struct {
+	Base
+}
+
+func (wrapper Wrapper) NewPersistentReaderSource(r ref) PersistentReaderSource {
+	return PersistentReaderSource{wrapper.NewBase(r)}
+}
+
+// GetSourceType retrieves the type of source data.
+func (inst PersistentReaderSource) GetSourceType() (PersistentReaderSourceType, error) {
+	var sourceType C.eLib3MFPersistentReaderSourceType
+	ret := C.CCall_lib3mf_persistentreadersource_getsourcetype(inst.wrapperRef.LibraryHandle, inst.Ref, &sourceType)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return PersistentReaderSourceType(sourceType), nil
+}
+
+// InvalidateSourceData invalidates the reader source. Every subsequent read on this data will fail.
+func (inst PersistentReaderSource) InvalidateSourceData() error {
+	ret := C.CCall_lib3mf_persistentreadersource_invalidatesourcedata(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SourceDataIsValid checks if the source data is valid. Any read on an invalid source object will fail.
+func (inst PersistentReaderSource) SourceDataIsValid() (bool, error) {
+	var dataIsValid C.bool
+	ret := C.CCall_lib3mf_persistentreadersource_sourcedataisvalid(inst.wrapperRef.LibraryHandle, inst.Ref, &dataIsValid)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(dataIsValid), nil
+}
+
 
 // Reader represents a Lib3MF class.
 type Reader struct {
@@ -4011,6 +5478,15 @@ type Reader struct {
 
 func (wrapper Wrapper) NewReader(r ref) Reader {
 	return Reader{wrapper.NewBase(r)}
+}
+
+// ReadFromPersistentSource reads a model from a persistent source object. The object will be referenced until the Model is destroyed or cleared.
+func (inst Reader) ReadFromPersistentSource(source PersistentReaderSource) error {
+	ret := C.CCall_lib3mf_reader_readfrompersistentsource(inst.wrapperRef.LibraryHandle, inst.Ref, source.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
 }
 
 // ReadFromFile reads a model from a file. The file type is specified by the Model Reader class.
@@ -4290,6 +5766,542 @@ func (inst ResourceIterator) Count() (uint64, error) {
 		return 0, makeError(uint32(ret))
 	}
 	return uint64(count), nil
+}
+
+
+// CustomXMLAttribute represents a Lib3MF class.
+type CustomXMLAttribute struct {
+	Base
+}
+
+func (wrapper Wrapper) NewCustomXMLAttribute(r ref) CustomXMLAttribute {
+	return CustomXMLAttribute{wrapper.NewBase(r)}
+}
+
+// GetName retrieves name of the attribute.
+func (inst CustomXMLAttribute) GetName() (string, error) {
+	var neededforname C.uint32_t
+	var filledinname C.uint32_t
+	ret := C.CCall_lib3mf_customxmlattribute_getname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforname, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizename := neededforname
+	buffername := make([]byte, bufferSizename)
+	ret = C.CCall_lib3mf_customxmlattribute_getname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizename, &filledinname, (*C.char)(unsafe.Pointer(&buffername[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffername[:(filledinname-1)]), nil
+}
+
+// GetValue retrieves value of the attribute as string.
+func (inst CustomXMLAttribute) GetValue() (string, error) {
+	var neededforvalue C.uint32_t
+	var filledinvalue C.uint32_t
+	ret := C.CCall_lib3mf_customxmlattribute_getvalue(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforvalue, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizevalue := neededforvalue
+	buffervalue := make([]byte, bufferSizevalue)
+	ret = C.CCall_lib3mf_customxmlattribute_getvalue(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizevalue, &filledinvalue, (*C.char)(unsafe.Pointer(&buffervalue[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffervalue[:(filledinvalue-1)]), nil
+}
+
+// IsValidInteger checks if the value is a valid integer in the given range.
+func (inst CustomXMLAttribute) IsValidInteger(minValue int64, maxValue int64) (bool, error) {
+	var isValid C.bool
+	ret := C.CCall_lib3mf_customxmlattribute_isvalidinteger(inst.wrapperRef.LibraryHandle, inst.Ref, C.int64_t(minValue), C.int64_t(maxValue), &isValid)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(isValid), nil
+}
+
+// GetIntegerValue returns the value as integer. Fails if the value is not a valid integer in the given range.
+func (inst CustomXMLAttribute) GetIntegerValue(minValue int64, maxValue int64) (int64, error) {
+	var value C.int64_t
+	ret := C.CCall_lib3mf_customxmlattribute_getintegervalue(inst.wrapperRef.LibraryHandle, inst.Ref, C.int64_t(minValue), C.int64_t(maxValue), &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return int64(value), nil
+}
+
+// IsValidDouble checks if the value is a valid double in the given range.
+func (inst CustomXMLAttribute) IsValidDouble(minValue float64, maxValue float64) (bool, error) {
+	var isValid C.bool
+	ret := C.CCall_lib3mf_customxmlattribute_isvaliddouble(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(minValue), C.double(maxValue), &isValid)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(isValid), nil
+}
+
+// GetDoubleValue returns the value as double. Fails if the value is not a valid double in the given range.
+func (inst CustomXMLAttribute) GetDoubleValue(minValue float64, maxValue float64) (float64, error) {
+	var value C.double
+	ret := C.CCall_lib3mf_customxmlattribute_getdoublevalue(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(minValue), C.double(maxValue), &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(value), nil
+}
+
+// IsValidBool checks if the value is a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+func (inst CustomXMLAttribute) IsValidBool() (bool, error) {
+	var isValid C.bool
+	ret := C.CCall_lib3mf_customxmlattribute_isvalidbool(inst.wrapperRef.LibraryHandle, inst.Ref, &isValid)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(isValid), nil
+}
+
+// GetBoolValue returns the value as bool. Fails if the value is not a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+func (inst CustomXMLAttribute) GetBoolValue(minValue float64, maxValue float64) (bool, error) {
+	var value C.bool
+	ret := C.CCall_lib3mf_customxmlattribute_getboolvalue(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(minValue), C.double(maxValue), &value)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(value), nil
+}
+
+// SetValue sets the value of the attribute as string.
+func (inst CustomXMLAttribute) SetValue(value string) error {
+	ret := C.CCall_lib3mf_customxmlattribute_setvalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(value)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SetIntegerValue sets the value of the attribute as integer.
+func (inst CustomXMLAttribute) SetIntegerValue(value int64) error {
+	ret := C.CCall_lib3mf_customxmlattribute_setintegervalue(inst.wrapperRef.LibraryHandle, inst.Ref, C.int64_t(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SetDoubleValue sets the value of the attribute as double.
+func (inst CustomXMLAttribute) SetDoubleValue(value float64) error {
+	ret := C.CCall_lib3mf_customxmlattribute_setdoublevalue(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SetBoolValue sets the value of the attribute as bool.
+func (inst CustomXMLAttribute) SetBoolValue(value bool) error {
+	ret := C.CCall_lib3mf_customxmlattribute_setboolvalue(inst.wrapperRef.LibraryHandle, inst.Ref, C.bool(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// Remove removes the attribute from its parent node. All subsequent calls to the class will fail.
+func (inst CustomXMLAttribute) Remove() error {
+	ret := C.CCall_lib3mf_customxmlattribute_remove(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// CustomXMLNode represents a Lib3MF class.
+type CustomXMLNode struct {
+	Base
+}
+
+func (wrapper Wrapper) NewCustomXMLNode(r ref) CustomXMLNode {
+	return CustomXMLNode{wrapper.NewBase(r)}
+}
+
+// GetName retrieves name of the node.
+func (inst CustomXMLNode) GetName() (string, error) {
+	var neededforname C.uint32_t
+	var filledinname C.uint32_t
+	ret := C.CCall_lib3mf_customxmlnode_getname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforname, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizename := neededforname
+	buffername := make([]byte, bufferSizename)
+	ret = C.CCall_lib3mf_customxmlnode_getname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizename, &filledinname, (*C.char)(unsafe.Pointer(&buffername[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffername[:(filledinname-1)]), nil
+}
+
+// GetNameSpace retrieves namespace of the node.
+func (inst CustomXMLNode) GetNameSpace() (string, error) {
+	var neededfornameSpace C.uint32_t
+	var filledinnameSpace C.uint32_t
+	ret := C.CCall_lib3mf_customxmlnode_getnamespace(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededfornameSpace, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizenameSpace := neededfornameSpace
+	buffernameSpace := make([]byte, bufferSizenameSpace)
+	ret = C.CCall_lib3mf_customxmlnode_getnamespace(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizenameSpace, &filledinnameSpace, (*C.char)(unsafe.Pointer(&buffernameSpace[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffernameSpace[:(filledinnameSpace-1)]), nil
+}
+
+// GetAttributeCount returns number of attributes.
+func (inst CustomXMLNode) GetAttributeCount() (uint64, error) {
+	var count C.uint64_t
+	ret := C.CCall_lib3mf_customxmlnode_getattributecount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint64(count), nil
+}
+
+// GetAttribute returns attribute instance. Fails if Index is out of range.
+func (inst CustomXMLNode) GetAttribute(index uint64) (CustomXMLAttribute, error) {
+	var attributeInstance ref
+	ret := C.CCall_lib3mf_customxmlnode_getattribute(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint64_t(index), &attributeInstance)
+	if ret != 0 {
+		return CustomXMLAttribute{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomXMLAttribute(attributeInstance), nil
+}
+
+// HasAttribute returns if attribute of a specific name exists.
+func (inst CustomXMLNode) HasAttribute(name string) (bool, error) {
+	var attributeExists C.bool
+	ret := C.CCall_lib3mf_customxmlnode_hasattribute(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &attributeExists)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(attributeExists), nil
+}
+
+// FindAttribute returns attribute instance of a specific name. .
+func (inst CustomXMLNode) FindAttribute(name string, mustExist bool) (*CustomXMLAttribute, error) {
+	var attributeInstance ref
+	ret := C.CCall_lib3mf_customxmlnode_findattribute(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), C.bool(mustExist), &attributeInstance)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	var _attributeInstancePtr *CustomXMLAttribute
+	if attributeInstance != nil {
+		_attributeInstancePtrVal := inst.wrapperRef.NewCustomXMLAttribute(attributeInstance)
+		_attributeInstancePtr = &_attributeInstancePtrVal
+	}
+	return _attributeInstancePtr, nil
+}
+
+// RemoveAttribute removes the attribute with a specific name. Does nothing if attribute does not exist.
+func (inst CustomXMLNode) RemoveAttribute(name string) (bool, error) {
+	var attributeRemoved C.bool
+	ret := C.CCall_lib3mf_customxmlnode_removeattribute(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &attributeRemoved)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(attributeRemoved), nil
+}
+
+// RemoveAttributeByIndex removes the attribute with a specific index. Fails if index is invalid.
+func (inst CustomXMLNode) RemoveAttributeByIndex(index uint64) (bool, error) {
+	var attributeRemoved C.bool
+	ret := C.CCall_lib3mf_customxmlnode_removeattributebyindex(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint64_t(index), &attributeRemoved)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(attributeRemoved), nil
+}
+
+// AddAttribute adds an attribute with a specific name and string value. Fails if attribute already exists.
+func (inst CustomXMLNode) AddAttribute(name string, value string) error {
+	ret := C.CCall_lib3mf_customxmlnode_addattribute(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), (*C.char)(unsafe.Pointer(&[]byte(value)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// AddIntegerAttribute adds an attribute with a specific name and integer value. Fails if attribute already exists.
+func (inst CustomXMLNode) AddIntegerAttribute(name string, value int64) error {
+	ret := C.CCall_lib3mf_customxmlnode_addintegerattribute(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), C.int64_t(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// AddDoubleAttribute adds an attribute with a specific name and double value. Fails if attribute already exists.
+func (inst CustomXMLNode) AddDoubleAttribute(name string, value float64) error {
+	ret := C.CCall_lib3mf_customxmlnode_adddoubleattribute(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), C.double(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// AddBoolAttribute adds an attribute with a specific name and bool value. Fails if attribute already exists.
+func (inst CustomXMLNode) AddBoolAttribute(name string, value bool) error {
+	ret := C.CCall_lib3mf_customxmlnode_addboolattribute(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), C.bool(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetChildren returns all the child nodes of the XML Node.
+func (inst CustomXMLNode) GetChildren() (CustomXMLNodes, error) {
+	var childNodes ref
+	ret := C.CCall_lib3mf_customxmlnode_getchildren(inst.wrapperRef.LibraryHandle, inst.Ref, &childNodes)
+	if ret != 0 {
+		return CustomXMLNodes{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomXMLNodes(childNodes), nil
+}
+
+// CountChildrenByName returns how many children of the XML Node have a specific name.
+func (inst CustomXMLNode) CountChildrenByName(name string) (uint64, error) {
+	var count C.uint64_t
+	ret := C.CCall_lib3mf_customxmlnode_countchildrenbyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint64(count), nil
+}
+
+// GetChildrenByName returns all the child nodes of the XML Node with a specific name.
+func (inst CustomXMLNode) GetChildrenByName(name string) (CustomXMLNodes, error) {
+	var childNodes ref
+	ret := C.CCall_lib3mf_customxmlnode_getchildrenbyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &childNodes)
+	if ret != 0 {
+		return CustomXMLNodes{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomXMLNodes(childNodes), nil
+}
+
+// HasChild returns if a child with a specific name exist.
+func (inst CustomXMLNode) HasChild(name string) (bool, error) {
+	var childExists C.bool
+	ret := C.CCall_lib3mf_customxmlnode_haschild(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &childExists)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(childExists), nil
+}
+
+// HasUniqueChild returns if a child with a specific name exist once and only once.
+func (inst CustomXMLNode) HasUniqueChild(name string) (bool, error) {
+	var childExists C.bool
+	ret := C.CCall_lib3mf_customxmlnode_hasuniquechild(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &childExists)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(childExists), nil
+}
+
+// FindChild returns child with a specific name. Throws an error if name does not exist once and only once.
+func (inst CustomXMLNode) FindChild(name string, mustExist bool) (*CustomXMLNode, error) {
+	var childInstance ref
+	ret := C.CCall_lib3mf_customxmlnode_findchild(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), C.bool(mustExist), &childInstance)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	var _childInstancePtr *CustomXMLNode
+	if childInstance != nil {
+		_childInstancePtrVal := inst.wrapperRef.NewCustomXMLNode(childInstance)
+		_childInstancePtr = &_childInstancePtrVal
+	}
+	return _childInstancePtr, nil
+}
+
+// AddChild adds a new child with a specific name.
+func (inst CustomXMLNode) AddChild(name string) (CustomXMLNode, error) {
+	var childInstance ref
+	ret := C.CCall_lib3mf_customxmlnode_addchild(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &childInstance)
+	if ret != 0 {
+		return CustomXMLNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomXMLNode(childInstance), nil
+}
+
+// RemoveChild removes a specific child. All subsequent calls to the child will fail after the call.
+func (inst CustomXMLNode) RemoveChild(childInstance CustomXMLNode) error {
+	ret := C.CCall_lib3mf_customxmlnode_removechild(inst.wrapperRef.LibraryHandle, inst.Ref, childInstance.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// RemoveChildrenWithName removes all children with a specific name. Does nothing if no child with the name exists. All subsequent calls to the deleted children will fail after the call.
+func (inst CustomXMLNode) RemoveChildrenWithName(name string) (uint64, error) {
+	var numberOfDeletedChildren C.uint64_t
+	ret := C.CCall_lib3mf_customxmlnode_removechildrenwithname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &numberOfDeletedChildren)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint64(numberOfDeletedChildren), nil
+}
+
+// Remove removes the node from its parent. The root node of the document can not be removed. Any subsequent call to the node fails after this.
+func (inst CustomXMLNode) Remove() error {
+	ret := C.CCall_lib3mf_customxmlnode_remove(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// CustomXMLNodes represents a Lib3MF class.
+type CustomXMLNodes struct {
+	Base
+}
+
+func (wrapper Wrapper) NewCustomXMLNodes(r ref) CustomXMLNodes {
+	return CustomXMLNodes{wrapper.NewBase(r)}
+}
+
+// GetNodeCount returns number of nodes.
+func (inst CustomXMLNodes) GetNodeCount() (uint64, error) {
+	var count C.uint64_t
+	ret := C.CCall_lib3mf_customxmlnodes_getnodecount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint64(count), nil
+}
+
+// GetNode returns node instance. Fails if Index is out of range.
+func (inst CustomXMLNodes) GetNode(index uint64) (CustomXMLNode, error) {
+	var nodeInstance ref
+	ret := C.CCall_lib3mf_customxmlnodes_getnode(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint64_t(index), &nodeInstance)
+	if ret != 0 {
+		return CustomXMLNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomXMLNode(nodeInstance), nil
+}
+
+// CountNodesByName returns how many nodes of the XML Node have a specific name.
+func (inst CustomXMLNodes) CountNodesByName(name string) (uint64, error) {
+	var count C.uint64_t
+	ret := C.CCall_lib3mf_customxmlnodes_countnodesbyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint64(count), nil
+}
+
+// GetNodesByName returns all the nodes nodes of the XML Node with a specific name.
+func (inst CustomXMLNodes) GetNodesByName(name string) (CustomXMLNodes, error) {
+	var nodes ref
+	ret := C.CCall_lib3mf_customxmlnodes_getnodesbyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &nodes)
+	if ret != 0 {
+		return CustomXMLNodes{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomXMLNodes(nodes), nil
+}
+
+// HasNode returns if a node with a specific name exist.
+func (inst CustomXMLNodes) HasNode(name string) (bool, error) {
+	var nodeExists C.bool
+	ret := C.CCall_lib3mf_customxmlnodes_hasnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &nodeExists)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(nodeExists), nil
+}
+
+// HasUniqueNode returns if a node with a specific name exist once and only once.
+func (inst CustomXMLNodes) HasUniqueNode(name string) (bool, error) {
+	var nodeExists C.bool
+	ret := C.CCall_lib3mf_customxmlnodes_hasuniquenode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &nodeExists)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(nodeExists), nil
+}
+
+// FindNode returns node with a specific name. Throws an error if name does not exist once and only once.
+func (inst CustomXMLNodes) FindNode(name string, mustExist bool) (*CustomXMLNode, error) {
+	var nodeInstance ref
+	ret := C.CCall_lib3mf_customxmlnodes_findnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), C.bool(mustExist), &nodeInstance)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	var _nodeInstancePtr *CustomXMLNode
+	if nodeInstance != nil {
+		_nodeInstancePtrVal := inst.wrapperRef.NewCustomXMLNode(nodeInstance)
+		_nodeInstancePtr = &_nodeInstancePtrVal
+	}
+	return _nodeInstancePtr, nil
+}
+
+
+// CustomDOMTree represents a Lib3MF class.
+type CustomDOMTree struct {
+	Base
+}
+
+func (wrapper Wrapper) NewCustomDOMTree(r ref) CustomDOMTree {
+	return CustomDOMTree{wrapper.NewBase(r)}
+}
+
+// GetNameSpace returns the namespace identifier for the DOM Tree.
+func (inst CustomDOMTree) GetNameSpace() (string, error) {
+	var neededfornameSpace C.uint32_t
+	var filledinnameSpace C.uint32_t
+	ret := C.CCall_lib3mf_customdomtree_getnamespace(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededfornameSpace, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizenameSpace := neededfornameSpace
+	buffernameSpace := make([]byte, bufferSizenameSpace)
+	ret = C.CCall_lib3mf_customdomtree_getnamespace(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizenameSpace, &filledinnameSpace, (*C.char)(unsafe.Pointer(&buffernameSpace[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffernameSpace[:(filledinnameSpace-1)]), nil
+}
+
+// GetRootNode returns root node of the tree.
+func (inst CustomDOMTree) GetRootNode() (CustomXMLNode, error) {
+	var rootNode ref
+	ret := C.CCall_lib3mf_customdomtree_getrootnode(inst.wrapperRef.LibraryHandle, inst.Ref, &rootNode)
+	if ret != 0 {
+		return CustomXMLNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomXMLNode(rootNode), nil
+}
+
+// SaveToString saves the XML tree into a string.
+func (inst CustomDOMTree) SaveToString() (string, error) {
+	var neededforxMLString C.uint32_t
+	var filledinxMLString C.uint32_t
+	ret := C.CCall_lib3mf_customdomtree_savetostring(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforxMLString, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizexMLString := neededforxMLString
+	bufferxMLString := make([]byte, bufferSizexMLString)
+	ret = C.CCall_lib3mf_customdomtree_savetostring(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizexMLString, &filledinxMLString, (*C.char)(unsafe.Pointer(&bufferxMLString[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferxMLString[:(filledinxMLString-1)]), nil
 }
 
 
@@ -6678,6 +8690,878 @@ func (inst Slice) GetZTop() (float64, error) {
 }
 
 
+// ToolpathProfile represents a Lib3MF class.
+type ToolpathProfile struct {
+	Base
+}
+
+func (wrapper Wrapper) NewToolpathProfile(r ref) ToolpathProfile {
+	return ToolpathProfile{wrapper.NewBase(r)}
+}
+
+// GetUUID retrieves the profile's uuid.
+func (inst ToolpathProfile) GetUUID() (string, error) {
+	var neededforuUID C.uint32_t
+	var filledinuUID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathprofile_getuuid(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforuUID, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizeuUID := neededforuUID
+	bufferuUID := make([]byte, bufferSizeuUID)
+	ret = C.CCall_lib3mf_toolpathprofile_getuuid(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizeuUID, &filledinuUID, (*C.char)(unsafe.Pointer(&bufferuUID[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferuUID[:(filledinuUID-1)]), nil
+}
+
+// GetName retrieves the profile's name.
+func (inst ToolpathProfile) GetName() (string, error) {
+	var neededforname C.uint32_t
+	var filledinname C.uint32_t
+	ret := C.CCall_lib3mf_toolpathprofile_getname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforname, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizename := neededforname
+	buffername := make([]byte, bufferSizename)
+	ret = C.CCall_lib3mf_toolpathprofile_getname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizename, &filledinname, (*C.char)(unsafe.Pointer(&buffername[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffername[:(filledinname-1)]), nil
+}
+
+// GetParameterCount returns the number of parameters.
+func (inst ToolpathProfile) GetParameterCount() (uint32, error) {
+	var count C.uint32_t
+	ret := C.CCall_lib3mf_toolpathprofile_getparametercount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(count), nil
+}
+
+// GetParameterName returns the Name of a parameter.
+func (inst ToolpathProfile) GetParameterName(index uint32) (string, error) {
+	var neededforname C.uint32_t
+	var filledinname C.uint32_t
+	ret := C.CCall_lib3mf_toolpathprofile_getparametername(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforname, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizename := neededforname
+	buffername := make([]byte, bufferSizename)
+	ret = C.CCall_lib3mf_toolpathprofile_getparametername(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), bufferSizename, &filledinname, (*C.char)(unsafe.Pointer(&buffername[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffername[:(filledinname-1)]), nil
+}
+
+// GetParameterNameSpace returns the NameSpace of a parameter.
+func (inst ToolpathProfile) GetParameterNameSpace(index uint32) (string, error) {
+	var neededfornameSpace C.uint32_t
+	var filledinnameSpace C.uint32_t
+	ret := C.CCall_lib3mf_toolpathprofile_getparameternamespace(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededfornameSpace, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizenameSpace := neededfornameSpace
+	buffernameSpace := make([]byte, bufferSizenameSpace)
+	ret = C.CCall_lib3mf_toolpathprofile_getparameternamespace(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), bufferSizenameSpace, &filledinnameSpace, (*C.char)(unsafe.Pointer(&buffernameSpace[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffernameSpace[:(filledinnameSpace-1)]), nil
+}
+
+// HasParameterValue checks if a parameter value exists.
+func (inst ToolpathProfile) HasParameterValue(nameSpaceName string, valueName string) (bool, error) {
+	var valueExists C.bool
+	ret := C.CCall_lib3mf_toolpathprofile_hasparametervalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), &valueExists)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(valueExists), nil
+}
+
+// GetParameterValue retrieves a profile's parameter value. Fails if value does not exist.
+func (inst ToolpathProfile) GetParameterValue(nameSpaceName string, valueName string) (string, error) {
+	var neededforvalue C.uint32_t
+	var filledinvalue C.uint32_t
+	ret := C.CCall_lib3mf_toolpathprofile_getparametervalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), 0, &neededforvalue, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizevalue := neededforvalue
+	buffervalue := make([]byte, bufferSizevalue)
+	ret = C.CCall_lib3mf_toolpathprofile_getparametervalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), bufferSizevalue, &filledinvalue, (*C.char)(unsafe.Pointer(&buffervalue[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffervalue[:(filledinvalue-1)]), nil
+}
+
+// GetParameterValueDef retrieves a profile's parameter value.
+func (inst ToolpathProfile) GetParameterValueDef(nameSpaceName string, valueName string, defaultValue string) (string, error) {
+	var neededforvalue C.uint32_t
+	var filledinvalue C.uint32_t
+	ret := C.CCall_lib3mf_toolpathprofile_getparametervaluedef(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), (*C.char)(unsafe.Pointer(&[]byte(defaultValue)[0])), 0, &neededforvalue, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizevalue := neededforvalue
+	buffervalue := make([]byte, bufferSizevalue)
+	ret = C.CCall_lib3mf_toolpathprofile_getparametervaluedef(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), (*C.char)(unsafe.Pointer(&[]byte(defaultValue)[0])), bufferSizevalue, &filledinvalue, (*C.char)(unsafe.Pointer(&buffervalue[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffervalue[:(filledinvalue-1)]), nil
+}
+
+// GetParameterDoubleValue retrieves a profile's parameter value as double. Fails if value does not exist or is not a double value.
+func (inst ToolpathProfile) GetParameterDoubleValue(nameSpaceName string, valueName string) (float64, error) {
+	var value C.double
+	ret := C.CCall_lib3mf_toolpathprofile_getparameterdoublevalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(value), nil
+}
+
+// GetParameterDoubleValueDef retrieves a profile's parameter value as double.
+func (inst ToolpathProfile) GetParameterDoubleValueDef(nameSpaceName string, valueName string, defaultValue float64) (float64, error) {
+	var value C.double
+	ret := C.CCall_lib3mf_toolpathprofile_getparameterdoublevaluedef(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), C.double(defaultValue), &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(value), nil
+}
+
+// GetParameterIntegerValue retrieves a profile's parameter value as integer. Fails if value does not exist or is not a integer value.
+func (inst ToolpathProfile) GetParameterIntegerValue(nameSpaceName string, valueName string) (int64, error) {
+	var value C.int64_t
+	ret := C.CCall_lib3mf_toolpathprofile_getparameterintegervalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return int64(value), nil
+}
+
+// GetParameterIntegerValueDef retrieves a profile's parameter value as integer.
+func (inst ToolpathProfile) GetParameterIntegerValueDef(nameSpaceName string, valueName string, defaultValue int64) (int64, error) {
+	var value C.int64_t
+	ret := C.CCall_lib3mf_toolpathprofile_getparameterintegervaluedef(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), C.int64_t(defaultValue), &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return int64(value), nil
+}
+
+// GetParameterBoolValue retrieves a profile's parameter value as boolean. Fails if value does not exist or is not a boolean value.
+func (inst ToolpathProfile) GetParameterBoolValue(nameSpaceName string, valueName string) (bool, error) {
+	var value C.bool
+	ret := C.CCall_lib3mf_toolpathprofile_getparameterboolvalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), &value)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(value), nil
+}
+
+// GetParameterBoolValueDef retrieves a profile's parameter value as boolean.
+func (inst ToolpathProfile) GetParameterBoolValueDef(nameSpaceName string, valueName string, defaultValue bool) (bool, error) {
+	var value C.bool
+	ret := C.CCall_lib3mf_toolpathprofile_getparameterboolvaluedef(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), C.bool(defaultValue), &value)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(value), nil
+}
+
+// SetName sets the profile's name.
+func (inst ToolpathProfile) SetName(name string) error {
+	ret := C.CCall_lib3mf_toolpathprofile_setname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SetParameterValue sets a profile's parameter value.
+func (inst ToolpathProfile) SetParameterValue(nameSpaceName string, valueName string, value string) error {
+	ret := C.CCall_lib3mf_toolpathprofile_setparametervalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), (*C.char)(unsafe.Pointer(&[]byte(value)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SetParameterDoubleValue sets a profile's parameter value as double.
+func (inst ToolpathProfile) SetParameterDoubleValue(nameSpaceName string, valueName string, value float64) error {
+	ret := C.CCall_lib3mf_toolpathprofile_setparameterdoublevalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), C.double(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SetParameterIntegerValue sets a profile's parameter value as integer.
+func (inst ToolpathProfile) SetParameterIntegerValue(nameSpaceName string, valueName string, value int64) error {
+	ret := C.CCall_lib3mf_toolpathprofile_setparameterintegervalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), C.int64_t(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SetParameterBoolValue sets a profile's parameter value as boolean.
+func (inst ToolpathProfile) SetParameterBoolValue(nameSpaceName string, valueName string, value bool) error {
+	ret := C.CCall_lib3mf_toolpathprofile_setparameterboolvalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), C.bool(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// ToolpathLayerReader represents a Lib3MF class.
+type ToolpathLayerReader struct {
+	Base
+}
+
+func (wrapper Wrapper) NewToolpathLayerReader(r ref) ToolpathLayerReader {
+	return ToolpathLayerReader{wrapper.NewBase(r)}
+}
+
+// GetLayerDataUUID retrieves the layerdata's uuid.
+func (inst ToolpathLayerReader) GetLayerDataUUID() (string, error) {
+	var neededforuUID C.uint32_t
+	var filledinuUID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getlayerdatauuid(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforuUID, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizeuUID := neededforuUID
+	bufferuUID := make([]byte, bufferSizeuUID)
+	ret = C.CCall_lib3mf_toolpathlayerreader_getlayerdatauuid(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizeuUID, &filledinuUID, (*C.char)(unsafe.Pointer(&bufferuUID[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferuUID[:(filledinuUID-1)]), nil
+}
+
+// GetSegmentCount retrieves the count of segments.
+func (inst ToolpathLayerReader) GetSegmentCount() (uint32, error) {
+	var count C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentcount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(count), nil
+}
+
+// GetSegmentInfo retrieves the segment type information .
+func (inst ToolpathLayerReader) GetSegmentInfo(index uint32) (ToolpathSegmentType, uint32, error) {
+	var _type C.eLib3MFToolpathSegmentType
+	var pointCount C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentinfo(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &_type, &pointCount)
+	if ret != 0 {
+		return 0, 0, makeError(uint32(ret))
+	}
+	return ToolpathSegmentType(_type), uint32(pointCount), nil
+}
+
+// GetSegmentProfile retrieves the assigned segment profile.
+func (inst ToolpathLayerReader) GetSegmentProfile(index uint32) (ToolpathProfile, error) {
+	var profile ref
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentprofile(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &profile)
+	if ret != 0 {
+		return ToolpathProfile{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathProfile(profile), nil
+}
+
+// GetSegmentProfileUUID retrieves the assigned segment profile uuid.
+func (inst ToolpathLayerReader) GetSegmentProfileUUID(index uint32) (string, error) {
+	var neededforprofileUUID C.uint32_t
+	var filledinprofileUUID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentprofileuuid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforprofileUUID, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizeprofileUUID := neededforprofileUUID
+	bufferprofileUUID := make([]byte, bufferSizeprofileUUID)
+	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmentprofileuuid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), bufferSizeprofileUUID, &filledinprofileUUID, (*C.char)(unsafe.Pointer(&bufferprofileUUID[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferprofileUUID[:(filledinprofileUUID-1)]), nil
+}
+
+// GetSegmentPart retrieves the assigned segment profile.
+func (inst ToolpathLayerReader) GetSegmentPart(index uint32) (BuildItem, error) {
+	var buildItem ref
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentpart(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &buildItem)
+	if ret != 0 {
+		return BuildItem{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewBuildItem(buildItem), nil
+}
+
+// GetSegmentPartUUID retrieves the assigned segment part uuid.
+func (inst ToolpathLayerReader) GetSegmentPartUUID(index uint32) (string, error) {
+	var neededforpartUUID C.uint32_t
+	var filledinpartUUID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentpartuuid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforpartUUID, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizepartUUID := neededforpartUUID
+	bufferpartUUID := make([]byte, bufferSizepartUUID)
+	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmentpartuuid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), bufferSizepartUUID, &filledinpartUUID, (*C.char)(unsafe.Pointer(&bufferpartUUID[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferpartUUID[:(filledinpartUUID-1)]), nil
+}
+
+// GetSegmentLocalPartID retrieves the assigned segment part id. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+func (inst ToolpathLayerReader) GetSegmentLocalPartID(index uint32) (uint32, error) {
+	var localPartID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentlocalpartid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &localPartID)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(localPartID), nil
+}
+
+// GetPartUUIDByLocalPartID retrieves the global part UUID by the local part ID. Fails if part ID does not exist in this layer. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+func (inst ToolpathLayerReader) GetPartUUIDByLocalPartID(localPartID uint32) (string, error) {
+	var neededforpartUUID C.uint32_t
+	var filledinpartUUID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(localPartID), 0, &neededforpartUUID, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizepartUUID := neededforpartUUID
+	bufferpartUUID := make([]byte, bufferSizepartUUID)
+	ret = C.CCall_lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(localPartID), bufferSizepartUUID, &filledinpartUUID, (*C.char)(unsafe.Pointer(&bufferpartUUID[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferpartUUID[:(filledinpartUUID-1)]), nil
+}
+
+// GetSegmentPointData retrieves the assigned segment point list. For type hatch, the points are taken pairwise.
+func (inst ToolpathLayerReader) GetSegmentPointData(index uint32, pointData []Position2D) ([]Position2D, error) {
+	var neededforpointData C.uint64_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentpointdata(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforpointData, nil)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	if len(pointData) < int(neededforpointData) {
+	 pointData = append(pointData, make([]Position2D, int(neededforpointData)-len(pointData))...)
+	}
+	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmentpointdata(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), neededforpointData, nil, (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])))
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	return pointData[:int(neededforpointData)], nil
+}
+
+// FindAttributeInfoByName retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
+func (inst ToolpathLayerReader) FindAttributeInfoByName(nameSpace string, attributeName string) (uint32, ToolpathAttributeType, error) {
+	var iD C.uint32_t
+	var attributeType C.eLib3MFToolpathAttributeType
+	ret := C.CCall_lib3mf_toolpathlayerreader_findattributeinfobyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &iD, &attributeType)
+	if ret != 0 {
+		return 0, 0, makeError(uint32(ret))
+	}
+	return uint32(iD), ToolpathAttributeType(attributeType), nil
+}
+
+// FindAttributeIDByName retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.
+func (inst ToolpathLayerReader) FindAttributeIDByName(nameSpace string, attributeName string) (uint32, error) {
+	var iD C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_findattributeidbyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &iD)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(iD), nil
+}
+
+// FindAttributeValueByName retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.
+func (inst ToolpathLayerReader) FindAttributeValueByName(nameSpace string, attributeName string) (ToolpathAttributeType, error) {
+	var attributeType C.eLib3MFToolpathAttributeType
+	ret := C.CCall_lib3mf_toolpathlayerreader_findattributevaluebyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &attributeType)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return ToolpathAttributeType(attributeType), nil
+}
+
+// GetSegmentIntegerAttributeByID retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
+func (inst ToolpathLayerReader) GetSegmentIntegerAttributeByID(index uint32, iD uint32) (int64, error) {
+	var value C.int64_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentintegerattributebyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), C.uint32_t(iD), &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return int64(value), nil
+}
+
+// GetSegmentIntegerAttributeByName retrieves a segment integer attribute by Attribute Name. Will fail if Attribute does not exist or is of different type.
+func (inst ToolpathLayerReader) GetSegmentIntegerAttributeByName(index uint32, nameSpace string, attributeName string) (int64, error) {
+	var value C.int64_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentintegerattributebyname(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return int64(value), nil
+}
+
+// GetSegmentDoubleAttributeByID retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.
+func (inst ToolpathLayerReader) GetSegmentDoubleAttributeByID(index uint32, iD uint32) (float64, error) {
+	var value C.double
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), C.uint32_t(iD), &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(value), nil
+}
+
+// GetSegmentDoubleAttributeByName retrieves a segment Double attribute by Attribute Name. Will fail if Attribute does not exist.
+func (inst ToolpathLayerReader) GetSegmentDoubleAttributeByName(index uint32, nameSpace string, attributeName string) (float64, error) {
+	var value C.double
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(value), nil
+}
+
+// GetCustomDataCount retrieves the count of custom data elements.
+func (inst ToolpathLayerReader) GetCustomDataCount() (uint32, error) {
+	var count C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getcustomdatacount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(count), nil
+}
+
+// GetCustomData retrieves the custom data.
+func (inst ToolpathLayerReader) GetCustomData(index uint32) (CustomDOMTree, error) {
+	var data ref
+	ret := C.CCall_lib3mf_toolpathlayerreader_getcustomdata(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &data)
+	if ret != 0 {
+		return CustomDOMTree{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomDOMTree(data), nil
+}
+
+// GetCustomDataName retrieves the node name of the custom data.
+func (inst ToolpathLayerReader) GetCustomDataName(index uint32) (string, string, error) {
+	var neededfornameSpace C.uint32_t
+	var filledinnameSpace C.uint32_t
+	var neededfordataName C.uint32_t
+	var filledindataName C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getcustomdataname(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededfornameSpace, nil, 0, &neededfordataName, nil)
+	if ret != 0 {
+		return "", "", makeError(uint32(ret))
+	}
+	bufferSizenameSpace := neededfornameSpace
+	buffernameSpace := make([]byte, bufferSizenameSpace)
+	bufferSizedataName := neededfordataName
+	bufferdataName := make([]byte, bufferSizedataName)
+	ret = C.CCall_lib3mf_toolpathlayerreader_getcustomdataname(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), bufferSizenameSpace, &filledinnameSpace, (*C.char)(unsafe.Pointer(&buffernameSpace[0])), bufferSizedataName, &filledindataName, (*C.char)(unsafe.Pointer(&bufferdataName[0])))
+	if ret != 0 {
+		return "", "", makeError(uint32(ret))
+	}
+	return string(buffernameSpace[:(filledinnameSpace-1)]), string(bufferdataName[:(filledindataName-1)]), nil
+}
+
+
+// ToolpathLayerData represents a Lib3MF class.
+type ToolpathLayerData struct {
+	Base
+}
+
+func (wrapper Wrapper) NewToolpathLayerData(r ref) ToolpathLayerData {
+	return ToolpathLayerData{wrapper.NewBase(r)}
+}
+
+// GetLayerDataUUID retrieves the layerdata's uuid.
+func (inst ToolpathLayerData) GetLayerDataUUID() (string, error) {
+	var neededforuUID C.uint32_t
+	var filledinuUID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerdata_getlayerdatauuid(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforuUID, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizeuUID := neededforuUID
+	bufferuUID := make([]byte, bufferSizeuUID)
+	ret = C.CCall_lib3mf_toolpathlayerdata_getlayerdatauuid(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizeuUID, &filledinuUID, (*C.char)(unsafe.Pointer(&bufferuUID[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferuUID[:(filledinuUID-1)]), nil
+}
+
+// RegisterProfile registers a toolpath profile.
+func (inst ToolpathLayerData) RegisterProfile(profile ToolpathProfile) (uint32, error) {
+	var profileID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerdata_registerprofile(inst.wrapperRef.LibraryHandle, inst.Ref, profile.Ref, &profileID)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(profileID), nil
+}
+
+// RegisterBuildItem registers a Model Build Item.
+func (inst ToolpathLayerData) RegisterBuildItem(buildItem BuildItem) (uint32, error) {
+	var partID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerdata_registerbuilditem(inst.wrapperRef.LibraryHandle, inst.Ref, buildItem.Ref, &partID)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(partID), nil
+}
+
+// SetSegmentAttribute sets Segment Attribute for all following segments that are added. Overrides previously set attribute.
+func (inst ToolpathLayerData) SetSegmentAttribute(nameSpace string, attributeName string, value string) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_setsegmentattribute(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), (*C.char)(unsafe.Pointer(&[]byte(value)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// ClearSegmentAttributes clears current segment attributes.
+func (inst ToolpathLayerData) ClearSegmentAttributes() error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_clearsegmentattributes(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WriteHatchData writes hatch data to the layer.
+func (inst ToolpathLayerData) WriteHatchData(profileID uint32, partID uint32, pointData []Position2D) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writehatchdata(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WriteLoop writes loop data to the layer.
+func (inst ToolpathLayerData) WriteLoop(profileID uint32, partID uint32, pointData []Position2D) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writeloop(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WritePolyline writes polyline data to the layer.
+func (inst ToolpathLayerData) WritePolyline(profileID uint32, partID uint32, pointData []Position2D) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writepolyline(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// AddCustomData adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
+func (inst ToolpathLayerData) AddCustomData(nameSpace string, dataName string) (CustomDOMTree, error) {
+	var data ref
+	ret := C.CCall_lib3mf_toolpathlayerdata_addcustomdata(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(dataName)[0])), &data)
+	if ret != 0 {
+		return CustomDOMTree{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomDOMTree(data), nil
+}
+
+// Finish finishes all writing of the layer and compresses toolpath data.
+func (inst ToolpathLayerData) Finish() error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_finish(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// Toolpath represents a Lib3MF class.
+type Toolpath struct {
+	Resource
+}
+
+func (wrapper Wrapper) NewToolpath(r ref) Toolpath {
+	return Toolpath{wrapper.NewResource(r)}
+}
+
+// GetUnits retrieves the unit factor.
+func (inst Toolpath) GetUnits() (float64, error) {
+	var units C.double
+	ret := C.CCall_lib3mf_toolpath_getunits(inst.wrapperRef.LibraryHandle, inst.Ref, &units)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(units), nil
+}
+
+// GetLayerCount retrieves the count of layers.
+func (inst Toolpath) GetLayerCount() (uint32, error) {
+	var count C.uint32_t
+	ret := C.CCall_lib3mf_toolpath_getlayercount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(count), nil
+}
+
+// GetProfileCount retrieves the count of profiles.
+func (inst Toolpath) GetProfileCount() (uint32, error) {
+	var count C.uint32_t
+	ret := C.CCall_lib3mf_toolpath_getprofilecount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(count), nil
+}
+
+// AddLayer adds a new toolpath layer.
+func (inst Toolpath) AddLayer(zMax uint32, path string, modelWriter Writer) (ToolpathLayerData, error) {
+	var layerData ref
+	ret := C.CCall_lib3mf_toolpath_addlayer(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(zMax), (*C.char)(unsafe.Pointer(&[]byte(path)[0])), modelWriter.Ref, &layerData)
+	if ret != 0 {
+		return ToolpathLayerData{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathLayerData(layerData), nil
+}
+
+// GetLayerAttachment retrieves the Attachment of a layer.
+func (inst Toolpath) GetLayerAttachment(index uint32) (Attachment, error) {
+	var attachment ref
+	ret := C.CCall_lib3mf_toolpath_getlayerattachment(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &attachment)
+	if ret != 0 {
+		return Attachment{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewAttachment(attachment), nil
+}
+
+// ReadLayerData reads the toolpath of a layer.
+func (inst Toolpath) ReadLayerData(index uint32) (ToolpathLayerReader, error) {
+	var toolpathReader ref
+	ret := C.CCall_lib3mf_toolpath_readlayerdata(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &toolpathReader)
+	if ret != 0 {
+		return ToolpathLayerReader{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathLayerReader(toolpathReader), nil
+}
+
+// GetLayerPath retrieves the Path of a layer.
+func (inst Toolpath) GetLayerPath(index uint32) (string, error) {
+	var neededforpath C.uint32_t
+	var filledinpath C.uint32_t
+	ret := C.CCall_lib3mf_toolpath_getlayerpath(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforpath, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizepath := neededforpath
+	bufferpath := make([]byte, bufferSizepath)
+	ret = C.CCall_lib3mf_toolpath_getlayerpath(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), bufferSizepath, &filledinpath, (*C.char)(unsafe.Pointer(&bufferpath[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferpath[:(filledinpath-1)]), nil
+}
+
+// GetLayerZMax retrieves the ZMax of a layer.
+func (inst Toolpath) GetLayerZMax(index uint32) (uint32, error) {
+	var zMax C.uint32_t
+	ret := C.CCall_lib3mf_toolpath_getlayerzmax(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &zMax)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(zMax), nil
+}
+
+// GetLayerZ return the z value of a layer in units.
+func (inst Toolpath) GetLayerZ(layerIndex uint32) (uint32, error) {
+	var zValue C.uint32_t
+	ret := C.CCall_lib3mf_toolpath_getlayerz(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(layerIndex), &zValue)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(zValue), nil
+}
+
+// AddProfile adds a new profile to the toolpath.
+func (inst Toolpath) AddProfile(name string) (ToolpathProfile, error) {
+	var profile ref
+	ret := C.CCall_lib3mf_toolpath_addprofile(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &profile)
+	if ret != 0 {
+		return ToolpathProfile{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathProfile(profile), nil
+}
+
+// GetProfile returns a profile of the toolpath.
+func (inst Toolpath) GetProfile(profileIndex uint32) (ToolpathProfile, error) {
+	var profile ref
+	ret := C.CCall_lib3mf_toolpath_getprofile(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileIndex), &profile)
+	if ret != 0 {
+		return ToolpathProfile{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathProfile(profile), nil
+}
+
+// GetProfileUUID returns a profile of the toolpath by UUID.
+func (inst Toolpath) GetProfileUUID(profileUUID string) (ToolpathProfile, error) {
+	var profile ref
+	ret := C.CCall_lib3mf_toolpath_getprofileuuid(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(profileUUID)[0])), &profile)
+	if ret != 0 {
+		return ToolpathProfile{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathProfile(profile), nil
+}
+
+// GetCustomDataCount retrieves the count of custom data elements.
+func (inst Toolpath) GetCustomDataCount() (uint32, error) {
+	var count C.uint32_t
+	ret := C.CCall_lib3mf_toolpath_getcustomdatacount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(count), nil
+}
+
+// GetCustomData retrieves the custom data.
+func (inst Toolpath) GetCustomData(index uint32) (CustomDOMTree, error) {
+	var data ref
+	ret := C.CCall_lib3mf_toolpath_getcustomdata(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &data)
+	if ret != 0 {
+		return CustomDOMTree{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomDOMTree(data), nil
+}
+
+// GetCustomDataName retrieves the node name of the custom data.
+func (inst Toolpath) GetCustomDataName(index uint32) (string, string, error) {
+	var neededfornameSpace C.uint32_t
+	var filledinnameSpace C.uint32_t
+	var neededfordataName C.uint32_t
+	var filledindataName C.uint32_t
+	ret := C.CCall_lib3mf_toolpath_getcustomdataname(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededfornameSpace, nil, 0, &neededfordataName, nil)
+	if ret != 0 {
+		return "", "", makeError(uint32(ret))
+	}
+	bufferSizenameSpace := neededfornameSpace
+	buffernameSpace := make([]byte, bufferSizenameSpace)
+	bufferSizedataName := neededfordataName
+	bufferdataName := make([]byte, bufferSizedataName)
+	ret = C.CCall_lib3mf_toolpath_getcustomdataname(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), bufferSizenameSpace, &filledinnameSpace, (*C.char)(unsafe.Pointer(&buffernameSpace[0])), bufferSizedataName, &filledindataName, (*C.char)(unsafe.Pointer(&bufferdataName[0])))
+	if ret != 0 {
+		return "", "", makeError(uint32(ret))
+	}
+	return string(buffernameSpace[:(filledinnameSpace-1)]), string(bufferdataName[:(filledindataName-1)]), nil
+}
+
+// HasUniqueCustomData retrieves if custom data with a specific namespace and name combination exists.
+func (inst Toolpath) HasUniqueCustomData(nameSpace string, dataName string) (bool, error) {
+	var customDataExists C.bool
+	ret := C.CCall_lib3mf_toolpath_hasuniquecustomdata(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(dataName)[0])), &customDataExists)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(customDataExists), nil
+}
+
+// FindUniqueCustomData retrieves the custom data with a specific namespace and name combination. Fails if combination is not unique.
+func (inst Toolpath) FindUniqueCustomData(nameSpace string, dataName string) (CustomDOMTree, error) {
+	var data ref
+	ret := C.CCall_lib3mf_toolpath_finduniquecustomdata(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(dataName)[0])), &data)
+	if ret != 0 {
+		return CustomDOMTree{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomDOMTree(data), nil
+}
+
+// AddCustomData adds a custom data DOM tree to the toolpath.
+func (inst Toolpath) AddCustomData(nameSpace string, dataName string) (CustomDOMTree, error) {
+	var data ref
+	ret := C.CCall_lib3mf_toolpath_addcustomdata(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(dataName)[0])), &data)
+	if ret != 0 {
+		return CustomDOMTree{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewCustomDOMTree(data), nil
+}
+
+// ClearCustomData deletes all custom data.
+func (inst Toolpath) ClearCustomData() (uint32, error) {
+	var numberOfDeletedItems C.uint32_t
+	ret := C.CCall_lib3mf_toolpath_clearcustomdata(inst.wrapperRef.LibraryHandle, inst.Ref, &numberOfDeletedItems)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(numberOfDeletedItems), nil
+}
+
+// DeleteCustomData deletes a custom data instance from the list.
+func (inst Toolpath) DeleteCustomData(data CustomDOMTree) (bool, error) {
+	var success C.bool
+	ret := C.CCall_lib3mf_toolpath_deletecustomdata(inst.wrapperRef.LibraryHandle, inst.Ref, data.Ref, &success)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(success), nil
+}
+
+// RegisterCustomIntegerAttribute registers an Integer Attribute that each segment holds.
+func (inst Toolpath) RegisterCustomIntegerAttribute(nameSpace string, attributeName string) error {
+	ret := C.CCall_lib3mf_toolpath_registercustomintegerattribute(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// RegisterCustomDoubleAttribute registers a Double Attribute that each segment holds. Registering only applies to reader or writer objects created after the call.
+func (inst Toolpath) RegisterCustomDoubleAttribute(nameSpace string, attributeName string) error {
+	ret := C.CCall_lib3mf_toolpath_registercustomdoubleattribute(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// ToolpathIterator represents a Lib3MF class.
+type ToolpathIterator struct {
+	ResourceIterator
+}
+
+func (wrapper Wrapper) NewToolpathIterator(r ref) ToolpathIterator {
+	return ToolpathIterator{wrapper.NewResourceIterator(r)}
+}
+
+// GetCurrentToolpath returns the Toolpath the iterator points at.
+func (inst ToolpathIterator) GetCurrentToolpath() (Toolpath, error) {
+	var resource ref
+	ret := C.CCall_lib3mf_toolpathiterator_getcurrenttoolpath(inst.wrapperRef.LibraryHandle, inst.Ref, &resource)
+	if ret != 0 {
+		return Toolpath{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpath(resource), nil
+}
+
+
 // SliceStack represents a Lib3MF class.
 type SliceStack struct {
 	Resource
@@ -7695,6 +10579,16 @@ func (inst Model) GetMultiPropertyGroups() (MultiPropertyGroupIterator, error) {
 	return inst.wrapperRef.NewMultiPropertyGroupIterator(resourceIterator), nil
 }
 
+// GetToolpaths creates a Toolpath instance with all toolpath resources.
+func (inst Model) GetToolpaths() (ToolpathIterator, error) {
+	var resourceIterator ref
+	ret := C.CCall_lib3mf_model_gettoolpaths(inst.wrapperRef.LibraryHandle, inst.Ref, &resourceIterator)
+	if ret != 0 {
+		return ToolpathIterator{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathIterator(resourceIterator), nil
+}
+
 // GetSliceStacks creates a resource iterator instance with all slice stack resources.
 func (inst Model) GetSliceStacks() (SliceStackIterator, error) {
 	var resourceIterator ref
@@ -7822,6 +10716,16 @@ func (inst Model) RemoveBuildItem(buildItemInstance BuildItem) error {
 		return makeError(uint32(ret))
 	}
 	return nil
+}
+
+// AddToolpath adds an empty Toolpath resource to the model.
+func (inst Model) AddToolpath(unitFactor float64) (Toolpath, error) {
+	var toolpathInstance ref
+	ret := C.CCall_lib3mf_model_addtoolpath(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(unitFactor), &toolpathInstance)
+	if ret != 0 {
+		return Toolpath{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpath(toolpathInstance), nil
 }
 
 // GetMetaDataGroup returns the metadata of the model as MetaDataGroup.
@@ -7963,6 +10867,38 @@ func (inst Model) GetKeyStore() (KeyStore, error) {
 		return KeyStore{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewKeyStore(keyStore), nil
+}
+
+// CreatePersistentSourceFromFile creates an OPC Reader Source from a file.
+func (inst Model) CreatePersistentSourceFromFile(filename string) (PersistentReaderSource, error) {
+	var instance ref
+	ret := C.CCall_lib3mf_model_createpersistentsourcefromfile(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(filename)[0])), &instance)
+	if ret != 0 {
+		return PersistentReaderSource{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewPersistentReaderSource(instance), nil
+}
+
+// CreatePersistentSourceFromBuffer creates an OPC Reader Source from a memory buffer. The memory buffer MUST exist as long as the Source object exists.
+func (inst Model) CreatePersistentSourceFromBuffer(buffer []uint8) (PersistentReaderSource, error) {
+	var instance ref
+	ret := C.CCall_lib3mf_model_createpersistentsourcefrombuffer(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint64_t(len(buffer)), (*C.uint8_t)(unsafe.Pointer(&buffer[0])), &instance)
+	if ret != 0 {
+		return PersistentReaderSource{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewPersistentReaderSource(instance), nil
+}
+
+// CreatePersistentSourceFromCallback creates an OPC Reader Source from a data provided by a callback function. The callbacks MUST exist as long as the source object exists.
+func (inst Model) CreatePersistentSourceFromCallback(theReadCallback ReadCallbackFunc, streamSize uint64, theSeekCallback SeekCallbackFunc, userData uintptr) (PersistentReaderSource, error) {
+	var instance ref
+	ret := C.CCall_lib3mf_model_createpersistentsourcefromcallback(inst.wrapperRef.LibraryHandle, inst.Ref, (C.Lib3MFReadCallback)(unsafe.Pointer(C.Lib3MFReadCallback_cgo)), C.uint64_t(streamSize), (C.Lib3MFSeekCallback)(unsafe.Pointer(C.Lib3MFSeekCallback_cgo)), (C.Lib3MF_pvoid)(userData), &instance)
+	if ret != 0 {
+		return PersistentReaderSource{}, makeError(uint32(ret))
+	}
+	readCallbackFunc = theReadCallback
+	seekCallbackFunc = theSeekCallback
+	return inst.wrapperRef.NewPersistentReaderSource(instance), nil
 }
 
 

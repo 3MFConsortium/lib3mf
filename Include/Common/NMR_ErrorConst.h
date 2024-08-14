@@ -302,6 +302,159 @@ NMR_ErrorConst.h defines all error code constants.
 // Too many slices
 #define NMR_ERROR_TOOMANYSLICES 0x1053
 
+// Duplicate value
+#define NMR_ERROR_DUPLICATEVALUE 0x1054
+
+// Root node can not be deleted
+#define NMR_ERROR_ROOTNODECANNOTBEDELETED 0x1055
+
+// Tried to access invalidated node
+#define NMR_ERROR_TRIEDTOACCESSINVALIDATEDNODE 0x1056
+
+// XML child node is not unique
+#define NMR_ERROR_XMLCHILDNODEISNOTUNIQUE 0x1057
+
+// XML child node not found
+#define NMR_ERROR_XMLCHILDNODENOTFOUND 0x1058
+
+// XML attribute not found
+#define NMR_ERROR_XMLATTRIBUTENOTFOUND 0x1059
+
+// Duplicate XML attribute
+#define NMR_ERROR_DUPLICATEXMLATTRIBUTE 0x105A
+
+// Too many custom XML Data Entries
+#define NMR_ERROR_TOOMANYCUSTOMXMLDATAENTRIES 0x105B
+
+// Stream Chunk already open
+#define NMR_ERROR_STREAMCHUNKALREADYOPEN 0x105C
+
+// No Stream Chunk open
+#define NMR_ERROR_NOSTREAMCHUNKOPEN 0x105D
+
+// Stream writer already finished
+#define NMR_ERROR_STREAMWRITERALREADYFINISHED 0x105E
+
+// Stream writer not finished
+#define NMR_ERROR_STREAMWRITERNOTFINISHED 0x105F
+
+// Duplicate Binary Stream
+#define NMR_ERROR_DUPLICATEBINARYSTREAM 0x1060
+
+// Duplicate Binary Stream Path
+#define NMR_ERROR_DUPLICATEBINARYSTREAMPATH 0x1061
+
+// Could not compress data
+#define NMR_ERROR_COULDNOTCOMPRESSDATA 0x1062
+
+// Discretization Value out of range
+#define NMR_ERROR_BINARYCHUNK_DISCRETIZATIONVALUEOUTOFRANGE 0x1063
+
+// Duplicate Binary Stream UUID
+#define NMR_ERROR_DUPLICATEBINARYSTREAMUUID 0x1064
+
+// Binary stream not found
+#define NMR_ERROR_BINARYSTREAMNOTFOUND 0x1065
+
+// Binary streams not allowed
+#define NMR_ERROR_BINARYSTREAMSNOTALLOWED 0x1066
+
+// Invalid binary chunk stream
+#define NMR_ERROR_INVALIDCHUNKSTREAM 0x1067
+
+// Invalid binary chunk stream sign
+#define NMR_ERROR_INVALIDCHUNKSTREAMSIGN 0x1068
+
+// Invalid binary chunk stream version
+#define NMR_ERROR_INVALIDCHUNKSTREAMVERSION 0x1069
+
+// Too many binary chunks
+#define NMR_ERROR_TOOMANYBINARYCHUNKS 0x106A
+
+// Too many binary chunk entries
+#define NMR_ERROR_TOOMANYBINARYCHUNKENTRIES 0x106B
+
+// Duplicate chunk entry in binary stream
+#define NMR_ERROR_DUPLICATECHUNKENTRY 0x106C
+
+// Invalid file chunk data size
+#define NMR_ERROR_INVALIDFILECHUNKDATASIZE 0x106D
+
+// Invalid chunk compressed data
+#define NMR_ERROR_INVALIDCHUNKCOMPRESSEDDATA 0x106E
+
+// Could not uncompressed data
+#define NMR_ERROR_COULDNOTUNCOMPRESSDATA 0x106F
+
+// Binary chunk entry not found
+#define NMR_ERROR_BINARYCHUNKENTRYNOTFOUND 0x1070
+
+// Invalid chunk entry index
+#define NMR_ERROR_INVALIDENTRYINDEX 0x1071
+
+// Invalid chunk data
+#define NMR_ERROR_INVALIDCHUNKDATA 0x1072
+
+// Invalid chunk entry position
+#define NMR_ERROR_INVALIDCHUNKENTRYPOSITION 0x1073
+
+// Invalid chunk entry end position
+#define NMR_ERROR_INVALIDCHUNKENTRYENDPOSITION 0x1074
+
+// Invalid chunk entry size
+#define NMR_ERROR_INVALIDCHUNKENTRYSIZE 0x1075
+
+// Not enough data to read from chunk
+#define NMR_ERROR_NOTENOUGHDATATOREADFROMCHUNK 0x1076
+
+// Invalid chunk entry type
+#define NMR_ERROR_INVALIDCHUNKENTRYTYPE 0x1077
+
+// Unexpected chunk data type
+#define NMR_ERROR_UNEXPECTEDCHUNKDATATYPE 0x1078
+
+// Invalid float value
+#define NMR_ERROR_INVALIDFLOATVALUE 0x1079
+
+// Segment attribute defined after reading
+#define NMR_ERROR_SEGMENTATTRIBUTEDEFINEDAFTERREADING 0x107A
+
+// Invalid segment attribute type
+#define NMR_ERROR_INVALIDSEGMENTATTRIBUTETYPE 0x107B
+
+// Invalid segment attribute namespace
+#define NMR_ERROR_INVALIDSEGMENTATTRIBUTENAMESPACE 0x107C
+
+// Invalid segment attribute name
+#define NMR_ERROR_INVALIDSEGMENTATTRIBUTENAME 0x107D
+
+// Invalid segment attribute id
+#define NMR_ERROR_INVALIDSEGMENTATTRIBUTEID 0x107E
+
+// Invalid segment attribute data size
+#define NMR_ERROR_INVALIDSEGMENTATTRIBUTEDATASIZE 0x107F
+
+// Segment attribute is not uint32 
+#define NMR_ERROR_SEGMENTATTRIBUTEISNOTUINT32 0x1080
+
+// Segment attribute is not double
+#define NMR_ERROR_SEGMENTATTRIBUTEISNOTDOUBLE 0x1081
+
+// Segment attribute not found
+#define NMR_ERROR_SEGMENTATTRIBUTENOTFOUND 0x1082
+
+// Namespace prefix already defined
+#define NMR_ERROR_NAMESPACEPREFIXALREADYDEFINED 0x1083
+
+// Writer does not support namespaces
+#define NMR_ERROR_WRITERDOESNOTSUPPORTNAMESPACES 0x1084
+
+// Namespace prefix is reserved
+#define NMR_ERROR_NAMESPACEPREFIXISRESERVED 0x1085
+
+// Namespace not found
+#define NMR_ERROR_NAMESPACENOTFOUND 0x1086
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/
@@ -1224,12 +1377,70 @@ Model error codes (0x8XXX)
 
 // A transform attribute is duplicated
 #define NMR_ERROR_DUPLICATETRANSFORM 0x810C
-
 // A component resource is invalid
 #define NMR_ERROR_INVALIDCOMPONENTRESOURCE 0x810D
 
 // A keystore element is not base64 encoded
 #define NMR_ERROR_KEYSTOREINVALIDENCODING 0x810E
+
+
+// Duplicate Mesh Binary Path
+#define NMR_ERROR_DUPLICATEMESHBINARYPATH 0x810F
+
+// Invalid XML attribute in namespace
+#define NMR_ERROR_INVALIDBINARYELEMENTID 0x8110
+
+// No Binary stream available
+#define NMR_ERROR_NOBINARYSTREAMAVAILABLE 0x8111
+
+// Missing Name
+#define NMR_ERROR_MISSINGNAME 0x8112
+
+// Missing Laser Power
+#define NMR_ERROR_MISSINGLASERPOWER 0x8113
+
+// Missing Laser Speed
+#define NMR_ERROR_MISSINGLASERSPEED 0x8114
+
+// Missing Laser Focus
+#define NMR_ERROR_MISSINGLASERFOCUS 0x8115
+
+// Missing Path
+#define NMR_ERROR_MISSINGPATH 0x8116
+
+// Missing ZTop
+#define NMR_ERROR_MISSINGZTOP 0x8117
+
+// Duplicate ID
+#define NMR_ERROR_DUPLICATEID 0x8118
+
+// Missing ID
+#define NMR_ERROR_MISSINGID 0x8119
+
+// Duplicate Type Attribute
+#define NMR_ERROR_DUPLICATETYPEATTRIBUTE 0x811A
+
+// Invalid Type Attribute
+#define NMR_ERROR_INVALIDTYPEATTRIBUTE 0x811B
+
+// Missing Type Attribute
+#define NMR_ERROR_MISSINGTYPEATTRIBUTE 0x811C
+
+// Missing Coordinate
+#define NMR_ERROR_MISSINGCOORDINATE 0x811D
+
+// Data source is invalid
+#define NMR_ERROR_DATASOURCEISINVALIDATED 0x811E
+
+// Inconsistent binary stream count
+#define NMR_ERROR_INCONSISTENTBINARYSTREAMCOUNT 0x811F
+
+// Missing Unit Factor
+#define NMR_ERROR_MISSINGUNITFACTOR 0x8120
+
+// Invalid Mesh Binary Path
+#define NMR_ERROR_INVALIDMESHBINARYPATH 0x8121
+
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
@@ -1344,5 +1555,35 @@ Library errors (0xAXXX)
 // Using cryptographically weak random number generator
 #define NMR_ERROR_RNGCALLBACKNOTCRYPTOSTRONG 0XA00C
 
+/*-------------------------------------------------------------------
+Toolpath errors (0xBXXX)
+-------------------------------------------------------------------*/
+
+// Not in toolpath header writing mode
+#define NMR_ERROR_TOOLPATH_NOTWRITINGHEADER 0xB001
+
+// Not in toolpath data writing mode
+#define NMR_ERROR_TOOLPATH_NOTWRITINGDATA 0xB002
+
+// Toolpath has already been written out
+#define NMR_ERROR_TOOLPATH_DATAHASBEENWRITTEN 0xB003
+
+// Toolpath has an invalid number of points
+#define NMR_ERROR_TOOLPATH_INVALIDPOINTCOUNT 0xB004
+
+// Layer segment is not open
+#define NMR_ERROR_LAYERSEGMENTNOTOPEN 0xB005
+
+// Layer segment is already open
+#define NMR_ERROR_LAYERSEGMENTALREADYOPEN 0xB006
+
+// Profile value not found
+#define NMR_ERROR_PROFILEVALUENOTFOUND 0xB007
+
+// Too many profile values
+#define NMR_ERROR_TOOMANYPROFILEVALUES 0xB008
+
+// Too many profile values
+#define NMR_ERROR_INVALIDPARAMETERINDEX 0xB009
 
 #endif // __NMR_ERRORCONST

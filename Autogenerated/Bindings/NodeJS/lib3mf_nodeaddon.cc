@@ -49,11 +49,17 @@ void LoadLib3MF(const FunctionCallbackInfo<Value>& args)
 void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 {
 	CLib3MFBase::Init();
+	CLib3MFBinaryStream::Init();
 	CLib3MFWriter::Init();
+	CLib3MFPersistentReaderSource::Init();
 	CLib3MFReader::Init();
 	CLib3MFPackagePart::Init();
 	CLib3MFResource::Init();
 	CLib3MFResourceIterator::Init();
+	CLib3MFCustomXMLAttribute::Init();
+	CLib3MFCustomXMLNode::Init();
+	CLib3MFCustomXMLNodes::Init();
+	CLib3MFCustomDOMTree::Init();
 	CLib3MFSliceStackIterator::Init();
 	CLib3MFObjectIterator::Init();
 	CLib3MFMeshObjectIterator::Init();
@@ -82,6 +88,11 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFBuildItem::Init();
 	CLib3MFBuildItemIterator::Init();
 	CLib3MFSlice::Init();
+	CLib3MFToolpathProfile::Init();
+	CLib3MFToolpathLayerReader::Init();
+	CLib3MFToolpathLayerData::Init();
+	CLib3MFToolpath::Init();
+	CLib3MFToolpathIterator::Init();
 	CLib3MFSliceStack::Init();
 	CLib3MFConsumer::Init();
 	CLib3MFAccessRight::Init();

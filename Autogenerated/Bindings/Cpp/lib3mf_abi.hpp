@@ -67,6 +67,78 @@ extern "C" {
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_base_classtypeid(Lib3MF_Base pBase, Lib3MF_uint64 * pClassTypeId);
 
 /*************************************************************************************************************************
+ Class definition for BinaryStream
+**************************************************************************************************************************/
+
+/**
+* Retrieves an binary streams package path for the binary data.
+*
+* @param[in] pBinaryStream - BinaryStream instance.
+* @param[in] nPathBufferSize - size of the buffer (including trailing 0)
+* @param[out] pPathNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pPathBuffer -  buffer of binary streams package binary path., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_binarystream_getbinarypath(Lib3MF_BinaryStream pBinaryStream, const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char * pPathBuffer);
+
+/**
+* Retrieves an binary streams package path for the index data.
+*
+* @param[in] pBinaryStream - BinaryStream instance.
+* @param[in] nPathBufferSize - size of the buffer (including trailing 0)
+* @param[out] pPathNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pPathBuffer -  buffer of binary streams package index path., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_binarystream_getindexpath(Lib3MF_BinaryStream pBinaryStream, const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char * pPathBuffer);
+
+/**
+* Retrieves an binary streams uuid.
+*
+* @param[in] pBinaryStream - BinaryStream instance.
+* @param[in] nUUIDBufferSize - size of the buffer (including trailing 0)
+* @param[out] pUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pUUIDBuffer -  buffer of binary streams uuid, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_binarystream_getuuid(Lib3MF_BinaryStream pBinaryStream, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer);
+
+/**
+* Sets the float compression mode to raw. All subsequent writes will adhere to this mode.
+*
+* @param[in] pBinaryStream - BinaryStream instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_binarystream_disablediscretizedarraycompression(Lib3MF_BinaryStream pBinaryStream);
+
+/**
+* Sets the compression mode to a quantized array. All subsequent writes will adhere to this mode.
+*
+* @param[in] pBinaryStream - BinaryStream instance.
+* @param[in] dUnits - Unit factor to use for quantization.
+* @param[in] ePredictionType - Prediction type to use for arrays.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_binarystream_enablediscretizedarraycompression(Lib3MF_BinaryStream pBinaryStream, Lib3MF_double dUnits, Lib3MF::eBinaryStreamPredictionType ePredictionType);
+
+/**
+* Enables LZMA mode.
+*
+* @param[in] pBinaryStream - BinaryStream instance.
+* @param[in] nLZMALevel - LZMA Level (0-9)
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_binarystream_enablelzma(Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nLZMALevel);
+
+/**
+* Disables LZMA mode.
+*
+* @param[in] pBinaryStream - BinaryStream instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_binarystream_disablelzma(Lib3MF_BinaryStream pBinaryStream);
+
+/*************************************************************************************************************************
  Class definition for Writer
 **************************************************************************************************************************/
 
@@ -199,9 +271,79 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_writer_addkeywrappingcallback(Lib3MF_Writer 
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_writer_setcontentencryptioncallback(Lib3MF_Writer pWriter, Lib3MF::ContentEncryptionCallback pTheCallback, Lib3MF_pvoid pUserData);
 
+/**
+* Creates a binary stream object. Only applicable for 3MF Writers.
+*
+* @param[in] pWriter - Writer instance.
+* @param[in] pIndexPath - Package path to write the index into
+* @param[in] pBinaryPath - Package path to write raw binary data into
+* @param[out] pBinaryStream - Returns a package path.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_writer_createbinarystream(Lib3MF_Writer pWriter, const char * pIndexPath, const char * pBinaryPath, Lib3MF_BinaryStream * pBinaryStream);
+
+/**
+* Sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.
+*
+* @param[in] pWriter - Writer instance.
+* @param[in] pInstance - Object instance to assign Binary stream to.
+* @param[in] pBinaryStream - Binary stream object to use for this layer.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_writer_assignbinarystream(Lib3MF_Writer pWriter, Lib3MF_Base pInstance, Lib3MF_BinaryStream pBinaryStream);
+
+/**
+* Registers a custom 3MF Namespace. Fails if Prefix is already registered.
+*
+* @param[in] pWriter - Writer instance.
+* @param[in] pPrefix - Prefix to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number
+* @param[in] pNameSpace - Namespace to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_writer_registercustomnamespace(Lib3MF_Writer pWriter, const char * pPrefix, const char * pNameSpace);
+
+/*************************************************************************************************************************
+ Class definition for PersistentReaderSource
+**************************************************************************************************************************/
+
+/**
+* Retrieves the type of source data.
+*
+* @param[in] pPersistentReaderSource - PersistentReaderSource instance.
+* @param[out] pSourceType - Reader Source Type
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_persistentreadersource_getsourcetype(Lib3MF_PersistentReaderSource pPersistentReaderSource, Lib3MF::ePersistentReaderSourceType * pSourceType);
+
+/**
+* Invalidates the reader source. Every subsequent read on this data will fail.
+*
+* @param[in] pPersistentReaderSource - PersistentReaderSource instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_persistentreadersource_invalidatesourcedata(Lib3MF_PersistentReaderSource pPersistentReaderSource);
+
+/**
+* Checks if the source data is valid. Any read on an invalid source object will fail.
+*
+* @param[in] pPersistentReaderSource - PersistentReaderSource instance.
+* @param[out] pDataIsValid - The source data is valid.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_persistentreadersource_sourcedataisvalid(Lib3MF_PersistentReaderSource pPersistentReaderSource, bool * pDataIsValid);
+
 /*************************************************************************************************************************
  Class definition for Reader
 **************************************************************************************************************************/
+
+/**
+* Reads a model from a persistent source object. The object will be referenced until the Model is destroyed or cleared.
+*
+* @param[in] pReader - Reader instance.
+* @param[in] pSource - Source object to read from
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_reader_readfrompersistentsource(Lib3MF_Reader pReader, Lib3MF_PersistentReaderSource pSource);
 
 /**
 * Reads a model from a file. The file type is specified by the Model Reader class
@@ -444,6 +586,472 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_resourceiterator_clone(Lib3MF_ResourceIterat
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_resourceiterator_count(Lib3MF_ResourceIterator pResourceIterator, Lib3MF_uint64 * pCount);
+
+/*************************************************************************************************************************
+ Class definition for CustomXMLAttribute
+**************************************************************************************************************************/
+
+/**
+* Retrieves name of the attribute.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameBuffer -  buffer of returns the name of the attribute., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlattribute_getname(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer);
+
+/**
+* Retrieves value of the attribute as string.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] nValueBufferSize - size of the buffer (including trailing 0)
+* @param[out] pValueNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pValueBuffer -  buffer of returns the value of the attribute., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlattribute_getvalue(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, const Lib3MF_uint32 nValueBufferSize, Lib3MF_uint32* pValueNeededChars, char * pValueBuffer);
+
+/**
+* Checks if the value is a valid integer in the given range.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] nMinValue - Minimum allowed value
+* @param[in] nMaxValue - Maximum allowed value
+* @param[out] pIsValid - returns if the value is a valid integer.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlattribute_isvalidinteger(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_int64 nMinValue, Lib3MF_int64 nMaxValue, bool * pIsValid);
+
+/**
+* Returns the value as integer. Fails if the value is not a valid integer in the given range.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] nMinValue - Minimum allowed value
+* @param[in] nMaxValue - Maximum allowed value
+* @param[out] pValue - returns the value.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlattribute_getintegervalue(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_int64 nMinValue, Lib3MF_int64 nMaxValue, Lib3MF_int64 * pValue);
+
+/**
+* Checks if the value is a valid double in the given range.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] dMinValue - Minimum allowed value
+* @param[in] dMaxValue - Maximum allowed value
+* @param[out] pIsValid - returns if the value is a valid double.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlattribute_isvaliddouble(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_double dMinValue, Lib3MF_double dMaxValue, bool * pIsValid);
+
+/**
+* Returns the value as double. Fails if the value is not a valid double in the given range.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] dMinValue - Minimum allowed value
+* @param[in] dMaxValue - Maximum allowed value
+* @param[out] pValue - returns the value .
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlattribute_getdoublevalue(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_double dMinValue, Lib3MF_double dMaxValue, Lib3MF_double * pValue);
+
+/**
+* Checks if the value is a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[out] pIsValid - returns if the value is a valid bool.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlattribute_isvalidbool(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, bool * pIsValid);
+
+/**
+* Returns the value as bool. Fails if the value is not a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] dMinValue - Minimum allowed value
+* @param[in] dMaxValue - Maximum allowed value
+* @param[out] pValue - returns the value .
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlattribute_getboolvalue(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_double dMinValue, Lib3MF_double dMaxValue, bool * pValue);
+
+/**
+* Sets the value of the attribute as string.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] pValue - new value of the attribute.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlattribute_setvalue(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, const char * pValue);
+
+/**
+* Sets the value of the attribute as integer.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] nValue - new value of the attribute.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlattribute_setintegervalue(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_int64 nValue);
+
+/**
+* Sets the value of the attribute as double.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] dValue - new value of the attribute.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlattribute_setdoublevalue(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, Lib3MF_double dValue);
+
+/**
+* Sets the value of the attribute as bool.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @param[in] bValue - new value of the attribute.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlattribute_setboolvalue(Lib3MF_CustomXMLAttribute pCustomXMLAttribute, bool bValue);
+
+/**
+* Removes the attribute from its parent node. All subsequent calls to the class will fail.
+*
+* @param[in] pCustomXMLAttribute - CustomXMLAttribute instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlattribute_remove(Lib3MF_CustomXMLAttribute pCustomXMLAttribute);
+
+/*************************************************************************************************************************
+ Class definition for CustomXMLNode
+**************************************************************************************************************************/
+
+/**
+* Retrieves name of the node.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameBuffer -  buffer of returns the name of the node., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_getname(Lib3MF_CustomXMLNode pCustomXMLNode, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer);
+
+/**
+* Retrieves namespace of the node.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameSpaceBuffer -  buffer of returns the namespace of the node., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_getnamespace(Lib3MF_CustomXMLNode pCustomXMLNode, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer);
+
+/**
+* Returns number of attributes.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[out] pCount - returns the number of attributes.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_getattributecount(Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_uint64 * pCount);
+
+/**
+* Returns attribute instance. Fails if Index is out of range.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] nIndex - Index of the attribute to return (0-based).
+* @param[out] pAttributeInstance - XML Document attribute.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_getattribute(Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_uint64 nIndex, Lib3MF_CustomXMLAttribute * pAttributeInstance);
+
+/**
+* Returns if attribute of a specific name exists.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the attribute.
+* @param[out] pAttributeExists - Returns if the attribute exists.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_hasattribute(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool * pAttributeExists);
+
+/**
+* Returns attribute instance of a specific name. 
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the attribute.
+* @param[in] bMustExist - If true, the call fails if attribute does not exist. If falls, the call will return null if the attribute does not exist.
+* @param[out] pAttributeInstance - XML Document attribute.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_findattribute(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool bMustExist, Lib3MF_CustomXMLAttribute * pAttributeInstance);
+
+/**
+* Removes the attribute with a specific name. Does nothing if attribute does not exist.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the attribute.
+* @param[out] pAttributeRemoved - Returns true if an attribute was removed.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_removeattribute(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool * pAttributeRemoved);
+
+/**
+* Removes the attribute with a specific index. Fails if index is invalid
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] nIndex - Index of the attribute to remove (0-based).
+* @param[out] pAttributeRemoved - Returns true if an attribute was removed.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_removeattributebyindex(Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_uint64 nIndex, bool * pAttributeRemoved);
+
+/**
+* Adds an attribute with a specific name and string value. Fails if attribute already exists.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the attribute.
+* @param[in] pValue - Value of the attribute.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_addattribute(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, const char * pValue);
+
+/**
+* Adds an attribute with a specific name and integer value. Fails if attribute already exists.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the attribute.
+* @param[in] nValue - Value of the attribute.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_addintegerattribute(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_int64 nValue);
+
+/**
+* Adds an attribute with a specific name and double value. Fails if attribute already exists.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the attribute.
+* @param[in] dValue - Value of the attribute.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_adddoubleattribute(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_double dValue);
+
+/**
+* Adds an attribute with a specific name and bool value. Fails if attribute already exists.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the attribute.
+* @param[in] bValue - Value of the attribute.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_addboolattribute(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool bValue);
+
+/**
+* Returns all the child nodes of the XML Node.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[out] pChildNodes - returns the list of child nodes.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_getchildren(Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_CustomXMLNodes * pChildNodes);
+
+/**
+* Returns how many children of the XML Node have a specific name.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the node.
+* @param[out] pCount - returns the number children with the specified name.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_countchildrenbyname(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_uint64 * pCount);
+
+/**
+* Returns all the child nodes of the XML Node with a specific name.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the child.
+* @param[out] pChildNodes - returns the list of child nodes.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_getchildrenbyname(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_CustomXMLNodes * pChildNodes);
+
+/**
+* Returns if a child with a specific name exist.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the child.
+* @param[out] pChildExists - returns if a child with a specific name exists.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_haschild(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool * pChildExists);
+
+/**
+* Returns if a child with a specific name exist once and only once.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the child.
+* @param[out] pChildExists - returns if a child with a specific name exists once and only once.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_hasuniquechild(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool * pChildExists);
+
+/**
+* Returns child with a specific name. Throws an error if name does not exist once and only once.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the child.
+* @param[in] bMustExist - If true, the call fails if child does not exist. If falls, the call will return null if the child does not exist.
+* @param[out] pChildInstance - returns child instance or null.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_findchild(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, bool bMustExist, Lib3MF_CustomXMLNode * pChildInstance);
+
+/**
+* Adds a new child with a specific name.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the child.
+* @param[out] pChildInstance - returns child instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_addchild(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_CustomXMLNode * pChildInstance);
+
+/**
+* Removes a specific child. All subsequent calls to the child will fail after the call.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pChildInstance - child instance to remove. Fails if given instance is not a child of the node.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_removechild(Lib3MF_CustomXMLNode pCustomXMLNode, Lib3MF_CustomXMLNode pChildInstance);
+
+/**
+* Removes all children with a specific name. Does nothing if no child with the name exists. All subsequent calls to the deleted children will fail after the call.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @param[in] pName - Name of the children.
+* @param[out] pNumberOfDeletedChildren - Returns how many children have been deleted.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_removechildrenwithname(Lib3MF_CustomXMLNode pCustomXMLNode, const char * pName, Lib3MF_uint64 * pNumberOfDeletedChildren);
+
+/**
+* Removes the node from its parent. The root node of the document can not be removed. Any subsequent call to the node fails after this.
+*
+* @param[in] pCustomXMLNode - CustomXMLNode instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnode_remove(Lib3MF_CustomXMLNode pCustomXMLNode);
+
+/*************************************************************************************************************************
+ Class definition for CustomXMLNodes
+**************************************************************************************************************************/
+
+/**
+* Returns number of nodes.
+*
+* @param[in] pCustomXMLNodes - CustomXMLNodes instance.
+* @param[out] pCount - returns the number of nodes in the list.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnodes_getnodecount(Lib3MF_CustomXMLNodes pCustomXMLNodes, Lib3MF_uint64 * pCount);
+
+/**
+* Returns node instance. Fails if Index is out of range.
+*
+* @param[in] pCustomXMLNodes - CustomXMLNodes instance.
+* @param[in] nIndex - Index of the node to return (0-based).
+* @param[out] pNodeInstance - XML Node node.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnodes_getnode(Lib3MF_CustomXMLNodes pCustomXMLNodes, Lib3MF_uint64 nIndex, Lib3MF_CustomXMLNode * pNodeInstance);
+
+/**
+* Returns how many nodes of the XML Node have a specific name.
+*
+* @param[in] pCustomXMLNodes - CustomXMLNodes instance.
+* @param[in] pName - Name of the node.
+* @param[out] pCount - returns the number of nodes with the specified name.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnodes_countnodesbyname(Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, Lib3MF_uint64 * pCount);
+
+/**
+* Returns all the nodes nodes of the XML Node with a specific name.
+*
+* @param[in] pCustomXMLNodes - CustomXMLNodes instance.
+* @param[in] pName - Name of the node.
+* @param[out] pNodes - returns the list of node nodes.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnodes_getnodesbyname(Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, Lib3MF_CustomXMLNodes * pNodes);
+
+/**
+* Returns if a node with a specific name exist.
+*
+* @param[in] pCustomXMLNodes - CustomXMLNodes instance.
+* @param[in] pName - Name of the node.
+* @param[out] pNodeExists - returns if a node with a specific name exists.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnodes_hasnode(Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, bool * pNodeExists);
+
+/**
+* Returns if a node with a specific name exist once and only once.
+*
+* @param[in] pCustomXMLNodes - CustomXMLNodes instance.
+* @param[in] pName - Name of the node.
+* @param[out] pNodeExists - returns if a node with a specific name exists once and only once.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnodes_hasuniquenode(Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, bool * pNodeExists);
+
+/**
+* Returns node with a specific name. Throws an error if name does not exist once and only once.
+*
+* @param[in] pCustomXMLNodes - CustomXMLNodes instance.
+* @param[in] pName - Name of the node.
+* @param[in] bMustExist - If true, the call fails if node does not exist. If falls, the call will return null if the node does not exist.
+* @param[out] pNodeInstance - returns node instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customxmlnodes_findnode(Lib3MF_CustomXMLNodes pCustomXMLNodes, const char * pName, bool bMustExist, Lib3MF_CustomXMLNode * pNodeInstance);
+
+/*************************************************************************************************************************
+ Class definition for CustomDOMTree
+**************************************************************************************************************************/
+
+/**
+* Returns the namespace identifier for the DOM Tree.
+*
+* @param[in] pCustomDOMTree - CustomDOMTree instance.
+* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameSpaceBuffer -  buffer of returns the namespace of the DOM Tree., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customdomtree_getnamespace(Lib3MF_CustomDOMTree pCustomDOMTree, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer);
+
+/**
+* Returns root node of the tree.
+*
+* @param[in] pCustomDOMTree - CustomDOMTree instance.
+* @param[out] pRootNode - Root node of the document.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customdomtree_getrootnode(Lib3MF_CustomDOMTree pCustomDOMTree, Lib3MF_CustomXMLNode * pRootNode);
+
+/**
+* Saves the XML tree into a string.
+*
+* @param[in] pCustomDOMTree - CustomDOMTree instance.
+* @param[in] nXMLStringBufferSize - size of the buffer (including trailing 0)
+* @param[out] pXMLStringNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pXMLStringBuffer -  buffer of String with the XML Content., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_customdomtree_savetostring(Lib3MF_CustomDOMTree pCustomDOMTree, const Lib3MF_uint32 nXMLStringBufferSize, Lib3MF_uint32* pXMLStringNeededChars, char * pXMLStringBuffer);
 
 /*************************************************************************************************************************
  Class definition for SliceStackIterator
@@ -2429,6 +3037,805 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_slice_getpolygonindexcount(Lib3MF_Slice pSli
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_slice_getztop(Lib3MF_Slice pSlice, Lib3MF_double * pZTop);
 
 /*************************************************************************************************************************
+ Class definition for ToolpathProfile
+**************************************************************************************************************************/
+
+/**
+* Retrieves the profile's uuid
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] nUUIDBufferSize - size of the buffer (including trailing 0)
+* @param[out] pUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pUUIDBuffer -  buffer of Returns the uuid value., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathprofile_getuuid(Lib3MF_ToolpathProfile pToolpathProfile, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer);
+
+/**
+* Retrieves the profile's name
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameBuffer -  buffer of Returns the name., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathprofile_getname(Lib3MF_ToolpathProfile pToolpathProfile, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer);
+
+/**
+* Returns the number of parameters.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[out] pCount - Returns the number of parameters.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathprofile_getparametercount(Lib3MF_ToolpathProfile pToolpathProfile, Lib3MF_uint32 * pCount);
+
+/**
+* Returns the Name of a parameter.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] nIndex - Index of Parameter (0-based). Call will fail if an invalid index is given.
+* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameBuffer -  buffer of Returns the name of the parameter., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathprofile_getparametername(Lib3MF_ToolpathProfile pToolpathProfile, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer);
+
+/**
+* Returns the NameSpace of a parameter.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] nIndex - Index of Parameter (0-based). Call will fail if an invalid index is given.
+* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameSpaceBuffer -  buffer of Returns the namespace of the parameter., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathprofile_getparameternamespace(Lib3MF_ToolpathProfile pToolpathProfile, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer);
+
+/**
+* Checks if a parameter value exists.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
+* @param[out] pValueExists - Returns if a value exists.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathprofile_hasparametervalue(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, bool * pValueExists);
+
+/**
+* Retrieves a profile's parameter value. Fails if value does not exist.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
+* @param[in] nValueBufferSize - size of the buffer (including trailing 0)
+* @param[out] pValueNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pValueBuffer -  buffer of Returns the value of the field., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathprofile_getparametervalue(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, const Lib3MF_uint32 nValueBufferSize, Lib3MF_uint32* pValueNeededChars, char * pValueBuffer);
+
+/**
+* Retrieves a profile's parameter value
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
+* @param[in] pDefaultValue - Default value if value does not exist.
+* @param[in] nValueBufferSize - size of the buffer (including trailing 0)
+* @param[out] pValueNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pValueBuffer -  buffer of Returns the value of the field., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathprofile_getparametervaluedef(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, const char * pDefaultValue, const Lib3MF_uint32 nValueBufferSize, Lib3MF_uint32* pValueNeededChars, char * pValueBuffer);
+
+/**
+* Retrieves a profile's parameter value as double. Fails if value does not exist or is not a double value.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
+* @param[out] pValue - Returns the value of the field.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathprofile_getparameterdoublevalue(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_double * pValue);
+
+/**
+* Retrieves a profile's parameter value as double.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
+* @param[in] dDefaultValue - Default value if value does not exist or is not a double value.
+* @param[out] pValue - Returns the value of the field.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathprofile_getparameterdoublevaluedef(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_double dDefaultValue, Lib3MF_double * pValue);
+
+/**
+* Retrieves a profile's parameter value as integer. Fails if value does not exist or is not a integer value.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
+* @param[out] pValue - Returns the value of the field.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathprofile_getparameterintegervalue(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_int64 * pValue);
+
+/**
+* Retrieves a profile's parameter value as integer.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
+* @param[in] nDefaultValue - Default value if value does not exist or is not a integer value.
+* @param[out] pValue - Returns the value of the field.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathprofile_getparameterintegervaluedef(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_int64 nDefaultValue, Lib3MF_int64 * pValue);
+
+/**
+* Retrieves a profile's parameter value as boolean. Fails if value does not exist or is not a boolean value.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
+* @param[out] pValue - Returns the value of the field.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathprofile_getparameterboolvalue(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, bool * pValue);
+
+/**
+* Retrieves a profile's parameter value as boolean.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
+* @param[in] bDefaultValue - Default value if value does not exist or is not a boolean value.
+* @param[out] pValue - Returns the value of the field.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathprofile_getparameterboolvaluedef(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, bool bDefaultValue, bool * pValue);
+
+/**
+* Sets the profile's name
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pName - Returns the name.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathprofile_setname(Lib3MF_ToolpathProfile pToolpathProfile, const char * pName);
+
+/**
+* Sets a profile's parameter value.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
+* @param[in] pValue - String value of the parameter.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathprofile_setparametervalue(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, const char * pValue);
+
+/**
+* Sets a profile's parameter value as double.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
+* @param[in] dValue - Double value of the parameter.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathprofile_setparameterdoublevalue(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_double dValue);
+
+/**
+* Sets a profile's parameter value as integer.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
+* @param[in] nValue - Integer value of the parameter.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathprofile_setparameterintegervalue(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_int64 nValue);
+
+/**
+* Sets a profile's parameter value as boolean.
+*
+* @param[in] pToolpathProfile - ToolpathProfile instance.
+* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+* @param[in] pValueName - Value key string.
+* @param[in] bValue - Boolean value of the parameter.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathprofile_setparameterboolvalue(Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, bool bValue);
+
+/*************************************************************************************************************************
+ Class definition for ToolpathLayerReader
+**************************************************************************************************************************/
+
+/**
+* Retrieves the layerdata's uuid
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nUUIDBufferSize - size of the buffer (including trailing 0)
+* @param[out] pUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pUUIDBuffer -  buffer of Returns the uuid value., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getlayerdatauuid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer);
+
+/**
+* Retrieves the count of segments.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[out] pCount - Count
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentcount(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 * pCount);
+
+/**
+* Retrieves the segment type information .
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+* @param[out] pType - Segment Type
+* @param[out] pPointCount - Point count of segment.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentinfo(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF::eToolpathSegmentType * pType, Lib3MF_uint32 * pPointCount);
+
+/**
+* Retrieves the assigned segment profile.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+* @param[out] pProfile - Segment Profile
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentprofile(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_ToolpathProfile * pProfile);
+
+/**
+* Retrieves the assigned segment profile uuid.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+* @param[in] nProfileUUIDBufferSize - size of the buffer (including trailing 0)
+* @param[out] pProfileUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pProfileUUIDBuffer -  buffer of Segment Profile UUID, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentprofileuuid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nProfileUUIDBufferSize, Lib3MF_uint32* pProfileUUIDNeededChars, char * pProfileUUIDBuffer);
+
+/**
+* Retrieves the assigned segment profile.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+* @param[out] pBuildItem - Segment Build Item
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpart(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_BuildItem * pBuildItem);
+
+/**
+* Retrieves the assigned segment part uuid.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+* @param[in] nPartUUIDBufferSize - size of the buffer (including trailing 0)
+* @param[out] pPartUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pPartUUIDBuffer -  buffer of Segment Part UUID, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpartuuid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nPartUUIDBufferSize, Lib3MF_uint32* pPartUUIDNeededChars, char * pPartUUIDBuffer);
+
+/**
+* Retrieves the assigned segment part id. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+* @param[out] pLocalPartID - Local Segment Part ID
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentlocalpartid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 * pLocalPartID);
+
+/**
+* Retrieves the global part UUID by the local part ID. Fails if part ID does not exist in this layer. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nLocalPartID - Local Segment Part ID
+* @param[in] nPartUUIDBufferSize - size of the buffer (including trailing 0)
+* @param[out] pPartUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pPartUUIDBuffer -  buffer of Segment Part UUID, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nLocalPartID, const Lib3MF_uint32 nPartUUIDBufferSize, Lib3MF_uint32* pPartUUIDNeededChars, char * pPartUUIDBuffer);
+
+/**
+* Retrieves the assigned segment point list. For type hatch, the points are taken pairwise.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[out] pPointDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
+* @param[out] pPointDataBuffer - Position2D  buffer of The point data array
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpointdata(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer);
+
+/**
+* Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] pNameSpace - Namespace of the custom attribute.
+* @param[in] pAttributeName - Name of the custom attribute.
+* @param[out] pID - Attribute ID.
+* @param[out] pAttributeType - Attribute Type.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_findattributeinfobyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID, Lib3MF::eToolpathAttributeType * pAttributeType);
+
+/**
+* Retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] pNameSpace - Namespace of the custom attribute.
+* @param[in] pAttributeName - Name of the custom attribute.
+* @param[out] pID - Attribute ID.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_findattributeidbyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID);
+
+/**
+* Retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] pNameSpace - Namespace of the custom attribute.
+* @param[in] pAttributeName - Name of the custom attribute.
+* @param[out] pAttributeType - Attribute Type.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_findattributevaluebyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF::eToolpathAttributeType * pAttributeType);
+
+/**
+* Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+* @param[in] nID - Attribute ID.
+* @param[out] pValue - Attribute Value.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentintegerattributebyid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 nID, Lib3MF_int64 * pValue);
+
+/**
+* Retrieves a segment integer attribute by Attribute Name. Will fail if Attribute does not exist or is of different type.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+* @param[in] pNameSpace - Namespace of the custom attribute.
+* @param[in] pAttributeName - Name of the custom attribute.
+* @param[out] pValue - Attribute Value.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentintegerattributebyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const char * pNameSpace, const char * pAttributeName, Lib3MF_int64 * pValue);
+
+/**
+* Retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+* @param[in] nID - Attribute ID.
+* @param[out] pValue - Attribute Value.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 nID, Lib3MF_double * pValue);
+
+/**
+* Retrieves a segment Double attribute by Attribute Name. Will fail if Attribute does not exist.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+* @param[in] pNameSpace - Namespace of the custom attribute.
+* @param[in] pAttributeName - Name of the custom attribute.
+* @param[out] pValue - Attribute Value.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const char * pNameSpace, const char * pAttributeName, Lib3MF_double * pValue);
+
+/**
+* Retrieves the count of custom data elements.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[out] pCount - Count
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getcustomdatacount(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 * pCount);
+
+/**
+* Retrieves the custom data.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+* @param[out] pData - DOM Tree of the data.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getcustomdata(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_CustomDOMTree * pData);
+
+/**
+* Retrieves the node name of the custom data.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameSpaceBuffer -  buffer of Namespace of the custom data tree., may be NULL
+* @param[in] nDataNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pDataNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pDataNameBuffer -  buffer of Root name of the data tree., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getcustomdataname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer, const Lib3MF_uint32 nDataNameBufferSize, Lib3MF_uint32* pDataNameNeededChars, char * pDataNameBuffer);
+
+/*************************************************************************************************************************
+ Class definition for ToolpathLayerData
+**************************************************************************************************************************/
+
+/**
+* Retrieves the layerdata's uuid
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nUUIDBufferSize - size of the buffer (including trailing 0)
+* @param[out] pUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pUUIDBuffer -  buffer of Returns the uuid value., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_getlayerdatauuid(Lib3MF_ToolpathLayerData pToolpathLayerData, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer);
+
+/**
+* Registers a toolpath profile
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] pProfile - The toolpath profile to register.
+* @param[out] pProfileID - returns the local profile ID for the layer.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_registerprofile(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_ToolpathProfile pProfile, Lib3MF_uint32 * pProfileID);
+
+/**
+* Registers a Model Build Item
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] pBuildItem - The model build item to use.
+* @param[out] pPartID - returns the local part ID for the layer.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_registerbuilditem(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_BuildItem pBuildItem, Lib3MF_uint32 * pPartID);
+
+/**
+* Sets Segment Attribute for all following segments that are added. Overrides previously set attribute.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] pNameSpace - The namespace of the attribute to register.
+* @param[in] pAttributeName - The name of the attribute to register.
+* @param[in] pValue - The value of the attribute to register.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_setsegmentattribute(Lib3MF_ToolpathLayerData pToolpathLayerData, const char * pNameSpace, const char * pAttributeName, const char * pValue);
+
+/**
+* Clears current segment attributes.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_clearsegmentattributes(Lib3MF_ToolpathLayerData pToolpathLayerData);
+
+/**
+* writes hatch data to the layer.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - Position2D buffer of The point data
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writehatchdata(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer);
+
+/**
+* writes loop data to the layer.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - Position2D buffer of The point data
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writeloop(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer);
+
+/**
+* writes polyline data to the layer.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - Position2D buffer of The point data
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writepolyline(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer);
+
+/**
+* Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] pNameSpace - Namespace of the custom data tree. MUST not be empty.
+* @param[in] pDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
+* @param[out] pData - DOM Tree of the data.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_addcustomdata(Lib3MF_ToolpathLayerData pToolpathLayerData, const char * pNameSpace, const char * pDataName, Lib3MF_CustomDOMTree * pData);
+
+/**
+* finishes all writing of the layer and compresses toolpath data.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_finish(Lib3MF_ToolpathLayerData pToolpathLayerData);
+
+/*************************************************************************************************************************
+ Class definition for Toolpath
+**************************************************************************************************************************/
+
+/**
+* Retrieves the unit factor
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[out] pUnits - Returns the unit factor.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_getunits(Lib3MF_Toolpath pToolpath, Lib3MF_double * pUnits);
+
+/**
+* Retrieves the count of layers
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[out] pCount - Returns the layer count
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_getlayercount(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pCount);
+
+/**
+* Retrieves the count of profiles
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[out] pCount - Returns the profile count
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_getprofilecount(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pCount);
+
+/**
+* Adds a new toolpath layer
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nZMax - ZMax value
+* @param[in] pPath - Package Path
+* @param[in] pModelWriter - The model writer that writes out the 3MF.
+* @param[out] pLayerData - Returns the layerdata object to write the layer content into.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_addlayer(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nZMax, const char * pPath, Lib3MF_Writer pModelWriter, Lib3MF_ToolpathLayerData * pLayerData);
+
+/**
+* Retrieves the Attachment of a layer
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nIndex - Layer Index
+* @param[out] pAttachment - Attachment
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_getlayerattachment(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_Attachment * pAttachment);
+
+/**
+* Reads the toolpath of a layer.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nIndex - Layer Index
+* @param[out] pToolpathReader - Toolpath Reader Instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_readlayerdata(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_ToolpathLayerReader * pToolpathReader);
+
+/**
+* Retrieves the Path of a layer
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nIndex - Layer Index
+* @param[in] nPathBufferSize - size of the buffer (including trailing 0)
+* @param[out] pPathNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pPathBuffer -  buffer of Package Path, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_getlayerpath(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char * pPathBuffer);
+
+/**
+* Retrieves the ZMax of a layer
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nIndex - Layer Index
+* @param[out] pZMax - ZMax value
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_getlayerzmax(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_uint32 * pZMax);
+
+/**
+* Return the z value of a layer in units.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nLayerIndex - Layer Index.
+* @param[out] pZValue - Z Value in Units.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_getlayerz(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nLayerIndex, Lib3MF_uint32 * pZValue);
+
+/**
+* Adds a new profile to the toolpath.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] pName - the name.
+* @param[out] pProfile - Returns the profile.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_addprofile(Lib3MF_Toolpath pToolpath, const char * pName, Lib3MF_ToolpathProfile * pProfile);
+
+/**
+* Returns a profile of the toolpath.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nProfileIndex - Layer Index.
+* @param[out] pProfile - Returns the profile.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_getprofile(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nProfileIndex, Lib3MF_ToolpathProfile * pProfile);
+
+/**
+* Returns a profile of the toolpath by UUID.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] pProfileUUID - UUID string.
+* @param[out] pProfile - Returns the profile.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_getprofileuuid(Lib3MF_Toolpath pToolpath, const char * pProfileUUID, Lib3MF_ToolpathProfile * pProfile);
+
+/**
+* Retrieves the count of custom data elements.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[out] pCount - Count
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_getcustomdatacount(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pCount);
+
+/**
+* Retrieves the custom data.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+* @param[out] pData - DOM Tree of the data.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_getcustomdata(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_CustomDOMTree * pData);
+
+/**
+* Retrieves the node name of the custom data.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameSpaceBuffer -  buffer of Namespace of the custom data tree., may be NULL
+* @param[in] nDataNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pDataNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pDataNameBuffer -  buffer of Root name of the data tree., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_getcustomdataname(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer, const Lib3MF_uint32 nDataNameBufferSize, Lib3MF_uint32* pDataNameNeededChars, char * pDataNameBuffer);
+
+/**
+* Retrieves if custom data with a specific namespace and name combination exists.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] pNameSpace - Namespace of the custom data tree.
+* @param[in] pDataName - Root name of the data tree.
+* @param[out] pCustomDataExists - Returns true if DOM Tree Exists.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_hasuniquecustomdata(Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pDataName, bool * pCustomDataExists);
+
+/**
+* Retrieves the custom data with a specific namespace and name combination. Fails if combination is not unique.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] pNameSpace - Namespace of the custom data tree.
+* @param[in] pDataName - Root name of the data tree.
+* @param[out] pData - DOM Tree of the data.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_finduniquecustomdata(Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pDataName, Lib3MF_CustomDOMTree * pData);
+
+/**
+* Adds a custom data DOM tree to the toolpath.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] pNameSpace - Namespace of the custom data tree. MUST not be empty.
+* @param[in] pDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
+* @param[out] pData - DOM Tree of the data.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_addcustomdata(Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pDataName, Lib3MF_CustomDOMTree * pData);
+
+/**
+* Deletes all custom data.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[out] pNumberOfDeletedItems - Returns number of deleted items.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_clearcustomdata(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pNumberOfDeletedItems);
+
+/**
+* Deletes a custom data instance from the list.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] pData - DOM Tree of the data.
+* @param[out] pSuccess - Returns if deletion was successful.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_deletecustomdata(Lib3MF_Toolpath pToolpath, Lib3MF_CustomDOMTree pData, bool * pSuccess);
+
+/**
+* Registers an Integer Attribute that each segment holds.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] pNameSpace - Namespace of the custom data tree. MUST not be empty.
+* @param[in] pAttributeName - Attribute name. MUST not be empty.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_registercustomintegerattribute(Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pAttributeName);
+
+/**
+* Registers a Double Attribute that each segment holds. Registering only applies to reader or writer objects created after the call.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] pNameSpace - Namespace of the custom data tree. MUST not be empty.
+* @param[in] pAttributeName - Attribute name. MUST not be empty.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_registercustomdoubleattribute(Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pAttributeName);
+
+/*************************************************************************************************************************
+ Class definition for ToolpathIterator
+**************************************************************************************************************************/
+
+/**
+* Returns the Toolpath the iterator points at.
+*
+* @param[in] pToolpathIterator - ToolpathIterator instance.
+* @param[out] pResource - returns the Toolpath instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathiterator_getcurrenttoolpath(Lib3MF_ToolpathIterator pToolpathIterator, Lib3MF_Toolpath * pResource);
+
+/*************************************************************************************************************************
  Class definition for SliceStack
 **************************************************************************************************************************/
 
@@ -3275,6 +4682,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getcompositematerials(Lib3MF_Model pMo
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getmultipropertygroups(Lib3MF_Model pModel, Lib3MF_MultiPropertyGroupIterator * pResourceIterator);
 
 /**
+* creates a Toolpath instance with all toolpath resources.
+*
+* @param[in] pModel - Model instance.
+* @param[out] pResourceIterator - returns the iterator instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_gettoolpaths(Lib3MF_Model pModel, Lib3MF_ToolpathIterator * pResourceIterator);
+
+/**
 * creates a resource iterator instance with all slice stack resources.
 *
 * @param[in] pModel - Model instance.
@@ -3396,6 +4812,16 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addbuilditem(Lib3MF_Model pModel, Lib3
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_removebuilditem(Lib3MF_Model pModel, Lib3MF_BuildItem pBuildItemInstance);
+
+/**
+* adds an empty Toolpath resource to the model.
+*
+* @param[in] pModel - Model instance.
+* @param[in] dUnitFactor - The toolpath instance of the created Toolpath.
+* @param[out] pToolpathInstance - The toolpath instance of the created Toolpath.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addtoolpath(Lib3MF_Model pModel, Lib3MF_double dUnitFactor, Lib3MF_Toolpath * pToolpathInstance);
 
 /**
 * Returns the metadata of the model as MetaDataGroup
@@ -3527,6 +4953,40 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_setrandomnumbercallback(Lib3MF_Model p
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getkeystore(Lib3MF_Model pModel, Lib3MF_KeyStore * pKeyStore);
+
+/**
+* Creates an OPC Reader Source from a file.
+*
+* @param[in] pModel - Model instance.
+* @param[in] pFilename - Filename to read from
+* @param[out] pInstance - The instance of the created reader source
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_createpersistentsourcefromfile(Lib3MF_Model pModel, const char * pFilename, Lib3MF_PersistentReaderSource * pInstance);
+
+/**
+* Creates an OPC Reader Source from a memory buffer. The memory buffer MUST exist as long as the Source object exists.
+*
+* @param[in] pModel - Model instance.
+* @param[in] nBufferBufferSize - Number of elements in buffer
+* @param[in] pBufferBuffer - uint8 buffer of Buffer to read from
+* @param[out] pInstance - The instance of the created reader source
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_createpersistentsourcefrombuffer(Lib3MF_Model pModel, Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer, Lib3MF_PersistentReaderSource * pInstance);
+
+/**
+* Creates an OPC Reader Source from a data provided by a callback function. The callbacks MUST exist as long as the source object exists.
+*
+* @param[in] pModel - Model instance.
+* @param[in] pTheReadCallback - Callback to call for reading a data chunk
+* @param[in] nStreamSize - number of bytes the callback returns
+* @param[in] pTheSeekCallback - Callback to call for seeking in the stream.
+* @param[in] pUserData - Userdata that is passed to the callback function
+* @param[out] pInstance - The instance of the created reader source
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_createpersistentsourcefromcallback(Lib3MF_Model pModel, Lib3MF::ReadCallback pTheReadCallback, Lib3MF_uint64 nStreamSize, Lib3MF::SeekCallback pTheSeekCallback, Lib3MF_pvoid pUserData, Lib3MF_PersistentReaderSource * pInstance);
 
 /*************************************************************************************************************************
  Global functions

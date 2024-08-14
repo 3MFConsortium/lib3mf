@@ -1,0 +1,118 @@
+/*++
+
+Copyright (C) 2019 3MF Consortium
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+--*/
+
+#include "Model/ToolpathReader/NMR_ToolpathReaderNode_Profile.h" 
+
+#include "Model/Classes/NMR_ModelConstants.h" 
+#include "Common/3MF_ProgressMonitor.h"
+#include "Common/NMR_Exception.h"
+#include "Common/NMR_StringUtils.h"
+
+#include <iostream>
+#include <sstream>
+#include <algorithm>
+#include <iterator>
+
+namespace NMR {
+
+	CToolpathReaderNode_Profile::CToolpathReaderNode_Profile(_In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, CModelToolpathLayerReadData * pReadData)
+		: CModelReaderNode(pWarnings, pProgressMonitor), m_pReadData(pReadData), m_nProfileID(0)
+	{
+		if (pReadData == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+	}
+
+
+	void CToolpathReaderNode_Profile::parseXML(_In_ CXmlReader * pXMLReader)
+	{
+		// Parse name
+		parseName(pXMLReader);
+
+		// Parse attribute
+		parseAttributes(pXMLReader);
+
+		// Parse Content
+		parseContent(pXMLReader);
+
+	}
+
+	void CToolpathReaderNode_Profile::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
+	{
+		__NMRASSERT(pAttributeName);
+		__NMRASSERT(pAttributeValue);
+
+		if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_ID) == 0) {
+			if (hasProfileID())
+				throw CNMRException(NMR_ERROR_DUPLICATEID);
+
+			nfInt32 nValue = fnStringToInt32(pAttributeValue);
+			if ((nValue > 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
+				m_nProfileID = nValue;
+		}
+
+		if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_UUID) == 0) {
+			if (hasUUID())
+				throw CNMRException(NMR_ERROR_DUPLICATEUUID);
+			m_sUUID = pAttributeValue;
+		}
+
+	}
+
+	void CToolpathReaderNode_Profile::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
+	{
+
+	}
+
+	void CToolpathReaderNode_Profile::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	{
+	}
+
+	nfUint32 CToolpathReaderNode_Profile::getProfileID()
+	{
+		return m_nProfileID;
+	}
+
+	bool CToolpathReaderNode_Profile::hasProfileID()
+	{
+		return (m_nProfileID != 0);
+	}
+
+	std::string CToolpathReaderNode_Profile::getUUID()
+	{
+		return m_sUUID;
+	}
+
+	bool CToolpathReaderNode_Profile::hasUUID()
+	{
+		return (m_sUUID.length() > 0);
+	}
+
+
+}

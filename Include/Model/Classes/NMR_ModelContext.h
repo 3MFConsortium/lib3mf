@@ -64,7 +64,7 @@ namespace NMR {
 	public:
 		CModelContext() = delete;
 		CModelContext(_In_ PModel pModel);
-		virtual ~CModelContext() = default;
+		virtual ~CModelContext();
 
 		inline PModel const & model() const{
 			return m_pModel;
@@ -89,6 +89,8 @@ namespace NMR {
 
 		void SetProgressCallback(Lib3MFProgressCallback callback, void* userData);
 	};
+
+	typedef std::shared_ptr<CModelContext> PModelContext;
 }
 #endif // !NMR_MODELCONTEXT
 

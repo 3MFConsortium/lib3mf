@@ -38,6 +38,8 @@ A model writer exports the in memory represenation into the 3MF file.
 #include "Model/Classes/NMR_ModelContext.h"
 #include "Common/Platform/NMR_ExportStream.h" 
 #include "Common/3MF_ProgressMonitor.h" 
+#include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamWriter.h" 
+
 #include <list>
 
 namespace NMR {
@@ -45,15 +47,33 @@ namespace NMR {
 	class CModelWriter : public CModelContext{
 	private:
 		nfUint32 m_nDecimalPrecision;
+
+	protected:
+		nfBool m_bAllowBinaryStreams;
+		std::map<std::string, std::pair <std::string, PChunkedBinaryStreamWriter>> m_BinaryWriterUUIDMap;
+		std::map<std::string, std::string> m_BinaryWriterPathMap;
+		std::map<std::string, std::string> m_BinaryWriterAssignmentMap;
+
 	public:
 		CModelWriter() = delete;
 		CModelWriter(_In_ PModel pModel);
-		virtual ~CModelWriter() = default;
+		virtual ~CModelWriter();
 
 		virtual void exportToStream(_In_ PExportStream pStream) = 0;
 
+		void allowBinaryStreams ();
+
 		void SetDecimalPrecision(nfUint32);
 		nfUint32 GetDecimalPrecision();
+
+		void registerBinaryStream(const std::string& sPath, const std::string& sUUID, PChunkedBinaryStreamWriter pStreamWriter);
+		void unregisterBinaryStreams();
+
+		void assignBinaryStream(const std::string& InstanceUUID, const std::string& sBinaryStreamUUID);
+		CChunkedBinaryStreamWriter* findBinaryStream(const std::string& InstanceUUID, std::string& Path);
+
+		virtual void registerCustomNameSpace(const std::string & sPrefix, const std::string & sNameSpace, bool bFailIfExisting);
+
 	};
 
 	typedef std::shared_ptr <CModelWriter> PModelWriter;

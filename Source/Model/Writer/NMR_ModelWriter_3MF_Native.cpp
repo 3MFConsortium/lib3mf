@@ -180,7 +180,6 @@ namespace NMR {
 	{
 		__NMRASSERT(pModel != nullptr);
 		__NMRASSERT(pModelPart.get() != nullptr);
-		__NMRASSERT(pPackageWriter.get() != nullptr);
 
 		nfUint32 nCount = pModel->getAttachmentCount();
 		nfUint32 nIndex;
@@ -216,5 +215,43 @@ namespace NMR {
 				monitor()->IncrementProgress(1);
 			}
 		}
+
+
+		// Write Binary Streams
+		for (auto iBinaryIter : m_BinaryWriterUUIDMap) {
+
+			auto pBinaryWriter = iBinaryIter.second.second;
+
+			if (!pBinaryWriter->isEmpty()) {
+				pBinaryWriter->finishWriting();
+				POpcPackagePart pBinaryPart = m_pPackageWriter->addPart(pBinaryWriter->getBinaryPath ());
+				pModelPart->addRelationship("binary" + iBinaryIter.first, PACKAGE_BINARY_RELATIONSHIP_TYPE, pBinaryPart->getURI());
+				pBinaryWriter->copyBinaryToStream(pBinaryPart->getExportStream());
+
+				POpcPackagePart pIndexPart = m_pPackageWriter->addPart(pBinaryWriter->getIndexPath ());
+				pModelPart->addRelationship("binaryindex" + iBinaryIter.first, PACKAGE_BINARYINDEX_RELATIONSHIP_TYPE, pIndexPart->getURI());
+
+				pIndexPart->addRelationship("binary" + iBinaryIter.first, PACKAGE_BINARY_RELATIONSHIP_TYPE, pBinaryPart->getURI());				
+				pBinaryWriter->writeIndexXML(pIndexPart->getExportStream());
+				
+
+			}
+
+		}
+
+
+		// Write Additional Attachments that are not part of the model
+		for (auto iAttachmentIter : m_AdditionalAttachments) {
+			CUUID uuid;
+			POpcPackagePart pAttachmentPart = m_pPackageWriter->addPart(iAttachmentIter.first);
+			pModelPart->addRelationship("attachment" + uuid.toString(), iAttachmentIter.second.second, pAttachmentPart->getURI());
+
+			PImportStream pAttachmentStream = iAttachmentIter.second.first;
+			pAttachmentStream->seekPosition(0, true);
+			pAttachmentPart->getExportStream()->copyFrom(pAttachmentStream.get(), pAttachmentStream->retrieveSize(), MODELWRITER_NATIVE_BUFFERSIZE);
+		}
+
 	}
+
+
 }

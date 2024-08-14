@@ -58,11 +58,17 @@ namespace Lib3MF {
 **************************************************************************************************************************/
 class CWrapper;
 class CBase;
+class CBinaryStream;
 class CWriter;
+class CPersistentReaderSource;
 class CReader;
 class CPackagePart;
 class CResource;
 class CResourceIterator;
+class CCustomXMLAttribute;
+class CCustomXMLNode;
+class CCustomXMLNodes;
+class CCustomDOMTree;
 class CSliceStackIterator;
 class CObjectIterator;
 class CMeshObjectIterator;
@@ -91,6 +97,11 @@ class CTexture2D;
 class CBuildItem;
 class CBuildItemIterator;
 class CSlice;
+class CToolpathProfile;
+class CToolpathLayerReader;
+class CToolpathLayerData;
+class CToolpath;
+class CToolpathIterator;
 class CSliceStack;
 class CConsumer;
 class CAccessRight;
@@ -105,11 +116,17 @@ class CModel;
 **************************************************************************************************************************/
 typedef CWrapper CLib3MFWrapper;
 typedef CBase CLib3MFBase;
+typedef CBinaryStream CLib3MFBinaryStream;
 typedef CWriter CLib3MFWriter;
+typedef CPersistentReaderSource CLib3MFPersistentReaderSource;
 typedef CReader CLib3MFReader;
 typedef CPackagePart CLib3MFPackagePart;
 typedef CResource CLib3MFResource;
 typedef CResourceIterator CLib3MFResourceIterator;
+typedef CCustomXMLAttribute CLib3MFCustomXMLAttribute;
+typedef CCustomXMLNode CLib3MFCustomXMLNode;
+typedef CCustomXMLNodes CLib3MFCustomXMLNodes;
+typedef CCustomDOMTree CLib3MFCustomDOMTree;
 typedef CSliceStackIterator CLib3MFSliceStackIterator;
 typedef CObjectIterator CLib3MFObjectIterator;
 typedef CMeshObjectIterator CLib3MFMeshObjectIterator;
@@ -138,6 +155,11 @@ typedef CTexture2D CLib3MFTexture2D;
 typedef CBuildItem CLib3MFBuildItem;
 typedef CBuildItemIterator CLib3MFBuildItemIterator;
 typedef CSlice CLib3MFSlice;
+typedef CToolpathProfile CLib3MFToolpathProfile;
+typedef CToolpathLayerReader CLib3MFToolpathLayerReader;
+typedef CToolpathLayerData CLib3MFToolpathLayerData;
+typedef CToolpath CLib3MFToolpath;
+typedef CToolpathIterator CLib3MFToolpathIterator;
 typedef CSliceStack CLib3MFSliceStack;
 typedef CConsumer CLib3MFConsumer;
 typedef CAccessRight CLib3MFAccessRight;
@@ -152,11 +174,17 @@ typedef CModel CLib3MFModel;
 **************************************************************************************************************************/
 typedef std::shared_ptr<CWrapper> PWrapper;
 typedef std::shared_ptr<CBase> PBase;
+typedef std::shared_ptr<CBinaryStream> PBinaryStream;
 typedef std::shared_ptr<CWriter> PWriter;
+typedef std::shared_ptr<CPersistentReaderSource> PPersistentReaderSource;
 typedef std::shared_ptr<CReader> PReader;
 typedef std::shared_ptr<CPackagePart> PPackagePart;
 typedef std::shared_ptr<CResource> PResource;
 typedef std::shared_ptr<CResourceIterator> PResourceIterator;
+typedef std::shared_ptr<CCustomXMLAttribute> PCustomXMLAttribute;
+typedef std::shared_ptr<CCustomXMLNode> PCustomXMLNode;
+typedef std::shared_ptr<CCustomXMLNodes> PCustomXMLNodes;
+typedef std::shared_ptr<CCustomDOMTree> PCustomDOMTree;
 typedef std::shared_ptr<CSliceStackIterator> PSliceStackIterator;
 typedef std::shared_ptr<CObjectIterator> PObjectIterator;
 typedef std::shared_ptr<CMeshObjectIterator> PMeshObjectIterator;
@@ -185,6 +213,11 @@ typedef std::shared_ptr<CTexture2D> PTexture2D;
 typedef std::shared_ptr<CBuildItem> PBuildItem;
 typedef std::shared_ptr<CBuildItemIterator> PBuildItemIterator;
 typedef std::shared_ptr<CSlice> PSlice;
+typedef std::shared_ptr<CToolpathProfile> PToolpathProfile;
+typedef std::shared_ptr<CToolpathLayerReader> PToolpathLayerReader;
+typedef std::shared_ptr<CToolpathLayerData> PToolpathLayerData;
+typedef std::shared_ptr<CToolpath> PToolpath;
+typedef std::shared_ptr<CToolpathIterator> PToolpathIterator;
 typedef std::shared_ptr<CSliceStack> PSliceStack;
 typedef std::shared_ptr<CConsumer> PConsumer;
 typedef std::shared_ptr<CAccessRight> PAccessRight;
@@ -199,11 +232,17 @@ typedef std::shared_ptr<CModel> PModel;
 **************************************************************************************************************************/
 typedef PWrapper PLib3MFWrapper;
 typedef PBase PLib3MFBase;
+typedef PBinaryStream PLib3MFBinaryStream;
 typedef PWriter PLib3MFWriter;
+typedef PPersistentReaderSource PLib3MFPersistentReaderSource;
 typedef PReader PLib3MFReader;
 typedef PPackagePart PLib3MFPackagePart;
 typedef PResource PLib3MFResource;
 typedef PResourceIterator PLib3MFResourceIterator;
+typedef PCustomXMLAttribute PLib3MFCustomXMLAttribute;
+typedef PCustomXMLNode PLib3MFCustomXMLNode;
+typedef PCustomXMLNodes PLib3MFCustomXMLNodes;
+typedef PCustomDOMTree PLib3MFCustomDOMTree;
 typedef PSliceStackIterator PLib3MFSliceStackIterator;
 typedef PObjectIterator PLib3MFObjectIterator;
 typedef PMeshObjectIterator PLib3MFMeshObjectIterator;
@@ -232,6 +271,11 @@ typedef PTexture2D PLib3MFTexture2D;
 typedef PBuildItem PLib3MFBuildItem;
 typedef PBuildItemIterator PLib3MFBuildItemIterator;
 typedef PSlice PLib3MFSlice;
+typedef PToolpathProfile PLib3MFToolpathProfile;
+typedef PToolpathLayerReader PLib3MFToolpathLayerReader;
+typedef PToolpathLayerData PLib3MFToolpathLayerData;
+typedef PToolpath PLib3MFToolpath;
+typedef PToolpathIterator PLib3MFToolpathIterator;
 typedef PSliceStack PLib3MFSliceStack;
 typedef PConsumer PLib3MFConsumer;
 typedef PAccessRight PLib3MFAccessRight;
@@ -355,6 +399,10 @@ public:
 			case LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER: return "UNKOWNPROGRESSIDENTIFIER";
 			case LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: return "ELEMENTCOUNTEXCEEDSLIMIT";
 			case LIB3MF_ERROR_INVALIDRESOURCE: return "INVALIDRESOURCE";
+			case LIB3MF_ERROR_INVALIDNODEINDEX: return "INVALIDNODEINDEX";
+			case LIB3MF_ERROR_INVALIDATTRIBUTEINDEX: return "INVALIDATTRIBUTEINDEX";
+			case LIB3MF_ERROR_DUPLICATECUSTOMDATA: return "DUPLICATECUSTOMDATA";
+			case LIB3MF_ERROR_CUSTOMDATANOTFOUND: return "CUSTOMDATANOTFOUND";
 			case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "BEAMLATTICE_INVALID_OBJECTTYPE";
 			case LIB3MF_ERROR_INVALIDKEYSTORE: return "INVALIDKEYSTORE";
 			case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "INVALIDKEYSTORECONSUMER";
@@ -362,6 +410,16 @@ public:
 			case LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: return "KEYSTORERESOURCEDATANOTFOUND";
 			case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: return "SECURECONTEXTNOTREGISTERED";
 			case LIB3MF_ERROR_INVALIDKEYSIZE: return "INVALIDKEYSIZE";
+			case LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER: return "TOOLPATH_NOTWRITINGHEADER";
+			case LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA: return "TOOLPATH_NOTWRITINGDATA";
+			case LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "TOOLPATH_DATAHASBEENWRITTEN";
+			case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "TOOLPATH_INVALIDPOINTCOUNT";
+			case LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED: return "TOOLPATH_ATTRIBUTEALREADYDEFINED";
+			case LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE: return "TOOLPATH_INVALIDATTRIBUTETYPE";
+			case LIB3MF_ERROR_EMPTYNAMESPACEPREFIX: return "EMPTYNAMESPACEPREFIX";
+			case LIB3MF_ERROR_EMPTYNAMESPACE: return "EMPTYNAMESPACE";
+			case LIB3MF_ERROR_INVALIDNAMESPACEPREFIX: return "INVALIDNAMESPACEPREFIX";
+			case LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES: return "WRITERDOESNOTSUPPORTNAMESPACES";
 		}
 		return "UNKNOWN";
 	}
@@ -406,13 +464,27 @@ public:
 			case LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER: return "A progress identifier is unknown";
 			case LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: return "An element buffer exceeds its spec limit";
 			case LIB3MF_ERROR_INVALIDRESOURCE: return "A resource is invalid";
+			case LIB3MF_ERROR_INVALIDNODEINDEX: return "Invalid node index";
+			case LIB3MF_ERROR_INVALIDATTRIBUTEINDEX: return "Invalid attribute index";
+			case LIB3MF_ERROR_DUPLICATECUSTOMDATA: return "Duplicate custom data";
+			case LIB3MF_ERROR_CUSTOMDATANOTFOUND: return "Custom data not found";
 			case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "This object type is not valid for beamlattices";
 			case LIB3MF_ERROR_INVALIDKEYSTORE: return "The keystore object is invalid";
 			case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "The consumer keystore object is invalid";
 			case LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND: return "A consumer has not been found";
 			case LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: return "A resource data has not been found";
 			case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: return "A Key or Conentent encryption callback has not been registered";
-			case LIB3MF_ERROR_INVALIDKEYSIZE: return "The key siue is invalid";
+			case LIB3MF_ERROR_INVALIDKEYSIZE: return "The key size is invalid";
+			case LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER: return "Not in toolpath header writing mode";
+			case LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA: return "Not in toolpath data writing mode";
+			case LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "Toolpath has already been written out";
+			case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "Toolpath has an invalid number of points";
+			case LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED: return "Toolpath attribute already defined";
+			case LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE: return "Toolpath attribute is of invalid type";
+			case LIB3MF_ERROR_EMPTYNAMESPACEPREFIX: return "Empty namespace prefix.";
+			case LIB3MF_ERROR_EMPTYNAMESPACE: return "Empty namespace.";
+			case LIB3MF_ERROR_INVALIDNAMESPACEPREFIX: return "Invalid namespace prefix.";
+			case LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES: return "Writer does not support namespaces.";
 		}
 		return "unknown error";
 	}
@@ -546,11 +618,17 @@ private:
 	Lib3MFResult loadWrapperTableFromSymbolLookupMethod(sLib3MFDynamicWrapperTable * pWrapperTable, void* pSymbolLookupMethod);
 
 	friend class CBase;
+	friend class CBinaryStream;
 	friend class CWriter;
+	friend class CPersistentReaderSource;
 	friend class CReader;
 	friend class CPackagePart;
 	friend class CResource;
 	friend class CResourceIterator;
+	friend class CCustomXMLAttribute;
+	friend class CCustomXMLNode;
+	friend class CCustomXMLNodes;
+	friend class CCustomDOMTree;
 	friend class CSliceStackIterator;
 	friend class CObjectIterator;
 	friend class CMeshObjectIterator;
@@ -579,6 +657,11 @@ private:
 	friend class CBuildItem;
 	friend class CBuildItemIterator;
 	friend class CSlice;
+	friend class CToolpathProfile;
+	friend class CToolpathLayerReader;
+	friend class CToolpathLayerData;
+	friend class CToolpath;
+	friend class CToolpathIterator;
 	friend class CSliceStack;
 	friend class CConsumer;
 	friend class CAccessRight;
@@ -649,6 +732,29 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CBinaryStream 
+**************************************************************************************************************************/
+class CBinaryStream : public CBase {
+public:
+	
+	/**
+	* CBinaryStream::CBinaryStream - Constructor for BinaryStream class.
+	*/
+	CBinaryStream(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetBinaryPath();
+	inline std::string GetIndexPath();
+	inline std::string GetUUID();
+	inline void DisableDiscretizedArrayCompression();
+	inline void EnableDiscretizedArrayCompression(const Lib3MF_double dUnits, const eBinaryStreamPredictionType ePredictionType);
+	inline void EnableLZMA(const Lib3MF_uint32 nLZMALevel);
+	inline void DisableLZMA();
+};
+	
+/*************************************************************************************************************************
  Class CWriter 
 **************************************************************************************************************************/
 class CWriter : public CBase {
@@ -675,6 +781,28 @@ public:
 	inline Lib3MF_uint32 GetWarningCount();
 	inline void AddKeyWrappingCallback(const std::string & sConsumerID, const KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData);
 	inline void SetContentEncryptionCallback(const ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData);
+	inline PBinaryStream CreateBinaryStream(const std::string & sIndexPath, const std::string & sBinaryPath);
+	inline void AssignBinaryStream(classParam<CBase> pInstance, classParam<CBinaryStream> pBinaryStream);
+	inline void RegisterCustomNamespace(const std::string & sPrefix, const std::string & sNameSpace);
+};
+	
+/*************************************************************************************************************************
+ Class CPersistentReaderSource 
+**************************************************************************************************************************/
+class CPersistentReaderSource : public CBase {
+public:
+	
+	/**
+	* CPersistentReaderSource::CPersistentReaderSource - Constructor for PersistentReaderSource class.
+	*/
+	CPersistentReaderSource(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline ePersistentReaderSourceType GetSourceType();
+	inline void InvalidateSourceData();
+	inline bool SourceDataIsValid();
 };
 	
 /*************************************************************************************************************************
@@ -691,6 +819,7 @@ public:
 	{
 	}
 	
+	inline void ReadFromPersistentSource(classParam<CPersistentReaderSource> pSource);
 	inline void ReadFromFile(const std::string & sFilename);
 	inline void ReadFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer);
 	inline void ReadFromCallback(const ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData);
@@ -763,6 +892,115 @@ public:
 	inline PResource GetCurrent();
 	inline PResourceIterator Clone();
 	inline Lib3MF_uint64 Count();
+};
+	
+/*************************************************************************************************************************
+ Class CCustomXMLAttribute 
+**************************************************************************************************************************/
+class CCustomXMLAttribute : public CBase {
+public:
+	
+	/**
+	* CCustomXMLAttribute::CCustomXMLAttribute - Constructor for CustomXMLAttribute class.
+	*/
+	CCustomXMLAttribute(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetName();
+	inline std::string GetValue();
+	inline bool IsValidInteger(const Lib3MF_int64 nMinValue, const Lib3MF_int64 nMaxValue);
+	inline Lib3MF_int64 GetIntegerValue(const Lib3MF_int64 nMinValue, const Lib3MF_int64 nMaxValue);
+	inline bool IsValidDouble(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue);
+	inline Lib3MF_double GetDoubleValue(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue);
+	inline bool IsValidBool();
+	inline bool GetBoolValue(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue);
+	inline void SetValue(const std::string & sValue);
+	inline void SetIntegerValue(const Lib3MF_int64 nValue);
+	inline void SetDoubleValue(const Lib3MF_double dValue);
+	inline void SetBoolValue(const bool bValue);
+	inline void Remove();
+};
+	
+/*************************************************************************************************************************
+ Class CCustomXMLNode 
+**************************************************************************************************************************/
+class CCustomXMLNode : public CBase {
+public:
+	
+	/**
+	* CCustomXMLNode::CCustomXMLNode - Constructor for CustomXMLNode class.
+	*/
+	CCustomXMLNode(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetName();
+	inline std::string GetNameSpace();
+	inline Lib3MF_uint64 GetAttributeCount();
+	inline PCustomXMLAttribute GetAttribute(const Lib3MF_uint64 nIndex);
+	inline bool HasAttribute(const std::string & sName);
+	inline PCustomXMLAttribute FindAttribute(const std::string & sName, const bool bMustExist);
+	inline bool RemoveAttribute(const std::string & sName);
+	inline bool RemoveAttributeByIndex(const Lib3MF_uint64 nIndex);
+	inline void AddAttribute(const std::string & sName, const std::string & sValue);
+	inline void AddIntegerAttribute(const std::string & sName, const Lib3MF_int64 nValue);
+	inline void AddDoubleAttribute(const std::string & sName, const Lib3MF_double dValue);
+	inline void AddBoolAttribute(const std::string & sName, const bool bValue);
+	inline PCustomXMLNodes GetChildren();
+	inline Lib3MF_uint64 CountChildrenByName(const std::string & sName);
+	inline PCustomXMLNodes GetChildrenByName(const std::string & sName);
+	inline bool HasChild(const std::string & sName);
+	inline bool HasUniqueChild(const std::string & sName);
+	inline PCustomXMLNode FindChild(const std::string & sName, const bool bMustExist);
+	inline PCustomXMLNode AddChild(const std::string & sName);
+	inline void RemoveChild(classParam<CCustomXMLNode> pChildInstance);
+	inline Lib3MF_uint64 RemoveChildrenWithName(const std::string & sName);
+	inline void Remove();
+};
+	
+/*************************************************************************************************************************
+ Class CCustomXMLNodes 
+**************************************************************************************************************************/
+class CCustomXMLNodes : public CBase {
+public:
+	
+	/**
+	* CCustomXMLNodes::CCustomXMLNodes - Constructor for CustomXMLNodes class.
+	*/
+	CCustomXMLNodes(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline Lib3MF_uint64 GetNodeCount();
+	inline PCustomXMLNode GetNode(const Lib3MF_uint64 nIndex);
+	inline Lib3MF_uint64 CountNodesByName(const std::string & sName);
+	inline PCustomXMLNodes GetNodesByName(const std::string & sName);
+	inline bool HasNode(const std::string & sName);
+	inline bool HasUniqueNode(const std::string & sName);
+	inline PCustomXMLNode FindNode(const std::string & sName, const bool bMustExist);
+};
+	
+/*************************************************************************************************************************
+ Class CCustomDOMTree 
+**************************************************************************************************************************/
+class CCustomDOMTree : public CBase {
+public:
+	
+	/**
+	* CCustomDOMTree::CCustomDOMTree - Constructor for CustomDOMTree class.
+	*/
+	CCustomDOMTree(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetNameSpace();
+	inline PCustomXMLNode GetRootNode();
+	inline std::string SaveToString();
 };
 	
 /*************************************************************************************************************************
@@ -1406,6 +1644,158 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CToolpathProfile 
+**************************************************************************************************************************/
+class CToolpathProfile : public CBase {
+public:
+	
+	/**
+	* CToolpathProfile::CToolpathProfile - Constructor for ToolpathProfile class.
+	*/
+	CToolpathProfile(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetUUID();
+	inline std::string GetName();
+	inline Lib3MF_uint32 GetParameterCount();
+	inline std::string GetParameterName(const Lib3MF_uint32 nIndex);
+	inline std::string GetParameterNameSpace(const Lib3MF_uint32 nIndex);
+	inline bool HasParameterValue(const std::string & sNameSpaceName, const std::string & sValueName);
+	inline std::string GetParameterValue(const std::string & sNameSpaceName, const std::string & sValueName);
+	inline std::string GetParameterValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const std::string & sDefaultValue);
+	inline Lib3MF_double GetParameterDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName);
+	inline Lib3MF_double GetParameterDoubleValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dDefaultValue);
+	inline Lib3MF_int64 GetParameterIntegerValue(const std::string & sNameSpaceName, const std::string & sValueName);
+	inline Lib3MF_int64 GetParameterIntegerValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_int64 nDefaultValue);
+	inline bool GetParameterBoolValue(const std::string & sNameSpaceName, const std::string & sValueName);
+	inline bool GetParameterBoolValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const bool bDefaultValue);
+	inline void SetName(const std::string & sName);
+	inline void SetParameterValue(const std::string & sNameSpaceName, const std::string & sValueName, const std::string & sValue);
+	inline void SetParameterDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dValue);
+	inline void SetParameterIntegerValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_int64 nValue);
+	inline void SetParameterBoolValue(const std::string & sNameSpaceName, const std::string & sValueName, const bool bValue);
+};
+	
+/*************************************************************************************************************************
+ Class CToolpathLayerReader 
+**************************************************************************************************************************/
+class CToolpathLayerReader : public CBase {
+public:
+	
+	/**
+	* CToolpathLayerReader::CToolpathLayerReader - Constructor for ToolpathLayerReader class.
+	*/
+	CToolpathLayerReader(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetLayerDataUUID();
+	inline Lib3MF_uint32 GetSegmentCount();
+	inline void GetSegmentInfo(const Lib3MF_uint32 nIndex, eToolpathSegmentType & eType, Lib3MF_uint32 & nPointCount);
+	inline PToolpathProfile GetSegmentProfile(const Lib3MF_uint32 nIndex);
+	inline std::string GetSegmentProfileUUID(const Lib3MF_uint32 nIndex);
+	inline PBuildItem GetSegmentPart(const Lib3MF_uint32 nIndex);
+	inline std::string GetSegmentPartUUID(const Lib3MF_uint32 nIndex);
+	inline Lib3MF_uint32 GetSegmentLocalPartID(const Lib3MF_uint32 nIndex);
+	inline std::string GetPartUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID);
+	inline void GetSegmentPointData(const Lib3MF_uint32 nIndex, std::vector<sPosition2D> & PointDataBuffer);
+	inline void FindAttributeInfoByName(const std::string & sNameSpace, const std::string & sAttributeName, Lib3MF_uint32 & nID, eToolpathAttributeType & eAttributeType);
+	inline Lib3MF_uint32 FindAttributeIDByName(const std::string & sNameSpace, const std::string & sAttributeName);
+	inline eToolpathAttributeType FindAttributeValueByName(const std::string & sNameSpace, const std::string & sAttributeName);
+	inline Lib3MF_int64 GetSegmentIntegerAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID);
+	inline Lib3MF_int64 GetSegmentIntegerAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName);
+	inline Lib3MF_double GetSegmentDoubleAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID);
+	inline Lib3MF_double GetSegmentDoubleAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName);
+	inline Lib3MF_uint32 GetCustomDataCount();
+	inline PCustomDOMTree GetCustomData(const Lib3MF_uint32 nIndex);
+	inline void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName);
+};
+	
+/*************************************************************************************************************************
+ Class CToolpathLayerData 
+**************************************************************************************************************************/
+class CToolpathLayerData : public CBase {
+public:
+	
+	/**
+	* CToolpathLayerData::CToolpathLayerData - Constructor for ToolpathLayerData class.
+	*/
+	CToolpathLayerData(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetLayerDataUUID();
+	inline Lib3MF_uint32 RegisterProfile(classParam<CToolpathProfile> pProfile);
+	inline Lib3MF_uint32 RegisterBuildItem(classParam<CBuildItem> pBuildItem);
+	inline void SetSegmentAttribute(const std::string & sNameSpace, const std::string & sAttributeName, const std::string & sValue);
+	inline void ClearSegmentAttributes();
+	inline void WriteHatchData(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
+	inline void WriteLoop(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
+	inline void WritePolyline(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
+	inline PCustomDOMTree AddCustomData(const std::string & sNameSpace, const std::string & sDataName);
+	inline void Finish();
+};
+	
+/*************************************************************************************************************************
+ Class CToolpath 
+**************************************************************************************************************************/
+class CToolpath : public CResource {
+public:
+	
+	/**
+	* CToolpath::CToolpath - Constructor for Toolpath class.
+	*/
+	CToolpath(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CResource(pWrapper, pHandle)
+	{
+	}
+	
+	inline Lib3MF_double GetUnits();
+	inline Lib3MF_uint32 GetLayerCount();
+	inline Lib3MF_uint32 GetProfileCount();
+	inline PToolpathLayerData AddLayer(const Lib3MF_uint32 nZMax, const std::string & sPath, classParam<CWriter> pModelWriter);
+	inline PAttachment GetLayerAttachment(const Lib3MF_uint32 nIndex);
+	inline PToolpathLayerReader ReadLayerData(const Lib3MF_uint32 nIndex);
+	inline std::string GetLayerPath(const Lib3MF_uint32 nIndex);
+	inline Lib3MF_uint32 GetLayerZMax(const Lib3MF_uint32 nIndex);
+	inline Lib3MF_uint32 GetLayerZ(const Lib3MF_uint32 nLayerIndex);
+	inline PToolpathProfile AddProfile(const std::string & sName);
+	inline PToolpathProfile GetProfile(const Lib3MF_uint32 nProfileIndex);
+	inline PToolpathProfile GetProfileUUID(const std::string & sProfileUUID);
+	inline Lib3MF_uint32 GetCustomDataCount();
+	inline PCustomDOMTree GetCustomData(const Lib3MF_uint32 nIndex);
+	inline void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName);
+	inline bool HasUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName);
+	inline PCustomDOMTree FindUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName);
+	inline PCustomDOMTree AddCustomData(const std::string & sNameSpace, const std::string & sDataName);
+	inline Lib3MF_uint32 ClearCustomData();
+	inline bool DeleteCustomData(classParam<CCustomDOMTree> pData);
+	inline void RegisterCustomIntegerAttribute(const std::string & sNameSpace, const std::string & sAttributeName);
+	inline void RegisterCustomDoubleAttribute(const std::string & sNameSpace, const std::string & sAttributeName);
+};
+	
+/*************************************************************************************************************************
+ Class CToolpathIterator 
+**************************************************************************************************************************/
+class CToolpathIterator : public CResourceIterator {
+public:
+	
+	/**
+	* CToolpathIterator::CToolpathIterator - Constructor for ToolpathIterator class.
+	*/
+	CToolpathIterator(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CResourceIterator(pWrapper, pHandle)
+	{
+	}
+	
+	inline PToolpath GetCurrentToolpath();
+};
+	
+/*************************************************************************************************************************
  Class CSliceStack 
 **************************************************************************************************************************/
 class CSliceStack : public CResource {
@@ -1614,6 +2004,7 @@ public:
 	inline PTexture2DGroupIterator GetTexture2DGroups();
 	inline PCompositeMaterialsIterator GetCompositeMaterials();
 	inline PMultiPropertyGroupIterator GetMultiPropertyGroups();
+	inline PToolpathIterator GetToolpaths();
 	inline PSliceStackIterator GetSliceStacks();
 	inline PModel MergeToModel();
 	inline PMeshObject AddMeshObject();
@@ -1627,6 +2018,7 @@ public:
 	inline PMultiPropertyGroup AddMultiPropertyGroup();
 	inline PBuildItem AddBuildItem(classParam<CObject> pObject, const sTransform & Transform);
 	inline void RemoveBuildItem(classParam<CBuildItem> pBuildItemInstance);
+	inline PToolpath AddToolpath(const Lib3MF_double dUnitFactor);
 	inline PMetaDataGroup GetMetaDataGroup();
 	inline PAttachment AddAttachment(const std::string & sURI, const std::string & sRelationShipType);
 	inline void RemoveAttachment(classParam<CAttachment> pAttachmentInstance);
@@ -1641,6 +2033,9 @@ public:
 	inline void RemoveCustomContentType(const std::string & sExtension);
 	inline void SetRandomNumberCallback(const RandomNumberCallback pTheCallback, const Lib3MF_pvoid pUserData);
 	inline PKeyStore GetKeyStore();
+	inline PPersistentReaderSource CreatePersistentSourceFromFile(const std::string & sFilename);
+	inline PPersistentReaderSource CreatePersistentSourceFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer);
+	inline PPersistentReaderSource CreatePersistentSourceFromCallback(const ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData);
 };
 
 /*************************************************************************************************************************
@@ -1660,11 +2055,17 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	CheckError(nullptr, m_WrapperTable.m_Base_ClassTypeId(pHandle, &resultClassTypeId));
 	switch(resultClassTypeId) {
 		case 0x856632D0BAF1D8B7UL: return new CBase(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Base"
+		case 0xA0EB26254C981E1AUL: return new CBinaryStream(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BinaryStream"
 		case 0xE76F642F363FD7E9UL: return new CWriter(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Writer"
+		case 0xBE46884397CE1319UL: return new CPersistentReaderSource(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::PersistentReaderSource"
 		case 0x2D86831DA59FBE72UL: return new CReader(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Reader"
 		case 0x0E55A826D377483EUL: return new CPackagePart(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::PackagePart"
 		case 0xDFE3889D1B269CBBUL: return new CResource(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Resource"
 		case 0x460F3515E2621DBEUL: return new CResourceIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ResourceIterator"
+		case 0xEA18C54DBD42B5F6UL: return new CCustomXMLAttribute(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::CustomXMLAttribute"
+		case 0x26B5AD02041EDF96UL: return new CCustomXMLNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::CustomXMLNode"
+		case 0x8C4B47C97D310E89UL: return new CCustomXMLNodes(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::CustomXMLNodes"
+		case 0x5E0CF70A6DB6256AUL: return new CCustomDOMTree(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::CustomDOMTree"
 		case 0x69684DB99FA813F6UL: return new CSliceStackIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::SliceStackIterator"
 		case 0xDE92510BD2112288UL: return new CObjectIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ObjectIterator"
 		case 0xF4196034E2B9FDE6UL: return new CMeshObjectIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObjectIterator"
@@ -1693,6 +2094,11 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0x68FB2D5FFC4BA12AUL: return new CBuildItem(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItem"
 		case 0xA7D21BD364910860UL: return new CBuildItemIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItemIterator"
 		case 0x2198BCF4D8DF9C40UL: return new CSlice(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Slice"
+		case 0xC869620B90242CA7UL: return new CToolpathProfile(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathProfile"
+		case 0x28DD7D3718F0616EUL: return new CToolpathLayerReader(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerReader"
+		case 0x28C0E70CC44F931AUL: return new CToolpathLayerData(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerData"
+		case 0xF0AAB2C814D9FFB1UL: return new CToolpath(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Toolpath"
+		case 0xD0F24425A07F2A81UL: return new CToolpathIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathIterator"
 		case 0x6594B031B6096238UL: return new CSliceStack(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::SliceStack"
 		case 0xD9E46D5E6D8118EEUL: return new CConsumer(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Consumer"
 		case 0x385C42FC5609498AUL: return new CAccessRight(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::AccessRight"
@@ -1988,6 +2394,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		pWrapperTable->m_LibraryHandle = nullptr;
 		pWrapperTable->m_Base_ClassTypeId = nullptr;
+		pWrapperTable->m_BinaryStream_GetBinaryPath = nullptr;
+		pWrapperTable->m_BinaryStream_GetIndexPath = nullptr;
+		pWrapperTable->m_BinaryStream_GetUUID = nullptr;
+		pWrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression = nullptr;
+		pWrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression = nullptr;
+		pWrapperTable->m_BinaryStream_EnableLZMA = nullptr;
+		pWrapperTable->m_BinaryStream_DisableLZMA = nullptr;
 		pWrapperTable->m_Writer_WriteToFile = nullptr;
 		pWrapperTable->m_Writer_GetStreamSize = nullptr;
 		pWrapperTable->m_Writer_WriteToBuffer = nullptr;
@@ -2001,6 +2414,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Writer_GetWarningCount = nullptr;
 		pWrapperTable->m_Writer_AddKeyWrappingCallback = nullptr;
 		pWrapperTable->m_Writer_SetContentEncryptionCallback = nullptr;
+		pWrapperTable->m_Writer_CreateBinaryStream = nullptr;
+		pWrapperTable->m_Writer_AssignBinaryStream = nullptr;
+		pWrapperTable->m_Writer_RegisterCustomNamespace = nullptr;
+		pWrapperTable->m_PersistentReaderSource_GetSourceType = nullptr;
+		pWrapperTable->m_PersistentReaderSource_InvalidateSourceData = nullptr;
+		pWrapperTable->m_PersistentReaderSource_SourceDataIsValid = nullptr;
+		pWrapperTable->m_Reader_ReadFromPersistentSource = nullptr;
 		pWrapperTable->m_Reader_ReadFromFile = nullptr;
 		pWrapperTable->m_Reader_ReadFromBuffer = nullptr;
 		pWrapperTable->m_Reader_ReadFromCallback = nullptr;
@@ -2025,6 +2445,51 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ResourceIterator_GetCurrent = nullptr;
 		pWrapperTable->m_ResourceIterator_Clone = nullptr;
 		pWrapperTable->m_ResourceIterator_Count = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_GetName = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_GetValue = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_IsValidInteger = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_GetIntegerValue = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_IsValidDouble = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_GetDoubleValue = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_IsValidBool = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_GetBoolValue = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_SetValue = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_SetIntegerValue = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_SetDoubleValue = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_SetBoolValue = nullptr;
+		pWrapperTable->m_CustomXMLAttribute_Remove = nullptr;
+		pWrapperTable->m_CustomXMLNode_GetName = nullptr;
+		pWrapperTable->m_CustomXMLNode_GetNameSpace = nullptr;
+		pWrapperTable->m_CustomXMLNode_GetAttributeCount = nullptr;
+		pWrapperTable->m_CustomXMLNode_GetAttribute = nullptr;
+		pWrapperTable->m_CustomXMLNode_HasAttribute = nullptr;
+		pWrapperTable->m_CustomXMLNode_FindAttribute = nullptr;
+		pWrapperTable->m_CustomXMLNode_RemoveAttribute = nullptr;
+		pWrapperTable->m_CustomXMLNode_RemoveAttributeByIndex = nullptr;
+		pWrapperTable->m_CustomXMLNode_AddAttribute = nullptr;
+		pWrapperTable->m_CustomXMLNode_AddIntegerAttribute = nullptr;
+		pWrapperTable->m_CustomXMLNode_AddDoubleAttribute = nullptr;
+		pWrapperTable->m_CustomXMLNode_AddBoolAttribute = nullptr;
+		pWrapperTable->m_CustomXMLNode_GetChildren = nullptr;
+		pWrapperTable->m_CustomXMLNode_CountChildrenByName = nullptr;
+		pWrapperTable->m_CustomXMLNode_GetChildrenByName = nullptr;
+		pWrapperTable->m_CustomXMLNode_HasChild = nullptr;
+		pWrapperTable->m_CustomXMLNode_HasUniqueChild = nullptr;
+		pWrapperTable->m_CustomXMLNode_FindChild = nullptr;
+		pWrapperTable->m_CustomXMLNode_AddChild = nullptr;
+		pWrapperTable->m_CustomXMLNode_RemoveChild = nullptr;
+		pWrapperTable->m_CustomXMLNode_RemoveChildrenWithName = nullptr;
+		pWrapperTable->m_CustomXMLNode_Remove = nullptr;
+		pWrapperTable->m_CustomXMLNodes_GetNodeCount = nullptr;
+		pWrapperTable->m_CustomXMLNodes_GetNode = nullptr;
+		pWrapperTable->m_CustomXMLNodes_CountNodesByName = nullptr;
+		pWrapperTable->m_CustomXMLNodes_GetNodesByName = nullptr;
+		pWrapperTable->m_CustomXMLNodes_HasNode = nullptr;
+		pWrapperTable->m_CustomXMLNodes_HasUniqueNode = nullptr;
+		pWrapperTable->m_CustomXMLNodes_FindNode = nullptr;
+		pWrapperTable->m_CustomDOMTree_GetNameSpace = nullptr;
+		pWrapperTable->m_CustomDOMTree_GetRootNode = nullptr;
+		pWrapperTable->m_CustomDOMTree_SaveToString = nullptr;
 		pWrapperTable->m_SliceStackIterator_GetCurrentSliceStack = nullptr;
 		pWrapperTable->m_ObjectIterator_GetCurrentObject = nullptr;
 		pWrapperTable->m_MeshObjectIterator_GetCurrentMeshObject = nullptr;
@@ -2217,6 +2682,78 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Slice_GetPolygonIndices = nullptr;
 		pWrapperTable->m_Slice_GetPolygonIndexCount = nullptr;
 		pWrapperTable->m_Slice_GetZTop = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetUUID = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetName = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetParameterCount = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetParameterName = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetParameterNameSpace = nullptr;
+		pWrapperTable->m_ToolpathProfile_HasParameterValue = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetParameterValue = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetParameterValueDef = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetParameterDoubleValue = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetParameterDoubleValueDef = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetParameterIntegerValue = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetParameterIntegerValueDef = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetParameterBoolValue = nullptr;
+		pWrapperTable->m_ToolpathProfile_GetParameterBoolValueDef = nullptr;
+		pWrapperTable->m_ToolpathProfile_SetName = nullptr;
+		pWrapperTable->m_ToolpathProfile_SetParameterValue = nullptr;
+		pWrapperTable->m_ToolpathProfile_SetParameterDoubleValue = nullptr;
+		pWrapperTable->m_ToolpathProfile_SetParameterIntegerValue = nullptr;
+		pWrapperTable->m_ToolpathProfile_SetParameterBoolValue = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetLayerDataUUID = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentCount = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentInfo = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentProfile = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentProfileUUID = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentPart = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentLocalPartID = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentPointData = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_FindAttributeInfoByName = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_FindAttributeIDByName = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_FindAttributeValueByName = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByID = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByName = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByID = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByName = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetCustomDataCount = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetCustomData = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetCustomDataName = nullptr;
+		pWrapperTable->m_ToolpathLayerData_GetLayerDataUUID = nullptr;
+		pWrapperTable->m_ToolpathLayerData_RegisterProfile = nullptr;
+		pWrapperTable->m_ToolpathLayerData_RegisterBuildItem = nullptr;
+		pWrapperTable->m_ToolpathLayerData_SetSegmentAttribute = nullptr;
+		pWrapperTable->m_ToolpathLayerData_ClearSegmentAttributes = nullptr;
+		pWrapperTable->m_ToolpathLayerData_WriteHatchData = nullptr;
+		pWrapperTable->m_ToolpathLayerData_WriteLoop = nullptr;
+		pWrapperTable->m_ToolpathLayerData_WritePolyline = nullptr;
+		pWrapperTable->m_ToolpathLayerData_AddCustomData = nullptr;
+		pWrapperTable->m_ToolpathLayerData_Finish = nullptr;
+		pWrapperTable->m_Toolpath_GetUnits = nullptr;
+		pWrapperTable->m_Toolpath_GetLayerCount = nullptr;
+		pWrapperTable->m_Toolpath_GetProfileCount = nullptr;
+		pWrapperTable->m_Toolpath_AddLayer = nullptr;
+		pWrapperTable->m_Toolpath_GetLayerAttachment = nullptr;
+		pWrapperTable->m_Toolpath_ReadLayerData = nullptr;
+		pWrapperTable->m_Toolpath_GetLayerPath = nullptr;
+		pWrapperTable->m_Toolpath_GetLayerZMax = nullptr;
+		pWrapperTable->m_Toolpath_GetLayerZ = nullptr;
+		pWrapperTable->m_Toolpath_AddProfile = nullptr;
+		pWrapperTable->m_Toolpath_GetProfile = nullptr;
+		pWrapperTable->m_Toolpath_GetProfileUUID = nullptr;
+		pWrapperTable->m_Toolpath_GetCustomDataCount = nullptr;
+		pWrapperTable->m_Toolpath_GetCustomData = nullptr;
+		pWrapperTable->m_Toolpath_GetCustomDataName = nullptr;
+		pWrapperTable->m_Toolpath_HasUniqueCustomData = nullptr;
+		pWrapperTable->m_Toolpath_FindUniqueCustomData = nullptr;
+		pWrapperTable->m_Toolpath_AddCustomData = nullptr;
+		pWrapperTable->m_Toolpath_ClearCustomData = nullptr;
+		pWrapperTable->m_Toolpath_DeleteCustomData = nullptr;
+		pWrapperTable->m_Toolpath_RegisterCustomIntegerAttribute = nullptr;
+		pWrapperTable->m_Toolpath_RegisterCustomDoubleAttribute = nullptr;
+		pWrapperTable->m_ToolpathIterator_GetCurrentToolpath = nullptr;
 		pWrapperTable->m_SliceStack_GetBottomZ = nullptr;
 		pWrapperTable->m_SliceStack_GetSliceCount = nullptr;
 		pWrapperTable->m_SliceStack_GetSlice = nullptr;
@@ -2300,6 +2837,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Model_GetTexture2DGroups = nullptr;
 		pWrapperTable->m_Model_GetCompositeMaterials = nullptr;
 		pWrapperTable->m_Model_GetMultiPropertyGroups = nullptr;
+		pWrapperTable->m_Model_GetToolpaths = nullptr;
 		pWrapperTable->m_Model_GetSliceStacks = nullptr;
 		pWrapperTable->m_Model_MergeToModel = nullptr;
 		pWrapperTable->m_Model_AddMeshObject = nullptr;
@@ -2313,6 +2851,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Model_AddMultiPropertyGroup = nullptr;
 		pWrapperTable->m_Model_AddBuildItem = nullptr;
 		pWrapperTable->m_Model_RemoveBuildItem = nullptr;
+		pWrapperTable->m_Model_AddToolpath = nullptr;
 		pWrapperTable->m_Model_GetMetaDataGroup = nullptr;
 		pWrapperTable->m_Model_AddAttachment = nullptr;
 		pWrapperTable->m_Model_RemoveAttachment = nullptr;
@@ -2327,6 +2866,9 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Model_RemoveCustomContentType = nullptr;
 		pWrapperTable->m_Model_SetRandomNumberCallback = nullptr;
 		pWrapperTable->m_Model_GetKeyStore = nullptr;
+		pWrapperTable->m_Model_CreatePersistentSourceFromFile = nullptr;
+		pWrapperTable->m_Model_CreatePersistentSourceFromBuffer = nullptr;
+		pWrapperTable->m_Model_CreatePersistentSourceFromCallback = nullptr;
 		pWrapperTable->m_GetLibraryVersion = nullptr;
 		pWrapperTable->m_GetPrereleaseInformation = nullptr;
 		pWrapperTable->m_GetBuildInformation = nullptr;
@@ -2403,6 +2945,69 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_Base_ClassTypeId == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_BinaryStream_GetBinaryPath = (PLib3MFBinaryStream_GetBinaryPathPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_getbinarypath");
+		#else // _WIN32
+		pWrapperTable->m_BinaryStream_GetBinaryPath = (PLib3MFBinaryStream_GetBinaryPathPtr) dlsym(hLibrary, "lib3mf_binarystream_getbinarypath");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BinaryStream_GetBinaryPath == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_BinaryStream_GetIndexPath = (PLib3MFBinaryStream_GetIndexPathPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_getindexpath");
+		#else // _WIN32
+		pWrapperTable->m_BinaryStream_GetIndexPath = (PLib3MFBinaryStream_GetIndexPathPtr) dlsym(hLibrary, "lib3mf_binarystream_getindexpath");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BinaryStream_GetIndexPath == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_BinaryStream_GetUUID = (PLib3MFBinaryStream_GetUUIDPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_getuuid");
+		#else // _WIN32
+		pWrapperTable->m_BinaryStream_GetUUID = (PLib3MFBinaryStream_GetUUIDPtr) dlsym(hLibrary, "lib3mf_binarystream_getuuid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BinaryStream_GetUUID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression = (PLib3MFBinaryStream_DisableDiscretizedArrayCompressionPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_disablediscretizedarraycompression");
+		#else // _WIN32
+		pWrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression = (PLib3MFBinaryStream_DisableDiscretizedArrayCompressionPtr) dlsym(hLibrary, "lib3mf_binarystream_disablediscretizedarraycompression");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression = (PLib3MFBinaryStream_EnableDiscretizedArrayCompressionPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_enablediscretizedarraycompression");
+		#else // _WIN32
+		pWrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression = (PLib3MFBinaryStream_EnableDiscretizedArrayCompressionPtr) dlsym(hLibrary, "lib3mf_binarystream_enablediscretizedarraycompression");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_BinaryStream_EnableLZMA = (PLib3MFBinaryStream_EnableLZMAPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_enablelzma");
+		#else // _WIN32
+		pWrapperTable->m_BinaryStream_EnableLZMA = (PLib3MFBinaryStream_EnableLZMAPtr) dlsym(hLibrary, "lib3mf_binarystream_enablelzma");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BinaryStream_EnableLZMA == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_BinaryStream_DisableLZMA = (PLib3MFBinaryStream_DisableLZMAPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_disablelzma");
+		#else // _WIN32
+		pWrapperTable->m_BinaryStream_DisableLZMA = (PLib3MFBinaryStream_DisableLZMAPtr) dlsym(hLibrary, "lib3mf_binarystream_disablelzma");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BinaryStream_DisableLZMA == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -2520,6 +3125,69 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_Writer_SetContentEncryptionCallback == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Writer_CreateBinaryStream = (PLib3MFWriter_CreateBinaryStreamPtr) GetProcAddress(hLibrary, "lib3mf_writer_createbinarystream");
+		#else // _WIN32
+		pWrapperTable->m_Writer_CreateBinaryStream = (PLib3MFWriter_CreateBinaryStreamPtr) dlsym(hLibrary, "lib3mf_writer_createbinarystream");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Writer_CreateBinaryStream == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Writer_AssignBinaryStream = (PLib3MFWriter_AssignBinaryStreamPtr) GetProcAddress(hLibrary, "lib3mf_writer_assignbinarystream");
+		#else // _WIN32
+		pWrapperTable->m_Writer_AssignBinaryStream = (PLib3MFWriter_AssignBinaryStreamPtr) dlsym(hLibrary, "lib3mf_writer_assignbinarystream");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Writer_AssignBinaryStream == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Writer_RegisterCustomNamespace = (PLib3MFWriter_RegisterCustomNamespacePtr) GetProcAddress(hLibrary, "lib3mf_writer_registercustomnamespace");
+		#else // _WIN32
+		pWrapperTable->m_Writer_RegisterCustomNamespace = (PLib3MFWriter_RegisterCustomNamespacePtr) dlsym(hLibrary, "lib3mf_writer_registercustomnamespace");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Writer_RegisterCustomNamespace == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_PersistentReaderSource_GetSourceType = (PLib3MFPersistentReaderSource_GetSourceTypePtr) GetProcAddress(hLibrary, "lib3mf_persistentreadersource_getsourcetype");
+		#else // _WIN32
+		pWrapperTable->m_PersistentReaderSource_GetSourceType = (PLib3MFPersistentReaderSource_GetSourceTypePtr) dlsym(hLibrary, "lib3mf_persistentreadersource_getsourcetype");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_PersistentReaderSource_GetSourceType == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_PersistentReaderSource_InvalidateSourceData = (PLib3MFPersistentReaderSource_InvalidateSourceDataPtr) GetProcAddress(hLibrary, "lib3mf_persistentreadersource_invalidatesourcedata");
+		#else // _WIN32
+		pWrapperTable->m_PersistentReaderSource_InvalidateSourceData = (PLib3MFPersistentReaderSource_InvalidateSourceDataPtr) dlsym(hLibrary, "lib3mf_persistentreadersource_invalidatesourcedata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_PersistentReaderSource_InvalidateSourceData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_PersistentReaderSource_SourceDataIsValid = (PLib3MFPersistentReaderSource_SourceDataIsValidPtr) GetProcAddress(hLibrary, "lib3mf_persistentreadersource_sourcedataisvalid");
+		#else // _WIN32
+		pWrapperTable->m_PersistentReaderSource_SourceDataIsValid = (PLib3MFPersistentReaderSource_SourceDataIsValidPtr) dlsym(hLibrary, "lib3mf_persistentreadersource_sourcedataisvalid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_PersistentReaderSource_SourceDataIsValid == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Reader_ReadFromPersistentSource = (PLib3MFReader_ReadFromPersistentSourcePtr) GetProcAddress(hLibrary, "lib3mf_reader_readfrompersistentsource");
+		#else // _WIN32
+		pWrapperTable->m_Reader_ReadFromPersistentSource = (PLib3MFReader_ReadFromPersistentSourcePtr) dlsym(hLibrary, "lib3mf_reader_readfrompersistentsource");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Reader_ReadFromPersistentSource == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -2736,6 +3404,411 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_ResourceIterator_Count == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_GetName = (PLib3MFCustomXMLAttribute_GetNamePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_getname");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_GetName = (PLib3MFCustomXMLAttribute_GetNamePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_getname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_GetName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_GetValue = (PLib3MFCustomXMLAttribute_GetValuePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_getvalue");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_GetValue = (PLib3MFCustomXMLAttribute_GetValuePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_getvalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_GetValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_IsValidInteger = (PLib3MFCustomXMLAttribute_IsValidIntegerPtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_isvalidinteger");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_IsValidInteger = (PLib3MFCustomXMLAttribute_IsValidIntegerPtr) dlsym(hLibrary, "lib3mf_customxmlattribute_isvalidinteger");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_IsValidInteger == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_GetIntegerValue = (PLib3MFCustomXMLAttribute_GetIntegerValuePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_getintegervalue");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_GetIntegerValue = (PLib3MFCustomXMLAttribute_GetIntegerValuePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_getintegervalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_GetIntegerValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_IsValidDouble = (PLib3MFCustomXMLAttribute_IsValidDoublePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_isvaliddouble");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_IsValidDouble = (PLib3MFCustomXMLAttribute_IsValidDoublePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_isvaliddouble");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_IsValidDouble == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_GetDoubleValue = (PLib3MFCustomXMLAttribute_GetDoubleValuePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_getdoublevalue");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_GetDoubleValue = (PLib3MFCustomXMLAttribute_GetDoubleValuePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_getdoublevalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_GetDoubleValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_IsValidBool = (PLib3MFCustomXMLAttribute_IsValidBoolPtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_isvalidbool");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_IsValidBool = (PLib3MFCustomXMLAttribute_IsValidBoolPtr) dlsym(hLibrary, "lib3mf_customxmlattribute_isvalidbool");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_IsValidBool == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_GetBoolValue = (PLib3MFCustomXMLAttribute_GetBoolValuePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_getboolvalue");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_GetBoolValue = (PLib3MFCustomXMLAttribute_GetBoolValuePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_getboolvalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_GetBoolValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_SetValue = (PLib3MFCustomXMLAttribute_SetValuePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_setvalue");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_SetValue = (PLib3MFCustomXMLAttribute_SetValuePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_setvalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_SetValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_SetIntegerValue = (PLib3MFCustomXMLAttribute_SetIntegerValuePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_setintegervalue");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_SetIntegerValue = (PLib3MFCustomXMLAttribute_SetIntegerValuePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_setintegervalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_SetIntegerValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_SetDoubleValue = (PLib3MFCustomXMLAttribute_SetDoubleValuePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_setdoublevalue");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_SetDoubleValue = (PLib3MFCustomXMLAttribute_SetDoubleValuePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_setdoublevalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_SetDoubleValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_SetBoolValue = (PLib3MFCustomXMLAttribute_SetBoolValuePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_setboolvalue");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_SetBoolValue = (PLib3MFCustomXMLAttribute_SetBoolValuePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_setboolvalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_SetBoolValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLAttribute_Remove = (PLib3MFCustomXMLAttribute_RemovePtr) GetProcAddress(hLibrary, "lib3mf_customxmlattribute_remove");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLAttribute_Remove = (PLib3MFCustomXMLAttribute_RemovePtr) dlsym(hLibrary, "lib3mf_customxmlattribute_remove");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLAttribute_Remove == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_GetName = (PLib3MFCustomXMLNode_GetNamePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_getname");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_GetName = (PLib3MFCustomXMLNode_GetNamePtr) dlsym(hLibrary, "lib3mf_customxmlnode_getname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_GetName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_GetNameSpace = (PLib3MFCustomXMLNode_GetNameSpacePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_getnamespace");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_GetNameSpace = (PLib3MFCustomXMLNode_GetNameSpacePtr) dlsym(hLibrary, "lib3mf_customxmlnode_getnamespace");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_GetNameSpace == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_GetAttributeCount = (PLib3MFCustomXMLNode_GetAttributeCountPtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_getattributecount");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_GetAttributeCount = (PLib3MFCustomXMLNode_GetAttributeCountPtr) dlsym(hLibrary, "lib3mf_customxmlnode_getattributecount");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_GetAttributeCount == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_GetAttribute = (PLib3MFCustomXMLNode_GetAttributePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_getattribute");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_GetAttribute = (PLib3MFCustomXMLNode_GetAttributePtr) dlsym(hLibrary, "lib3mf_customxmlnode_getattribute");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_GetAttribute == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_HasAttribute = (PLib3MFCustomXMLNode_HasAttributePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_hasattribute");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_HasAttribute = (PLib3MFCustomXMLNode_HasAttributePtr) dlsym(hLibrary, "lib3mf_customxmlnode_hasattribute");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_HasAttribute == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_FindAttribute = (PLib3MFCustomXMLNode_FindAttributePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_findattribute");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_FindAttribute = (PLib3MFCustomXMLNode_FindAttributePtr) dlsym(hLibrary, "lib3mf_customxmlnode_findattribute");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_FindAttribute == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_RemoveAttribute = (PLib3MFCustomXMLNode_RemoveAttributePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_removeattribute");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_RemoveAttribute = (PLib3MFCustomXMLNode_RemoveAttributePtr) dlsym(hLibrary, "lib3mf_customxmlnode_removeattribute");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_RemoveAttribute == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_RemoveAttributeByIndex = (PLib3MFCustomXMLNode_RemoveAttributeByIndexPtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_removeattributebyindex");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_RemoveAttributeByIndex = (PLib3MFCustomXMLNode_RemoveAttributeByIndexPtr) dlsym(hLibrary, "lib3mf_customxmlnode_removeattributebyindex");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_RemoveAttributeByIndex == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_AddAttribute = (PLib3MFCustomXMLNode_AddAttributePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_addattribute");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_AddAttribute = (PLib3MFCustomXMLNode_AddAttributePtr) dlsym(hLibrary, "lib3mf_customxmlnode_addattribute");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_AddAttribute == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_AddIntegerAttribute = (PLib3MFCustomXMLNode_AddIntegerAttributePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_addintegerattribute");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_AddIntegerAttribute = (PLib3MFCustomXMLNode_AddIntegerAttributePtr) dlsym(hLibrary, "lib3mf_customxmlnode_addintegerattribute");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_AddIntegerAttribute == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_AddDoubleAttribute = (PLib3MFCustomXMLNode_AddDoubleAttributePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_adddoubleattribute");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_AddDoubleAttribute = (PLib3MFCustomXMLNode_AddDoubleAttributePtr) dlsym(hLibrary, "lib3mf_customxmlnode_adddoubleattribute");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_AddDoubleAttribute == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_AddBoolAttribute = (PLib3MFCustomXMLNode_AddBoolAttributePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_addboolattribute");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_AddBoolAttribute = (PLib3MFCustomXMLNode_AddBoolAttributePtr) dlsym(hLibrary, "lib3mf_customxmlnode_addboolattribute");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_AddBoolAttribute == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_GetChildren = (PLib3MFCustomXMLNode_GetChildrenPtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_getchildren");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_GetChildren = (PLib3MFCustomXMLNode_GetChildrenPtr) dlsym(hLibrary, "lib3mf_customxmlnode_getchildren");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_GetChildren == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_CountChildrenByName = (PLib3MFCustomXMLNode_CountChildrenByNamePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_countchildrenbyname");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_CountChildrenByName = (PLib3MFCustomXMLNode_CountChildrenByNamePtr) dlsym(hLibrary, "lib3mf_customxmlnode_countchildrenbyname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_CountChildrenByName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_GetChildrenByName = (PLib3MFCustomXMLNode_GetChildrenByNamePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_getchildrenbyname");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_GetChildrenByName = (PLib3MFCustomXMLNode_GetChildrenByNamePtr) dlsym(hLibrary, "lib3mf_customxmlnode_getchildrenbyname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_GetChildrenByName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_HasChild = (PLib3MFCustomXMLNode_HasChildPtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_haschild");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_HasChild = (PLib3MFCustomXMLNode_HasChildPtr) dlsym(hLibrary, "lib3mf_customxmlnode_haschild");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_HasChild == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_HasUniqueChild = (PLib3MFCustomXMLNode_HasUniqueChildPtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_hasuniquechild");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_HasUniqueChild = (PLib3MFCustomXMLNode_HasUniqueChildPtr) dlsym(hLibrary, "lib3mf_customxmlnode_hasuniquechild");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_HasUniqueChild == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_FindChild = (PLib3MFCustomXMLNode_FindChildPtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_findchild");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_FindChild = (PLib3MFCustomXMLNode_FindChildPtr) dlsym(hLibrary, "lib3mf_customxmlnode_findchild");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_FindChild == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_AddChild = (PLib3MFCustomXMLNode_AddChildPtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_addchild");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_AddChild = (PLib3MFCustomXMLNode_AddChildPtr) dlsym(hLibrary, "lib3mf_customxmlnode_addchild");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_AddChild == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_RemoveChild = (PLib3MFCustomXMLNode_RemoveChildPtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_removechild");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_RemoveChild = (PLib3MFCustomXMLNode_RemoveChildPtr) dlsym(hLibrary, "lib3mf_customxmlnode_removechild");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_RemoveChild == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_RemoveChildrenWithName = (PLib3MFCustomXMLNode_RemoveChildrenWithNamePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_removechildrenwithname");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_RemoveChildrenWithName = (PLib3MFCustomXMLNode_RemoveChildrenWithNamePtr) dlsym(hLibrary, "lib3mf_customxmlnode_removechildrenwithname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_RemoveChildrenWithName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNode_Remove = (PLib3MFCustomXMLNode_RemovePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnode_remove");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNode_Remove = (PLib3MFCustomXMLNode_RemovePtr) dlsym(hLibrary, "lib3mf_customxmlnode_remove");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNode_Remove == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNodes_GetNodeCount = (PLib3MFCustomXMLNodes_GetNodeCountPtr) GetProcAddress(hLibrary, "lib3mf_customxmlnodes_getnodecount");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNodes_GetNodeCount = (PLib3MFCustomXMLNodes_GetNodeCountPtr) dlsym(hLibrary, "lib3mf_customxmlnodes_getnodecount");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNodes_GetNodeCount == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNodes_GetNode = (PLib3MFCustomXMLNodes_GetNodePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnodes_getnode");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNodes_GetNode = (PLib3MFCustomXMLNodes_GetNodePtr) dlsym(hLibrary, "lib3mf_customxmlnodes_getnode");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNodes_GetNode == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNodes_CountNodesByName = (PLib3MFCustomXMLNodes_CountNodesByNamePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnodes_countnodesbyname");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNodes_CountNodesByName = (PLib3MFCustomXMLNodes_CountNodesByNamePtr) dlsym(hLibrary, "lib3mf_customxmlnodes_countnodesbyname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNodes_CountNodesByName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNodes_GetNodesByName = (PLib3MFCustomXMLNodes_GetNodesByNamePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnodes_getnodesbyname");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNodes_GetNodesByName = (PLib3MFCustomXMLNodes_GetNodesByNamePtr) dlsym(hLibrary, "lib3mf_customxmlnodes_getnodesbyname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNodes_GetNodesByName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNodes_HasNode = (PLib3MFCustomXMLNodes_HasNodePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnodes_hasnode");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNodes_HasNode = (PLib3MFCustomXMLNodes_HasNodePtr) dlsym(hLibrary, "lib3mf_customxmlnodes_hasnode");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNodes_HasNode == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNodes_HasUniqueNode = (PLib3MFCustomXMLNodes_HasUniqueNodePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnodes_hasuniquenode");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNodes_HasUniqueNode = (PLib3MFCustomXMLNodes_HasUniqueNodePtr) dlsym(hLibrary, "lib3mf_customxmlnodes_hasuniquenode");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNodes_HasUniqueNode == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomXMLNodes_FindNode = (PLib3MFCustomXMLNodes_FindNodePtr) GetProcAddress(hLibrary, "lib3mf_customxmlnodes_findnode");
+		#else // _WIN32
+		pWrapperTable->m_CustomXMLNodes_FindNode = (PLib3MFCustomXMLNodes_FindNodePtr) dlsym(hLibrary, "lib3mf_customxmlnodes_findnode");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomXMLNodes_FindNode == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomDOMTree_GetNameSpace = (PLib3MFCustomDOMTree_GetNameSpacePtr) GetProcAddress(hLibrary, "lib3mf_customdomtree_getnamespace");
+		#else // _WIN32
+		pWrapperTable->m_CustomDOMTree_GetNameSpace = (PLib3MFCustomDOMTree_GetNameSpacePtr) dlsym(hLibrary, "lib3mf_customdomtree_getnamespace");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomDOMTree_GetNameSpace == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomDOMTree_GetRootNode = (PLib3MFCustomDOMTree_GetRootNodePtr) GetProcAddress(hLibrary, "lib3mf_customdomtree_getrootnode");
+		#else // _WIN32
+		pWrapperTable->m_CustomDOMTree_GetRootNode = (PLib3MFCustomDOMTree_GetRootNodePtr) dlsym(hLibrary, "lib3mf_customdomtree_getrootnode");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomDOMTree_GetRootNode == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_CustomDOMTree_SaveToString = (PLib3MFCustomDOMTree_SaveToStringPtr) GetProcAddress(hLibrary, "lib3mf_customdomtree_savetostring");
+		#else // _WIN32
+		pWrapperTable->m_CustomDOMTree_SaveToString = (PLib3MFCustomDOMTree_SaveToStringPtr) dlsym(hLibrary, "lib3mf_customdomtree_savetostring");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_CustomDOMTree_SaveToString == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -4467,6 +5540,654 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetUUID = (PLib3MFToolpathProfile_GetUUIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getuuid");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetUUID = (PLib3MFToolpathProfile_GetUUIDPtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getuuid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetUUID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetName = (PLib3MFToolpathProfile_GetNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getname");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetName = (PLib3MFToolpathProfile_GetNamePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterCount = (PLib3MFToolpathProfile_GetParameterCountPtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getparametercount");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterCount = (PLib3MFToolpathProfile_GetParameterCountPtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getparametercount");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetParameterCount == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterName = (PLib3MFToolpathProfile_GetParameterNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getparametername");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterName = (PLib3MFToolpathProfile_GetParameterNamePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getparametername");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetParameterName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterNameSpace = (PLib3MFToolpathProfile_GetParameterNameSpacePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getparameternamespace");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterNameSpace = (PLib3MFToolpathProfile_GetParameterNameSpacePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getparameternamespace");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetParameterNameSpace == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_HasParameterValue = (PLib3MFToolpathProfile_HasParameterValuePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_hasparametervalue");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_HasParameterValue = (PLib3MFToolpathProfile_HasParameterValuePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_hasparametervalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_HasParameterValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterValue = (PLib3MFToolpathProfile_GetParameterValuePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getparametervalue");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterValue = (PLib3MFToolpathProfile_GetParameterValuePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getparametervalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetParameterValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterValueDef = (PLib3MFToolpathProfile_GetParameterValueDefPtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getparametervaluedef");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterValueDef = (PLib3MFToolpathProfile_GetParameterValueDefPtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getparametervaluedef");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetParameterValueDef == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterDoubleValue = (PLib3MFToolpathProfile_GetParameterDoubleValuePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getparameterdoublevalue");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterDoubleValue = (PLib3MFToolpathProfile_GetParameterDoubleValuePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getparameterdoublevalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetParameterDoubleValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterDoubleValueDef = (PLib3MFToolpathProfile_GetParameterDoubleValueDefPtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getparameterdoublevaluedef");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterDoubleValueDef = (PLib3MFToolpathProfile_GetParameterDoubleValueDefPtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getparameterdoublevaluedef");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetParameterDoubleValueDef == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterIntegerValue = (PLib3MFToolpathProfile_GetParameterIntegerValuePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getparameterintegervalue");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterIntegerValue = (PLib3MFToolpathProfile_GetParameterIntegerValuePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getparameterintegervalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetParameterIntegerValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterIntegerValueDef = (PLib3MFToolpathProfile_GetParameterIntegerValueDefPtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getparameterintegervaluedef");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterIntegerValueDef = (PLib3MFToolpathProfile_GetParameterIntegerValueDefPtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getparameterintegervaluedef");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetParameterIntegerValueDef == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterBoolValue = (PLib3MFToolpathProfile_GetParameterBoolValuePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getparameterboolvalue");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterBoolValue = (PLib3MFToolpathProfile_GetParameterBoolValuePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getparameterboolvalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetParameterBoolValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterBoolValueDef = (PLib3MFToolpathProfile_GetParameterBoolValueDefPtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getparameterboolvaluedef");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_GetParameterBoolValueDef = (PLib3MFToolpathProfile_GetParameterBoolValueDefPtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getparameterboolvaluedef");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_GetParameterBoolValueDef == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_SetName = (PLib3MFToolpathProfile_SetNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_setname");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_SetName = (PLib3MFToolpathProfile_SetNamePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_setname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_SetName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_SetParameterValue = (PLib3MFToolpathProfile_SetParameterValuePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_setparametervalue");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_SetParameterValue = (PLib3MFToolpathProfile_SetParameterValuePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_setparametervalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_SetParameterValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_SetParameterDoubleValue = (PLib3MFToolpathProfile_SetParameterDoubleValuePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_setparameterdoublevalue");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_SetParameterDoubleValue = (PLib3MFToolpathProfile_SetParameterDoubleValuePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_setparameterdoublevalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_SetParameterDoubleValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_SetParameterIntegerValue = (PLib3MFToolpathProfile_SetParameterIntegerValuePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_setparameterintegervalue");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_SetParameterIntegerValue = (PLib3MFToolpathProfile_SetParameterIntegerValuePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_setparameterintegervalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_SetParameterIntegerValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathProfile_SetParameterBoolValue = (PLib3MFToolpathProfile_SetParameterBoolValuePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_setparameterboolvalue");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathProfile_SetParameterBoolValue = (PLib3MFToolpathProfile_SetParameterBoolValuePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_setparameterboolvalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathProfile_SetParameterBoolValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetLayerDataUUID = (PLib3MFToolpathLayerReader_GetLayerDataUUIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getlayerdatauuid");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetLayerDataUUID = (PLib3MFToolpathLayerReader_GetLayerDataUUIDPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getlayerdatauuid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetLayerDataUUID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentCount = (PLib3MFToolpathLayerReader_GetSegmentCountPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentcount");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentCount = (PLib3MFToolpathLayerReader_GetSegmentCountPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentcount");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetSegmentCount == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentInfo = (PLib3MFToolpathLayerReader_GetSegmentInfoPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentinfo");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentInfo = (PLib3MFToolpathLayerReader_GetSegmentInfoPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentinfo");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetSegmentInfo == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentProfile = (PLib3MFToolpathLayerReader_GetSegmentProfilePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentprofile");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentProfile = (PLib3MFToolpathLayerReader_GetSegmentProfilePtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentprofile");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetSegmentProfile == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentProfileUUID = (PLib3MFToolpathLayerReader_GetSegmentProfileUUIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentprofileuuid");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentProfileUUID = (PLib3MFToolpathLayerReader_GetSegmentProfileUUIDPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentprofileuuid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetSegmentProfileUUID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentPart = (PLib3MFToolpathLayerReader_GetSegmentPartPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentpart");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentPart = (PLib3MFToolpathLayerReader_GetSegmentPartPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentpart");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetSegmentPart == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID = (PLib3MFToolpathLayerReader_GetSegmentPartUUIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentpartuuid");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID = (PLib3MFToolpathLayerReader_GetSegmentPartUUIDPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentpartuuid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentLocalPartID = (PLib3MFToolpathLayerReader_GetSegmentLocalPartIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentlocalpartid");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentLocalPartID = (PLib3MFToolpathLayerReader_GetSegmentLocalPartIDPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentlocalpartid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetSegmentLocalPartID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID = (PLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getpartuuidbylocalpartid");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID = (PLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getpartuuidbylocalpartid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentPointData = (PLib3MFToolpathLayerReader_GetSegmentPointDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentpointdata");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentPointData = (PLib3MFToolpathLayerReader_GetSegmentPointDataPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentpointdata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetSegmentPointData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_FindAttributeInfoByName = (PLib3MFToolpathLayerReader_FindAttributeInfoByNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_findattributeinfobyname");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_FindAttributeInfoByName = (PLib3MFToolpathLayerReader_FindAttributeInfoByNamePtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_findattributeinfobyname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_FindAttributeInfoByName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_FindAttributeIDByName = (PLib3MFToolpathLayerReader_FindAttributeIDByNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_findattributeidbyname");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_FindAttributeIDByName = (PLib3MFToolpathLayerReader_FindAttributeIDByNamePtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_findattributeidbyname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_FindAttributeIDByName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_FindAttributeValueByName = (PLib3MFToolpathLayerReader_FindAttributeValueByNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_findattributevaluebyname");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_FindAttributeValueByName = (PLib3MFToolpathLayerReader_FindAttributeValueByNamePtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_findattributevaluebyname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_FindAttributeValueByName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByID = (PLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentintegerattributebyid");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByID = (PLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentintegerattributebyid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByName = (PLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentintegerattributebyname");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByName = (PLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNamePtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentintegerattributebyname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByID = (PLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByID = (PLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByName = (PLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByName = (PLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNamePtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetCustomDataCount = (PLib3MFToolpathLayerReader_GetCustomDataCountPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getcustomdatacount");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetCustomDataCount = (PLib3MFToolpathLayerReader_GetCustomDataCountPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getcustomdatacount");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetCustomDataCount == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetCustomData = (PLib3MFToolpathLayerReader_GetCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getcustomdata");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetCustomData = (PLib3MFToolpathLayerReader_GetCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getcustomdata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetCustomData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetCustomDataName = (PLib3MFToolpathLayerReader_GetCustomDataNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getcustomdataname");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetCustomDataName = (PLib3MFToolpathLayerReader_GetCustomDataNamePtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getcustomdataname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetCustomDataName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_GetLayerDataUUID = (PLib3MFToolpathLayerData_GetLayerDataUUIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_getlayerdatauuid");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_GetLayerDataUUID = (PLib3MFToolpathLayerData_GetLayerDataUUIDPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_getlayerdatauuid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_GetLayerDataUUID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_RegisterProfile = (PLib3MFToolpathLayerData_RegisterProfilePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_registerprofile");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_RegisterProfile = (PLib3MFToolpathLayerData_RegisterProfilePtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_registerprofile");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_RegisterProfile == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_RegisterBuildItem = (PLib3MFToolpathLayerData_RegisterBuildItemPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_registerbuilditem");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_RegisterBuildItem = (PLib3MFToolpathLayerData_RegisterBuildItemPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_registerbuilditem");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_RegisterBuildItem == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_SetSegmentAttribute = (PLib3MFToolpathLayerData_SetSegmentAttributePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_setsegmentattribute");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_SetSegmentAttribute = (PLib3MFToolpathLayerData_SetSegmentAttributePtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_setsegmentattribute");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_SetSegmentAttribute == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_ClearSegmentAttributes = (PLib3MFToolpathLayerData_ClearSegmentAttributesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_clearsegmentattributes");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_ClearSegmentAttributes = (PLib3MFToolpathLayerData_ClearSegmentAttributesPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_clearsegmentattributes");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_ClearSegmentAttributes == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_WriteHatchData = (PLib3MFToolpathLayerData_WriteHatchDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writehatchdata");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_WriteHatchData = (PLib3MFToolpathLayerData_WriteHatchDataPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writehatchdata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_WriteHatchData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_WriteLoop = (PLib3MFToolpathLayerData_WriteLoopPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writeloop");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_WriteLoop = (PLib3MFToolpathLayerData_WriteLoopPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writeloop");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_WriteLoop == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_WritePolyline = (PLib3MFToolpathLayerData_WritePolylinePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writepolyline");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_WritePolyline = (PLib3MFToolpathLayerData_WritePolylinePtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writepolyline");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_WritePolyline == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_AddCustomData = (PLib3MFToolpathLayerData_AddCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_addcustomdata");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_AddCustomData = (PLib3MFToolpathLayerData_AddCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_addcustomdata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_AddCustomData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_Finish = (PLib3MFToolpathLayerData_FinishPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_finish");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_Finish = (PLib3MFToolpathLayerData_FinishPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_finish");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_Finish == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_GetUnits = (PLib3MFToolpath_GetUnitsPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getunits");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_GetUnits = (PLib3MFToolpath_GetUnitsPtr) dlsym(hLibrary, "lib3mf_toolpath_getunits");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_GetUnits == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_GetLayerCount = (PLib3MFToolpath_GetLayerCountPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getlayercount");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_GetLayerCount = (PLib3MFToolpath_GetLayerCountPtr) dlsym(hLibrary, "lib3mf_toolpath_getlayercount");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_GetLayerCount == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_GetProfileCount = (PLib3MFToolpath_GetProfileCountPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getprofilecount");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_GetProfileCount = (PLib3MFToolpath_GetProfileCountPtr) dlsym(hLibrary, "lib3mf_toolpath_getprofilecount");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_GetProfileCount == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_AddLayer = (PLib3MFToolpath_AddLayerPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_addlayer");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_AddLayer = (PLib3MFToolpath_AddLayerPtr) dlsym(hLibrary, "lib3mf_toolpath_addlayer");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_AddLayer == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_GetLayerAttachment = (PLib3MFToolpath_GetLayerAttachmentPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getlayerattachment");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_GetLayerAttachment = (PLib3MFToolpath_GetLayerAttachmentPtr) dlsym(hLibrary, "lib3mf_toolpath_getlayerattachment");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_GetLayerAttachment == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_ReadLayerData = (PLib3MFToolpath_ReadLayerDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_readlayerdata");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_ReadLayerData = (PLib3MFToolpath_ReadLayerDataPtr) dlsym(hLibrary, "lib3mf_toolpath_readlayerdata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_ReadLayerData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_GetLayerPath = (PLib3MFToolpath_GetLayerPathPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getlayerpath");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_GetLayerPath = (PLib3MFToolpath_GetLayerPathPtr) dlsym(hLibrary, "lib3mf_toolpath_getlayerpath");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_GetLayerPath == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_GetLayerZMax = (PLib3MFToolpath_GetLayerZMaxPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getlayerzmax");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_GetLayerZMax = (PLib3MFToolpath_GetLayerZMaxPtr) dlsym(hLibrary, "lib3mf_toolpath_getlayerzmax");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_GetLayerZMax == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_GetLayerZ = (PLib3MFToolpath_GetLayerZPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getlayerz");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_GetLayerZ = (PLib3MFToolpath_GetLayerZPtr) dlsym(hLibrary, "lib3mf_toolpath_getlayerz");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_GetLayerZ == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_AddProfile = (PLib3MFToolpath_AddProfilePtr) GetProcAddress(hLibrary, "lib3mf_toolpath_addprofile");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_AddProfile = (PLib3MFToolpath_AddProfilePtr) dlsym(hLibrary, "lib3mf_toolpath_addprofile");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_AddProfile == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_GetProfile = (PLib3MFToolpath_GetProfilePtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getprofile");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_GetProfile = (PLib3MFToolpath_GetProfilePtr) dlsym(hLibrary, "lib3mf_toolpath_getprofile");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_GetProfile == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_GetProfileUUID = (PLib3MFToolpath_GetProfileUUIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getprofileuuid");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_GetProfileUUID = (PLib3MFToolpath_GetProfileUUIDPtr) dlsym(hLibrary, "lib3mf_toolpath_getprofileuuid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_GetProfileUUID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_GetCustomDataCount = (PLib3MFToolpath_GetCustomDataCountPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getcustomdatacount");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_GetCustomDataCount = (PLib3MFToolpath_GetCustomDataCountPtr) dlsym(hLibrary, "lib3mf_toolpath_getcustomdatacount");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_GetCustomDataCount == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_GetCustomData = (PLib3MFToolpath_GetCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getcustomdata");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_GetCustomData = (PLib3MFToolpath_GetCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpath_getcustomdata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_GetCustomData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_GetCustomDataName = (PLib3MFToolpath_GetCustomDataNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getcustomdataname");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_GetCustomDataName = (PLib3MFToolpath_GetCustomDataNamePtr) dlsym(hLibrary, "lib3mf_toolpath_getcustomdataname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_GetCustomDataName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_HasUniqueCustomData = (PLib3MFToolpath_HasUniqueCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_hasuniquecustomdata");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_HasUniqueCustomData = (PLib3MFToolpath_HasUniqueCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpath_hasuniquecustomdata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_HasUniqueCustomData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_FindUniqueCustomData = (PLib3MFToolpath_FindUniqueCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_finduniquecustomdata");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_FindUniqueCustomData = (PLib3MFToolpath_FindUniqueCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpath_finduniquecustomdata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_FindUniqueCustomData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_AddCustomData = (PLib3MFToolpath_AddCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_addcustomdata");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_AddCustomData = (PLib3MFToolpath_AddCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpath_addcustomdata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_AddCustomData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_ClearCustomData = (PLib3MFToolpath_ClearCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_clearcustomdata");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_ClearCustomData = (PLib3MFToolpath_ClearCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpath_clearcustomdata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_ClearCustomData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_DeleteCustomData = (PLib3MFToolpath_DeleteCustomDataPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_deletecustomdata");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_DeleteCustomData = (PLib3MFToolpath_DeleteCustomDataPtr) dlsym(hLibrary, "lib3mf_toolpath_deletecustomdata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_DeleteCustomData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_RegisterCustomIntegerAttribute = (PLib3MFToolpath_RegisterCustomIntegerAttributePtr) GetProcAddress(hLibrary, "lib3mf_toolpath_registercustomintegerattribute");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_RegisterCustomIntegerAttribute = (PLib3MFToolpath_RegisterCustomIntegerAttributePtr) dlsym(hLibrary, "lib3mf_toolpath_registercustomintegerattribute");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_RegisterCustomIntegerAttribute == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_RegisterCustomDoubleAttribute = (PLib3MFToolpath_RegisterCustomDoubleAttributePtr) GetProcAddress(hLibrary, "lib3mf_toolpath_registercustomdoubleattribute");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_RegisterCustomDoubleAttribute = (PLib3MFToolpath_RegisterCustomDoubleAttributePtr) dlsym(hLibrary, "lib3mf_toolpath_registercustomdoubleattribute");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_RegisterCustomDoubleAttribute == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathIterator_GetCurrentToolpath = (PLib3MFToolpathIterator_GetCurrentToolpathPtr) GetProcAddress(hLibrary, "lib3mf_toolpathiterator_getcurrenttoolpath");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathIterator_GetCurrentToolpath = (PLib3MFToolpathIterator_GetCurrentToolpathPtr) dlsym(hLibrary, "lib3mf_toolpathiterator_getcurrenttoolpath");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathIterator_GetCurrentToolpath == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_SliceStack_GetBottomZ = (PLib3MFSliceStack_GetBottomZPtr) GetProcAddress(hLibrary, "lib3mf_slicestack_getbottomz");
 		#else // _WIN32
 		pWrapperTable->m_SliceStack_GetBottomZ = (PLib3MFSliceStack_GetBottomZPtr) dlsym(hLibrary, "lib3mf_slicestack_getbottomz");
@@ -5214,6 +6935,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_Model_GetToolpaths = (PLib3MFModel_GetToolpathsPtr) GetProcAddress(hLibrary, "lib3mf_model_gettoolpaths");
+		#else // _WIN32
+		pWrapperTable->m_Model_GetToolpaths = (PLib3MFModel_GetToolpathsPtr) dlsym(hLibrary, "lib3mf_model_gettoolpaths");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_GetToolpaths == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_Model_GetSliceStacks = (PLib3MFModel_GetSliceStacksPtr) GetProcAddress(hLibrary, "lib3mf_model_getslicestacks");
 		#else // _WIN32
 		pWrapperTable->m_Model_GetSliceStacks = (PLib3MFModel_GetSliceStacksPtr) dlsym(hLibrary, "lib3mf_model_getslicestacks");
@@ -5328,6 +7058,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_Model_RemoveBuildItem == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_AddToolpath = (PLib3MFModel_AddToolpathPtr) GetProcAddress(hLibrary, "lib3mf_model_addtoolpath");
+		#else // _WIN32
+		pWrapperTable->m_Model_AddToolpath = (PLib3MFModel_AddToolpathPtr) dlsym(hLibrary, "lib3mf_model_addtoolpath");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_AddToolpath == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -5454,6 +7193,33 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_Model_GetKeyStore == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_CreatePersistentSourceFromFile = (PLib3MFModel_CreatePersistentSourceFromFilePtr) GetProcAddress(hLibrary, "lib3mf_model_createpersistentsourcefromfile");
+		#else // _WIN32
+		pWrapperTable->m_Model_CreatePersistentSourceFromFile = (PLib3MFModel_CreatePersistentSourceFromFilePtr) dlsym(hLibrary, "lib3mf_model_createpersistentsourcefromfile");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_CreatePersistentSourceFromFile == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_CreatePersistentSourceFromBuffer = (PLib3MFModel_CreatePersistentSourceFromBufferPtr) GetProcAddress(hLibrary, "lib3mf_model_createpersistentsourcefrombuffer");
+		#else // _WIN32
+		pWrapperTable->m_Model_CreatePersistentSourceFromBuffer = (PLib3MFModel_CreatePersistentSourceFromBufferPtr) dlsym(hLibrary, "lib3mf_model_createpersistentsourcefrombuffer");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_CreatePersistentSourceFromBuffer == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_CreatePersistentSourceFromCallback = (PLib3MFModel_CreatePersistentSourceFromCallbackPtr) GetProcAddress(hLibrary, "lib3mf_model_createpersistentsourcefromcallback");
+		#else // _WIN32
+		pWrapperTable->m_Model_CreatePersistentSourceFromCallback = (PLib3MFModel_CreatePersistentSourceFromCallbackPtr) dlsym(hLibrary, "lib3mf_model_createpersistentsourcefromcallback");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_CreatePersistentSourceFromCallback == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -5647,6 +7413,34 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_Base_ClassTypeId == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_binarystream_getbinarypath", (void**)&(pWrapperTable->m_BinaryStream_GetBinaryPath));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BinaryStream_GetBinaryPath == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_binarystream_getindexpath", (void**)&(pWrapperTable->m_BinaryStream_GetIndexPath));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BinaryStream_GetIndexPath == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_binarystream_getuuid", (void**)&(pWrapperTable->m_BinaryStream_GetUUID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BinaryStream_GetUUID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_binarystream_disablediscretizedarraycompression", (void**)&(pWrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_binarystream_enablediscretizedarraycompression", (void**)&(pWrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_binarystream_enablelzma", (void**)&(pWrapperTable->m_BinaryStream_EnableLZMA));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BinaryStream_EnableLZMA == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_binarystream_disablelzma", (void**)&(pWrapperTable->m_BinaryStream_DisableLZMA));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BinaryStream_DisableLZMA == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_writer_writetofile", (void**)&(pWrapperTable->m_Writer_WriteToFile));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Writer_WriteToFile == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -5697,6 +7491,34 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_writer_setcontentencryptioncallback", (void**)&(pWrapperTable->m_Writer_SetContentEncryptionCallback));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Writer_SetContentEncryptionCallback == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_writer_createbinarystream", (void**)&(pWrapperTable->m_Writer_CreateBinaryStream));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Writer_CreateBinaryStream == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_writer_assignbinarystream", (void**)&(pWrapperTable->m_Writer_AssignBinaryStream));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Writer_AssignBinaryStream == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_writer_registercustomnamespace", (void**)&(pWrapperTable->m_Writer_RegisterCustomNamespace));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Writer_RegisterCustomNamespace == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_persistentreadersource_getsourcetype", (void**)&(pWrapperTable->m_PersistentReaderSource_GetSourceType));
+		if ( (eLookupError != 0) || (pWrapperTable->m_PersistentReaderSource_GetSourceType == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_persistentreadersource_invalidatesourcedata", (void**)&(pWrapperTable->m_PersistentReaderSource_InvalidateSourceData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_PersistentReaderSource_InvalidateSourceData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_persistentreadersource_sourcedataisvalid", (void**)&(pWrapperTable->m_PersistentReaderSource_SourceDataIsValid));
+		if ( (eLookupError != 0) || (pWrapperTable->m_PersistentReaderSource_SourceDataIsValid == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_reader_readfrompersistentsource", (void**)&(pWrapperTable->m_Reader_ReadFromPersistentSource));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Reader_ReadFromPersistentSource == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_reader_readfromfile", (void**)&(pWrapperTable->m_Reader_ReadFromFile));
@@ -5793,6 +7615,186 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_resourceiterator_count", (void**)&(pWrapperTable->m_ResourceIterator_Count));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ResourceIterator_Count == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_getname", (void**)&(pWrapperTable->m_CustomXMLAttribute_GetName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_GetName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_getvalue", (void**)&(pWrapperTable->m_CustomXMLAttribute_GetValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_GetValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_isvalidinteger", (void**)&(pWrapperTable->m_CustomXMLAttribute_IsValidInteger));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_IsValidInteger == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_getintegervalue", (void**)&(pWrapperTable->m_CustomXMLAttribute_GetIntegerValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_GetIntegerValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_isvaliddouble", (void**)&(pWrapperTable->m_CustomXMLAttribute_IsValidDouble));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_IsValidDouble == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_getdoublevalue", (void**)&(pWrapperTable->m_CustomXMLAttribute_GetDoubleValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_GetDoubleValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_isvalidbool", (void**)&(pWrapperTable->m_CustomXMLAttribute_IsValidBool));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_IsValidBool == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_getboolvalue", (void**)&(pWrapperTable->m_CustomXMLAttribute_GetBoolValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_GetBoolValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_setvalue", (void**)&(pWrapperTable->m_CustomXMLAttribute_SetValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_SetValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_setintegervalue", (void**)&(pWrapperTable->m_CustomXMLAttribute_SetIntegerValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_SetIntegerValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_setdoublevalue", (void**)&(pWrapperTable->m_CustomXMLAttribute_SetDoubleValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_SetDoubleValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_setboolvalue", (void**)&(pWrapperTable->m_CustomXMLAttribute_SetBoolValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_SetBoolValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlattribute_remove", (void**)&(pWrapperTable->m_CustomXMLAttribute_Remove));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLAttribute_Remove == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_getname", (void**)&(pWrapperTable->m_CustomXMLNode_GetName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_GetName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_getnamespace", (void**)&(pWrapperTable->m_CustomXMLNode_GetNameSpace));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_GetNameSpace == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_getattributecount", (void**)&(pWrapperTable->m_CustomXMLNode_GetAttributeCount));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_GetAttributeCount == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_getattribute", (void**)&(pWrapperTable->m_CustomXMLNode_GetAttribute));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_GetAttribute == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_hasattribute", (void**)&(pWrapperTable->m_CustomXMLNode_HasAttribute));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_HasAttribute == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_findattribute", (void**)&(pWrapperTable->m_CustomXMLNode_FindAttribute));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_FindAttribute == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_removeattribute", (void**)&(pWrapperTable->m_CustomXMLNode_RemoveAttribute));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_RemoveAttribute == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_removeattributebyindex", (void**)&(pWrapperTable->m_CustomXMLNode_RemoveAttributeByIndex));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_RemoveAttributeByIndex == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_addattribute", (void**)&(pWrapperTable->m_CustomXMLNode_AddAttribute));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_AddAttribute == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_addintegerattribute", (void**)&(pWrapperTable->m_CustomXMLNode_AddIntegerAttribute));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_AddIntegerAttribute == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_adddoubleattribute", (void**)&(pWrapperTable->m_CustomXMLNode_AddDoubleAttribute));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_AddDoubleAttribute == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_addboolattribute", (void**)&(pWrapperTable->m_CustomXMLNode_AddBoolAttribute));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_AddBoolAttribute == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_getchildren", (void**)&(pWrapperTable->m_CustomXMLNode_GetChildren));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_GetChildren == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_countchildrenbyname", (void**)&(pWrapperTable->m_CustomXMLNode_CountChildrenByName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_CountChildrenByName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_getchildrenbyname", (void**)&(pWrapperTable->m_CustomXMLNode_GetChildrenByName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_GetChildrenByName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_haschild", (void**)&(pWrapperTable->m_CustomXMLNode_HasChild));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_HasChild == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_hasuniquechild", (void**)&(pWrapperTable->m_CustomXMLNode_HasUniqueChild));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_HasUniqueChild == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_findchild", (void**)&(pWrapperTable->m_CustomXMLNode_FindChild));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_FindChild == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_addchild", (void**)&(pWrapperTable->m_CustomXMLNode_AddChild));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_AddChild == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_removechild", (void**)&(pWrapperTable->m_CustomXMLNode_RemoveChild));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_RemoveChild == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_removechildrenwithname", (void**)&(pWrapperTable->m_CustomXMLNode_RemoveChildrenWithName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_RemoveChildrenWithName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnode_remove", (void**)&(pWrapperTable->m_CustomXMLNode_Remove));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNode_Remove == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnodes_getnodecount", (void**)&(pWrapperTable->m_CustomXMLNodes_GetNodeCount));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNodes_GetNodeCount == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnodes_getnode", (void**)&(pWrapperTable->m_CustomXMLNodes_GetNode));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNodes_GetNode == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnodes_countnodesbyname", (void**)&(pWrapperTable->m_CustomXMLNodes_CountNodesByName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNodes_CountNodesByName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnodes_getnodesbyname", (void**)&(pWrapperTable->m_CustomXMLNodes_GetNodesByName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNodes_GetNodesByName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnodes_hasnode", (void**)&(pWrapperTable->m_CustomXMLNodes_HasNode));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNodes_HasNode == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnodes_hasuniquenode", (void**)&(pWrapperTable->m_CustomXMLNodes_HasUniqueNode));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNodes_HasUniqueNode == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customxmlnodes_findnode", (void**)&(pWrapperTable->m_CustomXMLNodes_FindNode));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomXMLNodes_FindNode == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customdomtree_getnamespace", (void**)&(pWrapperTable->m_CustomDOMTree_GetNameSpace));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomDOMTree_GetNameSpace == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customdomtree_getrootnode", (void**)&(pWrapperTable->m_CustomDOMTree_GetRootNode));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomDOMTree_GetRootNode == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_customdomtree_savetostring", (void**)&(pWrapperTable->m_CustomDOMTree_SaveToString));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CustomDOMTree_SaveToString == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_slicestackiterator_getcurrentslicestack", (void**)&(pWrapperTable->m_SliceStackIterator_GetCurrentSliceStack));
@@ -6563,6 +8565,294 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_Slice_GetZTop == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getuuid", (void**)&(pWrapperTable->m_ToolpathProfile_GetUUID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetUUID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getname", (void**)&(pWrapperTable->m_ToolpathProfile_GetName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getparametercount", (void**)&(pWrapperTable->m_ToolpathProfile_GetParameterCount));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetParameterCount == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getparametername", (void**)&(pWrapperTable->m_ToolpathProfile_GetParameterName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetParameterName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getparameternamespace", (void**)&(pWrapperTable->m_ToolpathProfile_GetParameterNameSpace));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetParameterNameSpace == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_hasparametervalue", (void**)&(pWrapperTable->m_ToolpathProfile_HasParameterValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_HasParameterValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getparametervalue", (void**)&(pWrapperTable->m_ToolpathProfile_GetParameterValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetParameterValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getparametervaluedef", (void**)&(pWrapperTable->m_ToolpathProfile_GetParameterValueDef));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetParameterValueDef == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getparameterdoublevalue", (void**)&(pWrapperTable->m_ToolpathProfile_GetParameterDoubleValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetParameterDoubleValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getparameterdoublevaluedef", (void**)&(pWrapperTable->m_ToolpathProfile_GetParameterDoubleValueDef));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetParameterDoubleValueDef == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getparameterintegervalue", (void**)&(pWrapperTable->m_ToolpathProfile_GetParameterIntegerValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetParameterIntegerValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getparameterintegervaluedef", (void**)&(pWrapperTable->m_ToolpathProfile_GetParameterIntegerValueDef));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetParameterIntegerValueDef == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getparameterboolvalue", (void**)&(pWrapperTable->m_ToolpathProfile_GetParameterBoolValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetParameterBoolValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_getparameterboolvaluedef", (void**)&(pWrapperTable->m_ToolpathProfile_GetParameterBoolValueDef));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_GetParameterBoolValueDef == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_setname", (void**)&(pWrapperTable->m_ToolpathProfile_SetName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_SetName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_setparametervalue", (void**)&(pWrapperTable->m_ToolpathProfile_SetParameterValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_SetParameterValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_setparameterdoublevalue", (void**)&(pWrapperTable->m_ToolpathProfile_SetParameterDoubleValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_SetParameterDoubleValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_setparameterintegervalue", (void**)&(pWrapperTable->m_ToolpathProfile_SetParameterIntegerValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_SetParameterIntegerValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathprofile_setparameterboolvalue", (void**)&(pWrapperTable->m_ToolpathProfile_SetParameterBoolValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathProfile_SetParameterBoolValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getlayerdatauuid", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetLayerDataUUID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetLayerDataUUID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmentcount", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentCount));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentCount == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmentinfo", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentInfo));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentInfo == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmentprofile", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentProfile));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentProfile == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmentprofileuuid", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentProfileUUID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentProfileUUID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmentpart", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentPart));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentPart == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmentpartuuid", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmentlocalpartid", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentLocalPartID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentLocalPartID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getpartuuidbylocalpartid", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmentpointdata", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentPointData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentPointData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_findattributeinfobyname", (void**)&(pWrapperTable->m_ToolpathLayerReader_FindAttributeInfoByName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_FindAttributeInfoByName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_findattributeidbyname", (void**)&(pWrapperTable->m_ToolpathLayerReader_FindAttributeIDByName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_FindAttributeIDByName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_findattributevaluebyname", (void**)&(pWrapperTable->m_ToolpathLayerReader_FindAttributeValueByName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_FindAttributeValueByName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmentintegerattributebyid", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmentintegerattributebyname", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getcustomdatacount", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetCustomDataCount));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetCustomDataCount == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getcustomdata", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetCustomData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetCustomData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getcustomdataname", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetCustomDataName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetCustomDataName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_getlayerdatauuid", (void**)&(pWrapperTable->m_ToolpathLayerData_GetLayerDataUUID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_GetLayerDataUUID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_registerprofile", (void**)&(pWrapperTable->m_ToolpathLayerData_RegisterProfile));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_RegisterProfile == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_registerbuilditem", (void**)&(pWrapperTable->m_ToolpathLayerData_RegisterBuildItem));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_RegisterBuildItem == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_setsegmentattribute", (void**)&(pWrapperTable->m_ToolpathLayerData_SetSegmentAttribute));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_SetSegmentAttribute == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_clearsegmentattributes", (void**)&(pWrapperTable->m_ToolpathLayerData_ClearSegmentAttributes));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_ClearSegmentAttributes == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_writehatchdata", (void**)&(pWrapperTable->m_ToolpathLayerData_WriteHatchData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_WriteHatchData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_writeloop", (void**)&(pWrapperTable->m_ToolpathLayerData_WriteLoop));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_WriteLoop == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_writepolyline", (void**)&(pWrapperTable->m_ToolpathLayerData_WritePolyline));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_WritePolyline == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_addcustomdata", (void**)&(pWrapperTable->m_ToolpathLayerData_AddCustomData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_AddCustomData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_finish", (void**)&(pWrapperTable->m_ToolpathLayerData_Finish));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_Finish == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_getunits", (void**)&(pWrapperTable->m_Toolpath_GetUnits));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_GetUnits == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_getlayercount", (void**)&(pWrapperTable->m_Toolpath_GetLayerCount));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_GetLayerCount == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_getprofilecount", (void**)&(pWrapperTable->m_Toolpath_GetProfileCount));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_GetProfileCount == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_addlayer", (void**)&(pWrapperTable->m_Toolpath_AddLayer));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_AddLayer == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_getlayerattachment", (void**)&(pWrapperTable->m_Toolpath_GetLayerAttachment));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_GetLayerAttachment == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_readlayerdata", (void**)&(pWrapperTable->m_Toolpath_ReadLayerData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_ReadLayerData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_getlayerpath", (void**)&(pWrapperTable->m_Toolpath_GetLayerPath));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_GetLayerPath == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_getlayerzmax", (void**)&(pWrapperTable->m_Toolpath_GetLayerZMax));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_GetLayerZMax == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_getlayerz", (void**)&(pWrapperTable->m_Toolpath_GetLayerZ));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_GetLayerZ == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_addprofile", (void**)&(pWrapperTable->m_Toolpath_AddProfile));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_AddProfile == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_getprofile", (void**)&(pWrapperTable->m_Toolpath_GetProfile));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_GetProfile == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_getprofileuuid", (void**)&(pWrapperTable->m_Toolpath_GetProfileUUID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_GetProfileUUID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_getcustomdatacount", (void**)&(pWrapperTable->m_Toolpath_GetCustomDataCount));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_GetCustomDataCount == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_getcustomdata", (void**)&(pWrapperTable->m_Toolpath_GetCustomData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_GetCustomData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_getcustomdataname", (void**)&(pWrapperTable->m_Toolpath_GetCustomDataName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_GetCustomDataName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_hasuniquecustomdata", (void**)&(pWrapperTable->m_Toolpath_HasUniqueCustomData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_HasUniqueCustomData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_finduniquecustomdata", (void**)&(pWrapperTable->m_Toolpath_FindUniqueCustomData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_FindUniqueCustomData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_addcustomdata", (void**)&(pWrapperTable->m_Toolpath_AddCustomData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_AddCustomData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_clearcustomdata", (void**)&(pWrapperTable->m_Toolpath_ClearCustomData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_ClearCustomData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_deletecustomdata", (void**)&(pWrapperTable->m_Toolpath_DeleteCustomData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_DeleteCustomData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_registercustomintegerattribute", (void**)&(pWrapperTable->m_Toolpath_RegisterCustomIntegerAttribute));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_RegisterCustomIntegerAttribute == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_registercustomdoubleattribute", (void**)&(pWrapperTable->m_Toolpath_RegisterCustomDoubleAttribute));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_RegisterCustomDoubleAttribute == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathiterator_getcurrenttoolpath", (void**)&(pWrapperTable->m_ToolpathIterator_GetCurrentToolpath));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathIterator_GetCurrentToolpath == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_slicestack_getbottomz", (void**)&(pWrapperTable->m_SliceStack_GetBottomZ));
 		if ( (eLookupError != 0) || (pWrapperTable->m_SliceStack_GetBottomZ == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -6895,6 +9185,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetMultiPropertyGroups == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_model_gettoolpaths", (void**)&(pWrapperTable->m_Model_GetToolpaths));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetToolpaths == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_model_getslicestacks", (void**)&(pWrapperTable->m_Model_GetSliceStacks));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetSliceStacks == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -6945,6 +9239,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_model_removebuilditem", (void**)&(pWrapperTable->m_Model_RemoveBuildItem));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Model_RemoveBuildItem == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_addtoolpath", (void**)&(pWrapperTable->m_Model_AddToolpath));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_AddToolpath == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_model_getmetadatagroup", (void**)&(pWrapperTable->m_Model_GetMetaDataGroup));
@@ -7001,6 +9299,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_model_getkeystore", (void**)&(pWrapperTable->m_Model_GetKeyStore));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetKeyStore == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_createpersistentsourcefromfile", (void**)&(pWrapperTable->m_Model_CreatePersistentSourceFromFile));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_CreatePersistentSourceFromFile == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_createpersistentsourcefrombuffer", (void**)&(pWrapperTable->m_Model_CreatePersistentSourceFromBuffer));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_CreatePersistentSourceFromBuffer == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_createpersistentsourcefromcallback", (void**)&(pWrapperTable->m_Model_CreatePersistentSourceFromCallback));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_CreatePersistentSourceFromCallback == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_getlibraryversion", (void**)&(pWrapperTable->m_GetLibraryVersion));
@@ -7098,6 +9408,90 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		CheckError(m_pWrapper->m_WrapperTable.m_Base_ClassTypeId(m_pHandle, &resultClassTypeId));
 		
 		return resultClassTypeId;
+	}
+	
+	/**
+	 * Method definitions for class CBinaryStream
+	 */
+	
+	/**
+	* CBinaryStream::GetBinaryPath - Retrieves an binary streams package path for the binary data.
+	* @return binary streams package binary path.
+	*/
+	std::string CBinaryStream::GetBinaryPath()
+	{
+		Lib3MF_uint32 bytesNeededPath = 0;
+		Lib3MF_uint32 bytesWrittenPath = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_BinaryStream_GetBinaryPath(m_pHandle, 0, &bytesNeededPath, nullptr));
+		std::vector<char> bufferPath(bytesNeededPath);
+		CheckError(m_pWrapper->m_WrapperTable.m_BinaryStream_GetBinaryPath(m_pHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]));
+		
+		return std::string(&bufferPath[0]);
+	}
+	
+	/**
+	* CBinaryStream::GetIndexPath - Retrieves an binary streams package path for the index data.
+	* @return binary streams package index path.
+	*/
+	std::string CBinaryStream::GetIndexPath()
+	{
+		Lib3MF_uint32 bytesNeededPath = 0;
+		Lib3MF_uint32 bytesWrittenPath = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_BinaryStream_GetIndexPath(m_pHandle, 0, &bytesNeededPath, nullptr));
+		std::vector<char> bufferPath(bytesNeededPath);
+		CheckError(m_pWrapper->m_WrapperTable.m_BinaryStream_GetIndexPath(m_pHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]));
+		
+		return std::string(&bufferPath[0]);
+	}
+	
+	/**
+	* CBinaryStream::GetUUID - Retrieves an binary streams uuid.
+	* @return binary streams uuid
+	*/
+	std::string CBinaryStream::GetUUID()
+	{
+		Lib3MF_uint32 bytesNeededUUID = 0;
+		Lib3MF_uint32 bytesWrittenUUID = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_BinaryStream_GetUUID(m_pHandle, 0, &bytesNeededUUID, nullptr));
+		std::vector<char> bufferUUID(bytesNeededUUID);
+		CheckError(m_pWrapper->m_WrapperTable.m_BinaryStream_GetUUID(m_pHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]));
+		
+		return std::string(&bufferUUID[0]);
+	}
+	
+	/**
+	* CBinaryStream::DisableDiscretizedArrayCompression - Sets the float compression mode to raw. All subsequent writes will adhere to this mode.
+	*/
+	void CBinaryStream::DisableDiscretizedArrayCompression()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_BinaryStream_DisableDiscretizedArrayCompression(m_pHandle));
+	}
+	
+	/**
+	* CBinaryStream::EnableDiscretizedArrayCompression - Sets the compression mode to a quantized array. All subsequent writes will adhere to this mode.
+	* @param[in] dUnits - Unit factor to use for quantization.
+	* @param[in] ePredictionType - Prediction type to use for arrays.
+	*/
+	void CBinaryStream::EnableDiscretizedArrayCompression(const Lib3MF_double dUnits, const eBinaryStreamPredictionType ePredictionType)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_BinaryStream_EnableDiscretizedArrayCompression(m_pHandle, dUnits, ePredictionType));
+	}
+	
+	/**
+	* CBinaryStream::EnableLZMA - Enables LZMA mode.
+	* @param[in] nLZMALevel - LZMA Level (0-9)
+	*/
+	void CBinaryStream::EnableLZMA(const Lib3MF_uint32 nLZMALevel)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_BinaryStream_EnableLZMA(m_pHandle, nLZMALevel));
+	}
+	
+	/**
+	* CBinaryStream::DisableLZMA - Disables LZMA mode.
+	*/
+	void CBinaryStream::DisableLZMA()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_BinaryStream_DisableLZMA(m_pHandle));
 	}
 	
 	/**
@@ -7252,8 +9646,93 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CWriter::CreateBinaryStream - Creates a binary stream object. Only applicable for 3MF Writers.
+	* @param[in] sIndexPath - Package path to write the index into
+	* @param[in] sBinaryPath - Package path to write raw binary data into
+	* @return Returns a package path.
+	*/
+	PBinaryStream CWriter::CreateBinaryStream(const std::string & sIndexPath, const std::string & sBinaryPath)
+	{
+		Lib3MFHandle hBinaryStream = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Writer_CreateBinaryStream(m_pHandle, sIndexPath.c_str(), sBinaryPath.c_str(), &hBinaryStream));
+		
+		if (!hBinaryStream) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CBinaryStream>(dynamic_cast<CBinaryStream*>(m_pWrapper->polymorphicFactory(hBinaryStream)));
+	}
+	
+	/**
+	* CWriter::AssignBinaryStream - Sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.
+	* @param[in] pInstance - Object instance to assign Binary stream to.
+	* @param[in] pBinaryStream - Binary stream object to use for this layer.
+	*/
+	void CWriter::AssignBinaryStream(classParam<CBase> pInstance, classParam<CBinaryStream> pBinaryStream)
+	{
+		Lib3MFHandle hInstance = pInstance.GetHandle();
+		Lib3MFHandle hBinaryStream = pBinaryStream.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_Writer_AssignBinaryStream(m_pHandle, hInstance, hBinaryStream));
+	}
+	
+	/**
+	* CWriter::RegisterCustomNamespace - Registers a custom 3MF Namespace. Fails if Prefix is already registered.
+	* @param[in] sPrefix - Prefix to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number
+	* @param[in] sNameSpace - Namespace to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number
+	*/
+	void CWriter::RegisterCustomNamespace(const std::string & sPrefix, const std::string & sNameSpace)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Writer_RegisterCustomNamespace(m_pHandle, sPrefix.c_str(), sNameSpace.c_str()));
+	}
+	
+	/**
+	 * Method definitions for class CPersistentReaderSource
+	 */
+	
+	/**
+	* CPersistentReaderSource::GetSourceType - Retrieves the type of source data.
+	* @return Reader Source Type
+	*/
+	ePersistentReaderSourceType CPersistentReaderSource::GetSourceType()
+	{
+		ePersistentReaderSourceType resultSourceType = (ePersistentReaderSourceType) 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_PersistentReaderSource_GetSourceType(m_pHandle, &resultSourceType));
+		
+		return resultSourceType;
+	}
+	
+	/**
+	* CPersistentReaderSource::InvalidateSourceData - Invalidates the reader source. Every subsequent read on this data will fail.
+	*/
+	void CPersistentReaderSource::InvalidateSourceData()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_PersistentReaderSource_InvalidateSourceData(m_pHandle));
+	}
+	
+	/**
+	* CPersistentReaderSource::SourceDataIsValid - Checks if the source data is valid. Any read on an invalid source object will fail.
+	* @return The source data is valid.
+	*/
+	bool CPersistentReaderSource::SourceDataIsValid()
+	{
+		bool resultDataIsValid = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_PersistentReaderSource_SourceDataIsValid(m_pHandle, &resultDataIsValid));
+		
+		return resultDataIsValid;
+	}
+	
+	/**
 	 * Method definitions for class CReader
 	 */
+	
+	/**
+	* CReader::ReadFromPersistentSource - Reads a model from a persistent source object. The object will be referenced until the Model is destroyed or cleared.
+	* @param[in] pSource - Source object to read from
+	*/
+	void CReader::ReadFromPersistentSource(classParam<CPersistentReaderSource> pSource)
+	{
+		Lib3MFHandle hSource = pSource.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_Reader_ReadFromPersistentSource(m_pHandle, hSource));
+	}
 	
 	/**
 	* CReader::ReadFromFile - Reads a model from a file. The file type is specified by the Model Reader class
@@ -7545,6 +10024,614 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		CheckError(m_pWrapper->m_WrapperTable.m_ResourceIterator_Count(m_pHandle, &resultCount));
 		
 		return resultCount;
+	}
+	
+	/**
+	 * Method definitions for class CCustomXMLAttribute
+	 */
+	
+	/**
+	* CCustomXMLAttribute::GetName - Retrieves name of the attribute.
+	* @return returns the name of the attribute.
+	*/
+	std::string CCustomXMLAttribute::GetName()
+	{
+		Lib3MF_uint32 bytesNeededName = 0;
+		Lib3MF_uint32 bytesWrittenName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_GetName(m_pHandle, 0, &bytesNeededName, nullptr));
+		std::vector<char> bufferName(bytesNeededName);
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_GetName(m_pHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]));
+		
+		return std::string(&bufferName[0]);
+	}
+	
+	/**
+	* CCustomXMLAttribute::GetValue - Retrieves value of the attribute as string.
+	* @return returns the value of the attribute.
+	*/
+	std::string CCustomXMLAttribute::GetValue()
+	{
+		Lib3MF_uint32 bytesNeededValue = 0;
+		Lib3MF_uint32 bytesWrittenValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_GetValue(m_pHandle, 0, &bytesNeededValue, nullptr));
+		std::vector<char> bufferValue(bytesNeededValue);
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_GetValue(m_pHandle, bytesNeededValue, &bytesWrittenValue, &bufferValue[0]));
+		
+		return std::string(&bufferValue[0]);
+	}
+	
+	/**
+	* CCustomXMLAttribute::IsValidInteger - Checks if the value is a valid integer in the given range.
+	* @param[in] nMinValue - Minimum allowed value
+	* @param[in] nMaxValue - Maximum allowed value
+	* @return returns if the value is a valid integer.
+	*/
+	bool CCustomXMLAttribute::IsValidInteger(const Lib3MF_int64 nMinValue, const Lib3MF_int64 nMaxValue)
+	{
+		bool resultIsValid = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_IsValidInteger(m_pHandle, nMinValue, nMaxValue, &resultIsValid));
+		
+		return resultIsValid;
+	}
+	
+	/**
+	* CCustomXMLAttribute::GetIntegerValue - Returns the value as integer. Fails if the value is not a valid integer in the given range.
+	* @param[in] nMinValue - Minimum allowed value
+	* @param[in] nMaxValue - Maximum allowed value
+	* @return returns the value.
+	*/
+	Lib3MF_int64 CCustomXMLAttribute::GetIntegerValue(const Lib3MF_int64 nMinValue, const Lib3MF_int64 nMaxValue)
+	{
+		Lib3MF_int64 resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_GetIntegerValue(m_pHandle, nMinValue, nMaxValue, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CCustomXMLAttribute::IsValidDouble - Checks if the value is a valid double in the given range.
+	* @param[in] dMinValue - Minimum allowed value
+	* @param[in] dMaxValue - Maximum allowed value
+	* @return returns if the value is a valid double.
+	*/
+	bool CCustomXMLAttribute::IsValidDouble(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue)
+	{
+		bool resultIsValid = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_IsValidDouble(m_pHandle, dMinValue, dMaxValue, &resultIsValid));
+		
+		return resultIsValid;
+	}
+	
+	/**
+	* CCustomXMLAttribute::GetDoubleValue - Returns the value as double. Fails if the value is not a valid double in the given range.
+	* @param[in] dMinValue - Minimum allowed value
+	* @param[in] dMaxValue - Maximum allowed value
+	* @return returns the value .
+	*/
+	Lib3MF_double CCustomXMLAttribute::GetDoubleValue(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue)
+	{
+		Lib3MF_double resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_GetDoubleValue(m_pHandle, dMinValue, dMaxValue, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CCustomXMLAttribute::IsValidBool - Checks if the value is a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+	* @return returns if the value is a valid bool.
+	*/
+	bool CCustomXMLAttribute::IsValidBool()
+	{
+		bool resultIsValid = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_IsValidBool(m_pHandle, &resultIsValid));
+		
+		return resultIsValid;
+	}
+	
+	/**
+	* CCustomXMLAttribute::GetBoolValue - Returns the value as bool. Fails if the value is not a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.
+	* @param[in] dMinValue - Minimum allowed value
+	* @param[in] dMaxValue - Maximum allowed value
+	* @return returns the value .
+	*/
+	bool CCustomXMLAttribute::GetBoolValue(const Lib3MF_double dMinValue, const Lib3MF_double dMaxValue)
+	{
+		bool resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_GetBoolValue(m_pHandle, dMinValue, dMaxValue, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CCustomXMLAttribute::SetValue - Sets the value of the attribute as string.
+	* @param[in] sValue - new value of the attribute.
+	*/
+	void CCustomXMLAttribute::SetValue(const std::string & sValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_SetValue(m_pHandle, sValue.c_str()));
+	}
+	
+	/**
+	* CCustomXMLAttribute::SetIntegerValue - Sets the value of the attribute as integer.
+	* @param[in] nValue - new value of the attribute.
+	*/
+	void CCustomXMLAttribute::SetIntegerValue(const Lib3MF_int64 nValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_SetIntegerValue(m_pHandle, nValue));
+	}
+	
+	/**
+	* CCustomXMLAttribute::SetDoubleValue - Sets the value of the attribute as double.
+	* @param[in] dValue - new value of the attribute.
+	*/
+	void CCustomXMLAttribute::SetDoubleValue(const Lib3MF_double dValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_SetDoubleValue(m_pHandle, dValue));
+	}
+	
+	/**
+	* CCustomXMLAttribute::SetBoolValue - Sets the value of the attribute as bool.
+	* @param[in] bValue - new value of the attribute.
+	*/
+	void CCustomXMLAttribute::SetBoolValue(const bool bValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_SetBoolValue(m_pHandle, bValue));
+	}
+	
+	/**
+	* CCustomXMLAttribute::Remove - Removes the attribute from its parent node. All subsequent calls to the class will fail.
+	*/
+	void CCustomXMLAttribute::Remove()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLAttribute_Remove(m_pHandle));
+	}
+	
+	/**
+	 * Method definitions for class CCustomXMLNode
+	 */
+	
+	/**
+	* CCustomXMLNode::GetName - Retrieves name of the node.
+	* @return returns the name of the node.
+	*/
+	std::string CCustomXMLNode::GetName()
+	{
+		Lib3MF_uint32 bytesNeededName = 0;
+		Lib3MF_uint32 bytesWrittenName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_GetName(m_pHandle, 0, &bytesNeededName, nullptr));
+		std::vector<char> bufferName(bytesNeededName);
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_GetName(m_pHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]));
+		
+		return std::string(&bufferName[0]);
+	}
+	
+	/**
+	* CCustomXMLNode::GetNameSpace - Retrieves namespace of the node.
+	* @return returns the namespace of the node.
+	*/
+	std::string CCustomXMLNode::GetNameSpace()
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_GetNameSpace(m_pHandle, 0, &bytesNeededNameSpace, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_GetNameSpace(m_pHandle, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0]));
+		
+		return std::string(&bufferNameSpace[0]);
+	}
+	
+	/**
+	* CCustomXMLNode::GetAttributeCount - Returns number of attributes.
+	* @return returns the number of attributes.
+	*/
+	Lib3MF_uint64 CCustomXMLNode::GetAttributeCount()
+	{
+		Lib3MF_uint64 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_GetAttributeCount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CCustomXMLNode::GetAttribute - Returns attribute instance. Fails if Index is out of range.
+	* @param[in] nIndex - Index of the attribute to return (0-based).
+	* @return XML Document attribute.
+	*/
+	PCustomXMLAttribute CCustomXMLNode::GetAttribute(const Lib3MF_uint64 nIndex)
+	{
+		Lib3MFHandle hAttributeInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_GetAttribute(m_pHandle, nIndex, &hAttributeInstance));
+		
+		if (!hAttributeInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLAttribute>(dynamic_cast<CCustomXMLAttribute*>(m_pWrapper->polymorphicFactory(hAttributeInstance)));
+	}
+	
+	/**
+	* CCustomXMLNode::HasAttribute - Returns if attribute of a specific name exists.
+	* @param[in] sName - Name of the attribute.
+	* @return Returns if the attribute exists.
+	*/
+	bool CCustomXMLNode::HasAttribute(const std::string & sName)
+	{
+		bool resultAttributeExists = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_HasAttribute(m_pHandle, sName.c_str(), &resultAttributeExists));
+		
+		return resultAttributeExists;
+	}
+	
+	/**
+	* CCustomXMLNode::FindAttribute - Returns attribute instance of a specific name. 
+	* @param[in] sName - Name of the attribute.
+	* @param[in] bMustExist - If true, the call fails if attribute does not exist. If falls, the call will return null if the attribute does not exist.
+	* @return XML Document attribute.
+	*/
+	PCustomXMLAttribute CCustomXMLNode::FindAttribute(const std::string & sName, const bool bMustExist)
+	{
+		Lib3MFHandle hAttributeInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_FindAttribute(m_pHandle, sName.c_str(), bMustExist, &hAttributeInstance));
+		
+		if (hAttributeInstance) {
+			return std::shared_ptr<CCustomXMLAttribute>(dynamic_cast<CCustomXMLAttribute*>(m_pWrapper->polymorphicFactory(hAttributeInstance)));
+		} else {
+			return nullptr;
+		}
+	}
+	
+	/**
+	* CCustomXMLNode::RemoveAttribute - Removes the attribute with a specific name. Does nothing if attribute does not exist.
+	* @param[in] sName - Name of the attribute.
+	* @return Returns true if an attribute was removed.
+	*/
+	bool CCustomXMLNode::RemoveAttribute(const std::string & sName)
+	{
+		bool resultAttributeRemoved = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_RemoveAttribute(m_pHandle, sName.c_str(), &resultAttributeRemoved));
+		
+		return resultAttributeRemoved;
+	}
+	
+	/**
+	* CCustomXMLNode::RemoveAttributeByIndex - Removes the attribute with a specific index. Fails if index is invalid
+	* @param[in] nIndex - Index of the attribute to remove (0-based).
+	* @return Returns true if an attribute was removed.
+	*/
+	bool CCustomXMLNode::RemoveAttributeByIndex(const Lib3MF_uint64 nIndex)
+	{
+		bool resultAttributeRemoved = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_RemoveAttributeByIndex(m_pHandle, nIndex, &resultAttributeRemoved));
+		
+		return resultAttributeRemoved;
+	}
+	
+	/**
+	* CCustomXMLNode::AddAttribute - Adds an attribute with a specific name and string value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] sValue - Value of the attribute.
+	*/
+	void CCustomXMLNode::AddAttribute(const std::string & sName, const std::string & sValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_AddAttribute(m_pHandle, sName.c_str(), sValue.c_str()));
+	}
+	
+	/**
+	* CCustomXMLNode::AddIntegerAttribute - Adds an attribute with a specific name and integer value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] nValue - Value of the attribute.
+	*/
+	void CCustomXMLNode::AddIntegerAttribute(const std::string & sName, const Lib3MF_int64 nValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_AddIntegerAttribute(m_pHandle, sName.c_str(), nValue));
+	}
+	
+	/**
+	* CCustomXMLNode::AddDoubleAttribute - Adds an attribute with a specific name and double value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] dValue - Value of the attribute.
+	*/
+	void CCustomXMLNode::AddDoubleAttribute(const std::string & sName, const Lib3MF_double dValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_AddDoubleAttribute(m_pHandle, sName.c_str(), dValue));
+	}
+	
+	/**
+	* CCustomXMLNode::AddBoolAttribute - Adds an attribute with a specific name and bool value. Fails if attribute already exists.
+	* @param[in] sName - Name of the attribute.
+	* @param[in] bValue - Value of the attribute.
+	*/
+	void CCustomXMLNode::AddBoolAttribute(const std::string & sName, const bool bValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_AddBoolAttribute(m_pHandle, sName.c_str(), bValue));
+	}
+	
+	/**
+	* CCustomXMLNode::GetChildren - Returns all the child nodes of the XML Node.
+	* @return returns the list of child nodes.
+	*/
+	PCustomXMLNodes CCustomXMLNode::GetChildren()
+	{
+		Lib3MFHandle hChildNodes = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_GetChildren(m_pHandle, &hChildNodes));
+		
+		if (!hChildNodes) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNodes>(dynamic_cast<CCustomXMLNodes*>(m_pWrapper->polymorphicFactory(hChildNodes)));
+	}
+	
+	/**
+	* CCustomXMLNode::CountChildrenByName - Returns how many children of the XML Node have a specific name.
+	* @param[in] sName - Name of the node.
+	* @return returns the number children with the specified name.
+	*/
+	Lib3MF_uint64 CCustomXMLNode::CountChildrenByName(const std::string & sName)
+	{
+		Lib3MF_uint64 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_CountChildrenByName(m_pHandle, sName.c_str(), &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CCustomXMLNode::GetChildrenByName - Returns all the child nodes of the XML Node with a specific name.
+	* @param[in] sName - Name of the child.
+	* @return returns the list of child nodes.
+	*/
+	PCustomXMLNodes CCustomXMLNode::GetChildrenByName(const std::string & sName)
+	{
+		Lib3MFHandle hChildNodes = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_GetChildrenByName(m_pHandle, sName.c_str(), &hChildNodes));
+		
+		if (!hChildNodes) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNodes>(dynamic_cast<CCustomXMLNodes*>(m_pWrapper->polymorphicFactory(hChildNodes)));
+	}
+	
+	/**
+	* CCustomXMLNode::HasChild - Returns if a child with a specific name exist.
+	* @param[in] sName - Name of the child.
+	* @return returns if a child with a specific name exists.
+	*/
+	bool CCustomXMLNode::HasChild(const std::string & sName)
+	{
+		bool resultChildExists = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_HasChild(m_pHandle, sName.c_str(), &resultChildExists));
+		
+		return resultChildExists;
+	}
+	
+	/**
+	* CCustomXMLNode::HasUniqueChild - Returns if a child with a specific name exist once and only once.
+	* @param[in] sName - Name of the child.
+	* @return returns if a child with a specific name exists once and only once.
+	*/
+	bool CCustomXMLNode::HasUniqueChild(const std::string & sName)
+	{
+		bool resultChildExists = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_HasUniqueChild(m_pHandle, sName.c_str(), &resultChildExists));
+		
+		return resultChildExists;
+	}
+	
+	/**
+	* CCustomXMLNode::FindChild - Returns child with a specific name. Throws an error if name does not exist once and only once.
+	* @param[in] sName - Name of the child.
+	* @param[in] bMustExist - If true, the call fails if child does not exist. If falls, the call will return null if the child does not exist.
+	* @return returns child instance or null.
+	*/
+	PCustomXMLNode CCustomXMLNode::FindChild(const std::string & sName, const bool bMustExist)
+	{
+		Lib3MFHandle hChildInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_FindChild(m_pHandle, sName.c_str(), bMustExist, &hChildInstance));
+		
+		if (hChildInstance) {
+			return std::shared_ptr<CCustomXMLNode>(dynamic_cast<CCustomXMLNode*>(m_pWrapper->polymorphicFactory(hChildInstance)));
+		} else {
+			return nullptr;
+		}
+	}
+	
+	/**
+	* CCustomXMLNode::AddChild - Adds a new child with a specific name.
+	* @param[in] sName - Name of the child.
+	* @return returns child instance.
+	*/
+	PCustomXMLNode CCustomXMLNode::AddChild(const std::string & sName)
+	{
+		Lib3MFHandle hChildInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_AddChild(m_pHandle, sName.c_str(), &hChildInstance));
+		
+		if (!hChildInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNode>(dynamic_cast<CCustomXMLNode*>(m_pWrapper->polymorphicFactory(hChildInstance)));
+	}
+	
+	/**
+	* CCustomXMLNode::RemoveChild - Removes a specific child. All subsequent calls to the child will fail after the call.
+	* @param[in] pChildInstance - child instance to remove. Fails if given instance is not a child of the node.
+	*/
+	void CCustomXMLNode::RemoveChild(classParam<CCustomXMLNode> pChildInstance)
+	{
+		Lib3MFHandle hChildInstance = pChildInstance.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_RemoveChild(m_pHandle, hChildInstance));
+	}
+	
+	/**
+	* CCustomXMLNode::RemoveChildrenWithName - Removes all children with a specific name. Does nothing if no child with the name exists. All subsequent calls to the deleted children will fail after the call.
+	* @param[in] sName - Name of the children.
+	* @return Returns how many children have been deleted.
+	*/
+	Lib3MF_uint64 CCustomXMLNode::RemoveChildrenWithName(const std::string & sName)
+	{
+		Lib3MF_uint64 resultNumberOfDeletedChildren = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_RemoveChildrenWithName(m_pHandle, sName.c_str(), &resultNumberOfDeletedChildren));
+		
+		return resultNumberOfDeletedChildren;
+	}
+	
+	/**
+	* CCustomXMLNode::Remove - Removes the node from its parent. The root node of the document can not be removed. Any subsequent call to the node fails after this.
+	*/
+	void CCustomXMLNode::Remove()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNode_Remove(m_pHandle));
+	}
+	
+	/**
+	 * Method definitions for class CCustomXMLNodes
+	 */
+	
+	/**
+	* CCustomXMLNodes::GetNodeCount - Returns number of nodes.
+	* @return returns the number of nodes in the list.
+	*/
+	Lib3MF_uint64 CCustomXMLNodes::GetNodeCount()
+	{
+		Lib3MF_uint64 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNodes_GetNodeCount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CCustomXMLNodes::GetNode - Returns node instance. Fails if Index is out of range.
+	* @param[in] nIndex - Index of the node to return (0-based).
+	* @return XML Node node.
+	*/
+	PCustomXMLNode CCustomXMLNodes::GetNode(const Lib3MF_uint64 nIndex)
+	{
+		Lib3MFHandle hNodeInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNodes_GetNode(m_pHandle, nIndex, &hNodeInstance));
+		
+		if (!hNodeInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNode>(dynamic_cast<CCustomXMLNode*>(m_pWrapper->polymorphicFactory(hNodeInstance)));
+	}
+	
+	/**
+	* CCustomXMLNodes::CountNodesByName - Returns how many nodes of the XML Node have a specific name.
+	* @param[in] sName - Name of the node.
+	* @return returns the number of nodes with the specified name.
+	*/
+	Lib3MF_uint64 CCustomXMLNodes::CountNodesByName(const std::string & sName)
+	{
+		Lib3MF_uint64 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNodes_CountNodesByName(m_pHandle, sName.c_str(), &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CCustomXMLNodes::GetNodesByName - Returns all the nodes nodes of the XML Node with a specific name.
+	* @param[in] sName - Name of the node.
+	* @return returns the list of node nodes.
+	*/
+	PCustomXMLNodes CCustomXMLNodes::GetNodesByName(const std::string & sName)
+	{
+		Lib3MFHandle hNodes = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNodes_GetNodesByName(m_pHandle, sName.c_str(), &hNodes));
+		
+		if (!hNodes) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNodes>(dynamic_cast<CCustomXMLNodes*>(m_pWrapper->polymorphicFactory(hNodes)));
+	}
+	
+	/**
+	* CCustomXMLNodes::HasNode - Returns if a node with a specific name exist.
+	* @param[in] sName - Name of the node.
+	* @return returns if a node with a specific name exists.
+	*/
+	bool CCustomXMLNodes::HasNode(const std::string & sName)
+	{
+		bool resultNodeExists = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNodes_HasNode(m_pHandle, sName.c_str(), &resultNodeExists));
+		
+		return resultNodeExists;
+	}
+	
+	/**
+	* CCustomXMLNodes::HasUniqueNode - Returns if a node with a specific name exist once and only once.
+	* @param[in] sName - Name of the node.
+	* @return returns if a node with a specific name exists once and only once.
+	*/
+	bool CCustomXMLNodes::HasUniqueNode(const std::string & sName)
+	{
+		bool resultNodeExists = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNodes_HasUniqueNode(m_pHandle, sName.c_str(), &resultNodeExists));
+		
+		return resultNodeExists;
+	}
+	
+	/**
+	* CCustomXMLNodes::FindNode - Returns node with a specific name. Throws an error if name does not exist once and only once.
+	* @param[in] sName - Name of the node.
+	* @param[in] bMustExist - If true, the call fails if node does not exist. If falls, the call will return null if the node does not exist.
+	* @return returns node instance.
+	*/
+	PCustomXMLNode CCustomXMLNodes::FindNode(const std::string & sName, const bool bMustExist)
+	{
+		Lib3MFHandle hNodeInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomXMLNodes_FindNode(m_pHandle, sName.c_str(), bMustExist, &hNodeInstance));
+		
+		if (hNodeInstance) {
+			return std::shared_ptr<CCustomXMLNode>(dynamic_cast<CCustomXMLNode*>(m_pWrapper->polymorphicFactory(hNodeInstance)));
+		} else {
+			return nullptr;
+		}
+	}
+	
+	/**
+	 * Method definitions for class CCustomDOMTree
+	 */
+	
+	/**
+	* CCustomDOMTree::GetNameSpace - Returns the namespace identifier for the DOM Tree.
+	* @return returns the namespace of the DOM Tree.
+	*/
+	std::string CCustomDOMTree::GetNameSpace()
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomDOMTree_GetNameSpace(m_pHandle, 0, &bytesNeededNameSpace, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomDOMTree_GetNameSpace(m_pHandle, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0]));
+		
+		return std::string(&bufferNameSpace[0]);
+	}
+	
+	/**
+	* CCustomDOMTree::GetRootNode - Returns root node of the tree.
+	* @return Root node of the document.
+	*/
+	PCustomXMLNode CCustomDOMTree::GetRootNode()
+	{
+		Lib3MFHandle hRootNode = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomDOMTree_GetRootNode(m_pHandle, &hRootNode));
+		
+		if (!hRootNode) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomXMLNode>(dynamic_cast<CCustomXMLNode*>(m_pWrapper->polymorphicFactory(hRootNode)));
+	}
+	
+	/**
+	* CCustomDOMTree::SaveToString - Saves the XML tree into a string.
+	* @return String with the XML Content.
+	*/
+	std::string CCustomDOMTree::SaveToString()
+	{
+		Lib3MF_uint32 bytesNeededXMLString = 0;
+		Lib3MF_uint32 bytesWrittenXMLString = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomDOMTree_SaveToString(m_pHandle, 0, &bytesNeededXMLString, nullptr));
+		std::vector<char> bufferXMLString(bytesNeededXMLString);
+		CheckError(m_pWrapper->m_WrapperTable.m_CustomDOMTree_SaveToString(m_pHandle, bytesNeededXMLString, &bytesWrittenXMLString, &bufferXMLString[0]));
+		
+		return std::string(&bufferXMLString[0]);
 	}
 	
 	/**
@@ -9990,6 +13077,1034 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	 * Method definitions for class CToolpathProfile
+	 */
+	
+	/**
+	* CToolpathProfile::GetUUID - Retrieves the profile's uuid
+	* @return Returns the uuid value.
+	*/
+	std::string CToolpathProfile::GetUUID()
+	{
+		Lib3MF_uint32 bytesNeededUUID = 0;
+		Lib3MF_uint32 bytesWrittenUUID = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetUUID(m_pHandle, 0, &bytesNeededUUID, nullptr));
+		std::vector<char> bufferUUID(bytesNeededUUID);
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetUUID(m_pHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]));
+		
+		return std::string(&bufferUUID[0]);
+	}
+	
+	/**
+	* CToolpathProfile::GetName - Retrieves the profile's name
+	* @return Returns the name.
+	*/
+	std::string CToolpathProfile::GetName()
+	{
+		Lib3MF_uint32 bytesNeededName = 0;
+		Lib3MF_uint32 bytesWrittenName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetName(m_pHandle, 0, &bytesNeededName, nullptr));
+		std::vector<char> bufferName(bytesNeededName);
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetName(m_pHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]));
+		
+		return std::string(&bufferName[0]);
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterCount - Returns the number of parameters.
+	* @return Returns the number of parameters.
+	*/
+	Lib3MF_uint32 CToolpathProfile::GetParameterCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterCount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterName - Returns the Name of a parameter.
+	* @param[in] nIndex - Index of Parameter (0-based). Call will fail if an invalid index is given.
+	* @return Returns the name of the parameter.
+	*/
+	std::string CToolpathProfile::GetParameterName(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_uint32 bytesNeededName = 0;
+		Lib3MF_uint32 bytesWrittenName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterName(m_pHandle, nIndex, 0, &bytesNeededName, nullptr));
+		std::vector<char> bufferName(bytesNeededName);
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterName(m_pHandle, nIndex, bytesNeededName, &bytesWrittenName, &bufferName[0]));
+		
+		return std::string(&bufferName[0]);
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterNameSpace - Returns the NameSpace of a parameter.
+	* @param[in] nIndex - Index of Parameter (0-based). Call will fail if an invalid index is given.
+	* @return Returns the namespace of the parameter.
+	*/
+	std::string CToolpathProfile::GetParameterNameSpace(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterNameSpace(m_pHandle, nIndex, 0, &bytesNeededNameSpace, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterNameSpace(m_pHandle, nIndex, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0]));
+		
+		return std::string(&bufferNameSpace[0]);
+	}
+	
+	/**
+	* CToolpathProfile::HasParameterValue - Checks if a parameter value exists.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns if a value exists.
+	*/
+	bool CToolpathProfile::HasParameterValue(const std::string & sNameSpaceName, const std::string & sValueName)
+	{
+		bool resultValueExists = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_HasParameterValue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), &resultValueExists));
+		
+		return resultValueExists;
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterValue - Retrieves a profile's parameter value. Fails if value does not exist.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns the value of the field.
+	*/
+	std::string CToolpathProfile::GetParameterValue(const std::string & sNameSpaceName, const std::string & sValueName)
+	{
+		Lib3MF_uint32 bytesNeededValue = 0;
+		Lib3MF_uint32 bytesWrittenValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterValue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), 0, &bytesNeededValue, nullptr));
+		std::vector<char> bufferValue(bytesNeededValue);
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterValue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), bytesNeededValue, &bytesWrittenValue, &bufferValue[0]));
+		
+		return std::string(&bufferValue[0]);
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterValueDef - Retrieves a profile's parameter value
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] sDefaultValue - Default value if value does not exist.
+	* @return Returns the value of the field.
+	*/
+	std::string CToolpathProfile::GetParameterValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const std::string & sDefaultValue)
+	{
+		Lib3MF_uint32 bytesNeededValue = 0;
+		Lib3MF_uint32 bytesWrittenValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterValueDef(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), sDefaultValue.c_str(), 0, &bytesNeededValue, nullptr));
+		std::vector<char> bufferValue(bytesNeededValue);
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterValueDef(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), sDefaultValue.c_str(), bytesNeededValue, &bytesWrittenValue, &bufferValue[0]));
+		
+		return std::string(&bufferValue[0]);
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterDoubleValue - Retrieves a profile's parameter value as double. Fails if value does not exist or is not a double value.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns the value of the field.
+	*/
+	Lib3MF_double CToolpathProfile::GetParameterDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName)
+	{
+		Lib3MF_double resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterDoubleValue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterDoubleValueDef - Retrieves a profile's parameter value as double.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] dDefaultValue - Default value if value does not exist or is not a double value.
+	* @return Returns the value of the field.
+	*/
+	Lib3MF_double CToolpathProfile::GetParameterDoubleValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dDefaultValue)
+	{
+		Lib3MF_double resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterDoubleValueDef(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), dDefaultValue, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterIntegerValue - Retrieves a profile's parameter value as integer. Fails if value does not exist or is not a integer value.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns the value of the field.
+	*/
+	Lib3MF_int64 CToolpathProfile::GetParameterIntegerValue(const std::string & sNameSpaceName, const std::string & sValueName)
+	{
+		Lib3MF_int64 resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterIntegerValue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterIntegerValueDef - Retrieves a profile's parameter value as integer.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] nDefaultValue - Default value if value does not exist or is not a integer value.
+	* @return Returns the value of the field.
+	*/
+	Lib3MF_int64 CToolpathProfile::GetParameterIntegerValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_int64 nDefaultValue)
+	{
+		Lib3MF_int64 resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterIntegerValueDef(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), nDefaultValue, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterBoolValue - Retrieves a profile's parameter value as boolean. Fails if value does not exist or is not a boolean value.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns the value of the field.
+	*/
+	bool CToolpathProfile::GetParameterBoolValue(const std::string & sNameSpaceName, const std::string & sValueName)
+	{
+		bool resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterBoolValue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathProfile::GetParameterBoolValueDef - Retrieves a profile's parameter value as boolean.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] bDefaultValue - Default value if value does not exist or is not a boolean value.
+	* @return Returns the value of the field.
+	*/
+	bool CToolpathProfile::GetParameterBoolValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const bool bDefaultValue)
+	{
+		bool resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_GetParameterBoolValueDef(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), bDefaultValue, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathProfile::SetName - Sets the profile's name
+	* @param[in] sName - Returns the name.
+	*/
+	void CToolpathProfile::SetName(const std::string & sName)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_SetName(m_pHandle, sName.c_str()));
+	}
+	
+	/**
+	* CToolpathProfile::SetParameterValue - Sets a profile's parameter value.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] sValue - String value of the parameter.
+	*/
+	void CToolpathProfile::SetParameterValue(const std::string & sNameSpaceName, const std::string & sValueName, const std::string & sValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_SetParameterValue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), sValue.c_str()));
+	}
+	
+	/**
+	* CToolpathProfile::SetParameterDoubleValue - Sets a profile's parameter value as double.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] dValue - Double value of the parameter.
+	*/
+	void CToolpathProfile::SetParameterDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_SetParameterDoubleValue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), dValue));
+	}
+	
+	/**
+	* CToolpathProfile::SetParameterIntegerValue - Sets a profile's parameter value as integer.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] nValue - Integer value of the parameter.
+	*/
+	void CToolpathProfile::SetParameterIntegerValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_int64 nValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_SetParameterIntegerValue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), nValue));
+	}
+	
+	/**
+	* CToolpathProfile::SetParameterBoolValue - Sets a profile's parameter value as boolean.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] bValue - Boolean value of the parameter.
+	*/
+	void CToolpathProfile::SetParameterBoolValue(const std::string & sNameSpaceName, const std::string & sValueName, const bool bValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathProfile_SetParameterBoolValue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), bValue));
+	}
+	
+	/**
+	 * Method definitions for class CToolpathLayerReader
+	 */
+	
+	/**
+	* CToolpathLayerReader::GetLayerDataUUID - Retrieves the layerdata's uuid
+	* @return Returns the uuid value.
+	*/
+	std::string CToolpathLayerReader::GetLayerDataUUID()
+	{
+		Lib3MF_uint32 bytesNeededUUID = 0;
+		Lib3MF_uint32 bytesWrittenUUID = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetLayerDataUUID(m_pHandle, 0, &bytesNeededUUID, nullptr));
+		std::vector<char> bufferUUID(bytesNeededUUID);
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetLayerDataUUID(m_pHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]));
+		
+		return std::string(&bufferUUID[0]);
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentCount - Retrieves the count of segments.
+	* @return Count
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::GetSegmentCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentCount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentInfo - Retrieves the segment type information .
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[out] eType - Segment Type
+	* @param[out] nPointCount - Point count of segment.
+	*/
+	void CToolpathLayerReader::GetSegmentInfo(const Lib3MF_uint32 nIndex, eToolpathSegmentType & eType, Lib3MF_uint32 & nPointCount)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentInfo(m_pHandle, nIndex, &eType, &nPointCount));
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentProfile - Retrieves the assigned segment profile.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Profile
+	*/
+	PToolpathProfile CToolpathLayerReader::GetSegmentProfile(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hProfile = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentProfile(m_pHandle, nIndex, &hProfile));
+		
+		if (!hProfile) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpathProfile>(dynamic_cast<CToolpathProfile*>(m_pWrapper->polymorphicFactory(hProfile)));
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentProfileUUID - Retrieves the assigned segment profile uuid.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Profile UUID
+	*/
+	std::string CToolpathLayerReader::GetSegmentProfileUUID(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_uint32 bytesNeededProfileUUID = 0;
+		Lib3MF_uint32 bytesWrittenProfileUUID = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentProfileUUID(m_pHandle, nIndex, 0, &bytesNeededProfileUUID, nullptr));
+		std::vector<char> bufferProfileUUID(bytesNeededProfileUUID);
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentProfileUUID(m_pHandle, nIndex, bytesNeededProfileUUID, &bytesWrittenProfileUUID, &bufferProfileUUID[0]));
+		
+		return std::string(&bufferProfileUUID[0]);
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentPart - Retrieves the assigned segment profile.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Build Item
+	*/
+	PBuildItem CToolpathLayerReader::GetSegmentPart(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hBuildItem = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentPart(m_pHandle, nIndex, &hBuildItem));
+		
+		if (!hBuildItem) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CBuildItem>(dynamic_cast<CBuildItem*>(m_pWrapper->polymorphicFactory(hBuildItem)));
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentPartUUID - Retrieves the assigned segment part uuid.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Part UUID
+	*/
+	std::string CToolpathLayerReader::GetSegmentPartUUID(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_uint32 bytesNeededPartUUID = 0;
+		Lib3MF_uint32 bytesWrittenPartUUID = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentPartUUID(m_pHandle, nIndex, 0, &bytesNeededPartUUID, nullptr));
+		std::vector<char> bufferPartUUID(bytesNeededPartUUID);
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentPartUUID(m_pHandle, nIndex, bytesNeededPartUUID, &bytesWrittenPartUUID, &bufferPartUUID[0]));
+		
+		return std::string(&bufferPartUUID[0]);
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentLocalPartID - Retrieves the assigned segment part id. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Local Segment Part ID
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::GetSegmentLocalPartID(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_uint32 resultLocalPartID = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentLocalPartID(m_pHandle, nIndex, &resultLocalPartID));
+		
+		return resultLocalPartID;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetPartUUIDByLocalPartID - Retrieves the global part UUID by the local part ID. Fails if part ID does not exist in this layer. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+	* @param[in] nLocalPartID - Local Segment Part ID
+	* @return Segment Part UUID
+	*/
+	std::string CToolpathLayerReader::GetPartUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID)
+	{
+		Lib3MF_uint32 bytesNeededPartUUID = 0;
+		Lib3MF_uint32 bytesWrittenPartUUID = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetPartUUIDByLocalPartID(m_pHandle, nLocalPartID, 0, &bytesNeededPartUUID, nullptr));
+		std::vector<char> bufferPartUUID(bytesNeededPartUUID);
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetPartUUIDByLocalPartID(m_pHandle, nLocalPartID, bytesNeededPartUUID, &bytesWrittenPartUUID, &bufferPartUUID[0]));
+		
+		return std::string(&bufferPartUUID[0]);
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentPointData - Retrieves the assigned segment point list. For type hatch, the points are taken pairwise.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[out] PointDataBuffer - The point data array
+	*/
+	void CToolpathLayerReader::GetSegmentPointData(const Lib3MF_uint32 nIndex, std::vector<sPosition2D> & PointDataBuffer)
+	{
+		Lib3MF_uint64 elementsNeededPointData = 0;
+		Lib3MF_uint64 elementsWrittenPointData = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentPointData(m_pHandle, nIndex, 0, &elementsNeededPointData, nullptr));
+		PointDataBuffer.resize((size_t) elementsNeededPointData);
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentPointData(m_pHandle, nIndex, elementsNeededPointData, &elementsWrittenPointData, PointDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerReader::FindAttributeInfoByName - Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @param[out] nID - Attribute ID.
+	* @param[out] eAttributeType - Attribute Type.
+	*/
+	void CToolpathLayerReader::FindAttributeInfoByName(const std::string & sNameSpace, const std::string & sAttributeName, Lib3MF_uint32 & nID, eToolpathAttributeType & eAttributeType)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_FindAttributeInfoByName(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &nID, &eAttributeType));
+	}
+	
+	/**
+	* CToolpathLayerReader::FindAttributeIDByName - Retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute ID.
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::FindAttributeIDByName(const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		Lib3MF_uint32 resultID = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_FindAttributeIDByName(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &resultID));
+		
+		return resultID;
+	}
+	
+	/**
+	* CToolpathLayerReader::FindAttributeValueByName - Retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute Type.
+	*/
+	eToolpathAttributeType CToolpathLayerReader::FindAttributeValueByName(const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		eToolpathAttributeType resultAttributeType = (eToolpathAttributeType) 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_FindAttributeValueByName(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &resultAttributeType));
+		
+		return resultAttributeType;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentIntegerAttributeByID - Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nID - Attribute ID.
+	* @return Attribute Value.
+	*/
+	Lib3MF_int64 CToolpathLayerReader::GetSegmentIntegerAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID)
+	{
+		Lib3MF_int64 resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentIntegerAttributeByID(m_pHandle, nIndex, nID, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentIntegerAttributeByName - Retrieves a segment integer attribute by Attribute Name. Will fail if Attribute does not exist or is of different type.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute Value.
+	*/
+	Lib3MF_int64 CToolpathLayerReader::GetSegmentIntegerAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		Lib3MF_int64 resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentIntegerAttributeByName(m_pHandle, nIndex, sNameSpace.c_str(), sAttributeName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentDoubleAttributeByID - Retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nID - Attribute ID.
+	* @return Attribute Value.
+	*/
+	Lib3MF_double CToolpathLayerReader::GetSegmentDoubleAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID)
+	{
+		Lib3MF_double resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentDoubleAttributeByID(m_pHandle, nIndex, nID, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentDoubleAttributeByName - Retrieves a segment Double attribute by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute Value.
+	*/
+	Lib3MF_double CToolpathLayerReader::GetSegmentDoubleAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		Lib3MF_double resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentDoubleAttributeByName(m_pHandle, nIndex, sNameSpace.c_str(), sAttributeName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetCustomDataCount - Retrieves the count of custom data elements.
+	* @return Count
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::GetCustomDataCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetCustomDataCount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetCustomData - Retrieves the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @return DOM Tree of the data.
+	*/
+	PCustomDOMTree CToolpathLayerReader::GetCustomData(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hData = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetCustomData(m_pHandle, nIndex, &hData));
+		
+		if (!hData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomDOMTree>(dynamic_cast<CCustomDOMTree*>(m_pWrapper->polymorphicFactory(hData)));
+	}
+	
+	/**
+	* CToolpathLayerReader::GetCustomDataName - Retrieves the node name of the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @param[out] sNameSpace - Namespace of the custom data tree.
+	* @param[out] sDataName - Root name of the data tree.
+	*/
+	void CToolpathLayerReader::GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName)
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		Lib3MF_uint32 bytesNeededDataName = 0;
+		Lib3MF_uint32 bytesWrittenDataName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetCustomDataName(m_pHandle, nIndex, 0, &bytesNeededNameSpace, nullptr, 0, &bytesNeededDataName, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		std::vector<char> bufferDataName(bytesNeededDataName);
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetCustomDataName(m_pHandle, nIndex, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0], bytesNeededDataName, &bytesWrittenDataName, &bufferDataName[0]));
+		sNameSpace = std::string(&bufferNameSpace[0]);
+		sDataName = std::string(&bufferDataName[0]);
+	}
+	
+	/**
+	 * Method definitions for class CToolpathLayerData
+	 */
+	
+	/**
+	* CToolpathLayerData::GetLayerDataUUID - Retrieves the layerdata's uuid
+	* @return Returns the uuid value.
+	*/
+	std::string CToolpathLayerData::GetLayerDataUUID()
+	{
+		Lib3MF_uint32 bytesNeededUUID = 0;
+		Lib3MF_uint32 bytesWrittenUUID = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_GetLayerDataUUID(m_pHandle, 0, &bytesNeededUUID, nullptr));
+		std::vector<char> bufferUUID(bytesNeededUUID);
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_GetLayerDataUUID(m_pHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]));
+		
+		return std::string(&bufferUUID[0]);
+	}
+	
+	/**
+	* CToolpathLayerData::RegisterProfile - Registers a toolpath profile
+	* @param[in] pProfile - The toolpath profile to register.
+	* @return returns the local profile ID for the layer.
+	*/
+	Lib3MF_uint32 CToolpathLayerData::RegisterProfile(classParam<CToolpathProfile> pProfile)
+	{
+		Lib3MFHandle hProfile = pProfile.GetHandle();
+		Lib3MF_uint32 resultProfileID = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_RegisterProfile(m_pHandle, hProfile, &resultProfileID));
+		
+		return resultProfileID;
+	}
+	
+	/**
+	* CToolpathLayerData::RegisterBuildItem - Registers a Model Build Item
+	* @param[in] pBuildItem - The model build item to use.
+	* @return returns the local part ID for the layer.
+	*/
+	Lib3MF_uint32 CToolpathLayerData::RegisterBuildItem(classParam<CBuildItem> pBuildItem)
+	{
+		Lib3MFHandle hBuildItem = pBuildItem.GetHandle();
+		Lib3MF_uint32 resultPartID = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_RegisterBuildItem(m_pHandle, hBuildItem, &resultPartID));
+		
+		return resultPartID;
+	}
+	
+	/**
+	* CToolpathLayerData::SetSegmentAttribute - Sets Segment Attribute for all following segments that are added. Overrides previously set attribute.
+	* @param[in] sNameSpace - The namespace of the attribute to register.
+	* @param[in] sAttributeName - The name of the attribute to register.
+	* @param[in] sValue - The value of the attribute to register.
+	*/
+	void CToolpathLayerData::SetSegmentAttribute(const std::string & sNameSpace, const std::string & sAttributeName, const std::string & sValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_SetSegmentAttribute(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), sValue.c_str()));
+	}
+	
+	/**
+	* CToolpathLayerData::ClearSegmentAttributes - Clears current segment attributes.
+	*/
+	void CToolpathLayerData::ClearSegmentAttributes()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_ClearSegmentAttributes(m_pHandle));
+	}
+	
+	/**
+	* CToolpathLayerData::WriteHatchData - writes hatch data to the layer.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data
+	*/
+	void CToolpathLayerData::WriteHatchData(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_WriteHatchData(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WriteLoop - writes loop data to the layer.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data
+	*/
+	void CToolpathLayerData::WriteLoop(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_WriteLoop(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WritePolyline - writes polyline data to the layer.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data
+	*/
+	void CToolpathLayerData::WritePolyline(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_WritePolyline(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::AddCustomData - Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
+	* @return DOM Tree of the data.
+	*/
+	PCustomDOMTree CToolpathLayerData::AddCustomData(const std::string & sNameSpace, const std::string & sDataName)
+	{
+		Lib3MFHandle hData = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_AddCustomData(m_pHandle, sNameSpace.c_str(), sDataName.c_str(), &hData));
+		
+		if (!hData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomDOMTree>(dynamic_cast<CCustomDOMTree*>(m_pWrapper->polymorphicFactory(hData)));
+	}
+	
+	/**
+	* CToolpathLayerData::Finish - finishes all writing of the layer and compresses toolpath data.
+	*/
+	void CToolpathLayerData::Finish()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_Finish(m_pHandle));
+	}
+	
+	/**
+	 * Method definitions for class CToolpath
+	 */
+	
+	/**
+	* CToolpath::GetUnits - Retrieves the unit factor
+	* @return Returns the unit factor.
+	*/
+	Lib3MF_double CToolpath::GetUnits()
+	{
+		Lib3MF_double resultUnits = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetUnits(m_pHandle, &resultUnits));
+		
+		return resultUnits;
+	}
+	
+	/**
+	* CToolpath::GetLayerCount - Retrieves the count of layers
+	* @return Returns the layer count
+	*/
+	Lib3MF_uint32 CToolpath::GetLayerCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetLayerCount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CToolpath::GetProfileCount - Retrieves the count of profiles
+	* @return Returns the profile count
+	*/
+	Lib3MF_uint32 CToolpath::GetProfileCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetProfileCount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CToolpath::AddLayer - Adds a new toolpath layer
+	* @param[in] nZMax - ZMax value
+	* @param[in] sPath - Package Path
+	* @param[in] pModelWriter - The model writer that writes out the 3MF.
+	* @return Returns the layerdata object to write the layer content into.
+	*/
+	PToolpathLayerData CToolpath::AddLayer(const Lib3MF_uint32 nZMax, const std::string & sPath, classParam<CWriter> pModelWriter)
+	{
+		Lib3MFHandle hModelWriter = pModelWriter.GetHandle();
+		Lib3MFHandle hLayerData = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_AddLayer(m_pHandle, nZMax, sPath.c_str(), hModelWriter, &hLayerData));
+		
+		if (!hLayerData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpathLayerData>(dynamic_cast<CToolpathLayerData*>(m_pWrapper->polymorphicFactory(hLayerData)));
+	}
+	
+	/**
+	* CToolpath::GetLayerAttachment - Retrieves the Attachment of a layer
+	* @param[in] nIndex - Layer Index
+	* @return Attachment
+	*/
+	PAttachment CToolpath::GetLayerAttachment(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hAttachment = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetLayerAttachment(m_pHandle, nIndex, &hAttachment));
+		
+		if (!hAttachment) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CAttachment>(dynamic_cast<CAttachment*>(m_pWrapper->polymorphicFactory(hAttachment)));
+	}
+	
+	/**
+	* CToolpath::ReadLayerData - Reads the toolpath of a layer.
+	* @param[in] nIndex - Layer Index
+	* @return Toolpath Reader Instance
+	*/
+	PToolpathLayerReader CToolpath::ReadLayerData(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hToolpathReader = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_ReadLayerData(m_pHandle, nIndex, &hToolpathReader));
+		
+		if (!hToolpathReader) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpathLayerReader>(dynamic_cast<CToolpathLayerReader*>(m_pWrapper->polymorphicFactory(hToolpathReader)));
+	}
+	
+	/**
+	* CToolpath::GetLayerPath - Retrieves the Path of a layer
+	* @param[in] nIndex - Layer Index
+	* @return Package Path
+	*/
+	std::string CToolpath::GetLayerPath(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_uint32 bytesNeededPath = 0;
+		Lib3MF_uint32 bytesWrittenPath = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetLayerPath(m_pHandle, nIndex, 0, &bytesNeededPath, nullptr));
+		std::vector<char> bufferPath(bytesNeededPath);
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetLayerPath(m_pHandle, nIndex, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]));
+		
+		return std::string(&bufferPath[0]);
+	}
+	
+	/**
+	* CToolpath::GetLayerZMax - Retrieves the ZMax of a layer
+	* @param[in] nIndex - Layer Index
+	* @return ZMax value
+	*/
+	Lib3MF_uint32 CToolpath::GetLayerZMax(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_uint32 resultZMax = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetLayerZMax(m_pHandle, nIndex, &resultZMax));
+		
+		return resultZMax;
+	}
+	
+	/**
+	* CToolpath::GetLayerZ - Return the z value of a layer in units.
+	* @param[in] nLayerIndex - Layer Index.
+	* @return Z Value in Units.
+	*/
+	Lib3MF_uint32 CToolpath::GetLayerZ(const Lib3MF_uint32 nLayerIndex)
+	{
+		Lib3MF_uint32 resultZValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetLayerZ(m_pHandle, nLayerIndex, &resultZValue));
+		
+		return resultZValue;
+	}
+	
+	/**
+	* CToolpath::AddProfile - Adds a new profile to the toolpath.
+	* @param[in] sName - the name.
+	* @return Returns the profile.
+	*/
+	PToolpathProfile CToolpath::AddProfile(const std::string & sName)
+	{
+		Lib3MFHandle hProfile = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_AddProfile(m_pHandle, sName.c_str(), &hProfile));
+		
+		if (!hProfile) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpathProfile>(dynamic_cast<CToolpathProfile*>(m_pWrapper->polymorphicFactory(hProfile)));
+	}
+	
+	/**
+	* CToolpath::GetProfile - Returns a profile of the toolpath.
+	* @param[in] nProfileIndex - Layer Index.
+	* @return Returns the profile.
+	*/
+	PToolpathProfile CToolpath::GetProfile(const Lib3MF_uint32 nProfileIndex)
+	{
+		Lib3MFHandle hProfile = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetProfile(m_pHandle, nProfileIndex, &hProfile));
+		
+		if (!hProfile) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpathProfile>(dynamic_cast<CToolpathProfile*>(m_pWrapper->polymorphicFactory(hProfile)));
+	}
+	
+	/**
+	* CToolpath::GetProfileUUID - Returns a profile of the toolpath by UUID.
+	* @param[in] sProfileUUID - UUID string.
+	* @return Returns the profile.
+	*/
+	PToolpathProfile CToolpath::GetProfileUUID(const std::string & sProfileUUID)
+	{
+		Lib3MFHandle hProfile = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetProfileUUID(m_pHandle, sProfileUUID.c_str(), &hProfile));
+		
+		if (!hProfile) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpathProfile>(dynamic_cast<CToolpathProfile*>(m_pWrapper->polymorphicFactory(hProfile)));
+	}
+	
+	/**
+	* CToolpath::GetCustomDataCount - Retrieves the count of custom data elements.
+	* @return Count
+	*/
+	Lib3MF_uint32 CToolpath::GetCustomDataCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetCustomDataCount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CToolpath::GetCustomData - Retrieves the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @return DOM Tree of the data.
+	*/
+	PCustomDOMTree CToolpath::GetCustomData(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hData = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetCustomData(m_pHandle, nIndex, &hData));
+		
+		if (!hData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomDOMTree>(dynamic_cast<CCustomDOMTree*>(m_pWrapper->polymorphicFactory(hData)));
+	}
+	
+	/**
+	* CToolpath::GetCustomDataName - Retrieves the node name of the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @param[out] sNameSpace - Namespace of the custom data tree.
+	* @param[out] sDataName - Root name of the data tree.
+	*/
+	void CToolpath::GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName)
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		Lib3MF_uint32 bytesNeededDataName = 0;
+		Lib3MF_uint32 bytesWrittenDataName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetCustomDataName(m_pHandle, nIndex, 0, &bytesNeededNameSpace, nullptr, 0, &bytesNeededDataName, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		std::vector<char> bufferDataName(bytesNeededDataName);
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetCustomDataName(m_pHandle, nIndex, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0], bytesNeededDataName, &bytesWrittenDataName, &bufferDataName[0]));
+		sNameSpace = std::string(&bufferNameSpace[0]);
+		sDataName = std::string(&bufferDataName[0]);
+	}
+	
+	/**
+	* CToolpath::HasUniqueCustomData - Retrieves if custom data with a specific namespace and name combination exists.
+	* @param[in] sNameSpace - Namespace of the custom data tree.
+	* @param[in] sDataName - Root name of the data tree.
+	* @return Returns true if DOM Tree Exists.
+	*/
+	bool CToolpath::HasUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName)
+	{
+		bool resultCustomDataExists = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_HasUniqueCustomData(m_pHandle, sNameSpace.c_str(), sDataName.c_str(), &resultCustomDataExists));
+		
+		return resultCustomDataExists;
+	}
+	
+	/**
+	* CToolpath::FindUniqueCustomData - Retrieves the custom data with a specific namespace and name combination. Fails if combination is not unique.
+	* @param[in] sNameSpace - Namespace of the custom data tree.
+	* @param[in] sDataName - Root name of the data tree.
+	* @return DOM Tree of the data.
+	*/
+	PCustomDOMTree CToolpath::FindUniqueCustomData(const std::string & sNameSpace, const std::string & sDataName)
+	{
+		Lib3MFHandle hData = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_FindUniqueCustomData(m_pHandle, sNameSpace.c_str(), sDataName.c_str(), &hData));
+		
+		if (!hData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomDOMTree>(dynamic_cast<CCustomDOMTree*>(m_pWrapper->polymorphicFactory(hData)));
+	}
+	
+	/**
+	* CToolpath::AddCustomData - Adds a custom data DOM tree to the toolpath.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sDataName - Root name of the data tree. MUST not be empty. MUST be a valid XML name string.
+	* @return DOM Tree of the data.
+	*/
+	PCustomDOMTree CToolpath::AddCustomData(const std::string & sNameSpace, const std::string & sDataName)
+	{
+		Lib3MFHandle hData = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_AddCustomData(m_pHandle, sNameSpace.c_str(), sDataName.c_str(), &hData));
+		
+		if (!hData) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CCustomDOMTree>(dynamic_cast<CCustomDOMTree*>(m_pWrapper->polymorphicFactory(hData)));
+	}
+	
+	/**
+	* CToolpath::ClearCustomData - Deletes all custom data.
+	* @return Returns number of deleted items.
+	*/
+	Lib3MF_uint32 CToolpath::ClearCustomData()
+	{
+		Lib3MF_uint32 resultNumberOfDeletedItems = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_ClearCustomData(m_pHandle, &resultNumberOfDeletedItems));
+		
+		return resultNumberOfDeletedItems;
+	}
+	
+	/**
+	* CToolpath::DeleteCustomData - Deletes a custom data instance from the list.
+	* @param[in] pData - DOM Tree of the data.
+	* @return Returns if deletion was successful.
+	*/
+	bool CToolpath::DeleteCustomData(classParam<CCustomDOMTree> pData)
+	{
+		Lib3MFHandle hData = pData.GetHandle();
+		bool resultSuccess = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_DeleteCustomData(m_pHandle, hData, &resultSuccess));
+		
+		return resultSuccess;
+	}
+	
+	/**
+	* CToolpath::RegisterCustomIntegerAttribute - Registers an Integer Attribute that each segment holds.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sAttributeName - Attribute name. MUST not be empty.
+	*/
+	void CToolpath::RegisterCustomIntegerAttribute(const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_RegisterCustomIntegerAttribute(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str()));
+	}
+	
+	/**
+	* CToolpath::RegisterCustomDoubleAttribute - Registers a Double Attribute that each segment holds. Registering only applies to reader or writer objects created after the call.
+	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
+	* @param[in] sAttributeName - Attribute name. MUST not be empty.
+	*/
+	void CToolpath::RegisterCustomDoubleAttribute(const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_RegisterCustomDoubleAttribute(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str()));
+	}
+	
+	/**
+	 * Method definitions for class CToolpathIterator
+	 */
+	
+	/**
+	* CToolpathIterator::GetCurrentToolpath - Returns the Toolpath the iterator points at.
+	* @return returns the Toolpath instance.
+	*/
+	PToolpath CToolpathIterator::GetCurrentToolpath()
+	{
+		Lib3MFHandle hResource = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathIterator_GetCurrentToolpath(m_pHandle, &hResource));
+		
+		if (!hResource) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpath>(dynamic_cast<CToolpath*>(m_pWrapper->polymorphicFactory(hResource)));
+	}
+	
+	/**
 	 * Method definitions for class CSliceStack
 	 */
 	
@@ -11189,6 +15304,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CModel::GetToolpaths - creates a Toolpath instance with all toolpath resources.
+	* @return returns the iterator instance.
+	*/
+	PToolpathIterator CModel::GetToolpaths()
+	{
+		Lib3MFHandle hResourceIterator = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_GetToolpaths(m_pHandle, &hResourceIterator));
+		
+		if (!hResourceIterator) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpathIterator>(dynamic_cast<CToolpathIterator*>(m_pWrapper->polymorphicFactory(hResourceIterator)));
+	}
+	
+	/**
 	* CModel::GetSliceStacks - creates a resource iterator instance with all slice stack resources.
 	* @return returns the iterator instance.
 	*/
@@ -11389,6 +15519,22 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CModel::AddToolpath - adds an empty Toolpath resource to the model.
+	* @param[in] dUnitFactor - The toolpath instance of the created Toolpath.
+	* @return The toolpath instance of the created Toolpath.
+	*/
+	PToolpath CModel::AddToolpath(const Lib3MF_double dUnitFactor)
+	{
+		Lib3MFHandle hToolpathInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_AddToolpath(m_pHandle, dUnitFactor, &hToolpathInstance));
+		
+		if (!hToolpathInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpath>(dynamic_cast<CToolpath*>(m_pWrapper->polymorphicFactory(hToolpathInstance)));
+	}
+	
+	/**
 	* CModel::GetMetaDataGroup - Returns the metadata of the model as MetaDataGroup
 	* @return returns an Instance of the metadatagroup of the model
 	*/
@@ -11567,6 +15713,57 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CKeyStore>(dynamic_cast<CKeyStore*>(m_pWrapper->polymorphicFactory(hKeyStore)));
+	}
+	
+	/**
+	* CModel::CreatePersistentSourceFromFile - Creates an OPC Reader Source from a file.
+	* @param[in] sFilename - Filename to read from
+	* @return The instance of the created reader source
+	*/
+	PPersistentReaderSource CModel::CreatePersistentSourceFromFile(const std::string & sFilename)
+	{
+		Lib3MFHandle hInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_CreatePersistentSourceFromFile(m_pHandle, sFilename.c_str(), &hInstance));
+		
+		if (!hInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CPersistentReaderSource>(dynamic_cast<CPersistentReaderSource*>(m_pWrapper->polymorphicFactory(hInstance)));
+	}
+	
+	/**
+	* CModel::CreatePersistentSourceFromBuffer - Creates an OPC Reader Source from a memory buffer. The memory buffer MUST exist as long as the Source object exists.
+	* @param[in] BufferBuffer - Buffer to read from
+	* @return The instance of the created reader source
+	*/
+	PPersistentReaderSource CModel::CreatePersistentSourceFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer)
+	{
+		Lib3MFHandle hInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_CreatePersistentSourceFromBuffer(m_pHandle, (Lib3MF_uint64)BufferBuffer.size(), BufferBuffer.data(), &hInstance));
+		
+		if (!hInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CPersistentReaderSource>(dynamic_cast<CPersistentReaderSource*>(m_pWrapper->polymorphicFactory(hInstance)));
+	}
+	
+	/**
+	* CModel::CreatePersistentSourceFromCallback - Creates an OPC Reader Source from a data provided by a callback function. The callbacks MUST exist as long as the source object exists.
+	* @param[in] pTheReadCallback - Callback to call for reading a data chunk
+	* @param[in] nStreamSize - number of bytes the callback returns
+	* @param[in] pTheSeekCallback - Callback to call for seeking in the stream.
+	* @param[in] pUserData - Userdata that is passed to the callback function
+	* @return The instance of the created reader source
+	*/
+	PPersistentReaderSource CModel::CreatePersistentSourceFromCallback(const ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData)
+	{
+		Lib3MFHandle hInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_CreatePersistentSourceFromCallback(m_pHandle, pTheReadCallback, nStreamSize, pTheSeekCallback, pUserData, &hInstance));
+		
+		if (!hInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CPersistentReaderSource>(dynamic_cast<CPersistentReaderSource*>(m_pWrapper->polymorphicFactory(hInstance)));
 	}
 
 } // namespace Lib3MF

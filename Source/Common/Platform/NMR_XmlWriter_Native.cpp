@@ -344,13 +344,17 @@ namespace NMR {
 		}
 	}
 
-	void CXmlWriter_Native::RegisterCustomNameSpace(const std::string &sNameSpace, const std::string &sNameSpacePrefix)
+	void CXmlWriter_Native::RegisterCustomNameSpace(const std::string &sNameSpace, const std::string &sNameSpacePrefix, bool bFailIfExisting)
 	{
 		std::string sDummy;
 		if (GetNamespacePrefix(sNameSpace, sDummy))
 		{
-			throw CNMRException(NMR_ERROR_XMLNAMESPACEALREADYREGISTERED);
+			if (bFailIfExisting)
+				throw CNMRException(NMR_ERROR_XMLNAMESPACEALREADYREGISTERED);
+
+			return;
 		}
+
 		for (auto it = m_sNameSpaces.begin(); it != m_sNameSpaces.end(); ++it)
 			if (it->second == sNameSpacePrefix)
 				throw CNMRException(NMR_ERROR_XMLPREFIXALREADYREGISTERED);

@@ -35,6 +35,7 @@ NMR_ModelReader_3MF.h defines the Model Reader Class for
 #define __NMR_MODELREADER_3MF
 
 #include "Model/Reader/NMR_ModelReader.h" 
+#include "Model/Reader/NMR_ModelPersistentDataSource.h"
 #include "Common/NMR_SecureContentTypes.h"
 #include <string>
 #include <map>
@@ -43,14 +44,14 @@ namespace NMR {
 
 	class CModelReader_3MF : public CModelReader {
 	protected:
-		virtual PImportStream extract3MFOPCPackage(_In_ PImportStream pPackageStream) = 0;
+		virtual PImportStream extract3MFOPCPackage(PModelPersistentDataSource pDataSource) = 0;
 		virtual void release3MFOPCPackage() = 0;
 
 	public:
 		CModelReader_3MF() = delete;
 		CModelReader_3MF(_In_ PModel pModel);
 
-		virtual void readStream(_In_ PImportStream pStream);
+		virtual void readFromSource(_In_ PModelPersistentDataSource pDataSource) override;
 		virtual void addTextureAttachment(_In_ std::string sPath, _In_ PImportStream pStream);
 	};
 

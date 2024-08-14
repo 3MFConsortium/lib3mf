@@ -8,6 +8,7 @@ if (USE_INCLUDED_LIBZIP)
   endif()
 endif()
 
+
 if (USE_INCLUDED_ZLIB)
   file(GLOB ZLIB_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Libraries/zlib/Source/*.c")
 endif()
@@ -35,6 +36,7 @@ Source/API/lib3mf_basematerialgroup.cpp
 Source/API/lib3mf_basematerialgroupiterator.cpp
 Source/API/lib3mf_beamlattice.cpp
 Source/API/lib3mf_beamset.cpp
+Source/API/lib3mf_binarystream.cpp
 Source/API/lib3mf_builditem.cpp
 Source/API/lib3mf_builditemiterator.cpp
 Source/API/lib3mf_colorgroup.cpp
@@ -53,6 +55,10 @@ Source/API/lib3mf_multipropertygroupiterator.cpp
 Source/API/lib3mf_contentencryptionparams.cpp
 Source/API/lib3mf_accessright.cpp
 Source/API/lib3mf_consumer.cpp
+Source/API/lib3mf_customdomtree.cpp
+Source/API/lib3mf_customxmlattribute.cpp
+Source/API/lib3mf_customxmlnode.cpp
+Source/API/lib3mf_customxmlnodes.cpp
 Source/API/lib3mf_resourcedata.cpp
 Source/API/lib3mf_resourcedatagroup.cpp
 Source/API/lib3mf_keystore.cpp
@@ -60,6 +66,7 @@ Source/API/lib3mf_model.cpp
 Source/API/lib3mf_object.cpp
 Source/API/lib3mf_objectiterator.cpp
 Source/API/lib3mf_packagepart.cpp
+Source/API/lib3mf_persistentreadersource.cpp
 Source/API/lib3mf_reader.cpp
 Source/API/lib3mf_resource.cpp
 Source/API/lib3mf_resourceiterator.cpp
@@ -70,9 +77,17 @@ Source/API/lib3mf_texture2d.cpp
 Source/API/lib3mf_texture2dgroup.cpp
 Source/API/lib3mf_texture2dgroupiterator.cpp
 Source/API/lib3mf_texture2diterator.cpp
+Source/API/lib3mf_toolpath.cpp
+Source/API/lib3mf_toolpathiterator.cpp
+Source/API/lib3mf_toolpathlayerdata.cpp
+Source/API/lib3mf_toolpathlayerreader.cpp
+Source/API/lib3mf_toolpathprofile.cpp
 Source/API/lib3mf_writer.cpp
 Source/API/lib3mf_utils.cpp
 Source/Common/3MF_ProgressMonitor.cpp
+Source/Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamCollection.cpp
+Source/Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamReader.cpp
+Source/Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamWriter.cpp
 Source/Common/Math/NMR_Matrix.cpp
 Source/Common/Math/NMR_PairMatchingTree.cpp
 Source/Common/Math/NMR_Vector.cpp
@@ -124,6 +139,9 @@ Source/Common/Platform/NMR_XmlReader.cpp
 Source/Common/Platform/NMR_XmlWriter.cpp
 Source/Common/Platform/NMR_XmlWriter_Native.cpp
 Source/Model/Classes/NMR_PackageResourceID.cpp
+Source/Model/Classes/NMR_CustomXMLAttribute.cpp
+Source/Model/Classes/NMR_CustomXMLNode.cpp
+Source/Model/Classes/NMR_CustomXMLTree.cpp
 Source/Model/Classes/NMR_Model.cpp
 Source/Model/Classes/NMR_ModelAttachment.cpp
 Source/Model/Classes/NMR_ModelBaseMaterial.cpp
@@ -143,6 +161,11 @@ Source/Model/Classes/NMR_ModelObject.cpp
 Source/Model/Classes/NMR_ModelResource.cpp
 Source/Model/Classes/NMR_ModelTexture2D.cpp
 Source/Model/Classes/NMR_ModelTexture2DGroup.cpp
+Source/Model/Classes/NMR_ModelToolpath.cpp
+Source/Model/Classes/NMR_ModelToolpathLayer.cpp
+Source/Model/Classes/NMR_ModelToolpathLayerReadData.cpp
+Source/Model/Classes/NMR_ModelToolpathLayerWriteData.cpp
+Source/Model/Classes/NMR_ModelToolpathProfile.cpp
 Source/Model/Classes/NMR_ModelSlice.cpp
 Source/Model/Classes/NMR_ModelSliceStack.cpp
 Source/Model/Classes/NMR_KeyStore.cpp
@@ -161,6 +184,7 @@ Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamLatt
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamSet.cpp
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamSets.cpp
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Ref.cpp
+Source/Model/Reader/NMR_ModelPersistentDataSource.cpp
 Source/Model/Reader/NMR_ModelReader.cpp
 Source/Model/Reader/NMR_ModelReaderNode.cpp
 Source/Model/Reader/NMR_ModelReaderNode_ModelBase.cpp
@@ -221,6 +245,13 @@ Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceRefResources.cpp
 Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceStack.cpp
 Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_Vertex.cpp
 Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_Vertices.cpp
+Source/Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathData.cpp
+Source/Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathDataNode.cpp
+Source/Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathLayer.cpp
+Source/Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathLayers.cpp
+Source/Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathProfile.cpp
+Source/Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathProfiles.cpp
+Source/Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathResource.cpp
 Source/Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStore.cpp
 Source/Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStoreCipherValue.cpp
 Source/Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStoreKEKParams.cpp
@@ -230,6 +261,20 @@ Source/Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStoreAccessRight.cpp
 Source/Model/Reader/NMR_ModelReaderNode_StringValue.cpp
 Source/Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStoreResourceData.cpp
 Source/Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStoreResourceDataGroup.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReader.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Data.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_DataNode.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Hatch.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Layer.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Part.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Parts.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Point.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Profile.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Profiles.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Segment.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Segments.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_ZHatch.cpp
+Source/Model/ToolpathReader/NMR_ToolpathReaderNode_ZPoint.cpp
 Source/Model/Writer/NMR_KeyStoreOpcPackageWriter.cpp
 Source/Model/Writer/NMR_ModelWriter.cpp
 Source/Model/Writer/NMR_ModelWriterNode.cpp

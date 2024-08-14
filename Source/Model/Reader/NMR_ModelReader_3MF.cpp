@@ -115,10 +115,10 @@ namespace NMR {
 		}
 	}
 
-
-	void CModelReader_3MF::readStream(_In_ PImportStream pStream)
+	void CModelReader_3MF::readFromSource(_In_ PModelPersistentDataSource pDataSource)
 	{
-		__NMRASSERT(pStream != nullptr);
+		if (pDataSource.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		nfBool bHasModel = false;
 
@@ -127,7 +127,7 @@ namespace NMR {
 		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_EXTRACTOPCPACKAGE);
 		
 		// Extract Stream from Package
-		PImportStream pModelStream = extract3MFOPCPackage(pStream);
+		PImportStream pModelStream = extract3MFOPCPackage(pDataSource);
 		
 		// before reading the root model, read the other models in the file
 		readProductionAttachmentModels(model(), warnings(), monitor());

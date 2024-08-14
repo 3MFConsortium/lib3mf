@@ -137,3 +137,8 @@ Lib3MF::sBox CBuildItem::GetOutbox()
 	s.m_MaxCoordinate[2] = sOutbox.m_max.m_fields[2];
 	return s;
 }
+
+NMR::PModelBuildItem CBuildItem::getBuildItemInstance()
+{
+	return m_pBuildItem;
+}

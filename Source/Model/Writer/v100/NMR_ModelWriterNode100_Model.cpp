@@ -45,6 +45,7 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
+#include "Model/Classes/NMR_ModelToolpath.h"
 #include "Model/Classes/NMR_Model.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
@@ -58,7 +59,8 @@ This is the class for exporting the 3mf model stream root node.
 namespace NMR {
 
 	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
-		_In_ nfUint32 nDecimalPrecision, nfBool bWritesRootModel) : CModelWriterNode_ModelBase(pModel, pXMLWriter, pProgressMonitor), m_nDecimalPrecision(nDecimalPrecision)
+		_In_ nfUint32 nDecimalPrecision, nfBool bWritesRootModel) : CModelWriterNode_ModelBase(pModel, pXMLWriter, pProgressMonitor), m_nDecimalPrecision(nDecimalPrecision),
+		m_bWriteBinaryExtension (false)
 	{
 		m_pPropertyIndexMapping = std::make_shared<CMeshInformation_PropertyIndexMapping>();
 		m_bIsRootModel = bWritesRootModel;
@@ -69,6 +71,7 @@ namespace NMR {
 		m_bWriteSliceExtension = true;
 		m_bWriteSecureContentExtension = true;
 		m_bWriteBaseMaterials = true;
+		m_bWriteToolpaths = true;
 		m_bWriteObjects = true;
 
 		m_bWriteCustomNamespaces = true;
@@ -86,7 +89,7 @@ namespace NMR {
 				std::string prefix = "customXMLNS" + std::to_string(m_pXMLWriter->GetNamespaceCount());
 				std::string sDummy;
 				if (!m_pXMLWriter->GetNamespacePrefix(md->getNameSpace(), sDummy)) {
-					m_pXMLWriter->RegisterCustomNameSpace(md->getNameSpace(), prefix);
+					m_pXMLWriter->RegisterCustomNameSpace(md->getNameSpace(), prefix, false);
 				}
 			}
 		}
@@ -152,6 +155,15 @@ namespace NMR {
 			}
 		}
 
+		if (m_bWriteToolpaths) {
+			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_TOOLPATH, XML_3MF_NAMESPACE_TOOLPATHSPEC);
+			if (m_pModel->RequireExtension(XML_3MF_NAMESPACE_TOOLPATHSPEC)) {
+				if (sRequiredExtensions.size() > 0)
+					sRequiredExtensions = sRequiredExtensions + " ";
+				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_TOOLPATH;
+			}
+		}
+
 		if (m_bWriteSecureContentExtension) {
 			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_SECURECONTENT, XML_3MF_NAMESPACE_SECURECONTENTSPEC);
 			if (m_pModel->RequireExtension(XML_3MF_NAMESPACE_SECURECONTENTSPEC)) {
@@ -159,6 +171,10 @@ namespace NMR {
 					sRequiredExtensions = sRequiredExtensions + " ";
 				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_SECURECONTENT;
 			}
+		}
+
+		if (m_bWriteBinaryExtension) {
+			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_NAMESPACE_BINARYSPEC);
 		}
 
 		if (m_bWriteCustomNamespaces) {
@@ -471,8 +487,18 @@ namespace NMR {
 			writeMetaDataGroup(pObject->metaDataGroup());
 
 			if (pMeshObject) {
+
+				CChunkedBinaryStreamWriter* pMeshBinaryWriter = nullptr;
+				std::string sMeshBinaryPath;
+
+				auto iBinaryIter = m_BinaryStreamWriters.find(pMeshObject->uuid()->toString());
+				if (iBinaryIter != m_BinaryStreamWriters.end()) {
+					sMeshBinaryPath = iBinaryIter->second.first;
+					pMeshBinaryWriter = iBinaryIter->second.second;
+				}
+
 				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pProgressMonitor,
-					m_pPropertyIndexMapping, m_nDecimalPrecision, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
+					m_pPropertyIndexMapping, m_nDecimalPrecision, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension, pMeshBinaryWriter);
 
 				ModelWriter_Mesh.writeToXML();
 			}
@@ -775,6 +801,8 @@ namespace NMR {
 			if (m_bWriteSliceExtension) {
 				writeSliceStacks();
 			}
+			if (m_bWriteToolpaths)
+				writeToolpaths();
 			if (m_bWriteObjects)
 				writeObjects();
 		}
@@ -882,6 +910,132 @@ namespace NMR {
 		}
 
 		writeFullEndElement();
+	}
+
+	void CModelWriterNode100_Model::registerStreamWriter(const std::string& sInstanceUUID, const std::string& sPath, CChunkedBinaryStreamWriter* pBinaryStreamWriter)
+	{
+		if (pBinaryStreamWriter == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		m_BinaryStreamWriters.insert(std::make_pair(sInstanceUUID, std::make_pair(sPath, pBinaryStreamWriter)));
+	}
+
+	void CModelWriterNode100_Model::setWriteBinaryExtension(bool bWriteBinaryExtension)
+	{
+		m_bWriteBinaryExtension = bWriteBinaryExtension;
+	}
+
+	void CModelWriterNode100_Model::registerCustomNamespace(const std::string& sPrefix, const std::string& sNamespace, bool bFailIfExisting)
+	{
+		m_pXMLWriter->RegisterCustomNameSpace(sNamespace, sPrefix, bFailIfExisting);
+	}
+
+	void CModelWriterNode100_Model::writeCustomToolpathXMLNode(PCustomXMLNode pXMLNode, const std::string& sPrefix)
+	{
+		__NMRASSERT(pXMLNode.get() != nullptr);
+
+		std::string sNodeName = pXMLNode->getName();
+
+		writeStartElementWithPrefix(sNodeName.c_str (), sPrefix.c_str ());
+
+		size_t nAttributeCount = pXMLNode->getAttributeCount();
+		for (size_t nAttributeIndex = 0; nAttributeIndex < nAttributeCount; nAttributeIndex++) {
+			auto pAttribute = pXMLNode->getAttributeByIndex(nAttributeIndex);
+			std::string sAttributeName = pAttribute->getName();
+			std::string sAttributeValue = pAttribute->getValue();
+			writeStringAttribute(sAttributeName.c_str(), sAttributeValue);
+		}
+
+		size_t nChildCount = pXMLNode->getChildCount();
+		for (size_t nChildIndex = 0; nChildIndex < nChildCount; nChildIndex++) {
+			writeCustomToolpathXMLNode(pXMLNode->getChildByIndex(nChildIndex), sPrefix);
+		}
+
+		writeEndElement();
+
+	}
+
+	void CModelWriterNode100_Model::writeToolpaths()
+	{
+		nfUint32 nCount = m_pModel->getResourceCount();
+
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+
+			auto pResource = m_pModel->getResource(nIndex);
+			auto pToolpathResource = dynamic_cast<CModelToolpath*> (pResource.get());
+
+			if (pToolpathResource != nullptr) {
+
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHRESOURCE, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_TOOLPATH_ID, pToolpathResource->getPackageResourceID()->getUniqueID());
+				writeFloatAttribute(XML_3MF_ATTRIBUTE_TOOLPATH_UNITFACTOR, (nfFloat)pToolpathResource->getUnitFactor());
+
+				uint32_t nXMLDataCount = pToolpathResource->getCustomXMLDataCount();
+				if (nXMLDataCount > 0) {
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHDATA, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
+
+					for (uint32_t nXMLDataIndex = 0; nXMLDataIndex < nXMLDataCount; nXMLDataIndex++) {
+						auto pXMLData = pToolpathResource->getCustomXMLData(nXMLDataIndex);
+
+						std::string sNameSpacePrefix;
+						if (m_pXMLWriter->GetNamespacePrefix(pXMLData->getNameSpace(), sNameSpacePrefix)) {
+							writeCustomToolpathXMLNode (pXMLData->getRootNode (), sNameSpacePrefix);
+						}
+						
+					}
+
+					writeFullEndElement();
+				}
+
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHPROFILES, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
+				nfUint32 nProfileCount = pToolpathResource->getProfileCount();
+				for (nfUint32 nProfileIndex = 0; nProfileIndex < nProfileCount; nProfileIndex++) {
+					auto pProfile = pToolpathResource->getProfile(nProfileIndex);
+
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHPROFILE, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
+					writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_UUID, pProfile->getUUID());
+					writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_NAME, pProfile->getName());
+
+					auto profileValues = pProfile->listValues();
+					for (auto profileValue : profileValues) {
+						if (profileValue.m_sNameSpace.empty()) {
+							writeStringAttribute(profileValue.m_sValueName.c_str(), profileValue.m_sValue);
+						}
+						else {
+							std::string sPrefix;
+							if (m_pXMLWriter->GetNamespacePrefix(profileValue.m_sNameSpace, sPrefix)) {
+								writePrefixedStringAttribute(sPrefix.c_str(), profileValue.m_sValueName.c_str(), profileValue.m_sValue);
+							}
+						}
+					}
+
+					writeEndElement();
+
+				}
+
+				writeFullEndElement();
+
+
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHLAYERS, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
+				nfUint32 nLayerCount = pToolpathResource->getLayerCount();
+				for (nfUint32 nLayerIndex = 0; nLayerIndex < nLayerCount; nLayerIndex++) {
+					auto pLayer = pToolpathResource->getLayer(nLayerIndex);
+
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHLAYER, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_TOOLPATHLAYER_ZTOP, pLayer->getMaxZ());
+					writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHLAYER_PATH, pLayer->getLayerDataPath());
+					writeEndElement();
+
+				}
+
+
+				writeFullEndElement();
+
+				writeFullEndElement();
+
+
+			}
+
+		}
 	}
 
 }

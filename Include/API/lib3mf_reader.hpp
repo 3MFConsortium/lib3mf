@@ -80,6 +80,8 @@ public:
 	* Public member functions to implement.
 	*/
 
+	void ReadFromPersistentSource(IPersistentReaderSource* pSource) override;
+
 	void ReadFromFile (const std::string & sFilename);
 
 	void ReadFromBuffer (const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer);

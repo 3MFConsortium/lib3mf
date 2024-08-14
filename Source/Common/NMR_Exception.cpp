@@ -132,6 +132,56 @@ namespace NMR {
 		case NMR_ERROR_COULDNOTINFLATE: return "Failed to decompress part";
 		case NMR_ERROR_COULDNOTINITDEFLATE: return "Failed to initialize a zlib buffer";
 		case NMR_ERROR_TOOMANYSLICES: return "Too many slices";
+		case NMR_ERROR_DUPLICATEVALUE: return "Duplicate value";
+		case NMR_ERROR_ROOTNODECANNOTBEDELETED: return "Root node can not be deleted";
+		case NMR_ERROR_TRIEDTOACCESSINVALIDATEDNODE: return "Tried to access invalidated node";
+		case NMR_ERROR_XMLCHILDNODEISNOTUNIQUE: return "XML child node is not unique";
+		case NMR_ERROR_XMLCHILDNODENOTFOUND: return "XML child node not found";
+		case NMR_ERROR_XMLATTRIBUTENOTFOUND: return "XML attribute not found";
+		case NMR_ERROR_DUPLICATEXMLATTRIBUTE: return "Duplicate XML attribute";
+		case NMR_ERROR_TOOMANYCUSTOMXMLDATAENTRIES: return "Too many custom XML Data Entries";
+		case NMR_ERROR_STREAMCHUNKALREADYOPEN: return "Stream Chunk already open";
+		case NMR_ERROR_NOSTREAMCHUNKOPEN: return "No Stream Chunk open";
+		case NMR_ERROR_STREAMWRITERALREADYFINISHED: return "Stream writer already finished";
+		case NMR_ERROR_STREAMWRITERNOTFINISHED: return "Stream writer not finished";
+		case NMR_ERROR_DUPLICATEBINARYSTREAM: return "Duplicate Binary Stream";
+		case NMR_ERROR_DUPLICATEBINARYSTREAMPATH: return "Duplicate Binary Stream Path";
+		case NMR_ERROR_COULDNOTCOMPRESSDATA: return "Could not compress data";
+		case NMR_ERROR_BINARYCHUNK_DISCRETIZATIONVALUEOUTOFRANGE: return "Discretization Value out of range";
+		case NMR_ERROR_DUPLICATEBINARYSTREAMUUID: return "Duplicate Binary Stream UUID";
+		case NMR_ERROR_BINARYSTREAMNOTFOUND: return "Binary stream not found";
+		case NMR_ERROR_BINARYSTREAMSNOTALLOWED: return "Binary streams not allowed";
+		case NMR_ERROR_INVALIDCHUNKSTREAM: return "Invalid binary chunk stream";
+		case NMR_ERROR_INVALIDCHUNKSTREAMSIGN: return "Invalid binary chunk stream sign";
+		case NMR_ERROR_INVALIDCHUNKSTREAMVERSION: return "Invalid binary chunk stream version";
+		case NMR_ERROR_TOOMANYBINARYCHUNKS: return "Too many binary chunks";
+		case NMR_ERROR_TOOMANYBINARYCHUNKENTRIES: return "Too many binary chunk entries";
+		case NMR_ERROR_DUPLICATECHUNKENTRY: return "Duplicate chunk entry in binary stream";
+		case NMR_ERROR_INVALIDFILECHUNKDATASIZE: return "Invalid file chunk data size";
+		case NMR_ERROR_INVALIDCHUNKCOMPRESSEDDATA: return "Invalid chunk compressed data";
+		case NMR_ERROR_COULDNOTUNCOMPRESSDATA: return "Could not uncompressed data";
+		case NMR_ERROR_BINARYCHUNKENTRYNOTFOUND: return "Binary chunk entry not found";
+		case NMR_ERROR_INVALIDCHUNKDATA: return "Invalid chunk data";
+		case NMR_ERROR_INVALIDCHUNKENTRYPOSITION: return "Invalid chunk entry position";
+		case NMR_ERROR_INVALIDCHUNKENTRYENDPOSITION: return "Invalid chunk entry end position";
+		case NMR_ERROR_INVALIDCHUNKENTRYSIZE: return "Invalid chunk entry size";
+		case NMR_ERROR_NOTENOUGHDATATOREADFROMCHUNK: return "Not enough data to read from chunk";
+		case NMR_ERROR_INVALIDCHUNKENTRYTYPE: return "Invalid chunk entry type";
+		case NMR_ERROR_UNEXPECTEDCHUNKDATATYPE: return "Unexpected chunk data type";
+		case NMR_ERROR_INVALIDFLOATVALUE: return "Invalid float value";
+		case NMR_ERROR_SEGMENTATTRIBUTEDEFINEDAFTERREADING: return "Segment attribute defined after reading";
+		case NMR_ERROR_INVALIDSEGMENTATTRIBUTETYPE: return "Invalid segment attribute type";
+		case NMR_ERROR_INVALIDSEGMENTATTRIBUTENAMESPACE: return "Invalid segment attribute namespace";
+		case NMR_ERROR_INVALIDSEGMENTATTRIBUTENAME: return "Invalid segment attribute name";
+		case NMR_ERROR_INVALIDSEGMENTATTRIBUTEID: return "Invalid segment attribute id";
+		case NMR_ERROR_INVALIDSEGMENTATTRIBUTEDATASIZE: return "Invalid segment attribute data size";
+		case NMR_ERROR_SEGMENTATTRIBUTEISNOTUINT32: return "Segment attribute is not uint32";
+		case NMR_ERROR_SEGMENTATTRIBUTEISNOTDOUBLE: return "Segment attribute is not double";
+		case NMR_ERROR_SEGMENTATTRIBUTENOTFOUND: return "Segment attribute not found";
+		case NMR_ERROR_NAMESPACEPREFIXALREADYDEFINED: return "Namespace prefix already defined";
+		case NMR_ERROR_WRITERDOESNOTSUPPORTNAMESPACES: return "Writer does not support namespaces";
+		case NMR_ERROR_NAMESPACEPREFIXISRESERVED: return "Namespace prefix is reserved";
+		case NMR_ERROR_NAMESPACENOTFOUND: return "Namespace not found";
 
 		// Unhandled exception
 		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;
@@ -437,7 +487,26 @@ namespace NMR {
 		case NMR_ERROR_KEYSTOREOPCCOULDNOTGETSTREAM: return "Could not get KeyStore stream";
 		case NMR_ERROR_KEYSTOREUNSUPPORTEDALGORITHM: return "The algorithm attribute is unsupported";
 		case NMR_ERROR_KEYSTORETOOMANYELEMENTS: return "Too many elements added to a keystore tree";
-
+		case NMR_ERROR_INVALIDMESHBINARYPATH: return "Invalid Mesh Binary Path";
+		case NMR_ERROR_DUPLICATEMESHBINARYPATH: return "Duplicate Mesh Binary Path";
+		case NMR_ERROR_INVALIDBINARYELEMENTID: return "Invalid XML attribute in namespace";
+		case NMR_ERROR_NOBINARYSTREAMAVAILABLE: return "No Binary stream available";
+		case NMR_ERROR_INCONSISTENTBINARYSTREAMCOUNT: return "Inconsistent binary stream count";
+		case NMR_ERROR_MISSINGUNITFACTOR: return "Missing Unit Factor";
+		case NMR_ERROR_MISSINGNAME: return "Missing Name";
+		case NMR_ERROR_MISSINGLASERPOWER: return "Missing Laser Power";
+		case NMR_ERROR_MISSINGLASERSPEED: return "Missing Laser Speed";
+		case NMR_ERROR_MISSINGLASERFOCUS: return "Missing Laser Focus";
+		case NMR_ERROR_MISSINGPATH: return "Missing Path";
+		case NMR_ERROR_MISSINGZTOP: return "Missing ZTop";
+		case NMR_ERROR_DUPLICATEID: return "Duplicate ID";
+		case NMR_ERROR_MISSINGID: return "Missing ID";
+		case NMR_ERROR_DUPLICATETYPEATTRIBUTE: return "Duplicate Type Attribute";
+		case NMR_ERROR_INVALIDTYPEATTRIBUTE: return "Invalid Type Attribute";
+		case NMR_ERROR_MISSINGTYPEATTRIBUTE: return "Missing Type Attribute";
+		case NMR_ERROR_MISSINGCOORDINATE: return "Missing Coordinate";
+		case NMR_ERROR_DATASOURCEISINVALIDATED: return "Data source is invalidated";
+			
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";
 		case NMR_ERROR_XMLPARSER_INVALIDPARSERESULT: return "Invalid XML parse result";
@@ -475,6 +544,17 @@ namespace NMR {
 		case NMR_ERROR_KEKDESCRIPTORNOTFOUND: return "Required key encryption client was not registered for a consumer";
 		case NMR_ERROR_DEKDESCRIPTORNOTFOUND: return "Required data encryption client was not registered";
 		case NMR_ERROR_RNGCALLBACKNOTCRYPTOSTRONG: return "Using cryptographically weak random number generator";
+
+		// Toolpath errors (0xBXXX)
+		case NMR_ERROR_TOOLPATH_NOTWRITINGHEADER: return "Not in toolpath header writing mode";
+		case NMR_ERROR_TOOLPATH_NOTWRITINGDATA: return "Not in toolpath data writing mode";
+		case NMR_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "Toolpath has already been written out";
+		case NMR_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "Toolpath has an invalid number of points";
+		case NMR_ERROR_LAYERSEGMENTNOTOPEN: return "Layer segment is not open";
+		case NMR_ERROR_LAYERSEGMENTALREADYOPEN: return "Layer segment is already open";
+		case NMR_ERROR_PROFILEVALUENOTFOUND: return "Profile valuenot found";
+		case NMR_ERROR_TOOMANYPROFILEVALUES: return "Too many profile values";
+		case NMR_ERROR_INVALIDPARAMETERINDEX: return "Invalid parameter index";
 
 		default:
 			return "unknown error";

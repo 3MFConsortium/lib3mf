@@ -95,7 +95,7 @@ namespace NMR {
 		virtual void WriteRawLine(_In_ const nfChar * pszRawData, _In_ nfUint32 cbCount);
 
 		virtual bool GetNamespacePrefix(const std::string &sNameSpaceURI, std::string &sNameSpacePrefix);
-		virtual void RegisterCustomNameSpace(const std::string &sNameSpace, const std::string &sNameSpacePrefix);
+		virtual void RegisterCustomNameSpace(const std::string &sNameSpace, const std::string &sNameSpacePrefix, bool bFailIfExisting);
 		virtual nfUint32 GetNamespaceCount();
 		virtual std::string GetNamespacePrefix(nfUint32 nIndex);
 		virtual std::string GetNamespace(nfUint32 nIndex);

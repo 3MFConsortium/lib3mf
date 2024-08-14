@@ -54,6 +54,15 @@ namespace NMR {
 		m_pWarnings = std::make_shared<CModelWarnings>();
 	}
 
+	CModelContext::~CModelContext()
+	{
+		m_pWarnings = nullptr;
+		m_pSecureContext = nullptr;
+		m_pProgressMonitor = nullptr;
+		m_pKeystore = nullptr;
+		m_pModel = nullptr;
+	}
+
 	nfBool CModelContext::isComplete() const {
 		return (nullptr != m_pModel && nullptr != m_pProgressMonitor && nullptr != m_pSecureContext);
 	}

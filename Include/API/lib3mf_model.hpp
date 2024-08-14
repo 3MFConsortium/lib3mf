@@ -143,6 +143,8 @@ public:
 
 	IMultiPropertyGroupIterator * GetMultiPropertyGroups() override;
 
+	IToolpathIterator* GetToolpaths() override;
+
 	ISliceStackIterator * GetSliceStacks() override;
 
 	IModel * MergeToModel() override;
@@ -168,6 +170,8 @@ public:
 	IBuildItem * AddBuildItem(IObject* pObject, const sLib3MFTransform Transform) override;
 
 	void RemoveBuildItem(IBuildItem* pBuildItemInstance) override;
+
+	IToolpath* AddToolpath(const Lib3MF_double dUnitFactor) override;
 
 	IMetaDataGroup * GetMetaDataGroup() override;
 
@@ -198,6 +202,13 @@ public:
 	IKeyStore * GetKeyStore();
 
 	void SetRandomNumberCallback(const Lib3MF::RandomNumberCallback pTheCallback, const Lib3MF_pvoid pUserData);
+
+	IPersistentReaderSource* CreatePersistentSourceFromFile(const std::string& sFilename) override;
+
+	IPersistentReaderSource* CreatePersistentSourceFromBuffer(const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8* pBufferBuffer) override;
+
+	IPersistentReaderSource* CreatePersistentSourceFromCallback(const Lib3MF::ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MF::SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData) override;
+
 };
 
 }

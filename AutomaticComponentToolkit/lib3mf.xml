@@ -78,6 +78,10 @@
 		<error name="UNKOWNPROGRESSIDENTIFIER" code="140" description="A progress identifier is unknown"/>
 		<error name="ELEMENTCOUNTEXCEEDSLIMIT" code="141" description="An element buffer exceeds its spec limit"/>
 		<error name="INVALIDRESOURCE" code="142" description="A resource is invalid"/>
+		<error name="INVALIDNODEINDEX" code="143" description="Invalid node index"/>
+		<error name="INVALIDATTRIBUTEINDEX" code="144" description="Invalid attribute index"/>
+		<error name="DUPLICATECUSTOMDATA" code="145" description="Duplicate custom data"/>
+		<error name="CUSTOMDATANOTFOUND" code="146" description="Custom data not found"/>
 
 		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices"/>		
 		<error name="INVALIDKEYSTORE" code="3000" description="The keystore object is invalid"/>
@@ -85,8 +89,21 @@
 		<error name="KEYSTORECONSUMERNOTFOUND" code="3002" description="A consumer has not been found"/>
 		<error name="KEYSTORERESOURCEDATANOTFOUND" code="3003" description="A resource data has not been found"/>
 		<error name="SECURECONTEXTNOTREGISTERED" code="3004" description="A Key or Conentent encryption callback has not been registered"/>
-		<error name="INVALIDKEYSIZE" code="3005" description="The key siue is invalid"/>
+		<error name="INVALIDKEYSIZE" code="3005" description="The key size is invalid"/>
 
+		<error name="TOOLPATH_NOTWRITINGHEADER" code="4000" description="Not in toolpath header writing mode" />
+		<error name="TOOLPATH_NOTWRITINGDATA" code="4001" description="Not in toolpath data writing mode" />
+		<error name="TOOLPATH_DATAHASBEENWRITTEN" code="4002" description="Toolpath has already been written out" />
+		<error name="TOOLPATH_INVALIDPOINTCOUNT" code="4003" description="Toolpath has an invalid number of points" />
+		<error name="TOOLPATH_ATTRIBUTEALREADYDEFINED" code="4004" description="Toolpath attribute already defined" />
+		<error name="TOOLPATH_INVALIDATTRIBUTETYPE" code="4005" description="Toolpath attribute is of invalid type" />
+		
+		<error name="EMPTYNAMESPACEPREFIX" code="4006" description="Empty namespace prefix."/>
+		<error name="EMPTYNAMESPACE" code="4007" description="Empty namespace."/>		
+		<error name="INVALIDNAMESPACEPREFIX" code="4008" description="Invalid namespace prefix."/>
+		<error name="WRITERDOESNOTSUPPORTNAMESPACES" code="4009" description="Writer does not support namespaces."/>
+		
+		
 	</errors>
 
 	<enum name="PropertyType">
@@ -102,6 +119,14 @@
 		<option name="Fullres" value="0"/>
 		<option name="Lowres" value="1"/>
 	</enum>
+	
+	<enum name="PersistentReaderSourceType">
+		<option name="Unknown" value="0"/>
+		<option name="FileOnDisk" value="1"/>
+		<option name="MemoryBuffer" value="2"/>
+		<option name="Callback" value="3"/>
+	</enum>
+	
 
 	<enum name="ModelUnit">
 		<option name="MicroMeter" value="0"/>
@@ -155,6 +180,12 @@
 		<option name="Mixed" value="1"/>
 		<option name="All" value="2"/>
 	</enum>
+	
+	<enum name="BinaryStreamPredictionType">
+		<option name="NoPrediction" value="0"/>
+		<option name="DeltaPrediction" value="1"/>
+	</enum>
+	
 
 	<enum name="ProgressIdentifier">
 		<option name="QUERYCANCELED" value="0"/>
@@ -187,6 +218,19 @@
 		<option name="NoBlendMethod" value="0"/>
 		<option name="Mix" value="1"/>
 		<option name="Multiply" value="2"/>
+	</enum>
+	
+	<enum name="ToolpathSegmentType">
+		<option name="Unknown" value="0" />
+		<option name="Hatch" value="1" />
+		<option name="Loop" value="2" />
+		<option name="Polyline" value="3" />
+	</enum>
+
+	<enum name="ToolpathAttributeType">
+		<option name="Unknown" value="0" />
+		<option name="Integer" value="1" />
+		<option name="Double" value="2" />
 	</enum>
 
 	<struct name="Triangle">
@@ -285,6 +329,38 @@
 		</method>
 	</class>
 
+
+	<class name="BinaryStream" parent="Base">  
+		<method name="GetBinaryPath" description = "Retrieves an binary streams package path for the binary data.">
+			<param name="Path" type="string" pass="return" description="binary streams package binary path." />
+		</method>
+
+		<method name="GetIndexPath" description = "Retrieves an binary streams package path for the index data.">
+			<param name="Path" type="string" pass="return" description="binary streams package index path." />
+		</method>
+		
+		<method name="GetUUID" description = "Retrieves an binary streams uuid.">
+			<param name="UUID" type="string" pass="return" description="binary streams uuid" />
+		</method>
+
+		<method name="DisableDiscretizedArrayCompression" description="Sets the float compression mode to raw. All subsequent writes will adhere to this mode.">
+		</method>
+		
+		<method name="EnableDiscretizedArrayCompression" description="Sets the compression mode to a quantized array. All subsequent writes will adhere to this mode.">
+			<param name="Units" type="double" pass="in" description="Unit factor to use for quantization." />
+			<param name="PredictionType" type="enum" class="BinaryStreamPredictionType" pass="in" description="Prediction type to use for arrays." />			
+		</method>
+		
+		<method name="EnableLZMA" description="Enables LZMA mode.">
+			<param name="LZMALevel" type="uint32" pass="in" description="LZMA Level (0-9)" />
+		</method>
+		
+		<method name="DisableLZMA" description="Disables LZMA mode.">
+		</method>
+		
+	</class>
+
+
 	<class name="Writer" parent="Base">
 		<method name="WriteToFile" description="Writes out the model as file. The file type is specified by the Model Writer class.">
 			<param name="Filename" type="string" pass="in" description="Filename to write into"/>
@@ -333,9 +409,47 @@
 			<param name="TheCallback" type="functiontype" class="ContentEncryptionCallback" pass="in" description="The callback used to encrypt content"/>
 			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
 		</method>
+		
+		<method name="CreateBinaryStream" description = "Creates a binary stream object. Only applicable for 3MF Writers.">
+			<param name="IndexPath" type="string" pass="in" description="Package path to write the index into" />
+			<param name="BinaryPath" type="string" pass="in" description="Package path to write raw binary data into" />
+			<param name="BinaryStream" type="class" class="BinaryStream" pass="return" description="Returns a package path." />
+		</method>
+		
+		<method name="AssignBinaryStream" description="Sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.">
+			<param name="Instance" type="class" class="Base" pass="in" description="Object instance to assign Binary stream to." />
+			<param name="BinaryStream" type="class" class="BinaryStream" pass="in" description="Binary stream object to use for this layer." />
+		</method>
+		
+		<method name="RegisterCustomNamespace" description = "Registers a custom 3MF Namespace. Fails if Prefix is already registered.">
+			<param name="Prefix" type="string" pass="in" description="Prefix to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number" />
+			<param name="NameSpace" type="string" pass="in" description="Namespace to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number" />
+		</method>
+	</class>
+	
+
+	<class name="PersistentReaderSource" description="Reader class to load an OPC package from a persistent source (without unpacking everything in memory).">
+			
+		<method name="GetSourceType" description="Retrieves the type of source data.">
+			<param name="SourceType" type="enum" class="PersistentReaderSourceType" pass="return" description="Reader Source Type"/>
+		</method>
+		
+		<method name="InvalidateSourceData" description="Invalidates the reader source. Every subsequent read on this data will fail.">
+		</method>
+	
+		<method name="SourceDataIsValid" description="Checks if the source data is valid. Any read on an invalid source object will fail.">
+			<param name="DataIsValid" type="bool" pass="return" description="The source data is valid."/>
+		</method>
+		
 	</class>
 
+
 	<class name="Reader" parent="Base">
+	
+		<method name="ReadFromPersistentSource" description="Reads a model from a persistent source object. The object will be referenced until the Model is destroyed or cleared.">
+			<param name="Source" type="class" class="PersistentReaderSource" pass="in" description="Source object to read from"/>				
+		</method>
+	
 		<method name="ReadFromFile" description="Reads a model from a file. The file type is specified by the Model Reader class">
 			<param name="Filename" type="string" pass="in" description="Filename to read from"/>				
 		</method>
@@ -427,6 +541,242 @@
 			<param name="Count" type="uint64" pass="return" description="returns the number of resoucres the iterator captures."/>
 		</method>
 	</class>
+
+
+	<class name="CustomXMLAttribute" parent="Base" description="An custom XML attribute of a DOM Tree.">
+		
+		<method name="GetName" description="Retrieves name of the attribute.">
+			<param name="Name" type="string" pass="return" description="returns the name of the attribute." />
+		</method>
+				
+		<method name="GetValue" description="Retrieves value of the attribute as string.">
+			<param name="Value" type="string" pass="return" description="returns the value of the attribute." />
+		</method>
+
+		<method name="IsValidInteger" description="Checks if the value is a valid integer in the given range.">
+			<param name="MinValue" type="int64" pass="in" description="Minimum allowed value" />
+			<param name="MaxValue" type="int64" pass="in" description="Maximum allowed value" />
+			<param name="IsValid" type="bool" pass="return" description="returns if the value is a valid integer." />
+		</method>
+
+		<method name="GetIntegerValue" description="Returns the value as integer. Fails if the value is not a valid integer in the given range.">
+			<param name="MinValue" type="int64" pass="in" description="Minimum allowed value" />
+			<param name="MaxValue" type="int64" pass="in" description="Maximum allowed value" />
+			<param name="Value" type="int64" pass="return" description="returns the value." />
+		</method>
+
+		<method name="IsValidDouble" description="Checks if the value is a valid double in the given range.">
+			<param name="MinValue" type="double" pass="in" description="Minimum allowed value" />
+			<param name="MaxValue" type="double" pass="in" description="Maximum allowed value" />
+			<param name="IsValid" type="bool" pass="return" description="returns if the value is a valid double." />
+		</method>
+
+		<method name="GetDoubleValue" description="Returns the value as double. Fails if the value is not a valid double in the given range.">
+			<param name="MinValue" type="double" pass="in" description="Minimum allowed value" />
+			<param name="MaxValue" type="double" pass="in" description="Maximum allowed value" />
+			<param name="Value" type="double" pass="return" description="returns the value ." />
+		</method>
+		
+		<method name="IsValidBool" description="Checks if the value is a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.">
+			<param name="IsValid" type="bool" pass="return" description="returns if the value is a valid bool." />
+		</method>
+
+		<method name="GetBoolValue" description="Returns the value as bool. Fails if the value is not a valid boolean value, meaning an integer or true or false as string. The value will be trimmed and any character will be converted to lowercase.">
+			<param name="MinValue" type="double" pass="in" description="Minimum allowed value" />
+			<param name="MaxValue" type="double" pass="in" description="Maximum allowed value" />
+			<param name="Value" type="bool" pass="return" description="returns the value ." />
+		</method>
+
+		<method name="SetValue" description="Sets the value of the attribute as string.">
+			<param name="Value" type="string" pass="in" description="new value of the attribute." />
+		</method>
+		
+		<method name="SetIntegerValue" description="Sets the value of the attribute as integer.">
+			<param name="Value" type="int64" pass="in" description="new value of the attribute." />
+		</method>
+
+		<method name="SetDoubleValue" description="Sets the value of the attribute as double.">
+			<param name="Value" type="double" pass="in" description="new value of the attribute." />
+		</method>
+
+		<method name="SetBoolValue" description="Sets the value of the attribute as bool.">
+			<param name="Value" type="bool" pass="in" description="new value of the attribute." />
+		</method>
+
+		<method name="Remove" description="Removes the attribute from its parent node. All subsequent calls to the class will fail.">
+		</method>
+		
+	</class>
+
+
+	<class name="CustomXMLNode" parent="Base" description="A custom XML attribute of a DOM tree.">
+
+		<method name="GetName" description="Retrieves name of the node.">
+			<param name="Name" type="string" pass="return" description="returns the name of the node." />
+		</method>
+				
+		<method name="GetNameSpace" description="Retrieves namespace of the node.">
+			<param name="NameSpace" type="string" pass="return" description="returns the namespace of the node." />
+		</method>
+
+		<method name="GetAttributeCount" description="Returns number of attributes.">
+			<param name="Count" type="uint64" pass="return" description="returns the number of attributes." />
+		</method>
+				
+		<method name="GetAttribute" description="Returns attribute instance. Fails if Index is out of range.">
+			<param name="Index" type="uint64" pass="in" description="Index of the attribute to return (0-based)." />
+			<param name="AttributeInstance" type="class" class="CustomXMLAttribute" pass="return" description="XML Document attribute." />
+		</method>
+
+		<method name="HasAttribute" description="Returns if attribute of a specific name exists.">
+			<param name="Name" type="string" pass="in" description="Name of the attribute." />
+			<param name="AttributeExists" type="bool" pass="return" description="Returns if the attribute exists." />
+		</method>
+
+		<method name="FindAttribute" description="Returns attribute instance of a specific name. ">
+			<param name="Name" type="string" pass="in" description="Name of the attribute." />
+			<param name="MustExist" type="bool" pass="in" description="If true, the call fails if attribute does not exist. If falls, the call will return null if the attribute does not exist." />			
+			<param name="AttributeInstance" type="optionalclass" class="CustomXMLAttribute" pass="return" description="XML Document attribute." />
+		</method>
+
+		<method name="RemoveAttribute" description="Removes the attribute with a specific name. Does nothing if attribute does not exist.">
+			<param name="Name" type="string" pass="in" description="Name of the attribute." />
+			<param name="AttributeRemoved" type="bool" pass="return" description="Returns true if an attribute was removed." />			
+		</method>
+
+		<method name="RemoveAttributeByIndex" description="Removes the attribute with a specific index. Fails if index is invalid">
+			<param name="Index" type="uint64" pass="in" description="Index of the attribute to remove (0-based)." />
+			<param name="AttributeRemoved" type="bool" pass="return" description="Returns true if an attribute was removed." />			
+		</method>
+
+		<method name="AddAttribute" description="Adds an attribute with a specific name and string value. Fails if attribute already exists.">
+			<param name="Name" type="string" pass="in" description="Name of the attribute." />
+			<param name="Value" type="string" pass="in" description="Value of the attribute." />
+		</method>
+
+		<method name="AddIntegerAttribute" description="Adds an attribute with a specific name and integer value. Fails if attribute already exists.">
+			<param name="Name" type="string" pass="in" description="Name of the attribute." />
+			<param name="Value" type="int64" pass="in" description="Value of the attribute." />
+		</method>
+
+		<method name="AddDoubleAttribute" description="Adds an attribute with a specific name and double value. Fails if attribute already exists.">
+			<param name="Name" type="string" pass="in" description="Name of the attribute." />
+			<param name="Value" type="double" pass="in" description="Value of the attribute." />
+		</method>
+
+		<method name="AddBoolAttribute" description="Adds an attribute with a specific name and bool value. Fails if attribute already exists.">
+			<param name="Name" type="string" pass="in" description="Name of the attribute." />
+			<param name="Value" type="bool" pass="in" description="Value of the attribute." />
+		</method>
+
+		<method name="GetChildren" description="Returns all the child nodes of the XML Node.">
+			<param name="ChildNodes" type="class" class="CustomXMLNodes" pass="return" description="returns the list of child nodes." />
+		</method>
+
+		<method name="CountChildrenByName" description="Returns how many children of the XML Node have a specific name.">
+			<param name="Name" type="string" pass="in" description="Name of the node." />
+			<param name="Count" type="uint64" pass="return" description="returns the number children with the specified name." />
+		</method>
+				
+		<method name="GetChildrenByName" description="Returns all the child nodes of the XML Node with a specific name.">
+			<param name="Name" type="string" pass="in" description="Name of the child." />
+			<param name="ChildNodes" type="class" class="CustomXMLNodes" pass="return" description="returns the list of child nodes." />
+		</method>
+
+		<method name="HasChild" description="Returns if a child with a specific name exist.">
+			<param name="Name" type="string" pass="in" description="Name of the child." />
+			<param name="ChildExists" type="bool" pass="return" description="returns if a child with a specific name exists." />
+		</method>
+
+		<method name="HasUniqueChild" description="Returns if a child with a specific name exist once and only once.">
+			<param name="Name" type="string" pass="in" description="Name of the child." />
+			<param name="ChildExists" type="bool" pass="return" description="returns if a child with a specific name exists once and only once." />
+		</method>
+
+		<method name="FindChild" description="Returns child with a specific name. Throws an error if name does not exist once and only once.">
+			<param name="Name" type="string" pass="in" description="Name of the child." />
+			<param name="MustExist" type="bool" pass="in" description="If true, the call fails if child does not exist. If falls, the call will return null if the child does not exist." />			
+			<param name="ChildInstance" type="optionalclass" class="CustomXMLNode" pass="return" description="returns child instance or null." />
+		</method>
+		
+		<method name="AddChild" description="Adds a new child with a specific name.">
+			<param name="Name" type="string" pass="in" description="Name of the child." />
+			<param name="ChildInstance" type="class" class="CustomXMLNode" pass="return" description="returns child instance." />
+		</method>
+
+		<method name="RemoveChild" description="Removes a specific child. All subsequent calls to the child will fail after the call.">
+			<param name="ChildInstance" type="class" class="CustomXMLNode" pass="in" description="child instance to remove. Fails if given instance is not a child of the node." />
+		</method>
+
+		<method name="RemoveChildrenWithName" description="Removes all children with a specific name. Does nothing if no child with the name exists. All subsequent calls to the deleted children will fail after the call.">
+			<param name="Name" type="string" pass="in" description="Name of the children." />
+			<param name="NumberOfDeletedChildren" type="uint64" pass="return" description="Returns how many children have been deleted." />
+		</method>
+
+		<method name="Remove" description="Removes the node from its parent. The root node of the document can not be removed. Any subsequent call to the node fails after this.">
+		</method>
+
+		
+		
+	</class>
+
+	<class name="CustomXMLNodes" parent="Base" description="An list of XML document nodes.">
+
+		<method name="GetNodeCount" description="Returns number of nodes.">
+			<param name="Count" type="uint64" pass="return" description="returns the number of nodes in the list." />
+		</method>
+				
+		<method name="GetNode" description="Returns node instance. Fails if Index is out of range.">
+			<param name="Index" type="uint64" pass="in" description="Index of the node to return (0-based)." />
+			<param name="NodeInstance" type="class" class="CustomXMLNode" pass="return" description="XML Node node." />
+		</method>
+
+		<method name="CountNodesByName" description="Returns how many nodes of the XML Node have a specific name.">
+			<param name="Name" type="string" pass="in" description="Name of the node." />
+			<param name="Count" type="uint64" pass="return" description="returns the number of nodes with the specified name." />
+		</method>
+
+		<method name="GetNodesByName" description="Returns all the nodes nodes of the XML Node with a specific name.">
+			<param name="Name" type="string" pass="in" description="Name of the node." />
+			<param name="Nodes" type="class" class="CustomXMLNodes" pass="return" description="returns the list of node nodes." />
+		</method>
+				
+		<method name="HasNode" description="Returns if a node with a specific name exist.">
+			<param name="Name" type="string" pass="in" description="Name of the node." />
+			<param name="NodeExists" type="bool" pass="return" description="returns if a node with a specific name exists." />
+		</method>
+
+		<method name="HasUniqueNode" description="Returns if a node with a specific name exist once and only once.">
+			<param name="Name" type="string" pass="in" description="Name of the node." />
+			<param name="NodeExists" type="bool" pass="return" description="returns if a node with a specific name exists once and only once." />
+		</method>
+
+		<method name="FindNode" description="Returns node with a specific name. Throws an error if name does not exist once and only once.">
+			<param name="Name" type="string" pass="in" description="Name of the node." />
+			<param name="MustExist" type="bool" pass="in" description="If true, the call fails if node does not exist. If falls, the call will return null if the node does not exist." />			
+			<param name="NodeInstance" type="optionalclass" class="CustomXMLNode" pass="return" description="returns node instance." />
+		</method>
+
+
+				
+	</class>
+
+	<class name="CustomDOMTree" parent="Base" description="encapsulates a custom DOM tree in the XML File">
+	
+		<method name="GetNameSpace" description="Returns the namespace identifier for the DOM Tree.">
+			<param name="NameSpace" type="string" pass="return" description="returns the namespace of the DOM Tree."/>
+		</method>
+		
+		<method name="GetRootNode" description="Returns root node of the tree.">
+			<param name="RootNode" type="class" class="CustomXMLNode" pass="return" description="Root node of the document." />
+		</method>	
+
+		<method name="SaveToString" description="Saves the XML tree into a string.">
+			<param name="XMLString" type="string" pass="return" description="String with the XML Content." />
+		</method>	
+		
+	</class>
+
 
 	<class name="SliceStackIterator" parent="ResourceIterator">
 		<method name="GetCurrentSliceStack" description="Returns the SliceStack the iterator points at.">
@@ -620,6 +970,7 @@
 		<method name="AssignSliceStack" description="assigns a slicestack to the object">
 			<param name="SliceStackInstance" type="handle" class="SliceStack" pass="in" description="the new slice stack of this Object"/>
 		</method>
+		
 	</class>
 
 	<class name="MeshObject" parent="Object">
@@ -1163,6 +1514,413 @@
 			<param name="ZTop" type="double" pass="return" description="the upper Z-Coordinate of this slice"/>
 		</method>
 	</class>
+	
+	<class name="ToolpathProfile" parent="Base">
+
+		<method name="GetUUID" description="Retrieves the profile's uuid">
+			<param name="UUID" type="string" pass="return" description="Returns the uuid value." />
+		</method>
+
+		<method name="GetName" description="Retrieves the profile's name">
+			<param name="Name" type="string" pass="return" description="Returns the name." />
+		</method>
+
+		<method name="GetParameterCount" description="Returns the number of parameters.">
+			<param name="Count" type="uint32" pass="return" description="Returns the number of parameters." />
+		</method>
+
+		<method name="GetParameterName" description="Returns the Name of a parameter.">
+			<param name="Index" type="uint32" pass="in" description="Index of Parameter (0-based). Call will fail if an invalid index is given." />
+			<param name="Name" type="string" pass="return" description="Returns the name of the parameter." />
+		</method>
+
+		<method name="GetParameterNameSpace" description="Returns the NameSpace of a parameter.">
+			<param name="Index" type="uint32" pass="in" description="Index of Parameter (0-based). Call will fail if an invalid index is given." />
+			<param name="NameSpace" type="string" pass="return" description="Returns the namespace of the parameter." />
+		</method>
+		
+		<method name="HasParameterValue" description="Checks if a parameter value exists.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="ValueExists" type="bool" pass="return" description="Returns if a value exists." />
+		</method>
+
+		<method name="GetParameterValue" description="Retrieves a profile's parameter value. Fails if value does not exist.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="Value" type="string" pass="return" description="Returns the value of the field." />
+		</method>
+
+		<method name="GetParameterValueDef" description="Retrieves a profile's parameter value">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="DefaultValue" type="string" pass="in" description="Default value if value does not exist." />
+			<param name="Value" type="string" pass="return" description="Returns the value of the field." />
+		</method>
+
+		<method name="GetParameterDoubleValue" description="Retrieves a profile's parameter value as double. Fails if value does not exist or is not a double value.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="Value" type="double" pass="return" description="Returns the value of the field." />
+		</method>
+
+		<method name="GetParameterDoubleValueDef" description="Retrieves a profile's parameter value as double.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="DefaultValue" type="double" pass="in" description="Default value if value does not exist or is not a double value." />
+			<param name="Value" type="double" pass="return" description="Returns the value of the field." />
+		</method>
+
+		<method name="GetParameterIntegerValue" description="Retrieves a profile's parameter value as integer. Fails if value does not exist or is not a integer value.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="Value" type="int64" pass="return" description="Returns the value of the field." />
+		</method>
+
+		<method name="GetParameterIntegerValueDef" description="Retrieves a profile's parameter value as integer.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="DefaultValue" type="int64" pass="in" description="Default value if value does not exist or is not a integer value." />
+			<param name="Value" type="int64" pass="return" description="Returns the value of the field." />
+		</method>
+		
+		<method name="GetParameterBoolValue" description="Retrieves a profile's parameter value as boolean. Fails if value does not exist or is not a boolean value.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="Value" type="bool" pass="return" description="Returns the value of the field." />
+		</method>
+
+		<method name="GetParameterBoolValueDef" description="Retrieves a profile's parameter value as boolean.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="DefaultValue" type="bool" pass="in" description="Default value if value does not exist or is not a boolean value." />
+			<param name="Value" type="bool" pass="return" description="Returns the value of the field." />
+		</method>
+		
+		<method name="SetName" description="Sets the profile's name">
+			<param name="Name" type="string" pass="in" description="Returns the name." />
+		</method>
+
+		<method name="SetParameterValue" description="Sets a profile's parameter value.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="Value" type="string" pass="in" description="String value of the parameter." />
+		</method>
+
+		<method name="SetParameterDoubleValue" description="Sets a profile's parameter value as double.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="Value" type="double" pass="in" description="Double value of the parameter." />
+		</method>
+
+
+		<method name="SetParameterIntegerValue" description="Sets a profile's parameter value as integer.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="Value" type="int64" pass="in" description="Integer value of the parameter." />
+		</method>
+
+		<method name="SetParameterBoolValue" description="Sets a profile's parameter value as boolean.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="Value" type="bool" pass="in" description="Boolean value of the parameter." />
+		</method>
+
+	</class>
+
+
+  <class name="ToolpathLayerReader" parent="Base">
+  
+	<method name="GetLayerDataUUID" description="Retrieves the layerdata's uuid">
+		<param name="UUID" type="string" pass="return" description="Returns the uuid value." />
+	</method>
+	
+	<method name="GetSegmentCount" description="Retrieves the count of segments.">
+		<param name="Count" type="uint32" pass="return" description="Count" />
+	</method>
+	
+	<method name="GetSegmentInfo" description="Retrieves the segment type information .">
+		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
+		<param name="Type" type="enum" class="ToolpathSegmentType" pass="out" description="Segment Type" />
+		<param name="PointCount" type="uint32" pass="out" description="Point count of segment." />
+	</method>
+	
+	<method name="GetSegmentProfile" description="Retrieves the assigned segment profile.">
+		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
+		<param name="Profile" type="class" class="ToolpathProfile" pass="return" description="Segment Profile" />
+	</method>
+	
+	<method name="GetSegmentProfileUUID" description="Retrieves the assigned segment profile uuid.">
+		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
+		<param name="ProfileUUID" type="string" pass="return" description="Segment Profile UUID" />
+	</method>
+
+	<method name="GetSegmentPart" description="Retrieves the assigned segment profile.">
+		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
+		<param name="BuildItem" type="class" class="BuildItem" pass="return" description="Segment Build Item" />
+	</method>
+	
+	<method name="GetSegmentPartUUID" description="Retrieves the assigned segment part uuid.">
+		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
+		<param name="PartUUID" type="string" pass="return" description="Segment Part UUID" />
+	</method>
+
+	<method name="GetSegmentLocalPartID" description="Retrieves the assigned segment part id. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.">
+		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
+		<param name="LocalPartID" type="uint32" pass="return" description="Local Segment Part ID" />
+	</method>
+
+	<method name="GetPartUUIDByLocalPartID" description="Retrieves the global part UUID by the local part ID. Fails if part ID does not exist in this layer. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.">
+		<param name="LocalPartID" type="uint32" pass="in" description="Local Segment Part ID" />
+		<param name="PartUUID" type="string" pass="return" description="Segment Part UUID" />
+	</method>
+
+	<method name="GetSegmentPointData" description="Retrieves the assigned segment point list. For type hatch, the points are taken pairwise.">
+		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
+	    <param name="PointData" type="structarray" class="Position2D" pass="out" description="The point data array" />
+	</method>
+
+	<method name="FindAttributeInfoByName" description="Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.">
+		<param name="NameSpace" type="string" pass="in" description="Namespace of the custom attribute." />
+		<param name="AttributeName" type="string" pass="in" description="Name of the custom attribute." />
+		<param name="ID" type="uint32" pass="out" description="Attribute ID." />
+		<param name="AttributeType" type="enum" class="ToolpathAttributeType" pass="out" description="Attribute Type." />		
+	</method>
+
+	<method name="FindAttributeIDByName" description="Retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.">
+		<param name="NameSpace" type="string" pass="in" description="Namespace of the custom attribute." />
+		<param name="AttributeName" type="string" pass="in" description="Name of the custom attribute." />
+		<param name="ID" type="uint32" pass="return" description="Attribute ID." />
+	</method>
+
+	<method name="FindAttributeValueByName" description="Retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.">
+		<param name="NameSpace" type="string" pass="in" description="Namespace of the custom attribute." />
+		<param name="AttributeName" type="string" pass="in" description="Name of the custom attribute." />
+		<param name="AttributeType" type="enum" class="ToolpathAttributeType" pass="return" description="Attribute Type." />
+	</method>
+
+	<method name="GetSegmentIntegerAttributeByID" description="Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.">
+		<param name="Index" type="uint32" pass="in" description="Segment Index. Must be between 0 and Count - 1." />
+		<param name="ID" type="uint32" pass="in" description="Attribute ID." />
+		<param name="Value" type="int64" pass="return" description="Attribute Value." />
+	</method>
+
+	<method name="GetSegmentIntegerAttributeByName" description="Retrieves a segment integer attribute by Attribute Name. Will fail if Attribute does not exist or is of different type.">
+		<param name="Index" type="uint32" pass="in" description="Segment Index. Must be between 0 and Count - 1." />
+		<param name="NameSpace" type="string" pass="in" description="Namespace of the custom attribute." />
+		<param name="AttributeName" type="string" pass="in" description="Name of the custom attribute." />
+		<param name="Value" type="int64" pass="return" description="Attribute Value." />
+	</method>
+
+
+	<method name="GetSegmentDoubleAttributeByID" description="Retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.">
+		<param name="Index" type="uint32" pass="in" description="Segment Index. Must be between 0 and Count - 1." />
+		<param name="ID" type="uint32" pass="in" description="Attribute ID." />
+		<param name="Value" type="double" pass="return" description="Attribute Value." />
+	</method>
+
+	<method name="GetSegmentDoubleAttributeByName" description="Retrieves a segment Double attribute by Attribute Name. Will fail if Attribute does not exist.">
+		<param name="Index" type="uint32" pass="in" description="Segment Index. Must be between 0 and Count - 1." />
+		<param name="NameSpace" type="string" pass="in" description="Namespace of the custom attribute." />
+		<param name="AttributeName" type="string" pass="in" description="Name of the custom attribute." />
+		<param name="Value" type="double" pass="return" description="Attribute Value." />
+	</method>
+
+	<method name="GetCustomDataCount" description="Retrieves the count of custom data elements.">
+		<param name="Count" type="uint32" pass="return" description="Count" />
+	</method>
+	
+	<method name="GetCustomData" description="Retrieves the custom data.">
+		<param name="Index" type="uint32" pass="in" description="Index of the Custom Data. 0-based. MUST be smaller than Data Count" />
+		<param name="Data" type="class" class="CustomDOMTree" pass="return" description="DOM Tree of the data." />
+	</method>
+
+	<method name="GetCustomDataName" description="Retrieves the node name of the custom data.">
+		<param name="Index" type="uint32" pass="in" description="Index of the Custom Data. 0-based. MUST be smaller than Data Count" />
+		<param name="NameSpace" type="string" pass="out" description="Namespace of the custom data tree." />
+		<param name="DataName" type="string" pass="out" description="Root name of the data tree." />
+	</method>
+	
+  </class>
+  
+	
+	
+  <class name="ToolpathLayerData" parent="Base">
+
+	<method name="GetLayerDataUUID" description="Retrieves the layerdata's uuid">
+		<param name="UUID" type="string" pass="return" description="Returns the uuid value." />
+	</method>
+  
+    <method name="RegisterProfile" description="Registers a toolpath profile">
+      <param name="Profile" class="ToolpathProfile" type="handle" pass="in" description="The toolpath profile to register." />
+      <param name="ProfileID" type="uint32" pass="return" description="returns the local profile ID for the layer." />
+    </method>
+
+    <method name="RegisterBuildItem" description="Registers a Model Build Item">
+      <param name="BuildItem" class="BuildItem" type="handle" pass="in" description="The model build item to use." />
+      <param name="PartID" type="uint32" pass="return" description="returns the local part ID for the layer." />
+    </method>
+
+    <method name="SetSegmentAttribute" description="Sets Segment Attribute for all following segments that are added. Overrides previously set attribute.">
+      <param name="NameSpace" type="string" pass="in" description="The namespace of the attribute to register." />
+      <param name="AttributeName" type="string" pass="in" description="The name of the attribute to register." />
+      <param name="Value" type="string" pass="in" description="The value of the attribute to register." />
+    </method>
+
+    <method name="ClearSegmentAttributes" description="Clears current segment attributes.">
+    </method>
+
+    <method name="WriteHatchData" description="writes hatch data to the layer.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="PointData" type="structarray" class="Position2D" pass="in" description="The point data" />      
+    </method>
+
+    <method name="WriteLoop" description="writes loop data to the layer.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="PointData" type="structarray" class="Position2D" pass="in" description="The point data" />
+    </method>
+
+    <method name="WritePolyline" description="writes polyline data to the layer.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="PointData" type="structarray" class="Position2D" pass="in" description="The point data" />
+    </method>	
+
+	<method name="AddCustomData" description="Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.">
+		<param name="NameSpace" type="string" pass="in" description="Namespace of the custom data tree. MUST not be empty." />
+		<param name="DataName" type="string" pass="in" description="Root name of the data tree. MUST not be empty. MUST be a valid XML name string." />
+		<param name="Data" type="class" class="CustomDOMTree" pass="return" description="DOM Tree of the data." />
+	</method>	
+
+	<method name="Finish" description="finishes all writing of the layer and compresses toolpath data.">
+    </method>
+
+  </class>
+
+
+  <class name="Toolpath" parent="Resource">
+
+		<method name="GetUnits" description="Retrieves the unit factor">
+			<param name="Units" type="double" pass="return" description="Returns the unit factor." />
+		</method>
+
+		<method name="GetLayerCount" description="Retrieves the count of layers">
+			<param name="Count" type="uint32" pass="return" description="Returns the layer count" />
+		</method>
+
+		<method name="GetProfileCount" description="Retrieves the count of profiles">
+			<param name="Count" type="uint32" pass="return" description="Returns the profile count" />
+		</method>
+
+		<method name="AddLayer" description = "Adds a new toolpath layer">
+			<param name="ZMax" type="uint32" pass="in" description="ZMax value" />
+			<param name="Path" type="string" pass="in" description="Package Path" />
+			<param name="ModelWriter" type="handle" class="Writer" pass="in" description="The model writer that writes out the 3MF." />
+			<param name="LayerData" type="handle" class="ToolpathLayerData" pass="return" description="Returns the layerdata object to write the layer content into." />
+		</method>
+
+		<method name="GetLayerAttachment" description = "Retrieves the Attachment of a layer">
+		  <param name="Index" type="uint32" pass="in" description="Layer Index" />
+		  <param name="Attachment" type="class" class="Attachment" pass="return" description="Attachment" />
+		</method>
+
+		<method name="ReadLayerData" description = "Reads the toolpath of a layer.">
+		  <param name="Index" type="uint32" pass="in" description="Layer Index" />
+		  <param name="ToolpathReader" type="class" class="ToolpathLayerReader" pass="return" description="Toolpath Reader Instance" />
+		</method>
+		
+
+		<method name="GetLayerPath" description = "Retrieves the Path of a layer">
+		  <param name="Index" type="uint32" pass="in" description="Layer Index" />
+		  <param name="Path" type="string" pass="return" description="Package Path" />
+		</method>
+
+		<method name="GetLayerZMax" description = "Retrieves the ZMax of a layer">
+		  <param name="Index" type="uint32" pass="in" description="Layer Index" />
+		  <param name="ZMax" type="uint32" pass="return" description="ZMax value" />
+		</method>
+
+		<method name="GetLayerZ" description = "Return the z value of a layer in units.">
+			<param name="LayerIndex" type="uint32" pass="in" description="Layer Index." />
+			<param name="ZValue" type="uint32" pass="return" description="Z Value in Units." />
+		</method>
+
+		<method name="AddProfile" description="Adds a new profile to the toolpath.">
+			<param name="Name" type="string" pass="in" description="the name." />
+			<param name="Profile" type="handle" class="ToolpathProfile" pass="return" description="Returns the profile." />
+		</method>
+
+		<method name="GetProfile" description="Returns a profile of the toolpath.">
+			<param name="ProfileIndex" type="uint32" pass="in" description="Layer Index." />
+			<param name="Profile" type="handle" class="ToolpathProfile" pass="return" description="Returns the profile." />
+		</method>
+
+		<method name="GetProfileUUID" description="Returns a profile of the toolpath by UUID.">
+			<param name="ProfileUUID" type="string" pass="in" description="UUID string." />
+			<param name="Profile" type="handle" class="ToolpathProfile" pass="return" description="Returns the profile." />
+		</method>
+		
+		<method name="GetCustomDataCount" description="Retrieves the count of custom data elements.">
+			<param name="Count" type="uint32" pass="return" description="Count" />
+		</method>
+		
+		<method name="GetCustomData" description="Retrieves the custom data.">
+			<param name="Index" type="uint32" pass="in" description="Index of the Custom Data. 0-based. MUST be smaller than Data Count" />
+			<param name="Data" type="class" class="CustomDOMTree" pass="return" description="DOM Tree of the data." />
+		</method>
+
+		<method name="GetCustomDataName" description="Retrieves the node name of the custom data.">
+			<param name="Index" type="uint32" pass="in" description="Index of the Custom Data. 0-based. MUST be smaller than Data Count" />
+			<param name="NameSpace" type="string" pass="out" description="Namespace of the custom data tree." />
+			<param name="DataName" type="string" pass="out" description="Root name of the data tree." />
+		</method>
+
+		<method name="HasUniqueCustomData" description="Retrieves if custom data with a specific namespace and name combination exists.">
+			<param name="NameSpace" type="string" pass="in" description="Namespace of the custom data tree." />
+			<param name="DataName" type="string" pass="in" description="Root name of the data tree." />
+			<param name="CustomDataExists" type="bool" pass="return" description="Returns true if DOM Tree Exists." />
+		</method>
+
+		<method name="FindUniqueCustomData" description="Retrieves the custom data with a specific namespace and name combination. Fails if combination is not unique.">
+			<param name="NameSpace" type="string" pass="in" description="Namespace of the custom data tree." />
+			<param name="DataName" type="string" pass="in" description="Root name of the data tree." />
+			<param name="Data" type="class" class="CustomDOMTree" pass="return" description="DOM Tree of the data." />
+		</method>
+		
+		<method name="AddCustomData" description="Adds a custom data DOM tree to the toolpath.">
+			<param name="NameSpace" type="string" pass="in" description="Namespace of the custom data tree. MUST not be empty." />
+			<param name="DataName" type="string" pass="in" description="Root name of the data tree. MUST not be empty. MUST be a valid XML name string." />
+			<param name="Data" type="class" class="CustomDOMTree" pass="return" description="DOM Tree of the data." />
+		</method>
+
+		<method name="ClearCustomData" description="Deletes all custom data.">
+			<param name="NumberOfDeletedItems" type="uint32" pass="return" description="Returns number of deleted items." />
+		</method>
+		
+		<method name="DeleteCustomData" description="Deletes a custom data instance from the list.">
+			<param name="Data" type="class" class="CustomDOMTree" pass="in" description="DOM Tree of the data." />
+			<param name="Success" type="bool" pass="return" description="Returns if deletion was successful." />
+		</method>
+
+		<method name="RegisterCustomIntegerAttribute" description="Registers an Integer Attribute that each segment holds.">
+			<param name="NameSpace" type="string" pass="in" description="Namespace of the custom data tree. MUST not be empty." />
+			<param name="AttributeName" type="string" pass="in" description="Attribute name. MUST not be empty." />
+		</method>
+		
+		<method name="RegisterCustomDoubleAttribute" description="Registers a Double Attribute that each segment holds. Registering only applies to reader or writer objects created after the call.">
+			<param name="NameSpace" type="string" pass="in" description="Namespace of the custom data tree. MUST not be empty." />
+			<param name="AttributeName" type="string" pass="in" description="Attribute name. MUST not be empty." />
+		</method>
+
+	</class>	
+
+	<class name="ToolpathIterator" parent="ResourceIterator">
+		<method name="GetCurrentToolpath" description="Returns the Toolpath the iterator points at.">
+			<param name="Resource" type="handle" class="Toolpath" pass="return" description="returns the Toolpath instance." />
+		</method>
+	</class>	
 
 	<class name="SliceStack" parent="Resource">
 		<method name="GetBottomZ" description="Get the lower Z-Coordinate of the slice stack.">
@@ -1513,6 +2271,10 @@
 		<method name="GetMultiPropertyGroups" description="creates a MultiPropertyGroupsIterator instance with all MultiPropertyGroup resources.">
 			<param name="ResourceIterator" type="handle" class="MultiPropertyGroupIterator" pass="return" description="returns the iterator instance."/>
 		</method>
+		<method name="GetToolpaths" description="creates a Toolpath instance with all toolpath resources.">
+			<param name="ResourceIterator" type="handle" class="ToolpathIterator" pass="return" description="returns the iterator instance." />
+		</method>		
+		
 		<method name="GetSliceStacks" description="creates a resource iterator instance with all slice stack resources.">
 			<param name="ResourceIterator" type="handle" class="SliceStackIterator" pass="return" description="returns the iterator instance."/>
 		</method>
@@ -1558,6 +2320,11 @@
 		<method name="RemoveBuildItem" description="removes a build item from the model">
 			<param name="BuildItemInstance" type="handle" class="BuildItem" pass="in" description="Build item to remove."/>
 		</method>
+		<method name="AddToolpath" description = "adds an empty Toolpath resource to the model.">
+			<param name="UnitFactor" type="double" pass="in" description="The toolpath instance of the created Toolpath." />
+			<param name="ToolpathInstance" type="handle" class="Toolpath" pass="return" description="The toolpath instance of the created Toolpath." />
+		</method>
+		
 		<method name="GetMetaDataGroup" description="Returns the metadata of the model as MetaDataGroup">
 			<param name="TheMetaDataGroup" type="handle" class="MetaDataGroup" pass="return" description="returns an Instance of the metadatagroup of the model"/>
 		</method>
@@ -1605,6 +2372,23 @@
 		<method name="GetKeyStore" description="Gets the keystore associated with this model">
 			<param name="KeyStore" type="handle" class="KeyStore" pass="return" description="The package keystore"/>
 		</method>
+		
+		<method name="CreatePersistentSourceFromFile" description="Creates an OPC Reader Source from a file.">
+			<param name="Filename" type="string" pass="in" description="Filename to read from"/>				
+			<param name="Instance" type="class" class="PersistentReaderSource" pass="return" description="The instance of the created reader source"/>
+		</method>
+		<method name="CreatePersistentSourceFromBuffer" description="Creates an OPC Reader Source from a memory buffer. The memory buffer MUST exist as long as the Source object exists.">
+			<param name="Buffer" type="basicarray" class="uint8" pass="in" description="Buffer to read from"/>				
+			<param name="Instance" type="class" class="PersistentReaderSource" pass="return" description="The instance of the created reader source"/>
+		</method>
+		<method name="CreatePersistentSourceFromCallback" description="Creates an OPC Reader Source from a data provided by a callback function. The callbacks MUST exist as long as the source object exists.">
+			<param name="TheReadCallback" type="functiontype" class="ReadCallback" pass="in" description="Callback to call for reading a data chunk"/>
+			<param name="StreamSize" type="uint64" pass="in" description="number of bytes the callback returns"/>
+			<param name="TheSeekCallback" type="functiontype" class="SeekCallback" pass="in" description="Callback to call for seeking in the stream."/>
+			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+			<param name="Instance" type="class" class="PersistentReaderSource" pass="return" description="The instance of the created reader source"/>
+		</method>
+		
 	</class>
 
 	<global baseclassname="Base" stringoutclassname="Base"  releasemethod="Release" acquiremethod="Acquire" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod="GetLastError" prereleasemethod="GetPrereleaseInformation" buildinfomethod="GetBuildInformation" symbollookupmethod="GetSymbolLookupMethod" classtypeidmethod="ClassTypeId">

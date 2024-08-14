@@ -92,7 +92,7 @@ namespace NMR {
 		pXMLWriter->Flush();
 	}
 
-	void CModelWriter_3MF::writeModelStream(_In_ CXmlWriter * pXMLWriter, _In_ CModel * pModel)
+	void CModelWriter_3MF::writeModelStream(_In_ CXmlWriter* pXMLWriter, _In_ CModel* pModel)
 	{
 		__NMRASSERT(pModel != nullptr);
 		if (pXMLWriter == nullptr)
@@ -103,10 +103,57 @@ namespace NMR {
 		pXMLWriter->WriteStartDocument();
 
 		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, monitor(), GetDecimalPrecision(), true);
+		ModelNode.setWriteBinaryExtension(m_bAllowBinaryStreams);
+
+		for (auto iIter : m_CustomNameSpaces) {
+			std::string sPrefix = iIter.first;
+			std::string sNameSpace = iIter.second;
+			ModelNode.registerCustomNamespace(sPrefix, sNameSpace, false);
+		}
+
+		for (auto iAssignmentIter : m_BinaryWriterAssignmentMap) {
+			auto iBinaryIter = m_BinaryWriterUUIDMap.find(iAssignmentIter.second);
+			if (iBinaryIter != m_BinaryWriterUUIDMap.end()) {
+				ModelNode.registerStreamWriter(iAssignmentIter.first, iBinaryIter->second.first, iBinaryIter->second.second.get());
+			}
+		}
+
 		ModelNode.writeToXML();
 
 		pXMLWriter->WriteEndDocument();
 
 		pXMLWriter->Flush();
 	}
+
+	void CModelWriter_3MF::addAdditionalAttachment(_In_ std::string sPath, _In_ PImportStream pStream, _In_ std::string sRelationShipType)
+	{
+		if (pStream.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		m_AdditionalAttachments.insert(std::make_pair(sPath, std::make_pair(pStream, sRelationShipType)));
+	}
+
+	void CModelWriter_3MF::registerCustomNameSpace(const std::string& sPrefix, const std::string& sNameSpace, bool bFailIfExisting)
+	{
+		if (sPrefix.empty ())
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (sNameSpace.empty())
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		auto iIter = m_CustomNameSpaces.find(sPrefix);
+		if (iIter != m_CustomNameSpaces.end()) {
+			if (iIter->second != sNameSpace)
+				throw CNMRException(NMR_ERROR_NAMESPACEPREFIXALREADYDEFINED);
+
+		}
+		else {
+			m_CustomNameSpaces.insert(std::make_pair (sPrefix, sNameSpace));
+
+		}
+	}
+
+	std::map<std::string, std::string> CModelWriter_3MF::getCustomNamespaceMap()
+	{
+		return m_CustomNameSpaces;
+	}
+
 }

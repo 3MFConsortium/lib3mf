@@ -72,6 +72,10 @@ These are given by the 3MF Standard
 #define PACKAGE_MUST_PRESERVE_RELATIONSHIP_TYPE "http://schemas.openxmlformats.org/package/2006/relationships/mustpreserve"
 #define PACKAGE_KEYSTORE_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/04/keystore"
 #define PACKAGE_ENCRYPTED_FILE_RELATIONSHIP "http://schemas.openxmlformats.org/package/2006/relationships/encryptedfile"
+#define PACKAGE_TOOLPATH_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/05/toolpath"
+#define PACKAGE_BINARY_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/05/binary"
+#define PACKAGE_BINARYINDEX_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/05/binaryindex"
+
 
 #define XML_3MF_NAMESPACE_XML "http://www.w3.org/XML/1998/namespace"
 #define XML_3MF_NAMESPACE_XMLNS "http://www.w3.org/2000/xmlns/"
@@ -84,12 +88,16 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACE_SECURECONTENTSPEC "http://schemas.microsoft.com/3dmanufacturing/securecontent/2019/04"
 #define XML_3MF_NAMESPACE_DIGITALSIGNATURESPEC "http://www.w3.org/2000/09/xmldsig#"
 #define XML_3MF_NAMESPACE_CIPHERVALUESPEC "http://www.w3.org/2001/04/xmlenc#"
+#define XML_3MF_NAMESPACE_TOOLPATHSPEC "http://schemas.microsoft.com/3dmanufacturing/toolpath/2019/05"
+#define XML_3MF_NAMESPACE_BINARYSPEC "http://schemas.microsoft.com/3dmanufacturing/binary/2023/05"
 
 #define XML_3MF_NAMESPACEPREFIX_MATERIAL "m"
 #define XML_3MF_NAMESPACEPREFIX_PRODUCTION "p"
 #define XML_3MF_NAMESPACEPREFIX_BEAMLATTICE "b"
 #define XML_3MF_NAMESPACEPREFIX_SLICE "s"
 #define XML_3MF_NAMESPACEPREFIX_SECURECONTENT "sc"
+#define XML_3MF_NAMESPACEPREFIX_TOOLPATH "t"
+#define XML_3MF_NAMESPACEPREFIX_BINARY "bin"
 
 #define XML_3MF_ATTRIBUTE_XMLNS                     "xmlns"
 #define XML_3MF_ATTRIBUTE_PREFIX_XML                "xml"
@@ -121,6 +129,9 @@ These are given by the 3MF Standard
 // Slices element.
 #define XML_3MF_ELEMENT_SLICES                      "slices"
 #define XML_3MF_ATTRIBUTE_SLICES_SLICEHEIGHT        "sliceheight"
+
+// Layer element
+#define XML_3MF_ELEMENT_LAYER						"layer"
 
 // Components element.
 #define XML_3MF_ELEMENT_COMPONENTS                  "components"
@@ -159,6 +170,7 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_TRIANGLE_P1               "p1"
 #define XML_3MF_ATTRIBUTE_TRIANGLE_P2               "p2"
 #define XML_3MF_ATTRIBUTE_TRIANGLE_P3               "p3"
+#define XML_3MF_ATTRIBUTE_MESH_BINARY               "binary"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_V1            "v1"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_V2            "v2"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_NAME          "name"
@@ -355,6 +367,55 @@ These are given by the 3MF Standard
 #define XML_3MF_BEAMLATTICE_BALLMODE_NONE           "none"
 #define XML_3MF_BEAMLATTICE_BALLMODE_MIXED          "mixed"
 #define XML_3MF_BEAMLATTICE_BALLMODE_ALL            "all"
+
+// Toolpath
+#define XML_3MF_ELEMENT_TOOLPATHRESOURCE "toolpathresource"
+#define XML_3MF_ELEMENT_TOOLPATHPROFILES "toolpathprofiles"
+#define XML_3MF_ELEMENT_TOOLPATHPROFILE "toolpathprofile"
+#define XML_3MF_ELEMENT_TOOLPATHLAYERS "toolpathlayers"
+#define XML_3MF_ELEMENT_TOOLPATHLAYER "toolpathlayer"
+#define XML_3MF_ELEMENT_TOOLPATHDATA "toolpathdata"
+
+#define XML_3MF_ATTRIBUTE_TOOLPATH_ID                 "id"
+#define XML_3MF_ATTRIBUTE_TOOLPATH_UNITFACTOR         "unitfactor"
+
+#define XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_UUID        "uuid"
+#define XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_NAME        "name"
+#define XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERPOWER  "laserpower"
+#define XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERSPEED  "laserspeed"
+#define XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERFOCUS  "laserfocus"
+#define XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERINDEX  "laserindex"
+#define XML_3MF_ATTRIBUTE_TOOLPATHLAYER_ZTOP "ztop"
+#define XML_3MF_ATTRIBUTE_TOOLPATHLAYER_PATH "path"
+
+#define XML_3MF_TOOLPATHELEMENT_LAYER "layer"
+#define XML_3MF_TOOLPATHELEMENT_PARTS "parts"
+#define XML_3MF_TOOLPATHELEMENT_PART "part"
+#define XML_3MF_TOOLPATHELEMENT_PROFILES "profiles"
+#define XML_3MF_TOOLPATHELEMENT_PROFILE "profile"
+#define XML_3MF_TOOLPATHELEMENT_SEGMENTS "segments"
+#define XML_3MF_TOOLPATHELEMENT_SEGMENT "segment"
+#define XML_3MF_TOOLPATHELEMENT_DATA "data"
+#define XML_3MF_TOOLPATHELEMENT_HATCH "hatch"
+#define XML_3MF_TOOLPATHELEMENT_POINT "point"
+#define XML_3MF_TOOLPATHATTRIBUTE_ID "id"
+#define XML_3MF_TOOLPATHATTRIBUTE_UUID "uuid"
+#define XML_3MF_TOOLPATHATTRIBUTE_TYPE "type"
+#define XML_3MF_TOOLPATHATTRIBUTE_BINARY "binary"
+#define XML_3MF_TOOLPATHATTRIBUTE_PARTID "partid"
+#define XML_3MF_TOOLPATHATTRIBUTE_PROFILEID "profileid"
+#define XML_3MF_TOOLPATHATTRIBUTE_X "x"
+#define XML_3MF_TOOLPATHATTRIBUTE_Y "y"
+#define XML_3MF_TOOLPATHATTRIBUTE_X1 "x1"
+#define XML_3MF_TOOLPATHATTRIBUTE_Y1 "y1"
+#define XML_3MF_TOOLPATHATTRIBUTE_X2 "x2"
+#define XML_3MF_TOOLPATHATTRIBUTE_Y2 "y2"
+
+#define XML_3MF_TOOLPATHTYPE_HATCH "hatch"
+#define XML_3MF_TOOLPATHTYPE_LOOP "loop"
+#define XML_3MF_TOOLPATHTYPE_POLYLINE "polyline"
+#define XML_3MF_TOOLPATHTYPE_SYNC "sync"
+#define XML_3MF_TOOLPATHTYPE_DELAY "delay"
 
 // KeyStore element.
 #define XML_3MF_ELEMENT_KEYSTORE					"keystore"

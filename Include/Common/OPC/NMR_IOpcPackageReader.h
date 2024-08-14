@@ -5,6 +5,7 @@
 #include <string>
 #include "Common/NMR_Types.h"
 #include "Common/NMR_Local.h"
+#include "Common/Platform/NMR_ImportStream.h"
 
 namespace NMR {
 	class COpcPackageRelationship;
@@ -15,6 +16,7 @@ namespace NMR {
 	public:
 		virtual _Ret_maybenull_ COpcPackageRelationship * findRootRelation(_In_ std::string sRelationType, _In_ nfBool bMustBeUnique) = 0;
 		virtual POpcPackagePart createPart(_In_ std::string sPath) = 0;
+		virtual PImportStream readPartStreamIntoMemory(_In_ std::string sPath) = 0;
 		virtual nfUint64 getPartSize(_In_ std::string sPath) = 0;
 		virtual void close() {}
 	};
