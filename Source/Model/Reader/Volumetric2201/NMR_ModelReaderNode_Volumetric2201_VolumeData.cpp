@@ -76,6 +76,15 @@ namespace NMR
     void CModelReaderNode_Volumetric2201_VolumeData::OnAttribute(
         const nfChar* pAttributeName, const nfChar* pAttributeValue)
     {
+        if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_ID) == 0) {
+			if (m_nID != 0)
+            {
+				throw CNMRException(NMR_ERROR_DUPLICATERESOURCEID);
+            }
+
+			// Convert to integer and make a input and range check!
+			m_nID = fnStringToUint32(pAttributeValue);
+		}
     }
 
     void CModelReaderNode_Volumetric2201_VolumeData::OnNSChildElement(
