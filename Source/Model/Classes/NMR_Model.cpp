@@ -278,6 +278,11 @@ namespace NMR {
 		m_ResourceMap.insert(std::make_pair(nID, pResource));
 		m_Resources.push_back(pResource);
 
+		const ModelResourceID currentModelResourceId = pResource->getPackageResourceID()->getModelResourceID();
+		if(currentModelResourceId > m_MaxResourceId) {
+			m_MaxResourceId = currentModelResourceId;
+		}
+
 		// Create correct lookup table
 		addResourceToLookupTable(pResource);
 	}
@@ -393,12 +398,6 @@ namespace NMR {
 
     ModelResourceID CModel::generateResourceID()
     {
-        // Build a map with existing resource IDs
-        std::map<ModelResourceID, bool> existingResourceIDs;
-        for (const auto& resource : m_Resources) {
-            existingResourceIDs[resource->getPackageResourceID()->getModelResourceID()] = true;
-        }
-
         // Determine the initial resource ID
         ModelResourceID currentResourceID = 1;
         auto iIterator = m_ResourceMap.rbegin();
@@ -406,10 +405,10 @@ namespace NMR {
             currentResourceID = iIterator->first + 1;
         }
 
-        // Ensure the generated ID is not in the existing resource IDs map
-        if (!existingResourceIDs.empty() && existingResourceIDs.find(currentResourceID) != existingResourceIDs.end()) {
-            currentResourceID = existingResourceIDs.rbegin()->first + 1;
-        }
+        // Ensure the generated ID is unique
+		if(currentResourceID <= m_MaxResourceId) {
+			currentResourceID = m_MaxResourceId + 1;
+		}
 
         return currentResourceID;
     }

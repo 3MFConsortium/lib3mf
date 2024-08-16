@@ -110,6 +110,7 @@ namespace NMR {
 		CResourceHandler m_resourceHandler;
 	private:
 		std::vector<PModelResource> m_Resources;
+		ModelResourceID m_MaxResourceId = 0;
 
 		// Model Build Items
 		std::vector<PModelBuildItem> m_BuildItems;
