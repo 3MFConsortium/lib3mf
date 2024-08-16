@@ -853,6 +853,8 @@ namespace Lib3MF
         auto theMesh = GetMesh();
         auto volumeData = model->AddVolumeData();
         auto theColor = volumeData->CreateNewColor(implicitFunction.get());
+
+        auto volumeDataId = volumeData->GetUniqueResourceID();
         theMesh->SetVolumeData(volumeData);
 
         // Set transformation
@@ -872,6 +874,18 @@ namespace Lib3MF
         PReader ioReader = ioModel->QueryReader("3mf");
         ioReader->ReadFromFile(Volumetric::OutFolder +
                                "FunctionFromImage3D_Color.3mf");
+
+
+        // Assert
+        EXPECT_NE(volumeDataId, 0);
+        auto volumeDataFromFile = ioModel->GetResourceByID(volumeDataId);
+        ASSERT_TRUE(volumeDataFromFile);
+
+        // Check if volumeDataFromFile is a volume data
+        auto volumeDataFromFileAsVolumeData =
+            std::dynamic_pointer_cast<CVolumeData>(volumeDataFromFile);
+        ASSERT_TRUE(volumeDataFromFileAsVolumeData);
+
 
         // Check the function
         auto functionIterator = ioModel->GetFunctions();
