@@ -71,6 +71,8 @@ namespace NMR
         writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMEDATA,
                                     XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 
+        writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_ID, volumeData.getPackageResourceID()->getModelResourceID());
+        
         if(volumeData.getPropertyCount())
         {
             nfUint32 count = volumeData.getPropertyCount();

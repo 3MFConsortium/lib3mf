@@ -342,7 +342,7 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_TILESTYLEW    "tilestylew"
 
 #define XML_3MF_ELEMENT_VOLUMEDATA                      "volumedata"
-#define XML_3MF_ELEMENT_VOLUMETRIC_BOUNDARY             "boundary"
+#define XML_3MF_ATTRIBUTE_VOLUMEDATA_ID                 "id"
 #define XML_3MF_ELEMENT_VOLUMETRIC_COMPOSITE            "composite"
 #define XML_3MF_ELEMENT_VOLUMETRIC_COLOR                "color"
 #define XML_3MF_ELEMENT_VOLUMETRIC_PROPERTY             "property"
