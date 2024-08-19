@@ -278,6 +278,11 @@ namespace NMR {
 		m_ResourceMap.insert(std::make_pair(nID, pResource));
 		m_Resources.push_back(pResource);
 
+		const ModelResourceID currentModelResourceId = pResource->getPackageResourceID()->getModelResourceID();
+		if(currentModelResourceId > m_MaxResourceId) {
+			m_MaxResourceId = currentModelResourceId;
+		}
+
 		// Create correct lookup table
 		addResourceToLookupTable(pResource);
 	}
@@ -391,19 +396,24 @@ namespace NMR {
 		}
 	}
 
+    ModelResourceID CModel::generateResourceID()
+    {
+        // Determine the initial resource ID
+        ModelResourceID currentResourceID = 1;
+        auto iIterator = m_ResourceMap.rbegin();
+        if (iIterator != m_ResourceMap.rend()) {
+            currentResourceID = iIterator->first + 1;
+        }
 
-	// Retrieve a unique Resource ID
-	ModelResourceID CModel::generateResourceID()
-	{
-		// TODO: is this truly safe?
-		auto iIterator = m_ResourceMap.rbegin();
-		if (iIterator != m_ResourceMap.rend())
-			return iIterator->first + 1;
-		else
-			return 1;
-	}
+        // Ensure the generated ID is unique
+		if(currentResourceID <= m_MaxResourceId) {
+			currentResourceID = m_MaxResourceId + 1;
+		}
 
-	void CModel::updateUniqueResourceID(UniqueResourceID nOldID, UniqueResourceID nNewID)
+        return currentResourceID;
+    }
+
+    void CModel::updateUniqueResourceID(UniqueResourceID nOldID, UniqueResourceID nNewID)
 	{
 		if (m_ResourceMap.find(nNewID) != m_ResourceMap.end()) {
 			throw CNMRException(NMR_ERROR_DUPLICATEMODELRESOURCE);
