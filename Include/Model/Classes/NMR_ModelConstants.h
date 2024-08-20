@@ -121,6 +121,7 @@ These are given by the 3MF Standard
 
 // Mesh element.
 #define XML_3MF_ELEMENT_MESH                        "mesh"
+#define XML_3MF_ATTRIBUTE_MESH_VOLUMEDATA           "volumeid"
 
 // Slices element.
 #define XML_3MF_ELEMENT_SLICES                      "slices"
@@ -297,6 +298,7 @@ These are given by the 3MF Standard
 
 
 #define XML_3MF_ELEMENT_BOUNDARY_SHAPE "levelset"
+#define XML_3MF_ATTRIBUTE_LEVELSET_VOLUMEDATA "volumeid"
 #define XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_ID "id"
 #define XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_FUNCTION_ID "functionid"
 #define XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_CHANNEL "channel"
@@ -306,7 +308,6 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_MESH_BBOX_ONLY "meshbboxonly"
 #define XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_FALLBACK_VALUE "fallbackvalue"
 #define XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_MESH_ID "meshid"
-#define XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_VOLUME_ID "volumeid"
 
 // Multiproperties
 #define XML_3MF_ELEMENT_MULTIPROPERTIES             "multiproperties"

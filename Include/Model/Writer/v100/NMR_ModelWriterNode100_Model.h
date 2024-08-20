@@ -80,6 +80,7 @@ namespace NMR {
 		void writeImage3Ds();
 		void writeFunctionsFromImage3D();
 		void writeImplicitFunctions();
+		void writeVolumeData();
 
 		
 
