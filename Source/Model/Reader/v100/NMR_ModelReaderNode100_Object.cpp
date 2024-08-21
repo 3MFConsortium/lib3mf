@@ -237,7 +237,8 @@ namespace NMR {
 				// Create Empty Mesh
 				PMesh pMesh = std::make_shared<CMesh>();
 				// Create Mesh Object
-				m_pObject = std::make_shared<CModelMeshObject>(m_nID, m_pModel, pMesh);
+				PModelMeshObject meshObject = std::make_shared<CModelMeshObject>(m_nID, m_pModel, pMesh);
+				m_pObject = meshObject;
 				// Set Object Type (might fail, if string is invalid)
 				if (m_bHasType) {
 					if (!m_pObject->setObjectTypeString(m_sType, false))
@@ -245,7 +246,7 @@ namespace NMR {
 				}
 				
 				// Read Mesh
-				PModelReaderNode100_Mesh pXMLNode = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, pMesh.get(),
+				PModelReaderNode100_Mesh pXMLNode = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, meshObject,
 					m_pWarnings, m_pProgressMonitor, m_pObjectLevelPropertyID, m_nObjectLevelPropertyIndex);
 				pXMLNode->parseXML(pXMLReader);
 

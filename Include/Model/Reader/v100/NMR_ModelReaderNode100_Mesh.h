@@ -39,12 +39,13 @@ A mesh reader model node is a parser for the mesh node of an XML Model Stream.
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelObject.h"
 #include "Model/Classes/NMR_ModelVolumeData.h"
+#include "Model/Classes/NMR_ModelMeshObject.h"
 
 namespace NMR {
 
 	class CModelReaderNode100_Mesh : public CModelReaderNode {
 	private:
-		CMesh * m_pMesh;
+		PModelMeshObject m_pMesh;
 		CModel * m_pModel;
 
 		ModelResourceID m_nObjectLevelPropertyID;
@@ -56,12 +57,15 @@ namespace NMR {
 		ModelResourceID m_nClippingMeshID;
 		nfBool m_bHasRepresentationMeshID;
 		ModelResourceID m_nRepresentationMeshID;
+
+		nfBool m_bHasVolumeDataID = false;
+		ModelResourceID m_nVolumeDataID = 0;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_Mesh() = delete;
-		CModelReaderNode100_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, _In_ PPackageResourceID m_pObjectLevelPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);
+		CModelReaderNode100_Mesh(_In_ CModel * pModel, PModelMeshObject pMesh, _In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, _In_ PPackageResourceID m_pObjectLevelPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 		void retrieveClippingInfo(_Out_ eModelBeamLatticeClipMode &eClipMode, _Out_ nfBool & bHasClippingMode, _Out_ ModelResourceID & nClippingMeshID);

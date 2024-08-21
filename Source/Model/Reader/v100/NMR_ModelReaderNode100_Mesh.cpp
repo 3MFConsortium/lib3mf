@@ -45,9 +45,11 @@ A mesh reader model node is a parser for the mesh node of an XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_Mesh::CModelReaderNode100_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelWarnings pWarnings,
+	CModelReaderNode100_Mesh::CModelReaderNode100_Mesh(_In_ CModel * pModel, PModelMeshObject pMesh, _In_ PModelWarnings pWarnings,
 		_In_ PProgressMonitor pProgressMonitor, _In_ PPackageResourceID pObjectLevelPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex)
-		: CModelReaderNode(pWarnings, pProgressMonitor)
+		: CModelReaderNode(pWarnings, pProgressMonitor),
+		 m_pModel(pModel),
+		 m_pMesh(pMesh)
 	{
 		__NMRASSERT(pMesh);
 		__NMRASSERT(pModel);
@@ -55,14 +57,14 @@ namespace NMR {
 		m_pObjectLevelPropertyID = pObjectLevelPropertyID;
 		m_nObjectLevelPropertyIndex = nDefaultPropertyIndex;
 
-		m_pMesh = pMesh;
-		m_pModel = pModel;
-
 		m_bHasClippingMeshID = false;
 		m_nClippingMeshID = 0;
 		m_eClipMode = eModelBeamLatticeClipMode::MODELBEAMLATTICECLIPMODE_NONE;
 		m_bHasRepresentationMeshID = false;
 		m_nRepresentationMeshID = 0;
+
+		m_bHasVolumeDataID = false;
+		m_nVolumeDataID = 0;
 	}
 
 	void CModelReaderNode100_Mesh::parseXML(_In_ CXmlReader * pXMLReader)
@@ -75,6 +77,23 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
+
+		if(m_bHasVolumeDataID)
+		{
+			PPackageResourceID volumePackageId =
+				m_pModel->findPackageResourceID(m_pModel->currentPath(),
+												m_nVolumeDataID);
+
+			if(!volumePackageId.get())
+			{
+				throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
+			}
+
+			auto pVolumeData = m_pModel->findVolumeData(
+				volumePackageId->getUniqueID());
+
+			m_pMesh->setVolumeData(pVolumeData);
+		}
 	}
 
 	void CModelReaderNode100_Mesh::retrieveClippingInfo(_Out_ eModelBeamLatticeClipMode &eClipMode, _Out_ nfBool & bHasClippingMode, _Out_ ModelResourceID & nClippingMeshID)
@@ -102,24 +121,28 @@ namespace NMR {
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
+
+		NMR::CMesh *mesh = m_pMesh->getMesh();	
+
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
+
 
 			if (strcmp(pChildName, XML_3MF_ELEMENT_VERTICES) == 0)
 			{
-				if (m_pMesh->getNodeCount() % PROGRESS_READUPDATE == PROGRESS_READUPDATE - 1) {
+				if (mesh->getNodeCount() % PROGRESS_READUPDATE == PROGRESS_READUPDATE - 1) {
 					m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READMESH);
 					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 				}
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Vertices>(m_pMesh, m_pWarnings);
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Vertices>(mesh, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_TRIANGLES) == 0)
 			{
-				if (m_pMesh->getFaceCount() % PROGRESS_READUPDATE == PROGRESS_READUPDATE - 1) {
+				if (mesh->getFaceCount() % PROGRESS_READUPDATE == PROGRESS_READUPDATE - 1) {
 					m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READMESH);
 					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 				}
-				PModelReaderNode100_Triangles pXMLNode = std::make_shared<CModelReaderNode100_Triangles>(m_pModel, m_pMesh, m_pWarnings,
+				PModelReaderNode100_Triangles pXMLNode = std::make_shared<CModelReaderNode100_Triangles>(m_pModel, mesh, m_pWarnings,
 					m_pObjectLevelPropertyID, m_nObjectLevelPropertyIndex);
 				pXMLNode->parseXML(pXMLReader);
 				if (m_pObjectLevelPropertyID && m_pObjectLevelPropertyID->getPackageModelPath() == 0) {
@@ -141,7 +164,7 @@ namespace NMR {
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_BEAMLATTICESPEC) == 0) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_BEAMLATTICE) == 0)
 			{
-				PModelReaderNode_BeamLattice1702_BeamLattice pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_BeamLattice>(m_pModel, m_pMesh, m_pWarnings);
+				PModelReaderNode_BeamLattice1702_BeamLattice pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_BeamLattice>(m_pModel, mesh, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 
 				pXMLNode->retrieveClippingInfo(m_eClipMode, m_bHasClippingMeshID, m_nClippingMeshID);
