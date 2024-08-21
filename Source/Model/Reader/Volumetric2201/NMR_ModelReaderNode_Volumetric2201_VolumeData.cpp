@@ -67,10 +67,12 @@ namespace NMR
         // Parse attribute
         parseAttributes(pXMLReader);
 
+        // parseContent needs m_pVolumeData to be initialized, and m_nID to be set by parseAttributes
+		m_pVolumeData = std::make_shared<CModelVolumeData>(m_nID, m_pModel); 
         // Parse Content
         parseContent(pXMLReader);
 
-		m_pVolumeData = std::make_shared<CModelVolumeData>(m_nID, m_pModel);
+        m_pModel->addResource(m_pVolumeData);
     }
 
     void CModelReaderNode_Volumetric2201_VolumeData::OnAttribute(

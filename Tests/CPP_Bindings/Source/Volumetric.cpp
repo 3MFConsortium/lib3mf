@@ -854,7 +854,6 @@ namespace Lib3MF
         auto volumeData = model->AddVolumeData();
         auto theColor = volumeData->CreateNewColor(implicitFunction.get());
 
-        auto volumeDataId = volumeData->GetUniqueResourceID();
         theMesh->SetVolumeData(volumeData);
 
         // Set transformation
@@ -877,8 +876,14 @@ namespace Lib3MF
 
 
         // Assert
-        EXPECT_NE(volumeDataId, 0);
-        auto volumeDataFromFile = ioModel->GetResourceByID(volumeDataId);
+        // get the first mesh of ioModel
+        auto meshesFromWrittenFile = ioModel->GetMeshObjects();
+        meshesFromWrittenFile->MoveNext();
+        auto meshFromWrittenFile =
+            meshesFromWrittenFile->GetCurrentMeshObject();
+
+        // Check if volumeData is a volume data
+        auto volumeDataFromFile = meshFromWrittenFile->GetVolumeData();
         ASSERT_TRUE(volumeDataFromFile);
 
         // Check if volumeDataFromFile is a volume data
@@ -905,11 +910,11 @@ namespace Lib3MF
 
     /**
      * @brief Test case to create and load a function from an image3d and add a
-     * boundary to it.
+     * levelset to it.
      * @details This test case creates a new image stack and adds a function
-     * from the image3d to the model. It then adds a boundary to the volume data
+     * from the image3d to the model. It then adds a levelset to the volume data
      * and writes the model to a file. The test then reads the file, compares
-     * the function and boundary with the original and asserts that they are the
+     * the function and levelset with the original and asserts that they are the
      * same.
      */
     TEST_F(Volumetric, CreateAndLoad_FunctionFromImage3dAddBoundary_SameContent)
@@ -947,12 +952,12 @@ namespace Lib3MF
 
         // Write to file
         writer3MF = model->QueryWriter("3mf");
-        writer3MF->WriteToFile(Volumetric::OutFolder + "Boundary.3mf");
+        writer3MF->WriteToFile(Volumetric::OutFolder + "levlelset.3mf");
 
         // Read and compare
         PModel ioModel = wrapper->CreateModel();
         PReader ioReader = ioModel->QueryReader("3mf");
-        ioReader->ReadFromFile(Volumetric::OutFolder + "Boundary.3mf");
+        ioReader->ReadFromFile(Volumetric::OutFolder + "levlelset.3mf");
 
         // Check the function
         auto functionIterator = ioModel->GetFunctions();

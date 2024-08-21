@@ -61,8 +61,10 @@ namespace NMR {
 		nfBool m_bHasVolumeDataID = false;
 		ModelResourceID m_nVolumeDataID = 0;
 	protected:
-		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+		void OnNSAttribute(_In_z_ const nfChar *pAttributeName,
+							_In_z_ const nfChar *pAttributeValue,
+							_In_z_ const nfChar *pNameSpace) override;
+		void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader) override;
 	public:
 		CModelReaderNode100_Mesh() = delete;
 		CModelReaderNode100_Mesh(_In_ CModel * pModel, PModelMeshObject pMesh, _In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, _In_ PPackageResourceID m_pObjectLevelPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);

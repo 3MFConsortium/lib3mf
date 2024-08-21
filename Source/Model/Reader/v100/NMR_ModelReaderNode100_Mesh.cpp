@@ -109,13 +109,32 @@ namespace NMR {
 		nRepresentationMeshID = m_nRepresentationMeshID;
 	}
 
-	void CModelReaderNode100_Mesh::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
+	void CModelReaderNode100_Mesh::OnNSAttribute(
+		_In_z_ const nfChar *pAttributeName,
+		_In_z_ const nfChar *pAttributeValue,
+		_In_z_ const nfChar *pNameSpace)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
+		__NMRASSERT(pNameSpace);
+
+		if(strcmp(pNameSpace, XML_3MF_NAMESPACE_VOLUMETRICSPEC) == 0)
+		{
+			if(strcmp(pAttributeName, XML_3MF_ATTRIBUTE_MESH_VOLUMEDATA) ==
+				0)
+			{
+				if(m_bHasVolumeDataID)
+				{
+					throw CNMRException(
+						NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_VOLUME_ID);
+				}
+				m_bHasVolumeDataID = true;
+				m_nVolumeDataID = fnStringToUint32(pAttributeValue);
+			}
+		}
 	}
 
-	void CModelReaderNode100_Mesh::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+    void CModelReaderNode100_Mesh::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);

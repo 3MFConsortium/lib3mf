@@ -162,6 +162,11 @@ namespace NMR {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_FunctionFromImage3D>(
 					m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
+			} if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMEDATA) == 0)
+			{
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_VolumeData>(
+					m_pModel, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
