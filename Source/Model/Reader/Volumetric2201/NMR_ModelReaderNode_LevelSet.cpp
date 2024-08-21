@@ -224,7 +224,7 @@ namespace NMR
             m_nMeshID = fnStringToUint32(pAttributeValue);
         }
         else if(strcmp(pAttributeName,
-                       XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_VOLUME_ID) == 0)
+                       XML_3MF_ATTRIBUTE_MESH_VOLUMEDATA) == 0)
         {
             if(m_bHasVolumeDataID)
             {
