@@ -865,8 +865,15 @@ namespace NMR {
 		implicitWriter.writeImplicitFunctions();
 	}
 
-	void CModelWriterNode100_Model::writeMultiProperties()
+	void CModelWriterNode100_Model::writeVolumeData()
 	{
+		CModelWriterNode_VolumeData volumeWriter(m_pModel, m_pXMLWriter,
+													m_pProgressMonitor);
+		volumeWriter.writeToXML();
+	}
+
+    void CModelWriterNode100_Model::writeMultiProperties()
+        {
 		nfUint32 nCount = m_pModel->getMultiPropertyGroupCount();
 
 		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++)
@@ -914,6 +921,9 @@ namespace NMR {
 			}
 			if (m_bWriteImplicitExtension) {
 				writeImplicitFunctions();
+			}
+			if (m_bWriteVolumetricExtension) {
+				writeVolumeData();
 			}
 			if (m_bWriteObjects)
 				writeObjects();

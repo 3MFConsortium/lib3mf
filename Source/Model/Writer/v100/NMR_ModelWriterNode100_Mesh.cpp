@@ -131,6 +131,19 @@ namespace NMR {
 		writeStartElement(XML_3MF_ELEMENT_MESH);
 
 		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENODES);
+
+		//	Write id of referenced volume data, if any
+		if (m_bWriteVolumetricExtension) {
+			auto pVolumeData = m_pModelMeshObject->getVolumeData();
+			if (pVolumeData) {
+				PPackageResourceID pID = pVolumeData->getPackageResourceID();
+				if (pID->getPath() != m_pModel->currentPath())
+					throw CNMRException(NMR_ERROR_MODELRESOURCE_IN_DIFFERENT_MODEL);
+				writePrefixedIntAttribute(XML_3MF_NAMESPACEPREFIX_VOLUMETRIC, XML_3MF_ATTRIBUTE_MESH_VOLUMEDATA, pID->getModelResourceID());
+			}
+		}
+		
+
 		// Write Vertices
 		writeStartElement(XML_3MF_ELEMENT_VERTICES);
 		for (nNodeIndex = 0; nNodeIndex < nNodeCount; nNodeIndex++) {
