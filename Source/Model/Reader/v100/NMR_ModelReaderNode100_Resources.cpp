@@ -152,11 +152,6 @@ namespace NMR {
 					m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
-			else if (strcmp(pChildName, XML_3MF_ELEMENT_IMPLICIT_FUNCTION) == 0)
-			{
-				PModelReaderNode_ImplicitFunction pXMLNode = std::make_shared<CModelReaderNode_ImplicitFunction>(m_pModel, m_pWarnings);
-				pXMLNode->parseXML(pXMLReader);
-			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_FUNCTION_FROM_IMAGE3D) == 0)
 			{
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_FunctionFromImage3D>(
@@ -173,7 +168,7 @@ namespace NMR {
 		}
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_IMPLICITSPEC) == 0) {
-			if (strcmp(pChildName, XML_3MF_ELEMENT_IMPLICIT_FUNCTION) == 0)
+			if ((strcmp(pChildName, XML_3MF_ELEMENT_IMPLICIT_FUNCTION_DEPRECATED) == 0) || (strcmp(pChildName, XML_3MF_ELEMENT_IMPLICIT_FUNCTION) == 0))
 			{
 				PModelReaderNode_ImplicitFunction pXMLNode = std::make_shared<CModelReaderNode_ImplicitFunction>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);

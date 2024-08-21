@@ -258,7 +258,8 @@ These are given by the 3MF Standard
 
 
 // Voumeteric/Implicit
-#define XML_3MF_ELEMENT_IMPLICIT_FUNCTION "function"
+#define XML_3MF_ELEMENT_IMPLICIT_FUNCTION_DEPRECATED "function"
+#define XML_3MF_ELEMENT_IMPLICIT_FUNCTION "implicitfunction"
 
 #define XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_ID "id"
 #define XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_DISPLAY_NAME "displayname"
