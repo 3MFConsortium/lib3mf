@@ -137,7 +137,7 @@ namespace NMR
             PPackageResourceID pID = pVolumeData->getPackageResourceID();
             if (pID->getPath() != m_pModel->currentPath())
                 throw CNMRException(NMR_ERROR_MODELRESOURCE_IN_DIFFERENT_MODEL);
-            writePrefixedIntAttribute(XML_3MF_NAMESPACEPREFIX_VOLUMETRIC, XML_3MF_ATTRIBUTE_LEVELSET_VOLUMEDATA, pID->getModelResourceID());
+            writeIntAttribute(XML_3MF_ATTRIBUTE_LEVELSET_VOLUMEDATA, pID->getModelResourceID());
         }
         writeFullEndElement();
     }
