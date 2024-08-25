@@ -235,7 +235,9 @@ bool CLevelSet::IsLevelSetObject()
 IVolumeData * CLevelSet::GetVolumeData()
 {
 	NMR::PModelVolumeData pVolumeData = levelSetObject()->getVolumeData();
-	if (pVolumeData == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+	if (!pVolumeData)
+	{
+		return nullptr;
+	}
 	return new CVolumeData(pVolumeData);
 }
