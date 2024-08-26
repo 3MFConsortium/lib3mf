@@ -130,11 +130,12 @@ jobs:
           ZIP_FILE=$(ls build/lib3mf-*.zip)
           echo "ARTIFACT_NAME=$(basename ${ZIP_FILE})" >> $GITHUB_ENV
         shell: bash
+      - run: ls -al build/
       - name: Archive Mac binary
         uses: actions/upload-artifact@v4
         with:
           name: lib3mf.dylib
-          path: build/lib3mf.dylib
+          path: build/lib3mf.${{ env.LIB3MF_VERSION }}.0.dylib
       - name: Upload Artifact (CPacked Archive)
         uses: actions/upload-artifact@v4
         with:
@@ -301,7 +302,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ./build
-      - run: ls -Rl ./build
+      - run: ls -Rlh ./build
       - run: unzip bindings.zip/bindings.zip
         working-directory: ./build
       - run: bash SDK/GenerateSDK_github.sh
@@ -470,6 +471,7 @@ jobs:
           sh Examples/CppDynamic/GenerateMake.sh
           cd Examples/CppDynamic/build
           cmake --build .
+          ls -al
           ./Example_ExtractInfo ../../Files/Helix.3mf
       - name: Build Cpp
         run: |
