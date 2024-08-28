@@ -141,7 +141,8 @@ namespace NMR
         }
 		else if (m_pImplicitNode->getNodeType() == Lib3MF::eImplicitNodeType::ConstResourceID)
 		{
-			if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_RESOURCE_ID) == 0)
+			if ((strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_RESOURCE_ID_VALUE_DEPRECATED) == 0) 
+                || (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_VALUE) == 0))
             {
                 m_pImplicitNode->setModelResourceID(std::stoi(pAttributeValue));
             }

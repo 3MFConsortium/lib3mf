@@ -131,7 +131,8 @@ namespace NMR
         {
             m_nID = fnStringToUint32(pAttributeValue);
         }
-        else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_IMAGE3DID) == 0)
+        else if ((strcmp(pAttributeName, XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_IMAGE3DID_DEPRECATED) == 0) 
+            || (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_IMAGE3DID) == 0))
         {
             m_imageModelResourceID = fnStringToUint32(pAttributeValue);
         }
@@ -139,11 +140,13 @@ namespace NMR
         {
             m_displayName = std::string{pAttributeValue};
         }
-        else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_OFFSET) == 0)
+        else if ((strcmp(pAttributeName, XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_OFFSET_DEPRECATED) == 0)
+            || (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_OFFSET) == 0))
         {
             m_offset = fnStringToDouble(pAttributeValue);
         }
-        else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_SCALE) == 0)
+        else if ((strcmp(pAttributeName, XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_SCALE_DEPRECATED) == 0)
+            || (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_SCALE) == 0))
         {
             m_scale = fnStringToDouble(pAttributeValue);
         }

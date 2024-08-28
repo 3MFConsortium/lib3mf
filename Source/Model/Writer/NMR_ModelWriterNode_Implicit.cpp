@@ -139,7 +139,7 @@ namespace NMR
 				auto resource = node.getResource();
 				if (resource != nullptr)
 				{
-					writeIntAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_RESOURCE_ID, resource->getPackageResourceID()->getModelResourceID());
+					writeIntAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_VALUE, resource->getPackageResourceID()->getModelResourceID());
 				}
 				
             }
@@ -232,8 +232,7 @@ namespace NMR
 
         for (auto & port : ports)
         {
-            writeStartElementWithPrefix(portTypeToName(port->getType()),
-                                        XML_3MF_NAMESPACEPREFIX_IMPLICIT);
+            writeStartElement(portTypeToName(port->getType()));
             {
                 writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_PORT_ID, port->getIdentifier());
                 writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_PORT_DISPLAY_NAME,
