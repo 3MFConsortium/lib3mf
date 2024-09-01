@@ -404,6 +404,7 @@ jobs:
       - name: Go Bindings
         run: |
           cd SDK/Examples/Go
+          go get github.com/3MFConsortium/lib3mf.go/v2@v2.3.2
           go build -o create_cube create_cube.go
           ./create_cube
 
@@ -467,6 +468,7 @@ jobs:
       - name: Go Bindings
         run: |
           cd SDK/Examples/Go
+          go get github.com/3MFConsortium/lib3mf.go/v2@v2.3.2
           go build -o create_cube.exe create_cube.go
           ./create_cube.exe
 
@@ -533,6 +535,7 @@ jobs:
       - name: Go Bindings
         run: |
           cd SDK/Examples/Go
+          go get github.com/3MFConsortium/lib3mf.go/v2@v2.3.2
           go build -o create_cube create_cube.go
           ./create_cube
 
