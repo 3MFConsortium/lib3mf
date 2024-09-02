@@ -36,7 +36,7 @@ package main
 
 import (
 	"fmt"
-	lib3mf "github.com/3MFConsortium/lib3mf_go/v2"
+	lib3mf "github.com/3MFConsortium/lib3mf.go/v2"
 	"log"
 	"os"
 	"strings"
