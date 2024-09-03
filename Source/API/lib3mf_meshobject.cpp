@@ -415,10 +415,13 @@ void CMeshObject::SetVolumeData(IVolumeData* pTheVolumeData)
 
 	NMR::PModelResource pResource = pModel->findResource(pTheVolumeData->GetResourceID());
 
+	if (pResource == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT, "Referenced VolumeData Resource with ID " + std::to_string(pTheVolumeData->GetModelResourceID()) + " not found");
+
 	NMR::PModelVolumeData pVolumeData = std::dynamic_pointer_cast<NMR::CModelVolumeData>(pResource);
 
 	if (pVolumeData == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT, "Referenced Resource is not of type VolumeData");
 
 	meshObject()->setVolumeData(pVolumeData);
 }

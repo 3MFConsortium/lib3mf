@@ -58,7 +58,7 @@ NMR::CModelFunctionFromImage3D * Lib3MF::Impl::CFunctionFromImage3D::functionfro
     
     if(!pFunctionFromImage3D)
     { 
-        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT, "Resource is not a FunctionFromImage3D Object");
     }
 
     return pFunctionFromImage3D.get();
