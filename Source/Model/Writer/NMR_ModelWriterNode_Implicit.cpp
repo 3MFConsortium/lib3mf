@@ -232,7 +232,8 @@ namespace NMR
 
         for (auto & port : ports)
         {
-            writeStartElement(portTypeToName(port->getType()));
+            writeStartElementWithPrefix(portTypeToName(port->getType()),
+                                        XML_3MF_NAMESPACEPREFIX_IMPLICIT);
             {
                 writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_PORT_ID, port->getIdentifier());
                 writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_PORT_DISPLAY_NAME,
