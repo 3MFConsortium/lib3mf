@@ -97,13 +97,15 @@ sLib3MFTriangle convertObjectToLib3MFTriangle(Isolate* isolate, const Local<Valu
 		sTriangle.m_Indices[rowIndex] = 0;
 
 	if (pParamValue->IsObject()) {
+		// Convert pParamValue to MaybeLocal<Object>
 		MaybeLocal<Object> maybeObject = pParamValue->ToObject(context);
 
 		if (!maybeObject.IsEmpty()) {
+			// Convert MaybeLocal<Object> to Local<Object>
 			Local<Object> obj = maybeObject.ToLocalChecked();
-
-			// Indices Member
-			MaybeLocal<Value> maybeValIndices = obj->Get(context, String::NewFromUtf8(isolate, "Indices"));
+			
+			// Indices Member - use the updated Get method
+			MaybeLocal<Value> maybeValIndices = obj->Get(context, String::NewFromUtf8(isolate, "Indices").ToLocalChecked());
 			if (!maybeValIndices.IsEmpty()) {
 				Local<Value> valIndices = maybeValIndices.ToLocalChecked();
 				if (valIndices->IsArray()) {
@@ -116,25 +118,25 @@ sLib3MFTriangle convertObjectToLib3MFTriangle(Isolate* isolate, const Local<Valu
 								MaybeLocal<Number> localNumber = localValue->ToNumber(context);
 								sTriangle.m_Indices[rowIndex] = localNumber.ToLocalChecked()->Uint32Value(isolate->GetCurrentContext()).ToChecked();
 							} else {
-								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Indices array entry is not a number" )));
+								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Indices array entry is not a number").ToLocalChecked()));
 							}
 						} else {
-							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Indices array entry is invalid" )));
+							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Indices array entry is invalid").ToLocalChecked()));
 						}
 					}
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Indices member is not an array" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Indices member is not an array").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Indices member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Indices member not found in object").ToLocalChecked()));
 			}
 
 
 		} else {
-			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed." )));
+			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed.").ToLocalChecked()));
 		}
 	} else {
-		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter." )));
+		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter.").ToLocalChecked()));
 	}
 
 	return sTriangle;
@@ -147,9 +149,9 @@ Local<Object> convertLib3MFTriangleToObject(Isolate* isolate, sLib3MFTriangle sT
 	Local<Object> returnInstance = Object::New(isolate);
 	Local<Array> newIndices = Array::New(isolate, 3);
 	for (int rowIndex = 0; rowIndex < 3; rowIndex++) {
-		newIndices->Set(rowIndex, Integer::NewFromUnsigned(isolate, sTriangle.m_Indices[rowIndex]));
+		newIndices->Set(isolate->GetCurrentContext(), rowIndex, Integer::NewFromUnsigned(isolate, sTriangle.m_Indices[rowIndex]));
 	}
-	returnInstance->Set(String::NewFromUtf8(isolate, "Indices"), newIndices);
+	returnInstance->Set(isolate->GetCurrentContext(),String::NewFromUtf8(isolate, "Indices").ToLocalChecked(), newIndices);
 
 
 	return returnInstance;
@@ -175,21 +177,21 @@ sLib3MFTriangleProperties convertObjectToLib3MFTriangleProperties(Isolate* isola
 			Local<Object> obj = maybeObject.ToLocalChecked();
 
 			// ResourceID Member
-			MaybeLocal<Value> maybeValResourceID = obj->Get(context, String::NewFromUtf8(isolate, "ResourceID"));
+			MaybeLocal<Value> maybeValResourceID = obj->Get(context, String::NewFromUtf8(isolate, "ResourceID").ToLocalChecked());
 			if (!maybeValResourceID.IsEmpty()) {
 				Local<Value> valResourceID = maybeValResourceID.ToLocalChecked();
 				if (valResourceID->IsNumber()) {
 					MaybeLocal<Number> localValResourceID = valResourceID->ToNumber(context);
 					sTriangleProperties.m_ResourceID = localValResourceID.ToLocalChecked()->Uint32Value(isolate->GetCurrentContext()).ToChecked();
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "ResourceID member is not a number" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "ResourceID member is not a number").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "ResourceID member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "ResourceID member not found in object").ToLocalChecked()));
 			}
 
 			// PropertyIDs Member
-			MaybeLocal<Value> maybeValPropertyIDs = obj->Get(context, String::NewFromUtf8(isolate, "PropertyIDs"));
+			MaybeLocal<Value> maybeValPropertyIDs = obj->Get(context, String::NewFromUtf8(isolate, "PropertyIDs").ToLocalChecked());
 			if (!maybeValPropertyIDs.IsEmpty()) {
 				Local<Value> valPropertyIDs = maybeValPropertyIDs.ToLocalChecked();
 				if (valPropertyIDs->IsArray()) {
@@ -202,25 +204,25 @@ sLib3MFTriangleProperties convertObjectToLib3MFTriangleProperties(Isolate* isola
 								MaybeLocal<Number> localNumber = localValue->ToNumber(context);
 								sTriangleProperties.m_PropertyIDs[rowIndex] = localNumber.ToLocalChecked()->Uint32Value(isolate->GetCurrentContext()).ToChecked();
 							} else {
-								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "PropertyIDs array entry is not a number" )));
+								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "PropertyIDs array entry is not a number").ToLocalChecked()));
 							}
 						} else {
-							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "PropertyIDs array entry is invalid" )));
+							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "PropertyIDs array entry is invalid").ToLocalChecked()));
 						}
 					}
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "PropertyIDs member is not an array" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "PropertyIDs member is not an array").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "PropertyIDs member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "PropertyIDs member not found in object").ToLocalChecked()));
 			}
 
 
 		} else {
-			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed." )));
+			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed.").ToLocalChecked()));
 		}
 	} else {
-		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter." )));
+		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter.").ToLocalChecked()));
 	}
 
 	return sTriangleProperties;
@@ -231,12 +233,12 @@ sLib3MFTriangleProperties convertObjectToLib3MFTriangleProperties(Isolate* isola
 Local<Object> convertLib3MFTrianglePropertiesToObject(Isolate* isolate, sLib3MFTriangleProperties sTriangleProperties)
 {
 	Local<Object> returnInstance = Object::New(isolate);
-	returnInstance->Set(String::NewFromUtf8(isolate, "ResourceID"), Integer::NewFromUnsigned (isolate, sTriangleProperties.m_ResourceID));
+	returnInstance->Set(isolate->GetCurrentContext(),String::NewFromUtf8(isolate, "ResourceID").ToLocalChecked(), Integer::NewFromUnsigned (isolate, sTriangleProperties.m_ResourceID));
 	Local<Array> newPropertyIDs = Array::New(isolate, 3);
 	for (int rowIndex = 0; rowIndex < 3; rowIndex++) {
-		newPropertyIDs->Set(rowIndex, Integer::NewFromUnsigned(isolate, sTriangleProperties.m_PropertyIDs[rowIndex]));
+		newPropertyIDs->Set(isolate->GetCurrentContext(),rowIndex, Integer::NewFromUnsigned(isolate, sTriangleProperties.m_PropertyIDs[rowIndex]));
 	}
-	returnInstance->Set(String::NewFromUtf8(isolate, "PropertyIDs"), newPropertyIDs);
+	returnInstance->Set(isolate->GetCurrentContext(),String::NewFromUtf8(isolate, "PropertyIDs").ToLocalChecked(), newPropertyIDs);
 
 
 	return returnInstance;
@@ -261,7 +263,7 @@ sLib3MFPosition convertObjectToLib3MFPosition(Isolate* isolate, const Local<Valu
 			Local<Object> obj = maybeObject.ToLocalChecked();
 
 			// Coordinates Member
-			MaybeLocal<Value> maybeValCoordinates = obj->Get(context, String::NewFromUtf8(isolate, "Coordinates"));
+			MaybeLocal<Value> maybeValCoordinates = obj->Get(context, String::NewFromUtf8(isolate, "Coordinates").ToLocalChecked());
 			if (!maybeValCoordinates.IsEmpty()) {
 				Local<Value> valCoordinates = maybeValCoordinates.ToLocalChecked();
 				if (valCoordinates->IsArray()) {
@@ -274,25 +276,25 @@ sLib3MFPosition convertObjectToLib3MFPosition(Isolate* isolate, const Local<Valu
 								MaybeLocal<Number> localNumber = localValue->ToNumber(context);
 								sPosition.m_Coordinates[rowIndex] = (float)localNumber.ToLocalChecked()->NumberValue(isolate->GetCurrentContext()).ToChecked();
 							} else {
-								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Coordinates array entry is not a number" )));
+								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Coordinates array entry is not a number").ToLocalChecked()));
 							}
 						} else {
-							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Coordinates array entry is invalid" )));
+							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Coordinates array entry is invalid").ToLocalChecked()));
 						}
 					}
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Coordinates member is not an array" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Coordinates member is not an array").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Coordinates member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Coordinates member not found in object").ToLocalChecked()));
 			}
 
 
 		} else {
-			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed." )));
+			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed.").ToLocalChecked()));
 		}
 	} else {
-		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter." )));
+		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter.").ToLocalChecked()));
 	}
 
 	return sPosition;
@@ -305,9 +307,9 @@ Local<Object> convertLib3MFPositionToObject(Isolate* isolate, sLib3MFPosition sP
 	Local<Object> returnInstance = Object::New(isolate);
 	Local<Array> newCoordinates = Array::New(isolate, 3);
 	for (int rowIndex = 0; rowIndex < 3; rowIndex++) {
-		newCoordinates->Set(rowIndex, Number::New(isolate, (double) sPosition.m_Coordinates[rowIndex]));
+		newCoordinates->Set(isolate->GetCurrentContext(),rowIndex, Number::New(isolate, (double) sPosition.m_Coordinates[rowIndex]));
 	}
-	returnInstance->Set(String::NewFromUtf8(isolate, "Coordinates"), newCoordinates);
+	returnInstance->Set(isolate->GetCurrentContext(),String::NewFromUtf8(isolate, "Coordinates").ToLocalChecked(), newCoordinates);
 
 
 	return returnInstance;
@@ -332,7 +334,7 @@ sLib3MFPosition2D convertObjectToLib3MFPosition2D(Isolate* isolate, const Local<
 			Local<Object> obj = maybeObject.ToLocalChecked();
 
 			// Coordinates Member
-			MaybeLocal<Value> maybeValCoordinates = obj->Get(context, String::NewFromUtf8(isolate, "Coordinates"));
+			MaybeLocal<Value> maybeValCoordinates = obj->Get(context, String::NewFromUtf8(isolate, "Coordinates").ToLocalChecked());
 			if (!maybeValCoordinates.IsEmpty()) {
 				Local<Value> valCoordinates = maybeValCoordinates.ToLocalChecked();
 				if (valCoordinates->IsArray()) {
@@ -345,25 +347,25 @@ sLib3MFPosition2D convertObjectToLib3MFPosition2D(Isolate* isolate, const Local<
 								MaybeLocal<Number> localNumber = localValue->ToNumber(context);
 								sPosition2D.m_Coordinates[rowIndex] = (float)localNumber.ToLocalChecked()->NumberValue(isolate->GetCurrentContext()).ToChecked();
 							} else {
-								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Coordinates array entry is not a number" )));
+								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Coordinates array entry is not a number").ToLocalChecked()));
 							}
 						} else {
-							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Coordinates array entry is invalid" )));
+							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Coordinates array entry is invalid").ToLocalChecked()));
 						}
 					}
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Coordinates member is not an array" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Coordinates member is not an array").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Coordinates member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Coordinates member not found in object").ToLocalChecked()));
 			}
 
 
 		} else {
-			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed." )));
+			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed.").ToLocalChecked()));
 		}
 	} else {
-		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter." )));
+		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter.").ToLocalChecked()));
 	}
 
 	return sPosition2D;
@@ -376,9 +378,9 @@ Local<Object> convertLib3MFPosition2DToObject(Isolate* isolate, sLib3MFPosition2
 	Local<Object> returnInstance = Object::New(isolate);
 	Local<Array> newCoordinates = Array::New(isolate, 2);
 	for (int rowIndex = 0; rowIndex < 2; rowIndex++) {
-		newCoordinates->Set(rowIndex, Number::New(isolate, (double) sPosition2D.m_Coordinates[rowIndex]));
+		newCoordinates->Set(isolate->GetCurrentContext(),rowIndex, Number::New(isolate, (double) sPosition2D.m_Coordinates[rowIndex]));
 	}
-	returnInstance->Set(String::NewFromUtf8(isolate, "Coordinates"), newCoordinates);
+	returnInstance->Set(isolate->GetCurrentContext(),String::NewFromUtf8(isolate, "Coordinates").ToLocalChecked(), newCoordinates);
 
 
 	return returnInstance;
@@ -402,39 +404,39 @@ sLib3MFCompositeConstituent convertObjectToLib3MFCompositeConstituent(Isolate* i
 			Local<Object> obj = maybeObject.ToLocalChecked();
 
 			// PropertyID Member
-			MaybeLocal<Value> maybeValPropertyID = obj->Get(context, String::NewFromUtf8(isolate, "PropertyID"));
+			MaybeLocal<Value> maybeValPropertyID = obj->Get(context, String::NewFromUtf8(isolate, "PropertyID").ToLocalChecked());
 			if (!maybeValPropertyID.IsEmpty()) {
 				Local<Value> valPropertyID = maybeValPropertyID.ToLocalChecked();
 				if (valPropertyID->IsNumber()) {
 					MaybeLocal<Number> localValPropertyID = valPropertyID->ToNumber(context);
 					sCompositeConstituent.m_PropertyID = localValPropertyID.ToLocalChecked()->Uint32Value(isolate->GetCurrentContext()).ToChecked();
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "PropertyID member is not a number" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "PropertyID member is not a number").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "PropertyID member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "PropertyID member not found in object").ToLocalChecked()));
 			}
 
 			// MixingRatio Member
-			MaybeLocal<Value> maybeValMixingRatio = obj->Get(context, String::NewFromUtf8(isolate, "MixingRatio"));
+			MaybeLocal<Value> maybeValMixingRatio = obj->Get(context, String::NewFromUtf8(isolate, "MixingRatio").ToLocalChecked());
 			if (!maybeValMixingRatio.IsEmpty()) {
 				Local<Value> valMixingRatio = maybeValMixingRatio.ToLocalChecked();
 				if (valMixingRatio->IsNumber()) {
 					MaybeLocal<Number> localValMixingRatio = valMixingRatio->ToNumber(context);
 					sCompositeConstituent.m_MixingRatio = localValMixingRatio.ToLocalChecked()->NumberValue(isolate->GetCurrentContext()).ToChecked();
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "MixingRatio member is not a number" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "MixingRatio member is not a number").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "MixingRatio member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "MixingRatio member not found in object").ToLocalChecked()));
 			}
 
 
 		} else {
-			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed." )));
+			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed.").ToLocalChecked()));
 		}
 	} else {
-		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter." )));
+		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter.").ToLocalChecked()));
 	}
 
 	return sCompositeConstituent;
@@ -445,8 +447,8 @@ sLib3MFCompositeConstituent convertObjectToLib3MFCompositeConstituent(Isolate* i
 Local<Object> convertLib3MFCompositeConstituentToObject(Isolate* isolate, sLib3MFCompositeConstituent sCompositeConstituent)
 {
 	Local<Object> returnInstance = Object::New(isolate);
-	returnInstance->Set(String::NewFromUtf8(isolate, "PropertyID"), Integer::NewFromUnsigned (isolate, sCompositeConstituent.m_PropertyID));
-	returnInstance->Set(String::NewFromUtf8(isolate, "MixingRatio"), Number::New (isolate, sCompositeConstituent.m_MixingRatio));
+	returnInstance->Set(isolate->GetCurrentContext(),String::NewFromUtf8(isolate, "PropertyID").ToLocalChecked(), Integer::NewFromUnsigned (isolate, sCompositeConstituent.m_PropertyID));
+	returnInstance->Set(isolate->GetCurrentContext(),String::NewFromUtf8(isolate, "MixingRatio").ToLocalChecked(), Number::New (isolate, sCompositeConstituent.m_MixingRatio));
 
 	return returnInstance;
 }
@@ -469,39 +471,39 @@ sLib3MFMultiPropertyLayer convertObjectToLib3MFMultiPropertyLayer(Isolate* isola
 			Local<Object> obj = maybeObject.ToLocalChecked();
 
 			// ResourceID Member
-			MaybeLocal<Value> maybeValResourceID = obj->Get(context, String::NewFromUtf8(isolate, "ResourceID"));
+			MaybeLocal<Value> maybeValResourceID = obj->Get(context, String::NewFromUtf8(isolate, "ResourceID").ToLocalChecked());
 			if (!maybeValResourceID.IsEmpty()) {
 				Local<Value> valResourceID = maybeValResourceID.ToLocalChecked();
 				if (valResourceID->IsNumber()) {
 					MaybeLocal<Number> localValResourceID = valResourceID->ToNumber(context);
 					sMultiPropertyLayer.m_ResourceID = localValResourceID.ToLocalChecked()->Uint32Value(isolate->GetCurrentContext()).ToChecked();
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "ResourceID member is not a number" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "ResourceID member is not a number").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "ResourceID member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "ResourceID member not found in object").ToLocalChecked()));
 			}
 
 			// TheBlendMethod Member
-			MaybeLocal<Value> maybeValTheBlendMethod = obj->Get(context, String::NewFromUtf8(isolate, "TheBlendMethod"));
+			MaybeLocal<Value> maybeValTheBlendMethod = obj->Get(context, String::NewFromUtf8(isolate, "TheBlendMethod").ToLocalChecked());
 			if (!maybeValTheBlendMethod.IsEmpty()) {
 				Local<Value> valTheBlendMethod = maybeValTheBlendMethod.ToLocalChecked();
 				if (valTheBlendMethod->IsNumber()) {
 					MaybeLocal<Number> localValTheBlendMethod = valTheBlendMethod->ToNumber(context);
 					sMultiPropertyLayer.m_TheBlendMethod.m_code = localValTheBlendMethod.ToLocalChecked()->Int32Value(isolate->GetCurrentContext()).ToChecked();
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "TheBlendMethod member is not a number" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "TheBlendMethod member is not a number").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "TheBlendMethod member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "TheBlendMethod member not found in object").ToLocalChecked()));
 			}
 
 
 		} else {
-			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed." )));
+			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed.").ToLocalChecked()));
 		}
 	} else {
-		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter." )));
+		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter.").ToLocalChecked()));
 	}
 
 	return sMultiPropertyLayer;
@@ -512,8 +514,8 @@ sLib3MFMultiPropertyLayer convertObjectToLib3MFMultiPropertyLayer(Isolate* isola
 Local<Object> convertLib3MFMultiPropertyLayerToObject(Isolate* isolate, sLib3MFMultiPropertyLayer sMultiPropertyLayer)
 {
 	Local<Object> returnInstance = Object::New(isolate);
-	returnInstance->Set(String::NewFromUtf8(isolate, "ResourceID"), Integer::NewFromUnsigned (isolate, sMultiPropertyLayer.m_ResourceID));
-	returnInstance->Set(String::NewFromUtf8(isolate, "TheBlendMethod"), Integer::New (isolate, sMultiPropertyLayer.m_TheBlendMethod.m_code));
+	returnInstance->Set(isolate->GetCurrentContext(),String::NewFromUtf8(isolate, "ResourceID").ToLocalChecked(), Integer::NewFromUnsigned (isolate, sMultiPropertyLayer.m_ResourceID));
+	returnInstance->Set(isolate->GetCurrentContext(),String::NewFromUtf8(isolate, "TheBlendMethod").ToLocalChecked(), Integer::New (isolate, sMultiPropertyLayer.m_TheBlendMethod.m_code));
 
 	return returnInstance;
 }
@@ -536,39 +538,39 @@ sLib3MFTex2Coord convertObjectToLib3MFTex2Coord(Isolate* isolate, const Local<Va
 			Local<Object> obj = maybeObject.ToLocalChecked();
 
 			// U Member
-			MaybeLocal<Value> maybeValU = obj->Get(context, String::NewFromUtf8(isolate, "U"));
+			MaybeLocal<Value> maybeValU = obj->Get(context, String::NewFromUtf8(isolate, "U").ToLocalChecked());
 			if (!maybeValU.IsEmpty()) {
 				Local<Value> valU = maybeValU.ToLocalChecked();
 				if (valU->IsNumber()) {
 					MaybeLocal<Number> localValU = valU->ToNumber(context);
 					sTex2Coord.m_U = localValU.ToLocalChecked()->NumberValue(isolate->GetCurrentContext()).ToChecked();
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "U member is not a number" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "U member is not a number").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "U member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "U member not found in object").ToLocalChecked()));
 			}
 
 			// V Member
-			MaybeLocal<Value> maybeValV = obj->Get(context, String::NewFromUtf8(isolate, "V"));
+			MaybeLocal<Value> maybeValV = obj->Get(context, String::NewFromUtf8(isolate, "V").ToLocalChecked());
 			if (!maybeValV.IsEmpty()) {
 				Local<Value> valV = maybeValV.ToLocalChecked();
 				if (valV->IsNumber()) {
 					MaybeLocal<Number> localValV = valV->ToNumber(context);
 					sTex2Coord.m_V = localValV.ToLocalChecked()->NumberValue(isolate->GetCurrentContext()).ToChecked();
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "V member is not a number" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "V member is not a number").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "V member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "V member not found in object").ToLocalChecked()));
 			}
 
 
 		} else {
-			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed." )));
+			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed.").ToLocalChecked()));
 		}
 	} else {
-		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter." )));
+		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter.").ToLocalChecked()));
 	}
 
 	return sTex2Coord;
@@ -579,8 +581,8 @@ sLib3MFTex2Coord convertObjectToLib3MFTex2Coord(Isolate* isolate, const Local<Va
 Local<Object> convertLib3MFTex2CoordToObject(Isolate* isolate, sLib3MFTex2Coord sTex2Coord)
 {
 	Local<Object> returnInstance = Object::New(isolate);
-	returnInstance->Set(String::NewFromUtf8(isolate, "U"), Number::New (isolate, sTex2Coord.m_U));
-	returnInstance->Set(String::NewFromUtf8(isolate, "V"), Number::New (isolate, sTex2Coord.m_V));
+	returnInstance->Set(isolate->GetCurrentContext(),String::NewFromUtf8(isolate, "U").ToLocalChecked(), Number::New (isolate, sTex2Coord.m_U));
+	returnInstance->Set(isolate->GetCurrentContext(),String::NewFromUtf8(isolate, "V").ToLocalChecked(), Number::New (isolate, sTex2Coord.m_V));
 
 	return returnInstance;
 }
@@ -606,7 +608,7 @@ sLib3MFTransform convertObjectToLib3MFTransform(Isolate* isolate, const Local<Va
 			Local<Object> obj = maybeObject.ToLocalChecked();
 
 			// Fields Member
-			MaybeLocal<Value> maybeValFields = obj->Get(context, String::NewFromUtf8(isolate, "Fields"));
+			MaybeLocal<Value> maybeValFields = obj->Get(context, String::NewFromUtf8(isolate, "Fields").ToLocalChecked());
 			if (!maybeValFields.IsEmpty()) {
 				Local<Value> valFields = maybeValFields.ToLocalChecked();
 				if (valFields->IsArray()) {
@@ -625,32 +627,32 @@ sLib3MFTransform convertObjectToLib3MFTransform(Isolate* isolate, const Local<Va
 											MaybeLocal<Number> localNumber = localValue->ToNumber(context);
 											sTransform.m_Fields[colIndex][rowIndex] = (float)localNumber.ToLocalChecked()->NumberValue(isolate->GetCurrentContext()).ToChecked();
 										} else {
-											isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Fields array entry is not a number" )));
+											isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Fields array entry is not a number").ToLocalChecked()));
 										}
 									} else {
-										isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Fields array entry is invalid" )));
+										isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Fields array entry is invalid").ToLocalChecked()));
 									}
 								}
 							} else {
-								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Fields array entry is not an array" )));
+								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Fields array entry is not an array").ToLocalChecked()));
 							}
 						} else {
-							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Fields array entry is invalid" )));
+							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Fields array entry is invalid").ToLocalChecked()));
 						}
 					}
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Fields member is not an array" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Fields member is not an array").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Fields member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Fields member not found in object").ToLocalChecked()));
 			}
 
 
 		} else {
-			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed." )));
+			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed.").ToLocalChecked()));
 		}
 	} else {
-		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter." )));
+		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter.").ToLocalChecked()));
 	}
 
 	return sTransform;
@@ -665,11 +667,11 @@ Local<Object> convertLib3MFTransformToObject(Isolate* isolate, sLib3MFTransform 
 	for (int colIndex = 0; colIndex < 4; colIndex++) {
 		Local<Array> colArray = Array::New(isolate, 3);
 		for (int rowIndex = 0; rowIndex < 3; rowIndex++) {
-			colArray->Set(rowIndex, Number::New(isolate, (double) sTransform.m_Fields[colIndex][rowIndex]));
+			colArray->Set(isolate->GetCurrentContext(),rowIndex, Number::New(isolate, (double) sTransform.m_Fields[colIndex][rowIndex]));
 		}
-		newFields->Set(colIndex, colArray);
+		newFields->Set(isolate->GetCurrentContext(),colIndex, colArray);
 	}
-	returnInstance->Set(String::NewFromUtf8(isolate, "Fields"), newFields);
+	returnInstance->Set(isolate->GetCurrentContext(),String::NewFromUtf8(isolate, "Fields").ToLocalChecked(), newFields);
 
 
 	return returnInstance;
@@ -696,7 +698,7 @@ sLib3MFBox convertObjectToLib3MFBox(Isolate* isolate, const Local<Value> & pPara
 			Local<Object> obj = maybeObject.ToLocalChecked();
 
 			// MinCoordinate Member
-			MaybeLocal<Value> maybeValMinCoordinate = obj->Get(context, String::NewFromUtf8(isolate, "MinCoordinate"));
+			MaybeLocal<Value> maybeValMinCoordinate = obj->Get(context, String::NewFromUtf8(isolate, "MinCoordinate").ToLocalChecked());
 			if (!maybeValMinCoordinate.IsEmpty()) {
 				Local<Value> valMinCoordinate = maybeValMinCoordinate.ToLocalChecked();
 				if (valMinCoordinate->IsArray()) {
@@ -709,21 +711,21 @@ sLib3MFBox convertObjectToLib3MFBox(Isolate* isolate, const Local<Value> & pPara
 								MaybeLocal<Number> localNumber = localValue->ToNumber(context);
 								sBox.m_MinCoordinate[rowIndex] = (float)localNumber.ToLocalChecked()->NumberValue(isolate->GetCurrentContext()).ToChecked();
 							} else {
-								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "MinCoordinate array entry is not a number" )));
+								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "MinCoordinate array entry is not a number").ToLocalChecked()));
 							}
 						} else {
-							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "MinCoordinate array entry is invalid" )));
+							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "MinCoordinate array entry is invalid").ToLocalChecked()));
 						}
 					}
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "MinCoordinate member is not an array" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "MinCoordinate member is not an array").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "MinCoordinate member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "MinCoordinate member not found in object").ToLocalChecked()));
 			}
 
 			// MaxCoordinate Member
-			MaybeLocal<Value> maybeValMaxCoordinate = obj->Get(context, String::NewFromUtf8(isolate, "MaxCoordinate"));
+			MaybeLocal<Value> maybeValMaxCoordinate = obj->Get(context, String::NewFromUtf8(isolate, "MaxCoordinate").ToLocalChecked());
 			if (!maybeValMaxCoordinate.IsEmpty()) {
 				Local<Value> valMaxCoordinate = maybeValMaxCoordinate.ToLocalChecked();
 				if (valMaxCoordinate->IsArray()) {
@@ -736,25 +738,25 @@ sLib3MFBox convertObjectToLib3MFBox(Isolate* isolate, const Local<Value> & pPara
 								MaybeLocal<Number> localNumber = localValue->ToNumber(context);
 								sBox.m_MaxCoordinate[rowIndex] = (float)localNumber.ToLocalChecked()->NumberValue(isolate->GetCurrentContext()).ToChecked();
 							} else {
-								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "MaxCoordinate array entry is not a number" )));
+								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "MaxCoordinate array entry is not a number").ToLocalChecked()));
 							}
 						} else {
-							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "MaxCoordinate array entry is invalid" )));
+							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "MaxCoordinate array entry is invalid").ToLocalChecked()));
 						}
 					}
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "MaxCoordinate member is not an array" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "MaxCoordinate member is not an array").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "MaxCoordinate member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "MaxCoordinate member not found in object").ToLocalChecked()));
 			}
 
 
 		} else {
-			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed." )));
+			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed.").ToLocalChecked()));
 		}
 	} else {
-		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter." )));
+		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter.").ToLocalChecked()));
 	}
 
 	return sBox;
@@ -767,15 +769,15 @@ Local<Object> convertLib3MFBoxToObject(Isolate* isolate, sLib3MFBox sBox)
 	Local<Object> returnInstance = Object::New(isolate);
 	Local<Array> newMinCoordinate = Array::New(isolate, 3);
 	for (int rowIndex = 0; rowIndex < 3; rowIndex++) {
-		newMinCoordinate->Set(rowIndex, Number::New(isolate, (double) sBox.m_MinCoordinate[rowIndex]));
+		newMinCoordinate->Set(isolate->GetCurrentContext(),rowIndex, Number::New(isolate, (double) sBox.m_MinCoordinate[rowIndex]));
 	}
-	returnInstance->Set(String::NewFromUtf8(isolate, "MinCoordinate"), newMinCoordinate);
+	returnInstance->Set(isolate->GetCurrentContext(),String::NewFromUtf8(isolate, "MinCoordinate").ToLocalChecked(), newMinCoordinate);
 
 	Local<Array> newMaxCoordinate = Array::New(isolate, 3);
 	for (int rowIndex = 0; rowIndex < 3; rowIndex++) {
-		newMaxCoordinate->Set(rowIndex, Number::New(isolate, (double) sBox.m_MaxCoordinate[rowIndex]));
+		newMaxCoordinate->Set(isolate->GetCurrentContext(),rowIndex, Number::New(isolate, (double) sBox.m_MaxCoordinate[rowIndex]));
 	}
-	returnInstance->Set(String::NewFromUtf8(isolate, "MaxCoordinate"), newMaxCoordinate);
+	returnInstance->Set(isolate->GetCurrentContext(),String::NewFromUtf8(isolate, "MaxCoordinate").ToLocalChecked(), newMaxCoordinate);
 
 
 	return returnInstance;
@@ -801,67 +803,67 @@ sLib3MFColor convertObjectToLib3MFColor(Isolate* isolate, const Local<Value> & p
 			Local<Object> obj = maybeObject.ToLocalChecked();
 
 			// Red Member
-			MaybeLocal<Value> maybeValRed = obj->Get(context, String::NewFromUtf8(isolate, "Red"));
+			MaybeLocal<Value> maybeValRed = obj->Get(context, String::NewFromUtf8(isolate, "Red").ToLocalChecked());
 			if (!maybeValRed.IsEmpty()) {
 				Local<Value> valRed = maybeValRed.ToLocalChecked();
 				if (valRed->IsNumber()) {
 					MaybeLocal<Number> localValRed = valRed->ToNumber(context);
 					sColor.m_Red = localValRed.ToLocalChecked()->Uint32Value(isolate->GetCurrentContext()).ToChecked();
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Red member is not a number" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Red member is not a number").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Red member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Red member not found in object").ToLocalChecked()));
 			}
 
 			// Green Member
-			MaybeLocal<Value> maybeValGreen = obj->Get(context, String::NewFromUtf8(isolate, "Green"));
+			MaybeLocal<Value> maybeValGreen = obj->Get(context, String::NewFromUtf8(isolate, "Green").ToLocalChecked());
 			if (!maybeValGreen.IsEmpty()) {
 				Local<Value> valGreen = maybeValGreen.ToLocalChecked();
 				if (valGreen->IsNumber()) {
 					MaybeLocal<Number> localValGreen = valGreen->ToNumber(context);
 					sColor.m_Green = localValGreen.ToLocalChecked()->Uint32Value(isolate->GetCurrentContext()).ToChecked();
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Green member is not a number" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Green member is not a number").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Green member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Green member not found in object").ToLocalChecked()));
 			}
 
 			// Blue Member
-			MaybeLocal<Value> maybeValBlue = obj->Get(context, String::NewFromUtf8(isolate, "Blue"));
+			MaybeLocal<Value> maybeValBlue = obj->Get(context, String::NewFromUtf8(isolate, "Blue").ToLocalChecked());
 			if (!maybeValBlue.IsEmpty()) {
 				Local<Value> valBlue = maybeValBlue.ToLocalChecked();
 				if (valBlue->IsNumber()) {
 					MaybeLocal<Number> localValBlue = valBlue->ToNumber(context);
 					sColor.m_Blue = localValBlue.ToLocalChecked()->Uint32Value(isolate->GetCurrentContext()).ToChecked();
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Blue member is not a number" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Blue member is not a number").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Blue member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Blue member not found in object").ToLocalChecked()));
 			}
 
 			// Alpha Member
-			MaybeLocal<Value> maybeValAlpha = obj->Get(context, String::NewFromUtf8(isolate, "Alpha"));
+			MaybeLocal<Value> maybeValAlpha = obj->Get(context, String::NewFromUtf8(isolate, "Alpha").ToLocalChecked());
 			if (!maybeValAlpha.IsEmpty()) {
 				Local<Value> valAlpha = maybeValAlpha.ToLocalChecked();
 				if (valAlpha->IsNumber()) {
 					MaybeLocal<Number> localValAlpha = valAlpha->ToNumber(context);
 					sColor.m_Alpha = localValAlpha.ToLocalChecked()->Uint32Value(isolate->GetCurrentContext()).ToChecked();
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Alpha member is not a number" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Alpha member is not a number").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Alpha member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Alpha member not found in object").ToLocalChecked()));
 			}
 
 
 		} else {
-			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed." )));
+			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed.").ToLocalChecked()));
 		}
 	} else {
-		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter." )));
+		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter.").ToLocalChecked()));
 	}
 
 	return sColor;
@@ -872,10 +874,10 @@ sLib3MFColor convertObjectToLib3MFColor(Isolate* isolate, const Local<Value> & p
 Local<Object> convertLib3MFColorToObject(Isolate* isolate, sLib3MFColor sColor)
 {
 	Local<Object> returnInstance = Object::New(isolate);
-	returnInstance->Set(String::NewFromUtf8(isolate, "Red"), Integer::NewFromUnsigned (isolate, sColor.m_Red));
-	returnInstance->Set(String::NewFromUtf8(isolate, "Green"), Integer::NewFromUnsigned (isolate, sColor.m_Green));
-	returnInstance->Set(String::NewFromUtf8(isolate, "Blue"), Integer::NewFromUnsigned (isolate, sColor.m_Blue));
-	returnInstance->Set(String::NewFromUtf8(isolate, "Alpha"), Integer::NewFromUnsigned (isolate, sColor.m_Alpha));
+	returnInstance->Set(isolate->GetCurrentContext(),String::NewFromUtf8(isolate, "Red").ToLocalChecked(), Integer::NewFromUnsigned (isolate, sColor.m_Red));
+	returnInstance->Set(isolate->GetCurrentContext(),String::NewFromUtf8(isolate, "Green").ToLocalChecked(), Integer::NewFromUnsigned (isolate, sColor.m_Green));
+	returnInstance->Set(isolate->GetCurrentContext(),String::NewFromUtf8(isolate, "Blue").ToLocalChecked(), Integer::NewFromUnsigned (isolate, sColor.m_Blue));
+	returnInstance->Set(isolate->GetCurrentContext(),String::NewFromUtf8(isolate, "Alpha").ToLocalChecked(), Integer::NewFromUnsigned (isolate, sColor.m_Alpha));
 
 	return returnInstance;
 }
@@ -903,7 +905,7 @@ sLib3MFBeam convertObjectToLib3MFBeam(Isolate* isolate, const Local<Value> & pPa
 			Local<Object> obj = maybeObject.ToLocalChecked();
 
 			// Indices Member
-			MaybeLocal<Value> maybeValIndices = obj->Get(context, String::NewFromUtf8(isolate, "Indices"));
+			MaybeLocal<Value> maybeValIndices = obj->Get(context, String::NewFromUtf8(isolate, "Indices").ToLocalChecked());
 			if (!maybeValIndices.IsEmpty()) {
 				Local<Value> valIndices = maybeValIndices.ToLocalChecked();
 				if (valIndices->IsArray()) {
@@ -916,21 +918,21 @@ sLib3MFBeam convertObjectToLib3MFBeam(Isolate* isolate, const Local<Value> & pPa
 								MaybeLocal<Number> localNumber = localValue->ToNumber(context);
 								sBeam.m_Indices[rowIndex] = localNumber.ToLocalChecked()->Uint32Value(isolate->GetCurrentContext()).ToChecked();
 							} else {
-								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Indices array entry is not a number" )));
+								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Indices array entry is not a number").ToLocalChecked()));
 							}
 						} else {
-							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Indices array entry is invalid" )));
+							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Indices array entry is invalid").ToLocalChecked()));
 						}
 					}
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Indices member is not an array" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Indices member is not an array").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Indices member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Indices member not found in object").ToLocalChecked()));
 			}
 
 			// Radii Member
-			MaybeLocal<Value> maybeValRadii = obj->Get(context, String::NewFromUtf8(isolate, "Radii"));
+			MaybeLocal<Value> maybeValRadii = obj->Get(context, String::NewFromUtf8(isolate, "Radii").ToLocalChecked());
 			if (!maybeValRadii.IsEmpty()) {
 				Local<Value> valRadii = maybeValRadii.ToLocalChecked();
 				if (valRadii->IsArray()) {
@@ -943,21 +945,21 @@ sLib3MFBeam convertObjectToLib3MFBeam(Isolate* isolate, const Local<Value> & pPa
 								MaybeLocal<Number> localNumber = localValue->ToNumber(context);
 								sBeam.m_Radii[rowIndex] = localNumber.ToLocalChecked()->NumberValue(isolate->GetCurrentContext()).ToChecked();
 							} else {
-								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Radii array entry is not a number" )));
+								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Radii array entry is not a number").ToLocalChecked()));
 							}
 						} else {
-							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Radii array entry is invalid" )));
+							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Radii array entry is invalid").ToLocalChecked()));
 						}
 					}
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Radii member is not an array" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Radii member is not an array").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Radii member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Radii member not found in object").ToLocalChecked()));
 			}
 
 			// CapModes Member
-			MaybeLocal<Value> maybeValCapModes = obj->Get(context, String::NewFromUtf8(isolate, "CapModes"));
+			MaybeLocal<Value> maybeValCapModes = obj->Get(context, String::NewFromUtf8(isolate, "CapModes").ToLocalChecked());
 			if (!maybeValCapModes.IsEmpty()) {
 				Local<Value> valCapModes = maybeValCapModes.ToLocalChecked();
 				if (valCapModes->IsArray()) {
@@ -970,25 +972,25 @@ sLib3MFBeam convertObjectToLib3MFBeam(Isolate* isolate, const Local<Value> & pPa
 								MaybeLocal<Number> localNumber = localValue->ToNumber(context);
 								sBeam.m_CapModes[rowIndex].m_code = localNumber.ToLocalChecked()->Int32Value(isolate->GetCurrentContext()).ToChecked();
 							} else {
-								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "CapModes array entry is not a number" )));
+								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "CapModes array entry is not a number").ToLocalChecked()));
 							}
 						} else {
-							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "CapModes array entry is invalid" )));
+							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "CapModes array entry is invalid").ToLocalChecked()));
 						}
 					}
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "CapModes member is not an array" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "CapModes member is not an array").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "CapModes member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "CapModes member not found in object").ToLocalChecked()));
 			}
 
 
 		} else {
-			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed." )));
+			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed.").ToLocalChecked()));
 		}
 	} else {
-		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter." )));
+		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter.").ToLocalChecked()));
 	}
 
 	return sBeam;
@@ -1001,21 +1003,21 @@ Local<Object> convertLib3MFBeamToObject(Isolate* isolate, sLib3MFBeam sBeam)
 	Local<Object> returnInstance = Object::New(isolate);
 	Local<Array> newIndices = Array::New(isolate, 2);
 	for (int rowIndex = 0; rowIndex < 2; rowIndex++) {
-		newIndices->Set(rowIndex, Integer::NewFromUnsigned(isolate, sBeam.m_Indices[rowIndex]));
+		newIndices->Set(isolate->GetCurrentContext(),rowIndex, Integer::NewFromUnsigned(isolate, sBeam.m_Indices[rowIndex]));
 	}
-	returnInstance->Set(String::NewFromUtf8(isolate, "Indices"), newIndices);
+	returnInstance->Set(isolate->GetCurrentContext(),String::NewFromUtf8(isolate, "Indices").ToLocalChecked(), newIndices);
 
 	Local<Array> newRadii = Array::New(isolate, 2);
 	for (int rowIndex = 0; rowIndex < 2; rowIndex++) {
-		newRadii->Set(rowIndex, Number::New(isolate, sBeam.m_Radii[rowIndex]));
+		newRadii->Set(isolate->GetCurrentContext(),rowIndex, Number::New(isolate, sBeam.m_Radii[rowIndex]));
 	}
-	returnInstance->Set(String::NewFromUtf8(isolate, "Radii"), newRadii);
+	returnInstance->Set(isolate->GetCurrentContext(),String::NewFromUtf8(isolate, "Radii").ToLocalChecked(), newRadii);
 
 	Local<Array> newCapModes = Array::New(isolate, 2);
 	for (int rowIndex = 0; rowIndex < 2; rowIndex++) {
-		newCapModes->Set(rowIndex, Integer::New(isolate, sBeam.m_CapModes[rowIndex].m_code));
+		newCapModes->Set(isolate->GetCurrentContext(),rowIndex, Integer::New(isolate, sBeam.m_CapModes[rowIndex].m_code));
 	}
-	returnInstance->Set(String::NewFromUtf8(isolate, "CapModes"), newCapModes);
+	returnInstance->Set(isolate->GetCurrentContext(),String::NewFromUtf8(isolate, "CapModes").ToLocalChecked(), newCapModes);
 
 
 	return returnInstance;
@@ -1039,39 +1041,39 @@ sLib3MFBall convertObjectToLib3MFBall(Isolate* isolate, const Local<Value> & pPa
 			Local<Object> obj = maybeObject.ToLocalChecked();
 
 			// Index Member
-			MaybeLocal<Value> maybeValIndex = obj->Get(context, String::NewFromUtf8(isolate, "Index"));
+			MaybeLocal<Value> maybeValIndex = obj->Get(context, String::NewFromUtf8(isolate, "Index").ToLocalChecked());
 			if (!maybeValIndex.IsEmpty()) {
 				Local<Value> valIndex = maybeValIndex.ToLocalChecked();
 				if (valIndex->IsNumber()) {
 					MaybeLocal<Number> localValIndex = valIndex->ToNumber(context);
 					sBall.m_Index = localValIndex.ToLocalChecked()->Uint32Value(isolate->GetCurrentContext()).ToChecked();
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Index member is not a number" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Index member is not a number").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Index member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Index member not found in object").ToLocalChecked()));
 			}
 
 			// Radius Member
-			MaybeLocal<Value> maybeValRadius = obj->Get(context, String::NewFromUtf8(isolate, "Radius"));
+			MaybeLocal<Value> maybeValRadius = obj->Get(context, String::NewFromUtf8(isolate, "Radius").ToLocalChecked());
 			if (!maybeValRadius.IsEmpty()) {
 				Local<Value> valRadius = maybeValRadius.ToLocalChecked();
 				if (valRadius->IsNumber()) {
 					MaybeLocal<Number> localValRadius = valRadius->ToNumber(context);
 					sBall.m_Radius = localValRadius.ToLocalChecked()->NumberValue(isolate->GetCurrentContext()).ToChecked();
 				} else {
-					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Radius member is not a number" )));
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Radius member is not a number").ToLocalChecked()));
 				}
 			} else {
-				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Radius member not found in object" )));
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Radius member not found in object").ToLocalChecked()));
 			}
 
 
 		} else {
-			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed." )));
+			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed.").ToLocalChecked()));
 		}
 	} else {
-		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter." )));
+		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter.").ToLocalChecked()));
 	}
 
 	return sBall;
@@ -1082,8 +1084,8 @@ sLib3MFBall convertObjectToLib3MFBall(Isolate* isolate, const Local<Value> & pPa
 Local<Object> convertLib3MFBallToObject(Isolate* isolate, sLib3MFBall sBall)
 {
 	Local<Object> returnInstance = Object::New(isolate);
-	returnInstance->Set(String::NewFromUtf8(isolate, "Index"), Integer::NewFromUnsigned (isolate, sBall.m_Index));
-	returnInstance->Set(String::NewFromUtf8(isolate, "Radius"), Number::New (isolate, sBall.m_Radius));
+	returnInstance->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Index").ToLocalChecked(), Integer::NewFromUnsigned (isolate, sBall.m_Index));
+	returnInstance->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Radius").ToLocalChecked(), Number::New (isolate, sBall.m_Radius));
 
 	return returnInstance;
 }
@@ -1102,7 +1104,7 @@ void CLib3MFBaseClass::RaiseError(v8::Isolate * isolate, std::string Message)
 {
 		if (isolate != nullptr) {
 				isolate->ThrowException(Exception::TypeError(
-						String::NewFromUtf8(isolate, Message.c_str() )));
+						String::NewFromUtf8(isolate, Message.c_str() ).ToLocalChecked()));
 		}
 }
 void CLib3MFBaseClass::CheckError(v8::Isolate * isolate, sLib3MFDynamicWrapperTable * sWrapperTable, Lib3MFHandle pInstance, Lib3MFResult errorCode)
@@ -1167,7 +1169,7 @@ void CLib3MFBase::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFBase"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFBase").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -1219,7 +1221,7 @@ void CLib3MFBase::ClassTypeId(const FunctionCallbackInfo<Value>& args)
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_Base_ClassTypeId(instanceHandle, &nReturnClassTypeId);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnClassTypeId).c_str()));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnClassTypeId).c_str()).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -1245,7 +1247,7 @@ void CLib3MFWriter::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFWriter"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFWriter").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -1334,7 +1336,7 @@ void CLib3MFWriter::GetStreamSize(const FunctionCallbackInfo<Value>& args)
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_Writer_GetStreamSize(instanceHandle, &nReturnStreamSize);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnStreamSize).c_str()));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnStreamSize).c_str()).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -1468,7 +1470,7 @@ void CLib3MFWriter::SetStrictModeActive(const FunctionCallbackInfo<Value>& args)
         if (!args[0]->IsBoolean()) {
             throw std::runtime_error("Expected bool parameter 0 (StrictModeActive)");
         }
-        bool bStrictModeActive = args[0]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
+        bool bStrictModeActive = args[0]->BooleanValue(isolate);
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
             throw std::runtime_error("Could not get wrapper table for Lib3MF method SetStrictModeActive.");
@@ -1531,8 +1533,8 @@ void CLib3MFWriter::GetWarning(const FunctionCallbackInfo<Value>& args)
         bufferWarning.resize(bytesNeededWarning);
         Lib3MFResult errorCode = wrapperTable->m_Writer_GetWarning(instanceHandle, nIndex, &nReturnErrorCode, bytesNeededWarning, &bytesWrittenWarning, &bufferWarning[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ErrorCode"), Integer::NewFromUnsigned(isolate, nReturnErrorCode));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Warning"), String::NewFromUtf8(isolate, &bufferWarning[0]));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ErrorCode").ToLocalChecked(), Integer::NewFromUnsigned(isolate, nReturnErrorCode));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Warning").ToLocalChecked(), String::NewFromUtf8(isolate, &bufferWarning[0]).ToLocalChecked());
         args.GetReturnValue().Set(outObject);
 
 		} catch (std::exception & E) {
@@ -1638,7 +1640,7 @@ void CLib3MFReader::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFReader"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFReader").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -1848,7 +1850,7 @@ void CLib3MFReader::SetStrictModeActive(const FunctionCallbackInfo<Value>& args)
         if (!args[0]->IsBoolean()) {
             throw std::runtime_error("Expected bool parameter 0 (StrictModeActive)");
         }
-        bool bStrictModeActive = args[0]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
+        bool bStrictModeActive = args[0]->BooleanValue(isolate);
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
             throw std::runtime_error("Could not get wrapper table for Lib3MF method SetStrictModeActive.");
@@ -1911,8 +1913,8 @@ void CLib3MFReader::GetWarning(const FunctionCallbackInfo<Value>& args)
         bufferWarning.resize(bytesNeededWarning);
         Lib3MFResult errorCode = wrapperTable->m_Reader_GetWarning(instanceHandle, nIndex, &nReturnErrorCode, bytesNeededWarning, &bytesWrittenWarning, &bufferWarning[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ErrorCode"), Integer::NewFromUnsigned(isolate, nReturnErrorCode));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Warning"), String::NewFromUtf8(isolate, &bufferWarning[0]));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ErrorCode").ToLocalChecked(), Integer::NewFromUnsigned(isolate, nReturnErrorCode));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Warning").ToLocalChecked(), String::NewFromUtf8(isolate, &bufferWarning[0]).ToLocalChecked());
         args.GetReturnValue().Set(outObject);
 
 		} catch (std::exception & E) {
@@ -2018,7 +2020,7 @@ void CLib3MFPackagePart::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFPackagePart"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFPackagePart").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -2076,7 +2078,7 @@ void CLib3MFPackagePart::GetPath(const FunctionCallbackInfo<Value>& args)
         bufferPath.resize(bytesNeededPath);
         Lib3MFResult errorCode = wrapperTable->m_PackagePart_GetPath(instanceHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferPath[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferPath[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -2127,7 +2129,7 @@ void CLib3MFResource::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFResource"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFResource").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -2304,7 +2306,7 @@ void CLib3MFResourceIterator::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFResourceIterator"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFResourceIterator").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -2450,7 +2452,7 @@ void CLib3MFResourceIterator::Count(const FunctionCallbackInfo<Value>& args)
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_ResourceIterator_Count(instanceHandle, &nReturnCount);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -2476,7 +2478,7 @@ void CLib3MFSliceStackIterator::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFSliceStackIterator"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFSliceStackIterator").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -2555,7 +2557,7 @@ void CLib3MFObjectIterator::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFObjectIterator"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFObjectIterator").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -2634,7 +2636,7 @@ void CLib3MFMeshObjectIterator::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFMeshObjectIterator"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFMeshObjectIterator").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -2713,7 +2715,7 @@ void CLib3MFComponentsObjectIterator::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFComponentsObjectIterator"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFComponentsObjectIterator").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -2792,7 +2794,7 @@ void CLib3MFTexture2DIterator::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFTexture2DIterator"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFTexture2DIterator").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -2871,7 +2873,7 @@ void CLib3MFBaseMaterialGroupIterator::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFBaseMaterialGroupIterator"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFBaseMaterialGroupIterator").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -2950,7 +2952,7 @@ void CLib3MFColorGroupIterator::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFColorGroupIterator"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFColorGroupIterator").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -3029,7 +3031,7 @@ void CLib3MFTexture2DGroupIterator::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFTexture2DGroupIterator"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFTexture2DGroupIterator").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -3108,7 +3110,7 @@ void CLib3MFCompositeMaterialsIterator::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFCompositeMaterialsIterator"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFCompositeMaterialsIterator").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -3187,7 +3189,7 @@ void CLib3MFMultiPropertyGroupIterator::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFMultiPropertyGroupIterator"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFMultiPropertyGroupIterator").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -3266,7 +3268,7 @@ void CLib3MFMetaData::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFMetaData"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFMetaData").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -3333,7 +3335,7 @@ void CLib3MFMetaData::GetNameSpace(const FunctionCallbackInfo<Value>& args)
         bufferNameSpace.resize(bytesNeededNameSpace);
         Lib3MFResult errorCode = wrapperTable->m_MetaData_GetNameSpace(instanceHandle, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferNameSpace[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferNameSpace[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -3385,7 +3387,7 @@ void CLib3MFMetaData::GetName(const FunctionCallbackInfo<Value>& args)
         bufferName.resize(bytesNeededName);
         Lib3MFResult errorCode = wrapperTable->m_MetaData_GetName(instanceHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferName[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferName[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -3437,7 +3439,7 @@ void CLib3MFMetaData::GetKey(const FunctionCallbackInfo<Value>& args)
         bufferKey.resize(bytesNeededKey);
         Lib3MFResult errorCode = wrapperTable->m_MetaData_GetKey(instanceHandle, bytesNeededKey, &bytesWrittenKey, &bufferKey[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferKey[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferKey[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -3475,7 +3477,7 @@ void CLib3MFMetaData::SetMustPreserve(const FunctionCallbackInfo<Value>& args)
         if (!args[0]->IsBoolean()) {
             throw std::runtime_error("Expected bool parameter 0 (MustPreserve)");
         }
-        bool bMustPreserve = args[0]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
+        bool bMustPreserve = args[0]->BooleanValue(isolate);
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
             throw std::runtime_error("Could not get wrapper table for Lib3MF method SetMustPreserve.");
@@ -3510,7 +3512,7 @@ void CLib3MFMetaData::GetType(const FunctionCallbackInfo<Value>& args)
         bufferType.resize(bytesNeededType);
         Lib3MFResult errorCode = wrapperTable->m_MetaData_GetType(instanceHandle, bytesNeededType, &bytesWrittenType, &bufferType[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferType[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferType[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -3562,7 +3564,7 @@ void CLib3MFMetaData::GetValue(const FunctionCallbackInfo<Value>& args)
         bufferValue.resize(bytesNeededValue);
         Lib3MFResult errorCode = wrapperTable->m_MetaData_GetValue(instanceHandle, bytesNeededValue, &bytesWrittenValue, &bufferValue[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferValue[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferValue[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -3613,7 +3615,7 @@ void CLib3MFMetaDataGroup::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFMetaDataGroup"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFMetaDataGroup").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -3818,7 +3820,7 @@ void CLib3MFMetaDataGroup::AddMetaData(const FunctionCallbackInfo<Value>& args)
         std::string sValue = *sutf8Value;
         v8::String::Utf8Value sutf8Type(isolate, args[3]);
         std::string sType = *sutf8Type;
-        bool bMustPreserve = args[4]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
+        bool bMustPreserve = args[4]->BooleanValue(isolate);
         Lib3MFHandle hReturnMetaData = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
@@ -3855,7 +3857,7 @@ void CLib3MFObject::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFObject"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFObject").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -3979,7 +3981,7 @@ void CLib3MFObject::GetName(const FunctionCallbackInfo<Value>& args)
         bufferName.resize(bytesNeededName);
         Lib3MFResult errorCode = wrapperTable->m_Object_GetName(instanceHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferName[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferName[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -4031,7 +4033,7 @@ void CLib3MFObject::GetPartNumber(const FunctionCallbackInfo<Value>& args)
         bufferPartNumber.resize(bytesNeededPartNumber);
         Lib3MFResult errorCode = wrapperTable->m_Object_GetPartNumber(instanceHandle, bytesNeededPartNumber, &bytesWrittenPartNumber, &bufferPartNumber[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferPartNumber[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferPartNumber[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -4244,8 +4246,8 @@ void CLib3MFObject::GetUUID(const FunctionCallbackInfo<Value>& args)
         bufferUUID.resize(bytesNeededUUID);
         Lib3MFResult errorCode = wrapperTable->m_Object_GetUUID(instanceHandle, &bReturnHasUUID, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasUUID"), Boolean::New(isolate, bReturnHasUUID));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "UUID"), String::NewFromUtf8(isolate, &bufferUUID[0]));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasUUID").ToLocalChecked(), Boolean::New(isolate, bReturnHasUUID));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "UUID").ToLocalChecked(), String::NewFromUtf8(isolate, &bufferUUID[0]).ToLocalChecked());
         args.GetReturnValue().Set(outObject);
 
 		} catch (std::exception & E) {
@@ -4356,7 +4358,7 @@ void CLib3MFObject::HasSlices(const FunctionCallbackInfo<Value>& args)
         if (!args[0]->IsBoolean()) {
             throw std::runtime_error("Expected bool parameter 0 (Recursive)");
         }
-        bool bRecursive = args[0]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
+        bool bRecursive = args[0]->BooleanValue(isolate);
         bool bReturnHasSlices = false;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
@@ -4463,7 +4465,7 @@ void CLib3MFMeshObject::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFMeshObject"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFMeshObject").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -4809,9 +4811,9 @@ void CLib3MFMeshObject::GetObjectLevelProperty(const FunctionCallbackInfo<Value>
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_MeshObject_GetObjectLevelProperty(instanceHandle, &nReturnUniqueResourceID, &nReturnPropertyID, &bReturnHasObjectLevelProperty);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "UniqueResourceID"), Integer::NewFromUnsigned(isolate, nReturnUniqueResourceID));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "PropertyID"), Integer::NewFromUnsigned(isolate, nReturnPropertyID));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasObjectLevelProperty"), Boolean::New(isolate, bReturnHasObjectLevelProperty));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "UniqueResourceID").ToLocalChecked(), Integer::NewFromUnsigned(isolate, nReturnUniqueResourceID));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "PropertyID").ToLocalChecked(), Integer::NewFromUnsigned(isolate, nReturnPropertyID));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasObjectLevelProperty").ToLocalChecked(), Boolean::New(isolate, bReturnHasObjectLevelProperty));
         args.GetReturnValue().Set(outObject);
 
 		} catch (std::exception & E) {
@@ -5017,7 +5019,7 @@ void CLib3MFBeamLattice::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFBeamLattice"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFBeamLattice").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -5139,8 +5141,8 @@ void CLib3MFBeamLattice::GetClipping(const FunctionCallbackInfo<Value>& args)
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_BeamLattice_GetClipping(instanceHandle, &eReturnClipMode, &nReturnUniqueResourceID);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ClipMode"), Integer::New(isolate, (int)eReturnClipMode));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "UniqueResourceID"), Integer::NewFromUnsigned(isolate, nReturnUniqueResourceID));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ClipMode").ToLocalChecked(), Integer::New(isolate, (int)eReturnClipMode));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "UniqueResourceID").ToLocalChecked(), Integer::NewFromUnsigned(isolate, nReturnUniqueResourceID));
         args.GetReturnValue().Set(outObject);
 
 		} catch (std::exception & E) {
@@ -5193,8 +5195,8 @@ void CLib3MFBeamLattice::GetRepresentation(const FunctionCallbackInfo<Value>& ar
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_BeamLattice_GetRepresentation(instanceHandle, &bReturnHasRepresentation, &nReturnUniqueResourceID);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasRepresentation"), Boolean::New(isolate, bReturnHasRepresentation));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "UniqueResourceID"), Integer::NewFromUnsigned(isolate, nReturnUniqueResourceID));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasRepresentation").ToLocalChecked(), Boolean::New(isolate, bReturnHasRepresentation));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "UniqueResourceID").ToLocalChecked(), Integer::NewFromUnsigned(isolate, nReturnUniqueResourceID));
         args.GetReturnValue().Set(outObject);
 
 		} catch (std::exception & E) {
@@ -5243,8 +5245,8 @@ void CLib3MFBeamLattice::GetBallOptions(const FunctionCallbackInfo<Value>& args)
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_BeamLattice_GetBallOptions(instanceHandle, &eReturnBallMode, &dReturnBallRadius);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "BallMode"), Integer::New(isolate, (int)eReturnBallMode));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "BallRadius"), Number::New(isolate, dReturnBallRadius));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "BallMode").ToLocalChecked(), Integer::New(isolate, (int)eReturnBallMode));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "BallRadius").ToLocalChecked(), Number::New(isolate, dReturnBallRadius));
         args.GetReturnValue().Set(outObject);
 
 		} catch (std::exception & E) {
@@ -5655,7 +5657,7 @@ void CLib3MFComponent::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFComponent"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFComponent").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -5765,8 +5767,8 @@ void CLib3MFComponent::GetUUID(const FunctionCallbackInfo<Value>& args)
         bufferUUID.resize(bytesNeededUUID);
         Lib3MFResult errorCode = wrapperTable->m_Component_GetUUID(instanceHandle, &bReturnHasUUID, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasUUID"), Boolean::New(isolate, bReturnHasUUID));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "UUID"), String::NewFromUtf8(isolate, &bufferUUID[0]));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasUUID").ToLocalChecked(), Boolean::New(isolate, bReturnHasUUID));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "UUID").ToLocalChecked(), String::NewFromUtf8(isolate, &bufferUUID[0]).ToLocalChecked());
         args.GetReturnValue().Set(outObject);
 
 		} catch (std::exception & E) {
@@ -5886,7 +5888,7 @@ void CLib3MFComponentsObject::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFComponentsObject"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFComponentsObject").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -6028,7 +6030,7 @@ void CLib3MFBeamSet::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFBeamSet"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFBeamSet").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -6119,7 +6121,7 @@ void CLib3MFBeamSet::GetName(const FunctionCallbackInfo<Value>& args)
         bufferName.resize(bytesNeededName);
         Lib3MFResult errorCode = wrapperTable->m_BeamSet_GetName(instanceHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferName[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferName[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -6171,7 +6173,7 @@ void CLib3MFBeamSet::GetIdentifier(const FunctionCallbackInfo<Value>& args)
         bufferIdentifier.resize(bytesNeededIdentifier);
         Lib3MFResult errorCode = wrapperTable->m_BeamSet_GetIdentifier(instanceHandle, bytesNeededIdentifier, &bytesWrittenIdentifier, &bufferIdentifier[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferIdentifier[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferIdentifier[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -6321,7 +6323,7 @@ void CLib3MFBaseMaterialGroup::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFBaseMaterialGroup"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFBaseMaterialGroup").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -6486,7 +6488,7 @@ void CLib3MFBaseMaterialGroup::GetName(const FunctionCallbackInfo<Value>& args)
         bufferName.resize(bytesNeededName);
         Lib3MFResult errorCode = wrapperTable->m_BaseMaterialGroup_GetName(instanceHandle, nPropertyID, bytesNeededName, &bytesWrittenName, &bufferName[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferName[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferName[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -6595,7 +6597,7 @@ void CLib3MFColorGroup::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFColorGroup"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFColorGroup").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -6802,7 +6804,7 @@ void CLib3MFTexture2DGroup::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFTexture2DGroup"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFTexture2DGroup").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -7004,7 +7006,7 @@ void CLib3MFCompositeMaterials::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFCompositeMaterials"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFCompositeMaterials").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -7200,7 +7202,7 @@ void CLib3MFMultiPropertyGroup::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFMultiPropertyGroup"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFMultiPropertyGroup").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -7499,7 +7501,7 @@ void CLib3MFAttachment::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFAttachment"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFAttachment").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -7566,7 +7568,7 @@ void CLib3MFAttachment::GetPath(const FunctionCallbackInfo<Value>& args)
         bufferPath.resize(bytesNeededPath);
         Lib3MFResult errorCode = wrapperTable->m_Attachment_GetPath(instanceHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferPath[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferPath[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -7641,7 +7643,7 @@ void CLib3MFAttachment::GetRelationShipType(const FunctionCallbackInfo<Value>& a
         bufferPath.resize(bytesNeededPath);
         Lib3MFResult errorCode = wrapperTable->m_Attachment_GetRelationShipType(instanceHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferPath[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferPath[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -7770,7 +7772,7 @@ void CLib3MFAttachment::GetStreamSize(const FunctionCallbackInfo<Value>& args)
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_Attachment_GetStreamSize(instanceHandle, &nReturnStreamSize);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnStreamSize).c_str()));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnStreamSize).c_str()).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -7836,7 +7838,7 @@ void CLib3MFTexture2D::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFTexture2D"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFTexture2D").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -7994,8 +7996,8 @@ void CLib3MFTexture2D::GetTileStyleUV(const FunctionCallbackInfo<Value>& args)
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_Texture2D_GetTileStyleUV(instanceHandle, &eReturnTileStyleU, &eReturnTileStyleV);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "TileStyleU"), Integer::New(isolate, (int)eReturnTileStyleU));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "TileStyleV"), Integer::New(isolate, (int)eReturnTileStyleV));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "TileStyleU").ToLocalChecked(), Integer::New(isolate, (int)eReturnTileStyleU));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "TileStyleV").ToLocalChecked(), Integer::New(isolate, (int)eReturnTileStyleV));
         args.GetReturnValue().Set(outObject);
 
 		} catch (std::exception & E) {
@@ -8096,7 +8098,7 @@ void CLib3MFBuildItem::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFBuildItem"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFBuildItem").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -8188,8 +8190,8 @@ void CLib3MFBuildItem::GetUUID(const FunctionCallbackInfo<Value>& args)
         bufferUUID.resize(bytesNeededUUID);
         Lib3MFResult errorCode = wrapperTable->m_BuildItem_GetUUID(instanceHandle, &bReturnHasUUID, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasUUID"), Boolean::New(isolate, bReturnHasUUID));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "UUID"), String::NewFromUtf8(isolate, &bufferUUID[0]));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasUUID").ToLocalChecked(), Boolean::New(isolate, bReturnHasUUID));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "UUID").ToLocalChecked(), String::NewFromUtf8(isolate, &bufferUUID[0]).ToLocalChecked());
         args.GetReturnValue().Set(outObject);
 
 		} catch (std::exception & E) {
@@ -8332,7 +8334,7 @@ void CLib3MFBuildItem::GetPartNumber(const FunctionCallbackInfo<Value>& args)
         bufferPartNumber.resize(bytesNeededPartNumber);
         Lib3MFResult errorCode = wrapperTable->m_BuildItem_GetPartNumber(instanceHandle, bytesNeededPartNumber, &bytesWrittenPartNumber, &bufferPartNumber[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferPartNumber[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferPartNumber[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -8428,7 +8430,7 @@ void CLib3MFBuildItemIterator::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFBuildItemIterator"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFBuildItemIterator").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -8574,7 +8576,7 @@ void CLib3MFBuildItemIterator::Count(const FunctionCallbackInfo<Value>& args)
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_BuildItemIterator_Count(instanceHandle, &nReturnCount);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -8600,7 +8602,7 @@ void CLib3MFSlice::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFSlice"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFSlice").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -8700,7 +8702,7 @@ void CLib3MFSlice::GetVertexCount(const FunctionCallbackInfo<Value>& args)
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_Slice_GetVertexCount(instanceHandle, &nReturnCount);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -8722,7 +8724,7 @@ void CLib3MFSlice::AddPolygon(const FunctionCallbackInfo<Value>& args)
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_Slice_AddPolygon(instanceHandle, 0, nullptr, &nReturnIndex);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnIndex).c_str()));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnIndex).c_str()).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -8744,7 +8746,7 @@ void CLib3MFSlice::GetPolygonCount(const FunctionCallbackInfo<Value>& args)
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_Slice_GetPolygonCount(instanceHandle, &nReturnCount);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -8824,7 +8826,7 @@ void CLib3MFSlice::GetPolygonIndexCount(const FunctionCallbackInfo<Value>& args)
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_Slice_GetPolygonIndexCount(instanceHandle, nIndex, &nReturnCount);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -8872,7 +8874,7 @@ void CLib3MFSliceStack::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFSliceStack"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFSliceStack").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -8955,7 +8957,7 @@ void CLib3MFSliceStack::GetSliceCount(const FunctionCallbackInfo<Value>& args)
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_SliceStack_GetSliceCount(instanceHandle, &nReturnCount);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -9033,7 +9035,7 @@ void CLib3MFSliceStack::GetSliceRefCount(const FunctionCallbackInfo<Value>& args
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_SliceStack_GetSliceRefCount(instanceHandle, &nReturnCount);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -9162,7 +9164,7 @@ void CLib3MFSliceStack::GetOwnPath(const FunctionCallbackInfo<Value>& args)
         bufferPath.resize(bytesNeededPath);
         Lib3MFResult errorCode = wrapperTable->m_SliceStack_GetOwnPath(instanceHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferPath[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferPath[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -9188,7 +9190,7 @@ void CLib3MFConsumer::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFConsumer"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFConsumer").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -9247,7 +9249,7 @@ void CLib3MFConsumer::GetConsumerID(const FunctionCallbackInfo<Value>& args)
         bufferConsumerID.resize(bytesNeededConsumerID);
         Lib3MFResult errorCode = wrapperTable->m_Consumer_GetConsumerID(instanceHandle, bytesNeededConsumerID, &bytesWrittenConsumerID, &bufferConsumerID[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferConsumerID[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferConsumerID[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -9274,7 +9276,7 @@ void CLib3MFConsumer::GetKeyID(const FunctionCallbackInfo<Value>& args)
         bufferKeyID.resize(bytesNeededKeyID);
         Lib3MFResult errorCode = wrapperTable->m_Consumer_GetKeyID(instanceHandle, bytesNeededKeyID, &bytesWrittenKeyID, &bufferKeyID[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferKeyID[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferKeyID[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -9301,7 +9303,7 @@ void CLib3MFConsumer::GetKeyValue(const FunctionCallbackInfo<Value>& args)
         bufferKeyValue.resize(bytesNeededKeyValue);
         Lib3MFResult errorCode = wrapperTable->m_Consumer_GetKeyValue(instanceHandle, bytesNeededKeyValue, &bytesWrittenKeyValue, &bufferKeyValue[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferKeyValue[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferKeyValue[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -9327,7 +9329,7 @@ void CLib3MFAccessRight::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFAccessRight"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFAccessRight").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -9475,7 +9477,7 @@ void CLib3MFContentEncryptionParams::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFContentEncryptionParams"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFContentEncryptionParams").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -9656,7 +9658,7 @@ void CLib3MFContentEncryptionParams::GetDescriptor(const FunctionCallbackInfo<Va
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_ContentEncryptionParams_GetDescriptor(instanceHandle, &nReturnDescriptor);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnDescriptor).c_str()));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnDescriptor).c_str()).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -9683,7 +9685,7 @@ void CLib3MFContentEncryptionParams::GetKeyUUID(const FunctionCallbackInfo<Value
         bufferUUID.resize(bytesNeededUUID);
         Lib3MFResult errorCode = wrapperTable->m_ContentEncryptionParams_GetKeyUUID(instanceHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferUUID[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferUUID[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -9709,7 +9711,7 @@ void CLib3MFResourceData::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFResourceData"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFResourceData").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -9855,7 +9857,7 @@ void CLib3MFResourceDataGroup::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFResourceDataGroup"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFResourceDataGroup").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -9915,7 +9917,7 @@ void CLib3MFResourceDataGroup::GetKeyUUID(const FunctionCallbackInfo<Value>& arg
         bufferUUID.resize(bytesNeededUUID);
         Lib3MFResult errorCode = wrapperTable->m_ResourceDataGroup_GetKeyUUID(instanceHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferUUID[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferUUID[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -10043,7 +10045,7 @@ void CLib3MFKeyStore::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFKeyStore"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFKeyStore").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -10149,7 +10151,7 @@ void CLib3MFKeyStore::GetConsumerCount(const FunctionCallbackInfo<Value>& args)
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_KeyStore_GetConsumerCount(instanceHandle, &nReturnCount);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -10256,7 +10258,7 @@ void CLib3MFKeyStore::GetResourceDataGroupCount(const FunctionCallbackInfo<Value
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_KeyStore_GetResourceDataGroupCount(instanceHandle, &nReturnCount);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -10495,7 +10497,7 @@ void CLib3MFKeyStore::GetResourceDataCount(const FunctionCallbackInfo<Value>& ar
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_KeyStore_GetResourceDataCount(instanceHandle, &nReturnCount);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnCount).c_str()).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -10553,8 +10555,8 @@ void CLib3MFKeyStore::GetUUID(const FunctionCallbackInfo<Value>& args)
         bufferUUID.resize(bytesNeededUUID);
         Lib3MFResult errorCode = wrapperTable->m_KeyStore_GetUUID(instanceHandle, &bReturnHasUUID, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasUUID"), Boolean::New(isolate, bReturnHasUUID));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "UUID"), String::NewFromUtf8(isolate, &bufferUUID[0]));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasUUID").ToLocalChecked(), Boolean::New(isolate, bReturnHasUUID));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "UUID").ToLocalChecked(), String::NewFromUtf8(isolate, &bufferUUID[0]).ToLocalChecked());
         args.GetReturnValue().Set(outObject);
 
 		} catch (std::exception & E) {
@@ -10606,7 +10608,7 @@ void CLib3MFModel::Init()
 
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFModel"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFModel").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
 		// Prototype
@@ -10819,7 +10821,7 @@ void CLib3MFModel::GetLanguage(const FunctionCallbackInfo<Value>& args)
         bufferLanguage.resize(bytesNeededLanguage);
         Lib3MFResult errorCode = wrapperTable->m_Model_GetLanguage(instanceHandle, bytesNeededLanguage, &bytesWrittenLanguage, &bufferLanguage[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferLanguage[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferLanguage[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -11225,8 +11227,8 @@ void CLib3MFModel::GetBuildUUID(const FunctionCallbackInfo<Value>& args)
         bufferUUID.resize(bytesNeededUUID);
         Lib3MFResult errorCode = wrapperTable->m_Model_GetBuildUUID(instanceHandle, &bReturnHasUUID, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasUUID"), Boolean::New(isolate, bReturnHasUUID));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "UUID"), String::NewFromUtf8(isolate, &bufferUUID[0]));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasUUID").ToLocalChecked(), Boolean::New(isolate, bReturnHasUUID));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "UUID").ToLocalChecked(), String::NewFromUtf8(isolate, &bufferUUID[0]).ToLocalChecked());
         args.GetReturnValue().Set(outObject);
 
 		} catch (std::exception & E) {
@@ -12250,7 +12252,7 @@ void CLib3MFWrapper::Init()
 		Isolate* isolate = Isolate::GetCurrent();
 		// Prepare constructor template
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFWrapper"));
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFWrapper").ToLocalChecked());
 		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 		
 		// Prototype
@@ -12302,81 +12304,81 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
 						std::auto_ptr<sLib3MFDynamicWrapperTable> wrapperTable( new sLib3MFDynamicWrapperTable );
 						CheckError(isolate, nullptr, nullptr, LoadLib3MFWrapperTable(wrapperTable.get(), sLibraryName.c_str()));
 						newObject->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, wrapperTable.release()));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ePropertyType_NoPropertyType"), Integer::New(isolate, 0));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ePropertyType_BaseMaterial"), Integer::New(isolate, 1));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ePropertyType_TexCoord"), Integer::New(isolate, 2));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ePropertyType_Colors"), Integer::New(isolate, 3));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ePropertyType_Composite"), Integer::New(isolate, 4));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ePropertyType_Multi"), Integer::New(isolate, 5));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eSlicesMeshResolution_Fullres"), Integer::New(isolate, 0));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eSlicesMeshResolution_Lowres"), Integer::New(isolate, 1));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eModelUnit_MicroMeter"), Integer::New(isolate, 0));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eModelUnit_MilliMeter"), Integer::New(isolate, 1));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eModelUnit_CentiMeter"), Integer::New(isolate, 2));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eModelUnit_Inch"), Integer::New(isolate, 3));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eModelUnit_Foot"), Integer::New(isolate, 4));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eModelUnit_Meter"), Integer::New(isolate, 5));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eObjectType_Other"), Integer::New(isolate, 0));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eObjectType_Model"), Integer::New(isolate, 1));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eObjectType_Support"), Integer::New(isolate, 2));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eObjectType_SolidSupport"), Integer::New(isolate, 3));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eTextureType_Unknown"), Integer::New(isolate, 0));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eTextureType_PNG"), Integer::New(isolate, 1));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eTextureType_JPEG"), Integer::New(isolate, 2));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eTextureTileStyle_Wrap"), Integer::New(isolate, 0));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eTextureTileStyle_Mirror"), Integer::New(isolate, 1));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eTextureTileStyle_Clamp"), Integer::New(isolate, 2));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eTextureTileStyle_NoTileStyle"), Integer::New(isolate, 3));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eTextureFilter_Auto"), Integer::New(isolate, 0));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eTextureFilter_Linear"), Integer::New(isolate, 1));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eTextureFilter_Nearest"), Integer::New(isolate, 2));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeCapMode_Sphere"), Integer::New(isolate, 0));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeCapMode_HemiSphere"), Integer::New(isolate, 1));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeCapMode_Butt"), Integer::New(isolate, 2));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeClipMode_NoClipMode"), Integer::New(isolate, 0));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeClipMode_Inside"), Integer::New(isolate, 1));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeClipMode_Outside"), Integer::New(isolate, 2));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeBallMode_None"), Integer::New(isolate, 0));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeBallMode_Mixed"), Integer::New(isolate, 1));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeBallMode_All"), Integer::New(isolate, 2));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_QUERYCANCELED"), Integer::New(isolate, 0));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_DONE"), Integer::New(isolate, 1));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_CLEANUP"), Integer::New(isolate, 2));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_READSTREAM"), Integer::New(isolate, 3));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_EXTRACTOPCPACKAGE"), Integer::New(isolate, 4));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_READNONROOTMODELS"), Integer::New(isolate, 5));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_READROOTMODEL"), Integer::New(isolate, 6));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_READRESOURCES"), Integer::New(isolate, 7));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_READMESH"), Integer::New(isolate, 8));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_READSLICES"), Integer::New(isolate, 9));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_READBUILD"), Integer::New(isolate, 10));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_READCUSTOMATTACHMENT"), Integer::New(isolate, 11));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_READTEXTURETACHMENTS"), Integer::New(isolate, 12));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_CREATEOPCPACKAGE"), Integer::New(isolate, 13));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_WRITEMODELSTOSTREAM"), Integer::New(isolate, 14));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_WRITEROOTMODEL"), Integer::New(isolate, 15));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_WRITENONROOTMODELS"), Integer::New(isolate, 16));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_WRITEATTACHMENTS"), Integer::New(isolate, 17));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_WRITECONTENTTYPES"), Integer::New(isolate, 18));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_WRITENOBJECTS"), Integer::New(isolate, 19));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_WRITENODES"), Integer::New(isolate, 20));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_WRITETRIANGLES"), Integer::New(isolate, 21));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_WRITESLICES"), Integer::New(isolate, 22));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_WRITEKEYSTORE"), Integer::New(isolate, 23));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBlendMethod_NoBlendMethod"), Integer::New(isolate, 0));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBlendMethod_Mix"), Integer::New(isolate, 1));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBlendMethod_Multiply"), Integer::New(isolate, 2));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eEncryptionAlgorithm_AES256_GCM"), Integer::New(isolate, 1));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eWrappingAlgorithm_RSA_OAEP"), Integer::New(isolate, 0));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA1"), Integer::New(isolate, 160));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA224"), Integer::New(isolate, 224));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA256"), Integer::New(isolate, 256));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA384"), Integer::New(isolate, 384));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA512"), Integer::New(isolate, 512));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eDigestMethod_SHA1"), Integer::New(isolate, 160));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eDigestMethod_SHA256"), Integer::New(isolate, 256));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eCompression_NoCompression"), Integer::New(isolate, 0));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eCompression_Deflate"), Integer::New(isolate, 1));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ePropertyType_NoPropertyType").ToLocalChecked(), Integer::New(isolate, 0));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ePropertyType_BaseMaterial").ToLocalChecked(), Integer::New(isolate, 1));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ePropertyType_TexCoord").ToLocalChecked(), Integer::New(isolate, 2));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ePropertyType_Colors").ToLocalChecked(), Integer::New(isolate, 3));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ePropertyType_Composite").ToLocalChecked(), Integer::New(isolate, 4));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ePropertyType_Multi").ToLocalChecked(), Integer::New(isolate, 5));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eSlicesMeshResolution_Fullres").ToLocalChecked(), Integer::New(isolate, 0));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eSlicesMeshResolution_Lowres").ToLocalChecked(), Integer::New(isolate, 1));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eModelUnit_MicroMeter").ToLocalChecked(), Integer::New(isolate, 0));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eModelUnit_MilliMeter").ToLocalChecked(), Integer::New(isolate, 1));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eModelUnit_CentiMeter").ToLocalChecked(), Integer::New(isolate, 2));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eModelUnit_Inch").ToLocalChecked(), Integer::New(isolate, 3));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eModelUnit_Foot").ToLocalChecked(), Integer::New(isolate, 4));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eModelUnit_Meter").ToLocalChecked(), Integer::New(isolate, 5));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eObjectType_Other").ToLocalChecked(), Integer::New(isolate, 0));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eObjectType_Model").ToLocalChecked(), Integer::New(isolate, 1));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eObjectType_Support").ToLocalChecked(), Integer::New(isolate, 2));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eObjectType_SolidSupport").ToLocalChecked(), Integer::New(isolate, 3));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eTextureType_Unknown").ToLocalChecked(), Integer::New(isolate, 0));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eTextureType_PNG").ToLocalChecked(), Integer::New(isolate, 1));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eTextureType_JPEG").ToLocalChecked(), Integer::New(isolate, 2));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eTextureTileStyle_Wrap").ToLocalChecked(), Integer::New(isolate, 0));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eTextureTileStyle_Mirror").ToLocalChecked(), Integer::New(isolate, 1));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eTextureTileStyle_Clamp").ToLocalChecked(), Integer::New(isolate, 2));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eTextureTileStyle_NoTileStyle").ToLocalChecked(), Integer::New(isolate, 3));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eTextureFilter_Auto").ToLocalChecked(), Integer::New(isolate, 0));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eTextureFilter_Linear").ToLocalChecked(), Integer::New(isolate, 1));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eTextureFilter_Nearest").ToLocalChecked(), Integer::New(isolate, 2));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeCapMode_Sphere").ToLocalChecked(), Integer::New(isolate, 0));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeCapMode_HemiSphere").ToLocalChecked(), Integer::New(isolate, 1));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeCapMode_Butt").ToLocalChecked(), Integer::New(isolate, 2));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeClipMode_NoClipMode").ToLocalChecked(), Integer::New(isolate, 0));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeClipMode_Inside").ToLocalChecked(), Integer::New(isolate, 1));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeClipMode_Outside").ToLocalChecked(), Integer::New(isolate, 2));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeBallMode_None").ToLocalChecked(), Integer::New(isolate, 0));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeBallMode_Mixed").ToLocalChecked(), Integer::New(isolate, 1));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeBallMode_All").ToLocalChecked(), Integer::New(isolate, 2));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_QUERYCANCELED").ToLocalChecked(), Integer::New(isolate, 0));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_DONE").ToLocalChecked(), Integer::New(isolate, 1));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_CLEANUP").ToLocalChecked(), Integer::New(isolate, 2));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_READSTREAM").ToLocalChecked(), Integer::New(isolate, 3));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_EXTRACTOPCPACKAGE").ToLocalChecked(), Integer::New(isolate, 4));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_READNONROOTMODELS").ToLocalChecked(), Integer::New(isolate, 5));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_READROOTMODEL").ToLocalChecked(), Integer::New(isolate, 6));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_READRESOURCES").ToLocalChecked(), Integer::New(isolate, 7));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_READMESH").ToLocalChecked(), Integer::New(isolate, 8));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_READSLICES").ToLocalChecked(), Integer::New(isolate, 9));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_READBUILD").ToLocalChecked(), Integer::New(isolate, 10));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_READCUSTOMATTACHMENT").ToLocalChecked(), Integer::New(isolate, 11));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_READTEXTURETACHMENTS").ToLocalChecked(), Integer::New(isolate, 12));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_CREATEOPCPACKAGE").ToLocalChecked(), Integer::New(isolate, 13));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_WRITEMODELSTOSTREAM").ToLocalChecked(), Integer::New(isolate, 14));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_WRITEROOTMODEL").ToLocalChecked(), Integer::New(isolate, 15));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_WRITENONROOTMODELS").ToLocalChecked(), Integer::New(isolate, 16));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_WRITEATTACHMENTS").ToLocalChecked(), Integer::New(isolate, 17));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_WRITECONTENTTYPES").ToLocalChecked(), Integer::New(isolate, 18));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_WRITENOBJECTS").ToLocalChecked(), Integer::New(isolate, 19));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_WRITENODES").ToLocalChecked(), Integer::New(isolate, 20));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_WRITETRIANGLES").ToLocalChecked(), Integer::New(isolate, 21));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_WRITESLICES").ToLocalChecked(), Integer::New(isolate, 22));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_WRITEKEYSTORE").ToLocalChecked(), Integer::New(isolate, 23));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBlendMethod_NoBlendMethod").ToLocalChecked(), Integer::New(isolate, 0));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBlendMethod_Mix").ToLocalChecked(), Integer::New(isolate, 1));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBlendMethod_Multiply").ToLocalChecked(), Integer::New(isolate, 2));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eEncryptionAlgorithm_AES256_GCM").ToLocalChecked(), Integer::New(isolate, 1));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eWrappingAlgorithm_RSA_OAEP").ToLocalChecked(), Integer::New(isolate, 0));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA1").ToLocalChecked(), Integer::New(isolate, 160));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA224").ToLocalChecked(), Integer::New(isolate, 224));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA256").ToLocalChecked(), Integer::New(isolate, 256));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA384").ToLocalChecked(), Integer::New(isolate, 384));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA512").ToLocalChecked(), Integer::New(isolate, 512));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eDigestMethod_SHA1").ToLocalChecked(), Integer::New(isolate, 160));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eDigestMethod_SHA256").ToLocalChecked(), Integer::New(isolate, 256));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eCompression_NoCompression").ToLocalChecked(), Integer::New(isolate, 0));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eCompression_Deflate").ToLocalChecked(), Integer::New(isolate, 1));
 						obj->Wrap(newObject);
 						args.GetReturnValue().Set(newObject);
 				} else {
@@ -12420,9 +12422,9 @@ void CLib3MFWrapper::GetLibraryVersion(const FunctionCallbackInfo<Value>& args)
             throw std::runtime_error("Could not call Lib3MF method GetLibraryVersion.");
         Lib3MFResult errorCode = wrapperTable->m_GetLibraryVersion(&nReturnMajor, &nReturnMinor, &nReturnMicro);
         CheckError(isolate, wrapperTable, nullptr, errorCode);
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Major"), Integer::NewFromUnsigned(isolate, nReturnMajor));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Minor"), Integer::NewFromUnsigned(isolate, nReturnMinor));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Micro"), Integer::NewFromUnsigned(isolate, nReturnMicro));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Major").ToLocalChecked(), Integer::NewFromUnsigned(isolate, nReturnMajor));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Minor").ToLocalChecked(), Integer::NewFromUnsigned(isolate, nReturnMinor));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Micro").ToLocalChecked(), Integer::NewFromUnsigned(isolate, nReturnMicro));
         args.GetReturnValue().Set(outObject);
 
 		} catch (std::exception & E) {
@@ -12451,8 +12453,8 @@ void CLib3MFWrapper::GetPrereleaseInformation(const FunctionCallbackInfo<Value>&
         bufferPrereleaseInfo.resize(bytesNeededPrereleaseInfo);
         Lib3MFResult errorCode = wrapperTable->m_GetPrereleaseInformation(&bReturnHasPrereleaseInfo, bytesNeededPrereleaseInfo, &bytesWrittenPrereleaseInfo, &bufferPrereleaseInfo[0]);
         CheckError(isolate, wrapperTable, nullptr, errorCode);
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasPrereleaseInfo"), Boolean::New(isolate, bReturnHasPrereleaseInfo));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "PrereleaseInfo"), String::NewFromUtf8(isolate, &bufferPrereleaseInfo[0]));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasPrereleaseInfo").ToLocalChecked(), Boolean::New(isolate, bReturnHasPrereleaseInfo));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "PrereleaseInfo").ToLocalChecked(), String::NewFromUtf8(isolate, &bufferPrereleaseInfo[0]).ToLocalChecked());
         args.GetReturnValue().Set(outObject);
 
 		} catch (std::exception & E) {
@@ -12481,8 +12483,8 @@ void CLib3MFWrapper::GetBuildInformation(const FunctionCallbackInfo<Value>& args
         bufferBuildInformation.resize(bytesNeededBuildInformation);
         Lib3MFResult errorCode = wrapperTable->m_GetBuildInformation(&bReturnHasBuildInfo, bytesNeededBuildInformation, &bytesWrittenBuildInformation, &bufferBuildInformation[0]);
         CheckError(isolate, wrapperTable, nullptr, errorCode);
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasBuildInfo"), Boolean::New(isolate, bReturnHasBuildInfo));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "BuildInformation"), String::NewFromUtf8(isolate, &bufferBuildInformation[0]));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasBuildInfo").ToLocalChecked(), Boolean::New(isolate, bReturnHasBuildInfo));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "BuildInformation").ToLocalChecked(), String::NewFromUtf8(isolate, &bufferBuildInformation[0]).ToLocalChecked());
         args.GetReturnValue().Set(outObject);
 
 		} catch (std::exception & E) {
@@ -12513,10 +12515,10 @@ void CLib3MFWrapper::GetSpecificationVersion(const FunctionCallbackInfo<Value>& 
             throw std::runtime_error("Could not call Lib3MF method GetSpecificationVersion.");
         Lib3MFResult errorCode = wrapperTable->m_GetSpecificationVersion(sSpecificationURL.c_str(), &bReturnIsSupported, &nReturnMajor, &nReturnMinor, &nReturnMicro);
         CheckError(isolate, wrapperTable, nullptr, errorCode);
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "IsSupported"), Boolean::New(isolate, bReturnIsSupported));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Major"), Integer::NewFromUnsigned(isolate, nReturnMajor));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Minor"), Integer::NewFromUnsigned(isolate, nReturnMinor));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Micro"), Integer::NewFromUnsigned(isolate, nReturnMicro));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "IsSupported").ToLocalChecked(), Boolean::New(isolate, bReturnIsSupported));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Major").ToLocalChecked(), Integer::NewFromUnsigned(isolate, nReturnMajor));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Minor").ToLocalChecked(), Integer::NewFromUnsigned(isolate, nReturnMinor));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Micro").ToLocalChecked(), Integer::NewFromUnsigned(isolate, nReturnMicro));
         args.GetReturnValue().Set(outObject);
 
 		} catch (std::exception & E) {
@@ -12653,8 +12655,8 @@ void CLib3MFWrapper::GetLastError(const FunctionCallbackInfo<Value>& args)
         bufferLastErrorString.resize(bytesNeededLastErrorString);
         Lib3MFResult errorCode = wrapperTable->m_GetLastError(hInstance, bytesNeededLastErrorString, &bytesWrittenLastErrorString, &bufferLastErrorString[0], &bReturnHasLastError);
         CheckError(isolate, wrapperTable, nullptr, errorCode);
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "LastErrorString"), String::NewFromUtf8(isolate, &bufferLastErrorString[0]));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasLastError"), Boolean::New(isolate, bReturnHasLastError));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "LastErrorString").ToLocalChecked(), String::NewFromUtf8(isolate, &bufferLastErrorString[0]).ToLocalChecked());
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasLastError").ToLocalChecked(), Boolean::New(isolate, bReturnHasLastError));
         args.GetReturnValue().Set(outObject);
 
 		} catch (std::exception & E) {
@@ -12674,9 +12676,9 @@ void CLib3MFWrapper::GetSymbolLookupMethod(const FunctionCallbackInfo<Value>& ar
             throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSymbolLookupMethod.");
         if (wrapperTable->m_GetSymbolLookupMethod == nullptr)
             throw std::runtime_error("Could not call Lib3MF method GetSymbolLookupMethod.");
-        Lib3MFResult errorCode = wrapperTable->m_GetSymbolLookupMethod(&nReturnSymbolLookupMethod);
+        Lib3MFResult errorCode = wrapperTable->m_GetSymbolLookupMethod(reinterpret_cast<void**>(&nReturnSymbolLookupMethod));
         CheckError(isolate, wrapperTable, nullptr, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnSymbolLookupMethod).c_str()));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, std::to_string(nReturnSymbolLookupMethod).c_str()).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -12706,7 +12708,7 @@ void CLib3MFWrapper::RetrieveProgressMessage(const FunctionCallbackInfo<Value>& 
         bufferProgressMessage.resize(bytesNeededProgressMessage);
         Lib3MFResult errorCode = wrapperTable->m_RetrieveProgressMessage((eLib3MFProgressIdentifier) eTheProgressIdentifier, bytesNeededProgressMessage, &bytesWrittenProgressMessage, &bufferProgressMessage[0]);
         CheckError(isolate, wrapperTable, nullptr, errorCode);
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferProgressMessage[0]));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferProgressMessage[0]).ToLocalChecked());
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -12809,10 +12811,10 @@ void CLib3MFWrapper::ColorToRGBA(const FunctionCallbackInfo<Value>& args)
             throw std::runtime_error("Could not call Lib3MF method ColorToRGBA.");
         Lib3MFResult errorCode = wrapperTable->m_ColorToRGBA(&sTheColor, &nReturnRed, &nReturnGreen, &nReturnBlue, &nReturnAlpha);
         CheckError(isolate, wrapperTable, nullptr, errorCode);
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Red"), Integer::NewFromUnsigned(isolate, nReturnRed));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Green"), Integer::NewFromUnsigned(isolate, nReturnGreen));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Blue"), Integer::NewFromUnsigned(isolate, nReturnBlue));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Alpha"), Integer::NewFromUnsigned(isolate, nReturnAlpha));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Red").ToLocalChecked(), Integer::NewFromUnsigned(isolate, nReturnRed));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Green").ToLocalChecked(), Integer::NewFromUnsigned(isolate, nReturnGreen));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Blue").ToLocalChecked(), Integer::NewFromUnsigned(isolate, nReturnBlue));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Alpha").ToLocalChecked(), Integer::NewFromUnsigned(isolate, nReturnAlpha));
         args.GetReturnValue().Set(outObject);
 
 		} catch (std::exception & E) {
@@ -12842,10 +12844,10 @@ void CLib3MFWrapper::ColorToFloatRGBA(const FunctionCallbackInfo<Value>& args)
             throw std::runtime_error("Could not call Lib3MF method ColorToFloatRGBA.");
         Lib3MFResult errorCode = wrapperTable->m_ColorToFloatRGBA(&sTheColor, &fReturnRed, &fReturnGreen, &fReturnBlue, &fReturnAlpha);
         CheckError(isolate, wrapperTable, nullptr, errorCode);
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Red"), Number::New(isolate, (double)fReturnRed));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Green"), Number::New(isolate, (double)fReturnGreen));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Blue"), Number::New(isolate, (double)fReturnBlue));
-        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Alpha"), Number::New(isolate, (double)fReturnAlpha));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Red").ToLocalChecked(), Number::New(isolate, (double)fReturnRed));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Green").ToLocalChecked(), Number::New(isolate, (double)fReturnGreen));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Blue").ToLocalChecked(), Number::New(isolate, (double)fReturnBlue));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Alpha").ToLocalChecked(), Number::New(isolate, (double)fReturnAlpha));
         args.GetReturnValue().Set(outObject);
 
 		} catch (std::exception & E) {
