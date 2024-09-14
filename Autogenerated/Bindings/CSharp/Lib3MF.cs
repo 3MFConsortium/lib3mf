@@ -1376,6 +1376,12 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_addlayer", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Toolpath_AddLayer (IntPtr Handle, UInt32 AZMax, byte[] APath, IntPtr AModelWriter, out IntPtr ALayerData);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getbottomz", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetBottomZ (IntPtr Handle, out UInt32 ABottomZ);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_setbottomz", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_SetBottomZ (IntPtr Handle, UInt32 ABottomZ);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getlayerattachment", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Toolpath_GetLayerAttachment (IntPtr Handle, UInt32 AIndex, out IntPtr AAttachment);
 
@@ -1399,6 +1405,9 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getprofileuuid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Toolpath_GetProfileUUID (IntPtr Handle, byte[] AProfileUUID, out IntPtr AProfile);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getprofilebyuuid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetProfileByUUID (IntPtr Handle, byte[] AProfileUUID, out IntPtr AProfile);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getcustomdatacount", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Toolpath_GetCustomDataCount (IntPtr Handle, out UInt32 ACount);
@@ -1726,6 +1735,9 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addtoolpath", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_AddToolpath (IntPtr Handle, Double AUnitFactor, out IntPtr AToolpathInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addtoolpathwithbottomz", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_AddToolpathWithBottomZ (IntPtr Handle, Double AUnitFactor, UInt32 ABottomZ, out IntPtr AToolpathInstance);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getmetadatagroup", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetMetaDataGroup (IntPtr Handle, out IntPtr ATheMetaDataGroup);
@@ -5715,6 +5727,20 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpathLayerData>(newLayerData);
 		}
 
+		public UInt32 GetBottomZ ()
+		{
+			UInt32 resultBottomZ = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetBottomZ (Handle, out resultBottomZ));
+			return resultBottomZ;
+		}
+
+		public void SetBottomZ (UInt32 ABottomZ)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_SetBottomZ (Handle, ABottomZ));
+		}
+
 		public CAttachment GetLayerAttachment (UInt32 AIndex)
 		{
 			IntPtr newAttachment = IntPtr.Zero;
@@ -5784,6 +5810,15 @@ namespace Lib3MF {
 			IntPtr newProfile = IntPtr.Zero;
 
 			CheckError(Internal.Lib3MFWrapper.Toolpath_GetProfileUUID (Handle, byteProfileUUID, out newProfile));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpathProfile>(newProfile);
+		}
+
+		public CToolpathProfile GetProfileByUUID (String AProfileUUID)
+		{
+			byte[] byteProfileUUID = Encoding.UTF8.GetBytes(AProfileUUID + char.MinValue);
+			IntPtr newProfile = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetProfileByUUID (Handle, byteProfileUUID, out newProfile));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpathProfile>(newProfile);
 		}
 
@@ -6877,6 +6912,14 @@ namespace Lib3MF {
 			IntPtr newToolpathInstance = IntPtr.Zero;
 
 			CheckError(Internal.Lib3MFWrapper.Model_AddToolpath (Handle, AUnitFactor, out newToolpathInstance));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpath>(newToolpathInstance);
+		}
+
+		public CToolpath AddToolpathWithBottomZ (Double AUnitFactor, UInt32 ABottomZ)
+		{
+			IntPtr newToolpathInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_AddToolpathWithBottomZ (Handle, AUnitFactor, ABottomZ, out newToolpathInstance));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpath>(newToolpathInstance);
 		}
 

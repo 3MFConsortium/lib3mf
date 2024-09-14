@@ -647,10 +647,17 @@ void CModel::RemoveBuildItem (IBuildItem* pBuildItemInstance)
 
 IToolpath* CModel::AddToolpath(const Lib3MF_double dUnitFactor)
 {
+	return AddToolpathWithBottomZ(dUnitFactor, 0);
+}
+
+IToolpath* CModel::AddToolpathWithBottomZ(const Lib3MF_double dUnitFactor, const Lib3MF_uint32 nBottomZ) 
+{
 	if (dUnitFactor <= 0.0)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 
-	auto pToolpath = NMR::CModelToolpath::make(model().generateResourceID(), &model(), dUnitFactor);
+	NMR::CUUID uuid;
+
+	auto pToolpath = NMR::CModelToolpath::make(model().generateResourceID(), &model(), dUnitFactor, uuid, nBottomZ);
 	model().addResource(pToolpath);
 
 	return new CToolpath(pToolpath);

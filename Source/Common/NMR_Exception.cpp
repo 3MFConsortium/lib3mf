@@ -555,6 +555,8 @@ namespace NMR {
 		case NMR_ERROR_PROFILEVALUENOTFOUND: return "Profile valuenot found";
 		case NMR_ERROR_TOOMANYPROFILEVALUES: return "Too many profile values";
 		case NMR_ERROR_INVALIDPARAMETERINDEX: return "Invalid parameter index";
+		case NMR_ERROR_TOOLPATHLAYERSARENOTINCREMENTING: return "Toolpath layers are not incrementing";
+		case NMR_ERROR_CANNOTSETBOTTOMZIFLAYERSEXIST: return "Cannot set bottom Z if layers exist";
 
 		default:
 			return "unknown error";

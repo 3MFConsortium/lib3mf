@@ -3613,13 +3613,31 @@ typedef Lib3MFResult (*PLib3MFToolpath_GetProfileCountPtr) (Lib3MF_Toolpath pToo
 * Adds a new toolpath layer
 *
 * @param[in] pToolpath - Toolpath instance.
-* @param[in] nZMax - ZMax value
+* @param[in] nZMax - ZMax value of the layer. MUST be larger than the last layer added, as well as larger as BottomZ.
 * @param[in] pPath - Package Path
 * @param[in] pModelWriter - The model writer that writes out the 3MF.
 * @param[out] pLayerData - Returns the layerdata object to write the layer content into.
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFToolpath_AddLayerPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nZMax, const char * pPath, Lib3MF_Writer pModelWriter, Lib3MF_ToolpathLayerData * pLayerData);
+
+/**
+* Returns the bottom Z Value of the toolpath.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[out] pBottomZ - BottomZ value
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_GetBottomZPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pBottomZ);
+
+/**
+* Sets the bottom Z Value of the toolpath. Will fail if a layer is already existing.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nBottomZ - BottomZ value
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_SetBottomZPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nBottomZ);
 
 /**
 * Retrieves the Attachment of a layer
@@ -3694,7 +3712,7 @@ typedef Lib3MFResult (*PLib3MFToolpath_AddProfilePtr) (Lib3MF_Toolpath pToolpath
 typedef Lib3MFResult (*PLib3MFToolpath_GetProfilePtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nProfileIndex, Lib3MF_ToolpathProfile * pProfile);
 
 /**
-* Returns a profile of the toolpath by UUID.
+* Returns a profile of the toolpath by UUID. DEPRECIATED! Please use GetProfileByUUID instead.
 *
 * @param[in] pToolpath - Toolpath instance.
 * @param[in] pProfileUUID - UUID string.
@@ -3702,6 +3720,16 @@ typedef Lib3MFResult (*PLib3MFToolpath_GetProfilePtr) (Lib3MF_Toolpath pToolpath
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFToolpath_GetProfileUUIDPtr) (Lib3MF_Toolpath pToolpath, const char * pProfileUUID, Lib3MF_ToolpathProfile * pProfile);
+
+/**
+* Returns a profile of the toolpath by UUID. Fails if profile does not exist.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] pProfileUUID - UUID string.
+* @param[out] pProfile - Returns the profile.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_GetProfileByUUIDPtr) (Lib3MF_Toolpath pToolpath, const char * pProfileUUID, Lib3MF_ToolpathProfile * pProfile);
 
 /**
 * Retrieves the count of custom data elements.
@@ -4801,14 +4829,25 @@ typedef Lib3MFResult (*PLib3MFModel_AddBuildItemPtr) (Lib3MF_Model pModel, Lib3M
 typedef Lib3MFResult (*PLib3MFModel_RemoveBuildItemPtr) (Lib3MF_Model pModel, Lib3MF_BuildItem pBuildItemInstance);
 
 /**
-* adds an empty Toolpath resource to the model.
+* adds an empty Toolpath resource to the model. Bottom Z will be 0 in this case.
 *
 * @param[in] pModel - Model instance.
-* @param[in] dUnitFactor - The toolpath instance of the created Toolpath.
+* @param[in] dUnitFactor - A factor that transforms document units into toolpath units.
 * @param[out] pToolpathInstance - The toolpath instance of the created Toolpath.
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFModel_AddToolpathPtr) (Lib3MF_Model pModel, Lib3MF_double dUnitFactor, Lib3MF_Toolpath * pToolpathInstance);
+
+/**
+* adds an empty Toolpath resource to the model, with a non-standard Bottom Z value.
+*
+* @param[in] pModel - Model instance.
+* @param[in] dUnitFactor - A factor that transforms document units into toolpath units.
+* @param[in] nBottomZ - The bottom Z value to be used in the toolpath.
+* @param[out] pToolpathInstance - The toolpath instance of the created Toolpath.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_AddToolpathWithBottomZPtr) (Lib3MF_Model pModel, Lib3MF_double dUnitFactor, Lib3MF_uint32 nBottomZ, Lib3MF_Toolpath * pToolpathInstance);
 
 /**
 * Returns the metadata of the model as MetaDataGroup
@@ -5521,6 +5560,8 @@ typedef struct {
 	PLib3MFToolpath_GetLayerCountPtr m_Toolpath_GetLayerCount;
 	PLib3MFToolpath_GetProfileCountPtr m_Toolpath_GetProfileCount;
 	PLib3MFToolpath_AddLayerPtr m_Toolpath_AddLayer;
+	PLib3MFToolpath_GetBottomZPtr m_Toolpath_GetBottomZ;
+	PLib3MFToolpath_SetBottomZPtr m_Toolpath_SetBottomZ;
 	PLib3MFToolpath_GetLayerAttachmentPtr m_Toolpath_GetLayerAttachment;
 	PLib3MFToolpath_ReadLayerDataPtr m_Toolpath_ReadLayerData;
 	PLib3MFToolpath_GetLayerPathPtr m_Toolpath_GetLayerPath;
@@ -5529,6 +5570,7 @@ typedef struct {
 	PLib3MFToolpath_AddProfilePtr m_Toolpath_AddProfile;
 	PLib3MFToolpath_GetProfilePtr m_Toolpath_GetProfile;
 	PLib3MFToolpath_GetProfileUUIDPtr m_Toolpath_GetProfileUUID;
+	PLib3MFToolpath_GetProfileByUUIDPtr m_Toolpath_GetProfileByUUID;
 	PLib3MFToolpath_GetCustomDataCountPtr m_Toolpath_GetCustomDataCount;
 	PLib3MFToolpath_GetCustomDataPtr m_Toolpath_GetCustomData;
 	PLib3MFToolpath_GetCustomDataNamePtr m_Toolpath_GetCustomDataName;
@@ -5638,6 +5680,7 @@ typedef struct {
 	PLib3MFModel_AddBuildItemPtr m_Model_AddBuildItem;
 	PLib3MFModel_RemoveBuildItemPtr m_Model_RemoveBuildItem;
 	PLib3MFModel_AddToolpathPtr m_Model_AddToolpath;
+	PLib3MFModel_AddToolpathWithBottomZPtr m_Model_AddToolpathWithBottomZ;
 	PLib3MFModel_GetMetaDataGroupPtr m_Model_GetMetaDataGroup;
 	PLib3MFModel_AddAttachmentPtr m_Model_AddAttachment;
 	PLib3MFModel_RemoveAttachmentPtr m_Model_RemoveAttachment;

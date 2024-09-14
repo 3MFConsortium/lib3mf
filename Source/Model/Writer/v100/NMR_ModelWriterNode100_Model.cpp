@@ -965,8 +965,10 @@ namespace NMR {
 
 			if (pToolpathResource != nullptr) {
 
+				std::string sToolpathUUID = pToolpathResource->getUUID().toString();
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHRESOURCE, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
 				writeIntAttribute(XML_3MF_ATTRIBUTE_TOOLPATH_ID, pToolpathResource->getPackageResourceID()->getUniqueID());
+				writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATH_UUID, sToolpathUUID.c_str());
 				writeFloatAttribute(XML_3MF_ATTRIBUTE_TOOLPATH_UNITFACTOR, (nfFloat)pToolpathResource->getUnitFactor());
 
 				uint32_t nXMLDataCount = pToolpathResource->getCustomXMLDataCount();
@@ -1016,6 +1018,8 @@ namespace NMR {
 
 
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHLAYERS, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_TOOLPATHLAYER_ZBOTTOM, pToolpathResource->getBottomZ ());
+
 				nfUint32 nLayerCount = pToolpathResource->getLayerCount();
 				for (nfUint32 nLayerIndex = 0; nLayerIndex < nLayerCount; nLayerIndex++) {
 					auto pLayer = pToolpathResource->getLayer(nLayerIndex);

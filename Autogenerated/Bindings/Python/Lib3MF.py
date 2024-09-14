@@ -486,6 +486,8 @@ class FunctionTable:
 	lib3mf_toolpath_getlayercount = None
 	lib3mf_toolpath_getprofilecount = None
 	lib3mf_toolpath_addlayer = None
+	lib3mf_toolpath_getbottomz = None
+	lib3mf_toolpath_setbottomz = None
 	lib3mf_toolpath_getlayerattachment = None
 	lib3mf_toolpath_readlayerdata = None
 	lib3mf_toolpath_getlayerpath = None
@@ -494,6 +496,7 @@ class FunctionTable:
 	lib3mf_toolpath_addprofile = None
 	lib3mf_toolpath_getprofile = None
 	lib3mf_toolpath_getprofileuuid = None
+	lib3mf_toolpath_getprofilebyuuid = None
 	lib3mf_toolpath_getcustomdatacount = None
 	lib3mf_toolpath_getcustomdata = None
 	lib3mf_toolpath_getcustomdataname = None
@@ -603,6 +606,7 @@ class FunctionTable:
 	lib3mf_model_addbuilditem = None
 	lib3mf_model_removebuilditem = None
 	lib3mf_model_addtoolpath = None
+	lib3mf_model_addtoolpathwithbottomz = None
 	lib3mf_model_getmetadatagroup = None
 	lib3mf_model_addattachment = None
 	lib3mf_model_removeattachment = None
@@ -701,7 +705,7 @@ class BeamLatticeClipMode(CTypesEnum):
 '''Definition of BeamLatticeBallMode
 '''
 class BeamLatticeBallMode(CTypesEnum):
-	BeamLatticeBallModeNone = 0
+	None = 0
 	Mixed = 1
 	All = 2
 '''Definition of BinaryStreamPredictionType
@@ -3119,6 +3123,18 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_toolpath_addlayer = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getbottomz")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpath_getbottomz = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_setbottomz")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
+			self.lib.lib3mf_toolpath_setbottomz = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getlayerattachment")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -3166,6 +3182,12 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_toolpath_getprofileuuid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getprofilebyuuid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpath_getprofilebyuuid = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getcustomdatacount")), methodAddress)
 			if err != 0:
@@ -3820,6 +3842,12 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_double, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_addtoolpath = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_addtoolpathwithbottomz")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_double, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_addtoolpathwithbottomz = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getmetadatagroup")), methodAddress)
 			if err != 0:
@@ -5011,6 +5039,12 @@ class Wrapper:
 			self.lib.lib3mf_toolpath_addlayer.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpath_addlayer.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
+			self.lib.lib3mf_toolpath_getbottomz.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_getbottomz.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpath_setbottomz.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_setbottomz.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			
 			self.lib.lib3mf_toolpath_getlayerattachment.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpath_getlayerattachment.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
 			
@@ -5034,6 +5068,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_toolpath_getprofileuuid.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpath_getprofileuuid.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpath_getprofilebyuuid.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_getprofilebyuuid.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_toolpath_getcustomdatacount.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpath_getcustomdatacount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
@@ -5361,6 +5398,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_model_addtoolpath.restype = ctypes.c_int32
 			self.lib.lib3mf_model_addtoolpath.argtypes = [ctypes.c_void_p, ctypes.c_double, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_addtoolpathwithbottomz.restype = ctypes.c_int32
+			self.lib.lib3mf_model_addtoolpathwithbottomz.argtypes = [ctypes.c_void_p, ctypes.c_double, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_model_getmetadatagroup.restype = ctypes.c_int32
 			self.lib.lib3mf_model_getmetadatagroup.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -8704,6 +8744,17 @@ class Toolpath(Resource):
 		
 		return LayerDataObject
 	
+	def GetBottomZ(self):
+		pBottomZ = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getbottomz(self._handle, pBottomZ))
+		
+		return pBottomZ.value
+	
+	def SetBottomZ(self, BottomZ):
+		nBottomZ = ctypes.c_uint32(BottomZ)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_setbottomz(self._handle, nBottomZ))
+		
+	
 	def GetLayerAttachment(self, Index):
 		nIndex = ctypes.c_uint32(Index)
 		AttachmentHandle = ctypes.c_void_p()
@@ -8778,6 +8829,17 @@ class Toolpath(Resource):
 		pProfileUUID = ctypes.c_char_p(str.encode(ProfileUUID))
 		ProfileHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getprofileuuid(self._handle, pProfileUUID, ProfileHandle))
+		if ProfileHandle:
+			ProfileObject = self._wrapper._polymorphicFactory(ProfileHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ProfileObject
+	
+	def GetProfileByUUID(self, ProfileUUID):
+		pProfileUUID = ctypes.c_char_p(str.encode(ProfileUUID))
+		ProfileHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getprofilebyuuid(self._handle, pProfileUUID, ProfileHandle))
 		if ProfileHandle:
 			ProfileObject = self._wrapper._polymorphicFactory(ProfileHandle)
 		else:
@@ -9914,6 +9976,18 @@ class Model(Base):
 		dUnitFactor = ctypes.c_double(UnitFactor)
 		ToolpathInstanceHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_addtoolpath(self._handle, dUnitFactor, ToolpathInstanceHandle))
+		if ToolpathInstanceHandle:
+			ToolpathInstanceObject = self._wrapper._polymorphicFactory(ToolpathInstanceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ToolpathInstanceObject
+	
+	def AddToolpathWithBottomZ(self, UnitFactor, BottomZ):
+		dUnitFactor = ctypes.c_double(UnitFactor)
+		nBottomZ = ctypes.c_uint32(BottomZ)
+		ToolpathInstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_addtoolpathwithbottomz(self._handle, dUnitFactor, nBottomZ, ToolpathInstanceHandle))
 		if ToolpathInstanceHandle:
 			ToolpathInstanceObject = self._wrapper._polymorphicFactory(ToolpathInstanceHandle)
 		else:

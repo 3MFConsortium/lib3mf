@@ -3150,6 +3150,24 @@ Lib3MFResult CCall_lib3mf_toolpath_addlayer(Lib3MFHandle libraryHandle, Lib3MF_T
 }
 
 
+Lib3MFResult CCall_lib3mf_toolpath_getbottomz(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pBottomZ)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetBottomZ (pToolpath, pBottomZ);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_setbottomz(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nBottomZ)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_SetBottomZ (pToolpath, nBottomZ);
+}
+
+
 Lib3MFResult CCall_lib3mf_toolpath_getlayerattachment(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_Attachment * pAttachment)
 {
 	if (libraryHandle == 0) 
@@ -3219,6 +3237,15 @@ Lib3MFResult CCall_lib3mf_toolpath_getprofileuuid(Lib3MFHandle libraryHandle, Li
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_Toolpath_GetProfileUUID (pToolpath, pProfileUUID, pProfile);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getprofilebyuuid(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, const char * pProfileUUID, Lib3MF_ToolpathProfile * pProfile)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Toolpath_GetProfileByUUID (pToolpath, pProfileUUID, pProfile);
 }
 
 
@@ -4200,6 +4227,15 @@ Lib3MFResult CCall_lib3mf_model_addtoolpath(Lib3MFHandle libraryHandle, Lib3MF_M
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_Model_AddToolpath (pModel, dUnitFactor, pToolpathInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_addtoolpathwithbottomz(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_double dUnitFactor, Lib3MF_uint32 nBottomZ, Lib3MF_Toolpath * pToolpathInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_AddToolpathWithBottomZ (pModel, dUnitFactor, nBottomZ, pToolpathInstance);
 }
 
 
@@ -9345,6 +9381,25 @@ func (inst Toolpath) AddLayer(zMax uint32, path string, modelWriter Writer) (Too
 	return inst.wrapperRef.NewToolpathLayerData(layerData), nil
 }
 
+// GetBottomZ returns the bottom Z Value of the toolpath.
+func (inst Toolpath) GetBottomZ() (uint32, error) {
+	var bottomZ C.uint32_t
+	ret := C.CCall_lib3mf_toolpath_getbottomz(inst.wrapperRef.LibraryHandle, inst.Ref, &bottomZ)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(bottomZ), nil
+}
+
+// SetBottomZ sets the bottom Z Value of the toolpath. Will fail if a layer is already existing.
+func (inst Toolpath) SetBottomZ(bottomZ uint32) error {
+	ret := C.CCall_lib3mf_toolpath_setbottomz(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(bottomZ))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
 // GetLayerAttachment retrieves the Attachment of a layer.
 func (inst Toolpath) GetLayerAttachment(index uint32) (Attachment, error) {
 	var attachment ref
@@ -9422,10 +9477,20 @@ func (inst Toolpath) GetProfile(profileIndex uint32) (ToolpathProfile, error) {
 	return inst.wrapperRef.NewToolpathProfile(profile), nil
 }
 
-// GetProfileUUID returns a profile of the toolpath by UUID.
+// GetProfileUUID returns a profile of the toolpath by UUID. DEPRECIATED! Please use GetProfileByUUID instead.
 func (inst Toolpath) GetProfileUUID(profileUUID string) (ToolpathProfile, error) {
 	var profile ref
 	ret := C.CCall_lib3mf_toolpath_getprofileuuid(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(profileUUID)[0])), &profile)
+	if ret != 0 {
+		return ToolpathProfile{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathProfile(profile), nil
+}
+
+// GetProfileByUUID returns a profile of the toolpath by UUID. Fails if profile does not exist.
+func (inst Toolpath) GetProfileByUUID(profileUUID string) (ToolpathProfile, error) {
+	var profile ref
+	ret := C.CCall_lib3mf_toolpath_getprofilebyuuid(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(profileUUID)[0])), &profile)
 	if ret != 0 {
 		return ToolpathProfile{}, makeError(uint32(ret))
 	}
@@ -10718,10 +10783,20 @@ func (inst Model) RemoveBuildItem(buildItemInstance BuildItem) error {
 	return nil
 }
 
-// AddToolpath adds an empty Toolpath resource to the model.
+// AddToolpath adds an empty Toolpath resource to the model. Bottom Z will be 0 in this case.
 func (inst Model) AddToolpath(unitFactor float64) (Toolpath, error) {
 	var toolpathInstance ref
 	ret := C.CCall_lib3mf_model_addtoolpath(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(unitFactor), &toolpathInstance)
+	if ret != 0 {
+		return Toolpath{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpath(toolpathInstance), nil
+}
+
+// AddToolpathWithBottomZ adds an empty Toolpath resource to the model, with a non-standard Bottom Z value.
+func (inst Model) AddToolpathWithBottomZ(unitFactor float64, bottomZ uint32) (Toolpath, error) {
+	var toolpathInstance ref
+	ret := C.CCall_lib3mf_model_addtoolpathwithbottomz(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(unitFactor), C.uint32_t(bottomZ), &toolpathInstance)
 	if ret != 0 {
 		return Toolpath{}, makeError(uint32(ret))
 	}

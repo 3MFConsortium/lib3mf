@@ -63,7 +63,12 @@ namespace NMR {
 		if (!m_bHasUnitFactor)
 			throw CNMRException(NMR_ERROR_MISSINGUNITFACTOR);
 
-		m_pToolpath = std::make_shared<CModelToolpath> (m_nID, m_pModel, m_dUnitFactor);
+		CUUID uuid;
+		if (!m_sUUID.empty())
+			uuid.set(m_sUUID.c_str());
+
+		// BottomZ will be parsed in the layers subnode...
+		m_pToolpath = std::make_shared<CModelToolpath> (m_nID, m_pModel, m_dUnitFactor, uuid, 0);
 		m_pModel->addResource(m_pToolpath);
 
 		// Parse Content
@@ -87,6 +92,13 @@ namespace NMR {
 			// Convert to integer and make a input and range check!
 			m_nID = fnStringToUint32(pAttributeValue);
 			m_bHasID = true;
+		}
+
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TOOLPATH_UUID) == 0) {
+			if (!m_sUUID.empty ())
+				throw CNMRException(NMR_ERROR_DUPLICATERESOURCEID);
+
+			m_sUUID = std::string (pAttributeValue);
 		}
 
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TOOLPATH_UNITFACTOR) == 0) {

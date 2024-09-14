@@ -80,6 +80,17 @@ Lib3MF_uint32 CToolpath::GetLayerZ(const Lib3MF_uint32 nLayerIndex)
 	return pLayer->getMaxZ();
 }
 
+Lib3MF_uint32 CToolpath::GetBottomZ()
+{
+	return m_pToolpath->getBottomZ();
+}
+
+void CToolpath::SetBottomZ(const Lib3MF_uint32 nBottomZ)
+{
+	m_pToolpath->setBottomZ(nBottomZ);
+}
+
+
 IToolpathProfile* CToolpath::AddProfile(const std::string& sName)
 {
 	auto pProfile = m_pToolpath->addProfile(sName);
@@ -97,11 +108,16 @@ IToolpathProfile* CToolpath::GetProfile(const Lib3MF_uint32 nProfileIndex)
 
 IToolpathProfile* CToolpath::GetProfileUUID(const std::string& sProfileUUID)
 {
+	return GetProfileByUUID(sProfileUUID);
+}
+
+
+IToolpathProfile* CToolpath::GetProfileByUUID(const std::string& sProfileUUID)
+{
 	auto pProfile = m_pToolpath->getProfileByUUID(sProfileUUID);
 
 	return new CToolpathProfile(pProfile);
 }
-
 
 IToolpathLayerData* CToolpath::AddLayer(const Lib3MF_uint32 nZMax, const std::string& sPath, IWriter* pModelWriter)
 {

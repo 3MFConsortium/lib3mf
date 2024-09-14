@@ -51,6 +51,8 @@ namespace NMR {
 		nfDouble m_dUnitFactor;
 		nfBool m_bHasUnitFactor;
 
+		std::string m_sUUID;
+
 		PModelToolpath m_pToolpath;
 
 	protected:

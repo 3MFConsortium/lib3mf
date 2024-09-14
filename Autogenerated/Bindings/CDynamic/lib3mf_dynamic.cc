@@ -390,6 +390,8 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Toolpath_GetLayerCount = NULL;
 	pWrapperTable->m_Toolpath_GetProfileCount = NULL;
 	pWrapperTable->m_Toolpath_AddLayer = NULL;
+	pWrapperTable->m_Toolpath_GetBottomZ = NULL;
+	pWrapperTable->m_Toolpath_SetBottomZ = NULL;
 	pWrapperTable->m_Toolpath_GetLayerAttachment = NULL;
 	pWrapperTable->m_Toolpath_ReadLayerData = NULL;
 	pWrapperTable->m_Toolpath_GetLayerPath = NULL;
@@ -398,6 +400,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Toolpath_AddProfile = NULL;
 	pWrapperTable->m_Toolpath_GetProfile = NULL;
 	pWrapperTable->m_Toolpath_GetProfileUUID = NULL;
+	pWrapperTable->m_Toolpath_GetProfileByUUID = NULL;
 	pWrapperTable->m_Toolpath_GetCustomDataCount = NULL;
 	pWrapperTable->m_Toolpath_GetCustomData = NULL;
 	pWrapperTable->m_Toolpath_GetCustomDataName = NULL;
@@ -507,6 +510,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Model_AddBuildItem = NULL;
 	pWrapperTable->m_Model_RemoveBuildItem = NULL;
 	pWrapperTable->m_Model_AddToolpath = NULL;
+	pWrapperTable->m_Model_AddToolpathWithBottomZ = NULL;
 	pWrapperTable->m_Model_GetMetaDataGroup = NULL;
 	pWrapperTable->m_Model_AddAttachment = NULL;
 	pWrapperTable->m_Model_RemoveAttachment = NULL;
@@ -3676,6 +3680,24 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_GetBottomZ = (PLib3MFToolpath_GetBottomZPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getbottomz");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_GetBottomZ = (PLib3MFToolpath_GetBottomZPtr) dlsym(hLibrary, "lib3mf_toolpath_getbottomz");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_GetBottomZ == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_SetBottomZ = (PLib3MFToolpath_SetBottomZPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_setbottomz");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_SetBottomZ = (PLib3MFToolpath_SetBottomZPtr) dlsym(hLibrary, "lib3mf_toolpath_setbottomz");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_SetBottomZ == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_Toolpath_GetLayerAttachment = (PLib3MFToolpath_GetLayerAttachmentPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getlayerattachment");
 	#else // _WIN32
 	pWrapperTable->m_Toolpath_GetLayerAttachment = (PLib3MFToolpath_GetLayerAttachmentPtr) dlsym(hLibrary, "lib3mf_toolpath_getlayerattachment");
@@ -3745,6 +3767,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Toolpath_GetProfileUUID == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_GetProfileByUUID = (PLib3MFToolpath_GetProfileByUUIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getprofilebyuuid");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_GetProfileByUUID = (PLib3MFToolpath_GetProfileByUUIDPtr) dlsym(hLibrary, "lib3mf_toolpath_getprofilebyuuid");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_GetProfileByUUID == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -4726,6 +4757,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Model_AddToolpath == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_AddToolpathWithBottomZ = (PLib3MFModel_AddToolpathWithBottomZPtr) GetProcAddress(hLibrary, "lib3mf_model_addtoolpathwithbottomz");
+	#else // _WIN32
+	pWrapperTable->m_Model_AddToolpathWithBottomZ = (PLib3MFModel_AddToolpathWithBottomZPtr) dlsym(hLibrary, "lib3mf_model_addtoolpathwithbottomz");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_AddToolpathWithBottomZ == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

@@ -1758,6 +1758,8 @@ public:
 	inline Lib3MF_uint32 GetLayerCount();
 	inline Lib3MF_uint32 GetProfileCount();
 	inline PToolpathLayerData AddLayer(const Lib3MF_uint32 nZMax, const std::string & sPath, classParam<CWriter> pModelWriter);
+	inline Lib3MF_uint32 GetBottomZ();
+	inline void SetBottomZ(const Lib3MF_uint32 nBottomZ);
 	inline PAttachment GetLayerAttachment(const Lib3MF_uint32 nIndex);
 	inline PToolpathLayerReader ReadLayerData(const Lib3MF_uint32 nIndex);
 	inline std::string GetLayerPath(const Lib3MF_uint32 nIndex);
@@ -1766,6 +1768,7 @@ public:
 	inline PToolpathProfile AddProfile(const std::string & sName);
 	inline PToolpathProfile GetProfile(const Lib3MF_uint32 nProfileIndex);
 	inline PToolpathProfile GetProfileUUID(const std::string & sProfileUUID);
+	inline PToolpathProfile GetProfileByUUID(const std::string & sProfileUUID);
 	inline Lib3MF_uint32 GetCustomDataCount();
 	inline PCustomDOMTree GetCustomData(const Lib3MF_uint32 nIndex);
 	inline void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName);
@@ -2019,6 +2022,7 @@ public:
 	inline PBuildItem AddBuildItem(classParam<CObject> pObject, const sTransform & Transform);
 	inline void RemoveBuildItem(classParam<CBuildItem> pBuildItemInstance);
 	inline PToolpath AddToolpath(const Lib3MF_double dUnitFactor);
+	inline PToolpath AddToolpathWithBottomZ(const Lib3MF_double dUnitFactor, const Lib3MF_uint32 nBottomZ);
 	inline PMetaDataGroup GetMetaDataGroup();
 	inline PAttachment AddAttachment(const std::string & sURI, const std::string & sRelationShipType);
 	inline void RemoveAttachment(classParam<CAttachment> pAttachmentInstance);
@@ -2735,6 +2739,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Toolpath_GetLayerCount = nullptr;
 		pWrapperTable->m_Toolpath_GetProfileCount = nullptr;
 		pWrapperTable->m_Toolpath_AddLayer = nullptr;
+		pWrapperTable->m_Toolpath_GetBottomZ = nullptr;
+		pWrapperTable->m_Toolpath_SetBottomZ = nullptr;
 		pWrapperTable->m_Toolpath_GetLayerAttachment = nullptr;
 		pWrapperTable->m_Toolpath_ReadLayerData = nullptr;
 		pWrapperTable->m_Toolpath_GetLayerPath = nullptr;
@@ -2743,6 +2749,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Toolpath_AddProfile = nullptr;
 		pWrapperTable->m_Toolpath_GetProfile = nullptr;
 		pWrapperTable->m_Toolpath_GetProfileUUID = nullptr;
+		pWrapperTable->m_Toolpath_GetProfileByUUID = nullptr;
 		pWrapperTable->m_Toolpath_GetCustomDataCount = nullptr;
 		pWrapperTable->m_Toolpath_GetCustomData = nullptr;
 		pWrapperTable->m_Toolpath_GetCustomDataName = nullptr;
@@ -2852,6 +2859,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Model_AddBuildItem = nullptr;
 		pWrapperTable->m_Model_RemoveBuildItem = nullptr;
 		pWrapperTable->m_Model_AddToolpath = nullptr;
+		pWrapperTable->m_Model_AddToolpathWithBottomZ = nullptr;
 		pWrapperTable->m_Model_GetMetaDataGroup = nullptr;
 		pWrapperTable->m_Model_AddAttachment = nullptr;
 		pWrapperTable->m_Model_RemoveAttachment = nullptr;
@@ -6017,6 +6025,24 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_GetBottomZ = (PLib3MFToolpath_GetBottomZPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getbottomz");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_GetBottomZ = (PLib3MFToolpath_GetBottomZPtr) dlsym(hLibrary, "lib3mf_toolpath_getbottomz");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_GetBottomZ == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_SetBottomZ = (PLib3MFToolpath_SetBottomZPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_setbottomz");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_SetBottomZ = (PLib3MFToolpath_SetBottomZPtr) dlsym(hLibrary, "lib3mf_toolpath_setbottomz");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_SetBottomZ == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_Toolpath_GetLayerAttachment = (PLib3MFToolpath_GetLayerAttachmentPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getlayerattachment");
 		#else // _WIN32
 		pWrapperTable->m_Toolpath_GetLayerAttachment = (PLib3MFToolpath_GetLayerAttachmentPtr) dlsym(hLibrary, "lib3mf_toolpath_getlayerattachment");
@@ -6086,6 +6112,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_Toolpath_GetProfileUUID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_GetProfileByUUID = (PLib3MFToolpath_GetProfileByUUIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getprofilebyuuid");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_GetProfileByUUID = (PLib3MFToolpath_GetProfileByUUIDPtr) dlsym(hLibrary, "lib3mf_toolpath_getprofilebyuuid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_GetProfileByUUID == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -7067,6 +7102,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_Model_AddToolpath == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_AddToolpathWithBottomZ = (PLib3MFModel_AddToolpathWithBottomZPtr) GetProcAddress(hLibrary, "lib3mf_model_addtoolpathwithbottomz");
+		#else // _WIN32
+		pWrapperTable->m_Model_AddToolpathWithBottomZ = (PLib3MFModel_AddToolpathWithBottomZPtr) dlsym(hLibrary, "lib3mf_model_addtoolpathwithbottomz");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_AddToolpathWithBottomZ == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -8777,6 +8821,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_AddLayer == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_toolpath_getbottomz", (void**)&(pWrapperTable->m_Toolpath_GetBottomZ));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_GetBottomZ == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_setbottomz", (void**)&(pWrapperTable->m_Toolpath_SetBottomZ));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_SetBottomZ == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_toolpath_getlayerattachment", (void**)&(pWrapperTable->m_Toolpath_GetLayerAttachment));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_GetLayerAttachment == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -8807,6 +8859,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_toolpath_getprofileuuid", (void**)&(pWrapperTable->m_Toolpath_GetProfileUUID));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_GetProfileUUID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_getprofilebyuuid", (void**)&(pWrapperTable->m_Toolpath_GetProfileByUUID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_GetProfileByUUID == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_toolpath_getcustomdatacount", (void**)&(pWrapperTable->m_Toolpath_GetCustomDataCount));
@@ -9243,6 +9299,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_model_addtoolpath", (void**)&(pWrapperTable->m_Model_AddToolpath));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Model_AddToolpath == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_addtoolpathwithbottomz", (void**)&(pWrapperTable->m_Model_AddToolpathWithBottomZ));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_AddToolpathWithBottomZ == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_model_getmetadatagroup", (void**)&(pWrapperTable->m_Model_GetMetaDataGroup));
@@ -13804,7 +13864,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	
 	/**
 	* CToolpath::AddLayer - Adds a new toolpath layer
-	* @param[in] nZMax - ZMax value
+	* @param[in] nZMax - ZMax value of the layer. MUST be larger than the last layer added, as well as larger as BottomZ.
 	* @param[in] sPath - Package Path
 	* @param[in] pModelWriter - The model writer that writes out the 3MF.
 	* @return Returns the layerdata object to write the layer content into.
@@ -13819,6 +13879,27 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CToolpathLayerData>(dynamic_cast<CToolpathLayerData*>(m_pWrapper->polymorphicFactory(hLayerData)));
+	}
+	
+	/**
+	* CToolpath::GetBottomZ - Returns the bottom Z Value of the toolpath.
+	* @return BottomZ value
+	*/
+	Lib3MF_uint32 CToolpath::GetBottomZ()
+	{
+		Lib3MF_uint32 resultBottomZ = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetBottomZ(m_pHandle, &resultBottomZ));
+		
+		return resultBottomZ;
+	}
+	
+	/**
+	* CToolpath::SetBottomZ - Sets the bottom Z Value of the toolpath. Will fail if a layer is already existing.
+	* @param[in] nBottomZ - BottomZ value
+	*/
+	void CToolpath::SetBottomZ(const Lib3MF_uint32 nBottomZ)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_SetBottomZ(m_pHandle, nBottomZ));
 	}
 	
 	/**
@@ -13928,7 +14009,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpath::GetProfileUUID - Returns a profile of the toolpath by UUID.
+	* CToolpath::GetProfileUUID - Returns a profile of the toolpath by UUID. DEPRECIATED! Please use GetProfileByUUID instead.
 	* @param[in] sProfileUUID - UUID string.
 	* @return Returns the profile.
 	*/
@@ -13936,6 +14017,22 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	{
 		Lib3MFHandle hProfile = nullptr;
 		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetProfileUUID(m_pHandle, sProfileUUID.c_str(), &hProfile));
+		
+		if (!hProfile) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpathProfile>(dynamic_cast<CToolpathProfile*>(m_pWrapper->polymorphicFactory(hProfile)));
+	}
+	
+	/**
+	* CToolpath::GetProfileByUUID - Returns a profile of the toolpath by UUID. Fails if profile does not exist.
+	* @param[in] sProfileUUID - UUID string.
+	* @return Returns the profile.
+	*/
+	PToolpathProfile CToolpath::GetProfileByUUID(const std::string & sProfileUUID)
+	{
+		Lib3MFHandle hProfile = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetProfileByUUID(m_pHandle, sProfileUUID.c_str(), &hProfile));
 		
 		if (!hProfile) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -15519,14 +15616,31 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CModel::AddToolpath - adds an empty Toolpath resource to the model.
-	* @param[in] dUnitFactor - The toolpath instance of the created Toolpath.
+	* CModel::AddToolpath - adds an empty Toolpath resource to the model. Bottom Z will be 0 in this case.
+	* @param[in] dUnitFactor - A factor that transforms document units into toolpath units.
 	* @return The toolpath instance of the created Toolpath.
 	*/
 	PToolpath CModel::AddToolpath(const Lib3MF_double dUnitFactor)
 	{
 		Lib3MFHandle hToolpathInstance = nullptr;
 		CheckError(m_pWrapper->m_WrapperTable.m_Model_AddToolpath(m_pHandle, dUnitFactor, &hToolpathInstance));
+		
+		if (!hToolpathInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpath>(dynamic_cast<CToolpath*>(m_pWrapper->polymorphicFactory(hToolpathInstance)));
+	}
+	
+	/**
+	* CModel::AddToolpathWithBottomZ - adds an empty Toolpath resource to the model, with a non-standard Bottom Z value.
+	* @param[in] dUnitFactor - A factor that transforms document units into toolpath units.
+	* @param[in] nBottomZ - The bottom Z value to be used in the toolpath.
+	* @return The toolpath instance of the created Toolpath.
+	*/
+	PToolpath CModel::AddToolpathWithBottomZ(const Lib3MF_double dUnitFactor, const Lib3MF_uint32 nBottomZ)
+	{
+		Lib3MFHandle hToolpathInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_AddToolpathWithBottomZ(m_pHandle, dUnitFactor, nBottomZ, &hToolpathInstance));
 		
 		if (!hToolpathInstance) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);

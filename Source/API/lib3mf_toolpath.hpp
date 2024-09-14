@@ -69,6 +69,10 @@ public:
 
 	Lib3MF_uint32 GetProfileCount() override;
 
+	Lib3MF_uint32 GetBottomZ() override;
+
+	void SetBottomZ(const Lib3MF_uint32 nBottomZ) override;
+
 	IToolpathLayerData * AddLayer(const Lib3MF_uint32 nZMax, const std::string & sPath, IWriter* pModelWriter) override;
 
 	IAttachment * GetLayerAttachment(const Lib3MF_uint32 nIndex) override;
@@ -86,6 +90,8 @@ public:
 	IToolpathProfile * GetProfile(const Lib3MF_uint32 nProfileIndex) override;
 
 	IToolpathProfile * GetProfileUUID(const std::string & sProfileUUID) override;
+
+	IToolpathProfile * GetProfileByUUID(const std::string & sProfileUUID) override;
 
 	Lib3MF_uint32 GetCustomDataCount() override;
 

@@ -42,18 +42,41 @@ NMR_ModelToolpath.cpp implements the Model Toolpath Class.
 namespace NMR {
 
 
-	CModelToolpath::CModelToolpath(_In_ const ModelResourceID sID, _In_ CModel * pModel, double dUnitFactor)
-		: CModelResource(sID, pModel), m_dUnitFactor (dUnitFactor)
+	CModelToolpath::CModelToolpath(_In_ const ModelResourceID sID, _In_ CModel * pModel, double dUnitFactor, CUUID uuid, nfUint32 nBottomZ)
+		: CModelResource(sID, pModel), m_dUnitFactor (dUnitFactor), m_UUID (uuid), m_nBottomZ (nBottomZ)
 	{
 	}
 
-	PModelToolpath CModelToolpath::make(_In_ const ModelResourceID sID, _In_ CModel * pModel, double dUnitFactor)
+	PModelToolpath CModelToolpath::make(_In_ const ModelResourceID sID, _In_ CModel * pModel, double dUnitFactor, CUUID uuid, nfUint32 nBottomZ)
 	{	
-		return std::make_shared<CModelToolpath> (sID, pModel, dUnitFactor);
+		return std::make_shared<CModelToolpath> (sID, pModel, dUnitFactor, uuid, nBottomZ);
 	}
+
+	nfUint32 CModelToolpath::getBottomZ()
+	{
+		return m_nBottomZ;
+	}
+
+	void CModelToolpath::setBottomZ(nfUint32 nBottomZ)
+	{
+		if (m_Layers.size() != 0)
+			throw CNMRException(NMR_ERROR_CANNOTSETBOTTOMZIFLAYERSEXIST);
+
+		m_nBottomZ = nBottomZ;
+	}
+
 
 	PModelToolpathLayer CModelToolpath::addLayer(const std::string & sPath, nfUint32 nMaxZ)
 	{
+		uint32_t nLastZ = m_nBottomZ;
+		if (m_Layers.size () > 0) 
+		{ 
+			nLastZ = (*m_Layers.rbegin())->getMaxZ();			
+		}
+
+		if (nMaxZ <= nLastZ)
+			throw CNMRException(NMR_ERROR_TOOLPATHLAYERSARENOTINCREMENTING);
+
 		auto pLayer = std::make_shared<CModelToolpathLayer>(sPath, nMaxZ);
 		m_Layers.push_back(pLayer);
 		return pLayer;
@@ -75,6 +98,12 @@ namespace NMR {
 	{
 		return m_dUnitFactor;
 	}
+
+	CUUID CModelToolpath::getUUID()
+	{
+		return m_UUID;
+	}
+
 
 	PModelToolpathProfile CModelToolpath::addProfile(const std::string & sName)
 	{

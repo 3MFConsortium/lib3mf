@@ -1149,6 +1149,8 @@ private:
 	static void GetLayerCount(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetProfileCount(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddLayer(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetBottomZ(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetBottomZ(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetLayerAttachment(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void ReadLayerData(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetLayerPath(const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -1157,6 +1159,7 @@ private:
 	static void AddProfile(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetProfile(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetProfileUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetProfileByUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetCustomDataCount(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetCustomDataName(const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -1419,6 +1422,7 @@ private:
 	static void AddBuildItem(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void RemoveBuildItem(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddToolpath(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddToolpathWithBottomZ(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetMetaDataGroup(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddAttachment(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void RemoveAttachment(const v8::FunctionCallbackInfo<v8::Value>& args);

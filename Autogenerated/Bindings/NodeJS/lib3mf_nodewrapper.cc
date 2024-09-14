@@ -12578,6 +12578,8 @@ void CLib3MFToolpath::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerCount", GetLayerCount);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetProfileCount", GetProfileCount);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddLayer", AddLayer);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetBottomZ", GetBottomZ);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetBottomZ", SetBottomZ);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerAttachment", GetLayerAttachment);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "ReadLayerData", ReadLayerData);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerPath", GetLayerPath);
@@ -12586,6 +12588,7 @@ void CLib3MFToolpath::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddProfile", AddProfile);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetProfile", GetProfile);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetProfileUUID", GetProfileUUID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetProfileByUUID", GetProfileByUUID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCustomDataCount", GetCustomDataCount);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCustomData", GetCustomData);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCustomDataName", GetCustomDataName);
@@ -12728,6 +12731,52 @@ void CLib3MFToolpath::AddLayer(const FunctionCallbackInfo<Value>& args)
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjLayerData = CLib3MFToolpathLayerData::NewInstance(args.Holder(), hReturnLayerData);
         args.GetReturnValue().Set(instanceObjLayerData);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::GetBottomZ(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int nReturnBottomZ = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetBottomZ.");
+        if (wrapperTable->m_Toolpath_GetBottomZ == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetBottomZ.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetBottomZ(instanceHandle, &nReturnBottomZ);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnBottomZ));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::SetBottomZ(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (BottomZ)");
+        }
+        unsigned int nBottomZ = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetBottomZ.");
+        if (wrapperTable->m_Toolpath_SetBottomZ == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::SetBottomZ.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_SetBottomZ(instanceHandle, nBottomZ);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -12945,6 +12994,34 @@ void CLib3MFToolpath::GetProfileUUID(const FunctionCallbackInfo<Value>& args)
             throw std::runtime_error("Could not call Lib3MF method Toolpath::GetProfileUUID.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetProfileUUID(instanceHandle, sProfileUUID.c_str(), &hReturnProfile);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjProfile = CLib3MFToolpathProfile::NewInstance(args.Holder(), hReturnProfile);
+        args.GetReturnValue().Set(instanceObjProfile);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::GetProfileByUUID(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (ProfileUUID)");
+        }
+        v8::String::Utf8Value sutf8ProfileUUID(isolate, args[0]);
+        std::string sProfileUUID = *sutf8ProfileUUID;
+        Lib3MFHandle hReturnProfile = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetProfileByUUID.");
+        if (wrapperTable->m_Toolpath_GetProfileByUUID == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetProfileByUUID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetProfileByUUID(instanceHandle, sProfileUUID.c_str(), &hReturnProfile);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjProfile = CLib3MFToolpathProfile::NewInstance(args.Holder(), hReturnProfile);
         args.GetReturnValue().Set(instanceObjProfile);
@@ -15135,6 +15212,7 @@ void CLib3MFModel::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddBuildItem", AddBuildItem);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveBuildItem", RemoveBuildItem);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddToolpath", AddToolpath);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddToolpathWithBottomZ", AddToolpathWithBottomZ);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetMetaDataGroup", GetMetaDataGroup);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddAttachment", AddAttachment);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveAttachment", RemoveAttachment);
@@ -16401,6 +16479,37 @@ void CLib3MFModel::AddToolpath(const FunctionCallbackInfo<Value>& args)
             throw std::runtime_error("Could not call Lib3MF method Model::AddToolpath.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_Model_AddToolpath(instanceHandle, dUnitFactor, &hReturnToolpathInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjToolpathInstance = CLib3MFToolpath::NewInstance(args.Holder(), hReturnToolpathInstance);
+        args.GetReturnValue().Set(instanceObjToolpathInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::AddToolpathWithBottomZ(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsNumber()) {
+            throw std::runtime_error("Expected double parameter 0 (UnitFactor)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 1 (BottomZ)");
+        }
+        double dUnitFactor = (double) args[0]->NumberValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nBottomZ = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        Lib3MFHandle hReturnToolpathInstance = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddToolpathWithBottomZ.");
+        if (wrapperTable->m_Model_AddToolpathWithBottomZ == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::AddToolpathWithBottomZ.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_AddToolpathWithBottomZ(instanceHandle, dUnitFactor, nBottomZ, &hReturnToolpathInstance);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjToolpathInstance = CLib3MFToolpath::NewInstance(args.Holder(), hReturnToolpathInstance);
         args.GetReturnValue().Set(instanceObjToolpathInstance);

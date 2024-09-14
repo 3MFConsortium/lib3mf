@@ -13197,6 +13197,72 @@ Lib3MFResult lib3mf_toolpath_addlayer(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 n
 	}
 }
 
+Lib3MFResult lib3mf_toolpath_getbottomz(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pBottomZ)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "GetBottomZ");
+		}
+		if (pBottomZ == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pBottomZ = pIToolpath->GetBottomZ();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("BottomZ", *pBottomZ);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_setbottomz(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nBottomZ)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "SetBottomZ");
+			pJournalEntry->addUInt32Parameter("BottomZ", nBottomZ);
+		}
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpath->SetBottomZ(nBottomZ);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_toolpath_getlayerattachment(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_Attachment * pAttachment)
 {
 	IBase* pIBaseClass = (IBase *)pToolpath;
@@ -13496,6 +13562,46 @@ Lib3MFResult lib3mf_toolpath_getprofileuuid(Lib3MF_Toolpath pToolpath, const cha
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
 		pBaseProfile = pIToolpath->GetProfileUUID(sProfileUUID);
+
+		*pProfile = (IBase*)(pBaseProfile);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Profile", *pProfile);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_getprofilebyuuid(Lib3MF_Toolpath pToolpath, const char * pProfileUUID, Lib3MF_ToolpathProfile * pProfile)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "GetProfileByUUID");
+			pJournalEntry->addStringParameter("ProfileUUID", pProfileUUID);
+		}
+		if (pProfileUUID == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pProfile == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sProfileUUID(pProfileUUID);
+		IBase* pBaseProfile(nullptr);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseProfile = pIToolpath->GetProfileByUUID(sProfileUUID);
 
 		*pProfile = (IBase*)(pBaseProfile);
 		if (pJournalEntry.get() != nullptr) {
@@ -17780,6 +17886,44 @@ Lib3MFResult lib3mf_model_addtoolpath(Lib3MF_Model pModel, Lib3MF_double dUnitFa
 	}
 }
 
+Lib3MFResult lib3mf_model_addtoolpathwithbottomz(Lib3MF_Model pModel, Lib3MF_double dUnitFactor, Lib3MF_uint32 nBottomZ, Lib3MF_Toolpath * pToolpathInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "AddToolpathWithBottomZ");
+			pJournalEntry->addDoubleParameter("UnitFactor", dUnitFactor);
+			pJournalEntry->addUInt32Parameter("BottomZ", nBottomZ);
+		}
+		if (pToolpathInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseToolpathInstance(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseToolpathInstance = pIModel->AddToolpathWithBottomZ(dUnitFactor, nBottomZ);
+
+		*pToolpathInstance = (IBase*)(pBaseToolpathInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("ToolpathInstance", *pToolpathInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_model_getmetadatagroup(Lib3MF_Model pModel, Lib3MF_MetaDataGroup * pTheMetaDataGroup)
 {
 	IBase* pIBaseClass = (IBase *)pModel;
@@ -19102,6 +19246,10 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_toolpath_getprofilecount;
 	if (sProcName == "lib3mf_toolpath_addlayer") 
 		*ppProcAddress = (void*) &lib3mf_toolpath_addlayer;
+	if (sProcName == "lib3mf_toolpath_getbottomz") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_getbottomz;
+	if (sProcName == "lib3mf_toolpath_setbottomz") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_setbottomz;
 	if (sProcName == "lib3mf_toolpath_getlayerattachment") 
 		*ppProcAddress = (void*) &lib3mf_toolpath_getlayerattachment;
 	if (sProcName == "lib3mf_toolpath_readlayerdata") 
@@ -19118,6 +19266,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_toolpath_getprofile;
 	if (sProcName == "lib3mf_toolpath_getprofileuuid") 
 		*ppProcAddress = (void*) &lib3mf_toolpath_getprofileuuid;
+	if (sProcName == "lib3mf_toolpath_getprofilebyuuid") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_getprofilebyuuid;
 	if (sProcName == "lib3mf_toolpath_getcustomdatacount") 
 		*ppProcAddress = (void*) &lib3mf_toolpath_getcustomdatacount;
 	if (sProcName == "lib3mf_toolpath_getcustomdata") 
@@ -19336,6 +19486,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_model_removebuilditem;
 	if (sProcName == "lib3mf_model_addtoolpath") 
 		*ppProcAddress = (void*) &lib3mf_model_addtoolpath;
+	if (sProcName == "lib3mf_model_addtoolpathwithbottomz") 
+		*ppProcAddress = (void*) &lib3mf_model_addtoolpathwithbottomz;
 	if (sProcName == "lib3mf_model_getmetadatagroup") 
 		*ppProcAddress = (void*) &lib3mf_model_getmetadatagroup;
 	if (sProcName == "lib3mf_model_addattachment") 

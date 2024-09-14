@@ -3449,12 +3449,24 @@ public:
 
 	/**
 	* IToolpath::AddLayer - Adds a new toolpath layer
-	* @param[in] nZMax - ZMax value
+	* @param[in] nZMax - ZMax value of the layer. MUST be larger than the last layer added, as well as larger as BottomZ.
 	* @param[in] sPath - Package Path
 	* @param[in] pModelWriter - The model writer that writes out the 3MF.
 	* @return Returns the layerdata object to write the layer content into.
 	*/
 	virtual IToolpathLayerData * AddLayer(const Lib3MF_uint32 nZMax, const std::string & sPath, IWriter* pModelWriter) = 0;
+
+	/**
+	* IToolpath::GetBottomZ - Returns the bottom Z Value of the toolpath.
+	* @return BottomZ value
+	*/
+	virtual Lib3MF_uint32 GetBottomZ() = 0;
+
+	/**
+	* IToolpath::SetBottomZ - Sets the bottom Z Value of the toolpath. Will fail if a layer is already existing.
+	* @param[in] nBottomZ - BottomZ value
+	*/
+	virtual void SetBottomZ(const Lib3MF_uint32 nBottomZ) = 0;
 
 	/**
 	* IToolpath::GetLayerAttachment - Retrieves the Attachment of a layer
@@ -3506,11 +3518,18 @@ public:
 	virtual IToolpathProfile * GetProfile(const Lib3MF_uint32 nProfileIndex) = 0;
 
 	/**
-	* IToolpath::GetProfileUUID - Returns a profile of the toolpath by UUID.
+	* IToolpath::GetProfileUUID - Returns a profile of the toolpath by UUID. DEPRECIATED! Please use GetProfileByUUID instead.
 	* @param[in] sProfileUUID - UUID string.
 	* @return Returns the profile.
 	*/
 	virtual IToolpathProfile * GetProfileUUID(const std::string & sProfileUUID) = 0;
+
+	/**
+	* IToolpath::GetProfileByUUID - Returns a profile of the toolpath by UUID. Fails if profile does not exist.
+	* @param[in] sProfileUUID - UUID string.
+	* @return Returns the profile.
+	*/
+	virtual IToolpathProfile * GetProfileByUUID(const std::string & sProfileUUID) = 0;
 
 	/**
 	* IToolpath::GetCustomDataCount - Retrieves the count of custom data elements.
@@ -4408,11 +4427,19 @@ public:
 	virtual void RemoveBuildItem(IBuildItem* pBuildItemInstance) = 0;
 
 	/**
-	* IModel::AddToolpath - adds an empty Toolpath resource to the model.
-	* @param[in] dUnitFactor - The toolpath instance of the created Toolpath.
+	* IModel::AddToolpath - adds an empty Toolpath resource to the model. Bottom Z will be 0 in this case.
+	* @param[in] dUnitFactor - A factor that transforms document units into toolpath units.
 	* @return The toolpath instance of the created Toolpath.
 	*/
 	virtual IToolpath * AddToolpath(const Lib3MF_double dUnitFactor) = 0;
+
+	/**
+	* IModel::AddToolpathWithBottomZ - adds an empty Toolpath resource to the model, with a non-standard Bottom Z value.
+	* @param[in] dUnitFactor - A factor that transforms document units into toolpath units.
+	* @param[in] nBottomZ - The bottom Z value to be used in the toolpath.
+	* @return The toolpath instance of the created Toolpath.
+	*/
+	virtual IToolpath * AddToolpathWithBottomZ(const Lib3MF_double dUnitFactor, const Lib3MF_uint32 nBottomZ) = 0;
 
 	/**
 	* IModel::GetMetaDataGroup - Returns the metadata of the model as MetaDataGroup

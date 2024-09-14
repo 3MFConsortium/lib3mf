@@ -173,6 +173,8 @@ public:
 
 	IToolpath* AddToolpath(const Lib3MF_double dUnitFactor) override;
 
+	IToolpath* AddToolpathWithBottomZ(const Lib3MF_double dUnitFactor, const Lib3MF_uint32 nBottomZ) override;
+
 	IMetaDataGroup * GetMetaDataGroup() override;
 
 	IAttachment * AddAttachment(const std::string & sURI, const std::string & sRelationShipType) override;

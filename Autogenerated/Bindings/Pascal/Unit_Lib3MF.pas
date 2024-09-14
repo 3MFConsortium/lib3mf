@@ -4078,13 +4078,31 @@ type
 	* Adds a new toolpath layer
 	*
 	* @param[in] pToolpath - Toolpath instance.
-	* @param[in] nZMax - ZMax value
+	* @param[in] nZMax - ZMax value of the layer. MUST be larger than the last layer added, as well as larger as BottomZ.
 	* @param[in] pPath - Package Path
 	* @param[in] pModelWriter - The model writer that writes out the 3MF.
 	* @param[out] pLayerData - Returns the layerdata object to write the layer content into.
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpath_AddLayerFunc = function(pToolpath: TLib3MFHandle; const nZMax: Cardinal; const pPath: PAnsiChar; const pModelWriter: TLib3MFHandle; out pLayerData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the bottom Z Value of the toolpath.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[out] pBottomZ - BottomZ value
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetBottomZFunc = function(pToolpath: TLib3MFHandle; out pBottomZ: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the bottom Z Value of the toolpath. Will fail if a layer is already existing.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] nBottomZ - BottomZ value
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_SetBottomZFunc = function(pToolpath: TLib3MFHandle; const nBottomZ: Cardinal): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves the Attachment of a layer
@@ -4159,7 +4177,7 @@ type
 	TLib3MFToolpath_GetProfileFunc = function(pToolpath: TLib3MFHandle; const nProfileIndex: Cardinal; out pProfile: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
-	* Returns a profile of the toolpath by UUID.
+	* Returns a profile of the toolpath by UUID. DEPRECIATED! Please use GetProfileByUUID instead.
 	*
 	* @param[in] pToolpath - Toolpath instance.
 	* @param[in] pProfileUUID - UUID string.
@@ -4167,6 +4185,16 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpath_GetProfileUUIDFunc = function(pToolpath: TLib3MFHandle; const pProfileUUID: PAnsiChar; out pProfile: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns a profile of the toolpath by UUID. Fails if profile does not exist.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] pProfileUUID - UUID string.
+	* @param[out] pProfile - Returns the profile.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetProfileByUUIDFunc = function(pToolpath: TLib3MFHandle; const pProfileUUID: PAnsiChar; out pProfile: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves the count of custom data elements.
@@ -5275,14 +5303,25 @@ type
 	TLib3MFModel_RemoveBuildItemFunc = function(pModel: TLib3MFHandle; const pBuildItemInstance: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
-	* adds an empty Toolpath resource to the model.
+	* adds an empty Toolpath resource to the model. Bottom Z will be 0 in this case.
 	*
 	* @param[in] pModel - Model instance.
-	* @param[in] dUnitFactor - The toolpath instance of the created Toolpath.
+	* @param[in] dUnitFactor - A factor that transforms document units into toolpath units.
 	* @param[out] pToolpathInstance - The toolpath instance of the created Toolpath.
 	* @return error code or 0 (success)
 	*)
 	TLib3MFModel_AddToolpathFunc = function(pModel: TLib3MFHandle; const dUnitFactor: Double; out pToolpathInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* adds an empty Toolpath resource to the model, with a non-standard Bottom Z value.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] dUnitFactor - A factor that transforms document units into toolpath units.
+	* @param[in] nBottomZ - The bottom Z value to be used in the toolpath.
+	* @param[out] pToolpathInstance - The toolpath instance of the created Toolpath.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_AddToolpathWithBottomZFunc = function(pModel: TLib3MFHandle; const dUnitFactor: Double; const nBottomZ: Cardinal; out pToolpathInstance: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Returns the metadata of the model as MetaDataGroup
@@ -6496,6 +6535,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetLayerCount(): Cardinal;
 		function GetProfileCount(): Cardinal;
 		function AddLayer(const AZMax: Cardinal; const APath: String; const AModelWriter: TLib3MFWriter): TLib3MFToolpathLayerData;
+		function GetBottomZ(): Cardinal;
+		procedure SetBottomZ(const ABottomZ: Cardinal);
 		function GetLayerAttachment(const AIndex: Cardinal): TLib3MFAttachment;
 		function ReadLayerData(const AIndex: Cardinal): TLib3MFToolpathLayerReader;
 		function GetLayerPath(const AIndex: Cardinal): String;
@@ -6504,6 +6545,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function AddProfile(const AName: String): TLib3MFToolpathProfile;
 		function GetProfile(const AProfileIndex: Cardinal): TLib3MFToolpathProfile;
 		function GetProfileUUID(const AProfileUUID: String): TLib3MFToolpathProfile;
+		function GetProfileByUUID(const AProfileUUID: String): TLib3MFToolpathProfile;
 		function GetCustomDataCount(): Cardinal;
 		function GetCustomData(const AIndex: Cardinal): TLib3MFCustomDOMTree;
 		procedure GetCustomDataName(const AIndex: Cardinal; out ANameSpace: String; out ADataName: String);
@@ -6712,6 +6754,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function AddBuildItem(const AObject: TLib3MFObject; const ATransform: TLib3MFTransform): TLib3MFBuildItem;
 		procedure RemoveBuildItem(const ABuildItemInstance: TLib3MFBuildItem);
 		function AddToolpath(const AUnitFactor: Double): TLib3MFToolpath;
+		function AddToolpathWithBottomZ(const AUnitFactor: Double; const ABottomZ: Cardinal): TLib3MFToolpath;
 		function GetMetaDataGroup(): TLib3MFMetaDataGroup;
 		function AddAttachment(const AURI: String; const ARelationShipType: String): TLib3MFAttachment;
 		procedure RemoveAttachment(const AAttachmentInstance: TLib3MFAttachment);
@@ -7080,6 +7123,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFToolpath_GetLayerCountFunc: TLib3MFToolpath_GetLayerCountFunc;
 		FLib3MFToolpath_GetProfileCountFunc: TLib3MFToolpath_GetProfileCountFunc;
 		FLib3MFToolpath_AddLayerFunc: TLib3MFToolpath_AddLayerFunc;
+		FLib3MFToolpath_GetBottomZFunc: TLib3MFToolpath_GetBottomZFunc;
+		FLib3MFToolpath_SetBottomZFunc: TLib3MFToolpath_SetBottomZFunc;
 		FLib3MFToolpath_GetLayerAttachmentFunc: TLib3MFToolpath_GetLayerAttachmentFunc;
 		FLib3MFToolpath_ReadLayerDataFunc: TLib3MFToolpath_ReadLayerDataFunc;
 		FLib3MFToolpath_GetLayerPathFunc: TLib3MFToolpath_GetLayerPathFunc;
@@ -7088,6 +7133,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFToolpath_AddProfileFunc: TLib3MFToolpath_AddProfileFunc;
 		FLib3MFToolpath_GetProfileFunc: TLib3MFToolpath_GetProfileFunc;
 		FLib3MFToolpath_GetProfileUUIDFunc: TLib3MFToolpath_GetProfileUUIDFunc;
+		FLib3MFToolpath_GetProfileByUUIDFunc: TLib3MFToolpath_GetProfileByUUIDFunc;
 		FLib3MFToolpath_GetCustomDataCountFunc: TLib3MFToolpath_GetCustomDataCountFunc;
 		FLib3MFToolpath_GetCustomDataFunc: TLib3MFToolpath_GetCustomDataFunc;
 		FLib3MFToolpath_GetCustomDataNameFunc: TLib3MFToolpath_GetCustomDataNameFunc;
@@ -7197,6 +7243,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_AddBuildItemFunc: TLib3MFModel_AddBuildItemFunc;
 		FLib3MFModel_RemoveBuildItemFunc: TLib3MFModel_RemoveBuildItemFunc;
 		FLib3MFModel_AddToolpathFunc: TLib3MFModel_AddToolpathFunc;
+		FLib3MFModel_AddToolpathWithBottomZFunc: TLib3MFModel_AddToolpathWithBottomZFunc;
 		FLib3MFModel_GetMetaDataGroupFunc: TLib3MFModel_GetMetaDataGroupFunc;
 		FLib3MFModel_AddAttachmentFunc: TLib3MFModel_AddAttachmentFunc;
 		FLib3MFModel_RemoveAttachmentFunc: TLib3MFModel_RemoveAttachmentFunc;
@@ -7585,6 +7632,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFToolpath_GetLayerCountFunc: TLib3MFToolpath_GetLayerCountFunc read FLib3MFToolpath_GetLayerCountFunc;
 		property Lib3MFToolpath_GetProfileCountFunc: TLib3MFToolpath_GetProfileCountFunc read FLib3MFToolpath_GetProfileCountFunc;
 		property Lib3MFToolpath_AddLayerFunc: TLib3MFToolpath_AddLayerFunc read FLib3MFToolpath_AddLayerFunc;
+		property Lib3MFToolpath_GetBottomZFunc: TLib3MFToolpath_GetBottomZFunc read FLib3MFToolpath_GetBottomZFunc;
+		property Lib3MFToolpath_SetBottomZFunc: TLib3MFToolpath_SetBottomZFunc read FLib3MFToolpath_SetBottomZFunc;
 		property Lib3MFToolpath_GetLayerAttachmentFunc: TLib3MFToolpath_GetLayerAttachmentFunc read FLib3MFToolpath_GetLayerAttachmentFunc;
 		property Lib3MFToolpath_ReadLayerDataFunc: TLib3MFToolpath_ReadLayerDataFunc read FLib3MFToolpath_ReadLayerDataFunc;
 		property Lib3MFToolpath_GetLayerPathFunc: TLib3MFToolpath_GetLayerPathFunc read FLib3MFToolpath_GetLayerPathFunc;
@@ -7593,6 +7642,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFToolpath_AddProfileFunc: TLib3MFToolpath_AddProfileFunc read FLib3MFToolpath_AddProfileFunc;
 		property Lib3MFToolpath_GetProfileFunc: TLib3MFToolpath_GetProfileFunc read FLib3MFToolpath_GetProfileFunc;
 		property Lib3MFToolpath_GetProfileUUIDFunc: TLib3MFToolpath_GetProfileUUIDFunc read FLib3MFToolpath_GetProfileUUIDFunc;
+		property Lib3MFToolpath_GetProfileByUUIDFunc: TLib3MFToolpath_GetProfileByUUIDFunc read FLib3MFToolpath_GetProfileByUUIDFunc;
 		property Lib3MFToolpath_GetCustomDataCountFunc: TLib3MFToolpath_GetCustomDataCountFunc read FLib3MFToolpath_GetCustomDataCountFunc;
 		property Lib3MFToolpath_GetCustomDataFunc: TLib3MFToolpath_GetCustomDataFunc read FLib3MFToolpath_GetCustomDataFunc;
 		property Lib3MFToolpath_GetCustomDataNameFunc: TLib3MFToolpath_GetCustomDataNameFunc read FLib3MFToolpath_GetCustomDataNameFunc;
@@ -7702,6 +7752,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_AddBuildItemFunc: TLib3MFModel_AddBuildItemFunc read FLib3MFModel_AddBuildItemFunc;
 		property Lib3MFModel_RemoveBuildItemFunc: TLib3MFModel_RemoveBuildItemFunc read FLib3MFModel_RemoveBuildItemFunc;
 		property Lib3MFModel_AddToolpathFunc: TLib3MFModel_AddToolpathFunc read FLib3MFModel_AddToolpathFunc;
+		property Lib3MFModel_AddToolpathWithBottomZFunc: TLib3MFModel_AddToolpathWithBottomZFunc read FLib3MFModel_AddToolpathWithBottomZFunc;
 		property Lib3MFModel_GetMetaDataGroupFunc: TLib3MFModel_GetMetaDataGroupFunc read FLib3MFModel_GetMetaDataGroupFunc;
 		property Lib3MFModel_AddAttachmentFunc: TLib3MFModel_AddAttachmentFunc read FLib3MFModel_AddAttachmentFunc;
 		property Lib3MFModel_RemoveAttachmentFunc: TLib3MFModel_RemoveAttachmentFunc read FLib3MFModel_RemoveAttachmentFunc;
@@ -12382,6 +12433,16 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathLayerData, TLib3MFToolpathLayerData>.Make(FWrapper, HLayerData);
 	end;
 
+	function TLib3MFToolpath.GetBottomZ(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetBottomZFunc(FHandle, Result));
+	end;
+
+	procedure TLib3MFToolpath.SetBottomZ(const ABottomZ: Cardinal);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_SetBottomZFunc(FHandle, ABottomZ));
+	end;
+
 	function TLib3MFToolpath.GetLayerAttachment(const AIndex: Cardinal): TLib3MFAttachment;
 	var
 		HAttachment: TLib3MFHandle;
@@ -12457,6 +12518,17 @@ implementation
 		Result := nil;
 		HProfile := nil;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetProfileUUIDFunc(FHandle, PAnsiChar(AProfileUUID), HProfile));
+		if Assigned(HProfile) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathProfile, TLib3MFToolpathProfile>.Make(FWrapper, HProfile);
+	end;
+
+	function TLib3MFToolpath.GetProfileByUUID(const AProfileUUID: String): TLib3MFToolpathProfile;
+	var
+		HProfile: TLib3MFHandle;
+	begin
+		Result := nil;
+		HProfile := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetProfileByUUIDFunc(FHandle, PAnsiChar(AProfileUUID), HProfile));
 		if Assigned(HProfile) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathProfile, TLib3MFToolpathProfile>.Make(FWrapper, HProfile);
 	end;
@@ -13776,6 +13848,17 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFToolpath, TLib3MFToolpath>.Make(FWrapper, HToolpathInstance);
 	end;
 
+	function TLib3MFModel.AddToolpathWithBottomZ(const AUnitFactor: Double; const ABottomZ: Cardinal): TLib3MFToolpath;
+	var
+		HToolpathInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HToolpathInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddToolpathWithBottomZFunc(FHandle, AUnitFactor, ABottomZ, HToolpathInstance));
+		if Assigned(HToolpathInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpath, TLib3MFToolpath>.Make(FWrapper, HToolpathInstance);
+	end;
+
 	function TLib3MFModel.GetMetaDataGroup(): TLib3MFMetaDataGroup;
 	var
 		HTheMetaDataGroup: TLib3MFHandle;
@@ -14311,6 +14394,8 @@ implementation
 		FLib3MFToolpath_GetLayerCountFunc := LoadFunction('lib3mf_toolpath_getlayercount');
 		FLib3MFToolpath_GetProfileCountFunc := LoadFunction('lib3mf_toolpath_getprofilecount');
 		FLib3MFToolpath_AddLayerFunc := LoadFunction('lib3mf_toolpath_addlayer');
+		FLib3MFToolpath_GetBottomZFunc := LoadFunction('lib3mf_toolpath_getbottomz');
+		FLib3MFToolpath_SetBottomZFunc := LoadFunction('lib3mf_toolpath_setbottomz');
 		FLib3MFToolpath_GetLayerAttachmentFunc := LoadFunction('lib3mf_toolpath_getlayerattachment');
 		FLib3MFToolpath_ReadLayerDataFunc := LoadFunction('lib3mf_toolpath_readlayerdata');
 		FLib3MFToolpath_GetLayerPathFunc := LoadFunction('lib3mf_toolpath_getlayerpath');
@@ -14319,6 +14404,7 @@ implementation
 		FLib3MFToolpath_AddProfileFunc := LoadFunction('lib3mf_toolpath_addprofile');
 		FLib3MFToolpath_GetProfileFunc := LoadFunction('lib3mf_toolpath_getprofile');
 		FLib3MFToolpath_GetProfileUUIDFunc := LoadFunction('lib3mf_toolpath_getprofileuuid');
+		FLib3MFToolpath_GetProfileByUUIDFunc := LoadFunction('lib3mf_toolpath_getprofilebyuuid');
 		FLib3MFToolpath_GetCustomDataCountFunc := LoadFunction('lib3mf_toolpath_getcustomdatacount');
 		FLib3MFToolpath_GetCustomDataFunc := LoadFunction('lib3mf_toolpath_getcustomdata');
 		FLib3MFToolpath_GetCustomDataNameFunc := LoadFunction('lib3mf_toolpath_getcustomdataname');
@@ -14428,6 +14514,7 @@ implementation
 		FLib3MFModel_AddBuildItemFunc := LoadFunction('lib3mf_model_addbuilditem');
 		FLib3MFModel_RemoveBuildItemFunc := LoadFunction('lib3mf_model_removebuilditem');
 		FLib3MFModel_AddToolpathFunc := LoadFunction('lib3mf_model_addtoolpath');
+		FLib3MFModel_AddToolpathWithBottomZFunc := LoadFunction('lib3mf_model_addtoolpathwithbottomz');
 		FLib3MFModel_GetMetaDataGroupFunc := LoadFunction('lib3mf_model_getmetadatagroup');
 		FLib3MFModel_AddAttachmentFunc := LoadFunction('lib3mf_model_addattachment');
 		FLib3MFModel_RemoveAttachmentFunc := LoadFunction('lib3mf_model_removeattachment');
@@ -15501,6 +15588,12 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_addlayer'), @FLib3MFToolpath_AddLayerFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getbottomz'), @FLib3MFToolpath_GetBottomZFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_setbottomz'), @FLib3MFToolpath_SetBottomZFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getlayerattachment'), @FLib3MFToolpath_GetLayerAttachmentFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -15523,6 +15616,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getprofileuuid'), @FLib3MFToolpath_GetProfileUUIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getprofilebyuuid'), @FLib3MFToolpath_GetProfileByUUIDFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getcustomdatacount'), @FLib3MFToolpath_GetCustomDataCountFunc);
@@ -15850,6 +15946,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addtoolpath'), @FLib3MFModel_AddToolpathFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addtoolpathwithbottomz'), @FLib3MFModel_AddToolpathWithBottomZFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getmetadatagroup'), @FLib3MFModel_GetMetaDataGroupFunc);

@@ -44,7 +44,7 @@ NMR_ModelReaderNode_Toolpath1905_ToolpathLayers.h covers the official 3MF Toolpa
 namespace NMR {
 
 	CModelReaderNode_Toolpath1905_ToolpathLayers::CModelReaderNode_Toolpath1905_ToolpathLayers (_In_ CModel * pModel, _In_ CModelToolpath * pToolpath, _In_ PModelWarnings pWarnings)
-		: CModelReaderNode(pWarnings), m_pToolpath (pToolpath), m_pModel(pModel)
+		: CModelReaderNode(pWarnings), m_pToolpath (pToolpath), m_pModel(pModel), m_nBottomZ (0), m_bHasBottomZ (false)
 	{
 		if (pToolpath == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -58,6 +58,8 @@ namespace NMR {
 		// Parse attribute
 		parseAttributes(pXMLReader);
 
+		m_pToolpath->setBottomZ(m_nBottomZ);
+
 		// Parse Content
 		parseContent(pXMLReader);
 		
@@ -66,6 +68,15 @@ namespace NMR {
 
 	void CModelReaderNode_Toolpath1905_ToolpathLayers::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TOOLPATHLAYER_ZBOTTOM) == 0) {
+			if (m_bHasBottomZ)
+				throw CNMRException(NMR_ERROR_DUPLICATEVALUE);
+
+			// Convert to integer and make a input and range check!
+			m_nBottomZ = fnStringToUint32(pAttributeValue);
+			m_bHasBottomZ = true;
+		}
+
 	}
 	
 	void CModelReaderNode_Toolpath1905_ToolpathLayers::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)

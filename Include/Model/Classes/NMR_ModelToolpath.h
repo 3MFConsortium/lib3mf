@@ -57,6 +57,9 @@ namespace NMR {
 
 	class CModelToolpath : public CModelResource {
 	private:
+		CUUID m_UUID;
+
+		nfUint32 m_nBottomZ;
 		double m_dUnitFactor;
 		std::vector<PModelToolpathLayer> m_Layers;
 		std::vector<PModelToolpathProfile> m_Profiles;
@@ -66,9 +69,12 @@ namespace NMR {
 
 	public:
 		CModelToolpath() = delete;
-		CModelToolpath(_In_ const ModelResourceID sID, _In_ CModel * pModel, double dUnitFactor);
+		CModelToolpath(_In_ const ModelResourceID sID, _In_ CModel * pModel, double dUnitFactor, CUUID uuid, nfUint32 nBottomZ);
 
-		static PModelToolpath make(_In_ const ModelResourceID sID, _In_ CModel * pModel, double dUnitFactor);
+		static PModelToolpath make(_In_ const ModelResourceID sID, _In_ CModel * pModel, double dUnitFactor, CUUID uuid, nfUint32 nBottomZ);
+
+		nfUint32 getBottomZ();
+		void setBottomZ(nfUint32 nBottomZ);
 
 		PModelToolpathLayer addLayer (const std::string & sPath, nfUint32 nMaxZ);
 		nfUint32 getLayerCount();
@@ -82,6 +88,7 @@ namespace NMR {
 		PModelToolpathProfile getProfileByUUID(std::string sUUID);
 
 		double getUnitFactor ();
+		CUUID getUUID ();
 
 		uint32_t getCustomXMLDataCount();
 		PCustomXMLTree getCustomXMLData(uint32_t nIndex);

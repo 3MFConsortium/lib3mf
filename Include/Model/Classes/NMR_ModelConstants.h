@@ -377,6 +377,7 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_TOOLPATHDATA "toolpathdata"
 
 #define XML_3MF_ATTRIBUTE_TOOLPATH_ID                 "id"
+#define XML_3MF_ATTRIBUTE_TOOLPATH_UUID               "uuid"
 #define XML_3MF_ATTRIBUTE_TOOLPATH_UNITFACTOR         "unitfactor"
 
 #define XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_UUID        "uuid"
@@ -386,6 +387,7 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERFOCUS  "laserfocus"
 #define XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERINDEX  "laserindex"
 #define XML_3MF_ATTRIBUTE_TOOLPATHLAYER_ZTOP "ztop"
+#define XML_3MF_ATTRIBUTE_TOOLPATHLAYER_ZBOTTOM "zbottom"
 #define XML_3MF_ATTRIBUTE_TOOLPATHLAYER_PATH "path"
 
 #define XML_3MF_TOOLPATHELEMENT_LAYER "layer"

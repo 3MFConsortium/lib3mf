@@ -1586,4 +1586,10 @@ Toolpath errors (0xBXXX)
 // Too many profile values
 #define NMR_ERROR_INVALIDPARAMETERINDEX 0xB009
 
+// Toolpath layers are not incrementing
+#define NMR_ERROR_TOOLPATHLAYERSARENOTINCREMENTING 0xB00A
+
+// Cannot set bottom Z if layers exist
+#define NMR_ERROR_CANNOTSETBOTTOMZIFLAYERSEXIST 0xB00B
+
 #endif // __NMR_ERRORCONST

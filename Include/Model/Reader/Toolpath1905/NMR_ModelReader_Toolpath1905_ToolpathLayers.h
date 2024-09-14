@@ -47,6 +47,9 @@ namespace NMR {
 		CModelToolpath * m_pToolpath;
 		PModelWarnings m_pWarnings;
 
+		nfUint32 m_nBottomZ;
+		bool m_bHasBottomZ;
+
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);

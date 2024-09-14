@@ -1815,10 +1815,18 @@
 		</method>
 
 		<method name="AddLayer" description = "Adds a new toolpath layer">
-			<param name="ZMax" type="uint32" pass="in" description="ZMax value" />
+			<param name="ZMax" type="uint32" pass="in" description="ZMax value of the layer. MUST be larger than the last layer added, as well as larger as BottomZ." />
 			<param name="Path" type="string" pass="in" description="Package Path" />
 			<param name="ModelWriter" type="handle" class="Writer" pass="in" description="The model writer that writes out the 3MF." />
 			<param name="LayerData" type="handle" class="ToolpathLayerData" pass="return" description="Returns the layerdata object to write the layer content into." />
+		</method>
+
+		<method name="GetBottomZ" description = "Returns the bottom Z Value of the toolpath.">
+			<param name="BottomZ" type="uint32" pass="return" description="BottomZ value" />
+		</method>
+
+		<method name="SetBottomZ" description = "Sets the bottom Z Value of the toolpath. Will fail if a layer is already existing.">
+			<param name="BottomZ" type="uint32" pass="in" description="BottomZ value" />
 		</method>
 
 		<method name="GetLayerAttachment" description = "Retrieves the Attachment of a layer">
@@ -1857,7 +1865,12 @@
 			<param name="Profile" type="handle" class="ToolpathProfile" pass="return" description="Returns the profile." />
 		</method>
 
-		<method name="GetProfileUUID" description="Returns a profile of the toolpath by UUID.">
+		<method name="GetProfileUUID" description="Returns a profile of the toolpath by UUID. DEPRECIATED! Please use GetProfileByUUID instead.">
+			<param name="ProfileUUID" type="string" pass="in" description="UUID string." />
+			<param name="Profile" type="handle" class="ToolpathProfile" pass="return" description="Returns the profile." />
+		</method>
+
+		<method name="GetProfileByUUID" description="Returns a profile of the toolpath by UUID. Fails if profile does not exist.">
 			<param name="ProfileUUID" type="string" pass="in" description="UUID string." />
 			<param name="Profile" type="handle" class="ToolpathProfile" pass="return" description="Returns the profile." />
 		</method>
@@ -2320,8 +2333,14 @@
 		<method name="RemoveBuildItem" description="removes a build item from the model">
 			<param name="BuildItemInstance" type="handle" class="BuildItem" pass="in" description="Build item to remove."/>
 		</method>
-		<method name="AddToolpath" description = "adds an empty Toolpath resource to the model.">
-			<param name="UnitFactor" type="double" pass="in" description="The toolpath instance of the created Toolpath." />
+		<method name="AddToolpath" description = "adds an empty Toolpath resource to the model. Bottom Z will be 0 in this case.">
+			<param name="UnitFactor" type="double" pass="in" description="A factor that transforms document units into toolpath units." />
+			<param name="ToolpathInstance" type="handle" class="Toolpath" pass="return" description="The toolpath instance of the created Toolpath." />
+		</method>
+
+		<method name="AddToolpathWithBottomZ" description = "adds an empty Toolpath resource to the model, with a non-standard Bottom Z value.">
+			<param name="UnitFactor" type="double" pass="in" description="A factor that transforms document units into toolpath units." />
+			<param name="BottomZ" type="uint32" pass="in" description="The bottom Z value to be used in the toolpath." />
 			<param name="ToolpathInstance" type="handle" class="Toolpath" pass="return" description="The toolpath instance of the created Toolpath." />
 		</method>
 		
