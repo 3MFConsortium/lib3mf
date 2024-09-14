@@ -1229,4 +1229,46 @@ namespace Lib3MF
         // Check that the nodes are sorted topologically
         EXPECT_TRUE(helper::isTopologiallySorted(function));
     }
+
+
+
+    TEST_F(Volumetric,
+           Volumetric_Merge_FunctionsFromSourceModelIntoTargetModel_FunctionCountIncreases)
+    {
+        auto const targetModel = wrapper->CreateModel();
+        auto const sourceModel = wrapper->CreateModel();
+
+        auto const gyroidFunction = helper::createGyroidFunction(*sourceModel);
+
+        auto const targetGyroidFunction =
+            helper::createGyroidFunction(*targetModel);
+
+        targetModel->MergeFromModel(sourceModel.get());
+
+        auto targetFunctionsIter = targetModel->GetFunctions();
+        EXPECT_EQ(targetFunctionsIter->Count(), 2u);
+    }
+
+
+ TEST_F(Volumetric,
+           Volumetric_Merge_FunctionsFromLoadedModelIntoTargetModel_FunctionCountIncreases)
+    {
+        // load the source model
+        auto const sourceModel = wrapper->CreateModel();
+        auto const reader = sourceModel->QueryReader("3mf");
+        reader->ReadFromFile(InFolder + "SphereInACage.3mf");
+
+        auto sourcetModelFunctionCount = sourceModel->GetFunctions()->Count();
+
+        auto const targetModel = wrapper->CreateModel();
+
+        auto const targetGyroidFunction =
+            helper::createGyroidFunction(*targetModel);
+
+        targetModel->MergeFromModel(sourceModel.get());
+
+        auto targetFunctionsIter = targetModel->GetFunctions();
+        EXPECT_EQ(targetFunctionsIter->Count(), sourcetModelFunctionCount + 1);
+    }
+
 }  // namespace Lib3MF

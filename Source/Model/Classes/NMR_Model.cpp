@@ -1103,7 +1103,7 @@ namespace NMR {
 						auto const newIdIter = oldToNewMapping.find(oldId->getUniqueID());
 						if (newIdIter == oldToNewMapping.cend())
 						{
-							throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+							throw CNMRException(NMR_ERROR_RESOURCENOTFOUND, "Resource ID " + std::to_string(oldId->getUniqueID()) + " not found in mapping");
 						}
 
 						auto const newId = findPackageResourceID(newIdIter->second);

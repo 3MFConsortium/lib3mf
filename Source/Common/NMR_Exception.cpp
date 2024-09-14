@@ -36,15 +36,9 @@ Each exception is identified via a global ErrorCode
 #include <cmath>
 
 namespace NMR {
-
-	CNMRException::CNMRException(_In_ nfError errorcode) : std::exception()
+	std::string errorCodeToMessage(nfError errorcode)
 	{
-		m_errorcode = errorcode;
-	}
-
-	const char * CNMRException::what() const throw ()
-	{
-		switch (m_errorcode) {
+		switch (errorcode) {
 		// Success / user interaction (0x0XXX)
 		case NMR_USERABORTED: return "The called function was aborted by the user";
 		// General error codes (0x1XXX)
@@ -554,6 +548,23 @@ namespace NMR {
 		default:
 			return "unknown error";
 		}
+	}
+
+	CNMRException::CNMRException(_In_ nfError errorcode) : std::exception()
+	{
+		m_message = errorCodeToMessage(errorcode);
+	}
+
+	CNMRException::CNMRException(nfError errorcode,
+									const std::string& message): m_errorcode(errorcode), m_message(message)
+	{
+		m_message = errorCodeToMessage(errorcode) + ": " + message;
+	}
+
+	const char* CNMRException::what() const throw()
+	{ 
+		return m_message.c_str();
+		
 	}
 
 	nfError CNMRException::getErrorCode() const
