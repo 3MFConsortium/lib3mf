@@ -550,7 +550,7 @@ namespace NMR {
 		}
 	}
 
-	CNMRException::CNMRException(_In_ nfError errorcode) : std::exception()
+	CNMRException::CNMRException(_In_ nfError errorcode) : m_errorcode(errorcode), std::exception()
 	{
 		m_message = errorCodeToMessage(errorcode);
 	}

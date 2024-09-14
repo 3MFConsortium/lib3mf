@@ -1090,30 +1090,6 @@ namespace NMR {
 				pNewImplicitFunction->setPackageResourceID(newPkgId);
 				pNewImplicitFunction->setModel(this);
 
-				for (auto & node : *pNewImplicitFunction->getNodes())
-				{
-					if (node->getNodeType() == Lib3MF::eImplicitNodeType::ConstResourceID)
-					{
-						auto const oldId = pSourceModel->findPackageResourceID(pSourceModel->currentPath(), node->getModelResourceID());
-						if (!oldId)
-						{
-							throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
-						}
-
-						auto const newIdIter = oldToNewMapping.find(oldId->getUniqueID());
-						if (newIdIter == oldToNewMapping.cend())
-						{
-							throw CNMRException(NMR_ERROR_RESOURCENOTFOUND, "Resource ID " + std::to_string(oldId->getUniqueID()) + " not found in mapping");
-						}
-
-						auto const newId = findPackageResourceID(newIdIter->second);
-						if (!newId)
-						{
-							throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
-						}
-						node->setModelResourceID(newId->getModelResourceID());
-					}
-				}
 				addResource(pNewImplicitFunction);
 				oldToNewMapping[pOldImplicitFunction->getPackageResourceID()->getUniqueID()] = pNewImplicitFunction->getPackageResourceID()->getUniqueID();
 			}
@@ -1122,6 +1098,38 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 			}		 
 		  }
+
+		// loop over all functions and update the references in ConstResourceID nodes
+		for (nIndex = 0; nIndex < nCount; nIndex++)
+		{
+			CModelImplicitFunction * pImplicitFunction = getImplicitFunction(nIndex);
+
+			for (auto & node : *pImplicitFunction->getNodes())
+			{
+				if (node->getNodeType() == Lib3MF::eImplicitNodeType::ConstResourceID)
+				{
+					auto const oldId = pSourceModel->findPackageResourceID(pSourceModel->currentPath(), node->getModelResourceID());
+					if (!oldId)
+					{
+						throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+					}
+
+					auto const newIdIter = oldToNewMapping.find(oldId->getUniqueID());
+					if (newIdIter == oldToNewMapping.cend())
+					{
+						throw CNMRException(NMR_ERROR_RESOURCENOTFOUND, "Resource ID " + std::to_string(oldId->getUniqueID()) + " not found in mapping");
+					}
+
+					auto const newId = findPackageResourceID(newIdIter->second);
+					if (!newId)
+					{
+						throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+					}
+					node->setModelResourceID(newId->getModelResourceID());
+				}
+			}
+		}
+
 	}
 
 	nfUint32 CModel::createHandle()
