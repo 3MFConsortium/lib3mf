@@ -150,6 +150,9 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_ERROR_EMPTYNAMESPACE 4007 /** Empty namespace. */
 #define LIB3MF_ERROR_INVALIDNAMESPACEPREFIX 4008 /** Invalid namespace prefix. */
 #define LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES 4009 /** Writer does not support namespaces. */
+#define LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOORDINATE 4010 /** Invalid hatch coordinate. */
+#define LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE 4011 /** Invalid point coordinate. */
+#define LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOUNT 4012 /** Invalid hatch count */
 
 /*************************************************************************************************************************
  Error strings for Lib3MF
@@ -215,6 +218,9 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
     case LIB3MF_ERROR_EMPTYNAMESPACE: return "Empty namespace.";
     case LIB3MF_ERROR_INVALIDNAMESPACEPREFIX: return "Invalid namespace prefix.";
     case LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES: return "Writer does not support namespaces.";
+    case LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOORDINATE: return "Invalid hatch coordinate.";
+    case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE: return "Invalid point coordinate.";
+    case LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOUNT: return "Invalid hatch count";
     default: return "unknown error";
   }
 }
@@ -457,6 +463,20 @@ namespace Lib3MF {
       Lib3MF_single m_Coordinates[2];
   } sPosition2D;
   
+  typedef struct sDiscretePosition2D {
+      Lib3MF_int32 m_Coordinates[2];
+  } sDiscretePosition2D;
+  
+  typedef struct sHatch2D {
+      Lib3MF_single m_Point1Coordinates[2];
+      Lib3MF_single m_Point2Coordinates[2];
+  } sHatch2D;
+  
+  typedef struct sDiscreteHatch2D {
+      Lib3MF_int32 m_Point1Coordinates[2];
+      Lib3MF_int32 m_Point2Coordinates[2];
+  } sDiscreteHatch2D;
+  
   typedef struct sCompositeConstituent {
       Lib3MF_uint32 m_PropertyID;
       Lib3MF_double m_MixingRatio;
@@ -607,6 +627,9 @@ typedef Lib3MF::sTriangle sLib3MFTriangle;
 typedef Lib3MF::sTriangleProperties sLib3MFTriangleProperties;
 typedef Lib3MF::sPosition sLib3MFPosition;
 typedef Lib3MF::sPosition2D sLib3MFPosition2D;
+typedef Lib3MF::sDiscretePosition2D sLib3MFDiscretePosition2D;
+typedef Lib3MF::sHatch2D sLib3MFHatch2D;
+typedef Lib3MF::sDiscreteHatch2D sLib3MFDiscreteHatch2D;
 typedef Lib3MF::sCompositeConstituent sLib3MFCompositeConstituent;
 typedef Lib3MF::sMultiPropertyLayer sLib3MFMultiPropertyLayer;
 typedef Lib3MF::sTex2Coord sLib3MFTex2Coord;

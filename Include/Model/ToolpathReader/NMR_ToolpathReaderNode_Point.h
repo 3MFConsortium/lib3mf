@@ -39,8 +39,8 @@ namespace NMR {
 	class CToolpathReaderNode_Point : public CModelReaderNode {
 	protected:
 
-		nfDouble m_dX;
-		nfDouble m_dY;
+		nfInt32 m_nX;
+		nfInt32 m_nY;
 
 		nfBool m_bHasX;
 		nfBool m_bHasY;
@@ -56,8 +56,8 @@ namespace NMR {
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
-		nfDouble getX();
-		nfDouble getY();
+		nfInt32 getX();
+		nfInt32 getY();
 
 	};
 

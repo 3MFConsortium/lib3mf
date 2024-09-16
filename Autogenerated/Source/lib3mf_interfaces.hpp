@@ -3228,13 +3228,22 @@ public:
 	virtual std::string GetPartUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID) = 0;
 
 	/**
-	* IToolpathLayerReader::GetSegmentPointData - Retrieves the assigned segment point list. For type hatch, the points are taken pairwise.
+	* IToolpathLayerReader::GetSegmentPointDataInModelUnits - Retrieves the assigned segment point list. For type hatch, the points are taken pairwise.
 	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
 	* @param[in] nPointDataBufferSize - Number of elements in buffer
 	* @param[out] pPointDataNeededCount - will be filled with the count of the written structs, or needed buffer size.
-	* @param[out] pPointDataBuffer - Position2D buffer of The point data array
+	* @param[out] pPointDataBuffer - Position2D buffer of The point data array. The point coordinates are in model units.
 	*/
-	virtual void GetSegmentPointData(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer) = 0;
+	virtual void GetSegmentPointDataInModelUnits(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentPointDataDiscrete - Retrieves the assigned segment point list in units. For type hatch, the points are taken pairwise.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[in] nPointDataBufferSize - Number of elements in buffer
+	* @param[out] pPointDataNeededCount - will be filled with the count of the written structs, or needed buffer size.
+	* @param[out] pPointDataBuffer - DiscretePosition2D buffer of The point data array. The point coordinates are in toolpath units.
+	*/
+	virtual void GetSegmentPointDataDiscrete(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sDiscretePosition2D * pPointDataBuffer) = 0;
 
 	/**
 	* IToolpathLayerReader::FindAttributeInfoByName - Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
@@ -3370,31 +3379,78 @@ public:
 	virtual void ClearSegmentAttributes() = 0;
 
 	/**
-	* IToolpathLayerData::WriteHatchData - writes hatch data to the layer.
-	* @param[in] nProfileID - The toolpath profile to use
-	* @param[in] nPartID - The toolpath part to use
-	* @param[in] nPointDataBufferSize - Number of elements in buffer
-	* @param[in] pPointDataBuffer - The point data
+	* IToolpathLayerData::AddCustomLineAttributes - Stores custom line attributes for the next WriteLoop, WritePolyline or WriteHatchData call.
+	* @param[in] sNameSpace - The namespace of the attribute to register.
+	* @param[in] sAttributeName - The name of the attribute to register.
+	* @param[in] nValuesBufferSize - Number of elements in buffer
+	* @param[in] pValuesBuffer - Custom Values to store on segment lines. Array MUST NOT be empty. If custom attributes had been already defined, the error cardinality MUST match, or an error will be thrown.
 	*/
-	virtual void WriteHatchData(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer) = 0;
+	virtual void AddCustomLineAttributes(const std::string & sNameSpace, const std::string & sAttributeName, const Lib3MF_uint64 nValuesBufferSize, const Lib3MF_int32 * pValuesBuffer) = 0;
 
 	/**
-	* IToolpathLayerData::WriteLoop - writes loop data to the layer.
-	* @param[in] nProfileID - The toolpath profile to use
-	* @param[in] nPartID - The toolpath part to use
-	* @param[in] nPointDataBufferSize - Number of elements in buffer
-	* @param[in] pPointDataBuffer - The point data
+	* IToolpathLayerData::ClearCustomLineAttributes - Clears all custom line attributes. Any call to WriteLoop, WritePolyline or WriteHatchData will do this implicitely.
 	*/
-	virtual void WriteLoop(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer) = 0;
+	virtual void ClearCustomLineAttributes() = 0;
 
 	/**
-	* IToolpathLayerData::WritePolyline - writes polyline data to the layer.
+	* IToolpathLayerData::WriteHatchDataInModelUnits - writes hatch data to the layer in model units.
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
-	* @param[in] nPointDataBufferSize - Number of elements in buffer
-	* @param[in] pPointDataBuffer - The point data
+	* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of hatches in the hatchdata array. In any case, stored custom attributes will be cleared after the call.
+	* @param[in] nHatchDataBufferSize - Number of elements in buffer
+	* @param[in] pHatchDataBuffer - The hatch data in model units. Array MUST NOT be empty.
 	*/
-	virtual void WritePolyline(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer) = 0;
+	virtual void WriteHatchDataInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const bool bWriteCustomLineAttributes, const Lib3MF_uint64 nHatchDataBufferSize, const Lib3MF::sHatch2D * pHatchDataBuffer) = 0;
+
+	/**
+	* IToolpathLayerData::WriteHatchDataDiscrete - writes hatch data to the layer in toolpath units.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of hatches in the hatchdata array. In any case, stored custom attributes will be cleared after the call.
+	* @param[in] nHatchDataBufferSize - Number of elements in buffer
+	* @param[in] pHatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty.
+	*/
+	virtual void WriteHatchDataDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const bool bWriteCustomLineAttributes, const Lib3MF_uint64 nHatchDataBufferSize, const Lib3MF::sDiscreteHatch2D * pHatchDataBuffer) = 0;
+
+	/**
+	* IToolpathLayerData::WriteLoopInModelUnits - writes loop data to the layer in model units.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of points in the pointdata array. In any case, stored custom attributes will be cleared after the call.
+	* @param[in] nPointDataBufferSize - Number of elements in buffer
+	* @param[in] pPointDataBuffer - The point data in model units. Array MUST NOT be empty.
+	*/
+	virtual void WriteLoopInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const bool bWriteCustomLineAttributes, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer) = 0;
+
+	/**
+	* IToolpathLayerData::WriteLoopDiscrete - writes loop data to the layer in toolpath units.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of points in the pointdata array. In any case, stored custom attributes will be cleared after the call.
+	* @param[in] nPointDataBufferSize - Number of elements in buffer
+	* @param[in] pPointDataBuffer - The point data in toolpath units. Array MUST NOT be empty.
+	*/
+	virtual void WriteLoopDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const bool bWriteCustomLineAttributes, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D * pPointDataBuffer) = 0;
+
+	/**
+	* IToolpathLayerData::WritePolylineInModelUnits - writes polyline data to the layer.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of points in the pointdata array. In any case, stored custom attributes will be cleared after the call.
+	* @param[in] nPointDataBufferSize - Number of elements in buffer
+	* @param[in] pPointDataBuffer - The point data in model units. Array MUST NOT be empty.
+	*/
+	virtual void WritePolylineInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const bool bWriteCustomLineAttributes, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer) = 0;
+
+	/**
+	* IToolpathLayerData::WritePolylineDiscrete - writes polyline data to the layer.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of points in the pointdata array. In any case, stored custom attributes will be cleared after the call.
+	* @param[in] nPointDataBufferSize - Number of elements in buffer
+	* @param[in] pPointDataBuffer - The point data in toolpath units. Array MUST NOT be empty.
+	*/
+	virtual void WritePolylineDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const bool bWriteCustomLineAttributes, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D * pPointDataBuffer) = 0;
 
 	/**
 	* IToolpathLayerData::AddCustomData - Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
@@ -3430,7 +3486,19 @@ public:
 	}
 
 	/**
-	* IToolpath::GetUnits - Retrieves the unit factor
+	* IToolpath::GetUUID - Retrieves the UUID of the toolpath
+	* @return UUID Value.
+	*/
+	virtual std::string GetUUID() = 0;
+
+	/**
+	* IToolpath::ResetUUID - Generates a new unique identifier for this toolpath and sets its value.
+	* @return Newly created UUID Value.
+	*/
+	virtual std::string ResetUUID() = 0;
+
+	/**
+	* IToolpath::GetUnits - Retrieves the unit factor, i.e. how many model units are one toolpath unit.
 	* @return Returns the unit factor.
 	*/
 	virtual Lib3MF_double GetUnits() = 0;
@@ -3449,7 +3517,7 @@ public:
 
 	/**
 	* IToolpath::AddLayer - Adds a new toolpath layer
-	* @param[in] nZMax - ZMax value of the layer. MUST be larger than the last layer added, as well as larger as BottomZ.
+	* @param[in] nZMax - ZMax value of the layer in toolpath units. MUST be larger than the last layer added, as well as larger as BottomZ.
 	* @param[in] sPath - Package Path
 	* @param[in] pModelWriter - The model writer that writes out the 3MF.
 	* @return Returns the layerdata object to write the layer content into.
@@ -3458,18 +3526,18 @@ public:
 
 	/**
 	* IToolpath::GetBottomZ - Returns the bottom Z Value of the toolpath.
-	* @return BottomZ value
+	* @return BottomZ value in Toolpath units
 	*/
 	virtual Lib3MF_uint32 GetBottomZ() = 0;
 
 	/**
 	* IToolpath::SetBottomZ - Sets the bottom Z Value of the toolpath. Will fail if a layer is already existing.
-	* @param[in] nBottomZ - BottomZ value
+	* @param[in] nBottomZ - BottomZ value in Toolpath units
 	*/
 	virtual void SetBottomZ(const Lib3MF_uint32 nBottomZ) = 0;
 
 	/**
-	* IToolpath::GetLayerAttachment - Retrieves the Attachment of a layer
+	* IToolpath::GetLayerAttachment - Retrieves the Attachment that contains the layer data.
 	* @param[in] nIndex - Layer Index
 	* @return Attachment
 	*/
@@ -3492,16 +3560,29 @@ public:
 	/**
 	* IToolpath::GetLayerZMax - Retrieves the ZMax of a layer
 	* @param[in] nIndex - Layer Index
-	* @return ZMax value
+	* @return ZMax value in toolpath units
 	*/
 	virtual Lib3MF_uint32 GetLayerZMax(const Lib3MF_uint32 nIndex) = 0;
 
 	/**
-	* IToolpath::GetLayerZ - Return the z value of a layer in units.
-	* @param[in] nLayerIndex - Layer Index.
-	* @return Z Value in Units.
+	* IToolpath::GetLayerZMin - Retrieves the Minimum Z of a layer
+	* @param[in] nIndex - Layer Index
+	* @return ZMin value in toolpath units
 	*/
-	virtual Lib3MF_uint32 GetLayerZ(const Lib3MF_uint32 nLayerIndex) = 0;
+	virtual Lib3MF_uint32 GetLayerZMin(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpath::GetLayerThickness - Retrieves the Thickness of a layer
+	* @param[in] nIndex - Layer Index
+	* @return Thickness value in toolpath units
+	*/
+	virtual Lib3MF_uint32 GetLayerThickness(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpath::HasUniformThickness - Checks if the toolpath has a uniform thickness value, i.e. each layer has the same thickness.
+	* @return Returns true if the layer thicknesses are uniform, returns false otherwise.
+	*/
+	virtual bool HasUniformThickness() = 0;
 
 	/**
 	* IToolpath::AddProfile - Adds a new profile to the toolpath.
@@ -3590,18 +3671,18 @@ public:
 	virtual bool DeleteCustomData(ICustomDOMTree* pData) = 0;
 
 	/**
-	* IToolpath::RegisterCustomIntegerAttribute - Registers an Integer Attribute that each segment holds.
+	* IToolpath::RegisterCustomIntegerSegmentAttribute - Registers an Integer Attribute that each segment holds.
 	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
 	* @param[in] sAttributeName - Attribute name. MUST not be empty.
 	*/
-	virtual void RegisterCustomIntegerAttribute(const std::string & sNameSpace, const std::string & sAttributeName) = 0;
+	virtual void RegisterCustomIntegerSegmentAttribute(const std::string & sNameSpace, const std::string & sAttributeName) = 0;
 
 	/**
-	* IToolpath::RegisterCustomDoubleAttribute - Registers a Double Attribute that each segment holds. Registering only applies to reader or writer objects created after the call.
+	* IToolpath::RegisterCustomDoubleSegmentAttribute - Registers a Double Attribute that each segment holds. Registering only applies to reader or writer objects created after the call.
 	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
 	* @param[in] sAttributeName - Attribute name. MUST not be empty.
 	*/
-	virtual void RegisterCustomDoubleAttribute(const std::string & sNameSpace, const std::string & sAttributeName) = 0;
+	virtual void RegisterCustomDoubleSegmentAttribute(const std::string & sNameSpace, const std::string & sAttributeName) = 0;
 
 };
 

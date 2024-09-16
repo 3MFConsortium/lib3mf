@@ -94,7 +94,7 @@ namespace NMR {
 
 		int64_t* allocAttributeBuffer(uint32_t nEntryCount);
 
-		CPagedVector<NVEC2> m_Points;
+		CPagedVector<NVEC2I> m_Points;
 		TOOLPATHREADSEGMENT * m_pCurrentSegment;
 
 		std::map<uint32_t, std::string> m_UUIDMap;
@@ -111,11 +111,11 @@ namespace NMR {
 
 		void beginSegment(eModelToolpathSegmentType eType, nfUint32 nProfileID, nfUint32 nPartID);
 		void endSegment();
-		void addPoint (nfFloat fX, nfFloat fY);
+		void addDiscretePoint (nfInt32 nX, nfInt32 nY);
 
 		nfUint32 getSegmentCount();
 		void getSegmentInfo (nfUint32 nSegmentIndex, eModelToolpathSegmentType & eType, nfUint32 & nProfileID, nfUint32 & nPartID, nfUint32 & nPointCount);
-		NVEC2 getSegmentPoint (nfUint32 nSegmentIndex, nfUint32 nPointIndex);
+		NVEC2I getSegmentPoint (nfUint32 nSegmentIndex, nfUint32 nPointIndex);
 
 		void registerUUID (nfUint32 nID, std::string sUUID);
 		std::string mapIDtoUUID(nfUint32 nID);
@@ -132,7 +132,7 @@ namespace NMR {
 		double getSegmentDoubleAttribute(nfUint32 nSegmentIndex, uint32_t nAttributeID);
 		std::pair<uint32_t, eModelToolpathSegmentAttributeType> findAttribute(const std::string& sNameSpace, const std::string& sAttributeName, bool bMustExist);
 
-
+		double getUnits();
 
 	};
 

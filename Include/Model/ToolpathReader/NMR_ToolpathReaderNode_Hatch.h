@@ -38,10 +38,10 @@ namespace NMR {
 	class CToolpathReaderNode_Hatch : public CModelReaderNode {
 	protected:
 
-		nfDouble m_dX1;
-		nfDouble m_dY1;
-		nfDouble m_dX2;
-		nfDouble m_dY2;
+		nfInt32 m_nX1;
+		nfInt32 m_nY1;
+		nfInt32 m_nX2;
+		nfInt32 m_nY2;
 
 		nfBool m_bHasX1;
 		nfBool m_bHasY1;
@@ -60,10 +60,10 @@ namespace NMR {
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
-		nfDouble getX1();
-		nfDouble getY1();
-		nfDouble getX2();
-		nfDouble getY2();
+		nfInt32 getX1();
+		nfInt32 getY1();
+		nfInt32 getX2();
+		nfInt32 getY2();
 	};
 
 	typedef std::shared_ptr <CToolpathReaderNode_Hatch> PToolpathReaderNode_Hatch;

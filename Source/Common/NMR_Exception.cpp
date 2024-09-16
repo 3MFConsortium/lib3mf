@@ -557,6 +557,7 @@ namespace NMR {
 		case NMR_ERROR_INVALIDPARAMETERINDEX: return "Invalid parameter index";
 		case NMR_ERROR_TOOLPATHLAYERSARENOTINCREMENTING: return "Toolpath layers are not incrementing";
 		case NMR_ERROR_CANNOTSETBOTTOMZIFLAYERSEXIST: return "Cannot set bottom Z if layers exist";
+		case NMR_ERROR_LAYERHASNOTPOSITIVETHICKNESS: return "Layer has not positive thickness";
 
 		default:
 			return "unknown error";

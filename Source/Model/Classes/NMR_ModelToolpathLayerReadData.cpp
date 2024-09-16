@@ -97,14 +97,14 @@ namespace NMR {
 		m_pCurrentSegment = nullptr;
 	}
 
-	void CModelToolpathLayerReadData::addPoint(nfFloat fX, nfFloat fY)
+	void CModelToolpathLayerReadData::addDiscretePoint(nfInt32 nX, nfInt32 nY)
 	{
 		if (m_pCurrentSegment == nullptr)
 			throw CNMRException(NMR_ERROR_LAYERSEGMENTNOTOPEN);
 
-		NVEC2 * pVec = m_Points.allocData();
-		pVec->m_values.x = fX;
-		pVec->m_values.y = fY;
+		NVEC2I * pVec = m_Points.allocData();
+		pVec->m_values.x = nX;
+		pVec->m_values.y = nY;
 	}
 
 	nfUint32 CModelToolpathLayerReadData::getSegmentCount()
@@ -122,7 +122,7 @@ namespace NMR {
 		nPointCount = pSegment->m_nPointCount;
 	}
 
-	NVEC2 CModelToolpathLayerReadData::getSegmentPoint(nfUint32 nSegmentIndex, nfUint32 nPointIndex)
+	NVEC2I CModelToolpathLayerReadData::getSegmentPoint(nfUint32 nSegmentIndex, nfUint32 nPointIndex)
 	{
 		TOOLPATHREADSEGMENT * pSegment = m_Segments.getData(nSegmentIndex);
 		__NMRASSERT(pSegment != nullptr);
@@ -313,5 +313,9 @@ namespace NMR {
 		return std::make_pair (0, eModelToolpathSegmentAttributeType::Unknown);
 	}
 
+	double CModelToolpathLayerReadData::getUnits()
+	{
+		return m_pModelToolpath->getUnitFactor();
+	}
 
 }

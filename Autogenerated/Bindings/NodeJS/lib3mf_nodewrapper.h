@@ -1090,7 +1090,8 @@ private:
 	static void GetSegmentPartUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentLocalPartID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetPartUUIDByLocalPartID(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetSegmentPointData(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentPointDataInModelUnits(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentPointDataDiscrete(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void FindAttributeInfoByName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void FindAttributeIDByName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void FindAttributeValueByName(const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -1123,9 +1124,14 @@ private:
 	static void RegisterBuildItem(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetSegmentAttribute(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void ClearSegmentAttributes(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void WriteHatchData(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void WriteLoop(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void WritePolyline(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddCustomLineAttributes(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void ClearCustomLineAttributes(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void WriteHatchDataInModelUnits(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void WriteHatchDataDiscrete(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void WriteLoopInModelUnits(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void WriteLoopDiscrete(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void WritePolylineInModelUnits(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void WritePolylineDiscrete(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void Finish(const v8::FunctionCallbackInfo<v8::Value>& args);
 
@@ -1145,6 +1151,8 @@ class CLib3MFToolpath : public CLib3MFBaseClass {
 private:
 	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static v8::Persistent<v8::Function> constructor;
+	static void GetUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void ResetUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetUnits(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetLayerCount(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetProfileCount(const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -1155,7 +1163,9 @@ private:
 	static void ReadLayerData(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetLayerPath(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetLayerZMax(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetLayerZ(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetLayerZMin(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetLayerThickness(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void HasUniformThickness(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddProfile(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetProfile(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetProfileUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -1168,8 +1178,8 @@ private:
 	static void AddCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void ClearCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void DeleteCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void RegisterCustomIntegerAttribute(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void RegisterCustomDoubleAttribute(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void RegisterCustomIntegerSegmentAttribute(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void RegisterCustomDoubleSegmentAttribute(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFToolpath();

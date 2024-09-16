@@ -97,11 +97,17 @@
 		<error name="TOOLPATH_INVALIDPOINTCOUNT" code="4003" description="Toolpath has an invalid number of points" />
 		<error name="TOOLPATH_ATTRIBUTEALREADYDEFINED" code="4004" description="Toolpath attribute already defined" />
 		<error name="TOOLPATH_INVALIDATTRIBUTETYPE" code="4005" description="Toolpath attribute is of invalid type" />
+
 		
 		<error name="EMPTYNAMESPACEPREFIX" code="4006" description="Empty namespace prefix."/>
 		<error name="EMPTYNAMESPACE" code="4007" description="Empty namespace."/>		
 		<error name="INVALIDNAMESPACEPREFIX" code="4008" description="Invalid namespace prefix."/>
 		<error name="WRITERDOESNOTSUPPORTNAMESPACES" code="4009" description="Writer does not support namespaces."/>
+
+		<error name="TOOLPATH_INVALIDHATCHCOORDINATE" code="4010" description="Invalid hatch coordinate."/>
+		<error name="TOOLPATH_INVALIDPOINTCOORDINATE" code="4011" description="Invalid point coordinate."/>
+		<error name="TOOLPATH_INVALIDHATCHCOUNT" code="4012" description="Invalid hatch count" />
+		
 		
 		
 	</errors>
@@ -248,6 +254,20 @@
 
 	<struct name="Position2D">
 		<member name="Coordinates" type="single" rows="2"/>
+	</struct>
+
+	<struct name="DiscretePosition2D">
+		<member name="Coordinates" type="int32" rows="2"/>
+	</struct>
+
+	<struct name="Hatch2D">
+		<member name="Point1Coordinates" type="single" rows="2"/>
+		<member name="Point2Coordinates" type="single" rows="2"/>
+	</struct>
+
+	<struct name="DiscreteHatch2D">
+		<member name="Point1Coordinates" type="int32" rows="2"/>
+		<member name="Point2Coordinates" type="int32" rows="2"/>
 	</struct>
 
 	<struct name="CompositeConstituent">
@@ -1675,9 +1695,14 @@
 		<param name="PartUUID" type="string" pass="return" description="Segment Part UUID" />
 	</method>
 
-	<method name="GetSegmentPointData" description="Retrieves the assigned segment point list. For type hatch, the points are taken pairwise.">
+	<method name="GetSegmentPointDataInModelUnits" description="Retrieves the assigned segment point list. For type hatch, the points are taken pairwise.">
 		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
-	    <param name="PointData" type="structarray" class="Position2D" pass="out" description="The point data array" />
+	    <param name="PointData" type="structarray" class="Position2D" pass="out" description="The point data array. The point coordinates are in model units." />
+	</method>
+
+	<method name="GetSegmentPointDataDiscrete" description="Retrieves the assigned segment point list in units. For type hatch, the points are taken pairwise.">
+		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
+	    <param name="PointData" type="structarray" class="DiscretePosition2D" pass="out" description="The point data array. The point coordinates are in toolpath units." />
 	</method>
 
 	<method name="FindAttributeInfoByName" description="Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.">
@@ -1770,22 +1795,55 @@
     <method name="ClearSegmentAttributes" description="Clears current segment attributes.">
     </method>
 
-    <method name="WriteHatchData" description="writes hatch data to the layer.">
-      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
-      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
-      <param name="PointData" type="structarray" class="Position2D" pass="in" description="The point data" />      
+    <method name="AddCustomLineAttributes" description="Stores custom line attributes for the next WriteLoop, WritePolyline or WriteHatchData call.">
+      <param name="NameSpace" type="string" pass="in" description="The namespace of the attribute to register." />
+      <param name="AttributeName" type="string" pass="in" description="The name of the attribute to register." />
+      <param name="Values" type="basicarray" class="int32" pass="in" description="Custom Values to store on segment lines. Array MUST NOT be empty. If custom attributes had been already defined, the error cardinality MUST match, or an error will be thrown." />
     </method>
 
-    <method name="WriteLoop" description="writes loop data to the layer.">
-      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
-      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
-      <param name="PointData" type="structarray" class="Position2D" pass="in" description="The point data" />
+    <method name="ClearCustomLineAttributes" description="Clears all custom line attributes. Any call to WriteLoop, WritePolyline or WriteHatchData will do this implicitely.">
     </method>
 
-    <method name="WritePolyline" description="writes polyline data to the layer.">
+    <method name="WriteHatchDataInModelUnits" description="writes hatch data to the layer in model units.">
       <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
       <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
-      <param name="PointData" type="structarray" class="Position2D" pass="in" description="The point data" />
+      <param name="WriteCustomLineAttributes" type="bool" pass="in" description="If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of hatches in the hatchdata array. In any case, stored custom attributes will be cleared after the call." />
+      <param name="HatchData" type="structarray" class="Hatch2D" pass="in" description="The hatch data in model units. Array MUST NOT be empty." />      
+    </method>
+
+    <method name="WriteHatchDataDiscrete" description="writes hatch data to the layer in toolpath units.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="WriteCustomLineAttributes" type="bool" pass="in" description="If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of hatches in the hatchdata array. In any case, stored custom attributes will be cleared after the call." />
+      <param name="HatchData" type="structarray" class="DiscreteHatch2D" pass="in" description="The hatch data in toolpath units. Array MUST NOT be empty." />      
+    </method>
+
+    <method name="WriteLoopInModelUnits" description="writes loop data to the layer in model units.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="WriteCustomLineAttributes" type="bool" pass="in" description="If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of points in the pointdata array. In any case, stored custom attributes will be cleared after the call." />
+      <param name="PointData" type="structarray" class="Position2D" pass="in" description="The point data in model units. Array MUST NOT be empty." />
+    </method>
+
+    <method name="WriteLoopDiscrete" description="writes loop data to the layer in toolpath units.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="WriteCustomLineAttributes" type="bool" pass="in" description="If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of points in the pointdata array. In any case, stored custom attributes will be cleared after the call." />
+      <param name="PointData" type="structarray" class="DiscretePosition2D" pass="in" description="The point data in toolpath units. Array MUST NOT be empty." />
+    </method>
+
+    <method name="WritePolylineInModelUnits" description="writes polyline data to the layer.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="WriteCustomLineAttributes" type="bool" pass="in" description="If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of points in the pointdata array. In any case, stored custom attributes will be cleared after the call." />
+      <param name="PointData" type="structarray" class="Position2D" pass="in" description="The point data in model units. Array MUST NOT be empty." />
+    </method>	
+
+    <method name="WritePolylineDiscrete" description="writes polyline data to the layer.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="WriteCustomLineAttributes" type="bool" pass="in" description="If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of points in the pointdata array. In any case, stored custom attributes will be cleared after the call." />
+      <param name="PointData" type="structarray" class="DiscretePosition2D" pass="in" description="The point data in toolpath units. Array MUST NOT be empty." />
     </method>	
 
 	<method name="AddCustomData" description="Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.">
@@ -1802,7 +1860,15 @@
 
   <class name="Toolpath" parent="Resource">
 
-		<method name="GetUnits" description="Retrieves the unit factor">
+		<method name="GetUUID" description="Retrieves the UUID of the toolpath">
+			<param name="UUID" type="string" pass="return" description="UUID Value." />
+		</method>
+
+		<method name="ResetUUID" description="Generates a new unique identifier for this toolpath and sets its value.">
+			<param name="NewUUID" type="string" pass="return" description="Newly created UUID Value." />
+		</method>
+
+		<method name="GetUnits" description="Retrieves the unit factor, i.e. how many model units are one toolpath unit.">
 			<param name="Units" type="double" pass="return" description="Returns the unit factor." />
 		</method>
 
@@ -1815,21 +1881,21 @@
 		</method>
 
 		<method name="AddLayer" description = "Adds a new toolpath layer">
-			<param name="ZMax" type="uint32" pass="in" description="ZMax value of the layer. MUST be larger than the last layer added, as well as larger as BottomZ." />
+			<param name="ZMax" type="uint32" pass="in" description="ZMax value of the layer in toolpath units. MUST be larger than the last layer added, as well as larger as BottomZ." />
 			<param name="Path" type="string" pass="in" description="Package Path" />
 			<param name="ModelWriter" type="handle" class="Writer" pass="in" description="The model writer that writes out the 3MF." />
 			<param name="LayerData" type="handle" class="ToolpathLayerData" pass="return" description="Returns the layerdata object to write the layer content into." />
 		</method>
 
 		<method name="GetBottomZ" description = "Returns the bottom Z Value of the toolpath.">
-			<param name="BottomZ" type="uint32" pass="return" description="BottomZ value" />
+			<param name="BottomZ" type="uint32" pass="return" description="BottomZ value in Toolpath units" />
 		</method>
 
 		<method name="SetBottomZ" description = "Sets the bottom Z Value of the toolpath. Will fail if a layer is already existing.">
-			<param name="BottomZ" type="uint32" pass="in" description="BottomZ value" />
+			<param name="BottomZ" type="uint32" pass="in" description="BottomZ value in Toolpath units" />
 		</method>
 
-		<method name="GetLayerAttachment" description = "Retrieves the Attachment of a layer">
+		<method name="GetLayerAttachment" description = "Retrieves the Attachment that contains the layer data.">
 		  <param name="Index" type="uint32" pass="in" description="Layer Index" />
 		  <param name="Attachment" type="class" class="Attachment" pass="return" description="Attachment" />
 		</method>
@@ -1847,14 +1913,23 @@
 
 		<method name="GetLayerZMax" description = "Retrieves the ZMax of a layer">
 		  <param name="Index" type="uint32" pass="in" description="Layer Index" />
-		  <param name="ZMax" type="uint32" pass="return" description="ZMax value" />
+		  <param name="ZMax" type="uint32" pass="return" description="ZMax value in toolpath units" />
 		</method>
 
-		<method name="GetLayerZ" description = "Return the z value of a layer in units.">
-			<param name="LayerIndex" type="uint32" pass="in" description="Layer Index." />
-			<param name="ZValue" type="uint32" pass="return" description="Z Value in Units." />
+		<method name="GetLayerZMin" description = "Retrieves the Minimum Z of a layer">
+		  <param name="Index" type="uint32" pass="in" description="Layer Index" />
+		  <param name="ZMin" type="uint32" pass="return" description="ZMin value in toolpath units" />
+		</method>
+		
+		<method name="GetLayerThickness" description="Retrieves the Thickness of a layer">
+		  <param name="Index" type="uint32" pass="in" description="Layer Index" />
+		  <param name="ZThickness" type="uint32" pass="return" description="Thickness value in toolpath units" />
 		</method>
 
+		<method name="HasUniformThickness" description="Checks if the toolpath has a uniform thickness value, i.e. each layer has the same thickness.">
+			<param name="UniformThickness" type="bool" pass="return" description="Returns true if the layer thicknesses are uniform, returns false otherwise." />
+		</method>
+		
 		<method name="AddProfile" description="Adds a new profile to the toolpath.">
 			<param name="Name" type="string" pass="in" description="the name." />
 			<param name="Profile" type="handle" class="ToolpathProfile" pass="return" description="Returns the profile." />
@@ -1917,12 +1992,12 @@
 			<param name="Success" type="bool" pass="return" description="Returns if deletion was successful." />
 		</method>
 
-		<method name="RegisterCustomIntegerAttribute" description="Registers an Integer Attribute that each segment holds.">
+		<method name="RegisterCustomIntegerSegmentAttribute" description="Registers an Integer Attribute that each segment holds.">
 			<param name="NameSpace" type="string" pass="in" description="Namespace of the custom data tree. MUST not be empty." />
 			<param name="AttributeName" type="string" pass="in" description="Attribute name. MUST not be empty." />
 		</method>
 		
-		<method name="RegisterCustomDoubleAttribute" description="Registers a Double Attribute that each segment holds. Registering only applies to reader or writer objects created after the call.">
+		<method name="RegisterCustomDoubleSegmentAttribute" description="Registers a Double Attribute that each segment holds. Registering only applies to reader or writer objects created after the call.">
 			<param name="NameSpace" type="string" pass="in" description="Namespace of the custom data tree. MUST not be empty." />
 			<param name="AttributeName" type="string" pass="in" description="Attribute name. MUST not be empty." />
 		</method>

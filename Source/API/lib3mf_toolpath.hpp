@@ -62,6 +62,9 @@ protected:
 public:
 	CToolpath(NMR::PModelToolpath pToolpath);
 
+	std::string GetUUID() override;
+
+	std::string ResetUUID() override;
 
 	Lib3MF_double GetUnits() override;
 
@@ -83,7 +86,11 @@ public:
 
 	Lib3MF_uint32 GetLayerZMax(const Lib3MF_uint32 nIndex) override;
 
-	Lib3MF_uint32 GetLayerZ(const Lib3MF_uint32 nLayerIndex) override;
+	Lib3MF_uint32 GetLayerZMin(const Lib3MF_uint32 nIndex) override;
+
+	Lib3MF_uint32 GetLayerThickness(const Lib3MF_uint32 nIndex) override;
+
+	bool HasUniformThickness() override;
 
 	IToolpathProfile * AddProfile(const std::string & sName) override;
 
@@ -109,9 +116,9 @@ public:
 
 	bool DeleteCustomData(ICustomDOMTree* pData) override;
 
-	void RegisterCustomIntegerAttribute(const std::string& sNameSpace, const std::string& sAttributeName) override;
+	void RegisterCustomIntegerSegmentAttribute(const std::string& sNameSpace, const std::string& sAttributeName) override;
 
-	void RegisterCustomDoubleAttribute(const std::string& sNameSpace, const std::string& sAttributeName) override;
+	void RegisterCustomDoubleSegmentAttribute(const std::string& sNameSpace, const std::string& sAttributeName) override;
 
 
 };

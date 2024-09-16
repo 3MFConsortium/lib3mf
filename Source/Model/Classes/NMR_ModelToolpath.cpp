@@ -104,6 +104,13 @@ namespace NMR {
 		return m_UUID;
 	}
 
+	void CModelToolpath::resetUUID()
+	{
+		CUUID newUUID;
+		m_UUID = newUUID;
+	}
+
+
 
 	PModelToolpathProfile CModelToolpath::addProfile(const std::string & sName)
 	{

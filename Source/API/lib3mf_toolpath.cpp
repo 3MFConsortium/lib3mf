@@ -58,6 +58,17 @@ CToolpath::CToolpath(NMR::PModelToolpath pToolpath)
 
 }
 
+std::string CToolpath::GetUUID()
+{
+	return m_pToolpath->getUUID().toString ();
+}
+
+std::string CToolpath::ResetUUID()
+{
+	m_pToolpath->resetUUID();
+	return GetUUID();
+}
+
 
 Lib3MF_double CToolpath::GetUnits()
 {
@@ -74,11 +85,6 @@ Lib3MF_uint32 CToolpath::GetProfileCount()
 	return m_pToolpath->getProfileCount();
 }
 
-Lib3MF_uint32 CToolpath::GetLayerZ(const Lib3MF_uint32 nLayerIndex)
-{
-	auto pLayer = m_pToolpath->getLayer(nLayerIndex);
-	return pLayer->getMaxZ();
-}
 
 Lib3MF_uint32 CToolpath::GetBottomZ()
 {
@@ -167,6 +173,41 @@ Lib3MF_uint32 CToolpath::GetLayerZMax(const Lib3MF_uint32 nIndex)
 {
 	auto pLayer = m_pToolpath->getLayer(nIndex);
 	return pLayer->getMaxZ();
+}
+
+Lib3MF_uint32 CToolpath::GetLayerZMin(const Lib3MF_uint32 nIndex)
+{
+	if (nIndex > 0) {
+		auto pLayer = m_pToolpath->getLayer(nIndex - 1);
+		return pLayer->getMaxZ();
+	}
+	else
+		return m_pToolpath->getBottomZ();
+}
+
+Lib3MF_uint32 CToolpath::GetLayerThickness(const Lib3MF_uint32 nIndex)
+{
+	uint32_t nZMax = GetLayerZMax(nIndex);
+	uint32_t nZMin = GetLayerZMin(nIndex);
+
+	if (nZMin >= nZMax)
+		throw NMR::CNMRException(NMR_ERROR_LAYERHASNOTPOSITIVETHICKNESS);
+
+	return (uint32_t)(nZMax - nZMin);
+}
+
+bool CToolpath::HasUniformThickness()
+{
+	uint32_t nLayerCount = m_pToolpath->getLayerCount();
+	if (nLayerCount == 0)
+		return false;
+
+	uint32_t nLayerThickness = GetLayerThickness(0);
+	for (uint32_t nLayerIndex = 1; nLayerIndex < nLayerCount; nLayerIndex++)
+		if (nLayerThickness != GetLayerThickness(nLayerIndex))
+			return false;
+
+	return true;
 }
 
 
@@ -278,7 +319,7 @@ bool CToolpath::DeleteCustomData(ICustomDOMTree* pData)
 	return m_pToolpath->deleteCustomXMLData (pDataInstance->getXMLTreeInstance ().get ());
 }
 
-void CToolpath::RegisterCustomIntegerAttribute(const std::string& sNameSpace, const std::string& sAttributeName)
+void CToolpath::RegisterCustomIntegerSegmentAttribute(const std::string& sNameSpace, const std::string& sAttributeName)
 {
 	auto key = std::make_pair(sNameSpace, sAttributeName);
 	auto iIter = m_RegisteredAttributes.find (key);
@@ -289,7 +330,7 @@ void CToolpath::RegisterCustomIntegerAttribute(const std::string& sNameSpace, co
 	m_RegisteredAttributes.insert(std::make_pair (key, NMR::eModelToolpathSegmentAttributeType::SegmentAttributeInt64));
 }
 
-void CToolpath::RegisterCustomDoubleAttribute(const std::string& sNameSpace, const std::string& sAttributeName)
+void CToolpath::RegisterCustomDoubleSegmentAttribute(const std::string& sNameSpace, const std::string& sAttributeName)
 {
 	auto key = std::make_pair(sNameSpace, sAttributeName);
 	auto iIter = m_RegisteredAttributes.find(key);
@@ -299,4 +340,5 @@ void CToolpath::RegisterCustomDoubleAttribute(const std::string& sNameSpace, con
 
 	m_RegisteredAttributes.insert(std::make_pair(key, NMR::eModelToolpathSegmentAttributeType::SegmentAttributeDouble));
 }
+
 

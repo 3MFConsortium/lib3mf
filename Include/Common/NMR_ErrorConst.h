@@ -1592,4 +1592,7 @@ Toolpath errors (0xBXXX)
 // Cannot set bottom Z if layers exist
 #define NMR_ERROR_CANNOTSETBOTTOMZIFLAYERSEXIST 0xB00B
 
+// Layer has not positive thickness
+#define NMR_ERROR_LAYERHASNOTPOSITIVETHICKNESS 0XB00C
+
 #endif // __NMR_ERRORCONST

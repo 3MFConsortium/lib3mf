@@ -89,6 +89,7 @@ namespace NMR {
 
 		double getUnitFactor ();
 		CUUID getUUID ();
+		void resetUUID();
 
 		uint32_t getCustomXMLDataCount();
 		PCustomXMLTree getCustomXMLData(uint32_t nIndex);

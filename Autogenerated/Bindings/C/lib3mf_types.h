@@ -151,6 +151,9 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_ERROR_EMPTYNAMESPACE 4007 /** Empty namespace. */
 #define LIB3MF_ERROR_INVALIDNAMESPACEPREFIX 4008 /** Invalid namespace prefix. */
 #define LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES 4009 /** Writer does not support namespaces. */
+#define LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOORDINATE 4010 /** Invalid hatch coordinate. */
+#define LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE 4011 /** Invalid point coordinate. */
+#define LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOUNT 4012 /** Invalid hatch count */
 
 /*************************************************************************************************************************
  Error strings for Lib3MF
@@ -216,6 +219,9 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
     case LIB3MF_ERROR_EMPTYNAMESPACE: return "Empty namespace.";
     case LIB3MF_ERROR_INVALIDNAMESPACEPREFIX: return "Invalid namespace prefix.";
     case LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES: return "Writer does not support namespaces.";
+    case LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOORDINATE: return "Invalid hatch coordinate.";
+    case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE: return "Invalid point coordinate.";
+    case LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOUNT: return "Invalid hatch count";
     default: return "unknown error";
   }
 }
@@ -564,6 +570,20 @@ typedef struct sLib3MFPosition {
 typedef struct sLib3MFPosition2D {
     Lib3MF_single m_Coordinates[2];
 } sLib3MFPosition2D;
+
+typedef struct sLib3MFDiscretePosition2D {
+    Lib3MF_int32 m_Coordinates[2];
+} sLib3MFDiscretePosition2D;
+
+typedef struct sLib3MFHatch2D {
+    Lib3MF_single m_Point1Coordinates[2];
+    Lib3MF_single m_Point2Coordinates[2];
+} sLib3MFHatch2D;
+
+typedef struct sLib3MFDiscreteHatch2D {
+    Lib3MF_int32 m_Point1Coordinates[2];
+    Lib3MF_int32 m_Point2Coordinates[2];
+} sLib3MFDiscreteHatch2D;
 
 typedef struct sLib3MFCompositeConstituent {
     Lib3MF_uint32 m_PropertyID;

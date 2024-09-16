@@ -158,8 +158,8 @@ namespace NMR {
 				PToolpathReaderNode_Hatch pXMLNode = std::make_shared<CToolpathReaderNode_Hatch>(m_pWarnings, m_pProgressMonitor, m_pReadData);
 				pXMLNode->parseXML(pXMLReader);
 
-				m_pReadData->addPoint((nfFloat)pXMLNode->getX1(), (nfFloat)pXMLNode->getY1());
-				m_pReadData->addPoint((nfFloat)pXMLNode->getX2(), (nfFloat)pXMLNode->getY2());
+				m_pReadData->addDiscretePoint(pXMLNode->getX1(), pXMLNode->getY1());
+				m_pReadData->addDiscretePoint(pXMLNode->getX2(), pXMLNode->getY2());
 
 			}
 			else if (strcmp(pChildName, XML_3MF_TOOLPATHELEMENT_POINT) == 0) {
@@ -170,7 +170,7 @@ namespace NMR {
 				PToolpathReaderNode_Point pXMLNode = std::make_shared<CToolpathReaderNode_Point>(m_pWarnings, m_pProgressMonitor, m_pReadData);
 				pXMLNode->parseXML(pXMLReader);
 
-				m_pReadData->addPoint((nfFloat)pXMLNode->getX(), (nfFloat)pXMLNode->getY());
+				m_pReadData->addDiscretePoint(pXMLNode->getX(), pXMLNode->getY());
 
 			}
 			else

@@ -44,10 +44,10 @@ namespace NMR {
 	CToolpathReaderNode_Hatch::CToolpathReaderNode_Hatch(_In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, CModelToolpathLayerReadData * pReadData)
 		: CModelReaderNode(pWarnings, pProgressMonitor), 
 			m_pReadData (pReadData),
-			m_dX1 (0.0),
-			m_dY1(0.0),
-			m_dX2(0.0),
-			m_dY2(0.0),
+			m_nX1 (0),
+			m_nY1(0),
+			m_nX2(0),
+			m_nY2(0),
 			m_bHasX1 (false),
 			m_bHasY1 (false),
 			m_bHasX2 (false),
@@ -81,41 +81,26 @@ namespace NMR {
 		if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_X1) == 0) {
 			if (m_bHasX1)
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
-			m_dX1 = strtod(pAttributeValue, nullptr);
-			if (std::isnan(m_dX1))
-				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
-			if (fabs(m_dX1) > XML_3MF_MAXIMUMCOORDINATEVALUE)
-				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
+
+			m_nX1 = fnStringToInt32(pAttributeValue);
 			m_bHasX1 = true;
 		}
 		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_Y1) == 0) {
 			if (m_bHasY1)
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
-			m_dY1 = strtod(pAttributeValue, nullptr);
-			if (std::isnan(m_dY1))
-				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
-			if (fabs(m_dY1) > XML_3MF_MAXIMUMCOORDINATEVALUE)
-				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
+			m_nY1 = fnStringToInt32(pAttributeValue);
 			m_bHasY1 = true;
 		}
 		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_X2) == 0) {
 			if (m_bHasX2)
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
-			m_dX2 = strtod(pAttributeValue, nullptr);
-			if (std::isnan(m_dX2))
-				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
-			if (fabs(m_dX2) > XML_3MF_MAXIMUMCOORDINATEVALUE)
-				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
+			m_nX2 = fnStringToInt32(pAttributeValue);
 			m_bHasX2 = true;
 		}
 		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_Y2) == 0) {
 			if (m_bHasY2)
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
-			m_dY2 = strtod(pAttributeValue, nullptr);
-			if (std::isnan(m_dY2))
-				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
-			if (fabs(m_dY2) > XML_3MF_MAXIMUMCOORDINATEVALUE)
-				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
+			m_nY2 = fnStringToInt32(pAttributeValue);
 			m_bHasY2 = true;
 		}
 		else
@@ -132,32 +117,32 @@ namespace NMR {
 	{
 	}
 
-	nfDouble CToolpathReaderNode_Hatch::getX1()
+	nfInt32 CToolpathReaderNode_Hatch::getX1()
 	{
 		if (!m_bHasX1)
 			throw CNMRException(NMR_ERROR_MISSINGCOORDINATE);
-		return m_dX1;
+		return m_nX1;
 	}
 
-	nfDouble CToolpathReaderNode_Hatch::getY1()
+	nfInt32 CToolpathReaderNode_Hatch::getY1()
 	{
 		if (!m_bHasY1)
 			throw CNMRException(NMR_ERROR_MISSINGCOORDINATE);
-		return m_dY1;
+		return m_nY1;
 	}
 
-	nfDouble CToolpathReaderNode_Hatch::getX2()
+	nfInt32 CToolpathReaderNode_Hatch::getX2()
 	{
 		if (!m_bHasX2)
 			throw CNMRException(NMR_ERROR_MISSINGCOORDINATE);
-		return m_dX2;
+		return m_nX2;
 	}
 
-	nfDouble CToolpathReaderNode_Hatch::getY2()
+	nfInt32 CToolpathReaderNode_Hatch::getY2()
 	{
 		if (!m_bHasY2)
 			throw CNMRException(NMR_ERROR_MISSINGCOORDINATE);
-		return m_dY2;
+		return m_nY2;
 	}
 
 

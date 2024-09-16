@@ -84,7 +84,9 @@ public:
 
 	std::string GetPartUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID) override;
 	
-	void GetSegmentPointData(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer) override;
+	void GetSegmentPointDataInModelUnits(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer) override;
+
+	void GetSegmentPointDataDiscrete(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sDiscretePosition2D* pPointDataBuffer) override;
 
 	Lib3MF_uint32 GetCustomDataCount() override;
 

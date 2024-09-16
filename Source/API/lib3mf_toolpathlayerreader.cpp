@@ -126,7 +126,39 @@ std::string CToolpathLayerReader::GetPartUUIDByLocalPartID(const Lib3MF_uint32 n
 }
 
 
-void CToolpathLayerReader::GetSegmentPointData(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D* pPointDataBuffer)
+void CToolpathLayerReader::GetSegmentPointDataInModelUnits(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D* pPointDataBuffer)
+{
+	NMR::eModelToolpathSegmentType eNMRType;
+	uint32_t nProfileID;
+	uint32_t nPartID;
+	uint32_t nPointCount;
+	m_pReadData->getSegmentInfo(nIndex, eNMRType, nProfileID, nPartID, nPointCount);
+
+	double dUnits = m_pReadData->getUnits();
+
+	if (pPointDataNeededCount != nullptr) {
+		*pPointDataNeededCount = nPointCount;
+	}
+
+	if (pPointDataBuffer != nullptr) {
+		if (nPointDataBufferSize < nPointCount)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_BUFFERTOOSMALL);
+
+		if (nPointCount > 0) {
+
+			uint32_t nPointIndex;
+			Lib3MF::sPosition2D* pPoint = pPointDataBuffer;
+			for (nPointIndex = 0; nPointIndex < nPointCount; nPointIndex++) {
+				NMR::NVEC2I position = m_pReadData->getSegmentPoint(nIndex, nPointIndex);
+				pPoint->m_Coordinates[0] = (float) (position.m_values.x * dUnits);
+				pPoint->m_Coordinates[1] = (float) (position.m_values.y * dUnits);
+				pPoint++;
+			}
+		}
+	}
+}
+
+void CToolpathLayerReader::GetSegmentPointDataDiscrete(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sDiscretePosition2D* pPointDataBuffer)
 {
 	NMR::eModelToolpathSegmentType eNMRType;
 	uint32_t nProfileID;
@@ -145,9 +177,9 @@ void CToolpathLayerReader::GetSegmentPointData(const Lib3MF_uint32 nIndex, Lib3M
 		if (nPointCount > 0) {
 
 			uint32_t nPointIndex;
-			Lib3MF::sPosition2D* pPoint = pPointDataBuffer;
+			Lib3MF::sDiscretePosition2D* pPoint = pPointDataBuffer;
 			for (nPointIndex = 0; nPointIndex < nPointCount; nPointIndex++) {
-				NMR::NVEC2 position = m_pReadData->getSegmentPoint(nIndex, nPointIndex);
+				NMR::NVEC2I position = m_pReadData->getSegmentPoint(nIndex, nPointIndex);
 				pPoint->m_Coordinates[0] = position.m_values.x;
 				pPoint->m_Coordinates[1] = position.m_values.y;
 				pPoint++;
@@ -155,6 +187,7 @@ void CToolpathLayerReader::GetSegmentPointData(const Lib3MF_uint32 nIndex, Lib3M
 		}
 	}
 }
+
 
 Lib3MF_uint32 CToolpathLayerReader::GetCustomDataCount()
 {

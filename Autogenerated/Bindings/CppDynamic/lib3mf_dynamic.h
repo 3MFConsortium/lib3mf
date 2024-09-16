@@ -3350,10 +3350,22 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDPtr) (
 * @param[in] nIndex - Index. Must be between 0 and Count - 1.
 * @param[in] nPointDataBufferSize - Number of elements in buffer
 * @param[out] pPointDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
-* @param[out] pPointDataBuffer - Position2D  buffer of The point data array
+* @param[out] pPointDataBuffer - Position2D  buffer of The point data array. The point coordinates are in model units.
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentPointDataPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer);
+typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer);
+
+/**
+* Retrieves the assigned segment point list in units. For type hatch, the points are taken pairwise.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[out] pPointDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
+* @param[out] pPointDataBuffer - DiscretePosition2D  buffer of The point data array. The point coordinates are in toolpath units.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentPointDataDiscretePtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sDiscretePosition2D * pPointDataBuffer);
 
 /**
 * Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
@@ -3524,28 +3536,76 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerData_SetSegmentAttributePtr) (Lib3MF_
 typedef Lib3MFResult (*PLib3MFToolpathLayerData_ClearSegmentAttributesPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData);
 
 /**
-* writes hatch data to the layer.
+* Stores custom line attributes for the next WriteLoop, WritePolyline or WriteHatchData call.
 *
 * @param[in] pToolpathLayerData - ToolpathLayerData instance.
-* @param[in] nProfileID - The toolpath profile to use
-* @param[in] nPartID - The toolpath part to use
-* @param[in] nPointDataBufferSize - Number of elements in buffer
-* @param[in] pPointDataBuffer - Position2D buffer of The point data
+* @param[in] pNameSpace - The namespace of the attribute to register.
+* @param[in] pAttributeName - The name of the attribute to register.
+* @param[in] nValuesBufferSize - Number of elements in buffer
+* @param[in] pValuesBuffer - int32 buffer of Custom Values to store on segment lines. Array MUST NOT be empty. If custom attributes had been already defined, the error cardinality MUST match, or an error will be thrown.
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteHatchDataPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer);
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_AddCustomLineAttributesPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint64 nValuesBufferSize, const Lib3MF_int32 * pValuesBuffer);
 
 /**
-* writes loop data to the layer.
+* Clears all custom line attributes. Any call to WriteLoop, WritePolyline or WriteHatchData will do this implicitely.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_ClearCustomLineAttributesPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData);
+
+/**
+* writes hatch data to the layer in model units.
 *
 * @param[in] pToolpathLayerData - ToolpathLayerData instance.
 * @param[in] nProfileID - The toolpath profile to use
 * @param[in] nPartID - The toolpath part to use
-* @param[in] nPointDataBufferSize - Number of elements in buffer
-* @param[in] pPointDataBuffer - Position2D buffer of The point data
+* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of hatches in the hatchdata array. In any case, stored custom attributes will be cleared after the call.
+* @param[in] nHatchDataBufferSize - Number of elements in buffer
+* @param[in] pHatchDataBuffer - Hatch2D buffer of The hatch data in model units. Array MUST NOT be empty.
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteLoopPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer);
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteHatchDataInModelUnitsPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, bool bWriteCustomLineAttributes, Lib3MF_uint64 nHatchDataBufferSize, const Lib3MF::sHatch2D * pHatchDataBuffer);
+
+/**
+* writes hatch data to the layer in toolpath units.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use
+* @param[in] nPartID - The toolpath part to use
+* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of hatches in the hatchdata array. In any case, stored custom attributes will be cleared after the call.
+* @param[in] nHatchDataBufferSize - Number of elements in buffer
+* @param[in] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data in toolpath units. Array MUST NOT be empty.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteHatchDataDiscretePtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, bool bWriteCustomLineAttributes, Lib3MF_uint64 nHatchDataBufferSize, const Lib3MF::sDiscreteHatch2D * pHatchDataBuffer);
+
+/**
+* writes loop data to the layer in model units.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use
+* @param[in] nPartID - The toolpath part to use
+* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of points in the pointdata array. In any case, stored custom attributes will be cleared after the call.
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - Position2D buffer of The point data in model units. Array MUST NOT be empty.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteLoopInModelUnitsPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, bool bWriteCustomLineAttributes, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer);
+
+/**
+* writes loop data to the layer in toolpath units.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use
+* @param[in] nPartID - The toolpath part to use
+* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of points in the pointdata array. In any case, stored custom attributes will be cleared after the call.
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - DiscretePosition2D buffer of The point data in toolpath units. Array MUST NOT be empty.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteLoopDiscretePtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, bool bWriteCustomLineAttributes, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D * pPointDataBuffer);
 
 /**
 * writes polyline data to the layer.
@@ -3553,11 +3613,25 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteLoopPtr) (Lib3MF_ToolpathLa
 * @param[in] pToolpathLayerData - ToolpathLayerData instance.
 * @param[in] nProfileID - The toolpath profile to use
 * @param[in] nPartID - The toolpath part to use
+* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of points in the pointdata array. In any case, stored custom attributes will be cleared after the call.
 * @param[in] nPointDataBufferSize - Number of elements in buffer
-* @param[in] pPointDataBuffer - Position2D buffer of The point data
+* @param[in] pPointDataBuffer - Position2D buffer of The point data in model units. Array MUST NOT be empty.
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFToolpathLayerData_WritePolylinePtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer);
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WritePolylineInModelUnitsPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, bool bWriteCustomLineAttributes, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer);
+
+/**
+* writes polyline data to the layer.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use
+* @param[in] nPartID - The toolpath part to use
+* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of points in the pointdata array. In any case, stored custom attributes will be cleared after the call.
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - DiscretePosition2D buffer of The point data in toolpath units. Array MUST NOT be empty.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WritePolylineDiscretePtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, bool bWriteCustomLineAttributes, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D * pPointDataBuffer);
 
 /**
 * Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
@@ -3583,7 +3657,29 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerData_FinishPtr) (Lib3MF_ToolpathLayer
 **************************************************************************************************************************/
 
 /**
-* Retrieves the unit factor
+* Retrieves the UUID of the toolpath
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nUUIDBufferSize - size of the buffer (including trailing 0)
+* @param[out] pUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pUUIDBuffer -  buffer of UUID Value., may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_GetUUIDPtr) (Lib3MF_Toolpath pToolpath, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer);
+
+/**
+* Generates a new unique identifier for this toolpath and sets its value.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nNewUUIDBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNewUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNewUUIDBuffer -  buffer of Newly created UUID Value., may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_ResetUUIDPtr) (Lib3MF_Toolpath pToolpath, const Lib3MF_uint32 nNewUUIDBufferSize, Lib3MF_uint32* pNewUUIDNeededChars, char * pNewUUIDBuffer);
+
+/**
+* Retrieves the unit factor, i.e. how many model units are one toolpath unit.
 *
 * @param[in] pToolpath - Toolpath instance.
 * @param[out] pUnits - Returns the unit factor.
@@ -3613,7 +3709,7 @@ typedef Lib3MFResult (*PLib3MFToolpath_GetProfileCountPtr) (Lib3MF_Toolpath pToo
 * Adds a new toolpath layer
 *
 * @param[in] pToolpath - Toolpath instance.
-* @param[in] nZMax - ZMax value of the layer. MUST be larger than the last layer added, as well as larger as BottomZ.
+* @param[in] nZMax - ZMax value of the layer in toolpath units. MUST be larger than the last layer added, as well as larger as BottomZ.
 * @param[in] pPath - Package Path
 * @param[in] pModelWriter - The model writer that writes out the 3MF.
 * @param[out] pLayerData - Returns the layerdata object to write the layer content into.
@@ -3625,7 +3721,7 @@ typedef Lib3MFResult (*PLib3MFToolpath_AddLayerPtr) (Lib3MF_Toolpath pToolpath, 
 * Returns the bottom Z Value of the toolpath.
 *
 * @param[in] pToolpath - Toolpath instance.
-* @param[out] pBottomZ - BottomZ value
+* @param[out] pBottomZ - BottomZ value in Toolpath units
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFToolpath_GetBottomZPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pBottomZ);
@@ -3634,13 +3730,13 @@ typedef Lib3MFResult (*PLib3MFToolpath_GetBottomZPtr) (Lib3MF_Toolpath pToolpath
 * Sets the bottom Z Value of the toolpath. Will fail if a layer is already existing.
 *
 * @param[in] pToolpath - Toolpath instance.
-* @param[in] nBottomZ - BottomZ value
+* @param[in] nBottomZ - BottomZ value in Toolpath units
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFToolpath_SetBottomZPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nBottomZ);
 
 /**
-* Retrieves the Attachment of a layer
+* Retrieves the Attachment that contains the layer data.
 *
 * @param[in] pToolpath - Toolpath instance.
 * @param[in] nIndex - Layer Index
@@ -3676,20 +3772,39 @@ typedef Lib3MFResult (*PLib3MFToolpath_GetLayerPathPtr) (Lib3MF_Toolpath pToolpa
 *
 * @param[in] pToolpath - Toolpath instance.
 * @param[in] nIndex - Layer Index
-* @param[out] pZMax - ZMax value
+* @param[out] pZMax - ZMax value in toolpath units
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFToolpath_GetLayerZMaxPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_uint32 * pZMax);
 
 /**
-* Return the z value of a layer in units.
+* Retrieves the Minimum Z of a layer
 *
 * @param[in] pToolpath - Toolpath instance.
-* @param[in] nLayerIndex - Layer Index.
-* @param[out] pZValue - Z Value in Units.
+* @param[in] nIndex - Layer Index
+* @param[out] pZMin - ZMin value in toolpath units
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFToolpath_GetLayerZPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nLayerIndex, Lib3MF_uint32 * pZValue);
+typedef Lib3MFResult (*PLib3MFToolpath_GetLayerZMinPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_uint32 * pZMin);
+
+/**
+* Retrieves the Thickness of a layer
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nIndex - Layer Index
+* @param[out] pZThickness - Thickness value in toolpath units
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_GetLayerThicknessPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_uint32 * pZThickness);
+
+/**
+* Checks if the toolpath has a uniform thickness value, i.e. each layer has the same thickness.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[out] pUniformThickness - Returns true if the layer thicknesses are uniform, returns false otherwise.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_HasUniformThicknessPtr) (Lib3MF_Toolpath pToolpath, bool * pUniformThickness);
 
 /**
 * Adds a new profile to the toolpath.
@@ -3825,7 +3940,7 @@ typedef Lib3MFResult (*PLib3MFToolpath_DeleteCustomDataPtr) (Lib3MF_Toolpath pTo
 * @param[in] pAttributeName - Attribute name. MUST not be empty.
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFToolpath_RegisterCustomIntegerAttributePtr) (Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pAttributeName);
+typedef Lib3MFResult (*PLib3MFToolpath_RegisterCustomIntegerSegmentAttributePtr) (Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pAttributeName);
 
 /**
 * Registers a Double Attribute that each segment holds. Registering only applies to reader or writer objects created after the call.
@@ -3835,7 +3950,7 @@ typedef Lib3MFResult (*PLib3MFToolpath_RegisterCustomIntegerAttributePtr) (Lib3M
 * @param[in] pAttributeName - Attribute name. MUST not be empty.
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFToolpath_RegisterCustomDoubleAttributePtr) (Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pAttributeName);
+typedef Lib3MFResult (*PLib3MFToolpath_RegisterCustomDoubleSegmentAttributePtr) (Lib3MF_Toolpath pToolpath, const char * pNameSpace, const char * pAttributeName);
 
 /*************************************************************************************************************************
  Class definition for ToolpathIterator
@@ -5535,7 +5650,8 @@ typedef struct {
 	PLib3MFToolpathLayerReader_GetSegmentPartUUIDPtr m_ToolpathLayerReader_GetSegmentPartUUID;
 	PLib3MFToolpathLayerReader_GetSegmentLocalPartIDPtr m_ToolpathLayerReader_GetSegmentLocalPartID;
 	PLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDPtr m_ToolpathLayerReader_GetPartUUIDByLocalPartID;
-	PLib3MFToolpathLayerReader_GetSegmentPointDataPtr m_ToolpathLayerReader_GetSegmentPointData;
+	PLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsPtr m_ToolpathLayerReader_GetSegmentPointDataInModelUnits;
+	PLib3MFToolpathLayerReader_GetSegmentPointDataDiscretePtr m_ToolpathLayerReader_GetSegmentPointDataDiscrete;
 	PLib3MFToolpathLayerReader_FindAttributeInfoByNamePtr m_ToolpathLayerReader_FindAttributeInfoByName;
 	PLib3MFToolpathLayerReader_FindAttributeIDByNamePtr m_ToolpathLayerReader_FindAttributeIDByName;
 	PLib3MFToolpathLayerReader_FindAttributeValueByNamePtr m_ToolpathLayerReader_FindAttributeValueByName;
@@ -5551,11 +5667,18 @@ typedef struct {
 	PLib3MFToolpathLayerData_RegisterBuildItemPtr m_ToolpathLayerData_RegisterBuildItem;
 	PLib3MFToolpathLayerData_SetSegmentAttributePtr m_ToolpathLayerData_SetSegmentAttribute;
 	PLib3MFToolpathLayerData_ClearSegmentAttributesPtr m_ToolpathLayerData_ClearSegmentAttributes;
-	PLib3MFToolpathLayerData_WriteHatchDataPtr m_ToolpathLayerData_WriteHatchData;
-	PLib3MFToolpathLayerData_WriteLoopPtr m_ToolpathLayerData_WriteLoop;
-	PLib3MFToolpathLayerData_WritePolylinePtr m_ToolpathLayerData_WritePolyline;
+	PLib3MFToolpathLayerData_AddCustomLineAttributesPtr m_ToolpathLayerData_AddCustomLineAttributes;
+	PLib3MFToolpathLayerData_ClearCustomLineAttributesPtr m_ToolpathLayerData_ClearCustomLineAttributes;
+	PLib3MFToolpathLayerData_WriteHatchDataInModelUnitsPtr m_ToolpathLayerData_WriteHatchDataInModelUnits;
+	PLib3MFToolpathLayerData_WriteHatchDataDiscretePtr m_ToolpathLayerData_WriteHatchDataDiscrete;
+	PLib3MFToolpathLayerData_WriteLoopInModelUnitsPtr m_ToolpathLayerData_WriteLoopInModelUnits;
+	PLib3MFToolpathLayerData_WriteLoopDiscretePtr m_ToolpathLayerData_WriteLoopDiscrete;
+	PLib3MFToolpathLayerData_WritePolylineInModelUnitsPtr m_ToolpathLayerData_WritePolylineInModelUnits;
+	PLib3MFToolpathLayerData_WritePolylineDiscretePtr m_ToolpathLayerData_WritePolylineDiscrete;
 	PLib3MFToolpathLayerData_AddCustomDataPtr m_ToolpathLayerData_AddCustomData;
 	PLib3MFToolpathLayerData_FinishPtr m_ToolpathLayerData_Finish;
+	PLib3MFToolpath_GetUUIDPtr m_Toolpath_GetUUID;
+	PLib3MFToolpath_ResetUUIDPtr m_Toolpath_ResetUUID;
 	PLib3MFToolpath_GetUnitsPtr m_Toolpath_GetUnits;
 	PLib3MFToolpath_GetLayerCountPtr m_Toolpath_GetLayerCount;
 	PLib3MFToolpath_GetProfileCountPtr m_Toolpath_GetProfileCount;
@@ -5566,7 +5689,9 @@ typedef struct {
 	PLib3MFToolpath_ReadLayerDataPtr m_Toolpath_ReadLayerData;
 	PLib3MFToolpath_GetLayerPathPtr m_Toolpath_GetLayerPath;
 	PLib3MFToolpath_GetLayerZMaxPtr m_Toolpath_GetLayerZMax;
-	PLib3MFToolpath_GetLayerZPtr m_Toolpath_GetLayerZ;
+	PLib3MFToolpath_GetLayerZMinPtr m_Toolpath_GetLayerZMin;
+	PLib3MFToolpath_GetLayerThicknessPtr m_Toolpath_GetLayerThickness;
+	PLib3MFToolpath_HasUniformThicknessPtr m_Toolpath_HasUniformThickness;
 	PLib3MFToolpath_AddProfilePtr m_Toolpath_AddProfile;
 	PLib3MFToolpath_GetProfilePtr m_Toolpath_GetProfile;
 	PLib3MFToolpath_GetProfileUUIDPtr m_Toolpath_GetProfileUUID;
@@ -5579,8 +5704,8 @@ typedef struct {
 	PLib3MFToolpath_AddCustomDataPtr m_Toolpath_AddCustomData;
 	PLib3MFToolpath_ClearCustomDataPtr m_Toolpath_ClearCustomData;
 	PLib3MFToolpath_DeleteCustomDataPtr m_Toolpath_DeleteCustomData;
-	PLib3MFToolpath_RegisterCustomIntegerAttributePtr m_Toolpath_RegisterCustomIntegerAttribute;
-	PLib3MFToolpath_RegisterCustomDoubleAttributePtr m_Toolpath_RegisterCustomDoubleAttribute;
+	PLib3MFToolpath_RegisterCustomIntegerSegmentAttributePtr m_Toolpath_RegisterCustomIntegerSegmentAttribute;
+	PLib3MFToolpath_RegisterCustomDoubleSegmentAttributePtr m_Toolpath_RegisterCustomDoubleSegmentAttribute;
 	PLib3MFToolpathIterator_GetCurrentToolpathPtr m_ToolpathIterator_GetCurrentToolpath;
 	PLib3MFSliceStack_GetBottomZPtr m_SliceStack_GetBottomZ;
 	PLib3MFSliceStack_GetSliceCountPtr m_SliceStack_GetSliceCount;
