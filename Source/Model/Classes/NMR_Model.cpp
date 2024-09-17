@@ -399,15 +399,22 @@ namespace NMR {
 	// Retrieve a unique Resource ID
 	ModelResourceID CModel::generateResourceID()
 	{
-		// TODO: is this truly safe?
-		auto iIterator = m_ResourceMap.rbegin();
-		if (iIterator != m_ResourceMap.rend())
-			return iIterator->first + 1;
-		else
-			return 1;
+		ModelResourceID highestID = 0;
+
+		if (m_ResourceMap.empty())
+		{
+				return 1;
+		}
+
+		highestID = std::max_element(m_ResourceMap.begin(), m_ResourceMap.end(),
+			[](const auto &a, const auto &b) {
+				return a.first < b.first;
+			})->first;
+
+		return highestID + 1;
 	}
 
-	void CModel::updateUniqueResourceID(UniqueResourceID nOldID, UniqueResourceID nNewID)
+        void CModel::updateUniqueResourceID(UniqueResourceID nOldID, UniqueResourceID nNewID)
 	{
 		if (m_ResourceMap.find(nNewID) != m_ResourceMap.end()) {
 			throw CNMRException(NMR_ERROR_DUPLICATEMODELRESOURCE);
