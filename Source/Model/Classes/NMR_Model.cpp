@@ -395,23 +395,33 @@ namespace NMR {
 		}
 	}
 
-
 	// Retrieve a unique Resource ID
 	ModelResourceID CModel::generateResourceID()
 	{
 		ModelResourceID highestID = 0;
 
-		if (m_ResourceMap.empty())
+		if(m_ResourceMap.empty())
 		{
-				return 1;
+			return 1;
 		}
 
-		highestID = std::max_element(m_ResourceMap.begin(), m_ResourceMap.end(),
-			[](const auto &a, const auto &b) {
-				return a.first < b.first;
-			})->first;
+		// find the lowest unoccupied ModelResourceID
+		std::unordered_set<ModelResourceID> occupiedIDs;
+		for(const auto &entry : m_ResourceMap)
+		{
+			occupiedIDs.insert(
+				entry.second->getPackageResourceID()->getModelResourceID());
+		}
 
-		return highestID + 1;
+		ModelResourceID newResourceID = 1;
+
+		// Loop until we find an unoccupied resource ID
+		while(occupiedIDs.find(newResourceID) != occupiedIDs.end())
+		{
+			++newResourceID;
+		}
+
+		return newResourceID;
 	}
 
         void CModel::updateUniqueResourceID(UniqueResourceID nOldID, UniqueResourceID nNewID)
