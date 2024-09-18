@@ -148,7 +148,7 @@ jobs:
         with:
           submodules: false
       - name: Download all workflow run artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           path: ./build
       - run: ls -Rl ./build
@@ -168,7 +168,7 @@ jobs:
       - run: pwd
       - run: ls -Rl .
       - name: Download lib3mf_sdk artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: lib3mf_sdk.zip
           path: lib3mf_sdk.zip
@@ -193,7 +193,7 @@ jobs:
     needs: [assemble-sdk]
     steps:
       - name: Download lib3mf_sdk artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: lib3mf_sdk.zip
           path: lib3mf_sdk.zip
@@ -217,7 +217,7 @@ jobs:
     needs: [assemble-sdk]
     steps:
       - name: Download lib3mf_sdk artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: lib3mf_sdk.zip
           path: lib3mf_sdk.zip
