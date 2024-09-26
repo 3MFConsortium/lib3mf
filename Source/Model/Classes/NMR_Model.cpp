@@ -329,7 +329,21 @@ namespace NMR {
 		if (m_BuildItems.size() >= XML_3MF_MAXBUILDITEMCOUNT)
 			throw CNMRException(NMR_ERROR_INVALIDBUILDITEMCOUNT);
 		m_BuildItems.push_back(pBuildItem);
+		m_BuildItemMap.insert(std::make_pair(pBuildItem->uuid()->toString(), pBuildItem));
 	}
+
+	PModelBuildItem CModel::findBuildItemByUUID(_In_ const std::string& sUUID, bool bMustExist)
+	{
+		auto iIter = m_BuildItemMap.find(sUUID);
+		if (iIter != m_BuildItemMap.end())
+			return iIter->second;
+
+		if (bMustExist)
+			throw CNMRException(NMR_ERROR_BUILDITEMNOTFOUND);
+
+		return nullptr;
+	}
+
 
 	nfUint32 CModel::getBuildItemCount()
 	{
@@ -345,9 +359,11 @@ namespace NMR {
 
 	void CModel::removeBuildItem(_In_ nfUint32 nHandle, _In_ nfBool bThrowExceptionIfNotFound)
 	{
+
 		auto iIterator = m_BuildItems.begin();
 		while (iIterator != m_BuildItems.end()) {
 			if ((*iIterator)->getHandle() == nHandle) {
+				m_BuildItemMap.erase((*iIterator)->uuid ()->toString ());
 				m_BuildItems.erase(iIterator);
 				return;
 			}

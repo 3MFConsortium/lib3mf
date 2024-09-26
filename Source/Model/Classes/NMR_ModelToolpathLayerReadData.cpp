@@ -328,7 +328,65 @@ namespace NMR {
 		TOOLPATHREADSEGMENT* pSegment = m_Segments.getData(nSegmentIndex);
 		__NMRASSERT(pSegment != nullptr);
 
-		//pSegment->
+		switch (pSegment->m_eType) {
+			case eModelToolpathSegmentType::HatchSegment: {
+
+				uint32_t nProfileID = pSegment->m_nProfileID;
+
+				uint32_t nHatchCount = pSegment->m_nPointCount / 2;
+				for (uint32_t nHatchIndex = 0; nHatchIndex < nHatchCount; nHatchIndex++) {
+
+					// The profile overrides for hatches are stored on point 1!
+					auto& point1 = getSegmentPoint(nSegmentIndex, nHatchIndex * 2 + 0);
+					if (point1.m_nProfileOverride != 0) {
+						if (point1.m_nProfileOverride != nProfileID) 
+							return false;
+					}
+
+				}
+
+				return true;
+			}
+
+			case eModelToolpathSegmentType::LoopSegment:
+			{
+				uint32_t nProfileID = pSegment->m_nProfileID;
+
+				uint32_t nPointCount = pSegment->m_nPointCount;
+				for (uint32_t nPointIndex = 0; nPointIndex < nPointCount; nPointIndex++) {
+					auto& point = getSegmentPoint(nSegmentIndex, nPointIndex);
+					if (point.m_nProfileOverride != 0) {
+						if (point.m_nProfileOverride != nProfileID)
+							return false;
+					}
+
+				}
+
+				return true;
+			}
+
+			case eModelToolpathSegmentType::PolylineSegment:
+			{
+				uint32_t nProfileID = pSegment->m_nProfileID;
+
+				uint32_t nPointCount = pSegment->m_nPointCount;
+				// On a polyline, the profile ID of the last point is not applicable...
+				for (uint32_t nPointIndex = 0; nPointIndex < nPointCount - 1; nPointIndex++) {
+					auto& point = getSegmentPoint(nSegmentIndex, nPointIndex);
+					if (point.m_nProfileOverride != 0) {
+						if (point.m_nProfileOverride != nProfileID)
+							return false;
+					}
+
+				}
+
+				return true;
+			}
+
+			default:
+				return false;
+		}
+		
 		return false;
 	}
 

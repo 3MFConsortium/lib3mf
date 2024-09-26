@@ -118,6 +118,7 @@ namespace NMR {
 
 		// Model Build Items
 		std::vector<PModelBuildItem> m_BuildItems;
+		std::map<std::string, PModelBuildItem> m_BuildItemMap;
 
 		// build's UUID. Empty if none defined
 		PUUID m_buildUUID;
@@ -212,6 +213,7 @@ namespace NMR {
 
 		// Build Handling
 		void addBuildItem(_In_ PModelBuildItem pBuildItem);
+		PModelBuildItem findBuildItemByUUID(_In_ const std::string & sUUID, bool bMustExist);
 		nfUint32 getBuildItemCount();
 		PModelBuildItem getBuildItem(_In_ nfUint32 nIdx);
 		// Removes a build item identified by its handle

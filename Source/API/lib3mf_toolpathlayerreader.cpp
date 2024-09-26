@@ -30,8 +30,10 @@ Abstract: This is a stub class definition of CToolpathLayerReader
 
 #include "lib3mf_toolpathlayerreader.hpp"
 #include "lib3mf_toolpathprofile.hpp"
+#include "lib3mf_builditem.hpp"
 #include "lib3mf_interfaceexception.hpp"
 #include "lib3mf_customdomtree.hpp"
+
 
 using namespace Lib3MF::Impl;
 
@@ -111,7 +113,19 @@ bool CToolpathLayerReader::SegmentHasUniformProfile(const Lib3MF_uint32 nIndex)
 
 IBuildItem* CToolpathLayerReader::GetSegmentPart(const Lib3MF_uint32 nIndex)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::eModelToolpathSegmentType eNMRType;
+	uint32_t nProfileID;
+	uint32_t nPartID;
+	uint32_t nPointCount;
+	m_pReadData->getSegmentInfo(nIndex, eNMRType, nProfileID, nPartID, nPointCount);
+	std::string sUUID = m_pReadData->mapIDtoUUID(nPartID);
+
+	auto pModel = m_pModelToolpath->getModel();
+	auto pBuildItemInstance = pModel->findBuildItemByUUID(sUUID, true);
+
+	return new CBuildItem(pBuildItemInstance);
+
+
 }
 
 std::string CToolpathLayerReader::GetSegmentPartUUID(const Lib3MF_uint32 nIndex)
