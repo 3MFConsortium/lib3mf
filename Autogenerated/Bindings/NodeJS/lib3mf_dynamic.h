@@ -3394,12 +3394,12 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnit
 *
 * @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
 * @param[in] nIndex - Index. Must be between 0 and Count - 1.
-* @param[in] nPointDataBufferSize - Number of elements in buffer
-* @param[out] pPointDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
-* @param[out] pPointDataBuffer - DiscreteHatch2D  buffer of The hatch data array. The point coordinates are in toolpath units.
+* @param[in] nHatchDataBufferSize - Number of elements in buffer
+* @param[out] pHatchDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
+* @param[out] pHatchDataBuffer - DiscreteHatch2D  buffer of The hatch data array. The point coordinates are in toolpath units.
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentHatchDataDiscretePtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, sLib3MFDiscreteHatch2D * pPointDataBuffer);
+typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentHatchDataDiscretePtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, sLib3MFDiscreteHatch2D * pHatchDataBuffer);
 
 /**
 * Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.

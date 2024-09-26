@@ -12325,7 +12325,7 @@ Lib3MFResult lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(Lib3MF_T
 	}
 }
 
-Lib3MFResult lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, sLib3MFDiscreteHatch2D * pPointDataBuffer)
+Lib3MFResult lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, sLib3MFDiscreteHatch2D * pHatchDataBuffer)
 {
 	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
 
@@ -12335,13 +12335,13 @@ Lib3MFResult lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(Lib3MF_Toolp
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "GetSegmentHatchDataDiscrete");
 			pJournalEntry->addUInt32Parameter("Index", nIndex);
 		}
-		if ((!pPointDataBuffer) && !(pPointDataNeededCount))
+		if ((!pHatchDataBuffer) && !(pHatchDataNeededCount))
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
 		if (!pIToolpathLayerReader)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIToolpathLayerReader->GetSegmentHatchDataDiscrete(nIndex, nPointDataBufferSize, pPointDataNeededCount, pPointDataBuffer);
+		pIToolpathLayerReader->GetSegmentHatchDataDiscrete(nIndex, nHatchDataBufferSize, pHatchDataNeededCount, pHatchDataBuffer);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();

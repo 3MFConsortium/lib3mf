@@ -3889,12 +3889,12 @@ type
 	*
 	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
 	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[in] nPointDataCount - Number of elements in buffer
-	* @param[out] pPointDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
-	* @param[out] pPointDataBuffer - DiscreteHatch2D buffer of The hatch data array. The point coordinates are in toolpath units.
+	* @param[in] nHatchDataCount - Number of elements in buffer
+	* @param[out] pHatchDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
+	* @param[out] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data array. The point coordinates are in toolpath units.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nPointDataCount: QWord; out pPointDataNeededCount: QWord; pPointDataBuffer: PLib3MFDiscreteHatch2D): TLib3MFResult; cdecl;
+	TLib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nHatchDataCount: QWord; out pHatchDataNeededCount: QWord; pHatchDataBuffer: PLib3MFDiscreteHatch2D): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
@@ -6789,7 +6789,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure GetSegmentPointDataInModelUnits(const AIndex: Cardinal; out APointData: ArrayOfLib3MFPosition2D);
 		procedure GetSegmentPointDataDiscrete(const AIndex: Cardinal; out APointData: ArrayOfLib3MFDiscretePosition2D);
 		procedure GetSegmentHatchDataInModelUnits(const AIndex: Cardinal; out AHatchData: ArrayOfLib3MFHatch2D);
-		procedure GetSegmentHatchDataDiscrete(const AIndex: Cardinal; out APointData: ArrayOfLib3MFDiscreteHatch2D);
+		procedure GetSegmentHatchDataDiscrete(const AIndex: Cardinal; out AHatchData: ArrayOfLib3MFDiscreteHatch2D);
 		procedure FindSegmentAttributeInfoByName(const ANameSpace: String; const AAttributeName: String; out AID: Cardinal; out AAttributeType: TLib3MFToolpathAttributeType);
 		function FindSegmentAttributeIDByName(const ANameSpace: String; const AAttributeName: String): Cardinal;
 		function FindSegmentAttributeTypeByName(const ANameSpace: String; const AAttributeName: String): TLib3MFToolpathAttributeType;
@@ -12592,16 +12592,16 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsFunc(FHandle, AIndex, countNeededHatchData, countWrittenHatchData, @AHatchData[0]));
 	end;
 
-	procedure TLib3MFToolpathLayerReader.GetSegmentHatchDataDiscrete(const AIndex: Cardinal; out APointData: ArrayOfLib3MFDiscreteHatch2D);
+	procedure TLib3MFToolpathLayerReader.GetSegmentHatchDataDiscrete(const AIndex: Cardinal; out AHatchData: ArrayOfLib3MFDiscreteHatch2D);
 	var
-		countNeededPointData: QWord;
-		countWrittenPointData: QWord;
+		countNeededHatchData: QWord;
+		countWrittenHatchData: QWord;
 	begin
-		countNeededPointData:= 0;
-		countWrittenPointData:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc(FHandle, AIndex, 0, countNeededPointData, nil));
-		SetLength(APointData, countNeededPointData);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc(FHandle, AIndex, countNeededPointData, countWrittenPointData, @APointData[0]));
+		countNeededHatchData:= 0;
+		countWrittenHatchData:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc(FHandle, AIndex, 0, countNeededHatchData, nil));
+		SetLength(AHatchData, countNeededHatchData);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc(FHandle, AIndex, countNeededHatchData, countWrittenHatchData, @AHatchData[0]));
 	end;
 
 	procedure TLib3MFToolpathLayerReader.FindSegmentAttributeInfoByName(const ANameSpace: String; const AAttributeName: String; out AID: Cardinal; out AAttributeType: TLib3MFToolpathAttributeType);

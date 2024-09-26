@@ -1689,7 +1689,7 @@ public:
 	inline void GetSegmentPointDataInModelUnits(const Lib3MF_uint32 nIndex, std::vector<sPosition2D> & PointDataBuffer);
 	inline void GetSegmentPointDataDiscrete(const Lib3MF_uint32 nIndex, std::vector<sDiscretePosition2D> & PointDataBuffer);
 	inline void GetSegmentHatchDataInModelUnits(const Lib3MF_uint32 nIndex, std::vector<sHatch2D> & HatchDataBuffer);
-	inline void GetSegmentHatchDataDiscrete(const Lib3MF_uint32 nIndex, std::vector<sDiscreteHatch2D> & PointDataBuffer);
+	inline void GetSegmentHatchDataDiscrete(const Lib3MF_uint32 nIndex, std::vector<sDiscreteHatch2D> & HatchDataBuffer);
 	inline void FindSegmentAttributeInfoByName(const std::string & sNameSpace, const std::string & sAttributeName, Lib3MF_uint32 & nID, eToolpathAttributeType & eAttributeType);
 	inline Lib3MF_uint32 FindSegmentAttributeIDByName(const std::string & sNameSpace, const std::string & sAttributeName);
 	inline eToolpathAttributeType FindSegmentAttributeTypeByName(const std::string & sNameSpace, const std::string & sAttributeName);
@@ -6540,15 +6540,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	/**
 	* CToolpathLayerReader::GetSegmentHatchDataDiscrete - Retrieves the assigned segment hatch list in toolpath units. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
 	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[out] PointDataBuffer - The hatch data array. The point coordinates are in toolpath units.
+	* @param[out] HatchDataBuffer - The hatch data array. The point coordinates are in toolpath units.
 	*/
-	void CToolpathLayerReader::GetSegmentHatchDataDiscrete(const Lib3MF_uint32 nIndex, std::vector<sDiscreteHatch2D> & PointDataBuffer)
+	void CToolpathLayerReader::GetSegmentHatchDataDiscrete(const Lib3MF_uint32 nIndex, std::vector<sDiscreteHatch2D> & HatchDataBuffer)
 	{
-		Lib3MF_uint64 elementsNeededPointData = 0;
-		Lib3MF_uint64 elementsWrittenPointData = 0;
-		CheckError(lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(m_pHandle, nIndex, 0, &elementsNeededPointData, nullptr));
-		PointDataBuffer.resize((size_t) elementsNeededPointData);
-		CheckError(lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(m_pHandle, nIndex, elementsNeededPointData, &elementsWrittenPointData, PointDataBuffer.data()));
+		Lib3MF_uint64 elementsNeededHatchData = 0;
+		Lib3MF_uint64 elementsWrittenHatchData = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(m_pHandle, nIndex, 0, &elementsNeededHatchData, nullptr));
+		HatchDataBuffer.resize((size_t) elementsNeededHatchData);
+		CheckError(lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(m_pHandle, nIndex, elementsNeededHatchData, &elementsWrittenHatchData, HatchDataBuffer.data()));
 	}
 	
 	/**

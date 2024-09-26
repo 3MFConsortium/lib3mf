@@ -8806,15 +8806,15 @@ class ToolpathLayerReader(Base):
 	
 	def GetSegmentHatchDataDiscrete(self, Index):
 		nIndex = ctypes.c_uint32(Index)
-		nPointDataCount = ctypes.c_uint64(0)
-		nPointDataNeededCount = ctypes.c_uint64(0)
-		pPointDataBuffer = (DiscreteHatch2D*0)()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(self._handle, nIndex, nPointDataCount, nPointDataNeededCount, pPointDataBuffer))
-		nPointDataCount = ctypes.c_uint64(nPointDataNeededCount.value)
-		pPointDataBuffer = (DiscreteHatch2D * nPointDataNeededCount.value)()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(self._handle, nIndex, nPointDataCount, nPointDataNeededCount, pPointDataBuffer))
+		nHatchDataCount = ctypes.c_uint64(0)
+		nHatchDataNeededCount = ctypes.c_uint64(0)
+		pHatchDataBuffer = (DiscreteHatch2D*0)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(self._handle, nIndex, nHatchDataCount, nHatchDataNeededCount, pHatchDataBuffer))
+		nHatchDataCount = ctypes.c_uint64(nHatchDataNeededCount.value)
+		pHatchDataBuffer = (DiscreteHatch2D * nHatchDataNeededCount.value)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(self._handle, nIndex, nHatchDataCount, nHatchDataNeededCount, pHatchDataBuffer))
 		
-		return [pPointDataBuffer[i] for i in range(nPointDataNeededCount.value)]
+		return [pHatchDataBuffer[i] for i in range(nHatchDataNeededCount.value)]
 	
 	def FindSegmentAttributeInfoByName(self, NameSpace, AttributeName):
 		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))

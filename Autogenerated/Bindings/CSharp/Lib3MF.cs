@@ -1363,7 +1363,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentHatchDataInModelUnits (IntPtr Handle, UInt32 AIndex, UInt64 sizeHatchData, out UInt64 neededHatchData, IntPtr dataHatchData);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentHatchDataDiscrete (IntPtr Handle, UInt32 AIndex, UInt64 sizePointData, out UInt64 neededPointData, IntPtr dataPointData);
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentHatchDataDiscrete (IntPtr Handle, UInt32 AIndex, UInt64 sizeHatchData, out UInt64 neededHatchData, IntPtr dataHatchData);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_findsegmentattributeinfobyname", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerReader_FindSegmentAttributeInfoByName (IntPtr Handle, byte[] ANameSpace, byte[] AAttributeName, out UInt32 AID, out Int32 AAttributeType);
@@ -5716,20 +5716,20 @@ namespace Lib3MF {
 				AHatchData[index] = Internal.Lib3MFWrapper.convertInternalToStruct_Hatch2D(arrayHatchData[index]);
 		}
 
-		public void GetSegmentHatchDataDiscrete (UInt32 AIndex, out sDiscreteHatch2D[] APointData)
+		public void GetSegmentHatchDataDiscrete (UInt32 AIndex, out sDiscreteHatch2D[] AHatchData)
 		{
-			UInt64 sizePointData = 0;
-			UInt64 neededPointData = 0;
-			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentHatchDataDiscrete (Handle, AIndex, sizePointData, out neededPointData, IntPtr.Zero));
-			sizePointData = neededPointData;
-			var arrayPointData = new Internal.InternalDiscreteHatch2D[sizePointData];
-			GCHandle dataPointData = GCHandle.Alloc(arrayPointData, GCHandleType.Pinned);
+			UInt64 sizeHatchData = 0;
+			UInt64 neededHatchData = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentHatchDataDiscrete (Handle, AIndex, sizeHatchData, out neededHatchData, IntPtr.Zero));
+			sizeHatchData = neededHatchData;
+			var arrayHatchData = new Internal.InternalDiscreteHatch2D[sizeHatchData];
+			GCHandle dataHatchData = GCHandle.Alloc(arrayHatchData, GCHandleType.Pinned);
 
-			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentHatchDataDiscrete (Handle, AIndex, sizePointData, out neededPointData, dataPointData.AddrOfPinnedObject()));
-			dataPointData.Free();
-			APointData = new sDiscreteHatch2D[sizePointData];
-			for (int index = 0; index < APointData.Length; index++)
-				APointData[index] = Internal.Lib3MFWrapper.convertInternalToStruct_DiscreteHatch2D(arrayPointData[index]);
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentHatchDataDiscrete (Handle, AIndex, sizeHatchData, out neededHatchData, dataHatchData.AddrOfPinnedObject()));
+			dataHatchData.Free();
+			AHatchData = new sDiscreteHatch2D[sizeHatchData];
+			for (int index = 0; index < AHatchData.Length; index++)
+				AHatchData[index] = Internal.Lib3MFWrapper.convertInternalToStruct_DiscreteHatch2D(arrayHatchData[index]);
 		}
 
 		public void FindSegmentAttributeInfoByName (String ANameSpace, String AAttributeName, out UInt32 AID, out eToolpathAttributeType AAttributeType)

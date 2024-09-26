@@ -3264,11 +3264,11 @@ public:
 	/**
 	* IToolpathLayerReader::GetSegmentHatchDataDiscrete - Retrieves the assigned segment hatch list in toolpath units. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
 	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[in] nPointDataBufferSize - Number of elements in buffer
-	* @param[out] pPointDataNeededCount - will be filled with the count of the written structs, or needed buffer size.
-	* @param[out] pPointDataBuffer - DiscreteHatch2D buffer of The hatch data array. The point coordinates are in toolpath units.
+	* @param[in] nHatchDataBufferSize - Number of elements in buffer
+	* @param[out] pHatchDataNeededCount - will be filled with the count of the written structs, or needed buffer size.
+	* @param[out] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data array. The point coordinates are in toolpath units.
 	*/
-	virtual void GetSegmentHatchDataDiscrete(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sDiscreteHatch2D * pPointDataBuffer) = 0;
+	virtual void GetSegmentHatchDataDiscrete(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, Lib3MF::sDiscreteHatch2D * pHatchDataBuffer) = 0;
 
 	/**
 	* IToolpathLayerReader::FindSegmentAttributeInfoByName - Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.

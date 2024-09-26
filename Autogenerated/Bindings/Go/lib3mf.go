@@ -2961,12 +2961,12 @@ Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(Li
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, sLib3MFDiscreteHatch2D * pPointDataBuffer)
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, sLib3MFDiscreteHatch2D * pHatchDataBuffer)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataDiscrete (pToolpathLayerReader, nIndex, nPointDataBufferSize, pPointDataNeededCount, pPointDataBuffer);
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataDiscrete (pToolpathLayerReader, nIndex, nHatchDataBufferSize, pHatchDataNeededCount, pHatchDataBuffer);
 }
 
 
@@ -9388,20 +9388,20 @@ func (inst ToolpathLayerReader) GetSegmentHatchDataInModelUnits(index uint32, ha
 }
 
 // GetSegmentHatchDataDiscrete retrieves the assigned segment hatch list in toolpath units. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
-func (inst ToolpathLayerReader) GetSegmentHatchDataDiscrete(index uint32, pointData []DiscreteHatch2D) ([]DiscreteHatch2D, error) {
-	var neededforpointData C.uint64_t
-	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforpointData, nil)
+func (inst ToolpathLayerReader) GetSegmentHatchDataDiscrete(index uint32, hatchData []DiscreteHatch2D) ([]DiscreteHatch2D, error) {
+	var neededforhatchData C.uint64_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforhatchData, nil)
 	if ret != 0 {
 		return nil, makeError(uint32(ret))
 	}
-	if len(pointData) < int(neededforpointData) {
-	 pointData = append(pointData, make([]DiscreteHatch2D, int(neededforpointData)-len(pointData))...)
+	if len(hatchData) < int(neededforhatchData) {
+	 hatchData = append(hatchData, make([]DiscreteHatch2D, int(neededforhatchData)-len(hatchData))...)
 	}
-	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), neededforpointData, nil, (*C.sLib3MFDiscreteHatch2D)(unsafe.Pointer(&pointData[0])))
+	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), neededforhatchData, nil, (*C.sLib3MFDiscreteHatch2D)(unsafe.Pointer(&hatchData[0])))
 	if ret != 0 {
 		return nil, makeError(uint32(ret))
 	}
-	return pointData[:int(neededforpointData)], nil
+	return hatchData[:int(neededforhatchData)], nil
 }
 
 // FindSegmentAttributeInfoByName retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
