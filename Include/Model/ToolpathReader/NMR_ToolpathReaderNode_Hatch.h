@@ -48,6 +48,15 @@ namespace NMR {
 		nfBool m_bHasX2;
 		nfBool m_bHasY2;
 
+		nfInt32 m_nTag;
+		nfInt32 m_nCustomProfileID;
+		nfInt32 m_nFactorF1;
+		nfInt32 m_nFactorG1;
+		nfInt32 m_nFactorH1;
+		nfInt32 m_nFactorF2;
+		nfInt32 m_nFactorG2;
+		nfInt32 m_nFactorH2;
+
 		CModelToolpathLayerReadData * m_pReadData;
 
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
@@ -64,6 +73,15 @@ namespace NMR {
 		nfInt32 getY1();
 		nfInt32 getX2();
 		nfInt32 getY2();
+
+		nfInt32 getTag();
+		nfInt32 getCustomProfileID();
+		nfInt32 getFactorF1();
+		nfInt32 getFactorG1();
+		nfInt32 getFactorH1();
+		nfInt32 getFactorF2();
+		nfInt32 getFactorG2();
+		nfInt32 getFactorH2();
 	};
 
 	typedef std::shared_ptr <CToolpathReaderNode_Hatch> PToolpathReaderNode_Hatch;

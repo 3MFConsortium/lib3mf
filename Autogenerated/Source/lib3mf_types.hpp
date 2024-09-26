@@ -153,6 +153,7 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOORDINATE 4010 /** Invalid hatch coordinate. */
 #define LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE 4011 /** Invalid point coordinate. */
 #define LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOUNT 4012 /** Invalid hatch count */
+#define LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHHATCHDATA 4013 /** Scaling data needs to match hatch data */
 
 /*************************************************************************************************************************
  Error strings for Lib3MF
@@ -221,6 +222,7 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
     case LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOORDINATE: return "Invalid hatch coordinate.";
     case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE: return "Invalid point coordinate.";
     case LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOUNT: return "Invalid hatch count";
+    case LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHHATCHDATA: return "Scaling data needs to match hatch data";
     default: return "unknown error";
   }
 }
@@ -405,7 +407,11 @@ namespace Lib3MF {
     Unknown = 0,
     Hatch = 1,
     Loop = 2,
-    Polyline = 3
+    Polyline = 3,
+    PointSequence = 4,
+    Arc = 5,
+    Delay = 6,
+    Sync = 7
   };
   
   enum class eToolpathAttributeType : Lib3MF_int32 {
@@ -468,13 +474,17 @@ namespace Lib3MF {
   } sDiscretePosition2D;
   
   typedef struct sHatch2D {
-      Lib3MF_single m_Point1Coordinates[2];
-      Lib3MF_single m_Point2Coordinates[2];
+      Lib3MF_double m_Point1Coordinates[2];
+      Lib3MF_double m_Point2Coordinates[2];
+      Lib3MF_uint32 m_ProfileOverrideID;
+      Lib3MF_int32 m_Tag;
   } sHatch2D;
   
   typedef struct sDiscreteHatch2D {
       Lib3MF_int32 m_Point1Coordinates[2];
       Lib3MF_int32 m_Point2Coordinates[2];
+      Lib3MF_uint32 m_ProfileOverrideID;
+      Lib3MF_int32 m_Tag;
   } sDiscreteHatch2D;
   
   typedef struct sCompositeConstituent {

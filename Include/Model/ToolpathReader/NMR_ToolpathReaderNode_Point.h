@@ -41,6 +41,10 @@ namespace NMR {
 
 		nfInt32 m_nX;
 		nfInt32 m_nY;
+		nfInt32 m_nTag;
+		nfInt32 m_nFactorF;
+		nfInt32 m_nFactorG;
+		nfInt32 m_nFactorH;
 
 		nfBool m_bHasX;
 		nfBool m_bHasY;
@@ -58,6 +62,11 @@ namespace NMR {
 
 		nfInt32 getX();
 		nfInt32 getY();
+		nfInt32 getTag();
+		nfInt32 getFactorF();
+		nfInt32 getFactorG();
+		nfInt32 getFactorH();
+
 
 	};
 

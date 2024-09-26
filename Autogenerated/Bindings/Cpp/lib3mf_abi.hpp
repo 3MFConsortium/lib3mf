@@ -3291,17 +3291,17 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentcount(Lib3MF_T
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentinfo(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF::eToolpathSegmentType * pType, Lib3MF_uint32 * pPointCount);
 
 /**
-* Retrieves the assigned segment profile.
+* Retrieves the assigned segment default profile. Fails for delay and sync segments.
 *
 * @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
 * @param[in] nIndex - Index. Must be between 0 and Count - 1.
 * @param[out] pProfile - Segment Profile
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentprofile(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_ToolpathProfile * pProfile);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentdefaultprofile(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_ToolpathProfile * pProfile);
 
 /**
-* Retrieves the assigned segment profile uuid.
+* Retrieves the assigned segment default profile uuid. Fails for delay and sync segments.
 *
 * @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
 * @param[in] nIndex - Index. Must be between 0 and Count - 1.
@@ -3310,10 +3310,20 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentprofile(Lib3MF
 * @param[out] pProfileUUIDBuffer -  buffer of Segment Profile UUID, may be NULL
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentprofileuuid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nProfileUUIDBufferSize, Lib3MF_uint32* pProfileUUIDNeededChars, char * pProfileUUIDBuffer);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nProfileUUIDBufferSize, Lib3MF_uint32* pProfileUUIDNeededChars, char * pProfileUUIDBuffer);
 
 /**
-* Retrieves the assigned segment profile.
+* Returns if the segment has a uniform profile. If it is uniform, then the default profile applies to the whole segment. Returns false for delay and sync segments.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+* @param[out] pHasUniformProfile - If true, the segment has a uniform profile ID. 
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_segmenthasuniformprofile(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, bool * pHasUniformProfile);
+
+/**
+* Retrieves the assigned segment profile. Fails for delay and sync segments.
 *
 * @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
 * @param[in] nIndex - Index. Must be between 0 and Count - 1.
@@ -3323,7 +3333,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentprofileuuid(Li
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpart(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_BuildItem * pBuildItem);
 
 /**
-* Retrieves the assigned segment part uuid.
+* Retrieves the assigned segment part uuid. Fails for delay and sync segments.
 *
 * @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
 * @param[in] nIndex - Index. Must be between 0 and Count - 1.
@@ -3335,7 +3345,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpart(Lib3MF_To
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpartuuid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nPartUUIDBufferSize, Lib3MF_uint32* pPartUUIDNeededChars, char * pPartUUIDBuffer);
 
 /**
-* Retrieves the assigned segment part id. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+* Retrieves the assigned segment part id. Fails for delay and sync segments.
 *
 * @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
 * @param[in] nIndex - Index. Must be between 0 and Count - 1.
@@ -3345,7 +3355,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpartuuid(Lib3M
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentlocalpartid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 * pLocalPartID);
 
 /**
-* Retrieves the global part UUID by the local part ID. Fails if part ID does not exist in this layer. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+* Retrieves the global part UUID by the local part ID.
 *
 * @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
 * @param[in] nLocalPartID - Local Segment Part ID
@@ -3357,7 +3367,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentlocalpartid(Li
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nLocalPartID, const Lib3MF_uint32 nPartUUIDBufferSize, Lib3MF_uint32* pPartUUIDNeededChars, char * pPartUUIDBuffer);
 
 /**
-* Retrieves the assigned segment point list. For type hatch, the points are taken pairwise.
+* Retrieves the assigned segment point list. For type hatch, the points are taken pairwise. Returns an empty array for delay and sync elements.
 *
 * @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
 * @param[in] nIndex - Index. Must be between 0 and Count - 1.
@@ -3369,7 +3379,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getpartuuidbylocalpartid
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer);
 
 /**
-* Retrieves the assigned segment point list in units. For type hatch, the points are taken pairwise.
+* Retrieves the assigned segment point list in toolpath units. For type hatch, the points are taken pairwise. Returns an empty array for delay and sync elements.
 *
 * @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
 * @param[in] nIndex - Index. Must be between 0 and Count - 1.
@@ -3381,6 +3391,30 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpointdatainmod
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sDiscretePosition2D * pPointDataBuffer);
 
 /**
+* Retrieves the assigned segment hatch list. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+* @param[in] nHatchDataBufferSize - Number of elements in buffer
+* @param[out] pHatchDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
+* @param[out] pHatchDataBuffer - Hatch2D  buffer of The hatch data array. The point coordinates are in model units.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, Lib3MF::sHatch2D * pHatchDataBuffer);
+
+/**
+* Retrieves the assigned segment hatch list in toolpath units. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[out] pPointDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
+* @param[out] pPointDataBuffer - DiscreteHatch2D  buffer of The hatch data array. The point coordinates are in toolpath units.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sDiscreteHatch2D * pPointDataBuffer);
+
+/**
 * Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
 *
 * @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
@@ -3390,7 +3424,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpointdatadiscr
 * @param[out] pAttributeType - Attribute Type.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_findattributeinfobyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID, Lib3MF::eToolpathAttributeType * pAttributeType);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_findsegmentattributeinfobyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID, Lib3MF::eToolpathAttributeType * pAttributeType);
 
 /**
 * Retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.
@@ -3401,7 +3435,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_findattributeinfobyname(
 * @param[out] pID - Attribute ID.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_findattributeidbyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_findsegmentattributeidbyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID);
 
 /**
 * Retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.
@@ -3412,7 +3446,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_findattributeidbyname(Li
 * @param[out] pAttributeType - Attribute Type.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_findattributevaluebyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF::eToolpathAttributeType * pAttributeType);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_findsegmentattributetypebyname(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF::eToolpathAttributeType * pAttributeType);
 
 /**
 * Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
@@ -3549,24 +3583,30 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_setsegmentattribute(Lib3MF
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_clearsegmentattributes(Lib3MF_ToolpathLayerData pToolpathLayerData);
 
 /**
-* Stores custom line attributes for the next WriteLoop, WritePolyline or WriteHatchData call.
+* Sets the laser index for all subsequent segments.
 *
 * @param[in] pToolpathLayerData - ToolpathLayerData instance.
-* @param[in] pNameSpace - The namespace of the attribute to register.
-* @param[in] pAttributeName - The name of the attribute to register.
-* @param[in] nValuesBufferSize - Number of elements in buffer
-* @param[in] pValuesBuffer - int32 buffer of Custom Values to store on segment lines. Array MUST NOT be empty. If custom attributes had been already defined, the error cardinality MUST match, or an error will be thrown.
+* @param[in] nValue - The value of the laser index for all subsequent segments.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_addcustomlineattributes(Lib3MF_ToolpathLayerData pToolpathLayerData, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint64 nValuesBufferSize, const Lib3MF_int32 * pValuesBuffer);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_setlaserindex(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nValue);
 
 /**
-* Clears all custom line attributes. Any call to WriteLoop, WritePolyline or WriteHatchData will do this implicitely.
+* Removes the laser index for all subsequent segments.
 *
 * @param[in] pToolpathLayerData - ToolpathLayerData instance.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_clearcustomlineattributes(Lib3MF_ToolpathLayerData pToolpathLayerData);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_clearlaserindex(Lib3MF_ToolpathLayerData pToolpathLayerData);
+
+/**
+* Sets the denominator for the scaling factor, which is an integer.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nValue - The value of factor denominator.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_setfactorrange(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nValue);
 
 /**
 * writes hatch data to the layer in model units.
@@ -3574,12 +3614,41 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_clearcustomlineattributes(
 * @param[in] pToolpathLayerData - ToolpathLayerData instance.
 * @param[in] nProfileID - The toolpath profile to use
 * @param[in] nPartID - The toolpath part to use
-* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of hatches in the hatchdata array. In any case, stored custom attributes will be cleared after the call.
 * @param[in] nHatchDataBufferSize - Number of elements in buffer
-* @param[in] pHatchDataBuffer - Hatch2D buffer of The hatch data in model units. Array MUST NOT be empty.
+* @param[in] pHatchDataBuffer - Hatch2D buffer of The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writehatchdatainmodelunits(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, bool bWriteCustomLineAttributes, Lib3MF_uint64 nHatchDataBufferSize, const Lib3MF::sHatch2D * pHatchDataBuffer);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writehatchdatainmodelunits(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const Lib3MF::sHatch2D * pHatchDataBuffer);
+
+/**
+* writes hatch data to the layer in model units with constant profile overrides per hatch.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nHatchDataBufferSize - Number of elements in buffer
+* @param[in] pHatchDataBuffer - Hatch2D buffer of The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+* @param[in] nScalingDataBufferSize - Number of elements in buffer
+* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors. MUST have the same cardinality as HatchData.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithconstantoverrides(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const Lib3MF::sHatch2D * pHatchDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer);
+
+/**
+* writes hatch data to the layer in model units with ramped profile overrides per hatch.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nHatchDataBufferSize - Number of elements in buffer
+* @param[in] pHatchDataBuffer - Hatch2D buffer of The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+* @param[in] nScalingData1BufferSize - Number of elements in buffer
+* @param[in] pScalingData1Buffer - int32 buffer of The profile override scale factors for the start point of each hatch. MUST have the same cardinality as HatchData.
+* @param[in] nScalingData2BufferSize - Number of elements in buffer
+* @param[in] pScalingData2Buffer - int32 buffer of The profile override scale factors for the end point of each hatch. MUST have the same cardinality as HatchData.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithrampedoverrides(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const Lib3MF::sHatch2D * pHatchDataBuffer, Lib3MF_uint64 nScalingData1BufferSize, const Lib3MF_int32 * pScalingData1Buffer, Lib3MF_uint64 nScalingData2BufferSize, const Lib3MF_int32 * pScalingData2Buffer);
 
 /**
 * writes hatch data to the layer in toolpath units.
@@ -3587,64 +3656,145 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writehatchdatainmodelunits
 * @param[in] pToolpathLayerData - ToolpathLayerData instance.
 * @param[in] nProfileID - The toolpath profile to use
 * @param[in] nPartID - The toolpath part to use
-* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of hatches in the hatchdata array. In any case, stored custom attributes will be cleared after the call.
 * @param[in] nHatchDataBufferSize - Number of elements in buffer
-* @param[in] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data in toolpath units. Array MUST NOT be empty.
+* @param[in] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writehatchdatadiscrete(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, bool bWriteCustomLineAttributes, Lib3MF_uint64 nHatchDataBufferSize, const Lib3MF::sDiscreteHatch2D * pHatchDataBuffer);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writehatchdatadiscrete(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const Lib3MF::sDiscreteHatch2D * pHatchDataBuffer);
+
+/**
+* writes hatch data to the layer in toolpath units with constant profile overrides per hatch.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nHatchDataBufferSize - Number of elements in buffer
+* @param[in] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+* @param[in] nScalingDataBufferSize - Number of elements in buffer
+* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors. MUST have the same cardinality as HatchData.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writehatchdatadiscretewithconstantoverrides(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const Lib3MF::sDiscreteHatch2D * pHatchDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer);
+
+/**
+* writes hatch data to the layer in toolpath units with ramped profile overrides per hatch.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nHatchDataBufferSize - Number of elements in buffer
+* @param[in] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+* @param[in] nScalingData1BufferSize - Number of elements in buffer
+* @param[in] pScalingData1Buffer - int32 buffer of The profile override scale factors for the start point of each hatch. MUST have the same cardinality as HatchData.
+* @param[in] nScalingData2BufferSize - Number of elements in buffer
+* @param[in] pScalingData2Buffer - int32 buffer of The profile override scale factors for the end point of each hatch. MUST have the same cardinality as HatchData.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writehatchdatadiscretewithrampedoverrides(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const Lib3MF::sDiscreteHatch2D * pHatchDataBuffer, Lib3MF_uint64 nScalingData1BufferSize, const Lib3MF_int32 * pScalingData1Buffer, Lib3MF_uint64 nScalingData2BufferSize, const Lib3MF_int32 * pScalingData2Buffer);
 
 /**
 * writes loop data to the layer in model units.
 *
 * @param[in] pToolpathLayerData - ToolpathLayerData instance.
-* @param[in] nProfileID - The toolpath profile to use
+* @param[in] nProfileID - The toolpath profile to use. Loop Profiles can not be overridden by point.
 * @param[in] nPartID - The toolpath part to use
-* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of points in the pointdata array. In any case, stored custom attributes will be cleared after the call.
 * @param[in] nPointDataBufferSize - Number of elements in buffer
 * @param[in] pPointDataBuffer - Position2D buffer of The point data in model units. Array MUST NOT be empty.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writeloopinmodelunits(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, bool bWriteCustomLineAttributes, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writeloopinmodelunits(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer);
 
 /**
 * writes loop data to the layer in toolpath units.
 *
 * @param[in] pToolpathLayerData - ToolpathLayerData instance.
-* @param[in] nProfileID - The toolpath profile to use
+* @param[in] nProfileID - The toolpath profile to use. Loop Profiles can not be overridden by point.
 * @param[in] nPartID - The toolpath part to use
-* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of points in the pointdata array. In any case, stored custom attributes will be cleared after the call.
 * @param[in] nPointDataBufferSize - Number of elements in buffer
 * @param[in] pPointDataBuffer - DiscretePosition2D buffer of The point data in toolpath units. Array MUST NOT be empty.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writeloopdiscrete(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, bool bWriteCustomLineAttributes, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D * pPointDataBuffer);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writeloopdiscrete(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D * pPointDataBuffer);
+
+/**
+* writes loop data to the layer in model units with profile overrides.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use. Loop Profiles can not be overridden by point.
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - Position2D buffer of The point data in model units. Array MUST NOT be empty.
+* @param[in] nScalingDataBufferSize - Number of elements in buffer
+* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors for F. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writeloopinmodelunitswithoverrides(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer);
+
+/**
+* writes loop data to the layer in toolpath units with profile overrides..
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use. Loop Profiles can not be overridden by point.
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - DiscretePosition2D buffer of The point data in toolpath units. Array MUST NOT be empty.
+* @param[in] nScalingDataBufferSize - Number of elements in buffer
+* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors for F. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writeloopdiscretewithoverrides(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer);
 
 /**
 * writes polyline data to the layer.
 *
 * @param[in] pToolpathLayerData - ToolpathLayerData instance.
-* @param[in] nProfileID - The toolpath profile to use
+* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
 * @param[in] nPartID - The toolpath part to use
-* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of points in the pointdata array. In any case, stored custom attributes will be cleared after the call.
 * @param[in] nPointDataBufferSize - Number of elements in buffer
 * @param[in] pPointDataBuffer - Position2D buffer of The point data in model units. Array MUST NOT be empty.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writepolylineinmodelunits(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, bool bWriteCustomLineAttributes, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writepolylineinmodelunits(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer);
 
 /**
 * writes polyline data to the layer.
 *
 * @param[in] pToolpathLayerData - ToolpathLayerData instance.
-* @param[in] nProfileID - The toolpath profile to use
+* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
 * @param[in] nPartID - The toolpath part to use
-* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of points in the pointdata array. In any case, stored custom attributes will be cleared after the call.
 * @param[in] nPointDataBufferSize - Number of elements in buffer
 * @param[in] pPointDataBuffer - DiscretePosition2D buffer of The point data in toolpath units. Array MUST NOT be empty.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writepolylinediscrete(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, bool bWriteCustomLineAttributes, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D * pPointDataBuffer);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writepolylinediscrete(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D * pPointDataBuffer);
+
+/**
+* writes polyline data to the layer with profile overrides.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - Position2D buffer of The point data in model units. Array MUST NOT be empty.
+* @param[in] nScalingDataBufferSize - Number of elements in buffer
+* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors. MUST have the same cardinality as PointData. A Profile override ID of 0 inherits the profile of the segment.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writepolylineinmodelunitswithoverrides(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer);
+
+/**
+* writes polyline data to the layer with profile overrides.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - DiscretePosition2D buffer of The point data in toolpath units. Array MUST NOT be empty.
+* @param[in] nScalingDataBufferSize - Number of elements in buffer
+* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors. MUST have the same cardinality as PointData. A Profile override ID of 0 inherits the profile of the segment.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_writepolylinediscretewithoverrides(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer);
 
 /**
 * Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
@@ -3946,7 +4096,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_clearcustomdata(Lib3MF_Toolpath pTo
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_deletecustomdata(Lib3MF_Toolpath pToolpath, Lib3MF_CustomDOMTree pData, bool * pSuccess);
 
 /**
-* Registers an Integer Attribute that each segment holds.
+* Registers an Integer Attribute that each segment holds. Registering only applies to reader or writer objects created after the call.
 *
 * @param[in] pToolpath - Toolpath instance.
 * @param[in] pNameSpace - Namespace of the custom data tree. MUST not be empty.

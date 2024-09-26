@@ -97,14 +97,19 @@ namespace NMR {
 		m_pCurrentSegment = nullptr;
 	}
 
-	void CModelToolpathLayerReadData::addDiscretePoint(nfInt32 nX, nfInt32 nY)
+	void CModelToolpathLayerReadData::addDiscretePoint(nfInt32 nX, nfInt32 nY, nfInt32 nTag, nfInt32 nCustomProfileID, nfInt32 nFactorF, nfInt32 nFactorG, nfInt32 nFactorH)
 	{
 		if (m_pCurrentSegment == nullptr)
 			throw CNMRException(NMR_ERROR_LAYERSEGMENTNOTOPEN);
 
-		NVEC2I * pVec = m_Points.allocData();
-		pVec->m_values.x = nX;
-		pVec->m_values.y = nY;
+		TOOLPATHREADPOINT* pVec = m_Points.allocData();
+		pVec->m_nX = nX;
+		pVec->m_nY = nY;
+		pVec->m_nTag = nTag;
+		pVec->m_nProfileOverride = nCustomProfileID;
+		pVec->m_nFactorF = nFactorF;
+		pVec->m_nFactorG = nFactorG;
+		pVec->m_nFactorH = nFactorH;
 	}
 
 	nfUint32 CModelToolpathLayerReadData::getSegmentCount()
@@ -122,7 +127,7 @@ namespace NMR {
 		nPointCount = pSegment->m_nPointCount;
 	}
 
-	NVEC2I CModelToolpathLayerReadData::getSegmentPoint(nfUint32 nSegmentIndex, nfUint32 nPointIndex)
+	TOOLPATHREADPOINT& CModelToolpathLayerReadData::getSegmentPoint(nfUint32 nSegmentIndex, nfUint32 nPointIndex)
 	{
 		TOOLPATHREADSEGMENT * pSegment = m_Segments.getData(nSegmentIndex);
 		__NMRASSERT(pSegment != nullptr);
@@ -130,7 +135,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
 		return m_Points.getDataRef(pSegment->m_nStartPoint + nPointIndex);
-
+	
 	}
 
 	void CModelToolpathLayerReadData::registerUUID(nfUint32 nID, std::string sUUID)
@@ -172,7 +177,7 @@ namespace NMR {
 		m_CustomXMLData.push_back(pCustomXMLTree);
 	}
 
-	uint32_t CModelToolpathLayerReadData::registerCustomSegmentAttribute(const std::string& sNameSpace, const std::string& sAttributeName, eModelToolpathSegmentAttributeType eSegmentType)
+	uint32_t CModelToolpathLayerReadData::registerCustomSegmentAttribute(const std::string& sNameSpace, const std::string& sAttributeName, eModelToolpathSegmentAttributeType eAttributeType)
 	{
 		if (m_Segments.getCount() > 0)
 			throw CNMRException(NMR_ERROR_SEGMENTATTRIBUTEDEFINEDAFTERREADING);
@@ -185,7 +190,7 @@ namespace NMR {
 
 		auto iIter = m_SegmentAttributeMap.find(std::make_pair(sNameSpace, sAttributeName));
 		if (iIter != m_SegmentAttributeMap.end()) {
-			if (iIter->second.second != eSegmentType)
+			if (iIter->second.second != eAttributeType)
 				throw CNMRException(NMR_ERROR_INVALIDSEGMENTATTRIBUTETYPE);
 
 			return iIter->second.first;
@@ -193,13 +198,13 @@ namespace NMR {
 		}
 
 		
-		switch (eSegmentType) {
+		switch (eAttributeType) {
 		case eModelToolpathSegmentAttributeType::SegmentAttributeInt64:
 		case eModelToolpathSegmentAttributeType::SegmentAttributeDouble:
 			m_AttributesOfNextSegment.push_back (0);
-			m_SegmentAttributeDefinitions.push_back(std::make_pair(eSegmentType, std::make_pair(sNameSpace, sAttributeName)));
+			m_SegmentAttributeDefinitions.push_back(std::make_pair(eAttributeType, std::make_pair(sNameSpace, sAttributeName)));
 			nNewAttributeID = (uint32_t)m_SegmentAttributeDefinitions.size();
-			m_SegmentAttributeMap.insert(std::make_pair (std::make_pair (sNameSpace, sAttributeName), std::make_pair (nNewAttributeID, eSegmentType)));
+			m_SegmentAttributeMap.insert(std::make_pair (std::make_pair (sNameSpace, sAttributeName), std::make_pair (nNewAttributeID, eAttributeType)));
 			return nNewAttributeID;
 
 		default:
@@ -267,7 +272,7 @@ namespace NMR {
 
 		if ((nAttributeID < 1) && (nAttributeID > m_SegmentAttributeDefinitions.size ()))
 			throw CNMRException(NMR_ERROR_INVALIDSEGMENTATTRIBUTEID);
-		__NMRASSERT(pSegment->m_pDoubleAttributes != nullptr);
+		__NMRASSERT(pSegment->m_pAttributeData != nullptr);
 
 		double* pEntry = (double*)&pSegment->m_pAttributeData[nAttributeID - 1];
 		return *pEntry;
@@ -299,7 +304,7 @@ namespace NMR {
 
 	}
 
-	std::pair<uint32_t, eModelToolpathSegmentAttributeType> CModelToolpathLayerReadData::findAttribute(const std::string& sNameSpace, const std::string& sAttributeName, bool bMustExist)
+	std::pair<uint32_t, eModelToolpathSegmentAttributeType> CModelToolpathLayerReadData::findSegmentAttribute(const std::string& sNameSpace, const std::string& sAttributeName, bool bMustExist)
 	{
 		auto iIter = m_SegmentAttributeMap.find(std::make_pair(sNameSpace, sAttributeName));
 
@@ -317,5 +322,15 @@ namespace NMR {
 	{
 		return m_pModelToolpath->getUnitFactor();
 	}
+
+	bool CModelToolpathLayerReadData::segmentHasUniformProfile(nfUint32 nSegmentIndex)
+	{
+		TOOLPATHREADSEGMENT* pSegment = m_Segments.getData(nSegmentIndex);
+		__NMRASSERT(pSegment != nullptr);
+
+		//pSegment->
+		return false;
+	}
+
 
 }

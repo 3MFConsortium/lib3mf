@@ -57,7 +57,10 @@ namespace NMR {
 	enum class eModelToolpathSegmentType : nfUint32 {
 		HatchSegment = 0,
 		LoopSegment = 1,
-		PolylineSegment = 2
+		PolylineSegment = 2,
+		ArcSegment = 3,
+		SyncSegment = 4,
+		DelaySegment = 5
 	};
 
 	enum class eModelToolpathSegmentAttributeType : nfUint32 {
@@ -75,6 +78,16 @@ namespace NMR {
 		nfInt64* m_pAttributeData;
 	} TOOLPATHREADSEGMENT;
 
+	typedef struct {
+		nfInt32 m_nX;
+		nfInt32 m_nY;
+		nfInt32 m_nProfileOverride;
+		nfInt32 m_nTag;
+		nfInt32 m_nFactorF;
+		nfInt32 m_nFactorG;
+		nfInt32 m_nFactorH;
+	} TOOLPATHREADPOINT;
+
 	typedef std::vector<int64_t> CToolpathLayerAttributePage;
 
 	class CModelToolpathLayerReadData {
@@ -85,7 +98,9 @@ namespace NMR {
 
 		CPagedVector<TOOLPATHREADSEGMENT> m_Segments;
 		std::vector<std::pair<eModelToolpathSegmentAttributeType, std::pair<std::string, std::string>>> m_SegmentAttributeDefinitions;
+
 		std::map<std::pair<std::string, std::string>, std::pair<uint32_t, eModelToolpathSegmentAttributeType>> m_SegmentAttributeMap;
+
 		std::vector<int64_t> m_AttributesOfNextSegment;
 
 		std::vector<CToolpathLayerAttributePage> m_AttributeBuffer;
@@ -94,7 +109,7 @@ namespace NMR {
 
 		int64_t* allocAttributeBuffer(uint32_t nEntryCount);
 
-		CPagedVector<NVEC2I> m_Points;
+		CPagedVector<TOOLPATHREADPOINT> m_Points;
 		TOOLPATHREADSEGMENT * m_pCurrentSegment;
 
 		std::map<uint32_t, std::string> m_UUIDMap;
@@ -111,11 +126,11 @@ namespace NMR {
 
 		void beginSegment(eModelToolpathSegmentType eType, nfUint32 nProfileID, nfUint32 nPartID);
 		void endSegment();
-		void addDiscretePoint (nfInt32 nX, nfInt32 nY);
+		void addDiscretePoint (nfInt32 nX, nfInt32 nY, nfInt32 nTag, nfInt32 nCustomProfileID, nfInt32 nFactorF, nfInt32 nFactorG, nfInt32 nFactorH);
 
 		nfUint32 getSegmentCount();
 		void getSegmentInfo (nfUint32 nSegmentIndex, eModelToolpathSegmentType & eType, nfUint32 & nProfileID, nfUint32 & nPartID, nfUint32 & nPointCount);
-		NVEC2I getSegmentPoint (nfUint32 nSegmentIndex, nfUint32 nPointIndex);
+		TOOLPATHREADPOINT & getSegmentPoint (nfUint32 nSegmentIndex, nfUint32 nPointIndex);
 
 		void registerUUID (nfUint32 nID, std::string sUUID);
 		std::string mapIDtoUUID(nfUint32 nID);
@@ -124,13 +139,15 @@ namespace NMR {
 		PCustomXMLTree getCustomXMLData(uint32_t nIndex);
 		void addCustomXMLData(PCustomXMLTree pCustomXMLTree);
 
-		uint32_t registerCustomSegmentAttribute (const std::string& sNameSpace, const std::string& sAttributeName, eModelToolpathSegmentAttributeType eSegmentType);
+		uint32_t registerCustomSegmentAttribute (const std::string& sNameSpace, const std::string& sAttributeName, eModelToolpathSegmentAttributeType eAttributeType);
 
 		void clearSegmentAttributes ();
 		void storeSegmentAttribute (const std::string & sNameSpace, const std::string & sAttributeName, const std::string & sAttributeValue);
 		int64_t getSegmentIntegerAttribute(nfUint32 nSegmentIndex, uint32_t nAttributeID);
 		double getSegmentDoubleAttribute(nfUint32 nSegmentIndex, uint32_t nAttributeID);
-		std::pair<uint32_t, eModelToolpathSegmentAttributeType> findAttribute(const std::string& sNameSpace, const std::string& sAttributeName, bool bMustExist);
+		std::pair<uint32_t, eModelToolpathSegmentAttributeType> findSegmentAttribute(const std::string& sNameSpace, const std::string& sAttributeName, bool bMustExist);
+
+		bool segmentHasUniformProfile(nfUint32 nSegmentIndex);
 
 		double getUnits();
 

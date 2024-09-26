@@ -423,6 +423,7 @@ public:
 			case LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOORDINATE: return "TOOLPATH_INVALIDHATCHCOORDINATE";
 			case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE: return "TOOLPATH_INVALIDPOINTCOORDINATE";
 			case LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOUNT: return "TOOLPATH_INVALIDHATCHCOUNT";
+			case LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHHATCHDATA: return "TOOLPATH_SCALINGDATANEEDSTOMATCHHATCHDATA";
 		}
 		return "UNKNOWN";
 	}
@@ -491,6 +492,7 @@ public:
 			case LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOORDINATE: return "Invalid hatch coordinate.";
 			case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE: return "Invalid point coordinate.";
 			case LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOUNT: return "Invalid hatch count";
+			case LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHHATCHDATA: return "Scaling data needs to match hatch data";
 		}
 		return "unknown error";
 	}
@@ -1677,17 +1679,20 @@ public:
 	inline std::string GetLayerDataUUID();
 	inline Lib3MF_uint32 GetSegmentCount();
 	inline void GetSegmentInfo(const Lib3MF_uint32 nIndex, eToolpathSegmentType & eType, Lib3MF_uint32 & nPointCount);
-	inline PToolpathProfile GetSegmentProfile(const Lib3MF_uint32 nIndex);
-	inline std::string GetSegmentProfileUUID(const Lib3MF_uint32 nIndex);
+	inline PToolpathProfile GetSegmentDefaultProfile(const Lib3MF_uint32 nIndex);
+	inline std::string GetSegmentDefaultProfileUUID(const Lib3MF_uint32 nIndex);
+	inline bool SegmentHasUniformProfile(const Lib3MF_uint32 nIndex);
 	inline PBuildItem GetSegmentPart(const Lib3MF_uint32 nIndex);
 	inline std::string GetSegmentPartUUID(const Lib3MF_uint32 nIndex);
 	inline Lib3MF_uint32 GetSegmentLocalPartID(const Lib3MF_uint32 nIndex);
 	inline std::string GetPartUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID);
 	inline void GetSegmentPointDataInModelUnits(const Lib3MF_uint32 nIndex, std::vector<sPosition2D> & PointDataBuffer);
 	inline void GetSegmentPointDataDiscrete(const Lib3MF_uint32 nIndex, std::vector<sDiscretePosition2D> & PointDataBuffer);
-	inline void FindAttributeInfoByName(const std::string & sNameSpace, const std::string & sAttributeName, Lib3MF_uint32 & nID, eToolpathAttributeType & eAttributeType);
-	inline Lib3MF_uint32 FindAttributeIDByName(const std::string & sNameSpace, const std::string & sAttributeName);
-	inline eToolpathAttributeType FindAttributeValueByName(const std::string & sNameSpace, const std::string & sAttributeName);
+	inline void GetSegmentHatchDataInModelUnits(const Lib3MF_uint32 nIndex, std::vector<sHatch2D> & HatchDataBuffer);
+	inline void GetSegmentHatchDataDiscrete(const Lib3MF_uint32 nIndex, std::vector<sDiscreteHatch2D> & PointDataBuffer);
+	inline void FindSegmentAttributeInfoByName(const std::string & sNameSpace, const std::string & sAttributeName, Lib3MF_uint32 & nID, eToolpathAttributeType & eAttributeType);
+	inline Lib3MF_uint32 FindSegmentAttributeIDByName(const std::string & sNameSpace, const std::string & sAttributeName);
+	inline eToolpathAttributeType FindSegmentAttributeTypeByName(const std::string & sNameSpace, const std::string & sAttributeName);
 	inline Lib3MF_int64 GetSegmentIntegerAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID);
 	inline Lib3MF_int64 GetSegmentIntegerAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName);
 	inline Lib3MF_double GetSegmentDoubleAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID);
@@ -1716,14 +1721,23 @@ public:
 	inline Lib3MF_uint32 RegisterBuildItem(classParam<CBuildItem> pBuildItem);
 	inline void SetSegmentAttribute(const std::string & sNameSpace, const std::string & sAttributeName, const std::string & sValue);
 	inline void ClearSegmentAttributes();
-	inline void AddCustomLineAttributes(const std::string & sNameSpace, const std::string & sAttributeName, const CInputVector<Lib3MF_int32> & ValuesBuffer);
-	inline void ClearCustomLineAttributes();
-	inline void WriteHatchDataInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const bool bWriteCustomLineAttributes, const CInputVector<sHatch2D> & HatchDataBuffer);
-	inline void WriteHatchDataDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const bool bWriteCustomLineAttributes, const CInputVector<sDiscreteHatch2D> & HatchDataBuffer);
-	inline void WriteLoopInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const bool bWriteCustomLineAttributes, const CInputVector<sPosition2D> & PointDataBuffer);
-	inline void WriteLoopDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const bool bWriteCustomLineAttributes, const CInputVector<sDiscretePosition2D> & PointDataBuffer);
-	inline void WritePolylineInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const bool bWriteCustomLineAttributes, const CInputVector<sPosition2D> & PointDataBuffer);
-	inline void WritePolylineDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const bool bWriteCustomLineAttributes, const CInputVector<sDiscretePosition2D> & PointDataBuffer);
+	inline void SetLaserIndex(const Lib3MF_uint32 nValue);
+	inline void ClearLaserIndex();
+	inline void SetFactorRange(const Lib3MF_uint32 nValue);
+	inline void WriteHatchDataInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sHatch2D> & HatchDataBuffer);
+	inline void WriteHatchDataInModelUnitsWithConstantOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer);
+	inline void WriteHatchDataInModelUnitsWithRampedOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingData1Buffer, const CInputVector<Lib3MF_int32> & ScalingData2Buffer);
+	inline void WriteHatchDataDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscreteHatch2D> & HatchDataBuffer);
+	inline void WriteHatchDataDiscreteWithConstantOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscreteHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer);
+	inline void WriteHatchDataDiscreteWithRampedOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscreteHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingData1Buffer, const CInputVector<Lib3MF_int32> & ScalingData2Buffer);
+	inline void WriteLoopInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
+	inline void WriteLoopDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer);
+	inline void WriteLoopInModelUnitsWithOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer);
+	inline void WriteLoopDiscreteWithOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer);
+	inline void WritePolylineInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
+	inline void WritePolylineDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer);
+	inline void WritePolylineInModelUnitsWithOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer);
+	inline void WritePolylineDiscreteWithOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer);
 	inline PCustomDOMTree AddCustomData(const std::string & sNameSpace, const std::string & sDataName);
 	inline void Finish();
 };
@@ -6376,14 +6390,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathLayerReader::GetSegmentProfile - Retrieves the assigned segment profile.
+	* CToolpathLayerReader::GetSegmentDefaultProfile - Retrieves the assigned segment default profile. Fails for delay and sync segments.
 	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
 	* @return Segment Profile
 	*/
-	PToolpathProfile CToolpathLayerReader::GetSegmentProfile(const Lib3MF_uint32 nIndex)
+	PToolpathProfile CToolpathLayerReader::GetSegmentDefaultProfile(const Lib3MF_uint32 nIndex)
 	{
 		Lib3MFHandle hProfile = nullptr;
-		CheckError(lib3mf_toolpathlayerreader_getsegmentprofile(m_pHandle, nIndex, &hProfile));
+		CheckError(lib3mf_toolpathlayerreader_getsegmentdefaultprofile(m_pHandle, nIndex, &hProfile));
 		
 		if (!hProfile) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -6392,23 +6406,36 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathLayerReader::GetSegmentProfileUUID - Retrieves the assigned segment profile uuid.
+	* CToolpathLayerReader::GetSegmentDefaultProfileUUID - Retrieves the assigned segment default profile uuid. Fails for delay and sync segments.
 	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
 	* @return Segment Profile UUID
 	*/
-	std::string CToolpathLayerReader::GetSegmentProfileUUID(const Lib3MF_uint32 nIndex)
+	std::string CToolpathLayerReader::GetSegmentDefaultProfileUUID(const Lib3MF_uint32 nIndex)
 	{
 		Lib3MF_uint32 bytesNeededProfileUUID = 0;
 		Lib3MF_uint32 bytesWrittenProfileUUID = 0;
-		CheckError(lib3mf_toolpathlayerreader_getsegmentprofileuuid(m_pHandle, nIndex, 0, &bytesNeededProfileUUID, nullptr));
+		CheckError(lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid(m_pHandle, nIndex, 0, &bytesNeededProfileUUID, nullptr));
 		std::vector<char> bufferProfileUUID(bytesNeededProfileUUID);
-		CheckError(lib3mf_toolpathlayerreader_getsegmentprofileuuid(m_pHandle, nIndex, bytesNeededProfileUUID, &bytesWrittenProfileUUID, &bufferProfileUUID[0]));
+		CheckError(lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid(m_pHandle, nIndex, bytesNeededProfileUUID, &bytesWrittenProfileUUID, &bufferProfileUUID[0]));
 		
 		return std::string(&bufferProfileUUID[0]);
 	}
 	
 	/**
-	* CToolpathLayerReader::GetSegmentPart - Retrieves the assigned segment profile.
+	* CToolpathLayerReader::SegmentHasUniformProfile - Returns if the segment has a uniform profile. If it is uniform, then the default profile applies to the whole segment. Returns false for delay and sync segments.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return If true, the segment has a uniform profile ID. 
+	*/
+	bool CToolpathLayerReader::SegmentHasUniformProfile(const Lib3MF_uint32 nIndex)
+	{
+		bool resultHasUniformProfile = 0;
+		CheckError(lib3mf_toolpathlayerreader_segmenthasuniformprofile(m_pHandle, nIndex, &resultHasUniformProfile));
+		
+		return resultHasUniformProfile;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentPart - Retrieves the assigned segment profile. Fails for delay and sync segments.
 	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
 	* @return Segment Build Item
 	*/
@@ -6424,7 +6451,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathLayerReader::GetSegmentPartUUID - Retrieves the assigned segment part uuid.
+	* CToolpathLayerReader::GetSegmentPartUUID - Retrieves the assigned segment part uuid. Fails for delay and sync segments.
 	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
 	* @return Segment Part UUID
 	*/
@@ -6440,7 +6467,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathLayerReader::GetSegmentLocalPartID - Retrieves the assigned segment part id. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+	* CToolpathLayerReader::GetSegmentLocalPartID - Retrieves the assigned segment part id. Fails for delay and sync segments.
 	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
 	* @return Local Segment Part ID
 	*/
@@ -6453,7 +6480,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathLayerReader::GetPartUUIDByLocalPartID - Retrieves the global part UUID by the local part ID. Fails if part ID does not exist in this layer. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+	* CToolpathLayerReader::GetPartUUIDByLocalPartID - Retrieves the global part UUID by the local part ID.
 	* @param[in] nLocalPartID - Local Segment Part ID
 	* @return Segment Part UUID
 	*/
@@ -6469,7 +6496,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathLayerReader::GetSegmentPointDataInModelUnits - Retrieves the assigned segment point list. For type hatch, the points are taken pairwise.
+	* CToolpathLayerReader::GetSegmentPointDataInModelUnits - Retrieves the assigned segment point list. For type hatch, the points are taken pairwise. Returns an empty array for delay and sync elements.
 	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
 	* @param[out] PointDataBuffer - The point data array. The point coordinates are in model units.
 	*/
@@ -6483,7 +6510,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathLayerReader::GetSegmentPointDataDiscrete - Retrieves the assigned segment point list in units. For type hatch, the points are taken pairwise.
+	* CToolpathLayerReader::GetSegmentPointDataDiscrete - Retrieves the assigned segment point list in toolpath units. For type hatch, the points are taken pairwise. Returns an empty array for delay and sync elements.
 	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
 	* @param[out] PointDataBuffer - The point data array. The point coordinates are in toolpath units.
 	*/
@@ -6497,41 +6524,69 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathLayerReader::FindAttributeInfoByName - Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
+	* CToolpathLayerReader::GetSegmentHatchDataInModelUnits - Retrieves the assigned segment hatch list. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[out] HatchDataBuffer - The hatch data array. The point coordinates are in model units.
+	*/
+	void CToolpathLayerReader::GetSegmentHatchDataInModelUnits(const Lib3MF_uint32 nIndex, std::vector<sHatch2D> & HatchDataBuffer)
+	{
+		Lib3MF_uint64 elementsNeededHatchData = 0;
+		Lib3MF_uint64 elementsWrittenHatchData = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(m_pHandle, nIndex, 0, &elementsNeededHatchData, nullptr));
+		HatchDataBuffer.resize((size_t) elementsNeededHatchData);
+		CheckError(lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(m_pHandle, nIndex, elementsNeededHatchData, &elementsWrittenHatchData, HatchDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentHatchDataDiscrete - Retrieves the assigned segment hatch list in toolpath units. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[out] PointDataBuffer - The hatch data array. The point coordinates are in toolpath units.
+	*/
+	void CToolpathLayerReader::GetSegmentHatchDataDiscrete(const Lib3MF_uint32 nIndex, std::vector<sDiscreteHatch2D> & PointDataBuffer)
+	{
+		Lib3MF_uint64 elementsNeededPointData = 0;
+		Lib3MF_uint64 elementsWrittenPointData = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(m_pHandle, nIndex, 0, &elementsNeededPointData, nullptr));
+		PointDataBuffer.resize((size_t) elementsNeededPointData);
+		CheckError(lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(m_pHandle, nIndex, elementsNeededPointData, &elementsWrittenPointData, PointDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerReader::FindSegmentAttributeInfoByName - Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
 	* @param[in] sNameSpace - Namespace of the custom attribute.
 	* @param[in] sAttributeName - Name of the custom attribute.
 	* @param[out] nID - Attribute ID.
 	* @param[out] eAttributeType - Attribute Type.
 	*/
-	void CToolpathLayerReader::FindAttributeInfoByName(const std::string & sNameSpace, const std::string & sAttributeName, Lib3MF_uint32 & nID, eToolpathAttributeType & eAttributeType)
+	void CToolpathLayerReader::FindSegmentAttributeInfoByName(const std::string & sNameSpace, const std::string & sAttributeName, Lib3MF_uint32 & nID, eToolpathAttributeType & eAttributeType)
 	{
-		CheckError(lib3mf_toolpathlayerreader_findattributeinfobyname(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &nID, &eAttributeType));
+		CheckError(lib3mf_toolpathlayerreader_findsegmentattributeinfobyname(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &nID, &eAttributeType));
 	}
 	
 	/**
-	* CToolpathLayerReader::FindAttributeIDByName - Retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.
+	* CToolpathLayerReader::FindSegmentAttributeIDByName - Retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.
 	* @param[in] sNameSpace - Namespace of the custom attribute.
 	* @param[in] sAttributeName - Name of the custom attribute.
 	* @return Attribute ID.
 	*/
-	Lib3MF_uint32 CToolpathLayerReader::FindAttributeIDByName(const std::string & sNameSpace, const std::string & sAttributeName)
+	Lib3MF_uint32 CToolpathLayerReader::FindSegmentAttributeIDByName(const std::string & sNameSpace, const std::string & sAttributeName)
 	{
 		Lib3MF_uint32 resultID = 0;
-		CheckError(lib3mf_toolpathlayerreader_findattributeidbyname(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &resultID));
+		CheckError(lib3mf_toolpathlayerreader_findsegmentattributeidbyname(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &resultID));
 		
 		return resultID;
 	}
 	
 	/**
-	* CToolpathLayerReader::FindAttributeValueByName - Retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.
+	* CToolpathLayerReader::FindSegmentAttributeTypeByName - Retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.
 	* @param[in] sNameSpace - Namespace of the custom attribute.
 	* @param[in] sAttributeName - Name of the custom attribute.
 	* @return Attribute Type.
 	*/
-	eToolpathAttributeType CToolpathLayerReader::FindAttributeValueByName(const std::string & sNameSpace, const std::string & sAttributeName)
+	eToolpathAttributeType CToolpathLayerReader::FindSegmentAttributeTypeByName(const std::string & sNameSpace, const std::string & sAttributeName)
 	{
 		eToolpathAttributeType resultAttributeType = (eToolpathAttributeType) 0;
-		CheckError(lib3mf_toolpathlayerreader_findattributevaluebyname(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &resultAttributeType));
+		CheckError(lib3mf_toolpathlayerreader_findsegmentattributetypebyname(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &resultAttributeType));
 		
 		return resultAttributeType;
 	}
@@ -6709,94 +6764,193 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathLayerData::AddCustomLineAttributes - Stores custom line attributes for the next WriteLoop, WritePolyline or WriteHatchData call.
-	* @param[in] sNameSpace - The namespace of the attribute to register.
-	* @param[in] sAttributeName - The name of the attribute to register.
-	* @param[in] ValuesBuffer - Custom Values to store on segment lines. Array MUST NOT be empty. If custom attributes had been already defined, the error cardinality MUST match, or an error will be thrown.
+	* CToolpathLayerData::SetLaserIndex - Sets the laser index for all subsequent segments.
+	* @param[in] nValue - The value of the laser index for all subsequent segments.
 	*/
-	void CToolpathLayerData::AddCustomLineAttributes(const std::string & sNameSpace, const std::string & sAttributeName, const CInputVector<Lib3MF_int32> & ValuesBuffer)
+	void CToolpathLayerData::SetLaserIndex(const Lib3MF_uint32 nValue)
 	{
-		CheckError(lib3mf_toolpathlayerdata_addcustomlineattributes(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), (Lib3MF_uint64)ValuesBuffer.size(), ValuesBuffer.data()));
+		CheckError(lib3mf_toolpathlayerdata_setlaserindex(m_pHandle, nValue));
 	}
 	
 	/**
-	* CToolpathLayerData::ClearCustomLineAttributes - Clears all custom line attributes. Any call to WriteLoop, WritePolyline or WriteHatchData will do this implicitely.
+	* CToolpathLayerData::ClearLaserIndex - Removes the laser index for all subsequent segments.
 	*/
-	void CToolpathLayerData::ClearCustomLineAttributes()
+	void CToolpathLayerData::ClearLaserIndex()
 	{
-		CheckError(lib3mf_toolpathlayerdata_clearcustomlineattributes(m_pHandle));
+		CheckError(lib3mf_toolpathlayerdata_clearlaserindex(m_pHandle));
+	}
+	
+	/**
+	* CToolpathLayerData::SetFactorRange - Sets the denominator for the scaling factor, which is an integer.
+	* @param[in] nValue - The value of factor denominator.
+	*/
+	void CToolpathLayerData::SetFactorRange(const Lib3MF_uint32 nValue)
+	{
+		CheckError(lib3mf_toolpathlayerdata_setfactorrange(m_pHandle, nValue));
 	}
 	
 	/**
 	* CToolpathLayerData::WriteHatchDataInModelUnits - writes hatch data to the layer in model units.
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
-	* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of hatches in the hatchdata array. In any case, stored custom attributes will be cleared after the call.
-	* @param[in] HatchDataBuffer - The hatch data in model units. Array MUST NOT be empty.
+	* @param[in] HatchDataBuffer - The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
 	*/
-	void CToolpathLayerData::WriteHatchDataInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const bool bWriteCustomLineAttributes, const CInputVector<sHatch2D> & HatchDataBuffer)
+	void CToolpathLayerData::WriteHatchDataInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sHatch2D> & HatchDataBuffer)
 	{
-		CheckError(lib3mf_toolpathlayerdata_writehatchdatainmodelunits(m_pHandle, nProfileID, nPartID, bWriteCustomLineAttributes, (Lib3MF_uint64)HatchDataBuffer.size(), HatchDataBuffer.data()));
+		CheckError(lib3mf_toolpathlayerdata_writehatchdatainmodelunits(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)HatchDataBuffer.size(), HatchDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WriteHatchDataInModelUnitsWithConstantOverrides - writes hatch data to the layer in model units with constant profile overrides per hatch.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] HatchDataBuffer - The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] ScalingDataBuffer - The profile override scale factors. MUST have the same cardinality as HatchData.
+	*/
+	void CToolpathLayerData::WriteHatchDataInModelUnitsWithConstantOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer)
+	{
+		CheckError(lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithconstantoverrides(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)HatchDataBuffer.size(), HatchDataBuffer.data(), (Lib3MF_uint64)ScalingDataBuffer.size(), ScalingDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WriteHatchDataInModelUnitsWithRampedOverrides - writes hatch data to the layer in model units with ramped profile overrides per hatch.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] HatchDataBuffer - The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] ScalingData1Buffer - The profile override scale factors for the start point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] ScalingData2Buffer - The profile override scale factors for the end point of each hatch. MUST have the same cardinality as HatchData.
+	*/
+	void CToolpathLayerData::WriteHatchDataInModelUnitsWithRampedOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingData1Buffer, const CInputVector<Lib3MF_int32> & ScalingData2Buffer)
+	{
+		CheckError(lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithrampedoverrides(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)HatchDataBuffer.size(), HatchDataBuffer.data(), (Lib3MF_uint64)ScalingData1Buffer.size(), ScalingData1Buffer.data(), (Lib3MF_uint64)ScalingData2Buffer.size(), ScalingData2Buffer.data()));
 	}
 	
 	/**
 	* CToolpathLayerData::WriteHatchDataDiscrete - writes hatch data to the layer in toolpath units.
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
-	* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of hatches in the hatchdata array. In any case, stored custom attributes will be cleared after the call.
-	* @param[in] HatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty.
+	* @param[in] HatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
 	*/
-	void CToolpathLayerData::WriteHatchDataDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const bool bWriteCustomLineAttributes, const CInputVector<sDiscreteHatch2D> & HatchDataBuffer)
+	void CToolpathLayerData::WriteHatchDataDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscreteHatch2D> & HatchDataBuffer)
 	{
-		CheckError(lib3mf_toolpathlayerdata_writehatchdatadiscrete(m_pHandle, nProfileID, nPartID, bWriteCustomLineAttributes, (Lib3MF_uint64)HatchDataBuffer.size(), HatchDataBuffer.data()));
+		CheckError(lib3mf_toolpathlayerdata_writehatchdatadiscrete(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)HatchDataBuffer.size(), HatchDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WriteHatchDataDiscreteWithConstantOverrides - writes hatch data to the layer in toolpath units with constant profile overrides per hatch.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] HatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] ScalingDataBuffer - The profile override scale factors. MUST have the same cardinality as HatchData.
+	*/
+	void CToolpathLayerData::WriteHatchDataDiscreteWithConstantOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscreteHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer)
+	{
+		CheckError(lib3mf_toolpathlayerdata_writehatchdatadiscretewithconstantoverrides(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)HatchDataBuffer.size(), HatchDataBuffer.data(), (Lib3MF_uint64)ScalingDataBuffer.size(), ScalingDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WriteHatchDataDiscreteWithRampedOverrides - writes hatch data to the layer in toolpath units with ramped profile overrides per hatch.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] HatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] ScalingData1Buffer - The profile override scale factors for the start point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] ScalingData2Buffer - The profile override scale factors for the end point of each hatch. MUST have the same cardinality as HatchData.
+	*/
+	void CToolpathLayerData::WriteHatchDataDiscreteWithRampedOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscreteHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingData1Buffer, const CInputVector<Lib3MF_int32> & ScalingData2Buffer)
+	{
+		CheckError(lib3mf_toolpathlayerdata_writehatchdatadiscretewithrampedoverrides(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)HatchDataBuffer.size(), HatchDataBuffer.data(), (Lib3MF_uint64)ScalingData1Buffer.size(), ScalingData1Buffer.data(), (Lib3MF_uint64)ScalingData2Buffer.size(), ScalingData2Buffer.data()));
 	}
 	
 	/**
 	* CToolpathLayerData::WriteLoopInModelUnits - writes loop data to the layer in model units.
-	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nProfileID - The toolpath profile to use. Loop Profiles can not be overridden by point.
 	* @param[in] nPartID - The toolpath part to use
-	* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of points in the pointdata array. In any case, stored custom attributes will be cleared after the call.
 	* @param[in] PointDataBuffer - The point data in model units. Array MUST NOT be empty.
 	*/
-	void CToolpathLayerData::WriteLoopInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const bool bWriteCustomLineAttributes, const CInputVector<sPosition2D> & PointDataBuffer)
+	void CToolpathLayerData::WriteLoopInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer)
 	{
-		CheckError(lib3mf_toolpathlayerdata_writeloopinmodelunits(m_pHandle, nProfileID, nPartID, bWriteCustomLineAttributes, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data()));
+		CheckError(lib3mf_toolpathlayerdata_writeloopinmodelunits(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data()));
 	}
 	
 	/**
 	* CToolpathLayerData::WriteLoopDiscrete - writes loop data to the layer in toolpath units.
-	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nProfileID - The toolpath profile to use. Loop Profiles can not be overridden by point.
 	* @param[in] nPartID - The toolpath part to use
-	* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of points in the pointdata array. In any case, stored custom attributes will be cleared after the call.
 	* @param[in] PointDataBuffer - The point data in toolpath units. Array MUST NOT be empty.
 	*/
-	void CToolpathLayerData::WriteLoopDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const bool bWriteCustomLineAttributes, const CInputVector<sDiscretePosition2D> & PointDataBuffer)
+	void CToolpathLayerData::WriteLoopDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer)
 	{
-		CheckError(lib3mf_toolpathlayerdata_writeloopdiscrete(m_pHandle, nProfileID, nPartID, bWriteCustomLineAttributes, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data()));
+		CheckError(lib3mf_toolpathlayerdata_writeloopdiscrete(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WriteLoopInModelUnitsWithOverrides - writes loop data to the layer in model units with profile overrides.
+	* @param[in] nProfileID - The toolpath profile to use. Loop Profiles can not be overridden by point.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data in model units. Array MUST NOT be empty.
+	* @param[in] ScalingDataBuffer - The profile override scale factors for F. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	*/
+	void CToolpathLayerData::WriteLoopInModelUnitsWithOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer)
+	{
+		CheckError(lib3mf_toolpathlayerdata_writeloopinmodelunitswithoverrides(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data(), (Lib3MF_uint64)ScalingDataBuffer.size(), ScalingDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WriteLoopDiscreteWithOverrides - writes loop data to the layer in toolpath units with profile overrides..
+	* @param[in] nProfileID - The toolpath profile to use. Loop Profiles can not be overridden by point.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data in toolpath units. Array MUST NOT be empty.
+	* @param[in] ScalingDataBuffer - The profile override scale factors for F. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	*/
+	void CToolpathLayerData::WriteLoopDiscreteWithOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer)
+	{
+		CheckError(lib3mf_toolpathlayerdata_writeloopdiscretewithoverrides(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data(), (Lib3MF_uint64)ScalingDataBuffer.size(), ScalingDataBuffer.data()));
 	}
 	
 	/**
 	* CToolpathLayerData::WritePolylineInModelUnits - writes polyline data to the layer.
-	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
 	* @param[in] nPartID - The toolpath part to use
-	* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of points in the pointdata array. In any case, stored custom attributes will be cleared after the call.
 	* @param[in] PointDataBuffer - The point data in model units. Array MUST NOT be empty.
 	*/
-	void CToolpathLayerData::WritePolylineInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const bool bWriteCustomLineAttributes, const CInputVector<sPosition2D> & PointDataBuffer)
+	void CToolpathLayerData::WritePolylineInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer)
 	{
-		CheckError(lib3mf_toolpathlayerdata_writepolylineinmodelunits(m_pHandle, nProfileID, nPartID, bWriteCustomLineAttributes, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data()));
+		CheckError(lib3mf_toolpathlayerdata_writepolylineinmodelunits(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data()));
 	}
 	
 	/**
 	* CToolpathLayerData::WritePolylineDiscrete - writes polyline data to the layer.
-	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
 	* @param[in] nPartID - The toolpath part to use
-	* @param[in] bWriteCustomLineAttributes - If true, custom line attributes are written. The cardinality of each custom attribute MUST be equal to the number of points in the pointdata array. In any case, stored custom attributes will be cleared after the call.
 	* @param[in] PointDataBuffer - The point data in toolpath units. Array MUST NOT be empty.
 	*/
-	void CToolpathLayerData::WritePolylineDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const bool bWriteCustomLineAttributes, const CInputVector<sDiscretePosition2D> & PointDataBuffer)
+	void CToolpathLayerData::WritePolylineDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer)
 	{
-		CheckError(lib3mf_toolpathlayerdata_writepolylinediscrete(m_pHandle, nProfileID, nPartID, bWriteCustomLineAttributes, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data()));
+		CheckError(lib3mf_toolpathlayerdata_writepolylinediscrete(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WritePolylineInModelUnitsWithOverrides - writes polyline data to the layer with profile overrides.
+	* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data in model units. Array MUST NOT be empty.
+	* @param[in] ScalingDataBuffer - The profile override scale factors. MUST have the same cardinality as PointData. A Profile override ID of 0 inherits the profile of the segment.
+	*/
+	void CToolpathLayerData::WritePolylineInModelUnitsWithOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer)
+	{
+		CheckError(lib3mf_toolpathlayerdata_writepolylineinmodelunitswithoverrides(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data(), (Lib3MF_uint64)ScalingDataBuffer.size(), ScalingDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WritePolylineDiscreteWithOverrides - writes polyline data to the layer with profile overrides.
+	* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data in toolpath units. Array MUST NOT be empty.
+	* @param[in] ScalingDataBuffer - The profile override scale factors. MUST have the same cardinality as PointData. A Profile override ID of 0 inherits the profile of the segment.
+	*/
+	void CToolpathLayerData::WritePolylineDiscreteWithOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer)
+	{
+		CheckError(lib3mf_toolpathlayerdata_writepolylinediscretewithoverrides(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data(), (Lib3MF_uint64)ScalingDataBuffer.size(), ScalingDataBuffer.data()));
 	}
 	
 	/**
@@ -7220,7 +7374,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpath::RegisterCustomIntegerSegmentAttribute - Registers an Integer Attribute that each segment holds.
+	* CToolpath::RegisterCustomIntegerSegmentAttribute - Registers an Integer Attribute that each segment holds. Registering only applies to reader or writer objects created after the call.
 	* @param[in] sNameSpace - Namespace of the custom data tree. MUST not be empty.
 	* @param[in] sAttributeName - Attribute name. MUST not be empty.
 	*/

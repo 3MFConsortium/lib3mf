@@ -232,13 +232,13 @@ IToolpathLayerReader* CToolpath::ReadLayerData(const Lib3MF_uint32 nIndex)
 
 	auto pReader = std::make_shared<NMR::CToolpathReader>(m_pToolpath, true);
 	auto pReadData = pReader->getReadData();
-	for (auto iIter : m_RegisteredAttributes) {
+	for (auto iIter : m_RegisteredSegmentAttributes) {
 		pReadData->registerCustomSegmentAttribute(iIter.first.first, iIter.first.second, iIter.second);
 	}
 
 	pReader->readStream(pLayerDataStream);
 
-	return new CToolpathLayerReader(pReader->getReadData());
+	return new CToolpathLayerReader(pReader->getReadData(), m_pToolpath);
 }
 
 Lib3MF_uint32 CToolpath::GetCustomDataCount()
@@ -322,23 +322,23 @@ bool CToolpath::DeleteCustomData(ICustomDOMTree* pData)
 void CToolpath::RegisterCustomIntegerSegmentAttribute(const std::string& sNameSpace, const std::string& sAttributeName)
 {
 	auto key = std::make_pair(sNameSpace, sAttributeName);
-	auto iIter = m_RegisteredAttributes.find (key);
+	auto iIter = m_RegisteredSegmentAttributes.find (key);
 
-	if (iIter != m_RegisteredAttributes.end())
+	if (iIter != m_RegisteredSegmentAttributes.end())
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED, "Toolpath attribute already defined: " + sNameSpace + "/" + sAttributeName);
 
-	m_RegisteredAttributes.insert(std::make_pair (key, NMR::eModelToolpathSegmentAttributeType::SegmentAttributeInt64));
+	m_RegisteredSegmentAttributes.insert(std::make_pair (key, NMR::eModelToolpathSegmentAttributeType::SegmentAttributeInt64));
 }
 
 void CToolpath::RegisterCustomDoubleSegmentAttribute(const std::string& sNameSpace, const std::string& sAttributeName)
 {
 	auto key = std::make_pair(sNameSpace, sAttributeName);
-	auto iIter = m_RegisteredAttributes.find(key);
+	auto iIter = m_RegisteredSegmentAttributes.find(key);
 
-	if (iIter != m_RegisteredAttributes.end())
+	if (iIter != m_RegisteredSegmentAttributes.end())
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_ATTRIBUTEALREADYDEFINED, "Toolpath attribute already defined: " + sNameSpace + "/" + sAttributeName);
 
-	m_RegisteredAttributes.insert(std::make_pair(key, NMR::eModelToolpathSegmentAttributeType::SegmentAttributeDouble));
+	m_RegisteredSegmentAttributes.insert(std::make_pair(key, NMR::eModelToolpathSegmentAttributeType::SegmentAttributeDouble));
 }
 
 

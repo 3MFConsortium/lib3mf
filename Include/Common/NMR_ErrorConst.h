@@ -1595,4 +1595,31 @@ Toolpath errors (0xBXXX)
 // Layer has not positive thickness
 #define NMR_ERROR_LAYERHASNOTPOSITIVETHICKNESS 0XB00C
 
+// Invalid line attribute ID
+#define NMR_ERROR_INVALIDLINEATTRIBUTEID 0xB00D
+
+// Invalid line attribute Index
+#define NMR_ERROR_INVALIDLINEATTRIBUTEINDEX 0xB00E
+
+// Line attribute not found
+#define NMR_ERROR_LINEATTRIBUTENOTFOUND 0xB00F
+
+// Line attribute defined after reading
+#define NMR_ERROR_LINEATTRIBUTEDEFINEDAFTERREADING 0xB010
+
+// Invalid line attribute namespace
+#define NMR_ERROR_INVALIDLINEATTRIBUTENAMESPACE 0xB011
+
+// Invalid line attribute name
+#define NMR_ERROR_INVALIDLINEATTRIBUTENAME 0xB012
+
+// Invalid line attribute type
+#define NMR_ERROR_INVALIDLINEATTRIBUTETYPE 0xB013
+
+// Invalid profile scaling buffer
+#define NMR_ERROR_TOOLPATH_INVALIDPROFILESCALINGBUFFER 0xB014
+
+// Invalid factor range
+#define NMR_ERROR_TOOLPATH_INVALIDFACTORRANGE 0xB015
+
 #endif // __NMR_ERRORCONST

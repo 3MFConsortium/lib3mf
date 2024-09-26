@@ -154,6 +154,7 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOORDINATE 4010 /** Invalid hatch coordinate. */
 #define LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE 4011 /** Invalid point coordinate. */
 #define LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOUNT 4012 /** Invalid hatch count */
+#define LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHHATCHDATA 4013 /** Scaling data needs to match hatch data */
 
 /*************************************************************************************************************************
  Error strings for Lib3MF
@@ -222,6 +223,7 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
     case LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOORDINATE: return "Invalid hatch coordinate.";
     case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE: return "Invalid point coordinate.";
     case LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOUNT: return "Invalid hatch count";
+    case LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHHATCHDATA: return "Scaling data needs to match hatch data";
     default: return "unknown error";
   }
 }
@@ -404,7 +406,11 @@ typedef enum eLib3MFToolpathSegmentType {
   eToolpathSegmentTypeUnknown = 0,
   eToolpathSegmentTypeHatch = 1,
   eToolpathSegmentTypeLoop = 2,
-  eToolpathSegmentTypePolyline = 3
+  eToolpathSegmentTypePolyline = 3,
+  eToolpathSegmentTypePointSequence = 4,
+  eToolpathSegmentTypeArc = 5,
+  eToolpathSegmentTypeDelay = 6,
+  eToolpathSegmentTypeSync = 7
 } eLib3MFToolpathSegmentType;
 
 typedef enum eLib3MFToolpathAttributeType {
@@ -576,13 +582,17 @@ typedef struct sLib3MFDiscretePosition2D {
 } sLib3MFDiscretePosition2D;
 
 typedef struct sLib3MFHatch2D {
-    Lib3MF_single m_Point1Coordinates[2];
-    Lib3MF_single m_Point2Coordinates[2];
+    Lib3MF_double m_Point1Coordinates[2];
+    Lib3MF_double m_Point2Coordinates[2];
+    Lib3MF_uint32 m_ProfileOverrideID;
+    Lib3MF_int32 m_Tag;
 } sLib3MFHatch2D;
 
 typedef struct sLib3MFDiscreteHatch2D {
     Lib3MF_int32 m_Point1Coordinates[2];
     Lib3MF_int32 m_Point2Coordinates[2];
+    Lib3MF_uint32 m_ProfileOverrideID;
+    Lib3MF_int32 m_Tag;
 } sLib3MFDiscreteHatch2D;
 
 typedef struct sLib3MFCompositeConstituent {

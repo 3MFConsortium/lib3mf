@@ -2871,21 +2871,30 @@ Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentinfo(Lib3MFHandle librar
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentprofile(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_ToolpathProfile * pProfile)
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentdefaultprofile(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_ToolpathProfile * pProfile)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetSegmentProfile (pToolpathLayerReader, nIndex, pProfile);
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentDefaultProfile (pToolpathLayerReader, nIndex, pProfile);
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentprofileuuid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nProfileUUIDBufferSize, Lib3MF_uint32* pProfileUUIDNeededChars, char * pProfileUUIDBuffer)
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nProfileUUIDBufferSize, Lib3MF_uint32* pProfileUUIDNeededChars, char * pProfileUUIDBuffer)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetSegmentProfileUUID (pToolpathLayerReader, nIndex, nProfileUUIDBufferSize, pProfileUUIDNeededChars, pProfileUUIDBuffer);
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentDefaultProfileUUID (pToolpathLayerReader, nIndex, nProfileUUIDBufferSize, pProfileUUIDNeededChars, pProfileUUIDBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_segmenthasuniformprofile(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, bool * pHasUniformProfile)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_SegmentHasUniformProfile (pToolpathLayerReader, nIndex, pHasUniformProfile);
 }
 
 
@@ -2943,30 +2952,48 @@ Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete(Lib3MF
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_findattributeinfobyname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID, eLib3MFToolpathAttributeType * pAttributeType)
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, sLib3MFHatch2D * pHatchDataBuffer)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_FindAttributeInfoByName (pToolpathLayerReader, pNameSpace, pAttributeName, pID, pAttributeType);
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataInModelUnits (pToolpathLayerReader, nIndex, nHatchDataBufferSize, pHatchDataNeededCount, pHatchDataBuffer);
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_findattributeidbyname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID)
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, sLib3MFDiscreteHatch2D * pPointDataBuffer)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_FindAttributeIDByName (pToolpathLayerReader, pNameSpace, pAttributeName, pID);
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataDiscrete (pToolpathLayerReader, nIndex, nPointDataBufferSize, pPointDataNeededCount, pPointDataBuffer);
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_findattributevaluebyname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, eLib3MFToolpathAttributeType * pAttributeType)
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_findsegmentattributeinfobyname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID, eLib3MFToolpathAttributeType * pAttributeType)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_FindAttributeValueByName (pToolpathLayerReader, pNameSpace, pAttributeName, pAttributeType);
+	return wrapperTable->m_ToolpathLayerReader_FindSegmentAttributeInfoByName (pToolpathLayerReader, pNameSpace, pAttributeName, pID, pAttributeType);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_findsegmentattributeidbyname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint32 * pID)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_FindSegmentAttributeIDByName (pToolpathLayerReader, pNameSpace, pAttributeName, pID);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_findsegmentattributetypebyname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, const char * pNameSpace, const char * pAttributeName, eLib3MFToolpathAttributeType * pAttributeType)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_FindSegmentAttributeTypeByName (pToolpathLayerReader, pNameSpace, pAttributeName, pAttributeType);
 }
 
 
@@ -3078,75 +3105,156 @@ Lib3MFResult CCall_lib3mf_toolpathlayerdata_clearsegmentattributes(Lib3MFHandle 
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerdata_addcustomlineattributes(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, const char * pNameSpace, const char * pAttributeName, Lib3MF_uint64 nValuesBufferSize, const Lib3MF_int32 * pValuesBuffer)
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_setlaserindex(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nValue)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerData_AddCustomLineAttributes (pToolpathLayerData, pNameSpace, pAttributeName, nValuesBufferSize, pValuesBuffer);
+	return wrapperTable->m_ToolpathLayerData_SetLaserIndex (pToolpathLayerData, nValue);
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerdata_clearcustomlineattributes(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData)
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_clearlaserindex(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerData_ClearCustomLineAttributes (pToolpathLayerData);
+	return wrapperTable->m_ToolpathLayerData_ClearLaserIndex (pToolpathLayerData);
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerdata_writehatchdatainmodelunits(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, bool bWriteCustomLineAttributes, Lib3MF_uint64 nHatchDataBufferSize, const sLib3MFHatch2D * pHatchDataBuffer)
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_setfactorrange(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nValue)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnits (pToolpathLayerData, nProfileID, nPartID, bWriteCustomLineAttributes, nHatchDataBufferSize, pHatchDataBuffer);
+	return wrapperTable->m_ToolpathLayerData_SetFactorRange (pToolpathLayerData, nValue);
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerdata_writehatchdatadiscrete(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, bool bWriteCustomLineAttributes, Lib3MF_uint64 nHatchDataBufferSize, const sLib3MFDiscreteHatch2D * pHatchDataBuffer)
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writehatchdatainmodelunits(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const sLib3MFHatch2D * pHatchDataBuffer)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerData_WriteHatchDataDiscrete (pToolpathLayerData, nProfileID, nPartID, bWriteCustomLineAttributes, nHatchDataBufferSize, pHatchDataBuffer);
+	return wrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnits (pToolpathLayerData, nProfileID, nPartID, nHatchDataBufferSize, pHatchDataBuffer);
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerdata_writeloopinmodelunits(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, bool bWriteCustomLineAttributes, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer)
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithconstantoverrides(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const sLib3MFHatch2D * pHatchDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerData_WriteLoopInModelUnits (pToolpathLayerData, nProfileID, nPartID, bWriteCustomLineAttributes, nPointDataBufferSize, pPointDataBuffer);
+	return wrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithConstantOverrides (pToolpathLayerData, nProfileID, nPartID, nHatchDataBufferSize, pHatchDataBuffer, nScalingDataBufferSize, pScalingDataBuffer);
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerdata_writeloopdiscrete(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, bool bWriteCustomLineAttributes, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer)
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithrampedoverrides(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const sLib3MFHatch2D * pHatchDataBuffer, Lib3MF_uint64 nScalingData1BufferSize, const Lib3MF_int32 * pScalingData1Buffer, Lib3MF_uint64 nScalingData2BufferSize, const Lib3MF_int32 * pScalingData2Buffer)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerData_WriteLoopDiscrete (pToolpathLayerData, nProfileID, nPartID, bWriteCustomLineAttributes, nPointDataBufferSize, pPointDataBuffer);
+	return wrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverrides (pToolpathLayerData, nProfileID, nPartID, nHatchDataBufferSize, pHatchDataBuffer, nScalingData1BufferSize, pScalingData1Buffer, nScalingData2BufferSize, pScalingData2Buffer);
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerdata_writepolylineinmodelunits(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, bool bWriteCustomLineAttributes, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer)
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writehatchdatadiscrete(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const sLib3MFDiscreteHatch2D * pHatchDataBuffer)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerData_WritePolylineInModelUnits (pToolpathLayerData, nProfileID, nPartID, bWriteCustomLineAttributes, nPointDataBufferSize, pPointDataBuffer);
+	return wrapperTable->m_ToolpathLayerData_WriteHatchDataDiscrete (pToolpathLayerData, nProfileID, nPartID, nHatchDataBufferSize, pHatchDataBuffer);
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerdata_writepolylinediscrete(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, bool bWriteCustomLineAttributes, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer)
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writehatchdatadiscretewithconstantoverrides(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const sLib3MFDiscreteHatch2D * pHatchDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerData_WritePolylineDiscrete (pToolpathLayerData, nProfileID, nPartID, bWriteCustomLineAttributes, nPointDataBufferSize, pPointDataBuffer);
+	return wrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithConstantOverrides (pToolpathLayerData, nProfileID, nPartID, nHatchDataBufferSize, pHatchDataBuffer, nScalingDataBufferSize, pScalingDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writehatchdatadiscretewithrampedoverrides(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const sLib3MFDiscreteHatch2D * pHatchDataBuffer, Lib3MF_uint64 nScalingData1BufferSize, const Lib3MF_int32 * pScalingData1Buffer, Lib3MF_uint64 nScalingData2BufferSize, const Lib3MF_int32 * pScalingData2Buffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithRampedOverrides (pToolpathLayerData, nProfileID, nPartID, nHatchDataBufferSize, pHatchDataBuffer, nScalingData1BufferSize, pScalingData1Buffer, nScalingData2BufferSize, pScalingData2Buffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writeloopinmodelunits(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WriteLoopInModelUnits (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writeloopdiscrete(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WriteLoopDiscrete (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writeloopinmodelunitswithoverrides(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WriteLoopInModelUnitsWithOverrides (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer, nScalingDataBufferSize, pScalingDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writeloopdiscretewithoverrides(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithOverrides (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer, nScalingDataBufferSize, pScalingDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writepolylineinmodelunits(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WritePolylineInModelUnits (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writepolylinediscrete(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WritePolylineDiscrete (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writepolylineinmodelunitswithoverrides(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithOverrides (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer, nScalingDataBufferSize, pScalingDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writepolylinediscretewithoverrides(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithOverrides (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer, nScalingDataBufferSize, pScalingDataBuffer);
 }
 
 
@@ -4826,6 +4934,10 @@ const (
 	ToolpathSegmentType_Hatch = 1
 	ToolpathSegmentType_Loop = 2
 	ToolpathSegmentType_Polyline = 3
+	ToolpathSegmentType_PointSequence = 4
+	ToolpathSegmentType_Arc = 5
+	ToolpathSegmentType_Delay = 6
+	ToolpathSegmentType_Sync = 7
 )
 
 // ToolpathAttributeType represents a Lib3MF enum.
@@ -4906,14 +5018,18 @@ type DiscretePosition2D struct {
 
 // Hatch2D represents a Lib3MF struct.
 type Hatch2D struct {
-	Point1Coordinates[2] float32
-	Point2Coordinates[2] float32
+	Point1Coordinates[2] float64
+	Point2Coordinates[2] float64
+	ProfileOverrideID uint32
+	Tag int32
 }
 
 // DiscreteHatch2D represents a Lib3MF struct.
 type DiscreteHatch2D struct {
 	Point1Coordinates[2] int32
 	Point2Coordinates[2] int32
+	ProfileOverrideID uint32
+	Tag int32
 }
 
 // CompositeConstituent represents a Lib3MF struct.
@@ -5027,6 +5143,7 @@ const LIB3MF_ERROR_WRITERDOESNOTSUPPORTNAMESPACES = 4009;
 const LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOORDINATE = 4010;
 const LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE = 4011;
 const LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOUNT = 4012;
+const LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHHATCHDATA = 4013;
 
 // WrappedError is an error that wraps a Lib3MF error.
 type WrappedError struct {
@@ -5160,6 +5277,8 @@ func errorMessage(errorcode uint32) string {
 		return "Invalid point coordinate.";
 	case LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOUNT:
 		return "Invalid hatch count";
+	case LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHHATCHDATA:
+		return "Scaling data needs to match hatch data";
 	default:
 		return "unknown";
 	}
@@ -9126,34 +9245,44 @@ func (inst ToolpathLayerReader) GetSegmentInfo(index uint32) (ToolpathSegmentTyp
 	return ToolpathSegmentType(_type), uint32(pointCount), nil
 }
 
-// GetSegmentProfile retrieves the assigned segment profile.
-func (inst ToolpathLayerReader) GetSegmentProfile(index uint32) (ToolpathProfile, error) {
+// GetSegmentDefaultProfile retrieves the assigned segment default profile. Fails for delay and sync segments.
+func (inst ToolpathLayerReader) GetSegmentDefaultProfile(index uint32) (ToolpathProfile, error) {
 	var profile ref
-	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentprofile(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &profile)
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentdefaultprofile(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &profile)
 	if ret != 0 {
 		return ToolpathProfile{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewToolpathProfile(profile), nil
 }
 
-// GetSegmentProfileUUID retrieves the assigned segment profile uuid.
-func (inst ToolpathLayerReader) GetSegmentProfileUUID(index uint32) (string, error) {
+// GetSegmentDefaultProfileUUID retrieves the assigned segment default profile uuid. Fails for delay and sync segments.
+func (inst ToolpathLayerReader) GetSegmentDefaultProfileUUID(index uint32) (string, error) {
 	var neededforprofileUUID C.uint32_t
 	var filledinprofileUUID C.uint32_t
-	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentprofileuuid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforprofileUUID, nil)
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforprofileUUID, nil)
 	if ret != 0 {
 		return "", makeError(uint32(ret))
 	}
 	bufferSizeprofileUUID := neededforprofileUUID
 	bufferprofileUUID := make([]byte, bufferSizeprofileUUID)
-	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmentprofileuuid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), bufferSizeprofileUUID, &filledinprofileUUID, (*C.char)(unsafe.Pointer(&bufferprofileUUID[0])))
+	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), bufferSizeprofileUUID, &filledinprofileUUID, (*C.char)(unsafe.Pointer(&bufferprofileUUID[0])))
 	if ret != 0 {
 		return "", makeError(uint32(ret))
 	}
 	return string(bufferprofileUUID[:(filledinprofileUUID-1)]), nil
 }
 
-// GetSegmentPart retrieves the assigned segment profile.
+// SegmentHasUniformProfile returns if the segment has a uniform profile. If it is uniform, then the default profile applies to the whole segment. Returns false for delay and sync segments.
+func (inst ToolpathLayerReader) SegmentHasUniformProfile(index uint32) (bool, error) {
+	var hasUniformProfile C.bool
+	ret := C.CCall_lib3mf_toolpathlayerreader_segmenthasuniformprofile(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &hasUniformProfile)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(hasUniformProfile), nil
+}
+
+// GetSegmentPart retrieves the assigned segment profile. Fails for delay and sync segments.
 func (inst ToolpathLayerReader) GetSegmentPart(index uint32) (BuildItem, error) {
 	var buildItem ref
 	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentpart(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &buildItem)
@@ -9163,7 +9292,7 @@ func (inst ToolpathLayerReader) GetSegmentPart(index uint32) (BuildItem, error) 
 	return inst.wrapperRef.NewBuildItem(buildItem), nil
 }
 
-// GetSegmentPartUUID retrieves the assigned segment part uuid.
+// GetSegmentPartUUID retrieves the assigned segment part uuid. Fails for delay and sync segments.
 func (inst ToolpathLayerReader) GetSegmentPartUUID(index uint32) (string, error) {
 	var neededforpartUUID C.uint32_t
 	var filledinpartUUID C.uint32_t
@@ -9180,7 +9309,7 @@ func (inst ToolpathLayerReader) GetSegmentPartUUID(index uint32) (string, error)
 	return string(bufferpartUUID[:(filledinpartUUID-1)]), nil
 }
 
-// GetSegmentLocalPartID retrieves the assigned segment part id. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+// GetSegmentLocalPartID retrieves the assigned segment part id. Fails for delay and sync segments.
 func (inst ToolpathLayerReader) GetSegmentLocalPartID(index uint32) (uint32, error) {
 	var localPartID C.uint32_t
 	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentlocalpartid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &localPartID)
@@ -9190,7 +9319,7 @@ func (inst ToolpathLayerReader) GetSegmentLocalPartID(index uint32) (uint32, err
 	return uint32(localPartID), nil
 }
 
-// GetPartUUIDByLocalPartID retrieves the global part UUID by the local part ID. Fails if part ID does not exist in this layer. ATTENTION: This ID is only unique within the layer and there is no guarantee to be globally unique or consistent across layers.
+// GetPartUUIDByLocalPartID retrieves the global part UUID by the local part ID.
 func (inst ToolpathLayerReader) GetPartUUIDByLocalPartID(localPartID uint32) (string, error) {
 	var neededforpartUUID C.uint32_t
 	var filledinpartUUID C.uint32_t
@@ -9207,7 +9336,7 @@ func (inst ToolpathLayerReader) GetPartUUIDByLocalPartID(localPartID uint32) (st
 	return string(bufferpartUUID[:(filledinpartUUID-1)]), nil
 }
 
-// GetSegmentPointDataInModelUnits retrieves the assigned segment point list. For type hatch, the points are taken pairwise.
+// GetSegmentPointDataInModelUnits retrieves the assigned segment point list. For type hatch, the points are taken pairwise. Returns an empty array for delay and sync elements.
 func (inst ToolpathLayerReader) GetSegmentPointDataInModelUnits(index uint32, pointData []Position2D) ([]Position2D, error) {
 	var neededforpointData C.uint64_t
 	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforpointData, nil)
@@ -9224,7 +9353,7 @@ func (inst ToolpathLayerReader) GetSegmentPointDataInModelUnits(index uint32, po
 	return pointData[:int(neededforpointData)], nil
 }
 
-// GetSegmentPointDataDiscrete retrieves the assigned segment point list in units. For type hatch, the points are taken pairwise.
+// GetSegmentPointDataDiscrete retrieves the assigned segment point list in toolpath units. For type hatch, the points are taken pairwise. Returns an empty array for delay and sync elements.
 func (inst ToolpathLayerReader) GetSegmentPointDataDiscrete(index uint32, pointData []DiscretePosition2D) ([]DiscretePosition2D, error) {
 	var neededforpointData C.uint64_t
 	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforpointData, nil)
@@ -9241,31 +9370,65 @@ func (inst ToolpathLayerReader) GetSegmentPointDataDiscrete(index uint32, pointD
 	return pointData[:int(neededforpointData)], nil
 }
 
-// FindAttributeInfoByName retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
-func (inst ToolpathLayerReader) FindAttributeInfoByName(nameSpace string, attributeName string) (uint32, ToolpathAttributeType, error) {
+// GetSegmentHatchDataInModelUnits retrieves the assigned segment hatch list. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
+func (inst ToolpathLayerReader) GetSegmentHatchDataInModelUnits(index uint32, hatchData []Hatch2D) ([]Hatch2D, error) {
+	var neededforhatchData C.uint64_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforhatchData, nil)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	if len(hatchData) < int(neededforhatchData) {
+	 hatchData = append(hatchData, make([]Hatch2D, int(neededforhatchData)-len(hatchData))...)
+	}
+	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), neededforhatchData, nil, (*C.sLib3MFHatch2D)(unsafe.Pointer(&hatchData[0])))
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	return hatchData[:int(neededforhatchData)], nil
+}
+
+// GetSegmentHatchDataDiscrete retrieves the assigned segment hatch list in toolpath units. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
+func (inst ToolpathLayerReader) GetSegmentHatchDataDiscrete(index uint32, pointData []DiscreteHatch2D) ([]DiscreteHatch2D, error) {
+	var neededforpointData C.uint64_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforpointData, nil)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	if len(pointData) < int(neededforpointData) {
+	 pointData = append(pointData, make([]DiscreteHatch2D, int(neededforpointData)-len(pointData))...)
+	}
+	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), neededforpointData, nil, (*C.sLib3MFDiscreteHatch2D)(unsafe.Pointer(&pointData[0])))
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	return pointData[:int(neededforpointData)], nil
+}
+
+// FindSegmentAttributeInfoByName retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
+func (inst ToolpathLayerReader) FindSegmentAttributeInfoByName(nameSpace string, attributeName string) (uint32, ToolpathAttributeType, error) {
 	var iD C.uint32_t
 	var attributeType C.eLib3MFToolpathAttributeType
-	ret := C.CCall_lib3mf_toolpathlayerreader_findattributeinfobyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &iD, &attributeType)
+	ret := C.CCall_lib3mf_toolpathlayerreader_findsegmentattributeinfobyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &iD, &attributeType)
 	if ret != 0 {
 		return 0, 0, makeError(uint32(ret))
 	}
 	return uint32(iD), ToolpathAttributeType(attributeType), nil
 }
 
-// FindAttributeIDByName retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.
-func (inst ToolpathLayerReader) FindAttributeIDByName(nameSpace string, attributeName string) (uint32, error) {
+// FindSegmentAttributeIDByName retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.
+func (inst ToolpathLayerReader) FindSegmentAttributeIDByName(nameSpace string, attributeName string) (uint32, error) {
 	var iD C.uint32_t
-	ret := C.CCall_lib3mf_toolpathlayerreader_findattributeidbyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &iD)
+	ret := C.CCall_lib3mf_toolpathlayerreader_findsegmentattributeidbyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &iD)
 	if ret != 0 {
 		return 0, makeError(uint32(ret))
 	}
 	return uint32(iD), nil
 }
 
-// FindAttributeValueByName retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.
-func (inst ToolpathLayerReader) FindAttributeValueByName(nameSpace string, attributeName string) (ToolpathAttributeType, error) {
+// FindSegmentAttributeTypeByName retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.
+func (inst ToolpathLayerReader) FindSegmentAttributeTypeByName(nameSpace string, attributeName string) (ToolpathAttributeType, error) {
 	var attributeType C.eLib3MFToolpathAttributeType
-	ret := C.CCall_lib3mf_toolpathlayerreader_findattributevaluebyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &attributeType)
+	ret := C.CCall_lib3mf_toolpathlayerreader_findsegmentattributetypebyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &attributeType)
 	if ret != 0 {
 		return 0, makeError(uint32(ret))
 	}
@@ -9418,18 +9581,27 @@ func (inst ToolpathLayerData) ClearSegmentAttributes() error {
 	return nil
 }
 
-// AddCustomLineAttributes stores custom line attributes for the next WriteLoop, WritePolyline or WriteHatchData call.
-func (inst ToolpathLayerData) AddCustomLineAttributes(nameSpace string, attributeName string, values []int32) error {
-	ret := C.CCall_lib3mf_toolpathlayerdata_addcustomlineattributes(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), C.uint64_t(len(values)), (*C.int32_t)(unsafe.Pointer(&values[0])))
+// SetLaserIndex sets the laser index for all subsequent segments.
+func (inst ToolpathLayerData) SetLaserIndex(value uint32) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_setlaserindex(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(value))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
 	return nil
 }
 
-// ClearCustomLineAttributes clears all custom line attributes. Any call to WriteLoop, WritePolyline or WriteHatchData will do this implicitely.
-func (inst ToolpathLayerData) ClearCustomLineAttributes() error {
-	ret := C.CCall_lib3mf_toolpathlayerdata_clearcustomlineattributes(inst.wrapperRef.LibraryHandle, inst.Ref)
+// ClearLaserIndex removes the laser index for all subsequent segments.
+func (inst ToolpathLayerData) ClearLaserIndex() error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_clearlaserindex(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SetFactorRange sets the denominator for the scaling factor, which is an integer.
+func (inst ToolpathLayerData) SetFactorRange(value uint32) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_setfactorrange(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(value))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
@@ -9437,8 +9609,26 @@ func (inst ToolpathLayerData) ClearCustomLineAttributes() error {
 }
 
 // WriteHatchDataInModelUnits writes hatch data to the layer in model units.
-func (inst ToolpathLayerData) WriteHatchDataInModelUnits(profileID uint32, partID uint32, writeCustomLineAttributes bool, hatchData []Hatch2D) error {
-	ret := C.CCall_lib3mf_toolpathlayerdata_writehatchdatainmodelunits(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.bool(writeCustomLineAttributes), C.uint64_t(len(hatchData)), (*C.sLib3MFHatch2D)(unsafe.Pointer(&hatchData[0])))
+func (inst ToolpathLayerData) WriteHatchDataInModelUnits(profileID uint32, partID uint32, hatchData []Hatch2D) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writehatchdatainmodelunits(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(hatchData)), (*C.sLib3MFHatch2D)(unsafe.Pointer(&hatchData[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WriteHatchDataInModelUnitsWithConstantOverrides writes hatch data to the layer in model units with constant profile overrides per hatch.
+func (inst ToolpathLayerData) WriteHatchDataInModelUnitsWithConstantOverrides(profileID uint32, partID uint32, hatchData []Hatch2D, scalingData []int32) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithconstantoverrides(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(hatchData)), (*C.sLib3MFHatch2D)(unsafe.Pointer(&hatchData[0])), C.uint64_t(len(scalingData)), (*C.int32_t)(unsafe.Pointer(&scalingData[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WriteHatchDataInModelUnitsWithRampedOverrides writes hatch data to the layer in model units with ramped profile overrides per hatch.
+func (inst ToolpathLayerData) WriteHatchDataInModelUnitsWithRampedOverrides(profileID uint32, partID uint32, hatchData []Hatch2D, scalingData1 []int32, scalingData2 []int32) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithrampedoverrides(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(hatchData)), (*C.sLib3MFHatch2D)(unsafe.Pointer(&hatchData[0])), C.uint64_t(len(scalingData1)), (*C.int32_t)(unsafe.Pointer(&scalingData1[0])), C.uint64_t(len(scalingData2)), (*C.int32_t)(unsafe.Pointer(&scalingData2[0])))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
@@ -9446,8 +9636,26 @@ func (inst ToolpathLayerData) WriteHatchDataInModelUnits(profileID uint32, partI
 }
 
 // WriteHatchDataDiscrete writes hatch data to the layer in toolpath units.
-func (inst ToolpathLayerData) WriteHatchDataDiscrete(profileID uint32, partID uint32, writeCustomLineAttributes bool, hatchData []DiscreteHatch2D) error {
-	ret := C.CCall_lib3mf_toolpathlayerdata_writehatchdatadiscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.bool(writeCustomLineAttributes), C.uint64_t(len(hatchData)), (*C.sLib3MFDiscreteHatch2D)(unsafe.Pointer(&hatchData[0])))
+func (inst ToolpathLayerData) WriteHatchDataDiscrete(profileID uint32, partID uint32, hatchData []DiscreteHatch2D) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writehatchdatadiscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(hatchData)), (*C.sLib3MFDiscreteHatch2D)(unsafe.Pointer(&hatchData[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WriteHatchDataDiscreteWithConstantOverrides writes hatch data to the layer in toolpath units with constant profile overrides per hatch.
+func (inst ToolpathLayerData) WriteHatchDataDiscreteWithConstantOverrides(profileID uint32, partID uint32, hatchData []DiscreteHatch2D, scalingData []int32) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writehatchdatadiscretewithconstantoverrides(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(hatchData)), (*C.sLib3MFDiscreteHatch2D)(unsafe.Pointer(&hatchData[0])), C.uint64_t(len(scalingData)), (*C.int32_t)(unsafe.Pointer(&scalingData[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WriteHatchDataDiscreteWithRampedOverrides writes hatch data to the layer in toolpath units with ramped profile overrides per hatch.
+func (inst ToolpathLayerData) WriteHatchDataDiscreteWithRampedOverrides(profileID uint32, partID uint32, hatchData []DiscreteHatch2D, scalingData1 []int32, scalingData2 []int32) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writehatchdatadiscretewithrampedoverrides(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(hatchData)), (*C.sLib3MFDiscreteHatch2D)(unsafe.Pointer(&hatchData[0])), C.uint64_t(len(scalingData1)), (*C.int32_t)(unsafe.Pointer(&scalingData1[0])), C.uint64_t(len(scalingData2)), (*C.int32_t)(unsafe.Pointer(&scalingData2[0])))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
@@ -9455,8 +9663,8 @@ func (inst ToolpathLayerData) WriteHatchDataDiscrete(profileID uint32, partID ui
 }
 
 // WriteLoopInModelUnits writes loop data to the layer in model units.
-func (inst ToolpathLayerData) WriteLoopInModelUnits(profileID uint32, partID uint32, writeCustomLineAttributes bool, pointData []Position2D) error {
-	ret := C.CCall_lib3mf_toolpathlayerdata_writeloopinmodelunits(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.bool(writeCustomLineAttributes), C.uint64_t(len(pointData)), (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])))
+func (inst ToolpathLayerData) WriteLoopInModelUnits(profileID uint32, partID uint32, pointData []Position2D) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writeloopinmodelunits(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
@@ -9464,8 +9672,26 @@ func (inst ToolpathLayerData) WriteLoopInModelUnits(profileID uint32, partID uin
 }
 
 // WriteLoopDiscrete writes loop data to the layer in toolpath units.
-func (inst ToolpathLayerData) WriteLoopDiscrete(profileID uint32, partID uint32, writeCustomLineAttributes bool, pointData []DiscretePosition2D) error {
-	ret := C.CCall_lib3mf_toolpathlayerdata_writeloopdiscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.bool(writeCustomLineAttributes), C.uint64_t(len(pointData)), (*C.sLib3MFDiscretePosition2D)(unsafe.Pointer(&pointData[0])))
+func (inst ToolpathLayerData) WriteLoopDiscrete(profileID uint32, partID uint32, pointData []DiscretePosition2D) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writeloopdiscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFDiscretePosition2D)(unsafe.Pointer(&pointData[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WriteLoopInModelUnitsWithOverrides writes loop data to the layer in model units with profile overrides.
+func (inst ToolpathLayerData) WriteLoopInModelUnitsWithOverrides(profileID uint32, partID uint32, pointData []Position2D, scalingData []int32) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writeloopinmodelunitswithoverrides(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])), C.uint64_t(len(scalingData)), (*C.int32_t)(unsafe.Pointer(&scalingData[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WriteLoopDiscreteWithOverrides writes loop data to the layer in toolpath units with profile overrides..
+func (inst ToolpathLayerData) WriteLoopDiscreteWithOverrides(profileID uint32, partID uint32, pointData []DiscretePosition2D, scalingData []int32) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writeloopdiscretewithoverrides(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFDiscretePosition2D)(unsafe.Pointer(&pointData[0])), C.uint64_t(len(scalingData)), (*C.int32_t)(unsafe.Pointer(&scalingData[0])))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
@@ -9473,8 +9699,8 @@ func (inst ToolpathLayerData) WriteLoopDiscrete(profileID uint32, partID uint32,
 }
 
 // WritePolylineInModelUnits writes polyline data to the layer.
-func (inst ToolpathLayerData) WritePolylineInModelUnits(profileID uint32, partID uint32, writeCustomLineAttributes bool, pointData []Position2D) error {
-	ret := C.CCall_lib3mf_toolpathlayerdata_writepolylineinmodelunits(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.bool(writeCustomLineAttributes), C.uint64_t(len(pointData)), (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])))
+func (inst ToolpathLayerData) WritePolylineInModelUnits(profileID uint32, partID uint32, pointData []Position2D) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writepolylineinmodelunits(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
@@ -9482,8 +9708,26 @@ func (inst ToolpathLayerData) WritePolylineInModelUnits(profileID uint32, partID
 }
 
 // WritePolylineDiscrete writes polyline data to the layer.
-func (inst ToolpathLayerData) WritePolylineDiscrete(profileID uint32, partID uint32, writeCustomLineAttributes bool, pointData []DiscretePosition2D) error {
-	ret := C.CCall_lib3mf_toolpathlayerdata_writepolylinediscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.bool(writeCustomLineAttributes), C.uint64_t(len(pointData)), (*C.sLib3MFDiscretePosition2D)(unsafe.Pointer(&pointData[0])))
+func (inst ToolpathLayerData) WritePolylineDiscrete(profileID uint32, partID uint32, pointData []DiscretePosition2D) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writepolylinediscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFDiscretePosition2D)(unsafe.Pointer(&pointData[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WritePolylineInModelUnitsWithOverrides writes polyline data to the layer with profile overrides.
+func (inst ToolpathLayerData) WritePolylineInModelUnitsWithOverrides(profileID uint32, partID uint32, pointData []Position2D, scalingData []int32) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writepolylineinmodelunitswithoverrides(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])), C.uint64_t(len(scalingData)), (*C.int32_t)(unsafe.Pointer(&scalingData[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WritePolylineDiscreteWithOverrides writes polyline data to the layer with profile overrides.
+func (inst ToolpathLayerData) WritePolylineDiscreteWithOverrides(profileID uint32, partID uint32, pointData []DiscretePosition2D, scalingData []int32) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writepolylinediscretewithoverrides(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFDiscretePosition2D)(unsafe.Pointer(&pointData[0])), C.uint64_t(len(scalingData)), (*C.int32_t)(unsafe.Pointer(&scalingData[0])))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
@@ -9820,7 +10064,7 @@ func (inst Toolpath) DeleteCustomData(data CustomDOMTree) (bool, error) {
 	return bool(success), nil
 }
 
-// RegisterCustomIntegerSegmentAttribute registers an Integer Attribute that each segment holds.
+// RegisterCustomIntegerSegmentAttribute registers an Integer Attribute that each segment holds. Registering only applies to reader or writer objects created after the call.
 func (inst Toolpath) RegisterCustomIntegerSegmentAttribute(nameSpace string, attributeName string) error {
 	ret := C.CCall_lib3mf_toolpath_registercustomintegersegmentattribute(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])))
 	if ret != 0 {

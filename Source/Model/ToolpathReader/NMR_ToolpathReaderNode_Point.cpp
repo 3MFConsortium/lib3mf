@@ -47,7 +47,11 @@ namespace NMR {
 		m_bHasX (false),
 		m_bHasY (false),
 		m_nX (0),
-		m_nY (0)
+		m_nY (0),
+		m_nTag (0),
+		m_nFactorF (0),
+		m_nFactorG (0),
+		m_nFactorH (0)
 	{
 		if (pReadData == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -114,6 +118,27 @@ namespace NMR {
 		if (!m_bHasY)
 			throw CNMRException(NMR_ERROR_MISSINGCOORDINATE);
 		return m_nY;
+	}
+
+	nfInt32 CToolpathReaderNode_Point::getTag()
+	{
+		return m_nTag;
+	}
+
+
+	nfInt32 CToolpathReaderNode_Point::getFactorF()
+	{
+		return m_nFactorF;
+	}
+
+	nfInt32 CToolpathReaderNode_Point::getFactorG()
+	{
+		return m_nFactorG;
+	}
+
+	nfInt32 CToolpathReaderNode_Point::getFactorH()
+	{
+		return m_nFactorH;
 	}
 
 }

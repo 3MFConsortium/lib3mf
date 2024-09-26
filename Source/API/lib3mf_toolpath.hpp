@@ -56,7 +56,7 @@ namespace Impl {
 
 class CToolpath : public virtual IToolpath, public virtual CResource {
 protected:
-	std::map<std::pair<std::string, std::string>, NMR::eModelToolpathSegmentAttributeType> m_RegisteredAttributes;
+	std::map<std::pair<std::string, std::string>, NMR::eModelToolpathSegmentAttributeType> m_RegisteredSegmentAttributes;
 
 	NMR::PModelToolpath m_pToolpath;
 public:
@@ -119,7 +119,6 @@ public:
 	void RegisterCustomIntegerSegmentAttribute(const std::string& sNameSpace, const std::string& sAttributeName) override;
 
 	void RegisterCustomDoubleSegmentAttribute(const std::string& sNameSpace, const std::string& sAttributeName) override;
-
 
 };
 

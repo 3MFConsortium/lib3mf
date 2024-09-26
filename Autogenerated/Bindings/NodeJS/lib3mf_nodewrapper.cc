@@ -476,9 +476,11 @@ sLib3MFHatch2D convertObjectToLib3MFHatch2D(Isolate* isolate, const Local<Value>
 	int rowIndex;
 
 	for (rowIndex = 0; rowIndex < 2; rowIndex++)
-		sHatch2D.m_Point1Coordinates[rowIndex] = 0.0f;
+		sHatch2D.m_Point1Coordinates[rowIndex] = 0.0;
 	for (rowIndex = 0; rowIndex < 2; rowIndex++)
-		sHatch2D.m_Point2Coordinates[rowIndex] = 0.0f;
+		sHatch2D.m_Point2Coordinates[rowIndex] = 0.0;
+	sHatch2D.m_ProfileOverrideID = 0;
+	sHatch2D.m_Tag = 0;
 
 	if (pParamValue->IsObject()) {
 		MaybeLocal<Object> maybeObject = pParamValue->ToObject(context);
@@ -498,7 +500,7 @@ sLib3MFHatch2D convertObjectToLib3MFHatch2D(Isolate* isolate, const Local<Value>
 						if (mlocalValue.ToLocal(&localValue)) {
 							if (localValue->IsNumber()) {
 								MaybeLocal<Number> localNumber = localValue->ToNumber(context);
-								sHatch2D.m_Point1Coordinates[rowIndex] = (float)localNumber.ToLocalChecked()->NumberValue(isolate->GetCurrentContext()).ToChecked();
+								sHatch2D.m_Point1Coordinates[rowIndex] = localNumber.ToLocalChecked()->NumberValue(isolate->GetCurrentContext()).ToChecked();
 							} else {
 								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Point1Coordinates array entry is not a number" )));
 							}
@@ -525,7 +527,7 @@ sLib3MFHatch2D convertObjectToLib3MFHatch2D(Isolate* isolate, const Local<Value>
 						if (mlocalValue.ToLocal(&localValue)) {
 							if (localValue->IsNumber()) {
 								MaybeLocal<Number> localNumber = localValue->ToNumber(context);
-								sHatch2D.m_Point2Coordinates[rowIndex] = (float)localNumber.ToLocalChecked()->NumberValue(isolate->GetCurrentContext()).ToChecked();
+								sHatch2D.m_Point2Coordinates[rowIndex] = localNumber.ToLocalChecked()->NumberValue(isolate->GetCurrentContext()).ToChecked();
 							} else {
 								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Point2Coordinates array entry is not a number" )));
 							}
@@ -538,6 +540,34 @@ sLib3MFHatch2D convertObjectToLib3MFHatch2D(Isolate* isolate, const Local<Value>
 				}
 			} else {
 				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Point2Coordinates member not found in object" )));
+			}
+
+			// ProfileOverrideID Member
+			MaybeLocal<Value> maybeValProfileOverrideID = obj->Get(context, String::NewFromUtf8(isolate, "ProfileOverrideID"));
+			if (!maybeValProfileOverrideID.IsEmpty()) {
+				Local<Value> valProfileOverrideID = maybeValProfileOverrideID.ToLocalChecked();
+				if (valProfileOverrideID->IsNumber()) {
+					MaybeLocal<Number> localValProfileOverrideID = valProfileOverrideID->ToNumber(context);
+					sHatch2D.m_ProfileOverrideID = localValProfileOverrideID.ToLocalChecked()->Uint32Value(isolate->GetCurrentContext()).ToChecked();
+				} else {
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "ProfileOverrideID member is not a number" )));
+				}
+			} else {
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "ProfileOverrideID member not found in object" )));
+			}
+
+			// Tag Member
+			MaybeLocal<Value> maybeValTag = obj->Get(context, String::NewFromUtf8(isolate, "Tag"));
+			if (!maybeValTag.IsEmpty()) {
+				Local<Value> valTag = maybeValTag.ToLocalChecked();
+				if (valTag->IsNumber()) {
+					MaybeLocal<Number> localValTag = valTag->ToNumber(context);
+					sHatch2D.m_Tag = localValTag.ToLocalChecked()->Int32Value(isolate->GetCurrentContext()).ToChecked();
+				} else {
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Tag member is not a number" )));
+				}
+			} else {
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Tag member not found in object" )));
 			}
 
 
@@ -558,16 +588,18 @@ Local<Object> convertLib3MFHatch2DToObject(Isolate* isolate, sLib3MFHatch2D sHat
 	Local<Object> returnInstance = Object::New(isolate);
 	Local<Array> newPoint1Coordinates = Array::New(isolate, 2);
 	for (int rowIndex = 0; rowIndex < 2; rowIndex++) {
-		newPoint1Coordinates->Set(rowIndex, Number::New(isolate, (double) sHatch2D.m_Point1Coordinates[rowIndex]));
+		newPoint1Coordinates->Set(rowIndex, Number::New(isolate, sHatch2D.m_Point1Coordinates[rowIndex]));
 	}
 	returnInstance->Set(String::NewFromUtf8(isolate, "Point1Coordinates"), newPoint1Coordinates);
 
 	Local<Array> newPoint2Coordinates = Array::New(isolate, 2);
 	for (int rowIndex = 0; rowIndex < 2; rowIndex++) {
-		newPoint2Coordinates->Set(rowIndex, Number::New(isolate, (double) sHatch2D.m_Point2Coordinates[rowIndex]));
+		newPoint2Coordinates->Set(rowIndex, Number::New(isolate, sHatch2D.m_Point2Coordinates[rowIndex]));
 	}
 	returnInstance->Set(String::NewFromUtf8(isolate, "Point2Coordinates"), newPoint2Coordinates);
 
+	returnInstance->Set(String::NewFromUtf8(isolate, "ProfileOverrideID"), Integer::NewFromUnsigned (isolate, sHatch2D.m_ProfileOverrideID));
+	returnInstance->Set(String::NewFromUtf8(isolate, "Tag"), Integer::New (isolate, sHatch2D.m_Tag));
 
 	return returnInstance;
 }
@@ -585,6 +617,8 @@ sLib3MFDiscreteHatch2D convertObjectToLib3MFDiscreteHatch2D(Isolate* isolate, co
 		sDiscreteHatch2D.m_Point1Coordinates[rowIndex] = 0;
 	for (rowIndex = 0; rowIndex < 2; rowIndex++)
 		sDiscreteHatch2D.m_Point2Coordinates[rowIndex] = 0;
+	sDiscreteHatch2D.m_ProfileOverrideID = 0;
+	sDiscreteHatch2D.m_Tag = 0;
 
 	if (pParamValue->IsObject()) {
 		MaybeLocal<Object> maybeObject = pParamValue->ToObject(context);
@@ -646,6 +680,34 @@ sLib3MFDiscreteHatch2D convertObjectToLib3MFDiscreteHatch2D(Isolate* isolate, co
 				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Point2Coordinates member not found in object" )));
 			}
 
+			// ProfileOverrideID Member
+			MaybeLocal<Value> maybeValProfileOverrideID = obj->Get(context, String::NewFromUtf8(isolate, "ProfileOverrideID"));
+			if (!maybeValProfileOverrideID.IsEmpty()) {
+				Local<Value> valProfileOverrideID = maybeValProfileOverrideID.ToLocalChecked();
+				if (valProfileOverrideID->IsNumber()) {
+					MaybeLocal<Number> localValProfileOverrideID = valProfileOverrideID->ToNumber(context);
+					sDiscreteHatch2D.m_ProfileOverrideID = localValProfileOverrideID.ToLocalChecked()->Uint32Value(isolate->GetCurrentContext()).ToChecked();
+				} else {
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "ProfileOverrideID member is not a number" )));
+				}
+			} else {
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "ProfileOverrideID member not found in object" )));
+			}
+
+			// Tag Member
+			MaybeLocal<Value> maybeValTag = obj->Get(context, String::NewFromUtf8(isolate, "Tag"));
+			if (!maybeValTag.IsEmpty()) {
+				Local<Value> valTag = maybeValTag.ToLocalChecked();
+				if (valTag->IsNumber()) {
+					MaybeLocal<Number> localValTag = valTag->ToNumber(context);
+					sDiscreteHatch2D.m_Tag = localValTag.ToLocalChecked()->Int32Value(isolate->GetCurrentContext()).ToChecked();
+				} else {
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Tag member is not a number" )));
+				}
+			} else {
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Tag member not found in object" )));
+			}
+
 
 		} else {
 			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed." )));
@@ -674,6 +736,8 @@ Local<Object> convertLib3MFDiscreteHatch2DToObject(Isolate* isolate, sLib3MFDisc
 	}
 	returnInstance->Set(String::NewFromUtf8(isolate, "Point2Coordinates"), newPoint2Coordinates);
 
+	returnInstance->Set(String::NewFromUtf8(isolate, "ProfileOverrideID"), Integer::NewFromUnsigned (isolate, sDiscreteHatch2D.m_ProfileOverrideID));
+	returnInstance->Set(String::NewFromUtf8(isolate, "Tag"), Integer::New (isolate, sDiscreteHatch2D.m_Tag));
 
 	return returnInstance;
 }
@@ -11846,17 +11910,20 @@ void CLib3MFToolpathLayerReader::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerDataUUID", GetLayerDataUUID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentCount", GetSegmentCount);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentInfo", GetSegmentInfo);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentProfile", GetSegmentProfile);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentProfileUUID", GetSegmentProfileUUID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentDefaultProfile", GetSegmentDefaultProfile);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentDefaultProfileUUID", GetSegmentDefaultProfileUUID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SegmentHasUniformProfile", SegmentHasUniformProfile);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPart", GetSegmentPart);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPartUUID", GetSegmentPartUUID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentLocalPartID", GetSegmentLocalPartID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetPartUUIDByLocalPartID", GetPartUUIDByLocalPartID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPointDataInModelUnits", GetSegmentPointDataInModelUnits);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPointDataDiscrete", GetSegmentPointDataDiscrete);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "FindAttributeInfoByName", FindAttributeInfoByName);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "FindAttributeIDByName", FindAttributeIDByName);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "FindAttributeValueByName", FindAttributeValueByName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentHatchDataInModelUnits", GetSegmentHatchDataInModelUnits);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentHatchDataDiscrete", GetSegmentHatchDataDiscrete);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "FindSegmentAttributeInfoByName", FindSegmentAttributeInfoByName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "FindSegmentAttributeIDByName", FindSegmentAttributeIDByName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "FindSegmentAttributeTypeByName", FindSegmentAttributeTypeByName);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentIntegerAttributeByID", GetSegmentIntegerAttributeByID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentIntegerAttributeByName", GetSegmentIntegerAttributeByName);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentDoubleAttributeByID", GetSegmentDoubleAttributeByID);
@@ -11976,7 +12043,7 @@ void CLib3MFToolpathLayerReader::GetSegmentInfo(const FunctionCallbackInfo<Value
 }
 
 
-void CLib3MFToolpathLayerReader::GetSegmentProfile(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerReader::GetSegmentDefaultProfile(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
@@ -11988,11 +12055,11 @@ void CLib3MFToolpathLayerReader::GetSegmentProfile(const FunctionCallbackInfo<Va
         Lib3MFHandle hReturnProfile = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentProfile.");
-        if (wrapperTable->m_ToolpathLayerReader_GetSegmentProfile == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentProfile.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentDefaultProfile.");
+        if (wrapperTable->m_ToolpathLayerReader_GetSegmentDefaultProfile == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentDefaultProfile.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentProfile(instanceHandle, nIndex, &hReturnProfile);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentDefaultProfile(instanceHandle, nIndex, &hReturnProfile);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjProfile = CLib3MFToolpathProfile::NewInstance(args.Holder(), hReturnProfile);
         args.GetReturnValue().Set(instanceObjProfile);
@@ -12003,7 +12070,7 @@ void CLib3MFToolpathLayerReader::GetSegmentProfile(const FunctionCallbackInfo<Va
 }
 
 
-void CLib3MFToolpathLayerReader::GetSegmentProfileUUID(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerReader::GetSegmentDefaultProfileUUID(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
@@ -12016,17 +12083,43 @@ void CLib3MFToolpathLayerReader::GetSegmentProfileUUID(const FunctionCallbackInf
         unsigned int bytesWrittenProfileUUID = 0;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentProfileUUID.");
-        if (wrapperTable->m_ToolpathLayerReader_GetSegmentProfileUUID == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentProfileUUID.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentDefaultProfileUUID.");
+        if (wrapperTable->m_ToolpathLayerReader_GetSegmentDefaultProfileUUID == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentDefaultProfileUUID.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult initErrorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentProfileUUID(instanceHandle, nIndex, 0, &bytesNeededProfileUUID, nullptr);
+        Lib3MFResult initErrorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentDefaultProfileUUID(instanceHandle, nIndex, 0, &bytesNeededProfileUUID, nullptr);
         CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
         std::vector<char> bufferProfileUUID;
         bufferProfileUUID.resize(bytesNeededProfileUUID);
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentProfileUUID(instanceHandle, nIndex, bytesNeededProfileUUID, &bytesWrittenProfileUUID, &bufferProfileUUID[0]);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentDefaultProfileUUID(instanceHandle, nIndex, bytesNeededProfileUUID, &bytesWrittenProfileUUID, &bufferProfileUUID[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferProfileUUID[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::SegmentHasUniformProfile(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        bool bReturnHasUniformProfile = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SegmentHasUniformProfile.");
+        if (wrapperTable->m_ToolpathLayerReader_SegmentHasUniformProfile == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::SegmentHasUniformProfile.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_SegmentHasUniformProfile(instanceHandle, nIndex, &bReturnHasUniformProfile);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnHasUniformProfile));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -12197,7 +12290,55 @@ void CLib3MFToolpathLayerReader::GetSegmentPointDataDiscrete(const FunctionCallb
 }
 
 
-void CLib3MFToolpathLayerReader::FindAttributeInfoByName(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerReader::GetSegmentHatchDataInModelUnits(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentHatchDataInModelUnits.");
+        if (wrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataInModelUnits == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentHatchDataInModelUnits.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataInModelUnits(instanceHandle, nIndex, 0, nullptr, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::GetSegmentHatchDataDiscrete(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentHatchDataDiscrete.");
+        if (wrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataDiscrete == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentHatchDataDiscrete.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataDiscrete(instanceHandle, nIndex, 0, nullptr, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::FindSegmentAttributeInfoByName(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
@@ -12217,11 +12358,11 @@ void CLib3MFToolpathLayerReader::FindAttributeInfoByName(const FunctionCallbackI
         eLib3MFToolpathAttributeType eReturnAttributeType;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method FindAttributeInfoByName.");
-        if (wrapperTable->m_ToolpathLayerReader_FindAttributeInfoByName == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::FindAttributeInfoByName.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method FindSegmentAttributeInfoByName.");
+        if (wrapperTable->m_ToolpathLayerReader_FindSegmentAttributeInfoByName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::FindSegmentAttributeInfoByName.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_FindAttributeInfoByName(instanceHandle, sNameSpace.c_str(), sAttributeName.c_str(), &nReturnID, &eReturnAttributeType);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_FindSegmentAttributeInfoByName(instanceHandle, sNameSpace.c_str(), sAttributeName.c_str(), &nReturnID, &eReturnAttributeType);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "ID"), Integer::NewFromUnsigned(isolate, nReturnID));
         outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "AttributeType"), Integer::New(isolate, (int)eReturnAttributeType));
@@ -12233,7 +12374,7 @@ void CLib3MFToolpathLayerReader::FindAttributeInfoByName(const FunctionCallbackI
 }
 
 
-void CLib3MFToolpathLayerReader::FindAttributeIDByName(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerReader::FindSegmentAttributeIDByName(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
@@ -12251,11 +12392,11 @@ void CLib3MFToolpathLayerReader::FindAttributeIDByName(const FunctionCallbackInf
         unsigned int nReturnID = 0;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method FindAttributeIDByName.");
-        if (wrapperTable->m_ToolpathLayerReader_FindAttributeIDByName == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::FindAttributeIDByName.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method FindSegmentAttributeIDByName.");
+        if (wrapperTable->m_ToolpathLayerReader_FindSegmentAttributeIDByName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::FindSegmentAttributeIDByName.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_FindAttributeIDByName(instanceHandle, sNameSpace.c_str(), sAttributeName.c_str(), &nReturnID);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_FindSegmentAttributeIDByName(instanceHandle, sNameSpace.c_str(), sAttributeName.c_str(), &nReturnID);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnID));
 
@@ -12265,7 +12406,7 @@ void CLib3MFToolpathLayerReader::FindAttributeIDByName(const FunctionCallbackInf
 }
 
 
-void CLib3MFToolpathLayerReader::FindAttributeValueByName(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerReader::FindSegmentAttributeTypeByName(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
@@ -12283,11 +12424,11 @@ void CLib3MFToolpathLayerReader::FindAttributeValueByName(const FunctionCallback
         eLib3MFToolpathAttributeType eReturnAttributeType;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method FindAttributeValueByName.");
-        if (wrapperTable->m_ToolpathLayerReader_FindAttributeValueByName == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::FindAttributeValueByName.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method FindSegmentAttributeTypeByName.");
+        if (wrapperTable->m_ToolpathLayerReader_FindSegmentAttributeTypeByName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::FindSegmentAttributeTypeByName.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_FindAttributeValueByName(instanceHandle, sNameSpace.c_str(), sAttributeName.c_str(), &eReturnAttributeType);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_FindSegmentAttributeTypeByName(instanceHandle, sNameSpace.c_str(), sAttributeName.c_str(), &eReturnAttributeType);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         args.GetReturnValue().Set(Integer::New(isolate, (int)eReturnAttributeType));
 
@@ -12543,14 +12684,23 @@ void CLib3MFToolpathLayerData::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "RegisterBuildItem", RegisterBuildItem);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetSegmentAttribute", SetSegmentAttribute);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "ClearSegmentAttributes", ClearSegmentAttributes);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "AddCustomLineAttributes", AddCustomLineAttributes);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "ClearCustomLineAttributes", ClearCustomLineAttributes);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetLaserIndex", SetLaserIndex);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "ClearLaserIndex", ClearLaserIndex);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetFactorRange", SetFactorRange);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "WriteHatchDataInModelUnits", WriteHatchDataInModelUnits);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "WriteHatchDataInModelUnitsWithConstantOverrides", WriteHatchDataInModelUnitsWithConstantOverrides);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "WriteHatchDataInModelUnitsWithRampedOverrides", WriteHatchDataInModelUnitsWithRampedOverrides);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "WriteHatchDataDiscrete", WriteHatchDataDiscrete);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "WriteHatchDataDiscreteWithConstantOverrides", WriteHatchDataDiscreteWithConstantOverrides);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "WriteHatchDataDiscreteWithRampedOverrides", WriteHatchDataDiscreteWithRampedOverrides);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "WriteLoopInModelUnits", WriteLoopInModelUnits);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "WriteLoopDiscrete", WriteLoopDiscrete);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "WriteLoopInModelUnitsWithOverrides", WriteLoopInModelUnitsWithOverrides);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "WriteLoopDiscreteWithOverrides", WriteLoopDiscreteWithOverrides);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "WritePolylineInModelUnits", WritePolylineInModelUnits);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "WritePolylineDiscrete", WritePolylineDiscrete);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "WritePolylineInModelUnitsWithOverrides", WritePolylineInModelUnitsWithOverrides);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "WritePolylineDiscreteWithOverrides", WritePolylineDiscreteWithOverrides);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddCustomData", AddCustomData);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "Finish", Finish);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
@@ -12728,28 +12878,22 @@ void CLib3MFToolpathLayerData::ClearSegmentAttributes(const FunctionCallbackInfo
 }
 
 
-void CLib3MFToolpathLayerData::AddCustomLineAttributes(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerData::SetLaserIndex(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		try {
-        if (!args[0]->IsString()) {
-            throw std::runtime_error("Expected string parameter 0 (NameSpace)");
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Value)");
         }
-        if (!args[1]->IsString()) {
-            throw std::runtime_error("Expected string parameter 1 (AttributeName)");
-        }
-        v8::String::Utf8Value sutf8NameSpace(isolate, args[0]);
-        std::string sNameSpace = *sutf8NameSpace;
-        v8::String::Utf8Value sutf8AttributeName(isolate, args[1]);
-        std::string sAttributeName = *sutf8AttributeName;
+        unsigned int nValue = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddCustomLineAttributes.");
-        if (wrapperTable->m_ToolpathLayerData_AddCustomLineAttributes == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::AddCustomLineAttributes.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetLaserIndex.");
+        if (wrapperTable->m_ToolpathLayerData_SetLaserIndex == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::SetLaserIndex.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_AddCustomLineAttributes(instanceHandle, sNameSpace.c_str(), sAttributeName.c_str(), 0, nullptr);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_SetLaserIndex(instanceHandle, nValue);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {
@@ -12758,18 +12902,42 @@ void CLib3MFToolpathLayerData::AddCustomLineAttributes(const FunctionCallbackInf
 }
 
 
-void CLib3MFToolpathLayerData::ClearCustomLineAttributes(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFToolpathLayerData::ClearLaserIndex(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		try {
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method ClearCustomLineAttributes.");
-        if (wrapperTable->m_ToolpathLayerData_ClearCustomLineAttributes == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::ClearCustomLineAttributes.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method ClearLaserIndex.");
+        if (wrapperTable->m_ToolpathLayerData_ClearLaserIndex == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::ClearLaserIndex.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_ClearCustomLineAttributes(instanceHandle);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_ClearLaserIndex(instanceHandle);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::SetFactorRange(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Value)");
+        }
+        unsigned int nValue = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetFactorRange.");
+        if (wrapperTable->m_ToolpathLayerData_SetFactorRange == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::SetFactorRange.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_SetFactorRange(instanceHandle, nValue);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {
@@ -12789,19 +12957,71 @@ void CLib3MFToolpathLayerData::WriteHatchDataInModelUnits(const FunctionCallback
         if (!args[1]->IsUint32()) {
             throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
         }
-        if (!args[2]->IsBoolean()) {
-            throw std::runtime_error("Expected bool parameter 2 (WriteCustomLineAttributes)");
-        }
         unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        bool bWriteCustomLineAttributes = args[2]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
             throw std::runtime_error("Could not get wrapper table for Lib3MF method WriteHatchDataInModelUnits.");
         if (wrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnits == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WriteHatchDataInModelUnits.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnits(instanceHandle, nProfileID, nPartID, bWriteCustomLineAttributes, 0, nullptr);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnits(instanceHandle, nProfileID, nPartID, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::WriteHatchDataInModelUnitsWithConstantOverrides(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (ProfileID)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
+        }
+        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method WriteHatchDataInModelUnitsWithConstantOverrides.");
+        if (wrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithConstantOverrides == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WriteHatchDataInModelUnitsWithConstantOverrides.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithConstantOverrides(instanceHandle, nProfileID, nPartID, 0, nullptr, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::WriteHatchDataInModelUnitsWithRampedOverrides(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (ProfileID)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
+        }
+        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method WriteHatchDataInModelUnitsWithRampedOverrides.");
+        if (wrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverrides == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WriteHatchDataInModelUnitsWithRampedOverrides.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverrides(instanceHandle, nProfileID, nPartID, 0, nullptr, 0, nullptr, 0, nullptr);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {
@@ -12821,19 +13041,71 @@ void CLib3MFToolpathLayerData::WriteHatchDataDiscrete(const FunctionCallbackInfo
         if (!args[1]->IsUint32()) {
             throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
         }
-        if (!args[2]->IsBoolean()) {
-            throw std::runtime_error("Expected bool parameter 2 (WriteCustomLineAttributes)");
-        }
         unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        bool bWriteCustomLineAttributes = args[2]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
             throw std::runtime_error("Could not get wrapper table for Lib3MF method WriteHatchDataDiscrete.");
         if (wrapperTable->m_ToolpathLayerData_WriteHatchDataDiscrete == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WriteHatchDataDiscrete.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteHatchDataDiscrete(instanceHandle, nProfileID, nPartID, bWriteCustomLineAttributes, 0, nullptr);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteHatchDataDiscrete(instanceHandle, nProfileID, nPartID, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::WriteHatchDataDiscreteWithConstantOverrides(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (ProfileID)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
+        }
+        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method WriteHatchDataDiscreteWithConstantOverrides.");
+        if (wrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithConstantOverrides == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WriteHatchDataDiscreteWithConstantOverrides.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithConstantOverrides(instanceHandle, nProfileID, nPartID, 0, nullptr, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::WriteHatchDataDiscreteWithRampedOverrides(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (ProfileID)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
+        }
+        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method WriteHatchDataDiscreteWithRampedOverrides.");
+        if (wrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithRampedOverrides == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WriteHatchDataDiscreteWithRampedOverrides.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithRampedOverrides(instanceHandle, nProfileID, nPartID, 0, nullptr, 0, nullptr, 0, nullptr);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {
@@ -12853,19 +13125,15 @@ void CLib3MFToolpathLayerData::WriteLoopInModelUnits(const FunctionCallbackInfo<
         if (!args[1]->IsUint32()) {
             throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
         }
-        if (!args[2]->IsBoolean()) {
-            throw std::runtime_error("Expected bool parameter 2 (WriteCustomLineAttributes)");
-        }
         unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        bool bWriteCustomLineAttributes = args[2]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
             throw std::runtime_error("Could not get wrapper table for Lib3MF method WriteLoopInModelUnits.");
         if (wrapperTable->m_ToolpathLayerData_WriteLoopInModelUnits == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WriteLoopInModelUnits.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteLoopInModelUnits(instanceHandle, nProfileID, nPartID, bWriteCustomLineAttributes, 0, nullptr);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteLoopInModelUnits(instanceHandle, nProfileID, nPartID, 0, nullptr);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {
@@ -12885,19 +13153,71 @@ void CLib3MFToolpathLayerData::WriteLoopDiscrete(const FunctionCallbackInfo<Valu
         if (!args[1]->IsUint32()) {
             throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
         }
-        if (!args[2]->IsBoolean()) {
-            throw std::runtime_error("Expected bool parameter 2 (WriteCustomLineAttributes)");
-        }
         unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        bool bWriteCustomLineAttributes = args[2]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
             throw std::runtime_error("Could not get wrapper table for Lib3MF method WriteLoopDiscrete.");
         if (wrapperTable->m_ToolpathLayerData_WriteLoopDiscrete == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WriteLoopDiscrete.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteLoopDiscrete(instanceHandle, nProfileID, nPartID, bWriteCustomLineAttributes, 0, nullptr);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteLoopDiscrete(instanceHandle, nProfileID, nPartID, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::WriteLoopInModelUnitsWithOverrides(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (ProfileID)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
+        }
+        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method WriteLoopInModelUnitsWithOverrides.");
+        if (wrapperTable->m_ToolpathLayerData_WriteLoopInModelUnitsWithOverrides == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WriteLoopInModelUnitsWithOverrides.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteLoopInModelUnitsWithOverrides(instanceHandle, nProfileID, nPartID, 0, nullptr, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::WriteLoopDiscreteWithOverrides(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (ProfileID)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
+        }
+        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method WriteLoopDiscreteWithOverrides.");
+        if (wrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithOverrides == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WriteLoopDiscreteWithOverrides.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithOverrides(instanceHandle, nProfileID, nPartID, 0, nullptr, 0, nullptr);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {
@@ -12917,19 +13237,15 @@ void CLib3MFToolpathLayerData::WritePolylineInModelUnits(const FunctionCallbackI
         if (!args[1]->IsUint32()) {
             throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
         }
-        if (!args[2]->IsBoolean()) {
-            throw std::runtime_error("Expected bool parameter 2 (WriteCustomLineAttributes)");
-        }
         unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        bool bWriteCustomLineAttributes = args[2]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
             throw std::runtime_error("Could not get wrapper table for Lib3MF method WritePolylineInModelUnits.");
         if (wrapperTable->m_ToolpathLayerData_WritePolylineInModelUnits == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WritePolylineInModelUnits.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WritePolylineInModelUnits(instanceHandle, nProfileID, nPartID, bWriteCustomLineAttributes, 0, nullptr);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WritePolylineInModelUnits(instanceHandle, nProfileID, nPartID, 0, nullptr);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {
@@ -12949,19 +13265,71 @@ void CLib3MFToolpathLayerData::WritePolylineDiscrete(const FunctionCallbackInfo<
         if (!args[1]->IsUint32()) {
             throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
         }
-        if (!args[2]->IsBoolean()) {
-            throw std::runtime_error("Expected bool parameter 2 (WriteCustomLineAttributes)");
-        }
         unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
-        bool bWriteCustomLineAttributes = args[2]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
             throw std::runtime_error("Could not get wrapper table for Lib3MF method WritePolylineDiscrete.");
         if (wrapperTable->m_ToolpathLayerData_WritePolylineDiscrete == nullptr)
             throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WritePolylineDiscrete.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WritePolylineDiscrete(instanceHandle, nProfileID, nPartID, bWriteCustomLineAttributes, 0, nullptr);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WritePolylineDiscrete(instanceHandle, nProfileID, nPartID, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::WritePolylineInModelUnitsWithOverrides(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (ProfileID)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
+        }
+        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method WritePolylineInModelUnitsWithOverrides.");
+        if (wrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithOverrides == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WritePolylineInModelUnitsWithOverrides.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithOverrides(instanceHandle, nProfileID, nPartID, 0, nullptr, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::WritePolylineDiscreteWithOverrides(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (ProfileID)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
+        }
+        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method WritePolylineDiscreteWithOverrides.");
+        if (wrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithOverrides == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WritePolylineDiscreteWithOverrides.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithOverrides(instanceHandle, nProfileID, nPartID, 0, nullptr, 0, nullptr);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {
@@ -17680,6 +18048,10 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathSegmentType_Hatch"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathSegmentType_Loop"), Integer::New(isolate, 2));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathSegmentType_Polyline"), Integer::New(isolate, 3));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathSegmentType_PointSequence"), Integer::New(isolate, 4));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathSegmentType_Arc"), Integer::New(isolate, 5));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathSegmentType_Delay"), Integer::New(isolate, 6));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathSegmentType_Sync"), Integer::New(isolate, 7));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathAttributeType_Unknown"), Integer::New(isolate, 0));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathAttributeType_Integer"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathAttributeType_Double"), Integer::New(isolate, 2));

@@ -51,7 +51,15 @@ namespace NMR {
 			m_bHasX1 (false),
 			m_bHasY1 (false),
 			m_bHasX2 (false),
-			m_bHasY2 (false)
+			m_bHasY2 (false),
+		m_nCustomProfileID (0),
+		m_nTag(0),
+		m_nFactorF1(0),
+		m_nFactorG1(0),
+		m_nFactorH1(0),
+		m_nFactorF2(0),
+		m_nFactorG2(0),
+		m_nFactorH2(0)
 
 
 	{
@@ -103,6 +111,32 @@ namespace NMR {
 			m_nY2 = fnStringToInt32(pAttributeValue);
 			m_bHasY2 = true;
 		}
+		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_PID) == 0) {
+			m_nCustomProfileID = fnStringToInt32(pAttributeValue);
+		}
+		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_TAG) == 0) {
+			m_nTag = fnStringToInt32(pAttributeValue);
+		}
+		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF) == 0) {
+			m_nFactorF1 = fnStringToInt32(pAttributeValue);
+			m_nFactorF2 = m_nFactorF1;
+		}
+		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF1) == 0) {
+			m_nFactorF1 = fnStringToInt32(pAttributeValue);
+		}
+		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF2) == 0) {
+			m_nFactorF2 = fnStringToInt32(pAttributeValue);
+		}
+		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG) == 0) {
+			m_nFactorG1 = fnStringToInt32(pAttributeValue);
+			m_nFactorG2 = m_nFactorF1;
+		}
+		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG1) == 0) {
+			m_nFactorG1 = fnStringToInt32(pAttributeValue);
+		}
+		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG2) == 0) {
+			m_nFactorG2 = fnStringToInt32(pAttributeValue);
+		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 
@@ -110,7 +144,6 @@ namespace NMR {
 
 	void CToolpathReaderNode_Hatch::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
 	{
-	
 	}
 
 	void CToolpathReaderNode_Hatch::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
@@ -145,5 +178,44 @@ namespace NMR {
 		return m_nY2;
 	}
 
+	nfInt32 CToolpathReaderNode_Hatch::getTag()
+	{
+		return m_nTag;
+	}
+
+	nfInt32 CToolpathReaderNode_Hatch::getCustomProfileID()
+	{
+		return m_nCustomProfileID;
+	}
+
+	nfInt32 CToolpathReaderNode_Hatch::getFactorF1()
+	{
+		return m_nFactorF1;
+	}
+
+	nfInt32 CToolpathReaderNode_Hatch::getFactorG1()
+	{
+		return m_nFactorG1;
+	}
+
+	nfInt32 CToolpathReaderNode_Hatch::getFactorH1()
+	{
+		return m_nFactorH1;
+	}
+
+	nfInt32 CToolpathReaderNode_Hatch::getFactorF2()
+	{
+		return m_nFactorF2;
+	}
+
+	nfInt32 CToolpathReaderNode_Hatch::getFactorG2()
+	{
+		return m_nFactorG2;
+	}
+
+	nfInt32 CToolpathReaderNode_Hatch::getFactorH2()
+	{
+		return m_nFactorH2;
+	}
 
 }

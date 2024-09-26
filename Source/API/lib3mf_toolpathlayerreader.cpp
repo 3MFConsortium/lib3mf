@@ -29,6 +29,7 @@ Abstract: This is a stub class definition of CToolpathLayerReader
 */
 
 #include "lib3mf_toolpathlayerreader.hpp"
+#include "lib3mf_toolpathprofile.hpp"
 #include "lib3mf_interfaceexception.hpp"
 #include "lib3mf_customdomtree.hpp"
 
@@ -38,10 +39,12 @@ using namespace Lib3MF::Impl;
  Class definition of CToolpathLayerReader
 **************************************************************************************************************************/
 
-CToolpathLayerReader::CToolpathLayerReader(NMR::PModelToolpathLayerReadData pReadData)
-	: m_pReadData(pReadData)
+CToolpathLayerReader::CToolpathLayerReader(NMR::PModelToolpathLayerReadData pReadData, NMR::PModelToolpath pModelToolpath)
+	: m_pReadData(pReadData), m_pModelToolpath(pModelToolpath)
 {
 	if (pReadData.get() == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	if (pModelToolpath.get() == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 
 }
@@ -77,12 +80,19 @@ void CToolpathLayerReader::GetSegmentInfo(const Lib3MF_uint32 nIndex, Lib3MF::eT
 	}
 }
 
-IToolpathProfile* CToolpathLayerReader::GetSegmentProfile(const Lib3MF_uint32 nIndex)
+IToolpathProfile* CToolpathLayerReader::GetSegmentDefaultProfile(const Lib3MF_uint32 nIndex)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::eModelToolpathSegmentType eNMRType;
+	uint32_t nProfileID = 0;
+	uint32_t nPointCount = 0;
+	uint32_t nPartID = 0;
+	m_pReadData->getSegmentInfo(nIndex, eNMRType, nProfileID, nPartID, nPointCount);
+
+	auto pProfile = m_pModelToolpath->getProfileByUUID(m_pReadData->mapIDtoUUID(nProfileID));
+	return new CToolpathProfile (pProfile);
 }
 
-std::string CToolpathLayerReader::GetSegmentProfileUUID(const Lib3MF_uint32 nIndex)
+std::string CToolpathLayerReader::GetSegmentDefaultProfileUUID(const Lib3MF_uint32 nIndex)
 {
 	NMR::eModelToolpathSegmentType eNMRType;
 	uint32_t nProfileID;
@@ -92,6 +102,12 @@ std::string CToolpathLayerReader::GetSegmentProfileUUID(const Lib3MF_uint32 nInd
 
 	return m_pReadData->mapIDtoUUID(nProfileID);
 }
+
+bool CToolpathLayerReader::SegmentHasUniformProfile(const Lib3MF_uint32 nIndex)
+{
+	return m_pReadData->segmentHasUniformProfile(nIndex);
+}
+
 
 IBuildItem* CToolpathLayerReader::GetSegmentPart(const Lib3MF_uint32 nIndex)
 {
@@ -149,9 +165,9 @@ void CToolpathLayerReader::GetSegmentPointDataInModelUnits(const Lib3MF_uint32 n
 			uint32_t nPointIndex;
 			Lib3MF::sPosition2D* pPoint = pPointDataBuffer;
 			for (nPointIndex = 0; nPointIndex < nPointCount; nPointIndex++) {
-				NMR::NVEC2I position = m_pReadData->getSegmentPoint(nIndex, nPointIndex);
-				pPoint->m_Coordinates[0] = (float) (position.m_values.x * dUnits);
-				pPoint->m_Coordinates[1] = (float) (position.m_values.y * dUnits);
+				NMR::TOOLPATHREADPOINT& point = m_pReadData->getSegmentPoint(nIndex, nPointIndex);
+				pPoint->m_Coordinates[0] = (float) (point.m_nX * dUnits);
+				pPoint->m_Coordinates[1] = (float) (point.m_nY * dUnits);
 				pPoint++;
 			}
 		}
@@ -179,15 +195,110 @@ void CToolpathLayerReader::GetSegmentPointDataDiscrete(const Lib3MF_uint32 nInde
 			uint32_t nPointIndex;
 			Lib3MF::sDiscretePosition2D* pPoint = pPointDataBuffer;
 			for (nPointIndex = 0; nPointIndex < nPointCount; nPointIndex++) {
-				NMR::NVEC2I position = m_pReadData->getSegmentPoint(nIndex, nPointIndex);
-				pPoint->m_Coordinates[0] = position.m_values.x;
-				pPoint->m_Coordinates[1] = position.m_values.y;
+				NMR::TOOLPATHREADPOINT & point = m_pReadData->getSegmentPoint(nIndex, nPointIndex);
+				pPoint->m_Coordinates[0] = point.m_nX;
+				pPoint->m_Coordinates[1] = point.m_nY;
 				pPoint++;
 			}
 		}
 	}
 }
 
+void CToolpathLayerReader::GetSegmentHatchDataInModelUnits(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, Lib3MF::sHatch2D* pHatchDataBuffer)
+{
+	NMR::eModelToolpathSegmentType eNMRType;
+	uint32_t nProfileID;
+	uint32_t nPartID;
+	uint32_t nPointCount;
+	m_pReadData->getSegmentInfo(nIndex, eNMRType, nProfileID, nPartID, nPointCount);
+
+	if (eNMRType == NMR::eModelToolpathSegmentType::HatchSegment) {
+		uint32_t nHatchCount = nPointCount / 2;
+
+		if (pHatchDataNeededCount != nullptr) {
+			*pHatchDataNeededCount = nHatchCount;
+		}
+
+		if (pHatchDataBuffer != nullptr) {
+			if (nHatchDataBufferSize < nHatchCount)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_BUFFERTOOSMALL);
+
+			if (nHatchCount > 0) {
+
+				double dUnits = m_pReadData->getUnits();
+
+				uint32_t nHatchIndex;
+				Lib3MF::sHatch2D* pHatch = pHatchDataBuffer;
+				for (nHatchIndex = 0; nHatchIndex < nHatchCount; nHatchIndex++) {
+					auto & point1 = m_pReadData->getSegmentPoint(nIndex, nHatchIndex * 2);
+					auto & point2 = m_pReadData->getSegmentPoint(nIndex, nHatchIndex * 2 + 1);
+					pHatch->m_Point1Coordinates[0] = point1.m_nX * dUnits;
+					pHatch->m_Point1Coordinates[1] = point1.m_nY * dUnits;
+					pHatch->m_Point2Coordinates[0] = point2.m_nX * dUnits;
+					pHatch->m_Point2Coordinates[1] = point2.m_nY * dUnits;
+					pHatch->m_ProfileOverrideID = (uint32_t)point1.m_nProfileOverride;
+					pHatch->m_Tag = point1.m_nTag;
+					pHatch++;
+				}
+			}
+		}
+
+	}
+	else {
+
+		if (pHatchDataNeededCount != nullptr) 
+			*pHatchDataNeededCount = 0;
+
+	}
+
+}
+
+void CToolpathLayerReader::GetSegmentHatchDataDiscrete(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, Lib3MF::sDiscreteHatch2D* pHatchDataBuffer)
+{
+	NMR::eModelToolpathSegmentType eNMRType;
+	uint32_t nProfileID;
+	uint32_t nPartID;
+	uint32_t nPointCount;
+	m_pReadData->getSegmentInfo(nIndex, eNMRType, nProfileID, nPartID, nPointCount);
+
+	if (eNMRType == NMR::eModelToolpathSegmentType::HatchSegment) {
+		uint32_t nHatchCount = nPointCount / 2;
+
+		if (pHatchDataNeededCount != nullptr) {
+			*pHatchDataNeededCount = nHatchCount;
+		}
+
+		if (pHatchDataBuffer != nullptr) {
+			if (nHatchDataBufferSize < nHatchCount)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_BUFFERTOOSMALL);
+
+			if (nHatchCount > 0) {
+
+				uint32_t nHatchIndex;
+				Lib3MF::sDiscreteHatch2D* pHatch = pHatchDataBuffer;
+				for (nHatchIndex = 0; nHatchIndex < nHatchCount; nHatchIndex++) {
+					auto& point1 = m_pReadData->getSegmentPoint(nIndex, nHatchIndex * 2);
+					auto& point2 = m_pReadData->getSegmentPoint(nIndex, nHatchIndex * 2 + 1);
+					pHatch->m_Point1Coordinates[0] = point1.m_nX;
+					pHatch->m_Point1Coordinates[1] = point1.m_nY;
+					pHatch->m_Point2Coordinates[0] = point2.m_nX;
+					pHatch->m_Point2Coordinates[1] = point2.m_nY;
+					pHatch->m_ProfileOverrideID = (uint32_t)point1.m_nProfileOverride;
+					pHatch->m_Tag = point1.m_nTag;
+					pHatch++;
+				}
+			}
+		}
+
+	}
+	else {
+
+		if (pHatchDataNeededCount != nullptr)
+			*pHatchDataNeededCount = 0;
+
+	}
+
+}
 
 Lib3MF_uint32 CToolpathLayerReader::GetCustomDataCount()
 {
@@ -206,9 +317,9 @@ void CToolpathLayerReader::GetCustomDataName(const Lib3MF_uint32 nIndex, std::st
 	sDataName = pCustomData->getRootName();
 }
 
-void CToolpathLayerReader::FindAttributeInfoByName(const std::string& sNameSpace, const std::string& sAttributeName, Lib3MF_uint32& nID, Lib3MF::eToolpathAttributeType& eAttributeType)
+void CToolpathLayerReader::FindSegmentAttributeInfoByName(const std::string& sNameSpace, const std::string& sAttributeName, Lib3MF_uint32& nID, Lib3MF::eToolpathAttributeType& eAttributeType)
 {
-	std::pair<uint32_t, NMR::eModelToolpathSegmentAttributeType> attributeInfo = m_pReadData->findAttribute(sNameSpace, sAttributeName, true);
+	std::pair<uint32_t, NMR::eModelToolpathSegmentAttributeType> attributeInfo = m_pReadData->findSegmentAttribute(sNameSpace, sAttributeName, true);
 	nID = attributeInfo.first;
 	
 	switch (attributeInfo.second) {
@@ -220,21 +331,19 @@ void CToolpathLayerReader::FindAttributeInfoByName(const std::string& sNameSpace
 		break;
 	default:
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE);
-
-
 	}
 }
 
 
-Lib3MF_uint32 CToolpathLayerReader::FindAttributeIDByName(const std::string& sNameSpace, const std::string& sAttributeName)
+Lib3MF_uint32 CToolpathLayerReader::FindSegmentAttributeIDByName(const std::string& sNameSpace, const std::string& sAttributeName)
 {
-	std::pair<uint32_t, NMR::eModelToolpathSegmentAttributeType> attributeInfo = m_pReadData->findAttribute(sNameSpace, sAttributeName, true);
+	std::pair<uint32_t, NMR::eModelToolpathSegmentAttributeType> attributeInfo = m_pReadData->findSegmentAttribute(sNameSpace, sAttributeName, true);
 	return attributeInfo.first;
 }
 
-Lib3MF::eToolpathAttributeType CToolpathLayerReader::FindAttributeValueByName(const std::string& sNameSpace, const std::string& sAttributeName)
+Lib3MF::eToolpathAttributeType CToolpathLayerReader::FindSegmentAttributeTypeByName(const std::string& sNameSpace, const std::string& sAttributeName)
 {
-	std::pair<uint32_t, NMR::eModelToolpathSegmentAttributeType> attributeInfo = m_pReadData->findAttribute(sNameSpace, sAttributeName, true);
+	std::pair<uint32_t, NMR::eModelToolpathSegmentAttributeType> attributeInfo = m_pReadData->findSegmentAttribute(sNameSpace, sAttributeName, true);
 
 	switch (attributeInfo.second) {
 	case NMR::eModelToolpathSegmentAttributeType::SegmentAttributeInt64:
@@ -255,7 +364,7 @@ Lib3MF_int64 CToolpathLayerReader::GetSegmentIntegerAttributeByID(const Lib3MF_u
 
 Lib3MF_int64 CToolpathLayerReader::GetSegmentIntegerAttributeByName(const Lib3MF_uint32 nIndex, const std::string& sNameSpace, const std::string& sAttributeName)
 {
-	std::pair<uint32_t, NMR::eModelToolpathSegmentAttributeType> attributeInfo = m_pReadData->findAttribute(sNameSpace, sAttributeName, true);
+	std::pair<uint32_t, NMR::eModelToolpathSegmentAttributeType> attributeInfo = m_pReadData->findSegmentAttribute(sNameSpace, sAttributeName, true);
 	if (attributeInfo.second != NMR::eModelToolpathSegmentAttributeType::SegmentAttributeInt64)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE);
 
@@ -274,7 +383,7 @@ Lib3MF_double CToolpathLayerReader::GetSegmentDoubleAttributeByID(const Lib3MF_u
 
 Lib3MF_double CToolpathLayerReader::GetSegmentDoubleAttributeByName(const Lib3MF_uint32 nIndex, const std::string& sNameSpace, const std::string& sAttributeName)
 {
-	std::pair<uint32_t, NMR::eModelToolpathSegmentAttributeType> attributeInfo = m_pReadData->findAttribute(sNameSpace, sAttributeName, true);
+	std::pair<uint32_t, NMR::eModelToolpathSegmentAttributeType> attributeInfo = m_pReadData->findSegmentAttribute(sNameSpace, sAttributeName, true);
 	if (attributeInfo.second != NMR::eModelToolpathSegmentAttributeType::SegmentAttributeDouble)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_INVALIDATTRIBUTETYPE);
 

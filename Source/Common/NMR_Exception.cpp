@@ -558,6 +558,15 @@ namespace NMR {
 		case NMR_ERROR_TOOLPATHLAYERSARENOTINCREMENTING: return "Toolpath layers are not incrementing";
 		case NMR_ERROR_CANNOTSETBOTTOMZIFLAYERSEXIST: return "Cannot set bottom Z if layers exist";
 		case NMR_ERROR_LAYERHASNOTPOSITIVETHICKNESS: return "Layer has not positive thickness";
+		case NMR_ERROR_INVALIDLINEATTRIBUTEID: return "Invalid line attribute ID";
+		case NMR_ERROR_INVALIDLINEATTRIBUTEINDEX: return "Invalid line attribute Index";
+		case NMR_ERROR_LINEATTRIBUTENOTFOUND: return "Line attribute not found";
+		case NMR_ERROR_LINEATTRIBUTEDEFINEDAFTERREADING: return "Line attribute defined after reading";
+		case NMR_ERROR_INVALIDLINEATTRIBUTENAMESPACE: return "Invalid line attribute namespace";
+		case NMR_ERROR_INVALIDLINEATTRIBUTENAME: return "Invalid line attribute name";
+		case NMR_ERROR_INVALIDLINEATTRIBUTETYPE: return "Invalid line attribute type";
+		case NMR_ERROR_TOOLPATH_INVALIDPROFILESCALINGBUFFER: return "Invalid profile scaling buffer";
+		case NMR_ERROR_TOOLPATH_INVALIDFACTORRANGE: return "Invalid factor range";
 
 		default:
 			return "unknown error";

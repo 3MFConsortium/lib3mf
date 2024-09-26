@@ -48,7 +48,8 @@ NMR_ModelToolpathLayer.cpp defines the Model Toolpath Layer.
 namespace NMR {
 
 	CModelToolpathLayerWriteData::CModelToolpathLayerWriteData(CModelToolpath * pModelToolpath, NMR::PModelWriter_3MF pModelWriter, const std::string & sPackagePath, std::map<std::string, std::string> PrefixToNameSpaceMap)
-		: m_pModelToolpath (pModelToolpath), m_pModelWriter (pModelWriter), m_sPackagePath (sPackagePath), m_PrefixToNameSpaceMap (PrefixToNameSpaceMap)
+		: m_pModelToolpath (pModelToolpath), m_pModelWriter (pModelWriter), m_sPackagePath (sPackagePath), m_PrefixToNameSpaceMap (PrefixToNameSpaceMap),
+		m_nCurrentLaserIndex (0), m_nFactorRange (TOOLPATHWRITER_DEFAULTFACTORRANGE)
 	{
 		if (pModelToolpath == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -126,7 +127,7 @@ namespace NMR {
 		return nNewID;
 	}
 
-	void CModelToolpathLayerWriteData::WriteHatchData(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nHatchCount, const nfInt32 * pX1Buffer, const nfInt32 * pY1Buffer, const nfInt32 * pX2Buffer, const nfInt32 * pY2Buffer)
+	void CModelToolpathLayerWriteData::WriteHatchData(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nHatchCount, const nfInt32* pX1Buffer, const nfInt32* pY1Buffer, const nfInt32* pX2Buffer, const nfInt32* pY2Buffer, const nfInt32* pTagBuffer, const nfInt32* pProfileIDBuffer, const int32_t* pScalingData1Buffer, const int32_t* pScalingData2Buffer)
 	{
 		std::string sPath;
 		NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter(sPath);
@@ -152,6 +153,17 @@ namespace NMR {
 		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_TYPE, nullptr, XML_3MF_TOOLPATHTYPE_HATCH);
 		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PROFILEID, nullptr, sProfileID.c_str());
 		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARTID, nullptr, sPartID.c_str());
+		
+		if (m_nCurrentLaserIndex != 0) {
+			std::string sLaserIndex = std::to_string(m_nCurrentLaserIndex);
+			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_LASERINDEX, nullptr, sLaserIndex.c_str());
+		}
+
+		if (pScalingData1Buffer != nullptr) {
+			std::string sFactorRange = std::to_string(m_nFactorRange);
+			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_MAXFACTOR, nullptr, sFactorRange.c_str());
+		}
+
 		for (auto& customAttribute : m_CustomSegmentAttributes) {
 			std::string sNameSpace = customAttribute.first.first;
 			std::string sAttributeName = customAttribute.first.second;
@@ -161,10 +173,17 @@ namespace NMR {
 		}
 
 		if (pStreamWriter != nullptr) {
-			unsigned int binaryKeyX1 = pStreamWriter->addIntArray(pX1Buffer, nHatchCount, eptDeltaPredicition);
-			unsigned int binaryKeyY1 = pStreamWriter->addIntArray(pY1Buffer, nHatchCount, eptDeltaPredicition);
-			unsigned int binaryKeyX2 = pStreamWriter->addIntArray(pX2Buffer, nHatchCount, eptDeltaPredicition);
-			unsigned int binaryKeyY2 = pStreamWriter->addIntArray(pY2Buffer, nHatchCount, eptDeltaPredicition);
+			uint32_t binaryKeyX1 = pStreamWriter->addIntArray(pX1Buffer, nHatchCount, eptDeltaPredicition);
+			uint32_t binaryKeyY1 = pStreamWriter->addIntArray(pY1Buffer, nHatchCount, eptDeltaPredicition);
+			uint32_t binaryKeyX2 = pStreamWriter->addIntArray(pX2Buffer, nHatchCount, eptDeltaPredicition);
+			uint32_t binaryKeyY2 = pStreamWriter->addIntArray(pY2Buffer, nHatchCount, eptDeltaPredicition);
+			uint32_t binaryKeyTags = 0;
+			if (pTagBuffer != nullptr)
+				binaryKeyTags = pStreamWriter->addIntArray(pTagBuffer, nHatchCount, eptDeltaPredicition);
+
+			uint32_t binaryKeyProfileIDs = 0;
+			if (pProfileIDBuffer != nullptr)
+				binaryKeyProfileIDs = pStreamWriter->addIntArray(pProfileIDBuffer, nHatchCount, eptDeltaPredicition);
 
 			std::string sKeyX1 = std::to_string(binaryKeyX1);
 			std::string sKeyY1 = std::to_string(binaryKeyY1);
@@ -176,6 +195,17 @@ namespace NMR {
 			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_Y1, nullptr, sKeyY1.c_str());
 			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_X2, nullptr, sKeyX2.c_str());
 			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_Y2, nullptr, sKeyY2.c_str());
+
+			if (binaryKeyProfileIDs != 0) {
+				std::string sKeyProfileIDs = std::to_string(binaryKeyProfileIDs);
+				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_PID, nullptr, sKeyProfileIDs.c_str());
+			}
+
+			if (binaryKeyTags != 0) {
+				std::string sKeyTags = std::to_string(binaryKeyTags);
+				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_TAG, nullptr, sKeyTags.c_str());
+			}
+
 			m_pXmlWriter->WriteEndElement();
 
 
@@ -195,6 +225,59 @@ namespace NMR {
 				m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_Y1, nullptr, sY1.c_str());
 				m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_X2, nullptr, sX2.c_str());
 				m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_Y2, nullptr, sY2.c_str());
+
+				if (pProfileIDBuffer != nullptr) {
+					int32_t nProfileID = pProfileIDBuffer[nIndex];
+					if (nProfileID != 0) {
+						std::string sProfileID = std::to_string(nProfileID);
+						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PID, nullptr, sProfileID.c_str());
+					}
+				}
+
+				if (pTagBuffer != nullptr) {
+					int32_t nTag = pTagBuffer[nIndex];
+					if (nTag != 0) {
+						std::string sTag = std::to_string(nTag);
+						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_TAG, nullptr, sTag.c_str());
+					}
+				}
+
+				if (pScalingData1Buffer != nullptr) {
+
+					int32_t nScalingValue1 = pScalingData1Buffer[nIndex];
+					int32_t nScalingValue2 = nScalingValue1;
+
+					if (pScalingData2Buffer != nullptr) {
+						nScalingValue2 = pScalingData2Buffer[nIndex];
+					}
+
+					if (nScalingValue1 == nScalingValue2) {
+						if (nScalingValue1 != 0) {
+							std::string sScalingValue = std::to_string(nScalingValue1);
+							m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF, nullptr, sScalingValue.c_str());
+						}
+					}
+					else {
+						if (nScalingValue1 != 0) {
+							std::string sScalingValue1 = std::to_string(nScalingValue1);
+							m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF1, nullptr, sScalingValue1.c_str());
+						}
+						if (nScalingValue2 != 0) {
+							std::string sScalingValue2 = std::to_string(nScalingValue2);
+							m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF2, nullptr, sScalingValue2.c_str());
+						}
+
+					}
+
+
+				}
+				else {
+					if (pScalingData2Buffer != nullptr) {
+						throw CNMRException(NMR_ERROR_TOOLPATH_INVALIDPROFILESCALINGBUFFER);
+					}
+
+				}
+
 				m_pXmlWriter->WriteEndElement();
 
 			}
@@ -205,7 +288,7 @@ namespace NMR {
 
 	}
 
-	void CModelToolpathLayerWriteData::WriteLoop(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nPointCount, const nfInt32 * pXBuffer, const nfInt32 * pYBuffer)
+	void CModelToolpathLayerWriteData::WriteLoop(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nPointCount, const nfInt32 * pXBuffer, const nfInt32 * pYBuffer, const int32_t* pTagDataBuffer, const int32_t* pScalingDataBuffer)
 	{
 		if (pXBuffer == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -227,6 +310,13 @@ namespace NMR {
 		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_TYPE, nullptr, XML_3MF_TOOLPATHTYPE_LOOP);
 		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PROFILEID, nullptr, sProfileID.c_str());
 		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARTID, nullptr, sPartID.c_str());
+
+
+		if (m_nCurrentLaserIndex != 0) {
+			std::string sLaserIndex = std::to_string(m_nCurrentLaserIndex);
+			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_LASERINDEX, nullptr, sLaserIndex.c_str());
+		}
+
 		for (auto& customAttribute : m_CustomSegmentAttributes) {
 			std::string sNameSpace = customAttribute.first.first;
 			std::string sAttributeName = customAttribute.first.second;
@@ -259,6 +349,27 @@ namespace NMR {
 				m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_POINT, nullptr);
 				m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_X, nullptr, sX.c_str());
 				m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_Y, nullptr, sY.c_str());
+
+				if (pTagDataBuffer != nullptr) {
+
+					int32_t nTagValue = pTagDataBuffer[nIndex];
+					if (nTagValue != 0) {
+						std::string sTagValue = std::to_string(nTagValue);
+
+						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_TAG, nullptr, sTagValue.c_str());
+					}
+				}
+
+				if (pScalingDataBuffer != nullptr) {
+
+					int32_t nScalingValue = pScalingDataBuffer[nIndex];
+					if (nScalingValue != 0) {
+						std::string sScalingValue = std::to_string(nScalingValue);
+
+						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF, nullptr, sScalingValue.c_str());
+					}
+				}
+
 				m_pXmlWriter->WriteEndElement();
 			}
 
@@ -268,7 +379,7 @@ namespace NMR {
 
 	}
 
-	void CModelToolpathLayerWriteData::WritePolyline(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nPointCount, const nfInt32 * pXBuffer, const nfInt32 * pYBuffer)
+	void CModelToolpathLayerWriteData::WritePolyline(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nPointCount, const nfInt32 * pXBuffer, const nfInt32 * pYBuffer, const int32_t* pTagDataBuffer, const int32_t* pScalingDataBuffer)
 	{
 		std::string sPath;
 
@@ -290,6 +401,16 @@ namespace NMR {
 		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_TYPE, nullptr, XML_3MF_TOOLPATHTYPE_POLYLINE);
 		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PROFILEID, nullptr, sProfileID.c_str());
 		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARTID, nullptr, sPartID.c_str());
+		if (m_nCurrentLaserIndex != 0) {
+			std::string sLaserIndex = std::to_string(m_nCurrentLaserIndex);
+			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_LASERINDEX, nullptr, sLaserIndex.c_str());
+		}
+
+		if (pScalingDataBuffer != nullptr) {
+			std::string sFactorRange = std::to_string(m_nFactorRange);
+			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_MAXFACTOR, nullptr, sFactorRange.c_str());
+		}
+
 		for (auto& customAttribute : m_CustomSegmentAttributes) {
 			std::string sNameSpace = customAttribute.first.first;
 			std::string sAttributeName = customAttribute.first.second;
@@ -323,6 +444,15 @@ namespace NMR {
 				m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_POINT, nullptr);
 				m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_X, nullptr, sX.c_str());
 				m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_Y, nullptr, sY.c_str());
+
+				if (pScalingDataBuffer != nullptr) {
+
+					int32_t nScalingValue = pScalingDataBuffer[nIndex];
+					std::string sScalingValue = std::to_string(nScalingValue);
+
+					m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF, nullptr, sScalingValue.c_str());
+				}
+
 				m_pXmlWriter->WriteEndElement();
 			}
 
@@ -497,5 +627,17 @@ namespace NMR {
 		return iIter->second;
 	}
 
+	void CModelToolpathLayerWriteData::setCurrentLaserIndex(uint32_t nLaserIndex)
+	{
+		m_nCurrentLaserIndex = nLaserIndex;
+	}
+
+	void CModelToolpathLayerWriteData::setFactorRange(uint32_t nFactorRange)
+	{
+		if ((nFactorRange < TOOLPATHWRITER_MINFACTORRANGE) || (nFactorRange > TOOLPATHWRITER_MAXFACTORRANGE))
+			throw CNMRException(NMR_ERROR_TOOLPATH_INVALIDFACTORRANGE);
+
+		m_nFactorRange = nFactorRange;
+	}
 }
 

@@ -50,6 +50,10 @@ NMR_ModelToolpath.h defines the Model Toolpath Layer Data.
 
 #include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamWriter.h"
 
+#define TOOLPATHWRITER_MINFACTORRANGE 1
+#define TOOLPATHWRITER_MAXFACTORRANGE (1024 * 1024 * 1024)
+#define TOOLPATHWRITER_DEFAULTFACTORRANGE 1024
+
 namespace NMR {
 
 	class CModelToolpath;
@@ -74,6 +78,9 @@ namespace NMR {
 		bool m_bWritingData;
 		bool m_bWritingFinished;
 		unsigned int m_nIDCounter;
+
+		uint32_t m_nCurrentLaserIndex;
+		uint32_t m_nFactorRange;
 
 		std::vector<PCustomXMLTree> m_CustomXMLData;
 		std::map<std::pair<std::string, std::string>, std::string> m_CustomSegmentAttributes;
@@ -102,11 +109,11 @@ namespace NMR {
 
 		nfUint32 RegisterPart(PModelBuildItem pBuildItem);
 
-		void WriteHatchData(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nHatchCount, const nfInt32 * pX1Buffer, const nfInt32 * pY1Buffer, const nfInt32 * pX2Buffer, const nfInt32 * pY2Buffer);
+		void WriteHatchData(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nHatchCount, const nfInt32 * pX1Buffer, const nfInt32 * pY1Buffer, const nfInt32 * pX2Buffer, const nfInt32 * pY2Buffer, const nfInt32 * pTagBuffer, const nfInt32 * pProfileIDBuffer, const int32_t* pScalingData1Buffer, const int32_t* pScalingData2Buffer);
 
-		void WriteLoop(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nPointCount, const nfInt32 * pXBuffer, const nfInt32 * pYBuffer);
+		void WriteLoop(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nPointCount, const nfInt32 * pXBuffer, const nfInt32 * pYBuffer, const int32_t* pTagDataBuffer, const int32_t* pScalingDataBuffer);
 
-		void WritePolyline(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nPointCount, const nfInt32 * pXBuffer, const nfInt32 * pYBuffer);
+		void WritePolyline(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nPointCount, const nfInt32 * pXBuffer, const nfInt32 * pYBuffer, const int32_t* pTagDataBuffer, const int32_t* pScalingDataBuffer);
 
 		void finishHeader();
 
@@ -120,7 +127,9 @@ namespace NMR {
 
 		void clearCustomSegmentAttributes();
 
+		void setCurrentLaserIndex(uint32_t nLaserIndex);
 
+		void setFactorRange(uint32_t nFactorRange);
 
 	};
 

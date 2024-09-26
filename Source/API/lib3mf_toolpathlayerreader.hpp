@@ -44,6 +44,7 @@ Abstract: This is the class declaration of CToolpathLayerReader
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelToolpathLayerReadData.h"
+#include "Model/Classes/NMR_ModelToolpath.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -59,10 +60,11 @@ private:
 protected:
 
 	NMR::PModelToolpathLayerReadData m_pReadData;
+	NMR::PModelToolpath m_pModelToolpath;
 
 public:
 
-	CToolpathLayerReader(NMR::PModelToolpathLayerReadData pReadData);
+	CToolpathLayerReader(NMR::PModelToolpathLayerReadData pReadData, NMR::PModelToolpath pModelToolpath);
 
 	virtual ~CToolpathLayerReader();
 
@@ -72,9 +74,11 @@ public:
 
 	void GetSegmentInfo(const Lib3MF_uint32 nIndex, Lib3MF::eToolpathSegmentType & eType, Lib3MF_uint32 & nPointCount) override;
 
-	IToolpathProfile * GetSegmentProfile(const Lib3MF_uint32 nIndex) override;
+	IToolpathProfile * GetSegmentDefaultProfile(const Lib3MF_uint32 nIndex) override;
 
-	std::string GetSegmentProfileUUID(const Lib3MF_uint32 nIndex) override;
+	std::string GetSegmentDefaultProfileUUID(const Lib3MF_uint32 nIndex) override;
+
+	bool SegmentHasUniformProfile(const Lib3MF_uint32 nIndex) override;
 
 	IBuildItem * GetSegmentPart(const Lib3MF_uint32 nIndex) override;
 
@@ -88,17 +92,21 @@ public:
 
 	void GetSegmentPointDataDiscrete(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sDiscretePosition2D* pPointDataBuffer) override;
 
+	void GetSegmentHatchDataInModelUnits(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, Lib3MF::sHatch2D* pHatchDataBuffer) override;
+
+	void GetSegmentHatchDataDiscrete(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sDiscreteHatch2D* pPointDataBuffer) override;
+
 	Lib3MF_uint32 GetCustomDataCount() override;
 
 	ICustomDOMTree* GetCustomData(const Lib3MF_uint32 nIndex) override;
 
 	void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string& sNameSpace, std::string& sDataName) override;
 
-	void FindAttributeInfoByName(const std::string& sNameSpace, const std::string& sAttributeName, Lib3MF_uint32& nID, Lib3MF::eToolpathAttributeType& eAttributeType) override;
+	void FindSegmentAttributeInfoByName(const std::string& sNameSpace, const std::string& sAttributeName, Lib3MF_uint32& nID, Lib3MF::eToolpathAttributeType& eAttributeType) override;
 
-	Lib3MF_uint32 FindAttributeIDByName(const std::string& sNameSpace, const std::string& sAttributeName) override;
+	Lib3MF_uint32 FindSegmentAttributeIDByName(const std::string& sNameSpace, const std::string& sAttributeName) override;
 
-	Lib3MF::eToolpathAttributeType FindAttributeValueByName(const std::string& sNameSpace, const std::string& sAttributeName) override;
+	Lib3MF::eToolpathAttributeType FindSegmentAttributeTypeByName(const std::string& sNameSpace, const std::string& sAttributeName) override;
 
 	Lib3MF_int64 GetSegmentIntegerAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID) override;
 
@@ -107,7 +115,6 @@ public:
 	Lib3MF_double GetSegmentDoubleAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID) override;
 
 	Lib3MF_double GetSegmentDoubleAttributeByName(const Lib3MF_uint32 nIndex, const std::string& sNameSpace, const std::string& sAttributeName) override;
-
 
 };
 
