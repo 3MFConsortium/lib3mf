@@ -1133,17 +1133,23 @@ private:
 	static void WriteHatchDataInModelUnits(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WriteHatchDataInModelUnitsWithConstantOverrides(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WriteHatchDataInModelUnitsWithRampedOverrides(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void WriteHatchDataInModelUnitsWithMultipleOverrides(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WriteHatchDataDiscrete(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WriteHatchDataDiscreteWithConstantOverrides(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WriteHatchDataDiscreteWithRampedOverrides(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void WriteHatchDataDiscreteWithMultipleOverrides(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WriteLoopInModelUnits(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WriteLoopDiscrete(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WriteLoopInModelUnitsWithOverrides(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void WriteLoopInModelUnitsWithMultipleOverrides(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WriteLoopDiscreteWithOverrides(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void WriteLoopDiscreteWithMultipleOverrides(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WritePolylineInModelUnits(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void WritePolylineDiscrete(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WritePolylineInModelUnitsWithOverrides(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void WritePolylineInModelUnitsWithMultipleOverrides(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void WritePolylineDiscrete(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WritePolylineDiscreteWithOverrides(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void WritePolylineDiscreteWithMultipleOverrides(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void Finish(const v8::FunctionCallbackInfo<v8::Value>& args);
 

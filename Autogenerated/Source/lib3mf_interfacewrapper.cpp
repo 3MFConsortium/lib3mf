@@ -13207,6 +13207,53 @@ Lib3MFResult lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithrampedoverri
 	}
 }
 
+Lib3MFResult lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithmultipleoverrides(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const sLib3MFHatch2D * pHatchDataBuffer, Lib3MF_uint64 nScalingDataF1BufferSize, const Lib3MF_int32 * pScalingDataF1Buffer, Lib3MF_uint64 nScalingDataF2BufferSize, const Lib3MF_int32 * pScalingDataF2Buffer, Lib3MF_uint64 nScalingDataG1BufferSize, const Lib3MF_int32 * pScalingDataG1Buffer, Lib3MF_uint64 nScalingDataG2BufferSize, const Lib3MF_int32 * pScalingDataG2Buffer, Lib3MF_uint64 nScalingDataH1BufferSize, const Lib3MF_int32 * pScalingDataH1Buffer, Lib3MF_uint64 nScalingDataH2BufferSize, const Lib3MF_int32 * pScalingDataH2Buffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerData, "ToolpathLayerData", "WriteHatchDataInModelUnitsWithMultipleOverrides");
+			pJournalEntry->addUInt32Parameter("ProfileID", nProfileID);
+			pJournalEntry->addUInt32Parameter("PartID", nPartID);
+		}
+		if ( (!pHatchDataBuffer) && (nHatchDataBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataF1Buffer) && (nScalingDataF1BufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataF2Buffer) && (nScalingDataF2BufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataG1Buffer) && (nScalingDataG1BufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataG2Buffer) && (nScalingDataG2BufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataH1Buffer) && (nScalingDataH1BufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataH2Buffer) && (nScalingDataH2BufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLayerData* pIToolpathLayerData = dynamic_cast<IToolpathLayerData*>(pIBaseClass);
+		if (!pIToolpathLayerData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLayerData->WriteHatchDataInModelUnitsWithMultipleOverrides(nProfileID, nPartID, nHatchDataBufferSize, pHatchDataBuffer, nScalingDataF1BufferSize, pScalingDataF1Buffer, nScalingDataF2BufferSize, pScalingDataF2Buffer, nScalingDataG1BufferSize, pScalingDataG1Buffer, nScalingDataG2BufferSize, pScalingDataG2Buffer, nScalingDataH1BufferSize, pScalingDataH1Buffer, nScalingDataH2BufferSize, pScalingDataH2Buffer);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_toolpathlayerdata_writehatchdatadiscrete(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const sLib3MFDiscreteHatch2D * pHatchDataBuffer)
 {
 	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
@@ -13301,6 +13348,53 @@ Lib3MFResult lib3mf_toolpathlayerdata_writehatchdatadiscretewithrampedoverrides(
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
 		pIToolpathLayerData->WriteHatchDataDiscreteWithRampedOverrides(nProfileID, nPartID, nHatchDataBufferSize, pHatchDataBuffer, nScalingData1BufferSize, pScalingData1Buffer, nScalingData2BufferSize, pScalingData2Buffer);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerdata_writehatchdatadiscretewithmultipleoverrides(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const sLib3MFDiscreteHatch2D * pHatchDataBuffer, Lib3MF_uint64 nScalingDataF1BufferSize, const Lib3MF_int32 * pScalingDataF1Buffer, Lib3MF_uint64 nScalingDataF2BufferSize, const Lib3MF_int32 * pScalingDataF2Buffer, Lib3MF_uint64 nScalingDataG1BufferSize, const Lib3MF_int32 * pScalingDataG1Buffer, Lib3MF_uint64 nScalingDataG2BufferSize, const Lib3MF_int32 * pScalingDataG2Buffer, Lib3MF_uint64 nScalingDataH1BufferSize, const Lib3MF_int32 * pScalingDataH1Buffer, Lib3MF_uint64 nScalingDataH2BufferSize, const Lib3MF_int32 * pScalingDataH2Buffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerData, "ToolpathLayerData", "WriteHatchDataDiscreteWithMultipleOverrides");
+			pJournalEntry->addUInt32Parameter("ProfileID", nProfileID);
+			pJournalEntry->addUInt32Parameter("PartID", nPartID);
+		}
+		if ( (!pHatchDataBuffer) && (nHatchDataBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataF1Buffer) && (nScalingDataF1BufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataF2Buffer) && (nScalingDataF2BufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataG1Buffer) && (nScalingDataG1BufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataG2Buffer) && (nScalingDataG2BufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataH1Buffer) && (nScalingDataH1BufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataH2Buffer) && (nScalingDataH2BufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLayerData* pIToolpathLayerData = dynamic_cast<IToolpathLayerData*>(pIBaseClass);
+		if (!pIToolpathLayerData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLayerData->WriteHatchDataDiscreteWithMultipleOverrides(nProfileID, nPartID, nHatchDataBufferSize, pHatchDataBuffer, nScalingDataF1BufferSize, pScalingDataF1Buffer, nScalingDataF2BufferSize, pScalingDataF2Buffer, nScalingDataG1BufferSize, pScalingDataG1Buffer, nScalingDataG2BufferSize, pScalingDataG2Buffer, nScalingDataH1BufferSize, pScalingDataH1Buffer, nScalingDataH2BufferSize, pScalingDataH2Buffer);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -13425,6 +13519,47 @@ Lib3MFResult lib3mf_toolpathlayerdata_writeloopinmodelunitswithoverrides(Lib3MF_
 	}
 }
 
+Lib3MFResult lib3mf_toolpathlayerdata_writeloopinmodelunitswithmultipleoverrides(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataFBufferSize, const Lib3MF_int32 * pScalingDataFBuffer, Lib3MF_uint64 nScalingDataGBufferSize, const Lib3MF_int32 * pScalingDataGBuffer, Lib3MF_uint64 nScalingDataHBufferSize, const Lib3MF_int32 * pScalingDataHBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerData, "ToolpathLayerData", "WriteLoopInModelUnitsWithMultipleOverrides");
+			pJournalEntry->addUInt32Parameter("ProfileID", nProfileID);
+			pJournalEntry->addUInt32Parameter("PartID", nPartID);
+		}
+		if ( (!pPointDataBuffer) && (nPointDataBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataFBuffer) && (nScalingDataFBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataGBuffer) && (nScalingDataGBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataHBuffer) && (nScalingDataHBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLayerData* pIToolpathLayerData = dynamic_cast<IToolpathLayerData*>(pIBaseClass);
+		if (!pIToolpathLayerData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLayerData->WriteLoopInModelUnitsWithMultipleOverrides(nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer, nScalingDataFBufferSize, pScalingDataFBuffer, nScalingDataGBufferSize, pScalingDataGBuffer, nScalingDataHBufferSize, pScalingDataHBuffer);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_toolpathlayerdata_writeloopdiscretewithoverrides(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer)
 {
 	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
@@ -13462,6 +13597,47 @@ Lib3MFResult lib3mf_toolpathlayerdata_writeloopdiscretewithoverrides(Lib3MF_Tool
 	}
 }
 
+Lib3MFResult lib3mf_toolpathlayerdata_writeloopdiscretewithmultipleoverrides(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataFBufferSize, const Lib3MF_int32 * pScalingDataFBuffer, Lib3MF_uint64 nScalingDataGBufferSize, const Lib3MF_int32 * pScalingDataGBuffer, Lib3MF_uint64 nScalingDataHBufferSize, const Lib3MF_int32 * pScalingDataHBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerData, "ToolpathLayerData", "WriteLoopDiscreteWithMultipleOverrides");
+			pJournalEntry->addUInt32Parameter("ProfileID", nProfileID);
+			pJournalEntry->addUInt32Parameter("PartID", nPartID);
+		}
+		if ( (!pPointDataBuffer) && (nPointDataBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataFBuffer) && (nScalingDataFBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataGBuffer) && (nScalingDataGBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataHBuffer) && (nScalingDataHBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLayerData* pIToolpathLayerData = dynamic_cast<IToolpathLayerData*>(pIBaseClass);
+		if (!pIToolpathLayerData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLayerData->WriteLoopDiscreteWithMultipleOverrides(nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer, nScalingDataFBufferSize, pScalingDataFBuffer, nScalingDataGBufferSize, pScalingDataGBuffer, nScalingDataHBufferSize, pScalingDataHBuffer);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_toolpathlayerdata_writepolylineinmodelunits(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer)
 {
 	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
@@ -13480,41 +13656,6 @@ Lib3MFResult lib3mf_toolpathlayerdata_writepolylineinmodelunits(Lib3MF_ToolpathL
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
 		pIToolpathLayerData->WritePolylineInModelUnits(nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_toolpathlayerdata_writepolylinediscrete(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer)
-{
-	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerData, "ToolpathLayerData", "WritePolylineDiscrete");
-			pJournalEntry->addUInt32Parameter("ProfileID", nProfileID);
-			pJournalEntry->addUInt32Parameter("PartID", nPartID);
-		}
-		if ( (!pPointDataBuffer) && (nPointDataBufferSize>0))
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IToolpathLayerData* pIToolpathLayerData = dynamic_cast<IToolpathLayerData*>(pIBaseClass);
-		if (!pIToolpathLayerData)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIToolpathLayerData->WritePolylineDiscrete(nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -13569,6 +13710,82 @@ Lib3MFResult lib3mf_toolpathlayerdata_writepolylineinmodelunitswithoverrides(Lib
 	}
 }
 
+Lib3MFResult lib3mf_toolpathlayerdata_writepolylineinmodelunitswithmultipleoverrides(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataFBufferSize, const Lib3MF_int32 * pScalingDataFBuffer, Lib3MF_uint64 nScalingDataGBufferSize, const Lib3MF_int32 * pScalingDataGBuffer, Lib3MF_uint64 nScalingDataHBufferSize, const Lib3MF_int32 * pScalingDataHBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerData, "ToolpathLayerData", "WritePolylineInModelUnitsWithMultipleOverrides");
+			pJournalEntry->addUInt32Parameter("ProfileID", nProfileID);
+			pJournalEntry->addUInt32Parameter("PartID", nPartID);
+		}
+		if ( (!pPointDataBuffer) && (nPointDataBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataFBuffer) && (nScalingDataFBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataGBuffer) && (nScalingDataGBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataHBuffer) && (nScalingDataHBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLayerData* pIToolpathLayerData = dynamic_cast<IToolpathLayerData*>(pIBaseClass);
+		if (!pIToolpathLayerData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLayerData->WritePolylineInModelUnitsWithMultipleOverrides(nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer, nScalingDataFBufferSize, pScalingDataFBuffer, nScalingDataGBufferSize, pScalingDataGBuffer, nScalingDataHBufferSize, pScalingDataHBuffer);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerdata_writepolylinediscrete(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerData, "ToolpathLayerData", "WritePolylineDiscrete");
+			pJournalEntry->addUInt32Parameter("ProfileID", nProfileID);
+			pJournalEntry->addUInt32Parameter("PartID", nPartID);
+		}
+		if ( (!pPointDataBuffer) && (nPointDataBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLayerData* pIToolpathLayerData = dynamic_cast<IToolpathLayerData*>(pIBaseClass);
+		if (!pIToolpathLayerData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLayerData->WritePolylineDiscrete(nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_toolpathlayerdata_writepolylinediscretewithoverrides(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer)
 {
 	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
@@ -13589,6 +13806,47 @@ Lib3MFResult lib3mf_toolpathlayerdata_writepolylinediscretewithoverrides(Lib3MF_
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
 		pIToolpathLayerData->WritePolylineDiscreteWithOverrides(nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer, nScalingDataBufferSize, pScalingDataBuffer);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerdata_writepolylinediscretewithmultipleoverrides(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataFBufferSize, const Lib3MF_int32 * pScalingDataFBuffer, Lib3MF_uint64 nScalingDataGBufferSize, const Lib3MF_int32 * pScalingDataGBuffer, Lib3MF_uint64 nScalingDataHBufferSize, const Lib3MF_int32 * pScalingDataHBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerData, "ToolpathLayerData", "WritePolylineDiscreteWithMultipleOverrides");
+			pJournalEntry->addUInt32Parameter("ProfileID", nProfileID);
+			pJournalEntry->addUInt32Parameter("PartID", nPartID);
+		}
+		if ( (!pPointDataBuffer) && (nPointDataBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataFBuffer) && (nScalingDataFBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataGBuffer) && (nScalingDataGBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pScalingDataHBuffer) && (nScalingDataHBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLayerData* pIToolpathLayerData = dynamic_cast<IToolpathLayerData*>(pIBaseClass);
+		if (!pIToolpathLayerData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLayerData->WritePolylineDiscreteWithMultipleOverrides(nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer, nScalingDataFBufferSize, pScalingDataFBuffer, nScalingDataGBufferSize, pScalingDataGBuffer, nScalingDataHBufferSize, pScalingDataHBuffer);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -20066,28 +20324,40 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithconstantoverrides;
 	if (sProcName == "lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithrampedoverrides") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithrampedoverrides;
+	if (sProcName == "lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithmultipleoverrides") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithmultipleoverrides;
 	if (sProcName == "lib3mf_toolpathlayerdata_writehatchdatadiscrete") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writehatchdatadiscrete;
 	if (sProcName == "lib3mf_toolpathlayerdata_writehatchdatadiscretewithconstantoverrides") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writehatchdatadiscretewithconstantoverrides;
 	if (sProcName == "lib3mf_toolpathlayerdata_writehatchdatadiscretewithrampedoverrides") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writehatchdatadiscretewithrampedoverrides;
+	if (sProcName == "lib3mf_toolpathlayerdata_writehatchdatadiscretewithmultipleoverrides") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writehatchdatadiscretewithmultipleoverrides;
 	if (sProcName == "lib3mf_toolpathlayerdata_writeloopinmodelunits") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writeloopinmodelunits;
 	if (sProcName == "lib3mf_toolpathlayerdata_writeloopdiscrete") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writeloopdiscrete;
 	if (sProcName == "lib3mf_toolpathlayerdata_writeloopinmodelunitswithoverrides") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writeloopinmodelunitswithoverrides;
+	if (sProcName == "lib3mf_toolpathlayerdata_writeloopinmodelunitswithmultipleoverrides") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writeloopinmodelunitswithmultipleoverrides;
 	if (sProcName == "lib3mf_toolpathlayerdata_writeloopdiscretewithoverrides") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writeloopdiscretewithoverrides;
+	if (sProcName == "lib3mf_toolpathlayerdata_writeloopdiscretewithmultipleoverrides") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writeloopdiscretewithmultipleoverrides;
 	if (sProcName == "lib3mf_toolpathlayerdata_writepolylineinmodelunits") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writepolylineinmodelunits;
-	if (sProcName == "lib3mf_toolpathlayerdata_writepolylinediscrete") 
-		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writepolylinediscrete;
 	if (sProcName == "lib3mf_toolpathlayerdata_writepolylineinmodelunitswithoverrides") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writepolylineinmodelunitswithoverrides;
+	if (sProcName == "lib3mf_toolpathlayerdata_writepolylineinmodelunitswithmultipleoverrides") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writepolylineinmodelunitswithmultipleoverrides;
+	if (sProcName == "lib3mf_toolpathlayerdata_writepolylinediscrete") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writepolylinediscrete;
 	if (sProcName == "lib3mf_toolpathlayerdata_writepolylinediscretewithoverrides") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writepolylinediscretewithoverrides;
+	if (sProcName == "lib3mf_toolpathlayerdata_writepolylinediscretewithmultipleoverrides") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writepolylinediscretewithmultipleoverrides;
 	if (sProcName == "lib3mf_toolpathlayerdata_addcustomdata") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_addcustomdata;
 	if (sProcName == "lib3mf_toolpathlayerdata_finish") 

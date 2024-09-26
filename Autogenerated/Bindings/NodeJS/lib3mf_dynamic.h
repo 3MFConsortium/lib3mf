@@ -3616,7 +3616,7 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteHatchDataInModelUnitsPtr) (
 * @param[in] nHatchDataBufferSize - Number of elements in buffer
 * @param[in] pHatchDataBuffer - Hatch2D buffer of The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
 * @param[in] nScalingDataBufferSize - Number of elements in buffer
-* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors. MUST have the same cardinality as HatchData.
+* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors (f). MUST have the same cardinality as HatchData.
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithConstantOverridesPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const sLib3MFHatch2D * pHatchDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer);
@@ -3630,12 +3630,36 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithCo
 * @param[in] nHatchDataBufferSize - Number of elements in buffer
 * @param[in] pHatchDataBuffer - Hatch2D buffer of The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
 * @param[in] nScalingData1BufferSize - Number of elements in buffer
-* @param[in] pScalingData1Buffer - int32 buffer of The profile override scale factors for the start point of each hatch. MUST have the same cardinality as HatchData.
+* @param[in] pScalingData1Buffer - int32 buffer of The profile override scale factors (f) for the start point of each hatch. MUST have the same cardinality as HatchData.
 * @param[in] nScalingData2BufferSize - Number of elements in buffer
-* @param[in] pScalingData2Buffer - int32 buffer of The profile override scale factors for the end point of each hatch. MUST have the same cardinality as HatchData.
+* @param[in] pScalingData2Buffer - int32 buffer of The profile override scale factors (f) for the end point of each hatch. MUST have the same cardinality as HatchData.
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverridesPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const sLib3MFHatch2D * pHatchDataBuffer, Lib3MF_uint64 nScalingData1BufferSize, const Lib3MF_int32 * pScalingData1Buffer, Lib3MF_uint64 nScalingData2BufferSize, const Lib3MF_int32 * pScalingData2Buffer);
+
+/**
+* writes hatch data to the layer in model units with ramped profile overrides per hatch.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nHatchDataBufferSize - Number of elements in buffer
+* @param[in] pHatchDataBuffer - Hatch2D buffer of The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+* @param[in] nScalingDataF1BufferSize - Number of elements in buffer
+* @param[in] pScalingDataF1Buffer - int32 buffer of The profile override scale factors (f) for the start point of each hatch. MUST have the same cardinality as HatchData.
+* @param[in] nScalingDataF2BufferSize - Number of elements in buffer
+* @param[in] pScalingDataF2Buffer - int32 buffer of The profile override scale factors (f) for the end point of each hatch. MUST have the same cardinality as HatchData.
+* @param[in] nScalingDataG1BufferSize - Number of elements in buffer
+* @param[in] pScalingDataG1Buffer - int32 buffer of The profile override scale factors (g) for the start point of each hatch. MUST have the same cardinality as HatchData.
+* @param[in] nScalingDataG2BufferSize - Number of elements in buffer
+* @param[in] pScalingDataG2Buffer - int32 buffer of The profile override scale factors (g) for the end point of each hatch. MUST have the same cardinality as HatchData.
+* @param[in] nScalingDataH1BufferSize - Number of elements in buffer
+* @param[in] pScalingDataH1Buffer - int32 buffer of The profile override scale factors (h) for the start point of each hatch. MUST have the same cardinality as HatchData.
+* @param[in] nScalingDataH2BufferSize - Number of elements in buffer
+* @param[in] pScalingDataH2Buffer - int32 buffer of The profile override scale factors (h) for the end point of each hatch. MUST have the same cardinality as HatchData.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverridesPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const sLib3MFHatch2D * pHatchDataBuffer, Lib3MF_uint64 nScalingDataF1BufferSize, const Lib3MF_int32 * pScalingDataF1Buffer, Lib3MF_uint64 nScalingDataF2BufferSize, const Lib3MF_int32 * pScalingDataF2Buffer, Lib3MF_uint64 nScalingDataG1BufferSize, const Lib3MF_int32 * pScalingDataG1Buffer, Lib3MF_uint64 nScalingDataG2BufferSize, const Lib3MF_int32 * pScalingDataG2Buffer, Lib3MF_uint64 nScalingDataH1BufferSize, const Lib3MF_int32 * pScalingDataH1Buffer, Lib3MF_uint64 nScalingDataH2BufferSize, const Lib3MF_int32 * pScalingDataH2Buffer);
 
 /**
 * writes hatch data to the layer in toolpath units.
@@ -3658,7 +3682,7 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteHatchDataDiscretePtr) (Lib3
 * @param[in] nHatchDataBufferSize - Number of elements in buffer
 * @param[in] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
 * @param[in] nScalingDataBufferSize - Number of elements in buffer
-* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors. MUST have the same cardinality as HatchData.
+* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors (f). MUST have the same cardinality as HatchData.
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteHatchDataDiscreteWithConstantOverridesPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const sLib3MFDiscreteHatch2D * pHatchDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer);
@@ -3672,12 +3696,36 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteHatchDataDiscreteWithConsta
 * @param[in] nHatchDataBufferSize - Number of elements in buffer
 * @param[in] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
 * @param[in] nScalingData1BufferSize - Number of elements in buffer
-* @param[in] pScalingData1Buffer - int32 buffer of The profile override scale factors for the start point of each hatch. MUST have the same cardinality as HatchData.
+* @param[in] pScalingData1Buffer - int32 buffer of The profile override scale factors (f) for the start point of each hatch. MUST have the same cardinality as HatchData.
 * @param[in] nScalingData2BufferSize - Number of elements in buffer
-* @param[in] pScalingData2Buffer - int32 buffer of The profile override scale factors for the end point of each hatch. MUST have the same cardinality as HatchData.
+* @param[in] pScalingData2Buffer - int32 buffer of The profile override scale factors (f) for the end point of each hatch. MUST have the same cardinality as HatchData.
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteHatchDataDiscreteWithRampedOverridesPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const sLib3MFDiscreteHatch2D * pHatchDataBuffer, Lib3MF_uint64 nScalingData1BufferSize, const Lib3MF_int32 * pScalingData1Buffer, Lib3MF_uint64 nScalingData2BufferSize, const Lib3MF_int32 * pScalingData2Buffer);
+
+/**
+* writes hatch data to the layer in toolpath units with ramped profile overrides per hatch.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nHatchDataBufferSize - Number of elements in buffer
+* @param[in] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+* @param[in] nScalingDataF1BufferSize - Number of elements in buffer
+* @param[in] pScalingDataF1Buffer - int32 buffer of The profile override scale factors (f) for the start point of each hatch. If empty, no factors are written. MUST otherwise have the same cardinality as HatchData.
+* @param[in] nScalingDataF2BufferSize - Number of elements in buffer
+* @param[in] pScalingDataF2Buffer - int32 buffer of The profile override scale factors (f) for the end point of each hatch. Defaults to ScalingDataF1, if empty. MUST be empty, if ScalingDataF1 is empty. MUST otherwise have the same cardinality as HatchData.
+* @param[in] nScalingDataG1BufferSize - Number of elements in buffer
+* @param[in] pScalingDataG1Buffer - int32 buffer of The profile override scale factors (g) for the start point of each hatch. If empty, no factors are written. MUST have the same cardinality as HatchData.
+* @param[in] nScalingDataG2BufferSize - Number of elements in buffer
+* @param[in] pScalingDataG2Buffer - int32 buffer of The profile override scale factors (g) for the end point of each hatch. Defaults to ScalingDataG1, if empty. MUST be empty, if ScalingDataG1 is empty. MUST otherwise have the same cardinality as HatchData.
+* @param[in] nScalingDataH1BufferSize - Number of elements in buffer
+* @param[in] pScalingDataH1Buffer - int32 buffer of The profile override scale factors (h) for the start point of each hatch. MUST have the same cardinality as HatchData.
+* @param[in] nScalingDataH2BufferSize - Number of elements in buffer
+* @param[in] pScalingDataH2Buffer - int32 buffer of The profile override scale factors (h) for the end point of each hatch. Defaults to ScalingDataH1, if empty. MUST be empty, if ScalingDataH1 is empty. MUST otherwise have the same cardinality as HatchData.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverridesPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const sLib3MFDiscreteHatch2D * pHatchDataBuffer, Lib3MF_uint64 nScalingDataF1BufferSize, const Lib3MF_int32 * pScalingDataF1Buffer, Lib3MF_uint64 nScalingDataF2BufferSize, const Lib3MF_int32 * pScalingDataF2Buffer, Lib3MF_uint64 nScalingDataG1BufferSize, const Lib3MF_int32 * pScalingDataG1Buffer, Lib3MF_uint64 nScalingDataG2BufferSize, const Lib3MF_int32 * pScalingDataG2Buffer, Lib3MF_uint64 nScalingDataH1BufferSize, const Lib3MF_int32 * pScalingDataH1Buffer, Lib3MF_uint64 nScalingDataH2BufferSize, const Lib3MF_int32 * pScalingDataH2Buffer);
 
 /**
 * writes loop data to the layer in model units.
@@ -3718,6 +3766,24 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteLoopDiscretePtr) (Lib3MF_To
 typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteLoopInModelUnitsWithOverridesPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer);
 
 /**
+* writes loop data to the layer in model units with profile overrides.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use. Loop Profiles can not be overridden by point.
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - Position2D buffer of The point data in model units. Array MUST NOT be empty.
+* @param[in] nScalingDataFBufferSize - Number of elements in buffer
+* @param[in] pScalingDataFBuffer - int32 buffer of The profile override scale factors for F. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+* @param[in] nScalingDataGBufferSize - Number of elements in buffer
+* @param[in] pScalingDataGBuffer - int32 buffer of The profile override scale factors for G. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+* @param[in] nScalingDataHBufferSize - Number of elements in buffer
+* @param[in] pScalingDataHBuffer - int32 buffer of The profile override scale factors for H. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverridesPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataFBufferSize, const Lib3MF_int32 * pScalingDataFBuffer, Lib3MF_uint64 nScalingDataGBufferSize, const Lib3MF_int32 * pScalingDataGBuffer, Lib3MF_uint64 nScalingDataHBufferSize, const Lib3MF_int32 * pScalingDataHBuffer);
+
+/**
 * writes loop data to the layer in toolpath units with profile overrides..
 *
 * @param[in] pToolpathLayerData - ToolpathLayerData instance.
@@ -3732,6 +3798,24 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteLoopInModelUnitsWithOverrid
 typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteLoopDiscreteWithOverridesPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer);
 
 /**
+* writes loop data to the layer in toolpath units with profile overrides..
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use. Loop Profiles can not be overridden by point.
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - DiscretePosition2D buffer of The point data in toolpath units. Array MUST NOT be empty.
+* @param[in] nScalingDataFBufferSize - Number of elements in buffer
+* @param[in] pScalingDataFBuffer - int32 buffer of The profile override scale factors for F. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+* @param[in] nScalingDataGBufferSize - Number of elements in buffer
+* @param[in] pScalingDataGBuffer - int32 buffer of The profile override scale factors for G. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+* @param[in] nScalingDataHBufferSize - Number of elements in buffer
+* @param[in] pScalingDataHBuffer - int32 buffer of The profile override scale factors for H. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteLoopDiscreteWithMultipleOverridesPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataFBufferSize, const Lib3MF_int32 * pScalingDataFBuffer, Lib3MF_uint64 nScalingDataGBufferSize, const Lib3MF_int32 * pScalingDataGBuffer, Lib3MF_uint64 nScalingDataHBufferSize, const Lib3MF_int32 * pScalingDataHBuffer);
+
+/**
 * writes polyline data to the layer.
 *
 * @param[in] pToolpathLayerData - ToolpathLayerData instance.
@@ -3742,6 +3826,38 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteLoopDiscreteWithOverridesPt
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFToolpathLayerData_WritePolylineInModelUnitsPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer);
+
+/**
+* writes polyline data to the layer with profile overrides.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - Position2D buffer of The point data in model units. Array MUST NOT be empty.
+* @param[in] nScalingDataBufferSize - Number of elements in buffer
+* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors. If empty, no factors are written. MUST otherwise have the same cardinality as PointData. A Profile override ID of 0 inherits the profile of the segment.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WritePolylineInModelUnitsWithOverridesPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer);
+
+/**
+* writes polyline data to the layer with profile overrides.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - Position2D buffer of The point data in model units. Array MUST NOT be empty.
+* @param[in] nScalingDataFBufferSize - Number of elements in buffer
+* @param[in] pScalingDataFBuffer - int32 buffer of The profile override scale factors for F. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+* @param[in] nScalingDataGBufferSize - Number of elements in buffer
+* @param[in] pScalingDataGBuffer - int32 buffer of The profile override scale factors for G. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+* @param[in] nScalingDataHBufferSize - Number of elements in buffer
+* @param[in] pScalingDataHBuffer - int32 buffer of The profile override scale factors for H. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverridesPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataFBufferSize, const Lib3MF_int32 * pScalingDataFBuffer, Lib3MF_uint64 nScalingDataGBufferSize, const Lib3MF_int32 * pScalingDataGBuffer, Lib3MF_uint64 nScalingDataHBufferSize, const Lib3MF_int32 * pScalingDataHBuffer);
 
 /**
 * writes polyline data to the layer.
@@ -3762,12 +3878,12 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerData_WritePolylineDiscretePtr) (Lib3M
 * @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
 * @param[in] nPartID - The toolpath part to use
 * @param[in] nPointDataBufferSize - Number of elements in buffer
-* @param[in] pPointDataBuffer - Position2D buffer of The point data in model units. Array MUST NOT be empty.
+* @param[in] pPointDataBuffer - DiscretePosition2D buffer of The point data in toolpath units. Array MUST NOT be empty.
 * @param[in] nScalingDataBufferSize - Number of elements in buffer
-* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors. MUST have the same cardinality as PointData. A Profile override ID of 0 inherits the profile of the segment.
+* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors. If empty, no factors are written. MUST otherwise have the same cardinality as PointData. A Profile override ID of 0 inherits the profile of the segment.
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFToolpathLayerData_WritePolylineInModelUnitsWithOverridesPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer);
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WritePolylineDiscreteWithOverridesPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer);
 
 /**
 * writes polyline data to the layer with profile overrides.
@@ -3777,11 +3893,15 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerData_WritePolylineInModelUnitsWithOve
 * @param[in] nPartID - The toolpath part to use
 * @param[in] nPointDataBufferSize - Number of elements in buffer
 * @param[in] pPointDataBuffer - DiscretePosition2D buffer of The point data in toolpath units. Array MUST NOT be empty.
-* @param[in] nScalingDataBufferSize - Number of elements in buffer
-* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors. MUST have the same cardinality as PointData. A Profile override ID of 0 inherits the profile of the segment.
+* @param[in] nScalingDataFBufferSize - Number of elements in buffer
+* @param[in] pScalingDataFBuffer - int32 buffer of The profile override scale factors for F. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+* @param[in] nScalingDataGBufferSize - Number of elements in buffer
+* @param[in] pScalingDataGBuffer - int32 buffer of The profile override scale factors for G. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+* @param[in] nScalingDataHBufferSize - Number of elements in buffer
+* @param[in] pScalingDataHBuffer - int32 buffer of The profile override scale factors for H. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFToolpathLayerData_WritePolylineDiscreteWithOverridesPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer);
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WritePolylineDiscreteWithMultipleOverridesPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataFBufferSize, const Lib3MF_int32 * pScalingDataFBuffer, Lib3MF_uint64 nScalingDataGBufferSize, const Lib3MF_int32 * pScalingDataGBuffer, Lib3MF_uint64 nScalingDataHBufferSize, const Lib3MF_int32 * pScalingDataHBuffer);
 
 /**
 * Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
@@ -5826,17 +5946,23 @@ typedef struct {
 	PLib3MFToolpathLayerData_WriteHatchDataInModelUnitsPtr m_ToolpathLayerData_WriteHatchDataInModelUnits;
 	PLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithConstantOverridesPtr m_ToolpathLayerData_WriteHatchDataInModelUnitsWithConstantOverrides;
 	PLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverridesPtr m_ToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverrides;
+	PLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverridesPtr m_ToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverrides;
 	PLib3MFToolpathLayerData_WriteHatchDataDiscretePtr m_ToolpathLayerData_WriteHatchDataDiscrete;
 	PLib3MFToolpathLayerData_WriteHatchDataDiscreteWithConstantOverridesPtr m_ToolpathLayerData_WriteHatchDataDiscreteWithConstantOverrides;
 	PLib3MFToolpathLayerData_WriteHatchDataDiscreteWithRampedOverridesPtr m_ToolpathLayerData_WriteHatchDataDiscreteWithRampedOverrides;
+	PLib3MFToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverridesPtr m_ToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverrides;
 	PLib3MFToolpathLayerData_WriteLoopInModelUnitsPtr m_ToolpathLayerData_WriteLoopInModelUnits;
 	PLib3MFToolpathLayerData_WriteLoopDiscretePtr m_ToolpathLayerData_WriteLoopDiscrete;
 	PLib3MFToolpathLayerData_WriteLoopInModelUnitsWithOverridesPtr m_ToolpathLayerData_WriteLoopInModelUnitsWithOverrides;
+	PLib3MFToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverridesPtr m_ToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverrides;
 	PLib3MFToolpathLayerData_WriteLoopDiscreteWithOverridesPtr m_ToolpathLayerData_WriteLoopDiscreteWithOverrides;
+	PLib3MFToolpathLayerData_WriteLoopDiscreteWithMultipleOverridesPtr m_ToolpathLayerData_WriteLoopDiscreteWithMultipleOverrides;
 	PLib3MFToolpathLayerData_WritePolylineInModelUnitsPtr m_ToolpathLayerData_WritePolylineInModelUnits;
-	PLib3MFToolpathLayerData_WritePolylineDiscretePtr m_ToolpathLayerData_WritePolylineDiscrete;
 	PLib3MFToolpathLayerData_WritePolylineInModelUnitsWithOverridesPtr m_ToolpathLayerData_WritePolylineInModelUnitsWithOverrides;
+	PLib3MFToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverridesPtr m_ToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverrides;
+	PLib3MFToolpathLayerData_WritePolylineDiscretePtr m_ToolpathLayerData_WritePolylineDiscrete;
 	PLib3MFToolpathLayerData_WritePolylineDiscreteWithOverridesPtr m_ToolpathLayerData_WritePolylineDiscreteWithOverrides;
+	PLib3MFToolpathLayerData_WritePolylineDiscreteWithMultipleOverridesPtr m_ToolpathLayerData_WritePolylineDiscreteWithMultipleOverrides;
 	PLib3MFToolpathLayerData_AddCustomDataPtr m_ToolpathLayerData_AddCustomData;
 	PLib3MFToolpathLayerData_FinishPtr m_ToolpathLayerData_Finish;
 	PLib3MFToolpath_GetUUIDPtr m_Toolpath_GetUUID;

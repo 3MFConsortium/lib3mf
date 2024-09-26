@@ -154,6 +154,7 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE 4011 /** Invalid point coordinate. */
 #define LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOUNT 4012 /** Invalid hatch count */
 #define LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHHATCHDATA 4013 /** Scaling data needs to match hatch data */
+#define LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHPOINTDATA 4014 /** Scaling data needs to match point data */
 
 /*************************************************************************************************************************
  Error strings for Lib3MF
@@ -223,6 +224,7 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
     case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE: return "Invalid point coordinate.";
     case LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOUNT: return "Invalid hatch count";
     case LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHHATCHDATA: return "Scaling data needs to match hatch data";
+    case LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHPOINTDATA: return "Scaling data needs to match point data";
     default: return "unknown error";
   }
 }

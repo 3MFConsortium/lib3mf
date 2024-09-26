@@ -138,6 +138,7 @@ const
 	LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE = 4011;
 	LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOUNT = 4012;
 	LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHHATCHDATA = 4013;
+	LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHPOINTDATA = 4014;
 
 (*************************************************************************************************************************
  Declaration of enums
@@ -4112,7 +4113,7 @@ type
 	* @param[in] nHatchDataCount - Number of elements in buffer
 	* @param[in] pHatchDataBuffer - Hatch2D buffer of The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
 	* @param[in] nScalingDataCount - Number of elements in buffer
-	* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors. MUST have the same cardinality as HatchData.
+	* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors (f). MUST have the same cardinality as HatchData.
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithConstantOverridesFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nHatchDataCount: QWord; const pHatchDataBuffer: PLib3MFHatch2D; const nScalingDataCount: QWord; const pScalingDataBuffer: PInteger): TLib3MFResult; cdecl;
@@ -4126,12 +4127,36 @@ type
 	* @param[in] nHatchDataCount - Number of elements in buffer
 	* @param[in] pHatchDataBuffer - Hatch2D buffer of The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
 	* @param[in] nScalingData1Count - Number of elements in buffer
-	* @param[in] pScalingData1Buffer - int32 buffer of The profile override scale factors for the start point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] pScalingData1Buffer - int32 buffer of The profile override scale factors (f) for the start point of each hatch. MUST have the same cardinality as HatchData.
 	* @param[in] nScalingData2Count - Number of elements in buffer
-	* @param[in] pScalingData2Buffer - int32 buffer of The profile override scale factors for the end point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] pScalingData2Buffer - int32 buffer of The profile override scale factors (f) for the end point of each hatch. MUST have the same cardinality as HatchData.
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverridesFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nHatchDataCount: QWord; const pHatchDataBuffer: PLib3MFHatch2D; const nScalingData1Count: QWord; const pScalingData1Buffer: PInteger; const nScalingData2Count: QWord; const pScalingData2Buffer: PInteger): TLib3MFResult; cdecl;
+	
+	(**
+	* writes hatch data to the layer in model units with ramped profile overrides per hatch.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nHatchDataCount - Number of elements in buffer
+	* @param[in] pHatchDataBuffer - Hatch2D buffer of The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] nScalingDataF1Count - Number of elements in buffer
+	* @param[in] pScalingDataF1Buffer - int32 buffer of The profile override scale factors (f) for the start point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] nScalingDataF2Count - Number of elements in buffer
+	* @param[in] pScalingDataF2Buffer - int32 buffer of The profile override scale factors (f) for the end point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] nScalingDataG1Count - Number of elements in buffer
+	* @param[in] pScalingDataG1Buffer - int32 buffer of The profile override scale factors (g) for the start point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] nScalingDataG2Count - Number of elements in buffer
+	* @param[in] pScalingDataG2Buffer - int32 buffer of The profile override scale factors (g) for the end point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] nScalingDataH1Count - Number of elements in buffer
+	* @param[in] pScalingDataH1Buffer - int32 buffer of The profile override scale factors (h) for the start point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] nScalingDataH2Count - Number of elements in buffer
+	* @param[in] pScalingDataH2Buffer - int32 buffer of The profile override scale factors (h) for the end point of each hatch. MUST have the same cardinality as HatchData.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverridesFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nHatchDataCount: QWord; const pHatchDataBuffer: PLib3MFHatch2D; const nScalingDataF1Count: QWord; const pScalingDataF1Buffer: PInteger; const nScalingDataF2Count: QWord; const pScalingDataF2Buffer: PInteger; const nScalingDataG1Count: QWord; const pScalingDataG1Buffer: PInteger; const nScalingDataG2Count: QWord; const pScalingDataG2Buffer: PInteger; const nScalingDataH1Count: QWord; const pScalingDataH1Buffer: PInteger; const nScalingDataH2Count: QWord; const pScalingDataH2Buffer: PInteger): TLib3MFResult; cdecl;
 	
 	(**
 	* writes hatch data to the layer in toolpath units.
@@ -4154,7 +4179,7 @@ type
 	* @param[in] nHatchDataCount - Number of elements in buffer
 	* @param[in] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
 	* @param[in] nScalingDataCount - Number of elements in buffer
-	* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors. MUST have the same cardinality as HatchData.
+	* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors (f). MUST have the same cardinality as HatchData.
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpathLayerData_WriteHatchDataDiscreteWithConstantOverridesFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nHatchDataCount: QWord; const pHatchDataBuffer: PLib3MFDiscreteHatch2D; const nScalingDataCount: QWord; const pScalingDataBuffer: PInteger): TLib3MFResult; cdecl;
@@ -4168,12 +4193,36 @@ type
 	* @param[in] nHatchDataCount - Number of elements in buffer
 	* @param[in] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
 	* @param[in] nScalingData1Count - Number of elements in buffer
-	* @param[in] pScalingData1Buffer - int32 buffer of The profile override scale factors for the start point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] pScalingData1Buffer - int32 buffer of The profile override scale factors (f) for the start point of each hatch. MUST have the same cardinality as HatchData.
 	* @param[in] nScalingData2Count - Number of elements in buffer
-	* @param[in] pScalingData2Buffer - int32 buffer of The profile override scale factors for the end point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] pScalingData2Buffer - int32 buffer of The profile override scale factors (f) for the end point of each hatch. MUST have the same cardinality as HatchData.
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpathLayerData_WriteHatchDataDiscreteWithRampedOverridesFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nHatchDataCount: QWord; const pHatchDataBuffer: PLib3MFDiscreteHatch2D; const nScalingData1Count: QWord; const pScalingData1Buffer: PInteger; const nScalingData2Count: QWord; const pScalingData2Buffer: PInteger): TLib3MFResult; cdecl;
+	
+	(**
+	* writes hatch data to the layer in toolpath units with ramped profile overrides per hatch.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nHatchDataCount - Number of elements in buffer
+	* @param[in] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] nScalingDataF1Count - Number of elements in buffer
+	* @param[in] pScalingDataF1Buffer - int32 buffer of The profile override scale factors (f) for the start point of each hatch. If empty, no factors are written. MUST otherwise have the same cardinality as HatchData.
+	* @param[in] nScalingDataF2Count - Number of elements in buffer
+	* @param[in] pScalingDataF2Buffer - int32 buffer of The profile override scale factors (f) for the end point of each hatch. Defaults to ScalingDataF1, if empty. MUST be empty, if ScalingDataF1 is empty. MUST otherwise have the same cardinality as HatchData.
+	* @param[in] nScalingDataG1Count - Number of elements in buffer
+	* @param[in] pScalingDataG1Buffer - int32 buffer of The profile override scale factors (g) for the start point of each hatch. If empty, no factors are written. MUST have the same cardinality as HatchData.
+	* @param[in] nScalingDataG2Count - Number of elements in buffer
+	* @param[in] pScalingDataG2Buffer - int32 buffer of The profile override scale factors (g) for the end point of each hatch. Defaults to ScalingDataG1, if empty. MUST be empty, if ScalingDataG1 is empty. MUST otherwise have the same cardinality as HatchData.
+	* @param[in] nScalingDataH1Count - Number of elements in buffer
+	* @param[in] pScalingDataH1Buffer - int32 buffer of The profile override scale factors (h) for the start point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] nScalingDataH2Count - Number of elements in buffer
+	* @param[in] pScalingDataH2Buffer - int32 buffer of The profile override scale factors (h) for the end point of each hatch. Defaults to ScalingDataH1, if empty. MUST be empty, if ScalingDataH1 is empty. MUST otherwise have the same cardinality as HatchData.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverridesFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nHatchDataCount: QWord; const pHatchDataBuffer: PLib3MFDiscreteHatch2D; const nScalingDataF1Count: QWord; const pScalingDataF1Buffer: PInteger; const nScalingDataF2Count: QWord; const pScalingDataF2Buffer: PInteger; const nScalingDataG1Count: QWord; const pScalingDataG1Buffer: PInteger; const nScalingDataG2Count: QWord; const pScalingDataG2Buffer: PInteger; const nScalingDataH1Count: QWord; const pScalingDataH1Buffer: PInteger; const nScalingDataH2Count: QWord; const pScalingDataH2Buffer: PInteger): TLib3MFResult; cdecl;
 	
 	(**
 	* writes loop data to the layer in model units.
@@ -4214,6 +4263,24 @@ type
 	TLib3MFToolpathLayerData_WriteLoopInModelUnitsWithOverridesFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nPointDataCount: QWord; const pPointDataBuffer: PLib3MFPosition2D; const nScalingDataCount: QWord; const pScalingDataBuffer: PInteger): TLib3MFResult; cdecl;
 	
 	(**
+	* writes loop data to the layer in model units with profile overrides.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] nProfileID - The toolpath profile to use. Loop Profiles can not be overridden by point.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nPointDataCount - Number of elements in buffer
+	* @param[in] pPointDataBuffer - Position2D buffer of The point data in model units. Array MUST NOT be empty.
+	* @param[in] nScalingDataFCount - Number of elements in buffer
+	* @param[in] pScalingDataFBuffer - int32 buffer of The profile override scale factors for F. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] nScalingDataGCount - Number of elements in buffer
+	* @param[in] pScalingDataGBuffer - int32 buffer of The profile override scale factors for G. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] nScalingDataHCount - Number of elements in buffer
+	* @param[in] pScalingDataHBuffer - int32 buffer of The profile override scale factors for H. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverridesFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nPointDataCount: QWord; const pPointDataBuffer: PLib3MFPosition2D; const nScalingDataFCount: QWord; const pScalingDataFBuffer: PInteger; const nScalingDataGCount: QWord; const pScalingDataGBuffer: PInteger; const nScalingDataHCount: QWord; const pScalingDataHBuffer: PInteger): TLib3MFResult; cdecl;
+	
+	(**
 	* writes loop data to the layer in toolpath units with profile overrides..
 	*
 	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
@@ -4228,6 +4295,24 @@ type
 	TLib3MFToolpathLayerData_WriteLoopDiscreteWithOverridesFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nPointDataCount: QWord; const pPointDataBuffer: PLib3MFDiscretePosition2D; const nScalingDataCount: QWord; const pScalingDataBuffer: PInteger): TLib3MFResult; cdecl;
 	
 	(**
+	* writes loop data to the layer in toolpath units with profile overrides..
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] nProfileID - The toolpath profile to use. Loop Profiles can not be overridden by point.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nPointDataCount - Number of elements in buffer
+	* @param[in] pPointDataBuffer - DiscretePosition2D buffer of The point data in toolpath units. Array MUST NOT be empty.
+	* @param[in] nScalingDataFCount - Number of elements in buffer
+	* @param[in] pScalingDataFBuffer - int32 buffer of The profile override scale factors for F. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] nScalingDataGCount - Number of elements in buffer
+	* @param[in] pScalingDataGBuffer - int32 buffer of The profile override scale factors for G. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] nScalingDataHCount - Number of elements in buffer
+	* @param[in] pScalingDataHBuffer - int32 buffer of The profile override scale factors for H. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_WriteLoopDiscreteWithMultipleOverridesFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nPointDataCount: QWord; const pPointDataBuffer: PLib3MFDiscretePosition2D; const nScalingDataFCount: QWord; const pScalingDataFBuffer: PInteger; const nScalingDataGCount: QWord; const pScalingDataGBuffer: PInteger; const nScalingDataHCount: QWord; const pScalingDataHBuffer: PInteger): TLib3MFResult; cdecl;
+	
+	(**
 	* writes polyline data to the layer.
 	*
 	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
@@ -4238,6 +4323,38 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpathLayerData_WritePolylineInModelUnitsFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nPointDataCount: QWord; const pPointDataBuffer: PLib3MFPosition2D): TLib3MFResult; cdecl;
+	
+	(**
+	* writes polyline data to the layer with profile overrides.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nPointDataCount - Number of elements in buffer
+	* @param[in] pPointDataBuffer - Position2D buffer of The point data in model units. Array MUST NOT be empty.
+	* @param[in] nScalingDataCount - Number of elements in buffer
+	* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors. If empty, no factors are written. MUST otherwise have the same cardinality as PointData. A Profile override ID of 0 inherits the profile of the segment.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_WritePolylineInModelUnitsWithOverridesFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nPointDataCount: QWord; const pPointDataBuffer: PLib3MFPosition2D; const nScalingDataCount: QWord; const pScalingDataBuffer: PInteger): TLib3MFResult; cdecl;
+	
+	(**
+	* writes polyline data to the layer with profile overrides.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nPointDataCount - Number of elements in buffer
+	* @param[in] pPointDataBuffer - Position2D buffer of The point data in model units. Array MUST NOT be empty.
+	* @param[in] nScalingDataFCount - Number of elements in buffer
+	* @param[in] pScalingDataFBuffer - int32 buffer of The profile override scale factors for F. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] nScalingDataGCount - Number of elements in buffer
+	* @param[in] pScalingDataGBuffer - int32 buffer of The profile override scale factors for G. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] nScalingDataHCount - Number of elements in buffer
+	* @param[in] pScalingDataHBuffer - int32 buffer of The profile override scale factors for H. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverridesFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nPointDataCount: QWord; const pPointDataBuffer: PLib3MFPosition2D; const nScalingDataFCount: QWord; const pScalingDataFBuffer: PInteger; const nScalingDataGCount: QWord; const pScalingDataGBuffer: PInteger; const nScalingDataHCount: QWord; const pScalingDataHBuffer: PInteger): TLib3MFResult; cdecl;
 	
 	(**
 	* writes polyline data to the layer.
@@ -4258,12 +4375,12 @@ type
 	* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] nPointDataCount - Number of elements in buffer
-	* @param[in] pPointDataBuffer - Position2D buffer of The point data in model units. Array MUST NOT be empty.
+	* @param[in] pPointDataBuffer - DiscretePosition2D buffer of The point data in toolpath units. Array MUST NOT be empty.
 	* @param[in] nScalingDataCount - Number of elements in buffer
-	* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors. MUST have the same cardinality as PointData. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors. If empty, no factors are written. MUST otherwise have the same cardinality as PointData. A Profile override ID of 0 inherits the profile of the segment.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFToolpathLayerData_WritePolylineInModelUnitsWithOverridesFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nPointDataCount: QWord; const pPointDataBuffer: PLib3MFPosition2D; const nScalingDataCount: QWord; const pScalingDataBuffer: PInteger): TLib3MFResult; cdecl;
+	TLib3MFToolpathLayerData_WritePolylineDiscreteWithOverridesFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nPointDataCount: QWord; const pPointDataBuffer: PLib3MFDiscretePosition2D; const nScalingDataCount: QWord; const pScalingDataBuffer: PInteger): TLib3MFResult; cdecl;
 	
 	(**
 	* writes polyline data to the layer with profile overrides.
@@ -4273,11 +4390,15 @@ type
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] nPointDataCount - Number of elements in buffer
 	* @param[in] pPointDataBuffer - DiscretePosition2D buffer of The point data in toolpath units. Array MUST NOT be empty.
-	* @param[in] nScalingDataCount - Number of elements in buffer
-	* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors. MUST have the same cardinality as PointData. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] nScalingDataFCount - Number of elements in buffer
+	* @param[in] pScalingDataFBuffer - int32 buffer of The profile override scale factors for F. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] nScalingDataGCount - Number of elements in buffer
+	* @param[in] pScalingDataGBuffer - int32 buffer of The profile override scale factors for G. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] nScalingDataHCount - Number of elements in buffer
+	* @param[in] pScalingDataHBuffer - int32 buffer of The profile override scale factors for H. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFToolpathLayerData_WritePolylineDiscreteWithOverridesFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nPointDataCount: QWord; const pPointDataBuffer: PLib3MFDiscretePosition2D; const nScalingDataCount: QWord; const pScalingDataBuffer: PInteger): TLib3MFResult; cdecl;
+	TLib3MFToolpathLayerData_WritePolylineDiscreteWithMultipleOverridesFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nPointDataCount: QWord; const pPointDataBuffer: PLib3MFDiscretePosition2D; const nScalingDataFCount: QWord; const pScalingDataFBuffer: PInteger; const nScalingDataGCount: QWord; const pScalingDataGBuffer: PInteger; const nScalingDataHCount: QWord; const pScalingDataHBuffer: PInteger): TLib3MFResult; cdecl;
 	
 	(**
 	* Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
@@ -6822,17 +6943,23 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure WriteHatchDataInModelUnits(const AProfileID: Cardinal; const APartID: Cardinal; const AHatchData: ArrayOfLib3MFHatch2D);
 		procedure WriteHatchDataInModelUnitsWithConstantOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const AHatchData: ArrayOfLib3MFHatch2D; const AScalingData: TIntegerDynArray);
 		procedure WriteHatchDataInModelUnitsWithRampedOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const AHatchData: ArrayOfLib3MFHatch2D; const AScalingData1: TIntegerDynArray; const AScalingData2: TIntegerDynArray);
+		procedure WriteHatchDataInModelUnitsWithMultipleOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const AHatchData: ArrayOfLib3MFHatch2D; const AScalingDataF1: TIntegerDynArray; const AScalingDataF2: TIntegerDynArray; const AScalingDataG1: TIntegerDynArray; const AScalingDataG2: TIntegerDynArray; const AScalingDataH1: TIntegerDynArray; const AScalingDataH2: TIntegerDynArray);
 		procedure WriteHatchDataDiscrete(const AProfileID: Cardinal; const APartID: Cardinal; const AHatchData: ArrayOfLib3MFDiscreteHatch2D);
 		procedure WriteHatchDataDiscreteWithConstantOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const AHatchData: ArrayOfLib3MFDiscreteHatch2D; const AScalingData: TIntegerDynArray);
 		procedure WriteHatchDataDiscreteWithRampedOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const AHatchData: ArrayOfLib3MFDiscreteHatch2D; const AScalingData1: TIntegerDynArray; const AScalingData2: TIntegerDynArray);
+		procedure WriteHatchDataDiscreteWithMultipleOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const AHatchData: ArrayOfLib3MFDiscreteHatch2D; const AScalingDataF1: TIntegerDynArray; const AScalingDataF2: TIntegerDynArray; const AScalingDataG1: TIntegerDynArray; const AScalingDataG2: TIntegerDynArray; const AScalingDataH1: TIntegerDynArray; const AScalingDataH2: TIntegerDynArray);
 		procedure WriteLoopInModelUnits(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D);
 		procedure WriteLoopDiscrete(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFDiscretePosition2D);
 		procedure WriteLoopInModelUnitsWithOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D; const AScalingData: TIntegerDynArray);
+		procedure WriteLoopInModelUnitsWithMultipleOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D; const AScalingDataF: TIntegerDynArray; const AScalingDataG: TIntegerDynArray; const AScalingDataH: TIntegerDynArray);
 		procedure WriteLoopDiscreteWithOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFDiscretePosition2D; const AScalingData: TIntegerDynArray);
+		procedure WriteLoopDiscreteWithMultipleOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFDiscretePosition2D; const AScalingDataF: TIntegerDynArray; const AScalingDataG: TIntegerDynArray; const AScalingDataH: TIntegerDynArray);
 		procedure WritePolylineInModelUnits(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D);
-		procedure WritePolylineDiscrete(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFDiscretePosition2D);
 		procedure WritePolylineInModelUnitsWithOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D; const AScalingData: TIntegerDynArray);
+		procedure WritePolylineInModelUnitsWithMultipleOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D; const AScalingDataF: TIntegerDynArray; const AScalingDataG: TIntegerDynArray; const AScalingDataH: TIntegerDynArray);
+		procedure WritePolylineDiscrete(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFDiscretePosition2D);
 		procedure WritePolylineDiscreteWithOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFDiscretePosition2D; const AScalingData: TIntegerDynArray);
+		procedure WritePolylineDiscreteWithMultipleOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFDiscretePosition2D; const AScalingDataF: TIntegerDynArray; const AScalingDataG: TIntegerDynArray; const AScalingDataH: TIntegerDynArray);
 		function AddCustomData(const ANameSpace: String; const ADataName: String): TLib3MFCustomDOMTree;
 		procedure Finish();
 	end;
@@ -7443,17 +7570,23 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsFunc: TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsFunc;
 		FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithConstantOverridesFunc: TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithConstantOverridesFunc;
 		FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverridesFunc: TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverridesFunc;
+		FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverridesFunc: TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverridesFunc;
 		FLib3MFToolpathLayerData_WriteHatchDataDiscreteFunc: TLib3MFToolpathLayerData_WriteHatchDataDiscreteFunc;
 		FLib3MFToolpathLayerData_WriteHatchDataDiscreteWithConstantOverridesFunc: TLib3MFToolpathLayerData_WriteHatchDataDiscreteWithConstantOverridesFunc;
 		FLib3MFToolpathLayerData_WriteHatchDataDiscreteWithRampedOverridesFunc: TLib3MFToolpathLayerData_WriteHatchDataDiscreteWithRampedOverridesFunc;
+		FLib3MFToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverridesFunc: TLib3MFToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverridesFunc;
 		FLib3MFToolpathLayerData_WriteLoopInModelUnitsFunc: TLib3MFToolpathLayerData_WriteLoopInModelUnitsFunc;
 		FLib3MFToolpathLayerData_WriteLoopDiscreteFunc: TLib3MFToolpathLayerData_WriteLoopDiscreteFunc;
 		FLib3MFToolpathLayerData_WriteLoopInModelUnitsWithOverridesFunc: TLib3MFToolpathLayerData_WriteLoopInModelUnitsWithOverridesFunc;
+		FLib3MFToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverridesFunc: TLib3MFToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverridesFunc;
 		FLib3MFToolpathLayerData_WriteLoopDiscreteWithOverridesFunc: TLib3MFToolpathLayerData_WriteLoopDiscreteWithOverridesFunc;
+		FLib3MFToolpathLayerData_WriteLoopDiscreteWithMultipleOverridesFunc: TLib3MFToolpathLayerData_WriteLoopDiscreteWithMultipleOverridesFunc;
 		FLib3MFToolpathLayerData_WritePolylineInModelUnitsFunc: TLib3MFToolpathLayerData_WritePolylineInModelUnitsFunc;
-		FLib3MFToolpathLayerData_WritePolylineDiscreteFunc: TLib3MFToolpathLayerData_WritePolylineDiscreteFunc;
 		FLib3MFToolpathLayerData_WritePolylineInModelUnitsWithOverridesFunc: TLib3MFToolpathLayerData_WritePolylineInModelUnitsWithOverridesFunc;
+		FLib3MFToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverridesFunc: TLib3MFToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverridesFunc;
+		FLib3MFToolpathLayerData_WritePolylineDiscreteFunc: TLib3MFToolpathLayerData_WritePolylineDiscreteFunc;
 		FLib3MFToolpathLayerData_WritePolylineDiscreteWithOverridesFunc: TLib3MFToolpathLayerData_WritePolylineDiscreteWithOverridesFunc;
+		FLib3MFToolpathLayerData_WritePolylineDiscreteWithMultipleOverridesFunc: TLib3MFToolpathLayerData_WritePolylineDiscreteWithMultipleOverridesFunc;
 		FLib3MFToolpathLayerData_AddCustomDataFunc: TLib3MFToolpathLayerData_AddCustomDataFunc;
 		FLib3MFToolpathLayerData_FinishFunc: TLib3MFToolpathLayerData_FinishFunc;
 		FLib3MFToolpath_GetUUIDFunc: TLib3MFToolpath_GetUUIDFunc;
@@ -7974,17 +8107,23 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFToolpathLayerData_WriteHatchDataInModelUnitsFunc: TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsFunc read FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsFunc;
 		property Lib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithConstantOverridesFunc: TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithConstantOverridesFunc read FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithConstantOverridesFunc;
 		property Lib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverridesFunc: TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverridesFunc read FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverridesFunc;
+		property Lib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverridesFunc: TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverridesFunc read FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverridesFunc;
 		property Lib3MFToolpathLayerData_WriteHatchDataDiscreteFunc: TLib3MFToolpathLayerData_WriteHatchDataDiscreteFunc read FLib3MFToolpathLayerData_WriteHatchDataDiscreteFunc;
 		property Lib3MFToolpathLayerData_WriteHatchDataDiscreteWithConstantOverridesFunc: TLib3MFToolpathLayerData_WriteHatchDataDiscreteWithConstantOverridesFunc read FLib3MFToolpathLayerData_WriteHatchDataDiscreteWithConstantOverridesFunc;
 		property Lib3MFToolpathLayerData_WriteHatchDataDiscreteWithRampedOverridesFunc: TLib3MFToolpathLayerData_WriteHatchDataDiscreteWithRampedOverridesFunc read FLib3MFToolpathLayerData_WriteHatchDataDiscreteWithRampedOverridesFunc;
+		property Lib3MFToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverridesFunc: TLib3MFToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverridesFunc read FLib3MFToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverridesFunc;
 		property Lib3MFToolpathLayerData_WriteLoopInModelUnitsFunc: TLib3MFToolpathLayerData_WriteLoopInModelUnitsFunc read FLib3MFToolpathLayerData_WriteLoopInModelUnitsFunc;
 		property Lib3MFToolpathLayerData_WriteLoopDiscreteFunc: TLib3MFToolpathLayerData_WriteLoopDiscreteFunc read FLib3MFToolpathLayerData_WriteLoopDiscreteFunc;
 		property Lib3MFToolpathLayerData_WriteLoopInModelUnitsWithOverridesFunc: TLib3MFToolpathLayerData_WriteLoopInModelUnitsWithOverridesFunc read FLib3MFToolpathLayerData_WriteLoopInModelUnitsWithOverridesFunc;
+		property Lib3MFToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverridesFunc: TLib3MFToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverridesFunc read FLib3MFToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverridesFunc;
 		property Lib3MFToolpathLayerData_WriteLoopDiscreteWithOverridesFunc: TLib3MFToolpathLayerData_WriteLoopDiscreteWithOverridesFunc read FLib3MFToolpathLayerData_WriteLoopDiscreteWithOverridesFunc;
+		property Lib3MFToolpathLayerData_WriteLoopDiscreteWithMultipleOverridesFunc: TLib3MFToolpathLayerData_WriteLoopDiscreteWithMultipleOverridesFunc read FLib3MFToolpathLayerData_WriteLoopDiscreteWithMultipleOverridesFunc;
 		property Lib3MFToolpathLayerData_WritePolylineInModelUnitsFunc: TLib3MFToolpathLayerData_WritePolylineInModelUnitsFunc read FLib3MFToolpathLayerData_WritePolylineInModelUnitsFunc;
-		property Lib3MFToolpathLayerData_WritePolylineDiscreteFunc: TLib3MFToolpathLayerData_WritePolylineDiscreteFunc read FLib3MFToolpathLayerData_WritePolylineDiscreteFunc;
 		property Lib3MFToolpathLayerData_WritePolylineInModelUnitsWithOverridesFunc: TLib3MFToolpathLayerData_WritePolylineInModelUnitsWithOverridesFunc read FLib3MFToolpathLayerData_WritePolylineInModelUnitsWithOverridesFunc;
+		property Lib3MFToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverridesFunc: TLib3MFToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverridesFunc read FLib3MFToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverridesFunc;
+		property Lib3MFToolpathLayerData_WritePolylineDiscreteFunc: TLib3MFToolpathLayerData_WritePolylineDiscreteFunc read FLib3MFToolpathLayerData_WritePolylineDiscreteFunc;
 		property Lib3MFToolpathLayerData_WritePolylineDiscreteWithOverridesFunc: TLib3MFToolpathLayerData_WritePolylineDiscreteWithOverridesFunc read FLib3MFToolpathLayerData_WritePolylineDiscreteWithOverridesFunc;
+		property Lib3MFToolpathLayerData_WritePolylineDiscreteWithMultipleOverridesFunc: TLib3MFToolpathLayerData_WritePolylineDiscreteWithMultipleOverridesFunc read FLib3MFToolpathLayerData_WritePolylineDiscreteWithMultipleOverridesFunc;
 		property Lib3MFToolpathLayerData_AddCustomDataFunc: TLib3MFToolpathLayerData_AddCustomDataFunc read FLib3MFToolpathLayerData_AddCustomDataFunc;
 		property Lib3MFToolpathLayerData_FinishFunc: TLib3MFToolpathLayerData_FinishFunc read FLib3MFToolpathLayerData_FinishFunc;
 		property Lib3MFToolpath_GetUUIDFunc: TLib3MFToolpath_GetUUIDFunc read FLib3MFToolpath_GetUUIDFunc;
@@ -9190,6 +9329,7 @@ implementation
 			LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE: ADescription := 'Invalid point coordinate.';
 			LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOUNT: ADescription := 'Invalid hatch count';
 			LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHHATCHDATA: ADescription := 'Scaling data needs to match hatch data';
+			LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHPOINTDATA: ADescription := 'Scaling data needs to match point data';
 			else
 				ADescription := 'unknown';
 		end;
@@ -12837,6 +12977,82 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverridesFunc(FHandle, AProfileID, APartID, QWord(LenHatchData), PtrHatchData, QWord(LenScalingData1), PtrScalingData1, QWord(LenScalingData2), PtrScalingData2));
 	end;
 
+	procedure TLib3MFToolpathLayerData.WriteHatchDataInModelUnitsWithMultipleOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const AHatchData: ArrayOfLib3MFHatch2D; const AScalingDataF1: TIntegerDynArray; const AScalingDataF2: TIntegerDynArray; const AScalingDataG1: TIntegerDynArray; const AScalingDataG2: TIntegerDynArray; const AScalingDataH1: TIntegerDynArray; const AScalingDataH2: TIntegerDynArray);
+	var
+		PtrHatchData: PLib3MFHatch2D;
+		LenHatchData: QWord;
+		PtrScalingDataF1: PInteger;
+		LenScalingDataF1: QWord;
+		PtrScalingDataF2: PInteger;
+		LenScalingDataF2: QWord;
+		PtrScalingDataG1: PInteger;
+		LenScalingDataG1: QWord;
+		PtrScalingDataG2: PInteger;
+		LenScalingDataG2: QWord;
+		PtrScalingDataH1: PInteger;
+		LenScalingDataH1: QWord;
+		PtrScalingDataH2: PInteger;
+		LenScalingDataH2: QWord;
+	begin
+		LenHatchData := Length(AHatchData);
+		if LenHatchData > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenHatchData > 0 then
+			PtrHatchData := @AHatchData[0]
+		else
+			PtrHatchData := nil;
+		
+		LenScalingDataF1 := Length(AScalingDataF1);
+		if LenScalingDataF1 > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataF1 > 0 then
+			PtrScalingDataF1 := @AScalingDataF1[0]
+		else
+			PtrScalingDataF1 := nil;
+		
+		LenScalingDataF2 := Length(AScalingDataF2);
+		if LenScalingDataF2 > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataF2 > 0 then
+			PtrScalingDataF2 := @AScalingDataF2[0]
+		else
+			PtrScalingDataF2 := nil;
+		
+		LenScalingDataG1 := Length(AScalingDataG1);
+		if LenScalingDataG1 > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataG1 > 0 then
+			PtrScalingDataG1 := @AScalingDataG1[0]
+		else
+			PtrScalingDataG1 := nil;
+		
+		LenScalingDataG2 := Length(AScalingDataG2);
+		if LenScalingDataG2 > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataG2 > 0 then
+			PtrScalingDataG2 := @AScalingDataG2[0]
+		else
+			PtrScalingDataG2 := nil;
+		
+		LenScalingDataH1 := Length(AScalingDataH1);
+		if LenScalingDataH1 > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataH1 > 0 then
+			PtrScalingDataH1 := @AScalingDataH1[0]
+		else
+			PtrScalingDataH1 := nil;
+		
+		LenScalingDataH2 := Length(AScalingDataH2);
+		if LenScalingDataH2 > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataH2 > 0 then
+			PtrScalingDataH2 := @AScalingDataH2[0]
+		else
+			PtrScalingDataH2 := nil;
+		
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverridesFunc(FHandle, AProfileID, APartID, QWord(LenHatchData), PtrHatchData, QWord(LenScalingDataF1), PtrScalingDataF1, QWord(LenScalingDataF2), PtrScalingDataF2, QWord(LenScalingDataG1), PtrScalingDataG1, QWord(LenScalingDataG2), PtrScalingDataG2, QWord(LenScalingDataH1), PtrScalingDataH1, QWord(LenScalingDataH2), PtrScalingDataH2));
+	end;
+
 	procedure TLib3MFToolpathLayerData.WriteHatchDataDiscrete(const AProfileID: Cardinal; const APartID: Cardinal; const AHatchData: ArrayOfLib3MFDiscreteHatch2D);
 	var
 		PtrHatchData: PLib3MFDiscreteHatch2D;
@@ -12915,6 +13131,82 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WriteHatchDataDiscreteWithRampedOverridesFunc(FHandle, AProfileID, APartID, QWord(LenHatchData), PtrHatchData, QWord(LenScalingData1), PtrScalingData1, QWord(LenScalingData2), PtrScalingData2));
 	end;
 
+	procedure TLib3MFToolpathLayerData.WriteHatchDataDiscreteWithMultipleOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const AHatchData: ArrayOfLib3MFDiscreteHatch2D; const AScalingDataF1: TIntegerDynArray; const AScalingDataF2: TIntegerDynArray; const AScalingDataG1: TIntegerDynArray; const AScalingDataG2: TIntegerDynArray; const AScalingDataH1: TIntegerDynArray; const AScalingDataH2: TIntegerDynArray);
+	var
+		PtrHatchData: PLib3MFDiscreteHatch2D;
+		LenHatchData: QWord;
+		PtrScalingDataF1: PInteger;
+		LenScalingDataF1: QWord;
+		PtrScalingDataF2: PInteger;
+		LenScalingDataF2: QWord;
+		PtrScalingDataG1: PInteger;
+		LenScalingDataG1: QWord;
+		PtrScalingDataG2: PInteger;
+		LenScalingDataG2: QWord;
+		PtrScalingDataH1: PInteger;
+		LenScalingDataH1: QWord;
+		PtrScalingDataH2: PInteger;
+		LenScalingDataH2: QWord;
+	begin
+		LenHatchData := Length(AHatchData);
+		if LenHatchData > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenHatchData > 0 then
+			PtrHatchData := @AHatchData[0]
+		else
+			PtrHatchData := nil;
+		
+		LenScalingDataF1 := Length(AScalingDataF1);
+		if LenScalingDataF1 > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataF1 > 0 then
+			PtrScalingDataF1 := @AScalingDataF1[0]
+		else
+			PtrScalingDataF1 := nil;
+		
+		LenScalingDataF2 := Length(AScalingDataF2);
+		if LenScalingDataF2 > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataF2 > 0 then
+			PtrScalingDataF2 := @AScalingDataF2[0]
+		else
+			PtrScalingDataF2 := nil;
+		
+		LenScalingDataG1 := Length(AScalingDataG1);
+		if LenScalingDataG1 > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataG1 > 0 then
+			PtrScalingDataG1 := @AScalingDataG1[0]
+		else
+			PtrScalingDataG1 := nil;
+		
+		LenScalingDataG2 := Length(AScalingDataG2);
+		if LenScalingDataG2 > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataG2 > 0 then
+			PtrScalingDataG2 := @AScalingDataG2[0]
+		else
+			PtrScalingDataG2 := nil;
+		
+		LenScalingDataH1 := Length(AScalingDataH1);
+		if LenScalingDataH1 > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataH1 > 0 then
+			PtrScalingDataH1 := @AScalingDataH1[0]
+		else
+			PtrScalingDataH1 := nil;
+		
+		LenScalingDataH2 := Length(AScalingDataH2);
+		if LenScalingDataH2 > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataH2 > 0 then
+			PtrScalingDataH2 := @AScalingDataH2[0]
+		else
+			PtrScalingDataH2 := nil;
+		
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverridesFunc(FHandle, AProfileID, APartID, QWord(LenHatchData), PtrHatchData, QWord(LenScalingDataF1), PtrScalingDataF1, QWord(LenScalingDataF2), PtrScalingDataF2, QWord(LenScalingDataG1), PtrScalingDataG1, QWord(LenScalingDataG2), PtrScalingDataG2, QWord(LenScalingDataH1), PtrScalingDataH1, QWord(LenScalingDataH2), PtrScalingDataH2));
+	end;
+
 	procedure TLib3MFToolpathLayerData.WriteLoopInModelUnits(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D);
 	var
 		PtrPointData: PLib3MFPosition2D;
@@ -12973,6 +13265,52 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WriteLoopInModelUnitsWithOverridesFunc(FHandle, AProfileID, APartID, QWord(LenPointData), PtrPointData, QWord(LenScalingData), PtrScalingData));
 	end;
 
+	procedure TLib3MFToolpathLayerData.WriteLoopInModelUnitsWithMultipleOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D; const AScalingDataF: TIntegerDynArray; const AScalingDataG: TIntegerDynArray; const AScalingDataH: TIntegerDynArray);
+	var
+		PtrPointData: PLib3MFPosition2D;
+		LenPointData: QWord;
+		PtrScalingDataF: PInteger;
+		LenScalingDataF: QWord;
+		PtrScalingDataG: PInteger;
+		LenScalingDataG: QWord;
+		PtrScalingDataH: PInteger;
+		LenScalingDataH: QWord;
+	begin
+		LenPointData := Length(APointData);
+		if LenPointData > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenPointData > 0 then
+			PtrPointData := @APointData[0]
+		else
+			PtrPointData := nil;
+		
+		LenScalingDataF := Length(AScalingDataF);
+		if LenScalingDataF > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataF > 0 then
+			PtrScalingDataF := @AScalingDataF[0]
+		else
+			PtrScalingDataF := nil;
+		
+		LenScalingDataG := Length(AScalingDataG);
+		if LenScalingDataG > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataG > 0 then
+			PtrScalingDataG := @AScalingDataG[0]
+		else
+			PtrScalingDataG := nil;
+		
+		LenScalingDataH := Length(AScalingDataH);
+		if LenScalingDataH > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataH > 0 then
+			PtrScalingDataH := @AScalingDataH[0]
+		else
+			PtrScalingDataH := nil;
+		
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverridesFunc(FHandle, AProfileID, APartID, QWord(LenPointData), PtrPointData, QWord(LenScalingDataF), PtrScalingDataF, QWord(LenScalingDataG), PtrScalingDataG, QWord(LenScalingDataH), PtrScalingDataH));
+	end;
+
 	procedure TLib3MFToolpathLayerData.WriteLoopDiscreteWithOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFDiscretePosition2D; const AScalingData: TIntegerDynArray);
 	var
 		PtrPointData: PLib3MFDiscretePosition2D;
@@ -12999,6 +13337,52 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WriteLoopDiscreteWithOverridesFunc(FHandle, AProfileID, APartID, QWord(LenPointData), PtrPointData, QWord(LenScalingData), PtrScalingData));
 	end;
 
+	procedure TLib3MFToolpathLayerData.WriteLoopDiscreteWithMultipleOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFDiscretePosition2D; const AScalingDataF: TIntegerDynArray; const AScalingDataG: TIntegerDynArray; const AScalingDataH: TIntegerDynArray);
+	var
+		PtrPointData: PLib3MFDiscretePosition2D;
+		LenPointData: QWord;
+		PtrScalingDataF: PInteger;
+		LenScalingDataF: QWord;
+		PtrScalingDataG: PInteger;
+		LenScalingDataG: QWord;
+		PtrScalingDataH: PInteger;
+		LenScalingDataH: QWord;
+	begin
+		LenPointData := Length(APointData);
+		if LenPointData > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenPointData > 0 then
+			PtrPointData := @APointData[0]
+		else
+			PtrPointData := nil;
+		
+		LenScalingDataF := Length(AScalingDataF);
+		if LenScalingDataF > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataF > 0 then
+			PtrScalingDataF := @AScalingDataF[0]
+		else
+			PtrScalingDataF := nil;
+		
+		LenScalingDataG := Length(AScalingDataG);
+		if LenScalingDataG > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataG > 0 then
+			PtrScalingDataG := @AScalingDataG[0]
+		else
+			PtrScalingDataG := nil;
+		
+		LenScalingDataH := Length(AScalingDataH);
+		if LenScalingDataH > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataH > 0 then
+			PtrScalingDataH := @AScalingDataH[0]
+		else
+			PtrScalingDataH := nil;
+		
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WriteLoopDiscreteWithMultipleOverridesFunc(FHandle, AProfileID, APartID, QWord(LenPointData), PtrPointData, QWord(LenScalingDataF), PtrScalingDataF, QWord(LenScalingDataG), PtrScalingDataG, QWord(LenScalingDataH), PtrScalingDataH));
+	end;
+
 	procedure TLib3MFToolpathLayerData.WritePolylineInModelUnits(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D);
 	var
 		PtrPointData: PLib3MFPosition2D;
@@ -13013,22 +13397,6 @@ implementation
 			PtrPointData := nil;
 		
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WritePolylineInModelUnitsFunc(FHandle, AProfileID, APartID, QWord(LenPointData), PtrPointData));
-	end;
-
-	procedure TLib3MFToolpathLayerData.WritePolylineDiscrete(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFDiscretePosition2D);
-	var
-		PtrPointData: PLib3MFDiscretePosition2D;
-		LenPointData: QWord;
-	begin
-		LenPointData := Length(APointData);
-		if LenPointData > $FFFFFFFF then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
-		if LenPointData > 0 then
-			PtrPointData := @APointData[0]
-		else
-			PtrPointData := nil;
-		
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WritePolylineDiscreteFunc(FHandle, AProfileID, APartID, QWord(LenPointData), PtrPointData));
 	end;
 
 	procedure TLib3MFToolpathLayerData.WritePolylineInModelUnitsWithOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D; const AScalingData: TIntegerDynArray);
@@ -13057,6 +13425,68 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WritePolylineInModelUnitsWithOverridesFunc(FHandle, AProfileID, APartID, QWord(LenPointData), PtrPointData, QWord(LenScalingData), PtrScalingData));
 	end;
 
+	procedure TLib3MFToolpathLayerData.WritePolylineInModelUnitsWithMultipleOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D; const AScalingDataF: TIntegerDynArray; const AScalingDataG: TIntegerDynArray; const AScalingDataH: TIntegerDynArray);
+	var
+		PtrPointData: PLib3MFPosition2D;
+		LenPointData: QWord;
+		PtrScalingDataF: PInteger;
+		LenScalingDataF: QWord;
+		PtrScalingDataG: PInteger;
+		LenScalingDataG: QWord;
+		PtrScalingDataH: PInteger;
+		LenScalingDataH: QWord;
+	begin
+		LenPointData := Length(APointData);
+		if LenPointData > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenPointData > 0 then
+			PtrPointData := @APointData[0]
+		else
+			PtrPointData := nil;
+		
+		LenScalingDataF := Length(AScalingDataF);
+		if LenScalingDataF > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataF > 0 then
+			PtrScalingDataF := @AScalingDataF[0]
+		else
+			PtrScalingDataF := nil;
+		
+		LenScalingDataG := Length(AScalingDataG);
+		if LenScalingDataG > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataG > 0 then
+			PtrScalingDataG := @AScalingDataG[0]
+		else
+			PtrScalingDataG := nil;
+		
+		LenScalingDataH := Length(AScalingDataH);
+		if LenScalingDataH > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataH > 0 then
+			PtrScalingDataH := @AScalingDataH[0]
+		else
+			PtrScalingDataH := nil;
+		
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverridesFunc(FHandle, AProfileID, APartID, QWord(LenPointData), PtrPointData, QWord(LenScalingDataF), PtrScalingDataF, QWord(LenScalingDataG), PtrScalingDataG, QWord(LenScalingDataH), PtrScalingDataH));
+	end;
+
+	procedure TLib3MFToolpathLayerData.WritePolylineDiscrete(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFDiscretePosition2D);
+	var
+		PtrPointData: PLib3MFDiscretePosition2D;
+		LenPointData: QWord;
+	begin
+		LenPointData := Length(APointData);
+		if LenPointData > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenPointData > 0 then
+			PtrPointData := @APointData[0]
+		else
+			PtrPointData := nil;
+		
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WritePolylineDiscreteFunc(FHandle, AProfileID, APartID, QWord(LenPointData), PtrPointData));
+	end;
+
 	procedure TLib3MFToolpathLayerData.WritePolylineDiscreteWithOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFDiscretePosition2D; const AScalingData: TIntegerDynArray);
 	var
 		PtrPointData: PLib3MFDiscretePosition2D;
@@ -13081,6 +13511,52 @@ implementation
 			PtrScalingData := nil;
 		
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WritePolylineDiscreteWithOverridesFunc(FHandle, AProfileID, APartID, QWord(LenPointData), PtrPointData, QWord(LenScalingData), PtrScalingData));
+	end;
+
+	procedure TLib3MFToolpathLayerData.WritePolylineDiscreteWithMultipleOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFDiscretePosition2D; const AScalingDataF: TIntegerDynArray; const AScalingDataG: TIntegerDynArray; const AScalingDataH: TIntegerDynArray);
+	var
+		PtrPointData: PLib3MFDiscretePosition2D;
+		LenPointData: QWord;
+		PtrScalingDataF: PInteger;
+		LenScalingDataF: QWord;
+		PtrScalingDataG: PInteger;
+		LenScalingDataG: QWord;
+		PtrScalingDataH: PInteger;
+		LenScalingDataH: QWord;
+	begin
+		LenPointData := Length(APointData);
+		if LenPointData > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenPointData > 0 then
+			PtrPointData := @APointData[0]
+		else
+			PtrPointData := nil;
+		
+		LenScalingDataF := Length(AScalingDataF);
+		if LenScalingDataF > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataF > 0 then
+			PtrScalingDataF := @AScalingDataF[0]
+		else
+			PtrScalingDataF := nil;
+		
+		LenScalingDataG := Length(AScalingDataG);
+		if LenScalingDataG > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataG > 0 then
+			PtrScalingDataG := @AScalingDataG[0]
+		else
+			PtrScalingDataG := nil;
+		
+		LenScalingDataH := Length(AScalingDataH);
+		if LenScalingDataH > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenScalingDataH > 0 then
+			PtrScalingDataH := @AScalingDataH[0]
+		else
+			PtrScalingDataH := nil;
+		
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WritePolylineDiscreteWithMultipleOverridesFunc(FHandle, AProfileID, APartID, QWord(LenPointData), PtrPointData, QWord(LenScalingDataF), PtrScalingDataF, QWord(LenScalingDataG), PtrScalingDataG, QWord(LenScalingDataH), PtrScalingDataH));
 	end;
 
 	function TLib3MFToolpathLayerData.AddCustomData(const ANameSpace: String; const ADataName: String): TLib3MFCustomDOMTree;
@@ -15148,17 +15624,23 @@ implementation
 		FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsFunc := LoadFunction('lib3mf_toolpathlayerdata_writehatchdatainmodelunits');
 		FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithConstantOverridesFunc := LoadFunction('lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithconstantoverrides');
 		FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverridesFunc := LoadFunction('lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithrampedoverrides');
+		FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverridesFunc := LoadFunction('lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithmultipleoverrides');
 		FLib3MFToolpathLayerData_WriteHatchDataDiscreteFunc := LoadFunction('lib3mf_toolpathlayerdata_writehatchdatadiscrete');
 		FLib3MFToolpathLayerData_WriteHatchDataDiscreteWithConstantOverridesFunc := LoadFunction('lib3mf_toolpathlayerdata_writehatchdatadiscretewithconstantoverrides');
 		FLib3MFToolpathLayerData_WriteHatchDataDiscreteWithRampedOverridesFunc := LoadFunction('lib3mf_toolpathlayerdata_writehatchdatadiscretewithrampedoverrides');
+		FLib3MFToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverridesFunc := LoadFunction('lib3mf_toolpathlayerdata_writehatchdatadiscretewithmultipleoverrides');
 		FLib3MFToolpathLayerData_WriteLoopInModelUnitsFunc := LoadFunction('lib3mf_toolpathlayerdata_writeloopinmodelunits');
 		FLib3MFToolpathLayerData_WriteLoopDiscreteFunc := LoadFunction('lib3mf_toolpathlayerdata_writeloopdiscrete');
 		FLib3MFToolpathLayerData_WriteLoopInModelUnitsWithOverridesFunc := LoadFunction('lib3mf_toolpathlayerdata_writeloopinmodelunitswithoverrides');
+		FLib3MFToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverridesFunc := LoadFunction('lib3mf_toolpathlayerdata_writeloopinmodelunitswithmultipleoverrides');
 		FLib3MFToolpathLayerData_WriteLoopDiscreteWithOverridesFunc := LoadFunction('lib3mf_toolpathlayerdata_writeloopdiscretewithoverrides');
+		FLib3MFToolpathLayerData_WriteLoopDiscreteWithMultipleOverridesFunc := LoadFunction('lib3mf_toolpathlayerdata_writeloopdiscretewithmultipleoverrides');
 		FLib3MFToolpathLayerData_WritePolylineInModelUnitsFunc := LoadFunction('lib3mf_toolpathlayerdata_writepolylineinmodelunits');
-		FLib3MFToolpathLayerData_WritePolylineDiscreteFunc := LoadFunction('lib3mf_toolpathlayerdata_writepolylinediscrete');
 		FLib3MFToolpathLayerData_WritePolylineInModelUnitsWithOverridesFunc := LoadFunction('lib3mf_toolpathlayerdata_writepolylineinmodelunitswithoverrides');
+		FLib3MFToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverridesFunc := LoadFunction('lib3mf_toolpathlayerdata_writepolylineinmodelunitswithmultipleoverrides');
+		FLib3MFToolpathLayerData_WritePolylineDiscreteFunc := LoadFunction('lib3mf_toolpathlayerdata_writepolylinediscrete');
 		FLib3MFToolpathLayerData_WritePolylineDiscreteWithOverridesFunc := LoadFunction('lib3mf_toolpathlayerdata_writepolylinediscretewithoverrides');
+		FLib3MFToolpathLayerData_WritePolylineDiscreteWithMultipleOverridesFunc := LoadFunction('lib3mf_toolpathlayerdata_writepolylinediscretewithmultipleoverrides');
 		FLib3MFToolpathLayerData_AddCustomDataFunc := LoadFunction('lib3mf_toolpathlayerdata_addcustomdata');
 		FLib3MFToolpathLayerData_FinishFunc := LoadFunction('lib3mf_toolpathlayerdata_finish');
 		FLib3MFToolpath_GetUUIDFunc := LoadFunction('lib3mf_toolpath_getuuid');
@@ -16366,6 +16848,9 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithrampedoverrides'), @FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverridesFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithmultipleoverrides'), @FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverridesFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writehatchdatadiscrete'), @FLib3MFToolpathLayerData_WriteHatchDataDiscreteFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -16373,6 +16858,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writehatchdatadiscretewithrampedoverrides'), @FLib3MFToolpathLayerData_WriteHatchDataDiscreteWithRampedOverridesFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writehatchdatadiscretewithmultipleoverrides'), @FLib3MFToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverridesFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writeloopinmodelunits'), @FLib3MFToolpathLayerData_WriteLoopInModelUnitsFunc);
@@ -16384,19 +16872,31 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writeloopinmodelunitswithoverrides'), @FLib3MFToolpathLayerData_WriteLoopInModelUnitsWithOverridesFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writeloopinmodelunitswithmultipleoverrides'), @FLib3MFToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverridesFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writeloopdiscretewithoverrides'), @FLib3MFToolpathLayerData_WriteLoopDiscreteWithOverridesFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writeloopdiscretewithmultipleoverrides'), @FLib3MFToolpathLayerData_WriteLoopDiscreteWithMultipleOverridesFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writepolylineinmodelunits'), @FLib3MFToolpathLayerData_WritePolylineInModelUnitsFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writepolylinediscrete'), @FLib3MFToolpathLayerData_WritePolylineDiscreteFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writepolylineinmodelunitswithoverrides'), @FLib3MFToolpathLayerData_WritePolylineInModelUnitsWithOverridesFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writepolylineinmodelunitswithmultipleoverrides'), @FLib3MFToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverridesFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writepolylinediscrete'), @FLib3MFToolpathLayerData_WritePolylineDiscreteFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writepolylinediscretewithoverrides'), @FLib3MFToolpathLayerData_WritePolylineDiscreteWithOverridesFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writepolylinediscretewithmultipleoverrides'), @FLib3MFToolpathLayerData_WritePolylineDiscreteWithMultipleOverridesFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_addcustomdata'), @FLib3MFToolpathLayerData_AddCustomDataFunc);

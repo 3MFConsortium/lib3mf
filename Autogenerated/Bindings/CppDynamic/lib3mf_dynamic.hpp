@@ -424,6 +424,7 @@ public:
 			case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE: return "TOOLPATH_INVALIDPOINTCOORDINATE";
 			case LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOUNT: return "TOOLPATH_INVALIDHATCHCOUNT";
 			case LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHHATCHDATA: return "TOOLPATH_SCALINGDATANEEDSTOMATCHHATCHDATA";
+			case LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHPOINTDATA: return "TOOLPATH_SCALINGDATANEEDSTOMATCHPOINTDATA";
 		}
 		return "UNKNOWN";
 	}
@@ -493,6 +494,7 @@ public:
 			case LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE: return "Invalid point coordinate.";
 			case LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOUNT: return "Invalid hatch count";
 			case LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHHATCHDATA: return "Scaling data needs to match hatch data";
+			case LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHPOINTDATA: return "Scaling data needs to match point data";
 		}
 		return "unknown error";
 	}
@@ -1751,17 +1753,23 @@ public:
 	inline void WriteHatchDataInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sHatch2D> & HatchDataBuffer);
 	inline void WriteHatchDataInModelUnitsWithConstantOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer);
 	inline void WriteHatchDataInModelUnitsWithRampedOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingData1Buffer, const CInputVector<Lib3MF_int32> & ScalingData2Buffer);
+	inline void WriteHatchDataInModelUnitsWithMultipleOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataF1Buffer, const CInputVector<Lib3MF_int32> & ScalingDataF2Buffer, const CInputVector<Lib3MF_int32> & ScalingDataG1Buffer, const CInputVector<Lib3MF_int32> & ScalingDataG2Buffer, const CInputVector<Lib3MF_int32> & ScalingDataH1Buffer, const CInputVector<Lib3MF_int32> & ScalingDataH2Buffer);
 	inline void WriteHatchDataDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscreteHatch2D> & HatchDataBuffer);
 	inline void WriteHatchDataDiscreteWithConstantOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscreteHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer);
 	inline void WriteHatchDataDiscreteWithRampedOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscreteHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingData1Buffer, const CInputVector<Lib3MF_int32> & ScalingData2Buffer);
+	inline void WriteHatchDataDiscreteWithMultipleOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscreteHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataF1Buffer, const CInputVector<Lib3MF_int32> & ScalingDataF2Buffer, const CInputVector<Lib3MF_int32> & ScalingDataG1Buffer, const CInputVector<Lib3MF_int32> & ScalingDataG2Buffer, const CInputVector<Lib3MF_int32> & ScalingDataH1Buffer, const CInputVector<Lib3MF_int32> & ScalingDataH2Buffer);
 	inline void WriteLoopInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
 	inline void WriteLoopDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer);
 	inline void WriteLoopInModelUnitsWithOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer);
+	inline void WriteLoopInModelUnitsWithMultipleOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataFBuffer, const CInputVector<Lib3MF_int32> & ScalingDataGBuffer, const CInputVector<Lib3MF_int32> & ScalingDataHBuffer);
 	inline void WriteLoopDiscreteWithOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer);
+	inline void WriteLoopDiscreteWithMultipleOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataFBuffer, const CInputVector<Lib3MF_int32> & ScalingDataGBuffer, const CInputVector<Lib3MF_int32> & ScalingDataHBuffer);
 	inline void WritePolylineInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer);
-	inline void WritePolylineDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer);
 	inline void WritePolylineInModelUnitsWithOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer);
+	inline void WritePolylineInModelUnitsWithMultipleOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataFBuffer, const CInputVector<Lib3MF_int32> & ScalingDataGBuffer, const CInputVector<Lib3MF_int32> & ScalingDataHBuffer);
+	inline void WritePolylineDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer);
 	inline void WritePolylineDiscreteWithOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer);
+	inline void WritePolylineDiscreteWithMultipleOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataFBuffer, const CInputVector<Lib3MF_int32> & ScalingDataGBuffer, const CInputVector<Lib3MF_int32> & ScalingDataHBuffer);
 	inline PCustomDOMTree AddCustomData(const std::string & sNameSpace, const std::string & sDataName);
 	inline void Finish();
 };
@@ -2770,17 +2778,23 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnits = nullptr;
 		pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithConstantOverrides = nullptr;
 		pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverrides = nullptr;
+		pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverrides = nullptr;
 		pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscrete = nullptr;
 		pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithConstantOverrides = nullptr;
 		pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithRampedOverrides = nullptr;
+		pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverrides = nullptr;
 		pWrapperTable->m_ToolpathLayerData_WriteLoopInModelUnits = nullptr;
 		pWrapperTable->m_ToolpathLayerData_WriteLoopDiscrete = nullptr;
 		pWrapperTable->m_ToolpathLayerData_WriteLoopInModelUnitsWithOverrides = nullptr;
+		pWrapperTable->m_ToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverrides = nullptr;
 		pWrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithOverrides = nullptr;
+		pWrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithMultipleOverrides = nullptr;
 		pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnits = nullptr;
-		pWrapperTable->m_ToolpathLayerData_WritePolylineDiscrete = nullptr;
 		pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithOverrides = nullptr;
+		pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverrides = nullptr;
+		pWrapperTable->m_ToolpathLayerData_WritePolylineDiscrete = nullptr;
 		pWrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithOverrides = nullptr;
+		pWrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithMultipleOverrides = nullptr;
 		pWrapperTable->m_ToolpathLayerData_AddCustomData = nullptr;
 		pWrapperTable->m_ToolpathLayerData_Finish = nullptr;
 		pWrapperTable->m_Toolpath_GetUUID = nullptr;
@@ -6086,6 +6100,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverrides = (PLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverridesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithmultipleoverrides");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverrides = (PLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverridesPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithmultipleoverrides");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverrides == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscrete = (PLib3MFToolpathLayerData_WriteHatchDataDiscretePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writehatchdatadiscrete");
 		#else // _WIN32
 		pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscrete = (PLib3MFToolpathLayerData_WriteHatchDataDiscretePtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writehatchdatadiscrete");
@@ -6110,6 +6133,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithRampedOverrides == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverrides = (PLib3MFToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverridesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writehatchdatadiscretewithmultipleoverrides");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverrides = (PLib3MFToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverridesPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writehatchdatadiscretewithmultipleoverrides");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverrides == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -6140,12 +6172,30 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverrides = (PLib3MFToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverridesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writeloopinmodelunitswithmultipleoverrides");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverrides = (PLib3MFToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverridesPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writeloopinmodelunitswithmultipleoverrides");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverrides == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithOverrides = (PLib3MFToolpathLayerData_WriteLoopDiscreteWithOverridesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writeloopdiscretewithoverrides");
 		#else // _WIN32
 		pWrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithOverrides = (PLib3MFToolpathLayerData_WriteLoopDiscreteWithOverridesPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writeloopdiscretewithoverrides");
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithOverrides == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithMultipleOverrides = (PLib3MFToolpathLayerData_WriteLoopDiscreteWithMultipleOverridesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writeloopdiscretewithmultipleoverrides");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithMultipleOverrides = (PLib3MFToolpathLayerData_WriteLoopDiscreteWithMultipleOverridesPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writeloopdiscretewithmultipleoverrides");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithMultipleOverrides == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -6158,15 +6208,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_ToolpathLayerData_WritePolylineDiscrete = (PLib3MFToolpathLayerData_WritePolylineDiscretePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writepolylinediscrete");
-		#else // _WIN32
-		pWrapperTable->m_ToolpathLayerData_WritePolylineDiscrete = (PLib3MFToolpathLayerData_WritePolylineDiscretePtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writepolylinediscrete");
-		dlerror();
-		#endif // _WIN32
-		if (pWrapperTable->m_ToolpathLayerData_WritePolylineDiscrete == nullptr)
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		#ifdef _WIN32
 		pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithOverrides = (PLib3MFToolpathLayerData_WritePolylineInModelUnitsWithOverridesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writepolylineinmodelunitswithoverrides");
 		#else // _WIN32
 		pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithOverrides = (PLib3MFToolpathLayerData_WritePolylineInModelUnitsWithOverridesPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writepolylineinmodelunitswithoverrides");
@@ -6176,12 +6217,39 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverrides = (PLib3MFToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverridesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writepolylineinmodelunitswithmultipleoverrides");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverrides = (PLib3MFToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverridesPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writepolylineinmodelunitswithmultipleoverrides");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverrides == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_WritePolylineDiscrete = (PLib3MFToolpathLayerData_WritePolylineDiscretePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writepolylinediscrete");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_WritePolylineDiscrete = (PLib3MFToolpathLayerData_WritePolylineDiscretePtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writepolylinediscrete");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_WritePolylineDiscrete == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithOverrides = (PLib3MFToolpathLayerData_WritePolylineDiscreteWithOverridesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writepolylinediscretewithoverrides");
 		#else // _WIN32
 		pWrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithOverrides = (PLib3MFToolpathLayerData_WritePolylineDiscreteWithOverridesPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writepolylinediscretewithoverrides");
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithOverrides == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithMultipleOverrides = (PLib3MFToolpathLayerData_WritePolylineDiscreteWithMultipleOverridesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writepolylinediscretewithmultipleoverrides");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithMultipleOverrides = (PLib3MFToolpathLayerData_WritePolylineDiscreteWithMultipleOverridesPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writepolylinediscretewithmultipleoverrides");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithMultipleOverrides == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -9075,6 +9143,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverrides == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithmultipleoverrides", (void**)&(pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverrides));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverrides == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_writehatchdatadiscrete", (void**)&(pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscrete));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscrete == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -9085,6 +9157,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_writehatchdatadiscretewithrampedoverrides", (void**)&(pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithRampedOverrides));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithRampedOverrides == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_writehatchdatadiscretewithmultipleoverrides", (void**)&(pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverrides));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverrides == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_writeloopinmodelunits", (void**)&(pWrapperTable->m_ToolpathLayerData_WriteLoopInModelUnits));
@@ -9099,24 +9175,40 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_WriteLoopInModelUnitsWithOverrides == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_writeloopinmodelunitswithmultipleoverrides", (void**)&(pWrapperTable->m_ToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverrides));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverrides == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_writeloopdiscretewithoverrides", (void**)&(pWrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithOverrides));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithOverrides == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_writeloopdiscretewithmultipleoverrides", (void**)&(pWrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithMultipleOverrides));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithMultipleOverrides == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_writepolylineinmodelunits", (void**)&(pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnits));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnits == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_writepolylinediscrete", (void**)&(pWrapperTable->m_ToolpathLayerData_WritePolylineDiscrete));
-		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_WritePolylineDiscrete == nullptr) )
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_writepolylineinmodelunitswithoverrides", (void**)&(pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithOverrides));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithOverrides == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_writepolylineinmodelunitswithmultipleoverrides", (void**)&(pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverrides));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverrides == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_writepolylinediscrete", (void**)&(pWrapperTable->m_ToolpathLayerData_WritePolylineDiscrete));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_WritePolylineDiscrete == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_writepolylinediscretewithoverrides", (void**)&(pWrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithOverrides));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithOverrides == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_writepolylinediscretewithmultipleoverrides", (void**)&(pWrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithMultipleOverrides));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithMultipleOverrides == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_addcustomdata", (void**)&(pWrapperTable->m_ToolpathLayerData_AddCustomData));
@@ -14199,7 +14291,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] HatchDataBuffer - The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
-	* @param[in] ScalingDataBuffer - The profile override scale factors. MUST have the same cardinality as HatchData.
+	* @param[in] ScalingDataBuffer - The profile override scale factors (f). MUST have the same cardinality as HatchData.
 	*/
 	void CToolpathLayerData::WriteHatchDataInModelUnitsWithConstantOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer)
 	{
@@ -14211,12 +14303,29 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] HatchDataBuffer - The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
-	* @param[in] ScalingData1Buffer - The profile override scale factors for the start point of each hatch. MUST have the same cardinality as HatchData.
-	* @param[in] ScalingData2Buffer - The profile override scale factors for the end point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] ScalingData1Buffer - The profile override scale factors (f) for the start point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] ScalingData2Buffer - The profile override scale factors (f) for the end point of each hatch. MUST have the same cardinality as HatchData.
 	*/
 	void CToolpathLayerData::WriteHatchDataInModelUnitsWithRampedOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingData1Buffer, const CInputVector<Lib3MF_int32> & ScalingData2Buffer)
 	{
 		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverrides(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)HatchDataBuffer.size(), HatchDataBuffer.data(), (Lib3MF_uint64)ScalingData1Buffer.size(), ScalingData1Buffer.data(), (Lib3MF_uint64)ScalingData2Buffer.size(), ScalingData2Buffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WriteHatchDataInModelUnitsWithMultipleOverrides - writes hatch data to the layer in model units with ramped profile overrides per hatch.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] HatchDataBuffer - The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] ScalingDataF1Buffer - The profile override scale factors (f) for the start point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] ScalingDataF2Buffer - The profile override scale factors (f) for the end point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] ScalingDataG1Buffer - The profile override scale factors (g) for the start point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] ScalingDataG2Buffer - The profile override scale factors (g) for the end point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] ScalingDataH1Buffer - The profile override scale factors (h) for the start point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] ScalingDataH2Buffer - The profile override scale factors (h) for the end point of each hatch. MUST have the same cardinality as HatchData.
+	*/
+	void CToolpathLayerData::WriteHatchDataInModelUnitsWithMultipleOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataF1Buffer, const CInputVector<Lib3MF_int32> & ScalingDataF2Buffer, const CInputVector<Lib3MF_int32> & ScalingDataG1Buffer, const CInputVector<Lib3MF_int32> & ScalingDataG2Buffer, const CInputVector<Lib3MF_int32> & ScalingDataH1Buffer, const CInputVector<Lib3MF_int32> & ScalingDataH2Buffer)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverrides(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)HatchDataBuffer.size(), HatchDataBuffer.data(), (Lib3MF_uint64)ScalingDataF1Buffer.size(), ScalingDataF1Buffer.data(), (Lib3MF_uint64)ScalingDataF2Buffer.size(), ScalingDataF2Buffer.data(), (Lib3MF_uint64)ScalingDataG1Buffer.size(), ScalingDataG1Buffer.data(), (Lib3MF_uint64)ScalingDataG2Buffer.size(), ScalingDataG2Buffer.data(), (Lib3MF_uint64)ScalingDataH1Buffer.size(), ScalingDataH1Buffer.data(), (Lib3MF_uint64)ScalingDataH2Buffer.size(), ScalingDataH2Buffer.data()));
 	}
 	
 	/**
@@ -14235,7 +14344,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] HatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
-	* @param[in] ScalingDataBuffer - The profile override scale factors. MUST have the same cardinality as HatchData.
+	* @param[in] ScalingDataBuffer - The profile override scale factors (f). MUST have the same cardinality as HatchData.
 	*/
 	void CToolpathLayerData::WriteHatchDataDiscreteWithConstantOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscreteHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer)
 	{
@@ -14247,12 +14356,29 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] HatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
-	* @param[in] ScalingData1Buffer - The profile override scale factors for the start point of each hatch. MUST have the same cardinality as HatchData.
-	* @param[in] ScalingData2Buffer - The profile override scale factors for the end point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] ScalingData1Buffer - The profile override scale factors (f) for the start point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] ScalingData2Buffer - The profile override scale factors (f) for the end point of each hatch. MUST have the same cardinality as HatchData.
 	*/
 	void CToolpathLayerData::WriteHatchDataDiscreteWithRampedOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscreteHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingData1Buffer, const CInputVector<Lib3MF_int32> & ScalingData2Buffer)
 	{
 		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_WriteHatchDataDiscreteWithRampedOverrides(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)HatchDataBuffer.size(), HatchDataBuffer.data(), (Lib3MF_uint64)ScalingData1Buffer.size(), ScalingData1Buffer.data(), (Lib3MF_uint64)ScalingData2Buffer.size(), ScalingData2Buffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WriteHatchDataDiscreteWithMultipleOverrides - writes hatch data to the layer in toolpath units with ramped profile overrides per hatch.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] HatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] ScalingDataF1Buffer - The profile override scale factors (f) for the start point of each hatch. If empty, no factors are written. MUST otherwise have the same cardinality as HatchData.
+	* @param[in] ScalingDataF2Buffer - The profile override scale factors (f) for the end point of each hatch. Defaults to ScalingDataF1, if empty. MUST be empty, if ScalingDataF1 is empty. MUST otherwise have the same cardinality as HatchData.
+	* @param[in] ScalingDataG1Buffer - The profile override scale factors (g) for the start point of each hatch. If empty, no factors are written. MUST have the same cardinality as HatchData.
+	* @param[in] ScalingDataG2Buffer - The profile override scale factors (g) for the end point of each hatch. Defaults to ScalingDataG1, if empty. MUST be empty, if ScalingDataG1 is empty. MUST otherwise have the same cardinality as HatchData.
+	* @param[in] ScalingDataH1Buffer - The profile override scale factors (h) for the start point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] ScalingDataH2Buffer - The profile override scale factors (h) for the end point of each hatch. Defaults to ScalingDataH1, if empty. MUST be empty, if ScalingDataH1 is empty. MUST otherwise have the same cardinality as HatchData.
+	*/
+	void CToolpathLayerData::WriteHatchDataDiscreteWithMultipleOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscreteHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataF1Buffer, const CInputVector<Lib3MF_int32> & ScalingDataF2Buffer, const CInputVector<Lib3MF_int32> & ScalingDataG1Buffer, const CInputVector<Lib3MF_int32> & ScalingDataG2Buffer, const CInputVector<Lib3MF_int32> & ScalingDataH1Buffer, const CInputVector<Lib3MF_int32> & ScalingDataH2Buffer)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverrides(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)HatchDataBuffer.size(), HatchDataBuffer.data(), (Lib3MF_uint64)ScalingDataF1Buffer.size(), ScalingDataF1Buffer.data(), (Lib3MF_uint64)ScalingDataF2Buffer.size(), ScalingDataF2Buffer.data(), (Lib3MF_uint64)ScalingDataG1Buffer.size(), ScalingDataG1Buffer.data(), (Lib3MF_uint64)ScalingDataG2Buffer.size(), ScalingDataG2Buffer.data(), (Lib3MF_uint64)ScalingDataH1Buffer.size(), ScalingDataH1Buffer.data(), (Lib3MF_uint64)ScalingDataH2Buffer.size(), ScalingDataH2Buffer.data()));
 	}
 	
 	/**
@@ -14290,6 +14416,20 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CToolpathLayerData::WriteLoopInModelUnitsWithMultipleOverrides - writes loop data to the layer in model units with profile overrides.
+	* @param[in] nProfileID - The toolpath profile to use. Loop Profiles can not be overridden by point.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data in model units. Array MUST NOT be empty.
+	* @param[in] ScalingDataFBuffer - The profile override scale factors for F. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] ScalingDataGBuffer - The profile override scale factors for G. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] ScalingDataHBuffer - The profile override scale factors for H. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	*/
+	void CToolpathLayerData::WriteLoopInModelUnitsWithMultipleOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataFBuffer, const CInputVector<Lib3MF_int32> & ScalingDataGBuffer, const CInputVector<Lib3MF_int32> & ScalingDataHBuffer)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverrides(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data(), (Lib3MF_uint64)ScalingDataFBuffer.size(), ScalingDataFBuffer.data(), (Lib3MF_uint64)ScalingDataGBuffer.size(), ScalingDataGBuffer.data(), (Lib3MF_uint64)ScalingDataHBuffer.size(), ScalingDataHBuffer.data()));
+	}
+	
+	/**
 	* CToolpathLayerData::WriteLoopDiscreteWithOverrides - writes loop data to the layer in toolpath units with profile overrides..
 	* @param[in] nProfileID - The toolpath profile to use. Loop Profiles can not be overridden by point.
 	* @param[in] nPartID - The toolpath part to use
@@ -14299,6 +14439,20 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	void CToolpathLayerData::WriteLoopDiscreteWithOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer)
 	{
 		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_WriteLoopDiscreteWithOverrides(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data(), (Lib3MF_uint64)ScalingDataBuffer.size(), ScalingDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WriteLoopDiscreteWithMultipleOverrides - writes loop data to the layer in toolpath units with profile overrides..
+	* @param[in] nProfileID - The toolpath profile to use. Loop Profiles can not be overridden by point.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data in toolpath units. Array MUST NOT be empty.
+	* @param[in] ScalingDataFBuffer - The profile override scale factors for F. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] ScalingDataGBuffer - The profile override scale factors for G. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] ScalingDataHBuffer - The profile override scale factors for H. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	*/
+	void CToolpathLayerData::WriteLoopDiscreteWithMultipleOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataFBuffer, const CInputVector<Lib3MF_int32> & ScalingDataGBuffer, const CInputVector<Lib3MF_int32> & ScalingDataHBuffer)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_WriteLoopDiscreteWithMultipleOverrides(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data(), (Lib3MF_uint64)ScalingDataFBuffer.size(), ScalingDataFBuffer.data(), (Lib3MF_uint64)ScalingDataGBuffer.size(), ScalingDataGBuffer.data(), (Lib3MF_uint64)ScalingDataHBuffer.size(), ScalingDataHBuffer.data()));
 	}
 	
 	/**
@@ -14313,6 +14467,32 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CToolpathLayerData::WritePolylineInModelUnitsWithOverrides - writes polyline data to the layer with profile overrides.
+	* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data in model units. Array MUST NOT be empty.
+	* @param[in] ScalingDataBuffer - The profile override scale factors. If empty, no factors are written. MUST otherwise have the same cardinality as PointData. A Profile override ID of 0 inherits the profile of the segment.
+	*/
+	void CToolpathLayerData::WritePolylineInModelUnitsWithOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_WritePolylineInModelUnitsWithOverrides(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data(), (Lib3MF_uint64)ScalingDataBuffer.size(), ScalingDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WritePolylineInModelUnitsWithMultipleOverrides - writes polyline data to the layer with profile overrides.
+	* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data in model units. Array MUST NOT be empty.
+	* @param[in] ScalingDataFBuffer - The profile override scale factors for F. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] ScalingDataGBuffer - The profile override scale factors for G. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] ScalingDataHBuffer - The profile override scale factors for H. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	*/
+	void CToolpathLayerData::WritePolylineInModelUnitsWithMultipleOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataFBuffer, const CInputVector<Lib3MF_int32> & ScalingDataGBuffer, const CInputVector<Lib3MF_int32> & ScalingDataHBuffer)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverrides(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data(), (Lib3MF_uint64)ScalingDataFBuffer.size(), ScalingDataFBuffer.data(), (Lib3MF_uint64)ScalingDataGBuffer.size(), ScalingDataGBuffer.data(), (Lib3MF_uint64)ScalingDataHBuffer.size(), ScalingDataHBuffer.data()));
+	}
+	
+	/**
 	* CToolpathLayerData::WritePolylineDiscrete - writes polyline data to the layer.
 	* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
 	* @param[in] nPartID - The toolpath part to use
@@ -14324,27 +14504,29 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathLayerData::WritePolylineInModelUnitsWithOverrides - writes polyline data to the layer with profile overrides.
-	* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
-	* @param[in] nPartID - The toolpath part to use
-	* @param[in] PointDataBuffer - The point data in model units. Array MUST NOT be empty.
-	* @param[in] ScalingDataBuffer - The profile override scale factors. MUST have the same cardinality as PointData. A Profile override ID of 0 inherits the profile of the segment.
-	*/
-	void CToolpathLayerData::WritePolylineInModelUnitsWithOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer)
-	{
-		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_WritePolylineInModelUnitsWithOverrides(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data(), (Lib3MF_uint64)ScalingDataBuffer.size(), ScalingDataBuffer.data()));
-	}
-	
-	/**
 	* CToolpathLayerData::WritePolylineDiscreteWithOverrides - writes polyline data to the layer with profile overrides.
 	* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] PointDataBuffer - The point data in toolpath units. Array MUST NOT be empty.
-	* @param[in] ScalingDataBuffer - The profile override scale factors. MUST have the same cardinality as PointData. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] ScalingDataBuffer - The profile override scale factors. If empty, no factors are written. MUST otherwise have the same cardinality as PointData. A Profile override ID of 0 inherits the profile of the segment.
 	*/
 	void CToolpathLayerData::WritePolylineDiscreteWithOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer)
 	{
 		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_WritePolylineDiscreteWithOverrides(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data(), (Lib3MF_uint64)ScalingDataBuffer.size(), ScalingDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WritePolylineDiscreteWithMultipleOverrides - writes polyline data to the layer with profile overrides.
+	* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data in toolpath units. Array MUST NOT be empty.
+	* @param[in] ScalingDataFBuffer - The profile override scale factors for F. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] ScalingDataGBuffer - The profile override scale factors for G. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] ScalingDataHBuffer - The profile override scale factors for H. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	*/
+	void CToolpathLayerData::WritePolylineDiscreteWithMultipleOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataFBuffer, const CInputVector<Lib3MF_int32> & ScalingDataGBuffer, const CInputVector<Lib3MF_int32> & ScalingDataHBuffer)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_WritePolylineDiscreteWithMultipleOverrides(m_pHandle, nProfileID, nPartID, (Lib3MF_uint64)PointDataBuffer.size(), PointDataBuffer.data(), (Lib3MF_uint64)ScalingDataFBuffer.size(), ScalingDataFBuffer.data(), (Lib3MF_uint64)ScalingDataGBuffer.size(), ScalingDataGBuffer.data(), (Lib3MF_uint64)ScalingDataHBuffer.size(), ScalingDataHBuffer.data()));
 	}
 	
 	/**

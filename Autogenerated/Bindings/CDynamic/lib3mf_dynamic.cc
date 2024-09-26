@@ -391,17 +391,23 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnits = NULL;
 	pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithConstantOverrides = NULL;
 	pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverrides = NULL;
+	pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverrides = NULL;
 	pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscrete = NULL;
 	pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithConstantOverrides = NULL;
 	pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithRampedOverrides = NULL;
+	pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverrides = NULL;
 	pWrapperTable->m_ToolpathLayerData_WriteLoopInModelUnits = NULL;
 	pWrapperTable->m_ToolpathLayerData_WriteLoopDiscrete = NULL;
 	pWrapperTable->m_ToolpathLayerData_WriteLoopInModelUnitsWithOverrides = NULL;
+	pWrapperTable->m_ToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverrides = NULL;
 	pWrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithOverrides = NULL;
+	pWrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithMultipleOverrides = NULL;
 	pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnits = NULL;
-	pWrapperTable->m_ToolpathLayerData_WritePolylineDiscrete = NULL;
 	pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithOverrides = NULL;
+	pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverrides = NULL;
+	pWrapperTable->m_ToolpathLayerData_WritePolylineDiscrete = NULL;
 	pWrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithOverrides = NULL;
+	pWrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithMultipleOverrides = NULL;
 	pWrapperTable->m_ToolpathLayerData_AddCustomData = NULL;
 	pWrapperTable->m_ToolpathLayerData_Finish = NULL;
 	pWrapperTable->m_Toolpath_GetUUID = NULL;
@@ -3711,6 +3717,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverrides = (PLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverridesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithmultipleoverrides");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverrides = (PLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverridesPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithmultipleoverrides");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverrides == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscrete = (PLib3MFToolpathLayerData_WriteHatchDataDiscretePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writehatchdatadiscrete");
 	#else // _WIN32
 	pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscrete = (PLib3MFToolpathLayerData_WriteHatchDataDiscretePtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writehatchdatadiscrete");
@@ -3735,6 +3750,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithRampedOverrides == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverrides = (PLib3MFToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverridesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writehatchdatadiscretewithmultipleoverrides");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverrides = (PLib3MFToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverridesPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writehatchdatadiscretewithmultipleoverrides");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverrides == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -3765,12 +3789,30 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverrides = (PLib3MFToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverridesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writeloopinmodelunitswithmultipleoverrides");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverrides = (PLib3MFToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverridesPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writeloopinmodelunitswithmultipleoverrides");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverrides == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithOverrides = (PLib3MFToolpathLayerData_WriteLoopDiscreteWithOverridesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writeloopdiscretewithoverrides");
 	#else // _WIN32
 	pWrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithOverrides = (PLib3MFToolpathLayerData_WriteLoopDiscreteWithOverridesPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writeloopdiscretewithoverrides");
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithOverrides == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithMultipleOverrides = (PLib3MFToolpathLayerData_WriteLoopDiscreteWithMultipleOverridesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writeloopdiscretewithmultipleoverrides");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithMultipleOverrides = (PLib3MFToolpathLayerData_WriteLoopDiscreteWithMultipleOverridesPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writeloopdiscretewithmultipleoverrides");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithMultipleOverrides == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -3783,15 +3825,6 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ToolpathLayerData_WritePolylineDiscrete = (PLib3MFToolpathLayerData_WritePolylineDiscretePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writepolylinediscrete");
-	#else // _WIN32
-	pWrapperTable->m_ToolpathLayerData_WritePolylineDiscrete = (PLib3MFToolpathLayerData_WritePolylineDiscretePtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writepolylinediscrete");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_ToolpathLayerData_WritePolylineDiscrete == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
 	pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithOverrides = (PLib3MFToolpathLayerData_WritePolylineInModelUnitsWithOverridesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writepolylineinmodelunitswithoverrides");
 	#else // _WIN32
 	pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithOverrides = (PLib3MFToolpathLayerData_WritePolylineInModelUnitsWithOverridesPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writepolylineinmodelunitswithoverrides");
@@ -3801,12 +3834,39 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverrides = (PLib3MFToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverridesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writepolylineinmodelunitswithmultipleoverrides");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverrides = (PLib3MFToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverridesPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writepolylineinmodelunitswithmultipleoverrides");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverrides == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerData_WritePolylineDiscrete = (PLib3MFToolpathLayerData_WritePolylineDiscretePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writepolylinediscrete");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerData_WritePolylineDiscrete = (PLib3MFToolpathLayerData_WritePolylineDiscretePtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writepolylinediscrete");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerData_WritePolylineDiscrete == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithOverrides = (PLib3MFToolpathLayerData_WritePolylineDiscreteWithOverridesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writepolylinediscretewithoverrides");
 	#else // _WIN32
 	pWrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithOverrides = (PLib3MFToolpathLayerData_WritePolylineDiscreteWithOverridesPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writepolylinediscretewithoverrides");
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithOverrides == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithMultipleOverrides = (PLib3MFToolpathLayerData_WritePolylineDiscreteWithMultipleOverridesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_writepolylinediscretewithmultipleoverrides");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithMultipleOverrides = (PLib3MFToolpathLayerData_WritePolylineDiscreteWithMultipleOverridesPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_writepolylinediscretewithmultipleoverrides");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithMultipleOverrides == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

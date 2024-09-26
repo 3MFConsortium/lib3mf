@@ -3159,6 +3159,15 @@ Lib3MFResult CCall_lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithramped
 }
 
 
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithmultipleoverrides(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const sLib3MFHatch2D * pHatchDataBuffer, Lib3MF_uint64 nScalingDataF1BufferSize, const Lib3MF_int32 * pScalingDataF1Buffer, Lib3MF_uint64 nScalingDataF2BufferSize, const Lib3MF_int32 * pScalingDataF2Buffer, Lib3MF_uint64 nScalingDataG1BufferSize, const Lib3MF_int32 * pScalingDataG1Buffer, Lib3MF_uint64 nScalingDataG2BufferSize, const Lib3MF_int32 * pScalingDataG2Buffer, Lib3MF_uint64 nScalingDataH1BufferSize, const Lib3MF_int32 * pScalingDataH1Buffer, Lib3MF_uint64 nScalingDataH2BufferSize, const Lib3MF_int32 * pScalingDataH2Buffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithMultipleOverrides (pToolpathLayerData, nProfileID, nPartID, nHatchDataBufferSize, pHatchDataBuffer, nScalingDataF1BufferSize, pScalingDataF1Buffer, nScalingDataF2BufferSize, pScalingDataF2Buffer, nScalingDataG1BufferSize, pScalingDataG1Buffer, nScalingDataG2BufferSize, pScalingDataG2Buffer, nScalingDataH1BufferSize, pScalingDataH1Buffer, nScalingDataH2BufferSize, pScalingDataH2Buffer);
+}
+
+
 Lib3MFResult CCall_lib3mf_toolpathlayerdata_writehatchdatadiscrete(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const sLib3MFDiscreteHatch2D * pHatchDataBuffer)
 {
 	if (libraryHandle == 0) 
@@ -3183,6 +3192,15 @@ Lib3MFResult CCall_lib3mf_toolpathlayerdata_writehatchdatadiscretewithrampedover
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithRampedOverrides (pToolpathLayerData, nProfileID, nPartID, nHatchDataBufferSize, pHatchDataBuffer, nScalingData1BufferSize, pScalingData1Buffer, nScalingData2BufferSize, pScalingData2Buffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writehatchdatadiscretewithmultipleoverrides(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nHatchDataBufferSize, const sLib3MFDiscreteHatch2D * pHatchDataBuffer, Lib3MF_uint64 nScalingDataF1BufferSize, const Lib3MF_int32 * pScalingDataF1Buffer, Lib3MF_uint64 nScalingDataF2BufferSize, const Lib3MF_int32 * pScalingDataF2Buffer, Lib3MF_uint64 nScalingDataG1BufferSize, const Lib3MF_int32 * pScalingDataG1Buffer, Lib3MF_uint64 nScalingDataG2BufferSize, const Lib3MF_int32 * pScalingDataG2Buffer, Lib3MF_uint64 nScalingDataH1BufferSize, const Lib3MF_int32 * pScalingDataH1Buffer, Lib3MF_uint64 nScalingDataH2BufferSize, const Lib3MF_int32 * pScalingDataH2Buffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WriteHatchDataDiscreteWithMultipleOverrides (pToolpathLayerData, nProfileID, nPartID, nHatchDataBufferSize, pHatchDataBuffer, nScalingDataF1BufferSize, pScalingDataF1Buffer, nScalingDataF2BufferSize, pScalingDataF2Buffer, nScalingDataG1BufferSize, pScalingDataG1Buffer, nScalingDataG2BufferSize, pScalingDataG2Buffer, nScalingDataH1BufferSize, pScalingDataH1Buffer, nScalingDataH2BufferSize, pScalingDataH2Buffer);
 }
 
 
@@ -3213,12 +3231,30 @@ Lib3MFResult CCall_lib3mf_toolpathlayerdata_writeloopinmodelunitswithoverrides(L
 }
 
 
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writeloopinmodelunitswithmultipleoverrides(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataFBufferSize, const Lib3MF_int32 * pScalingDataFBuffer, Lib3MF_uint64 nScalingDataGBufferSize, const Lib3MF_int32 * pScalingDataGBuffer, Lib3MF_uint64 nScalingDataHBufferSize, const Lib3MF_int32 * pScalingDataHBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WriteLoopInModelUnitsWithMultipleOverrides (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer, nScalingDataFBufferSize, pScalingDataFBuffer, nScalingDataGBufferSize, pScalingDataGBuffer, nScalingDataHBufferSize, pScalingDataHBuffer);
+}
+
+
 Lib3MFResult CCall_lib3mf_toolpathlayerdata_writeloopdiscretewithoverrides(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithOverrides (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer, nScalingDataBufferSize, pScalingDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writeloopdiscretewithmultipleoverrides(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataFBufferSize, const Lib3MF_int32 * pScalingDataFBuffer, Lib3MF_uint64 nScalingDataGBufferSize, const Lib3MF_int32 * pScalingDataGBuffer, Lib3MF_uint64 nScalingDataHBufferSize, const Lib3MF_int32 * pScalingDataHBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithMultipleOverrides (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer, nScalingDataFBufferSize, pScalingDataFBuffer, nScalingDataGBufferSize, pScalingDataGBuffer, nScalingDataHBufferSize, pScalingDataHBuffer);
 }
 
 
@@ -3231,15 +3267,6 @@ Lib3MFResult CCall_lib3mf_toolpathlayerdata_writepolylineinmodelunits(Lib3MFHand
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerdata_writepolylinediscrete(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerData_WritePolylineDiscrete (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer);
-}
-
-
 Lib3MFResult CCall_lib3mf_toolpathlayerdata_writepolylineinmodelunitswithoverrides(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer)
 {
 	if (libraryHandle == 0) 
@@ -3249,12 +3276,39 @@ Lib3MFResult CCall_lib3mf_toolpathlayerdata_writepolylineinmodelunitswithoverrid
 }
 
 
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writepolylineinmodelunitswithmultipleoverrides(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFPosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataFBufferSize, const Lib3MF_int32 * pScalingDataFBuffer, Lib3MF_uint64 nScalingDataGBufferSize, const Lib3MF_int32 * pScalingDataGBuffer, Lib3MF_uint64 nScalingDataHBufferSize, const Lib3MF_int32 * pScalingDataHBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithMultipleOverrides (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer, nScalingDataFBufferSize, pScalingDataFBuffer, nScalingDataGBufferSize, pScalingDataGBuffer, nScalingDataHBufferSize, pScalingDataHBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writepolylinediscrete(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WritePolylineDiscrete (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer);
+}
+
+
 Lib3MFResult CCall_lib3mf_toolpathlayerdata_writepolylinediscretewithoverrides(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithOverrides (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer, nScalingDataBufferSize, pScalingDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_writepolylinediscretewithmultipleoverrides(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const sLib3MFDiscretePosition2D * pPointDataBuffer, Lib3MF_uint64 nScalingDataFBufferSize, const Lib3MF_int32 * pScalingDataFBuffer, Lib3MF_uint64 nScalingDataGBufferSize, const Lib3MF_int32 * pScalingDataGBuffer, Lib3MF_uint64 nScalingDataHBufferSize, const Lib3MF_int32 * pScalingDataHBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithMultipleOverrides (pToolpathLayerData, nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer, nScalingDataFBufferSize, pScalingDataFBuffer, nScalingDataGBufferSize, pScalingDataGBuffer, nScalingDataHBufferSize, pScalingDataHBuffer);
 }
 
 
@@ -5144,6 +5198,7 @@ const LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOORDINATE = 4010;
 const LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE = 4011;
 const LIB3MF_ERROR_TOOLPATH_INVALIDHATCHCOUNT = 4012;
 const LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHHATCHDATA = 4013;
+const LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHPOINTDATA = 4014;
 
 // WrappedError is an error that wraps a Lib3MF error.
 type WrappedError struct {
@@ -5279,6 +5334,8 @@ func errorMessage(errorcode uint32) string {
 		return "Invalid hatch count";
 	case LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHHATCHDATA:
 		return "Scaling data needs to match hatch data";
+	case LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHPOINTDATA:
+		return "Scaling data needs to match point data";
 	default:
 		return "unknown";
 	}
@@ -9635,6 +9692,15 @@ func (inst ToolpathLayerData) WriteHatchDataInModelUnitsWithRampedOverrides(prof
 	return nil
 }
 
+// WriteHatchDataInModelUnitsWithMultipleOverrides writes hatch data to the layer in model units with ramped profile overrides per hatch.
+func (inst ToolpathLayerData) WriteHatchDataInModelUnitsWithMultipleOverrides(profileID uint32, partID uint32, hatchData []Hatch2D, scalingDataF1 []int32, scalingDataF2 []int32, scalingDataG1 []int32, scalingDataG2 []int32, scalingDataH1 []int32, scalingDataH2 []int32) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithmultipleoverrides(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(hatchData)), (*C.sLib3MFHatch2D)(unsafe.Pointer(&hatchData[0])), C.uint64_t(len(scalingDataF1)), (*C.int32_t)(unsafe.Pointer(&scalingDataF1[0])), C.uint64_t(len(scalingDataF2)), (*C.int32_t)(unsafe.Pointer(&scalingDataF2[0])), C.uint64_t(len(scalingDataG1)), (*C.int32_t)(unsafe.Pointer(&scalingDataG1[0])), C.uint64_t(len(scalingDataG2)), (*C.int32_t)(unsafe.Pointer(&scalingDataG2[0])), C.uint64_t(len(scalingDataH1)), (*C.int32_t)(unsafe.Pointer(&scalingDataH1[0])), C.uint64_t(len(scalingDataH2)), (*C.int32_t)(unsafe.Pointer(&scalingDataH2[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
 // WriteHatchDataDiscrete writes hatch data to the layer in toolpath units.
 func (inst ToolpathLayerData) WriteHatchDataDiscrete(profileID uint32, partID uint32, hatchData []DiscreteHatch2D) error {
 	ret := C.CCall_lib3mf_toolpathlayerdata_writehatchdatadiscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(hatchData)), (*C.sLib3MFDiscreteHatch2D)(unsafe.Pointer(&hatchData[0])))
@@ -9656,6 +9722,15 @@ func (inst ToolpathLayerData) WriteHatchDataDiscreteWithConstantOverrides(profil
 // WriteHatchDataDiscreteWithRampedOverrides writes hatch data to the layer in toolpath units with ramped profile overrides per hatch.
 func (inst ToolpathLayerData) WriteHatchDataDiscreteWithRampedOverrides(profileID uint32, partID uint32, hatchData []DiscreteHatch2D, scalingData1 []int32, scalingData2 []int32) error {
 	ret := C.CCall_lib3mf_toolpathlayerdata_writehatchdatadiscretewithrampedoverrides(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(hatchData)), (*C.sLib3MFDiscreteHatch2D)(unsafe.Pointer(&hatchData[0])), C.uint64_t(len(scalingData1)), (*C.int32_t)(unsafe.Pointer(&scalingData1[0])), C.uint64_t(len(scalingData2)), (*C.int32_t)(unsafe.Pointer(&scalingData2[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WriteHatchDataDiscreteWithMultipleOverrides writes hatch data to the layer in toolpath units with ramped profile overrides per hatch.
+func (inst ToolpathLayerData) WriteHatchDataDiscreteWithMultipleOverrides(profileID uint32, partID uint32, hatchData []DiscreteHatch2D, scalingDataF1 []int32, scalingDataF2 []int32, scalingDataG1 []int32, scalingDataG2 []int32, scalingDataH1 []int32, scalingDataH2 []int32) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writehatchdatadiscretewithmultipleoverrides(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(hatchData)), (*C.sLib3MFDiscreteHatch2D)(unsafe.Pointer(&hatchData[0])), C.uint64_t(len(scalingDataF1)), (*C.int32_t)(unsafe.Pointer(&scalingDataF1[0])), C.uint64_t(len(scalingDataF2)), (*C.int32_t)(unsafe.Pointer(&scalingDataF2[0])), C.uint64_t(len(scalingDataG1)), (*C.int32_t)(unsafe.Pointer(&scalingDataG1[0])), C.uint64_t(len(scalingDataG2)), (*C.int32_t)(unsafe.Pointer(&scalingDataG2[0])), C.uint64_t(len(scalingDataH1)), (*C.int32_t)(unsafe.Pointer(&scalingDataH1[0])), C.uint64_t(len(scalingDataH2)), (*C.int32_t)(unsafe.Pointer(&scalingDataH2[0])))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
@@ -9689,9 +9764,27 @@ func (inst ToolpathLayerData) WriteLoopInModelUnitsWithOverrides(profileID uint3
 	return nil
 }
 
+// WriteLoopInModelUnitsWithMultipleOverrides writes loop data to the layer in model units with profile overrides.
+func (inst ToolpathLayerData) WriteLoopInModelUnitsWithMultipleOverrides(profileID uint32, partID uint32, pointData []Position2D, scalingDataF []int32, scalingDataG []int32, scalingDataH []int32) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writeloopinmodelunitswithmultipleoverrides(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])), C.uint64_t(len(scalingDataF)), (*C.int32_t)(unsafe.Pointer(&scalingDataF[0])), C.uint64_t(len(scalingDataG)), (*C.int32_t)(unsafe.Pointer(&scalingDataG[0])), C.uint64_t(len(scalingDataH)), (*C.int32_t)(unsafe.Pointer(&scalingDataH[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
 // WriteLoopDiscreteWithOverrides writes loop data to the layer in toolpath units with profile overrides..
 func (inst ToolpathLayerData) WriteLoopDiscreteWithOverrides(profileID uint32, partID uint32, pointData []DiscretePosition2D, scalingData []int32) error {
 	ret := C.CCall_lib3mf_toolpathlayerdata_writeloopdiscretewithoverrides(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFDiscretePosition2D)(unsafe.Pointer(&pointData[0])), C.uint64_t(len(scalingData)), (*C.int32_t)(unsafe.Pointer(&scalingData[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WriteLoopDiscreteWithMultipleOverrides writes loop data to the layer in toolpath units with profile overrides..
+func (inst ToolpathLayerData) WriteLoopDiscreteWithMultipleOverrides(profileID uint32, partID uint32, pointData []DiscretePosition2D, scalingDataF []int32, scalingDataG []int32, scalingDataH []int32) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writeloopdiscretewithmultipleoverrides(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFDiscretePosition2D)(unsafe.Pointer(&pointData[0])), C.uint64_t(len(scalingDataF)), (*C.int32_t)(unsafe.Pointer(&scalingDataF[0])), C.uint64_t(len(scalingDataG)), (*C.int32_t)(unsafe.Pointer(&scalingDataG[0])), C.uint64_t(len(scalingDataH)), (*C.int32_t)(unsafe.Pointer(&scalingDataH[0])))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
@@ -9707,15 +9800,6 @@ func (inst ToolpathLayerData) WritePolylineInModelUnits(profileID uint32, partID
 	return nil
 }
 
-// WritePolylineDiscrete writes polyline data to the layer.
-func (inst ToolpathLayerData) WritePolylineDiscrete(profileID uint32, partID uint32, pointData []DiscretePosition2D) error {
-	ret := C.CCall_lib3mf_toolpathlayerdata_writepolylinediscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFDiscretePosition2D)(unsafe.Pointer(&pointData[0])))
-	if ret != 0 {
-		return makeError(uint32(ret))
-	}
-	return nil
-}
-
 // WritePolylineInModelUnitsWithOverrides writes polyline data to the layer with profile overrides.
 func (inst ToolpathLayerData) WritePolylineInModelUnitsWithOverrides(profileID uint32, partID uint32, pointData []Position2D, scalingData []int32) error {
 	ret := C.CCall_lib3mf_toolpathlayerdata_writepolylineinmodelunitswithoverrides(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])), C.uint64_t(len(scalingData)), (*C.int32_t)(unsafe.Pointer(&scalingData[0])))
@@ -9725,9 +9809,36 @@ func (inst ToolpathLayerData) WritePolylineInModelUnitsWithOverrides(profileID u
 	return nil
 }
 
+// WritePolylineInModelUnitsWithMultipleOverrides writes polyline data to the layer with profile overrides.
+func (inst ToolpathLayerData) WritePolylineInModelUnitsWithMultipleOverrides(profileID uint32, partID uint32, pointData []Position2D, scalingDataF []int32, scalingDataG []int32, scalingDataH []int32) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writepolylineinmodelunitswithmultipleoverrides(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])), C.uint64_t(len(scalingDataF)), (*C.int32_t)(unsafe.Pointer(&scalingDataF[0])), C.uint64_t(len(scalingDataG)), (*C.int32_t)(unsafe.Pointer(&scalingDataG[0])), C.uint64_t(len(scalingDataH)), (*C.int32_t)(unsafe.Pointer(&scalingDataH[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WritePolylineDiscrete writes polyline data to the layer.
+func (inst ToolpathLayerData) WritePolylineDiscrete(profileID uint32, partID uint32, pointData []DiscretePosition2D) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writepolylinediscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFDiscretePosition2D)(unsafe.Pointer(&pointData[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
 // WritePolylineDiscreteWithOverrides writes polyline data to the layer with profile overrides.
 func (inst ToolpathLayerData) WritePolylineDiscreteWithOverrides(profileID uint32, partID uint32, pointData []DiscretePosition2D, scalingData []int32) error {
 	ret := C.CCall_lib3mf_toolpathlayerdata_writepolylinediscretewithoverrides(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFDiscretePosition2D)(unsafe.Pointer(&pointData[0])), C.uint64_t(len(scalingData)), (*C.int32_t)(unsafe.Pointer(&scalingData[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WritePolylineDiscreteWithMultipleOverrides writes polyline data to the layer with profile overrides.
+func (inst ToolpathLayerData) WritePolylineDiscreteWithMultipleOverrides(profileID uint32, partID uint32, pointData []DiscretePosition2D, scalingDataF []int32, scalingDataG []int32, scalingDataH []int32) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writepolylinediscretewithmultipleoverrides(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFDiscretePosition2D)(unsafe.Pointer(&pointData[0])), C.uint64_t(len(scalingDataF)), (*C.int32_t)(unsafe.Pointer(&scalingDataF[0])), C.uint64_t(len(scalingDataG)), (*C.int32_t)(unsafe.Pointer(&scalingDataG[0])), C.uint64_t(len(scalingDataH)), (*C.int32_t)(unsafe.Pointer(&scalingDataH[0])))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}

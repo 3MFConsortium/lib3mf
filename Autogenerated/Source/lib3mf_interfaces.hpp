@@ -3436,7 +3436,7 @@ public:
 	* @param[in] nHatchDataBufferSize - Number of elements in buffer
 	* @param[in] pHatchDataBuffer - The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
 	* @param[in] nScalingDataBufferSize - Number of elements in buffer
-	* @param[in] pScalingDataBuffer - The profile override scale factors. MUST have the same cardinality as HatchData.
+	* @param[in] pScalingDataBuffer - The profile override scale factors (f). MUST have the same cardinality as HatchData.
 	*/
 	virtual void WriteHatchDataInModelUnitsWithConstantOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nHatchDataBufferSize, const Lib3MF::sHatch2D * pHatchDataBuffer, const Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer) = 0;
 
@@ -3447,11 +3447,32 @@ public:
 	* @param[in] nHatchDataBufferSize - Number of elements in buffer
 	* @param[in] pHatchDataBuffer - The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
 	* @param[in] nScalingData1BufferSize - Number of elements in buffer
-	* @param[in] pScalingData1Buffer - The profile override scale factors for the start point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] pScalingData1Buffer - The profile override scale factors (f) for the start point of each hatch. MUST have the same cardinality as HatchData.
 	* @param[in] nScalingData2BufferSize - Number of elements in buffer
-	* @param[in] pScalingData2Buffer - The profile override scale factors for the end point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] pScalingData2Buffer - The profile override scale factors (f) for the end point of each hatch. MUST have the same cardinality as HatchData.
 	*/
 	virtual void WriteHatchDataInModelUnitsWithRampedOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nHatchDataBufferSize, const Lib3MF::sHatch2D * pHatchDataBuffer, const Lib3MF_uint64 nScalingData1BufferSize, const Lib3MF_int32 * pScalingData1Buffer, const Lib3MF_uint64 nScalingData2BufferSize, const Lib3MF_int32 * pScalingData2Buffer) = 0;
+
+	/**
+	* IToolpathLayerData::WriteHatchDataInModelUnitsWithMultipleOverrides - writes hatch data to the layer in model units with ramped profile overrides per hatch.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nHatchDataBufferSize - Number of elements in buffer
+	* @param[in] pHatchDataBuffer - The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] nScalingDataF1BufferSize - Number of elements in buffer
+	* @param[in] pScalingDataF1Buffer - The profile override scale factors (f) for the start point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] nScalingDataF2BufferSize - Number of elements in buffer
+	* @param[in] pScalingDataF2Buffer - The profile override scale factors (f) for the end point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] nScalingDataG1BufferSize - Number of elements in buffer
+	* @param[in] pScalingDataG1Buffer - The profile override scale factors (g) for the start point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] nScalingDataG2BufferSize - Number of elements in buffer
+	* @param[in] pScalingDataG2Buffer - The profile override scale factors (g) for the end point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] nScalingDataH1BufferSize - Number of elements in buffer
+	* @param[in] pScalingDataH1Buffer - The profile override scale factors (h) for the start point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] nScalingDataH2BufferSize - Number of elements in buffer
+	* @param[in] pScalingDataH2Buffer - The profile override scale factors (h) for the end point of each hatch. MUST have the same cardinality as HatchData.
+	*/
+	virtual void WriteHatchDataInModelUnitsWithMultipleOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nHatchDataBufferSize, const Lib3MF::sHatch2D * pHatchDataBuffer, const Lib3MF_uint64 nScalingDataF1BufferSize, const Lib3MF_int32 * pScalingDataF1Buffer, const Lib3MF_uint64 nScalingDataF2BufferSize, const Lib3MF_int32 * pScalingDataF2Buffer, const Lib3MF_uint64 nScalingDataG1BufferSize, const Lib3MF_int32 * pScalingDataG1Buffer, const Lib3MF_uint64 nScalingDataG2BufferSize, const Lib3MF_int32 * pScalingDataG2Buffer, const Lib3MF_uint64 nScalingDataH1BufferSize, const Lib3MF_int32 * pScalingDataH1Buffer, const Lib3MF_uint64 nScalingDataH2BufferSize, const Lib3MF_int32 * pScalingDataH2Buffer) = 0;
 
 	/**
 	* IToolpathLayerData::WriteHatchDataDiscrete - writes hatch data to the layer in toolpath units.
@@ -3469,7 +3490,7 @@ public:
 	* @param[in] nHatchDataBufferSize - Number of elements in buffer
 	* @param[in] pHatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
 	* @param[in] nScalingDataBufferSize - Number of elements in buffer
-	* @param[in] pScalingDataBuffer - The profile override scale factors. MUST have the same cardinality as HatchData.
+	* @param[in] pScalingDataBuffer - The profile override scale factors (f). MUST have the same cardinality as HatchData.
 	*/
 	virtual void WriteHatchDataDiscreteWithConstantOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nHatchDataBufferSize, const Lib3MF::sDiscreteHatch2D * pHatchDataBuffer, const Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer) = 0;
 
@@ -3480,11 +3501,32 @@ public:
 	* @param[in] nHatchDataBufferSize - Number of elements in buffer
 	* @param[in] pHatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
 	* @param[in] nScalingData1BufferSize - Number of elements in buffer
-	* @param[in] pScalingData1Buffer - The profile override scale factors for the start point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] pScalingData1Buffer - The profile override scale factors (f) for the start point of each hatch. MUST have the same cardinality as HatchData.
 	* @param[in] nScalingData2BufferSize - Number of elements in buffer
-	* @param[in] pScalingData2Buffer - The profile override scale factors for the end point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] pScalingData2Buffer - The profile override scale factors (f) for the end point of each hatch. MUST have the same cardinality as HatchData.
 	*/
 	virtual void WriteHatchDataDiscreteWithRampedOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nHatchDataBufferSize, const Lib3MF::sDiscreteHatch2D * pHatchDataBuffer, const Lib3MF_uint64 nScalingData1BufferSize, const Lib3MF_int32 * pScalingData1Buffer, const Lib3MF_uint64 nScalingData2BufferSize, const Lib3MF_int32 * pScalingData2Buffer) = 0;
+
+	/**
+	* IToolpathLayerData::WriteHatchDataDiscreteWithMultipleOverrides - writes hatch data to the layer in toolpath units with ramped profile overrides per hatch.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nHatchDataBufferSize - Number of elements in buffer
+	* @param[in] pHatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] nScalingDataF1BufferSize - Number of elements in buffer
+	* @param[in] pScalingDataF1Buffer - The profile override scale factors (f) for the start point of each hatch. If empty, no factors are written. MUST otherwise have the same cardinality as HatchData.
+	* @param[in] nScalingDataF2BufferSize - Number of elements in buffer
+	* @param[in] pScalingDataF2Buffer - The profile override scale factors (f) for the end point of each hatch. Defaults to ScalingDataF1, if empty. MUST be empty, if ScalingDataF1 is empty. MUST otherwise have the same cardinality as HatchData.
+	* @param[in] nScalingDataG1BufferSize - Number of elements in buffer
+	* @param[in] pScalingDataG1Buffer - The profile override scale factors (g) for the start point of each hatch. If empty, no factors are written. MUST have the same cardinality as HatchData.
+	* @param[in] nScalingDataG2BufferSize - Number of elements in buffer
+	* @param[in] pScalingDataG2Buffer - The profile override scale factors (g) for the end point of each hatch. Defaults to ScalingDataG1, if empty. MUST be empty, if ScalingDataG1 is empty. MUST otherwise have the same cardinality as HatchData.
+	* @param[in] nScalingDataH1BufferSize - Number of elements in buffer
+	* @param[in] pScalingDataH1Buffer - The profile override scale factors (h) for the start point of each hatch. MUST have the same cardinality as HatchData.
+	* @param[in] nScalingDataH2BufferSize - Number of elements in buffer
+	* @param[in] pScalingDataH2Buffer - The profile override scale factors (h) for the end point of each hatch. Defaults to ScalingDataH1, if empty. MUST be empty, if ScalingDataH1 is empty. MUST otherwise have the same cardinality as HatchData.
+	*/
+	virtual void WriteHatchDataDiscreteWithMultipleOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nHatchDataBufferSize, const Lib3MF::sDiscreteHatch2D * pHatchDataBuffer, const Lib3MF_uint64 nScalingDataF1BufferSize, const Lib3MF_int32 * pScalingDataF1Buffer, const Lib3MF_uint64 nScalingDataF2BufferSize, const Lib3MF_int32 * pScalingDataF2Buffer, const Lib3MF_uint64 nScalingDataG1BufferSize, const Lib3MF_int32 * pScalingDataG1Buffer, const Lib3MF_uint64 nScalingDataG2BufferSize, const Lib3MF_int32 * pScalingDataG2Buffer, const Lib3MF_uint64 nScalingDataH1BufferSize, const Lib3MF_int32 * pScalingDataH1Buffer, const Lib3MF_uint64 nScalingDataH2BufferSize, const Lib3MF_int32 * pScalingDataH2Buffer) = 0;
 
 	/**
 	* IToolpathLayerData::WriteLoopInModelUnits - writes loop data to the layer in model units.
@@ -3516,6 +3558,21 @@ public:
 	virtual void WriteLoopInModelUnitsWithOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer, const Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer) = 0;
 
 	/**
+	* IToolpathLayerData::WriteLoopInModelUnitsWithMultipleOverrides - writes loop data to the layer in model units with profile overrides.
+	* @param[in] nProfileID - The toolpath profile to use. Loop Profiles can not be overridden by point.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nPointDataBufferSize - Number of elements in buffer
+	* @param[in] pPointDataBuffer - The point data in model units. Array MUST NOT be empty.
+	* @param[in] nScalingDataFBufferSize - Number of elements in buffer
+	* @param[in] pScalingDataFBuffer - The profile override scale factors for F. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] nScalingDataGBufferSize - Number of elements in buffer
+	* @param[in] pScalingDataGBuffer - The profile override scale factors for G. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] nScalingDataHBufferSize - Number of elements in buffer
+	* @param[in] pScalingDataHBuffer - The profile override scale factors for H. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	*/
+	virtual void WriteLoopInModelUnitsWithMultipleOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer, const Lib3MF_uint64 nScalingDataFBufferSize, const Lib3MF_int32 * pScalingDataFBuffer, const Lib3MF_uint64 nScalingDataGBufferSize, const Lib3MF_int32 * pScalingDataGBuffer, const Lib3MF_uint64 nScalingDataHBufferSize, const Lib3MF_int32 * pScalingDataHBuffer) = 0;
+
+	/**
 	* IToolpathLayerData::WriteLoopDiscreteWithOverrides - writes loop data to the layer in toolpath units with profile overrides..
 	* @param[in] nProfileID - The toolpath profile to use. Loop Profiles can not be overridden by point.
 	* @param[in] nPartID - The toolpath part to use
@@ -3527,6 +3584,21 @@ public:
 	virtual void WriteLoopDiscreteWithOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D * pPointDataBuffer, const Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer) = 0;
 
 	/**
+	* IToolpathLayerData::WriteLoopDiscreteWithMultipleOverrides - writes loop data to the layer in toolpath units with profile overrides..
+	* @param[in] nProfileID - The toolpath profile to use. Loop Profiles can not be overridden by point.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nPointDataBufferSize - Number of elements in buffer
+	* @param[in] pPointDataBuffer - The point data in toolpath units. Array MUST NOT be empty.
+	* @param[in] nScalingDataFBufferSize - Number of elements in buffer
+	* @param[in] pScalingDataFBuffer - The profile override scale factors for F. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] nScalingDataGBufferSize - Number of elements in buffer
+	* @param[in] pScalingDataGBuffer - The profile override scale factors for G. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] nScalingDataHBufferSize - Number of elements in buffer
+	* @param[in] pScalingDataHBuffer - The profile override scale factors for H. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	*/
+	virtual void WriteLoopDiscreteWithMultipleOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D * pPointDataBuffer, const Lib3MF_uint64 nScalingDataFBufferSize, const Lib3MF_int32 * pScalingDataFBuffer, const Lib3MF_uint64 nScalingDataGBufferSize, const Lib3MF_int32 * pScalingDataGBuffer, const Lib3MF_uint64 nScalingDataHBufferSize, const Lib3MF_int32 * pScalingDataHBuffer) = 0;
+
+	/**
 	* IToolpathLayerData::WritePolylineInModelUnits - writes polyline data to the layer.
 	* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
 	* @param[in] nPartID - The toolpath part to use
@@ -3534,6 +3606,32 @@ public:
 	* @param[in] pPointDataBuffer - The point data in model units. Array MUST NOT be empty.
 	*/
 	virtual void WritePolylineInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer) = 0;
+
+	/**
+	* IToolpathLayerData::WritePolylineInModelUnitsWithOverrides - writes polyline data to the layer with profile overrides.
+	* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nPointDataBufferSize - Number of elements in buffer
+	* @param[in] pPointDataBuffer - The point data in model units. Array MUST NOT be empty.
+	* @param[in] nScalingDataBufferSize - Number of elements in buffer
+	* @param[in] pScalingDataBuffer - The profile override scale factors. If empty, no factors are written. MUST otherwise have the same cardinality as PointData. A Profile override ID of 0 inherits the profile of the segment.
+	*/
+	virtual void WritePolylineInModelUnitsWithOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer, const Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer) = 0;
+
+	/**
+	* IToolpathLayerData::WritePolylineInModelUnitsWithMultipleOverrides - writes polyline data to the layer with profile overrides.
+	* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nPointDataBufferSize - Number of elements in buffer
+	* @param[in] pPointDataBuffer - The point data in model units. Array MUST NOT be empty.
+	* @param[in] nScalingDataFBufferSize - Number of elements in buffer
+	* @param[in] pScalingDataFBuffer - The profile override scale factors for F. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] nScalingDataGBufferSize - Number of elements in buffer
+	* @param[in] pScalingDataGBuffer - The profile override scale factors for G. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] nScalingDataHBufferSize - Number of elements in buffer
+	* @param[in] pScalingDataHBuffer - The profile override scale factors for H. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	*/
+	virtual void WritePolylineInModelUnitsWithMultipleOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer, const Lib3MF_uint64 nScalingDataFBufferSize, const Lib3MF_int32 * pScalingDataFBuffer, const Lib3MF_uint64 nScalingDataGBufferSize, const Lib3MF_int32 * pScalingDataGBuffer, const Lib3MF_uint64 nScalingDataHBufferSize, const Lib3MF_int32 * pScalingDataHBuffer) = 0;
 
 	/**
 	* IToolpathLayerData::WritePolylineDiscrete - writes polyline data to the layer.
@@ -3545,26 +3643,30 @@ public:
 	virtual void WritePolylineDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D * pPointDataBuffer) = 0;
 
 	/**
-	* IToolpathLayerData::WritePolylineInModelUnitsWithOverrides - writes polyline data to the layer with profile overrides.
-	* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
-	* @param[in] nPartID - The toolpath part to use
-	* @param[in] nPointDataBufferSize - Number of elements in buffer
-	* @param[in] pPointDataBuffer - The point data in model units. Array MUST NOT be empty.
-	* @param[in] nScalingDataBufferSize - Number of elements in buffer
-	* @param[in] pScalingDataBuffer - The profile override scale factors. MUST have the same cardinality as PointData. A Profile override ID of 0 inherits the profile of the segment.
-	*/
-	virtual void WritePolylineInModelUnitsWithOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer, const Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer) = 0;
-
-	/**
 	* IToolpathLayerData::WritePolylineDiscreteWithOverrides - writes polyline data to the layer with profile overrides.
 	* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] nPointDataBufferSize - Number of elements in buffer
 	* @param[in] pPointDataBuffer - The point data in toolpath units. Array MUST NOT be empty.
 	* @param[in] nScalingDataBufferSize - Number of elements in buffer
-	* @param[in] pScalingDataBuffer - The profile override scale factors. MUST have the same cardinality as PointData. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] pScalingDataBuffer - The profile override scale factors. If empty, no factors are written. MUST otherwise have the same cardinality as PointData. A Profile override ID of 0 inherits the profile of the segment.
 	*/
 	virtual void WritePolylineDiscreteWithOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D * pPointDataBuffer, const Lib3MF_uint64 nScalingDataBufferSize, const Lib3MF_int32 * pScalingDataBuffer) = 0;
+
+	/**
+	* IToolpathLayerData::WritePolylineDiscreteWithMultipleOverrides - writes polyline data to the layer with profile overrides.
+	* @param[in] nProfileID - The toolpath profile to use. Polyline Profiles can not be overridden by point.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nPointDataBufferSize - Number of elements in buffer
+	* @param[in] pPointDataBuffer - The point data in toolpath units. Array MUST NOT be empty.
+	* @param[in] nScalingDataFBufferSize - Number of elements in buffer
+	* @param[in] pScalingDataFBuffer - The profile override scale factors for F. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] nScalingDataGBufferSize - Number of elements in buffer
+	* @param[in] pScalingDataGBuffer - The profile override scale factors for G. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	* @param[in] nScalingDataHBufferSize - Number of elements in buffer
+	* @param[in] pScalingDataHBuffer - The profile override scale factors for H. If empty, no factors are written. MUST otherwise have the same cardinality as PointData.
+	*/
+	virtual void WritePolylineDiscreteWithMultipleOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D * pPointDataBuffer, const Lib3MF_uint64 nScalingDataFBufferSize, const Lib3MF_int32 * pScalingDataFBuffer, const Lib3MF_uint64 nScalingDataGBufferSize, const Lib3MF_int32 * pScalingDataGBuffer, const Lib3MF_uint64 nScalingDataHBufferSize, const Lib3MF_int32 * pScalingDataHBuffer) = 0;
 
 	/**
 	* IToolpathLayerData::AddCustomData - Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
