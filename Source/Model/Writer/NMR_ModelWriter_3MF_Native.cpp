@@ -224,7 +224,7 @@ namespace NMR {
 
 			if (!pBinaryWriter->isEmpty()) {
 				pBinaryWriter->finishWriting();
-				POpcPackagePart pBinaryPart = m_pPackageWriter->addPart(pBinaryWriter->getBinaryPath ());
+				POpcPackagePart pBinaryPart = m_pPackageWriter->addUncompressedPart(pBinaryWriter->getBinaryPath ());
 				pModelPart->addRelationship("binary" + iBinaryIter.first, PACKAGE_BINARY_RELATIONSHIP_TYPE, pBinaryPart->getURI());
 				pBinaryWriter->copyBinaryToStream(pBinaryPart->getExportStream());
 

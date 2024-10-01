@@ -736,8 +736,9 @@ public:
 	inline std::string GetUUID();
 	inline void DisableDiscretizedArrayCompression();
 	inline void EnableDiscretizedArrayCompression(const Lib3MF_double dUnits, const eBinaryStreamPredictionType ePredictionType);
-	inline void EnableLZMA(const Lib3MF_uint32 nLZMALevel);
-	inline void DisableLZMA();
+	inline void EnableLZ4(const Lib3MF_uint32 nCompressionLevel);
+	inline void EnableZLib(const Lib3MF_uint32 nCompressionLevel);
+	inline void EnableZstd(const Lib3MF_uint32 nCompressionLevel);
 };
 	
 /*************************************************************************************************************************
@@ -2490,20 +2491,30 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CBinaryStream::EnableLZMA - Enables LZMA mode.
-	* @param[in] nLZMALevel - LZMA Level (0-9)
+	* CBinaryStream::EnableLZ4 - Switches to fast LZ4 compression mode.
+	* @param[in] nCompressionLevel - Compression level (0-9).
 	*/
-	void CBinaryStream::EnableLZMA(const Lib3MF_uint32 nLZMALevel)
+	void CBinaryStream::EnableLZ4(const Lib3MF_uint32 nCompressionLevel)
 	{
-		CheckError(lib3mf_binarystream_enablelzma(m_pHandle, nLZMALevel));
+		CheckError(lib3mf_binarystream_enablelz4(m_pHandle, nCompressionLevel));
 	}
 	
 	/**
-	* CBinaryStream::DisableLZMA - Disables LZMA mode.
+	* CBinaryStream::EnableZLib - Switches to ZLib compression mode.
+	* @param[in] nCompressionLevel - Compression level (0-9).
 	*/
-	void CBinaryStream::DisableLZMA()
+	void CBinaryStream::EnableZLib(const Lib3MF_uint32 nCompressionLevel)
 	{
-		CheckError(lib3mf_binarystream_disablelzma(m_pHandle));
+		CheckError(lib3mf_binarystream_enablezlib(m_pHandle, nCompressionLevel));
+	}
+	
+	/**
+	* CBinaryStream::EnableZstd - Switches to ZStd compression mode.
+	* @param[in] nCompressionLevel - Compression level.
+	*/
+	void CBinaryStream::EnableZstd(const Lib3MF_uint32 nCompressionLevel)
+	{
+		CheckError(lib3mf_binarystream_enablezstd(m_pHandle, nCompressionLevel));
 	}
 	
 	/**

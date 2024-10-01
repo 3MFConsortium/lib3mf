@@ -356,15 +356,22 @@ public:
 	virtual void EnableDiscretizedArrayCompression(const Lib3MF_double dUnits, const Lib3MF::eBinaryStreamPredictionType ePredictionType) = 0;
 
 	/**
-	* IBinaryStream::EnableLZMA - Enables LZMA mode.
-	* @param[in] nLZMALevel - LZMA Level (0-9)
+	* IBinaryStream::EnableLZ4 - Switches to fast LZ4 compression mode.
+	* @param[in] nCompressionLevel - Compression level (0-9).
 	*/
-	virtual void EnableLZMA(const Lib3MF_uint32 nLZMALevel) = 0;
+	virtual void EnableLZ4(const Lib3MF_uint32 nCompressionLevel) = 0;
 
 	/**
-	* IBinaryStream::DisableLZMA - Disables LZMA mode.
+	* IBinaryStream::EnableZLib - Switches to ZLib compression mode.
+	* @param[in] nCompressionLevel - Compression level (0-9).
 	*/
-	virtual void DisableLZMA() = 0;
+	virtual void EnableZLib(const Lib3MF_uint32 nCompressionLevel) = 0;
+
+	/**
+	* IBinaryStream::EnableZstd - Switches to ZStd compression mode.
+	* @param[in] nCompressionLevel - Compression level.
+	*/
+	virtual void EnableZstd(const Lib3MF_uint32 nCompressionLevel) = 0;
 
 };
 

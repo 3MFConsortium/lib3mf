@@ -122,21 +122,31 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_binarystream_disablediscretizedarraycompress
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_binarystream_enablediscretizedarraycompression(Lib3MF_BinaryStream pBinaryStream, Lib3MF_double dUnits, Lib3MF::eBinaryStreamPredictionType ePredictionType);
 
 /**
-* Enables LZMA mode.
+* Switches to fast LZ4 compression mode.
 *
 * @param[in] pBinaryStream - BinaryStream instance.
-* @param[in] nLZMALevel - LZMA Level (0-9)
+* @param[in] nCompressionLevel - Compression level (0-9).
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_binarystream_enablelzma(Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nLZMALevel);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_binarystream_enablelz4(Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nCompressionLevel);
 
 /**
-* Disables LZMA mode.
+* Switches to ZLib compression mode.
 *
 * @param[in] pBinaryStream - BinaryStream instance.
+* @param[in] nCompressionLevel - Compression level (0-9).
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_binarystream_disablelzma(Lib3MF_BinaryStream pBinaryStream);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_binarystream_enablezlib(Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nCompressionLevel);
+
+/**
+* Switches to ZStd compression mode.
+*
+* @param[in] pBinaryStream - BinaryStream instance.
+* @param[in] nCompressionLevel - Compression level.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_binarystream_enablezstd(Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nCompressionLevel);
 
 /*************************************************************************************************************************
  Class definition for Writer

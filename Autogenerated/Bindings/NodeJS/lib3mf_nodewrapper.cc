@@ -1612,8 +1612,9 @@ void CLib3MFBinaryStream::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetUUID", GetUUID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "DisableDiscretizedArrayCompression", DisableDiscretizedArrayCompression);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "EnableDiscretizedArrayCompression", EnableDiscretizedArrayCompression);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "EnableLZMA", EnableLZMA);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "DisableLZMA", DisableLZMA);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "EnableLZ4", EnableLZ4);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "EnableZLib", EnableZLib);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "EnableZstd", EnableZstd);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -1776,22 +1777,22 @@ void CLib3MFBinaryStream::EnableDiscretizedArrayCompression(const FunctionCallba
 }
 
 
-void CLib3MFBinaryStream::EnableLZMA(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFBinaryStream::EnableLZ4(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		try {
         if (!args[0]->IsUint32()) {
-            throw std::runtime_error("Expected uint32 parameter 0 (LZMALevel)");
+            throw std::runtime_error("Expected uint32 parameter 0 (CompressionLevel)");
         }
-        unsigned int nLZMALevel = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nCompressionLevel = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method EnableLZMA.");
-        if (wrapperTable->m_BinaryStream_EnableLZMA == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method BinaryStream::EnableLZMA.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method EnableLZ4.");
+        if (wrapperTable->m_BinaryStream_EnableLZ4 == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BinaryStream::EnableLZ4.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_BinaryStream_EnableLZMA(instanceHandle, nLZMALevel);
+        Lib3MFResult errorCode = wrapperTable->m_BinaryStream_EnableLZ4(instanceHandle, nCompressionLevel);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {
@@ -1800,18 +1801,46 @@ void CLib3MFBinaryStream::EnableLZMA(const FunctionCallbackInfo<Value>& args)
 }
 
 
-void CLib3MFBinaryStream::DisableLZMA(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFBinaryStream::EnableZLib(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (CompressionLevel)");
+        }
+        unsigned int nCompressionLevel = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method DisableLZMA.");
-        if (wrapperTable->m_BinaryStream_DisableLZMA == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method BinaryStream::DisableLZMA.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method EnableZLib.");
+        if (wrapperTable->m_BinaryStream_EnableZLib == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BinaryStream::EnableZLib.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_BinaryStream_DisableLZMA(instanceHandle);
+        Lib3MFResult errorCode = wrapperTable->m_BinaryStream_EnableZLib(instanceHandle, nCompressionLevel);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFBinaryStream::EnableZstd(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (CompressionLevel)");
+        }
+        unsigned int nCompressionLevel = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method EnableZstd.");
+        if (wrapperTable->m_BinaryStream_EnableZstd == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BinaryStream::EnableZstd.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_BinaryStream_EnableZstd(instanceHandle, nCompressionLevel);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {

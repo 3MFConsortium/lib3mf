@@ -35,7 +35,8 @@ NMR_PortableZIPWriter.cpp implements a portable stream to write into ZIP files
  
 namespace NMR {
 
-	CExportStream_ZIP::CExportStream_ZIP(_In_ CPortableZIPWriter * pZIPWriter, nfUint32 nEntryKey)
+	CExportStream_ZIP::CExportStream_ZIP(_In_ CPortableZIPWriter * pZIPWriter, nfUint32 nEntryKey, bool bUseDeflate)
+		: m_bUseDeflate (bUseDeflate)
 	{
 		m_bIsInitialized = false;
 
@@ -66,9 +67,13 @@ namespace NMR {
 		m_pStream.avail_out = ZIPEXPORTBUFFERSIZE;
 		m_pStream.total_out = 0;
 
-		nfInt32 nResult = deflateInit2(&m_pStream, Z_BEST_SPEED, Z_DEFLATED, -15, 8, Z_DEFAULT_STRATEGY);
-		if (nResult < 0)
-			throw CNMRException(NMR_ERROR_DEFLATEINITFAILED);
+		if (m_bUseDeflate) {
+
+			nfInt32 nResult = deflateInit2(&m_pStream, Z_BEST_SPEED, Z_DEFLATED, -15, 8, Z_DEFAULT_STRATEGY);
+			if (nResult < 0)
+				throw CNMRException(NMR_ERROR_DEFLATEINITFAILED);
+
+		}
 
 		m_bIsInitialized = true;
 	}
@@ -76,7 +81,9 @@ namespace NMR {
 	CExportStream_ZIP::~CExportStream_ZIP()
 	{
 		if (m_bIsInitialized) {
-			finishDeflate();
+			if (m_bUseDeflate) {
+				finishDeflate();
+			}
 		}
 	}
 
@@ -135,22 +142,30 @@ namespace NMR {
 		if ((pData == nullptr) || (cbCount == 0) || (cbCount > ZIPEXPORTWRITECHUNKSIZE))
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		m_pStream.next_in = (Bytef *) pData;
-		m_pStream.avail_in = cbCount;
-
 		m_pZIPWriter->calculateChecksum(m_nEntryKey, pData, cbCount);
 
-		while (m_pStream.avail_in > 0) {
-			nfInt32 nResult = deflate(&m_pStream, 0);
-			if (nResult < 0)
-				throw CNMRException(NMR_ERROR_COULDNOTDEFLATE);
+		if (m_bUseDeflate) {
 
-			if (m_pStream.avail_out == 0) {
-				m_pZIPWriter->writeDeflatedBuffer(m_nEntryKey, &m_nOutBuffer[0], ZIPEXPORTBUFFERSIZE);
+			m_pStream.next_in = (Bytef*)pData;
+			m_pStream.avail_in = cbCount;
 
-				m_pStream.next_out = &m_nOutBuffer[0];
-				m_pStream.avail_out = ZIPEXPORTBUFFERSIZE;
+			while (m_pStream.avail_in > 0) {
+				nfInt32 nResult = deflate(&m_pStream, 0);
+				if (nResult < 0)
+					throw CNMRException(NMR_ERROR_COULDNOTDEFLATE);
+
+				if (m_pStream.avail_out == 0) {
+					m_pZIPWriter->writeDeflatedBuffer(m_nEntryKey, &m_nOutBuffer[0], ZIPEXPORTBUFFERSIZE);
+
+					m_pStream.next_out = &m_nOutBuffer[0];
+					m_pStream.avail_out = ZIPEXPORTBUFFERSIZE;
+				}
 			}
+
+		}
+		else {
+			m_pZIPWriter->writeDeflatedBuffer(m_nEntryKey, pData, cbCount);
+
 		}
 
 		return cbCount;
@@ -163,30 +178,34 @@ namespace NMR {
 		if (!m_bIsInitialized)
 			throw CNMRException(NMR_ERROR_ZIPALREADYFINISHED);
 
-		m_pStream.next_in = nullptr;
-		m_pStream.avail_in = 0;
+		if (m_bUseDeflate) {
 
-		nfBool bContinue = true;
-		while (bContinue) {
-			nfInt32 nResult = deflate(&m_pStream, Z_FINISH);
-			if (nResult < 0)
-				throw CNMRException(NMR_ERROR_COULDNOTDEFLATE);
+			m_pStream.next_in = nullptr;
+			m_pStream.avail_in = 0;
 
-			if ((nResult != Z_STREAM_END) && (m_pStream.avail_out == 0)) {
-				m_pZIPWriter->writeDeflatedBuffer(m_nEntryKey, &m_nOutBuffer[0], ZIPEXPORTBUFFERSIZE);
+			nfBool bContinue = true;
+			while (bContinue) {
+				nfInt32 nResult = deflate(&m_pStream, Z_FINISH);
+				if (nResult < 0)
+					throw CNMRException(NMR_ERROR_COULDNOTDEFLATE);
 
-				m_pStream.next_out = &m_nOutBuffer[0];
-				m_pStream.avail_out = ZIPEXPORTBUFFERSIZE;
+				if ((nResult != Z_STREAM_END) && (m_pStream.avail_out == 0)) {
+					m_pZIPWriter->writeDeflatedBuffer(m_nEntryKey, &m_nOutBuffer[0], ZIPEXPORTBUFFERSIZE);
+
+					m_pStream.next_out = &m_nOutBuffer[0];
+					m_pStream.avail_out = ZIPEXPORTBUFFERSIZE;
+				}
+				else
+					bContinue = false;
 			}
-			else
-				bContinue = false;
-		}
 
-		if (m_pStream.avail_out < ZIPEXPORTBUFFERSIZE) {
-			m_pZIPWriter->writeDeflatedBuffer(m_nEntryKey, &m_nOutBuffer[0], ZIPEXPORTBUFFERSIZE - m_pStream.avail_out);
-		}
+			if (m_pStream.avail_out < ZIPEXPORTBUFFERSIZE) {
+				m_pZIPWriter->writeDeflatedBuffer(m_nEntryKey, &m_nOutBuffer[0], ZIPEXPORTBUFFERSIZE - m_pStream.avail_out);
+			}
 
-		deflateEnd(&m_pStream);
+			deflateEnd(&m_pStream);
+
+		}
 		m_bIsInitialized = false;
 	}
 

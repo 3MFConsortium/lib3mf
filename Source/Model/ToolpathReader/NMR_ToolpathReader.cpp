@@ -95,14 +95,9 @@ namespace NMR {
 				bHasModel = true;
 
 				PToolpathReaderNode_Layer pXMLNode = std::make_shared<CToolpathReaderNode_Layer>(m_pWarnings, m_pProgressMonitor, m_pReadData.get ());
-				//pXMLNode->setBinaryStreamCollection(m_pBinaryStreamCollection);
 
 				pXMLNode->parseXML(pXMLReader.get());
 
-				//if (!pXMLNode->getHasResources())
-					//throw CNMRException(NMR_ERROR_NORESOURCES);
-				//if (!pXMLNode->getHasBuild())
-					//throw CNMRException(NMR_ERROR_NOBUILD);
 			}
 
 		}

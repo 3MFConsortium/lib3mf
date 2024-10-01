@@ -176,6 +176,9 @@ else()
     target_link_libraries(${PROJECT_NAME} ${LIBZIP_LIBRARIES})
 endif()
 
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/lz4)
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zstd)
 
 if (USE_INCLUDED_ZLIB)
     target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zlib/Include)

@@ -51,8 +51,6 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDFILECHUNKDATASIZE);
 		if (Chunk.m_CompressedDataSize > BINARYCHUNKFILEMAXCHUNKDATASIZE)
 			throw CNMRException(NMR_ERROR_INVALIDFILECHUNKDATASIZE);
-		if (Chunk.m_CompressedPropsSize > BINARYCHUNKFILEMAXCHUNKDATASIZE)
-			throw CNMRException(NMR_ERROR_INVALIDFILECHUNKDATASIZE);
 
 		CImportStream * pImportStream = pReader->m_pImportStream.get();
 
@@ -87,7 +85,7 @@ namespace NMR {
 
 		if (m_Chunk.m_UncompressedDataSize > 0) {
 
-			std::vector<nfByte> PropsData;
+			/*std::vector<nfByte> PropsData;
 			std::vector<nfByte> CompressedData;
 
 			if (m_Chunk.m_CompressedPropsSize == 0)
@@ -113,7 +111,8 @@ namespace NMR {
 			//int error;
 			//error = LzmaUncompress(m_Data.data(), &destLen, CompressedData.data(), &srcLen, PropsData.data(), propsLen);
 			//if (error != SZ_OK)
-				throw CNMRException(NMR_ERROR_COULDNOTUNCOMPRESSDATA);
+				throw CNMRException(NMR_ERROR_COULDNOTUNCOMPRESSDATA); */
+
 		}
 
 		m_bHasCachedData = true;
@@ -143,7 +142,7 @@ namespace NMR {
 		switch (pChunkEntry->m_EntryType) {
 			case BINARYCHUNKFILEENTRYTYPE_INT32ARRAY_NOPREDICTION:
 			case BINARYCHUNKFILEENTRYTYPE_INT32ARRAY_DELTAPREDICTION: 
-				dataType = edtInt32Array;
+				dataType = eChunkedBinaryDataType::edtInt32Array;
 				if ((pChunkEntry->m_SizeInBytes % 4) != 0)
 					throw CNMRException(NMR_ERROR_INVALIDCHUNKDATA);
 
@@ -152,7 +151,7 @@ namespace NMR {
 
 			case BINARYCHUNKFILEENTRYTYPE_FLOAT32ARRAY_NOPREDICTION: 
 			case BINARYCHUNKFILEENTRYTYPE_FLOAT32ARRAY_DELTAPREDICTION:
-				dataType = edtFloatArray;
+				dataType = eChunkedBinaryDataType::edtFloatArray;
 				if (pChunkEntry->m_SizeInBytes < 4)
 					throw CNMRException(NMR_ERROR_INVALIDCHUNKDATA);
 				if ((pChunkEntry->m_SizeInBytes % 4) != 0)
@@ -162,7 +161,7 @@ namespace NMR {
 				break;
 
 			default:
-				dataType = edtUnknown;
+				dataType = eChunkedBinaryDataType::edtUnknown;
 				nCount = 0;
 		} 
 	}

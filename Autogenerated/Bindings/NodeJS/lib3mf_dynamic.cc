@@ -54,8 +54,9 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_BinaryStream_GetUUID = NULL;
 	pWrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression = NULL;
 	pWrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression = NULL;
-	pWrapperTable->m_BinaryStream_EnableLZMA = NULL;
-	pWrapperTable->m_BinaryStream_DisableLZMA = NULL;
+	pWrapperTable->m_BinaryStream_EnableLZ4 = NULL;
+	pWrapperTable->m_BinaryStream_EnableZLib = NULL;
+	pWrapperTable->m_BinaryStream_EnableZstd = NULL;
 	pWrapperTable->m_Writer_WriteToFile = NULL;
 	pWrapperTable->m_Writer_GetStreamSize = NULL;
 	pWrapperTable->m_Writer_WriteToBuffer = NULL;
@@ -684,21 +685,30 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_BinaryStream_EnableLZMA = (PLib3MFBinaryStream_EnableLZMAPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_enablelzma");
+	pWrapperTable->m_BinaryStream_EnableLZ4 = (PLib3MFBinaryStream_EnableLZ4Ptr) GetProcAddress(hLibrary, "lib3mf_binarystream_enablelz4");
 	#else // _WIN32
-	pWrapperTable->m_BinaryStream_EnableLZMA = (PLib3MFBinaryStream_EnableLZMAPtr) dlsym(hLibrary, "lib3mf_binarystream_enablelzma");
+	pWrapperTable->m_BinaryStream_EnableLZ4 = (PLib3MFBinaryStream_EnableLZ4Ptr) dlsym(hLibrary, "lib3mf_binarystream_enablelz4");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_BinaryStream_EnableLZMA == NULL)
+	if (pWrapperTable->m_BinaryStream_EnableLZ4 == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_BinaryStream_DisableLZMA = (PLib3MFBinaryStream_DisableLZMAPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_disablelzma");
+	pWrapperTable->m_BinaryStream_EnableZLib = (PLib3MFBinaryStream_EnableZLibPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_enablezlib");
 	#else // _WIN32
-	pWrapperTable->m_BinaryStream_DisableLZMA = (PLib3MFBinaryStream_DisableLZMAPtr) dlsym(hLibrary, "lib3mf_binarystream_disablelzma");
+	pWrapperTable->m_BinaryStream_EnableZLib = (PLib3MFBinaryStream_EnableZLibPtr) dlsym(hLibrary, "lib3mf_binarystream_enablezlib");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_BinaryStream_DisableLZMA == NULL)
+	if (pWrapperTable->m_BinaryStream_EnableZLib == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_BinaryStream_EnableZstd = (PLib3MFBinaryStream_EnableZstdPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_enablezstd");
+	#else // _WIN32
+	pWrapperTable->m_BinaryStream_EnableZstd = (PLib3MFBinaryStream_EnableZstdPtr) dlsym(hLibrary, "lib3mf_binarystream_enablezstd");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_BinaryStream_EnableZstd == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

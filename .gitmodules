@@ -16,3 +16,9 @@
 [submodule "submodules/googletest"]
 	path = submodules/googletest
 	url = https://github.com/google/googletest.git
+[submodule "submodules/zstd"]
+	path = submodules/zstd
+	url = https://github.com/facebook/zstd.git
+[submodule "submodules/lz4"]
+	path = submodules/lz4
+	url = https://github.com/lz4/lz4.git

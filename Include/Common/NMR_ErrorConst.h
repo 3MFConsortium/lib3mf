@@ -455,6 +455,12 @@ NMR_ErrorConst.h defines all error code constants.
 // Namespace not found
 #define NMR_ERROR_NAMESPACENOTFOUND 0x1086
 
+// Chunk size exceeded for LZ4 compression
+#define NMR_ERROR_CHUNKSIZEEXCEEDEDFORLZ4COMPRESSION 0x1087
+
+// Unsupported compression method
+#define NMR_ERROR_UNSUPPORTEDCOMPRESSIONMETHOD 0x1088
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/

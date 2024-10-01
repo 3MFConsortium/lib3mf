@@ -76,11 +76,11 @@ namespace NMR {
 		__NMRASSERT(pNameSpace);
 		__NMRASSERT(pAttributeName);
 
-		/*if (strcmp(pNameSpace, XML_3MF_NAMESPACE_ZCOMPRESSION) == 0) {
-			if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_BINARY) == 0) {
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_BINARYSPEC	) == 0) {
+			if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_BINARYSOURCE) == 0) {
 				m_sBinaryStreamPath = pAttributeValue;
 			}
-		} */
+		} 
 
 	}
 

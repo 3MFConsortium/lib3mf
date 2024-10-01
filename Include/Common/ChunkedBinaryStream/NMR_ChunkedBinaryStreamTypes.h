@@ -49,8 +49,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #define BINARYCHUNKFILE_MAXFLOATUNITS (1024 * 1024 * 1024)
 
-#define BINARYCHUNKFILEENTRY_COMPRESSIONTYPE_NONE 1
-#define BINARYCHUNKFILEENTRY_COMPRESSIONTYPE_LZMA 2
+#define BINARYCHUNKFILEENTRY_COMPRESSIONMODE_UNKNOWN 0
+#define BINARYCHUNKFILEENTRY_COMPRESSIONMODE_NONE 1
+#define BINARYCHUNKFILEENTRY_COMPRESSIONMODE_LZMA 2
+#define BINARYCHUNKFILEENTRY_COMPRESSIONMODE_LZ4 3
+#define BINARYCHUNKFILEENTRY_COMPRESSIONMODE_ZSTD 4
+#define BINARYCHUNKFILEENTRY_COMPRESSIONMODE_ZLIB 5
 
 
 namespace NMR {
@@ -72,7 +76,7 @@ namespace NMR {
 		nfUint64 m_EntryTableStart;
 		nfUint64 m_CompressedDataStart;
 		nfUint32 m_CompressedDataSize;
-		nfUint32 m_CompressedPropsSize;
+		nfUint32 m_Depreciated;
 		nfUint32 m_UncompressedDataSize;
 		nfByte m_MD5Checksum[16];
 		nfUint32 m_CompressionMode;
@@ -88,9 +92,17 @@ namespace NMR {
 
 #pragma pack()
 
-	enum eChunkedBinaryPredictionType { eptNoPredicition, eptDeltaPredicition };
+	enum class eChunkedBinaryPredictionType : uint32_t
+	{   eptNoPredicition = 0,
+		eptDeltaPredicition = 1
+	};
 
-	enum eChunkedBinaryDataType { edtUnknown, edtInt32Array, edtFloatArray };
+	enum class eChunkedBinaryDataType : uint32_t 
+	{ 
+		edtUnknown = 0, 
+		edtInt32Array = 1, 
+		edtFloatArray = 2 
+	};
 
 }
 

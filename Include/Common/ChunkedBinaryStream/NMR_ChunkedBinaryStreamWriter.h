@@ -40,6 +40,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace NMR {
 
+	enum class eChunkedBinaryCompressionType : uint32_t
+	{
+		ctRaw = 0,
+		ctZLib = 1,
+		ctLZ4 = 2,
+		ctZstd = 3
+	};
+
 	class CChunkedBinaryStreamWriter {
 	private:
 		PExportStreamMemory m_pBinaryExportStream;
@@ -52,8 +60,8 @@ namespace NMR {
 
 		nfBool m_bIsEmpty;
 
-		bool m_bEnableLZMA;
-		uint32_t m_nLZMALevel;
+		eChunkedBinaryCompressionType m_CompressionType;
+		uint32_t m_nCompressionLevel;
 
 		eChunkedBinaryPredictionType m_PredictionType;
 		bool m_bQuantizeFloats;
@@ -77,8 +85,7 @@ namespace NMR {
 		void finishChunk();
 		nfUint32 getChunkCount ();
 
-		void setEnableLZMA(bool bEnableLZMA);
-		void setLZMALevel(uint32_t nLZMALevel);
+		void setCompressionType(eChunkedBinaryCompressionType compressionType, uint32_t nCompressionLevel);
 
 		void finishWriting ();
 

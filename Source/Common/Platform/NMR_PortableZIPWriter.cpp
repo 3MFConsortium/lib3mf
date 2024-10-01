@@ -69,7 +69,7 @@ namespace NMR {
 			writeDirectory();
 	}
 
-	PExportStream CPortableZIPWriter::createEntry(_In_ const std::string sName, _In_ nfTimeStamp nUnixTimeStamp)
+	PExportStream CPortableZIPWriter::createEntry(_In_ const std::string sName, _In_ nfTimeStamp nUnixTimeStamp, bool bUseDeflate)
 	{
 		if (m_bIsFinished)
 			throw CNMRException(NMR_ERROR_ZIPALREADYFINISHED);
@@ -99,7 +99,11 @@ namespace NMR {
 		LocalHeader.m_nSignature = ZIPFILEHEADERSIGNATURE;
 		LocalHeader.m_nVersion = m_nVersionNeeded;
 		LocalHeader.m_nGeneralPurposeFlags = 0;
-		LocalHeader.m_nCompressionMethod = ZIPFILECOMPRESSION_DEFLATED;
+		if (bUseDeflate)
+			LocalHeader.m_nCompressionMethod = ZIPFILECOMPRESSION_DEFLATED;
+		else
+			LocalHeader.m_nCompressionMethod = ZIPFILECOMPRESSION_UNCOMPRESSED;
+
 		LocalHeader.m_nLastModTime = nLastModTime;
 		LocalHeader.m_nLastModDate = nLastModDate;
 		LocalHeader.m_nCRC32 = 0;
@@ -110,7 +114,7 @@ namespace NMR {
 
 		if (m_bWriteZIP64) {
 			LocalHeader.m_nExtraFieldLength += sizeof(ZIP64EXTRAINFORMATIONFIELD);
-		}
+		}		
 
 		ZIP64EXTRAINFORMATIONFIELD zip64ExtraInformation;
 		zip64ExtraInformation.m_nTag = ZIPFILEDATAZIP64EXTENDEDINFORMATIONEXTRAFIELD;
@@ -139,11 +143,11 @@ namespace NMR {
 		nfUint64 nDataPosition = m_pExportStream->getPosition();
 
 		// create list entry
-		m_pCurrentEntry = std::make_shared<CPortableZIPWriterEntry>(sUTF8Name, nLastModTime, nLastModDate, nFilePosition, nExtInfoPosition, nDataPosition);
+		m_pCurrentEntry = std::make_shared<CPortableZIPWriterEntry>(sUTF8Name, nLastModTime, nLastModDate, nFilePosition, nExtInfoPosition, nDataPosition, bUseDeflate);
 		m_Entries.push_back(m_pCurrentEntry);
 
 		// Return new ZIP Entry stream
-		m_pCurrentStream = std::make_shared<CExportStream_ZIP>(this, m_nCurrentEntryKey);
+		m_pCurrentStream = std::make_shared<CExportStream_ZIP>(this, m_nCurrentEntryKey, bUseDeflate);
 		return m_pCurrentStream;
 	}
 
@@ -271,7 +275,11 @@ namespace NMR {
 			DirectoryHeader.m_nVersionMade = m_nVersionMade;
 			DirectoryHeader.m_nVersionNeeded = m_nVersionNeeded;
 			DirectoryHeader.m_nGeneralPurposeFlags = 0;
-			DirectoryHeader.m_nCompressionMethod = ZIPFILECOMPRESSION_DEFLATED;
+			if (pEntry->getUseDeflate ())
+				DirectoryHeader.m_nCompressionMethod = ZIPFILECOMPRESSION_DEFLATED;
+			else
+				DirectoryHeader.m_nCompressionMethod = ZIPFILECOMPRESSION_UNCOMPRESSED;
+
 			DirectoryHeader.m_nLastModTime = pEntry->getLastModTime();
 			DirectoryHeader.m_nLastModDate = pEntry->getLastModDate();
 			DirectoryHeader.m_nCRC32 = pEntry->getCRC32();

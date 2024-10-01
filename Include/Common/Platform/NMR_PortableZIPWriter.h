@@ -62,7 +62,7 @@ namespace NMR {
 		CPortableZIPWriter(_In_ PExportStream pExportStream, _In_ nfBool bWriteZIP64);
 		~CPortableZIPWriter();
 
-		PExportStream createEntry(_In_ const std::string sName, _In_ nfTimeStamp nUnixTimeStamp);
+		PExportStream createEntry(_In_ const std::string sName, _In_ nfTimeStamp nUnixTimeStamp, bool bUseDeflate);
 		void closeEntry();
 
 		void writeDeflatedBuffer(_In_ nfUint32 nEntryKey, _In_ const void * pBuffer, _In_ nfUint32 cbCompressedBytes);

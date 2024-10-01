@@ -358,21 +358,21 @@ Lib3MFResult lib3mf_binarystream_enablediscretizedarraycompression(Lib3MF_Binary
 	}
 }
 
-Lib3MFResult lib3mf_binarystream_enablelzma(Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nLZMALevel)
+Lib3MFResult lib3mf_binarystream_enablelz4(Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nCompressionLevel)
 {
 	IBase* pIBaseClass = (IBase *)pBinaryStream;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pBinaryStream, "BinaryStream", "EnableLZMA");
-			pJournalEntry->addUInt32Parameter("LZMALevel", nLZMALevel);
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBinaryStream, "BinaryStream", "EnableLZ4");
+			pJournalEntry->addUInt32Parameter("CompressionLevel", nCompressionLevel);
 		}
 		IBinaryStream* pIBinaryStream = dynamic_cast<IBinaryStream*>(pIBaseClass);
 		if (!pIBinaryStream)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIBinaryStream->EnableLZMA(nLZMALevel);
+		pIBinaryStream->EnableLZ4(nCompressionLevel);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -390,20 +390,53 @@ Lib3MFResult lib3mf_binarystream_enablelzma(Lib3MF_BinaryStream pBinaryStream, L
 	}
 }
 
-Lib3MFResult lib3mf_binarystream_disablelzma(Lib3MF_BinaryStream pBinaryStream)
+Lib3MFResult lib3mf_binarystream_enablezlib(Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nCompressionLevel)
 {
 	IBase* pIBaseClass = (IBase *)pBinaryStream;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pBinaryStream, "BinaryStream", "DisableLZMA");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBinaryStream, "BinaryStream", "EnableZLib");
+			pJournalEntry->addUInt32Parameter("CompressionLevel", nCompressionLevel);
 		}
 		IBinaryStream* pIBinaryStream = dynamic_cast<IBinaryStream*>(pIBaseClass);
 		if (!pIBinaryStream)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIBinaryStream->DisableLZMA();
+		pIBinaryStream->EnableZLib(nCompressionLevel);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_binarystream_enablezstd(Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nCompressionLevel)
+{
+	IBase* pIBaseClass = (IBase *)pBinaryStream;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBinaryStream, "BinaryStream", "EnableZstd");
+			pJournalEntry->addUInt32Parameter("CompressionLevel", nCompressionLevel);
+		}
+		IBinaryStream* pIBinaryStream = dynamic_cast<IBinaryStream*>(pIBaseClass);
+		if (!pIBinaryStream)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIBinaryStream->EnableZstd(nCompressionLevel);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -19650,10 +19683,12 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_binarystream_disablediscretizedarraycompression;
 	if (sProcName == "lib3mf_binarystream_enablediscretizedarraycompression") 
 		*ppProcAddress = (void*) &lib3mf_binarystream_enablediscretizedarraycompression;
-	if (sProcName == "lib3mf_binarystream_enablelzma") 
-		*ppProcAddress = (void*) &lib3mf_binarystream_enablelzma;
-	if (sProcName == "lib3mf_binarystream_disablelzma") 
-		*ppProcAddress = (void*) &lib3mf_binarystream_disablelzma;
+	if (sProcName == "lib3mf_binarystream_enablelz4") 
+		*ppProcAddress = (void*) &lib3mf_binarystream_enablelz4;
+	if (sProcName == "lib3mf_binarystream_enablezlib") 
+		*ppProcAddress = (void*) &lib3mf_binarystream_enablezlib;
+	if (sProcName == "lib3mf_binarystream_enablezstd") 
+		*ppProcAddress = (void*) &lib3mf_binarystream_enablezstd;
 	if (sProcName == "lib3mf_writer_writetofile") 
 		*ppProcAddress = (void*) &lib3mf_writer_writetofile;
 	if (sProcName == "lib3mf_writer_getstreamsize") 

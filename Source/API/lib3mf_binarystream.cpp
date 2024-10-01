@@ -88,15 +88,17 @@ void CBinaryStream::EnableDiscretizedArrayCompression(const Lib3MF_double dUnits
 	}
 }
 
-
-void CBinaryStream::EnableLZMA(const Lib3MF_uint32 nLZMALevel)
+void CBinaryStream::EnableLZ4(const Lib3MF_uint32 nCompressionLevel)
 {
-	m_pStreamWriter->setEnableLZMA(true);
-	m_pStreamWriter->setLZMALevel(nLZMALevel);
-
+	m_pStreamWriter->setCompressionType(NMR::eChunkedBinaryCompressionType::ctLZ4, nCompressionLevel);
 }
 
-void CBinaryStream::DisableLZMA()
+void CBinaryStream::EnableZLib(const Lib3MF_uint32 nCompressionLevel)
 {
-	m_pStreamWriter->setEnableLZMA(false);
+	m_pStreamWriter->setCompressionType(NMR::eChunkedBinaryCompressionType::ctZLib, nCompressionLevel);
+}
+
+void CBinaryStream::EnableZstd(const Lib3MF_uint32 nCompressionLevel)
+{
+	m_pStreamWriter->setCompressionType(NMR::eChunkedBinaryCompressionType::ctZstd, nCompressionLevel);
 }

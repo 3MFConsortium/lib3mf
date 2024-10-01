@@ -72,8 +72,12 @@ public:
 
 	void DisableDiscretizedArrayCompression();
 	void EnableDiscretizedArrayCompression(const Lib3MF_double dUnits, const Lib3MF::eBinaryStreamPredictionType ePredictionType);
-	void EnableLZMA(const Lib3MF_uint32 nLZMALevel);
-	void DisableLZMA();
+
+	void EnableLZ4(const Lib3MF_uint32 nCompressionLevel) override;
+
+	void EnableZLib(const Lib3MF_uint32 nCompressionLevel) override;
+
+	void EnableZstd(const Lib3MF_uint32 nCompressionLevel) override;
 
 };
 

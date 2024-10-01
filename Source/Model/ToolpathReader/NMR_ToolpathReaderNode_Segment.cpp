@@ -45,14 +45,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace NMR {
 
-	CToolpathReaderNode_Segment::CToolpathReaderNode_Segment(_In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, CModelToolpathLayerReadData * pReadData, _In_ std::string sBinaryStreamPath)
+	CToolpathReaderNode_Segment::CToolpathReaderNode_Segment(_In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, CModelToolpathLayerReadData * pReadData, _In_ std::string sBinaryIndexStreamPath)
 		: CModelReaderNode(pWarnings, pProgressMonitor), 
 		m_pReadData(pReadData), 
 		m_nPartID (0), 
 		m_nProfileID (0),
 		m_bHasSegmentType (false),
 		m_eSegmentType (eModelToolpathSegmentType::HatchSegment),
-		m_sBinaryStreamPath (sBinaryStreamPath)
+		m_sBinaryIndexStreamPath(sBinaryIndexStreamPath)
 	{
 		if (pReadData == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -177,8 +177,22 @@ namespace NMR {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 
-		/*if (strcmp(pNameSpace, XML_3MF_NAMESPACE_ZCOMPRESSION) == 0) {
-			if (strcmp(pChildName, XML_3MF_TOOLPATHELEMENT_HATCH) == 0) {
+/*		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_BINARYSPEC) == 0) {
+
+			if (strcmp(pChildName, XML_3MF_TOOLPATHELEMENT_POINT) == 0) {
+				if ((m_eSegmentType != eModelToolpathSegmentType::LoopSegment) && (m_eSegmentType != eModelToolpathSegmentType::PolylineSegment))
+					throw CNMRException(NMR_ERROR_INVALIDTYPEATTRIBUTE);
+
+				PToolpathReaderNode_ZPoint pXMLNode = std::make_shared<CToolpathReaderNode_ZPoint>(m_pWarnings, m_pProgressMonitor, m_pReadData);
+				pXMLNode->parseXML(pXMLReader);
+
+				nfInt32 nXID, nYID;
+				pXMLNode->getBinaryIDs(nXID, nYID);
+
+				if ((m_pBinaryStreamCollection.get() == nullptr) || (m_sBinaryIndexStreamPath.empty()))
+					throw CNMRException(NMR_ERROR_NOBINARYSTREAMAVAILABLE);
+
+			/*if (strcmp(pChildName, XML_3MF_TOOLPATHELEMENT_HATCH) == 0) {
 				if (m_eSegmentType != eModelToolpathSegmentType::HatchSegment)
 					throw CNMRException(NMR_ERROR_INVALIDTYPEATTRIBUTE);
 
@@ -281,7 +295,7 @@ namespace NMR {
 					}
 				}
 
-			} 
+			}  
 
 		} */
 

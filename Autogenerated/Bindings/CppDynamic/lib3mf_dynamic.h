@@ -109,21 +109,31 @@ typedef Lib3MFResult (*PLib3MFBinaryStream_DisableDiscretizedArrayCompressionPtr
 typedef Lib3MFResult (*PLib3MFBinaryStream_EnableDiscretizedArrayCompressionPtr) (Lib3MF_BinaryStream pBinaryStream, Lib3MF_double dUnits, Lib3MF::eBinaryStreamPredictionType ePredictionType);
 
 /**
-* Enables LZMA mode.
+* Switches to fast LZ4 compression mode.
 *
 * @param[in] pBinaryStream - BinaryStream instance.
-* @param[in] nLZMALevel - LZMA Level (0-9)
+* @param[in] nCompressionLevel - Compression level (0-9).
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFBinaryStream_EnableLZMAPtr) (Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nLZMALevel);
+typedef Lib3MFResult (*PLib3MFBinaryStream_EnableLZ4Ptr) (Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nCompressionLevel);
 
 /**
-* Disables LZMA mode.
+* Switches to ZLib compression mode.
 *
 * @param[in] pBinaryStream - BinaryStream instance.
+* @param[in] nCompressionLevel - Compression level (0-9).
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFBinaryStream_DisableLZMAPtr) (Lib3MF_BinaryStream pBinaryStream);
+typedef Lib3MFResult (*PLib3MFBinaryStream_EnableZLibPtr) (Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nCompressionLevel);
+
+/**
+* Switches to ZStd compression mode.
+*
+* @param[in] pBinaryStream - BinaryStream instance.
+* @param[in] nCompressionLevel - Compression level.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBinaryStream_EnableZstdPtr) (Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nCompressionLevel);
 
 /*************************************************************************************************************************
  Class definition for Writer
@@ -5609,8 +5619,9 @@ typedef struct {
 	PLib3MFBinaryStream_GetUUIDPtr m_BinaryStream_GetUUID;
 	PLib3MFBinaryStream_DisableDiscretizedArrayCompressionPtr m_BinaryStream_DisableDiscretizedArrayCompression;
 	PLib3MFBinaryStream_EnableDiscretizedArrayCompressionPtr m_BinaryStream_EnableDiscretizedArrayCompression;
-	PLib3MFBinaryStream_EnableLZMAPtr m_BinaryStream_EnableLZMA;
-	PLib3MFBinaryStream_DisableLZMAPtr m_BinaryStream_DisableLZMA;
+	PLib3MFBinaryStream_EnableLZ4Ptr m_BinaryStream_EnableLZ4;
+	PLib3MFBinaryStream_EnableZLibPtr m_BinaryStream_EnableZLib;
+	PLib3MFBinaryStream_EnableZstdPtr m_BinaryStream_EnableZstd;
 	PLib3MFWriter_WriteToFilePtr m_Writer_WriteToFile;
 	PLib3MFWriter_GetStreamSizePtr m_Writer_GetStreamSize;
 	PLib3MFWriter_WriteToBufferPtr m_Writer_WriteToBuffer;

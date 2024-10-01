@@ -35,6 +35,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <cmath>
 
+#include "lz4.h"
+#include "lz4hc.h"
 
 namespace NMR {
 
@@ -48,9 +50,9 @@ namespace NMR {
 		m_bIsEmpty(true),
 		m_bQuantizeFloats(false),
 		m_dQuantizationUnits(0.001),
-		m_PredictionType (eptNoPredicition),
-		m_nLZMALevel (5),
-		m_bEnableLZMA (false),
+		m_PredictionType (eChunkedBinaryPredictionType::eptNoPredicition),
+		m_nCompressionLevel (5),
+		m_CompressionType (eChunkedBinaryCompressionType::ctRaw),
 		m_sBinaryPath (sBinaryPath),
 		m_sIndexPath (sIndexPath)
 	{
@@ -107,52 +109,72 @@ namespace NMR {
 
 		if (m_CurrentChunkData.size() > 0) {
 			std::vector <nfByte> outBuffer;
-			outBuffer.resize(m_CurrentChunk->m_UncompressedDataSize * 2);
-
-			std::vector <nfByte> outProps;
-			outProps.resize(m_CurrentChunk->m_UncompressedDataSize * 2);
 
 			nfByte * pInputBuffer = (nfByte*) m_CurrentChunkData.data();
+			   
 
+			uint32_t compressionMode = BINARYCHUNKFILEENTRY_COMPRESSIONMODE_UNKNOWN;
+			  
 			size_t inputSize = m_CurrentChunkData.size() * 4;
 			size_t outBufferSize = outBuffer.size ();
-			size_t outPropsSize = outProps.size ();
 
-			if (m_bEnableLZMA) {
+			switch (m_CompressionType) {
+				case eChunkedBinaryCompressionType::ctLZ4: {
+					if (inputSize > LZ4_MAX_INPUT_SIZE)
+						throw CNMRException(NMR_ERROR_CHUNKSIZEEXCEEDEDFORLZ4COMPRESSION);
 
-				// TODO
-				throw CNMRException(NMR_ERROR_COULDNOTCOMPRESSDATA);
+					int maxCompressedSize = LZ4_compressBound((int)inputSize);
+					outBuffer.resize(maxCompressedSize);
+
+					int compressionLevel = (int)m_nCompressionLevel;
+					if (m_nCompressionLevel > LZ4HC_CLEVEL_MAX)
+						compressionLevel = LZ4HC_CLEVEL_MAX;
+					else if (m_nCompressionLevel < LZ4HC_CLEVEL_MIN)
+						compressionLevel = LZ4HC_CLEVEL_MIN;
+
+					int compressedSize = LZ4_compress_HC ((char*)pInputBuffer, (char*)outBuffer.data(), (int)inputSize, maxCompressedSize, compressionLevel);
+					if (compressedSize < 0)
+						throw CNMRException(NMR_ERROR_COULDNOTCOMPRESSDATA);
+
+					outBufferSize = (uint32_t)compressedSize;
+						compressionMode = BINARYCHUNKFILEENTRY_COMPRESSIONMODE_LZ4;
+
+					break;
+				}
+
+				case eChunkedBinaryCompressionType::ctRaw: {
+
+					// Uncompressed for LibZ Compression of 3MF Package
+					outBufferSize = inputSize;
+					outBuffer.resize(inputSize);
+					for (size_t nIndex = 0; nIndex < inputSize; nIndex++)
+						outBuffer[nIndex] = pInputBuffer[nIndex];
+
+					compressionMode = BINARYCHUNKFILEENTRY_COMPRESSIONMODE_NONE;
+
+					break;
+				}
+																
+				default: 
+					throw CNMRException(NMR_ERROR_UNSUPPORTEDCOMPRESSIONMETHOD);
 
 			}
-			else {
 
-				// Uncompressed for LibZ Compression of 3MF Package
-				outBufferSize = inputSize;
-				for (size_t nIndex = 0; nIndex < inputSize; nIndex++)
-					outBuffer[nIndex] = pInputBuffer[nIndex];
-				outPropsSize = 0;
-
-			}
+	
 
 			m_CurrentChunk->m_CompressedDataSize = (nfUint32) outBufferSize;
-			m_CurrentChunk->m_CompressedPropsSize = (nfUint32) outPropsSize;
-
+			m_CurrentChunk->m_CompressionMode = compressionMode;
 			m_CurrentChunk->m_CompressedDataStart = m_pBinaryExportStream->getPosition();
 			m_pBinaryExportStream->writeBuffer (outBuffer.data(), outBufferSize);
-			m_pBinaryExportStream->writeBuffer (outProps.data(), outPropsSize);
 		}
 
 		m_CurrentChunk = nullptr;
 	}
 
-	void CChunkedBinaryStreamWriter::setEnableLZMA(bool bEnableLZMA)
+	void CChunkedBinaryStreamWriter::setCompressionType(eChunkedBinaryCompressionType compressionType, uint32_t nCompressionLevel)
 	{
-		m_bEnableLZMA = bEnableLZMA;
-	}
-
-	void CChunkedBinaryStreamWriter::setLZMALevel(uint32_t nLZMALevel)
-	{
-		m_nLZMALevel = nLZMALevel;
+		m_CompressionType = compressionType;
+		m_nCompressionLevel = nCompressionLevel;
 	}
 
 	void CChunkedBinaryStreamWriter::finishWriting()
@@ -196,13 +218,13 @@ namespace NMR {
 		Entry.m_PositionInChunk = m_CurrentChunk->m_UncompressedDataSize;
 
 		switch (predictionType) {
-			case eptNoPredicition:
+		case eChunkedBinaryPredictionType::eptNoPredicition:
 				Entry.m_EntryType = BINARYCHUNKFILEENTRYTYPE_INT32ARRAY_NOPREDICTION;
 				for (nIndex = 0; nIndex < nLength; nIndex++) 
 					m_CurrentChunkData.push_back (pData[nIndex]);
 
 				break;
-			case eptDeltaPredicition:
+			case eChunkedBinaryPredictionType::eptDeltaPredicition:
 				Entry.m_EntryType = BINARYCHUNKFILEENTRYTYPE_INT32ARRAY_DELTAPREDICTION;
 				m_CurrentChunkData.push_back(pData[0]);
 				for (nIndex = 1; nIndex < nLength; nIndex++) 
@@ -305,7 +327,7 @@ namespace NMR {
 		m_CurrentChunkData.push_back(*((nfInt32 *)&fDiscretizationUnits));
 
 		switch (predictionType) {
-		case eptNoPredicition:
+		case eChunkedBinaryPredictionType::eptNoPredicition:
 			Entry.m_EntryType = BINARYCHUNKFILEENTRYTYPE_FLOAT32ARRAY_NOPREDICTION;
 
 			for (nIndex = 0; nIndex < nLength; nIndex++) {
@@ -317,7 +339,7 @@ namespace NMR {
 			}
 
 			break;
-		case eptDeltaPredicition:  
+		case eChunkedBinaryPredictionType::eptDeltaPredicition:
 			Entry.m_EntryType = BINARYCHUNKFILEENTRYTYPE_FLOAT32ARRAY_DELTAPREDICTION;
 			
 			nValue = (nfInt64)(pData[0]);
@@ -411,11 +433,36 @@ namespace NMR {
 			std::string sChunkCompressedSize = std::to_string(chunk.m_CompressedDataSize);
 			std::string sChunkUncompressedSize = std::to_string(chunk.m_UncompressedDataSize);
 			std::string sChunkDataOffset = std::to_string(chunk.m_CompressedDataStart);
+
+			std::string sChunkCompressionMode;
+
+			switch (chunk.m_CompressionMode) {
+			case BINARYCHUNKFILEENTRY_COMPRESSIONMODE_NONE:
+				sChunkCompressionMode = "none";
+				break;
+			case BINARYCHUNKFILEENTRY_COMPRESSIONMODE_LZ4:
+				sChunkCompressionMode = "lz4";
+				break;
+			case BINARYCHUNKFILEENTRY_COMPRESSIONMODE_LZMA:
+				sChunkCompressionMode = "lzma";
+				break;
+			case BINARYCHUNKFILEENTRY_COMPRESSIONMODE_ZSTD:
+				sChunkCompressionMode = "zstd";
+				break;
+			case BINARYCHUNKFILEENTRY_COMPRESSIONMODE_ZLIB:
+				sChunkCompressionMode = "zlib";
+				break;
+			default:
+				throw CNMRException(NMR_ERROR_UNSUPPORTEDCOMPRESSIONMETHOD);
+
+			}
+
 			pXMLWriter->WriteStartElement(nullptr, "chunk", nullptr);
 			pXMLWriter->WriteAttributeString(nullptr, "id", "", sChunkID.c_str());
 			pXMLWriter->WriteAttributeString(nullptr, "fileoffset", "", sChunkDataOffset.c_str());
 			pXMLWriter->WriteAttributeString(nullptr, "compressedsize", "", sChunkCompressedSize.c_str());
 			pXMLWriter->WriteAttributeString(nullptr, "uncompressedsize", "", sChunkUncompressedSize.c_str());
+			pXMLWriter->WriteAttributeString(nullptr, "method", "", sChunkCompressionMode.c_str());
 
 			auto iIter = m_ChunkEntries.find(chunk.m_ChunkID);
 			if (iIter != m_ChunkEntries.end()) {

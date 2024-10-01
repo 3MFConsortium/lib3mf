@@ -417,11 +417,14 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_enablediscretizedarraycompression", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BinaryStream_EnableDiscretizedArrayCompression (IntPtr Handle, Double AUnits, Int32 APredictionType);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_enablelzma", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BinaryStream_EnableLZMA (IntPtr Handle, UInt32 ALZMALevel);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_enablelz4", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BinaryStream_EnableLZ4 (IntPtr Handle, UInt32 ACompressionLevel);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_disablelzma", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BinaryStream_DisableLZMA (IntPtr Handle);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_enablezlib", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BinaryStream_EnableZLib (IntPtr Handle, UInt32 ACompressionLevel);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_enablezstd", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BinaryStream_EnableZstd (IntPtr Handle, UInt32 ACompressionLevel);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_writer_writetofile", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Writer_WriteToFile (IntPtr Handle, byte[] AFilename);
@@ -2553,16 +2556,22 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.BinaryStream_EnableDiscretizedArrayCompression (Handle, AUnits, enumPredictionType));
 		}
 
-		public void EnableLZMA (UInt32 ALZMALevel)
+		public void EnableLZ4 (UInt32 ACompressionLevel)
 		{
 
-			CheckError(Internal.Lib3MFWrapper.BinaryStream_EnableLZMA (Handle, ALZMALevel));
+			CheckError(Internal.Lib3MFWrapper.BinaryStream_EnableLZ4 (Handle, ACompressionLevel));
 		}
 
-		public void DisableLZMA ()
+		public void EnableZLib (UInt32 ACompressionLevel)
 		{
 
-			CheckError(Internal.Lib3MFWrapper.BinaryStream_DisableLZMA (Handle));
+			CheckError(Internal.Lib3MFWrapper.BinaryStream_EnableZLib (Handle, ACompressionLevel));
+		}
+
+		public void EnableZstd (UInt32 ACompressionLevel)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.BinaryStream_EnableZstd (Handle, ACompressionLevel));
 		}
 
 	}

@@ -565,21 +565,31 @@ type
 	TLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc = function(pBinaryStream: TLib3MFHandle; const dUnits: Double; const ePredictionType: Integer): TLib3MFResult; cdecl;
 	
 	(**
-	* Enables LZMA mode.
+	* Switches to fast LZ4 compression mode.
 	*
 	* @param[in] pBinaryStream - BinaryStream instance.
-	* @param[in] nLZMALevel - LZMA Level (0-9)
+	* @param[in] nCompressionLevel - Compression level (0-9).
 	* @return error code or 0 (success)
 	*)
-	TLib3MFBinaryStream_EnableLZMAFunc = function(pBinaryStream: TLib3MFHandle; const nLZMALevel: Cardinal): TLib3MFResult; cdecl;
+	TLib3MFBinaryStream_EnableLZ4Func = function(pBinaryStream: TLib3MFHandle; const nCompressionLevel: Cardinal): TLib3MFResult; cdecl;
 	
 	(**
-	* Disables LZMA mode.
+	* Switches to ZLib compression mode.
 	*
 	* @param[in] pBinaryStream - BinaryStream instance.
+	* @param[in] nCompressionLevel - Compression level (0-9).
 	* @return error code or 0 (success)
 	*)
-	TLib3MFBinaryStream_DisableLZMAFunc = function(pBinaryStream: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFBinaryStream_EnableZLibFunc = function(pBinaryStream: TLib3MFHandle; const nCompressionLevel: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Switches to ZStd compression mode.
+	*
+	* @param[in] pBinaryStream - BinaryStream instance.
+	* @param[in] nCompressionLevel - Compression level.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBinaryStream_EnableZstdFunc = function(pBinaryStream: TLib3MFHandle; const nCompressionLevel: Cardinal): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -6155,8 +6165,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetUUID(): String;
 		procedure DisableDiscretizedArrayCompression();
 		procedure EnableDiscretizedArrayCompression(const AUnits: Double; const APredictionType: TLib3MFBinaryStreamPredictionType);
-		procedure EnableLZMA(const ALZMALevel: Cardinal);
-		procedure DisableLZMA();
+		procedure EnableLZ4(const ACompressionLevel: Cardinal);
+		procedure EnableZLib(const ACompressionLevel: Cardinal);
+		procedure EnableZstd(const ACompressionLevel: Cardinal);
 	end;
 
 
@@ -7233,8 +7244,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFBinaryStream_GetUUIDFunc: TLib3MFBinaryStream_GetUUIDFunc;
 		FLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc: TLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc;
 		FLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc: TLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc;
-		FLib3MFBinaryStream_EnableLZMAFunc: TLib3MFBinaryStream_EnableLZMAFunc;
-		FLib3MFBinaryStream_DisableLZMAFunc: TLib3MFBinaryStream_DisableLZMAFunc;
+		FLib3MFBinaryStream_EnableLZ4Func: TLib3MFBinaryStream_EnableLZ4Func;
+		FLib3MFBinaryStream_EnableZLibFunc: TLib3MFBinaryStream_EnableZLibFunc;
+		FLib3MFBinaryStream_EnableZstdFunc: TLib3MFBinaryStream_EnableZstdFunc;
 		FLib3MFWriter_WriteToFileFunc: TLib3MFWriter_WriteToFileFunc;
 		FLib3MFWriter_GetStreamSizeFunc: TLib3MFWriter_GetStreamSizeFunc;
 		FLib3MFWriter_WriteToBufferFunc: TLib3MFWriter_WriteToBufferFunc;
@@ -7770,8 +7782,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFBinaryStream_GetUUIDFunc: TLib3MFBinaryStream_GetUUIDFunc read FLib3MFBinaryStream_GetUUIDFunc;
 		property Lib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc: TLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc read FLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc;
 		property Lib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc: TLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc read FLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc;
-		property Lib3MFBinaryStream_EnableLZMAFunc: TLib3MFBinaryStream_EnableLZMAFunc read FLib3MFBinaryStream_EnableLZMAFunc;
-		property Lib3MFBinaryStream_DisableLZMAFunc: TLib3MFBinaryStream_DisableLZMAFunc read FLib3MFBinaryStream_DisableLZMAFunc;
+		property Lib3MFBinaryStream_EnableLZ4Func: TLib3MFBinaryStream_EnableLZ4Func read FLib3MFBinaryStream_EnableLZ4Func;
+		property Lib3MFBinaryStream_EnableZLibFunc: TLib3MFBinaryStream_EnableZLibFunc read FLib3MFBinaryStream_EnableZLibFunc;
+		property Lib3MFBinaryStream_EnableZstdFunc: TLib3MFBinaryStream_EnableZstdFunc read FLib3MFBinaryStream_EnableZstdFunc;
 		property Lib3MFWriter_WriteToFileFunc: TLib3MFWriter_WriteToFileFunc read FLib3MFWriter_WriteToFileFunc;
 		property Lib3MFWriter_GetStreamSizeFunc: TLib3MFWriter_GetStreamSizeFunc read FLib3MFWriter_GetStreamSizeFunc;
 		property Lib3MFWriter_WriteToBufferFunc: TLib3MFWriter_WriteToBufferFunc read FLib3MFWriter_WriteToBufferFunc;
@@ -9437,14 +9450,19 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc(FHandle, AUnits, convertBinaryStreamPredictionTypeToConst(APredictionType)));
 	end;
 
-	procedure TLib3MFBinaryStream.EnableLZMA(const ALZMALevel: Cardinal);
+	procedure TLib3MFBinaryStream.EnableLZ4(const ACompressionLevel: Cardinal);
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_EnableLZMAFunc(FHandle, ALZMALevel));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_EnableLZ4Func(FHandle, ACompressionLevel));
 	end;
 
-	procedure TLib3MFBinaryStream.DisableLZMA();
+	procedure TLib3MFBinaryStream.EnableZLib(const ACompressionLevel: Cardinal);
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_DisableLZMAFunc(FHandle));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_EnableZLibFunc(FHandle, ACompressionLevel));
+	end;
+
+	procedure TLib3MFBinaryStream.EnableZstd(const ACompressionLevel: Cardinal);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_EnableZstdFunc(FHandle, ACompressionLevel));
 	end;
 
 (*************************************************************************************************************************
@@ -15287,8 +15305,9 @@ implementation
 		FLib3MFBinaryStream_GetUUIDFunc := LoadFunction('lib3mf_binarystream_getuuid');
 		FLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc := LoadFunction('lib3mf_binarystream_disablediscretizedarraycompression');
 		FLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc := LoadFunction('lib3mf_binarystream_enablediscretizedarraycompression');
-		FLib3MFBinaryStream_EnableLZMAFunc := LoadFunction('lib3mf_binarystream_enablelzma');
-		FLib3MFBinaryStream_DisableLZMAFunc := LoadFunction('lib3mf_binarystream_disablelzma');
+		FLib3MFBinaryStream_EnableLZ4Func := LoadFunction('lib3mf_binarystream_enablelz4');
+		FLib3MFBinaryStream_EnableZLibFunc := LoadFunction('lib3mf_binarystream_enablezlib');
+		FLib3MFBinaryStream_EnableZstdFunc := LoadFunction('lib3mf_binarystream_enablezstd');
 		FLib3MFWriter_WriteToFileFunc := LoadFunction('lib3mf_writer_writetofile');
 		FLib3MFWriter_GetStreamSizeFunc := LoadFunction('lib3mf_writer_getstreamsize');
 		FLib3MFWriter_WriteToBufferFunc := LoadFunction('lib3mf_writer_writetobuffer');
@@ -15837,10 +15856,13 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_enablediscretizedarraycompression'), @FLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_enablelzma'), @FLib3MFBinaryStream_EnableLZMAFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_enablelz4'), @FLib3MFBinaryStream_EnableLZ4Func);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_disablelzma'), @FLib3MFBinaryStream_DisableLZMAFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_enablezlib'), @FLib3MFBinaryStream_EnableZLibFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_enablezstd'), @FLib3MFBinaryStream_EnableZstdFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_writer_writetofile'), @FLib3MFWriter_WriteToFileFunc);

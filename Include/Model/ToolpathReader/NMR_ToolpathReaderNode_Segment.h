@@ -44,14 +44,14 @@ namespace NMR {
 		nfUint32 m_nPartID;
 		eModelToolpathSegmentType m_eSegmentType;
 		nfBool m_bHasSegmentType;
-		std::string m_sBinaryStreamPath;
+		std::string m_sBinaryIndexStreamPath;
 
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 	public:
 		CToolpathReaderNode_Segment() = delete;
-		CToolpathReaderNode_Segment(_In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, _In_ CModelToolpathLayerReadData * pReadData, _In_ std::string sBinaryStreamPath);
+		CToolpathReaderNode_Segment(_In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, _In_ CModelToolpathLayerReadData * pReadData, _In_ std::string sBinaryIndexStreamPath);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 

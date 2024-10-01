@@ -63,12 +63,25 @@ namespace NMR {
 	{
 		sPath = fnRemoveLeadingPathDelimiter(sPath);
 		
-		PExportStream pStream = m_pZIPWriter->createEntry(sPath, fnGetUnixTime());
+		PExportStream pStream = m_pZIPWriter->createEntry(sPath, fnGetUnixTime(), true);
 		POpcPackagePart pPart = std::make_shared<COpcPackagePart>(sPath, pStream);
 		m_Parts.push_back(pPart);
 
 		return pPart;
 	}
+
+	POpcPackagePart COpcPackageWriter::addUncompressedPart(_In_ std::string sPath)
+	{
+		sPath = fnRemoveLeadingPathDelimiter(sPath);
+
+		PExportStream pStream = m_pZIPWriter->createEntry(sPath, fnGetUnixTime(), false);
+		POpcPackagePart pPart = std::make_shared<COpcPackagePart>(sPath, pStream);
+		m_Parts.push_back(pPart);
+
+		return pPart;
+
+	}
+
 
 	void COpcPackageWriter::addContentType(_In_ std::string sExtension, _In_ std::string sContentType)
 	{
@@ -141,7 +154,7 @@ namespace NMR {
 				sPath += sName;
 				sPath += std::string(".")+PACKAGE_3D_RELS_EXTENSION;
 
-				PExportStream pStream = m_pZIPWriter->createEntry(sPath, fnGetUnixTime());
+				PExportStream pStream = m_pZIPWriter->createEntry(sPath, fnGetUnixTime(), true);
 				pPart->writeRelationships(pStream);
 			}
 			iIterator++;
@@ -151,7 +164,7 @@ namespace NMR {
 
 	void COpcPackageWriter::writeContentTypes()
 	{
-		PExportStream pStream = m_pZIPWriter->createEntry(OPCPACKAGE_PATH_CONTENTTYPES, fnGetUnixTime());
+		PExportStream pStream = m_pZIPWriter->createEntry(OPCPACKAGE_PATH_CONTENTTYPES, fnGetUnixTime(), true);
 		PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(pStream);
 
 		pXMLWriter->WriteStartDocument();
@@ -190,7 +203,7 @@ namespace NMR {
 		if (m_RootRelationships.size() == 0)
 			return;
 
-		PExportStream pStream = m_pZIPWriter->createEntry(OPCPACKAGE_PATH_ROOTRELATIONSHIPS, fnGetUnixTime());
+		PExportStream pStream = m_pZIPWriter->createEntry(OPCPACKAGE_PATH_ROOTRELATIONSHIPS, fnGetUnixTime(), true);
 		PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(pStream);
 
 		pXMLWriter->WriteStartDocument();

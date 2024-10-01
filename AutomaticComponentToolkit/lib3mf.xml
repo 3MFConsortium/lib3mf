@@ -382,11 +382,16 @@
 			<param name="PredictionType" type="enum" class="BinaryStreamPredictionType" pass="in" description="Prediction type to use for arrays." />			
 		</method>
 		
-		<method name="EnableLZMA" description="Enables LZMA mode.">
-			<param name="LZMALevel" type="uint32" pass="in" description="LZMA Level (0-9)" />
+		<method name="EnableLZ4" description="Switches to fast LZ4 compression mode.">
+			<param name="CompressionLevel" type="uint32" pass="in" description="Compression level (2-12)." />
 		</method>
 		
-		<method name="DisableLZMA" description="Disables LZMA mode.">
+		<method name="EnableZLib" description="Switches to ZLib compression mode.">
+			<param name="CompressionLevel" type="uint32" pass="in" description="Compression level (0-9)." />
+		</method>
+		
+		<method name="EnableZstd" description="Switches to ZStd compression mode.">
+			<param name="CompressionLevel" type="uint32" pass="in" description="Compression level." />				
 		</method>
 		
 	</class>

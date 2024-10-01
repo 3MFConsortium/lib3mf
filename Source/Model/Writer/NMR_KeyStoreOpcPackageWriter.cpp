@@ -166,6 +166,26 @@ namespace NMR {
 		return pPart;
 	}
 
+	POpcPackagePart CKeyStoreOpcPackageWriter::addUncompressedPart(_In_ std::string sPath)
+	{
+		PSecureContext const& secureContext = m_pContext.secureContext();
+		PKeyStore const& keyStore = m_pContext.keyStore();
+
+		auto pPart = m_pPackageWriter->addUncompressedPart(sPath);
+		NMR::PKeyStoreResourceData rd = keyStore->findResourceData(sPath);
+		if (nullptr != rd) {
+			if (secureContext->hasDekCtx()) {
+				return wrapPartStream(rd, pPart);
+			}
+			else {
+				m_pContext.warnings()->addWarning(NMR_ERROR_DEKDESCRIPTORNOTFOUND, eModelWarningLevel::mrwFatal);
+			}
+		}
+		return pPart;
+
+	}
+
+
 	void CKeyStoreOpcPackageWriter::close() {
 		PSecureContext const & secureContext = m_pContext.secureContext();
 		PKeyStore const & keyStore = m_pContext.keyStore();

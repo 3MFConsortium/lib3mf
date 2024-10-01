@@ -38,7 +38,8 @@ NMR_PortableZIPWriterEntry.cpp implements a portable and fast writer of ZIP file
 
 namespace NMR {
 
-	CPortableZIPWriterEntry::CPortableZIPWriterEntry(_In_ const std::string sUTF8Name, _In_ nfUint16 nLastModTime, _In_ nfUint16 nLastModDate, _In_ nfUint64 nFilePosition, _In_ nfUint64 nExtInfoPosition, _In_ nfUint64 nDataPosition)
+	CPortableZIPWriterEntry::CPortableZIPWriterEntry(_In_ const std::string sUTF8Name, _In_ nfUint16 nLastModTime, _In_ nfUint16 nLastModDate, _In_ nfUint64 nFilePosition, _In_ nfUint64 nExtInfoPosition, _In_ nfUint64 nDataPosition, bool bUseDeflate)
+		: m_bUseDeflate (bUseDeflate)
 	{
 		m_sUTF8Name = sUTF8Name;
 		m_nCRC32 = 0;
@@ -94,6 +95,11 @@ namespace NMR {
 	nfUint64 CPortableZIPWriterEntry::getDataPosition()
 	{
 		return m_nDataPosition;
+	}
+
+	bool CPortableZIPWriterEntry::getUseDeflate()
+	{
+		return m_bUseDeflate;
 	}
 
 	void CPortableZIPWriterEntry::increaseCompressedSize(_In_ nfUint32 nCompressedSize)

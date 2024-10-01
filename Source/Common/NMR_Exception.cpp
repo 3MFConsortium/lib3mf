@@ -182,6 +182,8 @@ namespace NMR {
 		case NMR_ERROR_WRITERDOESNOTSUPPORTNAMESPACES: return "Writer does not support namespaces";
 		case NMR_ERROR_NAMESPACEPREFIXISRESERVED: return "Namespace prefix is reserved";
 		case NMR_ERROR_NAMESPACENOTFOUND: return "Namespace not found";
+		case NMR_ERROR_CHUNKSIZEEXCEEDEDFORLZ4COMPRESSION: return "Chunk size exceeded for LZ4 compression";
+		case NMR_ERROR_UNSUPPORTEDCOMPRESSIONMETHOD: return "Unsupported compression method";
 
 		// Unhandled exception
 		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;

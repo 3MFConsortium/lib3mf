@@ -126,21 +126,30 @@ Lib3MFResult CCall_lib3mf_binarystream_enablediscretizedarraycompression(Lib3MFH
 }
 
 
-Lib3MFResult CCall_lib3mf_binarystream_enablelzma(Lib3MFHandle libraryHandle, Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nLZMALevel)
+Lib3MFResult CCall_lib3mf_binarystream_enablelz4(Lib3MFHandle libraryHandle, Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nCompressionLevel)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_BinaryStream_EnableLZMA (pBinaryStream, nLZMALevel);
+	return wrapperTable->m_BinaryStream_EnableLZ4 (pBinaryStream, nCompressionLevel);
 }
 
 
-Lib3MFResult CCall_lib3mf_binarystream_disablelzma(Lib3MFHandle libraryHandle, Lib3MF_BinaryStream pBinaryStream)
+Lib3MFResult CCall_lib3mf_binarystream_enablezlib(Lib3MFHandle libraryHandle, Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nCompressionLevel)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_BinaryStream_DisableLZMA (pBinaryStream);
+	return wrapperTable->m_BinaryStream_EnableZLib (pBinaryStream, nCompressionLevel);
+}
+
+
+Lib3MFResult CCall_lib3mf_binarystream_enablezstd(Lib3MFHandle libraryHandle, Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nCompressionLevel)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BinaryStream_EnableZstd (pBinaryStream, nCompressionLevel);
 }
 
 
@@ -5560,18 +5569,27 @@ func (inst BinaryStream) EnableDiscretizedArrayCompression(units float64, predic
 	return nil
 }
 
-// EnableLZMA enables LZMA mode.
-func (inst BinaryStream) EnableLZMA(lZMALevel uint32) error {
-	ret := C.CCall_lib3mf_binarystream_enablelzma(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(lZMALevel))
+// EnableLZ4 switches to fast LZ4 compression mode.
+func (inst BinaryStream) EnableLZ4(compressionLevel uint32) error {
+	ret := C.CCall_lib3mf_binarystream_enablelz4(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(compressionLevel))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
 	return nil
 }
 
-// DisableLZMA disables LZMA mode.
-func (inst BinaryStream) DisableLZMA() error {
-	ret := C.CCall_lib3mf_binarystream_disablelzma(inst.wrapperRef.LibraryHandle, inst.Ref)
+// EnableZLib switches to ZLib compression mode.
+func (inst BinaryStream) EnableZLib(compressionLevel uint32) error {
+	ret := C.CCall_lib3mf_binarystream_enablezlib(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(compressionLevel))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// EnableZstd switches to ZStd compression mode.
+func (inst BinaryStream) EnableZstd(compressionLevel uint32) error {
+	ret := C.CCall_lib3mf_binarystream_enablezstd(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(compressionLevel))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}

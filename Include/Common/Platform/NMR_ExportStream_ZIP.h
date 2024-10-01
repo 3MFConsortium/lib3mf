@@ -49,6 +49,7 @@ namespace NMR {
 	private:
 		CPortableZIPWriter * m_pZIPWriter;
 		nfUint32 m_nEntryKey;
+		bool m_bUseDeflate;
 		z_stream m_pStream;
 		std::array<nfByte, ZIPEXPORTBUFFERSIZE> m_nOutBuffer;
 
@@ -58,7 +59,7 @@ namespace NMR {
 		void finishDeflate();
 	public:
 		CExportStream_ZIP() = delete;
-		CExportStream_ZIP(_In_ CPortableZIPWriter * pZIPWriter, nfUint32 nEntryKey);
+		CExportStream_ZIP(_In_ CPortableZIPWriter * pZIPWriter, nfUint32 nEntryKey, bool bUseDeflate);
 		~CExportStream_ZIP();
 
 		virtual nfBool seekPosition(_In_ nfUint64 position, _In_ nfBool bHasToSucceed);

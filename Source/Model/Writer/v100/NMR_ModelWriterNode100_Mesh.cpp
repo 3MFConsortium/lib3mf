@@ -133,7 +133,7 @@ namespace NMR {
 		writeStartElement(XML_3MF_ELEMENT_MESH);
 
 		if (m_pBinaryStreamWriter != nullptr) {
-			writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_ATTRIBUTE_MESH_BINARY, m_pBinaryStreamWriter->getIndexPath().c_str());
+			writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_ATTRIBUTE_MESH_BINARYSOURCE, m_pBinaryStreamWriter->getIndexPath().c_str());
 		}
 
 		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENODES);
@@ -253,9 +253,9 @@ namespace NMR {
 				Node3Indices[nFaceIndex] = (nfInt32)pMeshFace->m_nodeindices[2]; 
 			} 
 
-			unsigned int binaryKeyV1 = m_pBinaryStreamWriter->addIntArray(Node1Indices.data(), nFaceCount, eptNoPredicition);
-			unsigned int binaryKeyV2 = m_pBinaryStreamWriter->addIntArray(Node2Indices.data(), nFaceCount, eptNoPredicition);
-			unsigned int binaryKeyV3 = m_pBinaryStreamWriter->addIntArray(Node3Indices.data(), nFaceCount, eptNoPredicition);
+			unsigned int binaryKeyV1 = m_pBinaryStreamWriter->addIntArray(Node1Indices.data(), nFaceCount, eChunkedBinaryPredictionType::eptNoPredicition);
+			unsigned int binaryKeyV2 = m_pBinaryStreamWriter->addIntArray(Node2Indices.data(), nFaceCount, eChunkedBinaryPredictionType::eptNoPredicition);
+			unsigned int binaryKeyV3 = m_pBinaryStreamWriter->addIntArray(Node3Indices.data(), nFaceCount, eChunkedBinaryPredictionType::eptNoPredicition);
 
 			writeStartElementWithPrefix(XML_3MF_ELEMENT_TRIANGLE, XML_3MF_NAMESPACEPREFIX_BINARY);
 			writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_V1, binaryKeyV1);

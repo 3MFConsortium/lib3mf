@@ -51,8 +51,9 @@ namespace NMR {
 		nfUint64 m_nFilePosition;
 		nfUint64 m_nExtInfoPosition;
 		nfUint64 m_nDataPosition;
+		bool m_bUseDeflate;
 	public:
-		CPortableZIPWriterEntry(_In_ const std::string sUTF8Name, _In_ nfUint16 nLastModTime, _In_ nfUint16 nLastModDate, _In_ nfUint64 nFilePosition, _In_ nfUint64 nExtInfoPosition, _In_ nfUint64 nDataPosition);
+		CPortableZIPWriterEntry(_In_ const std::string sUTF8Name, _In_ nfUint16 nLastModTime, _In_ nfUint16 nLastModDate, _In_ nfUint64 nFilePosition, _In_ nfUint64 nExtInfoPosition, _In_ nfUint64 nDataPosition, bool bUseDeflate);
 		std::string getUTF8Name();
 		nfUint32 getCRC32();
 		nfUint64 getCompressedSize();
@@ -62,9 +63,11 @@ namespace NMR {
 		nfUint64 getFilePosition();
 		nfUint64 getExtInfoPosition();
 		nfUint64 getDataPosition();
+		bool getUseDeflate();
 		void increaseCompressedSize(_In_ nfUint32 nCompressedSize);
 		void increaseUncompressedSize(_In_ nfUint32 nUncompressedSize);
 		void calculateChecksum(_In_ const void * pBuffer, _In_ nfUint32 cbCount);
+
 
 	};
 
