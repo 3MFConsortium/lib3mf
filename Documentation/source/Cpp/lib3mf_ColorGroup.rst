@@ -49,7 +49,7 @@ CColorGroup
 
 	.. cpp:function:: sColor GetColor(const Lib3MF_uint32 nPropertyID)
 
-		Sets a color value.
+		returns a color value.
 
 		:param nPropertyID: PropertyID of a color within this color group. 
 		:returns: The color
