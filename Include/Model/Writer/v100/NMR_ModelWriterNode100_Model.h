@@ -70,8 +70,14 @@ namespace NMR {
 
 		void writeResources();
 		void writeBaseMaterials();
+		void writeBaseMaterial(
+			CModelBaseMaterialResource* pBaseMaterial);
 		void writeTextures2D();
+		void writeTexture2D(
+			CModelTexture2DResource* pTexture2D);
 		void writeColors();
+		void writeColor(
+			CModelColorGroupResource* pColorGroup);
 		void writeTex2Coords();
 		void writeCompositeMaterials();
 		void writeMultiProperties();
