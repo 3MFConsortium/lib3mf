@@ -58,9 +58,9 @@ namespace NMR
 
         void writeToXML() override;
 
+        void writeVolumeDataResource(CModelVolumeData & volumeData);   
       private:
         void writeVolumeDataResources();
-        void writeVolumeDataResource(CModelVolumeData & volumeData);   
         void writeProperty(CVolumeDataProperty & property);
         void writeColor(CVolumeDataColor & color);
         

@@ -69,6 +69,8 @@ namespace NMR {
 		void writeMetaDataGroup(_In_ PModelMetaDataGroup pMetaDataGroup);
 
 		void writeResources();
+		void writeResource(CModelResource * pResource);
+		
 		void writeBaseMaterials();
 		void writeBaseMaterial(
 			CModelBaseMaterialResource* pBaseMaterial);
@@ -96,6 +98,7 @@ namespace NMR {
 		
 
 		void writeObjects();
+		void writeObject(CModelObject & pObject);
 		void writeBuild();
 
 		void writeSliceStacks();
