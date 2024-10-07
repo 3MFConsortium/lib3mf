@@ -59,18 +59,24 @@ namespace NMR
                 continue;
             }
             
-            writeStartElementWithPrefix(XML_3MF_ELEMENT_IMPLICIT_FUNCTION,
-                                        XML_3MF_NAMESPACEPREFIX_IMPLICIT);
-            {
-                writeIntAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_ID,
-                                  pFunction->getPackageResourceID()->getModelResourceID());
-                writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_DISPLAY_NAME,
-                                     pFunction->getDisplayName());
-
-                writeImplicitFunctionElements(*pFunction);
-            }
-            writeFullEndElement();
+            writeImplicitFunction(*pFunction);
         }
+    }
+
+    void CModelWriterNode_Implicit::writeImplicitFunction(
+        CModelImplicitFunction& function)
+    {
+        writeStartElementWithPrefix(XML_3MF_ELEMENT_IMPLICIT_FUNCTION,
+                                    XML_3MF_NAMESPACEPREFIX_IMPLICIT);
+        {
+            writeIntAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_ID,
+                              function.getPackageResourceID()->getModelResourceID());
+            writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_DISPLAY_NAME,
+                                 function.getDisplayName());
+
+            writeImplicitFunctionElements(function);
+        }
+        writeFullEndElement();
     }
 
     void CModelWriterNode_Implicit::writeToXML()

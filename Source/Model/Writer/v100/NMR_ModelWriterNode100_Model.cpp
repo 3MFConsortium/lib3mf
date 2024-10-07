@@ -817,42 +817,52 @@ namespace NMR {
 		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
 			CModelImage3D * pImage3DResource = m_pModel->getImage3D(nIndex);
 
-			writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGE3D, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-			writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_ID, pImage3DResource->getPackageResourceID()->getModelResourceID());
-			if (!pImage3DResource->getName().empty())
-				writeStringAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_NAME, pImage3DResource->getName());
-
-			if (CModelImageStack* pImageStack = dynamic_cast<CModelImageStack*>(pImage3DResource))
+			if (!pImage3DResource)
 			{
-				writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGESTACK, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-				
-				nfUint32 nSheetCount = pImageStack->getSheetCount();
-				writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGESTACK_ROWCOUNT, pImageStack->getRowCount());
-				writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGESTACK_COLUMNCOUNT, pImageStack->getColumnCount());
-				writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGESTACK_SHEETCOUNT, nSheetCount);
-
-				for (nfUint32 nSheetIndex = 0; nSheetIndex < nSheetCount; nSheetIndex++) {
-					auto pSheet = pImageStack->getSheet(nSheetIndex);
-					writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGESHEET, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-					if (pSheet.get() != nullptr) {
-						writeStringAttribute(XML_3MF_ATTRIBUTE_IMAGESHEET_PATH, pSheet->getPathURI());
-					}
-					writeEndElement();
-				}
-
-				writeFullEndElement();
+				throw CNMRException(NMR_ERROR_INVALID_RESOURCE_INDEX, "Invalid Image3D resource index.");
 			}
-			else
-			{
-				throw CNMRException(-1); // TODO NMR_ERROR_UNKNOWN_IMAGE3D_TYPE
-			}
-
-			writeFullEndElement();
+			writeImage3D(*pImage3DResource);
 		}
 
 	}
 
-	void CModelWriterNode100_Model::writeFunctionsFromImage3D()
+    void CModelWriterNode100_Model::writeImage3D(CModelImage3D &pImage3D)
+	{
+		writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGE3D, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+		writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_ID, pImage3D.getPackageResourceID()->getModelResourceID());
+		if (!pImage3D.getName().empty())
+			writeStringAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_NAME, pImage3D.getName());
+
+		if (CModelImageStack* pImageStack = dynamic_cast<CModelImageStack*>(&pImage3D))
+		{
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGESTACK, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+
+			nfUint32 nSheetCount = pImageStack->getSheetCount();
+			writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGESTACK_ROWCOUNT, pImageStack->getRowCount());
+			writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGESTACK_COLUMNCOUNT, pImageStack->getColumnCount());
+			writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGESTACK_SHEETCOUNT, nSheetCount);
+
+			for (nfUint32 nSheetIndex = 0; nSheetIndex < nSheetCount; nSheetIndex++) {
+				auto pSheet = pImageStack->getSheet(nSheetIndex);
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGESHEET, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+				if (pSheet.get() != nullptr) {
+					writeStringAttribute(XML_3MF_ATTRIBUTE_IMAGESHEET_PATH, pSheet->getPathURI());
+				}
+				writeEndElement();
+			}
+
+			writeFullEndElement();
+		}
+		else
+		{
+			throw CNMRException(-1); // TODO NMR_ERROR_UNKNOWN_IMAGE3D_TYPE
+		}
+
+		writeFullEndElement();
+	}
+
+	
+    void CModelWriterNode100_Model::writeFunctionsFromImage3D()
 	{
 		nfUint32 nCount = m_pModel->getFunctionCount();
 
@@ -863,40 +873,47 @@ namespace NMR {
 			{
 				continue;
 			}
-			writeStartElementWithPrefix(XML_3MF_ELEMENT_FUNCTION_FROM_IMAGE3D,
-										XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-			{
-				writeIntAttribute(
-					XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_ID,
-					funcFromImg3D->getPackageResourceID()->getModelResourceID());
-				writeStringAttribute(
-					XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_DISPLAY_NAME,
-					funcFromImg3D->getDisplayName());
-				writeIntAttribute(
-					XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_IMAGE3DID,
-					funcFromImg3D->getImage3DModelResourceID());
-				writeDoubleAttribute(
-					XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_OFFSET,
-					funcFromImg3D->getOffset());
-				writeDoubleAttribute(
-					XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_SCALE,
-					funcFromImg3D->getScale());
-
-				writeStringAttribute(
-					XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_TILESTYLEU,
-					CModelTexture2DResource::tileStyleToString(funcFromImg3D->getTileStyleU()));
-				writeStringAttribute(
-					XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_TILESTYLEV,
-					CModelTexture2DResource::tileStyleToString(funcFromImg3D->getTileStyleV()));
-				writeStringAttribute(
-					XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_TILESTYLEW,
-					CModelTexture2DResource::tileStyleToString(funcFromImg3D->getTileStyleW()));
-				writeStringAttribute(
-					XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_FILTER,
-					CModelTexture2DResource::filterToString(funcFromImg3D->getFilter()));
-			}
-			writeFullEndElement();
+			
+			writeFunctionFromImage3D(*funcFromImg3D);
 		}
+	}
+
+	void CModelWriterNode100_Model::writeFunctionFromImage3D(
+		CModelFunctionFromImage3D & functionFromImage3D)
+	{
+		writeStartElementWithPrefix(XML_3MF_ELEMENT_FUNCTION_FROM_IMAGE3D,
+									XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+		writeIntAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_ID,
+							functionFromImage3D.getPackageResourceID()
+								->getModelResourceID());
+		writeStringAttribute(
+			XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_DISPLAY_NAME,
+			functionFromImage3D.getDisplayName());
+		writeIntAttribute(
+			XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_IMAGE3DID,
+			functionFromImage3D.getImage3DModelResourceID());
+		writeDoubleAttribute(
+			XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_OFFSET,
+			functionFromImage3D.getOffset());
+		writeDoubleAttribute(XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_SCALE,
+								functionFromImage3D.getScale());
+		writeStringAttribute(
+			XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_TILESTYLEU,
+			CModelTexture2DResource::tileStyleToString(
+				functionFromImage3D.getTileStyleU()));
+		writeStringAttribute(
+			XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_TILESTYLEV,
+			CModelTexture2DResource::tileStyleToString(
+				functionFromImage3D.getTileStyleV()));
+		writeStringAttribute(
+			XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_TILESTYLEW,
+			CModelTexture2DResource::tileStyleToString(
+				functionFromImage3D.getTileStyleW()));
+		writeStringAttribute(
+			XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_FILTER,
+			CModelTexture2DResource::filterToString(
+				functionFromImage3D.getFilter()));
+		writeFullEndElement();
 	}
 
     void CModelWriterNode100_Model::writeImplicitFunctions()

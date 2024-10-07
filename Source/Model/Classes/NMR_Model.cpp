@@ -424,7 +424,7 @@ namespace NMR {
 		return newResourceID;
 	}
 
-        void CModel::updateUniqueResourceID(UniqueResourceID nOldID, UniqueResourceID nNewID)
+    void CModel::updateUniqueResourceID(UniqueResourceID nOldID, UniqueResourceID nNewID)
 	{
 		if (m_ResourceMap.find(nNewID) != m_ResourceMap.end()) {
 			throw CNMRException(NMR_ERROR_DUPLICATEMODELRESOURCE);

@@ -55,6 +55,7 @@ namespace NMR
                                   PProgressMonitor pProgressMonitor);
 
         void writeImplicitFunctions();
+        void writeImplicitFunction(CModelImplicitFunction & function);
 
         void writeToXML() override;
 
