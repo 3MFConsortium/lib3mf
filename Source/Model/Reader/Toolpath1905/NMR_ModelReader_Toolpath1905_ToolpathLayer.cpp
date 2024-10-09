@@ -99,7 +99,7 @@ namespace NMR {
 
 	}
 	
-	void CModelReaderNode_Toolpath1905_ToolpathLayer::createLayer(CModelToolpath * pToolpath)
+	void CModelReaderNode_Toolpath1905_ToolpathLayer::createLayer(CModelToolpath * pToolpath, bool bIgnoreBottomLayer)
 	{
 		__NMRASSERT(pToolpath);
 
@@ -108,8 +108,16 @@ namespace NMR {
 		if (!m_bHasZTop)
 			throw CNMRException(NMR_ERROR_MISSINGZTOP);
 
+		bool bIgnoreLayer = false;
 
-		pToolpath->addLayer(m_sPath, m_nZTop);
+		if (bIgnoreBottomLayer) {
+			if (pToolpath->layersAreEmpty() && (pToolpath->getBottomZ() == m_nZTop))
+				bIgnoreLayer = true;
+		}
+			
+		if (!bIgnoreLayer) {
+			pToolpath->addLayer(m_sPath, m_nZTop);
+		}
 	}
 
 

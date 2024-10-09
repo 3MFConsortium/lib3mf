@@ -65,6 +65,11 @@ namespace NMR {
 		m_nBottomZ = nBottomZ;
 	}
 
+	bool CModelToolpath::layersAreEmpty()
+	{
+		return (m_Layers.size() == 0);
+	}
+
 
 	PModelToolpathLayer CModelToolpath::addLayer(const std::string & sPath, nfUint32 nMaxZ)
 	{

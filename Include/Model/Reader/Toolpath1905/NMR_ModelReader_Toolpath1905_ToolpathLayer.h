@@ -62,7 +62,7 @@ namespace NMR {
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
-		void createLayer(CModelToolpath * pToolpath);
+		void createLayer(CModelToolpath * pToolpath, bool bIgnoreBottomLayer);
 
 
 	};

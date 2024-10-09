@@ -93,7 +93,7 @@ namespace NMR {
 					m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 
-				pXMLNode->createLayer(m_pToolpath);
+				pXMLNode->createLayer(m_pToolpath, !m_bHasBottomZ);
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

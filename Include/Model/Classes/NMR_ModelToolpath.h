@@ -76,6 +76,8 @@ namespace NMR {
 		nfUint32 getBottomZ();
 		void setBottomZ(nfUint32 nBottomZ);
 
+		bool layersAreEmpty();
+
 		PModelToolpathLayer addLayer (const std::string & sPath, nfUint32 nMaxZ);
 		nfUint32 getLayerCount();
 		PModelToolpathLayer getLayer(nfUint32 nIndex);
