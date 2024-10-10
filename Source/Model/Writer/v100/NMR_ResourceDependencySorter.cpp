@@ -44,7 +44,6 @@ namespace NMR
         : m_pModel(pModel)
     {
         buildIndexMaps();
-        buildGraph();
     }
 
     TopologicalSortResult CResourceDependencySorter::sort()
@@ -62,10 +61,16 @@ namespace NMR
             }
         }
 
+        auto graph = buildGraph();
+        if (common::graph::isCyclic(graph))
+        {
+            throw CNMRException(NMR_ERROR_INVALIDPARAM, "Cyclic dependency between resources detected");
+        }
         auto sortedIndices = common::graph::topologicalSort(
             buildGraph());  // only contains resources that have or are a
                             // dependency
-        for(auto index : sortedIndices)
+
+        for (auto index : sortedIndices)
         {
             
             auto modelResourceID = indexToModelResourceID(index);

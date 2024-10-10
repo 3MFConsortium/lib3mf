@@ -37,4 +37,5 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace NMR::common::graph
 {
     VertexList topologicalSort(const IDirectedGraph & graph);
+    bool isCyclic(const IDirectedGraph & graph);
 } 
