@@ -178,4 +178,23 @@ namespace NMR
     {
         return m_meshBBoxOnly;
     }
+
+    ResourceDependencies CModelLevelSetObject::getDependencies()
+    {
+        ResourceDependencies dependencies;
+        if (m_pFunction)
+        {
+            dependencies.push_back(m_pFunction->getPackageResourceID());
+        }
+
+        if (m_pVolumeData)
+        {
+            // concatenate dependencies
+            auto volumeDataDependencies = m_pVolumeData->getDependencies();
+            dependencies.insert(dependencies.end(), volumeDataDependencies.begin(), volumeDataDependencies.end());
+        }
+
+        return dependencies;
+    }
 }  // namespace NMR
+

@@ -375,6 +375,8 @@ namespace NMR {
 		nfBool hasCryptoRandCallbak() const;
 		nfUint64 generateRandomBytes(nfByte *, nfUint64);
 
+		[[nodiscard]] ModelResourceID getMaxModelResourceID();
+
 	};
 
 	typedef std::shared_ptr <CModel> PModel;

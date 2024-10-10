@@ -440,6 +440,36 @@ namespace NMR
         }
         return node->findOutput(portName);
     }
-}
 
+    ResourceDependencies CModelImplicitFunction::getDependencies()
+    {  
+        ResourceDependencies dependencies;
+        for (auto const& node : *m_nodes)
+        {
+            if (!node)
+            {
+                throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM,
+                                                "Node must not be nullptr.");
+            }
+            if (node->getNodeType() == Lib3MF::eImplicitNodeType::ConstResourceID)
+            {
+                auto * model = getModel();
+                if (!model)
+                {
+                    throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM,
+                                                    "Model must not be nullptr.");
+                }
+
+                auto referendedResource =  model->findResource(model->currentPath(), node->getModelResourceID());
+                if (!referendedResource)
+                {
+                    throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM,
+                                                    "Referenced resource must not be nullptr.");
+                }   
+                dependencies.push_back(referendedResource->getPackageResourceID());
+            }
+        }
+        return dependencies;
+    }
+}
 

@@ -105,6 +105,8 @@ namespace NMR {
 
 		void setMeshBBoxOnly(bool bMeshBBoxOnly);
 		bool getMeshBBoxOnly() const;
+
+		ResourceDependencies getDependencies() override;
 	};
 
 	typedef std::shared_ptr <CModelLevelSetObject> PModelLevelSetObject;

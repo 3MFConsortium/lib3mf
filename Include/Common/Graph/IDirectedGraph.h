@@ -4,8 +4,9 @@ Copyright (C) 2023 3MF Consortium
 
 All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification,276529
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification,276529 are permitted provided that the following conditions are
+met:
 
 1. Redistributions of source code must retain the above copyright notice, this
 list of conditions and the following disclaimer.
@@ -39,18 +40,23 @@ namespace NMR::common::graph
 
     class IDirectedGraph
     {
-      public:
-        explicit IDirectedGraph(std::size_t const /*unused*/){};
+       public:
+        explicit IDirectedGraph(std::size_t const /*unused*/) {};
         virtual ~IDirectedGraph() = default;
-        virtual void addDependency(Identifier id, Identifier idOfDependency) = 0;
-        virtual void removeDependency(Identifier id, Identifier idOfDependency) = 0;
-        [[nodiscard]] virtual bool isDirectlyDependingOn(Identifier id,
-                                                         Identifier dependencyInQuestion) const = 0;
+        virtual void addDependency(Identifier id,
+                                   Identifier idOfDependency) = 0;
+        virtual void removeDependency(Identifier id,
+                                      Identifier idOfDependency) = 0;
+        [[nodiscard]] virtual auto isDirectlyDependingOn(
+            Identifier id, Identifier dependencyInQuestion) const -> bool = 0;
 
-        [[nodiscard]] virtual std::size_t getSize() const = 0;
+        [[nodiscard]] virtual auto getSize() const -> std::size_t = 0;
         virtual void removeVertex(Identifier id) = 0;
         virtual void addVertex(Identifier id) = 0;
+        [[nodiscard]] virtual auto hasPredecessors(Identifier id) const
+            -> bool = 0;
 
-        [[nodiscard]] virtual DependencySet const & getVertices() const = 0;
+        [[nodiscard]] virtual auto getVertices() const
+            -> const DependencySet& = 0;
     };
-} // namespace gladius::nodes::graph
+}  // namespace NMR::common::graph

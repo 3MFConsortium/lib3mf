@@ -78,6 +78,10 @@ namespace NMR {
          PVolumeDataComposite createComposite(/* basematerialgroupd*/);
          void setComposite(PVolumeDataComposite pComposite);
          void removeComposite();
+
+         ResourceDependencies getDependencies() override;
+
+         PPackageResourceID packageResourceIDFromModelResourceID(ModelResourceID modelResourceID);
 	};
 
 	typedef std::shared_ptr <CModelVolumeData> PModelVolumeData;

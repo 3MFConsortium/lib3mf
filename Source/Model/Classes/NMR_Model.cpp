@@ -1573,16 +1573,35 @@ namespace NMR {
 		return size;
 	}
 
-	PModelFunction CModel::findFunction(_In_ UniqueResourceID nResourceID) {
-		for (size_t i = 0; i < m_FunctionLookup.size(); i++) {
-			PModelFunction pFunction = std::dynamic_pointer_cast<CModelFunction>(m_FunctionLookup[i]);
-			if (pFunction->getPackageResourceID()->getUniqueID() == nResourceID)
-				return pFunction;
-		}
-		return nullptr;
+	ModelResourceID CModel::getMaxModelResourceID()
+	{
+		auto maxResourceID = std::max_element(
+			m_Resources.begin(), m_Resources.end(),
+			[](const PModelResource &a, const PModelResource &b)
+			{
+				return a->getPackageResourceID()->getModelResourceID() <
+						b->getPackageResourceID()->getModelResourceID();
+			});
+		if(maxResourceID == m_Resources.end()) return 0;
+
+		return (*maxResourceID)->getPackageResourceID()->getModelResourceID();
 	}
 
-	nfUint32 CModel::getFunctionCount() {
+	PModelFunction CModel::findFunction(_In_ UniqueResourceID nResourceID)
+	{
+            for(size_t i = 0; i < m_FunctionLookup.size(); i++)
+            {
+                PModelFunction pFunction =
+                    std::dynamic_pointer_cast<CModelFunction>(
+                        m_FunctionLookup[i]);
+                if(pFunction->getPackageResourceID()->getUniqueID() ==
+                   nResourceID)
+                    return pFunction;
+            }
+            return nullptr;
+        }
+
+        nfUint32 CModel::getFunctionCount() {
 		return (nfUint32)m_FunctionLookup.size();
 	}
 

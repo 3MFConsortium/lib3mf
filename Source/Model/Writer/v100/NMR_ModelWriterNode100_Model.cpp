@@ -33,6 +33,7 @@ This is the class for exporting the 3mf model stream root node.
 
 #include "Model/Writer/v100/NMR_ModelWriterNode100_Mesh.h"
 #include "Model/Writer/v100/NMR_ModelWriterNode100_Model.h"
+#include "Model/Writer/v100/NMR_ResourceDependencySorter.h"
 
 #include "Model/Classes/NMR_ModelAttachment.h"
 #include "Model/Classes/NMR_ModelBuildItem.h"
@@ -53,6 +54,8 @@ This is the class for exporting the 3mf model stream root node.
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
+#include "Common/Graph/DirectedGraph.h"
+#include "Common/Graph/GraphAlgorithms.h"
 #include "Model/Classes/NMR_ModelConstants_Slices.h"
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
 #include "Model/Classes/NMR_ModelLevelSetObject.h"
@@ -1043,19 +1046,28 @@ namespace NMR {
 				writeSliceStacks();
 			}
 
+			// Create topological order of resources
+			CResourceDependencySorter sorter(m_pModel);
+			auto sortedResources = sorter.sort();
 
-			for(auto resId = 0u; resId < m_pModel->getResourceCount(); resId++)
+			for(auto &resId : sortedResources)
 			{
-				auto pResource = m_pModel->getResource(resId);
-
-				if (!pResource)
+				if(resId->getPath() != m_pModel->currentPath())
 				{
-					throw CNMRException(NMR_ERROR_INVALID_RESOURCE_INDEX, "Invalid Resource");
+					continue;
+				}
+				auto pResource =
+					m_pModel->findResource(resId->getUniqueID());
+
+				if(!pResource)
+				{
+					throw CNMRException(
+						NMR_ERROR_INVALID_RESOURCE_INDEX,
+						"Invalid Resource");
 				}
 				writeResource(pResource.get());
-				
 			}
-		}
+        }
 		else {
 			if (m_bWriteSliceExtension) {
 				writeSliceStacks();

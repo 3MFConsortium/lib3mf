@@ -4,8 +4,9 @@ Copyright (C) 2023 3MF Consortium
 
 All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification,276529
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification,276529 are permitted provided that the following conditions are
+met:
 
 1. Redistributions of source code must retain the above copyright notice, this
 list of conditions and the following disclaimer.
@@ -33,26 +34,34 @@ namespace NMR::common::graph
 {
     class DirectedGraph : public IDirectedGraph
     {
-      public:
+       public:
         explicit DirectedGraph(std::size_t size);
-
         void addDependency(Identifier id, Identifier idOfDependency) override;
+        void removeDependency(Identifier id,
+                              Identifier idOfDependency) override;
+        [[nodiscard]] auto isDirectlyDependingOn(
+            Identifier id,
+            Identifier dependencyInQuestion) const -> bool override;
 
-        void removeDependency(Identifier id, Identifier idOfDependency) override;
-        [[nodiscard]] bool isDirectlyDependingOn(Identifier id,
-                                                 Identifier dependencyInQuestion) const override;
-
-        [[nodiscard]] std::size_t getSize() const override;
+        [[nodiscard]] auto getSize() const -> std::size_t override;
 
         void removeVertex(Identifier id) override;
 
-        [[nodiscard]] DependencySet const & getVertices() const override;
+        [[nodiscard]] auto getVertices() const -> const DependencySet& override;
         void addVertex(Identifier id) override;
 
-      private:
+       private:
         std::size_t m_size;
         std::vector<bool> m_graphData;
 
-        DependencySet m_vertices;
+        DependencySet m_vertices;  // Possible performance improvement: We could
+                                   // try out a std::set
+
+        using PredecessorList = std::vector<std::size_t>;
+        std::vector<PredecessorList> m_predecessors;
+
+        // Inherited via IDirectedGraph
+        [[nodiscard]] auto hasPredecessors(Identifier id) const
+            -> bool override;
     };
-}
+}  // namespace NMR::common::graph

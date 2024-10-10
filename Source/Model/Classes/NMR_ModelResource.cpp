@@ -34,7 +34,7 @@ resource object.
 
 #include "Model/Classes/NMR_Model.h" 
 #include "Model/Classes/NMR_ModelResource.h" 
-#include "Common/NMR_Exception.h" 
+#include "Common/NMR_Exception.h"
 
 namespace NMR {
 
@@ -82,7 +82,12 @@ namespace NMR {
 		m_pModel = pModel;
 	}
 
-    void CModelResource::clearResourceIndexMap()
+	ResourceDependencies CModelResource::getDependencies()
+	{
+		return {};
+	}
+
+	void CModelResource::clearResourceIndexMap()
 	{
 		m_ResourceIndexMap.clear();
 		m_bHasResourceIndexMap = false;

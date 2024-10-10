@@ -238,6 +238,18 @@ namespace NMR {
 	{
 		m_pMesh->extendOutbox(vOutBox, mAccumulatedMatrix);
 	}
+
+	ResourceDependencies CModelMeshObject::getDependencies()
+	{
+		ResourceDependencies dependencies;
+		if(m_pVolumeData)
+		{
+			dependencies.push_back(
+				m_pVolumeData->getPackageResourceID());
+		}
+
+		return dependencies;
+	}
 }
 
 

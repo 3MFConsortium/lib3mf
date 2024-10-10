@@ -33,6 +33,7 @@ NMR_ModelVolumeData.cpp implements the class CModelVolumeData.
 #include "Model/Classes/NMR_ModelVolumeData.h"
 
 #include "Model/Classes/NMR_ModelFunction.h"
+#include "lib3mf_interfaceexception.hpp"
 
 namespace NMR 
 {
@@ -174,4 +175,57 @@ namespace NMR
 		m_pComposite.reset();
 	}
 
-}
+	ResourceDependencies CModelVolumeData::getDependencies()
+	{
+		ResourceDependencies dependencies;
+
+		if (m_pColor)
+		{
+			dependencies.push_back(packageResourceIDFromModelResourceID(m_pColor->getFunctionResourceID()));
+		}
+
+		for (auto iIterator = m_mapProperties.begin(); iIterator != m_mapProperties.end(); iIterator++)
+		{
+			PVolumeDataProperty pProperty = iIterator->second;
+			if (pProperty)
+			{
+				dependencies.push_back(packageResourceIDFromModelResourceID(pProperty->getFunctionResourceID()));
+			}
+		}
+
+		if (m_pComposite)
+		{
+			for (nfUint32 i = 0u; i < m_pComposite->materialMappingCount(); i++)
+			{
+				dependencies.push_back(packageResourceIDFromModelResourceID(m_pComposite->getMaterialMapping(i)->getFunctionResourceID()));
+			}
+			
+		}
+
+		return dependencies;
+	}
+
+
+	PPackageResourceID
+	CModelVolumeData::packageResourceIDFromModelResourceID(
+		ModelResourceID modelResourceID)
+	{
+		auto* model = getModel();
+		if(!model)
+		{
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM,
+											"Model must not be nullptr.");
+		}
+
+		auto referendedResource = model->findResource(
+			model->currentPath(), modelResourceID);
+		if(!referendedResource)
+		{
+			throw ELib3MFInterfaceException(
+				LIB3MF_ERROR_INVALIDPARAM,
+				"Referenced resource must not be nullptr.");
+		}
+
+		return referendedResource->getPackageResourceID();
+	}
+}  // namespace NMR

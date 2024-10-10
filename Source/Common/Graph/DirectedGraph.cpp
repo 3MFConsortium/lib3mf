@@ -4,8 +4,9 @@ Copyright (C) 2023 3MF Consortium
 
 All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification,276529
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification,276529 are permitted provided that the following conditions are
+met:
 
 1. Redistributions of source code must retain the above copyright notice, this
 list of conditions and the following disclaimer.
@@ -33,17 +34,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace NMR::common::graph
 {
     DirectedGraph::DirectedGraph(size_t const size)
-        : IDirectedGraph(size)
-        , m_size(size)
-        , m_graphData(m_size * m_size, false)
+        : IDirectedGraph(size),
+          m_size(size),
+          m_graphData((m_size + 1) * (m_size + 1), false)
     {
     }
 
     void DirectedGraph::addDependency(Identifier id, Identifier idOfDependency)
     {
-        addVertex(id);
-        addVertex(idOfDependency);
-        if (id == idOfDependency)
+        if(id == idOfDependency)
         {
             return;
         }
@@ -51,13 +50,15 @@ namespace NMR::common::graph
         m_graphData[index] = true;
     }
 
-    void DirectedGraph::removeDependency(Identifier id, Identifier idOfDependency)
+    void DirectedGraph::removeDependency(Identifier id,
+                                         Identifier idOfDependency)
     {
         auto const index = id * m_size + idOfDependency;
         m_graphData[index] = false;
     }
 
-    bool DirectedGraph::isDirectlyDependingOn(Identifier id, Identifier dependencyInQuestion) const
+    bool DirectedGraph::isDirectlyDependingOn(
+        Identifier id, Identifier dependencyInQuestion) const
     {
         auto const index = id * m_size + dependencyInQuestion;
         return m_graphData[index];
@@ -70,21 +71,22 @@ namespace NMR::common::graph
 
     void DirectedGraph::removeVertex(Identifier id)
     {
-        auto const iterElemToRemove = std::find(std::begin(m_vertices), std::end(m_vertices), id);
-        if (iterElemToRemove == std::end(m_vertices))
+        auto const iterElemToRemove =
+            std::find(std::begin(m_vertices), std::end(m_vertices), id);
+        if(iterElemToRemove == std::end(m_vertices))
         {
             return;
         }
         m_vertices.erase(iterElemToRemove);
 
-        for (auto vertex : m_vertices)
+        for(auto vertex : m_vertices)
         {
             removeDependency(id, vertex);
             removeDependency(vertex, id);
         }
     }
 
-    DependencySet const& DirectedGraph::getVertices() const 
+    auto DirectedGraph::getVertices() const -> const DependencySet&
     {
         return m_vertices;
     }
@@ -94,4 +96,8 @@ namespace NMR::common::graph
         m_vertices.insert(id);
     }
 
-} // namespace gladius::nodes::graph
+    auto DirectedGraph::hasPredecessors(Identifier id) const -> bool
+    {
+        return !m_predecessors[id].empty();
+    }
+}  // namespace NMR::common::graph

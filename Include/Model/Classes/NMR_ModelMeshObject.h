@@ -85,6 +85,8 @@ namespace NMR {
 
 		_Ret_notnull_ PModelVolumeData getVolumeData();
 		void setVolumeData(_In_ PModelVolumeData pVolumeData);
+
+		ResourceDependencies getDependencies() override;
 	};
 
 	typedef std::shared_ptr <CModelMeshObject> PModelMeshObject;
