@@ -181,7 +181,7 @@ namespace NMR
 
 		if (m_pColor)
 		{
-			dependencies.push_back(packageResourceIDFromModelResourceID(m_pColor->getFunctionResourceID()));
+			dependencies.push_back(packageResourceIDFromResourceID(m_pColor->getFunctionResourceID()));
 		}
 
 		for (auto iIterator = m_mapProperties.begin(); iIterator != m_mapProperties.end(); iIterator++)
@@ -189,7 +189,7 @@ namespace NMR
 			PVolumeDataProperty pProperty = iIterator->second;
 			if (pProperty)
 			{
-				dependencies.push_back(packageResourceIDFromModelResourceID(pProperty->getFunctionResourceID()));
+				dependencies.push_back(packageResourceIDFromResourceID(pProperty->getFunctionResourceID()));
 			}
 		}
 
@@ -197,7 +197,7 @@ namespace NMR
 		{
 			for (nfUint32 i = 0u; i < m_pComposite->materialMappingCount(); i++)
 			{
-				dependencies.push_back(packageResourceIDFromModelResourceID(m_pComposite->getMaterialMapping(i)->getFunctionResourceID()));
+				dependencies.push_back(packageResourceIDFromResourceID(m_pComposite->getMaterialMapping(i)->getFunctionResourceID()));
 			}
 			
 		}
@@ -205,10 +205,9 @@ namespace NMR
 		return dependencies;
 	}
 
-
 	PPackageResourceID
-	CModelVolumeData::packageResourceIDFromModelResourceID(
-		ModelResourceID modelResourceID)
+	CModelVolumeData::packageResourceIDFromResourceID(
+		UniqueResourceID uniqueResourceID)
 	{
 		auto* model = getModel();
 		if(!model)
@@ -217,8 +216,7 @@ namespace NMR
 											"Model must not be nullptr.");
 		}
 
-		auto referendedResource = model->findResource(
-			model->currentPath(), modelResourceID);
+		auto referendedResource = model->findResource(uniqueResourceID);
 		if(!referendedResource)
 		{
 			throw ELib3MFInterfaceException(

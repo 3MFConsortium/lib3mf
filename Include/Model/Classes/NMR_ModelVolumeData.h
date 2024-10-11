@@ -80,9 +80,10 @@ namespace NMR {
          void removeComposite();
 
          ResourceDependencies getDependencies() override;
-
-         PPackageResourceID packageResourceIDFromModelResourceID(ModelResourceID modelResourceID);
-	};
+         
+         PPackageResourceID packageResourceIDFromResourceID(
+             UniqueResourceID uniqueResourceID);
+    };
 
 	typedef std::shared_ptr <CModelVolumeData> PModelVolumeData;
 
