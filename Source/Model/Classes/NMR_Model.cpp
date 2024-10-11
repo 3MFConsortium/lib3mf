@@ -1061,6 +1061,8 @@ namespace NMR {
 		if (pSourceModel == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
+		nfUint32 previousTargetFunctionCount = getFunctionCount();
+
 		nfUint32 nCount = pSourceModel->getFunctionCount();
 		nfUint32 nIndex;
 
@@ -1114,10 +1116,10 @@ namespace NMR {
 			{
 				throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 			}		 
-		  }
+		}
 
-		// loop over all functions and update the references in ConstResourceID nodes
-		for (nIndex = 0; nIndex < nCount; nIndex++)
+		// loop over all newly added functions and update the references in ConstResourceID nodes
+		for (nIndex = previousTargetFunctionCount; nIndex < nCount; nIndex++)
 		{
 			CModelImplicitFunction * pImplicitFunction = getImplicitFunction(nIndex);
 

@@ -1278,7 +1278,11 @@ namespace Lib3MF
         auto const sourceModel = wrapper->CreateModel();
         auto reader = sourceModel->QueryReader("3mf");
         reader->SetStrictModeActive(true);
-        reader->ReadFromFile(InFolder + "SphereInACage.3mf");
+        reader->ReadFromFile(InFolder + "RadialRadiator.3mf");
+
+        // save the source model to a file with a different name
+        auto writer = sourceModel->QueryWriter("3mf");
+        writer->WriteToFile(Volumetric::OutFolder + "RadialRadiatorCopy.3mf");
 
         auto sourceModelFunctionCount = sourceModel->GetFunctions()->Count();
 
