@@ -110,7 +110,7 @@ namespace NMR
         void setMatrix(const Lib3MF::sMatrix4x4 & value);
         Lib3MF::sMatrix4x4 getMatrix() const;
 
-        void setModelResourceID(UniqueResourceID resourceID);
+        void setModelResourceID(ModelResourceID resourceID);
         ModelResourceID getModelResourceID() const;
         PModelResource getResource() const;
 
