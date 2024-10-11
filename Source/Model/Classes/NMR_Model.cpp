@@ -1128,7 +1128,8 @@ namespace NMR {
 					auto const oldId = pSourceModel->findPackageResourceID(pSourceModel->currentPath(), node->getModelResourceID());
 					if (!oldId)
 					{
-						throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+						throw CNMRException(NMR_ERROR_RESOURCENOTFOUND, "Resource ID " + std::to_string(node->getModelResourceID()) +
+						 " not found in source model, this might happen when the file contains forward references");
 					}
 
 					auto const newIdIter = oldToNewMapping.find(oldId->getUniqueID());
