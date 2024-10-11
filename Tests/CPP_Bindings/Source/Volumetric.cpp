@@ -1258,7 +1258,7 @@ namespace Lib3MF
         auto const reader = sourceModel->QueryReader("3mf");
         reader->ReadFromFile(InFolder + "SphereInACage.3mf");
 
-        auto sourcetModelFunctionCount = sourceModel->GetFunctions()->Count();
+        auto sourceModelFunctionCount = sourceModel->GetFunctions()->Count();
 
         auto const targetModel = wrapper->CreateModel();
 
@@ -1268,7 +1268,31 @@ namespace Lib3MF
         targetModel->MergeFromModel(sourceModel.get());
 
         auto targetFunctionsIter = targetModel->GetFunctions();
-        EXPECT_EQ(targetFunctionsIter->Count(), sourcetModelFunctionCount + 1);
+        EXPECT_EQ(targetFunctionsIter->Count(), sourceModelFunctionCount + 1);
+    }
+
+     TEST_F(Volumetric,
+           Volumetric_Merge_FunctionsFromLoadedModelIntoLoadedTargetModel_FunctionCountIncreases)
+    {
+        // load the source model
+        auto const sourceModel = wrapper->CreateModel();
+        auto reader = sourceModel->QueryReader("3mf");
+        reader->SetStrictModeActive(true);
+        reader->ReadFromFile(InFolder + "SphereInACage.3mf");
+
+        auto sourceModelFunctionCount = sourceModel->GetFunctions()->Count();
+
+        auto const targetModel = wrapper->CreateModel();
+        auto targetReader = targetModel->QueryReader("3mf");
+        targetReader->SetStrictModeActive(true);
+
+        targetReader->ReadFromFile(InFolder + "template.3mf");
+        auto previousTargetFunctionCount = targetModel->GetFunctions()->Count();
+
+        EXPECT_NO_THROW(targetModel->MergeFromModel(sourceModel.get()));
+
+        auto targetFunctionsIter = targetModel->GetFunctions();
+        EXPECT_EQ(targetFunctionsIter->Count(), sourceModelFunctionCount + previousTargetFunctionCount);
     }
 
 }  // namespace Lib3MF

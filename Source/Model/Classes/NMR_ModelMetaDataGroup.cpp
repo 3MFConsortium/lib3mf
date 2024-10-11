@@ -113,7 +113,11 @@ namespace NMR {
 			std::string sName;
 			std::string sValue;
 			PModelMetaData metaData = pSourceMetaDataGroup->getMetaData(nIndex);
-			addMetaData(metaData->getNameSpace(), metaData->getName(), metaData->getValue(), metaData->getType(), metaData->getPreserve());
+
+			// only add metadata, if the key does not exist yet
+			if (!hasMetaData(metaData->getKey())) {
+				addMetaData(metaData->getNameSpace(), metaData->getName(), metaData->getValue(), metaData->getType(), metaData->getPreserve());
+			}
 		}
 	}
 }
