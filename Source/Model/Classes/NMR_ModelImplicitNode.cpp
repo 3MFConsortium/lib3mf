@@ -252,4 +252,8 @@ namespace NMR
         return m_parent;
     }
 
+    void CModelImplicitNode::setParent(CModelImplicitFunction* parent)
+    {
+        m_parent = parent;
+    }
 } // namespace NMR

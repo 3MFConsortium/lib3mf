@@ -1280,10 +1280,6 @@ namespace Lib3MF
         reader->SetStrictModeActive(true);
         reader->ReadFromFile(InFolder + "RadialRadiator.3mf");
 
-        // save the source model to a file with a different name
-        auto writer = sourceModel->QueryWriter("3mf");
-        writer->WriteToFile(Volumetric::OutFolder + "RadialRadiatorCopy.3mf");
-
         auto sourceModelFunctionCount = sourceModel->GetFunctions()->Count();
 
         auto const targetModel = wrapper->CreateModel();
@@ -1297,6 +1293,60 @@ namespace Lib3MF
 
         auto targetFunctionsIter = targetModel->GetFunctions();
         EXPECT_EQ(targetFunctionsIter->Count(), sourceModelFunctionCount + previousTargetFunctionCount);
+    }
+
+    TEST_F(Volumetric,
+           Volumetric_Merge_FunctionsFromLoadedModelIntoLoadedTargetModelWithoutFunctions_VaildResourceReferences)
+    {
+        // load the source model
+        auto const sourceModel = wrapper->CreateModel();
+        auto reader = sourceModel->QueryReader("3mf");
+        reader->SetStrictModeActive(true);
+        reader->ReadFromFile(InFolder + "template.3mf");
+
+        auto sourceModelFunctionCount = sourceModel->GetFunctions()->Count();
+        auto const targetModel = wrapper->CreateModel();
+        auto targetReader = targetModel->QueryReader("3mf");
+        targetReader->SetStrictModeActive(true);
+
+        targetReader->ReadFromFile(InFolder + "Cube.3mf");
+        auto previousTargetFunctionCount = targetModel->GetFunctions()->Count();
+
+        EXPECT_NO_THROW(targetModel->MergeFromModel(sourceModel.get()));
+
+        auto targetFunctionsIter = targetModel->GetFunctions();
+        EXPECT_EQ(targetFunctionsIter->Count(), sourceModelFunctionCount + previousTargetFunctionCount);
+
+        while (targetFunctionsIter->MoveNext())
+        {
+            auto function = targetFunctionsIter->GetCurrentFunction();
+            ASSERT_TRUE(function);
+            auto implicitFunction = std::dynamic_pointer_cast<CImplicitFunction>(function);
+            if (implicitFunction)
+            {
+                std::cout << "Implicit function: " << implicitFunction->GetDisplayName() << " Resource ID: " << implicitFunction->GetModelResourceID() << std::endl;
+
+                auto res = targetModel->GetResourceByID(implicitFunction->GetUniqueResourceID());
+                ASSERT_TRUE(res);
+                
+                auto nodeIterator = implicitFunction->GetNodes();
+                while (nodeIterator->MoveNext())
+                {
+                    auto node = nodeIterator->GetCurrent();
+                    ASSERT_TRUE(node);
+                
+                    
+                    if (node->GetNodeType() == Lib3MF::eImplicitNodeType::ConstResourceID)
+                    {
+                        auto resourceIdNode = std::dynamic_pointer_cast<CResourceIdNode>(node);
+                        std::cout <<  "Resource ID node: " << resourceIdNode->GetDisplayName() << " identifier: " << resourceIdNode->GetIdentifier() << std::endl;
+                        ASSERT_TRUE(resourceIdNode);
+                        auto resource = resourceIdNode->GetResource();
+                        ASSERT_TRUE(resource);
+                    }            
+                }
+            }
+        }
     }
 
 }  // namespace Lib3MF

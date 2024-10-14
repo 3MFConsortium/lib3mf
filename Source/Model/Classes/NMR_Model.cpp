@@ -1109,6 +1109,11 @@ namespace NMR {
 				pNewImplicitFunction->setPackageResourceID(newPkgId);
 				pNewImplicitFunction->setModel(this);
 
+				for (auto &node : *pNewImplicitFunction->getNodes())
+				{
+					node->setParent(pNewImplicitFunction.get());
+				}
+
 				addResource(pNewImplicitFunction);
 				oldToNewMapping[pOldImplicitFunction->getPackageResourceID()->getUniqueID()] = pNewImplicitFunction->getPackageResourceID()->getUniqueID();
 			}
@@ -1145,8 +1150,23 @@ namespace NMR {
 					{
 						throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 					}
+				
 					node->setModelResourceID(newId->getModelResourceID());
-				}
+
+					// check if the resource is available
+					auto res = findResource(currentPath(), newId->getModelResourceID());
+					if (!res)
+					{
+						throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+					}
+					
+					auto resource = node->getResource();
+					if (!resource)
+					{
+						throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+						
+					}
+			}
 			}
 		}
 

@@ -119,6 +119,7 @@ namespace NMR
         void setGraphID(GraphID id);
         GraphID getGraphID() const;
         CModelImplicitFunction * getParent() const;
+        void setParent(CModelImplicitFunction * parent);
     };
 
     using PModelImplicitNode = std::shared_ptr<CModelImplicitNode>;
