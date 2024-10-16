@@ -5310,6 +5310,15 @@ Lib3MFResult CCall_lib3mf_model_getlevelsets(Lib3MFHandle libraryHandle, Lib3MF_
 }
 
 
+Lib3MFResult CCall_lib3mf_model_removeresource(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Resource pResource)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_RemoveResource (pModel, pResource);
+}
+
+
 Lib3MFResult CCall_lib3mf_getlibraryversion(Lib3MFHandle libraryHandle, Lib3MF_uint32 * pMajor, Lib3MF_uint32 * pMinor, Lib3MF_uint32 * pMicro)
 {
 	if (libraryHandle == 0) 
@@ -7563,7 +7572,7 @@ func (inst MeshObject) BeamLattice() (BeamLattice, error) {
 	return inst.wrapperRef.NewBeamLattice(theBeamLattice), nil
 }
 
-// GetVolumeData retrieves the VolumeData this MeshObject.
+// GetVolumeData retrieves the VolumeData of this MeshObject.
 func (inst MeshObject) GetVolumeData() (*VolumeData, error) {
 	var theVolumeData ref
 	ret := C.CCall_lib3mf_meshobject_getvolumedata(inst.wrapperRef.LibraryHandle, inst.Ref, &theVolumeData)
@@ -7578,7 +7587,7 @@ func (inst MeshObject) GetVolumeData() (*VolumeData, error) {
 	return _theVolumeDataPtr, nil
 }
 
-// SetVolumeData sets the VolumeData this MeshObject.
+// SetVolumeData sets the VolumeData of this MeshObject.
 func (inst MeshObject) SetVolumeData(theVolumeData VolumeData) error {
 	ret := C.CCall_lib3mf_meshobject_setvolumedata(inst.wrapperRef.LibraryHandle, inst.Ref, theVolumeData.Ref)
 	if ret != 0 {
@@ -13498,6 +13507,15 @@ func (inst Model) GetLevelSets() (LevelSetIterator, error) {
 		return LevelSetIterator{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewLevelSetIterator(resourceIterator), nil
+}
+
+// RemoveResource removes a resource from the model.
+func (inst Model) RemoveResource(resource Resource) error {
+	ret := C.CCall_lib3mf_model_removeresource(inst.wrapperRef.LibraryHandle, inst.Ref, resource.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
 }
 
 

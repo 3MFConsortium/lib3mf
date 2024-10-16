@@ -717,6 +717,7 @@ class FunctionTable:
 	lib3mf_model_addvolumedata = None
 	lib3mf_model_addlevelset = None
 	lib3mf_model_getlevelsets = None
+	lib3mf_model_removeresource = None
 
 '''Definition of Enumerations
 '''
@@ -4733,6 +4734,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_getlevelsets = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_removeresource")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
+			self.lib.lib3mf_model_removeresource = methodType(int(methodAddress.value))
+			
 		except AttributeError as ae:
 			raise ELib3MFException(ErrorCodes.COULDNOTFINDLIBRARYEXPORT, ae.args[0])
 		
@@ -6540,6 +6547,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_model_getlevelsets.restype = ctypes.c_int32
 			self.lib.lib3mf_model_getlevelsets.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_removeresource.restype = ctypes.c_int32
+			self.lib.lib3mf_model_removeresource.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
 			
 		except AttributeError as ae:
 			raise ELib3MFException(ErrorCodes.COULDNOTFINDLIBRARYEXPORT, ae.args[0])
@@ -12866,5 +12876,14 @@ class Model(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return ResourceIteratorObject
+	
+	def RemoveResource(self, ResourceObject):
+		ResourceHandle = None
+		if ResourceObject:
+			ResourceHandle = ResourceObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_removeresource(self._handle, ResourceHandle))
+		
 	
 		

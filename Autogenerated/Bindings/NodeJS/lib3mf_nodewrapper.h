@@ -2596,6 +2596,7 @@ private:
 	static void AddVolumeData(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddLevelSet(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetLevelSets(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void RemoveResource(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFModel();

@@ -3402,6 +3402,7 @@ public:
 	inline PVolumeData AddVolumeData();
 	inline PLevelSet AddLevelSet();
 	inline PLevelSetIterator GetLevelSets();
+	inline void RemoveResource(classParam<CResource> pResource);
 };
 
 /*************************************************************************************************************************
@@ -5262,7 +5263,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CMeshObject::GetVolumeData - Retrieves the VolumeData this MeshObject.
+	* CMeshObject::GetVolumeData - Retrieves the VolumeData of this MeshObject.
 	* @return the VolumeData of this MeshObject
 	*/
 	PVolumeData CMeshObject::GetVolumeData()
@@ -5278,7 +5279,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CMeshObject::SetVolumeData - Sets the VolumeData this MeshObject.
+	* CMeshObject::SetVolumeData - Sets the VolumeData of this MeshObject.
 	* @param[in] pTheVolumeData - the VolumeData of this MeshObject
 	*/
 	void CMeshObject::SetVolumeData(classParam<CVolumeData> pTheVolumeData)
@@ -12077,6 +12078,16 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CLevelSetIterator>(dynamic_cast<CLevelSetIterator*>(m_pWrapper->polymorphicFactory(hResourceIterator)));
+	}
+	
+	/**
+	* CModel::RemoveResource - Removes a resource from the model
+	* @param[in] pResource - The resource to remove
+	*/
+	void CModel::RemoveResource(classParam<CResource> pResource)
+	{
+		Lib3MFHandle hResource = pResource.GetHandle();
+		CheckError(lib3mf_model_removeresource(m_pHandle, hResource));
 	}
 
 } // namespace Lib3MF

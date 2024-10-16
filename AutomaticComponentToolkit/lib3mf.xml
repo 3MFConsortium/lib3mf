@@ -4129,16 +4129,29 @@
 			<param name="VolumeDataInstance" type="handle" class="VolumeData" pass="return"
 				description="returns the new volume data instance." />
 		</method>
-
+		
+		<method name="GetVolumeDataByID"
+			description="finds a volume data object by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
+			<param name="VolumeDataInstance" type="handle" class="VolumeData" pass="return"
+				description="returns the volume data instance" />
+		</method>
+		
 		<method name="AddLevelSet" description="adds an empty boundary shape object to the model.">
 			<param name="LevelSetInstance" type="handle" class="LevelSet" pass="return"
 				description=" returns the mesh object instance" />
 		</method>
 
+
 		<method name="GetLevelSets"
 			description="creates a resource iterator instance with all boundary shape resources.">
 			<param name="ResourceIterator" type="handle" class="LevelSetIterator" pass="return"
 				description="returns the iterator instance." />
+		</method>
+
+		<method name="RemoveResource" description="Removes a resource from the model">
+			<param name="Resource" type="handle" class="Resource" pass="in"
+				description="The resource to remove" />
 		</method>
 	</class>
 

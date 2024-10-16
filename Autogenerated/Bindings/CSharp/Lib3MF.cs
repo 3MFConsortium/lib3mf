@@ -2181,6 +2181,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getlevelsets", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetLevelSets (IntPtr Handle, out IntPtr AResourceIterator);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_removeresource", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_RemoveResource (IntPtr Handle, IntPtr AResource);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_getlibraryversion", CharSet = CharSet.Ansi, CallingConvention=CallingConvention.Cdecl)]
 			public extern static Int32 GetLibraryVersion (out UInt32 AMajor, out UInt32 AMinor, out UInt32 AMicro);
 
@@ -8905,6 +8908,15 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Model_GetLevelSets (Handle, out newResourceIterator));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CLevelSetIterator>(newResourceIterator);
+		}
+
+		public void RemoveResource (CResource AResource)
+		{
+			IntPtr AResourceHandle = IntPtr.Zero;
+			if (AResource != null)
+				AResourceHandle = AResource.GetHandle();
+
+			CheckError(Internal.Lib3MFWrapper.Model_RemoveResource (Handle, AResourceHandle));
 		}
 
 	}

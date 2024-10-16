@@ -1202,7 +1202,7 @@ typedef Lib3MFResult (*PLib3MFMeshObject_IsManifoldAndOrientedPtr) (Lib3MF_MeshO
 typedef Lib3MFResult (*PLib3MFMeshObject_BeamLatticePtr) (Lib3MF_MeshObject pMeshObject, Lib3MF_BeamLattice * pTheBeamLattice);
 
 /**
-* Retrieves the VolumeData this MeshObject.
+* Retrieves the VolumeData of this MeshObject.
 *
 * @param[in] pMeshObject - MeshObject instance.
 * @param[out] pTheVolumeData - the VolumeData of this MeshObject
@@ -1211,7 +1211,7 @@ typedef Lib3MFResult (*PLib3MFMeshObject_BeamLatticePtr) (Lib3MF_MeshObject pMes
 typedef Lib3MFResult (*PLib3MFMeshObject_GetVolumeDataPtr) (Lib3MF_MeshObject pMeshObject, Lib3MF_VolumeData * pTheVolumeData);
 
 /**
-* Sets the VolumeData this MeshObject.
+* Sets the VolumeData of this MeshObject.
 *
 * @param[in] pMeshObject - MeshObject instance.
 * @param[in] pTheVolumeData - the VolumeData of this MeshObject
@@ -6231,6 +6231,15 @@ typedef Lib3MFResult (*PLib3MFModel_AddLevelSetPtr) (Lib3MF_Model pModel, Lib3MF
 */
 typedef Lib3MFResult (*PLib3MFModel_GetLevelSetsPtr) (Lib3MF_Model pModel, Lib3MF_LevelSetIterator * pResourceIterator);
 
+/**
+* Removes a resource from the model
+*
+* @param[in] pModel - Model instance.
+* @param[in] pResource - The resource to remove
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_RemoveResourcePtr) (Lib3MF_Model pModel, Lib3MF_Resource pResource);
+
 /*************************************************************************************************************************
  Global functions
 **************************************************************************************************************************/
@@ -7017,6 +7026,7 @@ typedef struct {
 	PLib3MFModel_AddVolumeDataPtr m_Model_AddVolumeData;
 	PLib3MFModel_AddLevelSetPtr m_Model_AddLevelSet;
 	PLib3MFModel_GetLevelSetsPtr m_Model_GetLevelSets;
+	PLib3MFModel_RemoveResourcePtr m_Model_RemoveResource;
 	PLib3MFGetLibraryVersionPtr m_GetLibraryVersion;
 	PLib3MFGetPrereleaseInformationPtr m_GetPrereleaseInformation;
 	PLib3MFGetBuildInformationPtr m_GetBuildInformation;

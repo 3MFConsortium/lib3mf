@@ -1516,13 +1516,13 @@ public:
 	virtual IBeamLattice * BeamLattice() = 0;
 
 	/**
-	* IMeshObject::GetVolumeData - Retrieves the VolumeData this MeshObject.
+	* IMeshObject::GetVolumeData - Retrieves the VolumeData of this MeshObject.
 	* @return the VolumeData of this MeshObject
 	*/
 	virtual IVolumeData * GetVolumeData() = 0;
 
 	/**
-	* IMeshObject::SetVolumeData - Sets the VolumeData this MeshObject.
+	* IMeshObject::SetVolumeData - Sets the VolumeData of this MeshObject.
 	* @param[in] pTheVolumeData - the VolumeData of this MeshObject
 	*/
 	virtual void SetVolumeData(IVolumeData* pTheVolumeData) = 0;
@@ -6545,6 +6545,12 @@ public:
 	* @return returns the iterator instance.
 	*/
 	virtual ILevelSetIterator * GetLevelSets() = 0;
+
+	/**
+	* IModel::RemoveResource - Removes a resource from the model
+	* @param[in] pResource - The resource to remove
+	*/
+	virtual void RemoveResource(IResource* pResource) = 0;
 
 };
 

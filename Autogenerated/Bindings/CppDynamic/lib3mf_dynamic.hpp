@@ -3426,6 +3426,7 @@ public:
 	inline PVolumeData AddVolumeData();
 	inline PLevelSet AddLevelSet();
 	inline PLevelSetIterator GetLevelSets();
+	inline void RemoveResource(classParam<CResource> pResource);
 };
 
 /*************************************************************************************************************************
@@ -4427,6 +4428,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Model_AddVolumeData = nullptr;
 		pWrapperTable->m_Model_AddLevelSet = nullptr;
 		pWrapperTable->m_Model_GetLevelSets = nullptr;
+		pWrapperTable->m_Model_RemoveResource = nullptr;
 		pWrapperTable->m_GetLibraryVersion = nullptr;
 		pWrapperTable->m_GetPrereleaseInformation = nullptr;
 		pWrapperTable->m_GetBuildInformation = nullptr;
@@ -9735,6 +9737,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_Model_RemoveResource = (PLib3MFModel_RemoveResourcePtr) GetProcAddress(hLibrary, "lib3mf_model_removeresource");
+		#else // _WIN32
+		pWrapperTable->m_Model_RemoveResource = (PLib3MFModel_RemoveResourcePtr) dlsym(hLibrary, "lib3mf_model_removeresource");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_RemoveResource == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_GetLibraryVersion = (PLib3MFGetLibraryVersionPtr) GetProcAddress(hLibrary, "lib3mf_getlibraryversion");
 		#else // _WIN32
 		pWrapperTable->m_GetLibraryVersion = (PLib3MFGetLibraryVersionPtr) dlsym(hLibrary, "lib3mf_getlibraryversion");
@@ -12249,6 +12260,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetLevelSets == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_model_removeresource", (void**)&(pWrapperTable->m_Model_RemoveResource));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_RemoveResource == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_getlibraryversion", (void**)&(pWrapperTable->m_GetLibraryVersion));
 		if ( (eLookupError != 0) || (pWrapperTable->m_GetLibraryVersion == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -13776,7 +13791,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CMeshObject::GetVolumeData - Retrieves the VolumeData this MeshObject.
+	* CMeshObject::GetVolumeData - Retrieves the VolumeData of this MeshObject.
 	* @return the VolumeData of this MeshObject
 	*/
 	PVolumeData CMeshObject::GetVolumeData()
@@ -13792,7 +13807,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CMeshObject::SetVolumeData - Sets the VolumeData this MeshObject.
+	* CMeshObject::SetVolumeData - Sets the VolumeData of this MeshObject.
 	* @param[in] pTheVolumeData - the VolumeData of this MeshObject
 	*/
 	void CMeshObject::SetVolumeData(classParam<CVolumeData> pTheVolumeData)
@@ -20591,6 +20606,16 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CLevelSetIterator>(dynamic_cast<CLevelSetIterator*>(m_pWrapper->polymorphicFactory(hResourceIterator)));
+	}
+	
+	/**
+	* CModel::RemoveResource - Removes a resource from the model
+	* @param[in] pResource - The resource to remove
+	*/
+	void CModel::RemoveResource(classParam<CResource> pResource)
+	{
+		Lib3MFHandle hResource = pResource.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_RemoveResource(m_pHandle, hResource));
 	}
 
 } // namespace Lib3MF

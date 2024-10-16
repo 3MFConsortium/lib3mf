@@ -222,6 +222,8 @@ public:
 	ILevelSet* AddLevelSet() override;
 
 	ILevelSetIterator * GetLevelSets() override;
+
+	void RemoveResource(IResource* pResource) override;
 };
 
 }

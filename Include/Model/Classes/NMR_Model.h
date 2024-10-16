@@ -377,6 +377,8 @@ namespace NMR {
 
 		[[nodiscard]] ModelResourceID getMaxModelResourceID();
 
+		void removeResource(PModelResource pResource);
+
 	};
 
 	typedef std::shared_ptr <CModel> PModel;

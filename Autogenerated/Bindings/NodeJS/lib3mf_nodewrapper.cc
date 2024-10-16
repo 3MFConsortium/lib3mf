@@ -21636,6 +21636,7 @@ void CLib3MFModel::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddVolumeData", AddVolumeData);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddLevelSet", AddLevelSet);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLevelSets", GetLevelSets);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveResource", RemoveResource);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -23477,6 +23478,34 @@ void CLib3MFModel::GetLevelSets(const FunctionCallbackInfo<Value>& args)
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjResourceIterator = CLib3MFLevelSetIterator::NewInstance(args.Holder(), hReturnResourceIterator);
         args.GetReturnValue().Set(instanceObjResourceIterator);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::RemoveResource(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsObject()) {
+            throw std::runtime_error("Expected class parameter 0 (Resource)");
+        }
+        Local<Object> objResource = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+        CLib3MFResource * instanceResource = ObjectWrap::Unwrap<CLib3MFResource>(objResource);
+        if (instanceResource == nullptr)
+            throw std::runtime_error("Invalid Object parameter 0 (Resource)");
+        Lib3MFHandle hResource = instanceResource->getHandle( objResource );
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method RemoveResource.");
+        if (wrapperTable->m_Model_RemoveResource == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::RemoveResource.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_RemoveResource(instanceHandle, hResource);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

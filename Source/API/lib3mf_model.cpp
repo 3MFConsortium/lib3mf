@@ -939,3 +939,10 @@ ILevelSetIterator * CModel::GetLevelSets()
 	return pResult.release();
 }
 
+void CModel::RemoveResource(IResource* pResource)
+{
+	CResource* pLib3MFResource = dynamic_cast<CResource*> (pResource);
+	if (!pLib3MFResource)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDRESOURCE);
+	model().removeResource(pLib3MFResource->resource());
+}

@@ -630,6 +630,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Model_AddVolumeData = NULL;
 	pWrapperTable->m_Model_AddLevelSet = NULL;
 	pWrapperTable->m_Model_GetLevelSets = NULL;
+	pWrapperTable->m_Model_RemoveResource = NULL;
 	pWrapperTable->m_GetLibraryVersion = NULL;
 	pWrapperTable->m_GetPrereleaseInformation = NULL;
 	pWrapperTable->m_GetBuildInformation = NULL;
@@ -5939,6 +5940,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Model_GetLevelSets == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_RemoveResource = (PLib3MFModel_RemoveResourcePtr) GetProcAddress(hLibrary, "lib3mf_model_removeresource");
+	#else // _WIN32
+	pWrapperTable->m_Model_RemoveResource = (PLib3MFModel_RemoveResourcePtr) dlsym(hLibrary, "lib3mf_model_removeresource");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_RemoveResource == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

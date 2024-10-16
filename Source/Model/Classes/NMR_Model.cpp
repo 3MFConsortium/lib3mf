@@ -1689,5 +1689,119 @@ namespace NMR {
 
 		return dynamic_cast<CModelVolumeData*>(pResource.get());
 	}
+
+
+	void CModel::removeResource(PModelResource pResource)
+	{
+		if (pResource.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		// Remove from resource list
+		auto resourceIterator = std::find(m_Resources.begin(), m_Resources.end(), pResource);
+		if (resourceIterator == m_Resources.end())
+		{
+			throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+
+		}
+
+		m_Resources.erase(resourceIterator);
+
+		// Remove from Resource map
+		auto resourceMapIterator = m_ResourceMap.find(pResource->getPackageResourceID()->getUniqueID());
+		if (resourceMapIterator == m_ResourceMap.end())
+		{
+			throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+		}
+
+		m_ResourceMap.erase(resourceMapIterator);
+
+		// Remove from specific resource lists
+
+		auto objectIterator = std::find(m_ObjectLookup.begin(), m_ObjectLookup.end(), pResource);
+		if (objectIterator != m_ObjectLookup.end())
+		{
+			m_ObjectLookup.erase(objectIterator);
+			return;
+		}
+
+		auto baseMaterialIterator = std::find(m_BaseMaterialLookup.begin(), m_BaseMaterialLookup.end(), pResource);
+		if (baseMaterialIterator != m_BaseMaterialLookup.end())
+		{
+			m_BaseMaterialLookup.erase(baseMaterialIterator);
+			return;
+		}
+
+		auto textureIterator = std::find(m_TextureLookup.begin(), m_TextureLookup.end(), pResource);
+		if (textureIterator != m_TextureLookup.end())
+		{
+			m_TextureLookup.erase(textureIterator);
+			return;
+		}
+
+		auto sliceStackIterator = std::find(m_SliceStackLookup.begin(), m_SliceStackLookup.end(), pResource);
+		if (sliceStackIterator != m_SliceStackLookup.end())
+		{
+			m_SliceStackLookup.erase(sliceStackIterator);
+			return;
+		}
+
+		auto colorGroupIterator = std::find(m_ColorGroupLookup.begin(), m_ColorGroupLookup.end(), pResource);
+		if (colorGroupIterator != m_ColorGroupLookup.end())
+		{
+			m_ColorGroupLookup.erase(colorGroupIterator);
+			return;
+		}
+
+		auto texture2DGroupIterator = std::find(m_Texture2DGroupLookup.begin(), m_Texture2DGroupLookup.end(), pResource);
+		if (texture2DGroupIterator != m_Texture2DGroupLookup.end())
+		{
+			m_Texture2DGroupLookup.erase(texture2DGroupIterator);
+			return;
+		}
+
+		auto compositeMaterialsIterator = std::find(m_CompositeMaterialsLookup.begin(), m_CompositeMaterialsLookup.end(), pResource);
+		if (compositeMaterialsIterator != m_CompositeMaterialsLookup.end())
+		{
+			m_CompositeMaterialsLookup.erase(compositeMaterialsIterator);
+			return;
+		}
+
+		auto multiPropertyGroupIterator = std::find(m_MultiPropertyGroupLookup.begin(), m_MultiPropertyGroupLookup.end(), pResource);
+		if (multiPropertyGroupIterator != m_MultiPropertyGroupLookup.end())
+		{
+			m_MultiPropertyGroupLookup.erase(multiPropertyGroupIterator);
+			return;
+		}
+
+		auto image3DIterator = std::find(m_Image3DLookup.begin(), m_Image3DLookup.end(), pResource);
+		if (image3DIterator != m_Image3DLookup.end())
+		{
+			m_Image3DLookup.erase(image3DIterator);
+			return;
+		}
+
+		auto functionIterator = std::find(m_FunctionLookup.begin(), m_FunctionLookup.end(), pResource);
+		if (functionIterator != m_FunctionLookup.end())
+		{
+			m_FunctionLookup.erase(functionIterator);
+			return;
+		}
+
+		auto volumeDataIterator = std::find(m_VolumeDataLookup.begin(), m_VolumeDataLookup.end(), pResource);
+		if (volumeDataIterator != m_VolumeDataLookup.end())
+		{
+			m_VolumeDataLookup.erase(volumeDataIterator);
+			return;
+		}
+
+		auto levelSetObjectIterator = std::find(m_levelSetObjectLookup.begin(), m_levelSetObjectLookup.end(), pResource);
+		if (levelSetObjectIterator != m_levelSetObjectLookup.end())
+		{
+			m_levelSetObjectLookup.erase(levelSetObjectIterator);
+			return;
+		}
+
+		throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+	}
 }  // namespace NMR
 

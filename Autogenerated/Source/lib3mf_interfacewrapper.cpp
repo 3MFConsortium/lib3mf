@@ -22607,6 +22607,43 @@ Lib3MFResult lib3mf_model_getlevelsets(Lib3MF_Model pModel, Lib3MF_LevelSetItera
 	}
 }
 
+Lib3MFResult lib3mf_model_removeresource(Lib3MF_Model pModel, Lib3MF_Resource pResource)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "RemoveResource");
+			pJournalEntry->addHandleParameter("Resource", pResource);
+		}
+		IBase* pIBaseClassResource = (IBase *)pResource;
+		IResource* pIResource = dynamic_cast<IResource*>(pIBaseClassResource);
+		if (!pIResource)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIModel->RemoveResource(pIResource);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 
 
 /*************************************************************************************************************************
@@ -23786,6 +23823,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_model_addlevelset;
 	if (sProcName == "lib3mf_model_getlevelsets") 
 		*ppProcAddress = (void*) &lib3mf_model_getlevelsets;
+	if (sProcName == "lib3mf_model_removeresource") 
+		*ppProcAddress = (void*) &lib3mf_model_removeresource;
 	if (sProcName == "lib3mf_getlibraryversion") 
 		*ppProcAddress = (void*) &lib3mf_getlibraryversion;
 	if (sProcName == "lib3mf_getprereleaseinformation") 

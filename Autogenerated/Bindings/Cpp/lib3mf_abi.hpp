@@ -1215,7 +1215,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_meshobject_ismanifoldandoriented(Lib3MF_Mesh
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_meshobject_beamlattice(Lib3MF_MeshObject pMeshObject, Lib3MF_BeamLattice * pTheBeamLattice);
 
 /**
-* Retrieves the VolumeData this MeshObject.
+* Retrieves the VolumeData of this MeshObject.
 *
 * @param[in] pMeshObject - MeshObject instance.
 * @param[out] pTheVolumeData - the VolumeData of this MeshObject
@@ -1224,7 +1224,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_meshobject_beamlattice(Lib3MF_MeshObject pMe
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_meshobject_getvolumedata(Lib3MF_MeshObject pMeshObject, Lib3MF_VolumeData * pTheVolumeData);
 
 /**
-* Sets the VolumeData this MeshObject.
+* Sets the VolumeData of this MeshObject.
 *
 * @param[in] pMeshObject - MeshObject instance.
 * @param[in] pTheVolumeData - the VolumeData of this MeshObject
@@ -6243,6 +6243,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addlevelset(Lib3MF_Model pModel, Lib3M
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getlevelsets(Lib3MF_Model pModel, Lib3MF_LevelSetIterator * pResourceIterator);
+
+/**
+* Removes a resource from the model
+*
+* @param[in] pModel - Model instance.
+* @param[in] pResource - The resource to remove
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_removeresource(Lib3MF_Model pModel, Lib3MF_Resource pResource);
 
 /*************************************************************************************************************************
  Global functions

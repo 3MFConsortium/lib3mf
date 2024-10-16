@@ -1774,7 +1774,7 @@ type
 	TLib3MFMeshObject_BeamLatticeFunc = function(pMeshObject: TLib3MFHandle; out pTheBeamLattice: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
-	* Retrieves the VolumeData this MeshObject.
+	* Retrieves the VolumeData of this MeshObject.
 	*
 	* @param[in] pMeshObject - MeshObject instance.
 	* @param[out] pTheVolumeData - the VolumeData of this MeshObject
@@ -1783,7 +1783,7 @@ type
 	TLib3MFMeshObject_GetVolumeDataFunc = function(pMeshObject: TLib3MFHandle; out pTheVolumeData: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
-	* Sets the VolumeData this MeshObject.
+	* Sets the VolumeData of this MeshObject.
 	*
 	* @param[in] pMeshObject - MeshObject instance.
 	* @param[in] pTheVolumeData - the VolumeData of this MeshObject
@@ -6895,6 +6895,15 @@ type
 	*)
 	TLib3MFModel_GetLevelSetsFunc = function(pModel: TLib3MFHandle; out pResourceIterator: TLib3MFHandle): TLib3MFResult; cdecl;
 	
+	(**
+	* Removes a resource from the model
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] pResource - The resource to remove
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_RemoveResourceFunc = function(pModel: TLib3MFHandle; const pResource: TLib3MFHandle): TLib3MFResult; cdecl;
+	
 (*************************************************************************************************************************
  Global function definitions 
 **************************************************************************************************************************)
@@ -8963,6 +8972,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function AddVolumeData(): TLib3MFVolumeData;
 		function AddLevelSet(): TLib3MFLevelSet;
 		function GetLevelSets(): TLib3MFLevelSetIterator;
+		procedure RemoveResource(const AResource: TLib3MFResource);
 	end;
 
 (*************************************************************************************************************************
@@ -9554,6 +9564,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_AddVolumeDataFunc: TLib3MFModel_AddVolumeDataFunc;
 		FLib3MFModel_AddLevelSetFunc: TLib3MFModel_AddLevelSetFunc;
 		FLib3MFModel_GetLevelSetsFunc: TLib3MFModel_GetLevelSetsFunc;
+		FLib3MFModel_RemoveResourceFunc: TLib3MFModel_RemoveResourceFunc;
 		FLib3MFGetLibraryVersionFunc: TLib3MFGetLibraryVersionFunc;
 		FLib3MFGetPrereleaseInformationFunc: TLib3MFGetPrereleaseInformationFunc;
 		FLib3MFGetBuildInformationFunc: TLib3MFGetBuildInformationFunc;
@@ -10165,6 +10176,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_AddVolumeDataFunc: TLib3MFModel_AddVolumeDataFunc read FLib3MFModel_AddVolumeDataFunc;
 		property Lib3MFModel_AddLevelSetFunc: TLib3MFModel_AddLevelSetFunc read FLib3MFModel_AddLevelSetFunc;
 		property Lib3MFModel_GetLevelSetsFunc: TLib3MFModel_GetLevelSetsFunc read FLib3MFModel_GetLevelSetsFunc;
+		property Lib3MFModel_RemoveResourceFunc: TLib3MFModel_RemoveResourceFunc read FLib3MFModel_RemoveResourceFunc;
 		property Lib3MFGetLibraryVersionFunc: TLib3MFGetLibraryVersionFunc read FLib3MFGetLibraryVersionFunc;
 		property Lib3MFGetPrereleaseInformationFunc: TLib3MFGetPrereleaseInformationFunc read FLib3MFGetPrereleaseInformationFunc;
 		property Lib3MFGetBuildInformationFunc: TLib3MFGetBuildInformationFunc read FLib3MFGetBuildInformationFunc;
@@ -18894,6 +18906,17 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFLevelSetIterator, TLib3MFLevelSetIterator>.Make(FWrapper, HResourceIterator);
 	end;
 
+	procedure TLib3MFModel.RemoveResource(const AResource: TLib3MFResource);
+	var
+		AResourceHandle: TLib3MFHandle;
+	begin
+		if Assigned(AResource) then
+		AResourceHandle := AResource.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AResource is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_RemoveResourceFunc(FHandle, AResourceHandle));
+	end;
+
 (*************************************************************************************************************************
  Wrapper class implementation
 **************************************************************************************************************************)
@@ -19498,6 +19521,7 @@ implementation
 		FLib3MFModel_AddVolumeDataFunc := LoadFunction('lib3mf_model_addvolumedata');
 		FLib3MFModel_AddLevelSetFunc := LoadFunction('lib3mf_model_addlevelset');
 		FLib3MFModel_GetLevelSetsFunc := LoadFunction('lib3mf_model_getlevelsets');
+		FLib3MFModel_RemoveResourceFunc := LoadFunction('lib3mf_model_removeresource');
 		FLib3MFGetLibraryVersionFunc := LoadFunction('lib3mf_getlibraryversion');
 		FLib3MFGetPrereleaseInformationFunc := LoadFunction('lib3mf_getprereleaseinformation');
 		FLib3MFGetBuildInformationFunc := LoadFunction('lib3mf_getbuildinformation');
@@ -21272,6 +21296,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getlevelsets'), @FLib3MFModel_GetLevelSetsFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_removeresource'), @FLib3MFModel_RemoveResourceFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_getlibraryversion'), @FLib3MFGetLibraryVersionFunc);
