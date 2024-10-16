@@ -1715,6 +1715,8 @@ namespace NMR {
 
 		m_ResourceMap.erase(resourceMapIterator);
 
+		m_resourceHandler.removePackageResourceID(pResource->getPackageResourceID());
+
 		// Remove from specific resource lists
 
 		auto objectIterator = std::find(m_ObjectLookup.begin(), m_ObjectLookup.end(), pResource);
