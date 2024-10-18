@@ -1116,6 +1116,10 @@ namespace NMR {
 
 				addResource(pNewImplicitFunction);
 				oldToNewMapping[pOldImplicitFunction->getPackageResourceID()->getUniqueID()] = pNewImplicitFunction->getPackageResourceID()->getUniqueID();
+
+                // std::cout << "Merged implicit function (unique ids) " << pOldImplicitFunction->getPackageResourceID()->getUniqueID() << " to " << pNewImplicitFunction->getPackageResourceID()->getUniqueID() << std::endl;
+
+				// std::cout << "Merged implicit function (model resource ids) " << pOldImplicitFunction->getPackageResourceID()->getModelResourceID() << " to " << pNewImplicitFunction->getPackageResourceID()->getModelResourceID() << std::endl; 
 			}
 			else
 			{
@@ -1123,7 +1127,7 @@ namespace NMR {
 			}		 
 		}
 
-		nCount = pSourceModel->getFunctionCount();
+		nCount = getFunctionCount();
 		
 		// loop over all newly added functions and update the references in ConstResourceID nodes
 		for (nIndex = previousTargetFunctionCount; nIndex < nCount; nIndex++)
@@ -1154,6 +1158,7 @@ namespace NMR {
 					}
 					
 					node->setModelResourceID(newId->getModelResourceID());
+					
 
 					// check if the resource is available
 					auto res = findResource(currentPath(), newId->getModelResourceID());
