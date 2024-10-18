@@ -1270,6 +1270,38 @@ namespace Lib3MF
         auto targetFunctionsIter = targetModel->GetFunctions();
         EXPECT_EQ(targetFunctionsIter->Count(), sourceModelFunctionCount + 1);
     }
+    void verifyFunctionResources(std::shared_ptr<Lib3MF::CModel> model)
+    { 
+        auto functionIter = model->GetFunctions();
+        while (functionIter->MoveNext())
+        {
+            auto function = functionIter->GetCurrentFunction();
+            ASSERT_TRUE(function);
+            auto implicitFunction = std::dynamic_pointer_cast<CImplicitFunction>(function);
+            if (implicitFunction)
+            {
+                auto res = model->GetResourceByID(implicitFunction->GetUniqueResourceID());
+                ASSERT_TRUE(res);
+                
+                auto nodeIterator = implicitFunction->GetNodes();
+                while (nodeIterator->MoveNext())
+                {
+                    auto node = nodeIterator->GetCurrent();
+                    ASSERT_TRUE(node);
+                
+                    
+                    if (node->GetNodeType() == Lib3MF::eImplicitNodeType::ConstResourceID)
+                    {
+                        auto resourceIdNode = std::dynamic_pointer_cast<CResourceIdNode>(node);
+                        ASSERT_TRUE(resourceIdNode);
+                        auto resource = resourceIdNode->GetResource();
+                        ASSERT_TRUE(resource);
+                    }            
+                }
+            }
+        }
+        
+    }
 
      TEST_F(Volumetric,
            Volumetric_Merge_FunctionsFromLoadedModelIntoLoadedTargetModel_FunctionCountIncreases)
@@ -1293,7 +1325,10 @@ namespace Lib3MF
 
         auto targetFunctionsIter = targetModel->GetFunctions();
         EXPECT_EQ(targetFunctionsIter->Count(), sourceModelFunctionCount + previousTargetFunctionCount);
+
+        verifyFunctionResources(targetModel);
     }
+
 
     TEST_F(Volumetric,
            Volumetric_Merge_FunctionsFromLoadedModelIntoLoadedTargetModelWithoutFunctions_VaildResourceReferences)
@@ -1314,39 +1349,7 @@ namespace Lib3MF
 
         EXPECT_NO_THROW(targetModel->MergeFromModel(sourceModel.get()));
 
-        auto targetFunctionsIter = targetModel->GetFunctions();
-        EXPECT_EQ(targetFunctionsIter->Count(), sourceModelFunctionCount + previousTargetFunctionCount);
-
-        while (targetFunctionsIter->MoveNext())
-        {
-            auto function = targetFunctionsIter->GetCurrentFunction();
-            ASSERT_TRUE(function);
-            auto implicitFunction = std::dynamic_pointer_cast<CImplicitFunction>(function);
-            if (implicitFunction)
-            {
-                std::cout << "Implicit function: " << implicitFunction->GetDisplayName() << " Resource ID: " << implicitFunction->GetModelResourceID() << std::endl;
-
-                auto res = targetModel->GetResourceByID(implicitFunction->GetUniqueResourceID());
-                ASSERT_TRUE(res);
-                
-                auto nodeIterator = implicitFunction->GetNodes();
-                while (nodeIterator->MoveNext())
-                {
-                    auto node = nodeIterator->GetCurrent();
-                    ASSERT_TRUE(node);
-                
-                    
-                    if (node->GetNodeType() == Lib3MF::eImplicitNodeType::ConstResourceID)
-                    {
-                        auto resourceIdNode = std::dynamic_pointer_cast<CResourceIdNode>(node);
-                        std::cout <<  "Resource ID node: " << resourceIdNode->GetDisplayName() << " identifier: " << resourceIdNode->GetIdentifier() << std::endl;
-                        ASSERT_TRUE(resourceIdNode);
-                        auto resource = resourceIdNode->GetResource();
-                        ASSERT_TRUE(resource);
-                    }            
-                }
-            }
-        }
+        verifyFunctionResources(targetModel);
     }
 
 }  // namespace Lib3MF

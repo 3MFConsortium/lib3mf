@@ -1123,6 +1123,8 @@ namespace NMR {
 			}		 
 		}
 
+		nCount = pSourceModel->getFunctionCount();
+		
 		// loop over all newly added functions and update the references in ConstResourceID nodes
 		for (nIndex = previousTargetFunctionCount; nIndex < nCount; nIndex++)
 		{
@@ -1150,7 +1152,7 @@ namespace NMR {
 					{
 						throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 					}
-				
+					
 					node->setModelResourceID(newId->getModelResourceID());
 
 					// check if the resource is available
