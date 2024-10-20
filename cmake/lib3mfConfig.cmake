@@ -1,4 +1,7 @@
 # lib3mfConfig.cmake
+include(CMakeFindDependencyMacro)
+find_dependency(libzip)
+find_dependency(ZLIB)
 
 if(VCPKG_TOOLCHAIN)
     message("Lib3MF - VCPKG Tool Chain")
