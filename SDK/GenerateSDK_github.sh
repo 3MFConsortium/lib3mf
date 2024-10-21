@@ -30,7 +30,7 @@ mkdir -p $SDKARTIFACT/Lib || failed "Error creating Lib-folder"
 echo Copy binaries
 cp $LOCATION/lib3mf.dll/lib3mf.dll $SDKARTIFACT/Bin/ || failed "Error copying binary"
 cp $LOCATION/lib3mf.so/lib3mf.so.2 $SDKARTIFACT/Bin/lib3mf.so || failed "Error copying binary"
-cp $LOCATION/lib3mf.dylib/lib3mf.2.3.2.0.dylib $SDKARTIFACT/Bin/lib3mf.dylib || failed "Error copying binary"
+cp $LOCATION/lib3mf.dylib/lib3mf.$LIB3MF_VERSION.dylib $SDKARTIFACT/Bin/lib3mf.dylib || failed "Error copying binary"
 cp $LOCATION/lib3mf.lib/lib3mf.lib $SDKARTIFACT/Lib/ || failed "Error copying binary"
 
 echo Generate version.txt
