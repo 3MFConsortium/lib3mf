@@ -6535,13 +6535,6 @@ public:
 	virtual IVolumeData * AddVolumeData() = 0;
 
 	/**
-	* IModel::GetVolumeDataByID - finds a volume data object by its UniqueResourceID
-	* @param[in] nUniqueResourceID - UniqueResourceID
-	* @return returns the volume data instance
-	*/
-	virtual IVolumeData * GetVolumeDataByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
-
-	/**
 	* IModel::AddLevelSet - adds an empty boundary shape object to the model.
 	* @return  returns the mesh object instance
 	*/

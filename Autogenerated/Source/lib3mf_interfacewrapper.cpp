@@ -22535,43 +22535,6 @@ Lib3MFResult lib3mf_model_addvolumedata(Lib3MF_Model pModel, Lib3MF_VolumeData *
 	}
 }
 
-Lib3MFResult lib3mf_model_getvolumedatabyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_VolumeData * pVolumeDataInstance)
-{
-	IBase* pIBaseClass = (IBase *)pModel;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetVolumeDataByID");
-			pJournalEntry->addUInt32Parameter("UniqueResourceID", nUniqueResourceID);
-		}
-		if (pVolumeDataInstance == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseVolumeDataInstance(nullptr);
-		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
-		if (!pIModel)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pBaseVolumeDataInstance = pIModel->GetVolumeDataByID(nUniqueResourceID);
-
-		*pVolumeDataInstance = (IBase*)(pBaseVolumeDataInstance);
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("VolumeDataInstance", *pVolumeDataInstance);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
 Lib3MFResult lib3mf_model_addlevelset(Lib3MF_Model pModel, Lib3MF_LevelSet * pLevelSetInstance)
 {
 	IBase* pIBaseClass = (IBase *)pModel;
@@ -23856,8 +23819,6 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_model_addfunctionfromimage3d;
 	if (sProcName == "lib3mf_model_addvolumedata") 
 		*ppProcAddress = (void*) &lib3mf_model_addvolumedata;
-	if (sProcName == "lib3mf_model_getvolumedatabyid") 
-		*ppProcAddress = (void*) &lib3mf_model_getvolumedatabyid;
 	if (sProcName == "lib3mf_model_addlevelset") 
 		*ppProcAddress = (void*) &lib3mf_model_addlevelset;
 	if (sProcName == "lib3mf_model_getlevelsets") 

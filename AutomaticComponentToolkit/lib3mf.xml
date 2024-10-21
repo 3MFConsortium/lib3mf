@@ -4121,14 +4121,7 @@
 			<param name="VolumeDataInstance" type="handle" class="VolumeData" pass="return"
 				description="returns the new volume data instance." />
 		</method>
-		
-		<method name="GetVolumeDataByID"
-			description="finds a volume data object by its UniqueResourceID">
-			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
-			<param name="VolumeDataInstance" type="handle" class="VolumeData" pass="return"
-				description="returns the volume data instance" />
-		</method>
-		
+				
 		<method name="AddLevelSet" description="adds an empty boundary shape object to the model.">
 			<param name="LevelSetInstance" type="handle" class="LevelSet" pass="return"
 				description=" returns the mesh object instance" />

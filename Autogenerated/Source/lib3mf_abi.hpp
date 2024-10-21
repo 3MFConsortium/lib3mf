@@ -6227,16 +6227,6 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addfunctionfromimage3d(Lib3MF_Model pM
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addvolumedata(Lib3MF_Model pModel, Lib3MF_VolumeData * pVolumeDataInstance);
 
 /**
-* finds a volume data object by its UniqueResourceID
-*
-* @param[in] pModel - Model instance.
-* @param[in] nUniqueResourceID - UniqueResourceID
-* @param[out] pVolumeDataInstance - returns the volume data instance
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getvolumedatabyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_VolumeData * pVolumeDataInstance);
-
-/**
 * adds an empty boundary shape object to the model.
 *
 * @param[in] pModel - Model instance.
