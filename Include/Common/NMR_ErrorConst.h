@@ -1228,6 +1228,9 @@ Model error codes (0x8XXX)
 // A component resource is invalid
 #define NMR_ERROR_INVALIDCOMPONENTRESOURCE 0x810D
 
+// A keystore element is not base64 encoded
+#define NMR_ERROR_KEYSTOREINVALIDENCODING 0x810E
+
 // errors for the volumetric extension 0x88xx
 
 // Invalid Image3D Size
@@ -1454,6 +1457,7 @@ Model error codes (0x8XXX)
 
 // Duplicate attribute mesh id in levelset element
 #define NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_MESH_ID 0x884A
+
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)

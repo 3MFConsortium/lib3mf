@@ -153,20 +153,10 @@ namespace NMR {
 	{
 		__NMRASSERT(pszValue);
 		nfDouble dResult = 0.0;
-#ifdef __APPLE__
-	#define __NO_FROM_CHARS_FP__
-#endif
 
-//mingw
-#ifdef __MINGW32__
-	#define __NO_FROM_CHARS_FP__
-#endif
+		//skip leading whitespaces
+		for (; *pszValue && *pszValue == ' '; pszValue++);
 
-#ifdef __MINGW64__
-	#define __NO_FROM_CHARS_FP__
-#endif
-
-#ifdef __NO_FROM_CHARS_FP__
 		// Convert to double and make a input and range check!
 		auto answer = fast_float::from_chars(pszValue, pszValue + strlen(pszValue), dResult);
 
@@ -175,7 +165,13 @@ namespace NMR {
 		{
 			throw CNMRException(NMR_ERROR_EMPTYSTRINGTODOUBLECONVERSION);
 		}
-		
+		else if (answer.ptr) // Invalidate comma as decimal separator
+		{
+			if (answer.ptr[0] == ',')
+			{
+				throw CNMRException(NMR_ERROR_INVALIDSTRINGTODOUBLECONVERSION);
+			}
+		}
 		if ((dResult == HUGE_VAL) || (dResult == -HUGE_VAL))
 			throw CNMRException(NMR_ERROR_STRINGTODOUBLECONVERSIONOUTOFRANGE);
 #else

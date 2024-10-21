@@ -14,3 +14,5 @@ SetupWriteRead4.3mf
 SetupWriteRead5.3mf
 v093reout.3mf
 .vs
+.idea
+cmake-build-*

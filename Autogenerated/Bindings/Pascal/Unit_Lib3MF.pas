@@ -3272,7 +3272,7 @@ type
 	TLib3MFAttachment_WriteToFileFunc = function(pAttachment: TLib3MFHandle; const pFileName: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
-	* Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF packege, or via the WriteToFile or WriteToBuffer-methods.
+	* Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
 	*
 	* @param[in] pAttachment - Attachment instance.
 	* @param[in] pFileName - file to read from.
@@ -3281,7 +3281,7 @@ type
 	TLib3MFAttachment_ReadFromFileFunc = function(pAttachment: TLib3MFHandle; const pFileName: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
-	* Reads a model and from the data provided by a callback function
+	* Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
 	*
 	* @param[in] pAttachment - Attachment instance.
 	* @param[in] pTheReadCallback - Callback to call for reading a data chunk
@@ -3313,7 +3313,7 @@ type
 	TLib3MFAttachment_WriteToBufferFunc = function(pAttachment: TLib3MFHandle; const nBufferCount: QWord; out pBufferNeededCount: QWord; pBufferBuffer: PByte): TLib3MFResult; cdecl;
 	
 	(**
-	* Reads an attachment from a memory buffer
+	* Reads an attachment from a memory buffer. This buffer is immediatly read (in contrast to the ReadFromCallback and ReadFromFile-methods).
 	*
 	* @param[in] pAttachment - Attachment instance.
 	* @param[in] nBufferCount - Number of elements in buffer

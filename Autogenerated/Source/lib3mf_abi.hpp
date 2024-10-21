@@ -2694,7 +2694,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_attachment_setrelationshiptype(Lib3MF_Attach
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_attachment_writetofile(Lib3MF_Attachment pAttachment, const char * pFileName);
 
 /**
-* Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF packege, or via the WriteToFile or WriteToBuffer-methods.
+* Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
 *
 * @param[in] pAttachment - Attachment instance.
 * @param[in] pFileName - file to read from.
@@ -2703,7 +2703,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_attachment_writetofile(Lib3MF_Attachment pAt
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_attachment_readfromfile(Lib3MF_Attachment pAttachment, const char * pFileName);
 
 /**
-* Reads a model and from the data provided by a callback function
+* Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
 *
 * @param[in] pAttachment - Attachment instance.
 * @param[in] pTheReadCallback - Callback to call for reading a data chunk
@@ -2735,7 +2735,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_attachment_getstreamsize(Lib3MF_Attachment p
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_attachment_writetobuffer(Lib3MF_Attachment pAttachment, const Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer);
 
 /**
-* Reads an attachment from a memory buffer
+* Reads an attachment from a memory buffer. This buffer is immediatly read (in contrast to the ReadFromCallback and ReadFromFile-methods).
 *
 * @param[in] pAttachment - Attachment instance.
 * @param[in] nBufferBufferSize - Number of elements in buffer
@@ -6225,6 +6225,16 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addfunctionfromimage3d(Lib3MF_Model pM
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addvolumedata(Lib3MF_Model pModel, Lib3MF_VolumeData * pVolumeDataInstance);
+
+/**
+* finds a volume data object by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pVolumeDataInstance - returns the volume data instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getvolumedatabyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_VolumeData * pVolumeDataInstance);
 
 /**
 * adds an empty boundary shape object to the model.

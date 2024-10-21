@@ -59,6 +59,48 @@ namespace Lib3MF
 		CheckReaderWarnings(Reader::reader3MF, 0);
 	}
 
+    TEST_F(Reader, 3MFReadFromFileAndAddMeshObjects)
+    {
+        auto reader = model->QueryReader("3mf");
+        reader->ReadFromFile(sTestFilesPath + "/Reader/" + "Box.3mf");
+        ASSERT_NO_THROW(model->AddMeshObject());
+        ASSERT_NO_THROW(model->AddMeshObject());
+        ASSERT_NO_THROW(model->AddMeshObject());
+        std::vector<Lib3MF_uint32> resourceIDs;
+        std::vector<Lib3MF_uint32> modelResourceIDs;
+        std::vector<Lib3MF_uint32> expectedModelResourceIDs({2,3,5,6,7});
+        std::vector<Lib3MF_uint32> expectedResourceIDs({2,3,4,5,6});
+        auto objectIterator = model->GetObjects();
+        while (objectIterator->MoveNext()) {
+            auto object = objectIterator->GetCurrentObject();
+            modelResourceIDs.push_back(object->GetModelResourceID());
+            resourceIDs.push_back(object->GetResourceID());
+        }
+        ASSERT_EQ(modelResourceIDs, expectedModelResourceIDs);
+        ASSERT_EQ(resourceIDs, expectedResourceIDs);
+    }
+
+    TEST_F(Reader, 3MFReadFromFileAndAddComponents)
+    {
+        auto reader = model->QueryReader("3mf");
+        reader->ReadFromFile(sTestFilesPath + "/Reader/" + "Globo.3mf");
+        ASSERT_NO_THROW(model->AddComponentsObject());
+        ASSERT_NO_THROW(model->AddComponentsObject());
+        ASSERT_NO_THROW(model->AddComponentsObject());
+        std::vector<Lib3MF_uint32> resourceIDs;
+        std::vector<Lib3MF_uint32> modelResourceIDs;
+        std::vector<Lib3MF_uint32> expectedModelResourceIDs({2,3,4,5,6,7,8,9});
+        std::vector<Lib3MF_uint32> expectedResourceIDs({1,2,3,4,5,6,7,8});
+        auto objectIterator = model->GetObjects();
+        while (objectIterator->MoveNext()) {
+            auto object = objectIterator->GetCurrentObject();
+            modelResourceIDs.push_back(object->GetModelResourceID());
+            resourceIDs.push_back(object->GetResourceID());
+        }
+        ASSERT_EQ(modelResourceIDs, expectedModelResourceIDs);
+        ASSERT_EQ(resourceIDs, expectedResourceIDs);
+    }
+
 	TEST_F(Reader, STLReadFromFile)
 	{
 		Reader::readerSTL->ReadFromFile(sTestFilesPath + "/Reader/" + "Pyramid.stl");
@@ -150,4 +192,28 @@ namespace Lib3MF
 		ASSERT_SPECIFIC_THROW(reader->ReadFromFile(sTestFilesPath + "/Reader/" + "GEN-M-ADA-ITEM-TRANSFORM-0.3mf"), ELib3MFException);
 	}
 
+
+	TEST_F(Reader, ReadVerticesCommaSeparatedValue) {
+		// This file N_XXX_0422_01.3mf contains vertices with comma-separated values.
+		// The 3MFReader should throw an error at NMR_StringUtils::fnStringToDouble when reading this file because 
+		// comma-separated values are not allowed in 3MF files.
+		auto reader = model->QueryReader("3mf");
+		ASSERT_SPECIFIC_THROW(reader->ReadFromFile(sTestFilesPath + "/Reader/" + "N_XXX_0422_01.3mf"), ELib3MFException);
+	}
+
+	TEST_F(Reader, ReadVerticesWithLeadingPLUSSign) {
+		// This file P_XXM_0519_01.3mf contains vertices with leading + sign e.g +1E+2.
+		// The 3MFReader allows leading + sign at NMR_StringUtils::fnStringToDouble when reading this file.
+		auto reader = model->QueryReader("3mf");
+		reader->ReadFromFile(sTestFilesPath + "/Reader/" + "P_XXM_0519_01.3mf");
+		CheckReaderWarnings(Reader::reader3MF, 0);
+	}
+
+	TEST_F(Reader, ReadVerticesValueWithLeadingTrialingSpaces) {
+		// This file cam-51476-test.3mf contains vertices with leading whitespaces.
+		// The 3MFReader allows leading/trialing whitespaces at NMR_StringUtils::fnStringToDouble when reading this file.
+		auto reader = model->QueryReader("3mf");
+		reader->ReadFromFile(sTestFilesPath + "/Reader/" + "cam_51476_test.3mf");
+		CheckReaderWarnings(Reader::reader3MF, 0);
+	}
 }

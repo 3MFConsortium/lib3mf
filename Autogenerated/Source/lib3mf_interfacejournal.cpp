@@ -286,7 +286,7 @@ CLib3MFInterfaceJournal::CLib3MFInterfaceJournal (const std::string & sFileName)
 	m_StartTime = std::chrono::high_resolution_clock::now();
 	m_Stream.open (sFileName, std::ios::out);
 	m_Stream << "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
-	m_Stream << "<journal library=\"Lib3MF\" version=\"2.4.0-implicit\" xmlns=\"http://schemas.autodesk.com/components/Lib3MF/2.4.0-implicit\">\n";
+	m_Stream << "<journal library=\"Lib3MF\" version=\"2.4.0\" xmlns=\"http://schemas.autodesk.com/components/Lib3MF/2.4.0\">\n";
 	m_Stream << "\n";
 
 }
