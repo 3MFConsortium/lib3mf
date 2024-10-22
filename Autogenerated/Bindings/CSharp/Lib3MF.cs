@@ -101,7 +101,7 @@ namespace Lib3MF {
 	};
 
 	public enum eBeamLatticeBallMode {
-		None = 0,
+		BeamLatticeBallModeNone = 0,
 		Mixed = 1,
 		All = 2
 	};

@@ -5593,7 +5593,7 @@ const (
 type BeamLatticeBallMode int
 
 const (
-	BeamLatticeBallMode_None = 0
+	BeamLatticeBallMode_BeamLatticeBallModeNone = 0
 	BeamLatticeBallMode_Mixed = 1
 	BeamLatticeBallMode_All = 2
 )

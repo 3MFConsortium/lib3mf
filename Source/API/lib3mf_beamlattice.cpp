@@ -139,7 +139,7 @@ void CBeamLattice::GetBallOptions (eLib3MFBeamLatticeBallMode & eBallMode, Lib3M
 
 void CBeamLattice::SetBallOptions (const eLib3MFBeamLatticeBallMode eBallMode, const Lib3MF_double dBallRadius)
 {
-	if (eBallMode == eLib3MFBeamLatticeBallMode::None || dBallRadius > 0.0) {
+	if (eBallMode == eLib3MFBeamLatticeBallMode::BeamLatticeBallModeNone || dBallRadius > 0.0) {
 		m_mesh.setBeamLatticeBallMode((NMR::eModelBeamLatticeBallMode)eBallMode);
 		m_mesh.setDefaultBallRadius(dBallRadius);
 	}

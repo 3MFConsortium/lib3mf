@@ -194,7 +194,7 @@ type
 	);
 
 	TLib3MFBeamLatticeBallMode = (
-		eBeamLatticeBallModeNone,
+		eBeamLatticeBallModeBeamLatticeBallModeNone,
 		eBeamLatticeBallModeMixed,
 		eBeamLatticeBallModeAll
 	);
@@ -10622,7 +10622,7 @@ implementation
 	function convertBeamLatticeBallModeToConst(const AValue: TLib3MFBeamLatticeBallMode): Integer;
 	begin
 		case AValue of
-			eBeamLatticeBallModeNone: Result := 0;
+			eBeamLatticeBallModeBeamLatticeBallModeNone: Result := 0;
 			eBeamLatticeBallModeMixed: Result := 1;
 			eBeamLatticeBallModeAll: Result := 2;
 			else 
@@ -10633,7 +10633,7 @@ implementation
 	function convertConstToBeamLatticeBallMode(const AValue: Integer): TLib3MFBeamLatticeBallMode;
 	begin
 		case AValue of
-			0: Result := eBeamLatticeBallModeNone;
+			0: Result := eBeamLatticeBallModeBeamLatticeBallModeNone;
 			1: Result := eBeamLatticeBallModeMixed;
 			2: Result := eBeamLatticeBallModeAll;
 			else 

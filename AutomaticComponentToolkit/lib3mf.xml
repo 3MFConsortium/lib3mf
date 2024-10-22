@@ -181,7 +181,7 @@
 	</enum>
 
 	<enum name="BeamLatticeBallMode">
-		<option name="None" value="0" />
+		<option name="BeamLatticeBallModeNone" value="0" />
 		<option name="Mixed" value="1" />
 		<option name="All" value="2" />
 	</enum>

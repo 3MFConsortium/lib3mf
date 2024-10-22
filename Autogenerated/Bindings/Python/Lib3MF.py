@@ -792,7 +792,7 @@ class BeamLatticeClipMode(CTypesEnum):
 '''Definition of BeamLatticeBallMode
 '''
 class BeamLatticeBallMode(CTypesEnum):
-	None = 0
+	BeamLatticeBallModeNone = 0
 	Mixed = 1
 	All = 2
 '''Definition of ProgressIdentifier

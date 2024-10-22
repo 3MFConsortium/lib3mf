@@ -388,7 +388,7 @@ typedef enum eLib3MFBeamLatticeClipMode {
 } eLib3MFBeamLatticeClipMode;
 
 typedef enum eLib3MFBeamLatticeBallMode {
-  eBeamLatticeBallModeNone = 0,
+  eBeamLatticeBallModeBeamLatticeBallModeNone = 0,
   eBeamLatticeBallModeMixed = 1,
   eBeamLatticeBallModeAll = 2
 } eLib3MFBeamLatticeBallMode;

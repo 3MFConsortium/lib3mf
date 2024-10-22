@@ -23617,7 +23617,7 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeClipMode_NoClipMode"), Integer::New(isolate, 0));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeClipMode_Inside"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeClipMode_Outside"), Integer::New(isolate, 2));
-						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeBallMode_None"), Integer::New(isolate, 0));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeBallMode_BeamLatticeBallModeNone"), Integer::New(isolate, 0));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeBallMode_Mixed"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eBeamLatticeBallMode_All"), Integer::New(isolate, 2));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eProgressIdentifier_QUERYCANCELED"), Integer::New(isolate, 0));

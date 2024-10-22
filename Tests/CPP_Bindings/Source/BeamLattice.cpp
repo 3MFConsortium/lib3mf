@@ -152,7 +152,7 @@ namespace Lib3MF
 
 	TEST_F(BeamLattice, BallMode)
 	{
-		beamLattice->SetBallOptions(eBeamLatticeBallMode::None, 1.2);
+		beamLattice->SetBallOptions(eBeamLatticeBallMode::BeamLatticeBallModeNone, 1.2);
 
 		sBeam beam;
 		beam.m_Radii[0] = 1.0;
