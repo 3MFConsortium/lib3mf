@@ -109,7 +109,9 @@ public:
 
 	bool IsComponentsObject();
 
-	bool IsValid();
+    bool IsLevelSetObject() override;
+
+    bool IsValid();
 
 	virtual IBeamLattice * BeamLattice();
 
@@ -126,6 +128,10 @@ public:
 	void GetAllTriangleProperties(Lib3MF_uint64 nPropertiesArrayBufferSize, Lib3MF_uint64* pPropertiesArrayNeededCount, sLib3MFTriangleProperties * pPropertiesArrayBuffer);
 
 	void ClearAllProperties();
+
+	IVolumeData * GetVolumeData() override;
+
+	void SetVolumeData(IVolumeData* pTheVolumeData) override;
 };
 
 }

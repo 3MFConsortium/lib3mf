@@ -58,6 +58,8 @@ private:
 
 	NMR::PModel m_model;
 
+	void mergeModel(NMR::CModel & sourceModel, NMR::CModel & targetModel);
+
 protected:
 
 	/**
@@ -117,7 +119,9 @@ public:
 
 	ISliceStack * GetSliceStackByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
-	std::string GetBuildUUID (bool & bHasUUID) override;
+    ILevelSet* GetLevelSetByID(const Lib3MF_uint32 nUniqueResourceID) override;
+
+    std::string GetBuildUUID (bool & bHasUUID) override;
 
 	void SetBuildUUID (const std::string & sUUID) override;
 
@@ -146,6 +150,8 @@ public:
 	ISliceStackIterator * GetSliceStacks() override;
 
 	IModel * MergeToModel() override;
+
+	void MergeFromModel(IModel* pModelInstance) override;
 
 	IMeshObject * AddMeshObject() override;
 
@@ -195,9 +201,29 @@ public:
 
 	Lib3MF::sBox GetOutbox() override;
 
-	IKeyStore * GetKeyStore();
+	IKeyStore * GetKeyStore() override;
 
-	void SetRandomNumberCallback(const Lib3MF::RandomNumberCallback pTheCallback, const Lib3MF_pvoid pUserData);
+	void SetRandomNumberCallback(const Lib3MF::RandomNumberCallback pTheCallback, const Lib3MF_pvoid pUserData) override;
+
+	IImageStack * AddImageStack(const Lib3MF_uint32 nSizeX, const Lib3MF_uint32 nSizeY, const Lib3MF_uint32 nSheetCount) override;
+
+	IImageStack* GetImageStackByID(const Lib3MF_uint32 nUniqueResourceID) override;
+
+	IImage3DIterator * GetImage3Ds() override;
+
+	IFunctionIterator * GetFunctions() override;
+
+	IImplicitFunction * AddImplicitFunction() override;
+
+	IFunctionFromImage3D* AddFunctionFromImage3D(IImage3D* pImage3DInstance) override;
+
+	IVolumeData * AddVolumeData() override;
+
+	ILevelSet* AddLevelSet() override;
+
+	ILevelSetIterator * GetLevelSets() override;
+
+	void RemoveResource(IResource* pResource) override;
 };
 
 }

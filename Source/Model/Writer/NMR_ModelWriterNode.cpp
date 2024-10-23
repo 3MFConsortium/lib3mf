@@ -83,8 +83,18 @@ namespace NMR {
 		writeConstStringAttribute(pAttributeName, sStream.str().c_str());
 	}
 
-	void CModelWriterNode::writeUintAttribute(_In_z_ const nfChar * pAttributeName, _In_ nfUint32 nAttributeValue)
+	void CModelWriterNode::writePrefixedIntAttribute(
+		const nfChar* pPrefix, const nfChar* pAttributeName,
+		nfInt32 nAttributeValue)
 	{
+		std::stringstream sStream;
+		sStream << nAttributeValue;
+		writeConstPrefixedStringAttribute(pPrefix, pAttributeName, sStream.str().c_str());
+	}
+	
+	void CModelWriterNode::writeUintAttribute(
+		_In_z_ const nfChar* pAttributeName, _In_ nfUint32 nAttributeValue)
+        {
 		std::stringstream sStream;
 		sStream << nAttributeValue;
 		writeConstStringAttribute(pAttributeName, sStream.str().c_str());
@@ -94,6 +104,13 @@ namespace NMR {
 	{
 		std::stringstream sStream;
 		sStream << fAttributeValue;
+		writeConstStringAttribute(pAttributeName, sStream.str().c_str());
+	}
+
+	void CModelWriterNode::writeDoubleAttribute(_In_z_ const nfChar* pAttributeName, _In_ nfDouble dAttributeValue)
+	{
+		std::stringstream sStream;
+		sStream << dAttributeValue;
 		writeConstStringAttribute(pAttributeName, sStream.str().c_str());
 	}
 

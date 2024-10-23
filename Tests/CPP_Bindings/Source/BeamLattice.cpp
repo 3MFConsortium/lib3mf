@@ -152,7 +152,7 @@ namespace Lib3MF
 
 	TEST_F(BeamLattice, BallMode)
 	{
-		beamLattice->SetBallOptions(eBeamLatticeBallMode::None, 1.2);
+		beamLattice->SetBallOptions(eBeamLatticeBallMode::BeamLatticeBallModeNone, 1.2);
 
 		sBeam beam;
 		beam.m_Radii[0] = 1.0;
@@ -272,7 +272,7 @@ namespace Lib3MF
 			beamLattice->AddBeam(beam);
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 
@@ -291,7 +291,7 @@ namespace Lib3MF
 			beamLattice->SetBeam(0, beam);
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 
@@ -299,7 +299,7 @@ namespace Lib3MF
 		try {
 			beamLattice->SetBallOptions(eBeamLatticeBallMode::All, 0.0);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 
@@ -316,7 +316,7 @@ namespace Lib3MF
 			beamLattice->SetBall(0, ball);
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 
@@ -326,7 +326,7 @@ namespace Lib3MF
 			beamLattice->AddBall(ball);
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 	}
@@ -420,7 +420,7 @@ namespace Lib3MF
 			beamLattice->SetBeams(beams);
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 
@@ -463,7 +463,7 @@ namespace Lib3MF
 			beamLattice->SetBalls(balls);
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 	}
@@ -501,14 +501,14 @@ namespace Lib3MF
 			mesh->SetType(eObjectType::Support);
 			ASSERT_FALSE(true) << "Could set eObjectTypeSupport";
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 		try {
 			mesh->SetType(eObjectType::Other);
 			ASSERT_FALSE(true) << "Could set eObjectTypeOther";
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 	}
@@ -530,7 +530,7 @@ namespace Lib3MF
 			beamLattice->AddBeam(beam);
 			ASSERT_FALSE(true) << "Could add beam on eObjectTypeSupport";
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 	}

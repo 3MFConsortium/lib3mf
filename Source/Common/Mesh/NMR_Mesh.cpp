@@ -547,7 +547,7 @@ namespace NMR {
 			try {
 				addBall(getNode(ballData[iBall].m_nodeindex), ballData[iBall].m_radius);
 			}
-			catch (CNMRException) {}
+			catch (CNMRException &) {}
 		}
 
 		delete [] ballData;

@@ -175,4 +175,92 @@ namespace Lib3MF
 		ASSERT_EQ(oldID, newId);
 	}
 
+	TEST_F(Model, RemoveResource_MaterialGroup)
+	{
+		auto baseMaterial = m_pModel->AddBaseMaterialGroup();
+		Lib3MF_uint32 id = baseMaterial->GetResourceID();
+		m_pModel->RemoveResource(baseMaterial.get());
+		
+		/// Now the resource should be gone
+		EXPECT_EQ(m_pModel->GetBaseMaterialGroups()->Count(), 0);
+        EXPECT_THROW(m_pModel->GetBaseMaterialGroupByID(id), Lib3MF::ELib3MFException);
+    }
+
+	TEST_F(Model, RemoveResource_MeshObject)
+	{
+		auto meshObject = m_pModel->AddMeshObject();
+		Lib3MF_uint32 id = meshObject->GetResourceID();
+		m_pModel->RemoveResource(meshObject.get());
+
+		/// Now the resource should be gone
+		EXPECT_EQ(m_pModel->GetMeshObjects()->Count(), 0);
+		EXPECT_THROW(m_pModel->GetMeshObjectByID(id), Lib3MF::ELib3MFException);
+	}
+
+	TEST_F(Model, RemoveResource_ComponentsObject)
+	{
+		auto componentsObject = m_pModel->AddComponentsObject();
+		Lib3MF_uint32 id = componentsObject->GetResourceID();
+		m_pModel->RemoveResource(componentsObject.get());
+
+		/// Now the resource should be gone
+		EXPECT_EQ(m_pModel->GetComponentsObjects()->Count(), 0);
+		EXPECT_THROW(m_pModel->GetComponentsObjectByID(id), Lib3MF::ELib3MFException);
+	}
+
+	TEST_F(Model, RemoveResource_ColorGroup)
+	{
+		auto colorGroup = m_pModel->AddColorGroup();
+		Lib3MF_uint32 id = colorGroup->GetResourceID();
+		m_pModel->RemoveResource(colorGroup.get());
+
+		/// Now the resource should be gone
+		EXPECT_EQ(m_pModel->GetColorGroups()->Count(), 0);
+		EXPECT_THROW(m_pModel->GetColorGroupByID(id), Lib3MF::ELib3MFException);
+	}
+
+	TEST_F(Model, RemoveResource_MultiPropertyGroup)
+	{
+		auto multiPropertyGroup = m_pModel->AddMultiPropertyGroup();
+		Lib3MF_uint32 id = multiPropertyGroup->GetResourceID();
+		m_pModel->RemoveResource(multiPropertyGroup.get());
+
+		/// Now the resource should be gone
+		EXPECT_EQ(m_pModel->GetMultiPropertyGroups()->Count(), 0);
+		EXPECT_THROW(m_pModel->GetMultiPropertyGroupByID(id), Lib3MF::ELib3MFException);
+
+	}
+
+	TEST_F(Model, RemoveResource_SliceStack)
+	{
+		auto sliceStack = m_pModel->AddSliceStack(0.);
+		Lib3MF_uint32 id = sliceStack->GetResourceID();
+		m_pModel->RemoveResource(sliceStack.get());
+
+		/// Now the resource should be gone
+		EXPECT_EQ(m_pModel->GetSliceStacks()->Count(), 0);
+		EXPECT_THROW(m_pModel->GetSliceStackByID(id), Lib3MF::ELib3MFException);
+	}
+
+	TEST_F(Model, RemoveResource_LevelSet)
+	{
+		auto levelSet = m_pModel->AddLevelSet();
+		Lib3MF_uint32 id = levelSet->GetResourceID();
+		m_pModel->RemoveResource(levelSet.get());
+
+		/// Now the resource should be gone
+		EXPECT_EQ(m_pModel->GetLevelSets()->Count(), 0);
+		EXPECT_THROW(m_pModel->GetLevelSetByID(id), Lib3MF::ELib3MFException);
+	}
+
+	TEST_F(Model, RemoveResource_Function)
+	{
+		auto function = m_pModel->AddImplicitFunction();
+		Lib3MF_uint32 id = function->GetResourceID();
+		m_pModel->RemoveResource(function.get());
+
+		/// Now the resource should be gone
+		EXPECT_EQ(m_pModel->GetFunctions()->Count(), 0);
+		EXPECT_THROW(m_pModel->GetResourceByID(id), Lib3MF::ELib3MFException);
+	}
 }

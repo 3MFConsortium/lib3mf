@@ -54,6 +54,8 @@ namespace Impl {
 class CResourceIterator : public virtual IResourceIterator, public virtual CBase {
 
 private:
+	NMR::PModel m_pModel;
+
 	std::vector<NMR::PModelResource> m_pResources;
 	Lib3MF_int32 m_nCurrentIndex;
 

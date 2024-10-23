@@ -221,9 +221,34 @@ namespace NMR {
 		m_pBeamLatticeAttributes = pBeamLatticeAttributes;
 	}
 
+	PModelVolumeData CModelMeshObject::getVolumeData()
+	{
+		return m_pVolumeData;
+	}
+
+	void CModelMeshObject::setVolumeData(_In_ PModelVolumeData pVolumeData)
+	{
+		if (!pVolumeData)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		m_pVolumeData = pVolumeData;
+	}
+
 	void CModelMeshObject::extendOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix)
 	{
 		m_pMesh->extendOutbox(vOutBox, mAccumulatedMatrix);
+	}
+
+	ResourceDependencies CModelMeshObject::getDependencies()
+	{
+		ResourceDependencies dependencies;
+		if(m_pVolumeData)
+		{
+			dependencies.push_back(
+				m_pVolumeData->getPackageResourceID());
+		}
+
+		return dependencies;
 	}
 }
 

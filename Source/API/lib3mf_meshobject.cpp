@@ -31,9 +31,12 @@ Abstract: This is a stub class definition of CMeshObject
 #include "lib3mf_interfaceexception.hpp"
 
 #include "lib3mf_beamlattice.hpp"
+#include "lib3mf_volumedata.hpp"
 // Include custom headers here.
 
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
+#include "Model/Classes/NMR_ModelVolumeData.h"
+#include "Model/Classes/NMR_ModelResource.h"
 #include <cmath>
 
 using namespace Lib3MF::Impl;
@@ -379,6 +382,11 @@ bool CMeshObject::IsComponentsObject()
 	return false;
 }
 
+bool CMeshObject::IsLevelSetObject()
+{
+	return false;
+}
+
 bool CMeshObject::IsValid()
 {
 	return meshObject()->isValid();
@@ -387,4 +395,33 @@ bool CMeshObject::IsValid()
 IBeamLattice* CMeshObject::BeamLattice()
 {
 	return new CBeamLattice(meshObject(), meshObject()->getBeamLatticeAttributes());
+}
+
+IVolumeData * CMeshObject::GetVolumeData()
+{
+	auto volumeData = meshObject()->getVolumeData();
+	if (!volumeData)
+	{
+		return nullptr;
+	}
+	return new CVolumeData(std::dynamic_pointer_cast<NMR::CModelResource>(meshObject()->getVolumeData()));
+}
+
+void CMeshObject::SetVolumeData(IVolumeData* pTheVolumeData)
+{
+	NMR::CModel * pModel = meshObject()->getModel();
+	if (pModel == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+
+	NMR::PModelResource pResource = pModel->findResource(pTheVolumeData->GetResourceID());
+
+	if (pResource == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT, "Referenced VolumeData Resource with ID " + std::to_string(pTheVolumeData->GetModelResourceID()) + " not found");
+
+	NMR::PModelVolumeData pVolumeData = std::dynamic_pointer_cast<NMR::CModelVolumeData>(pResource);
+
+	if (pVolumeData == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT, "Referenced Resource is not of type VolumeData");
+
+	meshObject()->setVolumeData(pVolumeData);
 }

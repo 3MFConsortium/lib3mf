@@ -42,8 +42,8 @@ namespace NMR {
 
 	class CKeyStoreCEKParams {
 	protected:
-		eKeyStoreEncryptAlgorithm m_eAlgorithm;
 		nfBool m_bCompression;
+		eKeyStoreEncryptAlgorithm m_eAlgorithm;
 		std::vector<nfByte> m_rgIv, m_rgTag, m_rgAad;
 		nfUint64 m_nDescriptor;
 	public:

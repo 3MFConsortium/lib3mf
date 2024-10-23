@@ -60,7 +60,15 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_multipropertygroupiterator.hpp"
 #include "lib3mf_packagepart.hpp"
 #include "lib3mf_keystore.hpp"
-
+#include "lib3mf_image3d.hpp"
+#include "lib3mf_imagestack.hpp"
+#include "lib3mf_image3diterator.hpp"
+#include "lib3mf_implicitfunction.hpp"
+#include "lib3mf_functioniterator.hpp"
+#include "lib3mf_functionfromimage3d.hpp"
+#include "lib3mf_volumedata.hpp"
+#include "lib3mf_levelset.hpp"
+#include "lib3mf_levelsetiterator.hpp"
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -69,6 +77,11 @@ Abstract: This is a stub class definition of CModel
 #include "Model/Classes/NMR_ModelColorGroup.h"
 #include "Model/Classes/NMR_ModelTexture2DGroup.h"
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
+#include "Model/Classes/NMR_ModelImageStack.h"
+#include "Model/Classes/NMR_ModelImplicitFunction.h"
+#include "Model/Classes/NMR_ModelFunctionFromImage3D.h"
+#include "Model/Classes/NMR_ModelVolumeData.h"
+#include "Model/Classes/NMR_ModelLevelSetObject.h"
 #include "Common/NMR_SecureContentTypes.h"
 #include "lib3mf_utils.hpp"
 
@@ -82,6 +95,22 @@ using namespace Lib3MF::Impl;
 CModel::CModel()
 {
 	m_model = std::make_shared<NMR::CModel>();
+}
+
+void CModel::mergeModel(NMR::CModel& sourceModel,
+                                      NMR::CModel& targetModel)
+{
+	NMR::UniqueResourceIDMapping oldToNewUniqueResourceIDs;
+	targetModel.mergeModelAttachments(&sourceModel);
+	targetModel.mergeTextures2D(&sourceModel, oldToNewUniqueResourceIDs);
+	targetModel.mergeBaseMaterials(&sourceModel, oldToNewUniqueResourceIDs);
+	targetModel.mergeColorGroups(&sourceModel, oldToNewUniqueResourceIDs);
+	targetModel.mergeTexture2DGroups(&sourceModel, oldToNewUniqueResourceIDs);
+	targetModel.mergeCompositeMaterials(&sourceModel, oldToNewUniqueResourceIDs);
+	targetModel.mergeMultiPropertyGroups(&sourceModel, oldToNewUniqueResourceIDs);
+	targetModel.mergeImage3Ds(&sourceModel, oldToNewUniqueResourceIDs);
+	targetModel.mergeFunctions(&sourceModel, oldToNewUniqueResourceIDs);
+	targetModel.mergeMetaData(&sourceModel);
 }
 
 NMR::CModel& CModel::model()
@@ -129,6 +158,31 @@ IResource* CModel::createIResourceFromModelResource(NMR::PModelResource pResourc
 
 	if (auto p = std::dynamic_pointer_cast<NMR::CModelSliceStack>(pResource)) {
 		return new CSliceStack(p);
+	}
+
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelImageStack>(pResource)) {
+		return new CImageStack(p);
+	}
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelImage3D>(pResource)) {
+		return new CImage3D(p);
+	}
+	
+	if (auto p= std::dynamic_pointer_cast<NMR::CModelImplicitFunction>(pResource)) {
+		return new CImplicitFunction(p);
+	}
+
+	if(auto p = std::dynamic_pointer_cast<NMR::CModelFunctionFromImage3D>(
+			pResource))
+	{
+        return new CFunctionFromImage3D(p);
+    }
+	
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelVolumeData>(pResource)) {
+		return new CVolumeData(p);
+	}
+
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelLevelSetObject>(pResource)) {
+		return new CLevelSet(p);
 	}
 
 	if (bFailIfUnkownClass)
@@ -278,6 +332,17 @@ ISliceStack * CModel::GetSliceStackByID(const Lib3MF_uint32 nUniqueResourceID)
 	}
 	else
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDSLICESTACKRESOURCE);
+}
+
+ILevelSet* CModel::GetLevelSetByID(const Lib3MF_uint32 nUniqueResourceID)
+{
+	NMR::PModelResource pResource = model().findResource(nUniqueResourceID);
+	if (dynamic_cast<NMR::CModelLevelSetObject*>(pResource.get())) {
+		return new CLevelSet(std::dynamic_pointer_cast<NMR::CModelLevelSetObject>(pResource));
+	}
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDLEVELSET);
+
 }
 
 ITexture2DGroup * CModel::GetTexture2DGroupByID(const Lib3MF_uint32 nUniqueResourceID)
@@ -499,6 +564,9 @@ IModel * CModel::MergeToModel ()
 	newModel.mergeTexture2DGroups(&model(), oldToNewUniqueResourceIDs);
 	newModel.mergeCompositeMaterials(&model(), oldToNewUniqueResourceIDs);
 	newModel.mergeMultiPropertyGroups(&model(), oldToNewUniqueResourceIDs);
+	newModel.mergeImage3Ds(&model(), oldToNewUniqueResourceIDs);
+	newModel.mergeFunctions(&model(), oldToNewUniqueResourceIDs);
+
 	newModel.mergeMetaData(&model());
 
 	pMesh->patchMeshInformationResources(oldToNewUniqueResourceIDs);
@@ -513,6 +581,15 @@ IModel * CModel::MergeToModel ()
 	newModel.addBuildItem(pBuildItem);
 
 	return pOutModel.release();
+}
+
+void CModel::MergeFromModel(IModel* pModelInstance)
+{
+	CModel* pLib3MFModel = dynamic_cast<CModel*> (pModelInstance);
+	if (!pLib3MFModel)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	mergeModel(pLib3MFModel->model(), model());
 }
 
 IMeshObject * CModel::AddMeshObject ()
@@ -744,11 +821,43 @@ Lib3MF::sBox CModel::GetOutbox()
 	return s;
 }
 
-IKeyStore * Lib3MF::Impl::CModel::GetKeyStore() {
+IImageStack * CModel::AddImageStack(const Lib3MF_uint32 nSizeX, const Lib3MF_uint32 nSizeY, const Lib3MF_uint32 nSheetCount)
+{
+	NMR::PModelImageStack pResource = NMR::CModelImageStack::make(model().generateResourceID(), &model(), nSizeX, nSizeY, nSheetCount);
+	model().addResource(pResource);
+
+	return new CImageStack(pResource);
+}
+
+IImageStack* CModel::GetImageStackByID(const Lib3MF_uint32 nUniqueResourceID)
+{
+	NMR::PModelImageStack pImageStackResource = model().findImageStack(nUniqueResourceID);
+	if (pImageStackResource) {
+		return new CImageStack(pImageStackResource);
+	}
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
+}
+
+IImage3DIterator * CModel::GetImage3Ds()
+{
+	auto pResult = std::unique_ptr<CImage3DIterator>(new CImage3DIterator());
+	Lib3MF_uint32 nImage3DCount = model().getImage3DCount();
+
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nImage3DCount; nIdx++) {
+		auto resource = model().getImage3DResource(nIdx);
+		pResult->addResource(resource);
+	}
+	return pResult.release();
+}
+
+IKeyStore * Lib3MF::Impl::CModel::GetKeyStore()
+{
 	return new CKeyStore(m_model);
 }
 
-void Lib3MF::Impl::CModel::SetRandomNumberCallback(Lib3MF::RandomNumberCallback pTheCallback, Lib3MF_pvoid pUserData) {
+void Lib3MF::Impl::CModel::SetRandomNumberCallback(Lib3MF::RandomNumberCallback pTheCallback, Lib3MF_pvoid pUserData)
+{
 	if (nullptr == pTheCallback)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 	NMR::CryptoRandGenDescriptor descriptor;
@@ -764,3 +873,76 @@ void Lib3MF::Impl::CModel::SetRandomNumberCallback(Lib3MF::RandomNumberCallback 
 	m_model->setCryptoRandCallback(descriptor);
 }
 
+IFunctionIterator * CModel::GetFunctions()
+{
+	auto pResult = std::unique_ptr<CFunctionIterator>(new CFunctionIterator());
+	Lib3MF_uint32 nFunctionCount = model().getFunctionCount();
+
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nFunctionCount; nIdx++) {
+		auto resource = model().getFunctionResource(nIdx);
+		pResult->addResource(resource);
+	}
+	return pResult.release();
+}
+
+IImplicitFunction* CModel::AddImplicitFunction()
+{
+	NMR::ModelResourceID NewResourceID = model().generateResourceID();
+	NMR::PModelImplicitFunction pNewResource = std::make_shared<NMR::CModelImplicitFunction>(NewResourceID, &model());
+
+	model().addResource(pNewResource);
+
+	return new CImplicitFunction(pNewResource);
+}
+
+IFunctionFromImage3D* CModel::AddFunctionFromImage3D(IImage3D* pImage3DInstance)
+{
+	NMR::ModelResourceID NewResourceID = model().generateResourceID();
+	NMR::PModelFunctionFromImage3D pNewResource = std::make_shared<NMR::CModelFunctionFromImage3D>(NewResourceID, &model());
+    pNewResource->setImage3DUniqueResourceID(pImage3DInstance->GetUniqueResourceID());
+	model().addResource(pNewResource);
+    auto newFunc = new CFunctionFromImage3D(pNewResource);
+	return newFunc;
+}
+
+
+IVolumeData * CModel::AddVolumeData()
+{
+	NMR::ModelResourceID NewResourceID = model().generateResourceID();
+	NMR::PModelVolumeData pNewResource = std::make_shared<NMR::CModelVolumeData>(NewResourceID, &model());
+
+	model().addResource(pNewResource);
+
+	return new CVolumeData(pNewResource);
+}
+
+ILevelSet* CModel::AddLevelSet()
+{
+	NMR::ModelResourceID NewResourceID = model().generateResourceID();
+	NMR::PModelLevelSetObject pNewResource = std::make_shared<NMR::CModelLevelSetObject>(NewResourceID, &model());
+
+	model().addResource(pNewResource);
+
+	return new CLevelSet(pNewResource);
+}
+
+ILevelSetIterator * CModel::GetLevelSets()
+{
+	auto pResult = std::unique_ptr<CLevelSetIterator>(new CLevelSetIterator());
+	Lib3MF_uint32 nObjectsCount = model().getObjectCount();
+
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nObjectsCount; nIdx++) {
+		auto resource = model().getObjectResource(nIdx);
+		if (dynamic_cast<NMR::CModelLevelSetObject *>(resource.get()))
+			pResult->addResource(resource);
+	}
+	return pResult.release();
+}
+
+void CModel::RemoveResource(IResource* pResource)
+{
+	CResource* pLib3MFResource = dynamic_cast<CResource*> (pResource);
+	if (!pLib3MFResource)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDRESOURCE);
+	model().removeResource(pLib3MFResource->resource());
+}

@@ -79,7 +79,7 @@ namespace NMR {
 		}
 
 		PModel const & model = m_pContext.model();
-		if (!model->hasCryptoRandCallbak())
+		if (!model->hasCryptoRandCallbak() && (keyStore->getResourceDataCount()>0))
 			m_pContext.warnings()->addWarning(NMR_ERROR_RNGCALLBACKNOTCRYPTOSTRONG, eModelWarningLevel::mrwInvalidOptionalValue);
 		for (nfUint64 i = 0; i < keyStore->getResourceDataCount(); ++i) {
 			PKeyStoreResourceData rd = keyStore->getResourceData(i);
@@ -139,7 +139,7 @@ namespace NMR {
 			ctx.m_sKekDecryptData.m_pAccessRight = ar;
 			std::vector<nfByte> closedKey;
 			//give consumer a chance to (re)encrypt this key
-			nfUint64 wrapped = ctx.m_fnWrap(key, closedKey, ctx.m_sKekDecryptData);
+			ctx.m_fnWrap(key, closedKey, ctx.m_sKekDecryptData);
 			ar->setCipherValue(closedKey);
 		} catch (CNMRException const & e) {
 			if (ar->isNew()) {

@@ -45,9 +45,13 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_ModelCompositeMaterials.h"
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
 #include "Model/Classes/NMR_ModelTexture2D.h"
+#include "Model/Classes/NMR_ModelImage3D.h"
+#include "Model/Classes/NMR_ModelImageStack.h"
 #include "Model/Classes/NMR_ModelSliceStack.h"
 #include "Model/Classes/NMR_ModelMetaDataGroup.h"
 #include "Model/Classes/NMR_KeyStore.h"
+#include "Model/Classes/NMR_ModelImplicitFunction.h"
+#include "Model/Classes/NMR_ModelFunctionFromImage3D.h"
 
 #include "Common/Mesh/NMR_Mesh.h"
 #include "Common/MeshInformation/NMR_MeshInformation.h"
@@ -396,22 +400,34 @@ namespace NMR {
 		}
 	}
 
-    ModelResourceID CModel::generateResourceID()
-    {
-        // Determine the initial resource ID
-        ModelResourceID currentResourceID = 1;
-        auto iIterator = m_ResourceMap.rbegin();
-        if (iIterator != m_ResourceMap.rend()) {
-            currentResourceID = iIterator->first + 1;
-        }
+	// Retrieve a unique Resource ID
+	ModelResourceID CModel::generateResourceID()
+	{
+		ModelResourceID highestID = 0;
 
-        // Ensure the generated ID is unique
-		if(currentResourceID <= m_MaxResourceId) {
-			currentResourceID = m_MaxResourceId + 1;
+		if(m_ResourceMap.empty())
+		{
+			return 1;
 		}
 
-        return currentResourceID;
-    }
+		// find the lowest unoccupied ModelResourceID
+		std::unordered_set<ModelResourceID> occupiedIDs;
+		for(const auto &entry : m_ResourceMap)
+		{
+			occupiedIDs.insert(
+				entry.second->getPackageResourceID()->getModelResourceID());
+		}
+
+		ModelResourceID newResourceID = 1;
+
+		// Loop until we find an unoccupied resource ID
+		while(occupiedIDs.find(newResourceID) != occupiedIDs.end())
+		{
+			++newResourceID;
+		}
+
+		return newResourceID;
+	}
 
     void CModel::updateUniqueResourceID(UniqueResourceID nOldID, UniqueResourceID nNewID)
 	{
@@ -541,6 +557,24 @@ namespace NMR {
 		CModelSliceStack *pSliceStack = dynamic_cast<CModelSliceStack *>(pResource.get());
 		if (pSliceStack != nullptr) 
 			m_SliceStackLookup.push_back(pResource);
+
+		CModelImage3D* pImage3d = dynamic_cast<CModelImage3D*>(pResource.get());
+		if (pImage3d != nullptr)
+			m_Image3DLookup.push_back(pResource);
+
+
+		CModelImplicitFunction* pImplicitFunction = dynamic_cast<CModelImplicitFunction*>(pResource.get());
+		if (pImplicitFunction != nullptr)
+			m_FunctionLookup.push_back(pResource);
+		
+		CModelFunctionFromImage3D* pFunctionFromImage3D = dynamic_cast<CModelFunctionFromImage3D*>(pResource.get());
+		if (pFunctionFromImage3D != nullptr)
+			m_FunctionLookup.push_back(pResource);
+
+		CModelVolumeData* pVolumeData = dynamic_cast<CModelVolumeData*>(pResource.get());
+		if (pVolumeData != nullptr)
+			m_VolumeDataLookup.push_back(pResource);
+
 	}
 
 	// Clear all build items and Resources
@@ -559,8 +593,12 @@ namespace NMR {
 		m_SliceStackLookup.clear();
 		m_CompositeMaterialsLookup.clear();
 		m_MultiPropertyGroupLookup.clear();
+		m_Image3DLookup.clear();
 
 		m_MetaDataGroup->clear();
+
+		m_FunctionLookup.clear();
+		m_VolumeDataLookup.clear();
 	}
 
 	_Ret_maybenull_ PModelBaseMaterialResource CModel::findBaseMaterial(_In_ PPackageResourceID pID)
@@ -927,7 +965,225 @@ namespace NMR {
 			oldToNewMapping[pTextureResource->getPackageResourceID()->getUniqueID()] = pNewTextureResource->getPackageResourceID()->getUniqueID();
 		}
 	}
-	
+
+	// Convenience functions for 3D Textures
+	PModelImage3D CModel::findImage3D(_In_ UniqueResourceID nResourceID)
+	{
+		PModelResource pResource = findResource(nResourceID);
+		if (pResource != nullptr) {
+			PModelImage3D pImage3DResource = std::dynamic_pointer_cast<CModelImage3D>(pResource);
+			if (pImage3DResource.get() == nullptr)
+				throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+			return pImage3DResource;
+		}
+		return nullptr;
+	}
+
+	// Convenience functions for 3D Textures
+	PModelImageStack CModel::findImageStack(_In_ UniqueResourceID nResourceID)
+	{
+		PModelResource pResource = findResource(nResourceID);
+		if (pResource != nullptr) {
+			PModelImageStack pImageStack = std::dynamic_pointer_cast<CModelImageStack>(pResource);
+			if (pImageStack.get() == nullptr)
+				throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+			return pImageStack;
+		}
+		return nullptr;
+	}
+
+	nfUint32 CModel::getImage3DCount()
+	{
+		return (nfUint32)m_Image3DLookup.size();
+	}
+
+	PModelResource CModel::getImage3DResource(_In_ nfUint32 nIndex)
+	{
+		nfUint32 nCount = getImage3DCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_Image3DLookup[nIndex];
+
+	}
+
+	CModelImage3D * CModel::getImage3D(_In_ nfUint32 nIndex)
+	{
+		CModelImage3D * pImage3D = dynamic_cast<CModelImage3D *> (getImage3DResource(nIndex).get());
+		if (pImage3D == nullptr)
+			throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+
+		return pImage3D;
+
+	}
+
+	void CModel::mergeImage3Ds(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping& oldToNewMapping)
+	{
+		if (pSourceModel == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		nfUint32 nCount = pSourceModel->getImage3DCount();
+		nfUint32 nIndex;
+
+		for (nIndex = 0; nIndex < nCount; nIndex++)
+		{
+			CModelImage3D* pOldImage3D = pSourceModel->getImage3D(nIndex);
+			if (pOldImage3D == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+			CModelImageStack* pOldImageStack = dynamic_cast<CModelImageStack*>(pOldImage3D);
+			if (pOldImageStack)
+			{
+				nfUint32 nSheetCount = pOldImageStack->getSheetCount();;
+				nfUint32 nIndex;
+				PModelImageStack pNewImageStack = CModelImageStack::make(generateResourceID(), this, pOldImageStack->getRowCount(), pOldImageStack->getColumnCount(), nSheetCount);
+
+				for (nIndex = 0; nIndex < nSheetCount; nIndex++) {
+					PModelAttachment pSheet = pOldImageStack->getSheet(nIndex);
+					if (pSheet.get() != nullptr) {
+						PModelAttachment pNewSheet = findModelAttachment(pSheet->getPathURI());
+						if (pNewSheet.get() == nullptr)
+							throw CNMRException(NMR_ERROR_ATTACHMENTNOTFOUND);
+
+						pNewImageStack->setSheet(nIndex, pNewSheet);
+					}
+				}
+
+				addResource(pNewImageStack);
+
+				oldToNewMapping[pOldImageStack->getPackageResourceID()->getUniqueID()] = pNewImageStack->getPackageResourceID()->getUniqueID();
+			}
+			else
+			{
+				throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+			}
+		}
+	}
+
+	void CModel::mergeFunctions(CModel *pSourceModel,
+                                    UniqueResourceIDMapping &oldToNewMapping)
+    {
+		if (pSourceModel == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		nfUint32 previousTargetFunctionCount = getFunctionCount();
+
+		nfUint32 nCount = pSourceModel->getFunctionCount();
+		nfUint32 nIndex;
+
+		for (nIndex = 0; nIndex < nCount; nIndex++)
+		{
+			CModelFunctionFromImage3D *pOldFunctionFromImage3D = pSourceModel->getFunctionFromImage3D(nIndex);
+			CModelImplicitFunction *pOldImplicitFunction = pSourceModel->getImplicitFunction(nIndex);
+
+			if (pOldFunctionFromImage3D)
+			{
+				PModelFunctionFromImage3D pNewFunctionFromImage3D = std::make_shared<CModelFunctionFromImage3D>(*pOldFunctionFromImage3D);
+				auto newPkgId = generatePackageResourceID(currentPath(), generateResourceID());
+				pNewFunctionFromImage3D->setModel(nullptr);	// Hack: Allows us to set the package resource ID without updating the model
+				pNewFunctionFromImage3D->setPackageResourceID(newPkgId);
+				pNewFunctionFromImage3D->setModel(this);
+
+
+				 // Update the referenced image3D resource ID
+			     auto newIdIter = oldToNewMapping.find(pOldFunctionFromImage3D->getImage3DUniqueResourceID());
+				 if (newIdIter != oldToNewMapping.cend())
+				 {
+					 auto const newId = findPackageResourceID(newIdIter->second);
+					 if (!newId)
+					 {
+						 throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+					 }
+					 pNewFunctionFromImage3D->setImage3DUniqueResourceID(newId->getUniqueID());
+				 }
+				 else
+				 {
+					 throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+				 }
+
+				addResource(pNewFunctionFromImage3D);
+				oldToNewMapping[pOldFunctionFromImage3D->getPackageResourceID()->getUniqueID()] = pNewFunctionFromImage3D->getPackageResourceID()->getUniqueID();
+			}
+			else if (pOldImplicitFunction)
+			{
+				PModelImplicitFunction pNewImplicitFunction = std::make_shared<CModelImplicitFunction>(*pOldImplicitFunction);
+			
+
+				auto newPkgId = generatePackageResourceID(currentPath(), generateResourceID());
+				pNewImplicitFunction->setModel(nullptr);	// Hack: Allows us to set the package resource ID without updating the model
+				pNewImplicitFunction->setPackageResourceID(newPkgId);
+				pNewImplicitFunction->setModel(this);
+
+				for (auto &node : *pNewImplicitFunction->getNodes())
+				{
+					node->setParent(pNewImplicitFunction.get());
+				}
+
+				addResource(pNewImplicitFunction);
+				oldToNewMapping[pOldImplicitFunction->getPackageResourceID()->getUniqueID()] = pNewImplicitFunction->getPackageResourceID()->getUniqueID();
+
+                // std::cout << "Merged implicit function (unique ids) " << pOldImplicitFunction->getPackageResourceID()->getUniqueID() << " to " << pNewImplicitFunction->getPackageResourceID()->getUniqueID() << std::endl;
+
+				// std::cout << "Merged implicit function (model resource ids) " << pOldImplicitFunction->getPackageResourceID()->getModelResourceID() << " to " << pNewImplicitFunction->getPackageResourceID()->getModelResourceID() << std::endl; 
+			}
+			else
+			{
+				throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+			}		 
+		}
+
+		nCount = getFunctionCount();
+		
+		// loop over all newly added functions and update the references in ConstResourceID nodes
+		for (nIndex = previousTargetFunctionCount; nIndex < nCount; nIndex++)
+		{
+			CModelImplicitFunction * pImplicitFunction = getImplicitFunction(nIndex);
+
+			for (auto & node : *pImplicitFunction->getNodes())
+			{
+				if (node->getNodeType() == Lib3MF::eImplicitNodeType::ConstResourceID)
+				{
+					auto const oldId = pSourceModel->findPackageResourceID(pSourceModel->currentPath(), node->getModelResourceID());
+					if (!oldId)
+					{
+						throw CNMRException(NMR_ERROR_RESOURCENOTFOUND, "Resource ID " + std::to_string(node->getModelResourceID()) +
+						 " not found in source model, this might happen when the file contains forward references");
+					}
+
+					auto const newIdIter = oldToNewMapping.find(oldId->getUniqueID());
+					if (newIdIter == oldToNewMapping.cend())
+					{
+						throw CNMRException(NMR_ERROR_RESOURCENOTFOUND, "Resource ID " + std::to_string(oldId->getUniqueID()) + " not found in mapping");
+					}
+
+					auto const newId = findPackageResourceID(newIdIter->second);
+					if (!newId)
+					{
+						throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+					}
+					
+					node->setModelResourceID(newId->getModelResourceID());
+					
+
+					// check if the resource is available
+					auto res = findResource(currentPath(), newId->getModelResourceID());
+					if (!res)
+					{
+						throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+					}
+					
+					auto resource = node->getResource();
+					if (!resource)
+					{
+						throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+						
+					}
+			}
+			}
+		}
+
+	}
+
 	nfUint32 CModel::createHandle()
 	{
 		if (m_nHandleCounter >= NMR_MAXHANDLE)
@@ -1233,7 +1489,34 @@ namespace NMR {
 			return false;
 		}
 
-		return false;
+		if(sExtension == XML_3MF_NAMESPACE_VOLUMETRICSPEC)
+		{
+			for(size_t i = 0; i < m_ObjectLookup.size(); i++)
+			{
+				CModelMeshObject *pMeshObject =
+					dynamic_cast<CModelMeshObject *>(
+						m_ObjectLookup[i].get());
+				if(pMeshObject == nullptr ||
+					pMeshObject->getMesh() == nullptr)
+					continue;
+
+				auto volumeData = pMeshObject->getVolumeData();
+				if (!volumeData)
+					continue;
+
+				if (volumeData->hasColor() || volumeData->getPropertyCount() > 0 || volumeData->hasComposite())
+				{
+		            return true;
+				}
+			}
+		}
+
+		if (sExtension == XML_3MF_NAMESPACE_IMPLICITSPEC)
+		{
+			if (m_FunctionLookup.size() > 0)
+				return true;
+		}
+        return false;	
 	}
 
 	nfUint32 CModel::getSliceStackCount() {
@@ -1325,4 +1608,214 @@ namespace NMR {
 		return size;
 	}
 
-}
+	ModelResourceID CModel::getMaxModelResourceID()
+	{
+		auto maxResourceID = std::max_element(
+			m_Resources.begin(), m_Resources.end(),
+			[](const PModelResource &a, const PModelResource &b)
+			{
+				return a->getPackageResourceID()->getModelResourceID() <
+						b->getPackageResourceID()->getModelResourceID();
+			});
+		if(maxResourceID == m_Resources.end()) return 0;
+
+		return (*maxResourceID)->getPackageResourceID()->getModelResourceID();
+	}
+
+	PModelFunction CModel::findFunction(_In_ UniqueResourceID nResourceID)
+	{
+            for(size_t i = 0; i < m_FunctionLookup.size(); i++)
+            {
+                PModelFunction pFunction =
+                    std::dynamic_pointer_cast<CModelFunction>(
+                        m_FunctionLookup[i]);
+                if(pFunction->getPackageResourceID()->getUniqueID() ==
+                   nResourceID)
+                    return pFunction;
+            }
+            return nullptr;
+        }
+
+        nfUint32 CModel::getFunctionCount() {
+		return (nfUint32)m_FunctionLookup.size();
+	}
+
+	PModelResource CModel::getFunctionResource(_In_ nfUint32 nIndex) {
+		nfUint32 nCount = getFunctionCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_FunctionLookup[nIndex];
+	}
+
+	CModelImplicitFunction* CModel::getImplicitFunction(_In_ nfUint32 nIndex) {
+		PModelResource pResource = getFunctionResource(nIndex);
+		if (pResource.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return dynamic_cast<CModelImplicitFunction*>(pResource.get());
+	}
+
+	CModelFunctionFromImage3D * CModel::getFunctionFromImage3D(nfUint32 nIndex)
+	{
+		PModelResource pResource = getFunctionResource(nIndex);
+		if (pResource.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return dynamic_cast<CModelFunctionFromImage3D*>(pResource.get());
+	}
+
+	PModelVolumeData CModel::findVolumeData(UniqueResourceID nResourceID)
+	{
+		for(size_t i = 0; i < m_VolumeDataLookup.size(); i++)
+		{
+			PModelVolumeData pVolumeData =
+				std::dynamic_pointer_cast<CModelVolumeData>(
+					m_VolumeDataLookup[i]);
+			if(pVolumeData->getPackageResourceID()->getUniqueID() ==
+				nResourceID)
+				return pVolumeData;
+		}
+		return nullptr;
+	}
+
+	nfUint32 NMR::CModel::getVolumeDataCount()
+	{
+		return (nfUint32)m_VolumeDataLookup.size();
+	}
+
+	PModelResource CModel::getVolumeDataResource(nfUint32 nIndex)
+	{
+		nfUint32 nCount = getVolumeDataCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_VolumeDataLookup[nIndex];
+	}
+
+	CModelVolumeData * CModel::getVolumeData(nfUint32 nIndex)
+	{
+		PModelResource pResource = getVolumeDataResource(nIndex);
+		if (pResource.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return dynamic_cast<CModelVolumeData*>(pResource.get());
+	}
+
+
+	void CModel::removeResource(PModelResource pResource)
+	{
+		if (pResource.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		// Remove from resource list
+		auto resourceIterator = std::find(m_Resources.begin(), m_Resources.end(), pResource);
+		if (resourceIterator == m_Resources.end())
+		{
+			throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+
+		}
+
+		m_Resources.erase(resourceIterator);
+
+		// Remove from Resource map
+		auto resourceMapIterator = m_ResourceMap.find(pResource->getPackageResourceID()->getUniqueID());
+		if (resourceMapIterator == m_ResourceMap.end())
+		{
+			throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+		}
+
+		m_ResourceMap.erase(resourceMapIterator);
+
+		m_resourceHandler.removePackageResourceID(pResource->getPackageResourceID());
+
+		// Remove from specific resource lists
+
+		auto objectIterator = std::find(m_ObjectLookup.begin(), m_ObjectLookup.end(), pResource);
+		if (objectIterator != m_ObjectLookup.end())
+		{
+			m_ObjectLookup.erase(objectIterator);
+			return;
+		}
+
+		auto baseMaterialIterator = std::find(m_BaseMaterialLookup.begin(), m_BaseMaterialLookup.end(), pResource);
+		if (baseMaterialIterator != m_BaseMaterialLookup.end())
+		{
+			m_BaseMaterialLookup.erase(baseMaterialIterator);
+			return;
+		}
+
+		auto textureIterator = std::find(m_TextureLookup.begin(), m_TextureLookup.end(), pResource);
+		if (textureIterator != m_TextureLookup.end())
+		{
+			m_TextureLookup.erase(textureIterator);
+			return;
+		}
+
+		auto sliceStackIterator = std::find(m_SliceStackLookup.begin(), m_SliceStackLookup.end(), pResource);
+		if (sliceStackIterator != m_SliceStackLookup.end())
+		{
+			m_SliceStackLookup.erase(sliceStackIterator);
+			return;
+		}
+
+		auto colorGroupIterator = std::find(m_ColorGroupLookup.begin(), m_ColorGroupLookup.end(), pResource);
+		if (colorGroupIterator != m_ColorGroupLookup.end())
+		{
+			m_ColorGroupLookup.erase(colorGroupIterator);
+			return;
+		}
+
+		auto texture2DGroupIterator = std::find(m_Texture2DGroupLookup.begin(), m_Texture2DGroupLookup.end(), pResource);
+		if (texture2DGroupIterator != m_Texture2DGroupLookup.end())
+		{
+			m_Texture2DGroupLookup.erase(texture2DGroupIterator);
+			return;
+		}
+
+		auto compositeMaterialsIterator = std::find(m_CompositeMaterialsLookup.begin(), m_CompositeMaterialsLookup.end(), pResource);
+		if (compositeMaterialsIterator != m_CompositeMaterialsLookup.end())
+		{
+			m_CompositeMaterialsLookup.erase(compositeMaterialsIterator);
+			return;
+		}
+
+		auto multiPropertyGroupIterator = std::find(m_MultiPropertyGroupLookup.begin(), m_MultiPropertyGroupLookup.end(), pResource);
+		if (multiPropertyGroupIterator != m_MultiPropertyGroupLookup.end())
+		{
+			m_MultiPropertyGroupLookup.erase(multiPropertyGroupIterator);
+			return;
+		}
+
+		auto image3DIterator = std::find(m_Image3DLookup.begin(), m_Image3DLookup.end(), pResource);
+		if (image3DIterator != m_Image3DLookup.end())
+		{
+			m_Image3DLookup.erase(image3DIterator);
+			return;
+		}
+
+		auto functionIterator = std::find(m_FunctionLookup.begin(), m_FunctionLookup.end(), pResource);
+		if (functionIterator != m_FunctionLookup.end())
+		{
+			m_FunctionLookup.erase(functionIterator);
+			return;
+		}
+
+		auto volumeDataIterator = std::find(m_VolumeDataLookup.begin(), m_VolumeDataLookup.end(), pResource);
+		if (volumeDataIterator != m_VolumeDataLookup.end())
+		{
+			m_VolumeDataLookup.erase(volumeDataIterator);
+			return;
+		}
+
+		auto levelSetObjectIterator = std::find(m_levelSetObjectLookup.begin(), m_levelSetObjectLookup.end(), pResource);
+		if (levelSetObjectIterator != m_levelSetObjectLookup.end())
+		{
+			m_levelSetObjectLookup.erase(levelSetObjectIterator);
+			return;
+		}
+
+		throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+	}
+}  // namespace NMR
+

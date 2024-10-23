@@ -149,8 +149,26 @@ namespace NMR {
 
 	void CModelComponentsObject::extendOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix)
 	{
-		for (auto iIterator = m_Components.begin(); iIterator != m_Components.end(); iIterator++) {
-			(*iIterator)->getObject()->extendOutbox(vOutBox, fnMATRIX3_multiply(mAccumulatedMatrix, (*iIterator)->getTransform()));
+		for(auto & component : m_Components)
+		{
+			component->getObject()->extendOutbox(vOutBox, fnMATRIX3_multiply(mAccumulatedMatrix, component->getTransform()));
 		}
 	}
-}
+
+	ResourceDependencies CModelComponentsObject::getDependencies()
+	{
+		ResourceDependencies dependencies;
+
+		for(auto & component : m_Components)
+		{
+			auto objectResource = component->getObject();
+
+			if (objectResource)
+			{
+				dependencies.push_back(objectResource->getPackageResourceID());
+			}
+		}
+
+		return dependencies;
+	}
+}  // namespace NMR

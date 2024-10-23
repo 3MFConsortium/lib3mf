@@ -96,6 +96,27 @@ namespace NMR {
 
 	typedef std::map<NMR::UniqueResourceID, NMR::UniqueResourceID> UniqueResourceIDMapping;
 
+	class CModelImage3D;
+	typedef std::shared_ptr <CModelImage3D> PModelImage3D;
+
+	class CModelImageStack;
+	typedef std::shared_ptr <CModelImageStack> PModelImageStack;
+
+	class CModelFunction;
+	typedef std::shared_ptr <CModelFunction> PModelFunction;
+	
+	class CModelImplicitFunction;
+	typedef std::shared_ptr <CModelImplicitFunction> PModelImplicitFunction;
+
+	class CModelFunctionFromImage3D;
+	typedef std::shared_ptr <CModelFunctionFromImage3D> PModelFunctionFromImage3D;
+
+	class CModelVolumeData;
+	typedef std::shared_ptr <CModelVolumeData> PModelVolumeData;
+
+	class LevelSetObject;
+	typedef std::shared_ptr <LevelSetObject> PLevelSetObject;
+
 	// The Model class implements the unification of all model-file in a 3MF package
 	// It should be understood as a "MultiModel"
 	class CModel {
@@ -148,6 +169,10 @@ namespace NMR {
 		std::vector<PModelResource> m_Texture2DGroupLookup;
 		std::vector<PModelResource> m_CompositeMaterialsLookup;
 		std::vector<PModelResource> m_MultiPropertyGroupLookup;
+		std::vector<PModelResource> m_Image3DLookup;
+		std::vector<PModelResource> m_FunctionLookup; // for implicit models
+		std::vector<PModelResource> m_VolumeDataLookup;
+		std::vector<PModelResource> m_levelSetObjectLookup;
 
 		// The KeyStore reference
 		PKeyStore m_pKeyStore;
@@ -280,6 +305,29 @@ namespace NMR {
 		CModelTexture2DResource * getTexture2D(_In_ nfUint32 nIndex);
 		void mergeTextures2D(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping);
 
+		// Convenience functions for 3D Images
+		_Ret_maybenull_ PModelImage3D findImage3D(_In_ UniqueResourceID nResourceID);
+		_Ret_maybenull_ PModelImageStack findImageStack(_In_ UniqueResourceID nResourceID);
+		nfUint32 getImage3DCount();
+		PModelResource getImage3DResource(_In_ nfUint32 nIndex);
+		CModelImage3D* getImage3D(_In_ nfUint32 nIndex);
+		void mergeImage3Ds(_In_ CModel* pSourceModel, _In_ UniqueResourceIDMapping& oldToNewMapping);
+
+		// Convenience functions for Functions
+		PModelFunction findFunction(UniqueResourceID nResourceID);
+		nfUint32 getFunctionCount();
+		PModelResource getFunctionResource(_In_ nfUint32 nIndex);
+		CModelImplicitFunction* getImplicitFunction(_In_ nfUint32 nIndex);
+		CModelFunctionFromImage3D* getFunctionFromImage3D(_In_ nfUint32 nIndex);
+		void mergeFunctions(_In_ CModel* pSourceModel, _In_ UniqueResourceIDMapping& oldToNewMapping);
+
+		// Convenience functions for volume data
+		PModelVolumeData findVolumeData(UniqueResourceID nResourceID);
+		nfUint32 getVolumeDataCount();
+		PModelResource getVolumeDataResource(_In_ nfUint32 nIndex);
+		CModelVolumeData* getVolumeData(_In_ nfUint32 nIndex);
+
+		
 		// Clear all build items and Resources
 		void clearAll ();
 
@@ -327,6 +375,10 @@ namespace NMR {
 		void setCryptoRandCallback(CryptoRandGenDescriptor const & randDescriptor);
 		nfBool hasCryptoRandCallbak() const;
 		nfUint64 generateRandomBytes(nfByte *, nfUint64);
+
+		[[nodiscard]] ModelResourceID getMaxModelResourceID();
+
+		void removeResource(PModelResource pResource);
 
 	};
 

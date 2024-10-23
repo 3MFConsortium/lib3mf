@@ -127,7 +127,7 @@ namespace NMR {
 
 		std::array<nfByte, 80> aSTLHeader;
 		nfUint32 nFaceCount = 0;
-		nfUint32 nGlobalColor = 0xffffffff;
+		// nfUint32 nGlobalColor = 0xffffffff;
 
 		pStream->readIntoBuffer(&aSTLHeader[0], 80, true);
 		pStream->readIntoBuffer((nfByte*)&nFaceCount, sizeof(nFaceCount), true);
@@ -138,14 +138,14 @@ namespace NMR {
 		if (nFaceCount > NMR_MESH_MAXFACECOUNT)
 			throw CNMRException(NMR_ERROR_INVALIDFACECOUNT);
 
-		std::string sHeaderString(std::begin(aSTLHeader), std::end(aSTLHeader));
-		std::size_t nFound = sHeaderString.find("COLOR=");
-		if (nFound != std::string::npos) {
-			if (nFound <= 76) {
-				nGlobalColor = ((nfUint32)aSTLHeader[nFound + 6]) + (((nfUint32)aSTLHeader[nFound + 7]) << 8) + (((nfUint32)aSTLHeader[nFound + 8]) << 16) +
-					(((nfUint32)aSTLHeader[nFound + 9]) << 24);
-			}
-		}
+		// std::string sHeaderString(std::begin(aSTLHeader), std::end(aSTLHeader));
+		// std::size_t nFound = sHeaderString.find("COLOR=");
+		// if (nFound != std::string::npos) {
+		// 	if (nFound <= 76) {
+		// 		nGlobalColor = ((nfUint32)aSTLHeader[nFound + 6]) + (((nfUint32)aSTLHeader[nFound + 7]) << 8) + (((nfUint32)aSTLHeader[nFound + 8]) << 16) +
+		// 			(((nfUint32)aSTLHeader[nFound + 9]) << 24);
+		// 	}
+		// }
 
 		nfUint32 nNodeIdx;
 		MESHNODE * pNodes[3];
@@ -193,7 +193,8 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
 
 			if (bIsValid) {
-				MESHFACE * pFace = pMesh->addFace(pNodes[0], pNodes[1], pNodes[2]);
+				pMesh->addFace(pNodes[0], pNodes[1], pNodes[2]);
+				// MESHFACE * pFace = pMesh->addFace(pNodes[0], pNodes[1], pNodes[2]);
 				//if (pProperties) {
 				//	nfUint32 nRed = (nfUint32) ((nfFloat) (Facet.m_attribute & 0x1f) / (255.0f / 31.0f));
 				//	nfUint32 nGreen = (nfUint32)((nfFloat)((Facet.m_attribute >> 5) & 0x1f) / (255.0f / 31.0f));

@@ -115,6 +115,7 @@ namespace Lib3MF
 
 	TEST_F(Properties, ObjectLevelPropertiesWriteRead)
 	{
+		using namespace Lib3MF::helper;
 		auto baseMaterialGroup = model->AddBaseMaterialGroup();
 		auto someMaterial = baseMaterialGroup->AddMaterial("SomeMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
 		auto anotherMaterial = baseMaterialGroup->AddMaterial("AnotherMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
@@ -163,6 +164,7 @@ namespace Lib3MF
 	// Copy-pasted from the previous test ("ObjectLevelPropertiesWriteRead"), but adds metadata to the mesh
 	TEST_F(Properties, ObjectLevelPropertiesWriteRead_WithMetaData)
 	{
+		using namespace Lib3MF::helper;
 		auto baseMaterialGroup = model->AddBaseMaterialGroup();
 		auto someMaterial = baseMaterialGroup->AddMaterial("SomeMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
 		auto anotherMaterial = baseMaterialGroup->AddMaterial("AnotherMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
@@ -433,6 +435,7 @@ namespace Lib3MF
 
 	TEST_F(Properties_Color, WriteRead)
 	{
+		using namespace Lib3MF::helper;
 		auto writer = model->QueryWriter("3mf");
 		std::vector<Lib3MF_uint8> buffer;
 		writer->WriteToBuffer(buffer);

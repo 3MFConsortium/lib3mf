@@ -86,6 +86,7 @@ namespace Lib3MF
 
 	TEST_F(ReaderV093, 3MFReadFromFile_Material)
 	{
+		using namespace Lib3MF::helper;
 		reader->ReadFromFile(sTestFilesPath + "/v093/" + "Material_093.3mf");
 		CheckReaderWarnings(reader, 1);
 

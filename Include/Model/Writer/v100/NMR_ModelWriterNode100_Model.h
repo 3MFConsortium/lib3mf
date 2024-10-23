@@ -61,22 +61,44 @@ namespace NMR {
 		nfBool m_bWriteObjects;
 		nfBool m_bIsRootModel;
 		nfBool m_bWriteCustomNamespaces;
+		nfBool m_bWriteVolumetricExtension;
+        nfBool m_bWriteImplicitExtension;        
 
-		void writeModelMetaData();
+        void writeModelMetaData();
 		void writeMetaData(_In_ PModelMetaData pMetaData);
 		void writeMetaDataGroup(_In_ PModelMetaDataGroup pMetaDataGroup);
 
 		void writeResources();
+		void writeResource(CModelResource * pResource);
+		
 		void writeBaseMaterials();
+		void writeBaseMaterial(
+			CModelBaseMaterialResource* pBaseMaterial);
 		void writeTextures2D();
+		void writeTexture2D(
+			CModelTexture2DResource* pTexture2D);
 		void writeColors();
+		void writeColor(
+			CModelColorGroupResource* pColorGroup);
 		void writeTex2Coords();
 		void writeCompositeMaterials();
 		void writeMultiProperties();
 		void writeMultiPropertyAttributes(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup);
 		void writeMultiPropertyMultiElements(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup);
+		
+		void writeImage3Ds();
+		void writeImage3D(CModelImage3D & pImage3D);
+
+		void writeFunctionsFromImage3D();
+		void writeFunctionFromImage3D(CModelFunctionFromImage3D & functionFromImage3D);
+
+		void writeImplicitFunctions();
+		void writeVolumeData();
+
+		
 
 		void writeObjects();
+		void writeObject(CModelObject & pObject);
 		void writeBuild();
 
 		void writeSliceStacks();

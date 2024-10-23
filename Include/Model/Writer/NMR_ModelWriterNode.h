@@ -51,8 +51,10 @@ namespace NMR {
 		void writeConstPrefixedStringAttribute(_In_z_ const nfChar * pPrefix, _In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 
 		void writeIntAttribute(_In_z_ const nfChar * pAttributeName, _In_ nfInt32 nAttributeValue);
+		void writePrefixedIntAttribute(_In_z_ const nfChar * pPrefix, _In_z_ const nfChar * pAttributeName, _In_ nfInt32 nAttributeValue);
 		void writeUintAttribute(_In_z_ const nfChar * pAttributeName, _In_ nfUint32 nAttributeValue);
 		void writeFloatAttribute(_In_z_ const nfChar * pAttributeName, _In_ nfFloat fAttributeValue);
+		void writeDoubleAttribute(_In_z_ const nfChar* pAttributeName, _In_ nfDouble dAttributeValue);
 
 		void writeStartElement(_In_z_ const nfChar * pElementName);
 		void writeStartElementWithNamespace(_In_z_ const nfChar * pElementName, _In_z_ const nfChar * pNameSpace);
