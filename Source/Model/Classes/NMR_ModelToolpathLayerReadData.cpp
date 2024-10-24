@@ -62,7 +62,7 @@ namespace NMR {
 		return m_sUUID;
 	}
 
-	void CModelToolpathLayerReadData::beginSegment(eModelToolpathSegmentType eType, nfUint32 nProfileID, nfUint32 nPartID)
+	void CModelToolpathLayerReadData::beginSegment(eModelToolpathSegmentType eType, nfUint32 nProfileID, nfUint32 nPartID, nfUint32 nOverrideFraction)
 	{
 		if (m_pCurrentSegment != nullptr)
 			throw CNMRException(NMR_ERROR_LAYERSEGMENTALREADYOPEN);
@@ -73,6 +73,7 @@ namespace NMR {
 		m_pCurrentSegment->m_nProfileID = nProfileID;
 		m_pCurrentSegment->m_nStartPoint = m_Points.getCount ();
 		m_pCurrentSegment->m_nPointCount = 0;
+		m_pCurrentSegment->m_nOverrideFraction = nOverrideFraction;
 
 		size_t nNumberOfAttributes = m_SegmentAttributeDefinitions.size();
 
@@ -97,7 +98,7 @@ namespace NMR {
 		m_pCurrentSegment = nullptr;
 	}
 
-	void CModelToolpathLayerReadData::addDiscretePoint(nfInt32 nX, nfInt32 nY, nfInt32 nTag, nfInt32 nCustomProfileID, nfInt32 nFactorF, nfInt32 nFactorG, nfInt32 nFactorH)
+	void CModelToolpathLayerReadData::addDiscretePoint(nfInt32 nX, nfInt32 nY, nfInt32 nTag, nfInt32 nFactorF, nfInt32 nFactorG, nfInt32 nFactorH)
 	{
 		if (m_pCurrentSegment == nullptr)
 			throw CNMRException(NMR_ERROR_LAYERSEGMENTNOTOPEN);
@@ -106,7 +107,6 @@ namespace NMR {
 		pVec->m_nX = nX;
 		pVec->m_nY = nY;
 		pVec->m_nTag = nTag;
-		pVec->m_nProfileOverride = nCustomProfileID;
 		pVec->m_nFactorF = nFactorF;
 		pVec->m_nFactorG = nFactorG;
 		pVec->m_nFactorH = nFactorH;
@@ -138,13 +138,31 @@ namespace NMR {
 	
 	}
 
-	void CModelToolpathLayerReadData::registerUUID(nfUint32 nID, std::string sUUID)
+	void CModelToolpathLayerReadData::registerPartUUID(nfUint32 nID, std::string sUUID)
 	{
 		auto iIter = m_UUIDMap.find(nID);
 		if (iIter != m_UUIDMap.end())
-			throw CNMRException(NMR_ERROR_DUPLICATEID);
+			throw CNMRException(NMR_ERROR_DUPLICATEPARTID);
+
+		if (nID == 0)
+			throw CNMRException(NMR_ERROR_INVALIDPARTID);
 
 		m_UUIDMap.insert(std::make_pair (nID, sUUID));
+		m_PartIDs.push_back(nID);
+
+	}
+
+	void CModelToolpathLayerReadData::registerProfileUUID(nfUint32 nID, std::string sUUID)
+	{
+		auto iIter = m_UUIDMap.find(nID);
+		if (iIter != m_UUIDMap.end())
+			throw CNMRException(NMR_ERROR_DUPLICATEPROFILEID);
+
+		if (nID == 0)
+			throw CNMRException(NMR_ERROR_INVALIDPROFILEID);
+
+		m_UUIDMap.insert(std::make_pair(nID, sUUID));
+		m_ProfileIDs.push_back(nID);
 	}
 
 	std::string CModelToolpathLayerReadData::mapIDtoUUID(nfUint32 nID)
@@ -328,67 +346,22 @@ namespace NMR {
 		TOOLPATHREADSEGMENT* pSegment = m_Segments.getData(nSegmentIndex);
 		__NMRASSERT(pSegment != nullptr);
 
-		switch (pSegment->m_eType) {
-			case eModelToolpathSegmentType::HatchSegment: {
-
-				uint32_t nProfileID = pSegment->m_nProfileID;
-
-				uint32_t nHatchCount = pSegment->m_nPointCount / 2;
-				for (uint32_t nHatchIndex = 0; nHatchIndex < nHatchCount; nHatchIndex++) {
-
-					// The profile overrides for hatches are stored on point 1!
-					auto& point1 = getSegmentPoint(nSegmentIndex, nHatchIndex * 2 + 0);
-					if (point1.m_nProfileOverride != 0) {
-						if (point1.m_nProfileOverride != nProfileID) 
-							return false;
-					}
-
-				}
-
-				return true;
-			}
-
-			case eModelToolpathSegmentType::LoopSegment:
-			{
-				uint32_t nProfileID = pSegment->m_nProfileID;
-
-				uint32_t nPointCount = pSegment->m_nPointCount;
-				for (uint32_t nPointIndex = 0; nPointIndex < nPointCount; nPointIndex++) {
-					auto& point = getSegmentPoint(nSegmentIndex, nPointIndex);
-					if (point.m_nProfileOverride != 0) {
-						if (point.m_nProfileOverride != nProfileID)
-							return false;
-					}
-
-				}
-
-				return true;
-			}
-
-			case eModelToolpathSegmentType::PolylineSegment:
-			{
-				uint32_t nProfileID = pSegment->m_nProfileID;
-
-				uint32_t nPointCount = pSegment->m_nPointCount;
-				// On a polyline, the profile ID of the last point is not applicable...
-				for (uint32_t nPointIndex = 0; nPointIndex < nPointCount - 1; nPointIndex++) {
-					auto& point = getSegmentPoint(nSegmentIndex, nPointIndex);
-					if (point.m_nProfileOverride != 0) {
-						if (point.m_nProfileOverride != nProfileID)
-							return false;
-					}
-
-				}
-
-				return true;
-			}
-
-			default:
-				return false;
-		}
-		
-		return false;
+	
+		return true;
 	}
 
+	uint32_t CModelToolpathLayerReadData::getPartCount()
+	{
+		if (m_PartIDs.size() > UINT32_MAX)
+			throw CNMRException(NMR_ERROR_TOOMANYPARTSINTOOLPATHLAYER);
+
+		return (uint32_t) m_PartIDs.size();
+	}
+
+	void CModelToolpathLayerReadData::getPartInformation(nfUint32 nPartIndex, nfUint32& nPartID, std::string& sPartUUID)
+	{
+		if (nPartIndex >= m_PartIDs.size ())
+			throw CNMRException(NMR_ERROR_INVALIDPARTINDEX);
+	}
 
 }

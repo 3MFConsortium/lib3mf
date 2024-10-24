@@ -1083,19 +1083,11 @@ private:
 	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static v8::Persistent<v8::Function> constructor;
 	static void GetLayerDataUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetCustomDataCount(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetCustomDataName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentCount(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentInfo(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetSegmentDefaultProfile(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetSegmentDefaultProfileUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void SegmentHasUniformProfile(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetSegmentPart(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetSegmentPartUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetSegmentLocalPartID(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetPartUUIDByLocalPartID(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetSegmentPointDataInModelUnits(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetSegmentPointDataDiscrete(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetSegmentHatchDataInModelUnits(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetSegmentHatchDataDiscrete(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void FindSegmentAttributeInfoByName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void FindSegmentAttributeIDByName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void FindSegmentAttributeTypeByName(const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -1103,9 +1095,22 @@ private:
 	static void GetSegmentIntegerAttributeByName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentDoubleAttributeByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentDoubleAttributeByName(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetCustomDataCount(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetCustomDataName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetPartCount(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetPartInformation(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetPartBuildItem(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentPartID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentBuildItem(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentBuildItemUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetBuildItemUUIDByLocalPartID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentDefaultProfile(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentDefaultProfileUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentDefaultProfileID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetProfileUUIDByLocalProfileID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SegmentHasUniformProfile(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentPointDataInModelUnits(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentPointDataDiscrete(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentHatchDataInModelUnits(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentHatchDataDiscrete(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFToolpathLayerReader();
@@ -1130,7 +1135,8 @@ private:
 	static void ClearSegmentAttributes(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetLaserIndex(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void ClearLaserIndex(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void SetFactorRange(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetOverrideFraction(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOverrideFraction(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WriteHatchDataInModelUnits(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WriteHatchDataInModelUnitsWithConstantOverrides(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WriteHatchDataInModelUnitsWithRampedOverrides(const v8::FunctionCallbackInfo<v8::Value>& args);

@@ -97,13 +97,30 @@ IToolpathProfile* CToolpathLayerReader::GetSegmentDefaultProfile(const Lib3MF_ui
 std::string CToolpathLayerReader::GetSegmentDefaultProfileUUID(const Lib3MF_uint32 nIndex)
 {
 	NMR::eModelToolpathSegmentType eNMRType;
-	uint32_t nProfileID;
-	uint32_t nPartID;
-	uint32_t nPointCount;
+	uint32_t nProfileID = 0;
+	uint32_t nPartID = 0;
+	uint32_t nPointCount = 0;
 	m_pReadData->getSegmentInfo(nIndex, eNMRType, nProfileID, nPartID, nPointCount);
 
 	return m_pReadData->mapIDtoUUID(nProfileID);
 }
+
+Lib3MF_uint32 CToolpathLayerReader::GetSegmentDefaultProfileID(const Lib3MF_uint32 nSegmentIndex)
+{
+	NMR::eModelToolpathSegmentType eNMRType;
+	uint32_t nProfileID = 0;
+	uint32_t nPartID = 0;
+	uint32_t nPointCount = 0;
+	m_pReadData->getSegmentInfo(nSegmentIndex, eNMRType, nProfileID, nPartID, nPointCount);
+
+	return nPartID;
+}
+
+std::string CToolpathLayerReader::GetProfileUUIDByLocalProfileID(const Lib3MF_uint32 nLocalProfileID)
+{
+	return m_pReadData->mapIDtoUUID(nLocalProfileID);
+}
+
 
 bool CToolpathLayerReader::SegmentHasUniformProfile(const Lib3MF_uint32 nIndex)
 {
@@ -111,7 +128,7 @@ bool CToolpathLayerReader::SegmentHasUniformProfile(const Lib3MF_uint32 nIndex)
 }
 
 
-IBuildItem* CToolpathLayerReader::GetSegmentPart(const Lib3MF_uint32 nIndex)
+IBuildItem* CToolpathLayerReader::GetSegmentBuildItem(const Lib3MF_uint32 nIndex)
 {
 	NMR::eModelToolpathSegmentType eNMRType;
 	uint32_t nProfileID;
@@ -128,7 +145,7 @@ IBuildItem* CToolpathLayerReader::GetSegmentPart(const Lib3MF_uint32 nIndex)
 
 }
 
-std::string CToolpathLayerReader::GetSegmentPartUUID(const Lib3MF_uint32 nIndex)
+std::string CToolpathLayerReader::GetSegmentBuildItemUUID(const Lib3MF_uint32 nIndex)
 {
 	NMR::eModelToolpathSegmentType eNMRType;
 	uint32_t nProfileID;
@@ -139,7 +156,7 @@ std::string CToolpathLayerReader::GetSegmentPartUUID(const Lib3MF_uint32 nIndex)
 	return m_pReadData->mapIDtoUUID(nPartID);
 }
 
-Lib3MF_uint32 CToolpathLayerReader::GetSegmentLocalPartID(const Lib3MF_uint32 nIndex)
+Lib3MF_uint32 CToolpathLayerReader::GetSegmentPartID(const Lib3MF_uint32 nIndex)
 {
 	NMR::eModelToolpathSegmentType eNMRType;
 	uint32_t nProfileID;
@@ -150,7 +167,7 @@ Lib3MF_uint32 CToolpathLayerReader::GetSegmentLocalPartID(const Lib3MF_uint32 nI
 	return nPartID;
 }
 
-std::string CToolpathLayerReader::GetPartUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID)
+std::string CToolpathLayerReader::GetBuildItemUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID)
 {
 	return m_pReadData->mapIDtoUUID(nLocalPartID);
 }
@@ -250,7 +267,6 @@ void CToolpathLayerReader::GetSegmentHatchDataInModelUnits(const Lib3MF_uint32 n
 					pHatch->m_Point1Coordinates[1] = point1.m_nY * dUnits;
 					pHatch->m_Point2Coordinates[0] = point2.m_nX * dUnits;
 					pHatch->m_Point2Coordinates[1] = point2.m_nY * dUnits;
-					pHatch->m_ProfileOverrideID = (uint32_t)point1.m_nProfileOverride;
 					pHatch->m_Tag = point1.m_nTag;
 					pHatch++;
 				}
@@ -297,7 +313,6 @@ void CToolpathLayerReader::GetSegmentHatchDataDiscrete(const Lib3MF_uint32 nInde
 					pHatch->m_Point1Coordinates[1] = point1.m_nY;
 					pHatch->m_Point2Coordinates[0] = point2.m_nX;
 					pHatch->m_Point2Coordinates[1] = point2.m_nY;
-					pHatch->m_ProfileOverrideID = (uint32_t)point1.m_nProfileOverride;
 					pHatch->m_Tag = point1.m_nTag;
 					pHatch++;
 				}
@@ -388,8 +403,6 @@ Lib3MF_int64 CToolpathLayerReader::GetSegmentIntegerAttributeByName(const Lib3MF
 
 
 
-
-
 Lib3MF_double CToolpathLayerReader::GetSegmentDoubleAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID)
 {
 	return m_pReadData->getSegmentDoubleAttribute(nIndex, nID);
@@ -404,3 +417,25 @@ Lib3MF_double CToolpathLayerReader::GetSegmentDoubleAttributeByName(const Lib3MF
 	return m_pReadData->getSegmentDoubleAttribute(nIndex, attributeInfo.first);
 }
 
+Lib3MF_uint32 CToolpathLayerReader::GetPartCount()
+{
+	return m_pReadData->getPartCount();
+}
+
+void CToolpathLayerReader::GetPartInformation(const Lib3MF_uint32 nPartIndex, Lib3MF_uint32& nPartID, std::string& sBuildItemUUID) 
+{
+	m_pReadData->getPartInformation(nPartIndex, nPartID, sBuildItemUUID);
+}
+
+IBuildItem* CToolpathLayerReader::GetPartBuildItem(const Lib3MF_uint32 nPartIndex)
+{
+	std::string sBuildItemUUID;
+	uint32_t nPartID = 0;
+	m_pReadData->getPartInformation(nPartIndex, nPartID, sBuildItemUUID);
+
+	auto pModel = m_pModelToolpath->getModel();
+	auto pBuildItemInstance = pModel->findBuildItemByUUID(sBuildItemUUID, true);
+
+	return new CBuildItem(pBuildItemInstance);
+
+}

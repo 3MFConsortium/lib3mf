@@ -70,37 +70,15 @@ public:
 
 	std::string GetLayerDataUUID() override;
 
-	Lib3MF_uint32 GetSegmentCount() override;
-
-	void GetSegmentInfo(const Lib3MF_uint32 nIndex, Lib3MF::eToolpathSegmentType & eType, Lib3MF_uint32 & nPointCount) override;
-
-	IToolpathProfile * GetSegmentDefaultProfile(const Lib3MF_uint32 nIndex) override;
-
-	std::string GetSegmentDefaultProfileUUID(const Lib3MF_uint32 nIndex) override;
-
-	bool SegmentHasUniformProfile(const Lib3MF_uint32 nIndex) override;
-
-	IBuildItem * GetSegmentPart(const Lib3MF_uint32 nIndex) override;
-
-	std::string GetSegmentPartUUID(const Lib3MF_uint32 nIndex) override;
-
-	Lib3MF_uint32 GetSegmentLocalPartID(const Lib3MF_uint32 nIndex) override;
-
-	std::string GetPartUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID) override;
-	
-	void GetSegmentPointDataInModelUnits(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer) override;
-
-	void GetSegmentPointDataDiscrete(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sDiscretePosition2D* pPointDataBuffer) override;
-
-	void GetSegmentHatchDataInModelUnits(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, Lib3MF::sHatch2D* pHatchDataBuffer) override;
-
-	void GetSegmentHatchDataDiscrete(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sDiscreteHatch2D* pPointDataBuffer) override;
-
 	Lib3MF_uint32 GetCustomDataCount() override;
 
 	ICustomDOMTree* GetCustomData(const Lib3MF_uint32 nIndex) override;
 
 	void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string& sNameSpace, std::string& sDataName) override;
+
+	Lib3MF_uint32 GetSegmentCount() override;
+
+	void GetSegmentInfo(const Lib3MF_uint32 nIndex, Lib3MF::eToolpathSegmentType & eType, Lib3MF_uint32 & nPointCount) override;
 
 	void FindSegmentAttributeInfoByName(const std::string& sNameSpace, const std::string& sAttributeName, Lib3MF_uint32& nID, Lib3MF::eToolpathAttributeType& eAttributeType) override;
 
@@ -115,6 +93,39 @@ public:
 	Lib3MF_double GetSegmentDoubleAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID) override;
 
 	Lib3MF_double GetSegmentDoubleAttributeByName(const Lib3MF_uint32 nIndex, const std::string& sNameSpace, const std::string& sAttributeName) override;
+
+	Lib3MF_uint32 GetPartCount() override;
+
+	void GetPartInformation(const Lib3MF_uint32 nPartIndex, Lib3MF_uint32& nPartID, std::string& sBuildItemUUID) override;
+
+	IBuildItem* GetPartBuildItem(const Lib3MF_uint32 nPartIndex) override;
+
+	Lib3MF_uint32 GetSegmentPartID(const Lib3MF_uint32 nPartIndex) override;
+
+	IBuildItem* GetSegmentBuildItem(const Lib3MF_uint32 nSegmentIndex) override;
+
+	std::string GetSegmentBuildItemUUID(const Lib3MF_uint32 nSegmentIndex) override;
+
+	std::string GetBuildItemUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID) override;
+
+	IToolpathProfile * GetSegmentDefaultProfile(const Lib3MF_uint32 nIndex) override;
+
+	std::string GetSegmentDefaultProfileUUID(const Lib3MF_uint32 nIndex) override;
+
+	Lib3MF_uint32 GetSegmentDefaultProfileID(const Lib3MF_uint32 nSegmentIndex) override;
+
+	std::string GetProfileUUIDByLocalProfileID(const Lib3MF_uint32 nLocalProfileID) override;
+
+	bool SegmentHasUniformProfile(const Lib3MF_uint32 nIndex) override;
+	
+	void GetSegmentPointDataInModelUnits(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer) override;
+
+	void GetSegmentPointDataDiscrete(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sDiscretePosition2D* pPointDataBuffer) override;
+
+	void GetSegmentHatchDataInModelUnits(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, Lib3MF::sHatch2D* pHatchDataBuffer) override;
+
+	void GetSegmentHatchDataDiscrete(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sDiscreteHatch2D* pPointDataBuffer) override;
+
 
 };
 

@@ -337,7 +337,6 @@ type
 	TLib3MFHatch2D = packed record
 		FPoint1Coordinates: array [0..1] of Double;
 		FPoint2Coordinates: array [0..1] of Double;
-		FProfileOverrideID: Cardinal;
 		FTag: Integer;
 	end;
 
@@ -345,7 +344,6 @@ type
 	TLib3MFDiscreteHatch2D = packed record
 		FPoint1Coordinates: array [0..1] of Integer;
 		FPoint2Coordinates: array [0..1] of Integer;
-		FProfileOverrideID: Cardinal;
 		FTag: Integer;
 	end;
 
@@ -568,7 +566,7 @@ type
 	* Switches to fast LZ4 compression mode.
 	*
 	* @param[in] pBinaryStream - BinaryStream instance.
-	* @param[in] nCompressionLevel - Compression level (0-9).
+	* @param[in] nCompressionLevel - Compression level (2-12).
 	* @return error code or 0 (success)
 	*)
 	TLib3MFBinaryStream_EnableLZ4Func = function(pBinaryStream: TLib3MFHandle; const nCompressionLevel: Cardinal): TLib3MFResult; cdecl;
@@ -3764,148 +3762,58 @@ type
 	TLib3MFToolpathLayerReader_GetLayerDataUUIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nUUIDBufferSize: Cardinal; out pUUIDNeededChars: Cardinal; pUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
-	* Retrieves the count of segments.
+	* Retrieves the count of custom data elements.
 	*
 	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
 	* @param[out] pCount - Count
 	* @return error code or 0 (success)
 	*)
-	TLib3MFToolpathLayerReader_GetSegmentCountFunc = function(pToolpathLayerReader: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
+	TLib3MFToolpathLayerReader_GetCustomDataCountFunc = function(pToolpathLayerReader: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the custom data.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @param[out] pData - DOM Tree of the data.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetCustomDataFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; out pData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the node name of the custom data.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameSpaceBuffer -  buffer of Namespace of the custom data tree., may be NULL
+	* @param[in] nDataNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pDataNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pDataNameBuffer -  buffer of Root name of the data tree., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetCustomDataNameFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nNameSpaceBufferSize: Cardinal; out pNameSpaceNeededChars: Cardinal; pNameSpaceBuffer: PAnsiChar; const nDataNameBufferSize: Cardinal; out pDataNameNeededChars: Cardinal; pDataNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the count of segments.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[out] pSegmentCount - Number of Segments
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentCountFunc = function(pToolpathLayerReader: TLib3MFHandle; out pSegmentCount: Cardinal): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves the segment type information .
 	*
 	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[in] nIndex - Index. Must be between 0 and SegmentCount - 1.
 	* @param[out] pType - Segment Type
 	* @param[out] pPointCount - Point count of segment.
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpathLayerReader_GetSegmentInfoFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; out pType: Integer; out pPointCount: Cardinal): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the assigned segment default profile. Fails for delay and sync segments.
-	*
-	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[out] pProfile - Segment Profile
-	* @return error code or 0 (success)
-	*)
-	TLib3MFToolpathLayerReader_GetSegmentDefaultProfileFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; out pProfile: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the assigned segment default profile uuid. Fails for delay and sync segments.
-	*
-	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[in] nProfileUUIDBufferSize - size of the buffer (including trailing 0)
-	* @param[out] pProfileUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pProfileUUIDBuffer -  buffer of Segment Profile UUID, may be NULL
-	* @return error code or 0 (success)
-	*)
-	TLib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nProfileUUIDBufferSize: Cardinal; out pProfileUUIDNeededChars: Cardinal; pProfileUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
-	
-	(**
-	* Returns if the segment has a uniform profile. If it is uniform, then the default profile applies to the whole segment. Returns false for delay and sync segments.
-	*
-	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[out] pHasUniformProfile - If true, the segment has a uniform profile ID. 
-	* @return error code or 0 (success)
-	*)
-	TLib3MFToolpathLayerReader_SegmentHasUniformProfileFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; out pHasUniformProfile: Byte): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the assigned segment profile. Fails for delay and sync segments.
-	*
-	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[out] pBuildItem - Segment Build Item
-	* @return error code or 0 (success)
-	*)
-	TLib3MFToolpathLayerReader_GetSegmentPartFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; out pBuildItem: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the assigned segment part uuid. Fails for delay and sync segments.
-	*
-	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[in] nPartUUIDBufferSize - size of the buffer (including trailing 0)
-	* @param[out] pPartUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pPartUUIDBuffer -  buffer of Segment Part UUID, may be NULL
-	* @return error code or 0 (success)
-	*)
-	TLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nPartUUIDBufferSize: Cardinal; out pPartUUIDNeededChars: Cardinal; pPartUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the assigned segment part id. Fails for delay and sync segments.
-	*
-	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[out] pLocalPartID - Local Segment Part ID
-	* @return error code or 0 (success)
-	*)
-	TLib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; out pLocalPartID: Cardinal): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the global part UUID by the local part ID.
-	*
-	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nLocalPartID - Local Segment Part ID
-	* @param[in] nPartUUIDBufferSize - size of the buffer (including trailing 0)
-	* @param[out] pPartUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pPartUUIDBuffer -  buffer of Segment Part UUID, may be NULL
-	* @return error code or 0 (success)
-	*)
-	TLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nLocalPartID: Cardinal; const nPartUUIDBufferSize: Cardinal; out pPartUUIDNeededChars: Cardinal; pPartUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the assigned segment point list. For type hatch, the points are taken pairwise. Returns an empty array for delay and sync elements.
-	*
-	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[in] nPointDataCount - Number of elements in buffer
-	* @param[out] pPointDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
-	* @param[out] pPointDataBuffer - Position2D buffer of The point data array. The point coordinates are in model units.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nPointDataCount: QWord; out pPointDataNeededCount: QWord; pPointDataBuffer: PLib3MFPosition2D): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the assigned segment point list in toolpath units. For type hatch, the points are taken pairwise. Returns an empty array for delay and sync elements.
-	*
-	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[in] nPointDataCount - Number of elements in buffer
-	* @param[out] pPointDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
-	* @param[out] pPointDataBuffer - DiscretePosition2D buffer of The point data array. The point coordinates are in toolpath units.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nPointDataCount: QWord; out pPointDataNeededCount: QWord; pPointDataBuffer: PLib3MFDiscretePosition2D): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the assigned segment hatch list. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
-	*
-	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[in] nHatchDataCount - Number of elements in buffer
-	* @param[out] pHatchDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
-	* @param[out] pHatchDataBuffer - Hatch2D buffer of The hatch data array. The point coordinates are in model units.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nHatchDataCount: QWord; out pHatchDataNeededCount: QWord; pHatchDataBuffer: PLib3MFHatch2D): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the assigned segment hatch list in toolpath units. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
-	*
-	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[in] nHatchDataCount - Number of elements in buffer
-	* @param[out] pHatchDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
-	* @param[out] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data array. The point coordinates are in toolpath units.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nHatchDataCount: QWord; out pHatchDataNeededCount: QWord; pHatchDataBuffer: PLib3MFDiscreteHatch2D): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
@@ -3945,81 +3853,225 @@ type
 	* Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
 	*
 	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
 	* @param[in] nID - Attribute ID.
 	* @param[out] pValue - Attribute Value.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nID: Cardinal; out pValue: Int64): TLib3MFResult; cdecl;
+	TLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nSegmentIndex: Cardinal; const nID: Cardinal; out pValue: Int64): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves a segment integer attribute by Attribute Name. Will fail if Attribute does not exist or is of different type.
 	*
 	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
 	* @param[in] pNameSpace - Namespace of the custom attribute.
 	* @param[in] pAttributeName - Name of the custom attribute.
 	* @param[out] pValue - Attribute Value.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const pNameSpace: PAnsiChar; const pAttributeName: PAnsiChar; out pValue: Int64): TLib3MFResult; cdecl;
+	TLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc = function(pToolpathLayerReader: TLib3MFHandle; const nSegmentIndex: Cardinal; const pNameSpace: PAnsiChar; const pAttributeName: PAnsiChar; out pValue: Int64): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.
 	*
 	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
 	* @param[in] nID - Attribute ID.
 	* @param[out] pValue - Attribute Value.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nID: Cardinal; out pValue: Double): TLib3MFResult; cdecl;
+	TLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nSegmentIndex: Cardinal; const nID: Cardinal; out pValue: Double): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves a segment Double attribute by Attribute Name. Will fail if Attribute does not exist.
 	*
 	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
 	* @param[in] pNameSpace - Namespace of the custom attribute.
 	* @param[in] pAttributeName - Name of the custom attribute.
 	* @param[out] pValue - Attribute Value.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const pNameSpace: PAnsiChar; const pAttributeName: PAnsiChar; out pValue: Double): TLib3MFResult; cdecl;
+	TLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc = function(pToolpathLayerReader: TLib3MFHandle; const nSegmentIndex: Cardinal; const pNameSpace: PAnsiChar; const pAttributeName: PAnsiChar; out pValue: Double): TLib3MFResult; cdecl;
 	
 	(**
-	* Retrieves the count of custom data elements.
+	* Returns how many parts are referenced in this layer.
 	*
 	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[out] pCount - Count
+	* @param[out] pPartCount - Number of parts referenced in this layer.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFToolpathLayerReader_GetCustomDataCountFunc = function(pToolpathLayerReader: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
+	TLib3MFToolpathLayerReader_GetPartCountFunc = function(pToolpathLayerReader: TLib3MFHandle; out pPartCount: Cardinal): TLib3MFResult; cdecl;
 	
 	(**
-	* Retrieves the custom data.
+	* Returns the ID and UUID of a referenced build item by its index in the layer..
 	*
 	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
-	* @param[out] pData - DOM Tree of the data.
+	* @param[in] nPartIndex - Index. Must be between 0 and PartCount - 1.
+	* @param[out] pPartID - Local Segment Part ID
+	* @param[in] nBuildItemUUIDBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pBuildItemUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pBuildItemUUIDBuffer -  buffer of Referenced Build Item UUID, may be NULL
 	* @return error code or 0 (success)
 	*)
-	TLib3MFToolpathLayerReader_GetCustomDataFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; out pData: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFToolpathLayerReader_GetPartInformationFunc = function(pToolpathLayerReader: TLib3MFHandle; const nPartIndex: Cardinal; out pPartID: Cardinal; const nBuildItemUUIDBufferSize: Cardinal; out pBuildItemUUIDNeededChars: Cardinal; pBuildItemUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
-	* Retrieves the node name of the custom data.
+	* Returns a referenced build item Instance by its index in the layer...
 	*
 	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
-	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
-	* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
-	* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pNameSpaceBuffer -  buffer of Namespace of the custom data tree., may be NULL
-	* @param[in] nDataNameBufferSize - size of the buffer (including trailing 0)
-	* @param[out] pDataNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pDataNameBuffer -  buffer of Root name of the data tree., may be NULL
+	* @param[in] nPartIndex - Index. Must be between 0 and PartCount - 1.
+	* @param[out] pBuildItem - Referenced Build Item Instance
 	* @return error code or 0 (success)
 	*)
-	TLib3MFToolpathLayerReader_GetCustomDataNameFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nNameSpaceBufferSize: Cardinal; out pNameSpaceNeededChars: Cardinal; pNameSpaceBuffer: PAnsiChar; const nDataNameBufferSize: Cardinal; out pDataNameNeededChars: Cardinal; pDataNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	TLib3MFToolpathLayerReader_GetPartBuildItemFunc = function(pToolpathLayerReader: TLib3MFHandle; const nPartIndex: Cardinal; out pBuildItem: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the assigned part id for a segment. Fails for delay and sync segments.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nPartIndex - Index. Must be between 0 and SegmentCount - 1.
+	* @param[out] pPartID - Local Segment Part ID
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentPartIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nPartIndex: Cardinal; out pPartID: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the assigned segment build item. Fails for delay and sync segments.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nSegmentIndex - Index. Must be between 0 and Count - 1.
+	* @param[out] pBuildItem - Segment Build Item
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentBuildItemFunc = function(pToolpathLayerReader: TLib3MFHandle; const nSegmentIndex: Cardinal; out pBuildItem: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the assigned segment build item uuid. Fails for delay and sync segments.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nSegmentIndex - Index. Must be between 0 and Count - 1.
+	* @param[in] nBuildItemUUIDBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pBuildItemUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pBuildItemUUIDBuffer -  buffer of Segment BuildItem UUID, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentBuildItemUUIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nSegmentIndex: Cardinal; const nBuildItemUUIDBufferSize: Cardinal; out pBuildItemUUIDNeededChars: Cardinal; pBuildItemUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Maps a local part ID to its global build item UUID.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nLocalPartID - Local Segment Part ID
+	* @param[in] nBuildItemUUIDBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pBuildItemUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pBuildItemUUIDBuffer -  buffer of Segment Build Item UUID, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetBuildItemUUIDByLocalPartIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nLocalPartID: Cardinal; const nBuildItemUUIDBufferSize: Cardinal; out pBuildItemUUIDNeededChars: Cardinal; pBuildItemUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the assigned segment default profile. Fails for delay and sync segments.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[out] pProfile - Segment Profile
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentDefaultProfileFunc = function(pToolpathLayerReader: TLib3MFHandle; const nSegmentIndex: Cardinal; out pProfile: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the assigned segment default profile uuid. Fails for delay and sync segments.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nSegmentIndex - Index. Must be between 0 and SegmentCount - 1.
+	* @param[in] nProfileUUIDBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pProfileUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pProfileUUIDBuffer -  buffer of Segment Profile UUID, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nSegmentIndex: Cardinal; const nProfileUUIDBufferSize: Cardinal; out pProfileUUIDNeededChars: Cardinal; pProfileUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the local default profile ID. Fails for delay and sync segments.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nSegmentIndex - Index. Must be between 0 and SegmentCount - 1.
+	* @param[out] pLocalProfileID - Local Segment Profile ID
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentDefaultProfileIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nSegmentIndex: Cardinal; out pLocalProfileID: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Maps a local profile ID its the global profile UUID.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nLocalProfileID - Local Segment Profile ID
+	* @param[in] nProfileUUIDBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pProfileUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pProfileUUIDBuffer -  buffer of Segment Profile UUID, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetProfileUUIDByLocalProfileIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nLocalProfileID: Cardinal; const nProfileUUIDBufferSize: Cardinal; out pProfileUUIDNeededChars: Cardinal; pProfileUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns if the segment has a uniform profile. If it is uniform, then the default profile applies to the whole segment. If it is not uniform, the type specific retrieval functions have to be used (or the file has to be rejected). Returns false for delay and sync segments.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[out] pHasUniformProfile - If true, the segment has a uniform profile ID. 
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_SegmentHasUniformProfileFunc = function(pToolpathLayerReader: TLib3MFHandle; const nSegmentIndex: Cardinal; out pHasUniformProfile: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the assigned segment point list. Fails if segment type is not loop or polyline.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[in] nPointDataCount - Number of elements in buffer
+	* @param[out] pPointDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
+	* @param[out] pPointDataBuffer - Position2D buffer of The point data array. The point coordinates are in model units.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc = function(pToolpathLayerReader: TLib3MFHandle; const nSegmentIndex: Cardinal; const nPointDataCount: QWord; out pPointDataNeededCount: QWord; pPointDataBuffer: PLib3MFPosition2D): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the assigned segment point list in toolpath units. Fails if segment type is not loop or polyline.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[in] nPointDataCount - Number of elements in buffer
+	* @param[out] pPointDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
+	* @param[out] pPointDataBuffer - DiscretePosition2D buffer of The point data array. The point coordinates are in toolpath units.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc = function(pToolpathLayerReader: TLib3MFHandle; const nSegmentIndex: Cardinal; const nPointDataCount: QWord; out pPointDataNeededCount: QWord; pPointDataBuffer: PLib3MFDiscretePosition2D): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the assigned segment hatch list. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nHatchDataCount - Number of elements in buffer
+	* @param[out] pHatchDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
+	* @param[out] pHatchDataBuffer - Hatch2D buffer of The hatch data array. The point coordinates are in model units.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsFunc = function(pToolpathLayerReader: TLib3MFHandle; const nSegmentIndex: Cardinal; const nHatchDataCount: QWord; out pHatchDataNeededCount: QWord; pHatchDataBuffer: PLib3MFHatch2D): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the assigned segment hatch list in toolpath units. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nHatchDataCount - Number of elements in buffer
+	* @param[out] pHatchDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
+	* @param[out] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data array. The point coordinates are in toolpath units.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc = function(pToolpathLayerReader: TLib3MFHandle; const nSegmentIndex: Cardinal; const nHatchDataCount: QWord; out pHatchDataNeededCount: QWord; pHatchDataBuffer: PLib3MFDiscreteHatch2D): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -4094,13 +4146,22 @@ type
 	TLib3MFToolpathLayerData_ClearLaserIndexFunc = function(pToolpathLayerData: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
-	* Sets the denominator for the scaling factor, which is an integer.
+	* Sets the denominator for the scaling factor all subsequent segments. Default is 1000.
 	*
 	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
-	* @param[in] nValue - The value of factor denominator.
+	* @param[in] nValue - The value of factor denominator. MUST a positive integer.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFToolpathLayerData_SetFactorRangeFunc = function(pToolpathLayerData: TLib3MFHandle; const nValue: Cardinal): TLib3MFResult; cdecl;
+	TLib3MFToolpathLayerData_SetOverrideFractionFunc = function(pToolpathLayerData: TLib3MFHandle; const nValue: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the current denominator for the scaling factor all subsequent segments. Default is 1000.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[out] pValue - The value of factor denominator.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_GetOverrideFractionFunc = function(pToolpathLayerData: TLib3MFHandle; out pValue: Cardinal): TLib3MFResult; cdecl;
 	
 	(**
 	* writes hatch data to the layer in model units.
@@ -4109,7 +4170,7 @@ type
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] nHatchDataCount - Number of elements in buffer
-	* @param[in] pHatchDataBuffer - Hatch2D buffer of The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] pHatchDataBuffer - Hatch2D buffer of The hatch data in model units. Array MUST NOT be empty.
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nHatchDataCount: QWord; const pHatchDataBuffer: PLib3MFHatch2D): TLib3MFResult; cdecl;
@@ -4121,7 +4182,7 @@ type
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] nHatchDataCount - Number of elements in buffer
-	* @param[in] pHatchDataBuffer - Hatch2D buffer of The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] pHatchDataBuffer - Hatch2D buffer of The hatch data in model units. Array MUST NOT be empty.
 	* @param[in] nScalingDataCount - Number of elements in buffer
 	* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors (f). MUST have the same cardinality as HatchData.
 	* @return error code or 0 (success)
@@ -4151,7 +4212,7 @@ type
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] nHatchDataCount - Number of elements in buffer
-	* @param[in] pHatchDataBuffer - Hatch2D buffer of The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] pHatchDataBuffer - Hatch2D buffer of The hatch data in model units. Array MUST NOT be empty.
 	* @param[in] nScalingDataF1Count - Number of elements in buffer
 	* @param[in] pScalingDataF1Buffer - int32 buffer of The profile override scale factors (f) for the start point of each hatch. MUST have the same cardinality as HatchData.
 	* @param[in] nScalingDataF2Count - Number of elements in buffer
@@ -4175,7 +4236,7 @@ type
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] nHatchDataCount - Number of elements in buffer
-	* @param[in] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data in toolpath units. Array MUST NOT be empty.
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpathLayerData_WriteHatchDataDiscreteFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nHatchDataCount: QWord; const pHatchDataBuffer: PLib3MFDiscreteHatch2D): TLib3MFResult; cdecl;
@@ -4187,7 +4248,7 @@ type
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] nHatchDataCount - Number of elements in buffer
-	* @param[in] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data in toolpath units. Array MUST NOT be empty.
 	* @param[in] nScalingDataCount - Number of elements in buffer
 	* @param[in] pScalingDataBuffer - int32 buffer of The profile override scale factors (f). MUST have the same cardinality as HatchData.
 	* @return error code or 0 (success)
@@ -4201,7 +4262,7 @@ type
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] nHatchDataCount - Number of elements in buffer
-	* @param[in] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data in toolpath units. Array MUST NOT be empty.
 	* @param[in] nScalingData1Count - Number of elements in buffer
 	* @param[in] pScalingData1Buffer - int32 buffer of The profile override scale factors (f) for the start point of each hatch. MUST have the same cardinality as HatchData.
 	* @param[in] nScalingData2Count - Number of elements in buffer
@@ -4217,7 +4278,7 @@ type
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] nHatchDataCount - Number of elements in buffer
-	* @param[in] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data in toolpath units. Array MUST NOT be empty.
 	* @param[in] nScalingDataF1Count - Number of elements in buffer
 	* @param[in] pScalingDataF1Buffer - int32 buffer of The profile override scale factors (f) for the start point of each hatch. If empty, no factors are written. MUST otherwise have the same cardinality as HatchData.
 	* @param[in] nScalingDataF2Count - Number of elements in buffer
@@ -6909,29 +6970,34 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
 		function GetLayerDataUUID(): String;
-		function GetSegmentCount(): Cardinal;
-		procedure GetSegmentInfo(const AIndex: Cardinal; out AType: TLib3MFToolpathSegmentType; out APointCount: Cardinal);
-		function GetSegmentDefaultProfile(const AIndex: Cardinal): TLib3MFToolpathProfile;
-		function GetSegmentDefaultProfileUUID(const AIndex: Cardinal): String;
-		function SegmentHasUniformProfile(const AIndex: Cardinal): Boolean;
-		function GetSegmentPart(const AIndex: Cardinal): TLib3MFBuildItem;
-		function GetSegmentPartUUID(const AIndex: Cardinal): String;
-		function GetSegmentLocalPartID(const AIndex: Cardinal): Cardinal;
-		function GetPartUUIDByLocalPartID(const ALocalPartID: Cardinal): String;
-		procedure GetSegmentPointDataInModelUnits(const AIndex: Cardinal; out APointData: ArrayOfLib3MFPosition2D);
-		procedure GetSegmentPointDataDiscrete(const AIndex: Cardinal; out APointData: ArrayOfLib3MFDiscretePosition2D);
-		procedure GetSegmentHatchDataInModelUnits(const AIndex: Cardinal; out AHatchData: ArrayOfLib3MFHatch2D);
-		procedure GetSegmentHatchDataDiscrete(const AIndex: Cardinal; out AHatchData: ArrayOfLib3MFDiscreteHatch2D);
-		procedure FindSegmentAttributeInfoByName(const ANameSpace: String; const AAttributeName: String; out AID: Cardinal; out AAttributeType: TLib3MFToolpathAttributeType);
-		function FindSegmentAttributeIDByName(const ANameSpace: String; const AAttributeName: String): Cardinal;
-		function FindSegmentAttributeTypeByName(const ANameSpace: String; const AAttributeName: String): TLib3MFToolpathAttributeType;
-		function GetSegmentIntegerAttributeByID(const AIndex: Cardinal; const AID: Cardinal): Int64;
-		function GetSegmentIntegerAttributeByName(const AIndex: Cardinal; const ANameSpace: String; const AAttributeName: String): Int64;
-		function GetSegmentDoubleAttributeByID(const AIndex: Cardinal; const AID: Cardinal): Double;
-		function GetSegmentDoubleAttributeByName(const AIndex: Cardinal; const ANameSpace: String; const AAttributeName: String): Double;
 		function GetCustomDataCount(): Cardinal;
 		function GetCustomData(const AIndex: Cardinal): TLib3MFCustomDOMTree;
 		procedure GetCustomDataName(const AIndex: Cardinal; out ANameSpace: String; out ADataName: String);
+		function GetSegmentCount(): Cardinal;
+		procedure GetSegmentInfo(const AIndex: Cardinal; out AType: TLib3MFToolpathSegmentType; out APointCount: Cardinal);
+		procedure FindSegmentAttributeInfoByName(const ANameSpace: String; const AAttributeName: String; out AID: Cardinal; out AAttributeType: TLib3MFToolpathAttributeType);
+		function FindSegmentAttributeIDByName(const ANameSpace: String; const AAttributeName: String): Cardinal;
+		function FindSegmentAttributeTypeByName(const ANameSpace: String; const AAttributeName: String): TLib3MFToolpathAttributeType;
+		function GetSegmentIntegerAttributeByID(const ASegmentIndex: Cardinal; const AID: Cardinal): Int64;
+		function GetSegmentIntegerAttributeByName(const ASegmentIndex: Cardinal; const ANameSpace: String; const AAttributeName: String): Int64;
+		function GetSegmentDoubleAttributeByID(const ASegmentIndex: Cardinal; const AID: Cardinal): Double;
+		function GetSegmentDoubleAttributeByName(const ASegmentIndex: Cardinal; const ANameSpace: String; const AAttributeName: String): Double;
+		function GetPartCount(): Cardinal;
+		procedure GetPartInformation(const APartIndex: Cardinal; out APartID: Cardinal; out ABuildItemUUID: String);
+		function GetPartBuildItem(const APartIndex: Cardinal): TLib3MFBuildItem;
+		function GetSegmentPartID(const APartIndex: Cardinal): Cardinal;
+		function GetSegmentBuildItem(const ASegmentIndex: Cardinal): TLib3MFBuildItem;
+		function GetSegmentBuildItemUUID(const ASegmentIndex: Cardinal): String;
+		function GetBuildItemUUIDByLocalPartID(const ALocalPartID: Cardinal): String;
+		function GetSegmentDefaultProfile(const ASegmentIndex: Cardinal): TLib3MFToolpathProfile;
+		function GetSegmentDefaultProfileUUID(const ASegmentIndex: Cardinal): String;
+		function GetSegmentDefaultProfileID(const ASegmentIndex: Cardinal): Cardinal;
+		function GetProfileUUIDByLocalProfileID(const ALocalProfileID: Cardinal): String;
+		function SegmentHasUniformProfile(const ASegmentIndex: Cardinal): Boolean;
+		procedure GetSegmentPointDataInModelUnits(const ASegmentIndex: Cardinal; out APointData: ArrayOfLib3MFPosition2D);
+		procedure GetSegmentPointDataDiscrete(const ASegmentIndex: Cardinal; out APointData: ArrayOfLib3MFDiscretePosition2D);
+		procedure GetSegmentHatchDataInModelUnits(const ASegmentIndex: Cardinal; out AHatchData: ArrayOfLib3MFHatch2D);
+		procedure GetSegmentHatchDataDiscrete(const ASegmentIndex: Cardinal; out AHatchData: ArrayOfLib3MFDiscreteHatch2D);
 	end;
 
 
@@ -6950,7 +7016,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure ClearSegmentAttributes();
 		procedure SetLaserIndex(const AValue: Cardinal);
 		procedure ClearLaserIndex();
-		procedure SetFactorRange(const AValue: Cardinal);
+		procedure SetOverrideFraction(const AValue: Cardinal);
+		function GetOverrideFraction(): Cardinal;
 		procedure WriteHatchDataInModelUnits(const AProfileID: Cardinal; const APartID: Cardinal; const AHatchData: ArrayOfLib3MFHatch2D);
 		procedure WriteHatchDataInModelUnitsWithConstantOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const AHatchData: ArrayOfLib3MFHatch2D; const AScalingData: TIntegerDynArray);
 		procedure WriteHatchDataInModelUnitsWithRampedOverrides(const AProfileID: Cardinal; const APartID: Cardinal; const AHatchData: ArrayOfLib3MFHatch2D; const AScalingData1: TIntegerDynArray; const AScalingData2: TIntegerDynArray);
@@ -7548,19 +7615,11 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFToolpathProfile_SetParameterIntegerValueFunc: TLib3MFToolpathProfile_SetParameterIntegerValueFunc;
 		FLib3MFToolpathProfile_SetParameterBoolValueFunc: TLib3MFToolpathProfile_SetParameterBoolValueFunc;
 		FLib3MFToolpathLayerReader_GetLayerDataUUIDFunc: TLib3MFToolpathLayerReader_GetLayerDataUUIDFunc;
+		FLib3MFToolpathLayerReader_GetCustomDataCountFunc: TLib3MFToolpathLayerReader_GetCustomDataCountFunc;
+		FLib3MFToolpathLayerReader_GetCustomDataFunc: TLib3MFToolpathLayerReader_GetCustomDataFunc;
+		FLib3MFToolpathLayerReader_GetCustomDataNameFunc: TLib3MFToolpathLayerReader_GetCustomDataNameFunc;
 		FLib3MFToolpathLayerReader_GetSegmentCountFunc: TLib3MFToolpathLayerReader_GetSegmentCountFunc;
 		FLib3MFToolpathLayerReader_GetSegmentInfoFunc: TLib3MFToolpathLayerReader_GetSegmentInfoFunc;
-		FLib3MFToolpathLayerReader_GetSegmentDefaultProfileFunc: TLib3MFToolpathLayerReader_GetSegmentDefaultProfileFunc;
-		FLib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc;
-		FLib3MFToolpathLayerReader_SegmentHasUniformProfileFunc: TLib3MFToolpathLayerReader_SegmentHasUniformProfileFunc;
-		FLib3MFToolpathLayerReader_GetSegmentPartFunc: TLib3MFToolpathLayerReader_GetSegmentPartFunc;
-		FLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc;
-		FLib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc: TLib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc;
-		FLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc: TLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc;
-		FLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc: TLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc;
-		FLib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc: TLib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc;
-		FLib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsFunc: TLib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsFunc;
-		FLib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc: TLib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc;
 		FLib3MFToolpathLayerReader_FindSegmentAttributeInfoByNameFunc: TLib3MFToolpathLayerReader_FindSegmentAttributeInfoByNameFunc;
 		FLib3MFToolpathLayerReader_FindSegmentAttributeIDByNameFunc: TLib3MFToolpathLayerReader_FindSegmentAttributeIDByNameFunc;
 		FLib3MFToolpathLayerReader_FindSegmentAttributeTypeByNameFunc: TLib3MFToolpathLayerReader_FindSegmentAttributeTypeByNameFunc;
@@ -7568,9 +7627,22 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc: TLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc;
 		FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc: TLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc;
 		FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc: TLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc;
-		FLib3MFToolpathLayerReader_GetCustomDataCountFunc: TLib3MFToolpathLayerReader_GetCustomDataCountFunc;
-		FLib3MFToolpathLayerReader_GetCustomDataFunc: TLib3MFToolpathLayerReader_GetCustomDataFunc;
-		FLib3MFToolpathLayerReader_GetCustomDataNameFunc: TLib3MFToolpathLayerReader_GetCustomDataNameFunc;
+		FLib3MFToolpathLayerReader_GetPartCountFunc: TLib3MFToolpathLayerReader_GetPartCountFunc;
+		FLib3MFToolpathLayerReader_GetPartInformationFunc: TLib3MFToolpathLayerReader_GetPartInformationFunc;
+		FLib3MFToolpathLayerReader_GetPartBuildItemFunc: TLib3MFToolpathLayerReader_GetPartBuildItemFunc;
+		FLib3MFToolpathLayerReader_GetSegmentPartIDFunc: TLib3MFToolpathLayerReader_GetSegmentPartIDFunc;
+		FLib3MFToolpathLayerReader_GetSegmentBuildItemFunc: TLib3MFToolpathLayerReader_GetSegmentBuildItemFunc;
+		FLib3MFToolpathLayerReader_GetSegmentBuildItemUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentBuildItemUUIDFunc;
+		FLib3MFToolpathLayerReader_GetBuildItemUUIDByLocalPartIDFunc: TLib3MFToolpathLayerReader_GetBuildItemUUIDByLocalPartIDFunc;
+		FLib3MFToolpathLayerReader_GetSegmentDefaultProfileFunc: TLib3MFToolpathLayerReader_GetSegmentDefaultProfileFunc;
+		FLib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc;
+		FLib3MFToolpathLayerReader_GetSegmentDefaultProfileIDFunc: TLib3MFToolpathLayerReader_GetSegmentDefaultProfileIDFunc;
+		FLib3MFToolpathLayerReader_GetProfileUUIDByLocalProfileIDFunc: TLib3MFToolpathLayerReader_GetProfileUUIDByLocalProfileIDFunc;
+		FLib3MFToolpathLayerReader_SegmentHasUniformProfileFunc: TLib3MFToolpathLayerReader_SegmentHasUniformProfileFunc;
+		FLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc: TLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc;
+		FLib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc: TLib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc;
+		FLib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsFunc: TLib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsFunc;
+		FLib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc: TLib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc;
 		FLib3MFToolpathLayerData_GetLayerDataUUIDFunc: TLib3MFToolpathLayerData_GetLayerDataUUIDFunc;
 		FLib3MFToolpathLayerData_RegisterProfileFunc: TLib3MFToolpathLayerData_RegisterProfileFunc;
 		FLib3MFToolpathLayerData_RegisterBuildItemFunc: TLib3MFToolpathLayerData_RegisterBuildItemFunc;
@@ -7578,7 +7650,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFToolpathLayerData_ClearSegmentAttributesFunc: TLib3MFToolpathLayerData_ClearSegmentAttributesFunc;
 		FLib3MFToolpathLayerData_SetLaserIndexFunc: TLib3MFToolpathLayerData_SetLaserIndexFunc;
 		FLib3MFToolpathLayerData_ClearLaserIndexFunc: TLib3MFToolpathLayerData_ClearLaserIndexFunc;
-		FLib3MFToolpathLayerData_SetFactorRangeFunc: TLib3MFToolpathLayerData_SetFactorRangeFunc;
+		FLib3MFToolpathLayerData_SetOverrideFractionFunc: TLib3MFToolpathLayerData_SetOverrideFractionFunc;
+		FLib3MFToolpathLayerData_GetOverrideFractionFunc: TLib3MFToolpathLayerData_GetOverrideFractionFunc;
 		FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsFunc: TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsFunc;
 		FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithConstantOverridesFunc: TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithConstantOverridesFunc;
 		FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverridesFunc: TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverridesFunc;
@@ -8086,19 +8159,11 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFToolpathProfile_SetParameterIntegerValueFunc: TLib3MFToolpathProfile_SetParameterIntegerValueFunc read FLib3MFToolpathProfile_SetParameterIntegerValueFunc;
 		property Lib3MFToolpathProfile_SetParameterBoolValueFunc: TLib3MFToolpathProfile_SetParameterBoolValueFunc read FLib3MFToolpathProfile_SetParameterBoolValueFunc;
 		property Lib3MFToolpathLayerReader_GetLayerDataUUIDFunc: TLib3MFToolpathLayerReader_GetLayerDataUUIDFunc read FLib3MFToolpathLayerReader_GetLayerDataUUIDFunc;
+		property Lib3MFToolpathLayerReader_GetCustomDataCountFunc: TLib3MFToolpathLayerReader_GetCustomDataCountFunc read FLib3MFToolpathLayerReader_GetCustomDataCountFunc;
+		property Lib3MFToolpathLayerReader_GetCustomDataFunc: TLib3MFToolpathLayerReader_GetCustomDataFunc read FLib3MFToolpathLayerReader_GetCustomDataFunc;
+		property Lib3MFToolpathLayerReader_GetCustomDataNameFunc: TLib3MFToolpathLayerReader_GetCustomDataNameFunc read FLib3MFToolpathLayerReader_GetCustomDataNameFunc;
 		property Lib3MFToolpathLayerReader_GetSegmentCountFunc: TLib3MFToolpathLayerReader_GetSegmentCountFunc read FLib3MFToolpathLayerReader_GetSegmentCountFunc;
 		property Lib3MFToolpathLayerReader_GetSegmentInfoFunc: TLib3MFToolpathLayerReader_GetSegmentInfoFunc read FLib3MFToolpathLayerReader_GetSegmentInfoFunc;
-		property Lib3MFToolpathLayerReader_GetSegmentDefaultProfileFunc: TLib3MFToolpathLayerReader_GetSegmentDefaultProfileFunc read FLib3MFToolpathLayerReader_GetSegmentDefaultProfileFunc;
-		property Lib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc read FLib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc;
-		property Lib3MFToolpathLayerReader_SegmentHasUniformProfileFunc: TLib3MFToolpathLayerReader_SegmentHasUniformProfileFunc read FLib3MFToolpathLayerReader_SegmentHasUniformProfileFunc;
-		property Lib3MFToolpathLayerReader_GetSegmentPartFunc: TLib3MFToolpathLayerReader_GetSegmentPartFunc read FLib3MFToolpathLayerReader_GetSegmentPartFunc;
-		property Lib3MFToolpathLayerReader_GetSegmentPartUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc read FLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc;
-		property Lib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc: TLib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc read FLib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc;
-		property Lib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc: TLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc read FLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc;
-		property Lib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc: TLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc read FLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc;
-		property Lib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc: TLib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc read FLib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc;
-		property Lib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsFunc: TLib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsFunc read FLib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsFunc;
-		property Lib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc: TLib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc read FLib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc;
 		property Lib3MFToolpathLayerReader_FindSegmentAttributeInfoByNameFunc: TLib3MFToolpathLayerReader_FindSegmentAttributeInfoByNameFunc read FLib3MFToolpathLayerReader_FindSegmentAttributeInfoByNameFunc;
 		property Lib3MFToolpathLayerReader_FindSegmentAttributeIDByNameFunc: TLib3MFToolpathLayerReader_FindSegmentAttributeIDByNameFunc read FLib3MFToolpathLayerReader_FindSegmentAttributeIDByNameFunc;
 		property Lib3MFToolpathLayerReader_FindSegmentAttributeTypeByNameFunc: TLib3MFToolpathLayerReader_FindSegmentAttributeTypeByNameFunc read FLib3MFToolpathLayerReader_FindSegmentAttributeTypeByNameFunc;
@@ -8106,9 +8171,22 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc: TLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc read FLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc;
 		property Lib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc: TLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc read FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc;
 		property Lib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc: TLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc read FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc;
-		property Lib3MFToolpathLayerReader_GetCustomDataCountFunc: TLib3MFToolpathLayerReader_GetCustomDataCountFunc read FLib3MFToolpathLayerReader_GetCustomDataCountFunc;
-		property Lib3MFToolpathLayerReader_GetCustomDataFunc: TLib3MFToolpathLayerReader_GetCustomDataFunc read FLib3MFToolpathLayerReader_GetCustomDataFunc;
-		property Lib3MFToolpathLayerReader_GetCustomDataNameFunc: TLib3MFToolpathLayerReader_GetCustomDataNameFunc read FLib3MFToolpathLayerReader_GetCustomDataNameFunc;
+		property Lib3MFToolpathLayerReader_GetPartCountFunc: TLib3MFToolpathLayerReader_GetPartCountFunc read FLib3MFToolpathLayerReader_GetPartCountFunc;
+		property Lib3MFToolpathLayerReader_GetPartInformationFunc: TLib3MFToolpathLayerReader_GetPartInformationFunc read FLib3MFToolpathLayerReader_GetPartInformationFunc;
+		property Lib3MFToolpathLayerReader_GetPartBuildItemFunc: TLib3MFToolpathLayerReader_GetPartBuildItemFunc read FLib3MFToolpathLayerReader_GetPartBuildItemFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentPartIDFunc: TLib3MFToolpathLayerReader_GetSegmentPartIDFunc read FLib3MFToolpathLayerReader_GetSegmentPartIDFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentBuildItemFunc: TLib3MFToolpathLayerReader_GetSegmentBuildItemFunc read FLib3MFToolpathLayerReader_GetSegmentBuildItemFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentBuildItemUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentBuildItemUUIDFunc read FLib3MFToolpathLayerReader_GetSegmentBuildItemUUIDFunc;
+		property Lib3MFToolpathLayerReader_GetBuildItemUUIDByLocalPartIDFunc: TLib3MFToolpathLayerReader_GetBuildItemUUIDByLocalPartIDFunc read FLib3MFToolpathLayerReader_GetBuildItemUUIDByLocalPartIDFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentDefaultProfileFunc: TLib3MFToolpathLayerReader_GetSegmentDefaultProfileFunc read FLib3MFToolpathLayerReader_GetSegmentDefaultProfileFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc read FLib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentDefaultProfileIDFunc: TLib3MFToolpathLayerReader_GetSegmentDefaultProfileIDFunc read FLib3MFToolpathLayerReader_GetSegmentDefaultProfileIDFunc;
+		property Lib3MFToolpathLayerReader_GetProfileUUIDByLocalProfileIDFunc: TLib3MFToolpathLayerReader_GetProfileUUIDByLocalProfileIDFunc read FLib3MFToolpathLayerReader_GetProfileUUIDByLocalProfileIDFunc;
+		property Lib3MFToolpathLayerReader_SegmentHasUniformProfileFunc: TLib3MFToolpathLayerReader_SegmentHasUniformProfileFunc read FLib3MFToolpathLayerReader_SegmentHasUniformProfileFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc: TLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc read FLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc: TLib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc read FLib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsFunc: TLib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsFunc read FLib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc: TLib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc read FLib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc;
 		property Lib3MFToolpathLayerData_GetLayerDataUUIDFunc: TLib3MFToolpathLayerData_GetLayerDataUUIDFunc read FLib3MFToolpathLayerData_GetLayerDataUUIDFunc;
 		property Lib3MFToolpathLayerData_RegisterProfileFunc: TLib3MFToolpathLayerData_RegisterProfileFunc read FLib3MFToolpathLayerData_RegisterProfileFunc;
 		property Lib3MFToolpathLayerData_RegisterBuildItemFunc: TLib3MFToolpathLayerData_RegisterBuildItemFunc read FLib3MFToolpathLayerData_RegisterBuildItemFunc;
@@ -8116,7 +8194,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFToolpathLayerData_ClearSegmentAttributesFunc: TLib3MFToolpathLayerData_ClearSegmentAttributesFunc read FLib3MFToolpathLayerData_ClearSegmentAttributesFunc;
 		property Lib3MFToolpathLayerData_SetLaserIndexFunc: TLib3MFToolpathLayerData_SetLaserIndexFunc read FLib3MFToolpathLayerData_SetLaserIndexFunc;
 		property Lib3MFToolpathLayerData_ClearLaserIndexFunc: TLib3MFToolpathLayerData_ClearLaserIndexFunc read FLib3MFToolpathLayerData_ClearLaserIndexFunc;
-		property Lib3MFToolpathLayerData_SetFactorRangeFunc: TLib3MFToolpathLayerData_SetFactorRangeFunc read FLib3MFToolpathLayerData_SetFactorRangeFunc;
+		property Lib3MFToolpathLayerData_SetOverrideFractionFunc: TLib3MFToolpathLayerData_SetOverrideFractionFunc read FLib3MFToolpathLayerData_SetOverrideFractionFunc;
+		property Lib3MFToolpathLayerData_GetOverrideFractionFunc: TLib3MFToolpathLayerData_GetOverrideFractionFunc read FLib3MFToolpathLayerData_GetOverrideFractionFunc;
 		property Lib3MFToolpathLayerData_WriteHatchDataInModelUnitsFunc: TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsFunc read FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsFunc;
 		property Lib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithConstantOverridesFunc: TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithConstantOverridesFunc read FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithConstantOverridesFunc;
 		property Lib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverridesFunc: TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverridesFunc read FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverridesFunc;
@@ -12622,189 +12701,6 @@ implementation
 		Result := StrPas(@bufferUUID[0]);
 	end;
 
-	function TLib3MFToolpathLayerReader.GetSegmentCount(): Cardinal;
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentCountFunc(FHandle, Result));
-	end;
-
-	procedure TLib3MFToolpathLayerReader.GetSegmentInfo(const AIndex: Cardinal; out AType: TLib3MFToolpathSegmentType; out APointCount: Cardinal);
-	var
-		ResultType: Integer;
-	begin
-		ResultType := 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentInfoFunc(FHandle, AIndex, ResultType, APointCount));
-		AType := convertConstToToolpathSegmentType(ResultType);
-	end;
-
-	function TLib3MFToolpathLayerReader.GetSegmentDefaultProfile(const AIndex: Cardinal): TLib3MFToolpathProfile;
-	var
-		HProfile: TLib3MFHandle;
-	begin
-		Result := nil;
-		HProfile := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentDefaultProfileFunc(FHandle, AIndex, HProfile));
-		if Assigned(HProfile) then
-			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathProfile, TLib3MFToolpathProfile>.Make(FWrapper, HProfile);
-	end;
-
-	function TLib3MFToolpathLayerReader.GetSegmentDefaultProfileUUID(const AIndex: Cardinal): String;
-	var
-		bytesNeededProfileUUID: Cardinal;
-		bytesWrittenProfileUUID: Cardinal;
-		bufferProfileUUID: array of Char;
-	begin
-		bytesNeededProfileUUID:= 0;
-		bytesWrittenProfileUUID:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc(FHandle, AIndex, 0, bytesNeededProfileUUID, nil));
-		SetLength(bufferProfileUUID, bytesNeededProfileUUID);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc(FHandle, AIndex, bytesNeededProfileUUID, bytesWrittenProfileUUID, @bufferProfileUUID[0]));
-		Result := StrPas(@bufferProfileUUID[0]);
-	end;
-
-	function TLib3MFToolpathLayerReader.SegmentHasUniformProfile(const AIndex: Cardinal): Boolean;
-	var
-		ResultHasUniformProfile: Byte;
-	begin
-		ResultHasUniformProfile := 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_SegmentHasUniformProfileFunc(FHandle, AIndex, ResultHasUniformProfile));
-		Result := (ResultHasUniformProfile <> 0);
-	end;
-
-	function TLib3MFToolpathLayerReader.GetSegmentPart(const AIndex: Cardinal): TLib3MFBuildItem;
-	var
-		HBuildItem: TLib3MFHandle;
-	begin
-		Result := nil;
-		HBuildItem := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPartFunc(FHandle, AIndex, HBuildItem));
-		if Assigned(HBuildItem) then
-			Result := TLib3MFPolymorphicFactory<TLib3MFBuildItem, TLib3MFBuildItem>.Make(FWrapper, HBuildItem);
-	end;
-
-	function TLib3MFToolpathLayerReader.GetSegmentPartUUID(const AIndex: Cardinal): String;
-	var
-		bytesNeededPartUUID: Cardinal;
-		bytesWrittenPartUUID: Cardinal;
-		bufferPartUUID: array of Char;
-	begin
-		bytesNeededPartUUID:= 0;
-		bytesWrittenPartUUID:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPartUUIDFunc(FHandle, AIndex, 0, bytesNeededPartUUID, nil));
-		SetLength(bufferPartUUID, bytesNeededPartUUID);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPartUUIDFunc(FHandle, AIndex, bytesNeededPartUUID, bytesWrittenPartUUID, @bufferPartUUID[0]));
-		Result := StrPas(@bufferPartUUID[0]);
-	end;
-
-	function TLib3MFToolpathLayerReader.GetSegmentLocalPartID(const AIndex: Cardinal): Cardinal;
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc(FHandle, AIndex, Result));
-	end;
-
-	function TLib3MFToolpathLayerReader.GetPartUUIDByLocalPartID(const ALocalPartID: Cardinal): String;
-	var
-		bytesNeededPartUUID: Cardinal;
-		bytesWrittenPartUUID: Cardinal;
-		bufferPartUUID: array of Char;
-	begin
-		bytesNeededPartUUID:= 0;
-		bytesWrittenPartUUID:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc(FHandle, ALocalPartID, 0, bytesNeededPartUUID, nil));
-		SetLength(bufferPartUUID, bytesNeededPartUUID);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc(FHandle, ALocalPartID, bytesNeededPartUUID, bytesWrittenPartUUID, @bufferPartUUID[0]));
-		Result := StrPas(@bufferPartUUID[0]);
-	end;
-
-	procedure TLib3MFToolpathLayerReader.GetSegmentPointDataInModelUnits(const AIndex: Cardinal; out APointData: ArrayOfLib3MFPosition2D);
-	var
-		countNeededPointData: QWord;
-		countWrittenPointData: QWord;
-	begin
-		countNeededPointData:= 0;
-		countWrittenPointData:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc(FHandle, AIndex, 0, countNeededPointData, nil));
-		SetLength(APointData, countNeededPointData);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc(FHandle, AIndex, countNeededPointData, countWrittenPointData, @APointData[0]));
-	end;
-
-	procedure TLib3MFToolpathLayerReader.GetSegmentPointDataDiscrete(const AIndex: Cardinal; out APointData: ArrayOfLib3MFDiscretePosition2D);
-	var
-		countNeededPointData: QWord;
-		countWrittenPointData: QWord;
-	begin
-		countNeededPointData:= 0;
-		countWrittenPointData:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc(FHandle, AIndex, 0, countNeededPointData, nil));
-		SetLength(APointData, countNeededPointData);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc(FHandle, AIndex, countNeededPointData, countWrittenPointData, @APointData[0]));
-	end;
-
-	procedure TLib3MFToolpathLayerReader.GetSegmentHatchDataInModelUnits(const AIndex: Cardinal; out AHatchData: ArrayOfLib3MFHatch2D);
-	var
-		countNeededHatchData: QWord;
-		countWrittenHatchData: QWord;
-	begin
-		countNeededHatchData:= 0;
-		countWrittenHatchData:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsFunc(FHandle, AIndex, 0, countNeededHatchData, nil));
-		SetLength(AHatchData, countNeededHatchData);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsFunc(FHandle, AIndex, countNeededHatchData, countWrittenHatchData, @AHatchData[0]));
-	end;
-
-	procedure TLib3MFToolpathLayerReader.GetSegmentHatchDataDiscrete(const AIndex: Cardinal; out AHatchData: ArrayOfLib3MFDiscreteHatch2D);
-	var
-		countNeededHatchData: QWord;
-		countWrittenHatchData: QWord;
-	begin
-		countNeededHatchData:= 0;
-		countWrittenHatchData:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc(FHandle, AIndex, 0, countNeededHatchData, nil));
-		SetLength(AHatchData, countNeededHatchData);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc(FHandle, AIndex, countNeededHatchData, countWrittenHatchData, @AHatchData[0]));
-	end;
-
-	procedure TLib3MFToolpathLayerReader.FindSegmentAttributeInfoByName(const ANameSpace: String; const AAttributeName: String; out AID: Cardinal; out AAttributeType: TLib3MFToolpathAttributeType);
-	var
-		ResultAttributeType: Integer;
-	begin
-		ResultAttributeType := 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_FindSegmentAttributeInfoByNameFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), AID, ResultAttributeType));
-		AAttributeType := convertConstToToolpathAttributeType(ResultAttributeType);
-	end;
-
-	function TLib3MFToolpathLayerReader.FindSegmentAttributeIDByName(const ANameSpace: String; const AAttributeName: String): Cardinal;
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_FindSegmentAttributeIDByNameFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), Result));
-	end;
-
-	function TLib3MFToolpathLayerReader.FindSegmentAttributeTypeByName(const ANameSpace: String; const AAttributeName: String): TLib3MFToolpathAttributeType;
-	var
-		ResultAttributeType: Integer;
-	begin
-		ResultAttributeType := 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_FindSegmentAttributeTypeByNameFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), ResultAttributeType));
-		Result := convertConstToToolpathAttributeType(ResultAttributeType);
-	end;
-
-	function TLib3MFToolpathLayerReader.GetSegmentIntegerAttributeByID(const AIndex: Cardinal; const AID: Cardinal): Int64;
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc(FHandle, AIndex, AID, Result));
-	end;
-
-	function TLib3MFToolpathLayerReader.GetSegmentIntegerAttributeByName(const AIndex: Cardinal; const ANameSpace: String; const AAttributeName: String): Int64;
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc(FHandle, AIndex, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), Result));
-	end;
-
-	function TLib3MFToolpathLayerReader.GetSegmentDoubleAttributeByID(const AIndex: Cardinal; const AID: Cardinal): Double;
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc(FHandle, AIndex, AID, Result));
-	end;
-
-	function TLib3MFToolpathLayerReader.GetSegmentDoubleAttributeByName(const AIndex: Cardinal; const ANameSpace: String; const AAttributeName: String): Double;
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc(FHandle, AIndex, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), Result));
-	end;
-
 	function TLib3MFToolpathLayerReader.GetCustomDataCount(): Cardinal;
 	begin
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetCustomDataCountFunc(FHandle, Result));
@@ -12840,6 +12736,238 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetCustomDataNameFunc(FHandle, AIndex, bytesNeededNameSpace, bytesWrittenNameSpace, @bufferNameSpace[0], bytesNeededDataName, bytesWrittenDataName, @bufferDataName[0]));
 		ANameSpace := StrPas(@bufferNameSpace[0]);
 		ADataName := StrPas(@bufferDataName[0]);
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentCount(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentCountFunc(FHandle, Result));
+	end;
+
+	procedure TLib3MFToolpathLayerReader.GetSegmentInfo(const AIndex: Cardinal; out AType: TLib3MFToolpathSegmentType; out APointCount: Cardinal);
+	var
+		ResultType: Integer;
+	begin
+		ResultType := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentInfoFunc(FHandle, AIndex, ResultType, APointCount));
+		AType := convertConstToToolpathSegmentType(ResultType);
+	end;
+
+	procedure TLib3MFToolpathLayerReader.FindSegmentAttributeInfoByName(const ANameSpace: String; const AAttributeName: String; out AID: Cardinal; out AAttributeType: TLib3MFToolpathAttributeType);
+	var
+		ResultAttributeType: Integer;
+	begin
+		ResultAttributeType := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_FindSegmentAttributeInfoByNameFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), AID, ResultAttributeType));
+		AAttributeType := convertConstToToolpathAttributeType(ResultAttributeType);
+	end;
+
+	function TLib3MFToolpathLayerReader.FindSegmentAttributeIDByName(const ANameSpace: String; const AAttributeName: String): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_FindSegmentAttributeIDByNameFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), Result));
+	end;
+
+	function TLib3MFToolpathLayerReader.FindSegmentAttributeTypeByName(const ANameSpace: String; const AAttributeName: String): TLib3MFToolpathAttributeType;
+	var
+		ResultAttributeType: Integer;
+	begin
+		ResultAttributeType := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_FindSegmentAttributeTypeByNameFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), ResultAttributeType));
+		Result := convertConstToToolpathAttributeType(ResultAttributeType);
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentIntegerAttributeByID(const ASegmentIndex: Cardinal; const AID: Cardinal): Int64;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentIntegerAttributeByIDFunc(FHandle, ASegmentIndex, AID, Result));
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentIntegerAttributeByName(const ASegmentIndex: Cardinal; const ANameSpace: String; const AAttributeName: String): Int64;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc(FHandle, ASegmentIndex, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), Result));
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentDoubleAttributeByID(const ASegmentIndex: Cardinal; const AID: Cardinal): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc(FHandle, ASegmentIndex, AID, Result));
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentDoubleAttributeByName(const ASegmentIndex: Cardinal; const ANameSpace: String; const AAttributeName: String): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc(FHandle, ASegmentIndex, PAnsiChar(ANameSpace), PAnsiChar(AAttributeName), Result));
+	end;
+
+	function TLib3MFToolpathLayerReader.GetPartCount(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetPartCountFunc(FHandle, Result));
+	end;
+
+	procedure TLib3MFToolpathLayerReader.GetPartInformation(const APartIndex: Cardinal; out APartID: Cardinal; out ABuildItemUUID: String);
+	var
+		bytesNeededBuildItemUUID: Cardinal;
+		bytesWrittenBuildItemUUID: Cardinal;
+		bufferBuildItemUUID: array of Char;
+	begin
+		bytesNeededBuildItemUUID:= 0;
+		bytesWrittenBuildItemUUID:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetPartInformationFunc(FHandle, APartIndex, APartID, 0, bytesNeededBuildItemUUID, nil));
+		SetLength(bufferBuildItemUUID, bytesNeededBuildItemUUID);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetPartInformationFunc(FHandle, APartIndex, APartID, bytesNeededBuildItemUUID, bytesWrittenBuildItemUUID, @bufferBuildItemUUID[0]));
+		ABuildItemUUID := StrPas(@bufferBuildItemUUID[0]);
+	end;
+
+	function TLib3MFToolpathLayerReader.GetPartBuildItem(const APartIndex: Cardinal): TLib3MFBuildItem;
+	var
+		HBuildItem: TLib3MFHandle;
+	begin
+		Result := nil;
+		HBuildItem := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetPartBuildItemFunc(FHandle, APartIndex, HBuildItem));
+		if Assigned(HBuildItem) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFBuildItem, TLib3MFBuildItem>.Make(FWrapper, HBuildItem);
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentPartID(const APartIndex: Cardinal): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPartIDFunc(FHandle, APartIndex, Result));
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentBuildItem(const ASegmentIndex: Cardinal): TLib3MFBuildItem;
+	var
+		HBuildItem: TLib3MFHandle;
+	begin
+		Result := nil;
+		HBuildItem := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentBuildItemFunc(FHandle, ASegmentIndex, HBuildItem));
+		if Assigned(HBuildItem) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFBuildItem, TLib3MFBuildItem>.Make(FWrapper, HBuildItem);
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentBuildItemUUID(const ASegmentIndex: Cardinal): String;
+	var
+		bytesNeededBuildItemUUID: Cardinal;
+		bytesWrittenBuildItemUUID: Cardinal;
+		bufferBuildItemUUID: array of Char;
+	begin
+		bytesNeededBuildItemUUID:= 0;
+		bytesWrittenBuildItemUUID:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentBuildItemUUIDFunc(FHandle, ASegmentIndex, 0, bytesNeededBuildItemUUID, nil));
+		SetLength(bufferBuildItemUUID, bytesNeededBuildItemUUID);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentBuildItemUUIDFunc(FHandle, ASegmentIndex, bytesNeededBuildItemUUID, bytesWrittenBuildItemUUID, @bufferBuildItemUUID[0]));
+		Result := StrPas(@bufferBuildItemUUID[0]);
+	end;
+
+	function TLib3MFToolpathLayerReader.GetBuildItemUUIDByLocalPartID(const ALocalPartID: Cardinal): String;
+	var
+		bytesNeededBuildItemUUID: Cardinal;
+		bytesWrittenBuildItemUUID: Cardinal;
+		bufferBuildItemUUID: array of Char;
+	begin
+		bytesNeededBuildItemUUID:= 0;
+		bytesWrittenBuildItemUUID:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetBuildItemUUIDByLocalPartIDFunc(FHandle, ALocalPartID, 0, bytesNeededBuildItemUUID, nil));
+		SetLength(bufferBuildItemUUID, bytesNeededBuildItemUUID);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetBuildItemUUIDByLocalPartIDFunc(FHandle, ALocalPartID, bytesNeededBuildItemUUID, bytesWrittenBuildItemUUID, @bufferBuildItemUUID[0]));
+		Result := StrPas(@bufferBuildItemUUID[0]);
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentDefaultProfile(const ASegmentIndex: Cardinal): TLib3MFToolpathProfile;
+	var
+		HProfile: TLib3MFHandle;
+	begin
+		Result := nil;
+		HProfile := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentDefaultProfileFunc(FHandle, ASegmentIndex, HProfile));
+		if Assigned(HProfile) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathProfile, TLib3MFToolpathProfile>.Make(FWrapper, HProfile);
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentDefaultProfileUUID(const ASegmentIndex: Cardinal): String;
+	var
+		bytesNeededProfileUUID: Cardinal;
+		bytesWrittenProfileUUID: Cardinal;
+		bufferProfileUUID: array of Char;
+	begin
+		bytesNeededProfileUUID:= 0;
+		bytesWrittenProfileUUID:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc(FHandle, ASegmentIndex, 0, bytesNeededProfileUUID, nil));
+		SetLength(bufferProfileUUID, bytesNeededProfileUUID);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc(FHandle, ASegmentIndex, bytesNeededProfileUUID, bytesWrittenProfileUUID, @bufferProfileUUID[0]));
+		Result := StrPas(@bufferProfileUUID[0]);
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentDefaultProfileID(const ASegmentIndex: Cardinal): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentDefaultProfileIDFunc(FHandle, ASegmentIndex, Result));
+	end;
+
+	function TLib3MFToolpathLayerReader.GetProfileUUIDByLocalProfileID(const ALocalProfileID: Cardinal): String;
+	var
+		bytesNeededProfileUUID: Cardinal;
+		bytesWrittenProfileUUID: Cardinal;
+		bufferProfileUUID: array of Char;
+	begin
+		bytesNeededProfileUUID:= 0;
+		bytesWrittenProfileUUID:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetProfileUUIDByLocalProfileIDFunc(FHandle, ALocalProfileID, 0, bytesNeededProfileUUID, nil));
+		SetLength(bufferProfileUUID, bytesNeededProfileUUID);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetProfileUUIDByLocalProfileIDFunc(FHandle, ALocalProfileID, bytesNeededProfileUUID, bytesWrittenProfileUUID, @bufferProfileUUID[0]));
+		Result := StrPas(@bufferProfileUUID[0]);
+	end;
+
+	function TLib3MFToolpathLayerReader.SegmentHasUniformProfile(const ASegmentIndex: Cardinal): Boolean;
+	var
+		ResultHasUniformProfile: Byte;
+	begin
+		ResultHasUniformProfile := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_SegmentHasUniformProfileFunc(FHandle, ASegmentIndex, ResultHasUniformProfile));
+		Result := (ResultHasUniformProfile <> 0);
+	end;
+
+	procedure TLib3MFToolpathLayerReader.GetSegmentPointDataInModelUnits(const ASegmentIndex: Cardinal; out APointData: ArrayOfLib3MFPosition2D);
+	var
+		countNeededPointData: QWord;
+		countWrittenPointData: QWord;
+	begin
+		countNeededPointData:= 0;
+		countWrittenPointData:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc(FHandle, ASegmentIndex, 0, countNeededPointData, nil));
+		SetLength(APointData, countNeededPointData);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc(FHandle, ASegmentIndex, countNeededPointData, countWrittenPointData, @APointData[0]));
+	end;
+
+	procedure TLib3MFToolpathLayerReader.GetSegmentPointDataDiscrete(const ASegmentIndex: Cardinal; out APointData: ArrayOfLib3MFDiscretePosition2D);
+	var
+		countNeededPointData: QWord;
+		countWrittenPointData: QWord;
+	begin
+		countNeededPointData:= 0;
+		countWrittenPointData:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc(FHandle, ASegmentIndex, 0, countNeededPointData, nil));
+		SetLength(APointData, countNeededPointData);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc(FHandle, ASegmentIndex, countNeededPointData, countWrittenPointData, @APointData[0]));
+	end;
+
+	procedure TLib3MFToolpathLayerReader.GetSegmentHatchDataInModelUnits(const ASegmentIndex: Cardinal; out AHatchData: ArrayOfLib3MFHatch2D);
+	var
+		countNeededHatchData: QWord;
+		countWrittenHatchData: QWord;
+	begin
+		countNeededHatchData:= 0;
+		countWrittenHatchData:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsFunc(FHandle, ASegmentIndex, 0, countNeededHatchData, nil));
+		SetLength(AHatchData, countNeededHatchData);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsFunc(FHandle, ASegmentIndex, countNeededHatchData, countWrittenHatchData, @AHatchData[0]));
+	end;
+
+	procedure TLib3MFToolpathLayerReader.GetSegmentHatchDataDiscrete(const ASegmentIndex: Cardinal; out AHatchData: ArrayOfLib3MFDiscreteHatch2D);
+	var
+		countNeededHatchData: QWord;
+		countWrittenHatchData: QWord;
+	begin
+		countNeededHatchData:= 0;
+		countWrittenHatchData:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc(FHandle, ASegmentIndex, 0, countNeededHatchData, nil));
+		SetLength(AHatchData, countNeededHatchData);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc(FHandle, ASegmentIndex, countNeededHatchData, countWrittenHatchData, @AHatchData[0]));
 	end;
 
 (*************************************************************************************************************************
@@ -12912,9 +13040,14 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_ClearLaserIndexFunc(FHandle));
 	end;
 
-	procedure TLib3MFToolpathLayerData.SetFactorRange(const AValue: Cardinal);
+	procedure TLib3MFToolpathLayerData.SetOverrideFraction(const AValue: Cardinal);
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_SetFactorRangeFunc(FHandle, AValue));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_SetOverrideFractionFunc(FHandle, AValue));
+	end;
+
+	function TLib3MFToolpathLayerData.GetOverrideFraction(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_GetOverrideFractionFunc(FHandle, Result));
 	end;
 
 	procedure TLib3MFToolpathLayerData.WriteHatchDataInModelUnits(const AProfileID: Cardinal; const APartID: Cardinal; const AHatchData: ArrayOfLib3MFHatch2D);
@@ -15609,19 +15742,11 @@ implementation
 		FLib3MFToolpathProfile_SetParameterIntegerValueFunc := LoadFunction('lib3mf_toolpathprofile_setparameterintegervalue');
 		FLib3MFToolpathProfile_SetParameterBoolValueFunc := LoadFunction('lib3mf_toolpathprofile_setparameterboolvalue');
 		FLib3MFToolpathLayerReader_GetLayerDataUUIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getlayerdatauuid');
+		FLib3MFToolpathLayerReader_GetCustomDataCountFunc := LoadFunction('lib3mf_toolpathlayerreader_getcustomdatacount');
+		FLib3MFToolpathLayerReader_GetCustomDataFunc := LoadFunction('lib3mf_toolpathlayerreader_getcustomdata');
+		FLib3MFToolpathLayerReader_GetCustomDataNameFunc := LoadFunction('lib3mf_toolpathlayerreader_getcustomdataname');
 		FLib3MFToolpathLayerReader_GetSegmentCountFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentcount');
 		FLib3MFToolpathLayerReader_GetSegmentInfoFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentinfo');
-		FLib3MFToolpathLayerReader_GetSegmentDefaultProfileFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentdefaultprofile');
-		FLib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid');
-		FLib3MFToolpathLayerReader_SegmentHasUniformProfileFunc := LoadFunction('lib3mf_toolpathlayerreader_segmenthasuniformprofile');
-		FLib3MFToolpathLayerReader_GetSegmentPartFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentpart');
-		FLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentpartuuid');
-		FLib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentlocalpartid');
-		FLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getpartuuidbylocalpartid');
-		FLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits');
-		FLib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete');
-		FLib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits');
-		FLib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete');
 		FLib3MFToolpathLayerReader_FindSegmentAttributeInfoByNameFunc := LoadFunction('lib3mf_toolpathlayerreader_findsegmentattributeinfobyname');
 		FLib3MFToolpathLayerReader_FindSegmentAttributeIDByNameFunc := LoadFunction('lib3mf_toolpathlayerreader_findsegmentattributeidbyname');
 		FLib3MFToolpathLayerReader_FindSegmentAttributeTypeByNameFunc := LoadFunction('lib3mf_toolpathlayerreader_findsegmentattributetypebyname');
@@ -15629,9 +15754,22 @@ implementation
 		FLib3MFToolpathLayerReader_GetSegmentIntegerAttributeByNameFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentintegerattributebyname');
 		FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid');
 		FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname');
-		FLib3MFToolpathLayerReader_GetCustomDataCountFunc := LoadFunction('lib3mf_toolpathlayerreader_getcustomdatacount');
-		FLib3MFToolpathLayerReader_GetCustomDataFunc := LoadFunction('lib3mf_toolpathlayerreader_getcustomdata');
-		FLib3MFToolpathLayerReader_GetCustomDataNameFunc := LoadFunction('lib3mf_toolpathlayerreader_getcustomdataname');
+		FLib3MFToolpathLayerReader_GetPartCountFunc := LoadFunction('lib3mf_toolpathlayerreader_getpartcount');
+		FLib3MFToolpathLayerReader_GetPartInformationFunc := LoadFunction('lib3mf_toolpathlayerreader_getpartinformation');
+		FLib3MFToolpathLayerReader_GetPartBuildItemFunc := LoadFunction('lib3mf_toolpathlayerreader_getpartbuilditem');
+		FLib3MFToolpathLayerReader_GetSegmentPartIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentpartid');
+		FLib3MFToolpathLayerReader_GetSegmentBuildItemFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentbuilditem');
+		FLib3MFToolpathLayerReader_GetSegmentBuildItemUUIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentbuilditemuuid');
+		FLib3MFToolpathLayerReader_GetBuildItemUUIDByLocalPartIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getbuilditemuuidbylocalpartid');
+		FLib3MFToolpathLayerReader_GetSegmentDefaultProfileFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentdefaultprofile');
+		FLib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid');
+		FLib3MFToolpathLayerReader_GetSegmentDefaultProfileIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentdefaultprofileid');
+		FLib3MFToolpathLayerReader_GetProfileUUIDByLocalProfileIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid');
+		FLib3MFToolpathLayerReader_SegmentHasUniformProfileFunc := LoadFunction('lib3mf_toolpathlayerreader_segmenthasuniformprofile');
+		FLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits');
+		FLib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete');
+		FLib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits');
+		FLib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete');
 		FLib3MFToolpathLayerData_GetLayerDataUUIDFunc := LoadFunction('lib3mf_toolpathlayerdata_getlayerdatauuid');
 		FLib3MFToolpathLayerData_RegisterProfileFunc := LoadFunction('lib3mf_toolpathlayerdata_registerprofile');
 		FLib3MFToolpathLayerData_RegisterBuildItemFunc := LoadFunction('lib3mf_toolpathlayerdata_registerbuilditem');
@@ -15639,7 +15777,8 @@ implementation
 		FLib3MFToolpathLayerData_ClearSegmentAttributesFunc := LoadFunction('lib3mf_toolpathlayerdata_clearsegmentattributes');
 		FLib3MFToolpathLayerData_SetLaserIndexFunc := LoadFunction('lib3mf_toolpathlayerdata_setlaserindex');
 		FLib3MFToolpathLayerData_ClearLaserIndexFunc := LoadFunction('lib3mf_toolpathlayerdata_clearlaserindex');
-		FLib3MFToolpathLayerData_SetFactorRangeFunc := LoadFunction('lib3mf_toolpathlayerdata_setfactorrange');
+		FLib3MFToolpathLayerData_SetOverrideFractionFunc := LoadFunction('lib3mf_toolpathlayerdata_setoverridefraction');
+		FLib3MFToolpathLayerData_GetOverrideFractionFunc := LoadFunction('lib3mf_toolpathlayerdata_getoverridefraction');
 		FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsFunc := LoadFunction('lib3mf_toolpathlayerdata_writehatchdatainmodelunits');
 		FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithConstantOverridesFunc := LoadFunction('lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithconstantoverrides');
 		FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithRampedOverridesFunc := LoadFunction('lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithrampedoverrides');
@@ -16768,43 +16907,19 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getlayerdatauuid'), @FLib3MFToolpathLayerReader_GetLayerDataUUIDFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getcustomdatacount'), @FLib3MFToolpathLayerReader_GetCustomDataCountFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getcustomdata'), @FLib3MFToolpathLayerReader_GetCustomDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getcustomdataname'), @FLib3MFToolpathLayerReader_GetCustomDataNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentcount'), @FLib3MFToolpathLayerReader_GetSegmentCountFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentinfo'), @FLib3MFToolpathLayerReader_GetSegmentInfoFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentdefaultprofile'), @FLib3MFToolpathLayerReader_GetSegmentDefaultProfileFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid'), @FLib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_segmenthasuniformprofile'), @FLib3MFToolpathLayerReader_SegmentHasUniformProfileFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentpart'), @FLib3MFToolpathLayerReader_GetSegmentPartFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentpartuuid'), @FLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentlocalpartid'), @FLib3MFToolpathLayerReader_GetSegmentLocalPartIDFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getpartuuidbylocalpartid'), @FLib3MFToolpathLayerReader_GetPartUUIDByLocalPartIDFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits'), @FLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete'), @FLib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits'), @FLib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete'), @FLib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_findsegmentattributeinfobyname'), @FLib3MFToolpathLayerReader_FindSegmentAttributeInfoByNameFunc);
@@ -16828,13 +16943,52 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname'), @FLib3MFToolpathLayerReader_GetSegmentDoubleAttributeByNameFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getcustomdatacount'), @FLib3MFToolpathLayerReader_GetCustomDataCountFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getpartcount'), @FLib3MFToolpathLayerReader_GetPartCountFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getcustomdata'), @FLib3MFToolpathLayerReader_GetCustomDataFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getpartinformation'), @FLib3MFToolpathLayerReader_GetPartInformationFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getcustomdataname'), @FLib3MFToolpathLayerReader_GetCustomDataNameFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getpartbuilditem'), @FLib3MFToolpathLayerReader_GetPartBuildItemFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentpartid'), @FLib3MFToolpathLayerReader_GetSegmentPartIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentbuilditem'), @FLib3MFToolpathLayerReader_GetSegmentBuildItemFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentbuilditemuuid'), @FLib3MFToolpathLayerReader_GetSegmentBuildItemUUIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getbuilditemuuidbylocalpartid'), @FLib3MFToolpathLayerReader_GetBuildItemUUIDByLocalPartIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentdefaultprofile'), @FLib3MFToolpathLayerReader_GetSegmentDefaultProfileFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid'), @FLib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentdefaultprofileid'), @FLib3MFToolpathLayerReader_GetSegmentDefaultProfileIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid'), @FLib3MFToolpathLayerReader_GetProfileUUIDByLocalProfileIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_segmenthasuniformprofile'), @FLib3MFToolpathLayerReader_SegmentHasUniformProfileFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits'), @FLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete'), @FLib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits'), @FLib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete'), @FLib3MFToolpathLayerReader_GetSegmentHatchDataDiscreteFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_getlayerdatauuid'), @FLib3MFToolpathLayerData_GetLayerDataUUIDFunc);
@@ -16858,7 +17012,10 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_clearlaserindex'), @FLib3MFToolpathLayerData_ClearLaserIndexFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_setfactorrange'), @FLib3MFToolpathLayerData_SetFactorRangeFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_setoverridefraction'), @FLib3MFToolpathLayerData_SetOverrideFractionFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_getoverridefraction'), @FLib3MFToolpathLayerData_GetOverrideFractionFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writehatchdatainmodelunits'), @FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsFunc);

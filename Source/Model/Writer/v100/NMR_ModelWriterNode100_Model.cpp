@@ -997,15 +997,15 @@ namespace NMR {
 					writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_UUID, pProfile->getUUID());
 					writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_NAME, pProfile->getName());
 
-					auto profileValues = pProfile->listValues();
+					auto profileValues = pProfile->getValues();
 					for (auto profileValue : profileValues) {
-						if (profileValue.m_sNameSpace.empty()) {
-							writeStringAttribute(profileValue.m_sValueName.c_str(), profileValue.m_sValue);
+						if (!profileValue->hasNameSpace ()) {
+							writeStringAttribute(profileValue->getValueName().c_str(), profileValue->getValue ());
 						}
 						else {
 							std::string sPrefix;
-							if (m_pXMLWriter->GetNamespacePrefix(profileValue.m_sNameSpace, sPrefix)) {
-								writePrefixedStringAttribute(sPrefix.c_str(), profileValue.m_sValueName.c_str(), profileValue.m_sValue);
+							if (m_pXMLWriter->GetNamespacePrefix(profileValue->getNameSpace (), sPrefix)) {
+								writePrefixedStringAttribute(sPrefix.c_str(), profileValue->getValueName().c_str(), profileValue->getValue());
 							}
 						}
 					}

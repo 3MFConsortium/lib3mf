@@ -2862,12 +2862,39 @@ Lib3MFResult CCall_lib3mf_toolpathlayerreader_getlayerdatauuid(Lib3MFHandle libr
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentcount(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 * pCount)
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getcustomdatacount(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 * pCount)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetSegmentCount (pToolpathLayerReader, pCount);
+	return wrapperTable->m_ToolpathLayerReader_GetCustomDataCount (pToolpathLayerReader, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getcustomdata(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_CustomDOMTree * pData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetCustomData (pToolpathLayerReader, nIndex, pData);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getcustomdataname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer, const Lib3MF_uint32 nDataNameBufferSize, Lib3MF_uint32* pDataNameNeededChars, char * pDataNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetCustomDataName (pToolpathLayerReader, nIndex, nNameSpaceBufferSize, pNameSpaceNeededChars, pNameSpaceBuffer, nDataNameBufferSize, pDataNameNeededChars, pDataNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentcount(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 * pSegmentCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentCount (pToolpathLayerReader, pSegmentCount);
 }
 
 
@@ -2877,105 +2904,6 @@ Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentinfo(Lib3MFHandle librar
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_ToolpathLayerReader_GetSegmentInfo (pToolpathLayerReader, nIndex, pType, pPointCount);
-}
-
-
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentdefaultprofile(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_ToolpathProfile * pProfile)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetSegmentDefaultProfile (pToolpathLayerReader, nIndex, pProfile);
-}
-
-
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nProfileUUIDBufferSize, Lib3MF_uint32* pProfileUUIDNeededChars, char * pProfileUUIDBuffer)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetSegmentDefaultProfileUUID (pToolpathLayerReader, nIndex, nProfileUUIDBufferSize, pProfileUUIDNeededChars, pProfileUUIDBuffer);
-}
-
-
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_segmenthasuniformprofile(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, bool * pHasUniformProfile)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_SegmentHasUniformProfile (pToolpathLayerReader, nIndex, pHasUniformProfile);
-}
-
-
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentpart(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_BuildItem * pBuildItem)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetSegmentPart (pToolpathLayerReader, nIndex, pBuildItem);
-}
-
-
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentpartuuid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nPartUUIDBufferSize, Lib3MF_uint32* pPartUUIDNeededChars, char * pPartUUIDBuffer)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetSegmentPartUUID (pToolpathLayerReader, nIndex, nPartUUIDBufferSize, pPartUUIDNeededChars, pPartUUIDBuffer);
-}
-
-
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentlocalpartid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 * pLocalPartID)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetSegmentLocalPartID (pToolpathLayerReader, nIndex, pLocalPartID);
-}
-
-
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nLocalPartID, const Lib3MF_uint32 nPartUUIDBufferSize, Lib3MF_uint32* pPartUUIDNeededChars, char * pPartUUIDBuffer)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetPartUUIDByLocalPartID (pToolpathLayerReader, nLocalPartID, nPartUUIDBufferSize, pPartUUIDNeededChars, pPartUUIDBuffer);
-}
-
-
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, sLib3MFPosition2D * pPointDataBuffer)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetSegmentPointDataInModelUnits (pToolpathLayerReader, nIndex, nPointDataBufferSize, pPointDataNeededCount, pPointDataBuffer);
-}
-
-
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, sLib3MFDiscretePosition2D * pPointDataBuffer)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetSegmentPointDataDiscrete (pToolpathLayerReader, nIndex, nPointDataBufferSize, pPointDataNeededCount, pPointDataBuffer);
-}
-
-
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, sLib3MFHatch2D * pHatchDataBuffer)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataInModelUnits (pToolpathLayerReader, nIndex, nHatchDataBufferSize, pHatchDataNeededCount, pHatchDataBuffer);
-}
-
-
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, sLib3MFDiscreteHatch2D * pHatchDataBuffer)
-{
-	if (libraryHandle == 0) 
-		return LIB3MF_ERROR_INVALIDCAST;
-	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataDiscrete (pToolpathLayerReader, nIndex, nHatchDataBufferSize, pHatchDataNeededCount, pHatchDataBuffer);
 }
 
 
@@ -3006,66 +2934,183 @@ Lib3MFResult CCall_lib3mf_toolpathlayerreader_findsegmentattributetypebyname(Lib
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentintegerattributebyid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 nID, Lib3MF_int64 * pValue)
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentintegerattributebyid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, Lib3MF_uint32 nID, Lib3MF_int64 * pValue)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByID (pToolpathLayerReader, nIndex, nID, pValue);
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByID (pToolpathLayerReader, nSegmentIndex, nID, pValue);
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentintegerattributebyname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const char * pNameSpace, const char * pAttributeName, Lib3MF_int64 * pValue)
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentintegerattributebyname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, const char * pNameSpace, const char * pAttributeName, Lib3MF_int64 * pValue)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByName (pToolpathLayerReader, nIndex, pNameSpace, pAttributeName, pValue);
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentIntegerAttributeByName (pToolpathLayerReader, nSegmentIndex, pNameSpace, pAttributeName, pValue);
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 nID, Lib3MF_double * pValue)
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, Lib3MF_uint32 nID, Lib3MF_double * pValue)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByID (pToolpathLayerReader, nIndex, nID, pValue);
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByID (pToolpathLayerReader, nSegmentIndex, nID, pValue);
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const char * pNameSpace, const char * pAttributeName, Lib3MF_double * pValue)
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, const char * pNameSpace, const char * pAttributeName, Lib3MF_double * pValue)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByName (pToolpathLayerReader, nIndex, pNameSpace, pAttributeName, pValue);
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentDoubleAttributeByName (pToolpathLayerReader, nSegmentIndex, pNameSpace, pAttributeName, pValue);
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getcustomdatacount(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 * pCount)
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getpartcount(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 * pPartCount)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetCustomDataCount (pToolpathLayerReader, pCount);
+	return wrapperTable->m_ToolpathLayerReader_GetPartCount (pToolpathLayerReader, pPartCount);
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getcustomdata(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, Lib3MF_CustomDOMTree * pData)
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getpartinformation(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nPartIndex, Lib3MF_uint32 * pPartID, const Lib3MF_uint32 nBuildItemUUIDBufferSize, Lib3MF_uint32* pBuildItemUUIDNeededChars, char * pBuildItemUUIDBuffer)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetCustomData (pToolpathLayerReader, nIndex, pData);
+	return wrapperTable->m_ToolpathLayerReader_GetPartInformation (pToolpathLayerReader, nPartIndex, pPartID, nBuildItemUUIDBufferSize, pBuildItemUUIDNeededChars, pBuildItemUUIDBuffer);
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerreader_getcustomdataname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer, const Lib3MF_uint32 nDataNameBufferSize, Lib3MF_uint32* pDataNameNeededChars, char * pDataNameBuffer)
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getpartbuilditem(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nPartIndex, Lib3MF_BuildItem * pBuildItem)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerReader_GetCustomDataName (pToolpathLayerReader, nIndex, nNameSpaceBufferSize, pNameSpaceNeededChars, pNameSpaceBuffer, nDataNameBufferSize, pDataNameNeededChars, pDataNameBuffer);
+	return wrapperTable->m_ToolpathLayerReader_GetPartBuildItem (pToolpathLayerReader, nPartIndex, pBuildItem);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentpartid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nPartIndex, Lib3MF_uint32 * pPartID)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentPartID (pToolpathLayerReader, nPartIndex, pPartID);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentbuilditem(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, Lib3MF_BuildItem * pBuildItem)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentBuildItem (pToolpathLayerReader, nSegmentIndex, pBuildItem);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentbuilditemuuid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, const Lib3MF_uint32 nBuildItemUUIDBufferSize, Lib3MF_uint32* pBuildItemUUIDNeededChars, char * pBuildItemUUIDBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentBuildItemUUID (pToolpathLayerReader, nSegmentIndex, nBuildItemUUIDBufferSize, pBuildItemUUIDNeededChars, pBuildItemUUIDBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getbuilditemuuidbylocalpartid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nLocalPartID, const Lib3MF_uint32 nBuildItemUUIDBufferSize, Lib3MF_uint32* pBuildItemUUIDNeededChars, char * pBuildItemUUIDBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetBuildItemUUIDByLocalPartID (pToolpathLayerReader, nLocalPartID, nBuildItemUUIDBufferSize, pBuildItemUUIDNeededChars, pBuildItemUUIDBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentdefaultprofile(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, Lib3MF_ToolpathProfile * pProfile)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentDefaultProfile (pToolpathLayerReader, nSegmentIndex, pProfile);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, const Lib3MF_uint32 nProfileUUIDBufferSize, Lib3MF_uint32* pProfileUUIDNeededChars, char * pProfileUUIDBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentDefaultProfileUUID (pToolpathLayerReader, nSegmentIndex, nProfileUUIDBufferSize, pProfileUUIDNeededChars, pProfileUUIDBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentdefaultprofileid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, Lib3MF_uint32 * pLocalProfileID)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentDefaultProfileID (pToolpathLayerReader, nSegmentIndex, pLocalProfileID);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nLocalProfileID, const Lib3MF_uint32 nProfileUUIDBufferSize, Lib3MF_uint32* pProfileUUIDNeededChars, char * pProfileUUIDBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetProfileUUIDByLocalProfileID (pToolpathLayerReader, nLocalProfileID, nProfileUUIDBufferSize, pProfileUUIDNeededChars, pProfileUUIDBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_segmenthasuniformprofile(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, bool * pHasUniformProfile)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_SegmentHasUniformProfile (pToolpathLayerReader, nSegmentIndex, pHasUniformProfile);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, sLib3MFPosition2D * pPointDataBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentPointDataInModelUnits (pToolpathLayerReader, nSegmentIndex, nPointDataBufferSize, pPointDataNeededCount, pPointDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, sLib3MFDiscretePosition2D * pPointDataBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentPointDataDiscrete (pToolpathLayerReader, nSegmentIndex, nPointDataBufferSize, pPointDataNeededCount, pPointDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, const Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, sLib3MFHatch2D * pHatchDataBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataInModelUnits (pToolpathLayerReader, nSegmentIndex, nHatchDataBufferSize, pHatchDataNeededCount, pHatchDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, const Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, sLib3MFDiscreteHatch2D * pHatchDataBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataDiscrete (pToolpathLayerReader, nSegmentIndex, nHatchDataBufferSize, pHatchDataNeededCount, pHatchDataBuffer);
 }
 
 
@@ -3132,12 +3177,21 @@ Lib3MFResult CCall_lib3mf_toolpathlayerdata_clearlaserindex(Lib3MFHandle library
 }
 
 
-Lib3MFResult CCall_lib3mf_toolpathlayerdata_setfactorrange(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nValue)
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_setoverridefraction(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nValue)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ToolpathLayerData_SetFactorRange (pToolpathLayerData, nValue);
+	return wrapperTable->m_ToolpathLayerData_SetOverrideFraction (pToolpathLayerData, nValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_getoverridefraction(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_GetOverrideFraction (pToolpathLayerData, pValue);
 }
 
 
@@ -5083,7 +5137,6 @@ type DiscretePosition2D struct {
 type Hatch2D struct {
 	Point1Coordinates[2] float64
 	Point2Coordinates[2] float64
-	ProfileOverrideID uint32
 	Tag int32
 }
 
@@ -5091,7 +5144,6 @@ type Hatch2D struct {
 type DiscreteHatch2D struct {
 	Point1Coordinates[2] int32
 	Point2Coordinates[2] int32
-	ProfileOverrideID uint32
 	Tag int32
 }
 
@@ -9299,257 +9351,6 @@ func (inst ToolpathLayerReader) GetLayerDataUUID() (string, error) {
 	return string(bufferuUID[:(filledinuUID-1)]), nil
 }
 
-// GetSegmentCount retrieves the count of segments.
-func (inst ToolpathLayerReader) GetSegmentCount() (uint32, error) {
-	var count C.uint32_t
-	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentcount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
-	if ret != 0 {
-		return 0, makeError(uint32(ret))
-	}
-	return uint32(count), nil
-}
-
-// GetSegmentInfo retrieves the segment type information .
-func (inst ToolpathLayerReader) GetSegmentInfo(index uint32) (ToolpathSegmentType, uint32, error) {
-	var _type C.eLib3MFToolpathSegmentType
-	var pointCount C.uint32_t
-	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentinfo(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &_type, &pointCount)
-	if ret != 0 {
-		return 0, 0, makeError(uint32(ret))
-	}
-	return ToolpathSegmentType(_type), uint32(pointCount), nil
-}
-
-// GetSegmentDefaultProfile retrieves the assigned segment default profile. Fails for delay and sync segments.
-func (inst ToolpathLayerReader) GetSegmentDefaultProfile(index uint32) (ToolpathProfile, error) {
-	var profile ref
-	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentdefaultprofile(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &profile)
-	if ret != 0 {
-		return ToolpathProfile{}, makeError(uint32(ret))
-	}
-	return inst.wrapperRef.NewToolpathProfile(profile), nil
-}
-
-// GetSegmentDefaultProfileUUID retrieves the assigned segment default profile uuid. Fails for delay and sync segments.
-func (inst ToolpathLayerReader) GetSegmentDefaultProfileUUID(index uint32) (string, error) {
-	var neededforprofileUUID C.uint32_t
-	var filledinprofileUUID C.uint32_t
-	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforprofileUUID, nil)
-	if ret != 0 {
-		return "", makeError(uint32(ret))
-	}
-	bufferSizeprofileUUID := neededforprofileUUID
-	bufferprofileUUID := make([]byte, bufferSizeprofileUUID)
-	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), bufferSizeprofileUUID, &filledinprofileUUID, (*C.char)(unsafe.Pointer(&bufferprofileUUID[0])))
-	if ret != 0 {
-		return "", makeError(uint32(ret))
-	}
-	return string(bufferprofileUUID[:(filledinprofileUUID-1)]), nil
-}
-
-// SegmentHasUniformProfile returns if the segment has a uniform profile. If it is uniform, then the default profile applies to the whole segment. Returns false for delay and sync segments.
-func (inst ToolpathLayerReader) SegmentHasUniformProfile(index uint32) (bool, error) {
-	var hasUniformProfile C.bool
-	ret := C.CCall_lib3mf_toolpathlayerreader_segmenthasuniformprofile(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &hasUniformProfile)
-	if ret != 0 {
-		return false, makeError(uint32(ret))
-	}
-	return bool(hasUniformProfile), nil
-}
-
-// GetSegmentPart retrieves the assigned segment profile. Fails for delay and sync segments.
-func (inst ToolpathLayerReader) GetSegmentPart(index uint32) (BuildItem, error) {
-	var buildItem ref
-	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentpart(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &buildItem)
-	if ret != 0 {
-		return BuildItem{}, makeError(uint32(ret))
-	}
-	return inst.wrapperRef.NewBuildItem(buildItem), nil
-}
-
-// GetSegmentPartUUID retrieves the assigned segment part uuid. Fails for delay and sync segments.
-func (inst ToolpathLayerReader) GetSegmentPartUUID(index uint32) (string, error) {
-	var neededforpartUUID C.uint32_t
-	var filledinpartUUID C.uint32_t
-	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentpartuuid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforpartUUID, nil)
-	if ret != 0 {
-		return "", makeError(uint32(ret))
-	}
-	bufferSizepartUUID := neededforpartUUID
-	bufferpartUUID := make([]byte, bufferSizepartUUID)
-	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmentpartuuid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), bufferSizepartUUID, &filledinpartUUID, (*C.char)(unsafe.Pointer(&bufferpartUUID[0])))
-	if ret != 0 {
-		return "", makeError(uint32(ret))
-	}
-	return string(bufferpartUUID[:(filledinpartUUID-1)]), nil
-}
-
-// GetSegmentLocalPartID retrieves the assigned segment part id. Fails for delay and sync segments.
-func (inst ToolpathLayerReader) GetSegmentLocalPartID(index uint32) (uint32, error) {
-	var localPartID C.uint32_t
-	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentlocalpartid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &localPartID)
-	if ret != 0 {
-		return 0, makeError(uint32(ret))
-	}
-	return uint32(localPartID), nil
-}
-
-// GetPartUUIDByLocalPartID retrieves the global part UUID by the local part ID.
-func (inst ToolpathLayerReader) GetPartUUIDByLocalPartID(localPartID uint32) (string, error) {
-	var neededforpartUUID C.uint32_t
-	var filledinpartUUID C.uint32_t
-	ret := C.CCall_lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(localPartID), 0, &neededforpartUUID, nil)
-	if ret != 0 {
-		return "", makeError(uint32(ret))
-	}
-	bufferSizepartUUID := neededforpartUUID
-	bufferpartUUID := make([]byte, bufferSizepartUUID)
-	ret = C.CCall_lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(localPartID), bufferSizepartUUID, &filledinpartUUID, (*C.char)(unsafe.Pointer(&bufferpartUUID[0])))
-	if ret != 0 {
-		return "", makeError(uint32(ret))
-	}
-	return string(bufferpartUUID[:(filledinpartUUID-1)]), nil
-}
-
-// GetSegmentPointDataInModelUnits retrieves the assigned segment point list. For type hatch, the points are taken pairwise. Returns an empty array for delay and sync elements.
-func (inst ToolpathLayerReader) GetSegmentPointDataInModelUnits(index uint32, pointData []Position2D) ([]Position2D, error) {
-	var neededforpointData C.uint64_t
-	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforpointData, nil)
-	if ret != 0 {
-		return nil, makeError(uint32(ret))
-	}
-	if len(pointData) < int(neededforpointData) {
-	 pointData = append(pointData, make([]Position2D, int(neededforpointData)-len(pointData))...)
-	}
-	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), neededforpointData, nil, (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])))
-	if ret != 0 {
-		return nil, makeError(uint32(ret))
-	}
-	return pointData[:int(neededforpointData)], nil
-}
-
-// GetSegmentPointDataDiscrete retrieves the assigned segment point list in toolpath units. For type hatch, the points are taken pairwise. Returns an empty array for delay and sync elements.
-func (inst ToolpathLayerReader) GetSegmentPointDataDiscrete(index uint32, pointData []DiscretePosition2D) ([]DiscretePosition2D, error) {
-	var neededforpointData C.uint64_t
-	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforpointData, nil)
-	if ret != 0 {
-		return nil, makeError(uint32(ret))
-	}
-	if len(pointData) < int(neededforpointData) {
-	 pointData = append(pointData, make([]DiscretePosition2D, int(neededforpointData)-len(pointData))...)
-	}
-	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), neededforpointData, nil, (*C.sLib3MFDiscretePosition2D)(unsafe.Pointer(&pointData[0])))
-	if ret != 0 {
-		return nil, makeError(uint32(ret))
-	}
-	return pointData[:int(neededforpointData)], nil
-}
-
-// GetSegmentHatchDataInModelUnits retrieves the assigned segment hatch list. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
-func (inst ToolpathLayerReader) GetSegmentHatchDataInModelUnits(index uint32, hatchData []Hatch2D) ([]Hatch2D, error) {
-	var neededforhatchData C.uint64_t
-	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforhatchData, nil)
-	if ret != 0 {
-		return nil, makeError(uint32(ret))
-	}
-	if len(hatchData) < int(neededforhatchData) {
-	 hatchData = append(hatchData, make([]Hatch2D, int(neededforhatchData)-len(hatchData))...)
-	}
-	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), neededforhatchData, nil, (*C.sLib3MFHatch2D)(unsafe.Pointer(&hatchData[0])))
-	if ret != 0 {
-		return nil, makeError(uint32(ret))
-	}
-	return hatchData[:int(neededforhatchData)], nil
-}
-
-// GetSegmentHatchDataDiscrete retrieves the assigned segment hatch list in toolpath units. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
-func (inst ToolpathLayerReader) GetSegmentHatchDataDiscrete(index uint32, hatchData []DiscreteHatch2D) ([]DiscreteHatch2D, error) {
-	var neededforhatchData C.uint64_t
-	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforhatchData, nil)
-	if ret != 0 {
-		return nil, makeError(uint32(ret))
-	}
-	if len(hatchData) < int(neededforhatchData) {
-	 hatchData = append(hatchData, make([]DiscreteHatch2D, int(neededforhatchData)-len(hatchData))...)
-	}
-	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), neededforhatchData, nil, (*C.sLib3MFDiscreteHatch2D)(unsafe.Pointer(&hatchData[0])))
-	if ret != 0 {
-		return nil, makeError(uint32(ret))
-	}
-	return hatchData[:int(neededforhatchData)], nil
-}
-
-// FindSegmentAttributeInfoByName retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
-func (inst ToolpathLayerReader) FindSegmentAttributeInfoByName(nameSpace string, attributeName string) (uint32, ToolpathAttributeType, error) {
-	var iD C.uint32_t
-	var attributeType C.eLib3MFToolpathAttributeType
-	ret := C.CCall_lib3mf_toolpathlayerreader_findsegmentattributeinfobyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &iD, &attributeType)
-	if ret != 0 {
-		return 0, 0, makeError(uint32(ret))
-	}
-	return uint32(iD), ToolpathAttributeType(attributeType), nil
-}
-
-// FindSegmentAttributeIDByName retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.
-func (inst ToolpathLayerReader) FindSegmentAttributeIDByName(nameSpace string, attributeName string) (uint32, error) {
-	var iD C.uint32_t
-	ret := C.CCall_lib3mf_toolpathlayerreader_findsegmentattributeidbyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &iD)
-	if ret != 0 {
-		return 0, makeError(uint32(ret))
-	}
-	return uint32(iD), nil
-}
-
-// FindSegmentAttributeTypeByName retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.
-func (inst ToolpathLayerReader) FindSegmentAttributeTypeByName(nameSpace string, attributeName string) (ToolpathAttributeType, error) {
-	var attributeType C.eLib3MFToolpathAttributeType
-	ret := C.CCall_lib3mf_toolpathlayerreader_findsegmentattributetypebyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &attributeType)
-	if ret != 0 {
-		return 0, makeError(uint32(ret))
-	}
-	return ToolpathAttributeType(attributeType), nil
-}
-
-// GetSegmentIntegerAttributeByID retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
-func (inst ToolpathLayerReader) GetSegmentIntegerAttributeByID(index uint32, iD uint32) (int64, error) {
-	var value C.int64_t
-	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentintegerattributebyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), C.uint32_t(iD), &value)
-	if ret != 0 {
-		return 0, makeError(uint32(ret))
-	}
-	return int64(value), nil
-}
-
-// GetSegmentIntegerAttributeByName retrieves a segment integer attribute by Attribute Name. Will fail if Attribute does not exist or is of different type.
-func (inst ToolpathLayerReader) GetSegmentIntegerAttributeByName(index uint32, nameSpace string, attributeName string) (int64, error) {
-	var value C.int64_t
-	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentintegerattributebyname(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &value)
-	if ret != 0 {
-		return 0, makeError(uint32(ret))
-	}
-	return int64(value), nil
-}
-
-// GetSegmentDoubleAttributeByID retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.
-func (inst ToolpathLayerReader) GetSegmentDoubleAttributeByID(index uint32, iD uint32) (float64, error) {
-	var value C.double
-	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), C.uint32_t(iD), &value)
-	if ret != 0 {
-		return 0, makeError(uint32(ret))
-	}
-	return float64(value), nil
-}
-
-// GetSegmentDoubleAttributeByName retrieves a segment Double attribute by Attribute Name. Will fail if Attribute does not exist.
-func (inst ToolpathLayerReader) GetSegmentDoubleAttributeByName(index uint32, nameSpace string, attributeName string) (float64, error) {
-	var value C.double
-	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &value)
-	if ret != 0 {
-		return 0, makeError(uint32(ret))
-	}
-	return float64(value), nil
-}
-
 // GetCustomDataCount retrieves the count of custom data elements.
 func (inst ToolpathLayerReader) GetCustomDataCount() (uint32, error) {
 	var count C.uint32_t
@@ -9589,6 +9390,322 @@ func (inst ToolpathLayerReader) GetCustomDataName(index uint32) (string, string,
 		return "", "", makeError(uint32(ret))
 	}
 	return string(buffernameSpace[:(filledinnameSpace-1)]), string(bufferdataName[:(filledindataName-1)]), nil
+}
+
+// GetSegmentCount retrieves the count of segments.
+func (inst ToolpathLayerReader) GetSegmentCount() (uint32, error) {
+	var segmentCount C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentcount(inst.wrapperRef.LibraryHandle, inst.Ref, &segmentCount)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(segmentCount), nil
+}
+
+// GetSegmentInfo retrieves the segment type information .
+func (inst ToolpathLayerReader) GetSegmentInfo(index uint32) (ToolpathSegmentType, uint32, error) {
+	var _type C.eLib3MFToolpathSegmentType
+	var pointCount C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentinfo(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &_type, &pointCount)
+	if ret != 0 {
+		return 0, 0, makeError(uint32(ret))
+	}
+	return ToolpathSegmentType(_type), uint32(pointCount), nil
+}
+
+// FindSegmentAttributeInfoByName retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
+func (inst ToolpathLayerReader) FindSegmentAttributeInfoByName(nameSpace string, attributeName string) (uint32, ToolpathAttributeType, error) {
+	var iD C.uint32_t
+	var attributeType C.eLib3MFToolpathAttributeType
+	ret := C.CCall_lib3mf_toolpathlayerreader_findsegmentattributeinfobyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &iD, &attributeType)
+	if ret != 0 {
+		return 0, 0, makeError(uint32(ret))
+	}
+	return uint32(iD), ToolpathAttributeType(attributeType), nil
+}
+
+// FindSegmentAttributeIDByName retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.
+func (inst ToolpathLayerReader) FindSegmentAttributeIDByName(nameSpace string, attributeName string) (uint32, error) {
+	var iD C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_findsegmentattributeidbyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &iD)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(iD), nil
+}
+
+// FindSegmentAttributeTypeByName retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.
+func (inst ToolpathLayerReader) FindSegmentAttributeTypeByName(nameSpace string, attributeName string) (ToolpathAttributeType, error) {
+	var attributeType C.eLib3MFToolpathAttributeType
+	ret := C.CCall_lib3mf_toolpathlayerreader_findsegmentattributetypebyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &attributeType)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return ToolpathAttributeType(attributeType), nil
+}
+
+// GetSegmentIntegerAttributeByID retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
+func (inst ToolpathLayerReader) GetSegmentIntegerAttributeByID(segmentIndex uint32, iD uint32) (int64, error) {
+	var value C.int64_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentintegerattributebyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), C.uint32_t(iD), &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return int64(value), nil
+}
+
+// GetSegmentIntegerAttributeByName retrieves a segment integer attribute by Attribute Name. Will fail if Attribute does not exist or is of different type.
+func (inst ToolpathLayerReader) GetSegmentIntegerAttributeByName(segmentIndex uint32, nameSpace string, attributeName string) (int64, error) {
+	var value C.int64_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentintegerattributebyname(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return int64(value), nil
+}
+
+// GetSegmentDoubleAttributeByID retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.
+func (inst ToolpathLayerReader) GetSegmentDoubleAttributeByID(segmentIndex uint32, iD uint32) (float64, error) {
+	var value C.double
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), C.uint32_t(iD), &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(value), nil
+}
+
+// GetSegmentDoubleAttributeByName retrieves a segment Double attribute by Attribute Name. Will fail if Attribute does not exist.
+func (inst ToolpathLayerReader) GetSegmentDoubleAttributeByName(segmentIndex uint32, nameSpace string, attributeName string) (float64, error) {
+	var value C.double
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(attributeName)[0])), &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(value), nil
+}
+
+// GetPartCount returns how many parts are referenced in this layer.
+func (inst ToolpathLayerReader) GetPartCount() (uint32, error) {
+	var partCount C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getpartcount(inst.wrapperRef.LibraryHandle, inst.Ref, &partCount)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(partCount), nil
+}
+
+// GetPartInformation returns the ID and UUID of a referenced build item by its index in the layer..
+func (inst ToolpathLayerReader) GetPartInformation(partIndex uint32) (uint32, string, error) {
+	var partID C.uint32_t
+	var neededforbuildItemUUID C.uint32_t
+	var filledinbuildItemUUID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getpartinformation(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(partIndex), &partID, 0, &neededforbuildItemUUID, nil)
+	if ret != 0 {
+		return 0, "", makeError(uint32(ret))
+	}
+	bufferSizebuildItemUUID := neededforbuildItemUUID
+	bufferbuildItemUUID := make([]byte, bufferSizebuildItemUUID)
+	ret = C.CCall_lib3mf_toolpathlayerreader_getpartinformation(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(partIndex), &partID, bufferSizebuildItemUUID, &filledinbuildItemUUID, (*C.char)(unsafe.Pointer(&bufferbuildItemUUID[0])))
+	if ret != 0 {
+		return 0, "", makeError(uint32(ret))
+	}
+	return uint32(partID), string(bufferbuildItemUUID[:(filledinbuildItemUUID-1)]), nil
+}
+
+// GetPartBuildItem returns a referenced build item Instance by its index in the layer...
+func (inst ToolpathLayerReader) GetPartBuildItem(partIndex uint32) (BuildItem, error) {
+	var buildItem ref
+	ret := C.CCall_lib3mf_toolpathlayerreader_getpartbuilditem(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(partIndex), &buildItem)
+	if ret != 0 {
+		return BuildItem{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewBuildItem(buildItem), nil
+}
+
+// GetSegmentPartID retrieves the assigned part id for a segment. Fails for delay and sync segments.
+func (inst ToolpathLayerReader) GetSegmentPartID(partIndex uint32) (uint32, error) {
+	var partID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentpartid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(partIndex), &partID)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(partID), nil
+}
+
+// GetSegmentBuildItem retrieves the assigned segment build item. Fails for delay and sync segments.
+func (inst ToolpathLayerReader) GetSegmentBuildItem(segmentIndex uint32) (BuildItem, error) {
+	var buildItem ref
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentbuilditem(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), &buildItem)
+	if ret != 0 {
+		return BuildItem{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewBuildItem(buildItem), nil
+}
+
+// GetSegmentBuildItemUUID retrieves the assigned segment build item uuid. Fails for delay and sync segments.
+func (inst ToolpathLayerReader) GetSegmentBuildItemUUID(segmentIndex uint32) (string, error) {
+	var neededforbuildItemUUID C.uint32_t
+	var filledinbuildItemUUID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentbuilditemuuid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), 0, &neededforbuildItemUUID, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizebuildItemUUID := neededforbuildItemUUID
+	bufferbuildItemUUID := make([]byte, bufferSizebuildItemUUID)
+	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmentbuilditemuuid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), bufferSizebuildItemUUID, &filledinbuildItemUUID, (*C.char)(unsafe.Pointer(&bufferbuildItemUUID[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferbuildItemUUID[:(filledinbuildItemUUID-1)]), nil
+}
+
+// GetBuildItemUUIDByLocalPartID maps a local part ID to its global build item UUID.
+func (inst ToolpathLayerReader) GetBuildItemUUIDByLocalPartID(localPartID uint32) (string, error) {
+	var neededforbuildItemUUID C.uint32_t
+	var filledinbuildItemUUID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getbuilditemuuidbylocalpartid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(localPartID), 0, &neededforbuildItemUUID, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizebuildItemUUID := neededforbuildItemUUID
+	bufferbuildItemUUID := make([]byte, bufferSizebuildItemUUID)
+	ret = C.CCall_lib3mf_toolpathlayerreader_getbuilditemuuidbylocalpartid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(localPartID), bufferSizebuildItemUUID, &filledinbuildItemUUID, (*C.char)(unsafe.Pointer(&bufferbuildItemUUID[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferbuildItemUUID[:(filledinbuildItemUUID-1)]), nil
+}
+
+// GetSegmentDefaultProfile retrieves the assigned segment default profile. Fails for delay and sync segments.
+func (inst ToolpathLayerReader) GetSegmentDefaultProfile(segmentIndex uint32) (ToolpathProfile, error) {
+	var profile ref
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentdefaultprofile(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), &profile)
+	if ret != 0 {
+		return ToolpathProfile{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathProfile(profile), nil
+}
+
+// GetSegmentDefaultProfileUUID retrieves the assigned segment default profile uuid. Fails for delay and sync segments.
+func (inst ToolpathLayerReader) GetSegmentDefaultProfileUUID(segmentIndex uint32) (string, error) {
+	var neededforprofileUUID C.uint32_t
+	var filledinprofileUUID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), 0, &neededforprofileUUID, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizeprofileUUID := neededforprofileUUID
+	bufferprofileUUID := make([]byte, bufferSizeprofileUUID)
+	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), bufferSizeprofileUUID, &filledinprofileUUID, (*C.char)(unsafe.Pointer(&bufferprofileUUID[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferprofileUUID[:(filledinprofileUUID-1)]), nil
+}
+
+// GetSegmentDefaultProfileID retrieves the local default profile ID. Fails for delay and sync segments.
+func (inst ToolpathLayerReader) GetSegmentDefaultProfileID(segmentIndex uint32) (uint32, error) {
+	var localProfileID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentdefaultprofileid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), &localProfileID)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(localProfileID), nil
+}
+
+// GetProfileUUIDByLocalProfileID maps a local profile ID its the global profile UUID.
+func (inst ToolpathLayerReader) GetProfileUUIDByLocalProfileID(localProfileID uint32) (string, error) {
+	var neededforprofileUUID C.uint32_t
+	var filledinprofileUUID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(localProfileID), 0, &neededforprofileUUID, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizeprofileUUID := neededforprofileUUID
+	bufferprofileUUID := make([]byte, bufferSizeprofileUUID)
+	ret = C.CCall_lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(localProfileID), bufferSizeprofileUUID, &filledinprofileUUID, (*C.char)(unsafe.Pointer(&bufferprofileUUID[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferprofileUUID[:(filledinprofileUUID-1)]), nil
+}
+
+// SegmentHasUniformProfile returns if the segment has a uniform profile. If it is uniform, then the default profile applies to the whole segment. If it is not uniform, the type specific retrieval functions have to be used (or the file has to be rejected). Returns false for delay and sync segments.
+func (inst ToolpathLayerReader) SegmentHasUniformProfile(segmentIndex uint32) (bool, error) {
+	var hasUniformProfile C.bool
+	ret := C.CCall_lib3mf_toolpathlayerreader_segmenthasuniformprofile(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), &hasUniformProfile)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(hasUniformProfile), nil
+}
+
+// GetSegmentPointDataInModelUnits retrieves the assigned segment point list. Fails if segment type is not loop or polyline.
+func (inst ToolpathLayerReader) GetSegmentPointDataInModelUnits(segmentIndex uint32, pointData []Position2D) ([]Position2D, error) {
+	var neededforpointData C.uint64_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), 0, &neededforpointData, nil)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	if len(pointData) < int(neededforpointData) {
+	 pointData = append(pointData, make([]Position2D, int(neededforpointData)-len(pointData))...)
+	}
+	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), neededforpointData, nil, (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])))
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	return pointData[:int(neededforpointData)], nil
+}
+
+// GetSegmentPointDataDiscrete retrieves the assigned segment point list in toolpath units. Fails if segment type is not loop or polyline.
+func (inst ToolpathLayerReader) GetSegmentPointDataDiscrete(segmentIndex uint32, pointData []DiscretePosition2D) ([]DiscretePosition2D, error) {
+	var neededforpointData C.uint64_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), 0, &neededforpointData, nil)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	if len(pointData) < int(neededforpointData) {
+	 pointData = append(pointData, make([]DiscretePosition2D, int(neededforpointData)-len(pointData))...)
+	}
+	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), neededforpointData, nil, (*C.sLib3MFDiscretePosition2D)(unsafe.Pointer(&pointData[0])))
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	return pointData[:int(neededforpointData)], nil
+}
+
+// GetSegmentHatchDataInModelUnits retrieves the assigned segment hatch list. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
+func (inst ToolpathLayerReader) GetSegmentHatchDataInModelUnits(segmentIndex uint32, hatchData []Hatch2D) ([]Hatch2D, error) {
+	var neededforhatchData C.uint64_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), 0, &neededforhatchData, nil)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	if len(hatchData) < int(neededforhatchData) {
+	 hatchData = append(hatchData, make([]Hatch2D, int(neededforhatchData)-len(hatchData))...)
+	}
+	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), neededforhatchData, nil, (*C.sLib3MFHatch2D)(unsafe.Pointer(&hatchData[0])))
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	return hatchData[:int(neededforhatchData)], nil
+}
+
+// GetSegmentHatchDataDiscrete retrieves the assigned segment hatch list in toolpath units. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
+func (inst ToolpathLayerReader) GetSegmentHatchDataDiscrete(segmentIndex uint32, hatchData []DiscreteHatch2D) ([]DiscreteHatch2D, error) {
+	var neededforhatchData C.uint64_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), 0, &neededforhatchData, nil)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	if len(hatchData) < int(neededforhatchData) {
+	 hatchData = append(hatchData, make([]DiscreteHatch2D, int(neededforhatchData)-len(hatchData))...)
+	}
+	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), neededforhatchData, nil, (*C.sLib3MFDiscreteHatch2D)(unsafe.Pointer(&hatchData[0])))
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	return hatchData[:int(neededforhatchData)], nil
 }
 
 
@@ -9674,13 +9791,23 @@ func (inst ToolpathLayerData) ClearLaserIndex() error {
 	return nil
 }
 
-// SetFactorRange sets the denominator for the scaling factor, which is an integer.
-func (inst ToolpathLayerData) SetFactorRange(value uint32) error {
-	ret := C.CCall_lib3mf_toolpathlayerdata_setfactorrange(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(value))
+// SetOverrideFraction sets the denominator for the scaling factor all subsequent segments. Default is 1000.
+func (inst ToolpathLayerData) SetOverrideFraction(value uint32) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_setoverridefraction(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(value))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
 	return nil
+}
+
+// GetOverrideFraction returns the current denominator for the scaling factor all subsequent segments. Default is 1000.
+func (inst ToolpathLayerData) GetOverrideFraction() (uint32, error) {
+	var value C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerdata_getoverridefraction(inst.wrapperRef.LibraryHandle, inst.Ref, &value)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(value), nil
 }
 
 // WriteHatchDataInModelUnits writes hatch data to the layer in model units.

@@ -1447,6 +1447,11 @@ Model error codes (0x8XXX)
 // Invalid Mesh Binary Path
 #define NMR_ERROR_INVALIDMESHBINARYPATH 0x8121
 
+// Duplicate override fraction
+#define NMR_ERROR_DUPLICATEOVERRIDEFRACTION 0x8122
+
+// Invalid override fraction
+#define NMR_ERROR_INVALIDOVERRIDEFRACTION 0x8123
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
@@ -1627,5 +1632,29 @@ Toolpath errors (0xBXXX)
 
 // Invalid factor range
 #define NMR_ERROR_TOOLPATH_INVALIDFACTORRANGE 0xB015
+
+// Duplicate part ID
+#define NMR_ERROR_DUPLICATEPARTID 0xB016
+
+// Duplicate profile ID
+#define NMR_ERROR_DUPLICATEPROFILEID 0xB017
+
+// Invalid part ID
+#define NMR_ERROR_INVALIDPARTID 0xB018
+
+// Invalid profile ID
+#define NMR_ERROR_INVALIDPROFILEID 0xB019
+
+// Too many parts in toolpath layer
+#define NMR_ERROR_TOOMANYPARTSINTOOLPATHLAYER 0xB01A
+
+// Invalid part index
+#define NMR_ERROR_INVALIDPARTINDEX 0xB01B
+
+// Duplicate profile value
+#define NMR_ERROR_DUPLICATEPROFILEVALUE 0xB01C
+
+// Duplicate profile modifier
+#define NMR_ERROR_DUPLICATEPROFILEMODIFIER 0xB01D
 
 #endif // __NMR_ERRORCONST

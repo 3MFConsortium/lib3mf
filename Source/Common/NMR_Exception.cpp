@@ -569,6 +569,16 @@ namespace NMR {
 		case NMR_ERROR_INVALIDLINEATTRIBUTETYPE: return "Invalid line attribute type";
 		case NMR_ERROR_TOOLPATH_INVALIDPROFILESCALINGBUFFER: return "Invalid profile scaling buffer";
 		case NMR_ERROR_TOOLPATH_INVALIDFACTORRANGE: return "Invalid factor range";
+		case NMR_ERROR_DUPLICATEPARTID: return "Duplicate part ID";
+		case NMR_ERROR_DUPLICATEPROFILEID: return "Duplicate profile ID";
+		case NMR_ERROR_INVALIDPARTID: return "Invalid part ID";
+		case NMR_ERROR_INVALIDPROFILEID: return "Invalid profile ID";
+		case NMR_ERROR_TOOMANYPARTSINTOOLPATHLAYER: return "Too many parts in toolpath layer";
+		case NMR_ERROR_INVALIDPARTINDEX: return "Invalid part index";
+		case NMR_ERROR_DUPLICATEOVERRIDEFRACTION: return "Duplicate override fraction";
+		case NMR_ERROR_INVALIDOVERRIDEFRACTION: return "Invalid override fraction";
+		case NMR_ERROR_DUPLICATEPROFILEVALUE: return "Duplicate profile value";
+		case NMR_ERROR_DUPLICATEPROFILEMODIFIER: return "Duplicate profile modifier";
 
 		default:
 			return "unknown error";

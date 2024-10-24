@@ -49,7 +49,6 @@ namespace NMR {
 		nfBool m_bHasY2;
 
 		nfInt32 m_nTag;
-		nfInt32 m_nCustomProfileID;
 		nfInt32 m_nFactorF1;
 		nfInt32 m_nFactorG1;
 		nfInt32 m_nFactorH1;
@@ -75,7 +74,6 @@ namespace NMR {
 		nfInt32 getY2();
 
 		nfInt32 getTag();
-		nfInt32 getCustomProfileID();
 		nfInt32 getFactorF1();
 		nfInt32 getFactorG1();
 		nfInt32 getFactorH1();

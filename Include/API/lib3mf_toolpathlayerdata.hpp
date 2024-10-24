@@ -79,7 +79,9 @@ public:
 
 	void ClearLaserIndex() override;
 
-	void SetFactorRange(const Lib3MF_uint32 nValue) override;
+	void SetOverrideFraction(const Lib3MF_uint32 nValue) override;
+
+	Lib3MF_uint32 GetOverrideFraction() override;
 
 	Lib3MF_uint32 RegisterProfile(IToolpathProfile* pProfile) override;
 

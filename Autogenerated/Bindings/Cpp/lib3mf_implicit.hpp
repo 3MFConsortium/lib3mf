@@ -1680,29 +1680,34 @@ public:
 	}
 	
 	inline std::string GetLayerDataUUID();
-	inline Lib3MF_uint32 GetSegmentCount();
-	inline void GetSegmentInfo(const Lib3MF_uint32 nIndex, eToolpathSegmentType & eType, Lib3MF_uint32 & nPointCount);
-	inline PToolpathProfile GetSegmentDefaultProfile(const Lib3MF_uint32 nIndex);
-	inline std::string GetSegmentDefaultProfileUUID(const Lib3MF_uint32 nIndex);
-	inline bool SegmentHasUniformProfile(const Lib3MF_uint32 nIndex);
-	inline PBuildItem GetSegmentPart(const Lib3MF_uint32 nIndex);
-	inline std::string GetSegmentPartUUID(const Lib3MF_uint32 nIndex);
-	inline Lib3MF_uint32 GetSegmentLocalPartID(const Lib3MF_uint32 nIndex);
-	inline std::string GetPartUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID);
-	inline void GetSegmentPointDataInModelUnits(const Lib3MF_uint32 nIndex, std::vector<sPosition2D> & PointDataBuffer);
-	inline void GetSegmentPointDataDiscrete(const Lib3MF_uint32 nIndex, std::vector<sDiscretePosition2D> & PointDataBuffer);
-	inline void GetSegmentHatchDataInModelUnits(const Lib3MF_uint32 nIndex, std::vector<sHatch2D> & HatchDataBuffer);
-	inline void GetSegmentHatchDataDiscrete(const Lib3MF_uint32 nIndex, std::vector<sDiscreteHatch2D> & HatchDataBuffer);
-	inline void FindSegmentAttributeInfoByName(const std::string & sNameSpace, const std::string & sAttributeName, Lib3MF_uint32 & nID, eToolpathAttributeType & eAttributeType);
-	inline Lib3MF_uint32 FindSegmentAttributeIDByName(const std::string & sNameSpace, const std::string & sAttributeName);
-	inline eToolpathAttributeType FindSegmentAttributeTypeByName(const std::string & sNameSpace, const std::string & sAttributeName);
-	inline Lib3MF_int64 GetSegmentIntegerAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID);
-	inline Lib3MF_int64 GetSegmentIntegerAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName);
-	inline Lib3MF_double GetSegmentDoubleAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID);
-	inline Lib3MF_double GetSegmentDoubleAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName);
 	inline Lib3MF_uint32 GetCustomDataCount();
 	inline PCustomDOMTree GetCustomData(const Lib3MF_uint32 nIndex);
 	inline void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName);
+	inline Lib3MF_uint32 GetSegmentCount();
+	inline void GetSegmentInfo(const Lib3MF_uint32 nIndex, eToolpathSegmentType & eType, Lib3MF_uint32 & nPointCount);
+	inline void FindSegmentAttributeInfoByName(const std::string & sNameSpace, const std::string & sAttributeName, Lib3MF_uint32 & nID, eToolpathAttributeType & eAttributeType);
+	inline Lib3MF_uint32 FindSegmentAttributeIDByName(const std::string & sNameSpace, const std::string & sAttributeName);
+	inline eToolpathAttributeType FindSegmentAttributeTypeByName(const std::string & sNameSpace, const std::string & sAttributeName);
+	inline Lib3MF_int64 GetSegmentIntegerAttributeByID(const Lib3MF_uint32 nSegmentIndex, const Lib3MF_uint32 nID);
+	inline Lib3MF_int64 GetSegmentIntegerAttributeByName(const Lib3MF_uint32 nSegmentIndex, const std::string & sNameSpace, const std::string & sAttributeName);
+	inline Lib3MF_double GetSegmentDoubleAttributeByID(const Lib3MF_uint32 nSegmentIndex, const Lib3MF_uint32 nID);
+	inline Lib3MF_double GetSegmentDoubleAttributeByName(const Lib3MF_uint32 nSegmentIndex, const std::string & sNameSpace, const std::string & sAttributeName);
+	inline Lib3MF_uint32 GetPartCount();
+	inline void GetPartInformation(const Lib3MF_uint32 nPartIndex, Lib3MF_uint32 & nPartID, std::string & sBuildItemUUID);
+	inline PBuildItem GetPartBuildItem(const Lib3MF_uint32 nPartIndex);
+	inline Lib3MF_uint32 GetSegmentPartID(const Lib3MF_uint32 nPartIndex);
+	inline PBuildItem GetSegmentBuildItem(const Lib3MF_uint32 nSegmentIndex);
+	inline std::string GetSegmentBuildItemUUID(const Lib3MF_uint32 nSegmentIndex);
+	inline std::string GetBuildItemUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID);
+	inline PToolpathProfile GetSegmentDefaultProfile(const Lib3MF_uint32 nSegmentIndex);
+	inline std::string GetSegmentDefaultProfileUUID(const Lib3MF_uint32 nSegmentIndex);
+	inline Lib3MF_uint32 GetSegmentDefaultProfileID(const Lib3MF_uint32 nSegmentIndex);
+	inline std::string GetProfileUUIDByLocalProfileID(const Lib3MF_uint32 nLocalProfileID);
+	inline bool SegmentHasUniformProfile(const Lib3MF_uint32 nSegmentIndex);
+	inline void GetSegmentPointDataInModelUnits(const Lib3MF_uint32 nSegmentIndex, std::vector<sPosition2D> & PointDataBuffer);
+	inline void GetSegmentPointDataDiscrete(const Lib3MF_uint32 nSegmentIndex, std::vector<sDiscretePosition2D> & PointDataBuffer);
+	inline void GetSegmentHatchDataInModelUnits(const Lib3MF_uint32 nSegmentIndex, std::vector<sHatch2D> & HatchDataBuffer);
+	inline void GetSegmentHatchDataDiscrete(const Lib3MF_uint32 nSegmentIndex, std::vector<sDiscreteHatch2D> & HatchDataBuffer);
 };
 	
 /*************************************************************************************************************************
@@ -1726,7 +1731,8 @@ public:
 	inline void ClearSegmentAttributes();
 	inline void SetLaserIndex(const Lib3MF_uint32 nValue);
 	inline void ClearLaserIndex();
-	inline void SetFactorRange(const Lib3MF_uint32 nValue);
+	inline void SetOverrideFraction(const Lib3MF_uint32 nValue);
+	inline Lib3MF_uint32 GetOverrideFraction();
 	inline void WriteHatchDataInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sHatch2D> & HatchDataBuffer);
 	inline void WriteHatchDataInModelUnitsWithConstantOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer);
 	inline void WriteHatchDataInModelUnitsWithRampedOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingData1Buffer, const CInputVector<Lib3MF_int32> & ScalingData2Buffer);
@@ -2492,7 +2498,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	
 	/**
 	* CBinaryStream::EnableLZ4 - Switches to fast LZ4 compression mode.
-	* @param[in] nCompressionLevel - Compression level (0-9).
+	* @param[in] nCompressionLevel - Compression level (2-12).
 	*/
 	void CBinaryStream::EnableLZ4(const Lib3MF_uint32 nCompressionLevel)
 	{
@@ -6386,289 +6392,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathLayerReader::GetSegmentCount - Retrieves the count of segments.
-	* @return Count
-	*/
-	Lib3MF_uint32 CToolpathLayerReader::GetSegmentCount()
-	{
-		Lib3MF_uint32 resultCount = 0;
-		CheckError(lib3mf_toolpathlayerreader_getsegmentcount(m_pHandle, &resultCount));
-		
-		return resultCount;
-	}
-	
-	/**
-	* CToolpathLayerReader::GetSegmentInfo - Retrieves the segment type information .
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[out] eType - Segment Type
-	* @param[out] nPointCount - Point count of segment.
-	*/
-	void CToolpathLayerReader::GetSegmentInfo(const Lib3MF_uint32 nIndex, eToolpathSegmentType & eType, Lib3MF_uint32 & nPointCount)
-	{
-		CheckError(lib3mf_toolpathlayerreader_getsegmentinfo(m_pHandle, nIndex, &eType, &nPointCount));
-	}
-	
-	/**
-	* CToolpathLayerReader::GetSegmentDefaultProfile - Retrieves the assigned segment default profile. Fails for delay and sync segments.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @return Segment Profile
-	*/
-	PToolpathProfile CToolpathLayerReader::GetSegmentDefaultProfile(const Lib3MF_uint32 nIndex)
-	{
-		Lib3MFHandle hProfile = nullptr;
-		CheckError(lib3mf_toolpathlayerreader_getsegmentdefaultprofile(m_pHandle, nIndex, &hProfile));
-		
-		if (!hProfile) {
-			CheckError(LIB3MF_ERROR_INVALIDPARAM);
-		}
-		return std::shared_ptr<CToolpathProfile>(dynamic_cast<CToolpathProfile*>(m_pWrapper->polymorphicFactory(hProfile)));
-	}
-	
-	/**
-	* CToolpathLayerReader::GetSegmentDefaultProfileUUID - Retrieves the assigned segment default profile uuid. Fails for delay and sync segments.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @return Segment Profile UUID
-	*/
-	std::string CToolpathLayerReader::GetSegmentDefaultProfileUUID(const Lib3MF_uint32 nIndex)
-	{
-		Lib3MF_uint32 bytesNeededProfileUUID = 0;
-		Lib3MF_uint32 bytesWrittenProfileUUID = 0;
-		CheckError(lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid(m_pHandle, nIndex, 0, &bytesNeededProfileUUID, nullptr));
-		std::vector<char> bufferProfileUUID(bytesNeededProfileUUID);
-		CheckError(lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid(m_pHandle, nIndex, bytesNeededProfileUUID, &bytesWrittenProfileUUID, &bufferProfileUUID[0]));
-		
-		return std::string(&bufferProfileUUID[0]);
-	}
-	
-	/**
-	* CToolpathLayerReader::SegmentHasUniformProfile - Returns if the segment has a uniform profile. If it is uniform, then the default profile applies to the whole segment. Returns false for delay and sync segments.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @return If true, the segment has a uniform profile ID. 
-	*/
-	bool CToolpathLayerReader::SegmentHasUniformProfile(const Lib3MF_uint32 nIndex)
-	{
-		bool resultHasUniformProfile = 0;
-		CheckError(lib3mf_toolpathlayerreader_segmenthasuniformprofile(m_pHandle, nIndex, &resultHasUniformProfile));
-		
-		return resultHasUniformProfile;
-	}
-	
-	/**
-	* CToolpathLayerReader::GetSegmentPart - Retrieves the assigned segment profile. Fails for delay and sync segments.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @return Segment Build Item
-	*/
-	PBuildItem CToolpathLayerReader::GetSegmentPart(const Lib3MF_uint32 nIndex)
-	{
-		Lib3MFHandle hBuildItem = nullptr;
-		CheckError(lib3mf_toolpathlayerreader_getsegmentpart(m_pHandle, nIndex, &hBuildItem));
-		
-		if (!hBuildItem) {
-			CheckError(LIB3MF_ERROR_INVALIDPARAM);
-		}
-		return std::shared_ptr<CBuildItem>(dynamic_cast<CBuildItem*>(m_pWrapper->polymorphicFactory(hBuildItem)));
-	}
-	
-	/**
-	* CToolpathLayerReader::GetSegmentPartUUID - Retrieves the assigned segment part uuid. Fails for delay and sync segments.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @return Segment Part UUID
-	*/
-	std::string CToolpathLayerReader::GetSegmentPartUUID(const Lib3MF_uint32 nIndex)
-	{
-		Lib3MF_uint32 bytesNeededPartUUID = 0;
-		Lib3MF_uint32 bytesWrittenPartUUID = 0;
-		CheckError(lib3mf_toolpathlayerreader_getsegmentpartuuid(m_pHandle, nIndex, 0, &bytesNeededPartUUID, nullptr));
-		std::vector<char> bufferPartUUID(bytesNeededPartUUID);
-		CheckError(lib3mf_toolpathlayerreader_getsegmentpartuuid(m_pHandle, nIndex, bytesNeededPartUUID, &bytesWrittenPartUUID, &bufferPartUUID[0]));
-		
-		return std::string(&bufferPartUUID[0]);
-	}
-	
-	/**
-	* CToolpathLayerReader::GetSegmentLocalPartID - Retrieves the assigned segment part id. Fails for delay and sync segments.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @return Local Segment Part ID
-	*/
-	Lib3MF_uint32 CToolpathLayerReader::GetSegmentLocalPartID(const Lib3MF_uint32 nIndex)
-	{
-		Lib3MF_uint32 resultLocalPartID = 0;
-		CheckError(lib3mf_toolpathlayerreader_getsegmentlocalpartid(m_pHandle, nIndex, &resultLocalPartID));
-		
-		return resultLocalPartID;
-	}
-	
-	/**
-	* CToolpathLayerReader::GetPartUUIDByLocalPartID - Retrieves the global part UUID by the local part ID.
-	* @param[in] nLocalPartID - Local Segment Part ID
-	* @return Segment Part UUID
-	*/
-	std::string CToolpathLayerReader::GetPartUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID)
-	{
-		Lib3MF_uint32 bytesNeededPartUUID = 0;
-		Lib3MF_uint32 bytesWrittenPartUUID = 0;
-		CheckError(lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(m_pHandle, nLocalPartID, 0, &bytesNeededPartUUID, nullptr));
-		std::vector<char> bufferPartUUID(bytesNeededPartUUID);
-		CheckError(lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(m_pHandle, nLocalPartID, bytesNeededPartUUID, &bytesWrittenPartUUID, &bufferPartUUID[0]));
-		
-		return std::string(&bufferPartUUID[0]);
-	}
-	
-	/**
-	* CToolpathLayerReader::GetSegmentPointDataInModelUnits - Retrieves the assigned segment point list. For type hatch, the points are taken pairwise. Returns an empty array for delay and sync elements.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[out] PointDataBuffer - The point data array. The point coordinates are in model units.
-	*/
-	void CToolpathLayerReader::GetSegmentPointDataInModelUnits(const Lib3MF_uint32 nIndex, std::vector<sPosition2D> & PointDataBuffer)
-	{
-		Lib3MF_uint64 elementsNeededPointData = 0;
-		Lib3MF_uint64 elementsWrittenPointData = 0;
-		CheckError(lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits(m_pHandle, nIndex, 0, &elementsNeededPointData, nullptr));
-		PointDataBuffer.resize((size_t) elementsNeededPointData);
-		CheckError(lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits(m_pHandle, nIndex, elementsNeededPointData, &elementsWrittenPointData, PointDataBuffer.data()));
-	}
-	
-	/**
-	* CToolpathLayerReader::GetSegmentPointDataDiscrete - Retrieves the assigned segment point list in toolpath units. For type hatch, the points are taken pairwise. Returns an empty array for delay and sync elements.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[out] PointDataBuffer - The point data array. The point coordinates are in toolpath units.
-	*/
-	void CToolpathLayerReader::GetSegmentPointDataDiscrete(const Lib3MF_uint32 nIndex, std::vector<sDiscretePosition2D> & PointDataBuffer)
-	{
-		Lib3MF_uint64 elementsNeededPointData = 0;
-		Lib3MF_uint64 elementsWrittenPointData = 0;
-		CheckError(lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete(m_pHandle, nIndex, 0, &elementsNeededPointData, nullptr));
-		PointDataBuffer.resize((size_t) elementsNeededPointData);
-		CheckError(lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete(m_pHandle, nIndex, elementsNeededPointData, &elementsWrittenPointData, PointDataBuffer.data()));
-	}
-	
-	/**
-	* CToolpathLayerReader::GetSegmentHatchDataInModelUnits - Retrieves the assigned segment hatch list. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[out] HatchDataBuffer - The hatch data array. The point coordinates are in model units.
-	*/
-	void CToolpathLayerReader::GetSegmentHatchDataInModelUnits(const Lib3MF_uint32 nIndex, std::vector<sHatch2D> & HatchDataBuffer)
-	{
-		Lib3MF_uint64 elementsNeededHatchData = 0;
-		Lib3MF_uint64 elementsWrittenHatchData = 0;
-		CheckError(lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(m_pHandle, nIndex, 0, &elementsNeededHatchData, nullptr));
-		HatchDataBuffer.resize((size_t) elementsNeededHatchData);
-		CheckError(lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(m_pHandle, nIndex, elementsNeededHatchData, &elementsWrittenHatchData, HatchDataBuffer.data()));
-	}
-	
-	/**
-	* CToolpathLayerReader::GetSegmentHatchDataDiscrete - Retrieves the assigned segment hatch list in toolpath units. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[out] HatchDataBuffer - The hatch data array. The point coordinates are in toolpath units.
-	*/
-	void CToolpathLayerReader::GetSegmentHatchDataDiscrete(const Lib3MF_uint32 nIndex, std::vector<sDiscreteHatch2D> & HatchDataBuffer)
-	{
-		Lib3MF_uint64 elementsNeededHatchData = 0;
-		Lib3MF_uint64 elementsWrittenHatchData = 0;
-		CheckError(lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(m_pHandle, nIndex, 0, &elementsNeededHatchData, nullptr));
-		HatchDataBuffer.resize((size_t) elementsNeededHatchData);
-		CheckError(lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(m_pHandle, nIndex, elementsNeededHatchData, &elementsWrittenHatchData, HatchDataBuffer.data()));
-	}
-	
-	/**
-	* CToolpathLayerReader::FindSegmentAttributeInfoByName - Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
-	* @param[in] sNameSpace - Namespace of the custom attribute.
-	* @param[in] sAttributeName - Name of the custom attribute.
-	* @param[out] nID - Attribute ID.
-	* @param[out] eAttributeType - Attribute Type.
-	*/
-	void CToolpathLayerReader::FindSegmentAttributeInfoByName(const std::string & sNameSpace, const std::string & sAttributeName, Lib3MF_uint32 & nID, eToolpathAttributeType & eAttributeType)
-	{
-		CheckError(lib3mf_toolpathlayerreader_findsegmentattributeinfobyname(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &nID, &eAttributeType));
-	}
-	
-	/**
-	* CToolpathLayerReader::FindSegmentAttributeIDByName - Retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.
-	* @param[in] sNameSpace - Namespace of the custom attribute.
-	* @param[in] sAttributeName - Name of the custom attribute.
-	* @return Attribute ID.
-	*/
-	Lib3MF_uint32 CToolpathLayerReader::FindSegmentAttributeIDByName(const std::string & sNameSpace, const std::string & sAttributeName)
-	{
-		Lib3MF_uint32 resultID = 0;
-		CheckError(lib3mf_toolpathlayerreader_findsegmentattributeidbyname(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &resultID));
-		
-		return resultID;
-	}
-	
-	/**
-	* CToolpathLayerReader::FindSegmentAttributeTypeByName - Retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.
-	* @param[in] sNameSpace - Namespace of the custom attribute.
-	* @param[in] sAttributeName - Name of the custom attribute.
-	* @return Attribute Type.
-	*/
-	eToolpathAttributeType CToolpathLayerReader::FindSegmentAttributeTypeByName(const std::string & sNameSpace, const std::string & sAttributeName)
-	{
-		eToolpathAttributeType resultAttributeType = (eToolpathAttributeType) 0;
-		CheckError(lib3mf_toolpathlayerreader_findsegmentattributetypebyname(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &resultAttributeType));
-		
-		return resultAttributeType;
-	}
-	
-	/**
-	* CToolpathLayerReader::GetSegmentIntegerAttributeByID - Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
-	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
-	* @param[in] nID - Attribute ID.
-	* @return Attribute Value.
-	*/
-	Lib3MF_int64 CToolpathLayerReader::GetSegmentIntegerAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID)
-	{
-		Lib3MF_int64 resultValue = 0;
-		CheckError(lib3mf_toolpathlayerreader_getsegmentintegerattributebyid(m_pHandle, nIndex, nID, &resultValue));
-		
-		return resultValue;
-	}
-	
-	/**
-	* CToolpathLayerReader::GetSegmentIntegerAttributeByName - Retrieves a segment integer attribute by Attribute Name. Will fail if Attribute does not exist or is of different type.
-	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
-	* @param[in] sNameSpace - Namespace of the custom attribute.
-	* @param[in] sAttributeName - Name of the custom attribute.
-	* @return Attribute Value.
-	*/
-	Lib3MF_int64 CToolpathLayerReader::GetSegmentIntegerAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName)
-	{
-		Lib3MF_int64 resultValue = 0;
-		CheckError(lib3mf_toolpathlayerreader_getsegmentintegerattributebyname(m_pHandle, nIndex, sNameSpace.c_str(), sAttributeName.c_str(), &resultValue));
-		
-		return resultValue;
-	}
-	
-	/**
-	* CToolpathLayerReader::GetSegmentDoubleAttributeByID - Retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.
-	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
-	* @param[in] nID - Attribute ID.
-	* @return Attribute Value.
-	*/
-	Lib3MF_double CToolpathLayerReader::GetSegmentDoubleAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID)
-	{
-		Lib3MF_double resultValue = 0;
-		CheckError(lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid(m_pHandle, nIndex, nID, &resultValue));
-		
-		return resultValue;
-	}
-	
-	/**
-	* CToolpathLayerReader::GetSegmentDoubleAttributeByName - Retrieves a segment Double attribute by Attribute Name. Will fail if Attribute does not exist.
-	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
-	* @param[in] sNameSpace - Namespace of the custom attribute.
-	* @param[in] sAttributeName - Name of the custom attribute.
-	* @return Attribute Value.
-	*/
-	Lib3MF_double CToolpathLayerReader::GetSegmentDoubleAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName)
-	{
-		Lib3MF_double resultValue = 0;
-		CheckError(lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname(m_pHandle, nIndex, sNameSpace.c_str(), sAttributeName.c_str(), &resultValue));
-		
-		return resultValue;
-	}
-	
-	/**
 	* CToolpathLayerReader::GetCustomDataCount - Retrieves the count of custom data elements.
 	* @return Count
 	*/
@@ -6714,6 +6437,362 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		CheckError(lib3mf_toolpathlayerreader_getcustomdataname(m_pHandle, nIndex, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0], bytesNeededDataName, &bytesWrittenDataName, &bufferDataName[0]));
 		sNameSpace = std::string(&bufferNameSpace[0]);
 		sDataName = std::string(&bufferDataName[0]);
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentCount - Retrieves the count of segments.
+	* @return Number of Segments
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::GetSegmentCount()
+	{
+		Lib3MF_uint32 resultSegmentCount = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentcount(m_pHandle, &resultSegmentCount));
+		
+		return resultSegmentCount;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentInfo - Retrieves the segment type information .
+	* @param[in] nIndex - Index. Must be between 0 and SegmentCount - 1.
+	* @param[out] eType - Segment Type
+	* @param[out] nPointCount - Point count of segment.
+	*/
+	void CToolpathLayerReader::GetSegmentInfo(const Lib3MF_uint32 nIndex, eToolpathSegmentType & eType, Lib3MF_uint32 & nPointCount)
+	{
+		CheckError(lib3mf_toolpathlayerreader_getsegmentinfo(m_pHandle, nIndex, &eType, &nPointCount));
+	}
+	
+	/**
+	* CToolpathLayerReader::FindSegmentAttributeInfoByName - Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @param[out] nID - Attribute ID.
+	* @param[out] eAttributeType - Attribute Type.
+	*/
+	void CToolpathLayerReader::FindSegmentAttributeInfoByName(const std::string & sNameSpace, const std::string & sAttributeName, Lib3MF_uint32 & nID, eToolpathAttributeType & eAttributeType)
+	{
+		CheckError(lib3mf_toolpathlayerreader_findsegmentattributeinfobyname(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &nID, &eAttributeType));
+	}
+	
+	/**
+	* CToolpathLayerReader::FindSegmentAttributeIDByName - Retrieves a segment attribute ID by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute ID.
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::FindSegmentAttributeIDByName(const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		Lib3MF_uint32 resultID = 0;
+		CheckError(lib3mf_toolpathlayerreader_findsegmentattributeidbyname(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &resultID));
+		
+		return resultID;
+	}
+	
+	/**
+	* CToolpathLayerReader::FindSegmentAttributeTypeByName - Retrieves a segment attribute Type by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute Type.
+	*/
+	eToolpathAttributeType CToolpathLayerReader::FindSegmentAttributeTypeByName(const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		eToolpathAttributeType resultAttributeType = (eToolpathAttributeType) 0;
+		CheckError(lib3mf_toolpathlayerreader_findsegmentattributetypebyname(m_pHandle, sNameSpace.c_str(), sAttributeName.c_str(), &resultAttributeType));
+		
+		return resultAttributeType;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentIntegerAttributeByID - Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[in] nID - Attribute ID.
+	* @return Attribute Value.
+	*/
+	Lib3MF_int64 CToolpathLayerReader::GetSegmentIntegerAttributeByID(const Lib3MF_uint32 nSegmentIndex, const Lib3MF_uint32 nID)
+	{
+		Lib3MF_int64 resultValue = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentintegerattributebyid(m_pHandle, nSegmentIndex, nID, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentIntegerAttributeByName - Retrieves a segment integer attribute by Attribute Name. Will fail if Attribute does not exist or is of different type.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute Value.
+	*/
+	Lib3MF_int64 CToolpathLayerReader::GetSegmentIntegerAttributeByName(const Lib3MF_uint32 nSegmentIndex, const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		Lib3MF_int64 resultValue = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentintegerattributebyname(m_pHandle, nSegmentIndex, sNameSpace.c_str(), sAttributeName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentDoubleAttributeByID - Retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[in] nID - Attribute ID.
+	* @return Attribute Value.
+	*/
+	Lib3MF_double CToolpathLayerReader::GetSegmentDoubleAttributeByID(const Lib3MF_uint32 nSegmentIndex, const Lib3MF_uint32 nID)
+	{
+		Lib3MF_double resultValue = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid(m_pHandle, nSegmentIndex, nID, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentDoubleAttributeByName - Retrieves a segment Double attribute by Attribute Name. Will fail if Attribute does not exist.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[in] sNameSpace - Namespace of the custom attribute.
+	* @param[in] sAttributeName - Name of the custom attribute.
+	* @return Attribute Value.
+	*/
+	Lib3MF_double CToolpathLayerReader::GetSegmentDoubleAttributeByName(const Lib3MF_uint32 nSegmentIndex, const std::string & sNameSpace, const std::string & sAttributeName)
+	{
+		Lib3MF_double resultValue = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname(m_pHandle, nSegmentIndex, sNameSpace.c_str(), sAttributeName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetPartCount - Returns how many parts are referenced in this layer.
+	* @return Number of parts referenced in this layer.
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::GetPartCount()
+	{
+		Lib3MF_uint32 resultPartCount = 0;
+		CheckError(lib3mf_toolpathlayerreader_getpartcount(m_pHandle, &resultPartCount));
+		
+		return resultPartCount;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetPartInformation - Returns the ID and UUID of a referenced build item by its index in the layer..
+	* @param[in] nPartIndex - Index. Must be between 0 and PartCount - 1.
+	* @param[out] nPartID - Local Segment Part ID
+	* @param[out] sBuildItemUUID - Referenced Build Item UUID
+	*/
+	void CToolpathLayerReader::GetPartInformation(const Lib3MF_uint32 nPartIndex, Lib3MF_uint32 & nPartID, std::string & sBuildItemUUID)
+	{
+		Lib3MF_uint32 bytesNeededBuildItemUUID = 0;
+		Lib3MF_uint32 bytesWrittenBuildItemUUID = 0;
+		CheckError(lib3mf_toolpathlayerreader_getpartinformation(m_pHandle, nPartIndex, &nPartID, 0, &bytesNeededBuildItemUUID, nullptr));
+		std::vector<char> bufferBuildItemUUID(bytesNeededBuildItemUUID);
+		CheckError(lib3mf_toolpathlayerreader_getpartinformation(m_pHandle, nPartIndex, &nPartID, bytesNeededBuildItemUUID, &bytesWrittenBuildItemUUID, &bufferBuildItemUUID[0]));
+		sBuildItemUUID = std::string(&bufferBuildItemUUID[0]);
+	}
+	
+	/**
+	* CToolpathLayerReader::GetPartBuildItem - Returns a referenced build item Instance by its index in the layer...
+	* @param[in] nPartIndex - Index. Must be between 0 and PartCount - 1.
+	* @return Referenced Build Item Instance
+	*/
+	PBuildItem CToolpathLayerReader::GetPartBuildItem(const Lib3MF_uint32 nPartIndex)
+	{
+		Lib3MFHandle hBuildItem = nullptr;
+		CheckError(lib3mf_toolpathlayerreader_getpartbuilditem(m_pHandle, nPartIndex, &hBuildItem));
+		
+		if (!hBuildItem) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CBuildItem>(dynamic_cast<CBuildItem*>(m_pWrapper->polymorphicFactory(hBuildItem)));
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentPartID - Retrieves the assigned part id for a segment. Fails for delay and sync segments.
+	* @param[in] nPartIndex - Index. Must be between 0 and SegmentCount - 1.
+	* @return Local Segment Part ID
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::GetSegmentPartID(const Lib3MF_uint32 nPartIndex)
+	{
+		Lib3MF_uint32 resultPartID = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentpartid(m_pHandle, nPartIndex, &resultPartID));
+		
+		return resultPartID;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentBuildItem - Retrieves the assigned segment build item. Fails for delay and sync segments.
+	* @param[in] nSegmentIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Build Item
+	*/
+	PBuildItem CToolpathLayerReader::GetSegmentBuildItem(const Lib3MF_uint32 nSegmentIndex)
+	{
+		Lib3MFHandle hBuildItem = nullptr;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentbuilditem(m_pHandle, nSegmentIndex, &hBuildItem));
+		
+		if (!hBuildItem) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CBuildItem>(dynamic_cast<CBuildItem*>(m_pWrapper->polymorphicFactory(hBuildItem)));
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentBuildItemUUID - Retrieves the assigned segment build item uuid. Fails for delay and sync segments.
+	* @param[in] nSegmentIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment BuildItem UUID
+	*/
+	std::string CToolpathLayerReader::GetSegmentBuildItemUUID(const Lib3MF_uint32 nSegmentIndex)
+	{
+		Lib3MF_uint32 bytesNeededBuildItemUUID = 0;
+		Lib3MF_uint32 bytesWrittenBuildItemUUID = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentbuilditemuuid(m_pHandle, nSegmentIndex, 0, &bytesNeededBuildItemUUID, nullptr));
+		std::vector<char> bufferBuildItemUUID(bytesNeededBuildItemUUID);
+		CheckError(lib3mf_toolpathlayerreader_getsegmentbuilditemuuid(m_pHandle, nSegmentIndex, bytesNeededBuildItemUUID, &bytesWrittenBuildItemUUID, &bufferBuildItemUUID[0]));
+		
+		return std::string(&bufferBuildItemUUID[0]);
+	}
+	
+	/**
+	* CToolpathLayerReader::GetBuildItemUUIDByLocalPartID - Maps a local part ID to its global build item UUID.
+	* @param[in] nLocalPartID - Local Segment Part ID
+	* @return Segment Build Item UUID
+	*/
+	std::string CToolpathLayerReader::GetBuildItemUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID)
+	{
+		Lib3MF_uint32 bytesNeededBuildItemUUID = 0;
+		Lib3MF_uint32 bytesWrittenBuildItemUUID = 0;
+		CheckError(lib3mf_toolpathlayerreader_getbuilditemuuidbylocalpartid(m_pHandle, nLocalPartID, 0, &bytesNeededBuildItemUUID, nullptr));
+		std::vector<char> bufferBuildItemUUID(bytesNeededBuildItemUUID);
+		CheckError(lib3mf_toolpathlayerreader_getbuilditemuuidbylocalpartid(m_pHandle, nLocalPartID, bytesNeededBuildItemUUID, &bytesWrittenBuildItemUUID, &bufferBuildItemUUID[0]));
+		
+		return std::string(&bufferBuildItemUUID[0]);
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentDefaultProfile - Retrieves the assigned segment default profile. Fails for delay and sync segments.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @return Segment Profile
+	*/
+	PToolpathProfile CToolpathLayerReader::GetSegmentDefaultProfile(const Lib3MF_uint32 nSegmentIndex)
+	{
+		Lib3MFHandle hProfile = nullptr;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentdefaultprofile(m_pHandle, nSegmentIndex, &hProfile));
+		
+		if (!hProfile) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpathProfile>(dynamic_cast<CToolpathProfile*>(m_pWrapper->polymorphicFactory(hProfile)));
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentDefaultProfileUUID - Retrieves the assigned segment default profile uuid. Fails for delay and sync segments.
+	* @param[in] nSegmentIndex - Index. Must be between 0 and SegmentCount - 1.
+	* @return Segment Profile UUID
+	*/
+	std::string CToolpathLayerReader::GetSegmentDefaultProfileUUID(const Lib3MF_uint32 nSegmentIndex)
+	{
+		Lib3MF_uint32 bytesNeededProfileUUID = 0;
+		Lib3MF_uint32 bytesWrittenProfileUUID = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid(m_pHandle, nSegmentIndex, 0, &bytesNeededProfileUUID, nullptr));
+		std::vector<char> bufferProfileUUID(bytesNeededProfileUUID);
+		CheckError(lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid(m_pHandle, nSegmentIndex, bytesNeededProfileUUID, &bytesWrittenProfileUUID, &bufferProfileUUID[0]));
+		
+		return std::string(&bufferProfileUUID[0]);
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentDefaultProfileID - Retrieves the local default profile ID. Fails for delay and sync segments.
+	* @param[in] nSegmentIndex - Index. Must be between 0 and SegmentCount - 1.
+	* @return Local Segment Profile ID
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::GetSegmentDefaultProfileID(const Lib3MF_uint32 nSegmentIndex)
+	{
+		Lib3MF_uint32 resultLocalProfileID = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentdefaultprofileid(m_pHandle, nSegmentIndex, &resultLocalProfileID));
+		
+		return resultLocalProfileID;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetProfileUUIDByLocalProfileID - Maps a local profile ID its the global profile UUID.
+	* @param[in] nLocalProfileID - Local Segment Profile ID
+	* @return Segment Profile UUID
+	*/
+	std::string CToolpathLayerReader::GetProfileUUIDByLocalProfileID(const Lib3MF_uint32 nLocalProfileID)
+	{
+		Lib3MF_uint32 bytesNeededProfileUUID = 0;
+		Lib3MF_uint32 bytesWrittenProfileUUID = 0;
+		CheckError(lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid(m_pHandle, nLocalProfileID, 0, &bytesNeededProfileUUID, nullptr));
+		std::vector<char> bufferProfileUUID(bytesNeededProfileUUID);
+		CheckError(lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid(m_pHandle, nLocalProfileID, bytesNeededProfileUUID, &bytesWrittenProfileUUID, &bufferProfileUUID[0]));
+		
+		return std::string(&bufferProfileUUID[0]);
+	}
+	
+	/**
+	* CToolpathLayerReader::SegmentHasUniformProfile - Returns if the segment has a uniform profile. If it is uniform, then the default profile applies to the whole segment. If it is not uniform, the type specific retrieval functions have to be used (or the file has to be rejected). Returns false for delay and sync segments.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and Count - 1.
+	* @return If true, the segment has a uniform profile ID. 
+	*/
+	bool CToolpathLayerReader::SegmentHasUniformProfile(const Lib3MF_uint32 nSegmentIndex)
+	{
+		bool resultHasUniformProfile = 0;
+		CheckError(lib3mf_toolpathlayerreader_segmenthasuniformprofile(m_pHandle, nSegmentIndex, &resultHasUniformProfile));
+		
+		return resultHasUniformProfile;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentPointDataInModelUnits - Retrieves the assigned segment point list. Fails if segment type is not loop or polyline.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[out] PointDataBuffer - The point data array. The point coordinates are in model units.
+	*/
+	void CToolpathLayerReader::GetSegmentPointDataInModelUnits(const Lib3MF_uint32 nSegmentIndex, std::vector<sPosition2D> & PointDataBuffer)
+	{
+		Lib3MF_uint64 elementsNeededPointData = 0;
+		Lib3MF_uint64 elementsWrittenPointData = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits(m_pHandle, nSegmentIndex, 0, &elementsNeededPointData, nullptr));
+		PointDataBuffer.resize((size_t) elementsNeededPointData);
+		CheckError(lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits(m_pHandle, nSegmentIndex, elementsNeededPointData, &elementsWrittenPointData, PointDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentPointDataDiscrete - Retrieves the assigned segment point list in toolpath units. Fails if segment type is not loop or polyline.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[out] PointDataBuffer - The point data array. The point coordinates are in toolpath units.
+	*/
+	void CToolpathLayerReader::GetSegmentPointDataDiscrete(const Lib3MF_uint32 nSegmentIndex, std::vector<sDiscretePosition2D> & PointDataBuffer)
+	{
+		Lib3MF_uint64 elementsNeededPointData = 0;
+		Lib3MF_uint64 elementsWrittenPointData = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete(m_pHandle, nSegmentIndex, 0, &elementsNeededPointData, nullptr));
+		PointDataBuffer.resize((size_t) elementsNeededPointData);
+		CheckError(lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete(m_pHandle, nSegmentIndex, elementsNeededPointData, &elementsWrittenPointData, PointDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentHatchDataInModelUnits - Retrieves the assigned segment hatch list. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[out] HatchDataBuffer - The hatch data array. The point coordinates are in model units.
+	*/
+	void CToolpathLayerReader::GetSegmentHatchDataInModelUnits(const Lib3MF_uint32 nSegmentIndex, std::vector<sHatch2D> & HatchDataBuffer)
+	{
+		Lib3MF_uint64 elementsNeededHatchData = 0;
+		Lib3MF_uint64 elementsWrittenHatchData = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(m_pHandle, nSegmentIndex, 0, &elementsNeededHatchData, nullptr));
+		HatchDataBuffer.resize((size_t) elementsNeededHatchData);
+		CheckError(lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(m_pHandle, nSegmentIndex, elementsNeededHatchData, &elementsWrittenHatchData, HatchDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentHatchDataDiscrete - Retrieves the assigned segment hatch list in toolpath units. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[out] HatchDataBuffer - The hatch data array. The point coordinates are in toolpath units.
+	*/
+	void CToolpathLayerReader::GetSegmentHatchDataDiscrete(const Lib3MF_uint32 nSegmentIndex, std::vector<sDiscreteHatch2D> & HatchDataBuffer)
+	{
+		Lib3MF_uint64 elementsNeededHatchData = 0;
+		Lib3MF_uint64 elementsWrittenHatchData = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(m_pHandle, nSegmentIndex, 0, &elementsNeededHatchData, nullptr));
+		HatchDataBuffer.resize((size_t) elementsNeededHatchData);
+		CheckError(lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(m_pHandle, nSegmentIndex, elementsNeededHatchData, &elementsWrittenHatchData, HatchDataBuffer.data()));
 	}
 	
 	/**
@@ -6800,19 +6879,31 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathLayerData::SetFactorRange - Sets the denominator for the scaling factor, which is an integer.
-	* @param[in] nValue - The value of factor denominator.
+	* CToolpathLayerData::SetOverrideFraction - Sets the denominator for the scaling factor all subsequent segments. Default is 1000.
+	* @param[in] nValue - The value of factor denominator. MUST a positive integer.
 	*/
-	void CToolpathLayerData::SetFactorRange(const Lib3MF_uint32 nValue)
+	void CToolpathLayerData::SetOverrideFraction(const Lib3MF_uint32 nValue)
 	{
-		CheckError(lib3mf_toolpathlayerdata_setfactorrange(m_pHandle, nValue));
+		CheckError(lib3mf_toolpathlayerdata_setoverridefraction(m_pHandle, nValue));
+	}
+	
+	/**
+	* CToolpathLayerData::GetOverrideFraction - Returns the current denominator for the scaling factor all subsequent segments. Default is 1000.
+	* @return The value of factor denominator.
+	*/
+	Lib3MF_uint32 CToolpathLayerData::GetOverrideFraction()
+	{
+		Lib3MF_uint32 resultValue = 0;
+		CheckError(lib3mf_toolpathlayerdata_getoverridefraction(m_pHandle, &resultValue));
+		
+		return resultValue;
 	}
 	
 	/**
 	* CToolpathLayerData::WriteHatchDataInModelUnits - writes hatch data to the layer in model units.
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
-	* @param[in] HatchDataBuffer - The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] HatchDataBuffer - The hatch data in model units. Array MUST NOT be empty.
 	*/
 	void CToolpathLayerData::WriteHatchDataInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sHatch2D> & HatchDataBuffer)
 	{
@@ -6823,7 +6914,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	* CToolpathLayerData::WriteHatchDataInModelUnitsWithConstantOverrides - writes hatch data to the layer in model units with constant profile overrides per hatch.
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
-	* @param[in] HatchDataBuffer - The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] HatchDataBuffer - The hatch data in model units. Array MUST NOT be empty.
 	* @param[in] ScalingDataBuffer - The profile override scale factors (f). MUST have the same cardinality as HatchData.
 	*/
 	void CToolpathLayerData::WriteHatchDataInModelUnitsWithConstantOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer)
@@ -6848,7 +6939,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	* CToolpathLayerData::WriteHatchDataInModelUnitsWithMultipleOverrides - writes hatch data to the layer in model units with ramped profile overrides per hatch.
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
-	* @param[in] HatchDataBuffer - The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] HatchDataBuffer - The hatch data in model units. Array MUST NOT be empty.
 	* @param[in] ScalingDataF1Buffer - The profile override scale factors (f) for the start point of each hatch. MUST have the same cardinality as HatchData.
 	* @param[in] ScalingDataF2Buffer - The profile override scale factors (f) for the end point of each hatch. MUST have the same cardinality as HatchData.
 	* @param[in] ScalingDataG1Buffer - The profile override scale factors (g) for the start point of each hatch. MUST have the same cardinality as HatchData.
@@ -6865,7 +6956,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	* CToolpathLayerData::WriteHatchDataDiscrete - writes hatch data to the layer in toolpath units.
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
-	* @param[in] HatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] HatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty.
 	*/
 	void CToolpathLayerData::WriteHatchDataDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscreteHatch2D> & HatchDataBuffer)
 	{
@@ -6876,7 +6967,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	* CToolpathLayerData::WriteHatchDataDiscreteWithConstantOverrides - writes hatch data to the layer in toolpath units with constant profile overrides per hatch.
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
-	* @param[in] HatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] HatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty.
 	* @param[in] ScalingDataBuffer - The profile override scale factors (f). MUST have the same cardinality as HatchData.
 	*/
 	void CToolpathLayerData::WriteHatchDataDiscreteWithConstantOverrides(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscreteHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_int32> & ScalingDataBuffer)
@@ -6888,7 +6979,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	* CToolpathLayerData::WriteHatchDataDiscreteWithRampedOverrides - writes hatch data to the layer in toolpath units with ramped profile overrides per hatch.
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
-	* @param[in] HatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] HatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty.
 	* @param[in] ScalingData1Buffer - The profile override scale factors (f) for the start point of each hatch. MUST have the same cardinality as HatchData.
 	* @param[in] ScalingData2Buffer - The profile override scale factors (f) for the end point of each hatch. MUST have the same cardinality as HatchData.
 	*/
@@ -6901,7 +6992,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	* CToolpathLayerData::WriteHatchDataDiscreteWithMultipleOverrides - writes hatch data to the layer in toolpath units with ramped profile overrides per hatch.
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
-	* @param[in] HatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] HatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty.
 	* @param[in] ScalingDataF1Buffer - The profile override scale factors (f) for the start point of each hatch. If empty, no factors are written. MUST otherwise have the same cardinality as HatchData.
 	* @param[in] ScalingDataF2Buffer - The profile override scale factors (f) for the end point of each hatch. Defaults to ScalingDataF1, if empty. MUST be empty, if ScalingDataF1 is empty. MUST otherwise have the same cardinality as HatchData.
 	* @param[in] ScalingDataG1Buffer - The profile override scale factors (g) for the start point of each hatch. If empty, no factors are written. MUST have the same cardinality as HatchData.

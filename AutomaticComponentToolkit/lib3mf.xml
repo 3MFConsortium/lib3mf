@@ -270,14 +270,12 @@
 	<struct name="Hatch2D">
 		<member name="Point1Coordinates" type="double" rows="2"/>
 		<member name="Point2Coordinates" type="double" rows="2"/>
-		<member name="ProfileOverrideID" type="uint32" />
 		<member name="Tag" type="int32" />		
 	</struct>
 
 	<struct name="DiscreteHatch2D">
 		<member name="Point1Coordinates" type="int32" rows="2"/>
 		<member name="Point2Coordinates" type="int32" rows="2"/>
-		<member name="ProfileOverrideID" type="uint32" />
 		<member name="Tag" type="int32" />
 	</struct>
 
@@ -1666,75 +1664,41 @@
 
 
   <class name="ToolpathLayerReader" parent="Base">
-  
+
+  	<!-- Methods for accessing general layer metadata -->
+
 	<method name="GetLayerDataUUID" description="Retrieves the layerdata's uuid">
 		<param name="UUID" type="string" pass="return" description="Returns the uuid value." />
 	</method>
-	
-	<method name="GetSegmentCount" description="Retrieves the count of segments.">
+
+	<method name="GetCustomDataCount" description="Retrieves the count of custom data elements.">
 		<param name="Count" type="uint32" pass="return" description="Count" />
 	</method>
 	
+	<method name="GetCustomData" description="Retrieves the custom data.">
+		<param name="Index" type="uint32" pass="in" description="Index of the Custom Data. 0-based. MUST be smaller than Data Count" />
+		<param name="Data" type="class" class="CustomDOMTree" pass="return" description="DOM Tree of the data." />
+	</method>
+
+	<method name="GetCustomDataName" description="Retrieves the node name of the custom data.">
+		<param name="Index" type="uint32" pass="in" description="Index of the Custom Data. 0-based. MUST be smaller than Data Count" />
+		<param name="NameSpace" type="string" pass="out" description="Namespace of the custom data tree." />
+		<param name="DataName" type="string" pass="out" description="Root name of the data tree." />
+	</method>
+
+	<!-- Methods for accessing general segment information -->
+
+	<method name="GetSegmentCount" description="Retrieves the count of segments.">
+		<param name="SegmentCount" type="uint32" pass="return" description="Number of Segments" />
+	</method>
+	
 	<method name="GetSegmentInfo" description="Retrieves the segment type information .">
-		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
+		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and SegmentCount - 1." />
 		<param name="Type" type="enum" class="ToolpathSegmentType" pass="out" description="Segment Type" />
 		<param name="PointCount" type="uint32" pass="out" description="Point count of segment." />
 	</method>
-	
-	<method name="GetSegmentDefaultProfile" description="Retrieves the assigned segment default profile. Fails for delay and sync segments.">
-		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
-		<param name="Profile" type="class" class="ToolpathProfile" pass="return" description="Segment Profile" />
-	</method>
-	
-	<method name="GetSegmentDefaultProfileUUID" description="Retrieves the assigned segment default profile uuid. Fails for delay and sync segments.">
-		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
-		<param name="ProfileUUID" type="string" pass="return" description="Segment Profile UUID" />
-	</method>
-	
-	<method name="SegmentHasUniformProfile" description="Returns if the segment has a uniform profile. If it is uniform, then the default profile applies to the whole segment. Returns false for delay and sync segments.">
-		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
-		<param name="HasUniformProfile" type="bool" pass="return" description="If true, the segment has a uniform profile ID. " />
-	</method>
 
-	<method name="GetSegmentPart" description="Retrieves the assigned segment profile. Fails for delay and sync segments.">
-		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
-		<param name="BuildItem" type="class" class="BuildItem" pass="return" description="Segment Build Item" />
-	</method>
-	
-	<method name="GetSegmentPartUUID" description="Retrieves the assigned segment part uuid. Fails for delay and sync segments.">
-		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
-		<param name="PartUUID" type="string" pass="return" description="Segment Part UUID" />
-	</method>
-
-	<method name="GetSegmentLocalPartID" description="Retrieves the assigned segment part id. Fails for delay and sync segments.">
-		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
-		<param name="LocalPartID" type="uint32" pass="return" description="Local Segment Part ID" />
-	</method>
-
-	<method name="GetPartUUIDByLocalPartID" description="Retrieves the global part UUID by the local part ID.">
-		<param name="LocalPartID" type="uint32" pass="in" description="Local Segment Part ID" />
-		<param name="PartUUID" type="string" pass="return" description="Segment Part UUID" />
-	</method>
-
-	<method name="GetSegmentPointDataInModelUnits" description="Retrieves the assigned segment point list. For type hatch, the points are taken pairwise. Returns an empty array for delay and sync elements.">
-		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
-	    <param name="PointData" type="structarray" class="Position2D" pass="out" description="The point data array. The point coordinates are in model units." />
-	</method>
-
-	<method name="GetSegmentPointDataDiscrete" description="Retrieves the assigned segment point list in toolpath units. For type hatch, the points are taken pairwise. Returns an empty array for delay and sync elements.">
-		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
-	    <param name="PointData" type="structarray" class="DiscretePosition2D" pass="out" description="The point data array. The point coordinates are in toolpath units." />
-	</method>
-
-	<method name="GetSegmentHatchDataInModelUnits" description="Retrieves the assigned segment hatch list. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.">
-		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
-	    <param name="HatchData" type="structarray" class="Hatch2D" pass="out" description="The hatch data array. The point coordinates are in model units." />
-	</method>
-
-	<method name="GetSegmentHatchDataDiscrete" description="Retrieves the assigned segment hatch list in toolpath units. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.">
-		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
-	    <param name="HatchData" type="structarray" class="DiscreteHatch2D" pass="out" description="The hatch data array. The point coordinates are in toolpath units." />
-	</method>
+	<!-- Methods for accessing segment attributes -->
 
 	<method name="FindSegmentAttributeInfoByName" description="Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.">
 		<param name="NameSpace" type="string" pass="in" description="Namespace of the custom attribute." />
@@ -1756,13 +1720,13 @@
 	</method>
 
 	<method name="GetSegmentIntegerAttributeByID" description="Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.">
-		<param name="Index" type="uint32" pass="in" description="Segment Index. Must be between 0 and Count - 1." />
+		<param name="SegmentIndex" type="uint32" pass="in" description="Segment Index. Must be between 0 and SegmentCount - 1." />
 		<param name="ID" type="uint32" pass="in" description="Attribute ID." />
 		<param name="Value" type="int64" pass="return" description="Attribute Value." />
 	</method>
 
 	<method name="GetSegmentIntegerAttributeByName" description="Retrieves a segment integer attribute by Attribute Name. Will fail if Attribute does not exist or is of different type.">
-		<param name="Index" type="uint32" pass="in" description="Segment Index. Must be between 0 and Count - 1." />
+		<param name="SegmentIndex" type="uint32" pass="in" description="Segment Index. Must be between 0 and SegmentCount - 1." />
 		<param name="NameSpace" type="string" pass="in" description="Namespace of the custom attribute." />
 		<param name="AttributeName" type="string" pass="in" description="Name of the custom attribute." />
 		<param name="Value" type="int64" pass="return" description="Attribute Value." />
@@ -1770,35 +1734,107 @@
 
 
 	<method name="GetSegmentDoubleAttributeByID" description="Retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.">
-		<param name="Index" type="uint32" pass="in" description="Segment Index. Must be between 0 and Count - 1." />
+		<param name="SegmentIndex" type="uint32" pass="in" description="Segment Index. Must be between 0 and SegmentCount - 1." />
 		<param name="ID" type="uint32" pass="in" description="Attribute ID." />
 		<param name="Value" type="double" pass="return" description="Attribute Value." />
 	</method>
 
 	<method name="GetSegmentDoubleAttributeByName" description="Retrieves a segment Double attribute by Attribute Name. Will fail if Attribute does not exist.">
-		<param name="Index" type="uint32" pass="in" description="Segment Index. Must be between 0 and Count - 1." />
+		<param name="SegmentIndex" type="uint32" pass="in" description="Segment Index. Must be between 0 and SegmentCount - 1." />
 		<param name="NameSpace" type="string" pass="in" description="Namespace of the custom attribute." />
 		<param name="AttributeName" type="string" pass="in" description="Name of the custom attribute." />
 		<param name="Value" type="double" pass="return" description="Attribute Value." />
 	</method>
 
-	<method name="GetCustomDataCount" description="Retrieves the count of custom data elements.">
-		<param name="Count" type="uint32" pass="return" description="Count" />
-	</method>
 	
-	<method name="GetCustomData" description="Retrieves the custom data.">
-		<param name="Index" type="uint32" pass="in" description="Index of the Custom Data. 0-based. MUST be smaller than Data Count" />
-		<param name="Data" type="class" class="CustomDOMTree" pass="return" description="DOM Tree of the data." />
+	<!-- Methods for matching segments to build items of the 3D Model -->
+
+	<method name="GetPartCount" description="Returns how many parts are referenced in this layer.">
+		<param name="PartCount" type="uint32" pass="return" description="Number of parts referenced in this layer." />
 	</method>
 
-	<method name="GetCustomDataName" description="Retrieves the node name of the custom data.">
-		<param name="Index" type="uint32" pass="in" description="Index of the Custom Data. 0-based. MUST be smaller than Data Count" />
-		<param name="NameSpace" type="string" pass="out" description="Namespace of the custom data tree." />
-		<param name="DataName" type="string" pass="out" description="Root name of the data tree." />
+	<method name="GetPartInformation" description="Returns the ID and UUID of a referenced build item by its index in the layer..">
+		<param name="PartIndex" type="uint32" pass="in" description="Index. Must be between 0 and PartCount - 1." />
+		<param name="PartID" type="uint32" pass="out" description="Local Segment Part ID" />
+		<param name="BuildItemUUID" type="string" pass="out" description="Referenced Build Item UUID" />
+	</method>
+	
+	<method name="GetPartBuildItem" description="Returns a referenced build item Instance by its index in the layer...">
+		<param name="PartIndex" type="uint32" pass="in" description="Index. Must be between 0 and PartCount - 1." />
+		<param name="BuildItem" type="class" class="BuildItem" pass="return" description="Referenced Build Item Instance" />
+	</method>
+
+	<method name="GetSegmentPartID" description="Retrieves the assigned part id for a segment. Fails for delay and sync segments.">
+		<param name="PartIndex" type="uint32" pass="in" description="Index. Must be between 0 and SegmentCount - 1." />
+		<param name="PartID" type="uint32" pass="return" description="Local Segment Part ID" />
+	</method>
+	
+	<method name="GetSegmentBuildItem" description="Retrieves the assigned segment build item. Fails for delay and sync segments.">
+		<param name="SegmentIndex" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
+		<param name="BuildItem" type="class" class="BuildItem" pass="return" description="Segment Build Item" />
+	</method>
+	
+	<method name="GetSegmentBuildItemUUID" description="Retrieves the assigned segment build item uuid. Fails for delay and sync segments.">
+		<param name="SegmentIndex" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
+		<param name="BuildItemUUID" type="string" pass="return" description="Segment BuildItem UUID" />
+	</method>
+	
+	<method name="GetBuildItemUUIDByLocalPartID" description="Maps a local part ID to its global build item UUID.">
+		<param name="LocalPartID" type="uint32" pass="in" description="Local Segment Part ID" />
+		<param name="BuildItemUUID" type="string" pass="return" description="Segment Build Item UUID" />
+	</method>
+	
+	<!-- Methods for matching segments to profile objects of the global 3D Model -->
+	<method name="GetSegmentDefaultProfile" description="Retrieves the assigned segment default profile. Fails for delay and sync segments.">
+		<param name="SegmentIndex" type="uint32" pass="in" description="Segment Index. Must be between 0 and SegmentCount - 1." />
+		<param name="Profile" type="class" class="ToolpathProfile" pass="return" description="Segment Profile" />
+	</method>
+	
+	<method name="GetSegmentDefaultProfileUUID" description="Retrieves the assigned segment default profile uuid. Fails for delay and sync segments.">
+		<param name="SegmentIndex" type="uint32" pass="in" description="Index. Must be between 0 and SegmentCount - 1." />
+		<param name="ProfileUUID" type="string" pass="return" description="Segment Profile UUID" />
+	</method>
+
+	<method name="GetSegmentDefaultProfileID" description="Retrieves the local default profile ID. Fails for delay and sync segments.">
+		<param name="SegmentIndex" type="uint32" pass="in" description="Index. Must be between 0 and SegmentCount - 1." />
+		<param name="LocalProfileID" type="uint32" pass="return" description="Local Segment Profile ID" />
+	</method>
+
+	<method name="GetProfileUUIDByLocalProfileID" description="Maps a local profile ID its the global profile UUID.">
+		<param name="LocalProfileID" type="uint32" pass="in" description="Local Segment Profile ID" />
+		<param name="ProfileUUID" type="string" pass="return" description="Segment Profile UUID" />
+	</method>
+
+	<method name="SegmentHasUniformProfile" description="Returns if the segment has a uniform profile. If it is uniform, then the default profile applies to the whole segment. If it is not uniform, the type specific retrieval functions have to be used (or the file has to be rejected). Returns false for delay and sync segments.">
+		<param name="SegmentIndex" type="uint32" pass="in" description="Segment Index. Must be between 0 and Count - 1." />
+		<param name="HasUniformProfile" type="bool" pass="return" description="If true, the segment has a uniform profile ID. " />
+	</method>
+
+	<!-- Methods for retrieving information about polyline and loop segments. -->
+	<method name="GetSegmentPointDataInModelUnits" description="Retrieves the assigned segment point list. Fails if segment type is not loop or polyline.">
+		<param name="SegmentIndex" type="uint32" pass="in" description="Segment Index. Must be between 0 and SegmentCount - 1." />
+	    <param name="PointData" type="structarray" class="Position2D" pass="out" description="The point data array. The point coordinates are in model units." />
+	</method>
+
+	<method name="GetSegmentPointDataDiscrete" description="Retrieves the assigned segment point list in toolpath units. Fails if segment type is not loop or polyline.">
+		<param name="SegmentIndex" type="uint32" pass="in" description="Segment Index. Must be between 0 and SegmentCount - 1." />
+	    <param name="PointData" type="structarray" class="DiscretePosition2D" pass="out" description="The point data array. The point coordinates are in toolpath units." />
+	</method>
+
+	<!-- Methods for retrieving information about hatch segments. -->
+
+	<method name="GetSegmentHatchDataInModelUnits" description="Retrieves the assigned segment hatch list. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.">
+		<param name="SegmentIndex" type="uint32" pass="in" description="Segment Index. Must be between 0 and Count - 1." />
+	    <param name="HatchData" type="structarray" class="Hatch2D" pass="out" description="The hatch data array. The point coordinates are in model units." />
+	</method>
+
+	<method name="GetSegmentHatchDataDiscrete" description="Retrieves the assigned segment hatch list in toolpath units. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.">
+		<param name="SegmentIndex" type="uint32" pass="in" description="Segment Index. Must be between 0 and Count - 1." />
+	    <param name="HatchData" type="structarray" class="DiscreteHatch2D" pass="out" description="The hatch data array. The point coordinates are in toolpath units." />
 	</method>
 	
   </class>
-  
+	
 	
 	
   <class name="ToolpathLayerData" parent="Base">
@@ -1833,20 +1869,24 @@
 	<method name="ClearLaserIndex" description="Removes the laser index for all subsequent segments.">
     </method>
 
-	<method name="SetFactorRange" description="Sets the denominator for the scaling factor, which is an integer.">
-      <param name="Value" type="uint32" pass="in" description="The value of factor denominator." />
+	<method name="SetOverrideFraction" description="Sets the denominator for the scaling factor all subsequent segments. Default is 1000.">
+      <param name="Value" type="uint32" pass="in" description="The value of factor denominator. MUST a positive integer." />
+    </method>
+
+	<method name="GetOverrideFraction" description="Returns the current denominator for the scaling factor all subsequent segments. Default is 1000.">
+      <param name="Value" type="uint32" pass="return" description="The value of factor denominator." />
     </method>
 	
     <method name="WriteHatchDataInModelUnits" description="writes hatch data to the layer in model units.">
       <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
       <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
-      <param name="HatchData" type="structarray" class="Hatch2D" pass="in" description="The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment." />      
+      <param name="HatchData" type="structarray" class="Hatch2D" pass="in" description="The hatch data in model units. Array MUST NOT be empty." />      
     </method>
 
     <method name="WriteHatchDataInModelUnitsWithConstantOverrides" description="writes hatch data to the layer in model units with constant profile overrides per hatch.">
       <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
       <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
-      <param name="HatchData" type="structarray" class="Hatch2D" pass="in" description="The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment." />      
+      <param name="HatchData" type="structarray" class="Hatch2D" pass="in" description="The hatch data in model units. Array MUST NOT be empty." />      
       <param name="ScalingData" type="basicarray" class="int32" pass="in" description="The profile override scale factors (f). MUST have the same cardinality as HatchData." /> 
     </method>
 
@@ -1861,7 +1901,7 @@
     <method name="WriteHatchDataInModelUnitsWithMultipleOverrides" description="writes hatch data to the layer in model units with ramped profile overrides per hatch.">
       <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
       <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
-      <param name="HatchData" type="structarray" class="Hatch2D" pass="in" description="The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment." />      
+      <param name="HatchData" type="structarray" class="Hatch2D" pass="in" description="The hatch data in model units. Array MUST NOT be empty." />      
       <param name="ScalingDataF1" type="basicarray" class="int32" pass="in" description="The profile override scale factors (f) for the start point of each hatch. MUST have the same cardinality as HatchData." /> 
       <param name="ScalingDataF2" type="basicarray" class="int32" pass="in" description="The profile override scale factors (f) for the end point of each hatch. MUST have the same cardinality as HatchData." /> 
       <param name="ScalingDataG1" type="basicarray" class="int32" pass="in" description="The profile override scale factors (g) for the start point of each hatch. MUST have the same cardinality as HatchData." /> 
@@ -1873,20 +1913,20 @@
     <method name="WriteHatchDataDiscrete" description="writes hatch data to the layer in toolpath units.">
       <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
       <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
-      <param name="HatchData" type="structarray" class="DiscreteHatch2D" pass="in" description="The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment." />      
+      <param name="HatchData" type="structarray" class="DiscreteHatch2D" pass="in" description="The hatch data in toolpath units. Array MUST NOT be empty." />      
     </method>
 
     <method name="WriteHatchDataDiscreteWithConstantOverrides" description="writes hatch data to the layer in toolpath units with constant profile overrides per hatch.">
       <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
       <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
-      <param name="HatchData" type="structarray" class="DiscreteHatch2D" pass="in" description="The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment." />      
+      <param name="HatchData" type="structarray" class="DiscreteHatch2D" pass="in" description="The hatch data in toolpath units. Array MUST NOT be empty." />      
       <param name="ScalingData" type="basicarray" class="int32" pass="in" description="The profile override scale factors (f). MUST have the same cardinality as HatchData." /> 
     </method>
 
     <method name="WriteHatchDataDiscreteWithRampedOverrides" description="writes hatch data to the layer in toolpath units with ramped profile overrides per hatch.">
       <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
       <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
-      <param name="HatchData" type="structarray" class="DiscreteHatch2D" pass="in" description="The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment." />      
+      <param name="HatchData" type="structarray" class="DiscreteHatch2D" pass="in" description="The hatch data in toolpath units. Array MUST NOT be empty." />      
       <param name="ScalingData1" type="basicarray" class="int32" pass="in" description="The profile override scale factors (f) for the start point of each hatch. MUST have the same cardinality as HatchData." /> 
       <param name="ScalingData2" type="basicarray" class="int32" pass="in" description="The profile override scale factors (f) for the end point of each hatch. MUST have the same cardinality as HatchData." /> 
     </method>
@@ -1894,7 +1934,7 @@
     <method name="WriteHatchDataDiscreteWithMultipleOverrides" description="writes hatch data to the layer in toolpath units with ramped profile overrides per hatch.">
       <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
       <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
-      <param name="HatchData" type="structarray" class="DiscreteHatch2D" pass="in" description="The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment." />      
+      <param name="HatchData" type="structarray" class="DiscreteHatch2D" pass="in" description="The hatch data in toolpath units. Array MUST NOT be empty." />      
       <param name="ScalingDataF1" type="basicarray" class="int32" pass="in" description="The profile override scale factors (f) for the start point of each hatch. If empty, no factors are written. MUST otherwise have the same cardinality as HatchData." /> 
       <param name="ScalingDataF2" type="basicarray" class="int32" pass="in" description="The profile override scale factors (f) for the end point of each hatch. Defaults to ScalingDataF1, if empty. MUST be empty, if ScalingDataF1 is empty. MUST otherwise have the same cardinality as HatchData." /> 
       <param name="ScalingDataG1" type="basicarray" class="int32" pass="in" description="The profile override scale factors (g) for the start point of each hatch. If empty, no factors are written. MUST have the same cardinality as HatchData." /> 

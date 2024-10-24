@@ -52,7 +52,8 @@ NMR_ModelToolpath.h defines the Model Toolpath Layer Data.
 
 #define TOOLPATHWRITER_MINFACTORRANGE 1
 #define TOOLPATHWRITER_MAXFACTORRANGE (1024 * 1024 * 1024)
-#define TOOLPATHWRITER_DEFAULTFACTORRANGE 1024
+
+#define TOOLPATHWRITER_DEFAULTOVERRIDEFRACTION 1000
 
 namespace NMR {
 
@@ -80,7 +81,7 @@ namespace NMR {
 		unsigned int m_nIDCounter;
 
 		uint32_t m_nCurrentLaserIndex;
-		uint32_t m_nFactorRange;
+		uint32_t m_nOverrideFraction;
 
 		std::vector<PCustomXMLTree> m_CustomXMLData;
 		std::map<std::pair<std::string, std::string>, std::string> m_CustomSegmentAttributes;
@@ -109,7 +110,7 @@ namespace NMR {
 
 		nfUint32 RegisterPart(PModelBuildItem pBuildItem);
 
-		void WriteHatchData(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nHatchCount, const nfInt32* pX1Buffer, const nfInt32* pY1Buffer, const nfInt32* pX2Buffer, const nfInt32* pY2Buffer, const nfInt32* pTagBuffer, const nfInt32* pProfileIDBuffer, const int32_t* pScalingDataF1Buffer, const int32_t* pScalingDataF2Buffer, const int32_t* pScalingDataG1Buffer, const int32_t* pScalingDataG2Buffer, const int32_t* pScalingDataH1Buffer, const int32_t* pScalingDataH2Buffer);
+		void WriteHatchData(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nHatchCount, const nfInt32* pX1Buffer, const nfInt32* pY1Buffer, const nfInt32* pX2Buffer, const nfInt32* pY2Buffer, const nfInt32* pTagBuffer, const int32_t* pScalingDataF1Buffer, const int32_t* pScalingDataF2Buffer, const int32_t* pScalingDataG1Buffer, const int32_t* pScalingDataG2Buffer, const int32_t* pScalingDataH1Buffer, const int32_t* pScalingDataH2Buffer);
 
 		void WriteLoop(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nPointCount, const nfInt32 * pXBuffer, const nfInt32 * pYBuffer, const int32_t* pTagDataBuffer, const int32_t* pScalingFDataBuffer, const int32_t* pScalingGDataBuffer, const int32_t* pScalingHDataBuffer);
 
@@ -129,7 +130,9 @@ namespace NMR {
 
 		void setCurrentLaserIndex(uint32_t nLaserIndex);
 
-		void setFactorRange(uint32_t nFactorRange);
+		void setOverrideFraction(uint32_t nOverrideFraction);
+
+		uint32_t getOverrideFraction ();
 
 	};
 

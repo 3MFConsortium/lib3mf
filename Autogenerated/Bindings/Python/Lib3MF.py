@@ -459,19 +459,11 @@ class FunctionTable:
 	lib3mf_toolpathprofile_setparameterintegervalue = None
 	lib3mf_toolpathprofile_setparameterboolvalue = None
 	lib3mf_toolpathlayerreader_getlayerdatauuid = None
+	lib3mf_toolpathlayerreader_getcustomdatacount = None
+	lib3mf_toolpathlayerreader_getcustomdata = None
+	lib3mf_toolpathlayerreader_getcustomdataname = None
 	lib3mf_toolpathlayerreader_getsegmentcount = None
 	lib3mf_toolpathlayerreader_getsegmentinfo = None
-	lib3mf_toolpathlayerreader_getsegmentdefaultprofile = None
-	lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid = None
-	lib3mf_toolpathlayerreader_segmenthasuniformprofile = None
-	lib3mf_toolpathlayerreader_getsegmentpart = None
-	lib3mf_toolpathlayerreader_getsegmentpartuuid = None
-	lib3mf_toolpathlayerreader_getsegmentlocalpartid = None
-	lib3mf_toolpathlayerreader_getpartuuidbylocalpartid = None
-	lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits = None
-	lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete = None
-	lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits = None
-	lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete = None
 	lib3mf_toolpathlayerreader_findsegmentattributeinfobyname = None
 	lib3mf_toolpathlayerreader_findsegmentattributeidbyname = None
 	lib3mf_toolpathlayerreader_findsegmentattributetypebyname = None
@@ -479,9 +471,22 @@ class FunctionTable:
 	lib3mf_toolpathlayerreader_getsegmentintegerattributebyname = None
 	lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid = None
 	lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname = None
-	lib3mf_toolpathlayerreader_getcustomdatacount = None
-	lib3mf_toolpathlayerreader_getcustomdata = None
-	lib3mf_toolpathlayerreader_getcustomdataname = None
+	lib3mf_toolpathlayerreader_getpartcount = None
+	lib3mf_toolpathlayerreader_getpartinformation = None
+	lib3mf_toolpathlayerreader_getpartbuilditem = None
+	lib3mf_toolpathlayerreader_getsegmentpartid = None
+	lib3mf_toolpathlayerreader_getsegmentbuilditem = None
+	lib3mf_toolpathlayerreader_getsegmentbuilditemuuid = None
+	lib3mf_toolpathlayerreader_getbuilditemuuidbylocalpartid = None
+	lib3mf_toolpathlayerreader_getsegmentdefaultprofile = None
+	lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid = None
+	lib3mf_toolpathlayerreader_getsegmentdefaultprofileid = None
+	lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid = None
+	lib3mf_toolpathlayerreader_segmenthasuniformprofile = None
+	lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits = None
+	lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete = None
+	lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits = None
+	lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete = None
 	lib3mf_toolpathlayerdata_getlayerdatauuid = None
 	lib3mf_toolpathlayerdata_registerprofile = None
 	lib3mf_toolpathlayerdata_registerbuilditem = None
@@ -489,7 +494,8 @@ class FunctionTable:
 	lib3mf_toolpathlayerdata_clearsegmentattributes = None
 	lib3mf_toolpathlayerdata_setlaserindex = None
 	lib3mf_toolpathlayerdata_clearlaserindex = None
-	lib3mf_toolpathlayerdata_setfactorrange = None
+	lib3mf_toolpathlayerdata_setoverridefraction = None
+	lib3mf_toolpathlayerdata_getoverridefraction = None
 	lib3mf_toolpathlayerdata_writehatchdatainmodelunits = None
 	lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithconstantoverrides = None
 	lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithrampedoverrides = None
@@ -869,7 +875,6 @@ class Hatch2D(ctypes.Structure):
 	_fields_ = [
 		("Point1Coordinates", ctypes.c_double * 2), 
 		("Point2Coordinates", ctypes.c_double * 2), 
-		("ProfileOverrideID", ctypes.c_uint32), 
 		("Tag", ctypes.c_int32)
 	]
 '''Definition of DiscreteHatch2D
@@ -879,7 +884,6 @@ class DiscreteHatch2D(ctypes.Structure):
 	_fields_ = [
 		("Point1Coordinates", ctypes.c_int32 * 2), 
 		("Point2Coordinates", ctypes.c_int32 * 2), 
-		("ProfileOverrideID", ctypes.c_uint32), 
 		("Tag", ctypes.c_int32)
 	]
 '''Definition of CompositeConstituent
@@ -2996,6 +3000,24 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
 			self.lib.lib3mf_toolpathlayerreader_getlayerdatauuid = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getcustomdatacount")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathlayerreader_getcustomdatacount = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getcustomdata")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpathlayerreader_getcustomdata = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getcustomdataname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathlayerreader_getcustomdataname = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentcount")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -3007,72 +3029,6 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_uint32))
 			self.lib.lib3mf_toolpathlayerreader_getsegmentinfo = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentdefaultprofile")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofile = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
-			self.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_segmenthasuniformprofile")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool))
-			self.lib.lib3mf_toolpathlayerreader_segmenthasuniformprofile = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentpart")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_toolpathlayerreader_getsegmentpart = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentpartuuid")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
-			self.lib.lib3mf_toolpathlayerreader_getsegmentpartuuid = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentlocalpartid")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32))
-			self.lib.lib3mf_toolpathlayerreader_getsegmentlocalpartid = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getpartuuidbylocalpartid")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
-			self.lib.lib3mf_toolpathlayerreader_getpartuuidbylocalpartid = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(Position2D))
-			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(DiscretePosition2D))
-			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(Hatch2D))
-			self.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(DiscreteHatch2D))
-			self.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_findsegmentattributeinfobyname")), methodAddress)
 			if err != 0:
@@ -3116,23 +3072,101 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_double))
 			self.lib.lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getcustomdatacount")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getpartcount")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
-			self.lib.lib3mf_toolpathlayerreader_getcustomdatacount = methodType(int(methodAddress.value))
+			self.lib.lib3mf_toolpathlayerreader_getpartcount = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getcustomdata")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getpartinformation")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32), ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathlayerreader_getpartinformation = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getpartbuilditem")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_toolpathlayerreader_getcustomdata = methodType(int(methodAddress.value))
+			self.lib.lib3mf_toolpathlayerreader_getpartbuilditem = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getcustomdataname")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentpartid")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
-			self.lib.lib3mf_toolpathlayerreader_getcustomdataname = methodType(int(methodAddress.value))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentpartid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentbuilditem")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentbuilditem = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentbuilditemuuid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathlayerreader_getsegmentbuilditemuuid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getbuilditemuuidbylocalpartid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathlayerreader_getbuilditemuuidbylocalpartid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentdefaultprofile")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofile = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentdefaultprofileid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofileid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_segmenthasuniformprofile")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_toolpathlayerreader_segmenthasuniformprofile = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(Position2D))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(DiscretePosition2D))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(Hatch2D))
+			self.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(DiscreteHatch2D))
+			self.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_getlayerdatauuid")), methodAddress)
 			if err != 0:
@@ -3176,11 +3210,17 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
 			self.lib.lib3mf_toolpathlayerdata_clearlaserindex = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_setfactorrange")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_setoverridefraction")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
-			self.lib.lib3mf_toolpathlayerdata_setfactorrange = methodType(int(methodAddress.value))
+			self.lib.lib3mf_toolpathlayerdata_setoverridefraction = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_getoverridefraction")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathlayerdata_getoverridefraction = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_writehatchdatainmodelunits")), methodAddress)
 			if err != 0:
@@ -5182,44 +5222,20 @@ class Wrapper:
 			self.lib.lib3mf_toolpathlayerreader_getlayerdatauuid.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_getlayerdatauuid.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
+			self.lib.lib3mf_toolpathlayerreader_getcustomdatacount.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getcustomdatacount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getcustomdata.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getcustomdata.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getcustomdataname.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getcustomdataname.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
 			self.lib.lib3mf_toolpathlayerreader_getsegmentcount.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_getsegmentcount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
 			
 			self.lib.lib3mf_toolpathlayerreader_getsegmentinfo.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_getsegmentinfo.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_uint32)]
-			
-			self.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofile.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofile.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
-			
-			self.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
-			
-			self.lib.lib3mf_toolpathlayerreader_segmenthasuniformprofile.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpathlayerreader_segmenthasuniformprofile.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool)]
-			
-			self.lib.lib3mf_toolpathlayerreader_getsegmentpart.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpathlayerreader_getsegmentpart.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
-			
-			self.lib.lib3mf_toolpathlayerreader_getsegmentpartuuid.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpathlayerreader_getsegmentpartuuid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
-			
-			self.lib.lib3mf_toolpathlayerreader_getsegmentlocalpartid.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpathlayerreader_getsegmentlocalpartid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32)]
-			
-			self.lib.lib3mf_toolpathlayerreader_getpartuuidbylocalpartid.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpathlayerreader_getpartuuidbylocalpartid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
-			
-			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(Position2D)]
-			
-			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(DiscretePosition2D)]
-			
-			self.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(Hatch2D)]
-			
-			self.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(DiscreteHatch2D)]
 			
 			self.lib.lib3mf_toolpathlayerreader_findsegmentattributeinfobyname.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_findsegmentattributeinfobyname.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint32), ctypes.POINTER(ctypes.c_int32)]
@@ -5242,14 +5258,53 @@ class Wrapper:
 			self.lib.lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_double)]
 			
-			self.lib.lib3mf_toolpathlayerreader_getcustomdatacount.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpathlayerreader_getcustomdatacount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			self.lib.lib3mf_toolpathlayerreader_getpartcount.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getpartcount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
 			
-			self.lib.lib3mf_toolpathlayerreader_getcustomdata.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpathlayerreader_getcustomdata.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_toolpathlayerreader_getpartinformation.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getpartinformation.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32), ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
-			self.lib.lib3mf_toolpathlayerreader_getcustomdataname.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpathlayerreader_getcustomdataname.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			self.lib.lib3mf_toolpathlayerreader_getpartbuilditem.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getpartbuilditem.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentpartid.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentpartid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentbuilditem.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentbuilditem.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentbuilditemuuid.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentbuilditemuuid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathlayerreader_getbuilditemuuidbylocalpartid.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getbuilditemuuidbylocalpartid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofile.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofile.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofileid.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofileid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathlayerreader_segmenthasuniformprofile.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_segmenthasuniformprofile.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(Position2D)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(DiscretePosition2D)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(Hatch2D)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(DiscreteHatch2D)]
 			
 			self.lib.lib3mf_toolpathlayerdata_getlayerdatauuid.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerdata_getlayerdatauuid.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
@@ -5272,8 +5327,11 @@ class Wrapper:
 			self.lib.lib3mf_toolpathlayerdata_clearlaserindex.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerdata_clearlaserindex.argtypes = [ctypes.c_void_p]
 			
-			self.lib.lib3mf_toolpathlayerdata_setfactorrange.restype = ctypes.c_int32
-			self.lib.lib3mf_toolpathlayerdata_setfactorrange.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			self.lib.lib3mf_toolpathlayerdata_setoverridefraction.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_setoverridefraction.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			
+			self.lib.lib3mf_toolpathlayerdata_getoverridefraction.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_getoverridefraction.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
 			
 			self.lib.lib3mf_toolpathlayerdata_writehatchdatainmodelunits.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerdata_writehatchdatainmodelunits.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(Hatch2D)]
@@ -8759,199 +8817,6 @@ class ToolpathLayerReader(Base):
 		
 		return pUUIDBuffer.value.decode()
 	
-	def GetSegmentCount(self):
-		pCount = ctypes.c_uint32()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentcount(self._handle, pCount))
-		
-		return pCount.value
-	
-	def GetSegmentInfo(self, Index):
-		nIndex = ctypes.c_uint32(Index)
-		pType = ctypes.c_int32()
-		pPointCount = ctypes.c_uint32()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentinfo(self._handle, nIndex, pType, pPointCount))
-		
-		return ToolpathSegmentType(pType.value), pPointCount.value
-	
-	def GetSegmentDefaultProfile(self, Index):
-		nIndex = ctypes.c_uint32(Index)
-		ProfileHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofile(self._handle, nIndex, ProfileHandle))
-		if ProfileHandle:
-			ProfileObject = self._wrapper._polymorphicFactory(ProfileHandle)
-		else:
-			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
-		
-		return ProfileObject
-	
-	def GetSegmentDefaultProfileUUID(self, Index):
-		nIndex = ctypes.c_uint32(Index)
-		nProfileUUIDBufferSize = ctypes.c_uint64(0)
-		nProfileUUIDNeededChars = ctypes.c_uint64(0)
-		pProfileUUIDBuffer = ctypes.c_char_p(None)
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid(self._handle, nIndex, nProfileUUIDBufferSize, nProfileUUIDNeededChars, pProfileUUIDBuffer))
-		nProfileUUIDBufferSize = ctypes.c_uint64(nProfileUUIDNeededChars.value)
-		pProfileUUIDBuffer = (ctypes.c_char * (nProfileUUIDNeededChars.value))()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid(self._handle, nIndex, nProfileUUIDBufferSize, nProfileUUIDNeededChars, pProfileUUIDBuffer))
-		
-		return pProfileUUIDBuffer.value.decode()
-	
-	def SegmentHasUniformProfile(self, Index):
-		nIndex = ctypes.c_uint32(Index)
-		pHasUniformProfile = ctypes.c_bool()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_segmenthasuniformprofile(self._handle, nIndex, pHasUniformProfile))
-		
-		return pHasUniformProfile.value
-	
-	def GetSegmentPart(self, Index):
-		nIndex = ctypes.c_uint32(Index)
-		BuildItemHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentpart(self._handle, nIndex, BuildItemHandle))
-		if BuildItemHandle:
-			BuildItemObject = self._wrapper._polymorphicFactory(BuildItemHandle)
-		else:
-			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
-		
-		return BuildItemObject
-	
-	def GetSegmentPartUUID(self, Index):
-		nIndex = ctypes.c_uint32(Index)
-		nPartUUIDBufferSize = ctypes.c_uint64(0)
-		nPartUUIDNeededChars = ctypes.c_uint64(0)
-		pPartUUIDBuffer = ctypes.c_char_p(None)
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentpartuuid(self._handle, nIndex, nPartUUIDBufferSize, nPartUUIDNeededChars, pPartUUIDBuffer))
-		nPartUUIDBufferSize = ctypes.c_uint64(nPartUUIDNeededChars.value)
-		pPartUUIDBuffer = (ctypes.c_char * (nPartUUIDNeededChars.value))()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentpartuuid(self._handle, nIndex, nPartUUIDBufferSize, nPartUUIDNeededChars, pPartUUIDBuffer))
-		
-		return pPartUUIDBuffer.value.decode()
-	
-	def GetSegmentLocalPartID(self, Index):
-		nIndex = ctypes.c_uint32(Index)
-		pLocalPartID = ctypes.c_uint32()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentlocalpartid(self._handle, nIndex, pLocalPartID))
-		
-		return pLocalPartID.value
-	
-	def GetPartUUIDByLocalPartID(self, LocalPartID):
-		nLocalPartID = ctypes.c_uint32(LocalPartID)
-		nPartUUIDBufferSize = ctypes.c_uint64(0)
-		nPartUUIDNeededChars = ctypes.c_uint64(0)
-		pPartUUIDBuffer = ctypes.c_char_p(None)
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(self._handle, nLocalPartID, nPartUUIDBufferSize, nPartUUIDNeededChars, pPartUUIDBuffer))
-		nPartUUIDBufferSize = ctypes.c_uint64(nPartUUIDNeededChars.value)
-		pPartUUIDBuffer = (ctypes.c_char * (nPartUUIDNeededChars.value))()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getpartuuidbylocalpartid(self._handle, nLocalPartID, nPartUUIDBufferSize, nPartUUIDNeededChars, pPartUUIDBuffer))
-		
-		return pPartUUIDBuffer.value.decode()
-	
-	def GetSegmentPointDataInModelUnits(self, Index):
-		nIndex = ctypes.c_uint32(Index)
-		nPointDataCount = ctypes.c_uint64(0)
-		nPointDataNeededCount = ctypes.c_uint64(0)
-		pPointDataBuffer = (Position2D*0)()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits(self._handle, nIndex, nPointDataCount, nPointDataNeededCount, pPointDataBuffer))
-		nPointDataCount = ctypes.c_uint64(nPointDataNeededCount.value)
-		pPointDataBuffer = (Position2D * nPointDataNeededCount.value)()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits(self._handle, nIndex, nPointDataCount, nPointDataNeededCount, pPointDataBuffer))
-		
-		return [pPointDataBuffer[i] for i in range(nPointDataNeededCount.value)]
-	
-	def GetSegmentPointDataDiscrete(self, Index):
-		nIndex = ctypes.c_uint32(Index)
-		nPointDataCount = ctypes.c_uint64(0)
-		nPointDataNeededCount = ctypes.c_uint64(0)
-		pPointDataBuffer = (DiscretePosition2D*0)()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete(self._handle, nIndex, nPointDataCount, nPointDataNeededCount, pPointDataBuffer))
-		nPointDataCount = ctypes.c_uint64(nPointDataNeededCount.value)
-		pPointDataBuffer = (DiscretePosition2D * nPointDataNeededCount.value)()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete(self._handle, nIndex, nPointDataCount, nPointDataNeededCount, pPointDataBuffer))
-		
-		return [pPointDataBuffer[i] for i in range(nPointDataNeededCount.value)]
-	
-	def GetSegmentHatchDataInModelUnits(self, Index):
-		nIndex = ctypes.c_uint32(Index)
-		nHatchDataCount = ctypes.c_uint64(0)
-		nHatchDataNeededCount = ctypes.c_uint64(0)
-		pHatchDataBuffer = (Hatch2D*0)()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(self._handle, nIndex, nHatchDataCount, nHatchDataNeededCount, pHatchDataBuffer))
-		nHatchDataCount = ctypes.c_uint64(nHatchDataNeededCount.value)
-		pHatchDataBuffer = (Hatch2D * nHatchDataNeededCount.value)()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(self._handle, nIndex, nHatchDataCount, nHatchDataNeededCount, pHatchDataBuffer))
-		
-		return [pHatchDataBuffer[i] for i in range(nHatchDataNeededCount.value)]
-	
-	def GetSegmentHatchDataDiscrete(self, Index):
-		nIndex = ctypes.c_uint32(Index)
-		nHatchDataCount = ctypes.c_uint64(0)
-		nHatchDataNeededCount = ctypes.c_uint64(0)
-		pHatchDataBuffer = (DiscreteHatch2D*0)()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(self._handle, nIndex, nHatchDataCount, nHatchDataNeededCount, pHatchDataBuffer))
-		nHatchDataCount = ctypes.c_uint64(nHatchDataNeededCount.value)
-		pHatchDataBuffer = (DiscreteHatch2D * nHatchDataNeededCount.value)()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(self._handle, nIndex, nHatchDataCount, nHatchDataNeededCount, pHatchDataBuffer))
-		
-		return [pHatchDataBuffer[i] for i in range(nHatchDataNeededCount.value)]
-	
-	def FindSegmentAttributeInfoByName(self, NameSpace, AttributeName):
-		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
-		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
-		pID = ctypes.c_uint32()
-		pAttributeType = ctypes.c_int32()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_findsegmentattributeinfobyname(self._handle, pNameSpace, pAttributeName, pID, pAttributeType))
-		
-		return pID.value, ToolpathAttributeType(pAttributeType.value)
-	
-	def FindSegmentAttributeIDByName(self, NameSpace, AttributeName):
-		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
-		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
-		pID = ctypes.c_uint32()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_findsegmentattributeidbyname(self._handle, pNameSpace, pAttributeName, pID))
-		
-		return pID.value
-	
-	def FindSegmentAttributeTypeByName(self, NameSpace, AttributeName):
-		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
-		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
-		pAttributeType = ctypes.c_int32()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_findsegmentattributetypebyname(self._handle, pNameSpace, pAttributeName, pAttributeType))
-		
-		return ToolpathAttributeType(pAttributeType.value)
-	
-	def GetSegmentIntegerAttributeByID(self, Index, ID):
-		nIndex = ctypes.c_uint32(Index)
-		nID = ctypes.c_uint32(ID)
-		pValue = ctypes.c_int64()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentintegerattributebyid(self._handle, nIndex, nID, pValue))
-		
-		return pValue.value
-	
-	def GetSegmentIntegerAttributeByName(self, Index, NameSpace, AttributeName):
-		nIndex = ctypes.c_uint32(Index)
-		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
-		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
-		pValue = ctypes.c_int64()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentintegerattributebyname(self._handle, nIndex, pNameSpace, pAttributeName, pValue))
-		
-		return pValue.value
-	
-	def GetSegmentDoubleAttributeByID(self, Index, ID):
-		nIndex = ctypes.c_uint32(Index)
-		nID = ctypes.c_uint32(ID)
-		pValue = ctypes.c_double()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid(self._handle, nIndex, nID, pValue))
-		
-		return pValue.value
-	
-	def GetSegmentDoubleAttributeByName(self, Index, NameSpace, AttributeName):
-		nIndex = ctypes.c_uint32(Index)
-		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
-		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
-		pValue = ctypes.c_double()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname(self._handle, nIndex, pNameSpace, pAttributeName, pValue))
-		
-		return pValue.value
-	
 	def GetCustomDataCount(self):
 		pCount = ctypes.c_uint32()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getcustomdatacount(self._handle, pCount))
@@ -8985,6 +8850,248 @@ class ToolpathLayerReader(Base):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getcustomdataname(self._handle, nIndex, nNameSpaceBufferSize, nNameSpaceNeededChars, pNameSpaceBuffer, nDataNameBufferSize, nDataNameNeededChars, pDataNameBuffer))
 		
 		return pNameSpaceBuffer.value.decode(), pDataNameBuffer.value.decode()
+	
+	def GetSegmentCount(self):
+		pSegmentCount = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentcount(self._handle, pSegmentCount))
+		
+		return pSegmentCount.value
+	
+	def GetSegmentInfo(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		pType = ctypes.c_int32()
+		pPointCount = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentinfo(self._handle, nIndex, pType, pPointCount))
+		
+		return ToolpathSegmentType(pType.value), pPointCount.value
+	
+	def FindSegmentAttributeInfoByName(self, NameSpace, AttributeName):
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
+		pID = ctypes.c_uint32()
+		pAttributeType = ctypes.c_int32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_findsegmentattributeinfobyname(self._handle, pNameSpace, pAttributeName, pID, pAttributeType))
+		
+		return pID.value, ToolpathAttributeType(pAttributeType.value)
+	
+	def FindSegmentAttributeIDByName(self, NameSpace, AttributeName):
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
+		pID = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_findsegmentattributeidbyname(self._handle, pNameSpace, pAttributeName, pID))
+		
+		return pID.value
+	
+	def FindSegmentAttributeTypeByName(self, NameSpace, AttributeName):
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
+		pAttributeType = ctypes.c_int32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_findsegmentattributetypebyname(self._handle, pNameSpace, pAttributeName, pAttributeType))
+		
+		return ToolpathAttributeType(pAttributeType.value)
+	
+	def GetSegmentIntegerAttributeByID(self, SegmentIndex, ID):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		nID = ctypes.c_uint32(ID)
+		pValue = ctypes.c_int64()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentintegerattributebyid(self._handle, nSegmentIndex, nID, pValue))
+		
+		return pValue.value
+	
+	def GetSegmentIntegerAttributeByName(self, SegmentIndex, NameSpace, AttributeName):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
+		pValue = ctypes.c_int64()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentintegerattributebyname(self._handle, nSegmentIndex, pNameSpace, pAttributeName, pValue))
+		
+		return pValue.value
+	
+	def GetSegmentDoubleAttributeByID(self, SegmentIndex, ID):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		nID = ctypes.c_uint32(ID)
+		pValue = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentdoubleattributebyid(self._handle, nSegmentIndex, nID, pValue))
+		
+		return pValue.value
+	
+	def GetSegmentDoubleAttributeByName(self, SegmentIndex, NameSpace, AttributeName):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pAttributeName = ctypes.c_char_p(str.encode(AttributeName))
+		pValue = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentdoubleattributebyname(self._handle, nSegmentIndex, pNameSpace, pAttributeName, pValue))
+		
+		return pValue.value
+	
+	def GetPartCount(self):
+		pPartCount = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getpartcount(self._handle, pPartCount))
+		
+		return pPartCount.value
+	
+	def GetPartInformation(self, PartIndex):
+		nPartIndex = ctypes.c_uint32(PartIndex)
+		pPartID = ctypes.c_uint32()
+		nBuildItemUUIDBufferSize = ctypes.c_uint64(0)
+		nBuildItemUUIDNeededChars = ctypes.c_uint64(0)
+		pBuildItemUUIDBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getpartinformation(self._handle, nPartIndex, pPartID, nBuildItemUUIDBufferSize, nBuildItemUUIDNeededChars, pBuildItemUUIDBuffer))
+		nBuildItemUUIDBufferSize = ctypes.c_uint64(nBuildItemUUIDNeededChars.value)
+		pBuildItemUUIDBuffer = (ctypes.c_char * (nBuildItemUUIDNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getpartinformation(self._handle, nPartIndex, pPartID, nBuildItemUUIDBufferSize, nBuildItemUUIDNeededChars, pBuildItemUUIDBuffer))
+		
+		return pPartID.value, pBuildItemUUIDBuffer.value.decode()
+	
+	def GetPartBuildItem(self, PartIndex):
+		nPartIndex = ctypes.c_uint32(PartIndex)
+		BuildItemHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getpartbuilditem(self._handle, nPartIndex, BuildItemHandle))
+		if BuildItemHandle:
+			BuildItemObject = self._wrapper._polymorphicFactory(BuildItemHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return BuildItemObject
+	
+	def GetSegmentPartID(self, PartIndex):
+		nPartIndex = ctypes.c_uint32(PartIndex)
+		pPartID = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentpartid(self._handle, nPartIndex, pPartID))
+		
+		return pPartID.value
+	
+	def GetSegmentBuildItem(self, SegmentIndex):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		BuildItemHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentbuilditem(self._handle, nSegmentIndex, BuildItemHandle))
+		if BuildItemHandle:
+			BuildItemObject = self._wrapper._polymorphicFactory(BuildItemHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return BuildItemObject
+	
+	def GetSegmentBuildItemUUID(self, SegmentIndex):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		nBuildItemUUIDBufferSize = ctypes.c_uint64(0)
+		nBuildItemUUIDNeededChars = ctypes.c_uint64(0)
+		pBuildItemUUIDBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentbuilditemuuid(self._handle, nSegmentIndex, nBuildItemUUIDBufferSize, nBuildItemUUIDNeededChars, pBuildItemUUIDBuffer))
+		nBuildItemUUIDBufferSize = ctypes.c_uint64(nBuildItemUUIDNeededChars.value)
+		pBuildItemUUIDBuffer = (ctypes.c_char * (nBuildItemUUIDNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentbuilditemuuid(self._handle, nSegmentIndex, nBuildItemUUIDBufferSize, nBuildItemUUIDNeededChars, pBuildItemUUIDBuffer))
+		
+		return pBuildItemUUIDBuffer.value.decode()
+	
+	def GetBuildItemUUIDByLocalPartID(self, LocalPartID):
+		nLocalPartID = ctypes.c_uint32(LocalPartID)
+		nBuildItemUUIDBufferSize = ctypes.c_uint64(0)
+		nBuildItemUUIDNeededChars = ctypes.c_uint64(0)
+		pBuildItemUUIDBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getbuilditemuuidbylocalpartid(self._handle, nLocalPartID, nBuildItemUUIDBufferSize, nBuildItemUUIDNeededChars, pBuildItemUUIDBuffer))
+		nBuildItemUUIDBufferSize = ctypes.c_uint64(nBuildItemUUIDNeededChars.value)
+		pBuildItemUUIDBuffer = (ctypes.c_char * (nBuildItemUUIDNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getbuilditemuuidbylocalpartid(self._handle, nLocalPartID, nBuildItemUUIDBufferSize, nBuildItemUUIDNeededChars, pBuildItemUUIDBuffer))
+		
+		return pBuildItemUUIDBuffer.value.decode()
+	
+	def GetSegmentDefaultProfile(self, SegmentIndex):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		ProfileHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofile(self._handle, nSegmentIndex, ProfileHandle))
+		if ProfileHandle:
+			ProfileObject = self._wrapper._polymorphicFactory(ProfileHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ProfileObject
+	
+	def GetSegmentDefaultProfileUUID(self, SegmentIndex):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		nProfileUUIDBufferSize = ctypes.c_uint64(0)
+		nProfileUUIDNeededChars = ctypes.c_uint64(0)
+		pProfileUUIDBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid(self._handle, nSegmentIndex, nProfileUUIDBufferSize, nProfileUUIDNeededChars, pProfileUUIDBuffer))
+		nProfileUUIDBufferSize = ctypes.c_uint64(nProfileUUIDNeededChars.value)
+		pProfileUUIDBuffer = (ctypes.c_char * (nProfileUUIDNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid(self._handle, nSegmentIndex, nProfileUUIDBufferSize, nProfileUUIDNeededChars, pProfileUUIDBuffer))
+		
+		return pProfileUUIDBuffer.value.decode()
+	
+	def GetSegmentDefaultProfileID(self, SegmentIndex):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		pLocalProfileID = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentdefaultprofileid(self._handle, nSegmentIndex, pLocalProfileID))
+		
+		return pLocalProfileID.value
+	
+	def GetProfileUUIDByLocalProfileID(self, LocalProfileID):
+		nLocalProfileID = ctypes.c_uint32(LocalProfileID)
+		nProfileUUIDBufferSize = ctypes.c_uint64(0)
+		nProfileUUIDNeededChars = ctypes.c_uint64(0)
+		pProfileUUIDBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid(self._handle, nLocalProfileID, nProfileUUIDBufferSize, nProfileUUIDNeededChars, pProfileUUIDBuffer))
+		nProfileUUIDBufferSize = ctypes.c_uint64(nProfileUUIDNeededChars.value)
+		pProfileUUIDBuffer = (ctypes.c_char * (nProfileUUIDNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid(self._handle, nLocalProfileID, nProfileUUIDBufferSize, nProfileUUIDNeededChars, pProfileUUIDBuffer))
+		
+		return pProfileUUIDBuffer.value.decode()
+	
+	def SegmentHasUniformProfile(self, SegmentIndex):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		pHasUniformProfile = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_segmenthasuniformprofile(self._handle, nSegmentIndex, pHasUniformProfile))
+		
+		return pHasUniformProfile.value
+	
+	def GetSegmentPointDataInModelUnits(self, SegmentIndex):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		nPointDataCount = ctypes.c_uint64(0)
+		nPointDataNeededCount = ctypes.c_uint64(0)
+		pPointDataBuffer = (Position2D*0)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits(self._handle, nSegmentIndex, nPointDataCount, nPointDataNeededCount, pPointDataBuffer))
+		nPointDataCount = ctypes.c_uint64(nPointDataNeededCount.value)
+		pPointDataBuffer = (Position2D * nPointDataNeededCount.value)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits(self._handle, nSegmentIndex, nPointDataCount, nPointDataNeededCount, pPointDataBuffer))
+		
+		return [pPointDataBuffer[i] for i in range(nPointDataNeededCount.value)]
+	
+	def GetSegmentPointDataDiscrete(self, SegmentIndex):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		nPointDataCount = ctypes.c_uint64(0)
+		nPointDataNeededCount = ctypes.c_uint64(0)
+		pPointDataBuffer = (DiscretePosition2D*0)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete(self._handle, nSegmentIndex, nPointDataCount, nPointDataNeededCount, pPointDataBuffer))
+		nPointDataCount = ctypes.c_uint64(nPointDataNeededCount.value)
+		pPointDataBuffer = (DiscretePosition2D * nPointDataNeededCount.value)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete(self._handle, nSegmentIndex, nPointDataCount, nPointDataNeededCount, pPointDataBuffer))
+		
+		return [pPointDataBuffer[i] for i in range(nPointDataNeededCount.value)]
+	
+	def GetSegmentHatchDataInModelUnits(self, SegmentIndex):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		nHatchDataCount = ctypes.c_uint64(0)
+		nHatchDataNeededCount = ctypes.c_uint64(0)
+		pHatchDataBuffer = (Hatch2D*0)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(self._handle, nSegmentIndex, nHatchDataCount, nHatchDataNeededCount, pHatchDataBuffer))
+		nHatchDataCount = ctypes.c_uint64(nHatchDataNeededCount.value)
+		pHatchDataBuffer = (Hatch2D * nHatchDataNeededCount.value)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(self._handle, nSegmentIndex, nHatchDataCount, nHatchDataNeededCount, pHatchDataBuffer))
+		
+		return [pHatchDataBuffer[i] for i in range(nHatchDataNeededCount.value)]
+	
+	def GetSegmentHatchDataDiscrete(self, SegmentIndex):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		nHatchDataCount = ctypes.c_uint64(0)
+		nHatchDataNeededCount = ctypes.c_uint64(0)
+		pHatchDataBuffer = (DiscreteHatch2D*0)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(self._handle, nSegmentIndex, nHatchDataCount, nHatchDataNeededCount, pHatchDataBuffer))
+		nHatchDataCount = ctypes.c_uint64(nHatchDataNeededCount.value)
+		pHatchDataBuffer = (DiscreteHatch2D * nHatchDataNeededCount.value)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(self._handle, nSegmentIndex, nHatchDataCount, nHatchDataNeededCount, pHatchDataBuffer))
+		
+		return [pHatchDataBuffer[i] for i in range(nHatchDataNeededCount.value)]
 	
 
 
@@ -9046,10 +9153,16 @@ class ToolpathLayerData(Base):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_clearlaserindex(self._handle))
 		
 	
-	def SetFactorRange(self, Value):
+	def SetOverrideFraction(self, Value):
 		nValue = ctypes.c_uint32(Value)
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_setfactorrange(self._handle, nValue))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_setoverridefraction(self._handle, nValue))
 		
+	
+	def GetOverrideFraction(self):
+		pValue = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_getoverridefraction(self._handle, pValue))
+		
+		return pValue.value
 	
 	def WriteHatchDataInModelUnits(self, ProfileID, PartID, HatchData):
 		nProfileID = ctypes.c_uint32(ProfileID)

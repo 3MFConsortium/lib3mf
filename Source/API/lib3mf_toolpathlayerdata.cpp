@@ -192,17 +192,14 @@ void CToolpathLayerData::WriteHatchDataInModelUnitsWithMultipleOverrides(const L
 	std::vector<int32_t> X2Values;
 	std::vector<int32_t> Y2Values;
 	std::vector<int32_t> TagValues;
-	std::vector<int32_t> ProfileIDValues;
 
 	X1Values.resize(nHatchCount);
 	Y1Values.resize(nHatchCount);
 	X2Values.resize(nHatchCount);
 	Y2Values.resize(nHatchCount);
 	TagValues.resize(nHatchCount);
-	ProfileIDValues.resize(nHatchCount);
 
 	uint32_t nTagCount = 0;
-	uint32_t nProfileIDCount = 0;
 
 	const Lib3MF::sHatch2D* pHatchData = pHatchDataBuffer;
 	for (uint32_t nIndex = 0; nIndex < nHatchCount; nIndex++) {
@@ -225,24 +222,18 @@ void CToolpathLayerData::WriteHatchDataInModelUnitsWithMultipleOverrides(const L
 		X2Values[nIndex] = (int32_t)round(dX2);
 		Y2Values[nIndex] = (int32_t)round(dY2);
 
-		ProfileIDValues[nIndex] = (int32_t)pHatchData->m_ProfileOverrideID;
 		TagValues[nIndex] = pHatchData->m_Tag;
 
 		if (pHatchData->m_Tag != 0)
 			nTagCount++;
-		if (pHatchData->m_ProfileOverrideID != 0)
-			nProfileIDCount++;
 		pHatchData++;
 	}
 
 	int32_t* pTagValues = nullptr;
 	if (nTagCount > 0)
 		pTagValues = TagValues.data();
-	int32_t* pProfileIDValues = nullptr;
-	if (nProfileIDCount > 0)
-		pProfileIDValues = ProfileIDValues.data();
 
-	m_pLayerData->WriteHatchData(nProfileID, nPartID, nHatchCount, X1Values.data(), Y1Values.data(), X2Values.data(), Y2Values.data(), pTagValues, pProfileIDValues, pScalingDataF1Buffer, pScalingDataF2Buffer, pScalingDataG1Buffer, pScalingDataG2Buffer, pScalingDataH1Buffer, pScalingDataH2Buffer);
+	m_pLayerData->WriteHatchData(nProfileID, nPartID, nHatchCount, X1Values.data(), Y1Values.data(), X2Values.data(), Y2Values.data(), pTagValues, pScalingDataF1Buffer, pScalingDataF2Buffer, pScalingDataG1Buffer, pScalingDataG2Buffer, pScalingDataH1Buffer, pScalingDataH2Buffer);
 
 }
 
@@ -322,17 +313,14 @@ void CToolpathLayerData::WriteHatchDataDiscreteWithMultipleOverrides(const Lib3M
 	std::vector<int32_t> X2Values;
 	std::vector<int32_t> Y2Values;
 	std::vector<int32_t> TagValues;
-	std::vector<int32_t> ProfileIDValues;
 
 	X1Values.resize(nHatchCount);
 	Y1Values.resize(nHatchCount);
 	X2Values.resize(nHatchCount);
 	Y2Values.resize(nHatchCount);
 	TagValues.resize(nHatchCount);
-	ProfileIDValues.resize(nHatchCount);
 
 	uint32_t nTagCount = 0;
-	uint32_t nProfileIDCount = 0;
 
 	const Lib3MF::sDiscreteHatch2D* pHatchData = pHatchDataBuffer;
 	for (uint32_t nIndex = 0; nIndex < nHatchCount; nIndex++) {
@@ -355,13 +343,10 @@ void CToolpathLayerData::WriteHatchDataDiscreteWithMultipleOverrides(const Lib3M
 		Y1Values[nIndex] = nY1;
 		X2Values[nIndex] = nX2;
 		Y2Values[nIndex] = nY2;
-		ProfileIDValues[nIndex] = (int32_t)pHatchData->m_ProfileOverrideID;
 		TagValues[nIndex] = pHatchData->m_Tag;
 
 		if (pHatchData->m_Tag != 0)
 			nTagCount++;
-		if (pHatchData->m_ProfileOverrideID != 0)
-			nProfileIDCount++;
 
 		pHatchData++;
 	}
@@ -369,11 +354,8 @@ void CToolpathLayerData::WriteHatchDataDiscreteWithMultipleOverrides(const Lib3M
 	int32_t* pTagValues = nullptr;
 	if (nTagCount > 0)
 		pTagValues = TagValues.data();
-	int32_t* pProfileIDValues = nullptr;
-	if (nProfileIDCount > 0)
-		pProfileIDValues = ProfileIDValues.data();
 
-	m_pLayerData->WriteHatchData(nProfileID, nPartID, nHatchCount, X1Values.data(), Y1Values.data(), X2Values.data(), Y2Values.data(), pTagValues, pProfileIDValues, pScalingDataF1Buffer, pScalingDataF2Buffer, pScalingDataG1Buffer, pScalingDataG2Buffer, pScalingDataH1Buffer, pScalingDataH2Buffer);
+	m_pLayerData->WriteHatchData(nProfileID, nPartID, nHatchCount, X1Values.data(), Y1Values.data(), X2Values.data(), Y2Values.data(), pTagValues, pScalingDataF1Buffer, pScalingDataF2Buffer, pScalingDataG1Buffer, pScalingDataG2Buffer, pScalingDataH1Buffer, pScalingDataH2Buffer);
 
 }
 
@@ -682,7 +664,14 @@ void CToolpathLayerData::ClearLaserIndex()
 	m_pLayerData->setCurrentLaserIndex(0);
 }
 
-void CToolpathLayerData::SetFactorRange(const Lib3MF_uint32 nValue)
+
+void CToolpathLayerData::SetOverrideFraction(const Lib3MF_uint32 nValue)
 {
-	m_pLayerData->setFactorRange(nValue);
+	m_pLayerData->setOverrideFraction(nValue);
 }
+
+Lib3MF_uint32 CToolpathLayerData::GetOverrideFraction()
+{
+	return m_pLayerData->getOverrideFraction ();
+}
+

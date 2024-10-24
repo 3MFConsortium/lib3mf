@@ -51,6 +51,8 @@ namespace NMR {
 		m_nPartID (0), 
 		m_nProfileID (0),
 		m_bHasSegmentType (false),
+		m_nOverrideFraction (XML_3MF_DEFAULTOVERRIDEFRACTION),
+		m_bHasOverrideFraction (false),	
 		m_eSegmentType (eModelToolpathSegmentType::HatchSegment),
 		m_sBinaryIndexStreamPath(sBinaryIndexStreamPath)
 	{
@@ -78,7 +80,7 @@ namespace NMR {
 		if (!hasProfileID())
 			throw CNMRException(NMR_ERROR_MISSINGID);
 
-		m_pReadData->beginSegment(m_eSegmentType, getProfileID(), getPartID());
+		m_pReadData->beginSegment(m_eSegmentType, getProfileID(), getPartID(), m_nOverrideFraction);
 
 		// Parse Content
 		parseContent(pXMLReader);
@@ -109,6 +111,21 @@ namespace NMR {
 			if ((nValue > 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nPartID = nValue;
 		}
+
+		if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_PARTID) == 0) {
+			if (m_bHasOverrideFraction)
+				throw CNMRException(NMR_ERROR_DUPLICATEOVERRIDEFRACTION);
+
+			nfInt32 nValue = fnStringToInt32(pAttributeValue);
+			if ((nValue > 0) && (nValue < XML_3MF_MAXOVERRIDEFRACTION)) {
+				m_nOverrideFraction = nValue;
+				m_bHasOverrideFraction = true;
+			}
+			else {
+				throw CNMRException(NMR_ERROR_INVALIDOVERRIDEFRACTION);
+			}
+		}
+		
 
 		if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_TYPE) == 0) {
 			if (m_bHasSegmentType)
@@ -158,8 +175,8 @@ namespace NMR {
 				PToolpathReaderNode_Hatch pXMLNode = std::make_shared<CToolpathReaderNode_Hatch>(m_pWarnings, m_pProgressMonitor, m_pReadData);
 				pXMLNode->parseXML(pXMLReader);
 
-				m_pReadData->addDiscretePoint(pXMLNode->getX1(), pXMLNode->getY1(), pXMLNode->getTag (), pXMLNode->getCustomProfileID (), pXMLNode->getFactorF1 (), pXMLNode->getFactorG1(), pXMLNode->getFactorH1());
-				m_pReadData->addDiscretePoint(pXMLNode->getX2(), pXMLNode->getY2(), pXMLNode->getTag(), pXMLNode->getCustomProfileID(), pXMLNode->getFactorF2(), pXMLNode->getFactorG2(), pXMLNode->getFactorH2());
+				m_pReadData->addDiscretePoint(pXMLNode->getX1(), pXMLNode->getY1(), pXMLNode->getTag (), pXMLNode->getFactorF1 (), pXMLNode->getFactorG1(), pXMLNode->getFactorH1());
+				m_pReadData->addDiscretePoint(pXMLNode->getX2(), pXMLNode->getY2(), pXMLNode->getTag(), pXMLNode->getFactorF2(), pXMLNode->getFactorG2(), pXMLNode->getFactorH2());
 
 			}
 			else if (strcmp(pChildName, XML_3MF_TOOLPATHELEMENT_POINT) == 0) {
@@ -170,7 +187,7 @@ namespace NMR {
 				PToolpathReaderNode_Point pXMLNode = std::make_shared<CToolpathReaderNode_Point>(m_pWarnings, m_pProgressMonitor, m_pReadData);
 				pXMLNode->parseXML(pXMLReader);
 
-				m_pReadData->addDiscretePoint(pXMLNode->getX(), pXMLNode->getY(), pXMLNode->getTag(), 0, pXMLNode->getFactorF (), pXMLNode->getFactorG (), pXMLNode->getFactorH ());
+				m_pReadData->addDiscretePoint(pXMLNode->getX(), pXMLNode->getY(), pXMLNode->getTag(), pXMLNode->getFactorF (), pXMLNode->getFactorG (), pXMLNode->getFactorH ());
 
 			}
 			else
@@ -321,5 +338,14 @@ namespace NMR {
 		return (m_nPartID != 0);
 	}
 
+	bool CToolpathReaderNode_Segment::hasOverrideFraction()
+	{
+		return m_bHasOverrideFraction;
+	}
+
+	nfUint32 CToolpathReaderNode_Segment::getOverrideFraction()
+	{
+		return m_nOverrideFraction;
+	}
 
 }

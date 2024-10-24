@@ -45,19 +45,63 @@ NMR_ModelToolpathProfile.h defines the Model Toolpath Profile.
 
 namespace NMR {
 
-	struct sModelToolpathProfileValue {
+	class CModelToolpathProfileValue {
+	private:
 		std::string m_sNameSpace;
 		std::string m_sValueName;
 		std::string m_sValue;
+	public:
+		CModelToolpathProfileValue(const std::string & sNameSpace, const std::string & sValueName, const std::string & sValue);
+
+		virtual ~CModelToolpathProfileValue();
+
+		bool hasNameSpace();
+		std::string getNameSpace ();
+		std::string getValueName ();
+		std::string getValue ();
+
+		double getBaseDoubleValue();
 	};
+
+	typedef std::shared_ptr<CModelToolpathProfileValue> PModelToolpathProfileValue;
+
+	enum class eModelToolpathProfileOverrideFactor {
+		pfNone = 0,
+		pfFactorF = 1,
+		pfFactorG = 2,
+		pfFactorH = 3
+	};
+
+	class CModelToolpathProfileModifier {
+	private:
+		PModelToolpathProfileValue m_pValue;
+		double m_dBaseValue;		
+		double m_dDeltaValue;
+		eModelToolpathProfileOverrideFactor m_OverrideFactor;
+
+	public:
+
+		CModelToolpathProfileModifier(PModelToolpathProfileValue pValue, double dDeltaValue, eModelToolpathProfileOverrideFactor overrideFactor);
+
+		virtual ~CModelToolpathProfileModifier();
+
+		double getBaseValue();
+
+		double evaluate (double dFactorF, double dFactorG, double dFactorH);
+
+	};
+
+	typedef std::shared_ptr<CModelToolpathProfileModifier> PModelToolpathProfileModifier;
 
 	class CModelToolpathProfile {
 	private:
 		std::string m_sUUID;
 		std::string m_sName;
 
-		std::vector<std::pair<std::string, std::string>> m_Parameters;
-		std::map<std::pair<std::string, std::string>, std::string> m_Values;
+		std::vector<PModelToolpathProfileValue> m_ValueList;
+		std::map<std::pair<std::string, std::string>, PModelToolpathProfileValue> m_ValueMap;
+
+		std::map<std::pair<std::string, std::string>, PModelToolpathProfileModifier> m_ModifierMap;
 
 	public:
 		CModelToolpathProfile() = delete;
@@ -71,13 +115,17 @@ namespace NMR {
 		std::string getValue(const std::string& sNameSpace, const std::string& sValueName);
 		void addValue(const std::string& sNameSpace, const std::string& sValueName, const std::string & sValue);
 
+		void addModifier(const std::string& sNameSpace, const std::string& sValueName, double dDelta, eModelToolpathProfileOverrideFactor overrideFactor);
+
 		uint32_t getParameterCount();
 		std::string getParameterName(const uint32_t nIndex);
 		std::string getParameterNameSpace(const uint32_t nIndex);
 
-		std::list<sModelToolpathProfileValue> listValues();
+		std::vector<PModelToolpathProfileValue> & getValues ();
 
-	};
+		double evaluate(const std::string& sNameSpace, const std::string& sValueName, double dFactorF, double dFactorG, double dFactorH);
+
+	};	
 
 	typedef std::shared_ptr <CModelToolpathProfile> PModelToolpathProfile;
 

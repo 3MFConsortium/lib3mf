@@ -38,6 +38,83 @@ NMR_ModelToolpathProfile.cpp defines the Model Toolpath Profile.
 
 namespace NMR {
 
+
+	CModelToolpathProfileValue::CModelToolpathProfileValue(const std::string& sNameSpace, const std::string& sValueName, const std::string& sValue)
+		: m_sNameSpace (sNameSpace),
+		m_sValueName (sValueName), 
+		m_sValue (sValue)
+	{
+
+	}
+
+	CModelToolpathProfileValue::~CModelToolpathProfileValue()
+	{
+								
+	}
+
+	bool CModelToolpathProfileValue::hasNameSpace()
+	{
+		return !m_sNameSpace.empty();
+	}
+
+	std::string CModelToolpathProfileValue::getNameSpace()
+	{
+		return m_sNameSpace;
+	}
+
+	std::string CModelToolpathProfileValue::getValueName()
+	{
+		return m_sValueName;
+	}
+
+	std::string CModelToolpathProfileValue::getValue()
+	{
+		return m_sValue;
+	}
+
+	double CModelToolpathProfileValue::getBaseDoubleValue()
+	{
+		return fnStringToDouble(m_sValue.c_str());
+	}
+
+
+
+	CModelToolpathProfileModifier::CModelToolpathProfileModifier(PModelToolpathProfileValue pValue, double dDeltaValue, eModelToolpathProfileOverrideFactor overrideFactor)
+		: m_pValue (pValue), m_dDeltaValue (dDeltaValue), m_OverrideFactor (overrideFactor)
+	{
+		if (pValue.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		m_dBaseValue = m_pValue->getBaseDoubleValue();
+		
+	}
+
+	CModelToolpathProfileModifier::~CModelToolpathProfileModifier()
+	{
+
+	}
+
+	double CModelToolpathProfileModifier::getBaseValue()
+	{
+		return m_dBaseValue;
+	}
+
+	double CModelToolpathProfileModifier::evaluate(double dFactorF, double dFactorG, double dFactorH)
+	{
+		switch (m_OverrideFactor) {
+			case eModelToolpathProfileOverrideFactor::pfFactorF:
+				return m_dBaseValue + m_dDeltaValue * dFactorF;
+			case eModelToolpathProfileOverrideFactor::pfFactorG:
+				return m_dBaseValue + m_dDeltaValue * dFactorG;
+			case eModelToolpathProfileOverrideFactor::pfFactorH:
+				return m_dBaseValue + m_dDeltaValue * dFactorH;
+
+			default:
+				return m_dBaseValue;
+		}
+	}
+
+
 	CModelToolpathProfile::CModelToolpathProfile(std::string sUUID, std::string sName)
 		: m_sUUID (sUUID), m_sName (sName)
 	{
@@ -61,58 +138,98 @@ namespace NMR {
 
 	uint32_t CModelToolpathProfile::getParameterCount()
 	{
-		return (uint32_t)m_Parameters.size();
+		return (uint32_t)m_ValueList.size();
 	}
 
 	std::string CModelToolpathProfile::getParameterName(const uint32_t nIndex)
 	{
-		if (nIndex >= m_Parameters.size())
+		if (nIndex >= m_ValueList.size())
 			throw CNMRException(NMR_ERROR_INVALIDPARAMETERINDEX);
 
-		return m_Parameters.at(nIndex).second;
+		return m_ValueList.at(nIndex)->getValueName ();
 	}
 
 	std::string CModelToolpathProfile::getParameterNameSpace(const uint32_t nIndex)
 	{
-		if (nIndex >= m_Parameters.size())
+		if (nIndex >= m_ValueList.size())
 			throw CNMRException(NMR_ERROR_INVALIDPARAMETERINDEX);
 
-		return m_Parameters.at(nIndex).first;
+		return m_ValueList.at(nIndex)->getNameSpace ();
 	}
 
 	bool CModelToolpathProfile::hasValue(const std::string& sNameSpace, const std::string& sValueName)
 	{
-		auto iter = m_Values.find(std::make_pair (sNameSpace, sValueName));
-		return iter != m_Values.end();
+		auto iter = m_ValueMap.find(std::make_pair (sNameSpace, sValueName));
+		return iter != m_ValueMap.end();
 	}
 
 	std::string CModelToolpathProfile::getValue(const std::string& sNameSpace, const std::string& sValueName)
 	{
-		auto iter = m_Values.find(std::make_pair(sNameSpace, sValueName));
-		if (iter == m_Values.end())
+		auto iter = m_ValueMap.find(std::make_pair(sNameSpace, sValueName));
+		if (iter == m_ValueMap.end())
 			throw CNMRException(NMR_ERROR_PROFILEVALUENOTFOUND);
 
-		return iter->second;
+		return iter->second->getValue ();
 	}
 
 	void CModelToolpathProfile::addValue(const std::string& sNameSpace, const std::string& sValueName, const std::string& sValue)
 	{
-		if (m_Values.size () >= MODELTOOLPATH_MAXCOUNT)
+		if (m_ValueList.size () >= MODELTOOLPATH_MAXCOUNT)
 			throw CNMRException(NMR_ERROR_TOOMANYPROFILEVALUES);
-		m_Values.insert(std::make_pair (std::make_pair (sNameSpace, sValueName), sValue));
-		m_Parameters.push_back(std::make_pair(sNameSpace, sValueName));
+
+		auto key = std::make_pair(sNameSpace, sValueName);
+		auto iIter = m_ValueMap.find(key);
+		if (iIter != m_ValueMap.end ())
+			throw CNMRException(NMR_ERROR_DUPLICATEPROFILEVALUE);
+
+		auto pValue = std::make_shared<CModelToolpathProfileValue>(sNameSpace, sValueName, sValue);
+		m_ValueMap.insert(std::make_pair (key, pValue));
+		m_ValueList.push_back (pValue);
 	}
 
-	std::list<sModelToolpathProfileValue> CModelToolpathProfile::listValues()
+	void CModelToolpathProfile::addModifier(const std::string& sNameSpace, const std::string& sValueName, double dDelta, eModelToolpathProfileOverrideFactor overrideFactor)
 	{
-		std::list<sModelToolpathProfileValue> profileValueList;
-		for (auto profileValue : m_Values) {
-			profileValueList.push_back(sModelToolpathProfileValue { profileValue.first.first, profileValue.first.second, profileValue.second });
+		auto key = std::make_pair(sNameSpace, sValueName);
+		auto iValueIter = m_ValueMap.find(key);
+		if (iValueIter == m_ValueMap.end())
+			throw CNMRException(NMR_ERROR_PROFILEVALUENOTFOUND);
+
+		auto pValue = iValueIter->second;
+
+		auto iModifierIter = m_ModifierMap.find(key);
+		if (iModifierIter != m_ModifierMap.end())
+			throw CNMRException(NMR_ERROR_DUPLICATEPROFILEMODIFIER);
+
+		auto pModifier = std::make_shared<CModelToolpathProfileModifier>(pValue, dDelta, overrideFactor);
+
+		m_ModifierMap.insert (std::make_pair (key, pModifier));
+
+	}
+
+
+	std::vector<PModelToolpathProfileValue>& CModelToolpathProfile::getValues()
+	{
+		return m_ValueList;
+	}
+
+	double CModelToolpathProfile::evaluate(const std::string& sNameSpace, const std::string& sValueName, double dFactorF, double dFactorG, double dFactorH)
+	{
+
+		auto key = std::make_pair(sNameSpace, sValueName);
+		auto iModifierIter = m_ModifierMap.find(key);
+		if (iModifierIter != m_ModifierMap.end()) {
+			return iModifierIter->second->evaluate (dFactorF, dFactorG, dFactorH);
+
+		}
+		else {
+			auto iValueIter = m_ValueMap.find(key);
+			if (iValueIter == m_ValueMap.end())
+				throw CNMRException(NMR_ERROR_PROFILEVALUENOTFOUND);
+
+			return iValueIter->second->getBaseDoubleValue();
 		}
 
-		return profileValueList;
 
 	}
-
 
 }

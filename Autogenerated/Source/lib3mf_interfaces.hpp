@@ -357,7 +357,7 @@ public:
 
 	/**
 	* IBinaryStream::EnableLZ4 - Switches to fast LZ4 compression mode.
-	* @param[in] nCompressionLevel - Compression level (0-9).
+	* @param[in] nCompressionLevel - Compression level (2-12).
 	*/
 	virtual void EnableLZ4(const Lib3MF_uint32 nCompressionLevel) = 0;
 
@@ -3179,103 +3179,39 @@ public:
 	virtual std::string GetLayerDataUUID() = 0;
 
 	/**
-	* IToolpathLayerReader::GetSegmentCount - Retrieves the count of segments.
+	* IToolpathLayerReader::GetCustomDataCount - Retrieves the count of custom data elements.
 	* @return Count
+	*/
+	virtual Lib3MF_uint32 GetCustomDataCount() = 0;
+
+	/**
+	* IToolpathLayerReader::GetCustomData - Retrieves the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @return DOM Tree of the data.
+	*/
+	virtual ICustomDOMTree * GetCustomData(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetCustomDataName - Retrieves the node name of the custom data.
+	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
+	* @param[out] sNameSpace - Namespace of the custom data tree.
+	* @param[out] sDataName - Root name of the data tree.
+	*/
+	virtual void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentCount - Retrieves the count of segments.
+	* @return Number of Segments
 	*/
 	virtual Lib3MF_uint32 GetSegmentCount() = 0;
 
 	/**
 	* IToolpathLayerReader::GetSegmentInfo - Retrieves the segment type information .
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[in] nIndex - Index. Must be between 0 and SegmentCount - 1.
 	* @param[out] eType - Segment Type
 	* @param[out] nPointCount - Point count of segment.
 	*/
 	virtual void GetSegmentInfo(const Lib3MF_uint32 nIndex, Lib3MF::eToolpathSegmentType & eType, Lib3MF_uint32 & nPointCount) = 0;
-
-	/**
-	* IToolpathLayerReader::GetSegmentDefaultProfile - Retrieves the assigned segment default profile. Fails for delay and sync segments.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @return Segment Profile
-	*/
-	virtual IToolpathProfile * GetSegmentDefaultProfile(const Lib3MF_uint32 nIndex) = 0;
-
-	/**
-	* IToolpathLayerReader::GetSegmentDefaultProfileUUID - Retrieves the assigned segment default profile uuid. Fails for delay and sync segments.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @return Segment Profile UUID
-	*/
-	virtual std::string GetSegmentDefaultProfileUUID(const Lib3MF_uint32 nIndex) = 0;
-
-	/**
-	* IToolpathLayerReader::SegmentHasUniformProfile - Returns if the segment has a uniform profile. If it is uniform, then the default profile applies to the whole segment. Returns false for delay and sync segments.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @return If true, the segment has a uniform profile ID. 
-	*/
-	virtual bool SegmentHasUniformProfile(const Lib3MF_uint32 nIndex) = 0;
-
-	/**
-	* IToolpathLayerReader::GetSegmentPart - Retrieves the assigned segment profile. Fails for delay and sync segments.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @return Segment Build Item
-	*/
-	virtual IBuildItem * GetSegmentPart(const Lib3MF_uint32 nIndex) = 0;
-
-	/**
-	* IToolpathLayerReader::GetSegmentPartUUID - Retrieves the assigned segment part uuid. Fails for delay and sync segments.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @return Segment Part UUID
-	*/
-	virtual std::string GetSegmentPartUUID(const Lib3MF_uint32 nIndex) = 0;
-
-	/**
-	* IToolpathLayerReader::GetSegmentLocalPartID - Retrieves the assigned segment part id. Fails for delay and sync segments.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @return Local Segment Part ID
-	*/
-	virtual Lib3MF_uint32 GetSegmentLocalPartID(const Lib3MF_uint32 nIndex) = 0;
-
-	/**
-	* IToolpathLayerReader::GetPartUUIDByLocalPartID - Retrieves the global part UUID by the local part ID.
-	* @param[in] nLocalPartID - Local Segment Part ID
-	* @return Segment Part UUID
-	*/
-	virtual std::string GetPartUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID) = 0;
-
-	/**
-	* IToolpathLayerReader::GetSegmentPointDataInModelUnits - Retrieves the assigned segment point list. For type hatch, the points are taken pairwise. Returns an empty array for delay and sync elements.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[in] nPointDataBufferSize - Number of elements in buffer
-	* @param[out] pPointDataNeededCount - will be filled with the count of the written structs, or needed buffer size.
-	* @param[out] pPointDataBuffer - Position2D buffer of The point data array. The point coordinates are in model units.
-	*/
-	virtual void GetSegmentPointDataInModelUnits(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer) = 0;
-
-	/**
-	* IToolpathLayerReader::GetSegmentPointDataDiscrete - Retrieves the assigned segment point list in toolpath units. For type hatch, the points are taken pairwise. Returns an empty array for delay and sync elements.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[in] nPointDataBufferSize - Number of elements in buffer
-	* @param[out] pPointDataNeededCount - will be filled with the count of the written structs, or needed buffer size.
-	* @param[out] pPointDataBuffer - DiscretePosition2D buffer of The point data array. The point coordinates are in toolpath units.
-	*/
-	virtual void GetSegmentPointDataDiscrete(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sDiscretePosition2D * pPointDataBuffer) = 0;
-
-	/**
-	* IToolpathLayerReader::GetSegmentHatchDataInModelUnits - Retrieves the assigned segment hatch list. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[in] nHatchDataBufferSize - Number of elements in buffer
-	* @param[out] pHatchDataNeededCount - will be filled with the count of the written structs, or needed buffer size.
-	* @param[out] pHatchDataBuffer - Hatch2D buffer of The hatch data array. The point coordinates are in model units.
-	*/
-	virtual void GetSegmentHatchDataInModelUnits(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, Lib3MF::sHatch2D * pHatchDataBuffer) = 0;
-
-	/**
-	* IToolpathLayerReader::GetSegmentHatchDataDiscrete - Retrieves the assigned segment hatch list in toolpath units. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
-	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
-	* @param[in] nHatchDataBufferSize - Number of elements in buffer
-	* @param[out] pHatchDataNeededCount - will be filled with the count of the written structs, or needed buffer size.
-	* @param[out] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data array. The point coordinates are in toolpath units.
-	*/
-	virtual void GetSegmentHatchDataDiscrete(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, Lib3MF::sDiscreteHatch2D * pHatchDataBuffer) = 0;
 
 	/**
 	* IToolpathLayerReader::FindSegmentAttributeInfoByName - Retrieves a segment attribute Information by Attribute Name. Will fail if Attribute does not exist.
@@ -3304,58 +3240,157 @@ public:
 
 	/**
 	* IToolpathLayerReader::GetSegmentIntegerAttributeByID - Retrieves a segment Uint32 attribute by Attribute ID. Will fail if Attribute does not exist.
-	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
 	* @param[in] nID - Attribute ID.
 	* @return Attribute Value.
 	*/
-	virtual Lib3MF_int64 GetSegmentIntegerAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID) = 0;
+	virtual Lib3MF_int64 GetSegmentIntegerAttributeByID(const Lib3MF_uint32 nSegmentIndex, const Lib3MF_uint32 nID) = 0;
 
 	/**
 	* IToolpathLayerReader::GetSegmentIntegerAttributeByName - Retrieves a segment integer attribute by Attribute Name. Will fail if Attribute does not exist or is of different type.
-	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
 	* @param[in] sNameSpace - Namespace of the custom attribute.
 	* @param[in] sAttributeName - Name of the custom attribute.
 	* @return Attribute Value.
 	*/
-	virtual Lib3MF_int64 GetSegmentIntegerAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName) = 0;
+	virtual Lib3MF_int64 GetSegmentIntegerAttributeByName(const Lib3MF_uint32 nSegmentIndex, const std::string & sNameSpace, const std::string & sAttributeName) = 0;
 
 	/**
 	* IToolpathLayerReader::GetSegmentDoubleAttributeByID - Retrieves a segment Double attribute by Attribute ID. Will fail if Attribute does not exist.
-	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
 	* @param[in] nID - Attribute ID.
 	* @return Attribute Value.
 	*/
-	virtual Lib3MF_double GetSegmentDoubleAttributeByID(const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nID) = 0;
+	virtual Lib3MF_double GetSegmentDoubleAttributeByID(const Lib3MF_uint32 nSegmentIndex, const Lib3MF_uint32 nID) = 0;
 
 	/**
 	* IToolpathLayerReader::GetSegmentDoubleAttributeByName - Retrieves a segment Double attribute by Attribute Name. Will fail if Attribute does not exist.
-	* @param[in] nIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
 	* @param[in] sNameSpace - Namespace of the custom attribute.
 	* @param[in] sAttributeName - Name of the custom attribute.
 	* @return Attribute Value.
 	*/
-	virtual Lib3MF_double GetSegmentDoubleAttributeByName(const Lib3MF_uint32 nIndex, const std::string & sNameSpace, const std::string & sAttributeName) = 0;
+	virtual Lib3MF_double GetSegmentDoubleAttributeByName(const Lib3MF_uint32 nSegmentIndex, const std::string & sNameSpace, const std::string & sAttributeName) = 0;
 
 	/**
-	* IToolpathLayerReader::GetCustomDataCount - Retrieves the count of custom data elements.
-	* @return Count
+	* IToolpathLayerReader::GetPartCount - Returns how many parts are referenced in this layer.
+	* @return Number of parts referenced in this layer.
 	*/
-	virtual Lib3MF_uint32 GetCustomDataCount() = 0;
+	virtual Lib3MF_uint32 GetPartCount() = 0;
 
 	/**
-	* IToolpathLayerReader::GetCustomData - Retrieves the custom data.
-	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
-	* @return DOM Tree of the data.
+	* IToolpathLayerReader::GetPartInformation - Returns the ID and UUID of a referenced build item by its index in the layer..
+	* @param[in] nPartIndex - Index. Must be between 0 and PartCount - 1.
+	* @param[out] nPartID - Local Segment Part ID
+	* @param[out] sBuildItemUUID - Referenced Build Item UUID
 	*/
-	virtual ICustomDOMTree * GetCustomData(const Lib3MF_uint32 nIndex) = 0;
+	virtual void GetPartInformation(const Lib3MF_uint32 nPartIndex, Lib3MF_uint32 & nPartID, std::string & sBuildItemUUID) = 0;
 
 	/**
-	* IToolpathLayerReader::GetCustomDataName - Retrieves the node name of the custom data.
-	* @param[in] nIndex - Index of the Custom Data. 0-based. MUST be smaller than Data Count
-	* @param[out] sNameSpace - Namespace of the custom data tree.
-	* @param[out] sDataName - Root name of the data tree.
+	* IToolpathLayerReader::GetPartBuildItem - Returns a referenced build item Instance by its index in the layer...
+	* @param[in] nPartIndex - Index. Must be between 0 and PartCount - 1.
+	* @return Referenced Build Item Instance
 	*/
-	virtual void GetCustomDataName(const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sDataName) = 0;
+	virtual IBuildItem * GetPartBuildItem(const Lib3MF_uint32 nPartIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentPartID - Retrieves the assigned part id for a segment. Fails for delay and sync segments.
+	* @param[in] nPartIndex - Index. Must be between 0 and SegmentCount - 1.
+	* @return Local Segment Part ID
+	*/
+	virtual Lib3MF_uint32 GetSegmentPartID(const Lib3MF_uint32 nPartIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentBuildItem - Retrieves the assigned segment build item. Fails for delay and sync segments.
+	* @param[in] nSegmentIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Build Item
+	*/
+	virtual IBuildItem * GetSegmentBuildItem(const Lib3MF_uint32 nSegmentIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentBuildItemUUID - Retrieves the assigned segment build item uuid. Fails for delay and sync segments.
+	* @param[in] nSegmentIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment BuildItem UUID
+	*/
+	virtual std::string GetSegmentBuildItemUUID(const Lib3MF_uint32 nSegmentIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetBuildItemUUIDByLocalPartID - Maps a local part ID to its global build item UUID.
+	* @param[in] nLocalPartID - Local Segment Part ID
+	* @return Segment Build Item UUID
+	*/
+	virtual std::string GetBuildItemUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentDefaultProfile - Retrieves the assigned segment default profile. Fails for delay and sync segments.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @return Segment Profile
+	*/
+	virtual IToolpathProfile * GetSegmentDefaultProfile(const Lib3MF_uint32 nSegmentIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentDefaultProfileUUID - Retrieves the assigned segment default profile uuid. Fails for delay and sync segments.
+	* @param[in] nSegmentIndex - Index. Must be between 0 and SegmentCount - 1.
+	* @return Segment Profile UUID
+	*/
+	virtual std::string GetSegmentDefaultProfileUUID(const Lib3MF_uint32 nSegmentIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentDefaultProfileID - Retrieves the local default profile ID. Fails for delay and sync segments.
+	* @param[in] nSegmentIndex - Index. Must be between 0 and SegmentCount - 1.
+	* @return Local Segment Profile ID
+	*/
+	virtual Lib3MF_uint32 GetSegmentDefaultProfileID(const Lib3MF_uint32 nSegmentIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetProfileUUIDByLocalProfileID - Maps a local profile ID its the global profile UUID.
+	* @param[in] nLocalProfileID - Local Segment Profile ID
+	* @return Segment Profile UUID
+	*/
+	virtual std::string GetProfileUUIDByLocalProfileID(const Lib3MF_uint32 nLocalProfileID) = 0;
+
+	/**
+	* IToolpathLayerReader::SegmentHasUniformProfile - Returns if the segment has a uniform profile. If it is uniform, then the default profile applies to the whole segment. If it is not uniform, the type specific retrieval functions have to be used (or the file has to be rejected). Returns false for delay and sync segments.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and Count - 1.
+	* @return If true, the segment has a uniform profile ID. 
+	*/
+	virtual bool SegmentHasUniformProfile(const Lib3MF_uint32 nSegmentIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentPointDataInModelUnits - Retrieves the assigned segment point list. Fails if segment type is not loop or polyline.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[in] nPointDataBufferSize - Number of elements in buffer
+	* @param[out] pPointDataNeededCount - will be filled with the count of the written structs, or needed buffer size.
+	* @param[out] pPointDataBuffer - Position2D buffer of The point data array. The point coordinates are in model units.
+	*/
+	virtual void GetSegmentPointDataInModelUnits(const Lib3MF_uint32 nSegmentIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentPointDataDiscrete - Retrieves the assigned segment point list in toolpath units. Fails if segment type is not loop or polyline.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[in] nPointDataBufferSize - Number of elements in buffer
+	* @param[out] pPointDataNeededCount - will be filled with the count of the written structs, or needed buffer size.
+	* @param[out] pPointDataBuffer - DiscretePosition2D buffer of The point data array. The point coordinates are in toolpath units.
+	*/
+	virtual void GetSegmentPointDataDiscrete(const Lib3MF_uint32 nSegmentIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sDiscretePosition2D * pPointDataBuffer) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentHatchDataInModelUnits - Retrieves the assigned segment hatch list. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nHatchDataBufferSize - Number of elements in buffer
+	* @param[out] pHatchDataNeededCount - will be filled with the count of the written structs, or needed buffer size.
+	* @param[out] pHatchDataBuffer - Hatch2D buffer of The hatch data array. The point coordinates are in model units.
+	*/
+	virtual void GetSegmentHatchDataInModelUnits(const Lib3MF_uint32 nSegmentIndex, Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, Lib3MF::sHatch2D * pHatchDataBuffer) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentHatchDataDiscrete - Retrieves the assigned segment hatch list in toolpath units. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and Count - 1.
+	* @param[in] nHatchDataBufferSize - Number of elements in buffer
+	* @param[out] pHatchDataNeededCount - will be filled with the count of the written structs, or needed buffer size.
+	* @param[out] pHatchDataBuffer - DiscreteHatch2D buffer of The hatch data array. The point coordinates are in toolpath units.
+	*/
+	virtual void GetSegmentHatchDataDiscrete(const Lib3MF_uint32 nSegmentIndex, Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, Lib3MF::sDiscreteHatch2D * pHatchDataBuffer) = 0;
 
 };
 
@@ -3422,17 +3457,23 @@ public:
 	virtual void ClearLaserIndex() = 0;
 
 	/**
-	* IToolpathLayerData::SetFactorRange - Sets the denominator for the scaling factor, which is an integer.
-	* @param[in] nValue - The value of factor denominator.
+	* IToolpathLayerData::SetOverrideFraction - Sets the denominator for the scaling factor all subsequent segments. Default is 1000.
+	* @param[in] nValue - The value of factor denominator. MUST a positive integer.
 	*/
-	virtual void SetFactorRange(const Lib3MF_uint32 nValue) = 0;
+	virtual void SetOverrideFraction(const Lib3MF_uint32 nValue) = 0;
+
+	/**
+	* IToolpathLayerData::GetOverrideFraction - Returns the current denominator for the scaling factor all subsequent segments. Default is 1000.
+	* @return The value of factor denominator.
+	*/
+	virtual Lib3MF_uint32 GetOverrideFraction() = 0;
 
 	/**
 	* IToolpathLayerData::WriteHatchDataInModelUnits - writes hatch data to the layer in model units.
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] nHatchDataBufferSize - Number of elements in buffer
-	* @param[in] pHatchDataBuffer - The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] pHatchDataBuffer - The hatch data in model units. Array MUST NOT be empty.
 	*/
 	virtual void WriteHatchDataInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nHatchDataBufferSize, const Lib3MF::sHatch2D * pHatchDataBuffer) = 0;
 
@@ -3441,7 +3482,7 @@ public:
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] nHatchDataBufferSize - Number of elements in buffer
-	* @param[in] pHatchDataBuffer - The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] pHatchDataBuffer - The hatch data in model units. Array MUST NOT be empty.
 	* @param[in] nScalingDataBufferSize - Number of elements in buffer
 	* @param[in] pScalingDataBuffer - The profile override scale factors (f). MUST have the same cardinality as HatchData.
 	*/
@@ -3465,7 +3506,7 @@ public:
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] nHatchDataBufferSize - Number of elements in buffer
-	* @param[in] pHatchDataBuffer - The hatch data in model units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] pHatchDataBuffer - The hatch data in model units. Array MUST NOT be empty.
 	* @param[in] nScalingDataF1BufferSize - Number of elements in buffer
 	* @param[in] pScalingDataF1Buffer - The profile override scale factors (f) for the start point of each hatch. MUST have the same cardinality as HatchData.
 	* @param[in] nScalingDataF2BufferSize - Number of elements in buffer
@@ -3486,7 +3527,7 @@ public:
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] nHatchDataBufferSize - Number of elements in buffer
-	* @param[in] pHatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] pHatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty.
 	*/
 	virtual void WriteHatchDataDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nHatchDataBufferSize, const Lib3MF::sDiscreteHatch2D * pHatchDataBuffer) = 0;
 
@@ -3495,7 +3536,7 @@ public:
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] nHatchDataBufferSize - Number of elements in buffer
-	* @param[in] pHatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] pHatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty.
 	* @param[in] nScalingDataBufferSize - Number of elements in buffer
 	* @param[in] pScalingDataBuffer - The profile override scale factors (f). MUST have the same cardinality as HatchData.
 	*/
@@ -3506,7 +3547,7 @@ public:
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] nHatchDataBufferSize - Number of elements in buffer
-	* @param[in] pHatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] pHatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty.
 	* @param[in] nScalingData1BufferSize - Number of elements in buffer
 	* @param[in] pScalingData1Buffer - The profile override scale factors (f) for the start point of each hatch. MUST have the same cardinality as HatchData.
 	* @param[in] nScalingData2BufferSize - Number of elements in buffer
@@ -3519,7 +3560,7 @@ public:
 	* @param[in] nProfileID - The toolpath profile to use
 	* @param[in] nPartID - The toolpath part to use
 	* @param[in] nHatchDataBufferSize - Number of elements in buffer
-	* @param[in] pHatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty. A Profile override ID of 0 inherits the profile of the segment.
+	* @param[in] pHatchDataBuffer - The hatch data in toolpath units. Array MUST NOT be empty.
 	* @param[in] nScalingDataF1BufferSize - Number of elements in buffer
 	* @param[in] pScalingDataF1Buffer - The profile override scale factors (f) for the start point of each hatch. If empty, no factors are written. MUST otherwise have the same cardinality as HatchData.
 	* @param[in] nScalingDataF2BufferSize - Number of elements in buffer

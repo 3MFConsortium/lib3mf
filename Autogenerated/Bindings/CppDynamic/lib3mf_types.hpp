@@ -478,14 +478,12 @@ namespace Lib3MF {
   typedef struct sHatch2D {
       Lib3MF_double m_Point1Coordinates[2];
       Lib3MF_double m_Point2Coordinates[2];
-      Lib3MF_uint32 m_ProfileOverrideID;
       Lib3MF_int32 m_Tag;
   } sHatch2D;
   
   typedef struct sDiscreteHatch2D {
       Lib3MF_int32 m_Point1Coordinates[2];
       Lib3MF_int32 m_Point2Coordinates[2];
-      Lib3MF_uint32 m_ProfileOverrideID;
       Lib3MF_int32 m_Tag;
   } sDiscreteHatch2D;
   

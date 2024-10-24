@@ -75,13 +75,13 @@ namespace NMR {
 		nfUint32 m_nPartID;
 		nfUint32 m_nStartPoint;
 		nfUint32 m_nPointCount;
+		nfUint32 m_nOverrideFraction;
 		nfInt64* m_pAttributeData;
 	} TOOLPATHREADSEGMENT;
 
 	typedef struct {
 		nfInt32 m_nX;
 		nfInt32 m_nY;
-		nfInt32 m_nProfileOverride;
 		nfInt32 m_nTag;
 		nfInt32 m_nFactorF;
 		nfInt32 m_nFactorG;
@@ -113,6 +113,8 @@ namespace NMR {
 		TOOLPATHREADSEGMENT * m_pCurrentSegment;
 
 		std::map<uint32_t, std::string> m_UUIDMap;
+		std::vector<uint32_t> m_PartIDs;
+		std::vector<uint32_t> m_ProfileIDs;
 
 		std::vector<PCustomXMLTree> m_CustomXMLData;
 
@@ -124,15 +126,20 @@ namespace NMR {
 
 		std::string getUUID();
 
-		void beginSegment(eModelToolpathSegmentType eType, nfUint32 nProfileID, nfUint32 nPartID);
+		void beginSegment(eModelToolpathSegmentType eType, nfUint32 nProfileID, nfUint32 nPartID, nfUint32 nOverrideFraction);
 		void endSegment();
-		void addDiscretePoint (nfInt32 nX, nfInt32 nY, nfInt32 nTag, nfInt32 nCustomProfileID, nfInt32 nFactorF, nfInt32 nFactorG, nfInt32 nFactorH);
+		void addDiscretePoint (nfInt32 nX, nfInt32 nY, nfInt32 nTag, nfInt32 nFactorF, nfInt32 nFactorG, nfInt32 nFactorH);
 
 		nfUint32 getSegmentCount();
 		void getSegmentInfo (nfUint32 nSegmentIndex, eModelToolpathSegmentType & eType, nfUint32 & nProfileID, nfUint32 & nPartID, nfUint32 & nPointCount);
 		TOOLPATHREADPOINT & getSegmentPoint (nfUint32 nSegmentIndex, nfUint32 nPointIndex);
 
-		void registerUUID (nfUint32 nID, std::string sUUID);
+		uint32_t getPartCount();
+
+		void getPartInformation(nfUint32 nPartIndex, nfUint32 & nPartID, std::string& sPartUUID);
+
+		void registerPartUUID (nfUint32 nID, std::string sUUID);
+		void registerProfileUUID(nfUint32 nID, std::string sUUID);
 		std::string mapIDtoUUID(nfUint32 nID);
 
 		uint32_t getCustomXMLDataCount();

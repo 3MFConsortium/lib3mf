@@ -45,6 +45,8 @@ namespace NMR {
 		eModelToolpathSegmentType m_eSegmentType;
 		nfBool m_bHasSegmentType;
 		std::string m_sBinaryIndexStreamPath;
+		nfUint32 m_nOverrideFraction;
+		bool m_bHasOverrideFraction;
 
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
@@ -60,6 +62,9 @@ namespace NMR {
 
 		nfUint32 getPartID();
 		bool hasPartID();
+
+		bool hasOverrideFraction();
+		nfUint32 getOverrideFraction();
 
 	};
 

@@ -49,7 +49,7 @@ namespace NMR {
 
 	CModelToolpathLayerWriteData::CModelToolpathLayerWriteData(CModelToolpath * pModelToolpath, NMR::PModelWriter_3MF pModelWriter, const std::string & sPackagePath, std::map<std::string, std::string> PrefixToNameSpaceMap)
 		: m_pModelToolpath (pModelToolpath), m_pModelWriter (pModelWriter), m_sPackagePath (sPackagePath), m_PrefixToNameSpaceMap (PrefixToNameSpaceMap),
-		m_nCurrentLaserIndex (0), m_nFactorRange (TOOLPATHWRITER_DEFAULTFACTORRANGE)
+		m_nCurrentLaserIndex (0), m_nOverrideFraction(TOOLPATHWRITER_DEFAULTOVERRIDEFRACTION)
 	{
 		if (pModelToolpath == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -139,7 +139,7 @@ namespace NMR {
 		return true;
 	}
 
-	void CModelToolpathLayerWriteData::WriteHatchData(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nHatchCount, const nfInt32* pX1Buffer, const nfInt32* pY1Buffer, const nfInt32* pX2Buffer, const nfInt32* pY2Buffer, const nfInt32* pTagBuffer, const nfInt32* pProfileIDBuffer, const int32_t* pScalingDataF1Buffer, const int32_t* pScalingDataF2Buffer, const int32_t* pScalingDataG1Buffer, const int32_t* pScalingDataG2Buffer, const int32_t* pScalingDataH1Buffer, const int32_t* pScalingDataH2Buffer)
+	void CModelToolpathLayerWriteData::WriteHatchData(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nHatchCount, const nfInt32* pX1Buffer, const nfInt32* pY1Buffer, const nfInt32* pX2Buffer, const nfInt32* pY2Buffer, const nfInt32* pTagBuffer, const int32_t* pScalingDataF1Buffer, const int32_t* pScalingDataF2Buffer, const int32_t* pScalingDataG1Buffer, const int32_t* pScalingDataG2Buffer, const int32_t* pScalingDataH1Buffer, const int32_t* pScalingDataH2Buffer)
 	{
 		std::string sPath;
 		NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter(sPath);
@@ -172,8 +172,8 @@ namespace NMR {
 		}
 
 		if ((pScalingDataF1Buffer != nullptr) || (pScalingDataG1Buffer != nullptr) || (pScalingDataH1Buffer != nullptr)) {
-			std::string sFactorRange = std::to_string(m_nFactorRange);
-			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_MAXFACTOR, nullptr, sFactorRange.c_str());
+			std::string sFactorRange = std::to_string(m_nOverrideFraction);
+			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_OVERRIDEFRACTION, nullptr, sFactorRange.c_str());
 		}
 
 		for (auto& customAttribute : m_CustomSegmentAttributes) {
@@ -193,10 +193,6 @@ namespace NMR {
 			if (pTagBuffer != nullptr)
 				binaryKeyTags = pStreamWriter->addIntArray(pTagBuffer, nHatchCount, eChunkedBinaryPredictionType::eptDeltaPredicition);
 
-			uint32_t binaryKeyProfileIDs = 0;
-			if (pProfileIDBuffer != nullptr)
-				binaryKeyProfileIDs = pStreamWriter->addIntArray(pProfileIDBuffer, nHatchCount, eChunkedBinaryPredictionType::eptDeltaPredicition);
-
 			std::string sKeyX1 = std::to_string(binaryKeyX1);
 			std::string sKeyY1 = std::to_string(binaryKeyY1);
 			std::string sKeyX2 = std::to_string(binaryKeyX2);
@@ -207,11 +203,6 @@ namespace NMR {
 			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_Y1, nullptr, sKeyY1.c_str());
 			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_X2, nullptr, sKeyX2.c_str());
 			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_Y2, nullptr, sKeyY2.c_str());
-
-			if (binaryKeyProfileIDs != 0) {
-				std::string sKeyProfileIDs = std::to_string(binaryKeyProfileIDs);
-				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_PID, nullptr, sKeyProfileIDs.c_str());
-			}
 
 			if (binaryKeyTags != 0) {
 				std::string sKeyTags = std::to_string(binaryKeyTags);
@@ -358,14 +349,6 @@ namespace NMR {
 				m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_Y1, nullptr, sY1.c_str());
 				m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_X2, nullptr, sX2.c_str());
 				m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_Y2, nullptr, sY2.c_str());
-
-				if (pProfileIDBuffer != nullptr) {
-					int32_t nProfileID = pProfileIDBuffer[nIndex];
-					if (nProfileID != 0) {
-						std::string sProfileID = std::to_string(nProfileID);
-						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PID, nullptr, sProfileID.c_str());
-					}
-				}
 
 				if (pTagBuffer != nullptr) {
 					int32_t nTag = pTagBuffer[nIndex];
@@ -525,8 +508,8 @@ namespace NMR {
 		}
 
 		if ((pScalingFDataBuffer != nullptr) || (pScalingGDataBuffer != nullptr) || (pScalingHDataBuffer != nullptr)) {
-			std::string sFactorRange = std::to_string(m_nFactorRange);
-			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_MAXFACTOR, nullptr, sFactorRange.c_str());
+			std::string sOverrideFraction = std::to_string(m_nOverrideFraction);
+			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_OVERRIDEFRACTION, nullptr, sOverrideFraction.c_str());
 		}
 
 		for (auto& customAttribute : m_CustomSegmentAttributes) {
@@ -672,8 +655,8 @@ namespace NMR {
 		}
 
 		if ((pScalingFDataBuffer != nullptr) || (pScalingGDataBuffer != nullptr) || (pScalingHDataBuffer != nullptr)) {
-			std::string sFactorRange = std::to_string(m_nFactorRange);
-			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_MAXFACTOR, nullptr, sFactorRange.c_str());
+			std::string sOverrideFraction = std::to_string(m_nOverrideFraction);
+			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_OVERRIDEFRACTION, nullptr, sOverrideFraction.c_str());
 		}
 
 		for (auto& customAttribute : m_CustomSegmentAttributes) {
@@ -959,12 +942,19 @@ namespace NMR {
 		m_nCurrentLaserIndex = nLaserIndex;
 	}
 
-	void CModelToolpathLayerWriteData::setFactorRange(uint32_t nFactorRange)
+	void CModelToolpathLayerWriteData::setOverrideFraction(uint32_t nOverrideFraction)
 	{
-		if ((nFactorRange < TOOLPATHWRITER_MINFACTORRANGE) || (nFactorRange > TOOLPATHWRITER_MAXFACTORRANGE))
+		if ((nOverrideFraction < TOOLPATHWRITER_MINFACTORRANGE) || (nOverrideFraction > TOOLPATHWRITER_MAXFACTORRANGE))
 			throw CNMRException(NMR_ERROR_TOOLPATH_INVALIDFACTORRANGE);
 
-		m_nFactorRange = nFactorRange;
+		m_nOverrideFraction = nOverrideFraction;
 	}
+
+	uint32_t CModelToolpathLayerWriteData::getOverrideFraction()
+	{
+		return m_nOverrideFraction;
+	}
+
+
 }
 

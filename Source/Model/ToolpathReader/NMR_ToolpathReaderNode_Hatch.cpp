@@ -52,7 +52,6 @@ namespace NMR {
 			m_bHasY1 (false),
 			m_bHasX2 (false),
 			m_bHasY2 (false),
-		m_nCustomProfileID (0),
 		m_nTag(0),
 		m_nFactorF1(0),
 		m_nFactorG1(0),
@@ -110,9 +109,6 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
 			m_nY2 = fnStringToInt32(pAttributeValue);
 			m_bHasY2 = true;
-		}
-		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_PID) == 0) {
-			m_nCustomProfileID = fnStringToInt32(pAttributeValue);
 		}
 		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_TAG) == 0) {
 			m_nTag = fnStringToInt32(pAttributeValue);
@@ -183,11 +179,7 @@ namespace NMR {
 		return m_nTag;
 	}
 
-	nfInt32 CToolpathReaderNode_Hatch::getCustomProfileID()
-	{
-		return m_nCustomProfileID;
-	}
-
+	
 	nfInt32 CToolpathReaderNode_Hatch::getFactorF1()
 	{
 		return m_nFactorF1;

@@ -87,7 +87,7 @@ namespace NMR {
 				if (!pXMLNode->hasUUID())
 					throw CNMRException(NMR_ERROR_MISSINGUUID);
 
-				m_pReadData->registerUUID (pXMLNode->getPartID (), pXMLNode->getUUID ());
+				m_pReadData->registerPartUUID (pXMLNode->getPartID (), pXMLNode->getUUID ());
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
